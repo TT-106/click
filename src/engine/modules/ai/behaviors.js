@@ -39,7 +39,7 @@ export function FollowLeaderBehavior() {
 }
 export function RangedAttackBehavior(a, b, c) {
   this.priorityWeight = c;
-  this.Fa = null;
+  this.targetCharacter = null;
   this.CA = a;
   this.bb = b;
   this.fn = new Vector2();
@@ -48,7 +48,7 @@ export function RangedAttackBehavior(a, b, c) {
 }
 export function MeleeAttackBehavior(a, b, c, d) {
   this.priorityWeight = b;
-  this.Fa = null;
+  this.targetCharacter = null;
   this.Ng = 0;
   this.bb = a;
   this.qk = c;
@@ -61,7 +61,7 @@ export function LootGoldBehavior(a) {
 }
 export function OpportunisticAttackBehavior(a) {
   this.priorityWeight = a;
-  this.Fa = null;
+  this.targetCharacter = null;
   this.Ng = 0;
   this.bb = RANGED_ATTACK_RANGE;
   this.qk = MELEE_ACTION_TYPE;
@@ -81,7 +81,7 @@ export function GuardRangedBehavior(a, b, c) {
 }
 export function TargetSpellBehavior(a, b) {
   this.priorityWeight = b;
-  this.Fa = this.Vi = null;
+  this.targetCharacter = this.Vi = null;
   this.Ng = 0;
   this.bb = a;
 }
@@ -205,7 +205,7 @@ export function CooldownBehavior(a, b) {
 }
 export function SpecialAttackBehavior(a, b, c, d) {
   this.priorityWeight = c;
-  this.Fa = null;
+  this.targetCharacter = null;
   this.Ng = 0;
   this.bb = a;
   this.Uw = b;
@@ -454,7 +454,7 @@ export function initializeAiBehaviors() {
   };
   RangedAttackBehavior.prototype.Wa = function () {
     this.co = this.ax = 0;
-    this.Fa = null;
+    this.targetCharacter = null;
   };
   RangedAttackBehavior.prototype.notifySpellLearned = function () {};
   RangedAttackBehavior.prototype.od = function (a) {
@@ -463,7 +463,7 @@ export function initializeAiBehaviors() {
     } else {
       this.co = 0;
     }
-    if (this.Fa && !(this.Fa.Va || this.Fa.effects.Kd || this.Fa.effects.bi) && this.vx(a)) {
+    if (this.targetCharacter && !(this.targetCharacter.Va || this.targetCharacter.effects.Kd || this.targetCharacter.effects.bi) && this.vx(a)) {
       this.ax = game.state.turnNumber;
       var b = a.position.room;
       if (b && isAdventurerOrMinion(a)) {
@@ -532,8 +532,8 @@ export function initializeAiBehaviors() {
     return true;
   };
   RangedAttackBehavior.prototype.wd = function (a) {
-    this.Fa = findNearestVisibleOpponent(a);
-    return this.Fa ? 2 < this.co ? this.co = 0 : a.position.levelPosition.ac(this.Fa.position.levelPosition) > this.CA ? 0 : this.priorityWeight : 0;
+    this.targetCharacter = findNearestVisibleOpponent(a);
+    return this.targetCharacter ? 2 < this.co ? this.co = 0 : a.position.levelPosition.ac(this.targetCharacter.position.levelPosition) > this.CA ? 0 : this.priorityWeight : 0;
   };
   RangedAttackBehavior.prototype.Ta = function () {
     return this.priorityWeight;
@@ -541,8 +541,8 @@ export function initializeAiBehaviors() {
   MeleeAttackBehavior.prototype.Wa = function () {};
   MeleeAttackBehavior.prototype.notifySpellLearned = function () {};
   MeleeAttackBehavior.prototype.od = function (a) {
-    if (this.Fa && !this.Fa.Va) {
-      a.Cb(this.Fa);
+    if (this.targetCharacter && !this.targetCharacter.Va) {
+      a.Cb(this.targetCharacter);
       if (this.Ng <= this.bb) {
         if (!canAttack(a)) {
           return;
@@ -550,7 +550,7 @@ export function initializeAiBehaviors() {
         markAttackTurn(a);
         a.actionType = this.qk;
       } else {
-        choosePointNearTarget(a.position.Qb, this.Fa.position.levelPosition, a.position.room);
+        choosePointNearTarget(a.position.Qb, this.targetCharacter.position.levelPosition, a.position.room);
         a.actionType = 1;
       }
       var b = a.position.room;
@@ -564,11 +564,11 @@ export function initializeAiBehaviors() {
     if (!a.position.room) {
       return 0;
     }
-    this.Fa = this.YD ? findNearbyOpponent(a) : selectScrollTarget(a);
-    if (!this.Fa) {
+    this.targetCharacter = this.YD ? findNearbyOpponent(a) : selectScrollTarget(a);
+    if (!this.targetCharacter) {
       return 0;
     }
-    this.Ng = a.position.levelPosition.ac(this.Fa.position.levelPosition);
+    this.Ng = a.position.levelPosition.ac(this.targetCharacter.position.levelPosition);
     return this.priorityWeight;
   };
   MeleeAttackBehavior.prototype.Ta = function () {
@@ -629,13 +629,13 @@ export function initializeAiBehaviors() {
     return 0.8 > b.health / statValue(b.maxHealth) ? null : a;
   };
   OpportunisticAttackBehavior.prototype.Wa = function () {
-    this.Fa = null;
+    this.targetCharacter = null;
     this.Ng = 0;
   };
   OpportunisticAttackBehavior.prototype.notifySpellLearned = function () {};
   OpportunisticAttackBehavior.prototype.od = function (a) {
-    if (this.Fa && !this.Fa.Va) {
-      a.Cb(this.Fa);
+    if (this.targetCharacter && !this.targetCharacter.Va) {
+      a.Cb(this.targetCharacter);
       if (this.Ng <= this.bb) {
         if (!canAttack(a)) {
           return;
@@ -643,7 +643,7 @@ export function initializeAiBehaviors() {
         markAttackTurn(a);
         a.actionType = this.qk;
       } else {
-        choosePointNearTarget(a.position.Qb, this.Fa.position.levelPosition, a.position.room);
+        choosePointNearTarget(a.position.Qb, this.targetCharacter.position.levelPosition, a.position.room);
         a.actionType = 1;
       }
       var b = a.position.room;
@@ -654,8 +654,8 @@ export function initializeAiBehaviors() {
     }
   };
   OpportunisticAttackBehavior.prototype.wd = function (a) {
-    this.Fa = selectScrollTarget(a);
-    if (!this.Fa) {
+    this.targetCharacter = selectScrollTarget(a);
+    if (!this.targetCharacter) {
       return 0;
     }
     if (a.effects.wg) {
@@ -665,7 +665,7 @@ export function initializeAiBehaviors() {
       this.bb = RANGED_ATTACK_RANGE;
       this.qk = MELEE_ACTION_TYPE;
     }
-    this.Ng = a.position.levelPosition.ac(this.Fa.position.levelPosition);
+    this.Ng = a.position.levelPosition.ac(this.targetCharacter.position.levelPosition);
     return this.priorityWeight;
   };
   OpportunisticAttackBehavior.prototype.Ta = function () {
@@ -769,7 +769,7 @@ export function initializeAiBehaviors() {
   };
   TargetSpellBehavior.prototype.od = function (a) {
     if (this.Vi && canAttack(a) && isSpellReady(this.Vi)) {
-      if (a.Cb(this.Fa), this.Ng <= this.bb) {
+      if (a.Cb(this.targetCharacter), this.Ng <= this.bb) {
         if (canAttack(a)) {
           markAttackTurn(a);
           this.Vi.mq = game.state.turnNumber;
@@ -782,7 +782,7 @@ export function initializeAiBehaviors() {
           }
         }
       } else {
-        assignVector(a.position.Qb, this.Fa.position.levelPosition);
+        assignVector(a.position.Qb, this.targetCharacter.position.levelPosition);
         a.actionType = 1;
       }
     }
@@ -799,7 +799,7 @@ export function initializeAiBehaviors() {
         return 0;
       }
     }
-    return (this.Fa = selectScrollTarget(a)) ? this.priorityWeight : 0;
+    return (this.targetCharacter = selectScrollTarget(a)) ? this.priorityWeight : 0;
   };
   HealBehavior.prototype = new ExploreDungeonBehavior();
   HealBehavior.prototype.Wa = function () {
@@ -1508,8 +1508,8 @@ export function initializeAiBehaviors() {
   SpecialAttackBehavior.prototype.Wa = function () {};
   SpecialAttackBehavior.prototype.notifySpellLearned = function () {};
   SpecialAttackBehavior.prototype.od = function (a) {
-    if (this.Fa && !this.Fa.Va) {
-      a.Cb(this.Fa);
+    if (this.targetCharacter && !this.targetCharacter.Va) {
+      a.Cb(this.targetCharacter);
       if (this.Ng <= this.bb) {
         if (!canAttack(a)) {
           return;
@@ -1517,7 +1517,7 @@ export function initializeAiBehaviors() {
         markAttackTurn(a);
         a.actionType = this.qk;
       } else {
-        choosePointNearTarget(a.position.Qb, this.Fa.position.levelPosition, a.position.room);
+        choosePointNearTarget(a.position.Qb, this.targetCharacter.position.levelPosition, a.position.room);
         a.actionType = 1;
       }
       var b = a.position.room;
@@ -1537,11 +1537,11 @@ export function initializeAiBehaviors() {
     if (!a.room || !c.room || a.room !== c.room) {
       return 0;
     }
-    this.Fa = selectScrollTarget(b);
-    if (!this.Fa) {
+    this.targetCharacter = selectScrollTarget(b);
+    if (!this.targetCharacter) {
       return 0;
     }
-    b = this.Fa.position.levelPosition;
+    b = this.targetCharacter.position.levelPosition;
     if (c.levelPosition.ac(b) > this.Uw) {
       return 0;
     }
