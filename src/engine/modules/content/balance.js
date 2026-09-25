@@ -297,7 +297,7 @@ export function initializeContentBalance() {
   ROOM_SPACING = 5;
   globalUpgradeDefinitions = {
     itemDropChance: {
-      c: "itemDropChance",
+      settingId: "itemDropChance",
       title: "更多道具掉落",
       e: "每次杀怪道具掉落几率+2%",
       currentValue: 40,
@@ -310,7 +310,7 @@ export function initializeContentBalance() {
       Pg: 11
     },
     maxMonsters: {
-      c: "maxMonstersPerRoom",
+      settingId: "maxMonstersPerRoom",
       title: "等多怪物",
       e: "房间内最多怪物数量(+2)",
       currentValue: 8,
@@ -323,7 +323,7 @@ export function initializeContentBalance() {
       Pg: 11
     },
     minMonsters: {
-      c: "minMonstersPerRoom",
+      settingId: "minMonstersPerRoom",
       title: "平均怪物计数",
       e: "房间内最少怪物数量(+1)",
       currentValue: 0,
@@ -336,7 +336,7 @@ export function initializeContentBalance() {
       Pg: 11
     },
     itemQualityChance: {
-      c: "betterItemRarityChance",
+      settingId: "betterItemRarityChance",
       title: "稀有道具掉落",
       e: "更加稀有道具掉落几率(+2%)",
       currentValue: 0,
@@ -349,7 +349,7 @@ export function initializeContentBalance() {
       Pg: 11
     },
     higherLevelItemChance: {
-      c: "itemLevelBonus",
+      settingId: "itemLevelBonus",
       title: "道具等级加成",
       e: "更高等级道具掉落几率(+3%)",
       currentValue: 0,
@@ -362,7 +362,7 @@ export function initializeContentBalance() {
       Pg: 11
     },
     ys: {
-      c: "maxGoldPerDrop",
+      settingId: "maxGoldPerDrop",
       title: "最大黄金掉落",
       e: "最大掉落黄金数量+25",
       currentValue: 15,
@@ -375,7 +375,7 @@ export function initializeContentBalance() {
       Pg: 11
     },
     As: {
-      c: "minGoldPerDrop",
+      settingId: "minGoldPerDrop",
       title: "最小黄金掉落",
       e: "最小掉落黄金数量+10",
       currentValue: 0,
@@ -388,7 +388,7 @@ export function initializeContentBalance() {
       Pg: 11
     },
     Lr: {
-      c: "goldDropChance",
+      settingId: "goldDropChance",
       title: "更多黄金掉落",
       e: "每次杀怪黄金掉落几率+5%",
       currentValue: 25,
@@ -401,7 +401,7 @@ export function initializeContentBalance() {
       Pg: 11
     },
     $s: {
-      c: "scrollDropChance",
+      settingId: "scrollDropChance",
       title: "更多卷轴掉落",
       e: "每次杀怪卷轴掉落几率+2%",
       currentValue: 20,
@@ -414,7 +414,7 @@ export function initializeContentBalance() {
       Pg: 11
     },
     Ns: {
-      c: "potionDropChance",
+      settingId: "potionDropChance",
       title: "更多药剂掉落",
       e: "每次杀怪药剂掉落几率+0.5%",
       currentValue: 1,
@@ -427,7 +427,7 @@ export function initializeContentBalance() {
       Pg: 11
     },
     treasureChance: {
-      c: "treasureChestChance",
+      settingId: "treasureChestChance",
       title: "更多财宝箱",
       e: "遇到财宝箱几率+2%",
       currentValue: 5,
@@ -472,11 +472,11 @@ export function initializeContentBalance() {
   for (upgradeIndexKey in globalUpgradesToIndex) {
     if (Object.prototype.hasOwnProperty.call(globalUpgradesToIndex, upgradeIndexKey)) {
       upgradeIndexEntry = globalUpgradesToIndex[upgradeIndexKey];
-      if (upgradeIndexEntry.c) {
-        if (globalUpgradesById[upgradeIndexEntry.c]) {
-          console.log("setting object duplicate settingId: " + upgradeIndexEntry.c + " setting: " + upgradeIndexKey);
+      if (upgradeIndexEntry.settingId) {
+        if (globalUpgradesById[upgradeIndexEntry.settingId]) {
+          console.log("setting object duplicate settingId: " + upgradeIndexEntry.settingId + " setting: " + upgradeIndexKey);
         } else {
-          globalUpgradesById[upgradeIndexEntry.c] = upgradeIndexEntry;
+          globalUpgradesById[upgradeIndexEntry.settingId] = upgradeIndexEntry;
         }
       } else {
         console.log("setting object missing settingId: " + upgradeIndexKey);

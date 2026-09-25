@@ -295,127 +295,127 @@ export function initializeAiTargeting() {
   ADVENTURER_TYPE = 0;
   MONSTER_TYPE = 2;
   summonDogSpellDefinition = {
-    c: "summonDogSpell",
+    id: "summonDogSpell",
     xa: druidSpellDefinitions.LB
   };
   summonWolfPackSpellDefinition = {
-    c: "summonWolfPackSpell",
+    id: "summonWolfPackSpell",
     xa: druidSpellDefinitions.PB
   };
   minorHealSpellDefinition = {
-    c: "minorHealSpell",
+    id: "minorHealSpell",
     xa: druidSpellDefinitions.cE
   };
   sleepSpellDefinition = {
-    c: "sleepSpell",
+    id: "sleepSpell",
     xa: druidSpellDefinitions.DE
   };
   summonChickensSpellDefinition = {
-    c: "summonChickensSpell",
+    id: "summonChickensSpell",
     xa: chickenSpellDefinitions.KB
   };
   summonGuardChickenSpellDefinition = {
-    c: "summonGuardChickenSpell",
+    id: "summonGuardChickenSpell",
     xa: chickenSpellDefinitions.MB
   };
   swiftStrikeSpellDefinition = {
-    c: "swiftStrikeSpell",
+    id: "swiftStrikeSpell",
     xa: ninjaSpellDefinitions.Hx
   };
   hurtSpellDefinition = {
-    c: "hurtSpell",
+    id: "hurtSpell",
     xa: necromancerSpellDefinitions.CD
   };
   greenDeathSpellDefinition = {
-    c: "greenDeathSpell",
+    id: "greenDeathSpell",
     xa: necromancerSpellDefinitions.xD
   };
   summonSkeletonArmySpellDefinition = {
-    c: "summonSkeletonArmySpell",
+    id: "summonSkeletonArmySpell",
     xa: necromancerSpellDefinitions.OB
   };
   summonPhantomSkullSpellDefinition = {
-    c: "summonPhantomSkullSpell",
+    id: "summonPhantomSkullSpell",
     xa: necromancerSpellDefinitions.NB
   };
   tauntSpellDefinition = {
-    c: "tauntSpell",
+    id: "tauntSpell",
     xa: fighterSpellDefinitions.ME
   };
   rageSpellDefinition = {
-    c: "rageSpell",
+    id: "rageSpell",
     xa: barbarianSpellDefinitions.rE
   };
   sledgeHammerSpellDefinition = {
-    c: "sledgeHammerSpell",
+    id: "sledgeHammerSpell",
     xa: barbarianSpellDefinitions.wB
   };
   stealthSpellDefinition = {
-    c: "stealthSpell",
+    id: "stealthSpell",
     xa: rogueSpellDefinitions.IB
   };
   instantLootSpellDefinition = {
-    c: "instantLootSpell",
+    id: "instantLootSpell",
     xa: rogueSpellDefinitions.ID
   };
   detectTreasureChestSpellDefinition = {
-    c: "detectTreasureChestSpell",
+    id: "detectTreasureChestSpell",
     xa: rogueSpellDefinitions.wu
   };
   healSpellDefinition = {
-    c: "healSpell",
+    id: "healSpell",
     xa: priestSpellDefinitions.yD
   };
   armorSpellDefinition = {
-    c: "armorSpell",
+    id: "armorSpell",
     xa: priestSpellDefinitions.Zz
   };
   damageSpellDefinition = {
-    c: "damageSpell",
+    id: "damageSpell",
     xa: priestSpellDefinitions.FD
   };
   attackRatingSpellDefinition = {
-    c: "attackRatingSpell",
+    id: "attackRatingSpell",
     xa: priestSpellDefinitions.ED
   };
   defenseRatingSpellDefinition = {
-    c: "defenseRatingSpell",
+    id: "defenseRatingSpell",
     xa: priestSpellDefinitions.$z
   };
   reviveSpellDefinition = {
-    c: "reviveSpell",
+    id: "reviveSpell",
     xa: priestSpellDefinitions.xE
   };
   shockSpellDefinition = {
-    c: "shockSpell",
+    id: "shockSpell",
     xa: electricSpellDefinitions.sB
   };
   spiderWebSpellDefinition = {
-    c: "spiderWebSpell",
+    id: "spiderWebSpell",
     xa: electricSpellDefinitions.CB
   };
   lightningRainSpellDefinition = {
-    c: "lightningRainSpell",
+    id: "lightningRainSpell",
     xa: electricSpellDefinitions.XD
   };
   chainedLightningSpellDefinition = {
-    c: "chainedLightningSpell",
+    id: "chainedLightningSpell",
     xa: electricSpellDefinitions.br
   };
   fireBlastSpellDefinition = {
-    c: "fireBlastSpell",
+    id: "fireBlastSpell",
     xa: fireSpellDefinitions.rD
   };
   fireBallSpellDefinition = {
-    c: "fireBallSpell",
+    id: "fireBallSpell",
     xa: fireSpellDefinitions.Kz
   };
   fireRainSpellDefinition = {
-    c: "fireRainSpell",
+    id: "fireRainSpell",
     xa: fireSpellDefinitions.Lz
   };
   turnMonsterSpellDefinition = {
-    c: "turnMonsterSpell",
+    id: "turnMonsterSpell",
     xa: fireSpellDefinitions.TE
   };
   IDLE_ACTION = 0;

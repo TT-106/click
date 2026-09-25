@@ -950,7 +950,7 @@ export function createSaveState(a) {
     for (kb in globalUpgradeDefinitions) {
       if (Object.prototype.hasOwnProperty.call(globalUpgradeDefinitions, kb)) {
         Ra = globalUpgradeDefinitions[kb];
-        Ja[Ra.c] = Ra.purchasedLevels;
+        Ja[Ra.settingId] = Ra.purchasedLevels;
       }
     }
     var Db = {

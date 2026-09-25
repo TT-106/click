@@ -141,7 +141,7 @@ export function serializeUpgradeFlags(a) {
     d;
   for (d = 0; d < a.length; d++) {
     c = a[d];
-    b[c.Jr().c] = c.He();
+    b[c.Jr().id] = c.He();
   }
   return b;
 }
@@ -150,7 +150,7 @@ export function restoreUpgradeFlags(a, b) {
   for (c = 0; c < a.length; c++) {
     f = a[c];
     d = a[c].Jr();
-    d = b[d.c];
+    d = b[d.id];
     f.ft(d);
   }
 }
