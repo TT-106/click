@@ -59,7 +59,7 @@ export function populateEncounter(a) {
             n.gq(l);
             p.characterLevel = l.xd;
             n.behaviors = new AttackBehavior(h, MELEE_ATTACK_RANGE);
-            n.p.room = h;
+            n.position.room = h;
             if (frailMonstersModifier.t) {
               p.damage.levelValue = floorNumber(0.7 * l.Gp);
               p.armor.levelValue = floorNumber(0.7 * l.Ep);
@@ -80,7 +80,7 @@ export function populateEncounter(a) {
               p = roomBottomPixels(h) - game.tileSize,
               h = s + randomInt(roomRightPixels(h) - game.tileSize - s),
               l = l + randomInt(p - l);
-            setVector(n.p.levelPosition, h, l);
+            setVector(n.position.levelPosition, h, l);
             g.Pi.push(n);
           }
           beginEncounter(b, false);
@@ -126,7 +126,7 @@ export function spawnDungeonBoss(a, b) {
       learnSpell(f, new Spell(bossClass.eu[c]));
     }
   }
-  c = f.p;
+  c = f.position;
   c.room = b;
   c.cd = null;
   var n = roomLeftPixels(b) + game.tileSize,

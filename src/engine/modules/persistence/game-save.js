@@ -416,7 +416,7 @@ export function restoreGameState(a, b) {
               of.skillPoints = Vb ? Vb : 0;
               of.hasUnspentSkills = hasUnspentSkills(of);
               hc.initialSpellSkillPoint = Tc ? Tc : 0;
-              var wd = hc.p,
+              var wd = hc.position,
                 rl = vc.worldX,
                 cj = vc.worldY,
                 Ah = vc.roomId,

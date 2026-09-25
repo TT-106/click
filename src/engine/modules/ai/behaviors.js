@@ -132,7 +132,7 @@ export function WaitBehavior() {
 }
 export function hasForcedDestination(a) {
   var b;
-  return (b = game.state.party.gn) ? a.p.Cc === b ? false : true : false;
+  return (b = game.state.party.gn) ? a.position.Cc === b ? false : true : false;
 }
 export function LootChestBehavior(a) {
   this.Wm = null;
@@ -231,7 +231,7 @@ export function initializeAiBehaviors() {
       if (a === game.state.leader) {
         if (c) {
           if (b = c.iq, c = c.jq, d = game.world.hb(b, c)) {
-            b = a.p;
+            b = a.position;
             if (game.world.hb(game.world.bc(b.dc()), game.world.cc(b.ec())) === d) {
               a.Y = 10;
             } else {
@@ -242,7 +242,7 @@ export function initializeAiBehaviors() {
           }
         } else if (d) {
           if (b = d.dm, c = d.em, d = game.world.hb(b, c)) {
-            b = a.p;
+            b = a.position;
             if (game.world.hb(game.world.bc(b.dc()), game.world.cc(b.ec())) === d) {
               a.Y = 11;
             } else {
@@ -252,7 +252,7 @@ export function initializeAiBehaviors() {
             return;
           }
         } else if (b = f.bc(), c = f.cc(), d = game.world.hb(b, c)) {
-          b = a.p;
+          b = a.position;
           if (game.world.hb(game.world.bc(b.dc()), game.world.cc(b.ec())) === d) {
             a.Y = 9;
           } else {
@@ -261,7 +261,7 @@ export function initializeAiBehaviors() {
           }
           return;
         }
-        d = a.p;
+        d = a.position;
         if (d.dd || a.Y === IDLE_ACTION) {
           setWorldDestination(d, b, c);
           a.Y = 1;
@@ -271,7 +271,7 @@ export function initializeAiBehaviors() {
         b = getAllies();
         c = b.indexOf(a);
         b = 1 === a.characterType ? a.summoner : 0 > c ? game.state.leader : b[c - 1];
-        setWorldDestination(a.p, game.world.bc(b.p.dc()), game.world.cc(b.p.ec()));
+        setWorldDestination(a.position, game.world.bc(b.position.dc()), game.world.cc(b.position.ec()));
         a.Y = 1;
       }
     } else {
@@ -306,7 +306,7 @@ export function initializeAiBehaviors() {
   IdleBehavior.prototype.Wa = function () {};
   IdleBehavior.prototype.Oa = function () {};
   IdleBehavior.prototype.od = function (a) {
-    var b = a.p,
+    var b = a.position,
       c = b.room;
     if (c) {
       if (b.dd || this.Al != c) {
@@ -320,7 +320,7 @@ export function initializeAiBehaviors() {
     }
   };
   IdleBehavior.prototype.wd = function (a) {
-    return a.p.room ? this.kB : 0;
+    return a.position.room ? this.kB : 0;
   };
   IdleBehavior.prototype.Ta = function () {
     return this.kB;
@@ -332,8 +332,8 @@ export function initializeAiBehaviors() {
   ExploreDungeonBehavior.prototype.od = function (a) {
     if (this.Da && this.un) {
       a.Cb(this.Da);
-      var b = a.p;
-      this.SB = a === this.Da ? 0 : b.levelPosition.ac(this.Da.p.levelPosition);
+      var b = a.position;
+      this.SB = a === this.Da ? 0 : b.levelPosition.ac(this.Da.position.levelPosition);
       if (this.SB <= this.bb) {
         if (!this.Yt && !canAttack(a)) {
           return;
@@ -344,18 +344,18 @@ export function initializeAiBehaviors() {
         a.Y = CAST_ACTION_TYPE;
         this.Kp(a);
       } else {
-        assignVector(b.Qb, this.Da.p.levelPosition);
+        assignVector(b.Qb, this.Da.position.levelPosition);
         a.Y = 1;
       }
       clearMovementTarget(b);
-      if ((b = a.p.room) && isAdventurerOrMinion(a)) {
+      if ((b = a.position.room) && isAdventurerOrMinion(a)) {
         forcePartyDestination(b);
       }
     }
   };
   ExploreDungeonBehavior.prototype.Kp = function () {};
   ExploreDungeonBehavior.prototype.wd = function (a) {
-    var b = a.p.room;
+    var b = a.position.room;
     if (!b || !this.Wd(a)) {
       return 0;
     }
@@ -368,7 +368,7 @@ export function initializeAiBehaviors() {
       }
     }
     this.Da = this.Td(a);
-    return this.Da && this.Da.p.room === b ? (this.un = this.Md()) ? this.Jd(a) : 0 : 0;
+    return this.Da && this.Da.position.room === b ? (this.un = this.Md()) ? this.Jd(a) : 0 : 0;
   };
   ExploreDungeonBehavior.prototype.Wd = function () {
     return true;
@@ -389,8 +389,8 @@ export function initializeAiBehaviors() {
   FollowLeaderBehavior.prototype.Oa = function () {};
   FollowLeaderBehavior.prototype.od = function (a) {
     if (this.Uq) {
-      var b = a.p.room;
-      if (a.p.dd) {
+      var b = a.position.room;
+      if (a.position.dd) {
         if (!b) {
           return;
         }
@@ -400,7 +400,7 @@ export function initializeAiBehaviors() {
         forcePartyDestination(b);
       }
       a.Y = 1;
-      a.p.dd = false;
+      a.position.dd = false;
       if (0 === game.state.turnNumber % 2) {
         showFloatingText(game.floatingText, a, "快逃!", "yellow");
       }
@@ -408,7 +408,7 @@ export function initializeAiBehaviors() {
   };
   FollowLeaderBehavior.prototype.vx = function (a) {
     var b = randomInt(3);
-    a = a.p;
+    a = a.position;
     var c = a.room,
       d = roomLeftPixels(c),
       f = roomTopPixels(c),
@@ -446,7 +446,7 @@ export function initializeAiBehaviors() {
       c = null;
     }
     this.Uq = c;
-    return !this.Uq || a.p.levelPosition.ac(this.Uq.p.levelPosition) > this.zE ? 0 : (1 - b) * this.ka;
+    return !this.Uq || a.position.levelPosition.ac(this.Uq.position.levelPosition) > this.zE ? 0 : (1 - b) * this.ka;
   };
   FollowLeaderBehavior.prototype.Ta = function () {
     return this.ka;
@@ -464,16 +464,16 @@ export function initializeAiBehaviors() {
     }
     if (this.Fa && !(this.Fa.Va || this.Fa.Ja.Kd || this.Fa.Ja.bi) && this.vx(a)) {
       this.ax = game.state.turnNumber;
-      var b = a.p.room;
+      var b = a.position.room;
       if (b && isAdventurerOrMinion(a)) {
         forcePartyDestination(b);
       }
       a.Y = 1;
-      a.p.dd = false;
+      a.position.dd = false;
     }
   };
   RangedAttackBehavior.prototype.vx = function (a) {
-    var b = a.p,
+    var b = a.position,
       c = b.levelPosition,
       d = b.room,
       f = roomLeftPixels(d),
@@ -489,8 +489,8 @@ export function initializeAiBehaviors() {
     setVector(this.Jl, 0, 0);
     for (s = 0; s < a.length; s++) {
       n = a[s];
-      if (!(n.Va || n.Ja.Kd || n.Ja.bi || n.p.room != d)) {
-        p = n.p.levelPosition;
+      if (!(n.Va || n.Ja.Kd || n.Ja.bi || n.position.room != d)) {
+        p = n.position.levelPosition;
         n = c.ac(p);
         if (!(n > this.CA)) {
           if (0 === n) {
@@ -532,7 +532,7 @@ export function initializeAiBehaviors() {
   };
   RangedAttackBehavior.prototype.wd = function (a) {
     this.Fa = findNearestVisibleOpponent(a);
-    return this.Fa ? 2 < this.co ? this.co = 0 : a.p.levelPosition.ac(this.Fa.p.levelPosition) > this.CA ? 0 : this.ka : 0;
+    return this.Fa ? 2 < this.co ? this.co = 0 : a.position.levelPosition.ac(this.Fa.position.levelPosition) > this.CA ? 0 : this.ka : 0;
   };
   RangedAttackBehavior.prototype.Ta = function () {
     return this.ka;
@@ -549,25 +549,25 @@ export function initializeAiBehaviors() {
         markAttackTurn(a);
         a.Y = this.qk;
       } else {
-        choosePointNearTarget(a.p.Qb, this.Fa.p.levelPosition, a.p.room);
+        choosePointNearTarget(a.position.Qb, this.Fa.position.levelPosition, a.position.room);
         a.Y = 1;
       }
-      var b = a.p.room;
+      var b = a.position.room;
       if (b && isAdventurerOrMinion(a)) {
         forcePartyDestination(b);
       }
-      clearMovementTarget(a.p);
+      clearMovementTarget(a.position);
     }
   };
   MeleeAttackBehavior.prototype.wd = function (a) {
-    if (!a.p.room) {
+    if (!a.position.room) {
       return 0;
     }
     this.Fa = this.YD ? findNearbyOpponent(a) : selectScrollTarget(a);
     if (!this.Fa) {
       return 0;
     }
-    this.Ng = a.p.levelPosition.ac(this.Fa.p.levelPosition);
+    this.Ng = a.position.levelPosition.ac(this.Fa.position.levelPosition);
     return this.ka;
   };
   MeleeAttackBehavior.prototype.Ta = function () {
@@ -621,7 +621,7 @@ export function initializeAiBehaviors() {
     return this.Hn;
   };
   LootGoldBehavior.prototype.Td = function (a) {
-    if (a.Ja.Gn || !hasOpponentsInRoom(a, a.p.room)) {
+    if (a.Ja.Gn || !hasOpponentsInRoom(a, a.position.room)) {
       return null;
     }
     var b = a.stats;
@@ -642,14 +642,14 @@ export function initializeAiBehaviors() {
         markAttackTurn(a);
         a.Y = this.qk;
       } else {
-        choosePointNearTarget(a.p.Qb, this.Fa.p.levelPosition, a.p.room);
+        choosePointNearTarget(a.position.Qb, this.Fa.position.levelPosition, a.position.room);
         a.Y = 1;
       }
-      var b = a.p.room;
+      var b = a.position.room;
       if (b && isAdventurerOrMinion(a)) {
         forcePartyDestination(b);
       }
-      clearMovementTarget(a.p);
+      clearMovementTarget(a.position);
     }
   };
   OpportunisticAttackBehavior.prototype.wd = function (a) {
@@ -664,7 +664,7 @@ export function initializeAiBehaviors() {
       this.bb = RANGED_ATTACK_RANGE;
       this.qk = MELEE_ACTION_TYPE;
     }
-    this.Ng = a.p.levelPosition.ac(this.Fa.p.levelPosition);
+    this.Ng = a.position.levelPosition.ac(this.Fa.position.levelPosition);
     return this.ka;
   };
   OpportunisticAttackBehavior.prototype.Ta = function () {
@@ -690,7 +690,7 @@ export function initializeAiBehaviors() {
     return this.Dn;
   };
   LootItemBehavior.prototype.Td = function (a) {
-    return a.Ja.wg || !hasOpponentsInRoom(a, a.p.room) ? null : a;
+    return a.Ja.wg || !hasOpponentsInRoom(a, a.position.room) ? null : a;
   };
   LootScrollBehavior.prototype = new ExploreDungeonBehavior();
   LootScrollBehavior.prototype.Wa = function () {
@@ -740,7 +740,7 @@ export function initializeAiBehaviors() {
     return this.on;
   };
   LootScrollBehavior.prototype.Td = function (a) {
-    return a.Ja.Vs || !hasOpponentsInRoom(a, a.p.room) ? null : a;
+    return a.Ja.Vs || !hasOpponentsInRoom(a, a.position.room) ? null : a;
   };
   GuardRangedBehavior.prototype.Wa = function () {
     this.Vq.Wa();
@@ -774,20 +774,20 @@ export function initializeAiBehaviors() {
           this.Vi.mq = game.state.turnNumber;
           a.ld = this.Vi;
           a.Y = CAST_ACTION_TYPE;
-          clearMovementTarget(a.p);
-          var b = a.p.room;
+          clearMovementTarget(a.position);
+          var b = a.position.room;
           if (b && isAdventurerOrMinion(a)) {
             forcePartyDestination(b);
           }
         }
       } else {
-        assignVector(a.p.Qb, this.Fa.p.levelPosition);
+        assignVector(a.position.Qb, this.Fa.position.levelPosition);
         a.Y = 1;
       }
     }
   };
   TargetSpellBehavior.prototype.wd = function (a) {
-    if (!this.Vi || !isSpellReady(this.Vi) || !a.p.room) {
+    if (!this.Vi || !isSpellReady(this.Vi) || !a.position.room) {
       return 0;
     }
     if (!freeSpellsModifier.t) {
@@ -998,7 +998,7 @@ export function initializeAiBehaviors() {
         c = b.Cc,
         d = b.Bc,
         b = b.ed,
-        f = a.p;
+        f = a.position;
       if (d && d != f.Bc) {
         var g = findRouteToDoor(a, d);
         f.Ug = g;
@@ -1039,7 +1039,7 @@ export function initializeAiBehaviors() {
       return 0;
     }
     var b = getOpponents(a);
-    return 0 < b.length && a.p.room === b[0].p.room ? 0 : this.eo;
+    return 0 < b.length && a.position.room === b[0].position.room ? 0 : this.eo;
   };
   WaitBehavior.prototype.Ta = function () {
     return this.eo;
@@ -1057,7 +1057,7 @@ export function initializeAiBehaviors() {
     return this.Wm && isSpellReady(this.Wm);
   };
   LootChestBehavior.prototype.Jd = function (a) {
-    return hasOpponentsInRoom(a, a.p.room) ? 0 : hasPendingLoot() ? this.Ta() : 0;
+    return hasOpponentsInRoom(a, a.position.room) ? 0 : hasPendingLoot() ? this.Ta() : 0;
   };
   LootChestBehavior.prototype.Md = function () {
     return this.Wm;
@@ -1078,7 +1078,7 @@ export function initializeAiBehaviors() {
     return this.pm && isSpellReady(this.pm);
   };
   LootPotionBehavior.prototype.Jd = function (a) {
-    var b = a.p.room;
+    var b = a.position.room;
     if (!b || hasOpponentsInRoom(a, b)) {
       return 0;
     }
@@ -1101,14 +1101,14 @@ export function initializeAiBehaviors() {
         this.qd = null;
       } else if (this.qd.Zc == a) {
         a.rh = this.qd;
-        if (distanceToPoint(a.p.levelPosition, this.qd.Xo, this.qd.Yo) < this.Mi) {
+        if (distanceToPoint(a.position.levelPosition, this.qd.Xo, this.qd.Yo) < this.Mi) {
           a.Y = 5;
         } else {
-          setVector(a.p.Qb, this.qd.Xo, this.qd.Yo);
+          setVector(a.position.Qb, this.qd.Xo, this.qd.Yo);
           a.Y = 1;
         }
-        clearMovementTarget(a.p);
-        var b = a.p.room;
+        clearMovementTarget(a.position);
+        var b = a.position.room;
         if (b && isAdventurerOrMinion(a)) {
           forcePartyDestination(b);
         }
@@ -1116,7 +1116,7 @@ export function initializeAiBehaviors() {
     }
   };
   UseShopBehavior.prototype.wd = function (a) {
-    var b = a.p.room;
+    var b = a.position.room;
     if (!b || hasOpponentsInRoom(a, b)) {
       return 0;
     }
@@ -1127,10 +1127,10 @@ export function initializeAiBehaviors() {
     var b = game.goldDrops.pe,
       c,
       d,
-      f = a.p.levelPosition,
+      f = a.position.levelPosition,
       g = null,
       h,
-      l = a.p.room,
+      l = a.position.room,
       n = -1;
     if (l) {
       for (d = 0; d < b.length; d++) {
@@ -1164,14 +1164,14 @@ export function initializeAiBehaviors() {
         this.bd = null;
       } else if (this.bd.Zc == a) {
         a.Zh = this.bd;
-        if (distanceToPoint(a.p.levelPosition, this.bd.bq, this.bd.cq) < this.Mi) {
+        if (distanceToPoint(a.position.levelPosition, this.bd.bq, this.bd.cq) < this.Mi) {
           a.Y = 7;
         } else {
-          setVector(a.p.Qb, this.bd.bq, this.bd.cq);
+          setVector(a.position.Qb, this.bd.bq, this.bd.cq);
           a.Y = 1;
         }
-        clearMovementTarget(a.p);
-        var b = a.p.room;
+        clearMovementTarget(a.position);
+        var b = a.position.room;
         if (b && isAdventurerOrMinion(a)) {
           forcePartyDestination(b);
         }
@@ -1179,7 +1179,7 @@ export function initializeAiBehaviors() {
     }
   };
   EnterDungeonBehavior.prototype.wd = function (a) {
-    var b = a.p.room;
+    var b = a.position.room;
     if (!b || hasOpponentsInRoom(a, b)) {
       return 0;
     }
@@ -1190,10 +1190,10 @@ export function initializeAiBehaviors() {
     var b = game.scrollDrops.kf,
       c,
       d,
-      f = a.p.levelPosition,
+      f = a.position.levelPosition,
       g = null,
       h,
-      l = a.p.room,
+      l = a.position.room,
       n = -1;
     if (l) {
       for (d = 0; d < b.length; d++) {
@@ -1227,14 +1227,14 @@ export function initializeAiBehaviors() {
         this.ad = null;
       } else if (this.ad.Zc == a) {
         a.hk = this.ad;
-        if (distanceToPoint(a.p.levelPosition, this.ad.Qp, this.ad.Rp) < this.Mi) {
+        if (distanceToPoint(a.position.levelPosition, this.ad.Qp, this.ad.Rp) < this.Mi) {
           a.Y = 8;
         } else {
-          setVector(a.p.Qb, this.ad.Qp, this.ad.Rp);
+          setVector(a.position.Qb, this.ad.Qp, this.ad.Rp);
           a.Y = 1;
         }
-        clearMovementTarget(a.p);
-        var b = a.p.room;
+        clearMovementTarget(a.position);
+        var b = a.position.room;
         if (b && isAdventurerOrMinion(a)) {
           forcePartyDestination(b);
         }
@@ -1242,7 +1242,7 @@ export function initializeAiBehaviors() {
     }
   };
   EnterCastleBehavior.prototype.wd = function (a) {
-    var b = a.p.room;
+    var b = a.position.room;
     if (!b || hasOpponentsInRoom(a, b)) {
       return 0;
     }
@@ -1253,10 +1253,10 @@ export function initializeAiBehaviors() {
     var b = game.potionDrops.Hf,
       c,
       d,
-      f = a.p.levelPosition,
+      f = a.position.levelPosition,
       g = null,
       h,
-      l = a.p.room,
+      l = a.position.room,
       n = -1;
     if (l) {
       for (d = 0; d < b.length; d++) {
@@ -1290,14 +1290,14 @@ export function initializeAiBehaviors() {
         this.$c = null;
       } else if (this.$c.Zc == a) {
         a.bj = this.$c;
-        if (distanceToPoint(a.p.levelPosition, this.$c.mp, this.$c.np) < this.Mi) {
+        if (distanceToPoint(a.position.levelPosition, this.$c.mp, this.$c.np) < this.Mi) {
           a.Y = 6;
         } else {
-          setVector(a.p.Qb, this.$c.mp, this.$c.np);
+          setVector(a.position.Qb, this.$c.mp, this.$c.np);
           a.Y = 1;
         }
-        clearMovementTarget(a.p);
-        var b = a.p.room;
+        clearMovementTarget(a.position);
+        var b = a.position.room;
         if (b && isAdventurerOrMinion(a)) {
           forcePartyDestination(b);
         }
@@ -1305,7 +1305,7 @@ export function initializeAiBehaviors() {
     }
   };
   TravelWorldBehavior.prototype.wd = function (a) {
-    var b = a.p.room;
+    var b = a.position.room;
     if (!b || hasOpponentsInRoom(a, b)) {
       return 0;
     }
@@ -1316,10 +1316,10 @@ export function initializeAiBehaviors() {
     var b = game.itemDrops.yf,
       c,
       d,
-      f = a.p.levelPosition,
+      f = a.position.levelPosition,
       g = null,
       h,
-      l = a.p.room,
+      l = a.position.room,
       n = -1;
     if (l) {
       for (d = 0; d < b.length; d++) {
@@ -1350,21 +1350,21 @@ export function initializeAiBehaviors() {
   ChangeFloorBehavior.prototype.od = function (a) {
     if (this.lc && !this.lc.Kg) {
       a.hq(this.lc);
-      if (distanceToPoint(a.p.levelPosition, this.lc.zq, this.lc.Aq) < this.Mi) {
+      if (distanceToPoint(a.position.levelPosition, this.lc.zq, this.lc.Aq) < this.Mi) {
         a.Y = 12;
       } else {
-        setVector(a.p.Qb, this.lc.zq, this.lc.Aq);
+        setVector(a.position.Qb, this.lc.zq, this.lc.Aq);
         a.Y = 1;
       }
-      clearMovementTarget(a.p);
-      var b = a.p.room;
+      clearMovementTarget(a.position);
+      var b = a.position.room;
       if (b && isAdventurerOrMinion(a)) {
         forcePartyDestination(b);
       }
     }
   };
   ChangeFloorBehavior.prototype.wd = function (a) {
-    var b = a.p.room;
+    var b = a.position.room;
     if (!b) {
       return 0;
     }
@@ -1436,7 +1436,7 @@ export function initializeAiBehaviors() {
     if (!this.Sc || !isSpellReady(this.Sc)) {
       return false;
     }
-    var b = a.p.room;
+    var b = a.position.room;
     if (!b) {
       return false;
     }
@@ -1447,7 +1447,7 @@ export function initializeAiBehaviors() {
     var d,
       f = false;
     for (d = 0; d < c.length; d++) {
-      if (c[d].p.room === b) {
+      if (c[d].position.room === b) {
         f = true;
         break;
       }
@@ -1469,17 +1469,17 @@ export function initializeAiBehaviors() {
     if (0 === b.length) {
       return null;
     }
-    var c = a.p.room;
+    var c = a.position.room;
     if (!c) {
       return null;
     }
     var d,
-      f = a.p.levelPosition,
+      f = a.position.levelPosition,
       g = null,
       h,
       l = -1;
     for (d = 0; d < b.length; d++) {
-      if (a = b[d], a.p.room === c && (h = f.Ud(a.p.levelPosition), 0 > l || h < l)) {
+      if (a = b[d], a.position.room === c && (h = f.Ud(a.position.levelPosition), 0 > l || h < l)) {
         g = a;
         l = h;
       }
@@ -1489,16 +1489,16 @@ export function initializeAiBehaviors() {
   CooldownBehavior.prototype.Wa = function () {};
   CooldownBehavior.prototype.Oa = function () {};
   CooldownBehavior.prototype.od = function (a) {
-    choosePointNearTarget(a.p.Qb, a.summoner.p.levelPosition, a.p.room);
+    choosePointNearTarget(a.position.Qb, a.summoner.position.levelPosition, a.position.room);
     a.Y = 1;
-    clearMovementTarget(a.p);
+    clearMovementTarget(a.position);
   };
   CooldownBehavior.prototype.wd = function (a) {
     if (game.worldActive) {
       return 0;
     }
-    var b = a.p;
-    a = a.summoner.p;
+    var b = a.position;
+    a = a.summoner.position;
     return !b.room || !a.room || b.room !== a.room || b.levelPosition.ac(a.levelPosition) < this.Uw ? 0 : this.ka;
   };
   CooldownBehavior.prototype.Ta = function () {
@@ -1516,14 +1516,14 @@ export function initializeAiBehaviors() {
         markAttackTurn(a);
         a.Y = this.qk;
       } else {
-        choosePointNearTarget(a.p.Qb, this.Fa.p.levelPosition, a.p.room);
+        choosePointNearTarget(a.position.Qb, this.Fa.position.levelPosition, a.position.room);
         a.Y = 1;
       }
-      var b = a.p.room;
+      var b = a.position.room;
       if (b && isAdventurerOrMinion(a)) {
         forcePartyDestination(b);
       }
-      clearMovementTarget(a.p);
+      clearMovementTarget(a.position);
     }
   };
   SpecialAttackBehavior.prototype.wd = function (a) {
@@ -1531,8 +1531,8 @@ export function initializeAiBehaviors() {
       return 0;
     }
     var b = a.summoner;
-    a = a.p;
-    var c = b.p;
+    a = a.position;
+    var c = b.position;
     if (!a.room || !c.room || a.room !== c.room) {
       return 0;
     }
@@ -1540,7 +1540,7 @@ export function initializeAiBehaviors() {
     if (!this.Fa) {
       return 0;
     }
-    b = this.Fa.p.levelPosition;
+    b = this.Fa.position.levelPosition;
     if (c.levelPosition.ac(b) > this.Uw) {
       return 0;
     }
@@ -1553,7 +1553,7 @@ export function initializeAiBehaviors() {
   StunnedBehavior.prototype.Wa = function () {};
   StunnedBehavior.prototype.Oa = function () {};
   StunnedBehavior.prototype.od = function (a) {
-    var b = a.p;
+    var b = a.position;
     if (b.room) {
       var c = b.room,
         d = b.Qb;
@@ -1568,7 +1568,7 @@ export function initializeAiBehaviors() {
     if (game.worldActive) {
       return 0;
     }
-    var b = a.p;
+    var b = a.position;
     if (b.Ug && 0 < b.Ug.length || b.Bc || b.ed || b.Cc) {
       return 0;
     }

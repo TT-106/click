@@ -55,7 +55,7 @@ export function getVisibleTreasure() {
   if (!game.worldActive) {
     var a, b;
     for (a = 0; a < game.state.adventurers.length; a++) {
-      if (b = getRoomTreasure(game.treasure, game.state.adventurers[a].p.room)) {
+      if (b = getRoomTreasure(game.treasure, game.state.adventurers[a].position.room)) {
         return b;
       }
     }

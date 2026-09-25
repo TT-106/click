@@ -112,16 +112,16 @@ export function castScroll(a, b) {
     if (0 === d.length) {
       c = null;
     } else {
-      var f = c.p.room;
+      var f = c.position.room;
       if (f) {
         var g,
           h,
-          l = c.p.levelPosition,
+          l = c.position.levelPosition,
           n = null,
           p,
           s = -1;
         for (h = 0; h < d.length; h++) {
-          if (!(g = d[h], c === g || g.Va || g.p.room !== f || (p = g.Ja, p.wg || p.Kd || p.bi || -1 < a.eq.yl.indexOf(g) || (p = l.Ud(g.p.levelPosition), !(0 > s || p < s))))) {
+          if (!(g = d[h], c === g || g.Va || g.position.room !== f || (p = g.Ja, p.wg || p.Kd || p.bi || -1 < a.eq.yl.indexOf(g) || (p = l.Ud(g.position.levelPosition), !(0 > s || p < s))))) {
             n = g;
             s = p;
           }
@@ -146,8 +146,8 @@ export function castScroll(a, b) {
           d.yl.shift();
         }
       }
-      d = game.state.scrollCaster.p;
-      d.room = c.p.room;
+      d = game.state.scrollCaster.position;
+      d.room = c.position.room;
       game.state.scrollCaster.Cb(c);
       if (a.mB) {
         game.state.scrollCaster.ld = a.mB;

@@ -53,7 +53,7 @@ export function Character(a, b, c, d, f) {
   this.KD = d;
   this.equipment = b != MONSTER_TYPE ? new Equipment(this.Z, this.characterClass) : null;
   this.Sb = this.ee = null;
-  this.p = new CharacterPosition(WORLD_WALK_SPEED, DUNGEON_WALK_SPEED);
+  this.position = new CharacterPosition(WORLD_WALK_SPEED, DUNGEON_WALK_SPEED);
   this.Ja = new CharacterEffects(this);
   if (this.inventory = f) {
     this.inventory.Bw = this;
@@ -184,7 +184,7 @@ export function updateCharacter(a, b) {
   if (!a.Va && a.Y !== IDLE_ACTION) {
     if (1 === a.Y) {
       if (game.worldActive) {
-        var c = a.p;
+        var c = a.position;
         if (a === game.state.leader) {
           a: {
             assignVector(c.ra, c.Ul);
@@ -253,7 +253,7 @@ export function updateCharacter(a, b) {
           }
         }
       } else {
-        var p = a.p,
+        var p = a.position,
           s;
         s = isAdventurerOrMinion(a) ? b * p.Jw * walkingSpeedBonus.t * walkingSpeedModifier.t : p.Jw * b;
         if (null != p.Ug && 0 < p.Ug.length) {
@@ -267,11 +267,11 @@ export function updateCharacter(a, b) {
               a: {
                 var C,
                   v = getAllies(),
-                  D = v[0].p,
+                  D = v[0].position,
                   N = D.room,
                   I = D.cd;
                 for (C = 1; C < v.length; C++) {
-                  if (D = v[C].p, D.cd != I || D.room != N) {
+                  if (D = v[C].position, D.cd != I || D.room != N) {
                     A = false;
                     break a;
                   }
@@ -478,7 +478,7 @@ export function updateCharacter(a, b) {
                   Gb,
                   Da = X.ya,
                   ub = X.ca,
-                  mb = a.p.levelPosition,
+                  mb = a.position.levelPosition,
                   Ea = getFriendlyTargets(a);
                 for (Ca = 0; Ca < Ea.length; Ca++) {
                   qa = Ea[Ca];
@@ -487,7 +487,7 @@ export function updateCharacter(a, b) {
                   ta.Cb(qa);
                   ta.Ib = X;
                   ta.yd = true;
-                  eb = qa.p.levelPosition;
+                  eb = qa.position.levelPosition;
                   if (Da) {
                     Gb = new VisualEffect(Da, mb, eb, true, 1);
                     Gb.ud = a;
@@ -520,14 +520,14 @@ export function updateCharacter(a, b) {
                     vb = ha.ca,
                     Sb,
                     Ma,
-                    zb = a.p.levelPosition;
+                    zb = a.position.levelPosition;
                   for (Ua = 0; Ua < Ga && ja; Ua++) {
                     Va = new CombatAction();
                     Va.Ca = a;
                     Va.Cb(ja);
                     Va.Ib = ha;
                     Va.yd = true;
-                    mc = ja.p.levelPosition;
+                    mc = ja.position.levelPosition;
                     Sb = new VisualEffect(null, zb, mc, true, 2);
                     Sb.ud = a;
                     Va.Xb = Sb;
@@ -543,12 +543,12 @@ export function updateCharacter(a, b) {
                     if (0 === ob.length) {
                       bb = null;
                     } else {
-                      var pb = ja.p.room;
+                      var pb = ja.position.room;
                       if (pb) {
-                        for (var Ha = undefined, jb = undefined, Ab = ja.p.levelPosition, Bb = null, qb = null, wb = undefined, Ib = undefined, Ec = -1, jb = 0; jb < ob.length; jb++) {
+                        for (var Ha = undefined, jb = undefined, Ab = ja.position.levelPosition, Bb = null, qb = null, wb = undefined, Ib = undefined, Ec = -1, jb = 0; jb < ob.length; jb++) {
                           Ha = ob[jb];
-                          if (!(Ha === ja || Ha === za || Ha === nb || Ha === fb || Ha === cb || Ha.Va || Ha.p.room !== pb)) {
-                            wb = Ab.ac(Ha.p.levelPosition);
+                          if (!(Ha === ja || Ha === za || Ha === nb || Ha === fb || Ha === cb || Ha.Va || Ha.position.room !== pb)) {
+                            wb = Ab.ac(Ha.position.levelPosition);
                             if (wb <= ac && (0 > Ec || wb < Ec)) {
                               Ib = Ha.Ja;
                               if (Ib.wg || Ib.Kd || Ib.bi) {
@@ -586,9 +586,9 @@ export function updateCharacter(a, b) {
                     Tb,
                     qc = cc.ya,
                     Fc = cc.ca,
-                    Cb = a.p.levelPosition,
-                    kb = a.p.room,
-                    Ra = Qa.p.levelPosition,
+                    Cb = a.position.levelPosition,
+                    kb = a.position.room,
+                    Ra = Qa.position.levelPosition,
                     Ja,
                     Db;
                   if (kb) {
@@ -611,7 +611,7 @@ export function updateCharacter(a, b) {
                       Db.ew = kb;
                       Db.li = Ja;
                       sa.xb = Db;
-                      var gb = Qa.p,
+                      var gb = Qa.position,
                         rb = gb.room,
                         dc = game.level.Ai(gb.Ob()),
                         Ka = game.level.Bi(gb.Pb()),
@@ -651,8 +651,8 @@ export function updateCharacter(a, b) {
                   var Ya = new CombatAction();
                   Ya.Ca = a;
                   Ya.Cb(xb);
-                  var tc = xb.p.levelPosition,
-                    me = a.p.levelPosition;
+                  var tc = xb.position.levelPosition,
+                    me = a.position.levelPosition;
                   Ya.Ib = Na;
                   Ya.yd = true;
                   var ne = Na.ya;
@@ -667,13 +667,13 @@ export function updateCharacter(a, b) {
                     Ya.Rd = false;
                     Ya.Jc = oe;
                     var Y = new VisualEffect(Td, me, tc, false, TARGETED_EFFECT),
-                      nf = xb.p.room;
+                      nf = xb.position.room;
                     Y.ud = a;
                     Y.ew = nf;
                     Y.li = oe;
                     Ya.xb = Y;
                     var Nc = a.stats.ho + 1,
-                      gd = xb.p,
+                      gd = xb.position,
                       uc = gd.room,
                       U = game.level.Ai(gd.Ob()),
                       Z = game.level.Bi(gd.Pb()),
@@ -751,8 +751,8 @@ export function updateCharacter(a, b) {
                     Vb.Jc = 0;
                     Vb.Ib = ad;
                     Vb.yd = false;
-                    var Tc = Gc.p.levelPosition,
-                      hd = randomPointInRoom(Tc, Gc.p.room),
+                    var Tc = Gc.position.levelPosition,
+                      hd = randomPointInRoom(Tc, Gc.position.room),
                       id = ad.ya;
                     if (id) {
                       var jd = new VisualEffect(id, Tc, hd, true, 1);
@@ -780,12 +780,12 @@ export function updateCharacter(a, b) {
                   rl = Math.max(0, re - of),
                   cj = Math.min(rl, wd.length),
                   Ah = 0,
-                  dj = a.p.room,
+                  dj = a.position.room,
                   Bh;
                 if (!(0 >= cj)) {
                   var Me;
                   for (Me = 0; Me < wd.length && Ah < cj; Me++) {
-                    if (Bh = wd[Me], Bh.p.room === dj) {
+                    if (Bh = wd[Me], Bh.position.room === dj) {
                       var Ne = a,
                         Oe = Bh,
                         fg = Ne.ld,
@@ -796,8 +796,8 @@ export function updateCharacter(a, b) {
                       ld.Jc = 0;
                       ld.Ib = fg;
                       ld.yd = true;
-                      var pf = Ne.p.levelPosition,
-                        qf = Oe.p.levelPosition,
+                      var pf = Ne.position.levelPosition,
+                        qf = Oe.position.levelPosition,
                         rf = fg.ya;
                       if (rf) {
                         var sf = new VisualEffect(rf, pf, qf, true, 1);
@@ -828,8 +828,8 @@ export function updateCharacter(a, b) {
                 Md.Jc = 0;
                 Md.Ib = se;
                 Md.yd = false;
-                var tf = a.p.levelPosition,
-                  uf = randomPointInRoom(tf, a.p.room),
+                var tf = a.position.levelPosition,
+                  uf = randomPointInRoom(tf, a.position.room),
                   Dh = se.ya;
                 if (Dh) {
                   var ej = new VisualEffect(Dh, tf, uf, true, 1);
@@ -853,7 +853,7 @@ export function updateCharacter(a, b) {
               if (bd) {
                 bd.ut = true;
                 bd.chainCount = a.stats.vt + 1;
-                var Fh = a.p.levelPosition;
+                var Fh = a.position.levelPosition;
                 if (Fh) {
                   if (!bd.pl) {
                     bd.pl = new Vector2();
@@ -911,14 +911,14 @@ export function updateCharacter(a, b) {
                 if (0 === Kh.length) {
                   xd = null;
                 } else {
-                  var jg = xf.p.room;
+                  var jg = xf.position.room;
                   if (jg) {
                     var Vd,
                       Nd,
-                      tl = xf.p.levelPosition,
+                      tl = xf.position.levelPosition,
                       kg,
                       ue = [];
-                    for (Vd = 0; Vd < Kh.length && (Nd = Kh[Vd], Nd.Va || Nd.p.room !== jg || hasStatusEffect(Nd.Ja, te) || (Nd === xf ? ue.push(Nd) : (kg = tl.ac(Nd.p.levelPosition), kg <= sl && ue.push(Nd)), !(1E3 <= ue.length))); Vd++) {}
+                    for (Vd = 0; Vd < Kh.length && (Nd = Kh[Vd], Nd.Va || Nd.position.room !== jg || hasStatusEffect(Nd.Ja, te) || (Nd === xf ? ue.push(Nd) : (kg = tl.ac(Nd.position.levelPosition), kg <= sl && ue.push(Nd)), !(1E3 <= ue.length))); Vd++) {}
                     xd = ue;
                   } else {
                     xd = null;
@@ -956,7 +956,7 @@ export function updateCharacter(a, b) {
                     mg,
                     Af = vf.ya,
                     ng = vf.ca,
-                    Lh = a.p.levelPosition;
+                    Lh = a.position.levelPosition;
                   for (xe = 0; xe < Ud.length; xe++) {
                     if (Wd = Ud[xe], 4 !== Wd.characterType || 1 !== te && 0 !== te) {
                       yd = new CombatAction();
@@ -964,7 +964,7 @@ export function updateCharacter(a, b) {
                       yd.Cb(Wd);
                       yd.Ib = vf;
                       yd.yd = true;
-                      lg = Wd.p.levelPosition;
+                      lg = Wd.position.levelPosition;
                       if (Af) {
                         mg = new VisualEffect(Af, Lh, lg, true, 1);
                         mg.ud = a;

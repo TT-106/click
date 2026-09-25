@@ -98,7 +98,7 @@ export function separateDungeonCharacters(a) {
     h;
   for (c = 0; c < game.state.adventurers.length; c++) {
     b = game.state.adventurers[c];
-    b = b.p;
+    b = b.position;
     if (b === a) {
       break;
     }
@@ -117,7 +117,7 @@ export function separateDungeonCharacters(a) {
   }
   for (c = 0; c < g.length; c++) {
     b = g[c];
-    b = b.p;
+    b = b.position;
     if (b !== a) {
       h = a.levelPosition.ac(b.levelPosition);
       if (50 > h) {
@@ -135,7 +135,7 @@ export function separateDungeonCharacters(a) {
   }
   for (c = 0; c < f.length; c++) {
     b = f[c];
-    b = b.p;
+    b = b.position;
     if (b !== a) {
       h = a.levelPosition.ac(b.levelPosition);
       if (50 > h) {
@@ -166,7 +166,7 @@ export function separateWorldCharacters(a) {
     g;
   for (c = 0; c < f.length; c++) {
     b = f[c];
-    b = b.p;
+    b = b.position;
     if (b !== a) {
       g = a.Db.ac(b.Db);
       if (40 > g) {

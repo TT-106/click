@@ -113,11 +113,11 @@ export function findNextUnopenedDoor() {
     d,
     f,
     g = null,
-    h = a.p.levelPosition,
+    h = a.position.levelPosition,
     l = game.level.Pa,
     n = game.level.gd,
     p = 1E5;
-  if (b = a.p.cd) {
+  if (b = a.position.cd) {
     if (!b.af.Mb) {
       return b.af;
     }
@@ -125,7 +125,7 @@ export function findNextUnopenedDoor() {
       return b.Be;
     }
   }
-  if (d = a.p.room) {
+  if (d = a.position.room) {
     b = d.Nc;
     for (c = 0; c < b.length; c++) {
       d = b[c];
@@ -216,7 +216,7 @@ export function initializeCharactersParty() {
         f;
       for (f = 0; f < c.length; f++) {
         d = c[f];
-        b = d.p;
+        b = d.position;
         clearMovementTarget(b);
         b.cd = null;
         b.room = null;
@@ -343,7 +343,7 @@ export function initializeCharactersParty() {
     }
     if (!this.Wf) {
       var a = game.castles,
-        b = game.state.leader.p.Db,
+        b = game.state.leader.position.Db,
         c = null,
         d = 0,
         f,
@@ -384,7 +384,7 @@ export function initializeCharactersParty() {
         }
       } else if (0 < b) {
         a = game.shops;
-        b = game.state.leader.p.Db;
+        b = game.state.leader.position.Db;
         c = null;
         for (h = d = 0; h < a.ht.length; h++) {
           if (f = a.ht[h], g = distanceSquaredToPoint(b, game.world.dc(f.iq), game.world.ec(f.jq)), !c || g < d) {
@@ -407,7 +407,7 @@ export function initializeCharactersParty() {
         b = true;
       } else {
         c = game.castles;
-        d = game.state.leader.p.Db;
+        d = game.state.leader.position.Db;
         f = null;
         for (n = g = 0; n < c.Dh.length; n++) {
           if (h = c.Dh[n], l = distanceSquaredToPoint(d, game.world.dc(h.dm), game.world.ec(h.em)), !f || l < g) {
@@ -435,7 +435,7 @@ export function initializeCharactersParty() {
           }
         }
         if (!this.Wb) {
-          d = game.state.leader.p.Db;
+          d = game.state.leader.position.Db;
           f = null;
           g = 0;
           var n = this.Wf.Ab,
@@ -510,7 +510,7 @@ export function initializeCharactersParty() {
         }
       } else {
         if (a = this.hp) {
-          b = game.state.leader.p;
+          b = game.state.leader.position;
           a = this.Nm - game.world.bc(b.dc());
           b = this.Om - game.world.cc(b.ec());
           a = 8 > Math.sqrt(a * a + b * b);
@@ -534,9 +534,9 @@ export function initializeCharactersParty() {
         b = getAllies(),
         c;
       for (a = 0; a < b.length; a++) {
-        if (c = b[a], c.p.room && c.Ja.Kd) {
+        if (c = b[a], c.position.room && c.Ja.Kd) {
           this.Mp = true;
-          setPartyDestination(this, c.p.room);
+          setPartyDestination(this, c.position.room);
           break a;
         }
       }
@@ -550,7 +550,7 @@ export function initializeCharactersParty() {
         if (this.Cc) {
           if (a = this.Cc.Xi) {
             a = getMonsters();
-            a = 0 === a.length ? true : this.Cc !== a[0].p.room;
+            a = 0 === a.length ? true : this.Cc !== a[0].position.room;
           }
           if (a) {
             this.Cc = null;

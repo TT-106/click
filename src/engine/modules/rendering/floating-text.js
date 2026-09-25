@@ -26,7 +26,7 @@ export function showDamageText(a, b) {
 export function showFloatingText(a, b, c, d) {
   if (!game.processingOffline) {
     c = new FloatingText(c, d);
-    b = b.p;
+    b = b.position;
     if (game.worldActive) {
       d = b.dc();
       var f = b.ec();

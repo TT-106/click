@@ -123,8 +123,8 @@ export function drawWorldCharacters(a, b) {
   var c, d, f, g;
   for (g = b.length - 1; 0 <= g; g--) {
     c = b[g];
-    d = c.p.dc();
-    f = c.p.ec();
+    d = c.position.dc();
+    f = c.position.ec();
     c = c.v();
     a.se.dk(c, d, f, game.viewportHalfWidth + (d - game.world.he - (f - game.world.ie)), game.viewportHalfHeight + 0.5 * (d - game.world.he + (f - game.world.ie)), c.Ad.spriteSize, 0);
   }
@@ -139,8 +139,8 @@ export function drawDungeonCharacters(a, b) {
     n;
   for (n = b.length - 1; 0 <= n; n--) {
     c = b[n];
-    d = c.p.Ob();
-    f = c.p.Pb();
+    d = c.position.Ob();
+    f = c.position.Pb();
     g = projectDungeonX(d, f);
     h = projectDungeonY(d, f);
     l = c.Ja.wg;
@@ -156,8 +156,8 @@ export function drawCharacterEffects(a, b) {
         if (s = p[d], s.Pd && (s = s.hD)) {
           u = p[d].Od;
           if (!y) {
-            g = f.p.Ob();
-            h = f.p.Pb();
+            g = f.position.Ob();
+            h = f.position.Pb();
             l = projectDungeonX(g, h) + 10;
             n = projectDungeonY(g, h) + 10;
             y = true;
@@ -198,8 +198,8 @@ export function drawCharacterHighlights(a, b, c) {
   for (d = 0; d < b.length; d++) {
     l = b[d];
     if (!l.Va) {
-      f = l.p.Ob();
-      g = l.p.Pb();
+      f = l.position.Ob();
+      g = l.position.Pb();
       h = projectDungeonX(f, g);
       f = projectDungeonY(f, g);
       g = l.stats;
@@ -588,8 +588,8 @@ export function initializeRenderingScene() {
           Va;
         for (Va = 0; Va < bb.length; Va++) {
           za = bb[Va];
-          nb = za.p.Ob();
-          fb = za.p.Pb();
+          nb = za.position.Ob();
+          fb = za.position.Pb();
           cb = projectWorldX(nb, fb);
           Ua = projectWorldY(nb, fb);
           a.If(za.v(), cb, Ua);
@@ -605,8 +605,8 @@ export function initializeRenderingScene() {
           pb;
         for (ob = 0; ob < mc.length; ob++) {
           vb = mc[ob];
-          Sb = vb.p.Ob();
-          Ma = vb.p.Pb();
+          Sb = vb.position.Ob();
+          Ma = vb.position.Pb();
           zb = projectDungeonX(Sb, Ma);
           Hb = projectDungeonY(Sb, Ma);
           pb = vb.v();

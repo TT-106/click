@@ -210,7 +210,7 @@ export function generateDungeonLevel(a, b, c, d) {
     for (b = 0; b < c.length; b++) {
       var g = c[b],
         h = d;
-      a = g.p;
+      a = g.position;
       a.cd = null;
       a.room = h;
       g.Y = IDLE_ACTION;

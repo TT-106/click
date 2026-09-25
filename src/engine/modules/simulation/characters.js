@@ -55,11 +55,11 @@ export function spawnMinion(a, b, c) {
   d.ee = game.monsterSprites.v(a.d);
   var g = createBehaviorQueue(a.nb());
   d.behaviors = g;
-  g = d.p;
-  g.room = b.p.room;
-  g.cd = b.p.cd;
+  g = d.position;
+  g.room = b.position.room;
+  g.cd = b.position.cd;
   setVector(g.levelPosition, c.x, c.y);
-  var h = b.p.Db;
+  var h = b.position.Db;
   c = h.x + floorNumber(-10 + 20 * Math.random());
   h = h.y + floorNumber(-10 + 20 * Math.random());
   setVector(g.Db, c, h);
@@ -115,7 +115,7 @@ export function createCastleGuardian(a, b, c) {
       learnSpell(f, new Spell(a.Jm[b]));
     }
   }
-  b = f.p;
+  b = f.position;
   b.room = c;
   b.cd = null;
   var h = roomLeftPixels(c) + game.tileSize,
@@ -272,7 +272,7 @@ export function initializeSimulationCharacters() {
   };
   CharacterLifecycle.prototype.ol = function (a, b) {
     if (!b.Va) {
-      var c = b.p,
+      var c = b.position,
         d = b.stats.characterLevel,
         f = 1 === a.characterType ? a.summoner : a;
       if (isAdventurerOrMinion(f)) {

@@ -73,7 +73,7 @@ export function serializeCharacter(a) {
     damageReceived: g.damageReceived
   };
   var h;
-  h = a.p;
+  h = a.position;
   var l = h.room,
     n = h.cd;
   h = {

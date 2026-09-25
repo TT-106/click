@@ -231,7 +231,7 @@ export function initializeWorldDungeons() {
         d;
       for (a = 0; a < c.length; a++) {
         d = c[a];
-        b = d.p;
+        b = d.position;
         clearMovementTarget(b);
         b.cd = null;
         b.room = null;

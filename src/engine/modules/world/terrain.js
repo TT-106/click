@@ -395,7 +395,7 @@ export function placePartyInWorld() {
   for (b = 0; b < game.state.adventurers.length; b++) {
     var c = a.he + randomInt(30),
       d = a.ie + randomInt(30);
-    setVector(game.state.adventurers[b].p.Db, c, d);
+    setVector(game.state.adventurers[b].position.Db, c, d);
   }
   a.ty = true;
 }

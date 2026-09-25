@@ -20,7 +20,7 @@ export function hasOpponentsInRoom(a, b) {
   }
   var d;
   for (d = 0; d < c.length; d++) {
-    if (a !== c[d] && c[d].p.room === b) {
+    if (a !== c[d] && c[d].position.room === b) {
       return true;
     }
   }
@@ -31,18 +31,18 @@ export function findNearestOpponent(a) {
   if (0 === b.length) {
     return null;
   }
-  var c = a.p.room;
+  var c = a.position.room;
   if (!c) {
     return null;
   }
   var d,
     f,
-    g = a.p.levelPosition,
+    g = a.position.levelPosition,
     h = null,
     l,
     n = -1;
   for (f = 0; f < b.length; f++) {
-    if (!(d = b[f], a === d || d.Va || d.p.room != c || (l = d.Ja, l.wg || d.characterType === ADVENTURER_TYPE && l.Kd || (l = g.Ud(d.p.levelPosition), !(0 > n || l < n))))) {
+    if (!(d = b[f], a === d || d.Va || d.position.room != c || (l = d.Ja, l.wg || d.characterType === ADVENTURER_TYPE && l.Kd || (l = g.Ud(d.position.levelPosition), !(0 > n || l < n))))) {
       h = d;
       n = l;
     }
@@ -50,7 +50,7 @@ export function findNearestOpponent(a) {
   return h;
 }
 export function findNearestVisibleOpponent(a) {
-  var b = a.p.room;
+  var b = a.position.room;
   if (!b) {
     return null;
   }
@@ -60,12 +60,12 @@ export function findNearestVisibleOpponent(a) {
   }
   var d,
     f,
-    g = a.p.levelPosition,
+    g = a.position.levelPosition,
     h = null,
     l,
     n = -1;
   for (f = 0; f < c.length; f++) {
-    if (!(d = c[f], a === d || d.Va || d.p.room != b || (l = d.Ja, l.wg || l.Kd || l.bi || (l = g.Ud(d.p.levelPosition), !(0 > n || l < n))))) {
+    if (!(d = c[f], a === d || d.Va || d.position.room != b || (l = d.Ja, l.wg || l.Kd || l.bi || (l = g.Ud(d.position.levelPosition), !(0 > n || l < n))))) {
       h = d;
       n = l;
     }
@@ -82,16 +82,16 @@ export function findChainTarget(a) {
   if (0 === b.length) {
     b = null;
   } else {
-    var c = a.p.room;
+    var c = a.position.room;
     if (c) {
       var d,
         f,
-        g = a.p.levelPosition,
+        g = a.position.levelPosition,
         h = null,
         l,
         n = -1;
       for (f = 0; f < b.length; f++) {
-        if (!(d = b[f], a === d || d.Va || d.p.room != c || (l = d.Ja, l.wg || l.Kd || l.bi || (l = g.Ud(d.p.levelPosition), !(0 > n || l < n))))) {
+        if (!(d = b[f], a === d || d.Va || d.position.room != c || (l = d.Ja, l.wg || l.Kd || l.bi || (l = g.Ud(d.position.levelPosition), !(0 > n || l < n))))) {
           h = d;
           n = l;
         }
@@ -111,7 +111,7 @@ export function findChainTarget(a) {
   }
   for (b = d[randomInt(d.length)]; b === a && 6 > c;) {
     b = d[randomInt(d.length)];
-    if (!b.p.room) {
+    if (!b.position.room) {
       b = null;
     }
     c++;
@@ -120,7 +120,7 @@ export function findChainTarget(a) {
 }
 export function findNearbyOpponent(a) {
   var b = findNearestOpponent(a);
-  return !b || 100 < a.p.levelPosition.ac(b.p.levelPosition) ? null : b;
+  return !b || 100 < a.position.levelPosition.ac(b.position.levelPosition) ? null : b;
 }
 export function approachValue(a, b, c) {
   return Math.max(b, (a - b) * (1 - c / 1E3) + b);
@@ -144,7 +144,7 @@ export function findRouteToDoor(a, b) {
   if (!b) {
     return null;
   }
-  var d = a.p.room,
+  var d = a.position.room,
     f = [];
   if (d) {
     var g = d.Nc,
@@ -154,7 +154,7 @@ export function findRouteToDoor(a, b) {
         return d;
       }
     }
-  } else if (g = a.p.cd, (d = searchDoorRoute(c, b, g.af, f, false)) || (d = searchDoorRoute(c, b, g.Be, f, false))) {
+  } else if (g = a.position.cd, (d = searchDoorRoute(c, b, g.af, f, false)) || (d = searchDoorRoute(c, b, g.Be, f, false))) {
     return d;
   }
   return null;
@@ -164,7 +164,7 @@ export function findRouteToRoom(a, b) {
   if (!b) {
     return null;
   }
-  var d = a.p.room,
+  var d = a.position.room,
     f = [];
   if (d === b) {
     return null;
@@ -177,7 +177,7 @@ export function findRouteToRoom(a, b) {
         return d;
       }
     }
-  } else if (g = a.p.cd, (d = searchRoomRoute(c, b, g.af, f, false)) || (d = searchRoomRoute(c, b, g.Be, f, false))) {
+  } else if (g = a.position.cd, (d = searchRoomRoute(c, b, g.af, f, false)) || (d = searchRoomRoute(c, b, g.Be, f, false))) {
     return d;
   }
   return null;
@@ -266,8 +266,8 @@ export function respondToTaunt(a, b) {
   if (c && c.Ja.Gn) {
     return attackTauntingTarget(a, b), true;
   }
-  for (var d = getOpponents(b), f, g = b.p.levelPosition, h, l = null, n = -1, c = 0; c < d.length; c++) {
-    if (f = d[c], b !== f && (h = f.Ja, h.Gn && !h.Kd && (h = g.Ud(f.p.levelPosition), 0 > n || h < n))) {
+  for (var d = getOpponents(b), f, g = b.position.levelPosition, h, l = null, n = -1, c = 0; c < d.length; c++) {
+    if (f = d[c], b !== f && (h = f.Ja, h.Gn && !h.Kd && (h = g.Ud(f.position.levelPosition), 0 > n || h < n))) {
       l = f;
       n = h;
     }
@@ -275,8 +275,8 @@ export function respondToTaunt(a, b) {
   return (c = l) || (c = findNearbyOpponent(b)) ? (b.Cb(c), attackTauntingTarget(a, b), true) : false;
 }
 export function attackTauntingTarget(a, b) {
-  var c = b.Da.p,
-    d = b.p;
+  var c = b.Da.position,
+    d = b.position;
   if (c.room === d.room) {
     if (d.levelPosition.ac(c.levelPosition) <= a.bb) {
       if (!canAttack(b)) {
@@ -285,7 +285,7 @@ export function attackTauntingTarget(a, b) {
       markAttackTurn(b);
       b.Y = 2;
     } else {
-      choosePointNearTarget(d.Qb, c.levelPosition, b.p.room);
+      choosePointNearTarget(d.Qb, c.levelPosition, b.position.room);
       b.Y = 1;
     }
     clearMovementTarget(d);
@@ -423,12 +423,12 @@ export function initializeAiTargeting() {
   CAST_ACTION_TYPE = 4;
   AttackBehavior.prototype.Oa = function () {};
   AttackBehavior.prototype.dr = function (a) {
-    if (!respondToTaunt(this, a) && (a.p.dd || a.Y === IDLE_ACTION)) {
+    if (!respondToTaunt(this, a) && (a.position.dd || a.Y === IDLE_ACTION)) {
       var b = (this.Al.tileRow + 1) * game.tileSize,
         c = (this.Al.heightInTiles - 1) * game.tileSize;
-      setVector(a.p.Qb, (this.Al.tileColumn + 1) * game.tileSize + randomInt((this.Al.widthInTiles - 1) * game.tileSize), b + randomInt(c));
+      setVector(a.position.Qb, (this.Al.tileColumn + 1) * game.tileSize + randomInt((this.Al.widthInTiles - 1) * game.tileSize), b + randomInt(c));
       a.Y = 1;
-      a.p.dd = false;
+      a.position.dd = false;
     }
   };
 }
