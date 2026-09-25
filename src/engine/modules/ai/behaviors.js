@@ -234,10 +234,10 @@ export function initializeAiBehaviors() {
           if (b = c.iq, c = c.jq, d = game.world.hb(b, c)) {
             b = a.position;
             if (game.world.hb(game.world.bc(b.dc()), game.world.cc(b.ec())) === d) {
-              a.Y = 10;
+              a.actionType = 10;
             } else {
               setWorldDestination(b, d.bc(), d.cc());
-              a.Y = 1;
+              a.actionType = 1;
             }
             return;
           }
@@ -245,27 +245,27 @@ export function initializeAiBehaviors() {
           if (b = d.dm, c = d.em, d = game.world.hb(b, c)) {
             b = a.position;
             if (game.world.hb(game.world.bc(b.dc()), game.world.cc(b.ec())) === d) {
-              a.Y = 11;
+              a.actionType = 11;
             } else {
               setWorldDestination(b, d.bc(), d.cc());
-              a.Y = 1;
+              a.actionType = 1;
             }
             return;
           }
         } else if (b = f.bc(), c = f.cc(), d = game.world.hb(b, c)) {
           b = a.position;
           if (game.world.hb(game.world.bc(b.dc()), game.world.cc(b.ec())) === d) {
-            a.Y = 9;
+            a.actionType = 9;
           } else {
             setWorldDestination(b, d.bc(), d.cc());
-            a.Y = 1;
+            a.actionType = 1;
           }
           return;
         }
         d = a.position;
-        if (d.dd || a.Y === IDLE_ACTION) {
+        if (d.dd || a.actionType === IDLE_ACTION) {
           setWorldDestination(d, b, c);
-          a.Y = 1;
+          a.actionType = 1;
           d.dd = false;
         }
       } else {
@@ -273,14 +273,14 @@ export function initializeAiBehaviors() {
         c = b.indexOf(a);
         b = 1 === a.characterType ? a.summoner : 0 > c ? game.state.leader : b[c - 1];
         setWorldDestination(a.position, game.world.bc(b.position.dc()), game.world.cc(b.position.ec()));
-        a.Y = 1;
+        a.actionType = 1;
       }
     } else {
-      a.Y = IDLE_ACTION;
+      a.actionType = IDLE_ACTION;
     }
   };
   BehaviorQueue.prototype.nu = function (a) {
-    a.Y = IDLE_ACTION;
+    a.actionType = IDLE_ACTION;
     a.rh = null;
     a.Da = null;
     a.bj = null;
@@ -317,7 +317,7 @@ export function initializeAiBehaviors() {
         setVector(b.Qb, roomLeftPixels(c) + game.tileSize + randomInt((c.widthInTiles - 1) * game.tileSize), d + randomInt(f));
         b.dd = false;
       }
-      a.Y = 1;
+      a.actionType = 1;
     }
   };
   IdleBehavior.prototype.wd = function (a) {
@@ -342,11 +342,11 @@ export function initializeAiBehaviors() {
         markAttackTurn(a);
         this.un.mq = game.state.turnNumber;
         a.ld = this.un;
-        a.Y = CAST_ACTION_TYPE;
+        a.actionType = CAST_ACTION_TYPE;
         this.Kp(a);
       } else {
         assignVector(b.Qb, this.Da.position.levelPosition);
-        a.Y = 1;
+        a.actionType = 1;
       }
       clearMovementTarget(b);
       if ((b = a.position.room) && isAdventurerOrMinion(a)) {
@@ -400,7 +400,7 @@ export function initializeAiBehaviors() {
       if (b && isAdventurerOrMinion(a)) {
         forcePartyDestination(b);
       }
-      a.Y = 1;
+      a.actionType = 1;
       a.position.dd = false;
       if (0 === game.state.turnNumber % 2) {
         showFloatingText(game.floatingText, a, "快逃!", "yellow");
@@ -469,7 +469,7 @@ export function initializeAiBehaviors() {
       if (b && isAdventurerOrMinion(a)) {
         forcePartyDestination(b);
       }
-      a.Y = 1;
+      a.actionType = 1;
       a.position.dd = false;
     }
   };
@@ -548,10 +548,10 @@ export function initializeAiBehaviors() {
           return;
         }
         markAttackTurn(a);
-        a.Y = this.qk;
+        a.actionType = this.qk;
       } else {
         choosePointNearTarget(a.position.Qb, this.Fa.position.levelPosition, a.position.room);
-        a.Y = 1;
+        a.actionType = 1;
       }
       var b = a.position.room;
       if (b && isAdventurerOrMinion(a)) {
@@ -641,10 +641,10 @@ export function initializeAiBehaviors() {
           return;
         }
         markAttackTurn(a);
-        a.Y = this.qk;
+        a.actionType = this.qk;
       } else {
         choosePointNearTarget(a.position.Qb, this.Fa.position.levelPosition, a.position.room);
-        a.Y = 1;
+        a.actionType = 1;
       }
       var b = a.position.room;
       if (b && isAdventurerOrMinion(a)) {
@@ -774,7 +774,7 @@ export function initializeAiBehaviors() {
           markAttackTurn(a);
           this.Vi.mq = game.state.turnNumber;
           a.ld = this.Vi;
-          a.Y = CAST_ACTION_TYPE;
+          a.actionType = CAST_ACTION_TYPE;
           clearMovementTarget(a.position);
           var b = a.position.room;
           if (b && isAdventurerOrMinion(a)) {
@@ -783,7 +783,7 @@ export function initializeAiBehaviors() {
         }
       } else {
         assignVector(a.position.Qb, this.Fa.position.levelPosition);
-        a.Y = 1;
+        a.actionType = 1;
       }
     }
   };
@@ -1022,14 +1022,14 @@ export function initializeAiBehaviors() {
       f.rB(b);
       if (d) {
         setVector(f.Qb, d.me, d.ne);
-        a.Y = 1;
+        a.actionType = 1;
       } else {
         if (b) {
           setVector(f.Qb, b.tq, b.uq);
-          a.Y = 1;
+          a.actionType = 1;
         } else {
           if (c) {
-            a.Y = 1;
+            a.actionType = 1;
           }
         }
       }
@@ -1103,10 +1103,10 @@ export function initializeAiBehaviors() {
       } else if (this.qd.Zc == a) {
         a.rh = this.qd;
         if (distanceToPoint(a.position.levelPosition, this.qd.Xo, this.qd.Yo) < this.Mi) {
-          a.Y = 5;
+          a.actionType = 5;
         } else {
           setVector(a.position.Qb, this.qd.Xo, this.qd.Yo);
-          a.Y = 1;
+          a.actionType = 1;
         }
         clearMovementTarget(a.position);
         var b = a.position.room;
@@ -1166,10 +1166,10 @@ export function initializeAiBehaviors() {
       } else if (this.bd.Zc == a) {
         a.Zh = this.bd;
         if (distanceToPoint(a.position.levelPosition, this.bd.bq, this.bd.cq) < this.Mi) {
-          a.Y = 7;
+          a.actionType = 7;
         } else {
           setVector(a.position.Qb, this.bd.bq, this.bd.cq);
-          a.Y = 1;
+          a.actionType = 1;
         }
         clearMovementTarget(a.position);
         var b = a.position.room;
@@ -1229,10 +1229,10 @@ export function initializeAiBehaviors() {
       } else if (this.ad.Zc == a) {
         a.hk = this.ad;
         if (distanceToPoint(a.position.levelPosition, this.ad.Qp, this.ad.Rp) < this.Mi) {
-          a.Y = 8;
+          a.actionType = 8;
         } else {
           setVector(a.position.Qb, this.ad.Qp, this.ad.Rp);
-          a.Y = 1;
+          a.actionType = 1;
         }
         clearMovementTarget(a.position);
         var b = a.position.room;
@@ -1292,10 +1292,10 @@ export function initializeAiBehaviors() {
       } else if (this.$c.Zc == a) {
         a.bj = this.$c;
         if (distanceToPoint(a.position.levelPosition, this.$c.mp, this.$c.np) < this.Mi) {
-          a.Y = 6;
+          a.actionType = 6;
         } else {
           setVector(a.position.Qb, this.$c.mp, this.$c.np);
-          a.Y = 1;
+          a.actionType = 1;
         }
         clearMovementTarget(a.position);
         var b = a.position.room;
@@ -1352,10 +1352,10 @@ export function initializeAiBehaviors() {
     if (this.lc && !this.lc.Kg) {
       a.hq(this.lc);
       if (distanceToPoint(a.position.levelPosition, this.lc.zq, this.lc.Aq) < this.Mi) {
-        a.Y = 12;
+        a.actionType = 12;
       } else {
         setVector(a.position.Qb, this.lc.zq, this.lc.Aq);
-        a.Y = 1;
+        a.actionType = 1;
       }
       clearMovementTarget(a.position);
       var b = a.position.room;
@@ -1491,7 +1491,7 @@ export function initializeAiBehaviors() {
   CooldownBehavior.prototype.Oa = function () {};
   CooldownBehavior.prototype.od = function (a) {
     choosePointNearTarget(a.position.Qb, a.summoner.position.levelPosition, a.position.room);
-    a.Y = 1;
+    a.actionType = 1;
     clearMovementTarget(a.position);
   };
   CooldownBehavior.prototype.wd = function (a) {
@@ -1515,10 +1515,10 @@ export function initializeAiBehaviors() {
           return;
         }
         markAttackTurn(a);
-        a.Y = this.qk;
+        a.actionType = this.qk;
       } else {
         choosePointNearTarget(a.position.Qb, this.Fa.position.levelPosition, a.position.room);
-        a.Y = 1;
+        a.actionType = 1;
       }
       var b = a.position.room;
       if (b && isAdventurerOrMinion(a)) {
@@ -1562,7 +1562,7 @@ export function initializeAiBehaviors() {
       clampPointToRoom(c, d, game.tileSize + 1);
       b.dd = false;
       b.dd = false;
-      a.Y = 1;
+      a.actionType = 1;
     }
   };
   StunnedBehavior.prototype.wd = function (a) {

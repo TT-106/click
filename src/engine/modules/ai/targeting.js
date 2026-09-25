@@ -284,10 +284,10 @@ export function attackTauntingTarget(a, b) {
         return;
       }
       markAttackTurn(b);
-      b.Y = 2;
+      b.actionType = 2;
     } else {
       choosePointNearTarget(d.Qb, c.levelPosition, b.position.room);
-      b.Y = 1;
+      b.actionType = 1;
     }
     clearMovementTarget(d);
   }
@@ -424,11 +424,11 @@ export function initializeAiTargeting() {
   CAST_ACTION_TYPE = 4;
   AttackBehavior.prototype.Oa = function () {};
   AttackBehavior.prototype.dr = function (a) {
-    if (!respondToTaunt(this, a) && (a.position.dd || a.Y === IDLE_ACTION)) {
+    if (!respondToTaunt(this, a) && (a.position.dd || a.actionType === IDLE_ACTION)) {
       var b = (this.Al.tileRow + 1) * game.tileSize,
         c = (this.Al.heightInTiles - 1) * game.tileSize;
       setVector(a.position.Qb, (this.Al.tileColumn + 1) * game.tileSize + randomInt((this.Al.widthInTiles - 1) * game.tileSize), b + randomInt(c));
-      a.Y = 1;
+      a.actionType = 1;
       a.position.dd = false;
     }
   };

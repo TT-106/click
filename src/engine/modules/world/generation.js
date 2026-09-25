@@ -214,7 +214,7 @@ export function generateDungeonLevel(a, b, c, d) {
       a = g.position;
       a.cd = null;
       a.room = h;
-      g.Y = IDLE_ACTION;
+      g.actionType = IDLE_ACTION;
       clearMovementTarget(a);
       g = h.stairs;
       setVector(a.levelPosition, g.tq, g.uq);

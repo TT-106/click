@@ -152,9 +152,9 @@ export function castScroll(a, b) {
       game.state.scrollCaster.Cb(c);
       if (a.mB) {
         game.state.scrollCaster.ld = a.mB;
-        game.state.scrollCaster.Y = CAST_ACTION_TYPE;
+        game.state.scrollCaster.actionType = CAST_ACTION_TYPE;
       } else {
-        game.state.scrollCaster.Y = MELEE_ACTION_TYPE;
+        game.state.scrollCaster.actionType = MELEE_ACTION_TYPE;
       }
       c = new VisualEffect("Red Damage", d.levelPosition, d.levelPosition, false, 1);
       addVisualEffect(game.effects, c);

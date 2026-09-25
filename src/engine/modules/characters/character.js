@@ -59,7 +59,7 @@ export function Character(a, b, c, d, f) {
   if (this.inventory = f) {
     this.inventory.Bw = this;
   }
-  this.Y = IDLE_ACTION;
+  this.actionType = IDLE_ACTION;
   this.Va = false;
   this.ld = this.Ue = this.bj = this.hk = this.Zh = this.rh = this.Da = this.behaviors = null;
   this.stats = new CharacterStats(this);
@@ -182,8 +182,8 @@ export function equipItem(a, b) {
   }
 }
 export function updateCharacter(a, b) {
-  if (!a.Va && a.Y !== IDLE_ACTION) {
-    if (1 === a.Y) {
+  if (!a.Va && a.actionType !== IDLE_ACTION) {
+    if (1 === a.actionType) {
       if (game.worldActive) {
         var c = a.position;
         if (a === game.state.leader) {
@@ -436,7 +436,7 @@ export function updateCharacter(a, b) {
         }
       }
     } else {
-      if (2 === a.Y) {
+      if (2 === a.actionType) {
         if (a.Da && !a.Da.Va) {
           if (0 < a.stats.extraAttackCount) {
             performMultiAttack(a, false);
@@ -450,7 +450,7 @@ export function updateCharacter(a, b) {
             game.state.aa.as();
           }
         }
-      } else if (a.Y === MELEE_ACTION_TYPE) {
+      } else if (a.actionType === MELEE_ACTION_TYPE) {
         if (a.Da && !a.Da.Va) {
           if (0 < a.stats.extraAttackCount) {
             performMultiAttack(a, true);
@@ -464,7 +464,7 @@ export function updateCharacter(a, b) {
             game.state.aa.ds();
           }
         }
-      } else if (a.Y === CAST_ACTION_TYPE) {
+      } else if (a.actionType === CAST_ACTION_TYPE) {
         if (a.ld) {
           var pa = a.ld.spellCategoryId,
             T = a.ld.statusEffectTypeId;
@@ -991,7 +991,7 @@ export function updateCharacter(a, b) {
             game.state.aa.gs();
           }
         }
-      } else if (5 === a.Y) {
+      } else if (5 === a.actionType) {
         if (a.rh && !a.rh.gc) {
           var Pe = a.rh.Xl,
             gj = game.floatingText;
@@ -1005,7 +1005,7 @@ export function updateCharacter(a, b) {
           a.rh = null;
           awardAdventurePoints(9);
         }
-      } else if (7 === a.Y) {
+      } else if (7 === a.actionType) {
         if (a.Zh && !a.Zh.gc) {
           showFloatingText(game.floatingText, a, "卷轴!", "white");
           addScrollCharge(a.Zh.vf());
@@ -1014,7 +1014,7 @@ export function updateCharacter(a, b) {
           a.Zh = null;
           awardAdventurePoints(10);
         }
-      } else if (8 === a.Y) {
+      } else if (8 === a.actionType) {
         if (a.hk && !a.hk.gc) {
           showFloatingText(game.floatingText, a, "药剂!", "white");
           a.hk.oh(true);
@@ -1023,7 +1023,7 @@ export function updateCharacter(a, b) {
           a.Zh = null;
           awardAdventurePoints(11);
         }
-      } else if (6 === a.Y) {
+      } else if (6 === a.actionType) {
         if (a.bj && !a.bj.gc) {
           a.bj.oh(true);
           removeItemDrop(a.bj);
@@ -1049,7 +1049,7 @@ export function updateCharacter(a, b) {
           }
           a.bj = null;
         }
-      } else if (12 === a.Y) {
+      } else if (12 === a.actionType) {
         if (a.Ue && !a.Ue.Kg) {
           var Xd = a.Ue,
             Oc,
@@ -1140,7 +1140,7 @@ export function updateCharacter(a, b) {
           recordGameEvent("Treasure Chest", "Looted");
           a.Ue = null;
         }
-      } else if (9 === a.Y) {
+      } else if (9 === a.actionType) {
         if (game.state.party.Wb) {
           var Ef = game.state.party;
           if (Ef.Wb && !Ef.Wb.isFarm) {
@@ -1163,7 +1163,7 @@ export function updateCharacter(a, b) {
             }
           }
         }
-      } else if (11 === a.Y) {
+      } else if (11 === a.actionType) {
         if (game.state.party.ge) {
           var Se = game.state.party;
           if (Se.ge) {
@@ -1182,7 +1182,7 @@ export function updateCharacter(a, b) {
             }
           }
         }
-      } else if (10 === a.Y && game.state.party.Lf) {
+      } else if (10 === a.actionType && game.state.party.Lf) {
         var Rp = game.state.party;
         if (Rp.Lf) {
           var jj;
@@ -1210,7 +1210,7 @@ export function updateCharacter(a, b) {
           Rp.Lf = null;
         }
       }
-      a.Y = IDLE_ACTION;
+      a.actionType = IDLE_ACTION;
     }
   }
 }

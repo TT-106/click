@@ -161,6 +161,17 @@ try {
           const tag = `${scenario.name}-${previous[0].turnNumber}`;
           await fs.writeFile(`output/scenarios/${tag}-original.json`, JSON.stringify(states[0], null, 2));
           await fs.writeFile(`output/scenarios/${tag}-refactored.json`, JSON.stringify(states[1], null, 2));
+          // 全保真序列化复核（含 -0/NaN/undefined）：若字符串相等，则是序列化盲区差异，打印首处分叉
+          const s = await Promise.all(pages.map(p => p.page.evaluate(() => JSON.stringify(window.harness.snapshot(), (k, v) => {
+            if (typeof v === 'number') { if (Number.isNaN(v)) return '⟂NaN'; if (Object.is(v, -0)) return '⟂-0'; }
+            return v === undefined ? '⟂undef' : v;
+          }))));
+          if (s[0] === s[1]) {
+            console.error(`  [诊断] 全保真序列化完全一致 —— playwright 反序列化层差异（对象原型/键顺序）`);
+          } else {
+            let i = 0; while (i < s[0].length && s[0][i] === s[1][i]) i++;
+            console.error(`  [诊断] 首处分叉 @${i}\n  ORIG: ${s[0].slice(Math.max(0, i - 100), i + 60)}\n  REF : ${s[1].slice(Math.max(0, i - 100), i + 60)}`);
+          }
           throw error;
         }
         // 场景有效性断言：对每一端独立验证"场景确实产生了预期效果"

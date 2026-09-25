@@ -221,7 +221,7 @@ export function initializeCharactersParty() {
         clearMovementTarget(b);
         b.cd = null;
         b.room = null;
-        d.Y = IDLE_ACTION;
+        d.actionType = IDLE_ACTION;
       }
       clearItemDrops();
       a.ye = false;

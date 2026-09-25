@@ -792,7 +792,7 @@ export function updateCharacterBehaviors(a) {
     c = a[b];
     if (!c.Va) {
       if (c.Ja.Kd) {
-        c.Y = IDLE_ACTION;
+        c.actionType = IDLE_ACTION;
       } else {
         c.dr();
       }
