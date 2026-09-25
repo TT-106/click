@@ -5,11 +5,18 @@
 ## U1 — `Da` 字段三路拆分引发行为分叉（重命名被回退）
 
 - 状态：**重命名已回退**，运行时字段仍是 `.Da`。
-- 现象：按第四轮取证（Character→combatTarget、CombatAction→targetCharacter、Explore 系 Behavior→selectedTarget）落地后，6 个差分场景（potions×2/scrolls/gold/veteran/late-horizon——全部是**存档变异类**）出现 levelCenter/levelSeed±1/currentLevelIndex 漂移；基线与 long-run-9000 不受影响。逐行复核未发现明显错分类（behaviors.js:442 已做 combatTarget 例外）。
-- 已排除：`.Ja/.ka/.Oa/.Fa/.Ca/.ra/.Y` 单独或组合落地均 12/12 通过（每个字母独立回归）。
-- 怀疑方向：① dossiers 的所有者分类在某个文件有遗漏（如 actions.js 中某 `.Da` 实为 Character）；② 存在 `X.Da` 的**链式/计算访问**未被静态 grep 覆盖；③ 某处对 `.Da` 的 `+`/字符串拼接依赖了 undefined 语义。
-- 下一步：用 harness 的 RNG 栈记录器（`window.__rngLogFrom/To`，tests/engine-harness.js）在分叉回合（3926 附近的多回合窗口）逐调用对比两端调用点；或对 behaviors.js/actions.js 的每个 `.Da` 做运行时类型断言（`instanceof Character/CombatAction`）验证所有者分类。
-- 关联提交：2588e9a 之后的波次 4b-1 系列提交。
+- 现象：按第四轮取证（Character→combatTarget、CombatAction→targetCharacter、Explore 系 Behavior→selectedTarget）落地后，6 个差分场景（potions×2/scrolls/gold/veteran/late-horizon——全部是**存档变异类**）出现 levelCenter/levelSeed±1/currentLevelIndex 漂移；基线与 long-run-9000 不受影响。
+- **本轮新增实证**（RNG 计数器 + 栈记录器）：
+  1. 推进期 RNG delta 全程 0/0（600 回合逐 50 回合步进）——分叉是**非随机决策**，不是随机流错位。
+  2. 载入期 RNG 消耗两端不同（restore 时 chooseScrollCaster→initializeCharacterSkills 的武器生成），但 harness 在载入后重置种子，不影响载入后状态（parity(0) 通过）。
+  3. `createSpellAction(a)`/`createChainAction(a)` 的入参 `a` 是**施法者角色**（character.js:853/875/884 调用），其内部 `a.Da` = **combatTarget**——actions.js:494/616/682 是 Character 所有，dossier 误标为 CombatAction.targetCharacter。
+  4. `BehaviorQueue.prototype.nu(a)`（behaviors.js:285）的 `a` 是**角色**（清 actionType/rh/ld 等角色字段），`a.Da = null` = 清 combatTarget——dossier 同样误标。
+  5. 已修正 3/442/494/616/682/285 全部已知误标后**仍分叉**——说明还有未发现的读写点或语义分叉（`hasOpponentsInRoom`/442 语义链最可疑：FollowLeaderBehavior.wd 的"谁在打我"判定直接影响移动决策，而 levelCenter 恰是位移差异）。
+- 已排除：`.Ja/.ka/.Oa/.Fa/.Ca/.ra/.Y` 单独或组合落地均 12/12 通过。
+- 下一步（按序）：
+  1. 在 Da 拆分状态下，对每个 `.combatTarget`/`.targetCharacter` 读写点加运行时类型断言（`instanceof Character` / `instanceof CombatAction`），跑 600 回合抓第一个断言失败点——直接定位错分类行。
+  2. 或改用**运行时观测**：差分两端同时 dump `FollowLeaderBehavior.wd` 的入参/返回（分叉首现的移动决策），二分到具体角色。
+- 经验教训（已入 facts#20 扩展）：**重命名跨文件字段时，"读点全集"必须包含工厂函数/工具函数内按多态入参的访问**；Babel 静态 grep 对 `a.Da`（a 的类型随调用方变化）天然失真，应配运行时类型断言。
 
 ## U2 — 外部自动化脚本（c2c.user.js）DOM 契约未实测
 
