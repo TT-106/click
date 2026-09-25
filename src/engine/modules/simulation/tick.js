@@ -278,7 +278,7 @@ export function advanceSimulation(a) {
     za,
     nb = false;
   for (ha = 0; ha < Fa.kj.length; ha++) {
-    if (ja = Fa.kj[ha], Ga = ja.Ca, (za = ja.xb) && za.Io === TARGETED_EFFECT) {
+    if (ja = Fa.kj[ha], Ga = ja.attacker, (za = ja.xb) && za.Io === TARGETED_EFFECT) {
       var fb;
       a: {
         var cb = ja,
@@ -294,7 +294,7 @@ export function advanceSimulation(a) {
               var vb = cb,
                 Sb = game.upgradeRegistry,
                 Ma = vb.Da,
-                zb = vb.Ca,
+                zb = vb.attacker,
                 Hb = floorNumber((zb.stats.ho + 1) * game.tileSize),
                 ac = findTargetsInRange(zb, Ma, 200, Hb);
               if (ac && 0 !== ac.length) {
@@ -325,7 +325,7 @@ export function advanceSimulation(a) {
                     applySeparationForce(Ab, Ha, jb, Hb);
                   } else {
                     Wa = new CombatAction();
-                    Wa.Ca = zb;
+                    Wa.attacker = zb;
                     Wa.Cb(qb);
                     Wa.yd = false;
                     Wa.Ib = Ib;
@@ -341,7 +341,7 @@ export function advanceSimulation(a) {
                     nc = qb,
                     sa = nc.position.levelPosition,
                     Tb = new CombatAction();
-                  Tb.Ca = vb.Ca;
+                  Tb.attacker = vb.attacker;
                   Tb.Cb(nc);
                   Tb.yd = false;
                   Tb.Ib = Qa.Wq;
@@ -385,7 +385,7 @@ export function advanceSimulation(a) {
         var Ja = kb.Ib;
         if (Ja && 12 === Ja.spellCategoryId) {
           var Db = Ra.wm;
-          setVector(kb.Ca.position.levelPosition, Db.x, Db.y);
+          setVector(kb.attacker.position.levelPosition, Db.x, Db.y);
         }
       }
       if ((!Ra || Ra.Pk || Ra.bg) && advanceCombatAction(Cb, kb)) {

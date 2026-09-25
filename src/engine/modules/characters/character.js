@@ -484,7 +484,7 @@ export function updateCharacter(a, b) {
                 for (Ca = 0; Ca < Ea.length; Ca++) {
                   qa = Ea[Ca];
                   ta = new CombatAction();
-                  ta.Ca = a;
+                  ta.attacker = a;
                   ta.Cb(qa);
                   ta.Ib = X;
                   ta.yd = true;
@@ -524,7 +524,7 @@ export function updateCharacter(a, b) {
                     zb = a.position.levelPosition;
                   for (Ua = 0; Ua < Ga && ja; Ua++) {
                     Va = new CombatAction();
-                    Va.Ca = a;
+                    Va.attacker = a;
                     Va.Cb(ja);
                     Va.Ib = ha;
                     Va.yd = true;
@@ -595,7 +595,7 @@ export function updateCharacter(a, b) {
                   if (kb) {
                     if (Fc) {
                       sa = new CombatAction();
-                      sa.Ca = a;
+                      sa.attacker = a;
                       sa.Cb(Qa);
                       sa.Ib = cc;
                       sa.yd = true;
@@ -650,7 +650,7 @@ export function updateCharacter(a, b) {
                 var Na = a.ld;
                 if (Na) {
                   var Ya = new CombatAction();
-                  Ya.Ca = a;
+                  Ya.attacker = a;
                   Ya.Cb(xb);
                   var tc = xb.position.levelPosition,
                     me = a.position.levelPosition;
@@ -746,7 +746,7 @@ export function updateCharacter(a, b) {
                     var Gc = a,
                       ad = Gc.ld,
                       Vb = new CombatAction();
-                    Vb.Ca = Gc;
+                    Vb.attacker = Gc;
                     Vb.Cb(Gc);
                     Vb.Rd = false;
                     Vb.Jc = 0;
@@ -791,7 +791,7 @@ export function updateCharacter(a, b) {
                         Oe = Bh,
                         fg = Ne.ld,
                         ld = new CombatAction();
-                      ld.Ca = Ne;
+                      ld.attacker = Ne;
                       ld.Cb(Oe);
                       ld.Rd = false;
                       ld.Jc = 0;
@@ -823,7 +823,7 @@ export function updateCharacter(a, b) {
               var se = a.ld;
               if (se) {
                 var Md = new CombatAction();
-                Md.Ca = a;
+                Md.attacker = a;
                 Md.Cb(a);
                 Md.Rd = false;
                 Md.Jc = 0;
@@ -961,7 +961,7 @@ export function updateCharacter(a, b) {
                   for (xe = 0; xe < Ud.length; xe++) {
                     if (Wd = Ud[xe], 4 !== Wd.characterType || 1 !== te && 0 !== te) {
                       yd = new CombatAction();
-                      yd.Ca = a;
+                      yd.attacker = a;
                       yd.Cb(Wd);
                       yd.Ib = vf;
                       yd.yd = true;
