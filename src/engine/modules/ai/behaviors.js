@@ -293,7 +293,7 @@ export function initializeAiBehaviors() {
       d,
       f = null,
       g;
-    for (b = 0; b < this.fo.length && !(d = this.fo[b], d.Ta() > c && (g = d.wd(a), g > c && (c = g, f = d), 100 <= c)); b++) {}
+    for (b = 0; b < this.fo.length && !(d = this.fo[b], d.getPriority() > c && (g = d.wd(a), g > c && (c = g, f = d), 100 <= c)); b++) {}
     if (f) {
       f.od(a);
     }
@@ -323,7 +323,7 @@ export function initializeAiBehaviors() {
   IdleBehavior.prototype.wd = function (a) {
     return a.position.room ? this.kB : 0;
   };
-  IdleBehavior.prototype.Ta = function () {
+  IdleBehavior.prototype.getPriority = function () {
     return this.kB;
   };
   ExploreDungeonBehavior.prototype.resetBehaviorState = function () {
@@ -383,7 +383,7 @@ export function initializeAiBehaviors() {
   ExploreDungeonBehavior.prototype.Td = function () {
     return null;
   };
-  ExploreDungeonBehavior.prototype.Ta = function () {
+  ExploreDungeonBehavior.prototype.getPriority = function () {
     return this.priorityWeight;
   };
   FollowLeaderBehavior.prototype.resetBehaviorState = function () {};
@@ -449,7 +449,7 @@ export function initializeAiBehaviors() {
     this.Uq = c;
     return !this.Uq || a.position.levelPosition.ac(this.Uq.position.levelPosition) > this.zE ? 0 : (1 - b) * this.priorityWeight;
   };
-  FollowLeaderBehavior.prototype.Ta = function () {
+  FollowLeaderBehavior.prototype.getPriority = function () {
     return this.priorityWeight;
   };
   RangedAttackBehavior.prototype.resetBehaviorState = function () {
@@ -535,7 +535,7 @@ export function initializeAiBehaviors() {
     this.targetCharacter = findNearestVisibleOpponent(a);
     return this.targetCharacter ? 2 < this.co ? this.co = 0 : a.position.levelPosition.ac(this.targetCharacter.position.levelPosition) > this.CA ? 0 : this.priorityWeight : 0;
   };
-  RangedAttackBehavior.prototype.Ta = function () {
+  RangedAttackBehavior.prototype.getPriority = function () {
     return this.priorityWeight;
   };
   MeleeAttackBehavior.prototype.resetBehaviorState = function () {};
@@ -571,7 +571,7 @@ export function initializeAiBehaviors() {
     this.Ng = a.position.levelPosition.ac(this.targetCharacter.position.levelPosition);
     return this.priorityWeight;
   };
-  MeleeAttackBehavior.prototype.Ta = function () {
+  MeleeAttackBehavior.prototype.getPriority = function () {
     return this.priorityWeight;
   };
   LootGoldBehavior.prototype = new ExploreDungeonBehavior();
@@ -616,7 +616,7 @@ export function initializeAiBehaviors() {
     return this.Hn && isSpellReady(this.Hn);
   };
   LootGoldBehavior.prototype.Jd = function () {
-    return this.Ta();
+    return this.getPriority();
   };
   LootGoldBehavior.prototype.Md = function () {
     return this.Hn;
@@ -668,7 +668,7 @@ export function initializeAiBehaviors() {
     this.Ng = a.position.levelPosition.ac(this.targetCharacter.position.levelPosition);
     return this.priorityWeight;
   };
-  OpportunisticAttackBehavior.prototype.Ta = function () {
+  OpportunisticAttackBehavior.prototype.getPriority = function () {
     return this.priorityWeight;
   };
   LootItemBehavior.prototype = new ExploreDungeonBehavior();
@@ -685,7 +685,7 @@ export function initializeAiBehaviors() {
     return this.Dn && isSpellReady(this.Dn);
   };
   LootItemBehavior.prototype.Jd = function () {
-    return this.Ta();
+    return this.getPriority();
   };
   LootItemBehavior.prototype.Md = function () {
     return this.Dn;
@@ -735,7 +735,7 @@ export function initializeAiBehaviors() {
     return this.on && isSpellReady(this.on);
   };
   LootScrollBehavior.prototype.Jd = function () {
-    return this.Ta();
+    return this.getPriority();
   };
   LootScrollBehavior.prototype.Md = function () {
     return this.on;
@@ -753,13 +753,13 @@ export function initializeAiBehaviors() {
   GuardRangedBehavior.prototype.wd = function (a) {
     return a.effects.wg ? 0 : this.Vq.wd(a);
   };
-  GuardRangedBehavior.prototype.Ta = function () {
-    return this.Vq.Ta();
+  GuardRangedBehavior.prototype.getPriority = function () {
+    return this.Vq.getPriority();
   };
   TargetSpellBehavior.prototype.resetBehaviorState = function () {
     this.Vi = null;
   };
-  TargetSpellBehavior.prototype.Ta = function () {
+  TargetSpellBehavior.prototype.getPriority = function () {
     return this.priorityWeight;
   };
   TargetSpellBehavior.prototype.notifySpellLearned = function (a) {
@@ -818,7 +818,7 @@ export function initializeAiBehaviors() {
   };
   HealBehavior.prototype.Jd = function (a) {
     a = getOpponents(a);
-    return 0 === a.length ? 0 : Math.min(this.Ta(), 5 / a.length * this.Ta());
+    return 0 === a.length ? 0 : Math.min(this.getPriority(), 5 / a.length * this.getPriority());
   };
   HealBehavior.prototype.Td = function (a) {
     return selectScrollTarget(a);
@@ -839,7 +839,7 @@ export function initializeAiBehaviors() {
     return this.gm;
   };
   ApplyEffectBehavior.prototype.Jd = function () {
-    return this.Ta();
+    return this.getPriority();
   };
   ApplyEffectBehavior.prototype.Td = function (a) {
     return selectScrollTarget(a);
@@ -860,7 +860,7 @@ export function initializeAiBehaviors() {
     return this.Zl;
   };
   AreaDamageBehavior.prototype.Jd = function () {
-    return this.Ta();
+    return this.getPriority();
   };
   AreaDamageBehavior.prototype.Td = function (a) {
     return selectScrollTarget(a);
@@ -881,7 +881,7 @@ export function initializeAiBehaviors() {
     return this.In;
   };
   ChainDamageBehavior.prototype.Jd = function () {
-    return this.Ta();
+    return this.getPriority();
   };
   ChainDamageBehavior.prototype.Td = function (a) {
     return selectScrollTarget(a);
@@ -902,7 +902,7 @@ export function initializeAiBehaviors() {
     return this.zd;
   };
   SummonBehavior.prototype.Jd = function () {
-    return this.Ta();
+    return this.getPriority();
   };
   SummonBehavior.prototype.Td = function (a) {
     return selectScrollTarget(a);
@@ -918,7 +918,7 @@ export function initializeAiBehaviors() {
   };
   LifeDrainBehavior.prototype.Jd = function () {
     var a = this.selectedTarget;
-    return Math.max(0, (1 - a.stats.health / statValue(a.stats.maxHealth)) * this.Ta());
+    return Math.max(0, (1 - a.stats.health / statValue(a.stats.maxHealth)) * this.getPriority());
   };
   LifeDrainBehavior.prototype.Wd = function () {
     return this.Lm && isSpellReady(this.Lm);
@@ -951,7 +951,7 @@ export function initializeAiBehaviors() {
     }
   };
   ReviveBehavior.prototype.Jd = function () {
-    return this.Ta();
+    return this.getPriority();
   };
   ReviveBehavior.prototype.Wd = function () {
     return this.pn && isSpellReady(this.pn);
@@ -983,7 +983,7 @@ export function initializeAiBehaviors() {
     return this.zd && isSpellReady(this.zd);
   };
   PartyBuffBehavior.prototype.Jd = function () {
-    return this.Ta();
+    return this.getPriority();
   };
   PartyBuffBehavior.prototype.Md = function () {
     return this.zd;
@@ -1042,7 +1042,7 @@ export function initializeAiBehaviors() {
     var b = getOpponents(a);
     return 0 < b.length && a.position.room === b[0].position.room ? 0 : this.eo;
   };
-  WaitBehavior.prototype.Ta = function () {
+  WaitBehavior.prototype.getPriority = function () {
     return this.eo;
   };
   LootChestBehavior.prototype = new ExploreDungeonBehavior();
@@ -1058,7 +1058,7 @@ export function initializeAiBehaviors() {
     return this.Wm && isSpellReady(this.Wm);
   };
   LootChestBehavior.prototype.Jd = function (a) {
-    return hasOpponentsInRoom(a, a.position.room) ? 0 : hasPendingLoot() ? this.Ta() : 0;
+    return hasOpponentsInRoom(a, a.position.room) ? 0 : hasPendingLoot() ? this.getPriority() : 0;
   };
   LootChestBehavior.prototype.Md = function () {
     return this.Wm;
@@ -1084,7 +1084,7 @@ export function initializeAiBehaviors() {
       return 0;
     }
     a = getRoomTreasure(game.treasure, b);
-    return !a || a.Kg || a.el ? 0 : this.Ta();
+    return !a || a.Kg || a.el ? 0 : this.getPriority();
   };
   LootPotionBehavior.prototype.Md = function () {
     return this.pm;
@@ -1152,7 +1152,7 @@ export function initializeAiBehaviors() {
     }
     return this.qd ? approachValue(this.priorityWeight, this.il, this.Wy) : 0;
   };
-  UseShopBehavior.prototype.Ta = function () {
+  UseShopBehavior.prototype.getPriority = function () {
     return this.priorityWeight;
   };
   EnterDungeonBehavior.prototype.resetBehaviorState = function () {
@@ -1215,7 +1215,7 @@ export function initializeAiBehaviors() {
     }
     return this.bd ? approachValue(this.priorityWeight, this.il, this.Zy) : 0;
   };
-  EnterDungeonBehavior.prototype.Ta = function () {
+  EnterDungeonBehavior.prototype.getPriority = function () {
     return this.priorityWeight;
   };
   EnterCastleBehavior.prototype.resetBehaviorState = function () {
@@ -1278,7 +1278,7 @@ export function initializeAiBehaviors() {
     }
     return this.ad ? approachValue(this.priorityWeight, this.il, this.Yy) : 0;
   };
-  EnterCastleBehavior.prototype.Ta = function () {
+  EnterCastleBehavior.prototype.getPriority = function () {
     return this.priorityWeight;
   };
   TravelWorldBehavior.prototype.resetBehaviorState = function () {
@@ -1341,7 +1341,7 @@ export function initializeAiBehaviors() {
     }
     return this.$c ? approachValue(this.priorityWeight, this.il, this.Xy) : 0;
   };
-  TravelWorldBehavior.prototype.Ta = function () {
+  TravelWorldBehavior.prototype.getPriority = function () {
     return this.priorityWeight;
   };
   ChangeFloorBehavior.prototype.resetBehaviorState = function () {
@@ -1372,7 +1372,7 @@ export function initializeAiBehaviors() {
     this.lc = getRoomTreasure(game.treasure, b);
     return !this.lc || this.lc.Kg || !this.lc.el || hasOpponentsInRoom(a, b) ? 0 : this.priorityWeight;
   };
-  ChangeFloorBehavior.prototype.Ta = function () {
+  ChangeFloorBehavior.prototype.getPriority = function () {
     return this.priorityWeight;
   };
   SelfSpellBehavior.prototype = new ExploreDungeonBehavior();
@@ -1391,7 +1391,7 @@ export function initializeAiBehaviors() {
     return this.Sc && isSpellReady(this.Sc) && !a.companion ? true : false;
   };
   SelfSpellBehavior.prototype.Jd = function () {
-    return this.Ta();
+    return this.getPriority();
   };
   SelfSpellBehavior.prototype.Md = function () {
     return this.Sc;
@@ -1416,7 +1416,7 @@ export function initializeAiBehaviors() {
     return countSummonedMinions(a) < b;
   };
   AreaSpellBehavior.prototype.Jd = function () {
-    return this.Ta();
+    return this.getPriority();
   };
   AreaSpellBehavior.prototype.Md = function () {
     return this.Sc;
@@ -1460,7 +1460,7 @@ export function initializeAiBehaviors() {
     return countSummonedMinions(a) < b;
   };
   CompanionSpellBehavior.prototype.Jd = function () {
-    return this.Ta();
+    return this.getPriority();
   };
   CompanionSpellBehavior.prototype.Md = function () {
     return this.Sc;
@@ -1502,7 +1502,7 @@ export function initializeAiBehaviors() {
     a = a.summoner.position;
     return !b.room || !a.room || b.room !== a.room || b.levelPosition.ac(a.levelPosition) < this.Uw ? 0 : this.priorityWeight;
   };
-  CooldownBehavior.prototype.Ta = function () {
+  CooldownBehavior.prototype.getPriority = function () {
     return this.priorityWeight;
   };
   SpecialAttackBehavior.prototype.resetBehaviorState = function () {};
@@ -1548,7 +1548,7 @@ export function initializeAiBehaviors() {
     this.Ng = a.levelPosition.ac(b);
     return this.priorityWeight;
   };
-  SpecialAttackBehavior.prototype.Ta = function () {
+  SpecialAttackBehavior.prototype.getPriority = function () {
     return this.priorityWeight;
   };
   StunnedBehavior.prototype.resetBehaviorState = function () {};
@@ -1580,7 +1580,7 @@ export function initializeAiBehaviors() {
     b = b.levelPosition;
     return isPointNearDoor(a, b) || a.stairs && distanceToPoint(b, a.stairs.tq, a.stairs.uq) < game.tileSize ? this.eo : 0;
   };
-  StunnedBehavior.prototype.Ta = function () {
+  StunnedBehavior.prototype.getPriority = function () {
     return this.eo;
   };
 }
