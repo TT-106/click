@@ -218,7 +218,7 @@ export function populateWorldBlock(a, b) {
     for (f = 0; f < a.rc; f++) {
       for (d = 0; d < a.sc; d++) {
         n = getBlockTile(b, f, d);
-        n.ea(null);
+        n.setDecorationSprite(null);
         n.Ln = 1E5;
       }
     }
@@ -256,21 +256,21 @@ export function populateWorldBlock(a, b) {
           }
           if (s) {
             n.Ln += p;
-            n.ea(s);
+            n.setDecorationSprite(s);
           } else {
-            n.ea(null);
+            n.setDecorationSprite(null);
           }
         } else {
-          n.ea(null);
+          n.setDecorationSprite(null);
         }
       }
     }
   }
-  if (c && !c.$b && ((d = (d = game.dungeons.Do[b.Hd + "_" + b.Id]) ? d : null) ? (f = d.bc(), g = d.cc(), (h = game.world.hb(f, g)) ? h.ea(game.terrainSprites.getSprite(d.Fo)) : (console.log("no tile for: col=" + f + " row=" + g), d = null)) : d = null, d && ((f = game.farms.jw[d.dungeonId]) && (f = game.world.hb(f.kw, f.lw)) && f.ea(game.terrainSprites.getSprite(game.farms.Gz)), a.Ut(d)), f = findCastle(b.Hd + "_" + b.Id))) {
+  if (c && !c.$b && ((d = (d = game.dungeons.Do[b.Hd + "_" + b.Id]) ? d : null) ? (f = d.bc(), g = d.cc(), (h = game.world.hb(f, g)) ? h.setDecorationSprite(game.terrainSprites.getSprite(d.Fo)) : (console.log("no tile for: col=" + f + " row=" + g), d = null)) : d = null, d && ((f = game.farms.jw[d.dungeonId]) && (f = game.world.hb(f.kw, f.lw)) && f.setDecorationSprite(game.terrainSprites.getSprite(game.farms.Gz)), a.Ut(d)), f = findCastle(b.Hd + "_" + b.Id))) {
     d = f.dm;
     f = f.em;
     if (g = game.world.hb(d, f)) {
-      g.ea(game.terrainSprites.getSprite(game.castles.Ny));
+      g.setDecorationSprite(game.terrainSprites.getSprite(game.castles.Ny));
     } else {
       console.log("no tile for: col=" + d + " row=" + f);
     }
@@ -283,20 +283,20 @@ export function populateWorldBlock(a, b) {
     for (n = 0; n < a.rc; n++) {
       d = getBlockTile(b, n, 0);
       d.Qa(f);
-      d.ea(null);
+      d.setDecorationSprite(null);
     }
   }
   if (c != h) {
     for (n = 0; n < a.sc; n++) {
       d = getBlockTile(b, 0, n);
       d.Qa(f);
-      d.ea(null);
+      d.setDecorationSprite(null);
     }
   }
   if (c === g && c === h && c != l) {
     d = getBlockTile(b, 0, 0);
     d.Qa(f);
-    d.ea(null);
+    d.setDecorationSprite(null);
   }
 }
 export function getTerrainCode(a, b, c, d) {
@@ -576,7 +576,7 @@ export function initializeWorldTerrain() {
     if (b = game.shops.zx[a.dungeonId]) {
       if (a = game.world.hb(b.iq, b.jq)) {
         b = game.terrainSprites.getSprite(randomShopSprite(game.shops));
-        a.ea(b);
+        a.setDecorationSprite(b);
       }
     } else {
       b = game.shops;
@@ -602,7 +602,7 @@ export function initializeWorldTerrain() {
   WorldTile.prototype.Qa = function (a) {
     this.Jn = a;
   };
-  WorldTile.prototype.ea = function (a) {
+  WorldTile.prototype.setDecorationSprite = function (a) {
     this.Yf = a;
   };
   WorldBlock.prototype.Aw = function () {
