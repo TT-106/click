@@ -292,7 +292,7 @@ export function advanceSimulation(a) {
             if (mc && 8 == mc.spellCategoryId) {
               var vb = cb,
                 Sb = game.upgradeRegistry,
-                Ma = vb.Da,
+                Ma = vb.targetCharacter,
                 zb = vb.attacker,
                 Hb = floorNumber((zb.stats.ho + 1) * game.tileSize),
                 ac = findTargetsInRange(zb, Ma, 200, Hb);

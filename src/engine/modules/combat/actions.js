@@ -27,7 +27,7 @@ import { MELEE_ATTACK_RANGE, RANGED_ATTACK_RANGE } from "../content/classes.js";
 export function CombatAction() {
   this.Jc = 0;
   this.yd = this.Vn = this.Rd = false;
-  this.xb = this.Xb = this.attacker = this.Da = this.Ib = null;
+  this.xb = this.Xb = this.attacker = this.targetCharacter = this.Ib = null;
   this.ut = this.Xs = false;
   this.chainCount = this.Ys = 0;
   this.pl = null;
@@ -69,7 +69,7 @@ export function advanceCombatAction(a, b) {
       applySpellEffect(a, b);
     }
     if (0 < b.Jc) {
-      showDamageText(b.Da, b.Jc);
+      showDamageText(b.targetCharacter, b.Jc);
     }
     if (b.Xs) {
       if (d = createChainAction(b)) {
@@ -84,7 +84,7 @@ export function advanceCombatAction(a, b) {
   if ((d = b.xb) && d.bx !== d.oc) {
     var f = d.To();
     if (b.Ib) {
-      var g = b.Da,
+      var g = b.targetCharacter,
         h = b.Ib,
         l = h.spellCategoryId;
       if (g) {
@@ -144,7 +144,7 @@ export function applySpellEffect(a, b) {
       console.log("Failed to find char effect description: " + d);
       d = null;
     }
-    c = b.Da.effects;
+    c = b.targetCharacter.effects;
     if (d) {
       c.of.push(d);
       if (isDisablingEffect(d)) {
@@ -156,7 +156,7 @@ export function applySpellEffect(a, b) {
   } else if (11 === d) {
     d = b.attacker;
     g = b.xb.xi;
-    h = b.Da;
+    h = b.targetCharacter;
     f = game.monsters;
     if (h) {
       h = f.Og.indexOf(h);
@@ -283,7 +283,7 @@ export function applySpellEffect(a, b) {
     if (15 === d) {
       a.wu(b);
     } else {
-      if (16 === d && (c = b.Da)) {
+      if (16 === d && (c = b.targetCharacter)) {
         c = c.effects;
         c.Kf = false;
         removeStunEffects(c);
@@ -299,7 +299,7 @@ export function summonSpellMinion(a, b, c) {
   }
 }
 export function applyActionDamage(a) {
-  var b = a.Da,
+  var b = a.targetCharacter,
     c = b.stats,
     d = a.Jc;
   if (0 !== d) {
@@ -491,7 +491,7 @@ export function createAttackAction(a, b, c) {
   enqueueCombatAction(game.combatQueue, d);
 }
 export function createSpellAction(a) {
-  var b = a.Da;
+  var b = a.combatTarget;
   if (!b || b.Va) {
     return null;
   }
@@ -613,7 +613,7 @@ export function createChainAction(a) {
   if (b >= c) {
     return null;
   }
-  var d = findChainTarget(a.Da);
+  var d = findChainTarget(a.targetCharacter);
   if (!d) {
     return null;
   }
@@ -679,7 +679,7 @@ export function createReturningAction(a) {
   if (!d) {
     return null;
   }
-  g = findChainTarget(a.Da);
+  g = findChainTarget(a.targetCharacter);
   if (!g) {
     return null;
   }
@@ -710,7 +710,7 @@ export function createReturningAction(a) {
 }
 export function initializeCombatActions() {
   CombatAction.prototype.Cb = function (a) {
-    this.Da = a;
+    this.targetCharacter = a;
   };
   CombatAction.prototype.Ir = function () {
     return this.Ys;

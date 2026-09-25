@@ -459,7 +459,7 @@ export function initializeRuntimeGame() {
       clearMonsters();
       clearMinions();
       for (var b, a = /** @type {any} */ (0); a < game.state.adventurers.length; a++) {
-        if (b = game.state.adventurers[a], b.summonedMinions = null, b.companion = null, b.Da = null, b.rh = null, b.Zh = null, b.hk = null, b.bj = null, b.Ue = null, b.ld = null, b.au = -3 * getAttackCooldown(b.stats, true), b.spells && 0 < b.spells.length) {
+        if (b = game.state.adventurers[a], b.summonedMinions = null, b.companion = null, b.combatTarget = null, b.rh = null, b.Zh = null, b.hk = null, b.bj = null, b.Ue = null, b.ld = null, b.au = -3 * getAttackCooldown(b.stats, true), b.spells && 0 < b.spells.length) {
           for (var c = 0; c < b.spells.length; c++) {
             resetSpellCooldown(b.spells[c]);
           }

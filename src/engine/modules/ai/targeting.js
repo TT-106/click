@@ -250,7 +250,7 @@ export function respondToTaunt(a, b) {
   if (docileMonstersModifier.currentValue) {
     return false;
   }
-  var c = b.Da;
+  var c = b.combatTarget;
   if (c && c.Va) {
     c = null;
     b.Cb(null);
@@ -275,7 +275,7 @@ export function respondToTaunt(a, b) {
   return (c = l) || (c = findNearbyOpponent(b)) ? (b.Cb(c), attackTauntingTarget(a, b), true) : false;
 }
 export function attackTauntingTarget(a, b) {
-  var c = b.Da.position,
+  var c = b.combatTarget.position,
     d = b.position;
   if (c.room === d.room) {
     if (d.levelPosition.ac(c.levelPosition) <= a.bb) {

@@ -68,6 +68,21 @@ if (original) {
     // 语义：CombatAction.targetCharacter 的值是被瞄准的 Character（与 combatTarget 同形）
     watch(Character, 'combatTarget', isCharacter);
     watch(CombatAction, 'targetCharacter', isCharacter);
+    // U1 第五轮：捕获"把活怪物写入冒险者 combatTarget"的调用栈（原版此路径写的是 MonsterType）
+    window.__ct2Stacks = [];
+    const origSet = Object.getOwnPropertyDescriptor(Character.prototype, 'combatTarget').set;
+    Object.defineProperty(Character.prototype, 'combatTarget', {
+      configurable: true,
+      get: Object.getOwnPropertyDescriptor(Character.prototype, 'combatTarget').get,
+      set(v) {
+        if (v && v.characterType === 2 && this.characterType !== 2) {
+          const st = (new Error().stack || '').split('\n').filter(l => l.includes('/src/')).slice(0, 3).map(l => l.replace(/^.*modules\//, '').replace(/:\d+:\d+\)?/, '')).join(' < ');
+          window.__ct2Stacks.push((this.adventurerName || '?') + ' ← ' + st.slice(0, 200));
+          if (window.__ct2Stacks.length > 6) window.__ct2Stacks.shift();
+        }
+        origSet.call(this, v);
+      },
+    });
   }
 }
 game.onLoad();

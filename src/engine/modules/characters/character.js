@@ -61,7 +61,7 @@ export function Character(a, b, c, d, f) {
   }
   this.actionType = IDLE_ACTION;
   this.Va = false;
-  this.ld = this.Ue = this.bj = this.hk = this.Zh = this.rh = this.Da = this.behaviors = null;
+  this.ld = this.Ue = this.bj = this.hk = this.Zh = this.rh = this.combatTarget = this.behaviors = null;
   this.stats = new CharacterStats(this);
   this.au = -3 * getAttackCooldown(this.stats, true);
   this.summoner = null;
@@ -437,11 +437,11 @@ export function updateCharacter(a, b) {
       }
     } else {
       if (2 === a.actionType) {
-        if (a.Da && !a.Da.Va) {
+        if (a.combatTarget && !a.combatTarget.Va) {
           if (0 < a.stats.extraAttackCount) {
             performMultiAttack(a, false);
           } else {
-            var yb = a.Da;
+            var yb = a.combatTarget;
             if (yb) {
               createAttackAction(a, yb, false);
             }
@@ -451,11 +451,11 @@ export function updateCharacter(a, b) {
           }
         }
       } else if (a.actionType === MELEE_ACTION_TYPE) {
-        if (a.Da && !a.Da.Va) {
+        if (a.combatTarget && !a.combatTarget.Va) {
           if (0 < a.stats.extraAttackCount) {
             performMultiAttack(a, true);
           } else {
-            var Fb = a.Da;
+            var Fb = a.combatTarget;
             if (Fb) {
               createAttackAction(a, Fb, true);
             }
@@ -507,7 +507,7 @@ export function updateCharacter(a, b) {
             } else if (5 === pa) {
               var ha = a.ld;
               if (ha) {
-                var ja = a.Da;
+                var ja = a.combatTarget;
                 if (ja && !ja.Va) {
                   var Ga = 1 + (a.stats.ar + 1),
                     bb = null,
@@ -580,7 +580,7 @@ export function updateCharacter(a, b) {
             } else if (6 === pa) {
               var cc = a.ld;
               if (cc) {
-                var Qa = a.Da;
+                var Qa = a.combatTarget;
                 if (Qa && !Qa.Va) {
                   var nc = a.stats.Qq + 1,
                     sa,
@@ -645,7 +645,7 @@ export function updateCharacter(a, b) {
                 }
               }
             } else if (8 === pa) {
-              var xb = a.Da;
+              var xb = a.combatTarget;
               if (xb && !xb.Va) {
                 var Na = a.ld;
                 if (Na) {
@@ -863,7 +863,7 @@ export function updateCharacter(a, b) {
                 } else {
                   bd.pl = null;
                 }
-                var Gh = calculateSpellDamage(a, bd.Da);
+                var Gh = calculateSpellDamage(a, bd.targetCharacter);
                 bd.Jc = Gh;
                 bd.Rd = 0 === Gh;
                 var Hh = bd.Xb;
@@ -887,7 +887,7 @@ export function updateCharacter(a, b) {
             a: {
               var vf = a.ld;
               if (vf) {
-                var wf = a.Da;
+                var wf = a.combatTarget;
                 if (!wf || wf.Va) {
                   if (wf = selectScrollTarget(a), !wf) {
                     break a;
@@ -1234,7 +1234,7 @@ export function initializeCharactersCharacter() {
     return this.ee;
   };
   Character.prototype.Cb = function (a) {
-    this.Da = a;
+    this.combatTarget = a;
   };
   Character.prototype.hq = function (a) {
     this.Ue = a;

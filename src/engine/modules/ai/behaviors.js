@@ -25,7 +25,7 @@ export function IdleBehavior(a) {
 }
 export function ExploreDungeonBehavior() {
   this.priorityWeight = 10;
-  this.Da = null;
+  this.selectedTarget = null;
   this.SB = 0;
   this.un = null;
   this.bb = 100;
@@ -282,7 +282,7 @@ export function initializeAiBehaviors() {
   BehaviorQueue.prototype.nu = function (a) {
     a.actionType = IDLE_ACTION;
     a.rh = null;
-    a.Da = null;
+    a.combatTarget = null;
     a.bj = null;
     a.Ue = null;
     a.ld = null;
@@ -327,14 +327,14 @@ export function initializeAiBehaviors() {
     return this.kB;
   };
   ExploreDungeonBehavior.prototype.Wa = function () {
-    this.Da = this.un = null;
+    this.selectedTarget = this.un = null;
   };
   ExploreDungeonBehavior.prototype.notifySpellLearned = function () {};
   ExploreDungeonBehavior.prototype.od = function (a) {
-    if (this.Da && this.un) {
-      a.Cb(this.Da);
+    if (this.selectedTarget && this.un) {
+      a.Cb(this.selectedTarget);
       var b = a.position;
-      this.SB = a === this.Da ? 0 : b.levelPosition.ac(this.Da.position.levelPosition);
+      this.SB = a === this.selectedTarget ? 0 : b.levelPosition.ac(this.selectedTarget.position.levelPosition);
       if (this.SB <= this.bb) {
         if (!this.Yt && !canAttack(a)) {
           return;
@@ -345,7 +345,7 @@ export function initializeAiBehaviors() {
         a.actionType = CAST_ACTION_TYPE;
         this.Kp(a);
       } else {
-        assignVector(b.Qb, this.Da.position.levelPosition);
+        assignVector(b.Qb, this.selectedTarget.position.levelPosition);
         a.actionType = 1;
       }
       clearMovementTarget(b);
@@ -368,8 +368,8 @@ export function initializeAiBehaviors() {
         return 0;
       }
     }
-    this.Da = this.Td(a);
-    return this.Da && this.Da.position.room === b ? (this.un = this.Md()) ? this.Jd(a) : 0 : 0;
+    this.selectedTarget = this.Td(a);
+    return this.selectedTarget && this.selectedTarget.position.room === b ? (this.un = this.Md()) ? this.Jd(a) : 0 : 0;
   };
   ExploreDungeonBehavior.prototype.Wd = function () {
     return true;
@@ -439,7 +439,7 @@ export function initializeAiBehaviors() {
       c = getOpponents(a);
       var d, f;
       for (f = 0; f < c.length; f++) {
-        if (d = c[f], a !== d && d.Da === a) {
+        if (d = c[f], a !== d && d.combatTarget === a) {
           c = d;
           break a;
         }
@@ -917,7 +917,7 @@ export function initializeAiBehaviors() {
     }
   };
   LifeDrainBehavior.prototype.Jd = function () {
-    var a = this.Da;
+    var a = this.selectedTarget;
     return Math.max(0, (1 - a.stats.health / statValue(a.stats.maxHealth)) * this.Ta());
   };
   LifeDrainBehavior.prototype.Wd = function () {
