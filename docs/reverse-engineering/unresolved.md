@@ -25,6 +25,11 @@
   1. 多场景序列（long-run→offline×3→potions-active）复现 'characterType' of undefined 崩溃——单页同场景通过，确认为**页面历史状态交互**。
   2. 关键疑点：`createSpellAction` 内 `d.Cb(b)` 设置 targetCharacter 后，character.js:866 `bd.targetCharacter` 读取链在多场景历史下变为 undefined——需对比两端 behaviors 队列（fo 列表内各行为的 un/Lm/selectedTarget 与原版对应字段）随场景切换的持久化差异。
   3. 工具已就绪：?watchDa 观察器 + __daNullLog 转换记录 + 崩溃栈捕获；下一步在 runner 序列的第 4/5 场景间插入 behaviors 内部状态逐字段转储。
+- **第五轮实证（2026-09-26，完整 12 场景序列复现）**：
+  1. 修正拆分 + 多场景序列在 600 回合内复现引擎崩溃：`getFriendlyTargets(undefined)` → `isHostile` 读 characterType（encounters.js:177）。
+  2. 调用方为 findChainTarget/findNearby 系（actions.js:616/682 的 a.combatTarget 已随修正传入，但多场景历史下该值仍为 undefined）——即施法者的 combatTarget 在原版被 Cb/攻击流设置，而重构端某条设置链在拆分状态下失效。
+  3. 单页 potions-active 同状态通过——再次确认为页面历史交互。
+  4. 下一步最小实验：在 split 状态下给 Character.Cb 与 nu()/clearMinions 打点记录（角色名, 新值, 栈），对比两端同一回合的 combatTarget 写序列——第一个缺失的写点即残余误分类/漏改点。
 - 经验教训（已入 facts#20 扩展）：**重命名跨文件字段时，"读点全集"必须包含工厂函数/工具函数内按多态入参的访问**；Babel 静态 grep 对 `a.Da`（a 的类型随调用方变化）天然失真，应配运行时类型断言。
 
 ## U2 — 外部自动化脚本（c2c.user.js）DOM 契约未实测

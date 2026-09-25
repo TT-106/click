@@ -98,7 +98,9 @@ window.harness = {
   // 完全重置（回到开局）
   reset() { reset(); return snapshot(); },
   // 空转：经真实帧循环推进时间（无队伍时循环只待机）——用于重置后的守卫路径
-  idle(count) { for (let i = 0; i < count; i++) { fixedNow += 250; loopTick(); } return snapshot(); }
+  idle(count) { for (let i = 0; i < count; i++) { fixedNow += 250; loopTick(); } return snapshot(); },
+  // U1 诊断：统一角色列表访问（原版 w.i.D / 重构 game.state.adventurers）
+  characters() { return original ? window.Game.i.D : game.state.adventurers; }
 };
 
 
