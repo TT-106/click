@@ -189,12 +189,12 @@ export function updateCharacter(a, b) {
         if (a === game.state.leader) {
           a: {
             assignVector(c.velocity, c.Ul);
-            subtractVector(c.velocity, c.Db);
+            subtractVector(c.velocity, c.worldPosition);
             var d = b * c.MC * walkingSpeedBonus.currentValue * walkingSpeedModifier.currentValue,
-              f = game.world.bc(c.Db.x),
-              g = game.world.cc(c.Db.y);
+              f = game.world.bc(c.worldPosition.x),
+              g = game.world.cc(c.worldPosition.y);
             if (vectorLength(c.velocity) <= d) {
-              assignVector(c.Db, c.Ul);
+              assignVector(c.worldPosition, c.Ul);
               c.dd = true;
             } else if (f === c.Rn && g === c.Sn) {
               c.dd = true;
@@ -216,7 +216,7 @@ export function updateCharacter(a, b) {
                 }
               }
               setVector(c.velocity, c.Hh.dc() + 1, c.Hh.ec() + 1);
-              subtractVector(c.velocity, c.Db);
+              subtractVector(c.velocity, c.worldPosition);
               if (separateWorldCharacters(c)) {
                 normalizeVector(c.velocity);
                 multiplyVector(c.Tl, 0.5);
@@ -224,24 +224,24 @@ export function updateCharacter(a, b) {
               }
               normalizeVector(c.velocity);
               multiplyVector(c.velocity, d);
-              addVector(c.Db, c.velocity);
+              addVector(c.worldPosition, c.velocity);
             }
           }
         } else {
           assignVector(c.velocity, c.Ul);
-          subtractVector(c.velocity, c.Db);
+          subtractVector(c.velocity, c.worldPosition);
           var h = b * c.MC * walkingSpeedBonus.currentValue * walkingSpeedModifier.currentValue,
-            l = game.world.bc(c.Db.x),
-            n = game.world.cc(c.Db.y);
+            l = game.world.bc(c.worldPosition.x),
+            n = game.world.cc(c.worldPosition.y);
           if (vectorLength(c.velocity) <= h) {
-            assignVector(c.Db, c.Ul);
+            assignVector(c.worldPosition, c.Ul);
             c.dd = true;
           } else {
             if (l === c.Rn && n === c.Sn) {
               c.dd = true;
             } else {
               setVector(c.velocity, c.Ul.x + 1, c.Ul.y + 1);
-              subtractVector(c.velocity, c.Db);
+              subtractVector(c.velocity, c.worldPosition);
               if (separateWorldCharacters(c)) {
                 normalizeVector(c.velocity);
                 multiplyVector(c.Tl, 0.5);
@@ -249,7 +249,7 @@ export function updateCharacter(a, b) {
               }
               normalizeVector(c.velocity);
               multiplyVector(c.velocity, h);
-              addVector(c.Db, c.velocity);
+              addVector(c.worldPosition, c.velocity);
             }
           }
         }

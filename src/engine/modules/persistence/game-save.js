@@ -424,7 +424,7 @@ export function restoreGameState(a, b) {
                 dj = vc.hallwayId,
                 Bh = vc.floorPositionIndex;
               setVector(wd.levelPosition, vc.levelX, vc.levelY);
-              setVector(wd.Db, rl, cj);
+              setVector(wd.worldPosition, rl, cj);
               if (-1 < Ah) {
                 wd.room = findRoom(Ah);
               }

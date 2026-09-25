@@ -800,7 +800,7 @@ export function updateCharacterBehaviors(a) {
   }
 }
 export function showDeathEffect(a) {
-  a = game.worldActive ? a.position.Db : a.position.levelPosition;
+  a = game.worldActive ? a.position.worldPosition : a.position.levelPosition;
   addVisualEffect(game.effects, new VisualEffect("Red Splat", a, a, false, 1));
 }
 export function purchaseDungeonFarm(a, b) {

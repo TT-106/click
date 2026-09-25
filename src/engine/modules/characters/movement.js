@@ -23,7 +23,7 @@ export function CharacterPosition(a, b) {
   this.Jw = b;
   this.MC = a;
   this.levelPosition = new Vector2();
-  this.Db = new Vector2();
+  this.worldPosition = new Vector2();
   this.room = this.cd = null;
   this.Ul = new Vector2();
   this.Sn = this.Rn = 0;
@@ -168,13 +168,13 @@ export function separateWorldCharacters(a) {
     b = f[c];
     b = b.position;
     if (b !== a) {
-      g = a.Db.ac(b.Db);
+      g = a.worldPosition.ac(b.worldPosition);
       if (40 > g) {
         if (0 === g) {
           setVector(a.Wc, Math.random(), Math.random());
         } else {
-          copyVector(a.Wc, a.Db);
-          subtractVector(a.Wc, b.Db);
+          copyVector(a.Wc, a.worldPosition);
+          subtractVector(a.Wc, b.worldPosition);
         }
         normalizeVector(a.Wc);
         addVector(a.Tl, a.Wc);
@@ -204,10 +204,10 @@ export function initializeCharactersMovement() {
     }
   };
   CharacterPosition.prototype.dc = function () {
-    return this.Db.x;
+    return this.worldPosition.x;
   };
   CharacterPosition.prototype.ec = function () {
-    return this.Db.y;
+    return this.worldPosition.y;
   };
   CharacterPosition.prototype.Ob = function () {
     return this.levelPosition.x;

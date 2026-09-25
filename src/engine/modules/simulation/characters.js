@@ -60,10 +60,10 @@ export function spawnMinion(a, b, c) {
   g.room = b.position.room;
   g.cd = b.position.cd;
   setVector(g.levelPosition, c.x, c.y);
-  var h = b.position.Db;
+  var h = b.position.worldPosition;
   c = h.x + floorNumber(-10 + 20 * Math.random());
   h = h.y + floorNumber(-10 + 20 * Math.random());
-  setVector(g.Db, c, h);
+  setVector(g.worldPosition, c, h);
   g = b.stats.characterLevel;
   d.summoner = b;
   if (!b.summonedMinions) {

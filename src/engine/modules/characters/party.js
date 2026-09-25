@@ -344,7 +344,7 @@ export function initializeCharactersParty() {
     }
     if (!this.Wf) {
       var a = game.castles,
-        b = game.state.leader.position.Db,
+        b = game.state.leader.position.worldPosition,
         c = null,
         d = 0,
         f,
@@ -385,7 +385,7 @@ export function initializeCharactersParty() {
         }
       } else if (0 < b) {
         a = game.shops;
-        b = game.state.leader.position.Db;
+        b = game.state.leader.position.worldPosition;
         c = null;
         for (h = d = 0; h < a.ht.length; h++) {
           if (f = a.ht[h], g = distanceSquaredToPoint(b, game.world.dc(f.iq), game.world.ec(f.jq)), !c || g < d) {
@@ -408,7 +408,7 @@ export function initializeCharactersParty() {
         b = true;
       } else {
         c = game.castles;
-        d = game.state.leader.position.Db;
+        d = game.state.leader.position.worldPosition;
         f = null;
         for (n = g = 0; n < c.Dh.length; n++) {
           if (h = c.Dh[n], l = distanceSquaredToPoint(d, game.world.dc(h.dm), game.world.ec(h.em)), !f || l < g) {
@@ -436,7 +436,7 @@ export function initializeCharactersParty() {
           }
         }
         if (!this.Wb) {
-          d = game.state.leader.position.Db;
+          d = game.state.leader.position.worldPosition;
           f = null;
           g = 0;
           var n = this.Wf.Ab,
