@@ -298,14 +298,14 @@ export function initializeAiBehaviors() {
       f.od(a);
     }
   };
-  BehaviorQueue.prototype.Oa = function (a) {
+  BehaviorQueue.prototype.notifySpellLearned = function (a) {
     var b;
     for (b = 0; b < this.fo.length; b++) {
-      this.fo[b].Oa(a);
+      this.fo[b].notifySpellLearned(a);
     }
   };
   IdleBehavior.prototype.Wa = function () {};
-  IdleBehavior.prototype.Oa = function () {};
+  IdleBehavior.prototype.notifySpellLearned = function () {};
   IdleBehavior.prototype.od = function (a) {
     var b = a.position,
       c = b.room;
@@ -329,7 +329,7 @@ export function initializeAiBehaviors() {
   ExploreDungeonBehavior.prototype.Wa = function () {
     this.Da = this.un = null;
   };
-  ExploreDungeonBehavior.prototype.Oa = function () {};
+  ExploreDungeonBehavior.prototype.notifySpellLearned = function () {};
   ExploreDungeonBehavior.prototype.od = function (a) {
     if (this.Da && this.un) {
       a.Cb(this.Da);
@@ -387,7 +387,7 @@ export function initializeAiBehaviors() {
     return this.priorityWeight;
   };
   FollowLeaderBehavior.prototype.Wa = function () {};
-  FollowLeaderBehavior.prototype.Oa = function () {};
+  FollowLeaderBehavior.prototype.notifySpellLearned = function () {};
   FollowLeaderBehavior.prototype.od = function (a) {
     if (this.Uq) {
       var b = a.position.room;
@@ -456,7 +456,7 @@ export function initializeAiBehaviors() {
     this.co = this.ax = 0;
     this.Fa = null;
   };
-  RangedAttackBehavior.prototype.Oa = function () {};
+  RangedAttackBehavior.prototype.notifySpellLearned = function () {};
   RangedAttackBehavior.prototype.od = function (a) {
     if (this.ax == game.state.turnNumber - 1) {
       this.co++;
@@ -539,7 +539,7 @@ export function initializeAiBehaviors() {
     return this.priorityWeight;
   };
   MeleeAttackBehavior.prototype.Wa = function () {};
-  MeleeAttackBehavior.prototype.Oa = function () {};
+  MeleeAttackBehavior.prototype.notifySpellLearned = function () {};
   MeleeAttackBehavior.prototype.od = function (a) {
     if (this.Fa && !this.Fa.Va) {
       a.Cb(this.Fa);
@@ -578,7 +578,7 @@ export function initializeAiBehaviors() {
   LootGoldBehavior.prototype.Wa = function () {
     this.Hn = null;
   };
-  LootGoldBehavior.prototype.Oa = function (a) {
+  LootGoldBehavior.prototype.notifySpellLearned = function (a) {
     if (!(this.Hn || 10 !== a.statusEffectTypeId)) {
       this.Hn = a;
     }
@@ -632,7 +632,7 @@ export function initializeAiBehaviors() {
     this.Fa = null;
     this.Ng = 0;
   };
-  OpportunisticAttackBehavior.prototype.Oa = function () {};
+  OpportunisticAttackBehavior.prototype.notifySpellLearned = function () {};
   OpportunisticAttackBehavior.prototype.od = function (a) {
     if (this.Fa && !this.Fa.Va) {
       a.Cb(this.Fa);
@@ -675,7 +675,7 @@ export function initializeAiBehaviors() {
   LootItemBehavior.prototype.Wa = function () {
     this.Dn = null;
   };
-  LootItemBehavior.prototype.Oa = function (a) {
+  LootItemBehavior.prototype.notifySpellLearned = function (a) {
     if (!(this.Dn || 11 !== a.statusEffectTypeId)) {
       this.Dn = a;
     }
@@ -697,7 +697,7 @@ export function initializeAiBehaviors() {
   LootScrollBehavior.prototype.Wa = function () {
     this.on = null;
   };
-  LootScrollBehavior.prototype.Oa = function (a) {
+  LootScrollBehavior.prototype.notifySpellLearned = function (a) {
     if (!(this.on || 12 !== a.statusEffectTypeId)) {
       this.on = a;
     }
@@ -746,7 +746,7 @@ export function initializeAiBehaviors() {
   GuardRangedBehavior.prototype.Wa = function () {
     this.Vq.Wa();
   };
-  GuardRangedBehavior.prototype.Oa = function () {};
+  GuardRangedBehavior.prototype.notifySpellLearned = function () {};
   GuardRangedBehavior.prototype.od = function (a) {
     this.Vq.od(a);
   };
@@ -762,7 +762,7 @@ export function initializeAiBehaviors() {
   TargetSpellBehavior.prototype.Ta = function () {
     return this.priorityWeight;
   };
-  TargetSpellBehavior.prototype.Oa = function (a) {
+  TargetSpellBehavior.prototype.notifySpellLearned = function (a) {
     if (!(this.Vi || 6 !== a.spellCategoryId)) {
       this.Vi = a;
     }
@@ -805,7 +805,7 @@ export function initializeAiBehaviors() {
   HealBehavior.prototype.Wa = function () {
     this.fm = null;
   };
-  HealBehavior.prototype.Oa = function (a) {
+  HealBehavior.prototype.notifySpellLearned = function (a) {
     if (!(this.fm || 5 !== a.spellCategoryId)) {
       this.fm = a;
     }
@@ -827,7 +827,7 @@ export function initializeAiBehaviors() {
   ApplyEffectBehavior.prototype.Wa = function () {
     this.gm = null;
   };
-  ApplyEffectBehavior.prototype.Oa = function (a) {
+  ApplyEffectBehavior.prototype.notifySpellLearned = function (a) {
     if (!(this.gm || a.statusEffectTypeId !== this.statusEffectTypeId)) {
       this.gm = a;
     }
@@ -848,7 +848,7 @@ export function initializeAiBehaviors() {
   AreaDamageBehavior.prototype.Wa = function () {
     this.Zl = null;
   };
-  AreaDamageBehavior.prototype.Oa = function (a) {
+  AreaDamageBehavior.prototype.notifySpellLearned = function (a) {
     if (!(this.Zl || 8 !== a.spellCategoryId)) {
       this.Zl = a;
     }
@@ -869,7 +869,7 @@ export function initializeAiBehaviors() {
   ChainDamageBehavior.prototype.Wa = function () {
     this.In = null;
   };
-  ChainDamageBehavior.prototype.Oa = function (a) {
+  ChainDamageBehavior.prototype.notifySpellLearned = function (a) {
     if (!(this.In || 12 !== a.spellCategoryId)) {
       this.In = a;
     }
@@ -890,7 +890,7 @@ export function initializeAiBehaviors() {
   SummonBehavior.prototype.Wa = function () {
     this.zd = null;
   };
-  SummonBehavior.prototype.Oa = function (a) {
+  SummonBehavior.prototype.notifySpellLearned = function (a) {
     if (!(this.zd || a.spellCategoryId !== this.expectedSpellCategoryId)) {
       this.zd = a;
     }
@@ -911,7 +911,7 @@ export function initializeAiBehaviors() {
   LifeDrainBehavior.prototype.Wa = function () {
     this.Lm = null;
   };
-  LifeDrainBehavior.prototype.Oa = function (a) {
+  LifeDrainBehavior.prototype.notifySpellLearned = function (a) {
     if (!(this.Lm || 1 !== a.spellCategoryId)) {
       this.Lm = a;
     }
@@ -945,7 +945,7 @@ export function initializeAiBehaviors() {
   ReviveBehavior.prototype.Wa = function () {
     this.pn = null;
   };
-  ReviveBehavior.prototype.Oa = function (a) {
+  ReviveBehavior.prototype.notifySpellLearned = function (a) {
     if (!(this.pn || 16 !== a.spellCategoryId)) {
       this.pn = a;
     }
@@ -974,7 +974,7 @@ export function initializeAiBehaviors() {
   PartyBuffBehavior.prototype.Wa = function () {
     this.zd = null;
   };
-  PartyBuffBehavior.prototype.Oa = function (a) {
+  PartyBuffBehavior.prototype.notifySpellLearned = function (a) {
     if (!(this.zd || a.statusEffectTypeId !== this.statusEffectTypeId)) {
       this.zd = a;
     }
@@ -992,7 +992,7 @@ export function initializeAiBehaviors() {
     return a;
   };
   WaitBehavior.prototype.Wa = function () {};
-  WaitBehavior.prototype.Oa = function () {};
+  WaitBehavior.prototype.notifySpellLearned = function () {};
   WaitBehavior.prototype.od = function (a) {
     if (!isPartyTravelling(game.state.party) || !hasForcedDestination(a)) {
       var b = game.state.party,
@@ -1049,7 +1049,7 @@ export function initializeAiBehaviors() {
   LootChestBehavior.prototype.Wa = function () {
     this.Wm = null;
   };
-  LootChestBehavior.prototype.Oa = function (a) {
+  LootChestBehavior.prototype.notifySpellLearned = function (a) {
     if (!(this.Wm || 14 !== a.spellCategoryId)) {
       this.Wm = a;
     }
@@ -1070,7 +1070,7 @@ export function initializeAiBehaviors() {
   LootPotionBehavior.prototype.Wa = function () {
     this.pm = null;
   };
-  LootPotionBehavior.prototype.Oa = function (a) {
+  LootPotionBehavior.prototype.notifySpellLearned = function (a) {
     if (!(this.pm || 15 !== a.spellCategoryId)) {
       this.pm = a;
     }
@@ -1095,7 +1095,7 @@ export function initializeAiBehaviors() {
   UseShopBehavior.prototype.Wa = function () {
     this.qd = null;
   };
-  UseShopBehavior.prototype.Oa = function () {};
+  UseShopBehavior.prototype.notifySpellLearned = function () {};
   UseShopBehavior.prototype.od = function (a) {
     if (this.qd) {
       if (this.qd.gc) {
@@ -1158,7 +1158,7 @@ export function initializeAiBehaviors() {
   EnterDungeonBehavior.prototype.Wa = function () {
     this.bd = null;
   };
-  EnterDungeonBehavior.prototype.Oa = function () {};
+  EnterDungeonBehavior.prototype.notifySpellLearned = function () {};
   EnterDungeonBehavior.prototype.od = function (a) {
     if (this.bd) {
       if (this.bd.gc) {
@@ -1221,7 +1221,7 @@ export function initializeAiBehaviors() {
   EnterCastleBehavior.prototype.Wa = function () {
     this.ad = null;
   };
-  EnterCastleBehavior.prototype.Oa = function () {};
+  EnterCastleBehavior.prototype.notifySpellLearned = function () {};
   EnterCastleBehavior.prototype.od = function (a) {
     if (this.ad) {
       if (this.ad.gc) {
@@ -1284,7 +1284,7 @@ export function initializeAiBehaviors() {
   TravelWorldBehavior.prototype.Wa = function () {
     this.$c = null;
   };
-  TravelWorldBehavior.prototype.Oa = function () {};
+  TravelWorldBehavior.prototype.notifySpellLearned = function () {};
   TravelWorldBehavior.prototype.od = function (a) {
     if (this.$c) {
       if (this.$c.gc) {
@@ -1347,7 +1347,7 @@ export function initializeAiBehaviors() {
   ChangeFloorBehavior.prototype.Wa = function () {
     this.lc = null;
   };
-  ChangeFloorBehavior.prototype.Oa = function () {};
+  ChangeFloorBehavior.prototype.notifySpellLearned = function () {};
   ChangeFloorBehavior.prototype.od = function (a) {
     if (this.lc && !this.lc.Kg) {
       a.hq(this.lc);
@@ -1379,7 +1379,7 @@ export function initializeAiBehaviors() {
   SelfSpellBehavior.prototype.Wa = function () {
     this.Sc = null;
   };
-  SelfSpellBehavior.prototype.Oa = function (a) {
+  SelfSpellBehavior.prototype.notifySpellLearned = function (a) {
     if (!(this.Sc || 9 !== a.spellCategoryId)) {
       this.Sc = a;
     }
@@ -1403,7 +1403,7 @@ export function initializeAiBehaviors() {
   AreaSpellBehavior.prototype.Wa = function () {
     this.Sc = null;
   };
-  AreaSpellBehavior.prototype.Oa = function (a) {
+  AreaSpellBehavior.prototype.notifySpellLearned = function (a) {
     if (!(this.Sc || a.spellCategoryId !== this.KE)) {
       this.Sc = a;
     }
@@ -1428,7 +1428,7 @@ export function initializeAiBehaviors() {
   CompanionSpellBehavior.prototype.Wa = function () {
     this.Sc = null;
   };
-  CompanionSpellBehavior.prototype.Oa = function (a) {
+  CompanionSpellBehavior.prototype.notifySpellLearned = function (a) {
     if (!(this.Sc || 11 !== a.spellCategoryId)) {
       this.Sc = a;
     }
@@ -1488,7 +1488,7 @@ export function initializeAiBehaviors() {
     return g;
   };
   CooldownBehavior.prototype.Wa = function () {};
-  CooldownBehavior.prototype.Oa = function () {};
+  CooldownBehavior.prototype.notifySpellLearned = function () {};
   CooldownBehavior.prototype.od = function (a) {
     choosePointNearTarget(a.position.Qb, a.summoner.position.levelPosition, a.position.room);
     a.actionType = 1;
@@ -1506,7 +1506,7 @@ export function initializeAiBehaviors() {
     return this.priorityWeight;
   };
   SpecialAttackBehavior.prototype.Wa = function () {};
-  SpecialAttackBehavior.prototype.Oa = function () {};
+  SpecialAttackBehavior.prototype.notifySpellLearned = function () {};
   SpecialAttackBehavior.prototype.od = function (a) {
     if (this.Fa && !this.Fa.Va) {
       a.Cb(this.Fa);
@@ -1552,7 +1552,7 @@ export function initializeAiBehaviors() {
     return this.priorityWeight;
   };
   StunnedBehavior.prototype.Wa = function () {};
-  StunnedBehavior.prototype.Oa = function () {};
+  StunnedBehavior.prototype.notifySpellLearned = function () {};
   StunnedBehavior.prototype.od = function (a) {
     var b = a.position;
     if (b.room) {

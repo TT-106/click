@@ -422,7 +422,7 @@ export function initializeAiTargeting() {
   IDLE_ACTION = 0;
   MELEE_ACTION_TYPE = 3;
   CAST_ACTION_TYPE = 4;
-  AttackBehavior.prototype.Oa = function () {};
+  AttackBehavior.prototype.notifySpellLearned = function () {};
   AttackBehavior.prototype.dr = function (a) {
     if (!respondToTaunt(this, a) && (a.position.dd || a.actionType === IDLE_ACTION)) {
       var b = (this.Al.tileRow + 1) * game.tileSize,

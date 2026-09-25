@@ -106,7 +106,7 @@ export function learnSpell(a, b) {
   resetSpellCooldown(b);
   a.spells.push(b);
   if (a.behaviors) {
-    a.behaviors.Oa(b);
+    a.behaviors.notifySpellLearned(b);
   }
 }
 export function hasUnpurchasedUpgrade(a) {
