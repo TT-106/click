@@ -1,4 +1,3 @@
-// @ts-nocheck -- M10 渐进类型化：JSDoc 覆盖后摘除（见 docs/WORKSTATE.md）
 /** 地牢状态、农场、商店及相关索引。
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
@@ -214,7 +213,7 @@ export function initializeWorldDungeons() {
     resetEncounter();
     game.state.aa.$r();
     if (this.currentLevelIndex < this.levelCount) {
-      generateDungeonLevel(this.er(), this.dungeonType, this.Aj, true);
+      generateDungeonLevel((/** @type {any} */ (this)).er(), this.dungeonType, this.Aj, true);
       awardAdventurePoints(POINT_EVENT_LEVEL_CLEARED);
       recordGameEvent("Dungeon", "进入等级" + this.currentLevelIndex);
     } else {

@@ -1,4 +1,3 @@
-// @ts-nocheck -- M10 渐进类型化：JSDoc 覆盖后摘除（见 docs/WORKSTATE.md）
 /** 大地图通行代价计算。
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
@@ -14,7 +13,7 @@ export function calculateWorldCosts(a, b, c) {
     h;
   for (h = 0; 3 > h; h++) {
     for (f = d[h], g = 0; 3 > g; g++) {
-      for (var l = f[g], n = a, p = undefined, s = undefined, u = undefined, p = 0; p < l.jo.length; p++) {
+      for (var l = f[g], n = a, p = 0, s = undefined, u = undefined; p < l.jo.length; p++) {
         for (u = l.jo[p], s = 0; s < u.length; s++) {
           u[s].ln = n;
         }

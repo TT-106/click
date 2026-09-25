@@ -1,4 +1,3 @@
-// @ts-nocheck -- M10 渐进类型化：JSDoc 覆盖后摘除（见 docs/WORKSTATE.md）
 /** 走廊路径查找、开放集与节点池。
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
@@ -93,7 +92,7 @@ export function findHallwayPath(a, b, c) {
       n,
       p,
       s,
-      d = 0;
+      d = /** @type {any} */ (0);
     a.open.Ui.length = 0;
     a.open.push(g);
     for (g.It = true; 0 < a.open.Ui.length;) {

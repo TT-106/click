@@ -1,4 +1,3 @@
-// @ts-nocheck -- M10 渐进类型化：JSDoc 覆盖后摘除（见 docs/WORKSTATE.md）
 /** 装备模板、数值、稀有度与掉落生成。
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
@@ -249,7 +248,7 @@ export function registerItemType(a, b, c) {
     console.log("item type hash collision: " + d);
   }
   a.os[g] = b;
-  for (g = 0; g < f.length; g++) {
+  for (g = 0; g < (/** @type {any} */ (f)).length; g++) {
     d = f[g];
     c = a.ps[d];
     if (!c) {

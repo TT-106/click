@@ -1,4 +1,3 @@
-// @ts-nocheck -- M10 渐进类型化：JSDoc 覆盖后摘除（见 docs/WORKSTATE.md）
 /** 卷轴库存、冷却、升级与施放。
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
@@ -207,7 +206,7 @@ export function resetScrollInventory() {
   var b, c;
   for (b = 0; b < scrollDefinitions.length; b++) {
     c = new Scroll(scrollDefinitions[b], game.scrollTargets);
-    c.ts(0 < scrollDefinitions[b].sg, 0);
+    (/** @type {any} */ (c)).ts(0 < scrollDefinitions[b].sg, 0);
     a.at.push(c);
     a.kx[c.scrollId] = c;
     if (!c.locked) {
