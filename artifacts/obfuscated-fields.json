@@ -95,132 +95,6 @@
     ]
   },
   {
-    "name": "Ta",
-    "reads": 19,
-    "writes": 17,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:296",
-        "code": "d.Ta"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:326",
-        "code": "IdleBehavior.prototype.Ta"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:386",
-        "code": "ExploreDungeonBehavior.prototype.Ta"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js"
-    ]
-  },
-  {
-    "name": "Va",
-    "reads": 31,
-    "writes": 4,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:466",
-        "code": "this.targetCharacter.Va"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:493",
-        "code": "n.Va"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:544",
-        "code": "this.targetCharacter.Va"
-      }
-    ],
-    "fileCount": 8,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js",
-      "src\\engine\\modules\\ai\\targeting.js",
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\combat\\scrolls.js",
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\simulation\\characters.js",
-      "src\\engine\\modules\\simulation\\tick.js"
-    ]
-  },
-  {
-    "name": "Pa",
-    "reads": 31,
-    "writes": 4,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\party.js:118",
-        "code": "game.level.Pa"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:270",
-        "code": "game.level.Pa"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:815",
-        "code": "qa.Pa"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\characters\\party.js",
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\world\\generation.js"
-    ]
-  },
-  {
-    "name": "ab",
-    "reads": 2,
-    "writes": 31,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\progression\\achievements.js:19",
-        "code": "this.ab"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\achievements.js:19",
-        "code": "a.ab"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\achievements.js:1982",
-        "code": "ab: true"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\progression\\achievements.js",
-      "src\\engine\\modules\\simulation\\tick.js"
-    ]
-  },
-  {
-    "name": "bb",
-    "reads": 7,
-    "writes": 25,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:31",
-        "code": "this.bb"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:44",
-        "code": "this.bb"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:53",
-        "code": "this.bb"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js",
-      "src\\engine\\modules\\ai\\targeting.js"
-    ]
-  },
-  {
     "name": "hb",
     "reads": 30,
     "writes": 2,
@@ -251,37 +125,6 @@
       "src\\engine\\modules\\world\\generation.js",
       "src\\engine\\modules\\world\\terrain.js",
       "src\\engine\\modules\\world\\travel-costs.js"
-    ]
-  },
-  {
-    "name": "cb",
-    "reads": 24,
-    "writes": 8,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:1170",
-        "code": "Se.ge.cb"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\party.js:229",
-        "code": "a.cb"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\party.js:266",
-        "code": "a.pd[b].cb"
-      }
-    ],
-    "fileCount": 9,
-    "files": [
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\characters\\party.js",
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\progression\\upgrades.js",
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\views\\castles.js",
-      "src\\engine\\modules\\world\\dungeons.js",
-      "src\\engine\\modules\\world\\regions.js",
-      "src\\engine\\modules\\world\\terrain.js"
     ]
   },
   {
@@ -449,32 +292,26 @@
     ]
   },
   {
-    "name": "nb",
-    "reads": 5,
-    "writes": 25,
+    "name": "ab",
+    "reads": 0,
+    "writes": 30,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\combat\\encounters.js:120",
-        "code": "bossClass.nb"
+        "loc": "src\\engine\\modules\\progression\\achievements.js:1982",
+        "code": "ab: true"
       },
       {
-        "loc": "src\\engine\\modules\\content\\classes.js:97",
-        "code": "nb: function () {\n  return [new FollowLeaderBehavior(), new StunnedBehavior(99), new LootGoldBehavior(98), new MeleeAttackBehavior(MELEE_ATT"
+        "loc": "src\\engine\\modules\\progression\\achievements.js:1989",
+        "code": "ab: true"
       },
       {
-        "loc": "src\\engine\\modules\\content\\classes.js:150",
-        "code": "nb: function () {\n  return [new FollowLeaderBehavior(), new StunnedBehavior(99), new ReviveBehavior(MELEE_ATTACK_RANGE, 94), new LifeDrainBe"
+        "loc": "src\\engine\\modules\\progression\\achievements.js:1996",
+        "code": "ab: true"
       }
     ],
-    "fileCount": 7,
+    "fileCount": 1,
     "files": [
-      "src\\engine\\modules\\combat\\encounters.js",
-      "src\\engine\\modules\\content\\classes.js",
-      "src\\engine\\modules\\content\\guardians.js",
-      "src\\engine\\modules\\content\\minions.js",
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\simulation\\characters.js",
-      "src\\engine\\modules\\views\\party-creation.js"
+      "src\\engine\\modules\\progression\\achievements.js"
     ]
   },
   {
@@ -553,63 +390,6 @@
     ]
   },
   {
-    "name": "Db",
-    "reads": 27,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:192",
-        "code": "c.Db"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:194",
-        "code": "c.Db"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:195",
-        "code": "c.Db"
-      }
-    ],
-    "fileCount": 7,
-    "files": [
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\characters\\movement.js",
-      "src\\engine\\modules\\characters\\party.js",
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\simulation\\characters.js",
-      "src\\engine\\modules\\simulation\\tick.js",
-      "src\\engine\\modules\\world\\terrain.js"
-    ]
-  },
-  {
-    "name": "Ab",
-    "reads": 25,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\party.js:259",
-        "code": "a.Ab"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\party.js:442",
-        "code": "this.Wf.Ab"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\party.js:454",
-        "code": "f.Ab"
-      }
-    ],
-    "fileCount": 6,
-    "files": [
-      "src\\engine\\modules\\characters\\party.js",
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\views\\castles.js",
-      "src\\engine\\modules\\world\\dungeons.js",
-      "src\\engine\\modules\\world\\initialization.js",
-      "src\\engine\\modules\\world\\regions.js"
-    ]
-  },
-  {
     "name": "Bb",
     "reads": 17,
     "writes": 11,
@@ -659,30 +439,6 @@
       "src\\engine\\modules\\combat\\actions.js",
       "src\\engine\\modules\\combat\\scrolls.js",
       "src\\engine\\modules\\simulation\\tick.js"
-    ]
-  },
-  {
-    "name": "Gb",
-    "reads": 4,
-    "writes": 23,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\progression\\points.js:273",
-        "code": "Gb: 5E5"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\points.js:279",
-        "code": "Gb: 1E6"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\points.js:285",
-        "code": "Gb: 25E5"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\progression\\points.js",
-      "src\\engine\\modules\\progression\\upgrades.js"
     ]
   },
   {
@@ -1763,11 +1519,11 @@
     "writes": 20,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:36",
+        "loc": "src\\engine\\modules\\loot\\treasure.js:35",
         "code": "d.xh.Ec"
       },
       {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:36",
+        "loc": "src\\engine\\modules\\loot\\treasure.js:35",
         "code": "d.hh.Ec"
       },
       {
@@ -3586,15 +3342,15 @@
     "writes": 1,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:51",
+        "loc": "src\\engine\\modules\\loot\\treasure.js:50",
         "code": "this.ve"
       },
       {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:67",
+        "loc": "src\\engine\\modules\\loot\\treasure.js:66",
         "code": "b.ve"
       },
       {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:67",
+        "loc": "src\\engine\\modules\\loot\\treasure.js:66",
         "code": "b.ve"
       }
     ],
@@ -4531,11 +4287,11 @@
         "code": "Xd.Mf"
       },
       {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:37",
+        "loc": "src\\engine\\modules\\loot\\treasure.js:36",
         "code": "this.Mf"
       },
       {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:37",
+        "loc": "src\\engine\\modules\\loot\\treasure.js:36",
         "code": "d.Mf"
       }
     ],
@@ -6086,11 +5842,11 @@
     "writes": 10,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:35",
+        "loc": "src\\engine\\modules\\loot\\treasure.js:34",
         "code": "d.xh"
       },
       {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:36",
+        "loc": "src\\engine\\modules\\loot\\treasure.js:35",
         "code": "d.xh"
       },
       {
@@ -6110,11 +5866,11 @@
     "writes": 10,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:35",
+        "loc": "src\\engine\\modules\\loot\\treasure.js:34",
         "code": "d.hh"
       },
       {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:36",
+        "loc": "src\\engine\\modules\\loot\\treasure.js:35",
         "code": "d.hh"
       },
       {
@@ -6134,15 +5890,15 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:52",
+        "loc": "src\\engine\\modules\\loot\\treasure.js:51",
+        "code": "this.yh"
+      },
+      {
+        "loc": "src\\engine\\modules\\loot\\treasure.js:122",
         "code": "this.yh"
       },
       {
         "loc": "src\\engine\\modules\\loot\\treasure.js:123",
-        "code": "this.yh"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:124",
         "code": "this.yh"
       }
     ],
@@ -6159,7 +5915,7 @@
     "writes": 10,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:82",
+        "loc": "src\\engine\\modules\\loot\\treasure.js:81",
         "code": "c.jh"
       },
       {
@@ -6996,15 +6752,15 @@
     "writes": 4,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:129",
+        "loc": "src\\engine\\modules\\views\\expedition.js:128",
         "code": "this.Vh"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:157",
+        "loc": "src\\engine\\modules\\views\\expedition.js:156",
         "code": "a.Vh"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:158",
+        "loc": "src\\engine\\modules\\views\\expedition.js:157",
         "code": "a.Vh"
       }
     ],
@@ -7020,15 +6776,15 @@
     "writes": 8,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:182",
+        "loc": "src\\engine\\modules\\views\\expedition.js:181",
+        "code": "this.Jh"
+      },
+      {
+        "loc": "src\\engine\\modules\\views\\expedition.js:700",
         "code": "this.Jh"
       },
       {
         "loc": "src\\engine\\modules\\views\\expedition.js:701",
-        "code": "this.Jh"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\expedition.js:702",
         "code": "this.Jh"
       }
     ],
@@ -7875,15 +7631,15 @@
     "writes": 3,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:180",
+        "loc": "src\\engine\\modules\\views\\expedition.js:179",
         "code": "this.Si"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:188",
+        "loc": "src\\engine\\modules\\views\\expedition.js:187",
         "code": "a.Si"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:189",
+        "loc": "src\\engine\\modules\\views\\expedition.js:188",
         "code": "a.Si"
       }
     ],
@@ -8878,15 +8634,15 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:35",
+        "loc": "src\\engine\\modules\\views\\expedition.js:34",
+        "code": "this.ok"
+      },
+      {
+        "loc": "src\\engine\\modules\\views\\expedition.js:337",
         "code": "this.ok"
       },
       {
         "loc": "src\\engine\\modules\\views\\expedition.js:338",
-        "code": "this.ok"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\expedition.js:339",
         "code": "this.ok"
       }
     ],
@@ -8902,15 +8658,15 @@
     "writes": 1,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:38",
+        "loc": "src\\engine\\modules\\views\\expedition.js:37",
         "code": "this.lk"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:259",
+        "loc": "src\\engine\\modules\\views\\expedition.js:258",
         "code": "this.lk"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:411",
+        "loc": "src\\engine\\modules\\views\\expedition.js:410",
         "code": "this.lk"
       }
     ],
@@ -8925,15 +8681,15 @@
     "writes": 6,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:42",
+        "loc": "src\\engine\\modules\\views\\expedition.js:41",
         "code": "this.vj"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:72",
+        "loc": "src\\engine\\modules\\views\\expedition.js:71",
         "code": "this.vj"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:255",
+        "loc": "src\\engine\\modules\\views\\expedition.js:254",
         "code": "this.vj"
       }
     ],
@@ -8948,15 +8704,15 @@
     "writes": 3,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:180",
+        "loc": "src\\engine\\modules\\views\\expedition.js:179",
         "code": "this.yj"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:205",
+        "loc": "src\\engine\\modules\\views\\expedition.js:204",
         "code": "a.yj"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:206",
+        "loc": "src\\engine\\modules\\views\\expedition.js:205",
         "code": "a.yj"
       }
     ],
@@ -8971,15 +8727,15 @@
     "writes": 6,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:181",
+        "loc": "src\\engine\\modules\\views\\expedition.js:180",
         "code": "this.ak"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:204",
+        "loc": "src\\engine\\modules\\views\\expedition.js:203",
         "code": "a.ak"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:667",
+        "loc": "src\\engine\\modules\\views\\expedition.js:666",
         "code": "this.ak"
       }
     ],
@@ -10837,15 +10593,15 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:35",
+        "loc": "src\\engine\\modules\\views\\expedition.js:34",
+        "code": "this.Ak"
+      },
+      {
+        "loc": "src\\engine\\modules\\views\\expedition.js:346",
         "code": "this.Ak"
       },
       {
         "loc": "src\\engine\\modules\\views\\expedition.js:347",
-        "code": "this.Ak"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\expedition.js:348",
         "code": "this.Ak"
       }
     ],
@@ -10860,15 +10616,15 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:35",
+        "loc": "src\\engine\\modules\\views\\expedition.js:34",
+        "code": "this.pk"
+      },
+      {
+        "loc": "src\\engine\\modules\\views\\expedition.js:301",
         "code": "this.pk"
       },
       {
         "loc": "src\\engine\\modules\\views\\expedition.js:302",
-        "code": "this.pk"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\expedition.js:303",
         "code": "this.pk"
       }
     ],
@@ -10883,15 +10639,15 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:35",
+        "loc": "src\\engine\\modules\\views\\expedition.js:34",
+        "code": "this.zk"
+      },
+      {
+        "loc": "src\\engine\\modules\\views\\expedition.js:292",
         "code": "this.zk"
       },
       {
         "loc": "src\\engine\\modules\\views\\expedition.js:293",
-        "code": "this.zk"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\expedition.js:294",
         "code": "this.zk"
       }
     ],
@@ -10906,15 +10662,15 @@
     "writes": 4,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:65",
+        "loc": "src\\engine\\modules\\views\\expedition.js:64",
         "code": "this.nl"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:71",
+        "loc": "src\\engine\\modules\\views\\expedition.js:70",
         "code": "this.nl"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:498",
+        "loc": "src\\engine\\modules\\views\\expedition.js:497",
         "code": "this.nl"
       }
     ],
@@ -11795,7 +11551,7 @@
         "code": "this.Ue.Nn"
       },
       {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:33",
+        "loc": "src\\engine\\modules\\loot\\treasure.js:32",
         "code": "this.Nn"
       }
     ],
@@ -12280,11 +12036,11 @@
     "writes": 1,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:49",
+        "loc": "src\\engine\\modules\\loot\\treasure.js:48",
         "code": "this.Mn"
       },
       {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:90",
+        "loc": "src\\engine\\modules\\loot\\treasure.js:89",
         "code": "b.Mn"
       },
       {
@@ -12647,15 +12403,15 @@
     "writes": 1,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:25",
+        "loc": "src\\engine\\modules\\views\\expedition.js:24",
         "code": "this.Wl"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:308",
+        "loc": "src\\engine\\modules\\views\\expedition.js:307",
         "code": "this.Wl"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:312",
+        "loc": "src\\engine\\modules\\views\\expedition.js:311",
         "code": "this.Wl"
       }
     ],
@@ -12670,15 +12426,15 @@
     "writes": 4,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:35",
+        "loc": "src\\engine\\modules\\views\\expedition.js:34",
         "code": "this.nn"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:245",
+        "loc": "src\\engine\\modules\\views\\expedition.js:244",
         "code": "this.nn"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:248",
+        "loc": "src\\engine\\modules\\views\\expedition.js:247",
         "code": "this.nn"
       }
     ],
@@ -12693,15 +12449,15 @@
     "writes": 1,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:37",
+        "loc": "src\\engine\\modules\\views\\expedition.js:36",
+        "code": "this.qm"
+      },
+      {
+        "loc": "src\\engine\\modules\\views\\expedition.js:256",
         "code": "this.qm"
       },
       {
         "loc": "src\\engine\\modules\\views\\expedition.js:257",
-        "code": "this.qm"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\expedition.js:258",
         "code": "this.qm"
       }
     ],
@@ -12716,15 +12472,15 @@
     "writes": 1,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:39",
+        "loc": "src\\engine\\modules\\views\\expedition.js:38",
         "code": "this.Dm"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:260",
+        "loc": "src\\engine\\modules\\views\\expedition.js:259",
         "code": "this.Dm"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:429",
+        "loc": "src\\engine\\modules\\views\\expedition.js:428",
         "code": "this.Dm"
       }
     ],
@@ -12739,15 +12495,15 @@
     "writes": 5,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:81",
+        "loc": "src\\engine\\modules\\views\\expedition.js:80",
+        "code": "this.rm"
+      },
+      {
+        "loc": "src\\engine\\modules\\views\\expedition.js:561",
         "code": "this.rm"
       },
       {
         "loc": "src\\engine\\modules\\views\\expedition.js:562",
-        "code": "this.rm"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\expedition.js:563",
         "code": "this.rm"
       }
     ],
@@ -12763,15 +12519,15 @@
     "writes": 5,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:129",
+        "loc": "src\\engine\\modules\\views\\expedition.js:128",
         "code": "this.tm"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:589",
+        "loc": "src\\engine\\modules\\views\\expedition.js:588",
         "code": "this.tm"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:589",
+        "loc": "src\\engine\\modules\\views\\expedition.js:588",
         "code": "this.tm"
       }
     ],
@@ -12787,15 +12543,15 @@
     "writes": 4,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:178",
+        "loc": "src\\engine\\modules\\views\\expedition.js:177",
         "code": "this.sm"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:666",
+        "loc": "src\\engine\\modules\\views\\expedition.js:665",
         "code": "this.sm"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:678",
+        "loc": "src\\engine\\modules\\views\\expedition.js:677",
         "code": "this.sm"
       }
     ],
@@ -12810,15 +12566,15 @@
     "writes": 3,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:180",
+        "loc": "src\\engine\\modules\\views\\expedition.js:179",
         "code": "this.km"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:186",
+        "loc": "src\\engine\\modules\\views\\expedition.js:185",
         "code": "a.km"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:188",
+        "loc": "src\\engine\\modules\\views\\expedition.js:187",
         "code": "a.km"
       }
     ],
@@ -14369,7 +14125,7 @@
         "code": "a.Yp"
       },
       {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:58",
+        "loc": "src\\engine\\modules\\loot\\treasure.js:57",
         "code": "a.Yp"
       },
       {
@@ -15353,15 +15109,15 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:86",
+        "loc": "src\\engine\\modules\\views\\expedition.js:85",
         "code": "this.Np"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:93",
+        "loc": "src\\engine\\modules\\views\\expedition.js:92",
         "code": "a.Np"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:95",
+        "loc": "src\\engine\\modules\\views\\expedition.js:94",
         "code": "a.Np"
       }
     ],
@@ -15376,15 +15132,15 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:105",
+        "loc": "src\\engine\\modules\\views\\expedition.js:104",
         "code": "this.qp"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:109",
+        "loc": "src\\engine\\modules\\views\\expedition.js:108",
         "code": "this.qp"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:122",
+        "loc": "src\\engine\\modules\\views\\expedition.js:121",
         "code": "a.qp"
       }
     ],
@@ -15399,15 +15155,15 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:129",
+        "loc": "src\\engine\\modules\\views\\expedition.js:128",
         "code": "this.$p"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:146",
+        "loc": "src\\engine\\modules\\views\\expedition.js:145",
         "code": "a.$p"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:148",
+        "loc": "src\\engine\\modules\\views\\expedition.js:147",
         "code": "a.$p"
       }
     ],
@@ -15422,15 +15178,15 @@
     "writes": 2,
     "samples": [
       {
+        "loc": "src\\engine\\modules\\views\\expedition.js:129",
+        "code": "this.aq"
+      },
+      {
         "loc": "src\\engine\\modules\\views\\expedition.js:130",
         "code": "this.aq"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:131",
-        "code": "this.aq"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\expedition.js:603",
+        "loc": "src\\engine\\modules\\views\\expedition.js:602",
         "code": "this.aq"
       }
     ],
@@ -15445,15 +15201,15 @@
     "writes": 4,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:178",
+        "loc": "src\\engine\\modules\\views\\expedition.js:177",
         "code": "this.yo"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:666",
+        "loc": "src\\engine\\modules\\views\\expedition.js:665",
         "code": "this.yo"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:683",
+        "loc": "src\\engine\\modules\\views\\expedition.js:682",
         "code": "this.yo"
       }
     ],
@@ -15468,15 +15224,15 @@
     "writes": 3,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:180",
+        "loc": "src\\engine\\modules\\views\\expedition.js:179",
         "code": "this.Pp"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:197",
+        "loc": "src\\engine\\modules\\views\\expedition.js:196",
         "code": "a.Pp"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:198",
+        "loc": "src\\engine\\modules\\views\\expedition.js:197",
         "code": "a.Pp"
       }
     ],
@@ -15491,15 +15247,15 @@
     "writes": 3,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:180",
+        "loc": "src\\engine\\modules\\views\\expedition.js:179",
         "code": "this.Op"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:194",
+        "loc": "src\\engine\\modules\\views\\expedition.js:193",
         "code": "a.Op"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:196",
+        "loc": "src\\engine\\modules\\views\\expedition.js:195",
         "code": "a.Op"
       }
     ],
@@ -15514,15 +15270,15 @@
     "writes": 3,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:180",
+        "loc": "src\\engine\\modules\\views\\expedition.js:179",
         "code": "this.Tp"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:193",
+        "loc": "src\\engine\\modules\\views\\expedition.js:192",
         "code": "a.Tp"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:195",
+        "loc": "src\\engine\\modules\\views\\expedition.js:194",
         "code": "a.Tp"
       }
     ],
@@ -15537,15 +15293,15 @@
     "writes": 4,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:183",
+        "loc": "src\\engine\\modules\\views\\expedition.js:182",
         "code": "this.Sp"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:187",
+        "loc": "src\\engine\\modules\\views\\expedition.js:186",
         "code": "a.Sp"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:188",
+        "loc": "src\\engine\\modules\\views\\expedition.js:187",
         "code": "a.Sp"
       }
     ],
@@ -15560,15 +15316,15 @@
     "writes": 4,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:183",
+        "loc": "src\\engine\\modules\\views\\expedition.js:182",
         "code": "this.Bo"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:209",
+        "loc": "src\\engine\\modules\\views\\expedition.js:208",
         "code": "a.Bo"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:711",
+        "loc": "src\\engine\\modules\\views\\expedition.js:710",
         "code": "this.Bo"
       }
     ],
@@ -15583,15 +15339,15 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:632",
+        "loc": "src\\engine\\modules\\views\\expedition.js:631",
         "code": "this.so"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:636",
+        "loc": "src\\engine\\modules\\views\\expedition.js:635",
         "code": "this.so"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:650",
+        "loc": "src\\engine\\modules\\views\\expedition.js:649",
         "code": "ScrollBarView.prototype.so"
       }
     ],
@@ -17545,15 +17301,15 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:50",
+        "loc": "src\\engine\\modules\\loot\\treasure.js:49",
         "code": "this.Dt"
       },
       {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:91",
+        "loc": "src\\engine\\modules\\loot\\treasure.js:90",
         "code": "b.Dt"
       },
       {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:98",
+        "loc": "src\\engine\\modules\\loot\\treasure.js:97",
         "code": "a.Dt"
       }
     ],
@@ -18592,15 +18348,15 @@
     "writes": 3,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:24",
+        "loc": "src\\engine\\modules\\views\\expedition.js:23",
         "code": "this.Nq"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:243",
+        "loc": "src\\engine\\modules\\views\\expedition.js:242",
         "code": "this.Nq"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:262",
+        "loc": "src\\engine\\modules\\views\\expedition.js:261",
         "code": "this.Nq"
       }
     ],
@@ -18615,15 +18371,15 @@
     "writes": 1,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:28",
+        "loc": "src\\engine\\modules\\views\\expedition.js:27",
         "code": "this.Lq"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:290",
+        "loc": "src\\engine\\modules\\views\\expedition.js:289",
         "code": "this.Lq"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:393",
+        "loc": "src\\engine\\modules\\views\\expedition.js:392",
         "code": "this.Lq"
       }
     ],
@@ -18638,15 +18394,15 @@
     "writes": 1,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:29",
+        "loc": "src\\engine\\modules\\views\\expedition.js:28",
         "code": "this.Jq"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:335",
+        "loc": "src\\engine\\modules\\views\\expedition.js:334",
         "code": "this.Jq"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:396",
+        "loc": "src\\engine\\modules\\views\\expedition.js:395",
         "code": "this.Jq"
       }
     ],
@@ -18661,15 +18417,15 @@
     "writes": 1,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:30",
+        "loc": "src\\engine\\modules\\views\\expedition.js:29",
         "code": "this.Kq"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:299",
+        "loc": "src\\engine\\modules\\views\\expedition.js:298",
         "code": "this.Kq"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:399",
+        "loc": "src\\engine\\modules\\views\\expedition.js:398",
         "code": "this.Kq"
       }
     ],
@@ -18684,15 +18440,15 @@
     "writes": 1,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:31",
+        "loc": "src\\engine\\modules\\views\\expedition.js:30",
         "code": "this.Mq"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:344",
+        "loc": "src\\engine\\modules\\views\\expedition.js:343",
         "code": "this.Mq"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:402",
+        "loc": "src\\engine\\modules\\views\\expedition.js:401",
         "code": "this.Mq"
       }
     ],
@@ -18707,15 +18463,15 @@
     "writes": 3,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:36",
+        "loc": "src\\engine\\modules\\views\\expedition.js:35",
         "code": "this.rr"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:255",
+        "loc": "src\\engine\\modules\\views\\expedition.js:254",
         "code": "this.rr"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:401",
+        "loc": "src\\engine\\modules\\views\\expedition.js:400",
         "code": "this.rr"
       }
     ],
@@ -18730,15 +18486,15 @@
     "writes": 3,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:36",
+        "loc": "src\\engine\\modules\\views\\expedition.js:35",
         "code": "this.pr"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:255",
+        "loc": "src\\engine\\modules\\views\\expedition.js:254",
         "code": "this.pr"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:398",
+        "loc": "src\\engine\\modules\\views\\expedition.js:397",
         "code": "this.pr"
       }
     ],
@@ -18753,15 +18509,15 @@
     "writes": 3,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:36",
+        "loc": "src\\engine\\modules\\views\\expedition.js:35",
         "code": "this.or"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:255",
+        "loc": "src\\engine\\modules\\views\\expedition.js:254",
         "code": "this.or"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:395",
+        "loc": "src\\engine\\modules\\views\\expedition.js:394",
         "code": "this.or"
       }
     ],
@@ -18776,15 +18532,15 @@
     "writes": 3,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:36",
+        "loc": "src\\engine\\modules\\views\\expedition.js:35",
         "code": "this.qr"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:255",
+        "loc": "src\\engine\\modules\\views\\expedition.js:254",
         "code": "this.qr"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:392",
+        "loc": "src\\engine\\modules\\views\\expedition.js:391",
         "code": "this.qr"
       }
     ],
@@ -18799,15 +18555,15 @@
     "writes": 4,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:43",
+        "loc": "src\\engine\\modules\\views\\expedition.js:42",
         "code": "this.Oq"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:244",
+        "loc": "src\\engine\\modules\\views\\expedition.js:243",
         "code": "this.Oq"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:250",
+        "loc": "src\\engine\\modules\\views\\expedition.js:249",
         "code": "this.Oq"
       }
     ],
@@ -18822,15 +18578,15 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:136",
+        "loc": "src\\engine\\modules\\views\\expedition.js:135",
         "code": "this.Qr"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:171",
+        "loc": "src\\engine\\modules\\views\\expedition.js:170",
         "code": "this.Qr"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:617",
+        "loc": "src\\engine\\modules\\views\\expedition.js:616",
         "code": "this.Qr"
       }
     ],
@@ -18845,15 +18601,15 @@
     "writes": 1,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:169",
+        "loc": "src\\engine\\modules\\views\\expedition.js:168",
         "code": "this.Zs"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:631",
+        "loc": "src\\engine\\modules\\views\\expedition.js:630",
         "code": "this.Zs"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:642",
+        "loc": "src\\engine\\modules\\views\\expedition.js:641",
         "code": "this.Zs"
       }
     ],
@@ -18868,15 +18624,15 @@
     "writes": 1,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:219",
+        "loc": "src\\engine\\modules\\views\\expedition.js:218",
         "code": "this.Ms"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:750",
+        "loc": "src\\engine\\modules\\views\\expedition.js:749",
         "code": "this.Ms"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:762",
+        "loc": "src\\engine\\modules\\views\\expedition.js:761",
         "code": "this.Ms"
       }
     ],
@@ -20476,11 +20232,11 @@
         "code": "Potion.prototype.aw"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:200",
+        "loc": "src\\engine\\modules\\views\\expedition.js:199",
         "code": "a.aw"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:734",
+        "loc": "src\\engine\\modules\\views\\expedition.js:733",
         "code": "PotionButtonView.prototype.aw"
       }
     ],
@@ -20500,11 +20256,11 @@
         "code": "PotionInventory.prototype.bw"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:211",
+        "loc": "src\\engine\\modules\\views\\expedition.js:210",
         "code": "a.bw"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:741",
+        "loc": "src\\engine\\modules\\views\\expedition.js:740",
         "code": "PotionButtonView.prototype.bw"
       }
     ],
@@ -20616,11 +20372,11 @@
     "writes": 3,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:21",
+        "loc": "src\\engine\\modules\\loot\\treasure.js:20",
         "code": "this.xw"
       },
       {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:21",
+        "loc": "src\\engine\\modules\\loot\\treasure.js:20",
         "code": "this.xw"
       },
       {
@@ -20641,11 +20397,11 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:73",
+        "loc": "src\\engine\\modules\\loot\\treasure.js:72",
         "code": "b.Zw"
       },
       {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:126",
+        "loc": "src\\engine\\modules\\loot\\treasure.js:125",
         "code": "TreasureRegistry.prototype.Zw"
       },
       {
@@ -20666,11 +20422,11 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:73",
+        "loc": "src\\engine\\modules\\loot\\treasure.js:72",
         "code": "b.Xw"
       },
       {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:120",
+        "loc": "src\\engine\\modules\\loot\\treasure.js:119",
         "code": "TreasureRegistry.prototype.Xw"
       },
       {
@@ -22543,15 +22299,15 @@
     "writes": 3,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:36",
+        "loc": "src\\engine\\modules\\views\\expedition.js:35",
         "code": "this.uv"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:468",
+        "loc": "src\\engine\\modules\\views\\expedition.js:467",
         "code": "this.uv"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:479",
+        "loc": "src\\engine\\modules\\views\\expedition.js:478",
         "code": "this.uv"
       }
     ],
@@ -22566,15 +22322,15 @@
     "writes": 3,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:36",
+        "loc": "src\\engine\\modules\\views\\expedition.js:35",
         "code": "this.sv"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:468",
+        "loc": "src\\engine\\modules\\views\\expedition.js:467",
         "code": "this.sv"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:480",
+        "loc": "src\\engine\\modules\\views\\expedition.js:479",
         "code": "this.sv"
       }
     ],
@@ -22589,15 +22345,15 @@
     "writes": 3,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:36",
+        "loc": "src\\engine\\modules\\views\\expedition.js:35",
         "code": "this.rv"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:468",
+        "loc": "src\\engine\\modules\\views\\expedition.js:467",
         "code": "this.rv"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:477",
+        "loc": "src\\engine\\modules\\views\\expedition.js:476",
         "code": "this.rv"
       }
     ],
@@ -22612,15 +22368,15 @@
     "writes": 3,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:36",
+        "loc": "src\\engine\\modules\\views\\expedition.js:35",
         "code": "this.tv"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:468",
+        "loc": "src\\engine\\modules\\views\\expedition.js:467",
         "code": "this.tv"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:478",
+        "loc": "src\\engine\\modules\\views\\expedition.js:477",
         "code": "this.tv"
       }
     ],
@@ -22635,15 +22391,15 @@
     "writes": 3,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:36",
+        "loc": "src\\engine\\modules\\views\\expedition.js:35",
         "code": "this.mv"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:255",
+        "loc": "src\\engine\\modules\\views\\expedition.js:254",
         "code": "this.mv"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:381",
+        "loc": "src\\engine\\modules\\views\\expedition.js:380",
         "code": "this.mv"
       }
     ],
@@ -22658,15 +22414,15 @@
     "writes": 3,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:36",
+        "loc": "src\\engine\\modules\\views\\expedition.js:35",
         "code": "this.kv"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:255",
+        "loc": "src\\engine\\modules\\views\\expedition.js:254",
         "code": "this.kv"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:374",
+        "loc": "src\\engine\\modules\\views\\expedition.js:373",
         "code": "this.kv"
       }
     ],
@@ -22681,15 +22437,15 @@
     "writes": 3,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:36",
+        "loc": "src\\engine\\modules\\views\\expedition.js:35",
         "code": "this.av"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:255",
+        "loc": "src\\engine\\modules\\views\\expedition.js:254",
         "code": "this.av"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:374",
+        "loc": "src\\engine\\modules\\views\\expedition.js:373",
         "code": "this.av"
       }
     ],
@@ -22704,11 +22460,11 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:40",
+        "loc": "src\\engine\\modules\\views\\expedition.js:39",
         "code": "this.qw"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:407",
+        "loc": "src\\engine\\modules\\views\\expedition.js:406",
         "code": "this.qw"
       },
       {
@@ -22728,15 +22484,15 @@
     "writes": 3,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:66",
+        "loc": "src\\engine\\modules\\views\\expedition.js:65",
         "code": "this.Su"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:496",
+        "loc": "src\\engine\\modules\\views\\expedition.js:495",
         "code": "this.Su"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:514",
+        "loc": "src\\engine\\modules\\views\\expedition.js:513",
         "code": "this.Su"
       }
     ],
@@ -22751,11 +22507,11 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:80",
+        "loc": "src\\engine\\modules\\views\\expedition.js:79",
         "code": "this.Hw"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:564",
+        "loc": "src\\engine\\modules\\views\\expedition.js:563",
         "code": "this.Hw"
       },
       {
@@ -22775,15 +22531,15 @@
     "writes": 1,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:104",
+        "loc": "src\\engine\\modules\\views\\expedition.js:103",
         "code": "this.Gw"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:117",
+        "loc": "src\\engine\\modules\\views\\expedition.js:116",
         "code": "a.Gw"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:123",
+        "loc": "src\\engine\\modules\\views\\expedition.js:122",
         "code": "a.Gw"
       }
     ],
@@ -22798,15 +22554,15 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:129",
+        "loc": "src\\engine\\modules\\views\\expedition.js:128",
         "code": "this.Cx"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:154",
+        "loc": "src\\engine\\modules\\views\\expedition.js:153",
         "code": "a.Cx"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:156",
+        "loc": "src\\engine\\modules\\views\\expedition.js:155",
         "code": "a.Cx"
       }
     ],
@@ -22821,15 +22577,15 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:129",
+        "loc": "src\\engine\\modules\\views\\expedition.js:128",
         "code": "this.mx"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:153",
+        "loc": "src\\engine\\modules\\views\\expedition.js:152",
         "code": "a.mx"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:155",
+        "loc": "src\\engine\\modules\\views\\expedition.js:154",
         "code": "a.mx"
       }
     ],
@@ -22844,15 +22600,15 @@
     "writes": 3,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:131",
+        "loc": "src\\engine\\modules\\views\\expedition.js:130",
         "code": "this.Gv"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:147",
+        "loc": "src\\engine\\modules\\views\\expedition.js:146",
         "code": "a.Gv"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:604",
+        "loc": "src\\engine\\modules\\views\\expedition.js:603",
         "code": "this.Gv"
       }
     ],
@@ -22867,15 +22623,15 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:168",
+        "loc": "src\\engine\\modules\\views\\expedition.js:167",
         "code": "this.fu"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:635",
+        "loc": "src\\engine\\modules\\views\\expedition.js:634",
         "code": "this.fu"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:651",
+        "loc": "src\\engine\\modules\\views\\expedition.js:650",
         "code": "this.fu"
       }
     ],
@@ -22890,11 +22646,11 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:179",
+        "loc": "src\\engine\\modules\\views\\expedition.js:178",
         "code": "this.gu"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:700",
+        "loc": "src\\engine\\modules\\views\\expedition.js:699",
         "code": "this.gu"
       },
       {
@@ -22914,15 +22670,15 @@
     "writes": 3,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:218",
+        "loc": "src\\engine\\modules\\views\\expedition.js:217",
         "code": "this.su"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:751",
+        "loc": "src\\engine\\modules\\views\\expedition.js:750",
         "code": "this.su"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:755",
+        "loc": "src\\engine\\modules\\views\\expedition.js:754",
         "code": "this.su"
       }
     ],
@@ -25196,7 +24952,7 @@
     "samples": [
       {
         "loc": "src\\engine\\modules\\world\\generation.js:180",
-        "code": "f.Pa[b].xx"
+        "code": "f.roomList[b].xx"
       },
       {
         "loc": "src\\engine\\modules\\world\\generation.js:183",
@@ -26339,7 +26095,7 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:21",
+        "loc": "src\\engine\\modules\\loot\\treasure.js:20",
         "code": "this.Sz"
       },
       {
@@ -26364,7 +26120,7 @@
     "writes": 1,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:35",
+        "loc": "src\\engine\\modules\\loot\\treasure.js:34",
         "code": "this.Vy"
       },
       {
@@ -26389,7 +26145,7 @@
     "writes": 1,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:36",
+        "loc": "src\\engine\\modules\\loot\\treasure.js:35",
         "code": "this.PA"
       },
       {
@@ -26414,7 +26170,7 @@
     "writes": 1,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:39",
+        "loc": "src\\engine\\modules\\loot\\treasure.js:38",
         "code": "this.BC"
       },
       {
@@ -27783,15 +27539,15 @@
     "writes": 1,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:26",
+        "loc": "src\\engine\\modules\\views\\expedition.js:25",
         "code": "this.Ay"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:281",
+        "loc": "src\\engine\\modules\\views\\expedition.js:280",
         "code": "this.Ay"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:377",
+        "loc": "src\\engine\\modules\\views\\expedition.js:376",
         "code": "this.Ay"
       }
     ],
@@ -27806,15 +27562,15 @@
     "writes": 1,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:27",
+        "loc": "src\\engine\\modules\\views\\expedition.js:26",
         "code": "this.zy"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:282",
+        "loc": "src\\engine\\modules\\views\\expedition.js:281",
         "code": "this.zy"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:375",
+        "loc": "src\\engine\\modules\\views\\expedition.js:374",
         "code": "this.zy"
       }
     ],
@@ -27829,15 +27585,15 @@
     "writes": 1,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:32",
+        "loc": "src\\engine\\modules\\views\\expedition.js:31",
         "code": "this.By"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:320",
+        "loc": "src\\engine\\modules\\views\\expedition.js:319",
         "code": "this.By"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:390",
+        "loc": "src\\engine\\modules\\views\\expedition.js:389",
         "code": "this.By"
       }
     ],
@@ -27852,15 +27608,15 @@
     "writes": 1,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:33",
+        "loc": "src\\engine\\modules\\views\\expedition.js:32",
         "code": "this.Dy"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:326",
+        "loc": "src\\engine\\modules\\views\\expedition.js:325",
         "code": "this.Dy"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:384",
+        "loc": "src\\engine\\modules\\views\\expedition.js:383",
         "code": "this.Dy"
       }
     ],
@@ -27875,15 +27631,15 @@
     "writes": 1,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:34",
+        "loc": "src\\engine\\modules\\views\\expedition.js:33",
         "code": "this.Cy"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:327",
+        "loc": "src\\engine\\modules\\views\\expedition.js:326",
         "code": "this.Cy"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:382",
+        "loc": "src\\engine\\modules\\views\\expedition.js:381",
         "code": "this.Cy"
       }
     ],
@@ -27898,15 +27654,15 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:72",
+        "loc": "src\\engine\\modules\\views\\expedition.js:71",
         "code": "this.bA"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:534",
+        "loc": "src\\engine\\modules\\views\\expedition.js:533",
         "code": "this.bA"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:541",
+        "loc": "src\\engine\\modules\\views\\expedition.js:540",
         "code": "this.bA"
       }
     ],
@@ -27921,15 +27677,15 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:72",
+        "loc": "src\\engine\\modules\\views\\expedition.js:71",
         "code": "this.xz"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:532",
+        "loc": "src\\engine\\modules\\views\\expedition.js:531",
         "code": "this.xz"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:537",
+        "loc": "src\\engine\\modules\\views\\expedition.js:536",
         "code": "this.xz"
       }
     ],
@@ -27944,15 +27700,15 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:73",
+        "loc": "src\\engine\\modules\\views\\expedition.js:72",
+        "code": "this.Bz"
+      },
+      {
+        "loc": "src\\engine\\modules\\views\\expedition.js:541",
         "code": "this.Bz"
       },
       {
         "loc": "src\\engine\\modules\\views\\expedition.js:542",
-        "code": "this.Bz"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\expedition.js:543",
         "code": "this.Bz"
       }
     ],
@@ -27967,15 +27723,15 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:81",
+        "loc": "src\\engine\\modules\\views\\expedition.js:80",
+        "code": "this.vz"
+      },
+      {
+        "loc": "src\\engine\\modules\\views\\expedition.js:557",
         "code": "this.vz"
       },
       {
         "loc": "src\\engine\\modules\\views\\expedition.js:558",
-        "code": "this.vz"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\expedition.js:559",
         "code": "this.vz"
       }
     ],
@@ -27990,15 +27746,15 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:81",
+        "loc": "src\\engine\\modules\\views\\expedition.js:80",
+        "code": "this.uz"
+      },
+      {
+        "loc": "src\\engine\\modules\\views\\expedition.js:553",
         "code": "this.uz"
       },
       {
         "loc": "src\\engine\\modules\\views\\expedition.js:554",
-        "code": "this.uz"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\expedition.js:555",
         "code": "this.uz"
       }
     ],
@@ -28013,15 +27769,15 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:87",
+        "loc": "src\\engine\\modules\\views\\expedition.js:86",
+        "code": "this.qz"
+      },
+      {
+        "loc": "src\\engine\\modules\\views\\expedition.js:576",
         "code": "this.qz"
       },
       {
         "loc": "src\\engine\\modules\\views\\expedition.js:577",
-        "code": "this.qz"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\expedition.js:578",
         "code": "this.qz"
       }
     ],
@@ -28036,15 +27792,15 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:132",
+        "loc": "src\\engine\\modules\\views\\expedition.js:131",
+        "code": "this.rz"
+      },
+      {
+        "loc": "src\\engine\\modules\\views\\expedition.js:608",
         "code": "this.rz"
       },
       {
         "loc": "src\\engine\\modules\\views\\expedition.js:609",
-        "code": "this.rz"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\expedition.js:610",
         "code": "this.rz"
       }
     ],
@@ -28059,15 +27815,15 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:133",
+        "loc": "src\\engine\\modules\\views\\expedition.js:132",
+        "code": "this.yz"
+      },
+      {
+        "loc": "src\\engine\\modules\\views\\expedition.js:593",
         "code": "this.yz"
       },
       {
         "loc": "src\\engine\\modules\\views\\expedition.js:594",
-        "code": "this.yz"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\expedition.js:595",
         "code": "this.yz"
       }
     ],
@@ -28082,15 +27838,15 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:134",
+        "loc": "src\\engine\\modules\\views\\expedition.js:133",
         "code": "this.wz"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:609",
+        "loc": "src\\engine\\modules\\views\\expedition.js:608",
         "code": "this.wz"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:611",
+        "loc": "src\\engine\\modules\\views\\expedition.js:610",
         "code": "this.wz"
       }
     ],
@@ -28105,15 +27861,15 @@
     "writes": 1,
     "samples": [
       {
+        "loc": "src\\engine\\modules\\views\\expedition.js:169",
+        "code": "this.oA"
+      },
+      {
         "loc": "src\\engine\\modules\\views\\expedition.js:170",
         "code": "this.oA"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:171",
-        "code": "this.oA"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\expedition.js:660",
+        "loc": "src\\engine\\modules\\views\\expedition.js:659",
         "code": "this.oA"
       }
     ],
@@ -28128,15 +27884,15 @@
     "writes": 1,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:177",
+        "loc": "src\\engine\\modules\\views\\expedition.js:176",
         "code": "this.TA"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:187",
+        "loc": "src\\engine\\modules\\views\\expedition.js:186",
         "code": "a.TA"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:673",
+        "loc": "src\\engine\\modules\\views\\expedition.js:672",
         "code": "this.TA"
       }
     ],
@@ -30626,7 +30382,7 @@
         "code": "c.vD"
       },
       {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:14",
+        "loc": "src\\engine\\modules\\loot\\treasure.js:13",
         "code": "this.vD"
       }
     ],
@@ -31411,7 +31167,7 @@
     "writes": 1,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:38",
+        "loc": "src\\engine\\modules\\loot\\treasure.js:37",
         "code": "this.VE"
       },
       {
@@ -31897,11 +31653,11 @@
     "writes": 1,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:78",
+        "loc": "src\\engine\\modules\\views\\expedition.js:77",
         "code": "this.pD"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:556",
+        "loc": "src\\engine\\modules\\views\\expedition.js:555",
         "code": "this.pD"
       }
     ],
@@ -31916,11 +31672,11 @@
     "writes": 1,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:79",
+        "loc": "src\\engine\\modules\\views\\expedition.js:78",
         "code": "this.tD"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:560",
+        "loc": "src\\engine\\modules\\views\\expedition.js:559",
         "code": "this.tD"
       }
     ],
@@ -31935,11 +31691,11 @@
     "writes": 1,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:135",
+        "loc": "src\\engine\\modules\\views\\expedition.js:134",
         "code": "this.YC"
       },
       {
-        "loc": "src\\engine\\modules\\views\\expedition.js:141",
+        "loc": "src\\engine\\modules\\views\\expedition.js:140",
         "code": "a.YC"
       }
     ],

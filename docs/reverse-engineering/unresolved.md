@@ -42,6 +42,14 @@
 | Gb | pointCost | pointUpgradeDefinitions |
 | cb | conquered | DungeonInfo 系（存档键 conquered 本已语义化，写读两端随字段同步） |
 
+## 第七轮落地（2026-09-26，存档同步组，每项独立全回归）
+
+| 字段 | 新名 | 同步点核验 |
+|---|---|---|
+| Db | worldPosition | entities.js worldX/worldY（经 dc()/ec() 访问器）↔ game-save.js:427 ✓ |
+| Ab | dungeonList | game-save.js:198/735 + initialization.js:125/171/175 ✓ |
+| Pa | roomList | game-save.js:248(roomVisibility 读)↔836(写) 顺序配对 ✓ 全套回归含离线+地牢场景 |
+
 - 经验教训（已入 facts#20 扩展）：**重命名跨文件字段时，"读点全集"必须包含工厂函数/工具函数内按多态入参的访问**；Babel 静态 grep 对 `a.Da`（a 的类型随调用方变化）天然失真，应配运行时类型断言。
 
 ## U2 — 外部自动化脚本（c2c.user.js）DOM 契约未实测
