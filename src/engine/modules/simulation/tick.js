@@ -1,4 +1,3 @@
-// @ts-nocheck -- M10 渐进类型化：JSDoc 覆盖后摘除（见 docs/WORKSTATE.md）
 /** 逐帧与逐回合推进。
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
@@ -317,7 +316,7 @@ export function advanceSimulation(a) {
                 if (!wb) {
                   wb = "Red Splat";
                 }
-                for (var Wa = undefined, ob = 0; ob < ac.length; ob++) {
+                for (var Wa = undefined, ob = /** @type {any} */ (0); ob < ac.length; ob++) {
                   qb = ac[ob];
                   Ab = qb.position;
                   Bb = Ab.levelPosition;
@@ -326,7 +325,7 @@ export function advanceSimulation(a) {
                   } else {
                     Wa = new CombatAction();
                     Wa.attacker = zb;
-                    Wa.Cb(qb);
+                    (/** @type {any} */ (Wa)).Cb(qb);
                     Wa.yd = false;
                     Wa.Ib = Ib;
                     applySeparationForce(Ab, Ha, jb, Hb);
@@ -342,7 +341,7 @@ export function advanceSimulation(a) {
                     sa = nc.position.levelPosition,
                     Tb = new CombatAction();
                   Tb.attacker = vb.attacker;
-                  Tb.Cb(nc);
+                  (/** @type {any} */ (Tb)).Cb(nc);
                   Tb.yd = false;
                   Tb.Ib = Qa.Wq;
                   if (!Qa.Wq) {
@@ -450,7 +449,7 @@ export function advanceSimulation(a) {
         subtractVector(directionScratchVector, ka.wm);
         var xb = vectorLength(directionScratchVector),
           Na = undefined,
-          Na = ka.ud === game.state.scrollCaster ? 11 * Eb : ka.Gs ? 5 * Eb : 7 * Eb;
+          Na = /** @type {any} */ (ka.ud === game.state.scrollCaster ? 11 * Eb : ka.Gs ? 5 * Eb : 7 * Eb);
         if (xb <= Na) {
           assignVector(ka.wm, ka.xi);
           ka.Pk = true;

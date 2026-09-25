@@ -1,4 +1,3 @@
-// @ts-nocheck -- M10 渐进类型化：JSDoc 覆盖后摘除（见 docs/WORKSTATE.md）
 /** 会话组合根、世界初始化和周目生命周期。
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
@@ -399,7 +398,7 @@ export function initializeRuntimeGame() {
       for (b = 0; b < upgradeCollections.length; b++) {
         resetUpgradeCollection(upgradeCollections[b]);
       }
-      for (var c, b = 0; b < game.state.adventurers.length; b++) {
+      for (var c, b = /** @type {any} */ (0); b < game.state.adventurers.length; b++) {
         c = game.state.adventurers[b];
         resetUpgradeCollection(c.skillTree1);
         resetUpgradeCollection(c.skillTree2);
@@ -459,9 +458,9 @@ export function initializeRuntimeGame() {
       game.allies.Pf.length = 0;
       clearMonsters();
       clearMinions();
-      for (var b, a = 0; a < game.state.adventurers.length; a++) {
+      for (var b, a = /** @type {any} */ (0); a < game.state.adventurers.length; a++) {
         if (b = game.state.adventurers[a], b.summonedMinions = null, b.companion = null, b.Da = null, b.rh = null, b.Zh = null, b.hk = null, b.bj = null, b.Ue = null, b.ld = null, b.au = -3 * getAttackCooldown(b.stats, true), b.spells && 0 < b.spells.length) {
-          for (var c = undefined, c = 0; c < b.spells.length; c++) {
+          for (var c = 0; c < b.spells.length; c++) {
             resetSpellCooldown(b.spells[c]);
           }
         }
