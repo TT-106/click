@@ -210,7 +210,7 @@ export function initializeRenderingSprites() {
     for (c = 0; c < a.length; c++) {
       d = a[c];
       this.FB.push(d.animationName);
-      this.Yh[d.animationName] = new SpriteAnimation(this, d.animationName, d.O, d.P, d.M, d.N, b, d.zc);
+      this.Yh[d.animationName] = new SpriteAnimation(this, d.animationName, d.firstFrameColumn, d.firstFrameRow, d.lastRowFrameCount, d.lastFrameRow, b, d.zc);
     }
   };
   AnimationSheet.prototype.Zg = function (a) {
