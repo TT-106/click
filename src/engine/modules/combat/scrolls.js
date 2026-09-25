@@ -17,7 +17,7 @@ export function Spell(a) {
   this.ga = a.ga;
   this.ca = a.ca;
   this.ya = a.ya;
-  this.X = a.X;
+  this.statusEffectTypeId = a.statusEffectTypeId;
   this.Ra = a.Ra;
   this.La = a.La;
   this.mq = game.state.turnNumber - 3 * this.La;
@@ -229,7 +229,7 @@ export function initializeCombatScrolls() {
     if (0 < b && this.tn) {
       var c;
       for (c = 0; c < this.upgradeCount; c++) {
-        applyStatBonus(game.state.scrollCaster, this.tn.f, this.tn.g);
+        applyStatBonus(game.state.scrollCaster, this.tn.statType, this.tn.statBonusValue);
       }
       updateScrollAccuracy();
     }
@@ -276,8 +276,8 @@ export function initializeCombatScrolls() {
     Yi: 4,
     Qh: 4,
     fq: {
-      f: 20,
-      g: 2
+      statType: 20,
+      statBonusValue: 2
     }
   }, {
     scrollId: "arrowScroll",
@@ -288,8 +288,8 @@ export function initializeCombatScrolls() {
     Yi: 4,
     Qh: 4,
     fq: {
-      f: 23,
-      g: 1
+      statType: 23,
+      statBonusValue: 1
     }
   }, {
     scrollId: "fireRainScroll",
@@ -300,8 +300,8 @@ export function initializeCombatScrolls() {
     Yi: 4,
     Qh: 2,
     fq: {
-      f: 22,
-      g: 1
+      statType: 22,
+      statBonusValue: 1
     }
   }, {
     scrollId: "chainedLightningScroll",
@@ -312,8 +312,8 @@ export function initializeCombatScrolls() {
     Yi: 4,
     Qh: 3,
     fq: {
-      f: 21,
-      g: 1
+      statType: 21,
+      statBonusValue: 1
     }
   }, {
     scrollId: "fireBallScroll",
@@ -324,8 +324,8 @@ export function initializeCombatScrolls() {
     Yi: 4,
     Qh: 2,
     fq: {
-      f: 25,
-      g: 1
+      statType: 25,
+      statBonusValue: 1
     }
   }];
   ScrollInventory.prototype.vf = function (a) {

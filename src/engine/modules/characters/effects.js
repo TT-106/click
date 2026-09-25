@@ -5,7 +5,7 @@ import { game } from "../runtime/game.js";
 import { addSpellStatBonus, statValue } from "./stats.js";
 import { floorNumber } from "../core/math.js";
 export function StatusEffect(a, b, c, d, f, g, h) {
-  this.X = a;
+  this.statusEffectTypeId = a;
   this.jD = b;
   this.Qd = c;
   this.hD = d;
@@ -15,7 +15,7 @@ export function StatusEffect(a, b, c, d, f, g, h) {
   this.Ok = h;
 }
 export function isDisablingEffect(a) {
-  return 0 === a.X || 1 === a.X || 13 === a.X || 14 === a.X;
+  return 0 === a.statusEffectTypeId || 1 === a.statusEffectTypeId || 13 === a.statusEffectTypeId || 14 === a.statusEffectTypeId;
 }
 export function CharacterEffects(a) {
   this.no = a;
@@ -52,7 +52,7 @@ export function updateCharacterEffects(a, b) {
       if (isDisablingEffect(f)) {
         a.Kd = true;
       }
-      h = f.X;
+      h = f.statusEffectTypeId;
       if (5 === h) {
         addSpellStatBonus(s, f.Ok);
       } else {
@@ -114,7 +114,7 @@ export function removeStunEffects(a) {
     var b, c;
     for (b = a.of.length - 1; 0 <= b; b--) {
       c = a.of[b];
-      if (13 === c.X) {
+      if (13 === c.statusEffectTypeId) {
         a.of.splice(b, 1);
       }
     }

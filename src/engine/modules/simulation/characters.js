@@ -92,7 +92,7 @@ export function spawnMinion(a, b, c) {
   if (a) {
     for (b = 0; b < a.length; b++) {
       f = a[b];
-      applyStatBonus(d, f.f, f.g);
+      applyStatBonus(d, f.statType, f.statBonusValue);
     }
   }
   game.minions.Tt(d);

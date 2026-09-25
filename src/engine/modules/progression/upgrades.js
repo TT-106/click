@@ -136,19 +136,19 @@ export function recalculateGlobalUpgrade(a) {
 export function EquipBestItemUpgrade(a) {
   this.vh = false;
   this.Yz = -1;
-  this.e = "";
+  this.descriptionLabel = "";
   this.vp = a;
 }
 export function EquipItemUpgrade(a, b) {
   this.vh = false;
   this.hA = a;
-  this.e = this.item = null;
+  this.descriptionLabel = this.item = null;
   this.vp = b;
 }
 export function LevelUpUpgrade(a) {
   this.ZA = this.Up = this.canPurchase = this.Ea = false;
   this.WA = -1;
-  this.e = null;
+  this.descriptionLabel = null;
   this.Lo = 0;
   this.$ = a;
 }
@@ -385,7 +385,7 @@ export function initializeProgressionUpgrades() {
     return this.mb.rd;
   };
   GlobalUpgrade.prototype.lb = function () {
-    return this.mb.e;
+    return this.mb.description;
   };
   GlobalUpgrade.prototype.Cd = function () {
     if (this.mb.currentValue >= this.mb.maxValue) {
@@ -424,7 +424,7 @@ export function initializeProgressionUpgrades() {
     return 4;
   };
   EquipBestItemUpgrade.prototype.lb = function () {
-    return this.e;
+    return this.descriptionLabel;
   };
   EquipBestItemUpgrade.prototype.Qc = function () {
     var a = game.inventories,
@@ -463,7 +463,7 @@ export function initializeProgressionUpgrades() {
     a = b;
     b = a > this.vp;
     if (c = this.vh !== b || this.Yz !== a) {
-      this.e = "装备所有更好的道具(" + a + ")";
+      this.descriptionLabel = "装备所有更好的道具(" + a + ")";
     }
     this.vh = b;
     this.Yz = a;
@@ -474,7 +474,7 @@ export function initializeProgressionUpgrades() {
     return null;
   };
   EquipItemUpgrade.prototype.og = function () {
-    this.e = this.item = null;
+    this.descriptionLabel = this.item = null;
   };
   EquipItemUpgrade.prototype.Oz = function () {
     return this.item;
@@ -483,7 +483,7 @@ export function initializeProgressionUpgrades() {
     return 3;
   };
   EquipItemUpgrade.prototype.lb = function () {
-    return this.e;
+    return this.descriptionLabel;
   };
   EquipItemUpgrade.prototype.Qc = function () {
     var a = this.item.nj;
@@ -505,18 +505,18 @@ export function initializeProgressionUpgrades() {
     if (a.length <= this.vp && a.length > this.hA) {
       this.item = a[this.hA];
       if (c != this.item) {
-        this.e = "Equip " + this.item.Ew;
+        this.descriptionLabel = "Equip " + this.item.Ew;
       }
       this.vh = true;
     } else {
-      this.e = this.item = null;
+      this.descriptionLabel = this.item = null;
       this.vh = false;
     }
     return b != this.vh || c != this.item;
   };
   LevelUpUpgrade.prototype = new Upgrade();
   LevelUpUpgrade.prototype.og = function () {
-    this.e = null;
+    this.descriptionLabel = null;
   };
   LevelUpUpgrade.prototype.Vo = function () {
     return this.$ >= game.state.adventurers.length ? null : game.state.adventurers[this.$];
@@ -525,7 +525,7 @@ export function initializeProgressionUpgrades() {
     return 2;
   };
   LevelUpUpgrade.prototype.lb = function () {
-    return this.e;
+    return this.descriptionLabel;
   };
   LevelUpUpgrade.prototype.Qc = function () {
     if (!(this.$ >= game.state.adventurers.length)) {
@@ -593,8 +593,8 @@ export function initializeProgressionUpgrades() {
       this.Ea = this.canPurchase = false;
     } else {
       var a = game.state.adventurers[this.$];
-      if (!this.e) {
-        this.e = "升级" + a.adventurerName;
+      if (!this.descriptionLabel) {
+        this.descriptionLabel = "升级" + a.adventurerName;
       }
       this.Lo = a.stats.Am;
       this.canPurchase = game.state.party.experiencePoints >= this.Lo;
@@ -774,7 +774,7 @@ export function initializeProgressionUpgrades() {
     return 1;
   };
   CharacterSkillUpgrade.prototype.lb = function () {
-    return this.it.e;
+    return this.it.description;
   };
   CharacterSkillUpgrade.prototype.Na = function () {
     return SKILL_UPGRADE_TYPE;
@@ -1076,7 +1076,7 @@ export function initializeProgressionUpgrades() {
           }
           a.upgradeCount++;
           if (a.tn) {
-            applyStatBonus(game.state.scrollCaster, a.tn.f, a.tn.g);
+            applyStatBonus(game.state.scrollCaster, a.tn.statType, a.tn.statBonusValue);
             updateScrollAccuracy();
           }
           recordGameEvent("Scroll Upgrade", a.rg + " (数量=" + a.upgradeCount + ")");

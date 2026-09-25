@@ -119,7 +119,7 @@ export function applySpellEffect(a, b) {
     d = c.ga;
   if (2 === d || 3 === d) {
     var f = b.Ca,
-      d = c.X,
+      d = c.statusEffectTypeId,
       c = c.Ra,
       g = statusEffectDefinitions[d];
     if (g) {

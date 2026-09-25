@@ -6,246 +6,246 @@ export function initializeContentSkillsNinja() {
   improvedDamageNinja1Definition = {
     id: "improvedDamageNinja1",
     title: "伤害提高 I",
-    e: "10%伤害加成",
-    g: 10,
-    f: 2
+    description: "10%伤害加成",
+    statBonusValue: 10,
+    statType: 2
   };
   improvedDamageNinja2Definition = {
     id: "improvedDamageNinja2",
     title: "伤害提高 II",
-    e: "10%伤害加成",
-    g: 10,
-    f: 2
+    description: "10%伤害加成",
+    statBonusValue: 10,
+    statType: 2
   };
   improvedDamageNinja3Definition = {
     id: "improvedDamageNinja3",
     title: "伤害提高 III",
-    e: "10%伤害加成",
-    g: 10,
-    f: 2
+    description: "10%伤害加成",
+    statBonusValue: 10,
+    statType: 2
   };
   improvedArmorNinja1Definition = {
     id: "improvedArmorNinja1",
     title: "护甲提高 I",
-    e: "10%护甲加成",
-    g: 10,
-    f: 3
+    description: "10%护甲加成",
+    statBonusValue: 10,
+    statType: 3
   };
   improvedArmorNinja2Definition = {
     id: "improvedArmorNinja2",
     title: "护甲提高 II",
-    e: "10%护甲加成",
-    g: 10,
-    f: 3
+    description: "10%护甲加成",
+    statBonusValue: 10,
+    statType: 3
   };
   improvedArmorNinja3Definition = {
     id: "improvedArmorNinja3",
     title: "护甲提高 III",
-    e: "10%护甲加成",
-    g: 10,
-    f: 3
+    description: "10%护甲加成",
+    statBonusValue: 10,
+    statType: 3
   };
   improvedAttackRatingNinja1Definition = {
     id: "improvedAttackRatingNinja1",
     title: "攻击等级提高 I",
-    e: "10%攻击等级加成",
-    g: 10,
-    f: 4
+    description: "10%攻击等级加成",
+    statBonusValue: 10,
+    statType: 4
   };
   improvedAttackRatingNinja2Definition = {
     id: "improvedAttackRatingNinja2",
     title: "攻击等级提高 II",
-    e: "10%攻击等级加成",
-    g: 10,
-    f: 4
+    description: "10%攻击等级加成",
+    statBonusValue: 10,
+    statType: 4
   };
   improvedAttackRatingNinja3Definition = {
     id: "improvedAttackRatingNinja3",
     title: "攻击等级提高 III",
-    e: "10%攻击等级加成",
-    g: 10,
-    f: 4
+    description: "10%攻击等级加成",
+    statBonusValue: 10,
+    statType: 4
   };
   improvedDefenseRatingNinja1Definition = {
     id: "improvedDefenseRatingNinja1",
     title: "防御等级提高 I",
-    e: "10%防御等级加成",
-    g: 10,
-    f: 5
+    description: "10%防御等级加成",
+    statBonusValue: 10,
+    statType: 5
   };
   improvedDefenseRatingNinja2Definition = {
     id: "improvedDefenseRatingNinja2",
     title: "防御等级提高 II",
-    e: "10%防御等级加成",
-    g: 10,
-    f: 5
+    description: "10%防御等级加成",
+    statBonusValue: 10,
+    statType: 5
   };
   improvedDefenseRatingNinja3Definition = {
     id: "improvedDefenseRatingNinja3",
     title: "防御等级提高 III",
-    e: "10%防御等级加成",
-    g: 10,
-    f: 5
+    description: "10%防御等级加成",
+    statBonusValue: 10,
+    statType: 5
   };
   fasterAttacksNinja1Definition = {
     id: "fasterAttacksNinja1",
     title: "快速攻击 I",
-    e: "攻击冷却时间减少",
-    g: 2,
-    f: 10
+    description: "攻击冷却时间减少",
+    statBonusValue: 2,
+    statType: 10
   };
   fasterAttacksNinja2Definition = {
     id: "fasterAttacksNinja2",
     title: "快速攻击 II",
-    e: "攻击冷却时间减少",
-    g: 2,
-    f: 10
+    description: "攻击冷却时间减少",
+    statBonusValue: 2,
+    statType: 10
   };
   fasterAttacksNinja3Definition = {
     id: "fasterAttacksNinja3",
     title: "快速攻击 III",
-    e: "攻击冷却时间减少",
-    g: 2,
-    f: 10
+    description: "攻击冷却时间减少",
+    statBonusValue: 2,
+    statType: 10
   };
   healthRegenerationNinja1Definition = {
     id: "healthRegenerationNinja1",
     title: "快速生命回复 I",
-    e: "生命回复速率+1%",
-    g: 1,
-    f: 8
+    description: "生命回复速率+1%",
+    statBonusValue: 1,
+    statType: 8
   };
   healthRegenerationNinja2Definition = {
     id: "healthRegenerationNinja2",
     title: "快速生命回复 II",
-    e: "生命回复速率+1%",
-    g: 1,
-    f: 8
+    description: "生命回复速率+1%",
+    statBonusValue: 1,
+    statType: 8
   };
   healthRegenerationNinja3Definition = {
     id: "healthRegenerationNinja3",
     title: "快速生命回复 III",
-    e: "生命回复速率+1%",
-    g: 1,
-    f: 8
+    description: "生命回复速率+1%",
+    statBonusValue: 1,
+    statType: 8
   };
   improvedHealthNinja1Definition = {
     id: "improvedHealthNinja1",
     title: "生命提高 I",
-    e: "最大生命+20%",
-    g: 20,
-    f: 6
+    description: "最大生命+20%",
+    statBonusValue: 20,
+    statType: 6
   };
   improvedHealthNinja2Definition = {
     id: "improvedHealthNinja2",
     title: "生命提高 II",
-    e: "最大生命+20%",
-    g: 20,
-    f: 6
+    description: "最大生命+20%",
+    statBonusValue: 20,
+    statType: 6
   };
   improvedHealthNinja3Definition = {
     id: "improvedHealthNinja3",
     title: "生命提高 III",
-    e: "最大生命+20%",
-    g: 20,
-    f: 6
+    description: "最大生命+20%",
+    statBonusValue: 20,
+    statType: 6
   };
   criticalHitChanceNinja1Definition = {
     id: "criticalHitChanceNinja1",
     title: "暴击几率",
-    e: "暴击几率+5%",
-    g: 5,
-    f: 17
+    description: "暴击几率+5%",
+    statBonusValue: 5,
+    statType: 17
   };
   criticalHitChanceNinja2Definition = {
     id: "criticalHitChanceNinja2",
     title: "暴击几率",
-    e: "暴击几率+5%",
-    g: 5,
-    f: 17
+    description: "暴击几率+5%",
+    statBonusValue: 5,
+    statType: 17
   };
   criticalHitChanceNinja3Definition = {
     id: "criticalHitChanceNinja3",
     title: "暴击几率",
-    e: "暴击几率+5%",
-    g: 5,
-    f: 17
+    description: "暴击几率+5%",
+    statBonusValue: 5,
+    statType: 17
   };
   criticalHitChanceNinja4Definition = {
     id: "criticalHitChanceNinja4",
     title: "暴击几率",
-    e: "暴击几率+5%",
-    g: 5,
-    f: 17
+    description: "暴击几率+5%",
+    statBonusValue: 5,
+    statType: 17
   };
   criticalHitChanceNinja5Definition = {
     id: "criticalHitChanceNinja5",
     title: "暴击几率",
-    e: "暴击几率+5%",
-    g: 5,
-    f: 17
+    description: "暴击几率+5%",
+    statBonusValue: 5,
+    statType: 17
   };
   attacksPerTurnNinja1Definition = {
     id: "attacksPerTurnNinja1",
     title: "额外打击",
-    e: "每回合最大攻击次数+1",
-    g: 1,
-    f: 18
+    description: "每回合最大攻击次数+1",
+    statBonusValue: 1,
+    statType: 18
   };
   attacksPerTurnNinja2Definition = {
     id: "attacksPerTurnNinja2",
     title: "再次攻击",
-    e: "每回合最大攻击次数+1",
-    g: 1,
-    f: 18
+    description: "每回合最大攻击次数+1",
+    statBonusValue: 1,
+    statType: 18
   };
   attacksPerTurnNinja3Definition = {
     id: "attacksPerTurnNinja3",
     title: "再次攻击",
-    e: "每回合最大攻击次数+1",
-    g: 1,
-    f: 18
+    description: "每回合最大攻击次数+1",
+    statBonusValue: 1,
+    statType: 18
   };
   additionalAttackPercentNinja1Definition = {
     id: "additionalAttackPercentNinja1",
     title: "额外攻击几率",
-    e: "+10%额外攻击几率",
-    g: 10,
-    f: 19
+    description: "+10%额外攻击几率",
+    statBonusValue: 10,
+    statType: 19
   };
   additionalAttackPercentNinja2Definition = {
     id: "additionalAttackPercentNinja2",
     title: "额外攻击几率",
-    e: "+10%额外攻击几率",
-    g: 10,
-    f: 19
+    description: "+10%额外攻击几率",
+    statBonusValue: 10,
+    statType: 19
   };
   additionalAttackPercentNinja3Definition = {
     id: "additionalAttackPercentNinja3",
     title: "额外攻击几率",
-    e: "+10%额外攻击几率",
-    g: 10,
-    f: 19
+    description: "+10%额外攻击几率",
+    statBonusValue: 10,
+    statType: 19
   };
   additionalAttackPercentNinja4Definition = {
     id: "additionalAttackPercentNinja4",
     title: "额外攻击几率",
-    e: "+10%额外攻击几率",
-    g: 10,
-    f: 19
+    description: "+10%额外攻击几率",
+    statBonusValue: 10,
+    statType: 19
   };
   swiftStrikeUpgradeNinja1Definition = {
     id: "swiftStrikeUpgradeNinja1",
     title: "快速打击 II",
-    e: "额外受害者",
-    g: 1,
-    f: 28
+    description: "额外受害者",
+    statBonusValue: 1,
+    statType: 28
   };
   swiftStrikeUpgradeNinja2Definition = {
     id: "swiftStrikeUpgradeNinja2",
     title: "快速打击 III",
-    e: "额外受害者",
-    g: 1,
-    f: 28
+    description: "额外受害者",
+    statBonusValue: 1,
+    statType: 28
   };
 }

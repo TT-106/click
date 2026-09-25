@@ -299,7 +299,7 @@ export function initializeContentBalance() {
     itemDropChance: {
       settingId: "itemDropChance",
       title: "更多道具掉落",
-      e: "每次杀怪道具掉落几率+2%",
+      description: "每次杀怪道具掉落几率+2%",
       currentValue: 40,
       baseValue: 40,
       perLevelIncrement: 2,
@@ -312,7 +312,7 @@ export function initializeContentBalance() {
     maxMonsters: {
       settingId: "maxMonstersPerRoom",
       title: "等多怪物",
-      e: "房间内最多怪物数量(+2)",
+      description: "房间内最多怪物数量(+2)",
       currentValue: 8,
       baseValue: 8,
       perLevelIncrement: 2,
@@ -325,7 +325,7 @@ export function initializeContentBalance() {
     minMonsters: {
       settingId: "minMonstersPerRoom",
       title: "平均怪物计数",
-      e: "房间内最少怪物数量(+1)",
+      description: "房间内最少怪物数量(+1)",
       currentValue: 0,
       baseValue: 0,
       perLevelIncrement: 1,
@@ -338,7 +338,7 @@ export function initializeContentBalance() {
     itemQualityChance: {
       settingId: "betterItemRarityChance",
       title: "稀有道具掉落",
-      e: "更加稀有道具掉落几率(+2%)",
+      description: "更加稀有道具掉落几率(+2%)",
       currentValue: 0,
       baseValue: 0,
       perLevelIncrement: 2,
@@ -351,7 +351,7 @@ export function initializeContentBalance() {
     higherLevelItemChance: {
       settingId: "itemLevelBonus",
       title: "道具等级加成",
-      e: "更高等级道具掉落几率(+3%)",
+      description: "更高等级道具掉落几率(+3%)",
       currentValue: 0,
       baseValue: 0,
       perLevelIncrement: 3,
@@ -364,7 +364,7 @@ export function initializeContentBalance() {
     ys: {
       settingId: "maxGoldPerDrop",
       title: "最大黄金掉落",
-      e: "最大掉落黄金数量+25",
+      description: "最大掉落黄金数量+25",
       currentValue: 15,
       baseValue: 15,
       perLevelIncrement: 25,
@@ -377,7 +377,7 @@ export function initializeContentBalance() {
     As: {
       settingId: "minGoldPerDrop",
       title: "最小黄金掉落",
-      e: "最小掉落黄金数量+10",
+      description: "最小掉落黄金数量+10",
       currentValue: 0,
       baseValue: 0,
       perLevelIncrement: 10,
@@ -390,7 +390,7 @@ export function initializeContentBalance() {
     Lr: {
       settingId: "goldDropChance",
       title: "更多黄金掉落",
-      e: "每次杀怪黄金掉落几率+5%",
+      description: "每次杀怪黄金掉落几率+5%",
       currentValue: 25,
       baseValue: 25,
       perLevelIncrement: 5,
@@ -403,7 +403,7 @@ export function initializeContentBalance() {
     $s: {
       settingId: "scrollDropChance",
       title: "更多卷轴掉落",
-      e: "每次杀怪卷轴掉落几率+2%",
+      description: "每次杀怪卷轴掉落几率+2%",
       currentValue: 20,
       baseValue: 20,
       perLevelIncrement: 2,
@@ -416,7 +416,7 @@ export function initializeContentBalance() {
     Ns: {
       settingId: "potionDropChance",
       title: "更多药剂掉落",
-      e: "每次杀怪药剂掉落几率+0.5%",
+      description: "每次杀怪药剂掉落几率+0.5%",
       currentValue: 1,
       baseValue: 1,
       perLevelIncrement: 0.5,
@@ -429,7 +429,7 @@ export function initializeContentBalance() {
     treasureChance: {
       settingId: "treasureChestChance",
       title: "更多财宝箱",
-      e: "遇到财宝箱几率+2%",
+      description: "遇到财宝箱几率+2%",
       currentValue: 5,
       baseValue: 5,
       perLevelIncrement: 2,

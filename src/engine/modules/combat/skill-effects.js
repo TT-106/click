@@ -19,7 +19,7 @@ export function applySkillTreeBonuses(a, b) {
     d = c[f];
     if (d.Na() === SKILL_UPGRADE_TYPE && d.He()) {
       d = d.Jr();
-      applyStatBonus(a, d.f, d.g);
+      applyStatBonus(a, d.statType, d.statBonusValue);
     }
   }
 }
@@ -29,7 +29,7 @@ export function applyBonusList(a, b) {
     resetSkillStatBonuses(a.stats);
     for (d = 0; d < b.length; d++) {
       c = b[d];
-      applyStatBonus(a, c.f, c.g);
+      applyStatBonus(a, c.statType, c.statBonusValue);
     }
   }
 }
@@ -144,7 +144,7 @@ export function applyStatBonus(a, b, c) {
 }
 export function initializeCombatSkillEffects() {
   stunEffectDefinition = {
-    X: 13,
+    statusEffectTypeId: 13,
     Te: "spritesheet/SpellFXAnim2.png",
     vd: "Bubbles",
     Od: 1,
@@ -154,7 +154,7 @@ export function initializeCombatSkillEffects() {
   };
   statusEffectDefinitions = {
     0: {
-      X: 0,
+      statusEffectTypeId: 0,
       Te: "spritesheet/SpellFXAnim4.png",
       vd: "Sleep",
       Od: 7,
@@ -163,7 +163,7 @@ export function initializeCombatSkillEffects() {
       cf: "睡着"
     },
     1: {
-      X: 1,
+      statusEffectTypeId: 1,
       Te: "spritesheet/SpellFXAnim1.png",
       vd: "Spider Web",
       Od: 7,
@@ -172,7 +172,7 @@ export function initializeCombatSkillEffects() {
       cf: "定身"
     },
     3: {
-      X: 3,
+      statusEffectTypeId: 3,
       Te: "spritesheet/SpellFXAnim4.png",
       vd: "Blind Eye Blink",
       Od: 7,
@@ -181,7 +181,7 @@ export function initializeCombatSkillEffects() {
       cf: "失明"
     },
     4: {
-      X: 4,
+      statusEffectTypeId: 4,
       Te: "spritesheet/SpellFXAnim4.png",
       vd: "Red Eye Blink",
       Od: 6,
@@ -190,7 +190,7 @@ export function initializeCombatSkillEffects() {
       cf: "转变"
     },
     5: {
-      X: 5,
+      statusEffectTypeId: 5,
       Te: "spritesheet/SpellFXAnim3.png",
       vd: "Shield",
       Od: 6,
@@ -199,7 +199,7 @@ export function initializeCombatSkillEffects() {
       cf: "护甲提高"
     },
     6: {
-      X: 6,
+      statusEffectTypeId: 6,
       Te: "spritesheet/SpellFXAnim3.png",
       vd: "Arm Flex",
       Od: 0,
@@ -208,7 +208,7 @@ export function initializeCombatSkillEffects() {
       cf: "伤害提高"
     },
     7: {
-      X: 7,
+      statusEffectTypeId: 7,
       Te: "spritesheet/SpellFXAnim4.png",
       vd: "Eagle",
       Od: 0,
@@ -217,7 +217,7 @@ export function initializeCombatSkillEffects() {
       cf: "攻击等级提高"
     },
     8: {
-      X: 8,
+      statusEffectTypeId: 8,
       Te: "spritesheet/SpellFXAnim4.png",
       vd: "Armor",
       Od: 3,
@@ -226,7 +226,7 @@ export function initializeCombatSkillEffects() {
       cf: "防御等级提高"
     },
     9: {
-      X: 9,
+      statusEffectTypeId: 9,
       Te: "spritesheet/SpellFXAnim3.png",
       vd: "Super Speed",
       Od: 0,
@@ -235,7 +235,7 @@ export function initializeCombatSkillEffects() {
       cf: "迅捷"
     },
     10: {
-      X: 10,
+      statusEffectTypeId: 10,
       Te: "spritesheet/SpellFXAnim3.png",
       vd: "Target",
       Od: 8,
@@ -244,7 +244,7 @@ export function initializeCombatSkillEffects() {
       cf: "怪物目标"
     },
     11: {
-      X: 11,
+      statusEffectTypeId: 11,
       Te: "spritesheet/SpellFXAnim3.png",
       vd: "Color Spiral",
       Od: 8,
@@ -253,7 +253,7 @@ export function initializeCombatSkillEffects() {
       cf: "潜行模式"
     },
     12: {
-      X: 12,
+      statusEffectTypeId: 12,
       Te: "spritesheet/SpellFXAnim4.png",
       vd: "Totems",
       Od: 2,
@@ -264,7 +264,7 @@ export function initializeCombatSkillEffects() {
   };
   statusEffectDefinitions[13] = stunEffectDefinition;
   statusEffectDefinitions[14] = {
-    X: 14,
+    statusEffectTypeId: 14,
     Te: "spritesheet/SpellFXAnim2.png",
     vd: "Bubbles",
     Od: 1,

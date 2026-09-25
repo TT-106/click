@@ -75,8 +75,8 @@ export function initializeContentGuardians() {
     },
     Jm: [electricSpellDefinitions.br, poisonCloudSpell],
     Nr: [{
-      g: 1,
-      f: 21
+      statBonusValue: 1,
+      statType: 21
     }]
   }, {
     characterClass: 2,
@@ -110,11 +110,11 @@ export function initializeContentGuardians() {
     },
     Jm: [],
     Nr: [{
-      g: 1,
-      f: 23
+      statBonusValue: 1,
+      statType: 23
     }, {
-      g: 40,
-      f: 24
+      statBonusValue: 40,
+      statType: 24
     }]
   }, {
     characterClass: 8,
@@ -157,20 +157,20 @@ export function initializeContentGuardians() {
     },
     Jm: [ninjaSpellDefinitions.Hx],
     Nr: [{
-      g: 15,
-      f: 17
+      statBonusValue: 15,
+      statType: 17
     }, {
-      g: 2,
-      f: 18
+      statBonusValue: 2,
+      statType: 18
     }, {
-      g: 25,
-      f: 19
+      statBonusValue: 25,
+      statType: 19
     }, {
-      g: 2,
-      f: 10
+      statBonusValue: 2,
+      statType: 10
     }, {
-      g: 1,
-      f: 28
+      statBonusValue: 1,
+      statType: 28
     }]
   }];
   bossSpriteDefinitions = [{
@@ -328,17 +328,17 @@ export function initializeContentGuardians() {
     },
     eu: [],
     WC: [{
-      g: 30,
-      f: 17
+      statBonusValue: 30,
+      statType: 17
     }, {
-      g: 2,
-      f: 18
+      statBonusValue: 2,
+      statType: 18
     }, {
-      g: 40,
-      f: 19
+      statBonusValue: 40,
+      statType: 19
     }, {
-      g: 3,
-      f: 10
+      statBonusValue: 3,
+      statType: 10
     }]
   };
 }

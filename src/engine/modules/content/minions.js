@@ -170,8 +170,8 @@ export function initializeContentMinions() {
     Ma: minionStatMultipliers,
     jl: [ninjaSpellDefinitions.Hx],
     Bp: [{
-      g: 1,
-      f: 28
+      statBonusValue: 1,
+      statType: 28
     }],
     nb: function () {
       return [new ChainDamageBehavior(RANGED_ATTACK_RANGE, 95), new RangedAttackBehavior(RANGED_MIN_DISTANCE, RANGED_ATTACK_RANGE, 90), new MeleeAttackBehavior(RANGED_ATTACK_RANGE, 85, MELEE_ACTION_TYPE, false), new ChangeFloorBehavior(), new TravelWorldBehavior(60, 10), new EnterDungeonBehavior(60, 10), new EnterCastleBehavior(60, 10), new UseShopBehavior(60, 10), new WaitBehavior()];
@@ -238,11 +238,11 @@ export function initializeContentMinions() {
     Ma: guardianStatMultipliers,
     kc: null,
     Bp: [{
-      g: 2,
-      f: 23
+      statBonusValue: 2,
+      statType: 23
     }, {
-      g: 40,
-      f: 24
+      statBonusValue: 40,
+      statType: 24
     }],
     nb: function () {
       return [new CooldownBehavior(160, 100), new SpecialAttackBehavior(RANGED_ATTACK_RANGE, 160, 95, MELEE_ACTION_TYPE), new MeleeAttackBehavior(RANGED_ATTACK_RANGE, 65, MELEE_ACTION_TYPE, false), new ChangeFloorBehavior(), new TravelWorldBehavior(60, 10), new EnterDungeonBehavior(60, 10), new EnterCastleBehavior(60, 10), new UseShopBehavior(60, 10), new WaitBehavior()];
@@ -279,8 +279,8 @@ export function initializeContentMinions() {
     kc: null,
     jl: [electricSpellDefinitions.br, poisonCloudSpell],
     Bp: [{
-      g: 3,
-      f: 21
+      statBonusValue: 3,
+      statType: 21
     }],
     nb: function () {
       return [new CooldownBehavior(160, 100), new HealBehavior(RANGED_ATTACK_RANGE, 95), new SummonBehavior(RANGED_ATTACK_RANGE, 85, 4), new ChangeFloorBehavior(), new TravelWorldBehavior(60, 10), new EnterDungeonBehavior(60, 10), new EnterCastleBehavior(60, 10), new UseShopBehavior(60, 10), new WaitBehavior()];

@@ -91,7 +91,7 @@ export function HealBehavior(a, b) {
 }
 export function ApplyEffectBehavior(a, b, c) {
   this.gm = null;
-  this.X = c;
+  this.statusEffectTypeId = c;
   this.ka = b;
   this.bb = a;
 }
@@ -124,7 +124,7 @@ export function ReviveBehavior(a, b) {
 export function PartyBuffBehavior(a, b, c) {
   this.ka = c;
   this.bb = a;
-  this.X = b;
+  this.statusEffectTypeId = b;
   this.zd = null;
 }
 export function WaitBehavior() {
@@ -578,7 +578,7 @@ export function initializeAiBehaviors() {
     this.Hn = null;
   };
   LootGoldBehavior.prototype.Oa = function (a) {
-    if (!(this.Hn || 10 !== a.X)) {
+    if (!(this.Hn || 10 !== a.statusEffectTypeId)) {
       this.Hn = a;
     }
   };
@@ -675,7 +675,7 @@ export function initializeAiBehaviors() {
     this.Dn = null;
   };
   LootItemBehavior.prototype.Oa = function (a) {
-    if (!(this.Dn || 11 !== a.X)) {
+    if (!(this.Dn || 11 !== a.statusEffectTypeId)) {
       this.Dn = a;
     }
   };
@@ -697,7 +697,7 @@ export function initializeAiBehaviors() {
     this.on = null;
   };
   LootScrollBehavior.prototype.Oa = function (a) {
-    if (!(this.on || 12 !== a.X)) {
+    if (!(this.on || 12 !== a.statusEffectTypeId)) {
       this.on = a;
     }
   };
@@ -827,7 +827,7 @@ export function initializeAiBehaviors() {
     this.gm = null;
   };
   ApplyEffectBehavior.prototype.Oa = function (a) {
-    if (!(this.gm || a.X !== this.X)) {
+    if (!(this.gm || a.statusEffectTypeId !== this.statusEffectTypeId)) {
       this.gm = a;
     }
   };
@@ -974,7 +974,7 @@ export function initializeAiBehaviors() {
     this.zd = null;
   };
   PartyBuffBehavior.prototype.Oa = function (a) {
-    if (!(this.zd || a.X !== this.X)) {
+    if (!(this.zd || a.statusEffectTypeId !== this.statusEffectTypeId)) {
       this.zd = a;
     }
   };

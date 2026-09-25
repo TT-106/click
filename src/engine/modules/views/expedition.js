@@ -411,7 +411,7 @@ export function initializeViewsExpedition() {
           this.lk[a] = null;
         }
         for (a = d = 0; a < c.length; a++) {
-          g = c[a].X;
+          g = c[a].statusEffectTypeId;
           b = this.lk.indexOf(g);
           if (0 > b && d < this.lk.length) {
             this.lk[d] = g;

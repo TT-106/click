@@ -466,7 +466,7 @@ export function updateCharacter(a, b) {
       } else if (a.Y === CAST_ACTION_TYPE) {
         if (a.ld) {
           var pa = a.ld.ga,
-            T = a.ld.X;
+            T = a.ld.statusEffectTypeId;
           if (2 !== pa || 4 !== T && 1 !== T && 0 !== T) {
             if (3 === pa) {
               var X = a.ld;
@@ -893,7 +893,7 @@ export function updateCharacter(a, b) {
                   }
                 }
                 var Jh,
-                  te = vf.X;
+                  te = vf.statusEffectTypeId;
                 if (1 === te || 0 === te) {
                   Jh = a.stats.mr + 1;
                 } else if (4 === te) {
