@@ -16,7 +16,7 @@ export function UpgradeButtonView(a, b, c, d) {
   this.elementId = a + "_" + c;
   this.visible = true;
   this.QA = a;
-  this.H = b;
+  this.upgrade = b;
   this.Ag = null;
   this.GC = d;
   this.zo = this.W = null;
@@ -34,43 +34,43 @@ export function mountUpgradeButton(a) {
 export function createUpgradeDetails(a, b) {
   switch (b) {
     case 1:
-      return new ItemPurchaseDetails(a.H, a.W);
+      return new ItemPurchaseDetails(a.upgrade, a.W);
     case 2:
-      return new EquipmentDetails(a.H, a.W);
+      return new EquipmentDetails(a.upgrade, a.W);
     case 3:
-      return new GlobalUpgradeDetails(a.H, a.W);
+      return new GlobalUpgradeDetails(a.upgrade, a.W);
     case 4:
-      return new EquipmentSetDetails(a.H, a.W);
+      return new EquipmentSetDetails(a.upgrade, a.W);
     case SKILL_UPGRADE_TYPE:
-      return new SkillUpgradeDetails(a.H, a.W);
+      return new SkillUpgradeDetails(a.upgrade, a.W);
     case 6:
-      return new SpellUpgradeDetails(a.H, a.W);
+      return new SpellUpgradeDetails(a.upgrade, a.W);
     case 7:
-      return new MonsterLevelDetails(a.H, a.W);
+      return new MonsterLevelDetails(a.upgrade, a.W);
     case 8:
-      return new DungeonPurchaseDetails(a.H, a.W);
+      return new DungeonPurchaseDetails(a.upgrade, a.W);
     case 9:
-      return new CastlePurchaseDetails(a.H, a.W);
+      return new CastlePurchaseDetails(a.upgrade, a.W);
     case 10:
-      return new FarmUpgradeDetails(a.H, a.W);
+      return new FarmUpgradeDetails(a.upgrade, a.W);
     case 11:
-      return new CharacterLevelDetails(a.H, a.W);
+      return new CharacterLevelDetails(a.upgrade, a.W);
     case 12:
-      return new ScrollUpgradeDetails(a.H, a.W);
+      return new ScrollUpgradeDetails(a.upgrade, a.W);
     case 13:
-      return new AutoDungeonDetails(a.H, a.W);
+      return new AutoDungeonDetails(a.upgrade, a.W);
     case 14:
-      return new AchievementClaimDetails(a.H, a.W);
+      return new AchievementClaimDetails(a.upgrade, a.W);
     case 15:
-      return new AchievementProgressDetails(a.H, a.W);
+      return new AchievementProgressDetails(a.upgrade, a.W);
     case 16:
-      return new PointUpgradeDetails(a.H, a.W);
+      return new PointUpgradeDetails(a.upgrade, a.W);
     default:
       return null;
   }
 }
 export function ItemPurchaseDetails(a, b) {
-  this.H = a;
+  this.upgrade = a;
   this.W = b;
   this.Ii = this.Ji = this.Hi = this.rp = this.Lj = null;
   this.sa = false;
@@ -78,7 +78,7 @@ export function ItemPurchaseDetails(a, b) {
   this.gb = this.fb = null;
 }
 export function EquipmentDetails(a, b) {
-  this.H = a;
+  this.upgrade = a;
   this.W = b;
   this.Sy = this.Py = this.Ry = this.Ty = this.hm = this.table = null;
   this.sa = false;
@@ -86,21 +86,21 @@ export function EquipmentDetails(a, b) {
   this.Ju = -1;
 }
 export function GlobalUpgradeDetails(a, b) {
-  this.H = a;
+  this.upgrade = a;
   this.W = b;
   this.ks = this.iA = this.Fw = this.jA = this.Qm = this.kp = this.Bf = null;
   this.sa = false;
   this.cv = null;
 }
 export function AutoDungeonDetails(a, b) {
-  this.H = a;
+  this.upgrade = a;
   this.W = b;
   this.mf = this.we = this.mo = this.$e = null;
   this.sa = false;
   this.oz = this.fb = "";
 }
 export function EquipmentSetDetails(a, b) {
-  this.H = a;
+  this.upgrade = a;
   this.W = b;
   this.IA = [];
   this.JA = [];
@@ -126,14 +126,14 @@ export function appendEquipmentRow(a, b) {
   a.Rw.push(createElement("span", c, null, null));
 }
 export function SkillUpgradeDetails(a, b) {
-  this.H = a;
+  this.upgrade = a;
   this.W = b;
   this.sb = this.jb = this.kq = this.wn = null;
   this.sa = false;
   this.gb = this.fb = null;
 }
 export function SpellUpgradeDetails(a, b) {
-  this.H = a;
+  this.upgrade = a;
   this.W = b;
   this.vu = this.Ml = this.yn = this.table = null;
   this.sa = false;
@@ -143,7 +143,7 @@ export function SpellUpgradeDetails(a, b) {
   this.qw = 8;
 }
 export function MonsterLevelDetails(a, b) {
-  this.H = a;
+  this.upgrade = a;
   this.W = b;
   this.ej = this.fj = this.dj = this.Dq = this.kk = null;
   this.sa = false;
@@ -151,14 +151,14 @@ export function MonsterLevelDetails(a, b) {
   this.gb = this.fb = null;
 }
 export function DungeonPurchaseDetails(a, b) {
-  this.H = a;
+  this.upgrade = a;
   this.W = b;
   this.ui = this.Vg = this.we = this.Nd = this.bf = this.Cq = null;
   this.sa = false;
   this.Lb = -1;
 }
 export function ScrollUpgradeDetails(a, b) {
-  this.H = a;
+  this.upgrade = a;
   this.W = b;
   this.tm = this.dq = this.we = this.Vh = this.sn = this.Cq = null;
   this.sa = false;
@@ -166,21 +166,21 @@ export function ScrollUpgradeDetails(a, b) {
   this.Lb = -1;
 }
 export function CastlePurchaseDetails(a, b) {
-  this.H = a;
+  this.upgrade = a;
   this.W = b;
   this.ui = this.Vg = this.we = this.Nd = this.Cm = this.Uz = null;
   this.sa = false;
   this.Gk = -1;
 }
 export function FarmUpgradeDetails(a, b) {
-  this.H = a;
+  this.upgrade = a;
   this.W = b;
   this.ui = this.Vg = this.we = this.Nd = this.Hm = this.Tz = null;
   this.sa = false;
   this.Dk = -1;
 }
 export function CharacterLevelDetails(a, b) {
-  this.H = a;
+  this.upgrade = a;
   this.W = b;
   this.jr = this.hr = this.gr = this.ir = this.cn = this.an = this.$m = this.bn = 0;
   this.lr = this.Sq = this.Rq = this.kr = this.sb = this.jb = this.pi = this.Zm = this.table = null;
@@ -190,21 +190,21 @@ export function CharacterLevelDetails(a, b) {
   this.vi = -1;
 }
 export function AchievementClaimDetails(a, b) {
-  this.H = a;
+  this.upgrade = a;
   this.W = b;
   this.sb = this.jb = null;
   this.sa = false;
   this.gb = this.fb = null;
 }
 export function AchievementProgressDetails(a, b) {
-  this.H = a;
+  this.upgrade = a;
   this.W = b;
   this.sb = this.jb = null;
   this.sa = false;
   this.gb = this.fb = null;
 }
 export function PointUpgradeDetails(a, b) {
-  this.H = a;
+  this.upgrade = a;
   this.W = b;
   this.pi = this.sb = this.jb = null;
   this.sa = false;
@@ -238,18 +238,18 @@ export function getRarityClass(a) {
 export function initializeViewsUpgradeDetails() {
   UpgradeButtonView.prototype = new View();
   UpgradeButtonView.prototype.Rc = function (a) {
-    this.H = a;
+    this.upgrade = a;
     if (this.Ag) {
       this.Ag.Rc(a);
     }
-    if (!(this.GC || this.H.Oc())) {
+    if (!(this.GC || this.upgrade.Oc())) {
       if (this.W) {
         hideElement(this.W);
       }
     }
   };
   UpgradeButtonView.prototype.isVisible = function () {
-    return this.GC ? true : this.H && this.H.Oc();
+    return this.GC ? true : this.upgrade && this.upgrade.Oc();
   };
   UpgradeButtonView.prototype.reset = function () {
     if (getElement(this.QA)) {
@@ -259,12 +259,12 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   UpgradeButtonView.prototype.Qc = function () {
-    if (this.H.qc()) {
-      this.H.Qc();
+    if (this.upgrade.qc()) {
+      this.upgrade.Qc();
     }
   };
   UpgradeButtonView.prototype.update = function () {
-    var a = this.H.Na(),
+    var a = this.upgrade.Na(),
       b = this.Ro();
     if (!this.W) {
       mountUpgradeButton(this);
@@ -291,7 +291,7 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   UpgradeButtonView.prototype.Ro = function () {
-    return this.H.qc() ? "upgradeButton centeredElement topMargin" : this.H.He() ? "ownedUpgradeButton centeredElement topMargin" : "disabledUpgradeButton centeredElement topMargin";
+    return this.upgrade.qc() ? "upgradeButton centeredElement topMargin" : this.upgrade.He() ? "ownedUpgradeButton centeredElement topMargin" : "disabledUpgradeButton centeredElement topMargin";
   };
   ItemPurchaseDetails.prototype.Na = function () {
     return 1;
@@ -301,7 +301,7 @@ export function initializeViewsUpgradeDetails() {
     this.gb = this.fb = null;
   };
   ItemPurchaseDetails.prototype.Rc = function (a) {
-    this.H = a;
+    this.upgrade = a;
   };
   ItemPurchaseDetails.prototype.te = function () {
     if (!this.Lj) {
@@ -314,9 +314,9 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   ItemPurchaseDetails.prototype.update = function () {
-    var a = this.H.Bb(),
-      b = this.H.ib(),
-      c = this.H.lb();
+    var a = this.upgrade.Bb(),
+      b = this.upgrade.ib(),
+      c = this.upgrade.lb();
     if (this.Lb !== a) {
       this.Lb = a;
       this.Hi.innerHTML = formatAmount(a);
@@ -382,7 +382,7 @@ export function initializeViewsUpgradeDetails() {
     this.Ju = -1;
   };
   EquipmentDetails.prototype.Rc = function (a) {
-    this.H = a;
+    this.upgrade = a;
   };
   EquipmentDetails.prototype.te = function () {
     if (!this.table) {
@@ -394,8 +394,8 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   EquipmentDetails.prototype.update = function () {
-    if (this.H.Vo()) {
-      var a = this.H.Vo(),
+    if (this.upgrade.Vo()) {
+      var a = this.upgrade.Vo(),
         b = a.stats.characterLevel;
       if (this.Iu !== a || this.Ju != b) {
         this.Iu = a;
@@ -403,7 +403,7 @@ export function initializeViewsUpgradeDetails() {
         var c = a.v(),
           d = a.classDefinition.Ma;
         this.hm.style.background = "url('spritesheet/monsters.png') -" + (c.sourceX + 10) + "px -" + (c.sourceY + 12) + "px";
-        this.Ty.innerHTML = this.H.lb();
+        this.Ty.innerHTML = this.upgrade.lb();
         this.aD.innerHTML = formatAmount(a.stats.Am) + " XP";
         this.Ry.innerHTML = "等级 " + (b + 1);
         this.Py.innerHTML = ", " + formatAmount(scaleByLevel(b + 1, healthCurve, d.Cf)) + " HP";
@@ -452,7 +452,7 @@ export function initializeViewsUpgradeDetails() {
     this.cv = null;
   };
   GlobalUpgradeDetails.prototype.Rc = function (a) {
-    this.H = a;
+    this.upgrade = a;
   };
   GlobalUpgradeDetails.prototype.te = function () {
     if (!this.Bf) {
@@ -464,7 +464,7 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   GlobalUpgradeDetails.prototype.update = function () {
-    var a = this.H.Oz();
+    var a = this.upgrade.Oz();
     if (this.cv !== a) {
       this.cv = a;
       var b = a.Uk(),
@@ -526,7 +526,7 @@ export function initializeViewsUpgradeDetails() {
     this.gb = this.fb = "";
   };
   AutoDungeonDetails.prototype.Rc = function (a) {
-    this.H = a;
+    this.upgrade = a;
   };
   AutoDungeonDetails.prototype.te = function () {
     if (!this.$e) {
@@ -538,8 +538,8 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   AutoDungeonDetails.prototype.update = function () {
-    var a = this.H.lb(),
-      b = this.H.ib();
+    var a = this.upgrade.lb(),
+      b = this.upgrade.ib();
     if (this.oz != b) {
       this.oz = b;
       this.we.innerHTML = b;
@@ -568,7 +568,7 @@ export function initializeViewsUpgradeDetails() {
     a = a.insertCell(1);
     a.style.textAlign = "left";
     this.we = createElement("span", a, null, null);
-    this.we.innerHTML = this.H.ib();
+    this.we.innerHTML = this.upgrade.ib();
     this.mf = b.insertCell(0);
     this.mf.colSpan = 2;
     this.mf.style.width = "200px";
@@ -581,7 +581,7 @@ export function initializeViewsUpgradeDetails() {
     this.sr.length = 0;
   };
   EquipmentSetDetails.prototype.Rc = function (a) {
-    this.H = a;
+    this.upgrade = a;
   };
   EquipmentSetDetails.prototype.te = function () {
     if (!this.Bf) {
@@ -593,7 +593,7 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   EquipmentSetDetails.prototype.update = function () {
-    var a = this.H.Nz(),
+    var a = this.upgrade.Nz(),
       b,
       c,
       d,
@@ -629,7 +629,7 @@ export function initializeViewsUpgradeDetails() {
     this.gb = this.fb = null;
   };
   SkillUpgradeDetails.prototype.Rc = function (a) {
-    this.H = a;
+    this.upgrade = a;
   };
   SkillUpgradeDetails.prototype.te = function () {
     if (!this.wn) {
@@ -642,8 +642,8 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   SkillUpgradeDetails.prototype.update = function () {
-    var a = this.H.ib(),
-      b = this.H.lb();
+    var a = this.upgrade.ib(),
+      b = this.upgrade.lb();
     if (this.gb !== a) {
       this.gb = a;
       this.jb.innerHTML = a;
@@ -684,7 +684,7 @@ export function initializeViewsUpgradeDetails() {
     this.Lv = null;
   };
   SpellUpgradeDetails.prototype.Rc = function (a) {
-    this.H = a;
+    this.upgrade = a;
   };
   SpellUpgradeDetails.prototype.te = function () {
     if (!this.table) {
@@ -696,7 +696,7 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   SpellUpgradeDetails.prototype.update = function () {
-    var a = this.H.uw();
+    var a = this.upgrade.uw();
     if (this.Lv !== a) {
       this.Lv = a;
       var b = a.ga;
@@ -713,8 +713,8 @@ export function initializeViewsUpgradeDetails() {
         this.De = this.oc = 0;
         this.nd = true;
       }
-      this.Ml.innerHTML = this.H.ib();
-      this.vu.innerHTML = this.H.lb();
+      this.Ml.innerHTML = this.upgrade.ib();
+      this.vu.innerHTML = this.upgrade.lb();
     }
     if (this.nd) {
       this.De++;
@@ -763,7 +763,7 @@ export function initializeViewsUpgradeDetails() {
     this.gb = this.fb = null;
   };
   MonsterLevelDetails.prototype.Rc = function (a) {
-    this.H = a;
+    this.upgrade = a;
   };
   MonsterLevelDetails.prototype.te = function () {
     if (!this.kk) {
@@ -776,9 +776,9 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   MonsterLevelDetails.prototype.update = function () {
-    var a = this.H.Bb(),
-      b = this.H.ib(),
-      c = this.H.lb();
+    var a = this.upgrade.Bb(),
+      b = this.upgrade.ib(),
+      c = this.upgrade.lb();
     if (this.Lb !== a) {
       this.Lb = a;
       this.dj.innerHTML = formatAmount(a);
@@ -844,7 +844,7 @@ export function initializeViewsUpgradeDetails() {
     this.ui = null;
   };
   DungeonPurchaseDetails.prototype.Rc = function (a) {
-    this.H = a;
+    this.upgrade = a;
   };
   DungeonPurchaseDetails.prototype.te = function () {
     if (!this.bf) {
@@ -856,8 +856,8 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   DungeonPurchaseDetails.prototype.update = function () {
-    var a = this.H.Bb(),
-      b = this.H.Wo();
+    var a = this.upgrade.Bb(),
+      b = this.upgrade.Wo();
     if (this.Lb !== a) {
       this.Lb = a;
       this.Cq.innerHTML = formatAmount(a);
@@ -885,7 +885,7 @@ export function initializeViewsUpgradeDetails() {
     c = a.insertCell(1);
     c.style.textAlign = "left";
     this.we = createElement("span", c, null, null);
-    this.we.innerHTML = this.H.ib();
+    this.we.innerHTML = this.upgrade.ib();
     c = a.insertCell(2);
     this.Cq = createElement("span", c, null, null);
     a = a.insertCell(3);
@@ -912,7 +912,7 @@ export function initializeViewsUpgradeDetails() {
     this.tm = null;
   };
   ScrollUpgradeDetails.prototype.Rc = function (a) {
-    this.H = a;
+    this.upgrade = a;
   };
   ScrollUpgradeDetails.prototype.te = function () {
     if (!this.sn) {
@@ -924,10 +924,10 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   ScrollUpgradeDetails.prototype.update = function () {
-    var a = this.H.Bb(),
-      b = this.H.Pz(),
-      c = this.H.ib(),
-      d = this.H.lb();
+    var a = this.upgrade.Bb(),
+      b = this.upgrade.Pz(),
+      c = this.upgrade.ib(),
+      d = this.upgrade.lb();
     if (this.Lb !== a) {
       this.Lb = a;
       this.Cq.innerHTML = formatAmount(a);
@@ -942,7 +942,7 @@ export function initializeViewsUpgradeDetails() {
     }
     if (this.Az !== d) {
       this.Az = d;
-      this.we.innerHTML = this.H.lb();
+      this.we.innerHTML = this.upgrade.lb();
     }
   };
   ScrollUpgradeDetails.prototype.eb = function () {
@@ -962,7 +962,7 @@ export function initializeViewsUpgradeDetails() {
     c = a.insertCell(1);
     c.style.textAlign = "left";
     this.we = createElement("span", c, null, null);
-    this.we.innerHTML = this.H.ib();
+    this.we.innerHTML = this.upgrade.ib();
     c = a.insertCell(2);
     this.Cq = createElement("span", c, null, null);
     a = a.insertCell(3);
@@ -988,7 +988,7 @@ export function initializeViewsUpgradeDetails() {
     this.Gk = -1;
   };
   CastlePurchaseDetails.prototype.Rc = function (a) {
-    this.H = a;
+    this.upgrade = a;
   };
   CastlePurchaseDetails.prototype.te = function () {
     if (!this.Cm) {
@@ -1026,7 +1026,7 @@ export function initializeViewsUpgradeDetails() {
     c.style.textAlign = "left";
     c.style.width = "150px";
     this.we = createElement("span", c, null, null);
-    this.we.innerHTML = this.H ? this.H.ib() : "收获地牢";
+    this.we.innerHTML = this.upgrade ? this.upgrade.ib() : "收获地牢";
     c = a.insertCell(2);
     this.Uz = createElement("span", c, null, null);
     a = a.insertCell(3);
@@ -1043,7 +1043,7 @@ export function initializeViewsUpgradeDetails() {
     b = b.insertCell(0);
     b.colSpan = 3;
     b.style.textAlign = "left";
-    b.innerHTML = this.H ? this.H.lb() : "收集杀戮农场";
+    b.innerHTML = this.upgrade ? this.upgrade.lb() : "收集杀戮农场";
   };
   FarmUpgradeDetails.prototype.Na = function () {
     return 10;
@@ -1052,7 +1052,7 @@ export function initializeViewsUpgradeDetails() {
     this.Dk = -1;
   };
   FarmUpgradeDetails.prototype.Rc = function (a) {
-    this.H = a;
+    this.upgrade = a;
   };
   FarmUpgradeDetails.prototype.te = function () {
     if (!this.Hm) {
@@ -1090,7 +1090,7 @@ export function initializeViewsUpgradeDetails() {
     c.style.textAlign = "left";
     c.style.width = "150px";
     this.we = createElement("span", c, null, null);
-    this.we.innerHTML = this.H ? this.H.ib() : "收集道具黄金";
+    this.we.innerHTML = this.upgrade ? this.upgrade.ib() : "收集道具黄金";
     c = a.insertCell(2);
     this.Tz = createElement("span", c, null, null);
     a = a.insertCell(3);
@@ -1107,7 +1107,7 @@ export function initializeViewsUpgradeDetails() {
     b = b.insertCell(0);
     b.colSpan = 3;
     b.style.textAlign = "left";
-    b.innerHTML = this.H ? this.H.lb() : "卖掉道具得到黄金";
+    b.innerHTML = this.upgrade ? this.upgrade.lb() : "卖掉道具得到黄金";
   };
   CharacterLevelDetails.prototype.Na = function () {
     return 11;
@@ -1119,7 +1119,7 @@ export function initializeViewsUpgradeDetails() {
     this.cn = this.an = this.$m = this.bn = this.jr = this.hr = this.ir = this.gr = 0;
   };
   CharacterLevelDetails.prototype.Rc = function (a) {
-    this.H = a;
+    this.upgrade = a;
     this.Lb = -1;
     this.gb = this.Bs = null;
     this.vi = -1;
@@ -1135,9 +1135,9 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   CharacterLevelDetails.prototype.update = function () {
-    var a = this.H.Bb(),
-      b = this.H.ib(),
-      c = this.H.Kr();
+    var a = this.upgrade.Bb(),
+      b = this.upgrade.ib(),
+      c = this.upgrade.Kr();
     if (this.Lb != a) {
       this.Lb = a;
       this.pi.innerHTML = formatAmount(a);
@@ -1161,7 +1161,7 @@ export function initializeViewsUpgradeDetails() {
       c = c[randomInt(c.length)].ll;
       this.Zm.style.background = "url('spritesheet/monsters.png') -" + (c.sourceX + 10) + "px -" + (c.sourceY + 12) + "px";
     }
-    for (var d, f = 0, g = 0, h = 0, l = 0, c = getPartyMinLevel(), a = this.H.Kr(), b = 0; b < game.state.adventurers.length; b++) {
+    for (var d, f = 0, g = 0, h = 0, l = 0, c = getPartyMinLevel(), a = this.upgrade.Kr(), b = 0; b < game.state.adventurers.length; b++) {
       d = game.state.adventurers[b].stats;
       f += statValue(d.damage);
       g += statValue(d.armor);
@@ -1272,7 +1272,7 @@ export function initializeViewsUpgradeDetails() {
     this.gb = this.fb = null;
   };
   AchievementClaimDetails.prototype.Rc = function (a) {
-    this.H = a;
+    this.upgrade = a;
   };
   AchievementClaimDetails.prototype.te = function () {
     if (!this.jb) {
@@ -1285,8 +1285,8 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   AchievementClaimDetails.prototype.update = function () {
-    var a = this.H.ib(),
-      b = this.H.lb();
+    var a = this.upgrade.ib(),
+      b = this.upgrade.lb();
     if (this.gb !== a) {
       this.gb = a;
       this.jb.innerHTML = a;
@@ -1314,7 +1314,7 @@ export function initializeViewsUpgradeDetails() {
     this.gb = this.fb = null;
   };
   AchievementProgressDetails.prototype.Rc = function (a) {
-    this.H = a;
+    this.upgrade = a;
   };
   AchievementProgressDetails.prototype.te = function () {
     if (!this.jb) {
@@ -1327,8 +1327,8 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   AchievementProgressDetails.prototype.update = function () {
-    var a = this.H.ib(),
-      b = this.H.lb();
+    var a = this.upgrade.ib(),
+      b = this.upgrade.lb();
     if (this.gb !== a) {
       this.gb = a;
       this.jb.innerHTML = a;
@@ -1352,7 +1352,7 @@ export function initializeViewsUpgradeDetails() {
     this.Lb = -1;
   };
   PointUpgradeDetails.prototype.Rc = function (a) {
-    this.H = a;
+    this.upgrade = a;
   };
   PointUpgradeDetails.prototype.te = function () {
     if (!this.jb) {
@@ -1366,9 +1366,9 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   PointUpgradeDetails.prototype.update = function () {
-    var a = this.H.ib(),
-      b = this.H.lb(),
-      c = this.H.Bb();
+    var a = this.upgrade.ib(),
+      b = this.upgrade.lb(),
+      c = this.upgrade.Bb();
     if (this.gb != a) {
       this.gb = a;
       this.jb.innerHTML = a;
