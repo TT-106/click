@@ -15,7 +15,8 @@
     "test:parity": "node scripts/test-parity.mjs",
     "test:scenarios": "node scripts/test-scenarios.mjs",
     "test:e2e": "node scripts/test-browser.mjs",
-    "check": "node scripts/check.mjs"
+    "check": "node scripts/check.mjs",
+    "perf": "node scripts/measure-perf.mjs"
   },
   "devDependencies": {
     "@babel/generator": "7.29.8",
