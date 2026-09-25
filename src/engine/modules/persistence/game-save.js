@@ -267,7 +267,7 @@ export function restoreGameState(a, b) {
               }
             }
             var bc,
-              Wa = game.level.Pa;
+              Wa = game.level.roomList;
             if (Wa.length !== pb.length) {
               console.log("room array length mismatch");
             } else {
@@ -812,7 +812,7 @@ export function createSaveState(a) {
         ta = qa.Ki,
         eb = qa.Li,
         Gb = qa.sp,
-        Da = qa.Pa,
+        Da = qa.roomList,
         ub = [],
         mb;
       for (mb = 0; mb < Da.length; mb++) {

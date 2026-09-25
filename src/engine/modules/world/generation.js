@@ -26,7 +26,7 @@ export function DungeonLayoutGenerator(a, b, c, d, f) {
   this.xA = MAX_ROOM_SIZE;
   this.wA = 15;
   this.DA = 8;
-  this.Pa = [];
+  this.roomList = [];
   this.gd = [];
   this.tf = this.Ce = null;
   this.Xp = this.Zo = 0;
@@ -98,8 +98,8 @@ export function findNearestConnectedRoom(a, b, c, d) {
 }
 export function roomOverlapsExisting(a, b) {
   var c, d;
-  for (c = 0; c < a.Pa.length; c++) {
-    d = a.Pa[c];
+  for (c = 0; c < a.roomList.length; c++) {
+    d = a.roomList[c];
     var f;
     if (f = b !== d) {
       f = a.iB;
@@ -121,7 +121,7 @@ export function CastleLayoutGenerator(a, b, c, d) {
   this.xA = 9;
   this.wA = 18;
   this.DA = 6;
-  this.Pa = [];
+  this.roomList = [];
   this.gd = [];
   this.tf = this.Ce = null;
   this.Xp = this.Zo = 0;
@@ -130,7 +130,7 @@ export function appendDungeonRoom(a, b, c, d, f, g) {
   b = new DungeonRoom(b, c, d, f, g);
   c = a.Xp++;
   b.roomId = c;
-  a.Pa.push(b);
+  a.roomList.push(b);
   b.Bq(a.tileGrid);
 }
 export function DungeonDecorationGenerator() {
@@ -141,7 +141,7 @@ export function DungeonLevel() {
   this.Li = this.Ki = 0;
   this.rc = this.sc = 120;
   this.tileGrid = null;
-  this.Pa = [];
+  this.roomList = [];
   this.gd = [];
   this.tf = this.Ce = null;
   this.sp = 0;
@@ -150,7 +150,7 @@ export function generateDungeonLevel(a, b, c, d) {
   var f = game.level;
   f.sp = a;
   var g = new SeededRandom(a);
-  f.Pa.length = 0;
+  f.roomList.length = 0;
   f.gd.length = 0;
   f.Ce = null;
   f.tf = null;
@@ -171,13 +171,13 @@ export function generateDungeonLevel(a, b, c, d) {
       clearDungeonTiles(f);
     }
   }
-  f.Pa = c.Pa;
+  f.roomList = c.roomList;
   f.gd = c.gd;
   f.Ce = c.Ce;
   f.tf = c.tf;
   c = getDungeonTheme(b);
-  for (b = 0; b < f.Pa.length; b++) {
-    f.Pa[b].xx(c, f.tileGrid);
+  for (b = 0; b < f.roomList.length; b++) {
+    f.roomList[b].xx(c, f.tileGrid);
   }
   for (b = 0; b < f.gd.length; b++) {
     f.gd[b].xx(c, f.tileGrid);
@@ -240,9 +240,9 @@ export function clearDungeonTiles(a) {
 export function findRoom(a) {
   var b = game.level,
     c;
-  for (c = 0; c < b.Pa.length; c++) {
-    if (b.Pa[c].roomId === a) {
-      return b.Pa[c];
+  for (c = 0; c < b.roomList.length; c++) {
+    if (b.roomList[c].roomId === a) {
+      return b.roomList[c];
     }
   }
   return null;
@@ -250,7 +250,7 @@ export function findRoom(a) {
 export function initializeWorldGeneration() {
   DungeonLayoutGenerator.prototype.rw = function () {
     this.Xp = this.Zo = 0;
-    this.Pa.length = 0;
+    this.roomList.length = 0;
     this.gd.length = 0;
     this.tf = this.Ce = null;
     a: {
@@ -279,7 +279,7 @@ export function initializeWorldGeneration() {
         }
         g = this.Xp++;
         c.roomId = g;
-        this.Pa.push(c);
+        this.roomList.push(c);
         g = c;
         this.yx(g);
         h = undefined;
@@ -305,10 +305,10 @@ export function initializeWorldGeneration() {
       f,
       g,
       h = new HallwayPathfinder(this.fl, this.Nj, this.tileGrid);
-    for (a = 1; a < this.Pa.length; a++) {
-      b = this.Pa[a];
+    for (a = 1; a < this.roomList.length; a++) {
+      b = this.roomList[a];
       d.length = 0;
-      c = findNearestConnectedRoom(this, this.Pa[a - 1], d, b);
+      c = findNearestConnectedRoom(this, this.roomList[a - 1], d, b);
       g = Date.now();
       f = findHallwayPath(h, b, c);
       if (!f) {
@@ -324,8 +324,8 @@ export function initializeWorldGeneration() {
     return true;
   };
   DungeonLayoutGenerator.prototype.uu = function () {
-    for (var a = this.Pa[randomIntFrom(this.seededRandom, this.Pa.length)], b = this.Pa[randomIntFrom(this.seededRandom, this.Pa.length)]; b === a;) {
-      b = this.Pa[randomIntFrom(this.seededRandom, this.Pa.length)];
+    for (var a = this.roomList[randomIntFrom(this.seededRandom, this.roomList.length)], b = this.roomList[randomIntFrom(this.seededRandom, this.roomList.length)]; b === a;) {
+      b = this.roomList[randomIntFrom(this.seededRandom, this.roomList.length)];
     }
     var c = false;
     if (game.currentDungeon) {
@@ -422,7 +422,7 @@ export function initializeWorldGeneration() {
   };
   CastleLayoutGenerator.prototype.rw = function () {
     this.Xp = this.Zo = 0;
-    this.Pa.length = 0;
+    this.roomList.length = 0;
     this.gd.length = 0;
     this.tf = this.Ce = null;
     appendDungeonRoom(this, 1, 1, 15, 15, 1);
@@ -441,8 +441,8 @@ export function initializeWorldGeneration() {
       c,
       d,
       f = new HallwayPathfinder(this.fl, this.Nj, this.tileGrid);
-    for (a = 1; a < this.Pa.length; a++) {
-      if (b = this.Pa[a - 1], c = this.Pa[a], d = findHallwayPath(f, b, c)) {
+    for (a = 1; a < this.roomList.length; a++) {
+      if (b = this.roomList[a - 1], c = this.roomList[a], d = findHallwayPath(f, b, c)) {
         var g = this.Zo++;
         d.hallwayId = g;
         this.gd.push(d);
@@ -455,8 +455,8 @@ export function initializeWorldGeneration() {
     }
   };
   CastleLayoutGenerator.prototype.uu = function () {
-    var a = this.Pa[this.Pa.length - 1];
-    this.Ce = this.to(this.Pa[0], false);
+    var a = this.roomList[this.roomList.length - 1];
+    this.Ce = this.to(this.roomList[0], false);
     this.tf = this.to(a, false);
   };
   CastleLayoutGenerator.prototype.to = function (a, b) {

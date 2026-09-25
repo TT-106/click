@@ -115,7 +115,7 @@ export function findNextUnopenedDoor() {
     f,
     g = null,
     h = a.position.levelPosition,
-    l = game.level.Pa,
+    l = game.level.roomList,
     n = game.level.gd,
     p = 1E5;
   if (b = a.position.cd) {
