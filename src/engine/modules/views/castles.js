@@ -8,7 +8,7 @@ import { View, addChildView, resetChildViews } from "./base.js";
 import { appendHeaderCell, clearElementById, createElement, getElement } from "./dom.js";
 import { TabView } from "./navigation.js";
 export function getCastleStatusColor(a) {
-  return a.$b ? "#222" : a.cb ? "#080" : canAttackCastle(a) ? game.monsterCatalog.fc >= a.requiredMonsterLevel ? "#850" : "#A30" : a.ye ? "#A80" : "#AAA";
+  return a.$b ? "#222" : a.conquered ? "#080" : canAttackCastle(a) ? game.monsterCatalog.fc >= a.requiredMonsterLevel ? "#850" : "#A30" : a.ye ? "#A80" : "#AAA";
 }
 export function CastleMapView() {
   this.elementId = "castleMapContainer";
@@ -204,7 +204,7 @@ export function initializeViewsCastles() {
         this.pb.style.backgroundColor = a;
       }
       a = this.xc;
-      a = a.$b ? "未解锁" : a.cb ? "已征服" : canAttackCastle(a) ? game.monsterCatalog.fc >= a.requiredMonsterLevel ? "准备攻击" : "怪物等级" + a.requiredMonsterLevel : a.ye ? "计划攻击" : "地牢" + a.yk + " / " + a.Ab.length;
+      a = a.$b ? "未解锁" : a.conquered ? "已征服" : canAttackCastle(a) ? game.monsterCatalog.fc >= a.requiredMonsterLevel ? "准备攻击" : "怪物等级" + a.requiredMonsterLevel : a.ye ? "计划攻击" : "地牢" + a.yk + " / " + a.Ab.length;
       if (this.Rv != a) {
         this.Rv = a;
         this.kd.innerHTML = a;
@@ -212,7 +212,7 @@ export function initializeViewsCastles() {
       a = this.xc;
       if (a.$b) {
         a = 0;
-      } else if (a.cb || canAttackCastle(a) || a.ye || a.Bj) {
+      } else if (a.conquered || canAttackCastle(a) || a.ye || a.Bj) {
         a = this.Us;
       } else {
         var a = this.xc.yk,

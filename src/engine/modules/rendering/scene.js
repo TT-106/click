@@ -418,7 +418,7 @@ export function initializeRenderingScene() {
           a.context.fillStyle = "green";
           for (u = 0; u < p.length; u++) {
             s = p[u];
-            if (s.cb) {
+            if (s.conquered) {
               drawEntityHighlight(a, s, h, l);
             }
           }
@@ -446,7 +446,7 @@ export function initializeRenderingScene() {
           a.context.fillStyle = "white";
           for (u = 0; u < p.length; u++) {
             s = p[u];
-            if (!(canAttackCastle(s) || s.$b || s.ye || s.cb)) {
+            if (!(canAttackCastle(s) || s.$b || s.ye || s.conquered)) {
               drawEntityHighlight(a, s, h, l);
             }
           }

@@ -303,7 +303,7 @@ export function getTerrainCode(a, b, c, d) {
   b *= game.tileSize;
   c *= game.tileSize;
   var f = sampleNoise(a.pE, b, c);
-  return !d || d.$b ? 0.5 > f && (a = sampleNoise(a.ox, b, c), -0.6 > a) ? "P" : "D" : d.cb ? 0.5 > f && (a = sampleNoise(a.ox, b, c), -0.6 > a) ? OCEAN_TERRAIN_CODE : "G" : 0.5 > f && (a = sampleNoise(a.ox, b, c), -0.6 > a) ? "I" : "S";
+  return !d || d.$b ? 0.5 > f && (a = sampleNoise(a.ox, b, c), -0.6 > a) ? "P" : "D" : d.conquered ? 0.5 > f && (a = sampleNoise(a.ox, b, c), -0.6 > a) ? OCEAN_TERRAIN_CODE : "G" : 0.5 > f && (a = sampleNoise(a.ox, b, c), -0.6 > a) ? "I" : "S";
 }
 export function WorldTile(a, b) {
   this.worldColumn = a;

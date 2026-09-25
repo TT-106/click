@@ -226,7 +226,7 @@ export function initializeCharactersParty() {
       clearItemDrops();
       a.ye = false;
       invalidateCastleRevision();
-      a.cb = true;
+      a.conquered = true;
       b = [];
       var g;
       for (d = 0; d < a.ck.length; d++) {
@@ -263,7 +263,7 @@ export function initializeCharactersParty() {
       }
       a = game.castles;
       for (b = c = 0; b < a.pd.length; b++) {
-        if (!a.pd[b].cb) {
+        if (!a.pd[b].conquered) {
           c++;
         }
       }
@@ -339,7 +339,7 @@ export function initializeCharactersParty() {
     this.ed = a;
   };
   PartyState.prototype.ou = function () {
-    if (this.Wf && this.Wf.cb) {
+    if (this.Wf && this.Wf.conquered) {
       this.Wf = null;
     }
     if (!this.Wf) {
@@ -351,7 +351,7 @@ export function initializeCharactersParty() {
         g,
         h;
       for (h = 0; h < a.pd.length; h++) {
-        if (f = a.pd[h], !f.$b && !f.cb && (g = distanceSquaredToPoint(b, game.world.dc(f.dm), game.world.ec(f.em)), !c || g < d)) {
+        if (f = a.pd[h], !f.$b && !f.conquered && (g = distanceSquaredToPoint(b, game.world.dc(f.dm), game.world.ec(f.em)), !c || g < d)) {
           c = f;
           d = g;
         }
@@ -403,7 +403,7 @@ export function initializeCharactersParty() {
         if (!this.ge.Bj) {
           this.ge = null;
         }
-      } else if (this.Wf.ye && !this.Wf.cb) {
+      } else if (this.Wf.ye && !this.Wf.conquered) {
         this.ge = this.Wf;
         b = true;
       } else {
@@ -442,7 +442,7 @@ export function initializeCharactersParty() {
           var n = this.Wf.Ab,
             p;
           for (p = 0; p < n.length; p++) {
-            if (h = n[p], !h.cb && (l = distanceSquaredToPoint(d, h.dc(), h.ec()), !f || l < g)) {
+            if (h = n[p], !h.conquered && (l = distanceSquaredToPoint(d, h.dc(), h.ec()), !f || l < g)) {
               f = h;
               g = l;
             }
@@ -452,7 +452,7 @@ export function initializeCharactersParty() {
             f = game.dungeons;
             g = null;
             for (p = h = 0; p < f.Ab.length; p++) {
-              if (!(l = f.Ab[p], l.isFarm || l.zj.$b || l.cb || (n = distanceSquaredToPoint(d, l.dc(), l.ec()), g && !(n < h)))) {
+              if (!(l = f.Ab[p], l.isFarm || l.zj.$b || l.conquered || (n = distanceSquaredToPoint(d, l.dc(), l.ec()), g && !(n < h)))) {
                 g = l;
                 h = n;
               }

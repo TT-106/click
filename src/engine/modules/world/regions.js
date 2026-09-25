@@ -67,7 +67,7 @@ export function Castle(a, b, c, d, f, g) {
   this.$C = d;
   this.dm = f;
   this.em = g;
-  this.Bj = this.cb = false;
+  this.Bj = this.conquered = false;
   this.$b = true;
   this.ye = false;
   this.requiredMonsterLevel = this.yk = 0;
@@ -75,15 +75,15 @@ export function Castle(a, b, c, d, f, g) {
   this.Ab = [];
 }
 export function canAttackCastle(a) {
-  return !a.$b && !a.cb && a.Bj && !a.ye;
+  return !a.$b && !a.conquered && a.Bj && !a.ye;
 }
 export function refreshCastleConquest(a) {
-  if (a.Bj || a.cb) {
+  if (a.Bj || a.conquered) {
     a.yk = a.Ab.length;
   } else {
     var b;
     for (b = a.yk = 0; b < a.Ab.length; b++) {
-      if (a.Ab[b].cb) {
+      if (a.Ab[b].conquered) {
         a.yk++;
       }
     }
@@ -158,7 +158,7 @@ export function resetCastles() {
   var b;
   for (b = 0; b < a.pd.length; b++) {
     var c = a.pd[b];
-    c.cb = false;
+    c.conquered = false;
     c.$b = true;
     c.ye = false;
     c.yk = 0;
@@ -286,7 +286,7 @@ export function initializeWorldRegions() {
   WORLD_ORIGIN_COLUMN = 100;
   WORLD_ORIGIN_ROW = 100;
   Castle.prototype.tx = function (a) {
-    this.cb = a;
+    this.conquered = a;
   };
   Castle.prototype.Is = function () {
     refreshCastleConquest(this);

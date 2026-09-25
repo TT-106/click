@@ -18,7 +18,7 @@ export function Dungeon(a, b, c, d, f, g, h, l, n) {
   this.farmCost = 0;
   this.Aj = !(4 === c || 5 === c || 7 === c || 8 === c);
   this.Fo = getDungeonMapSprite(c);
-  this.cb = this.isFarm = this.cleared = this.discovered = false;
+  this.conquered = this.isFarm = this.cleared = this.discovered = false;
   this.farmStartTurn = this.clearedTurn = 0;
   this.worldColumn = d;
   this.worldRow = f;
@@ -29,7 +29,7 @@ export function Dungeon(a, b, c, d, f, g, h, l, n) {
   this.zj = n;
 }
 export function canFarmDungeon(a) {
-  return a.discovered && a.cb && !a.isFarm && a.zj.cb;
+  return a.discovered && a.conquered && !a.isFarm && a.zj.conquered;
 }
 export function randomDungeonType(a) {
   switch (randomIntFrom(a, 11)) {
@@ -88,7 +88,7 @@ export function resetDungeons() {
     var c = a.Ab[b];
     c.discovered = false;
     c.cleared = false;
-    c.cb = false;
+    c.conquered = false;
     c.isFarm = false;
     c.farmStartTurn = 0;
     c.clearedTurn = 0;
@@ -185,7 +185,7 @@ export function randomShopSprite(a) {
 }
 export function initializeWorldDungeons() {
   Dungeon.prototype.tx = function (a) {
-    this.cb = a;
+    this.conquered = a;
   };
   Dungeon.prototype.dc = function () {
     return game.world.dc(this.worldColumn);
@@ -218,7 +218,7 @@ export function initializeWorldDungeons() {
       recordGameEvent("Dungeon", "进入等级" + this.currentLevelIndex);
     } else {
       game.currentDungeon = null;
-      this.cb = this.cleared = game.worldActive = true;
+      this.conquered = this.cleared = game.worldActive = true;
       this.clearedTurn = game.state.turnNumber;
       game.dungeons.Is(this);
       this.zj.Is();

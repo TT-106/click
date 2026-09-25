@@ -315,7 +315,7 @@ export function initializeProgressionUpgrades() {
     return "攻击城堡";
   };
   PurchaseItemUpgrade.prototype.He = function () {
-    return this.xc && (this.xc.ye || this.xc.cb);
+    return this.xc && (this.xc.ye || this.xc.conquered);
   };
   PurchaseItemUpgrade.prototype.getUpgradeType = function () {
     return 13;
@@ -910,7 +910,7 @@ export function initializeProgressionUpgrades() {
       if (this.dungeon.isFarm) {
         return "收获地牢";
       }
-      if (!this.dungeon.zj.cb) {
+      if (!this.dungeon.zj.conquered) {
         return "先要征服城堡";
       }
     }
@@ -981,7 +981,7 @@ export function initializeProgressionUpgrades() {
     var a;
     a = game.dungeons.bk;
     if (a = this.Ez < a.length ? a[this.Ez] : null) {
-      if (a.zj.cb) {
+      if (a.zj.conquered) {
         this.canPurchase = game.state.party.gold >= this.Bb();
         this.affordableSoon = !this.canPurchase;
       } else {

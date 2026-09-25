@@ -186,7 +186,7 @@ export function restoreGameState(a, b) {
               if (canAttackCastle(Fa)) {
                 La.Jg.push(Fa);
               }
-              if (Fa.ye && !Fa.cb) {
+              if (Fa.ye && !Fa.conquered) {
                 La.Dh.push(Fa);
               }
               refreshCastleConquest(Fa);
@@ -740,7 +740,7 @@ export function createSaveState(a) {
       x = {
         dungeonId: O.dungeonId,
         discovered: O.discovered,
-        conquered: O.cb,
+        conquered: O.conquered,
         cleared: O.cleared,
         clearedTurn: O.clearedTurn,
         dungeonFarm: O.isFarm,
@@ -768,7 +768,7 @@ export function createSaveState(a) {
       var S = na[H];
       K = {
         castleId: S.castleId,
-        conquered: S.cb,
+        conquered: S.conquered,
         dungeonsConquered: S.Bj,
         castleRegionLocked: S.$b,
         attackScheduled: S.ye,

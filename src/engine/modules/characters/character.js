@@ -1167,7 +1167,7 @@ export function updateCharacter(a, b) {
         if (game.state.party.ge) {
           var Se = game.state.party;
           if (Se.ge) {
-            if (Se.ge.cb) {
+            if (Se.ge.conquered) {
               Se.ge = null;
             } else {
               Se.Cc = null;
