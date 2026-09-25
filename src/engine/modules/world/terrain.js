@@ -208,7 +208,7 @@ export function populateWorldBlock(a, b) {
         g.Ln = "PPPP" === g.Kn || "OOOO" === g.Kn || "IIII" === g.Kn ? 1E5 : 0;
       }
       if (h = game.terrainSprites.getSprite(h)) {
-        g.Qa(h);
+        g.setBackgroundSprite(h);
       }
     }
   }
@@ -282,20 +282,20 @@ export function populateWorldBlock(a, b) {
   if (c != g) {
     for (n = 0; n < a.rc; n++) {
       d = getBlockTile(b, n, 0);
-      d.Qa(f);
+      d.setBackgroundSprite(f);
       d.setDecorationSprite(null);
     }
   }
   if (c != h) {
     for (n = 0; n < a.sc; n++) {
       d = getBlockTile(b, 0, n);
-      d.Qa(f);
+      d.setBackgroundSprite(f);
       d.setDecorationSprite(null);
     }
   }
   if (c === g && c === h && c != l) {
     d = getBlockTile(b, 0, 0);
-    d.Qa(f);
+    d.setBackgroundSprite(f);
     d.setDecorationSprite(null);
   }
 }
@@ -599,7 +599,7 @@ export function initializeWorldTerrain() {
   WorldTile.prototype.cc = function () {
     return this.worldRow;
   };
-  WorldTile.prototype.Qa = function (a) {
+  WorldTile.prototype.setBackgroundSprite = function (a) {
     this.Jn = a;
   };
   WorldTile.prototype.setDecorationSprite = function (a) {
