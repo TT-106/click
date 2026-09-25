@@ -30,6 +30,18 @@
   2. 调用方为 findChainTarget/findNearby 系（actions.js:616/682 的 a.combatTarget 已随修正传入，但多场景历史下该值仍为 undefined）——即施法者的 combatTarget 在原版被 Cb/攻击流设置，而重构端某条设置链在拆分状态下失效。
   3. 单页 potions-active 同状态通过——再次确认为页面历史交互。
   4. 下一步最小实验：在 split 状态下给 Character.Cb 与 nu()/clearMinions 打点记录（角色名, 新值, 栈），对比两端同一回合的 combatTarget 写序列——第一个缺失的写点即残余误分类/漏改点。
+## 第六轮取证已落地（2026-09-26，每项独立全回归）
+
+| 字段 | 新名 | 对象 |
+|---|---|---|
+| Va | isDead | Character |
+| ab | isVictoryAchievement | Achievement |
+| bb | actionRange | 全部 Behavior 类 |
+| Ta（方法） | getPriority | Behavior 原型（全局符号 Ta=recordGameEvent 未动，已加命名空间注记） |
+| nb | createBehaviors | 职业/守卫/随从定义工厂 |
+| Gb | pointCost | pointUpgradeDefinitions |
+| cb | conquered | DungeonInfo 系（存档键 conquered 本已语义化，写读两端随字段同步） |
+
 - 经验教训（已入 facts#20 扩展）：**重命名跨文件字段时，"读点全集"必须包含工厂函数/工具函数内按多态入参的访问**；Babel 静态 grep 对 `a.Da`（a 的类型随调用方变化）天然失真，应配运行时类型断言。
 
 ## U2 — 外部自动化脚本（c2c.user.js）DOM 契约未实测
