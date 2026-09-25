@@ -51,10 +51,16 @@ if (original) {
       Object.defineProperty(p, prop, {
         configurable: true,
         get() { return this['__' + prop]; },
-        set(v) {
-          if (v != null && !validate(v)) window.__daAssert.push(prop + ' ← ' + (v.constructor && v.constructor.name));
-          this['__' + prop] = v;
-        },
+      set(v) {
+        if (v != null && !validate(v)) window.__daAssert.push(prop + ' ← ' + (v.constructor && v.constructor.name));
+        // U1：非空→空转换记录（提前清空 combatTarget 的误分类写点定位）
+        if (prop === 'combatTarget' && v === null && this['__' + prop] != null && window.__daNullLog !== undefined) {
+          const st = (new Error().stack || '').split('\n').filter(l => l.includes('/src/') || l.includes('c2.js')).slice(0, 3).map(l => l.replace(/^.*modules\//, '').replace(/^.*archive\//, '').replace(/:\d+:\d+\)?/, '')).join(' < ');
+          window.__daNullLog.push(st.slice(0, 220));
+          if (window.__daNullLog.length > 12) window.__daNullLog.shift();
+        }
+        this['__' + prop] = v;
+      },
       });
     };
     const isCharacter = v => v.stats !== undefined && v.position !== undefined && v.effects !== undefined;

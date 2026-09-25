@@ -21,6 +21,10 @@
   2. 修正 6 处误标后的拆分在单页 600 回合下**值流 100% 正确**（零违例），standalone potions-active 通过。
   3. 但多场景 runner 历史下 LifeDrainBehavior.Jd 崩溃（selectedTarget undefined → 'stats'）——**场景顺序依赖**，非值流错误。
   4. 结论：拆分语义正确但与页面历史状态交互存在未解缺陷；下一步应对比两端 behaviors 队列内部状态（un/Lm/selectedTarget）在场景切换时的差异。
+- **第四轮实证（场景切换状态转储）**：
+  1. 多场景序列（long-run→offline×3→potions-active）复现 'characterType' of undefined 崩溃——单页同场景通过，确认为**页面历史状态交互**。
+  2. 关键疑点：`createSpellAction` 内 `d.Cb(b)` 设置 targetCharacter 后，character.js:866 `bd.targetCharacter` 读取链在多场景历史下变为 undefined——需对比两端 behaviors 队列（fo 列表内各行为的 un/Lm/selectedTarget 与原版对应字段）随场景切换的持久化差异。
+  3. 工具已就绪：?watchDa 观察器 + __daNullLog 转换记录 + 崩溃栈捕获；下一步在 runner 序列的第 4/5 场景间插入 behaviors 内部状态逐字段转储。
 - 经验教训（已入 facts#20 扩展）：**重命名跨文件字段时，"读点全集"必须包含工厂函数/工具函数内按多态入参的访问**；Babel 静态 grep 对 `a.Da`（a 的类型随调用方变化）天然失真，应配运行时类型断言。
 
 ## U2 — 外部自动化脚本（c2c.user.js）DOM 契约未实测
