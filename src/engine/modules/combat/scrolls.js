@@ -121,7 +121,7 @@ export function castScroll(a, b) {
           p,
           s = -1;
         for (h = 0; h < d.length; h++) {
-          if (!(g = d[h], c === g || g.Va || g.position.room !== f || (p = g.effects, p.wg || p.Kd || p.bi || -1 < a.eq.yl.indexOf(g) || (p = l.Ud(g.position.levelPosition), !(0 > s || p < s))))) {
+          if (!(g = d[h], c === g || g.isDead || g.position.room !== f || (p = g.effects, p.wg || p.Kd || p.bi || -1 < a.eq.yl.indexOf(g) || (p = l.Ud(g.position.levelPosition), !(0 > s || p < s))))) {
             n = g;
             s = p;
           }

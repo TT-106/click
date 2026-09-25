@@ -59,7 +59,7 @@ export function advanceSimulation(a) {
     for (C = p.length - 1; 0 <= C; C--) {
       s = p[C];
       u = s.summoner;
-      if (u.Va) {
+      if (u.isDead) {
         showDeathEffect(s);
         game.lifecycle.Lp(s);
       } else {
@@ -372,7 +372,7 @@ export function advanceSimulation(a) {
           nb = true;
         }
       }
-    } else if (Ga.Va) {
+    } else if (Ga.isDead) {
       bb = ja.Vn = true;
     } else if (ja.yd) {
       var Cb = Fa,
@@ -411,7 +411,7 @@ export function advanceSimulation(a) {
       db,
       Mc = 1 === Ga.characterType ? Ga.summoner.stats : Ga.stats;
     for (db = 0; db < gb.length; db++) {
-      if (rb = gb[db], !rb.Va && (dc = rb.position.levelPosition, Ka = game.level.Ai(dc.x), Xa = game.level.Bi(dc.y), (hb = game.level.hb(Ka, Xa)) && (lb = hb.Pq) && lb.Cj)) {
+      if (rb = gb[db], !rb.isDead && (dc = rb.position.levelPosition, Ka = game.level.Ai(dc.x), Xa = game.level.Bi(dc.y), (hb = game.level.hb(Ka, Xa)) && (lb = hb.Pq) && lb.Cj)) {
         if (lb.bl()) {
           setTileEffect(hb, null);
         } else if (lb.bx !== lb.oc && (sc = hb.li, 0 !== sc && (Aa = randomInt(sc + 1), 0 !== Aa))) {
@@ -790,7 +790,7 @@ export function updateCharacterBehaviors(a) {
   var b, c;
   for (b = 0; b < a.length; b++) {
     c = a[b];
-    if (!c.Va) {
+    if (!c.isDead) {
       if (c.effects.Kd) {
         c.actionType = IDLE_ACTION;
       } else {

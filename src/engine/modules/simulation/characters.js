@@ -256,7 +256,7 @@ export function updateCharacterFrames(a, b, c) {
 }
 export function initializeSimulationCharacters() {
   CharacterLifecycle.prototype.Lp = function (a) {
-    if (!a.Va) {
+    if (!a.isDead) {
       var b = a.summoner;
       if (b && b.summonedMinions) {
         var c = b.summonedMinions.indexOf(a);
@@ -267,12 +267,12 @@ export function initializeSimulationCharacters() {
           b.companion = null;
         }
       }
-      a.Va = true;
+      a.isDead = true;
       game.minions.Lp(a);
     }
   };
   CharacterLifecycle.prototype.ol = function (a, b) {
-    if (!b.Va) {
+    if (!b.isDead) {
       var c = b.position,
         d = b.stats.characterLevel,
         f = 1 === a.characterType ? a.summoner : a;
@@ -324,7 +324,7 @@ export function initializeSimulationCharacters() {
           spawnItemDrop(game.itemDrops, updateCharacterFrames(c.Ob(), g, h), updateCharacterFrames(c.Pb(), l, n), f, d);
         }
       }
-      b.Va = true;
+      b.isDead = true;
       c = updateWorldTravel();
       b.ee = c;
       game.monsters.ol(b);

@@ -60,7 +60,7 @@ export function Character(a, b, c, d, f) {
     this.inventory.Bw = this;
   }
   this.actionType = IDLE_ACTION;
-  this.Va = false;
+  this.isDead = false;
   this.ld = this.Ue = this.bj = this.hk = this.Zh = this.rh = this.combatTarget = this.behaviors = null;
   this.stats = new CharacterStats(this);
   this.au = -3 * getAttackCooldown(this.stats, true);
@@ -182,7 +182,7 @@ export function equipItem(a, b) {
   }
 }
 export function updateCharacter(a, b) {
-  if (!a.Va && a.actionType !== IDLE_ACTION) {
+  if (!a.isDead && a.actionType !== IDLE_ACTION) {
     if (1 === a.actionType) {
       if (game.worldActive) {
         var c = a.position;
@@ -437,7 +437,7 @@ export function updateCharacter(a, b) {
       }
     } else {
       if (2 === a.actionType) {
-        if (a.combatTarget && !a.combatTarget.Va) {
+        if (a.combatTarget && !a.combatTarget.isDead) {
           if (0 < a.stats.extraAttackCount) {
             performMultiAttack(a, false);
           } else {
@@ -451,7 +451,7 @@ export function updateCharacter(a, b) {
           }
         }
       } else if (a.actionType === MELEE_ACTION_TYPE) {
-        if (a.combatTarget && !a.combatTarget.Va) {
+        if (a.combatTarget && !a.combatTarget.isDead) {
           if (0 < a.stats.extraAttackCount) {
             performMultiAttack(a, true);
           } else {
@@ -508,7 +508,7 @@ export function updateCharacter(a, b) {
               var ha = a.ld;
               if (ha) {
                 var ja = a.combatTarget;
-                if (ja && !ja.Va) {
+                if (ja && !ja.isDead) {
                   var Ga = 1 + (a.stats.ar + 1),
                     bb = null,
                     za = null,
@@ -548,7 +548,7 @@ export function updateCharacter(a, b) {
                       if (pb) {
                         for (var Ha = undefined, jb = undefined, Ab = ja.position.levelPosition, Bb = null, qb = null, wb = undefined, Ib = undefined, Ec = -1, jb = 0; jb < ob.length; jb++) {
                           Ha = ob[jb];
-                          if (!(Ha === ja || Ha === za || Ha === nb || Ha === fb || Ha === cb || Ha.Va || Ha.position.room !== pb)) {
+                          if (!(Ha === ja || Ha === za || Ha === nb || Ha === fb || Ha === cb || Ha.isDead || Ha.position.room !== pb)) {
                             wb = Ab.ac(Ha.position.levelPosition);
                             if (wb <= ac && (0 > Ec || wb < Ec)) {
                               Ib = Ha.effects;
@@ -581,7 +581,7 @@ export function updateCharacter(a, b) {
               var cc = a.ld;
               if (cc) {
                 var Qa = a.combatTarget;
-                if (Qa && !Qa.Va) {
+                if (Qa && !Qa.isDead) {
                   var nc = a.stats.Qq + 1,
                     sa,
                     Tb,
@@ -646,7 +646,7 @@ export function updateCharacter(a, b) {
               }
             } else if (8 === pa) {
               var xb = a.combatTarget;
-              if (xb && !xb.Va) {
+              if (xb && !xb.isDead) {
                 var Na = a.ld;
                 if (Na) {
                   var Ya = new CombatAction();
@@ -888,7 +888,7 @@ export function updateCharacter(a, b) {
               var vf = a.ld;
               if (vf) {
                 var wf = a.combatTarget;
-                if (!wf || wf.Va) {
+                if (!wf || wf.isDead) {
                   if (wf = selectScrollTarget(a), !wf) {
                     break a;
                   }
@@ -919,7 +919,7 @@ export function updateCharacter(a, b) {
                       tl = xf.position.levelPosition,
                       kg,
                       ue = [];
-                    for (Vd = 0; Vd < Kh.length && (Nd = Kh[Vd], Nd.Va || Nd.position.room !== jg || hasStatusEffect(Nd.effects, te) || (Nd === xf ? ue.push(Nd) : (kg = tl.ac(Nd.position.levelPosition), kg <= sl && ue.push(Nd)), !(1E3 <= ue.length))); Vd++) {}
+                    for (Vd = 0; Vd < Kh.length && (Nd = Kh[Vd], Nd.isDead || Nd.position.room !== jg || hasStatusEffect(Nd.effects, te) || (Nd === xf ? ue.push(Nd) : (kg = tl.ac(Nd.position.levelPosition), kg <= sl && ue.push(Nd)), !(1E3 <= ue.length))); Vd++) {}
                     xd = ue;
                   } else {
                     xd = null;
@@ -1240,7 +1240,7 @@ export function initializeCharactersCharacter() {
     this.Ue = a;
   };
   Character.prototype.dr = function () {
-    if (this.behaviors && !this.Va) {
+    if (this.behaviors && !this.isDead) {
       this.behaviors.dr(this);
     }
   };

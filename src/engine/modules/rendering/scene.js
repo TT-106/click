@@ -152,7 +152,7 @@ export function drawDungeonCharacters(a, b) {
 export function drawCharacterEffects(a, b) {
   var c, d, f, g, h, l, n, p, s, u, y;
   for (c = 0; c < b.length; c++) {
-    if (f = b[c], !f.Va) {
+    if (f = b[c], !f.isDead) {
       for (y = false, p = f.effects.of, d = 0; d < p.length; d++) {
         if (s = p[d], s.Pd && (s = s.hD)) {
           u = p[d].Od;
@@ -198,7 +198,7 @@ export function drawCharacterHighlights(a, b, c) {
   var d, f, g, h, l;
   for (d = 0; d < b.length; d++) {
     l = b[d];
-    if (!l.Va) {
+    if (!l.isDead) {
       f = l.position.Ob();
       g = l.position.Pb();
       h = projectDungeonX(f, g);

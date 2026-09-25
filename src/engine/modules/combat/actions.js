@@ -45,7 +45,7 @@ export function findTargetsInRange(a, b, c, d) {
     h = b.position.levelPosition,
     l,
     n = [];
-  for (b = 0; b < a.length && (g = a[b], g.Va || g.position.room !== f || (l = h.ac(g.position.levelPosition), !(l <= d && (n.push(g), n.length >= c)))); b++) {}
+  for (b = 0; b < a.length && (g = a[b], g.isDead || g.position.room !== f || (l = h.ac(g.position.levelPosition), !(l <= d && (n.push(g), n.length >= c)))); b++) {}
   return n;
 }
 export function CombatQueue() {
@@ -346,7 +346,7 @@ export function resolveCharacterDefeat(a, b) {
   } else if (1 === b.characterType) {
     game.lifecycle.Lp(b);
   } else if (4 === b.characterType) {
-    if (!b.Va) {
+    if (!b.isDead) {
       var g = b.position,
         d = 1 === a.characterType ? a.summoner : a;
       if (isAdventurerOrMinion(d)) {
@@ -400,7 +400,7 @@ export function resolveCharacterDefeat(a, b) {
         u = new PotionDrop(u, tickCharacterTurn(n, c, f), tickCharacterTurn(p, h, l), d);
         game.potionDrops.Hf.push(u);
       }
-      b.Va = true;
+      b.isDead = true;
       d = updateWorldTravel();
       b.ee = d;
       game.monsters.ol(b);
@@ -492,7 +492,7 @@ export function createAttackAction(a, b, c) {
 }
 export function createSpellAction(a) {
   var b = a.combatTarget;
-  if (!b || b.Va) {
+  if (!b || b.isDead) {
     return null;
   }
   var c = a.ld;

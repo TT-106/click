@@ -463,7 +463,7 @@ export function initializeAiBehaviors() {
     } else {
       this.co = 0;
     }
-    if (this.targetCharacter && !(this.targetCharacter.Va || this.targetCharacter.effects.Kd || this.targetCharacter.effects.bi) && this.vx(a)) {
+    if (this.targetCharacter && !(this.targetCharacter.isDead || this.targetCharacter.effects.Kd || this.targetCharacter.effects.bi) && this.vx(a)) {
       this.ax = game.state.turnNumber;
       var b = a.position.room;
       if (b && isAdventurerOrMinion(a)) {
@@ -490,7 +490,7 @@ export function initializeAiBehaviors() {
     setVector(this.Jl, 0, 0);
     for (s = 0; s < a.length; s++) {
       n = a[s];
-      if (!(n.Va || n.effects.Kd || n.effects.bi || n.position.room != d)) {
+      if (!(n.isDead || n.effects.Kd || n.effects.bi || n.position.room != d)) {
         p = n.position.levelPosition;
         n = c.ac(p);
         if (!(n > this.CA)) {
@@ -541,7 +541,7 @@ export function initializeAiBehaviors() {
   MeleeAttackBehavior.prototype.resetBehaviorState = function () {};
   MeleeAttackBehavior.prototype.notifySpellLearned = function () {};
   MeleeAttackBehavior.prototype.od = function (a) {
-    if (this.targetCharacter && !this.targetCharacter.Va) {
+    if (this.targetCharacter && !this.targetCharacter.isDead) {
       a.Cb(this.targetCharacter);
       if (this.Ng <= this.bb) {
         if (!canAttack(a)) {
@@ -634,7 +634,7 @@ export function initializeAiBehaviors() {
   };
   OpportunisticAttackBehavior.prototype.notifySpellLearned = function () {};
   OpportunisticAttackBehavior.prototype.od = function (a) {
-    if (this.targetCharacter && !this.targetCharacter.Va) {
+    if (this.targetCharacter && !this.targetCharacter.isDead) {
       a.Cb(this.targetCharacter);
       if (this.Ng <= this.bb) {
         if (!canAttack(a)) {
@@ -1508,7 +1508,7 @@ export function initializeAiBehaviors() {
   SpecialAttackBehavior.prototype.resetBehaviorState = function () {};
   SpecialAttackBehavior.prototype.notifySpellLearned = function () {};
   SpecialAttackBehavior.prototype.od = function (a) {
-    if (this.targetCharacter && !this.targetCharacter.Va) {
+    if (this.targetCharacter && !this.targetCharacter.isDead) {
       a.Cb(this.targetCharacter);
       if (this.Ng <= this.bb) {
         if (!canAttack(a)) {
