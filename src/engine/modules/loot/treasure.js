@@ -1,4 +1,3 @@
-// @ts-nocheck -- M10 渐进类型化：JSDoc 覆盖后摘除（见 docs/WORKSTATE.md）
 /** 金币掉落、宝箱生成和拾取。
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
@@ -52,7 +51,7 @@ export function TreasureRegistry() {
   this.yh = new Vector2();
 }
 export function spawnRoomTreasure(a) {
-  var b = game.treasure,
+  var b = game.treasure;
     c = 0 < getMonsters().length;
   if (!getRoomTreasure(b, a)) {
     if (3 != a.Yp) {
