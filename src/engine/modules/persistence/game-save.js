@@ -195,8 +195,8 @@ export function restoreGameState(a, b) {
             sortCastles(La, La.Jg);
             var ha = game.dungeons,
               ja;
-            for (ja = 0; ja < ha.Ab.length; ja++) {
-              refreshFarmableDungeons(ha, ha.Ab[ja]);
+            for (ja = 0; ja < ha.dungeonList.length; ja++) {
+              refreshFarmableDungeons(ha, ha.dungeonList[ja]);
             }
           }
           var Ga = d.currentCastle;
@@ -732,7 +732,7 @@ export function createSaveState(a) {
     var v = game.dungeons.Sd,
       D = game.dungeons.Mk,
       N = [],
-      I = game.dungeons.Ab,
+      I = game.dungeons.dungeonList,
       x,
       z;
     for (z = 0; z < I.length; z++) {

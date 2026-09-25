@@ -204,7 +204,7 @@ export function initializeViewsCastles() {
         this.pb.style.backgroundColor = a;
       }
       a = this.xc;
-      a = a.$b ? "未解锁" : a.conquered ? "已征服" : canAttackCastle(a) ? game.monsterCatalog.fc >= a.requiredMonsterLevel ? "准备攻击" : "怪物等级" + a.requiredMonsterLevel : a.ye ? "计划攻击" : "地牢" + a.yk + " / " + a.Ab.length;
+      a = a.$b ? "未解锁" : a.conquered ? "已征服" : canAttackCastle(a) ? game.monsterCatalog.fc >= a.requiredMonsterLevel ? "准备攻击" : "怪物等级" + a.requiredMonsterLevel : a.ye ? "计划攻击" : "地牢" + a.yk + " / " + a.dungeonList.length;
       if (this.Rv != a) {
         this.Rv = a;
         this.kd.innerHTML = a;
@@ -216,7 +216,7 @@ export function initializeViewsCastles() {
         a = this.Us;
       } else {
         var a = this.xc.yk,
-          b = this.xc.Ab,
+          b = this.xc.dungeonList,
           a = 0 === b.length ? 1 : Math.min(1, a / b.length),
           a = this.Us * a | 0;
       }

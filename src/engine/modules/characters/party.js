@@ -256,7 +256,7 @@ export function initializeCharactersParty() {
       refreshAttackableCastles(a);
       refreshScheduledCastles(a);
       awardAdventurePoints(19);
-      if (a = a.Ab) {
+      if (a = a.dungeonList) {
         for (c = 0; c < a.length; c++) {
           refreshFarmableDungeons(game.dungeons, a[c]);
         }
@@ -439,7 +439,7 @@ export function initializeCharactersParty() {
           d = game.state.leader.position.worldPosition;
           f = null;
           g = 0;
-          var n = this.Wf.Ab,
+          var n = this.Wf.dungeonList,
             p;
           for (p = 0; p < n.length; p++) {
             if (h = n[p], !h.conquered && (l = distanceSquaredToPoint(d, h.dc(), h.ec()), !f || l < g)) {
@@ -451,8 +451,8 @@ export function initializeCharactersParty() {
           if (!this.Wb) {
             f = game.dungeons;
             g = null;
-            for (p = h = 0; p < f.Ab.length; p++) {
-              if (!(l = f.Ab[p], l.isFarm || l.zj.$b || l.conquered || (n = distanceSquaredToPoint(d, l.dc(), l.ec()), g && !(n < h)))) {
+            for (p = h = 0; p < f.dungeonList.length; p++) {
+              if (!(l = f.dungeonList[p], l.isFarm || l.zj.$b || l.conquered || (n = distanceSquaredToPoint(d, l.dc(), l.ec()), g && !(n < h)))) {
                 g = l;
                 h = n;
               }
@@ -461,8 +461,8 @@ export function initializeCharactersParty() {
             if (!this.Wb) {
               f = game.dungeons;
               g = null;
-              for (p = h = 0; p < f.Ab.length; p++) {
-                if (!(l = f.Ab[p], l.isFarm || l.zj.$b || l.discovered && (!l.discovered || l.cleared) || (n = distanceSquaredToPoint(d, l.dc(), l.ec()), g && !(n < h)))) {
+              for (p = h = 0; p < f.dungeonList.length; p++) {
+                if (!(l = f.dungeonList[p], l.isFarm || l.zj.$b || l.discovered && (!l.discovered || l.cleared) || (n = distanceSquaredToPoint(d, l.dc(), l.ec()), g && !(n < h)))) {
                   g = l;
                   h = n;
                 }
@@ -471,8 +471,8 @@ export function initializeCharactersParty() {
               if (!this.Wb) {
                 f = game.dungeons;
                 g = null;
-                for (p = h = 0; p < f.Ab.length; p++) {
-                  if (l = f.Ab[p], !l.isFarm && !l.zj.$b && (n = distanceSquaredToPoint(d, l.dc(), l.ec()), !g || n < h)) {
+                for (p = h = 0; p < f.dungeonList.length; p++) {
+                  if (l = f.dungeonList[p], !l.isFarm && !l.zj.$b && (n = distanceSquaredToPoint(d, l.dc(), l.ec()), !g || n < h)) {
                     g = l;
                     h = n;
                   }

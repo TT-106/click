@@ -72,22 +72,22 @@ export function Castle(a, b, c, d, f, g) {
   this.ye = false;
   this.requiredMonsterLevel = this.yk = 0;
   this.ck = [];
-  this.Ab = [];
+  this.dungeonList = [];
 }
 export function canAttackCastle(a) {
   return !a.$b && !a.conquered && a.Bj && !a.ye;
 }
 export function refreshCastleConquest(a) {
   if (a.Bj || a.conquered) {
-    a.yk = a.Ab.length;
+    a.yk = a.dungeonList.length;
   } else {
     var b;
-    for (b = a.yk = 0; b < a.Ab.length; b++) {
-      if (a.Ab[b].conquered) {
+    for (b = a.yk = 0; b < a.dungeonList.length; b++) {
+      if (a.dungeonList[b].conquered) {
         a.yk++;
       }
     }
-    if (a.yk === a.Ab.length) {
+    if (a.yk === a.dungeonList.length) {
       a.Bj = true;
       b = game.castles;
       b.Uj++;
@@ -163,7 +163,7 @@ export function resetCastles() {
     c.ye = false;
     c.yk = 0;
     c.requiredMonsterLevel = 0;
-    c.Bj = 0 === c.Ab.length;
+    c.Bj = 0 === c.dungeonList.length;
   }
 }
 export function unlockStartingRegion() {

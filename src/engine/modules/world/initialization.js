@@ -122,7 +122,7 @@ export function initializeRegionsAndCastles() {
     }
   }
   var Ja = game.dungeons;
-  Ja.Ab.length = 0;
+  Ja.dungeonList.length = 0;
   Ja.uj.length = 0;
   Ja.Ge.length = 0;
   Ja.ze.length = 0;
@@ -168,17 +168,17 @@ export function initializeRegionsAndCastles() {
         rc = 3 + randomIntFrom(gb, 4);
         sb = new Dungeon(Db, hb, lb, ec, Ub, db, Mc, rc, Ka);
         Na.push(sb);
-        Ka.Ab.push(sb);
+        Ka.dungeonList.push(sb);
       }
     }
   }
-  Ja.Ab = Na;
+  Ja.dungeonList = Na;
   var Ya, tc;
-  for (Ya = 0; Ya < Ja.Ab.length; Ya++) {
-    tc = Ja.Ab[Ya];
+  for (Ya = 0; Ya < Ja.dungeonList.length; Ya++) {
+    tc = Ja.dungeonList[Ya];
     Ja.Do[tc.dungeonId] = tc;
   }
-  sortDungeons(Ja, Ja.Ab);
+  sortDungeons(Ja, Ja.dungeonList);
   resetFarms();
   resetShops();
   resetAdventurePoints();

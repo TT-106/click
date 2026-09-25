@@ -60,7 +60,7 @@ export function randomDungeonType(a) {
   }
 }
 export function DungeonRegistry() {
-  this.Ab = [];
+  this.dungeonList = [];
   this.Do = {};
   this.Mk = 0;
   this.Ge = [];
@@ -84,8 +84,8 @@ export function resetDungeons() {
   a.Mk = 0;
   a.Sd = 0;
   var b;
-  for (b = 0; b < a.Ab.length; b++) {
-    var c = a.Ab[b];
+  for (b = 0; b < a.dungeonList.length; b++) {
+    var c = a.dungeonList[b];
     c.discovered = false;
     c.cleared = false;
     c.conquered = false;
