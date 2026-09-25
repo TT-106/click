@@ -16,6 +16,11 @@
 - 下一步（按序）：
   1. 在 Da 拆分状态下，对每个 `.combatTarget`/`.targetCharacter` 读写点加运行时类型断言（`instanceof Character` / `instanceof CombatAction`），跑 600 回合抓第一个断言失败点——直接定位错分类行。
   2. 或改用**运行时观测**：差分两端同时 dump `FollowLeaderBehavior.wd` 的入参/返回（分叉首现的移动决策），二分到具体角色。
+- **第三轮实证（2026-09-26，运行时观察器）**：
+  1. harness 已内置 ?watchDa 观察器（defineProperty 拦截 combatTarget/targetCharacter 全部写操作并校验值形状）。
+  2. 修正 6 处误标后的拆分在单页 600 回合下**值流 100% 正确**（零违例），standalone potions-active 通过。
+  3. 但多场景 runner 历史下 LifeDrainBehavior.Jd 崩溃（selectedTarget undefined → 'stats'）——**场景顺序依赖**，非值流错误。
+  4. 结论：拆分语义正确但与页面历史状态交互存在未解缺陷；下一步应对比两端 behaviors 队列内部状态（un/Lm/selectedTarget）在场景切换时的差异。
 - 经验教训（已入 facts#20 扩展）：**重命名跨文件字段时，"读点全集"必须包含工厂函数/工具函数内按多态入参的访问**；Babel 静态 grep 对 `a.Da`（a 的类型随调用方变化）天然失真，应配运行时类型断言。
 
 ## U2 — 外部自动化脚本（c2c.user.js）DOM 契约未实测
