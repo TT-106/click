@@ -10,7 +10,7 @@ export function initializeItemCatalog() {
   var c = {
       baseName: "剑",
       na: true,
-      oa: false,
+      isProjectile: false,
       ma: false,
       la: false,
       Z: ["20"]
@@ -18,7 +18,7 @@ export function initializeItemCatalog() {
     d = {
       baseName: "斧",
       na: true,
-      oa: false,
+      isProjectile: false,
       ma: false,
       la: false,
       Z: ["21"]
@@ -26,7 +26,7 @@ export function initializeItemCatalog() {
     f = {
       baseName: "锤",
       na: true,
-      oa: false,
+      isProjectile: false,
       ma: false,
       la: false,
       Z: ["21"]
@@ -34,7 +34,7 @@ export function initializeItemCatalog() {
     g = {
       baseName: "匕首",
       na: true,
-      oa: false,
+      isProjectile: false,
       ma: false,
       la: false,
       Z: ["24", "33"]
@@ -42,7 +42,7 @@ export function initializeItemCatalog() {
     h = {
       baseName: "连枷",
       na: true,
-      oa: false,
+      isProjectile: false,
       ma: false,
       la: false,
       Z: ["22", "20", "21"]
@@ -50,7 +50,7 @@ export function initializeItemCatalog() {
     l = {
       baseName: "权杖",
       na: true,
-      oa: false,
+      isProjectile: false,
       ma: false,
       la: false,
       Z: ["22", "20"]
@@ -58,7 +58,7 @@ export function initializeItemCatalog() {
     n = {
       baseName: "节杖",
       na: true,
-      oa: false,
+      isProjectile: false,
       ma: false,
       la: false,
       Z: ["32"]
@@ -66,7 +66,7 @@ export function initializeItemCatalog() {
     p = {
       baseName: "双节棍",
       na: true,
-      oa: false,
+      isProjectile: false,
       ma: false,
       la: false,
       Z: ["29"]
@@ -74,7 +74,7 @@ export function initializeItemCatalog() {
     s = {
       baseName: "棍棒",
       na: false,
-      oa: false,
+      isProjectile: false,
       ma: false,
       la: true,
       Z: ["26", "27", "28", "31"]
@@ -82,7 +82,7 @@ export function initializeItemCatalog() {
     u = {
       baseName: "镰刀",
       na: true,
-      oa: false,
+      isProjectile: false,
       ma: false,
       la: false,
       Z: ["30"]
@@ -90,7 +90,7 @@ export function initializeItemCatalog() {
     y = {
       baseName: "骨头",
       na: false,
-      oa: false,
+      isProjectile: false,
       ma: false,
       la: true,
       Z: ["201"]
@@ -98,7 +98,7 @@ export function initializeItemCatalog() {
     A = {
       baseName: "蜡烛",
       na: false,
-      oa: false,
+      isProjectile: false,
       ma: false,
       la: true,
       Z: ["203"]
@@ -106,7 +106,7 @@ export function initializeItemCatalog() {
     C = {
       baseName: "灯笼",
       na: false,
-      oa: false,
+      isProjectile: false,
       ma: false,
       la: true,
       Z: ["203"]
@@ -114,7 +114,7 @@ export function initializeItemCatalog() {
     v = {
       baseName: "灯",
       na: false,
-      oa: false,
+      isProjectile: false,
       ma: false,
       la: true,
       Z: ["203"]
@@ -122,7 +122,7 @@ export function initializeItemCatalog() {
     D = {
       baseName: "硬币",
       na: false,
-      oa: false,
+      isProjectile: false,
       ma: false,
       la: true,
       Z: ["205"]
@@ -130,7 +130,7 @@ export function initializeItemCatalog() {
     N = {
       baseName: "珠宝",
       na: false,
-      oa: false,
+      isProjectile: false,
       ma: false,
       la: true,
       Z: ["205"]
@@ -138,7 +138,7 @@ export function initializeItemCatalog() {
     I = {
       baseName: "弓",
       na: false,
-      oa: false,
+      isProjectile: false,
       ma: false,
       la: true,
       Z: ["23"]
@@ -146,7 +146,7 @@ export function initializeItemCatalog() {
     x = {
       baseName: "弩",
       na: false,
-      oa: false,
+      isProjectile: false,
       ma: false,
       la: true,
       Z: ["25"]
@@ -154,25 +154,25 @@ export function initializeItemCatalog() {
     z = {
       baseName: "箭矢",
       na: false,
-      oa: true,
+      isProjectile: true,
       ma: false,
       la: false,
-      Xn: 1,
+      projectileAnimationId: 1,
       Z: ["60"]
     },
     O = {
       baseName: "闪电",
       na: false,
-      oa: true,
+      isProjectile: true,
       ma: false,
       la: false,
-      Xn: 2,
+      projectileAnimationId: 2,
       Z: ["61"]
     },
     J = {
       baseName: "护盾",
       na: false,
-      oa: false,
+      isProjectile: false,
       ma: true,
       la: false,
       Z: ["40", "41"]
@@ -180,7 +180,7 @@ export function initializeItemCatalog() {
     la = {
       baseName: "链甲",
       na: false,
-      oa: false,
+      isProjectile: false,
       ma: true,
       la: false,
       Z: ["80", "82", "81"]
@@ -188,7 +188,7 @@ export function initializeItemCatalog() {
     Q = {
       baseName: "板甲",
       na: false,
-      oa: false,
+      isProjectile: false,
       ma: true,
       la: false,
       Z: ["80", "81"]
@@ -196,7 +196,7 @@ export function initializeItemCatalog() {
     V = {
       baseName: "板甲",
       na: false,
-      oa: false,
+      isProjectile: false,
       ma: true,
       la: false,
       Z: ["80", "82", "81"]
@@ -204,7 +204,7 @@ export function initializeItemCatalog() {
     na = {
       baseName: "皮甲",
       na: false,
-      oa: false,
+      isProjectile: false,
       ma: true,
       la: false,
       Z: ["84", "83"]
@@ -212,7 +212,7 @@ export function initializeItemCatalog() {
     K = {
       baseName: "项链",
       na: false,
-      oa: false,
+      isProjectile: false,
       ma: false,
       la: true,
       Z: "140 141 142 143 145 144".split(" ")
@@ -220,7 +220,7 @@ export function initializeItemCatalog() {
     H = {
       baseName: "戒指",
       na: false,
-      oa: false,
+      isProjectile: false,
       ma: false,
       la: true,
       Z: "160 161 162 163 164 165".split(" ")
@@ -228,7 +228,7 @@ export function initializeItemCatalog() {
     S = {
       baseName: "符号",
       na: false,
-      oa: false,
+      isProjectile: false,
       ma: false,
       la: true,
       Z: ["200"]
@@ -236,7 +236,7 @@ export function initializeItemCatalog() {
     da = {
       baseName: "蘑菇",
       na: false,
-      oa: false,
+      isProjectile: false,
       ma: false,
       la: true,
       Z: ["202", "204"]
@@ -244,7 +244,7 @@ export function initializeItemCatalog() {
     W = {
       baseName: "头盔",
       na: false,
-      oa: false,
+      isProjectile: false,
       ma: true,
       la: false,
       Z: ["120"]
@@ -252,7 +252,7 @@ export function initializeItemCatalog() {
     ia = {
       baseName: "王冠",
       na: false,
-      oa: false,
+      isProjectile: false,
       ma: true,
       la: false,
       Z: ["125"]
@@ -260,7 +260,7 @@ export function initializeItemCatalog() {
     ea = {
       baseName: "巫师帽",
       na: false,
-      oa: false,
+      isProjectile: false,
       ma: true,
       la: false,
       Z: ["121", "122", "123", "124"]
@@ -268,7 +268,7 @@ export function initializeItemCatalog() {
     va = {
       baseName: "手套",
       na: false,
-      oa: false,
+      isProjectile: false,
       ma: true,
       la: false,
       Z: ["100", "101", "102"]
@@ -276,7 +276,7 @@ export function initializeItemCatalog() {
     yb = {
       baseName: "长手套",
       na: false,
-      oa: false,
+      isProjectile: false,
       ma: true,
       la: false,
       Z: ["101", "102"]
@@ -284,7 +284,7 @@ export function initializeItemCatalog() {
     Fb = {
       baseName: "长袍",
       na: false,
-      oa: false,
+      isProjectile: false,
       ma: true,
       la: false,
       Z: ["85", "86", "87", "89", "91"]
@@ -292,7 +292,7 @@ export function initializeItemCatalog() {
     pa = {
       baseName: "斗篷",
       na: false,
-      oa: false,
+      isProjectile: false,
       ma: true,
       la: false,
       Z: "85 86 87 88 90 92".split(" ")
@@ -300,7 +300,7 @@ export function initializeItemCatalog() {
     T = {
       baseName: "魔杖",
       na: false,
-      oa: false,
+      isProjectile: false,
       ma: false,
       la: true,
       Z: ["26"]
@@ -308,7 +308,7 @@ export function initializeItemCatalog() {
     X = {
       baseName: "靴子",
       na: false,
-      oa: false,
+      isProjectile: false,
       ma: true,
       la: false,
       Z: "181 185 182 183 184 180 186".split(" ")
@@ -316,7 +316,7 @@ export function initializeItemCatalog() {
     Ca = {
       baseName: "腰带",
       na: false,
-      oa: false,
+      isProjectile: false,
       ma: true,
       la: false,
       Z: ["3", "4", "5", "6", "7"]
@@ -552,7 +552,7 @@ export function initializeItemCatalog() {
   registerItemType(b, {
     baseName: "火炬",
     na: false,
-    oa: false,
+    isProjectile: false,
     ma: false,
     la: true,
     Z: ["203"]
@@ -619,10 +619,10 @@ export function initializeItemCatalog() {
   registerItemType(b, {
     baseName: "星星",
     na: false,
-    oa: true,
+    isProjectile: true,
     ma: false,
     la: false,
-    Xn: 3,
+    projectileAnimationId: 3,
     Z: ["62"]
   }, "ThrowingStar.PNG");
   registerItemType(b, K, "NecklaceJewelSilver5.PNG");
@@ -671,7 +671,7 @@ export function initializeItemCatalog() {
   registerItemType(b, {
     baseName: "面包",
     na: false,
-    oa: false,
+    isProjectile: false,
     ma: false,
     la: true,
     Z: ["204"]
@@ -679,7 +679,7 @@ export function initializeItemCatalog() {
   registerItemType(b, {
     baseName: "啤酒",
     na: false,
-    oa: false,
+    isProjectile: false,
     ma: false,
     la: true,
     Z: ["204"]
@@ -687,7 +687,7 @@ export function initializeItemCatalog() {
   registerItemType(b, {
     baseName: "鸡腿",
     na: false,
-    oa: false,
+    isProjectile: false,
     ma: false,
     la: true,
     Z: ["204"]
@@ -695,7 +695,7 @@ export function initializeItemCatalog() {
   registerItemType(b, {
     baseName: "火腿",
     na: false,
-    oa: false,
+    isProjectile: false,
     ma: false,
     la: true,
     Z: ["204"]
@@ -817,7 +817,7 @@ export function initializeItemCatalog() {
   registerItemType(b, {
     baseName: "虚拟伤害",
     na: false,
-    oa: true,
+    isProjectile: true,
     ma: false,
     la: false,
     Z: ["230"]
@@ -825,7 +825,7 @@ export function initializeItemCatalog() {
   registerItemType(b, {
     baseName: "虚拟护甲",
     na: false,
-    oa: false,
+    isProjectile: false,
     ma: false,
     la: true,
     Z: ["231"]
@@ -833,7 +833,7 @@ export function initializeItemCatalog() {
   registerItemType(b, {
     baseName: "虚拟攻击等级",
     na: false,
-    oa: false,
+    isProjectile: false,
     ma: false,
     la: true,
     Z: ["232"]
@@ -841,7 +841,7 @@ export function initializeItemCatalog() {
   registerItemType(b, {
     baseName: "虚拟防御等级",
     na: false,
-    oa: false,
+    isProjectile: false,
     ma: false,
     la: true,
     Z: ["233"]
@@ -849,7 +849,7 @@ export function initializeItemCatalog() {
   registerItemType(b, {
     baseName: "虚拟最大生命",
     na: false,
-    oa: false,
+    isProjectile: false,
     ma: false,
     la: true,
     Z: ["234"]
@@ -857,7 +857,7 @@ export function initializeItemCatalog() {
   registerItemType(b, {
     baseName: "虚拟最大法力",
     na: false,
-    oa: false,
+    isProjectile: false,
     ma: false,
     la: true,
     Z: ["235"]

@@ -49,14 +49,14 @@ export function ItemType(a, b, c, d, f, g, h, l, n) {
   this.RD = a;
   this.baseName = b;
   this.Z = c;
-  this.Xn = n;
+  this.projectileAnimationId = n;
   if (!(this.lA = game.itemSprites.getSprite(d))) {
     console.log("error. invalid item sprite: " + d);
   }
   this.na = f;
   this.ma = g;
   this.la = h;
-  this.SC = l;
+  this.isProjectileItem = l;
 }
 export function Item(a, b, c, d, f, g, h, l, n, p) {
   this.op = a;
@@ -244,7 +244,7 @@ export function registerItemType(a, b, c) {
   }
   g = f + "";
   f = b.Z;
-  b = new ItemType(g, b.baseName, f, c, b.na, b.ma, b.la, b.oa, b.Xn);
+  b = new ItemType(g, b.baseName, f, c, b.na, b.ma, b.la, b.isProjectile, b.projectileAnimationId);
   if (a.os[g]) {
     console.log("item type hash collision: " + d);
   }
@@ -312,10 +312,10 @@ export function initializeLootItems() {
     return this.lA;
   };
   ItemType.prototype.sw = function () {
-    return this.Xn;
+    return this.projectileAnimationId;
   };
   ItemType.prototype.Cw = function () {
-    return this.SC;
+    return this.isProjectileItem;
   };
   Item.prototype.Uk = function () {
     return this.op.Uk();
