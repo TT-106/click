@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true,
+    "strict": false,
+    "noImplicitThis": true,
+    "alwaysStrict": false,
+    "skipLibCheck": true,
+    "types": []
+  },
+  "include": [
+    "src/engine/save-codec.js",
+    "src/engine/modules/core/**/*.js",
+    "src/engine/modules/persistence/**/*.js"
+  ]
+}

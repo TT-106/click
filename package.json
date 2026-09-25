@@ -16,6 +16,7 @@
     "test:scenarios": "node scripts/test-scenarios.mjs",
     "test:e2e": "node scripts/test-browser.mjs",
     "check": "node scripts/check.mjs",
+    "typecheck": "tsc -p tsconfig.json",
     "perf": "node scripts/measure-perf.mjs"
   },
   "devDependencies": {
@@ -23,6 +24,7 @@
     "@babel/parser": "7.29.9",
     "@babel/traverse": "7.29.8",
     "@babel/types": "7.29.8",
-    "playwright": "^1.63.0"
+    "playwright": "^1.63.0",
+    "typescript": "^5.9.2"
   }
 }

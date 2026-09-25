@@ -29,6 +29,15 @@ for (const file of targets) {
 }
 console.log(`✓ 语法检查 ${targets.length} 个文件`);
 
+// M10 类型检查（JSDoc 渐进策略；范围见 tsconfig.json，@ts-nocheck 文件随类型化逐个摘除）
+try {
+  execFileSync(process.execPath, ['node_modules/typescript/bin/tsc', '-p', 'tsconfig.json'], { stdio: 'inherit' });
+  console.log('✓ typecheck 通过');
+} catch {
+  failures++;
+  console.error('✗ typecheck 失败');
+}
+
 try {
   const unitTests = (await listJs('tests/unit')).filter(file => file.endsWith('.test.mjs'));
   if (!unitTests.length) throw new Error('tests/unit 下没有测试文件');
