@@ -340,7 +340,7 @@ export function initializeAiBehaviors() {
           return;
         }
         markAttackTurn(a);
-        this.un.mq = game.state.turnNumber;
+        this.un.lastCastTurn = game.state.turnNumber;
         a.ld = this.un;
         a.actionType = CAST_ACTION_TYPE;
         this.Kp(a);
@@ -772,7 +772,7 @@ export function initializeAiBehaviors() {
       if (a.Cb(this.targetCharacter), this.Ng <= this.bb) {
         if (canAttack(a)) {
           markAttackTurn(a);
-          this.Vi.mq = game.state.turnNumber;
+          this.Vi.lastCastTurn = game.state.turnNumber;
           a.ld = this.Vi;
           a.actionType = CAST_ACTION_TYPE;
           clearMovementTarget(a.position);

@@ -12,7 +12,7 @@ export function initializeContentSpells() {
     spellCategoryId: 2,
     td: true,
     potencyPercent: 0,
-    La: 15
+    cooldownTurns: 15
   };
   electricSpellDefinitions = {
     sB: {
@@ -23,7 +23,7 @@ export function initializeContentSpells() {
       statusEffectTypeId: null,
       spellCategoryId: 4,
       potencyPercent: 0,
-      La: 13,
+      cooldownTurns: 13,
       bo: true
     },
     CB: {
@@ -35,7 +35,7 @@ export function initializeContentSpells() {
       spellCategoryId: 2,
       td: true,
       potencyPercent: 20,
-      La: 20
+      cooldownTurns: 20
     },
     XD: {
       name: "闪电雨",
@@ -45,7 +45,7 @@ export function initializeContentSpells() {
       statusEffectTypeId: null,
       spellCategoryId: 6,
       potencyPercent: 0,
-      La: 30
+      cooldownTurns: 30
     },
     br: {
       name: "连锁闪电",
@@ -55,7 +55,7 @@ export function initializeContentSpells() {
       statusEffectTypeId: null,
       spellCategoryId: 5,
       potencyPercent: 0,
-      La: 25
+      cooldownTurns: 25
     }
   };
   fireSpellDefinitions = {
@@ -67,7 +67,7 @@ export function initializeContentSpells() {
       statusEffectTypeId: null,
       spellCategoryId: 4,
       potencyPercent: 0,
-      La: 13,
+      cooldownTurns: 13,
       bo: true
     },
     Lz: {
@@ -78,7 +78,7 @@ export function initializeContentSpells() {
       statusEffectTypeId: null,
       spellCategoryId: 6,
       potencyPercent: 0,
-      La: 40
+      cooldownTurns: 40
     },
     Kz: {
       name: "火球",
@@ -88,7 +88,7 @@ export function initializeContentSpells() {
       statusEffectTypeId: null,
       spellCategoryId: 8,
       potencyPercent: 0,
-      La: 35
+      cooldownTurns: 35
     },
     TE: {
       name: "转变怪物",
@@ -99,7 +99,7 @@ export function initializeContentSpells() {
       spellCategoryId: 2,
       td: true,
       potencyPercent: 0,
-      La: 20
+      cooldownTurns: 20
     }
   };
   poisonCloudSpell = {
@@ -110,7 +110,7 @@ export function initializeContentSpells() {
     statusEffectTypeId: null,
     spellCategoryId: 4,
     potencyPercent: 10,
-    La: 13,
+    cooldownTurns: 13,
     bo: true
   };
   priestSpellDefinitions = {
@@ -122,7 +122,7 @@ export function initializeContentSpells() {
       statusEffectTypeId: null,
       spellCategoryId: 1,
       potencyPercent: 35,
-      La: 20
+      cooldownTurns: 20
     },
     xE: {
       name: "复活",
@@ -133,7 +133,7 @@ export function initializeContentSpells() {
       spellCategoryId: 16,
       potencyPercent: 1,
       td: true,
-      La: 20
+      cooldownTurns: 20
     },
     Zz: {
       name: "提高护甲",
@@ -144,7 +144,7 @@ export function initializeContentSpells() {
       spellCategoryId: 3,
       potencyPercent: 10,
       td: true,
-      La: 700
+      cooldownTurns: 700
     },
     FD: {
       name: "提高伤害",
@@ -155,7 +155,7 @@ export function initializeContentSpells() {
       spellCategoryId: 3,
       potencyPercent: 10,
       td: true,
-      La: 700
+      cooldownTurns: 700
     },
     ED: {
       name: "提高攻击等级",
@@ -166,7 +166,7 @@ export function initializeContentSpells() {
       spellCategoryId: 3,
       potencyPercent: 10,
       td: true,
-      La: 700
+      cooldownTurns: 700
     },
     $z: {
       name: "提高防御等级",
@@ -177,7 +177,7 @@ export function initializeContentSpells() {
       spellCategoryId: 3,
       potencyPercent: 10,
       td: true,
-      La: 700
+      cooldownTurns: 700
     }
   };
   fighterSpellDefinitions = {
@@ -190,7 +190,7 @@ export function initializeContentSpells() {
       spellCategoryId: 2,
       td: true,
       potencyPercent: 50,
-      La: 30
+      cooldownTurns: 30
     }
   };
   rogueSpellDefinitions = {
@@ -203,7 +203,7 @@ export function initializeContentSpells() {
       spellCategoryId: 2,
       td: true,
       potencyPercent: 100,
-      La: 30
+      cooldownTurns: 30
     },
     ID: {
       name: "立即搜索",
@@ -214,7 +214,7 @@ export function initializeContentSpells() {
       spellCategoryId: 14,
       td: true,
       potencyPercent: 0,
-      La: 10
+      cooldownTurns: 10
     },
     wu: {
       name: "发现财宝箱",
@@ -225,7 +225,7 @@ export function initializeContentSpells() {
       spellCategoryId: 15,
       td: true,
       potencyPercent: 0,
-      La: 10
+      cooldownTurns: 10
     }
   };
   barbarianSpellDefinitions = {
@@ -238,7 +238,7 @@ export function initializeContentSpells() {
       spellCategoryId: 2,
       td: true,
       potencyPercent: 100,
-      La: 40
+      cooldownTurns: 40
     },
     wB: {
       name: "重锤",
@@ -248,7 +248,7 @@ export function initializeContentSpells() {
       statusEffectTypeId: null,
       spellCategoryId: 8,
       potencyPercent: 0,
-      La: 25
+      cooldownTurns: 25
     }
   };
   necromancerSpellDefinitions = {
@@ -260,7 +260,7 @@ export function initializeContentSpells() {
       statusEffectTypeId: null,
       spellCategoryId: 4,
       potencyPercent: 0,
-      La: 13,
+      cooldownTurns: 13,
       bo: true
     },
     xD: {
@@ -271,7 +271,7 @@ export function initializeContentSpells() {
       statusEffectTypeId: null,
       spellCategoryId: 13,
       potencyPercent: 0,
-      La: 20
+      cooldownTurns: 20
     },
     OB: {
       name: "骷髅军队",
@@ -281,7 +281,7 @@ export function initializeContentSpells() {
       statusEffectTypeId: null,
       spellCategoryId: 11,
       potencyPercent: 1,
-      La: 25
+      cooldownTurns: 25
     },
     NB: {
       name: "幽灵骷髅",
@@ -291,7 +291,7 @@ export function initializeContentSpells() {
       statusEffectTypeId: null,
       spellCategoryId: 9,
       potencyPercent: 1,
-      La: 25
+      cooldownTurns: 25
     }
   };
   druidSpellDefinitions = {
@@ -303,7 +303,7 @@ export function initializeContentSpells() {
       statusEffectTypeId: null,
       spellCategoryId: 10,
       potencyPercent: 1,
-      La: 25,
+      cooldownTurns: 25,
       bo: true
     },
     LB: {
@@ -314,7 +314,7 @@ export function initializeContentSpells() {
       statusEffectTypeId: null,
       spellCategoryId: 9,
       potencyPercent: 1,
-      La: 25
+      cooldownTurns: 25
     },
     cE: {
       name: "小型治疗术",
@@ -324,7 +324,7 @@ export function initializeContentSpells() {
       statusEffectTypeId: null,
       spellCategoryId: 1,
       potencyPercent: 25,
-      La: 25
+      cooldownTurns: 25
     },
     DE: {
       name: "睡眠",
@@ -335,7 +335,7 @@ export function initializeContentSpells() {
       spellCategoryId: 2,
       td: true,
       potencyPercent: 0,
-      La: 20
+      cooldownTurns: 20
     }
   };
   ninjaSpellDefinitions = {
@@ -348,7 +348,7 @@ export function initializeContentSpells() {
       spellCategoryId: 12,
       td: false,
       potencyPercent: 100,
-      La: 30
+      cooldownTurns: 30
     }
   };
   chickenSpellDefinitions = {
@@ -360,7 +360,7 @@ export function initializeContentSpells() {
       statusEffectTypeId: null,
       spellCategoryId: 17,
       potencyPercent: 1,
-      La: 25,
+      cooldownTurns: 25,
       bo: true
     },
     MB: {
@@ -371,7 +371,7 @@ export function initializeContentSpells() {
       statusEffectTypeId: null,
       spellCategoryId: 9,
       potencyPercent: 1,
-      La: 25
+      cooldownTurns: 25
     }
   };
 }

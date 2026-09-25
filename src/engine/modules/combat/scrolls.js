@@ -20,18 +20,18 @@ export function Spell(a) {
   this.projectileEffectName = a.projectileEffectName;
   this.statusEffectTypeId = a.statusEffectTypeId;
   this.potencyPercent = a.potencyPercent;
-  this.La = a.La;
-  this.mq = game.state.turnNumber - 3 * this.La;
+  this.cooldownTurns = a.cooldownTurns;
+  this.lastCastTurn = game.state.turnNumber - 3 * this.cooldownTurns;
   this.td = a.td;
 }
 export function resetSpellCooldown(a) {
-  a.mq = game.state.turnNumber - 3 * a.La;
+  a.lastCastTurn = game.state.turnNumber - 3 * a.cooldownTurns;
 }
 export function isSpellReady(a) {
-  if (a.mq > game.state.turnNumber) {
+  if (a.lastCastTurn > game.state.turnNumber) {
     resetSpellCooldown(a);
   }
-  return game.state.turnNumber - a.mq >= a.La;
+  return game.state.turnNumber - a.lastCastTurn >= a.cooldownTurns;
 }
 export function Scroll(a, b) {
   this.eq = b;
