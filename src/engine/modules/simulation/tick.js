@@ -540,7 +540,7 @@ export function advanceSimulation(a) {
       q = game.world;
     if (null == ba || null == ca) {
       console.log("Setting world center x/y to null. worldCenterX=" + ba + " y=" + ca);
-    } else if (q.he = ba, q.ie = ca, !worldBlockContains(q.q[1][1], q.he, q.ie)) {
+    } else if (q.he = ba, q.ie = ca, !worldBlockContains(q.worldBlocks[1][1], q.he, q.ie)) {
       var pe;
       var fc = false,
         vd,
@@ -549,7 +549,7 @@ export function advanceSimulation(a) {
         vc;
       for (vd = 0; 3 > vd; vd++) {
         for (qe = 0; 3 > qe; qe++) {
-          if (worldBlockContains(q.q[vd][qe], q.he, q.ie)) {
+          if (worldBlockContains(q.worldBlocks[vd][qe], q.he, q.ie)) {
             fc = true;
             gc = vd;
             vc = qe;
@@ -558,184 +558,184 @@ export function advanceSimulation(a) {
         }
       }
       if (fc) {
-        var $c = q.q[0][0],
-          Gc = q.q[0][1],
-          ad = q.q[0][2],
-          Vb = q.q[1][0],
-          Tc = q.q[1][1],
-          hd = q.q[1][2],
-          id = q.q[2][0],
-          jd = q.q[2][1],
-          kd = q.q[2][2];
+        var $c = q.worldBlocks[0][0],
+          Gc = q.worldBlocks[0][1],
+          ad = q.worldBlocks[0][2],
+          Vb = q.worldBlocks[1][0],
+          Tc = q.worldBlocks[1][1],
+          hd = q.worldBlocks[1][2],
+          id = q.worldBlocks[2][0],
+          jd = q.worldBlocks[2][1],
+          kd = q.worldBlocks[2][2];
         if (0 === gc) {
-          q.R--;
+          q.blockOriginColumn--;
           if (0 === vc) {
-            q.L--;
-            q.q[0][0] = kd;
-            q.q[0][1] = id;
-            q.q[0][2] = jd;
-            q.q[1][0] = ad;
-            q.q[1][1] = $c;
-            q.q[1][2] = Gc;
-            q.q[2][0] = hd;
-            q.q[2][1] = Vb;
-            q.q[2][2] = Tc;
-            repositionWorldBlock(q.q[0][0], q.R, q.L, true);
-            repositionWorldBlock(q.q[0][1], q.R, q.L + 1, true);
-            repositionWorldBlock(q.q[0][2], q.R, q.L + 2, true);
-            repositionWorldBlock(q.q[1][0], q.R + 1, q.L, true);
-            repositionWorldBlock(q.q[1][1], q.R + 1, q.L + 1, false);
-            repositionWorldBlock(q.q[1][2], q.R + 1, q.L + 2, false);
-            repositionWorldBlock(q.q[2][0], q.R + 2, q.L, true);
-            repositionWorldBlock(q.q[2][1], q.R + 2, q.L + 1, false);
-            repositionWorldBlock(q.q[2][2], q.R + 2, q.L + 2, false);
+            q.blockOriginRow--;
+            q.worldBlocks[0][0] = kd;
+            q.worldBlocks[0][1] = id;
+            q.worldBlocks[0][2] = jd;
+            q.worldBlocks[1][0] = ad;
+            q.worldBlocks[1][1] = $c;
+            q.worldBlocks[1][2] = Gc;
+            q.worldBlocks[2][0] = hd;
+            q.worldBlocks[2][1] = Vb;
+            q.worldBlocks[2][2] = Tc;
+            repositionWorldBlock(q.worldBlocks[0][0], q.blockOriginColumn, q.blockOriginRow, true);
+            repositionWorldBlock(q.worldBlocks[0][1], q.blockOriginColumn, q.blockOriginRow + 1, true);
+            repositionWorldBlock(q.worldBlocks[0][2], q.blockOriginColumn, q.blockOriginRow + 2, true);
+            repositionWorldBlock(q.worldBlocks[1][0], q.blockOriginColumn + 1, q.blockOriginRow, true);
+            repositionWorldBlock(q.worldBlocks[1][1], q.blockOriginColumn + 1, q.blockOriginRow + 1, false);
+            repositionWorldBlock(q.worldBlocks[1][2], q.blockOriginColumn + 1, q.blockOriginRow + 2, false);
+            repositionWorldBlock(q.worldBlocks[2][0], q.blockOriginColumn + 2, q.blockOriginRow, true);
+            repositionWorldBlock(q.worldBlocks[2][1], q.blockOriginColumn + 2, q.blockOriginRow + 1, false);
+            repositionWorldBlock(q.worldBlocks[2][2], q.blockOriginColumn + 2, q.blockOriginRow + 2, false);
           } else {
             if (1 === vc) {
-              q.q[0][0] = id;
-              q.q[0][1] = jd;
-              q.q[0][2] = kd;
-              q.q[1][0] = $c;
-              q.q[1][1] = Gc;
-              q.q[1][2] = ad;
-              q.q[2][0] = Vb;
-              q.q[2][1] = Tc;
-              q.q[2][2] = hd;
-              repositionWorldBlock(q.q[0][0], q.R, q.L, true);
-              repositionWorldBlock(q.q[0][1], q.R, q.L + 1, true);
-              repositionWorldBlock(q.q[0][2], q.R, q.L + 2, true);
-              repositionWorldBlock(q.q[1][0], q.R + 1, q.L, false);
-              repositionWorldBlock(q.q[1][1], q.R + 1, q.L + 1, false);
-              repositionWorldBlock(q.q[1][2], q.R + 1, q.L + 2, false);
-              repositionWorldBlock(q.q[2][0], q.R + 2, q.L, false);
-              repositionWorldBlock(q.q[2][1], q.R + 2, q.L + 1, false);
-              repositionWorldBlock(q.q[2][2], q.R + 2, q.L + 2, false);
+              q.worldBlocks[0][0] = id;
+              q.worldBlocks[0][1] = jd;
+              q.worldBlocks[0][2] = kd;
+              q.worldBlocks[1][0] = $c;
+              q.worldBlocks[1][1] = Gc;
+              q.worldBlocks[1][2] = ad;
+              q.worldBlocks[2][0] = Vb;
+              q.worldBlocks[2][1] = Tc;
+              q.worldBlocks[2][2] = hd;
+              repositionWorldBlock(q.worldBlocks[0][0], q.blockOriginColumn, q.blockOriginRow, true);
+              repositionWorldBlock(q.worldBlocks[0][1], q.blockOriginColumn, q.blockOriginRow + 1, true);
+              repositionWorldBlock(q.worldBlocks[0][2], q.blockOriginColumn, q.blockOriginRow + 2, true);
+              repositionWorldBlock(q.worldBlocks[1][0], q.blockOriginColumn + 1, q.blockOriginRow, false);
+              repositionWorldBlock(q.worldBlocks[1][1], q.blockOriginColumn + 1, q.blockOriginRow + 1, false);
+              repositionWorldBlock(q.worldBlocks[1][2], q.blockOriginColumn + 1, q.blockOriginRow + 2, false);
+              repositionWorldBlock(q.worldBlocks[2][0], q.blockOriginColumn + 2, q.blockOriginRow, false);
+              repositionWorldBlock(q.worldBlocks[2][1], q.blockOriginColumn + 2, q.blockOriginRow + 1, false);
+              repositionWorldBlock(q.worldBlocks[2][2], q.blockOriginColumn + 2, q.blockOriginRow + 2, false);
             } else {
-              q.L++;
-              q.q[0][0] = jd;
-              q.q[0][1] = kd;
-              q.q[0][2] = id;
-              q.q[1][0] = Gc;
-              q.q[1][1] = ad;
-              q.q[1][2] = $c;
-              q.q[2][0] = Tc;
-              q.q[2][1] = hd;
-              q.q[2][2] = Vb;
-              repositionWorldBlock(q.q[0][0], q.R, q.L, true);
-              repositionWorldBlock(q.q[0][1], q.R, q.L + 1, true);
-              repositionWorldBlock(q.q[0][2], q.R, q.L + 2, true);
-              repositionWorldBlock(q.q[1][0], q.R + 1, q.L, false);
-              repositionWorldBlock(q.q[1][1], q.R + 1, q.L + 1, false);
-              repositionWorldBlock(q.q[1][2], q.R + 1, q.L + 2, true);
-              repositionWorldBlock(q.q[2][0], q.R + 2, q.L, false);
-              repositionWorldBlock(q.q[2][1], q.R + 2, q.L + 1, false);
-              repositionWorldBlock(q.q[2][2], q.R + 2, q.L + 2, true);
+              q.blockOriginRow++;
+              q.worldBlocks[0][0] = jd;
+              q.worldBlocks[0][1] = kd;
+              q.worldBlocks[0][2] = id;
+              q.worldBlocks[1][0] = Gc;
+              q.worldBlocks[1][1] = ad;
+              q.worldBlocks[1][2] = $c;
+              q.worldBlocks[2][0] = Tc;
+              q.worldBlocks[2][1] = hd;
+              q.worldBlocks[2][2] = Vb;
+              repositionWorldBlock(q.worldBlocks[0][0], q.blockOriginColumn, q.blockOriginRow, true);
+              repositionWorldBlock(q.worldBlocks[0][1], q.blockOriginColumn, q.blockOriginRow + 1, true);
+              repositionWorldBlock(q.worldBlocks[0][2], q.blockOriginColumn, q.blockOriginRow + 2, true);
+              repositionWorldBlock(q.worldBlocks[1][0], q.blockOriginColumn + 1, q.blockOriginRow, false);
+              repositionWorldBlock(q.worldBlocks[1][1], q.blockOriginColumn + 1, q.blockOriginRow + 1, false);
+              repositionWorldBlock(q.worldBlocks[1][2], q.blockOriginColumn + 1, q.blockOriginRow + 2, true);
+              repositionWorldBlock(q.worldBlocks[2][0], q.blockOriginColumn + 2, q.blockOriginRow, false);
+              repositionWorldBlock(q.worldBlocks[2][1], q.blockOriginColumn + 2, q.blockOriginRow + 1, false);
+              repositionWorldBlock(q.worldBlocks[2][2], q.blockOriginColumn + 2, q.blockOriginRow + 2, true);
             }
           }
         } else {
           if (1 === gc) {
             if (0 === vc) {
-              q.L--;
-              q.q[0][0] = ad;
-              q.q[0][1] = $c;
-              q.q[0][2] = Gc;
-              q.q[1][0] = hd;
-              q.q[1][1] = Vb;
-              q.q[1][2] = Tc;
-              q.q[2][0] = kd;
-              q.q[2][1] = id;
-              q.q[2][2] = jd;
-              repositionWorldBlock(q.q[0][0], q.R, q.L, true);
-              repositionWorldBlock(q.q[0][1], q.R, q.L + 1, false);
-              repositionWorldBlock(q.q[0][2], q.R, q.L + 2, false);
-              repositionWorldBlock(q.q[1][0], q.R + 1, q.L, true);
-              repositionWorldBlock(q.q[1][1], q.R + 1, q.L + 1, false);
-              repositionWorldBlock(q.q[1][2], q.R + 1, q.L + 2, false);
-              repositionWorldBlock(q.q[2][0], q.R + 2, q.L, true);
-              repositionWorldBlock(q.q[2][1], q.R + 2, q.L + 1, false);
-              repositionWorldBlock(q.q[2][2], q.R + 2, q.L + 2, false);
+              q.blockOriginRow--;
+              q.worldBlocks[0][0] = ad;
+              q.worldBlocks[0][1] = $c;
+              q.worldBlocks[0][2] = Gc;
+              q.worldBlocks[1][0] = hd;
+              q.worldBlocks[1][1] = Vb;
+              q.worldBlocks[1][2] = Tc;
+              q.worldBlocks[2][0] = kd;
+              q.worldBlocks[2][1] = id;
+              q.worldBlocks[2][2] = jd;
+              repositionWorldBlock(q.worldBlocks[0][0], q.blockOriginColumn, q.blockOriginRow, true);
+              repositionWorldBlock(q.worldBlocks[0][1], q.blockOriginColumn, q.blockOriginRow + 1, false);
+              repositionWorldBlock(q.worldBlocks[0][2], q.blockOriginColumn, q.blockOriginRow + 2, false);
+              repositionWorldBlock(q.worldBlocks[1][0], q.blockOriginColumn + 1, q.blockOriginRow, true);
+              repositionWorldBlock(q.worldBlocks[1][1], q.blockOriginColumn + 1, q.blockOriginRow + 1, false);
+              repositionWorldBlock(q.worldBlocks[1][2], q.blockOriginColumn + 1, q.blockOriginRow + 2, false);
+              repositionWorldBlock(q.worldBlocks[2][0], q.blockOriginColumn + 2, q.blockOriginRow, true);
+              repositionWorldBlock(q.worldBlocks[2][1], q.blockOriginColumn + 2, q.blockOriginRow + 1, false);
+              repositionWorldBlock(q.worldBlocks[2][2], q.blockOriginColumn + 2, q.blockOriginRow + 2, false);
             } else {
               if (1 === vc) {
                 console.log("error? new center block already in the center of the grid.");
               } else {
-                q.L++;
-                q.q[0][0] = Gc;
-                q.q[0][1] = ad;
-                q.q[0][2] = $c;
-                q.q[1][0] = Tc;
-                q.q[1][1] = hd;
-                q.q[1][2] = Vb;
-                q.q[2][0] = jd;
-                q.q[2][1] = kd;
-                q.q[2][2] = id;
-                repositionWorldBlock(q.q[0][0], q.R, q.L, false);
-                repositionWorldBlock(q.q[0][1], q.R, q.L + 1, false);
-                repositionWorldBlock(q.q[0][2], q.R, q.L + 2, true);
-                repositionWorldBlock(q.q[1][0], q.R + 1, q.L, false);
-                repositionWorldBlock(q.q[1][1], q.R + 1, q.L + 1, false);
-                repositionWorldBlock(q.q[1][2], q.R + 1, q.L + 2, true);
-                repositionWorldBlock(q.q[2][0], q.R + 2, q.L, false);
-                repositionWorldBlock(q.q[2][1], q.R + 2, q.L + 1, false);
-                repositionWorldBlock(q.q[2][2], q.R + 2, q.L + 2, true);
+                q.blockOriginRow++;
+                q.worldBlocks[0][0] = Gc;
+                q.worldBlocks[0][1] = ad;
+                q.worldBlocks[0][2] = $c;
+                q.worldBlocks[1][0] = Tc;
+                q.worldBlocks[1][1] = hd;
+                q.worldBlocks[1][2] = Vb;
+                q.worldBlocks[2][0] = jd;
+                q.worldBlocks[2][1] = kd;
+                q.worldBlocks[2][2] = id;
+                repositionWorldBlock(q.worldBlocks[0][0], q.blockOriginColumn, q.blockOriginRow, false);
+                repositionWorldBlock(q.worldBlocks[0][1], q.blockOriginColumn, q.blockOriginRow + 1, false);
+                repositionWorldBlock(q.worldBlocks[0][2], q.blockOriginColumn, q.blockOriginRow + 2, true);
+                repositionWorldBlock(q.worldBlocks[1][0], q.blockOriginColumn + 1, q.blockOriginRow, false);
+                repositionWorldBlock(q.worldBlocks[1][1], q.blockOriginColumn + 1, q.blockOriginRow + 1, false);
+                repositionWorldBlock(q.worldBlocks[1][2], q.blockOriginColumn + 1, q.blockOriginRow + 2, true);
+                repositionWorldBlock(q.worldBlocks[2][0], q.blockOriginColumn + 2, q.blockOriginRow, false);
+                repositionWorldBlock(q.worldBlocks[2][1], q.blockOriginColumn + 2, q.blockOriginRow + 1, false);
+                repositionWorldBlock(q.worldBlocks[2][2], q.blockOriginColumn + 2, q.blockOriginRow + 2, true);
               }
             }
           } else {
-            q.R++;
+            q.blockOriginColumn++;
             if (0 === vc) {
-              q.L--;
-              q.q[0][0] = hd;
-              q.q[0][1] = Vb;
-              q.q[0][2] = Tc;
-              q.q[1][0] = kd;
-              q.q[1][1] = id;
-              q.q[1][2] = jd;
-              q.q[2][0] = ad;
-              q.q[2][1] = $c;
-              q.q[2][2] = Gc;
-              repositionWorldBlock(q.q[0][0], q.R, q.L, true);
-              repositionWorldBlock(q.q[0][1], q.R, q.L + 1, false);
-              repositionWorldBlock(q.q[0][2], q.R, q.L + 2, false);
-              repositionWorldBlock(q.q[1][0], q.R + 1, q.L, true);
-              repositionWorldBlock(q.q[1][1], q.R + 1, q.L + 1, false);
-              repositionWorldBlock(q.q[1][2], q.R + 1, q.L + 2, false);
+              q.blockOriginRow--;
+              q.worldBlocks[0][0] = hd;
+              q.worldBlocks[0][1] = Vb;
+              q.worldBlocks[0][2] = Tc;
+              q.worldBlocks[1][0] = kd;
+              q.worldBlocks[1][1] = id;
+              q.worldBlocks[1][2] = jd;
+              q.worldBlocks[2][0] = ad;
+              q.worldBlocks[2][1] = $c;
+              q.worldBlocks[2][2] = Gc;
+              repositionWorldBlock(q.worldBlocks[0][0], q.blockOriginColumn, q.blockOriginRow, true);
+              repositionWorldBlock(q.worldBlocks[0][1], q.blockOriginColumn, q.blockOriginRow + 1, false);
+              repositionWorldBlock(q.worldBlocks[0][2], q.blockOriginColumn, q.blockOriginRow + 2, false);
+              repositionWorldBlock(q.worldBlocks[1][0], q.blockOriginColumn + 1, q.blockOriginRow, true);
+              repositionWorldBlock(q.worldBlocks[1][1], q.blockOriginColumn + 1, q.blockOriginRow + 1, false);
+              repositionWorldBlock(q.worldBlocks[1][2], q.blockOriginColumn + 1, q.blockOriginRow + 2, false);
             } else {
               if (1 === vc) {
-                q.q[0][0] = Vb;
-                q.q[0][1] = Tc;
-                q.q[0][2] = hd;
-                q.q[1][0] = id;
-                q.q[1][1] = jd;
-                q.q[1][2] = kd;
-                q.q[2][0] = $c;
-                q.q[2][1] = Gc;
-                q.q[2][2] = ad;
-                repositionWorldBlock(q.q[0][0], q.R, q.L, false);
-                repositionWorldBlock(q.q[0][1], q.R, q.L + 1, false);
-                repositionWorldBlock(q.q[0][2], q.R, q.L + 2, false);
-                repositionWorldBlock(q.q[1][0], q.R + 1, q.L, false);
-                repositionWorldBlock(q.q[1][1], q.R + 1, q.L + 1, false);
-                repositionWorldBlock(q.q[1][2], q.R + 1, q.L + 2, false);
+                q.worldBlocks[0][0] = Vb;
+                q.worldBlocks[0][1] = Tc;
+                q.worldBlocks[0][2] = hd;
+                q.worldBlocks[1][0] = id;
+                q.worldBlocks[1][1] = jd;
+                q.worldBlocks[1][2] = kd;
+                q.worldBlocks[2][0] = $c;
+                q.worldBlocks[2][1] = Gc;
+                q.worldBlocks[2][2] = ad;
+                repositionWorldBlock(q.worldBlocks[0][0], q.blockOriginColumn, q.blockOriginRow, false);
+                repositionWorldBlock(q.worldBlocks[0][1], q.blockOriginColumn, q.blockOriginRow + 1, false);
+                repositionWorldBlock(q.worldBlocks[0][2], q.blockOriginColumn, q.blockOriginRow + 2, false);
+                repositionWorldBlock(q.worldBlocks[1][0], q.blockOriginColumn + 1, q.blockOriginRow, false);
+                repositionWorldBlock(q.worldBlocks[1][1], q.blockOriginColumn + 1, q.blockOriginRow + 1, false);
+                repositionWorldBlock(q.worldBlocks[1][2], q.blockOriginColumn + 1, q.blockOriginRow + 2, false);
               } else {
-                q.L++;
-                q.q[0][0] = Tc;
-                q.q[0][1] = hd;
-                q.q[0][2] = Vb;
-                q.q[1][0] = jd;
-                q.q[1][1] = kd;
-                q.q[1][2] = id;
-                q.q[2][0] = Gc;
-                q.q[2][1] = ad;
-                q.q[2][2] = $c;
-                repositionWorldBlock(q.q[0][0], q.R, q.L, false);
-                repositionWorldBlock(q.q[0][1], q.R, q.L + 1, false);
-                repositionWorldBlock(q.q[0][2], q.R, q.L + 2, true);
-                repositionWorldBlock(q.q[1][0], q.R + 1, q.L, false);
-                repositionWorldBlock(q.q[1][1], q.R + 1, q.L + 1, false);
-                repositionWorldBlock(q.q[1][2], q.R + 1, q.L + 2, true);
+                q.blockOriginRow++;
+                q.worldBlocks[0][0] = Tc;
+                q.worldBlocks[0][1] = hd;
+                q.worldBlocks[0][2] = Vb;
+                q.worldBlocks[1][0] = jd;
+                q.worldBlocks[1][1] = kd;
+                q.worldBlocks[1][2] = id;
+                q.worldBlocks[2][0] = Gc;
+                q.worldBlocks[2][1] = ad;
+                q.worldBlocks[2][2] = $c;
+                repositionWorldBlock(q.worldBlocks[0][0], q.blockOriginColumn, q.blockOriginRow, false);
+                repositionWorldBlock(q.worldBlocks[0][1], q.blockOriginColumn, q.blockOriginRow + 1, false);
+                repositionWorldBlock(q.worldBlocks[0][2], q.blockOriginColumn, q.blockOriginRow + 2, true);
+                repositionWorldBlock(q.worldBlocks[1][0], q.blockOriginColumn + 1, q.blockOriginRow, false);
+                repositionWorldBlock(q.worldBlocks[1][1], q.blockOriginColumn + 1, q.blockOriginRow + 1, false);
+                repositionWorldBlock(q.worldBlocks[1][2], q.blockOriginColumn + 1, q.blockOriginRow + 2, true);
               }
             }
-            repositionWorldBlock(q.q[2][0], q.R + 2, q.L, true);
-            repositionWorldBlock(q.q[2][1], q.R + 2, q.L + 1, true);
-            repositionWorldBlock(q.q[2][2], q.R + 2, q.L + 2, true);
+            repositionWorldBlock(q.worldBlocks[2][0], q.blockOriginColumn + 2, q.blockOriginRow, true);
+            repositionWorldBlock(q.worldBlocks[2][1], q.blockOriginColumn + 2, q.blockOriginRow + 1, true);
+            repositionWorldBlock(q.worldBlocks[2][2], q.blockOriginColumn + 2, q.blockOriginRow + 2, true);
           }
         }
         pe = true;
@@ -747,20 +747,20 @@ export function advanceSimulation(a) {
         console.log("Bug: party not contained by block grid. fixing.");
         var eg = q.vw(q.he),
           hc = q.ww(q.ie);
-        console.log("old: blockShiftCol=" + q.R + " blockShiftRow=" + q.L);
-        q.R = eg - 1;
-        q.L = hc - 1;
-        console.log("new: blockShiftCol=" + q.R + " blockShiftRow=" + q.L);
-        repositionWorldBlock(q.q[0][0], q.R, q.L, true);
-        repositionWorldBlock(q.q[0][1], q.R, q.L + 1, true);
-        repositionWorldBlock(q.q[0][2], q.R, q.L + 2, true);
-        repositionWorldBlock(q.q[1][0], q.R + 1, q.L, true);
-        repositionWorldBlock(q.q[1][1], q.R + 1, q.L + 1, true);
-        repositionWorldBlock(q.q[1][2], q.R + 1, q.L + 2, true);
-        repositionWorldBlock(q.q[2][0], q.R + 2, q.L, true);
-        repositionWorldBlock(q.q[2][1], q.R + 2, q.L + 1, true);
-        repositionWorldBlock(q.q[2][2], q.R + 2, q.L + 2, true);
-        var re = q.q[1][1];
+        console.log("old: blockShiftCol=" + q.blockOriginColumn + " blockShiftRow=" + q.blockOriginRow);
+        q.blockOriginColumn = eg - 1;
+        q.blockOriginRow = hc - 1;
+        console.log("new: blockShiftCol=" + q.blockOriginColumn + " blockShiftRow=" + q.blockOriginRow);
+        repositionWorldBlock(q.worldBlocks[0][0], q.blockOriginColumn, q.blockOriginRow, true);
+        repositionWorldBlock(q.worldBlocks[0][1], q.blockOriginColumn, q.blockOriginRow + 1, true);
+        repositionWorldBlock(q.worldBlocks[0][2], q.blockOriginColumn, q.blockOriginRow + 2, true);
+        repositionWorldBlock(q.worldBlocks[1][0], q.blockOriginColumn + 1, q.blockOriginRow, true);
+        repositionWorldBlock(q.worldBlocks[1][1], q.blockOriginColumn + 1, q.blockOriginRow + 1, true);
+        repositionWorldBlock(q.worldBlocks[1][2], q.blockOriginColumn + 1, q.blockOriginRow + 2, true);
+        repositionWorldBlock(q.worldBlocks[2][0], q.blockOriginColumn + 2, q.blockOriginRow, true);
+        repositionWorldBlock(q.worldBlocks[2][1], q.blockOriginColumn + 2, q.blockOriginRow + 1, true);
+        repositionWorldBlock(q.worldBlocks[2][2], q.blockOriginColumn + 2, q.blockOriginRow + 2, true);
+        var re = q.worldBlocks[1][1];
         if (!worldBlockContains(re, q.he, q.ie)) {
           console.log("Failed to fix world block grid issue.");
           console.log("posX: " + q.he + " posY: " + q.ie);

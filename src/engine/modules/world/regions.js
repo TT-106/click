@@ -167,7 +167,7 @@ export function resetCastles() {
   }
 }
 export function unlockStartingRegion() {
-  var a = game.world.q[1][1],
+  var a = game.world.worldBlocks[1][1],
     a = a.Hd + "_" + a.Id,
     b = findCastleByRegion(a);
   if (b) {

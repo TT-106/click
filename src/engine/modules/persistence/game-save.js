@@ -63,9 +63,9 @@ export function restoreGameState(a, b) {
             y = s.worldCenterY,
             A = s.blockShiftRow,
             C = game.world;
-          C.R = s.blockShiftCol;
-          C.L = A;
-          C.q = createWorldBlocks(C);
+          C.blockOriginColumn = s.blockShiftCol;
+          C.blockOriginRow = A;
+          C.worldBlocks = createWorldBlocks(C);
           refreshWorldBlocks(C);
           C.he = u;
           C.ie = y;
@@ -714,8 +714,8 @@ export function createSaveState(a) {
     u = {
       worldCenterX: y.he,
       worldCenterY: y.ie,
-      blockShiftCol: y.R,
-      blockShiftRow: y.L
+      blockShiftCol: y.blockOriginColumn,
+      blockShiftRow: y.blockOriginRow
     };
     var A,
       C = game.options;

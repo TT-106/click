@@ -449,7 +449,7 @@ export function initializeRenderingScene() {
               drawEntityHighlight(a, s, h, l);
             }
           }
-          var y = game.world.q[1][1],
+          var y = game.world.worldBlocks[1][1],
             A = h * (y.Hd - f),
             C = l * (y.Id - g);
           a.context.fillStyle = "blue";

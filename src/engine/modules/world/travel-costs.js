@@ -7,7 +7,7 @@ export function WorldPathfinder() {
 }
 export function calculateWorldCosts(a, b, c) {
   a = a.VC;
-  var d = game.world.q,
+  var d = game.world.worldBlocks,
     f,
     g,
     h;

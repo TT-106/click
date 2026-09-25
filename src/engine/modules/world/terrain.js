@@ -366,9 +366,9 @@ export function getBlockTile(a, b, c) {
 export function WorldMap() {
   this.wt = new WorldGenerator(WORLD_BLOCK_COLUMNS, WORLD_BLOCK_ROWS);
   this.ie = this.he = 0;
-  this.R = WORLD_ORIGIN_COLUMN;
-  this.L = WORLD_ORIGIN_ROW;
-  this.q = [];
+  this.blockOriginColumn = WORLD_ORIGIN_COLUMN;
+  this.blockOriginRow = WORLD_ORIGIN_ROW;
+  this.worldBlocks = [];
   this.ty = false;
 }
 export function createWorldBlocks(a) {
@@ -379,7 +379,7 @@ export function createWorldBlocks(a) {
   for (d = 0; 3 > d; d++) {
     c = [];
     for (f = 0; 3 > f; f++) {
-      c.push(new WorldBlock(d + a.R, f + a.L, a.wt));
+      c.push(new WorldBlock(d + a.blockOriginColumn, f + a.blockOriginRow, a.wt));
     }
     b.push(c);
   }
@@ -387,10 +387,10 @@ export function createWorldBlocks(a) {
 }
 export function placePartyInWorld() {
   var a = game.world;
-  a.q = createWorldBlocks(a);
+  a.worldBlocks = createWorldBlocks(a);
   refreshWorldBlocks(a);
-  a.he = a.q[1][1].yp + WORLD_BLOCK_COLUMNS * game.tileSize / 2 | 0;
-  a.ie = a.q[1][1].zp + WORLD_BLOCK_ROWS * game.tileSize / 2 | 0;
+  a.he = a.worldBlocks[1][1].yp + WORLD_BLOCK_COLUMNS * game.tileSize / 2 | 0;
+  a.ie = a.worldBlocks[1][1].zp + WORLD_BLOCK_ROWS * game.tileSize / 2 | 0;
   var b;
   for (b = 0; b < game.state.adventurers.length; b++) {
     var c = a.he + randomInt(30),
@@ -403,7 +403,7 @@ export function refreshWorldBlocks(a) {
   var b, c;
   for (c = 0; 3 > c; c++) {
     for (b = 0; 3 > b; b++) {
-      var d = a.q[c][b];
+      var d = a.worldBlocks[c][b];
       populateWorldBlock(d.wt, d);
     }
   }
@@ -415,8 +415,8 @@ export function findNearestWorldColumn(a) {
     f,
     g = 1E9,
     h = -1;
-  for (c = 0; c < b.q.length; c++) {
-    d = b.q[c][0];
+  for (c = 0; c < b.worldBlocks.length; c++) {
+    d = b.worldBlocks[c][0];
     d = a < d.Qj ? d.Qj : a >= d.wp ? d.wp - 1 : a;
     f = Math.abs(a - d);
     if (f < g) {
@@ -430,7 +430,7 @@ export function findNearestWorldRow(a) {
   var b,
     c,
     d,
-    f = game.world.q[0],
+    f = game.world.worldBlocks[0],
     g = 1E8,
     h = -1;
   for (b = 0; b < f.length; b++) {
@@ -619,12 +619,12 @@ export function initializeWorldTerrain() {
     }
   };
   WorldMap.prototype.hb = function (a, b) {
-    var c = (a / WORLD_BLOCK_COLUMNS | 0) - this.R,
-      d = (b / WORLD_BLOCK_ROWS | 0) - this.L;
+    var c = (a / WORLD_BLOCK_COLUMNS | 0) - this.blockOriginColumn,
+      d = (b / WORLD_BLOCK_ROWS | 0) - this.blockOriginRow;
     if (0 > c || 3 <= c || 0 > d || 3 <= d) {
       return null;
     }
-    c = this.q[c][d];
+    c = this.worldBlocks[c][d];
     return getBlockTile(c, a - (c.yp / game.tileSize | 0), b - (c.zp / game.tileSize | 0));
   };
   WorldMap.prototype.bc = function (a) {

@@ -14,7 +14,7 @@
 ## 存档格式（最高风险区）
 
 5. 存档 = JSON → LZ-string 1.3.3 Base64（`src/vendor/lz-string-1.3.3.js`，与原发行包同版本）→ localStorage `C2_V1_001`（备份键 `C2_V1_001_backup`）。
-6. **存档 JSON 的所有 4,477 个键（实测解码 fixture 全量扫描）都是语义化命名，无任何单字母键**。顶层 29 键：saveKey, gameTimestamp, gameInitialized, turnNumber, frameNumber, worldActive, partyCreated, gameWon, victoryCount, world, gameOptions, dungeonManagerState, shopManager, castleManager, farms, currentDungeon, currentCastle, level, treasureChestManager, scrollInventory, potionInventory, party, statistics, totalStatistics, victoryStatistics, adventurers, monsterTypes, settings, pointManagerState, achievementManager。
+6. **存档 JSON 的所有 4,477 个键（实测解码 fixture 全量扫描）都是语义化命名，无任何单字母键**。顶层 30 键（实测）：saveKey, gameTimestamp, gameInitialized, turnNumber, frameNumber, worldActive, partyCreated, gameWon, victoryCount, world, gameOptions, dungeonManagerState, shopManager, castleManager, farms, currentDungeon, currentCastle, level, treasureChestManager, scrollInventory, potionInventory, party, statistics, totalStatistics, victoryStatistics, adventurers, monsterTypes, settings, pointManagerState, achievementManager。
 7. 序列化时 `gameTimestamp` 写入的是**当前时刻**（lB/serializeGame 内 `Date.now()`），恢复时读回旧值作为 `lastActiveAt`。
 8. 运行时字段名（如 WorldMap.R/L）与存档键（blockShiftCol/Row）之间是显式映射（game-save.js 恢复/序列化两处成对出现）——重命名运行时字段必须同步这两处，存档 JSON 不变。
 
