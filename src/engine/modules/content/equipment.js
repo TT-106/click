@@ -215,7 +215,7 @@ export function initializeItemCatalog() {
       isProjectile: false,
       ma: false,
       la: true,
-      Z: "140 141 142 143 145 144".split(" ")
+      slotList: "140 141 142 143 145 144".split(" ")
     },
     H = {
       baseName: "戒指",
@@ -223,7 +223,7 @@ export function initializeItemCatalog() {
       isProjectile: false,
       ma: false,
       la: true,
-      Z: "160 161 162 163 164 165".split(" ")
+      slotList: "160 161 162 163 164 165".split(" ")
     },
     S = {
       baseName: "符号",
@@ -295,7 +295,7 @@ export function initializeItemCatalog() {
       isProjectile: false,
       ma: true,
       la: false,
-      Z: "85 86 87 88 90 92".split(" ")
+      slotList: "85 86 87 88 90 92".split(" ")
     },
     T = {
       baseName: "魔杖",
@@ -311,7 +311,7 @@ export function initializeItemCatalog() {
       isProjectile: false,
       ma: true,
       la: false,
-      Z: "181 185 182 183 184 180 186".split(" ")
+      slotList: "181 185 182 183 184 180 186".split(" ")
     },
     Ca = {
       baseName: "腰带",
