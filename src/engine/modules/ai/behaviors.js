@@ -304,7 +304,7 @@ export function initializeAiBehaviors() {
       this.fo[b].notifySpellLearned(a);
     }
   };
-  IdleBehavior.prototype.Wa = function () {};
+  IdleBehavior.prototype.resetBehaviorState = function () {};
   IdleBehavior.prototype.notifySpellLearned = function () {};
   IdleBehavior.prototype.od = function (a) {
     var b = a.position,
@@ -326,7 +326,7 @@ export function initializeAiBehaviors() {
   IdleBehavior.prototype.Ta = function () {
     return this.kB;
   };
-  ExploreDungeonBehavior.prototype.Wa = function () {
+  ExploreDungeonBehavior.prototype.resetBehaviorState = function () {
     this.selectedTarget = this.un = null;
   };
   ExploreDungeonBehavior.prototype.notifySpellLearned = function () {};
@@ -386,7 +386,7 @@ export function initializeAiBehaviors() {
   ExploreDungeonBehavior.prototype.Ta = function () {
     return this.priorityWeight;
   };
-  FollowLeaderBehavior.prototype.Wa = function () {};
+  FollowLeaderBehavior.prototype.resetBehaviorState = function () {};
   FollowLeaderBehavior.prototype.notifySpellLearned = function () {};
   FollowLeaderBehavior.prototype.od = function (a) {
     if (this.Uq) {
@@ -452,7 +452,7 @@ export function initializeAiBehaviors() {
   FollowLeaderBehavior.prototype.Ta = function () {
     return this.priorityWeight;
   };
-  RangedAttackBehavior.prototype.Wa = function () {
+  RangedAttackBehavior.prototype.resetBehaviorState = function () {
     this.co = this.ax = 0;
     this.targetCharacter = null;
   };
@@ -538,7 +538,7 @@ export function initializeAiBehaviors() {
   RangedAttackBehavior.prototype.Ta = function () {
     return this.priorityWeight;
   };
-  MeleeAttackBehavior.prototype.Wa = function () {};
+  MeleeAttackBehavior.prototype.resetBehaviorState = function () {};
   MeleeAttackBehavior.prototype.notifySpellLearned = function () {};
   MeleeAttackBehavior.prototype.od = function (a) {
     if (this.targetCharacter && !this.targetCharacter.Va) {
@@ -575,7 +575,7 @@ export function initializeAiBehaviors() {
     return this.priorityWeight;
   };
   LootGoldBehavior.prototype = new ExploreDungeonBehavior();
-  LootGoldBehavior.prototype.Wa = function () {
+  LootGoldBehavior.prototype.resetBehaviorState = function () {
     this.Hn = null;
   };
   LootGoldBehavior.prototype.notifySpellLearned = function (a) {
@@ -628,7 +628,7 @@ export function initializeAiBehaviors() {
     var b = a.stats;
     return 0.8 > b.health / statValue(b.maxHealth) ? null : a;
   };
-  OpportunisticAttackBehavior.prototype.Wa = function () {
+  OpportunisticAttackBehavior.prototype.resetBehaviorState = function () {
     this.targetCharacter = null;
     this.Ng = 0;
   };
@@ -672,7 +672,7 @@ export function initializeAiBehaviors() {
     return this.priorityWeight;
   };
   LootItemBehavior.prototype = new ExploreDungeonBehavior();
-  LootItemBehavior.prototype.Wa = function () {
+  LootItemBehavior.prototype.resetBehaviorState = function () {
     this.Dn = null;
   };
   LootItemBehavior.prototype.notifySpellLearned = function (a) {
@@ -694,7 +694,7 @@ export function initializeAiBehaviors() {
     return a.effects.wg || !hasOpponentsInRoom(a, a.position.room) ? null : a;
   };
   LootScrollBehavior.prototype = new ExploreDungeonBehavior();
-  LootScrollBehavior.prototype.Wa = function () {
+  LootScrollBehavior.prototype.resetBehaviorState = function () {
     this.on = null;
   };
   LootScrollBehavior.prototype.notifySpellLearned = function (a) {
@@ -743,8 +743,8 @@ export function initializeAiBehaviors() {
   LootScrollBehavior.prototype.Td = function (a) {
     return a.effects.Vs || !hasOpponentsInRoom(a, a.position.room) ? null : a;
   };
-  GuardRangedBehavior.prototype.Wa = function () {
-    this.Vq.Wa();
+  GuardRangedBehavior.prototype.resetBehaviorState = function () {
+    this.Vq.resetBehaviorState();
   };
   GuardRangedBehavior.prototype.notifySpellLearned = function () {};
   GuardRangedBehavior.prototype.od = function (a) {
@@ -756,7 +756,7 @@ export function initializeAiBehaviors() {
   GuardRangedBehavior.prototype.Ta = function () {
     return this.Vq.Ta();
   };
-  TargetSpellBehavior.prototype.Wa = function () {
+  TargetSpellBehavior.prototype.resetBehaviorState = function () {
     this.Vi = null;
   };
   TargetSpellBehavior.prototype.Ta = function () {
@@ -802,7 +802,7 @@ export function initializeAiBehaviors() {
     return (this.targetCharacter = selectScrollTarget(a)) ? this.priorityWeight : 0;
   };
   HealBehavior.prototype = new ExploreDungeonBehavior();
-  HealBehavior.prototype.Wa = function () {
+  HealBehavior.prototype.resetBehaviorState = function () {
     this.fm = null;
   };
   HealBehavior.prototype.notifySpellLearned = function (a) {
@@ -824,7 +824,7 @@ export function initializeAiBehaviors() {
     return selectScrollTarget(a);
   };
   ApplyEffectBehavior.prototype = new ExploreDungeonBehavior();
-  ApplyEffectBehavior.prototype.Wa = function () {
+  ApplyEffectBehavior.prototype.resetBehaviorState = function () {
     this.gm = null;
   };
   ApplyEffectBehavior.prototype.notifySpellLearned = function (a) {
@@ -845,7 +845,7 @@ export function initializeAiBehaviors() {
     return selectScrollTarget(a);
   };
   AreaDamageBehavior.prototype = new ExploreDungeonBehavior();
-  AreaDamageBehavior.prototype.Wa = function () {
+  AreaDamageBehavior.prototype.resetBehaviorState = function () {
     this.Zl = null;
   };
   AreaDamageBehavior.prototype.notifySpellLearned = function (a) {
@@ -866,7 +866,7 @@ export function initializeAiBehaviors() {
     return selectScrollTarget(a);
   };
   ChainDamageBehavior.prototype = new ExploreDungeonBehavior();
-  ChainDamageBehavior.prototype.Wa = function () {
+  ChainDamageBehavior.prototype.resetBehaviorState = function () {
     this.In = null;
   };
   ChainDamageBehavior.prototype.notifySpellLearned = function (a) {
@@ -887,7 +887,7 @@ export function initializeAiBehaviors() {
     return selectScrollTarget(a);
   };
   SummonBehavior.prototype = new ExploreDungeonBehavior();
-  SummonBehavior.prototype.Wa = function () {
+  SummonBehavior.prototype.resetBehaviorState = function () {
     this.zd = null;
   };
   SummonBehavior.prototype.notifySpellLearned = function (a) {
@@ -908,7 +908,7 @@ export function initializeAiBehaviors() {
     return selectScrollTarget(a);
   };
   LifeDrainBehavior.prototype = new ExploreDungeonBehavior();
-  LifeDrainBehavior.prototype.Wa = function () {
+  LifeDrainBehavior.prototype.resetBehaviorState = function () {
     this.Lm = null;
   };
   LifeDrainBehavior.prototype.notifySpellLearned = function (a) {
@@ -942,7 +942,7 @@ export function initializeAiBehaviors() {
     return 0.9 < c ? null : b;
   };
   ReviveBehavior.prototype = new ExploreDungeonBehavior();
-  ReviveBehavior.prototype.Wa = function () {
+  ReviveBehavior.prototype.resetBehaviorState = function () {
     this.pn = null;
   };
   ReviveBehavior.prototype.notifySpellLearned = function (a) {
@@ -971,7 +971,7 @@ export function initializeAiBehaviors() {
     return null;
   };
   PartyBuffBehavior.prototype = new ExploreDungeonBehavior();
-  PartyBuffBehavior.prototype.Wa = function () {
+  PartyBuffBehavior.prototype.resetBehaviorState = function () {
     this.zd = null;
   };
   PartyBuffBehavior.prototype.notifySpellLearned = function (a) {
@@ -991,7 +991,7 @@ export function initializeAiBehaviors() {
   PartyBuffBehavior.prototype.Td = function (a) {
     return a;
   };
-  WaitBehavior.prototype.Wa = function () {};
+  WaitBehavior.prototype.resetBehaviorState = function () {};
   WaitBehavior.prototype.notifySpellLearned = function () {};
   WaitBehavior.prototype.od = function (a) {
     if (!isPartyTravelling(game.state.party) || !hasForcedDestination(a)) {
@@ -1046,7 +1046,7 @@ export function initializeAiBehaviors() {
     return this.eo;
   };
   LootChestBehavior.prototype = new ExploreDungeonBehavior();
-  LootChestBehavior.prototype.Wa = function () {
+  LootChestBehavior.prototype.resetBehaviorState = function () {
     this.Wm = null;
   };
   LootChestBehavior.prototype.notifySpellLearned = function (a) {
@@ -1067,7 +1067,7 @@ export function initializeAiBehaviors() {
     return hasPendingLoot() ? a : null;
   };
   LootPotionBehavior.prototype = new ExploreDungeonBehavior();
-  LootPotionBehavior.prototype.Wa = function () {
+  LootPotionBehavior.prototype.resetBehaviorState = function () {
     this.pm = null;
   };
   LootPotionBehavior.prototype.notifySpellLearned = function (a) {
@@ -1092,7 +1092,7 @@ export function initializeAiBehaviors() {
   LootPotionBehavior.prototype.Td = function (a) {
     return a;
   };
-  UseShopBehavior.prototype.Wa = function () {
+  UseShopBehavior.prototype.resetBehaviorState = function () {
     this.qd = null;
   };
   UseShopBehavior.prototype.notifySpellLearned = function () {};
@@ -1155,7 +1155,7 @@ export function initializeAiBehaviors() {
   UseShopBehavior.prototype.Ta = function () {
     return this.priorityWeight;
   };
-  EnterDungeonBehavior.prototype.Wa = function () {
+  EnterDungeonBehavior.prototype.resetBehaviorState = function () {
     this.bd = null;
   };
   EnterDungeonBehavior.prototype.notifySpellLearned = function () {};
@@ -1218,7 +1218,7 @@ export function initializeAiBehaviors() {
   EnterDungeonBehavior.prototype.Ta = function () {
     return this.priorityWeight;
   };
-  EnterCastleBehavior.prototype.Wa = function () {
+  EnterCastleBehavior.prototype.resetBehaviorState = function () {
     this.ad = null;
   };
   EnterCastleBehavior.prototype.notifySpellLearned = function () {};
@@ -1281,7 +1281,7 @@ export function initializeAiBehaviors() {
   EnterCastleBehavior.prototype.Ta = function () {
     return this.priorityWeight;
   };
-  TravelWorldBehavior.prototype.Wa = function () {
+  TravelWorldBehavior.prototype.resetBehaviorState = function () {
     this.$c = null;
   };
   TravelWorldBehavior.prototype.notifySpellLearned = function () {};
@@ -1344,7 +1344,7 @@ export function initializeAiBehaviors() {
   TravelWorldBehavior.prototype.Ta = function () {
     return this.priorityWeight;
   };
-  ChangeFloorBehavior.prototype.Wa = function () {
+  ChangeFloorBehavior.prototype.resetBehaviorState = function () {
     this.lc = null;
   };
   ChangeFloorBehavior.prototype.notifySpellLearned = function () {};
@@ -1376,7 +1376,7 @@ export function initializeAiBehaviors() {
     return this.priorityWeight;
   };
   SelfSpellBehavior.prototype = new ExploreDungeonBehavior();
-  SelfSpellBehavior.prototype.Wa = function () {
+  SelfSpellBehavior.prototype.resetBehaviorState = function () {
     this.Sc = null;
   };
   SelfSpellBehavior.prototype.notifySpellLearned = function (a) {
@@ -1400,7 +1400,7 @@ export function initializeAiBehaviors() {
     return a;
   };
   AreaSpellBehavior.prototype = new ExploreDungeonBehavior();
-  AreaSpellBehavior.prototype.Wa = function () {
+  AreaSpellBehavior.prototype.resetBehaviorState = function () {
     this.Sc = null;
   };
   AreaSpellBehavior.prototype.notifySpellLearned = function (a) {
@@ -1425,7 +1425,7 @@ export function initializeAiBehaviors() {
     return a;
   };
   CompanionSpellBehavior.prototype = new ExploreDungeonBehavior();
-  CompanionSpellBehavior.prototype.Wa = function () {
+  CompanionSpellBehavior.prototype.resetBehaviorState = function () {
     this.Sc = null;
   };
   CompanionSpellBehavior.prototype.notifySpellLearned = function (a) {
@@ -1487,7 +1487,7 @@ export function initializeAiBehaviors() {
     }
     return g;
   };
-  CooldownBehavior.prototype.Wa = function () {};
+  CooldownBehavior.prototype.resetBehaviorState = function () {};
   CooldownBehavior.prototype.notifySpellLearned = function () {};
   CooldownBehavior.prototype.od = function (a) {
     choosePointNearTarget(a.position.Qb, a.summoner.position.levelPosition, a.position.room);
@@ -1505,7 +1505,7 @@ export function initializeAiBehaviors() {
   CooldownBehavior.prototype.Ta = function () {
     return this.priorityWeight;
   };
-  SpecialAttackBehavior.prototype.Wa = function () {};
+  SpecialAttackBehavior.prototype.resetBehaviorState = function () {};
   SpecialAttackBehavior.prototype.notifySpellLearned = function () {};
   SpecialAttackBehavior.prototype.od = function (a) {
     if (this.targetCharacter && !this.targetCharacter.Va) {
@@ -1551,7 +1551,7 @@ export function initializeAiBehaviors() {
   SpecialAttackBehavior.prototype.Ta = function () {
     return this.priorityWeight;
   };
-  StunnedBehavior.prototype.Wa = function () {};
+  StunnedBehavior.prototype.resetBehaviorState = function () {};
   StunnedBehavior.prototype.notifySpellLearned = function () {};
   StunnedBehavior.prototype.od = function (a) {
     var b = a.position;

@@ -159,7 +159,7 @@ export function createBehaviorQueue(a) {
     d;
   for (d = 0; d < a.length; d++) {
     c = a[d];
-    c.Wa();
+    c.resetBehaviorState();
     b.fo.push(c);
   }
   return b;
