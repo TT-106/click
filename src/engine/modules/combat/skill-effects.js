@@ -17,7 +17,7 @@ export function applySkillTreeBonuses(a, b) {
     f;
   for (f = 0; f < c.length; f++) {
     d = c[f];
-    if (d.Na() === SKILL_UPGRADE_TYPE && d.He()) {
+    if (d.getUpgradeType() === SKILL_UPGRADE_TYPE && d.He()) {
       d = d.Jr();
       applyStatBonus(a, d.statType, d.statBonusValue);
     }

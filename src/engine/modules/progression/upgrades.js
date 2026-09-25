@@ -274,7 +274,7 @@ export function initializeProgressionUpgrades() {
   Upgrade.prototype.He = function () {
     return false;
   };
-  Upgrade.prototype.Na = function () {
+  Upgrade.prototype.getUpgradeType = function () {
     return null;
   };
   Upgrade.prototype.uw = function () {
@@ -317,7 +317,7 @@ export function initializeProgressionUpgrades() {
   PurchaseItemUpgrade.prototype.He = function () {
     return this.xc && (this.xc.ye || this.xc.cb);
   };
-  PurchaseItemUpgrade.prototype.Na = function () {
+  PurchaseItemUpgrade.prototype.getUpgradeType = function () {
     return 13;
   };
   PurchaseItemUpgrade.prototype.Qc = function () {
@@ -363,7 +363,7 @@ export function initializeProgressionUpgrades() {
   GlobalUpgrade.prototype.ib = function () {
     return this.mb.title;
   };
-  GlobalUpgrade.prototype.Na = function () {
+  GlobalUpgrade.prototype.getUpgradeType = function () {
     return 1;
   };
   GlobalUpgrade.prototype.Oc = function () {
@@ -421,7 +421,7 @@ export function initializeProgressionUpgrades() {
   EquipBestItemUpgrade.prototype.ib = function () {
     return "装备所有道具";
   };
-  EquipBestItemUpgrade.prototype.Na = function () {
+  EquipBestItemUpgrade.prototype.getUpgradeType = function () {
     return 4;
   };
   EquipBestItemUpgrade.prototype.lb = function () {
@@ -480,7 +480,7 @@ export function initializeProgressionUpgrades() {
   EquipItemUpgrade.prototype.Oz = function () {
     return this.item;
   };
-  EquipItemUpgrade.prototype.Na = function () {
+  EquipItemUpgrade.prototype.getUpgradeType = function () {
     return 3;
   };
   EquipItemUpgrade.prototype.lb = function () {
@@ -522,7 +522,7 @@ export function initializeProgressionUpgrades() {
   LevelUpUpgrade.prototype.Vo = function () {
     return this.adventurerIndex >= game.state.adventurers.length ? null : game.state.adventurers[this.adventurerIndex];
   };
-  LevelUpUpgrade.prototype.Na = function () {
+  LevelUpUpgrade.prototype.getUpgradeType = function () {
     return 2;
   };
   LevelUpUpgrade.prototype.lb = function () {
@@ -628,7 +628,7 @@ export function initializeProgressionUpgrades() {
   UnlockMonsterLevelUpgrade.prototype.ib = function () {
     return this.Ve;
   };
-  UnlockMonsterLevelUpgrade.prototype.Na = function () {
+  UnlockMonsterLevelUpgrade.prototype.getUpgradeType = function () {
     return 11;
   };
   UnlockMonsterLevelUpgrade.prototype.lb = function () {
@@ -692,7 +692,7 @@ export function initializeProgressionUpgrades() {
   RetireMonsterLevelUpgrade.prototype.ib = function () {
     return this.Ve;
   };
-  RetireMonsterLevelUpgrade.prototype.Na = function () {
+  RetireMonsterLevelUpgrade.prototype.getUpgradeType = function () {
     return 11;
   };
   RetireMonsterLevelUpgrade.prototype.lb = function () {
@@ -777,7 +777,7 @@ export function initializeProgressionUpgrades() {
   CharacterSkillUpgrade.prototype.lb = function () {
     return this.it.description;
   };
-  CharacterSkillUpgrade.prototype.Na = function () {
+  CharacterSkillUpgrade.prototype.getUpgradeType = function () {
     return SKILL_UPGRADE_TYPE;
   };
   CharacterSkillUpgrade.prototype.Oc = function () {
@@ -848,7 +848,7 @@ export function initializeProgressionUpgrades() {
   LearnSpellUpgrade.prototype.lb = function () {
     return this.oq.spellDefinition.description;
   };
-  LearnSpellUpgrade.prototype.Na = function () {
+  LearnSpellUpgrade.prototype.getUpgradeType = function () {
     return 6;
   };
   LearnSpellUpgrade.prototype.Oc = function () {
@@ -922,7 +922,7 @@ export function initializeProgressionUpgrades() {
   PurchaseDungeonUpgrade.prototype.He = function () {
     return this.dungeon && this.dungeon.isFarm;
   };
-  PurchaseDungeonUpgrade.prototype.Na = function () {
+  PurchaseDungeonUpgrade.prototype.getUpgradeType = function () {
     return 7;
   };
   PurchaseDungeonUpgrade.prototype.Bb = function () {
@@ -964,7 +964,7 @@ export function initializeProgressionUpgrades() {
   PurchaseCastleUpgrade.prototype.He = function () {
     return this.dungeon && this.dungeon.isFarm;
   };
-  PurchaseCastleUpgrade.prototype.Na = function () {
+  PurchaseCastleUpgrade.prototype.getUpgradeType = function () {
     return 8;
   };
   PurchaseCastleUpgrade.prototype.Bb = function () {
@@ -1011,7 +1011,7 @@ export function initializeProgressionUpgrades() {
   AutoPurchaseDungeonUpgrade.prototype.ib = function () {
     return "收获奖励";
   };
-  AutoPurchaseDungeonUpgrade.prototype.Na = function () {
+  AutoPurchaseDungeonUpgrade.prototype.getUpgradeType = function () {
     return 9;
   };
   AutoPurchaseDungeonUpgrade.prototype.Qc = function () {
@@ -1052,7 +1052,7 @@ export function initializeProgressionUpgrades() {
   ScrollUpgrade.prototype.lb = function () {
     return this.vf().locked ? "解锁卷轴" : "升级卷轴";
   };
-  ScrollUpgrade.prototype.Na = function () {
+  ScrollUpgrade.prototype.getUpgradeType = function () {
     return 12;
   };
   ScrollUpgrade.prototype.Oc = function () {
@@ -1114,7 +1114,7 @@ export function initializeProgressionUpgrades() {
   ClaimAchievementUpgrade.prototype.lb = function () {
     return this.jk;
   };
-  ClaimAchievementUpgrade.prototype.Na = function () {
+  ClaimAchievementUpgrade.prototype.getUpgradeType = function () {
     return 14;
   };
   ClaimAchievementUpgrade.prototype.Oc = function () {
@@ -1155,7 +1155,7 @@ export function initializeProgressionUpgrades() {
   AchievementUpgrade.prototype.lb = function () {
     return this.jk;
   };
-  AchievementUpgrade.prototype.Na = function () {
+  AchievementUpgrade.prototype.getUpgradeType = function () {
     return 15;
   };
   AchievementUpgrade.prototype.qc = function () {
@@ -1197,7 +1197,7 @@ export function initializeProgressionUpgrades() {
   AdventurePointUpgrade.prototype.ib = function () {
     return this.kh.title;
   };
-  AdventurePointUpgrade.prototype.Na = function () {
+  AdventurePointUpgrade.prototype.getUpgradeType = function () {
     return 16;
   };
   AdventurePointUpgrade.prototype.qc = function () {
@@ -1244,7 +1244,7 @@ export function initializeProgressionUpgrades() {
   CollectFarmUpgrade.prototype.ib = function () {
     return "收集黄金";
   };
-  CollectFarmUpgrade.prototype.Na = function () {
+  CollectFarmUpgrade.prototype.getUpgradeType = function () {
     return 10;
   };
   CollectFarmUpgrade.prototype.Qc = function () {

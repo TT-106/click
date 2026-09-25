@@ -265,14 +265,14 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   UpgradeButtonView.prototype.update = function () {
-    var a = this.upgrade.Na(),
+    var a = this.upgrade.getUpgradeType(),
       b = this.Ro();
     if (!this.buttonElement) {
       mountUpgradeButton(this);
     }
     if (this.zo !== a) {
       this.zo = a;
-      if (this.Ag && this.zo !== this.Ag.Na()) {
+      if (this.Ag && this.zo !== this.Ag.getUpgradeType()) {
         clearElement(this.buttonElement);
         this.Ag = null;
       }
@@ -294,7 +294,7 @@ export function initializeViewsUpgradeDetails() {
   UpgradeButtonView.prototype.Ro = function () {
     return this.upgrade.qc() ? "upgradeButton centeredElement topMargin" : this.upgrade.He() ? "ownedUpgradeButton centeredElement topMargin" : "disabledUpgradeButton centeredElement topMargin";
   };
-  ItemPurchaseDetails.prototype.Na = function () {
+  ItemPurchaseDetails.prototype.getUpgradeType = function () {
     return 1;
   };
   ItemPurchaseDetails.prototype.reset = function () {
@@ -375,7 +375,7 @@ export function initializeViewsUpgradeDetails() {
     this.Ii.style.paddingTop = "5px";
     this.Ii.style.textAlign = "left";
   };
-  EquipmentDetails.prototype.Na = function () {
+  EquipmentDetails.prototype.getUpgradeType = function () {
     return 2;
   };
   EquipmentDetails.prototype.reset = function () {
@@ -446,7 +446,7 @@ export function initializeViewsUpgradeDetails() {
     this.Py = createElement("span", b, null, null);
     this.Sy = createElement("span", b, null, null);
   };
-  GlobalUpgradeDetails.prototype.Na = function () {
+  GlobalUpgradeDetails.prototype.getUpgradeType = function () {
     return 3;
   };
   GlobalUpgradeDetails.prototype.reset = function () {
@@ -520,7 +520,7 @@ export function initializeViewsUpgradeDetails() {
     this.ks.style.marginLeft = "10px";
     this.ks.style.color = "#0A0";
   };
-  AutoDungeonDetails.prototype.Na = function () {
+  AutoDungeonDetails.prototype.getUpgradeType = function () {
     return 13;
   };
   AutoDungeonDetails.prototype.reset = function () {
@@ -575,7 +575,7 @@ export function initializeViewsUpgradeDetails() {
     this.mf.style.width = "200px";
     this.mf.style.textAlign = "left";
   };
-  EquipmentSetDetails.prototype.Na = function () {
+  EquipmentSetDetails.prototype.getUpgradeType = function () {
     return 4;
   };
   EquipmentSetDetails.prototype.reset = function () {
@@ -623,7 +623,7 @@ export function initializeViewsUpgradeDetails() {
     appendEquipmentRow(this, 4);
     appendEquipmentRow(this, 5);
   };
-  SkillUpgradeDetails.prototype.Na = function () {
+  SkillUpgradeDetails.prototype.getUpgradeType = function () {
     return SKILL_UPGRADE_TYPE;
   };
   SkillUpgradeDetails.prototype.reset = function () {
@@ -678,7 +678,7 @@ export function initializeViewsUpgradeDetails() {
     this.sb.style.paddingTop = "5px";
     this.sb.style.textAlign = "left";
   };
-  SpellUpgradeDetails.prototype.Na = function () {
+  SpellUpgradeDetails.prototype.getUpgradeType = function () {
     return 6;
   };
   SpellUpgradeDetails.prototype.reset = function () {
@@ -756,7 +756,7 @@ export function initializeViewsUpgradeDetails() {
     this.vu = createElement("span", b, null, null);
     this.vu.style.paddingTop = "5px";
   };
-  MonsterLevelDetails.prototype.Na = function () {
+  MonsterLevelDetails.prototype.getUpgradeType = function () {
     return 7;
   };
   MonsterLevelDetails.prototype.reset = function () {
@@ -837,7 +837,7 @@ export function initializeViewsUpgradeDetails() {
     this.ej.style.paddingTop = "5px";
     this.ej.style.textAlign = "left";
   };
-  DungeonPurchaseDetails.prototype.Na = function () {
+  DungeonPurchaseDetails.prototype.getUpgradeType = function () {
     return 8;
   };
   DungeonPurchaseDetails.prototype.reset = function () {
@@ -905,7 +905,7 @@ export function initializeViewsUpgradeDetails() {
     this.Vg.style.width = "200px";
     this.Vg.style.textAlign = "left";
   };
-  ScrollUpgradeDetails.prototype.Na = function () {
+  ScrollUpgradeDetails.prototype.getUpgradeType = function () {
     return 12;
   };
   ScrollUpgradeDetails.prototype.reset = function () {
@@ -982,7 +982,7 @@ export function initializeViewsUpgradeDetails() {
     this.dq.style.width = "200px";
     this.dq.style.textAlign = "left";
   };
-  CastlePurchaseDetails.prototype.Na = function () {
+  CastlePurchaseDetails.prototype.getUpgradeType = function () {
     return 9;
   };
   CastlePurchaseDetails.prototype.reset = function () {
@@ -1046,7 +1046,7 @@ export function initializeViewsUpgradeDetails() {
     b.style.textAlign = "left";
     b.innerHTML = this.upgrade ? this.upgrade.lb() : "收集杀戮农场";
   };
-  FarmUpgradeDetails.prototype.Na = function () {
+  FarmUpgradeDetails.prototype.getUpgradeType = function () {
     return 10;
   };
   FarmUpgradeDetails.prototype.reset = function () {
@@ -1110,7 +1110,7 @@ export function initializeViewsUpgradeDetails() {
     b.style.textAlign = "left";
     b.innerHTML = this.upgrade ? this.upgrade.lb() : "卖掉道具得到黄金";
   };
-  CharacterLevelDetails.prototype.Na = function () {
+  CharacterLevelDetails.prototype.getUpgradeType = function () {
     return 11;
   };
   CharacterLevelDetails.prototype.reset = function () {
@@ -1266,7 +1266,7 @@ export function initializeViewsUpgradeDetails() {
     this.lr = createElement("span", c, null, null);
     this.lr.style.marginLeft = "15px";
   };
-  AchievementClaimDetails.prototype.Na = function () {
+  AchievementClaimDetails.prototype.getUpgradeType = function () {
     return 14;
   };
   AchievementClaimDetails.prototype.reset = function () {
@@ -1308,7 +1308,7 @@ export function initializeViewsUpgradeDetails() {
     this.sb = createElement("div", this.contentContainer, null, null);
     this.sb.style.padding = "5px";
   };
-  AchievementProgressDetails.prototype.Na = function () {
+  AchievementProgressDetails.prototype.getUpgradeType = function () {
     return 15;
   };
   AchievementProgressDetails.prototype.reset = function () {
@@ -1345,7 +1345,7 @@ export function initializeViewsUpgradeDetails() {
     this.sb = createElement("div", this.contentContainer, null, null);
     this.sb.style.padding = "5px";
   };
-  PointUpgradeDetails.prototype.Na = function () {
+  PointUpgradeDetails.prototype.getUpgradeType = function () {
     return 16;
   };
   PointUpgradeDetails.prototype.reset = function () {
