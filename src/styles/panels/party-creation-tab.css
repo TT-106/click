@@ -1,0 +1,227 @@
+.partyCreationIntroductionPanel {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    right: 3px;
+    height: 92px;
+
+    padding: 5px;
+    border: 1px solid #2B2B32;
+}
+
+.partySelectionHeaderContainer {
+    position: absolute;
+    top: 116px;
+    height: 19px;
+    left: 3px;
+    width: 220px;
+    padding: 5px;
+}
+
+.selectedCharactersHeaderContainer {
+    position: absolute;
+    top: 116px;
+    height: 19px;
+    left: 513px;
+    width: 220px;
+    padding: 5px;
+}
+
+.partySelectionHeaderSpan {
+    background-color: #2B2B32;
+    color: #FFF;
+    margin: 2px 0 0;
+    padding: 4px 7px;
+    width:120px;
+    text-align: center;
+}
+
+.partySelectionPanel {
+    position: absolute;
+    top: 140px;
+    left: 3px;
+    width: 500px;
+    height: 490px;
+    overflow-y: auto;
+    border: 1px solid #2B2B32;
+}
+
+.selectedCharactersPanel {
+    position: absolute;
+    top: 140px;
+    left: 513px;
+    width: 500px;
+    height: 490px;
+    overflow-y: auto;
+    border: 1px solid #2B2B32;
+}
+
+.partySelectionNameWarning {
+    position: absolute;
+    height: 25px;
+    left: 3px;
+    right: 3px;
+    bottom: 3px;
+    padding-top: 10px;
+    text-align: center;
+    font-weight: bold;
+    border: 1px solid #FA0;
+    color: #FA0;
+}
+
+.partySelectionTable {
+    border-spacing: 5px;
+    margin:3px;
+}
+
+.partySelectionTable td {
+    padding: 3px;
+}
+
+.lockedCharacterSelectionTable {
+    border: 1px solid #2B2B32;
+    background-color: #111;
+    cursor: default;
+    border-collapse: separate;
+    border-spacing: 3px;
+    width: 100%;
+    height: 76px;
+}
+
+.characterSelectionButton {
+    border: 1px solid #3AA5E6;
+    cursor: pointer;
+    border-collapse: separate;
+    border-spacing: 3px;
+    width: 100%;
+}
+.characterSelectionButton:active {
+    position: relative;
+    top: 1px;
+    cursor: pointer;
+}
+
+.deselectCharacterButton {
+    position:absolute;
+    padding:3px;
+    top: 3px;
+    width: 13px;
+    right: 3px;
+    height: 12px;
+    border: 1px solid #3AA5E6;
+    background-color: #0B0B12;
+    text-align:center;
+    z-index: 200;
+}
+
+.deselectCharacterButton:hover {
+    background-color: #2B2B32;
+    cursor: pointer;
+}
+
+.deselectCharacterButton:active {
+    top: 4px;
+    cursor: pointer;
+}
+
+.moveUpButton {
+    position:absolute;
+    padding:3px;
+    top: 3px;
+    width: 13px;
+    right: 52px;
+    height: 12px;
+    border: 1px solid #3AA5E6;
+    text-align: center;
+    background-color: #0B0B12;
+    z-index: 200;
+}
+
+.moveUpButton:hover {
+    background-color: #2B2B32;
+    cursor: pointer;
+}
+
+.moveUpButton:active {
+    top: 4px;
+    cursor: pointer;
+}
+
+.disabledMoveUpButton {
+    position:absolute;
+    padding:3px;
+    top: 3px;
+    width: 13px;
+    right: 52px;
+    height: 12px;
+    text-align: center;
+    border: 1px solid #2B2B32;
+    background-color: #222;
+    cursor: default;
+}
+
+.moveDownButton {
+    position:absolute;
+    padding:3px;
+    top: 3px;
+    width: 16px;
+    right: 26px;
+    height: 12px;
+    border: 1px solid #3AA5E6;
+    text-align: center;
+    background-color: #0B0B12;
+    z-index: 200;
+}
+
+.moveDownButton:hover {
+    background-color: #2B2B32;
+    cursor: pointer;
+}
+
+.moveDownButton:active {
+    top: 4px;
+    cursor: pointer;
+}
+
+.disabledMoveDownButton {
+    position:absolute;
+    padding:3px;
+    top: 3px;
+    width: 13px;
+    right: 26px;
+    height: 12px;
+    text-align: center;
+    border: 1px solid #2B2B32;
+    background-color: #222;
+    cursor: default;
+}
+
+.selectedCharacterContainer {
+    position:relative;
+}
+
+.selectedCharacterSelectionTable {
+    border: 1px solid #FA0;
+    border-collapse: separate;
+    border-spacing: 3px;
+}
+.errorSelectedCharacterSelectionTable {
+    border: 1px solid #F00;
+    border-collapse: separate;
+    border-spacing: 3px;
+}
+.disabledCharacterSelectionButton {
+    border: 1px solid #2B2B32;
+    background-color: #222;
+    cursor: default;
+    border-collapse: separate;
+    border-spacing: 3px;
+}
+
+.partyConfirmationPanel {
+    position: absolute;
+    bottom: 3px;
+    left: 3px;
+    right: 3px;
+    height: 48px;
+}

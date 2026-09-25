@@ -1,0 +1,49 @@
+.gameOverContentsDiv {
+    position:absolute;
+    top:115px;
+    left:45px;
+    right:45px;
+    bottom:45px;
+    
+}
+
+.gameOverTableTopRow {
+    position:absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 39px;
+}
+.gameOverTableBottomRow {
+    position:absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 39px;
+}
+
+.gameOverHeading {
+    font-size: 18px;
+    width: 300px;
+    padding: 10px;
+    margin: 5px auto;
+    color: yellow;
+}
+
+.gameOverSubHeading {
+    font-size: 16px;
+    width: 300px;
+    padding: 10px;
+    margin: 5px auto;
+}
+
+.gameOverBlurb {
+    padding: 10px;
+    width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.gameOverBonus {
+    color: #3AA5E6;
+}

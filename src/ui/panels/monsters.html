@@ -1,0 +1,76 @@
+<div id="monstersTabContent" class="tabContainer" style="display:none;">
+            <!-- Display the kill count at the top of the tab. -->
+            <div id="monsterKillCountContainer" class="monsterKillCountDiv centeredElement">
+                <table style="width:100%;">
+                    <tbody><tr>
+                        <td id="killCountPanel" style="text-align:right;">0</td>
+                        <td style="width:30px; text-align:left;background: url('spritesheet/terrain.png') -1302px -363px;height:22px;">
+                            <img src="images/Transparent.gif" title="Kills" style="width:100%;height:15px;">
+                        </td>
+                    </tr>
+                </tbody></table>
+            </div>
+
+            <div class="monsterUpgradesHeaderContainer">
+                <div class="monsterUpgradesHeaderSpan">升级怪物</div>
+            </div>
+            <div id="monsterUpgradesContainer" class="monsterUpgradesContainer">
+                <div id="monsterUpgradeButtonsContainer" class="monsterUpgradeButtonsContainer"></div>
+
+                <table class="monsterUpgradeValuesContainer">
+                    <tbody><tr>
+                        <th class="upgradeName">升级</th>
+                        <th class="upgradeValue">数值</th>
+                    </tr>
+                    <tr>
+                        <td class="upgradeName">每次杀怪黄金掉落几率</td>
+                        <td id="goldDropChance" class="upgradeValue">0.5%</td>
+                    </tr>
+                    <tr>
+                        <td class="upgradeName">每次最多掉落黄金数量</td>
+                        <td id="maxGoldPerDrop" class="upgradeValue">20 g</td>
+                    </tr>
+                    <tr>
+                        <td class="upgradeName">每次最少掉落黄金数量</td>
+                        <td id="minGoldPerDrop" class="upgradeValue">0 g</td>
+                    </tr>
+                    <tr>
+                        <td class="upgradeName">每次杀怪道具掉落几率</td>
+                        <td id="itemDropChance" class="upgradeValue">0.9%</td>
+                    </tr>
+                    <tr>
+                        <td class="upgradeName">每次杀怪卷轴掉落几率</td>
+                        <td id="scrollDropChance" class="upgradeValue">0.9%</td>
+                    </tr>
+                    <tr>
+                        <td class="upgradeName">每次杀怪药剂掉落几率</td>
+                        <td id="potionDropChance" class="upgradeValue">0.1%</td>
+                    </tr>
+                    <tr>
+                        <td class="upgradeName">更高等级道具掉落几率</td>
+                        <td id="itemLevelBonus" class="upgradeValue">10%</td>
+                    </tr>
+                    <tr>
+                        <td class="upgradeName">更加稀有道具掉落几率</td>
+                        <td id="itemRarityChance" class="upgradeValue">5%</td>
+                    </tr>
+                    <tr>
+                        <td class="upgradeName">遇到财宝箱几率</td>
+                        <td id="treasureChestChance" class="upgradeValue">5%</td>
+                    </tr>
+                    <tr>
+                        <td class="upgradeName">房间内最多怪物数量</td>
+                        <td id="maxMonstersPerRoom" class="upgradeValue">25</td>
+                    </tr>
+                    <tr>
+                        <td class="upgradeName">房间内最少怪物数量</td>
+                        <td id="minMonstersPerRoom" class="upgradeValue">0</td>
+                    </tr>
+                </tbody></table>
+            </div>
+
+            <div class="monstersTabContainer">
+                <div id="monsterTabMenu" class="tabMenu"></div>
+                <div id="monsterTabContainerParent" class="tabContent borderedContainer"></div>
+            </div>
+        </div>

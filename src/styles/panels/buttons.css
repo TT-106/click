@@ -1,0 +1,33 @@
+.upgradeButton {
+    padding:3px;
+    border: 1px solid #3AA5E6;
+    
+    cursor: pointer;
+}
+
+.upgradeButton:hover {
+    background-color: #2B2B32;
+    cursor: pointer;
+}
+
+.upgradeButton:active {
+    position: relative;
+    top: 1px;
+    cursor: pointer;
+}
+
+.disabledUpgradeButton {
+    padding:3px;
+    border: 1px solid #2B2B32;
+
+    cursor: default;
+    color:#AAA;
+}
+
+.ownedUpgradeButton {
+    padding:3px;
+    border: 1px solid #FA0;
+
+    background-color: #0B0B12;
+    cursor: default;
+}

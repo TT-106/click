@@ -1,0 +1,459 @@
+.gameTabTopLeftPanel {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    height: 450px;
+    width: 740px;
+    border: 1px solid #2B2B32;
+    z-index: -1;
+}
+
+.encounterNotificationPanel {
+    position: absolute;
+    top: 415px;
+    left: 3px;
+    width: 740px;
+    text-align: center;
+    font-weight: bold;
+    z-index: 100; 
+    display:none;
+}
+
+.dungeonNotificationDiv {
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 5px;
+    padding-right: 5px;
+    background-color: #2B2B32;
+    opacity: 0.8;
+    display:inline-block; 
+    border: 1px solid #2B2B32;
+}
+
+.encounterNotificationDiv {
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 5px;
+    padding-right: 5px;
+    background-color: #2B2B32;
+    opacity: 0.8;
+    display:inline-block; 
+    border: 1px solid #2B2B32;
+}
+
+.bossEncounterNotificationDiv {
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 5px;
+    padding-right: 5px;
+    background-color: #3AA5E6;
+    color: black;
+    display:inline-block; 
+    border: 1px solid #2B2B32;
+}
+
+.gameTabLootButtonPanel {
+    position: absolute;
+    top: 10px;
+    right: 290px;
+    height: 54px;
+    width: 180px;
+    z-index: 100; 
+}
+
+.lootButton {
+    padding:3px;
+    border: 1px solid #3AA5E6;
+    background-color: #0B0B12;
+    opacity: 0.9;
+    text-align: center;
+    cursor: pointer;
+}
+
+.lootButton:hover {
+    background-color: #2B2B32;
+    opacity: 0.9;
+    cursor: pointer;
+}
+
+.lootButton:active {
+    position: relative;
+    top: 1px;
+    cursor: pointer;
+}
+
+.lootButtonDisabled {
+    padding:3px;
+    border: 1px solid #2B2B32;
+    text-align: center;
+    background-color: #222;
+    opacity: 0.9;
+    cursor: default;
+}
+
+.gameTabScrollButtonContainer {
+    position: absolute;
+    top: 456px;
+    left: 2px;
+}
+
+.gameTabScrollButtonContainer td {
+    padding-top:0;
+    padding-bottom:0;
+}
+
+.scrollButton {
+    padding:2px;
+    width: 116px;
+    border: 1px solid #3AA5E6;
+    text-align: center;
+    cursor: pointer;
+    background-color: #0B0B12;
+}
+
+.scrollButton:hover {
+    background-color: #2B2B32;
+    cursor: pointer;
+}
+
+.scrollButton:active {
+    position: relative;
+    top: 1px;
+    cursor: pointer;
+}
+
+.scrollButtonDisabled {
+    padding:2px;
+    width: 116px;
+    border: 1px solid #2B2B32;
+    text-align: center;
+    cursor: default;
+    color: #AAA;
+}
+
+.potionCellDiv {
+    position:absolute;
+    
+    width: 180px;
+}
+
+.potionContentContainer {
+    position:absolute;
+    top: 0;
+    left: 0;
+    height: 43px;
+    width: 192px;
+
+}
+
+.dropPotionButton {
+    position:absolute;
+    padding:3px;
+    top: 2px;
+    width: 13px;
+    right: 2px;
+    height: 12px;
+    border: 1px solid #3AA5E6;
+    text-align: center;
+    background-color: #0B0B12;
+    z-index: 200;
+}
+
+.dropPotionButton:hover {
+    background-color: #2B2B32;
+    cursor: pointer;
+}
+
+.dropPotionButton:active {
+    top: 3px;
+    cursor: pointer;
+}
+
+.potionButton {
+    display: block;
+    position:absolute;
+    padding:3px;
+    top: 0;
+    left: 0;
+    right:0;
+    bottom:0;
+
+    border: 1px solid #3AA5E6;
+    text-align: left;
+    cursor: pointer;
+    background-color: #0B0B12;
+}
+
+.potionButtonActive {
+    display: block;
+    position:absolute;
+    padding:3px;
+    top: 0;
+    left: 0;
+    right:0;
+    bottom:0;
+
+    border: 1px solid #FA0;
+    text-align: left;
+    cursor: default;
+    background-color: transparent;
+    z-index: 100;
+}
+
+.potionButtonDisabled {
+    display: block;
+    position:absolute;
+    padding:3px;
+    top: 0;
+    left: 0;
+    right:0;
+    bottom:0;
+    border: 1px solid #2B2B32;
+    text-align: left;
+    cursor: default;
+    color: #AAA;
+}
+
+.potionButtonLocked {
+    display: block;
+    position:absolute;
+    padding:3px;
+    top: 0;
+    left: 0;
+    right:0;
+    bottom:0;
+    border: 1px solid #2B2B32;
+    text-align: left;
+    cursor: default;
+    background-color: #111;
+    color: #AAA;
+}
+
+.potionButtonProgressSlider {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: #FA0;
+    opacity: 0.4;
+    width: 0;
+    display: none;
+    cursor: default;
+}
+
+.potionButton:hover {
+    background-color: #2B2B32;
+    cursor: pointer;
+}
+
+.potionButton:active {
+    top: 1px;
+    bottom: -1px;
+    cursor: pointer;
+}
+
+.dungeonNotificationPanel {
+    position: absolute;
+    top: 10px;
+    left: 3px;
+    width: 740px;
+    text-align: center;
+    font-weight: bold;
+    z-index: 100; 
+    display:none;
+}
+
+.gameTabRightPanel {
+    position: absolute;
+    top: 3px;
+    left: 748px;
+    bottom: 3px;
+    right: 3px;
+}
+
+.gameTabRightCurrencyPanel {
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    height:25px;
+
+    border: 1px solid #2B2B32;
+
+    text-align: right;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.gameTabRightAdventurePointsPanel {
+    position:absolute;
+    top: 30px;
+    left:0;
+    right:0;
+    height:25px;
+
+    border: 1px solid #2B2B32;
+
+    text-align: right;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.gameTabBlankAdventurerInfo {
+    height: 33px;
+    border: 1px solid #2B2B32;
+    margin-right: 7px;
+    width: 622px;
+    margin-top: 2px;
+}
+
+.gameTabLockedAdventurerInfo {
+    height: 33px;
+    border: 1px solid #2B2B32;
+    margin-right: 7px;
+    width: 622px;
+    margin-top: 2px;
+    background-color: #111;
+}
+
+.adventurerInfoTable td {
+    padding: 0;
+}
+
+.gameTabRightPanelUpgradeButtonContainer {
+    position:absolute;
+    top:57px;
+    left:0;
+    right:0;
+    bottom:187px;
+
+    padding-bottom: 3px;
+    padding-left: 3px;
+    padding-right: 3px;
+    border: 1px solid #2B2B32;
+    margin-top: 3px;
+
+    overflow-y: scroll;
+}
+
+.gameTabBottomPanel {
+    position: absolute;
+    top: 498px;
+    left: 3px;
+    bottom: 3px;
+    width: 640px;
+}
+
+.gameTabPotionPanel {
+    position: absolute;
+    top: 499px; 
+    left: 630px;
+    bottom: 3px;
+    right: 3px;
+}
+
+.gameTabItemDiv {
+    padding: 3px;
+    margin-bottom: 3px;
+    border: 1px solid #2B2B32;
+}
+
+.gameTabAdventurerInfo {
+    position:absolute;
+
+}
+
+.gameTabAdventurerIconCell {
+    vertical-align: top;
+    width:54px;
+    
+}
+
+.gameTabAdventurerSliderCell {
+    width:75px;position:relative;
+}
+
+.gameTabAdventurerSliderDiv {
+    
+    position:absolute;top:0;left:0;width:100%;
+
+    margin-top:2px;
+}
+
+.gameTabAdventurerHealthSlider {
+    background-color: #F00;
+    height:15px;
+
+    position:absolute;
+    top:0;
+    left:0;
+}
+
+.gameTabAdventurerSpiritPointsSlider {
+    background-color: #00F;
+    height:15px;
+
+    position:absolute;
+    top:0;
+    left:0;
+}
+
+.gameTabAdventurerSliderOverlay {
+    position:absolute;text-align: right;
+    height:100%;
+    top:0;left:0;width:70px;z-index: 10;
+
+    padding-top:2px;
+}
+
+.gameTabAdventurerInfoHpAc {
+    width:40px;text-align:right;
+}
+
+.gameTabAdventurerInfoEffect {
+    width:29px;
+    
+    text-align:center;
+    border:1px solid #2B2B32;
+    
+    margin-left: 2px;
+    height: 29px;
+    
+}
+
+.gameTabAdventurerInfoTurn {
+    width:150px;text-align:left;
+}
+
+.gameTabCharacterDiv {
+    width: 345px;
+    float: left;
+    margin-top: 3px;
+    margin-left: 3px;
+    border: 1px solid #2B2B32;
+}
+
+.characterImage {
+    width: 54px;
+    height: 54px;
+}
+
+.terrainImage {
+    width: 54px;
+    height: 54px;
+}
+
+.itemImage {
+    width: 32px;
+    height: 32px;
+}
+.potionImage {
+    width: 32px;
+    height: 32px;
+}
+
+.killsImage {
+    width: 32px;
+    height: 22px;
+    border: 1px solid #2B2B32;
+}

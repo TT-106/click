@@ -1,0 +1,140 @@
+.inventoryTabContents {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.inventoryTabEquippedItemsHeaderContainer {
+    position: absolute;
+    top: 0;
+    height: 19px;
+    left: 3px;
+    width: 220px;
+    padding: 5px;
+}
+
+.inventoryTabEquippedItems {
+    position: absolute;
+    top: 30px;
+    left: 3px;
+    right: 3px;
+    height: 225px;
+    border: 1px solid #2B2B32;
+}
+
+.inventoryTabInventoryHeaderContainer {
+    position: absolute;
+    top: 267px;
+    height: 19px;
+    left: 3px;
+    width: 220px;
+    padding: 5px;
+}
+
+.inventoryTabInventoryList {
+    position: absolute;
+    top: 297px;
+    left: 3px;
+    right: 3px;
+    bottom: 3px;
+    overflow-y: scroll;
+    
+    border: 1px solid #2B2B32;
+}
+
+.equippedItemSlotDiv {
+    margin: 3px;
+    padding: 3px;
+    
+    border: 1px solid #2B2B32;
+}
+
+.equipButtonDiv {
+    padding:3px;
+    width:90px;
+    
+    border: 1px solid #2B2B32;
+    text-align: center;
+    cursor: pointer;
+}
+
+.equipButtonDiv:hover {
+    background-color: #2B2B32;
+    color: #EEE;
+    cursor: pointer;
+}
+
+.equipButtonDiv:active {
+    position: relative;
+    top: 1px;
+    cursor: pointer;
+}
+
+.itemValueBetter {
+    color: #0F0;
+    
+}
+
+.itemValueWorse {
+    color: #F00;
+    
+}
+
+.equipAllButtonContainer {
+    position: absolute;
+    top: 258px;
+    height: 26px;
+    right: 3px; 
+    width: 150px;
+    padding: 5px;
+
+}
+
+.equipAllButton {
+    padding:3px;
+    width:200px;
+    
+    border: 1px solid #2B2B32;
+    text-align: center;
+    cursor: pointer;
+}
+
+.equipAllButton:hover {
+    background-color: #2B2B32;
+    color: #EEE;
+    cursor: pointer;
+}
+
+.equipAllButton:active {
+    position: relative;
+    top: 1px;
+    cursor: pointer;
+}
+
+.disabledEquipAllButton {
+    padding:3px;
+    width:200px;
+    border: 1px solid #2B2B32;
+    text-align: center;
+    color: #AAA;
+    background-color: #2B2B32;
+    cursor: default;
+}
+
+.itemRarityCommon {
+    color: #FFF;
+}
+.itemRarityUncommon {
+    color: #AF0;
+}
+.itemRarityRare {
+    color: #08F;
+}
+.itemRarityHistoric {
+    color: #E4E;
+}
+.itemRarityAncient {
+    color: #EF8;
+}

@@ -1,0 +1,89 @@
+body {
+    font-family: "Arial", Gadget, sans-serif;
+
+    font-size: 12px;
+    font-weight: normal;
+    color: #FFF;
+    background-color: #0B0B12;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+a, a:hover, a:visited, a:active {
+    color: inherit;
+}
+
+div {
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
+.gameContainer {
+    position: absolute;
+    width: 1024px;
+    top: 10px;
+    margin-left: -512px;
+    left: 50%;
+    height: 718px;
+}
+
+.pauseButtonContainer {
+    position:absolute;
+    right: 0;
+    top:0;
+    text-align:center;
+
+    padding:3px;
+    width: 55px;
+    height: 20px;
+}
+
+.gameTitleContainer {
+    position: absolute;
+    top: 1px;
+    right: 60px;
+    width: 220px;
+    height: 20px;
+    padding-top:3px;
+    padding-right:5px;
+    text-align: right;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.sectionTitle {
+    font-weight: bold;
+    text-align: left;
+}
+
+.centeredElement {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.scrollingContainer {
+    overflow-y: scroll;
+}
+
+.borderedContainer {
+    border: 1px solid #2B2B32;
+}
+
+.topMargin {
+    margin-top: 3px;
+}
+
+.leftRightMargin {
+    margin-left: 3px;
+    margin-right: 3px;
+}
+
+.lockedSpanText {
+    display: block;
+    margin-top:10px;
+    margin-left: 10px;
+}

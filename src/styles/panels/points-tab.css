@@ -1,0 +1,111 @@
+.achievementsContainer {
+    position: absolute;
+    top: 73px;
+    bottom: 3px;
+    width: 639px;
+    right: 3px;
+
+    border: 1px solid #2B2B32;
+    overflow-y: scroll;
+
+    padding: 0;
+}
+
+.adventurePointsDiv {
+    padding:3px;
+    width:200px;
+    margin-top: 5px;
+    font-weight: bold;
+    font-size: 14px;
+    text-align: center;
+    border: 1px solid #2B2B32;
+}
+
+.achievementsHeaderContainer {
+    position: absolute;
+    top: 44px;
+    height: 19px;
+    left: 377px;
+    width: 160px;
+    padding: 5px;
+}
+
+.achievementsHeaderSpan {
+    background-color: #2B2B32;
+    color: #FFF;
+    margin: 2px 0 0;
+    padding: 4px 7px;
+    
+    text-align: center;
+}
+
+.pointsBreakdownHeaderContainer {
+    position: absolute;
+    top: 44px;
+    height: 19px;
+    left: 3px;
+    width: 220px;
+    padding: 5px;
+}
+
+.pointsBreakdownHeaderSpan {
+    background-color: #2B2B32;
+    color: #FFF;
+    margin: 2px 0 0;
+    padding: 4px 7px;
+    width:120px;
+    text-align: center;
+}
+
+.pointsBreakdownContainer {
+    position: absolute;
+    top: 73px;
+    bottom: 230px;
+    width: 360px;
+    left: 3px;
+
+    border: 1px solid #2B2B32;
+
+    padding: 5px;
+}
+
+.pointUpgradesHeaderContainer {
+    position: absolute;
+    top: 455px;
+    height: 19px;
+    left: 3px;
+    width: 220px;
+    padding: 5px;
+}
+
+.pointUpgradesHeaderSpan {
+    background-color: #2B2B32;
+    color: #FFF;
+    margin: 2px 0 0;
+    padding: 4px 7px;
+    width:120px;
+    text-align: center;
+}
+
+.pointUpgradesContainer {
+    position: absolute;
+    top: 485px;
+    bottom: 3px;
+    width: 360px;
+    left: 3px;
+
+    border: 1px solid #2B2B32;
+    overflow-y: scroll;
+
+    padding: 5px;
+}
+
+.pointsTable {
+    
+    width:100%;
+}
+
+.pointsTableLabel {
+    text-align:right;
+    width: 120px;
+}

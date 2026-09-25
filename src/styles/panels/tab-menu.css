@@ -1,0 +1,76 @@
+.tabMenu {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 30px;
+}
+
+.tabMenu ul {
+    position: absolute;
+    bottom: 0;
+    list-style: none;
+    padding: 0;
+    margin: 5px 0 0;
+}
+
+.tabMenu li {
+    float: left;
+
+    position: relative;
+    top: 1px;
+    border: 1px solid #2B2B32;
+    border-bottom-width: 0;
+    margin: 0 0 0 4px;
+}
+
+.tabMenu a {
+    text-decoration: none;
+    display: block;
+    padding: 4px 10px;
+    text-align: center;
+    cursor: pointer;
+    
+}
+
+.tabMenu a:hover {
+    background-color: #3AA5E6;
+}
+
+.tabMenu .selectedTab {
+    position: relative;
+    top: 1px;
+    border: 1px solid #2B2B32;
+}
+
+.tabMenu .selectedTab a {
+    background-color: #2B2B32;
+    
+}
+
+.tabContent {
+    border-top: 1px solid #2B2B32;
+    position: absolute;
+    top: 30px;
+    right: 0;
+    left: 0;
+    bottom: 0;
+}
+
+.tabContainer {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+
+.mainTabContainer {
+    border-left: 1px solid #2B2B32;
+    border-right: 1px solid #2B2B32;
+    border-bottom: 1px solid #2B2B32;
+}
+
+.tabMenu .tabHighlighted a {
+    background-color: #3AA5E6;
+}

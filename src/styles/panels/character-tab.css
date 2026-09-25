@@ -1,0 +1,56 @@
+.characterLevelUpContainer {
+    position: absolute;
+    top: 3px;
+    height: 60px;
+    left: 3px;
+    width: 240px;
+    padding: 0;
+}
+
+.characteristicsHeaderContainer {
+    position: absolute;
+    top: 73px;
+    height: 19px;
+    left: 3px;
+    width: 220px;
+    padding: 5px;
+}
+
+.characteristicsHeaderSpan {
+    background-color: #2B2B32;
+    color: #FFF;
+    margin: 2px 0 0;
+    padding: 4px 7px;
+    width:120px;
+    text-align: center;
+}
+
+.characterPropertiesContainer {
+    position: absolute;
+    top: 103px;
+    bottom: 3px;
+    left: 3px;
+    padding-left: 3px;
+    padding-right: 3px;
+    width: 190px;
+    border: 1px solid #2B2B32;
+}
+
+.characterTabContainer {
+    position: absolute;
+    top: 73px;
+    bottom: 3px;
+    left: 204px;
+    right: 3px;
+    padding: 3px;
+}
+
+.characteristicsTable {
+    margin-top:10px;
+    width:100%;
+}
+
+.characteristicsTableLabel {
+    text-align:right;
+    width: 110px;
+}

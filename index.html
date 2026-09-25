@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#151715">
+  <meta name="description" content="组建你的冒险小队，探索永冬大陆。Clickpocalypse II 本地重构版。">
+  <title>末日危机 II · 永冬远征</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./src/styles/game.css">
+  <link rel="stylesheet" href="./src/styles/app.css">
+  <script type="module" src="./src/app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳至游戏内容</a>
+  <header class="app-header">
+    <a class="brand" href="./" aria-label="末日危机 II 首页"><span class="brand-mark" data-icon="castle"></span><span>末日危机 <b>II</b><small>CLICKPOCALYPSE</small></span></a>
+    <div class="header-divider"></div><span class="header-caption">永冬远征<span>THE EVERLASTING WINTER</span></span>
+    <div class="header-actions"><span id="save-status" class="save-status">本地冒险</span><button id="open-saves" class="quiet-button"><span data-icon="save"></span><span>存档管理</span></button><button id="header-settings" class="icon-button" aria-label="游戏设置"><span data-icon="settings"></span></button></div>
+  </header>
+  <div class="app-layout">
+    <aside class="sidebar">
+      <div class="nav-label">冒险手册</div>
+      <nav aria-label="主导航" id="main-nav">
+        <button data-page="expedition" class="nav-item active" aria-current="page"><span data-icon="compass"></span><span>远征</span><span class="nav-index">01</span></button>
+        <button data-page="heroes" class="nav-item" disabled><span data-icon="users"></span><span>冒险者</span></button>
+        <button data-page="dungeons" class="nav-item" disabled><span data-icon="dungeon"></span><span>地牢</span></button>
+        <button data-page="castles" class="nav-item" disabled><span data-icon="castle"></span><span>城堡</span></button>
+        <button data-page="monsters" class="nav-item" disabled><span data-icon="skull"></span><span>怪物图鉴</span></button>
+        <button data-page="points" class="nav-item"><span data-icon="medal"></span><span>成就与点数</span></button>
+      </nav>
+      <div class="sidebar-bottom"><button data-page="settings" class="nav-item"><span data-icon="settings"></span><span>设置与帮助</span></button><div class="edition-note"><span class="status-dot"></span> 本地运行 <small>RESTORED EDITION · 2.0</small></div></div>
+    </aside>
+    <main id="main" tabindex="-1">
+      <div id="loading-screen" class="loading-screen"><span class="loading-mark" data-icon="compass"></span><h1>正在展开冒险地图</h1><p id="loading-message">载入世界、职业与像素资源…</p><button class="primary-button" id="retry-load" hidden>重新载入</button></div>
+      <div id="app-content" hidden>
+        <div class="page-heading"><div><div class="eyebrow" id="page-eyebrow">远征 / 准备出发</div><h1 id="page-title">每段传奇，都始于一支小队。</h1><p id="page-description">召集冒险者，走进永冬笼罩的大陆。</p></div><span class="run-indicator">第 <b id="run-number">1</b> 周目</span></div>
+        <section id="setup-screen" aria-label="组建冒险队伍">
+          <div class="recruit-panel"><div class="section-heading"><h2>招募冒险者</h2><span>选择职业加入队伍</span></div><div id="class-list" class="class-list"></div><div class="locked-heading"><span data-icon="lock"></span> 更多传说，等待解锁</div><div id="locked-classes" class="locked-classes"></div></div>
+          <div class="party-builder"><div class="section-heading"><h2>你的远征小队</h2><span id="party-count" class="count-label">0 / 4</span></div><div class="party-toolbar"><span>阵容与出场顺序</span><button id="recommended-party" class="text-button">使用推荐阵容 <span>↗</span></button></div><div id="party-slots" class="party-slots"></div><p id="party-validation" class="party-validation" aria-live="polite"></p><button id="begin-adventure" class="primary-button begin-button" disabled><span>开始远征</span><span data-icon="arrow"></span></button><div class="field-guide"><span data-icon="book"></span><div><h3>你做决定，他们去冒险。</h3><p>队员会自动探索、战斗和拾取装备。升级技能、施放卷轴、经营地牢，让小队走得更远。</p><span>自动战斗 <i>·</i> 离线成长 <i>·</i> 永久成就</span></div></div></div>
+        </section>
+        <section id="expedition-screen" hidden aria-label="远征工作台">
+          <div id="offline-notice" class="notice" hidden>正在结算离线冒险… <strong id="offline-progress"></strong></div>
+          <div class="expedition-grid"><div class="expedition-primary"><section class="map-panel"><div class="map-heading"><div><span data-icon="compass"></span><h2 id="location-name">永冬荒野</h2><span id="floor-label">世界探索</span></div><span id="map-state" class="map-state">自动探索中</span></div><div id="map-stage" class="map-stage"><div id="pause-overlay" class="pause-overlay" hidden><span data-icon="pause"></span><strong>冒险已暂停</strong><span>按空格继续</span></div></div><div class="map-footer"><span>回合 <b id="turn-count">0</b><span class="muted"> · 自动探索与战斗</span></span><button id="toggle-pause" class="quiet-button"><span data-icon="pause"></span><span id="pause-label">暂停</span><kbd>Space</kbd></button></div></section><section class="scroll-section"><div class="section-heading"><h2>战术卷轴</h2><span>在关键时刻扭转战局</span></div><div id="scrolls-mount"></div></section><section class="heroes-section"><div class="section-heading"><h2>远征小队</h2><button id="manage-heroes" class="text-button">管理队伍 ↗</button></div><div id="hero-list" class="hero-list"></div></section></div>
+          <aside class="expedition-secondary"><section class="resources-panel"><div class="section-heading"><h2>冒险收获</h2><span class="tiny-label">RESOURCES</span></div><div class="resource-grid"><div><span class="resource-label gold">黄金</span><strong id="resource-gold">0</strong></div><div><span class="resource-label">击杀</span><strong id="resource-kills">0</strong></div><div><span class="resource-label">经验 XP</span><strong id="resource-xp">0</strong></div><div><span class="resource-label">冒险点数 AP</span><strong id="resource-ap">0</strong></div></div></section><section class="upgrades-panel"><div class="section-heading"><h2>成长与升级</h2><span class="tiny-label">UPGRADES</span></div><div id="upgrades-mount"></div></section><section class="potions-panel"><div class="section-heading"><h2>药水背包</h2><span>拾取后可使用</span></div><div id="potions-mount"></div></section></aside></div>
+          <section class="journal-panel"><div class="journal-summary"><h2>远征日志</h2><p>发现 <b id="discovered-count">0</b> 座地牢 <span> / </span> 已清理 <b id="cleared-count">0</b></p></div><ol id="journal-entries"></ol></section>
+        </section>
+        <section id="legacy-screen" hidden aria-label="游戏详情"><div id="hero-tabs" class="hero-tabs" hidden></div><p class="legacy-scroll-hint">详细面板可左右滚动查看。</p><div id="legacy-viewport" class="legacy-viewport"><div id="legacy-host"></div></div></section>
+        <section id="settings-screen" class="settings-screen" hidden aria-label="游戏设置">
+          <div class="settings-column"><h2>冒险偏好</h2><label class="setting-row"><span><strong>法术特效</strong><small>显示战斗中的法术与粒子动画</small></span><input type="checkbox" data-option="effects"></label><label class="setting-row"><span><strong>战斗浮动文字</strong><small>显示伤害、治疗和状态文字</small></span><input type="checkbox" data-option="text"></label><label class="setting-row"><span><strong>地图叠加</strong><small>显示地图导航信息</small></span><input type="checkbox" data-option="map"></label><label class="setting-row"><span><strong>离线收益</strong><small>下次返回时结算离线期间的冒险</small></span><input type="checkbox" data-option="offline"></label><label class="setting-row"><span><strong>后台运行</strong><small>切换标签页后仍累计冒险时间</small></span><input type="checkbox" data-option="background"></label><label class="setting-row"><span><strong>显示帧率</strong><small>在地图上查看实时渲染帧率</small></span><input type="checkbox" data-option="fps"></label><button id="settings-save" class="secondary-button">保存设置</button></div>
+          <div class="help-column"><h2>冒险指南</h2><details open><summary>我需要一直点击吗？</summary><p>不需要。队伍会自主探索和战斗。你可以花费经验升级角色，用击杀数解锁成长加成，或在战斗中使用卷轴和药水。</p></details><details><summary>如何获得更好的装备？</summary><p>冒险者自动拾取和更换装备。点击队员可查看属性、背包与技能。开启宝箱和升级掉落，也能加快成长。</p></details><details><summary>生命值归零会怎样？</summary><p>队员会暂时昏迷，恢复后继续战斗。合理搭配前排、治疗与远程职业，让冒险更顺利。</p></details><details><summary>存档保存在哪里？</summary><p>进度每 30 秒保存在当前浏览器。存档与访问地址、浏览器绑定。更换设备前，请在「存档管理」中导出 .c2save 文件。支持原版存档代码。</p></details><div class="shortcuts"><h3>键盘操作</h3><div><span>暂停 / 继续冒险</span><kbd>Space</kbd></div><div><span>保存进度</span><kbd>Ctrl S</kbd></div><div><span>关闭弹窗</span><kbd>Esc</kbd></div></div><div class="credits"><strong>CLICKPOCALYPSE II</strong><p>原作 MINMAXIA · 像素美术 David E. Gervais</p><p>图块按 <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener noreferrer">CC BY 3.0</a> 授权。保留原版美术及署名。</p><button id="original-info" class="text-button">游戏统计与原版资料 ↗</button></div></div>
+        </section>
+        <footer class="app-footer"><span>CLICKPOCALYPSE II <i>/</i> 永冬远征</span><span>世界很大，慢慢冒险。</span></footer>
+      </div>
+    </main>
+  </div>
+  <dialog id="save-dialog" aria-labelledby="save-dialog-title"><div class="dialog-heading"><div><span class="eyebrow">ADVENTURE ARCHIVE</span><h2 id="save-dialog-title">保存这段冒险</h2></div><button class="icon-button" id="close-saves" aria-label="关闭存档管理"><span data-icon="close"></span></button></div><p>进度自动保存在此浏览器。导出一份存档，把冒险随身带走。</p><div class="dialog-actions"><button id="save-now" class="secondary-button"><span data-icon="save"></span>立即保存</button><button id="export-save" class="primary-button">导出存档 ↓</button></div><details class="import-section"><summary>导入已有存档</summary><label class="file-label" for="save-file">选择 .c2save 或 .txt 文件</label><input id="save-file" type="file" accept=".c2save,.txt"><label for="save-code">或粘贴原版存档代码</label><textarea id="save-code" rows="4" spellcheck="false" placeholder="粘贴完整存档代码…"></textarea><p class="form-note">载入将替换当前进度，原进度会自动留作备份。</p><button id="import-save" class="secondary-button">载入并备份当前进度</button><p id="import-error" role="alert" class="form-error"></p></details><details class="recovery-section"><summary>恢复与重新开始</summary><p>恢复最近一次保存前的备份，或导出原始本地文件。</p><div class="dialog-actions"><button id="restore-backup" class="secondary-button">恢复最近备份</button><button id="export-original" class="quiet-button">导出本地原文件</button></div><label for="reset-confirm">重新开始会清除本周目与永久成长。输入「重新开始」确认。</label><input id="reset-confirm" autocomplete="off" placeholder="重新开始"><button id="reset-game" class="danger-button" disabled>重新开始冒险</button></details></dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden><span id="toast-message"></span><button id="dismiss-toast" class="icon-button" aria-label="关闭提示">×</button></div>
+  <noscript>请启用 JavaScript 以运行游戏。</noscript>
+</body>
+</html>

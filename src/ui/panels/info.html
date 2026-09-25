@@ -1,0 +1,101 @@
+<div id="infoTabContent" class="tabContainer" style="display:none;">
+            <div id="infoTabSaveLoadContainer" class="infoTabSaveLoadContainer">
+                <div class="sectionTitle">存档</div>
+
+                <div class="saveButtonContainer">
+                    <div id="saveButton" class="saveButton" style="float:left;" title="Saves your current progress. This happens automatically.">保存游戏</div>
+
+                    <div id="lastSaveDiv" class="buttonNoteDiv">最后保存于: 从未</div>
+                </div>
+
+                <div id="firstResetButtonContainer" class="saveButtonContainer">
+                    <div id="firstResetButton" class="saveButton" style="float:left;" title="Starts the game over completely. No bonuses. Level 1 with no gold.">重置游戏</div>
+
+                    <div class="buttonNoteDiv">从头开始游戏(这不会删除'重生'数据).</div>
+                </div>
+                <div id="resetConfirmContainer" class="exportImportSaveContainer" style="margin-bottom:5px;">
+                    <div>你确定要清除所有进度重新开始?</div>
+                    <div>注意:这不会删除'重生'数据(如果有这个功能).</div>
+
+                    <div id="realResetButton" class="saveButton" style="margin-top:5px; float:left;" title="Starts the game over completely. No bonuses. Level 1 with no gold.">重置游戏</div>
+
+                    <div id="cancelResetButton" class="saveButton" style="margin-top:5px; margin-left:5px; float:left;">取消</div>
+                </div>
+
+                <div id="firstDeleteSaveButtonContainer" class="saveButtonContainer">
+                    <div id="firstDeleteButton" class="saveButton" style="float:left;" title="This will completely wipe out all of your progress and start you over from the beginning.">删除存档</div>
+
+                    <div class="buttonNoteDiv">清除所有进度,包括'重生'数据.</div>
+                </div>
+                <div id="deleteSaveConfirmContainer" class="exportImportSaveContainer" style="margin-bottom:5px;">
+                    <div>这将清除包括重生在内的所有数据.</div>
+                    <div style="font-weight:bold;">进行这个操作前,推荐您先导出存档进行备份.</div>
+
+                    <div id="realDeleteButton" class="saveButton" style="margin-top:5px; float:left;" title="Starts the game over completely.">删除存档</div>
+
+                    <div id="cancelDeleteButton" class="saveButton" style="margin-top:5px; margin-left:5px; float:left;">取消</div>
+                </div>
+
+                <div class="saveButtonContainer">
+                    <div id="exportSaveButton" class="saveButton" title="Lets you copy your progress to the clipboard.">导出存档</div>
+                </div>
+                <div id="exportSaveContainer" class="exportImportSaveContainer">
+                    <label for="exportSaveInput">复制/黏贴来导出:</label>
+                    <input id="exportSaveInput" style="width:450px;margin-top:5px;" type="text">
+
+                    <div id="cancelExportButton" class="saveButton" style="margin-top:5px;">取消</div>
+                </div>
+
+                <div class="saveButtonContainer">
+                    <div id="importSaveButton" class="saveButton">导入存档</div>
+                </div>
+                <div id="importSaveContainer" class="exportImportSaveContainer">
+                    <label for="importSaveInput">黏贴之前导出的存档来导入:</label>
+                    <input id="importSaveInput" style="width:450px;margin-top:5px;" type="text">
+
+                    <div id="importErrorMessage" style="font-weight:bold; color:red; display:none;">错误:无效的存档数据.</div>
+                    <div id="importSuccessMessage" style="font-weight:bold; color:green; display:none;">成功导入存档.</div>
+                    <div>
+                        <div id="importOkButton" class="saveButton" style="margin-top:5px; float:left;">导入</div>
+                        <div id="importCloseButton" class="saveButton" style="margin-top:5px; margin-left:5px; float:left;">取消</div>
+                    </div>
+                </div>
+                                <div class="saveButtonContainer">
+                    
+                </div>
+
+            </div>
+
+            <div id="statisticsContainer" class="infoTabStatisticsContainer"></div>
+
+            
+
+            
+
+            
+            <div id="gameOptionsContainer" class="infoTabGameOptions">
+                <form>
+                    <div class="sectionTitle">画面渲染选项</div>
+                    <div>
+                        <input id="infoTextEnabledCheckbox" type="checkbox"> <label for="infoTextEnabledCheckbox">文字效果渲染</label>
+                        <br>
+                        <input id="spellEffectsEnabledCheckbox" type="checkbox"> <label for="spellEffectsEnabledCheckbox">法术效果渲染</label>
+                        <br>
+                        <input id="mapOverlayEnabledCheckbox" type="checkbox"> <label for="mapOverlayEnabledCheckbox">地图叠加渲染</label>
+                        <br>
+                        <input id="spriteRenderOrderEnabledCheckbox" type="checkbox"> <label for="spriteRenderOrderEnabledCheckbox">精灵顺序渲染</label>
+                        <br>
+                        <input id="fpsVisibleCheckbox" type="checkbox"> <label for="fpsVisibleCheckbox">显示每秒帧数</label>
+                        <br>
+                    </div>
+                    <div class="sectionTitle" style="margin-top:10px;">游戏选项</div>
+                    <div>
+                        <input id="offlineProcessingEnabledCheckbox" type="checkbox"> <label for="offlineProcessingEnabledCheckbox">启用离线收益</label>
+                    </div>
+                    <div>
+                        <input id="inactiveTabProcessingEnabledCheckbox" type="checkbox"> <label for="inactiveTabProcessingEnabledCheckbox">游戏可后台运行</label>
+                    </div>
+                </form>
+            </div>
+            
+        </div>

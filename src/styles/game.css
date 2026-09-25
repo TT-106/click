@@ -1,0 +1,16 @@
+/* 游戏面板样式按职责分层；主题及响应式覆盖位于 app.css。 */
+@import url("./panels/base.css");
+@import url("./panels/buttons.css");
+@import url("./panels/tab-menu.css");
+@import url("./panels/party-creation-tab.css");
+@import url("./panels/game-tab.css");
+@import url("./panels/inventory-tab.css");
+@import url("./panels/monsters-tab.css");
+@import url("./panels/adventurers-tab.css");
+@import url("./panels/dungeons-tab.css");
+@import url("./panels/castles-tab.css");
+@import url("./panels/points-tab.css");
+@import url("./panels/character-tab.css");
+@import url("./panels/info-tab.css");
+@import url("./panels/game-over.css");
+@import url("./panels/offline-tab.css");

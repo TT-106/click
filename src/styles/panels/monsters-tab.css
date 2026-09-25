@@ -1,0 +1,135 @@
+.monsterUpgradesHeaderContainer {
+    position: absolute;
+    top: 43px;
+    height: 19px;
+    left: 3px;
+    width: 220px;
+    padding: 5px;
+}
+
+.monsterUpgradesHeaderSpan {
+    background-color: #2B2B32;
+    color: #FFF;
+    
+    margin: 2px 0 0;
+    padding: 4px 7px;
+    
+    width:120px;
+    text-align: center;
+}
+
+.monsterUpgradesKillCount {
+    padding:3px;
+    width:200px;
+    text-align: right;
+    margin-top: 5px;
+    
+    border: 1px solid #2B2B32;
+}
+
+.monsterKillCountDiv {
+    padding:3px;
+    width:200px;
+    margin-top: 5px;
+    font-weight: bold;
+    font-size: 14px;
+    text-align: center;
+    
+    border: 1px solid #2B2B32;
+}
+
+.monsterUpgradeLinkMiddle {
+    height:15px;
+    width: 50%;
+    border-right: 1px solid #888;
+}
+
+.monsterUpgradesContainer {
+    position: absolute;
+    top: 73px;
+    
+    bottom: 3px;
+    left: 3px;
+    width: 232px;
+    
+}
+
+.monsterUpgradeButtonsContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 395px;
+    overflow-y: scroll;
+    
+    border: 1px solid #2B2B32;
+}
+
+.monsterUpgradeValuesContainer {
+    position: absolute;
+    height: 210px;
+    width: 232px;
+    bottom: 0;
+    padding: 0;
+    margin:0;
+    
+    border: 1px solid #2B2B32;
+}
+
+.monsterUpgradeValuesContainer .upgradeName {
+    padding-left: 5px;
+    text-align: left;
+}
+.monsterUpgradeValuesContainer .upgradeValue {
+    padding-right: 5px;
+    text-align: right;
+}
+
+.monstersTabContainer {
+    position: absolute;
+    top: 43px;
+    
+    bottom: 3px;
+    left: 238px;
+    right: 3px;
+    padding: 3px;
+    
+}
+
+.monstersTableContainer {
+    position: absolute;
+
+    top:0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    overflow-y: scroll;
+    padding: 0;
+
+}
+
+.monsterTable {
+    padding: 0;
+    margin: 0;
+    border-spacing: 0;
+
+    width: 100%;
+}
+
+.monsterTable th {
+    
+    border-bottom: 1px solid #2B2B32;
+    
+    text-align: left;
+    font-weight: normal;
+    padding-left: 5px;
+
+}
+
+.monsterTable td {
+    text-align: left;
+
+    padding-left: 5px;
+
+}

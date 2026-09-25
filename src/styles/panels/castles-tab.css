@@ -1,0 +1,21 @@
+.castleTable {
+    position: absolute;
+    top: 3px;
+    bottom: 3px;
+    left: 3px;
+    width: 350px;
+
+    overflow-y: scroll;
+    padding: 0;
+    border: 1px solid #2B2B32;
+}
+
+.castleMap {
+    position: absolute;
+    top: 3px;
+    bottom: 3px;
+    width: 660px;
+    left: 358px;
+
+    padding: 0;
+}

@@ -1,0 +1,334 @@
+/** 成就、点数明细和永久奖励。
+ * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
+ */
+import { View, addChildView, resetChildViews } from "./base.js";
+import { appendHeaderCell, clearElementById, createElement, getElement, setElementHtml } from "./dom.js";
+import { UpgradeButtonView } from "./upgrade-details.js";
+import { game } from "../runtime/game.js";
+import { AchievementUpgrade, UpgradeCollection, refreshUpgradeCollection } from "../progression/upgrades.js";
+import { pointEventDefinitions, pointEventsById } from "../progression/points.js";
+import { formatAmount, formatGroupedAmount } from "../core/math.js";
+import { AdventurePointsView } from "./expedition.js";
+import { TabView } from "./navigation.js";
+export function AchievementListView(a) {
+  this.elementId = a;
+  this.visible = true;
+  this.Ot = this.Nt = this.Hq = this.Iq = null;
+  this.Uc = [];
+  this.Vc = [];
+  this.Nf = [];
+  this.QC = "achievementsHeaderSpan";
+  this.pz = -1;
+}
+export function AdventurePointBreakdownView() {
+  this.elementId = "pointsBreakdownContainer";
+  this.visible = true;
+  this.Ls = null;
+  this.Ao = {};
+  this.sz = {};
+  this.Dv = {};
+  this.sy = {};
+  this.tu = {};
+  this.ex = {};
+}
+export function mountPointBreakdown(a) {
+  clearElementById(a.elementId);
+  a.Ls = createElement("table", getElement(a.elementId), null, "pointsTable");
+  var b = 0;
+  a.St(b++);
+  var c;
+  for (c = 0; c < pointEventDefinitions.length; c++) {
+    var d = a,
+      f = pointEventDefinitions[c].h,
+      g = b++,
+      g = d.Ls.insertRow(g),
+      h = g.insertCell(0);
+    h.style.textAlign = "right";
+    h.style.width = "120px";
+    h.innerHTML = pointEventsById[f].Gc;
+    h = g.insertCell(1);
+    h.style.textAlign = "right";
+    h.style.width = "60px";
+    d.tu[f] = h;
+    h = g.insertCell(2);
+    h.style.textAlign = "right";
+    h.style.width = "60px";
+    d.ex[f] = h;
+    g = g.insertCell(3);
+    g.style.textAlign = "right";
+    d.sy[f] = g;
+  }
+}
+export function PointUpgradeListView(a) {
+  this.elementId = a;
+  this.visible = true;
+  this.Rl = this.hj = this.Gt = null;
+  this.Uc = [];
+  this.Vc = [];
+}
+export function PointsView(a) {
+  this.elementId = "pointsTabContent";
+  this.C = a;
+  addChildView(this, new AdventurePointsView("achievementsTabAdventurePointsPanel"));
+  addChildView(this, new AdventurePointBreakdownView());
+  addChildView(this, new PointUpgradeListView("pointUpgradesContainer"));
+  addChildView(this, new AchievementListView("achievementsContainer"));
+}
+export function initializeViewsAchievements() {
+  AchievementListView.prototype = new View();
+  AchievementListView.prototype.reset = function () {
+    this.uo();
+  };
+  AchievementListView.prototype.uo = function () {
+    clearElementById(this.elementId);
+    this.Iq = null;
+    this.Uc.length = 0;
+    this.Vc.length = 0;
+    this.Nf.length = 0;
+    this.Zn();
+    var a = this.elementId,
+      b = getElement(a);
+    if (b) {
+      this.Iq = createElement("table", b, null, "adventurerSkillTreeTable");
+      var b = this.Hq.upgrades,
+        c = this.Nt.upgrades,
+        d = this.Ot.upgrades,
+        f = Math.max(b.length, Math.max(c.length, d.length)),
+        g,
+        h,
+        l,
+        n;
+      for (g = 0; g < f; g++) {
+        h = this.Iq.insertRow(g);
+        l = h.insertCell(0);
+        n = h.insertCell(1);
+        h = h.insertCell(2);
+        l.id = a + "_" + g + "_0";
+        n.id = a + "_" + g + "_1";
+        h.id = a + "_" + g + "_2";
+        l.width = 150;
+        n.width = 150;
+        h.width = 150;
+        if (g < b.length) {
+          this.Uc.push(new UpgradeButtonView(l.id, b[g], g, true));
+        }
+        if (g < c.length) {
+          this.Vc.push(new UpgradeButtonView(n.id, c[g], g, true));
+        }
+        if (g < d.length) {
+          this.Nf.push(new UpgradeButtonView(h.id, d[g], g, true));
+        }
+      }
+    }
+    for (a = 0; a < this.Uc.length; a++) {
+      this.Uc[a].reset();
+    }
+    for (a = 0; a < this.Vc.length; a++) {
+      this.Vc[a].reset();
+    }
+    for (a = 0; a < this.Nf.length; a++) {
+      this.Nf[a].reset();
+    }
+  };
+  AchievementListView.prototype.Zn = function () {
+    var a = game.state.achievements.jj,
+      b = [],
+      c = [],
+      d = [],
+      f;
+    for (f = 0; f < a.length; f += 3) {
+      b.push(new AchievementUpgrade(a[f]));
+      if (f + 1 < a.length) {
+        c.push(new AchievementUpgrade(a[f + 1]));
+        if (f + 2 < a.length) {
+          d.push(new AchievementUpgrade(a[f + 2]));
+        }
+      }
+    }
+    this.Hq = new UpgradeCollection([b], false);
+    this.Nt = new UpgradeCollection([c], false);
+    this.Ot = new UpgradeCollection([d], false);
+  };
+  AchievementListView.prototype.update = function () {
+    if (!(this.Hq && this.Iq)) {
+      this.uo();
+    }
+    refreshUpgradeCollection(this.Hq);
+    refreshUpgradeCollection(this.Nt);
+    refreshUpgradeCollection(this.Ot);
+    var a;
+    for (a = 0; a < this.Uc.length; a++) {
+      this.Uc[a].render();
+    }
+    for (a = 0; a < this.Vc.length; a++) {
+      this.Vc[a].render();
+    }
+    for (a = 0; a < this.Nf.length; a++) {
+      this.Nf[a].render();
+    }
+    var b = game.state.achievements;
+    a = b.jj.length;
+    b = b.Ze.length + (a - b.ik.length);
+    if (this.pz != b) {
+      this.pz = b;
+      setElementHtml(this.QC, "成就(" + b + "/" + a + ")");
+    }
+  };
+  AdventurePointBreakdownView.prototype = new View();
+  AdventurePointBreakdownView.prototype.reset = function () {
+    this.Ao = {};
+    this.sy = {};
+    this.tu = {};
+    this.ex = {};
+    var a, b;
+    for (a = 0; a < pointEventDefinitions.length; a++) {
+      b = pointEventDefinitions[a].h;
+      this.Ao[b] = -1;
+      this.sz[b] = -1;
+      this.Dv[b] = -1;
+    }
+    mountPointBreakdown(this);
+  };
+  AdventurePointBreakdownView.prototype.update = function () {
+    if (!this.Ls) {
+      mountPointBreakdown(this);
+    }
+    var a,
+      b,
+      c,
+      d,
+      f,
+      g,
+      h,
+      l,
+      n = game.state.ae;
+    for (a = 0; a < pointEventDefinitions.length; a++) {
+      b = pointEventDefinitions[a].h;
+      c = this.Ao[b];
+      d = n.Qi[b];
+      f = this.Ao[b];
+      g = n.pj[b];
+      h = this.Dv[b];
+      l = pointEventDefinitions[a].Fb;
+      if (c != d) {
+        this.Ao[b] = d;
+        c = this.sy[b];
+        c.innerHTML = formatGroupedAmount(d);
+      }
+      if (f != g) {
+        this.sz[b] = g;
+        d = this.tu[b];
+        d.innerHTML = formatAmount(g);
+      }
+      if (h != l) {
+        this.Dv[b] = l;
+        b = this.ex[b];
+        b.innerHTML = formatAmount(l);
+      }
+    }
+  };
+  AdventurePointBreakdownView.prototype.St = function (a) {
+    a = this.Ls.insertRow(a);
+    var b = appendHeaderCell(a);
+    b.style.textAlign = "right";
+    b.innerHTML = "冒险行动";
+    b = appendHeaderCell(a);
+    b.style.textAlign = "right";
+    b.innerHTML = "计数";
+    b = appendHeaderCell(a);
+    b.style.textAlign = "right";
+    b.innerHTML = "AP/行动";
+    a = appendHeaderCell(a);
+    a.style.textAlign = "right";
+    a.innerHTML = "冒险点数";
+  };
+  PointUpgradeListView.prototype = new View();
+  PointUpgradeListView.prototype.reset = function () {
+    this.uo();
+  };
+  PointUpgradeListView.prototype.uo = function () {
+    clearElementById(this.elementId);
+    this.Gt = null;
+    this.Uc.length = 0;
+    this.Vc.length = 0;
+    this.Zn();
+    var a = this.elementId,
+      b = getElement(a);
+    if (b) {
+      this.Gt = createElement("table", b, null, "adventurerSkillTreeTable");
+      var b = this.hj.upgrades,
+        c = this.Rl.upgrades,
+        d = Math.max(b.length, c.length),
+        f,
+        g,
+        h;
+      for (f = 0; f < d; f++) {
+        g = this.Gt.insertRow(f);
+        h = g.insertCell(0);
+        g = g.insertCell(1);
+        h.id = a + "_" + f + "_0";
+        g.id = a + "_" + f + "_1";
+        h.width = 150;
+        g.width = 150;
+        if (f < b.length) {
+          this.Uc.push(new UpgradeButtonView(h.id, b[f], f, true));
+        }
+        if (f < c.length) {
+          this.Vc.push(new UpgradeButtonView(g.id, c[f], f, true));
+        }
+      }
+    }
+    for (a = 0; a < this.Uc.length; a++) {
+      this.Uc[a].reset();
+    }
+    for (a = 0; a < this.Vc.length; a++) {
+      this.Vc[a].reset();
+    }
+  };
+  PointUpgradeListView.prototype.Zn = function () {
+    var a = game.state.ae.tl,
+      b = [],
+      c = [],
+      d;
+    for (d = 0; d < a.length; d += 2) {
+      b.push(a[d]);
+      if (d + 1 < a.length) {
+        c.push(a[d + 1]);
+      }
+    }
+    this.hj = new UpgradeCollection([b], false);
+    this.Rl = new UpgradeCollection([c], false);
+  };
+  PointUpgradeListView.prototype.update = function () {
+    if (!(this.hj && this.Gt)) {
+      this.uo();
+    }
+    refreshUpgradeCollection(this.hj);
+    refreshUpgradeCollection(this.Rl);
+    var a;
+    for (a = 0; a < this.Uc.length; a++) {
+      this.Uc[a].render();
+    }
+    for (a = 0; a < this.Vc.length; a++) {
+      this.Vc[a].render();
+    }
+  };
+  PointsView.prototype = new TabView();
+  PointsView.prototype.onGameWon = function () {
+    this.C.enabled = true;
+    this.C.selected = false;
+  };
+  PointsView.prototype.onOfflineFinish = function () {
+    this.C.enabled = true;
+    this.C.selected = false;
+  };
+  PointsView.prototype.onOfflineStart = function () {
+    this.C.enabled = false;
+    this.C.selected = false;
+  };
+  PointsView.prototype.reset = function () {
+    this.C.enabled = true;
+    this.C.selected = false;
+    resetChildViews(this);
+  };
+}

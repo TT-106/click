@@ -1,0 +1,97 @@
+.infoTabGameCredits {
+    position: absolute;
+    bottom: 3px;
+    left: 3px;
+    right: 310px;
+    height: 80px;
+
+    padding: 5px;
+    border: 1px solid #2B2B32;
+}
+
+.infoTabMinmaxiaLinks {
+    position: absolute;
+    bottom: 99px;
+    left: 3px;
+    right: 310px;
+    height: 100px;
+
+    padding: 5px;
+    border: 1px solid #2B2B32;
+}
+
+.infoTabGameOptions {
+    position: absolute;
+    bottom: 3px;
+    right: 3px;
+    width: 292px;
+    height: 196px;
+    overflow-y: scroll;
+
+    padding: 5px;
+    border: 1px solid #2B2B32;
+}
+
+.infoTabRecentChanges {
+    position: absolute;
+    top: 228px;
+    left: 3px;
+    right: 505px;
+    height: 232px;
+
+    overflow-y: scroll;
+
+    padding: 5px;
+    border: 1px solid #2B2B32;
+}
+
+.infoTabInfo {
+    position: absolute;
+    top: 228px;
+    width: 487px;
+    right: 3px;
+    height: 232px;
+
+    overflow-y: scroll;
+
+    padding: 5px;
+    border: 1px solid #2B2B32;
+}
+
+.infoTabSaveLoadContainer {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    right: 350px;
+    
+    height: 210px;
+
+    overflow-y: scroll;
+
+    padding: 5px;
+    border: 1px solid #2B2B32;
+}
+
+.infoTabStatisticsContainer {
+    position: absolute;
+    top: 3px;
+    width: 333px;
+    
+    right: 3px;
+    height: 210px;
+
+    overflow-y: scroll;
+
+    padding: 5px;
+    border: 1px solid #2B2B32;
+}
+
+.statisticsTable {
+    margin-top:10px;
+    width:100%;
+}
+
+.statisticsTableLabel {
+    text-align:right;
+    width: 120px;
+}

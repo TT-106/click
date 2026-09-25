@@ -1,0 +1,25 @@
+{
+  "name": "clickpocalypse-ii-restored",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Clickpocalypse II 本地恢复与现代化工程",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "node scripts/serve.mjs",
+    "start": "node scripts/serve.mjs",
+    "recover": "node scripts/recover-engine.mjs",
+    "build": "node scripts/build.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "check": "node scripts/check.mjs"
+  },
+  "devDependencies": {
+    "@babel/generator": "7.29.8",
+    "@babel/parser": "7.29.9",
+    "@babel/traverse": "7.29.8",
+    "@babel/types": "7.29.8",
+    "playwright": "^1.63.0"
+  }
+}

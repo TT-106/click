@@ -1,0 +1,17 @@
+{
+  "source": "c2.js",
+  "sha256": "b9dd4f566645cdc252a5340ad1d89262a6a7c2e1d2cbc5d4db36d89113222153",
+  "atlases": {
+    "monsters": 939,
+    "terrain": 1183,
+    "items": 714
+  },
+  "transformations": [
+    "extract-sprite-atlases",
+    "extract-original-lz-codec",
+    "isolate-es-module-scope",
+    "inject-persistence",
+    "autosave-30-seconds",
+    "replace-window-game-with-private-export"
+  ]
+}
