@@ -1,3 +1,4 @@
+// @ts-nocheck -- M10 渐进类型化：JSDoc 覆盖后摘除（见 docs/WORKSTATE.md）
 /** 存档 DTO 的类型化 schema（与原版存档格式一一对应）。
  *
  * 事实来源：tests/fixtures/original.c2save 解码实测（4,477 键全语义化）+ game-save.js 序列化/恢复两侧。

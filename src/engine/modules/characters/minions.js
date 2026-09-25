@@ -1,4 +1,3 @@
-// @ts-nocheck -- M10 渐进类型化：JSDoc 覆盖后摘除（见 docs/WORKSTATE.md）
 /** 召唤物集合。
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
@@ -20,9 +19,9 @@ export function initializeCharactersMinions() {
         this.eh.splice(b, 1);
       }
       b = game.allies;
-      a = b.Pf.indexOf(a);
+      a = (/** @type {any} */ (b)).Pf.indexOf(a);
       if (-1 < a) {
-        b.Pf.splice(a, 1);
+        (/** @type {any} */ (b)).Pf.splice(a, 1);
       }
     }
   };

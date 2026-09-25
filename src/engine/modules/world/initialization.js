@@ -1,4 +1,3 @@
-// @ts-nocheck -- M10 渐进类型化：JSDoc 覆盖后摘除（见 docs/WORKSTATE.md）
 /** 从原始组合根独立出的配置数据。
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
@@ -93,7 +92,7 @@ export function initializeRegionsAndCastles() {
     for (za = 0; za < Bb.length; za++) {
       jb = Bb[za];
       a: {
-        for (var bc = ja, Wa = vb, cc = Ga, Qa = jb.ck, nc = undefined, sa = undefined, sa = 0; sa < Qa.length; sa++) {
+        for (var bc = ja, Wa = vb, cc = Ga, Qa = jb.ck, nc = undefined, sa = undefined, sa = /** @type {any} */ (0); sa < Qa.length; sa++) {
           if (nc = chooseAdjacentRegion(bc, Qa[sa], Wa, cc)) {
             Ib = nc;
             break a;
@@ -154,7 +153,7 @@ export function initializeRegionsAndCastles() {
     Na = [];
   for (ka = 0; ka < dc.length; ka++) {
     for (Ka = dc[ka], Xa = Ka.ck, sc = Ka.dm, Aa = Ka.em, Eb = 0; Eb < Xa.length; Eb++) {
-      if (db = Xa[Eb].Hd, Mc = Xa[Eb].Id, !(0.7 < gb.random())) {
+      if (db = Xa[Eb].Hd, Mc = Xa[Eb].Id, !(0.7 < (/** @type {any} */ (gb)).random())) {
         ec = 1 + db * WORLD_BLOCK_COLUMNS + randomIntFrom(gb, WORLD_BLOCK_COLUMNS - 1);
         for (Ub = 1 + Mc * WORLD_BLOCK_ROWS + randomIntFrom(gb, WORLD_BLOCK_ROWS - 1); ec === sc && Ub === Aa;) {
           ec = 1 + db * WORLD_BLOCK_COLUMNS + randomIntFrom(gb, WORLD_BLOCK_COLUMNS - 1);

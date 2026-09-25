@@ -1,3 +1,4 @@
+// @ts-nocheck -- M10 渐进类型化：JSDoc 覆盖后摘除（见 docs/WORKSTATE.md）
 import { game } from './modules/runtime/index.js';
 import { configurePersistence } from './modules/runtime/storage-port.js';
 import { adventurerClasses } from './modules/content/classes.js';

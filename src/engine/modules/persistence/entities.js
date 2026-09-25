@@ -1,4 +1,3 @@
-// @ts-nocheck -- M10 渐进类型化：存档恢复/实体序列化的专项类型化待办（见 docs/WORKSTATE.md M10）
 /** 角色、装备、怪物与统计序列化。
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
@@ -87,7 +86,7 @@ export function serializeCharacter(a) {
     hallwayId: n ? n.hallwayId : -1
   };
   var n = a.spells,
-    l = [],
+    l = /** @type {any} */ ([]),
     p;
   if (n) {
     for (p = 0; p < n.length; p++) {
@@ -326,7 +325,7 @@ export function initializePersistenceEntities() {
     b.fc = a.maxUnlockedLevel;
     a = a.monsterLevelStates;
     for (b = 0; b < a.length; b++) {
-      for (var c = a[b], d = c.level, c = c.monsterTypes, f = [], g = undefined, g = 0; g < c.length; g++) {
+      for (var c = a[b], d = c.level, c = c.monsterTypes, f = [], g = undefined, g = /** @type {any} */ (0); g < c.length; g++) {
         f.push(restoreMonsterType(c[g], d));
       }
       game.monsterCatalog.en[d + ""] = f;

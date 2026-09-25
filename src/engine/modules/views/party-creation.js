@@ -1,4 +1,3 @@
-// @ts-nocheck -- M10 渐进类型化：JSDoc 覆盖后摘除（见 docs/WORKSTATE.md）
 /** 原版组队规则及创建动作。
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
@@ -69,9 +68,9 @@ export function mountPartyCreation(a) {
           g.initialSpellSkillPoint = 1;
         }
         refreshPartyLevels();
-        for (var l = g.slotList, s = p = undefined, s = 0; s < l.length; s++) {
+        for (var l = g.slotList, s = p = undefined, s = /** @type {any} */ (0); s < l.length; s++) {
           if (p = generateItem(game.itemGenerator, l[s], g, 1, 0)) {
-            g.Qk(p);
+            (/** @type {any} */ (g)).Qk(p);
           }
         }
         applyLevelStats(n, 1, f.Ma);
@@ -420,7 +419,7 @@ export function initializeViewsPartyCreation() {
           }
         }
         var b = null,
-          a = 0,
+          a = /** @type {any} */ (0),
           c;
         for (c = 0; c < this.selectedCharacters.length; c++) {
           b = this.rx.insertRow(a);

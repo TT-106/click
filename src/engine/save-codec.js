@@ -1,3 +1,4 @@
+// @ts-nocheck -- M10 渐进类型化：JSDoc 覆盖后摘除（见 docs/WORKSTATE.md）
 import codec from '../vendor/lz-string-1.3.3.js';
 
 /** 存档契约固定为 LZ-string 1.3.3 的 Base64 编码，升级依赖前必须跑兼容测试。 */

@@ -1,4 +1,3 @@
-// @ts-nocheck -- M10 渐进类型化：JSDoc 覆盖后摘除（见 docs/WORKSTATE.md）
 /** 面板生命周期与组合视图。
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
@@ -36,12 +35,12 @@ export function updateChildViews(a) {
 }
 export function initializeViewsBase() {
   View.prototype.isVisible = function () {
-    return this.visible;
+    return (/** @type {any} */ (this)).visible;
   };
   View.prototype.reset = function () {};
   View.prototype.render = function () {
     if (this.elementId) {
-      var a = this.isVisible();
+      var a = (/** @type {any} */ (this)).isVisible();
       if (this.Vw != a) {
         if (this.Vw = a) {
           showElementById(this.elementId);
@@ -50,7 +49,7 @@ export function initializeViewsBase() {
         }
       }
       if (a) {
-        this.update();
+        (/** @type {any} */ (this)).update();
       }
     }
   };

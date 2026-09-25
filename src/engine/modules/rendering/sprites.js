@@ -1,4 +1,3 @@
-// @ts-nocheck -- M10 渐进类型化：JSDoc 覆盖后摘除（见 docs/WORKSTATE.md）
 /** 精灵图、动画帧、方向和视觉效果。
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
@@ -19,7 +18,7 @@ export function SpriteSheet(a, b, c) {
   var d = this;
   this.Il = new Image();
   this.Il.onload = function () {
-    d.$w(c);
+    (/** @type {any} */ (d)).$w(c);
     d.loaded = true;
   };
   this.Il.src = a;
@@ -55,7 +54,7 @@ export function AnimationSheet(a, b, c, d) {
   var f = this;
   this.Il = new Image();
   this.Il.onload = function () {
-    f.$w(c, d);
+    (/** @type {any} */ (f)).$w(c, d);
     f.loaded = true;
   };
   this.Il.src = a;

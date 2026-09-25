@@ -1,35 +1,5 @@
 [
   {
-    "name": "Z",
-    "reads": 9,
-    "writes": 54,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:44",
-        "code": "this.Z"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:55",
-        "code": "this.Z"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:162",
-        "code": "c.no.Z"
-      }
-    ],
-    "fileCount": 8,
-    "files": [
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\characters\\movement.js",
-      "src\\engine\\modules\\content\\equipment.js",
-      "src\\engine\\modules\\loot\\items.js",
-      "src\\engine\\modules\\persistence\\entities.js",
-      "src\\engine\\modules\\simulation\\characters.js",
-      "src\\engine\\modules\\views\\character.js",
-      "src\\engine\\modules\\views\\party-creation.js"
-    ]
-  },
-  {
     "name": "aa",
     "reads": 59,
     "writes": 3,
