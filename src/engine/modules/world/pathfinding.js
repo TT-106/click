@@ -7,7 +7,7 @@ import { game } from "../runtime/game.js";
 export function PathfindingGrid(a, b, c) {
   this.fl = a;
   this.Nj = b;
-  this.G = c;
+  this.tileGrid = c;
   this.oB = new PathNodePool();
   this.Ip = [];
   this.Sw = [];
@@ -40,7 +40,7 @@ export function getPathNode(a, b) {
   return d;
 }
 export function isHallwayWalkable(a, b, c, d, f) {
-  return 0 > b - 1 || 0 > c - 1 || b + 1 >= a.fl || c + 1 >= a.Nj ? false : roomContainsTile(a.Bl, b, c) ? !isNearRoomCorner(b, c, a.Bl) : roomContainsTile(a.Cl, b, c) ? !isNearRoomCorner(b, c, a.Cl) : isRoomBorder(a.Bl, b, c) || isRoomBorder(a.Cl, b, c) ? !d : 0 === f || 2 === f ? a.G[b - 1][c].Rb === EMPTY_TILE && a.G[b + 1][c].Rb === EMPTY_TILE : a.G[b][c - 1].Rb === EMPTY_TILE && a.G[b][c + 1].Rb === EMPTY_TILE;
+  return 0 > b - 1 || 0 > c - 1 || b + 1 >= a.fl || c + 1 >= a.Nj ? false : roomContainsTile(a.Bl, b, c) ? !isNearRoomCorner(b, c, a.Bl) : roomContainsTile(a.Cl, b, c) ? !isNearRoomCorner(b, c, a.Cl) : isRoomBorder(a.Bl, b, c) || isRoomBorder(a.Cl, b, c) ? !d : 0 === f || 2 === f ? a.tileGrid[b - 1][c].Rb === EMPTY_TILE && a.tileGrid[b + 1][c].Rb === EMPTY_TILE : a.tileGrid[b][c - 1].Rb === EMPTY_TILE && a.tileGrid[b][c + 1].Rb === EMPTY_TILE;
 }
 export function isNearRoomCorner(a, b, c) {
   var d = c.tileColumn,
@@ -74,13 +74,13 @@ export function PathOpenSet() {
   this.Ui = [];
 }
 export function HallwayPathfinder(a, b, c) {
-  this.G = c;
+  this.tileGrid = c;
   this.Fl = new PathfindingGrid(a, b, c);
   this.open = new PathOpenSet();
 }
 export function findHallwayPath(a, b, c) {
-  var d = a.G[b.tileColumn + b.widthInTiles / 2 | 0][b.tileRow + b.heightInTiles / 2 | 0],
-    f = a.G[c.tileColumn + c.widthInTiles / 2 | 0][c.tileRow + c.heightInTiles / 2 | 0],
+  var d = a.tileGrid[b.tileColumn + b.widthInTiles / 2 | 0][b.tileRow + b.heightInTiles / 2 | 0],
+    f = a.tileGrid[c.tileColumn + c.widthInTiles / 2 | 0][c.tileRow + c.heightInTiles / 2 | 0],
     g = a.Fl;
   g.Bl = b;
   g.Cl = c;
@@ -117,16 +117,16 @@ export function findHallwayPath(a, b, c) {
         n = n.Bi();
         var u = !(roomContainsTile(l.Bl, s, n) || roomContainsTile(l.Cl, s, n)) && (isRoomBorder(l.Bl, s, n) || isRoomBorder(l.Cl, s, n));
         if (isHallwayWalkable(l, s, n - 1, u, 0)) {
-          p.push(getPathNode(l, l.G[s][n - 1]));
+          p.push(getPathNode(l, l.tileGrid[s][n - 1]));
         }
         if (isHallwayWalkable(l, s - 1, n, u, 3)) {
-          p.push(getPathNode(l, l.G[s - 1][n]));
+          p.push(getPathNode(l, l.tileGrid[s - 1][n]));
         }
         if (isHallwayWalkable(l, s + 1, n, u, 1)) {
-          p.push(getPathNode(l, l.G[s + 1][n]));
+          p.push(getPathNode(l, l.tileGrid[s + 1][n]));
         }
         if (isHallwayWalkable(l, s, n + 1, u, 2)) {
-          p.push(getPathNode(l, l.G[s][n + 1]));
+          p.push(getPathNode(l, l.tileGrid[s][n + 1]));
         }
       }
       h = h.Hs;

@@ -18,7 +18,7 @@ export function DungeonLayoutGenerator(a, b, c, d, f) {
   this.wa = d;
   this.fl = a;
   this.Nj = b;
-  this.G = c;
+  this.tileGrid = c;
   this.Aj = f;
   this.iB = ROOM_SPACING;
   this.Ow = MIN_ROOM_DIMENSION;
@@ -114,7 +114,7 @@ export function CastleLayoutGenerator(a, b, c, d) {
   this.wa = d;
   this.fl = a;
   this.Nj = b;
-  this.G = c;
+  this.tileGrid = c;
   this.iB = 5;
   this.Ow = 4;
   this.xA = 9;
@@ -130,7 +130,7 @@ export function appendDungeonRoom(a, b, c, d, f, g) {
   c = a.Xp++;
   b.roomId = c;
   a.Pa.push(b);
-  b.Bq(a.G);
+  b.Bq(a.tileGrid);
 }
 export function DungeonDecorationGenerator() {
   this.yh = new Vector2();
@@ -139,7 +139,7 @@ export function DungeonDecorationGenerator() {
 export function DungeonLevel() {
   this.Li = this.Ki = 0;
   this.rc = this.sc = 120;
-  this.G = null;
+  this.tileGrid = null;
   this.Pa = [];
   this.gd = [];
   this.tf = this.Ce = null;
@@ -153,16 +153,16 @@ export function generateDungeonLevel(a, b, c, d) {
   f.gd.length = 0;
   f.Ce = null;
   f.tf = null;
-  if (f.G) {
+  if (f.tileGrid) {
     clearDungeonTiles(f);
   } else {
     f.Aw();
   }
   if (11 === b) {
-    c = new CastleLayoutGenerator(f.rc, f.sc, f.G, g);
+    c = new CastleLayoutGenerator(f.rc, f.sc, f.tileGrid, g);
     c.rw();
   } else {
-    for (a = 0, c = new DungeonLayoutGenerator(f.rc, f.sc, f.G, g, c); !c.rw();) {
+    for (a = 0, c = new DungeonLayoutGenerator(f.rc, f.sc, f.tileGrid, g, c); !c.rw();) {
       console.log("Level generation failed for seed: " + f.sp + " attempt: " + a);
       a++;
       f.sp++;
@@ -176,10 +176,10 @@ export function generateDungeonLevel(a, b, c, d) {
   f.tf = c.tf;
   c = getDungeonTheme(b);
   for (b = 0; b < f.Pa.length; b++) {
-    f.Pa[b].xx(c, f.G);
+    f.Pa[b].xx(c, f.tileGrid);
   }
   for (b = 0; b < f.gd.length; b++) {
-    f.gd[b].xx(c, f.G);
+    f.gd[b].xx(c, f.tileGrid);
   }
   clearItemDrops();
   b = game.goldDrops;
@@ -225,7 +225,7 @@ export function generateDungeonLevel(a, b, c, d) {
 export function clearDungeonTiles(a) {
   var b, c, d;
   for (c = 0; c < a.rc; c++) {
-    for (d = a.G[c], b = 0; b < a.sc; b++) {
+    for (d = a.tileGrid[c], b = 0; b < a.sc; b++) {
       var f = d[b];
       f.Jn = null;
       f.Yf = null;
@@ -291,7 +291,7 @@ export function initializeWorldGeneration() {
             this.shiftLeft(g);
           }
         }
-        c.Bq(this.G);
+        c.Bq(this.tileGrid);
       }
     }
     return this.ru() ? this.uu() ? true : (console.log("failed to create stairs."), false) : false;
@@ -303,7 +303,7 @@ export function initializeWorldGeneration() {
       d = [],
       f,
       g,
-      h = new HallwayPathfinder(this.fl, this.Nj, this.G);
+      h = new HallwayPathfinder(this.fl, this.Nj, this.tileGrid);
     for (a = 1; a < this.Pa.length; a++) {
       b = this.Pa[a];
       d.length = 0;
@@ -316,7 +316,7 @@ export function initializeWorldGeneration() {
       g = this.Zo++;
       f.hallwayId = g;
       this.gd.push(f);
-      f.Bq(this.G);
+      f.Bq(this.tileGrid);
       c.ro.push(b);
       b.ro.push(c);
     }
@@ -439,13 +439,13 @@ export function initializeWorldGeneration() {
       b,
       c,
       d,
-      f = new HallwayPathfinder(this.fl, this.Nj, this.G);
+      f = new HallwayPathfinder(this.fl, this.Nj, this.tileGrid);
     for (a = 1; a < this.Pa.length; a++) {
       if (b = this.Pa[a - 1], c = this.Pa[a], d = findHallwayPath(f, b, c)) {
         var g = this.Zo++;
         d.hallwayId = g;
         this.gd.push(d);
-        d.Bq(this.G);
+        d.Bq(this.tileGrid);
         c.ro.push(b);
         b.ro.push(c);
       } else {
@@ -505,7 +505,7 @@ export function initializeWorldGeneration() {
   };
   DungeonLevel.prototype.Aw = function () {
     var a, b, c, d, f;
-    this.G = [];
+    this.tileGrid = [];
     for (b = 0; b < this.rc; b++) {
       c = [];
       d = b * game.tileSize;
@@ -513,11 +513,11 @@ export function initializeWorldGeneration() {
         f = a * game.tileSize;
         c.push(new DungeonTile(b, a, d, f));
       }
-      this.G.push(c);
+      this.tileGrid.push(c);
     }
   };
   DungeonLevel.prototype.hb = function (a, b) {
-    return 0 > a || a >= this.rc || 0 > b || b >= this.sc ? null : this.G[a][b];
+    return 0 > a || a >= this.rc || 0 > b || b >= this.sc ? null : this.tileGrid[a][b];
   };
   DungeonLevel.prototype.Ai = function (a) {
     return a / game.tileSize | 0;

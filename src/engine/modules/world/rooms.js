@@ -29,7 +29,7 @@ export function DungeonRoom(a, b, c, d, f) {
   this.Yp = f;
   this.ro = [];
   this.Nc = [];
-  this.G = this.Ga = this.stairs = null;
+  this.tileGrid = this.Ga = this.stairs = null;
   this.Xi = false;
 }
 export function roomLeftPixels(a) {
@@ -68,55 +68,55 @@ export function revealRoom(a) {
       p = game.terrainSprites.v(a.Ga.floor);
     n = game.terrainSprites.v(a.Ga.Kb.Cg);
     var s = game.terrainSprites.v(a.Ga.Kb.Eg);
-    h = a.G[c - 1][f - 1];
+    h = a.tileGrid[c - 1][f - 1];
     h.Qa(p);
     h.ea(game.terrainSprites.v(a.Ga.Kb.Gg));
-    h = a.G[d][f - 1];
+    h = a.tileGrid[d][f - 1];
     h.Qa(p);
     h.ea(game.terrainSprites.v(a.Ga.Kb.Hg));
-    h = a.G[c - 1][g];
+    h = a.tileGrid[c - 1][g];
     h.Qa(p);
     h.ea(game.terrainSprites.v(a.Ga.Kb.Dg));
-    h = a.G[d][g];
+    h = a.tileGrid[d][g];
     h.Qa(p);
     h.ea(game.terrainSprites.v(a.Ga.Kb.Fg));
     for (l = c; l < d; l++) {
-      h = a.G[l][f - 1];
+      h = a.tileGrid[l][f - 1];
       h.Qa(p);
       if (!h.Yf) {
         h.ea(n);
       }
     }
     for (l = c; l < d; l++) {
-      h = a.G[l][g];
+      h = a.tileGrid[l][g];
       h.Qa(p);
       if (!h.Yf) {
         h.ea(n);
       }
     }
     for (n = f; n < g; n++) {
-      h = a.G[c - 1][n];
+      h = a.tileGrid[c - 1][n];
       h.Qa(p);
       if (!h.Yf) {
         h.ea(s);
       }
     }
     for (n = f; n < g; n++) {
-      h = a.G[d][n];
+      h = a.tileGrid[d][n];
       h.Qa(p);
       if (!h.Yf) {
         h.ea(s);
       }
     }
     for (l = c; l < d; l++) {
-      for (c = a.G[l], n = f; n < g; n++) {
+      for (c = a.tileGrid[l], n = f; n < g; n++) {
         h = c[n];
         h.Qa(p);
       }
     }
     for (d = 0; d < b.length; d++) {
       f = b[d];
-      h = a.G[f.wj][f.xj];
+      h = a.tileGrid[f.wj][f.xj];
       h.Qa(p);
       if (f.Ho) {
         if (f.Mb) {
@@ -133,7 +133,7 @@ export function revealRoom(a) {
       }
     }
     if (a.stairs) {
-      h = a.G[a.stairs.Ex][a.stairs.Fx];
+      h = a.tileGrid[a.stairs.Ex][a.stairs.Fx];
       h.Qa(p);
       if (a.stairs.Fq) {
         if (a.stairs.sq) {
@@ -150,7 +150,7 @@ export function revealRoom(a) {
       }
     }
     p = a.Ga.Th;
-    h = a.G;
+    h = a.tileGrid;
     b = game.decorations;
     if (!(!p || 0 === p.length || 0.2 > b.wa.random() || !(p = 1 === p.length ? p[0] : randomIntFrom(b.wa, p.length)))) {
       if (p.Oo && 0 < p.Oo.length) {
@@ -189,7 +189,7 @@ export function revealRoom(a) {
     }
     if (3 === a.Yp) {
       for (d = a.tileColumn + 1, b = d + a.widthInTiles, h = a.tileRow + 1, p = h + a.heightInTiles, l = d; l < b; l++) {
-        for (g = a.G[l], c = h; c < p; c++) {
+        for (g = a.tileGrid[l], c = h; c < p; c++) {
           if (0.8 > Math.random()) {
             d = 2 * rollGoldDrop();
             if (0 < d) {
@@ -275,7 +275,7 @@ export function DungeonHallway(a, b, c, d) {
   this.Cl = c;
   this.Be = d;
   this.Sk = [];
-  this.G = this.Ga = null;
+  this.tileGrid = this.Ga = null;
   this.Km = false;
 }
 export function getOppositeDoor(a, b) {
@@ -309,7 +309,7 @@ export function revealHallway(a, b) {
       D = game.terrainSprites.v(a.Ga.Kb.Ch);
     for (g = 0; g < c.length; g++) {
       d = c[g];
-      f = a.G[d.x][d.y];
+      f = a.tileGrid[d.x][d.y];
       f.Qa(h);
     }
     var N = null,
@@ -329,7 +329,7 @@ export function revealHallway(a, b) {
       x = d.x;
       z = d.y;
       if (!N) {
-        f = a.G[x][z];
+        f = a.tileGrid[x][z];
         f.Qa(h);
         if (a.af.Ho) {
           if (a.af.Mb) {
@@ -349,34 +349,34 @@ export function revealHallway(a, b) {
         K = x > I.x;
         na = x < I.x;
         if (K) {
-          f = a.G[x][z - 1];
+          f = a.tileGrid[x][z - 1];
           f.Qa(h);
           f.ea(A);
-          f = a.G[x][z + 1];
+          f = a.tileGrid[x][z + 1];
           f.Qa(h);
           f.ea(A);
         } else {
           if (na) {
-            f = a.G[x][z - 1];
+            f = a.tileGrid[x][z - 1];
             f.Qa(h);
             f.ea(C);
-            f = a.G[x][z + 1];
+            f = a.tileGrid[x][z + 1];
             f.Qa(h);
             f.ea(C);
           } else {
             if (Q) {
-              f = a.G[x + 1][z];
+              f = a.tileGrid[x + 1][z];
               f.Qa(h);
               f.ea(v);
-              f = a.G[x - 1][z];
+              f = a.tileGrid[x - 1][z];
               f.Qa(h);
               f.ea(v);
             } else {
               if (V) {
-                f = a.G[x + 1][z];
+                f = a.tileGrid[x + 1][z];
                 f.Qa(h);
                 f.ea(D);
-                f = a.G[x - 1][z];
+                f = a.tileGrid[x - 1][z];
                 f.Qa(h);
                 f.ea(D);
               }
@@ -385,7 +385,7 @@ export function revealHallway(a, b) {
         }
       }
       if (!I) {
-        f = a.G[x][z];
+        f = a.tileGrid[x][z];
         f.Qa(h);
         if (a.Be.Ho) {
           if (a.Be.Mb) {
@@ -404,34 +404,34 @@ export function revealHallway(a, b) {
         O = z > N.y;
         la = x < N.x;
         if (J = x > N.x) {
-          f = a.G[x][z - 1];
+          f = a.tileGrid[x][z - 1];
           f.Qa(h);
           f.ea(A);
-          f = a.G[x][z + 1];
+          f = a.tileGrid[x][z + 1];
           f.Qa(h);
           f.ea(A);
         } else {
           if (la) {
-            f = a.G[x][z - 1];
+            f = a.tileGrid[x][z - 1];
             f.Qa(h);
             f.ea(C);
-            f = a.G[x][z + 1];
+            f = a.tileGrid[x][z + 1];
             f.Qa(h);
             f.ea(C);
           } else {
             if (O) {
-              f = a.G[x + 1][z];
+              f = a.tileGrid[x + 1][z];
               f.Qa(h);
               f.ea(v);
-              f = a.G[x - 1][z];
+              f = a.tileGrid[x - 1][z];
               f.Qa(h);
               f.ea(v);
             } else {
               if (f) {
-                f = a.G[x + 1][z];
+                f = a.tileGrid[x + 1][z];
                 f.Qa(h);
                 f.ea(D);
-                f = a.G[x - 1][z];
+                f = a.tileGrid[x - 1][z];
                 f.Qa(h);
                 f.ea(D);
               }
@@ -449,68 +449,68 @@ export function revealHallway(a, b) {
         K = x > I.x;
         na = x < I.x;
         if (f && K) {
-          paintHallwayTile(a.G[x + 1][z], h, n, false);
-          paintHallwayTile(a.G[x + 1][z - 1], h, p, true);
-          paintHallwayTile(a.G[x][z - 1], h, l, false);
-          paintHallwayTile(a.G[x - 1][z + 1], h, p, true);
+          paintHallwayTile(a.tileGrid[x + 1][z], h, n, false);
+          paintHallwayTile(a.tileGrid[x + 1][z - 1], h, p, true);
+          paintHallwayTile(a.tileGrid[x][z - 1], h, l, false);
+          paintHallwayTile(a.tileGrid[x - 1][z + 1], h, p, true);
         } else {
           if (f && Q) {
-            paintHallwayTile(a.G[x - 1][z], h, n, false);
-            paintHallwayTile(a.G[x + 1][z], h, n, false);
+            paintHallwayTile(a.tileGrid[x - 1][z], h, n, false);
+            paintHallwayTile(a.tileGrid[x + 1][z], h, n, false);
           } else {
             if (f && na) {
-              paintHallwayTile(a.G[x - 1][z], h, n, false);
-              paintHallwayTile(a.G[x - 1][z - 1], h, s, true);
-              paintHallwayTile(a.G[x][z - 1], h, l, false);
-              paintHallwayTile(a.G[x + 1][z + 1], h, s, true);
+              paintHallwayTile(a.tileGrid[x - 1][z], h, n, false);
+              paintHallwayTile(a.tileGrid[x - 1][z - 1], h, s, true);
+              paintHallwayTile(a.tileGrid[x][z - 1], h, l, false);
+              paintHallwayTile(a.tileGrid[x + 1][z + 1], h, s, true);
             } else {
               if (O && K) {
-                paintHallwayTile(a.G[x + 1][z], h, n, false);
-                paintHallwayTile(a.G[x + 1][z + 1], h, u, true);
-                paintHallwayTile(a.G[x][z + 1], h, l, false);
-                paintHallwayTile(a.G[x - 1][z - 1], h, u, true);
+                paintHallwayTile(a.tileGrid[x + 1][z], h, n, false);
+                paintHallwayTile(a.tileGrid[x + 1][z + 1], h, u, true);
+                paintHallwayTile(a.tileGrid[x][z + 1], h, l, false);
+                paintHallwayTile(a.tileGrid[x - 1][z - 1], h, u, true);
               } else {
                 if (O && V) {
-                  paintHallwayTile(a.G[x - 1][z], h, n, false);
-                  paintHallwayTile(a.G[x + 1][z], h, n, false);
+                  paintHallwayTile(a.tileGrid[x - 1][z], h, n, false);
+                  paintHallwayTile(a.tileGrid[x + 1][z], h, n, false);
                 } else {
                   if (O && na) {
-                    paintHallwayTile(a.G[x - 1][z], h, n, false);
-                    paintHallwayTile(a.G[x - 1][z + 1], h, y, true);
-                    paintHallwayTile(a.G[x][z + 1], h, l, false);
-                    paintHallwayTile(a.G[x + 1][z - 1], h, y, true);
+                    paintHallwayTile(a.tileGrid[x - 1][z], h, n, false);
+                    paintHallwayTile(a.tileGrid[x - 1][z + 1], h, y, true);
+                    paintHallwayTile(a.tileGrid[x][z + 1], h, l, false);
+                    paintHallwayTile(a.tileGrid[x + 1][z - 1], h, y, true);
                   } else {
                     if (la && K) {
-                      paintHallwayTile(a.G[x][z - 1], h, l, false);
-                      paintHallwayTile(a.G[x][z + 1], h, l, false);
+                      paintHallwayTile(a.tileGrid[x][z - 1], h, l, false);
+                      paintHallwayTile(a.tileGrid[x][z + 1], h, l, false);
                     } else {
                       if (la && V) {
-                        paintHallwayTile(a.G[x - 1][z], h, n, false);
-                        paintHallwayTile(a.G[x - 1][z - 1], h, s, true);
-                        paintHallwayTile(a.G[x][z - 1], h, l, false);
-                        paintHallwayTile(a.G[x + 1][z + 1], h, s, true);
+                        paintHallwayTile(a.tileGrid[x - 1][z], h, n, false);
+                        paintHallwayTile(a.tileGrid[x - 1][z - 1], h, s, true);
+                        paintHallwayTile(a.tileGrid[x][z - 1], h, l, false);
+                        paintHallwayTile(a.tileGrid[x + 1][z + 1], h, s, true);
                       } else {
                         if (la && Q) {
-                          paintHallwayTile(a.G[x - 1][z], h, n, false);
-                          paintHallwayTile(a.G[x - 1][z + 1], h, y, true);
-                          paintHallwayTile(a.G[x][z + 1], h, l, false);
-                          paintHallwayTile(a.G[x + 1][z - 1], h, y, true);
+                          paintHallwayTile(a.tileGrid[x - 1][z], h, n, false);
+                          paintHallwayTile(a.tileGrid[x - 1][z + 1], h, y, true);
+                          paintHallwayTile(a.tileGrid[x][z + 1], h, l, false);
+                          paintHallwayTile(a.tileGrid[x + 1][z - 1], h, y, true);
                         } else {
                           if (J && Q) {
-                            paintHallwayTile(a.G[x + 1][z], h, n, false);
-                            paintHallwayTile(a.G[x + 1][z + 1], h, u, true);
-                            paintHallwayTile(a.G[x][z + 1], h, l, false);
-                            paintHallwayTile(a.G[x - 1][z - 1], h, u, true);
+                            paintHallwayTile(a.tileGrid[x + 1][z], h, n, false);
+                            paintHallwayTile(a.tileGrid[x + 1][z + 1], h, u, true);
+                            paintHallwayTile(a.tileGrid[x][z + 1], h, l, false);
+                            paintHallwayTile(a.tileGrid[x - 1][z - 1], h, u, true);
                           } else {
                             if (J && V) {
-                              paintHallwayTile(a.G[x + 1][z], h, n, false);
-                              paintHallwayTile(a.G[x + 1][z - 1], h, p, true);
-                              paintHallwayTile(a.G[x][z - 1], h, l, false);
-                              paintHallwayTile(a.G[x - 1][z + 1], h, p, true);
+                              paintHallwayTile(a.tileGrid[x + 1][z], h, n, false);
+                              paintHallwayTile(a.tileGrid[x + 1][z - 1], h, p, true);
+                              paintHallwayTile(a.tileGrid[x][z - 1], h, l, false);
+                              paintHallwayTile(a.tileGrid[x - 1][z + 1], h, p, true);
                             } else {
                               if (J && na) {
-                                paintHallwayTile(a.G[x][z - 1], h, l, false);
-                                paintHallwayTile(a.G[x][z + 1], h, l, false);
+                                paintHallwayTile(a.tileGrid[x][z - 1], h, l, false);
+                                paintHallwayTile(a.tileGrid[x][z + 1], h, l, false);
                               }
                             }
                           }
@@ -561,7 +561,7 @@ export function initializeWorldRooms() {
   EMPTY_TILE = 0;
   DungeonRoom.prototype.xx = function (a, b) {
     this.Ga = a;
-    this.G = b;
+    this.tileGrid = b;
   };
   DungeonRoom.prototype.yx = function () {
     if (1 < this.tileColumn) {
@@ -622,7 +622,7 @@ export function initializeWorldRooms() {
   };
   DungeonHallway.prototype.xx = function (a, b) {
     this.Ga = a;
-    this.G = b;
+    this.tileGrid = b;
   };
   DungeonHallway.prototype.Bq = function (a) {
     var b, c;
