@@ -219,7 +219,7 @@ export function PotionBarView() {
 }
 export function ExpeditionView(a) {
   this.elementId = "gameTabContent";
-  this.C = a;
+  this.tabState = a;
   addChildView(this, new GameCanvasView());
   addChildView(this, new DungeonNotificationView());
   addChildView(this, new EncounterNotificationView());
@@ -787,20 +787,20 @@ export function initializeViewsExpedition() {
   };
   ExpeditionView.prototype = new TabView();
   ExpeditionView.prototype.onGameWon = function () {
-    this.C.enabled = false;
-    this.C.selected = false;
+    this.tabState.enabled = false;
+    this.tabState.selected = false;
   };
   ExpeditionView.prototype.onOfflineFinish = function () {
-    this.C.enabled = true;
-    this.C.selected = true;
+    this.tabState.enabled = true;
+    this.tabState.selected = true;
   };
   ExpeditionView.prototype.onOfflineStart = function () {
-    this.C.enabled = false;
-    this.C.selected = false;
+    this.tabState.enabled = false;
+    this.tabState.selected = false;
   };
   ExpeditionView.prototype.reset = function () {
-    this.C.enabled = true;
-    this.C.selected = true;
+    this.tabState.enabled = true;
+    this.tabState.selected = true;
     resetChildViews(this);
   };
 }

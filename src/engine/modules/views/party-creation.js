@@ -17,7 +17,7 @@ import { recordGameEvent } from "../core/math.js";
 import { partyCapacityBonus } from "../content/balance.js";
 export function PartyCreationView(a) {
   this.elementId = "partyCreationTabContent";
-  this.C = a;
+  this.tabState = a;
   this.selectedCharacters = [];
   this.cr = [];
   this.validParty = false;
@@ -384,19 +384,19 @@ export function validateSelectedParty(a) {
 export function initializeViewsPartyCreation() {
   PartyCreationView.prototype = new TabView();
   PartyCreationView.prototype.onGameWon = function () {
-    this.C.enabled = false;
-    this.C.selected = false;
+    this.tabState.enabled = false;
+    this.tabState.selected = false;
   };
   PartyCreationView.prototype.onOfflineFinish = function () {
-    this.C.enabled = false;
-    this.C.selected = false;
+    this.tabState.enabled = false;
+    this.tabState.selected = false;
   };
   PartyCreationView.prototype.onOfflineStart = function () {
-    this.C.enabled = false;
-    this.C.selected = false;
+    this.tabState.enabled = false;
+    this.tabState.selected = false;
   };
   PartyCreationView.prototype.reset = function () {
-    this.C.enabled = false;
+    this.tabState.enabled = false;
     clearElementById(this.elementId);
     this.ql = false;
     this.selectedCharacters.length = 0;

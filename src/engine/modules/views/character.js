@@ -52,7 +52,7 @@ export function EquipAllView(a) {
 }
 export function InventoryTabView(a, b, c) {
   this.elementId = b;
-  this.C = a;
+  this.tabState = a;
   this.$ = c;
   this.QD = "itemTableAdventurer" + c;
   this.mD = "adventurerEquippedItems" + c;
@@ -126,7 +126,7 @@ export function CharacterAttributesView(a, b) {
 }
 export function CharacterView(a, b, c) {
   this.elementId = b;
-  this.C = a;
+  this.tabState = a;
   this.$ = c;
   a = new UpgradeCollection([[characterLevelUpgrades[c]]], false);
   addChildView(this, new CharacterAttributesView("characterPropertiesContainer" + c, c));
@@ -135,7 +135,7 @@ export function CharacterView(a, b, c) {
 }
 export function mountCharacterView(a) {
   var b = a.$ < game.state.adventurers.length,
-    c = a.C;
+    c = a.tabState;
   c.enabled = b;
   c.selected = false;
   if (b) {
@@ -153,7 +153,7 @@ export function mountCharacterView(a) {
 }
 export function SkillsTabView(a, b, c) {
   this.elementId = b;
-  this.C = a;
+  this.tabState = a;
   this.$ = c;
   this.ry = this.qy = this.Rl = this.hj = this.Ax = null;
   this.Uc = [];
@@ -620,12 +620,12 @@ export function initializeViewsCharacter() {
   };
   CharacterView.prototype = new TabView();
   CharacterView.prototype.onGameWon = function () {
-    this.C.enabled = false;
-    this.C.selected = false;
+    this.tabState.enabled = false;
+    this.tabState.selected = false;
   };
   CharacterView.prototype.onOfflineStart = function () {
-    this.C.enabled = false;
-    this.C.selected = false;
+    this.tabState.enabled = false;
+    this.tabState.selected = false;
   };
   CharacterView.prototype.onOfflineFinish = function () {
     mountCharacterView(this);

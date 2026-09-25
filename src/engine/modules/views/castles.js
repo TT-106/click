@@ -39,7 +39,7 @@ export function setCastleRowModel(a, b) {
 }
 export function CastlesView(a) {
   this.elementId = "castlesTabContent";
-  this.C = a;
+  this.tabState = a;
   addChildView(this, new CastleTableView());
   addChildView(this, new CastleMapView());
 }
@@ -227,20 +227,20 @@ export function initializeViewsCastles() {
   };
   CastlesView.prototype = new TabView();
   CastlesView.prototype.onGameWon = function () {
-    this.C.enabled = false;
-    this.C.selected = false;
+    this.tabState.enabled = false;
+    this.tabState.selected = false;
   };
   CastlesView.prototype.onOfflineFinish = function () {
-    this.C.enabled = true;
-    this.C.selected = false;
+    this.tabState.enabled = true;
+    this.tabState.selected = false;
   };
   CastlesView.prototype.onOfflineStart = function () {
-    this.C.enabled = false;
-    this.C.selected = false;
+    this.tabState.enabled = false;
+    this.tabState.selected = false;
   };
   CastlesView.prototype.reset = function () {
-    this.C.enabled = true;
-    this.C.selected = false;
+    this.tabState.enabled = true;
+    this.tabState.selected = false;
     resetChildViews(this);
   };
 }

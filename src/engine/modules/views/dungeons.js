@@ -77,7 +77,7 @@ export function DungeonRowView(a, b) {
 }
 export function DungeonListView(a, b, c) {
   this.elementId = c;
-  this.C = a;
+  this.tabState = a;
   this.dw = b;
   this.bf = null;
   this.rf = [];
@@ -98,7 +98,7 @@ export function getDungeonList(a) {
 }
 export function DungeonsView(a) {
   this.elementId = "dungeonsTabContent";
-  this.C = a;
+  this.tabState = a;
   this.nr = new TabState(getDungeonTabLabel(0, 0), true);
   this.zw = new TabState(getDungeonTabLabel(1, 0), true);
   this.qu = new TabState(getDungeonTabLabel(2, 0), true);
@@ -357,20 +357,20 @@ export function initializeViewsDungeons() {
   };
   DungeonsView.prototype = new TabView();
   DungeonsView.prototype.onGameWon = function () {
-    this.C.enabled = false;
-    this.C.selected = false;
+    this.tabState.enabled = false;
+    this.tabState.selected = false;
   };
   DungeonsView.prototype.onOfflineFinish = function () {
-    this.C.enabled = true;
-    this.C.selected = false;
+    this.tabState.enabled = true;
+    this.tabState.selected = false;
   };
   DungeonsView.prototype.onOfflineStart = function () {
-    this.C.enabled = false;
-    this.C.selected = false;
+    this.tabState.enabled = false;
+    this.tabState.selected = false;
   };
   DungeonsView.prototype.reset = function () {
-    this.C.enabled = true;
-    this.C.selected = false;
+    this.tabState.enabled = true;
+    this.tabState.selected = false;
     resetChildViews(this);
   };
   DungeonsView.prototype.update = function () {

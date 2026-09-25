@@ -31,7 +31,7 @@ export function TabState(a, b) {
   this.highlighted = this.selected = false;
 }
 export function TabButtonView(a) {
-  this.C = a;
+  this.tabState = a;
   this.tt = this.Kl = null;
   this.enabled = !a.initiallyEnabled;
   this.selected = !a.selected;
@@ -45,9 +45,9 @@ export function mountTabButton(a, b, c) {
   }
   a.Kl.className = a.selected ? "selectedTab" : "";
   a.tt = createElement("a", a.Kl, null, null);
-  a.tt.innerHTML = a.C.label;
+  a.tt.innerHTML = a.tabState.label;
   a.tt.onclick = function () {
-    var b = a.C,
+    var b = a.tabState,
       f;
     for (f = 0; f < c.tabs.length; f++) {
       c.tabs[f].selected = c.tabs[f] === b;
@@ -81,7 +81,7 @@ export function mountTabBar(a) {
   }
 }
 export function TabView() {
-  this.C = null;
+  this.tabState = null;
 }
 export function initializeViewsNavigation() {
   GameView.prototype = new CompositeView();
@@ -162,7 +162,7 @@ export function initializeViewsNavigation() {
     this.gv = null;
   };
   TabButtonView.prototype.render = function () {
-    var a = this.C.enabled;
+    var a = this.tabState.enabled;
     if (this.enabled !== a) {
       if (this.enabled = a) {
         showElement(this.Kl);
@@ -171,13 +171,13 @@ export function initializeViewsNavigation() {
       }
     }
     if (a) {
-      a = this.C.label;
+      a = this.tabState.label;
       if (this.gv !== a) {
         this.gv = a;
         this.tt.innerHTML = a;
       }
-      var a = this.C.selected,
-        b = this.C.highlighted;
+      var a = this.tabState.selected,
+        b = this.tabState.highlighted;
       if (this.selected != a || this.highlighted != b) {
         this.selected = a;
         this.highlighted = b;
@@ -197,7 +197,7 @@ export function initializeViewsNavigation() {
   TabBar.prototype.Js = function () {
     var a, b;
     for (a = 0; a < this.Ll.length; a++) {
-      b = this.Ll[a].C;
+      b = this.Ll[a].tabState;
       b.enabled = b.initiallyEnabled;
       b.highlighted = false;
       b.selected = 0 === a;
@@ -205,12 +205,12 @@ export function initializeViewsNavigation() {
   };
   TabView.prototype = new CompositeView();
   TabView.prototype.update = function () {
-    if (this.C.enabled && this.C.selected) {
+    if (this.tabState.enabled && this.tabState.selected) {
       updateChildViews(this);
     }
   };
   TabView.prototype.isVisible = function () {
-    return this.C.enabled && this.C.selected;
+    return this.tabState.enabled && this.tabState.selected;
   };
   TabView.prototype.onGameWon = function () {};
   TabView.prototype.onOfflineStart = function () {};

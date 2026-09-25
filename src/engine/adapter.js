@@ -124,8 +124,8 @@ export const engine = {
   },
   showPanel(id) {
     const tab = game.view.panels.find(tab => tab.elementId === id);
-    if (!tab?.C.enabled) return false;
-    for (const item of game.view.tabBar.tabs) item.selected = item === tab.C;
+    if (!tab?.tabState.enabled) return false;
+    for (const item of game.view.tabBar.tabs) item.selected = item === tab.tabState;
     game.view.render();
     return true;
   },

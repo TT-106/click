@@ -13,7 +13,7 @@ import { adventurerClasses } from "../content/classes.js";
 import { monsterSpriteDefinitions } from "../core/bootstrap-data.js";
 export function GameOverView(a) {
   this.elementId = "gameOverTabContent";
-  this.C = a;
+  this.tabState = a;
   this.ql = false;
 }
 export function mountGameOver(a) {
@@ -110,7 +110,7 @@ export function appendRandomMonsterPortrait(a) {
 }
 export function OfflineProgressView(a) {
   this.elementId = "offlineTabContent";
-  this.C = a;
+  this.tabState = a;
   this.$l = this.pb = null;
   this.gu = 500;
   this.Jh = -1;
@@ -140,20 +140,20 @@ export function mountOfflineProgress(a) {
 export function initializeViewsResults() {
   GameOverView.prototype = new TabView();
   GameOverView.prototype.onGameWon = function () {
-    this.C.enabled = true;
-    this.C.selected = true;
+    this.tabState.enabled = true;
+    this.tabState.selected = true;
   };
   GameOverView.prototype.onOfflineFinish = function () {
-    this.C.enabled = false;
-    this.C.selected = false;
+    this.tabState.enabled = false;
+    this.tabState.selected = false;
   };
   GameOverView.prototype.onOfflineStart = function () {
-    this.C.enabled = false;
-    this.C.selected = false;
+    this.tabState.enabled = false;
+    this.tabState.selected = false;
   };
   GameOverView.prototype.reset = function () {
-    this.C.enabled = false;
-    this.C.enabled = false;
+    this.tabState.enabled = false;
+    this.tabState.enabled = false;
     clearElementById(this.elementId);
     this.ql = false;
   };
@@ -165,11 +165,11 @@ export function initializeViewsResults() {
   };
   OfflineProgressView.prototype = new TabView();
   OfflineProgressView.prototype.onGameWon = function () {
-    this.C.enabled = false;
-    this.C.selected = false;
+    this.tabState.enabled = false;
+    this.tabState.selected = false;
   };
   OfflineProgressView.prototype.onOfflineStart = function () {
-    var a = this.C;
+    var a = this.tabState;
     a.enabled = true;
     a.selected = true;
     this.Jh = -1;
@@ -185,7 +185,7 @@ export function initializeViewsResults() {
     this.yu = this.Kk = this.Bu = this.Ck = this.Hk = this.Fk = this.Ek = this.vv = -1;
   };
   OfflineProgressView.prototype.onOfflineFinish = function () {
-    var a = this.C;
+    var a = this.tabState;
     a.enabled = false;
     a.selected = false;
     if (this.$l) {
@@ -194,7 +194,7 @@ export function initializeViewsResults() {
     }
   };
   OfflineProgressView.prototype.reset = function () {
-    this.C.enabled = false;
+    this.tabState.enabled = false;
   };
   OfflineProgressView.prototype.update = function () {
     if (!this.$l) {

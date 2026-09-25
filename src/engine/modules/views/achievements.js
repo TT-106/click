@@ -68,7 +68,7 @@ export function PointUpgradeListView(a) {
 }
 export function PointsView(a) {
   this.elementId = "pointsTabContent";
-  this.C = a;
+  this.tabState = a;
   addChildView(this, new AdventurePointsView("achievementsTabAdventurePointsPanel"));
   addChildView(this, new AdventurePointBreakdownView());
   addChildView(this, new PointUpgradeListView("pointUpgradesContainer"));
@@ -315,20 +315,20 @@ export function initializeViewsAchievements() {
   };
   PointsView.prototype = new TabView();
   PointsView.prototype.onGameWon = function () {
-    this.C.enabled = true;
-    this.C.selected = false;
+    this.tabState.enabled = true;
+    this.tabState.selected = false;
   };
   PointsView.prototype.onOfflineFinish = function () {
-    this.C.enabled = true;
-    this.C.selected = false;
+    this.tabState.enabled = true;
+    this.tabState.selected = false;
   };
   PointsView.prototype.onOfflineStart = function () {
-    this.C.enabled = false;
-    this.C.selected = false;
+    this.tabState.enabled = false;
+    this.tabState.selected = false;
   };
   PointsView.prototype.reset = function () {
-    this.C.enabled = true;
-    this.C.selected = false;
+    this.tabState.enabled = true;
+    this.tabState.selected = false;
     resetChildViews(this);
   };
 }

@@ -31,21 +31,21 @@ export function MonsterRowView(a, b) {
 }
 export function MonsterLevelTabView(a, b) {
   this.elementId = b;
-  this.C = a;
+  this.tabState = a;
   this.Dp = null;
   this.vi = this.xd = -1;
   this.Tj = [];
 }
 export function MonsterView(a) {
   this.elementId = "monstersTabContent";
-  this.C = a;
+  this.tabState = a;
   this.zg = [];
   for (a = 0; a < VISIBLE_MONSTER_LEVELS; a++) {
     this.zg.push(mountMonsterTable(a, a + 1));
   }
   var b = new TabBar("monsterTabMenu");
   for (a = 0; a < this.zg.length; a++) {
-    addTab(b, this.zg[a].C);
+    addTab(b, this.zg[a].tabState);
   }
   addChildView(this, new MonsterUpgradeSummaryView());
   addChildView(this, new MonsterLevelView());
@@ -58,9 +58,9 @@ export function MonsterView(a) {
 export function mountMonsterTable(a, b) {
   var c = {},
     d = 1 === b;
-  c.C = new TabState("等级 " + b, d);
+  c.tabState = new TabState("等级 " + b, d);
   if (d) {
-    c.C.selected = true;
+    c.tabState.selected = true;
   }
   var f = "monstersTabContainer" + a,
     g = getElement(f);
@@ -72,7 +72,7 @@ export function mountMonsterTable(a, b) {
       hideElement(g);
     }
   }
-  c.view = new MonsterLevelTabView(c.C, f);
+  c.view = new MonsterLevelTabView(c.tabState, f);
   c.view.xd = b;
   return c;
 }
@@ -85,7 +85,7 @@ export function updateMonsterTabLabels(a) {
     d = a.zg[f];
     b = d.view.xd;
     if (b !== c) {
-      d.C.label = "等级 " + c;
+      d.tabState.label = "等级 " + c;
       d.view.xd = c;
     }
     c++;
@@ -101,16 +101,16 @@ export function refreshMonsterTabVisibility(a) {
     f = a.zg[c];
     d = f.view.xd;
     d = b.hd <= d && d <= b.fc;
-    f.C.enabled = d;
-    if (!d && f.C.selected) {
-      f.C.selected = false;
+    f.tabState.enabled = d;
+    if (!d && f.tabState.selected) {
+      f.tabState.selected = false;
       g = true;
     }
   }
   if (g) {
     for (c = 0; c < a.zg.length; c++) {
-      if (a.zg[c].C.enabled) {
-        a.zg[c].C.selected = true;
+      if (a.zg[c].tabState.enabled) {
+        a.zg[c].tabState.selected = true;
         break;
       }
     }
@@ -374,20 +374,20 @@ export function initializeViewsMonsters() {
   };
   MonsterView.prototype = new TabView();
   MonsterView.prototype.onGameWon = function () {
-    this.C.enabled = false;
-    this.C.selected = false;
+    this.tabState.enabled = false;
+    this.tabState.selected = false;
   };
   MonsterView.prototype.onOfflineFinish = function () {
-    this.C.enabled = true;
-    this.C.selected = false;
+    this.tabState.enabled = true;
+    this.tabState.selected = false;
   };
   MonsterView.prototype.onOfflineStart = function () {
-    this.C.enabled = false;
-    this.C.selected = false;
+    this.tabState.enabled = false;
+    this.tabState.selected = false;
   };
   MonsterView.prototype.reset = function () {
-    this.C.enabled = true;
-    this.C.selected = false;
+    this.tabState.enabled = true;
+    this.tabState.selected = false;
     updateMonsterTabLabels(this);
     refreshMonsterTabVisibility(this);
     resetChildViews(this);

@@ -91,7 +91,7 @@ export function SaveControlsView() {
 }
 export function InformationView(a) {
   this.elementId = "infoTabContent";
-  this.C = a;
+  this.tabState = a;
   addChildView(this, new SaveControlsView());
   addChildView(this, new StatisticsView());
   addChildView(this, new OptionsView());
@@ -131,20 +131,20 @@ export function initializeViewsInformation() {
   };
   InformationView.prototype = new TabView();
   InformationView.prototype.onGameWon = function () {
-    this.C.selected = false;
-    this.C.enabled = true;
+    this.tabState.selected = false;
+    this.tabState.enabled = true;
   };
   InformationView.prototype.onOfflineFinish = function () {
-    this.C.enabled = true;
-    this.C.selected = false;
+    this.tabState.enabled = true;
+    this.tabState.selected = false;
   };
   InformationView.prototype.onOfflineStart = function () {
-    this.C.enabled = false;
-    this.C.selected = false;
+    this.tabState.enabled = false;
+    this.tabState.selected = false;
   };
   InformationView.prototype.reset = function () {
-    this.C.enabled = true;
-    this.C.selected = false;
+    this.tabState.enabled = true;
+    this.tabState.selected = false;
     resetChildViews(this);
   };
   StatisticsView.prototype = new View();
