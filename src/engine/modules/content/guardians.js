@@ -34,7 +34,7 @@ export function initializeContentGuardians() {
       slot: "235",
       statType: 6
     }],
-    Ma: guardianStatMultipliers,
+    statMultipliers: guardianStatMultipliers,
     kc: null,
     nb: function () {
       return [new MeleeAttackBehavior(MELEE_ATTACK_RANGE, 90, 2, false), new IdleBehavior(1)];
@@ -68,7 +68,7 @@ export function initializeContentGuardians() {
       slot: "182",
       statType: 6
     }],
-    Ma: casterStatMultipliers,
+    statMultipliers: casterStatMultipliers,
     kc: null,
     nb: function () {
       return [new RangedAttackBehavior(RANGED_MIN_DISTANCE, RANGED_ATTACK_RANGE, 95), new HealBehavior(RANGED_ATTACK_RANGE, 90), new SummonBehavior(RANGED_ATTACK_RANGE, 85, 4), new IdleBehavior(1)];
@@ -102,7 +102,7 @@ export function initializeContentGuardians() {
       slot: "3",
       statType: 4
     }],
-    Ma: guardianStatMultipliers,
+    statMultipliers: guardianStatMultipliers,
     kc: null,
     YE: null,
     nb: function () {

@@ -34,7 +34,7 @@ export function initializeContentMinions() {
       slot: "235",
       statType: 6
     }],
-    Ma: minionStatMultipliers,
+    statMultipliers: minionStatMultipliers,
     kc: null,
     nb: function () {
       return [new MeleeAttackBehavior(MELEE_ATTACK_RANGE, 90, 2, false), new ChangeFloorBehavior(), new TravelWorldBehavior(60, 10), new EnterDungeonBehavior(60, 10), new EnterCastleBehavior(60, 10), new UseShopBehavior(60, 10), new WaitBehavior()];
@@ -67,7 +67,7 @@ export function initializeContentMinions() {
       slot: "235",
       statType: 6
     }],
-    Ma: minionStatMultipliers,
+    statMultipliers: minionStatMultipliers,
     kc: null,
     nb: function () {
       return [new MeleeAttackBehavior(MELEE_ATTACK_RANGE, 90, 2, false), new ChangeFloorBehavior(), new TravelWorldBehavior(60, 10), new EnterDungeonBehavior(60, 10), new EnterCastleBehavior(60, 10), new UseShopBehavior(60, 10), new WaitBehavior()];
@@ -100,7 +100,7 @@ export function initializeContentMinions() {
       slot: "235",
       statType: 6
     }],
-    Ma: minionStatMultipliers,
+    statMultipliers: minionStatMultipliers,
     kc: null,
     nb: function () {
       return [new MeleeAttackBehavior(MELEE_ATTACK_RANGE, 90, 2, false), new ChangeFloorBehavior(), new TravelWorldBehavior(60, 10), new EnterDungeonBehavior(60, 10), new EnterCastleBehavior(60, 10), new UseShopBehavior(60, 10), new WaitBehavior()];
@@ -133,7 +133,7 @@ export function initializeContentMinions() {
       slot: "235",
       statType: 6
     }],
-    Ma: minionStatMultipliers,
+    statMultipliers: minionStatMultipliers,
     jl: [barbarianSpellDefinitions.wB],
     Bp: [],
     nb: function () {
@@ -167,7 +167,7 @@ export function initializeContentMinions() {
       slot: "33",
       statType: 6
     }],
-    Ma: minionStatMultipliers,
+    statMultipliers: minionStatMultipliers,
     jl: [ninjaSpellDefinitions.Hx],
     Bp: [{
       statBonusValue: 1,
@@ -204,7 +204,7 @@ export function initializeContentMinions() {
       slot: "88",
       statType: 6
     }],
-    Ma: minionStatMultipliers,
+    statMultipliers: minionStatMultipliers,
     jl: [rogueSpellDefinitions.IB],
     Bp: [],
     nb: function () {
@@ -235,7 +235,7 @@ export function initializeContentMinions() {
       slot: "3",
       statType: 4
     }],
-    Ma: guardianStatMultipliers,
+    statMultipliers: guardianStatMultipliers,
     kc: null,
     Bp: [{
       statBonusValue: 2,
@@ -275,7 +275,7 @@ export function initializeContentMinions() {
       slot: "235",
       statType: 6
     }],
-    Ma: casterStatMultipliers,
+    statMultipliers: casterStatMultipliers,
     kc: null,
     jl: [electricSpellDefinitions.br, poisonCloudSpell],
     Bp: [{
@@ -314,7 +314,7 @@ export function initializeContentMinions() {
       slot: "235",
       statType: 6
     }],
-    Ma: guardianStatMultipliers,
+    statMultipliers: guardianStatMultipliers,
     kc: null,
     jl: [priestSpellDefinitions.$z, priestSpellDefinitions.Zz],
     nb: function () {

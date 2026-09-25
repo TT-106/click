@@ -229,7 +229,7 @@ export function initializeContentClasses() {
       slot: "183",
       statType: 6
     }],
-    Ma: casterStatMultipliers,
+    statMultipliers: casterStatMultipliers,
     kc: fireSpellDefinitions,
     Qg: function () {
       return [new LearnSpellUpgrade(fireBlastSpellDefinition), new CharacterSkillUpgrade(improvedDamageMageFire1Definition), new CharacterSkillUpgrade(healthRegenerationMageFire2Definition), new CharacterSkillUpgrade(improvedDamageMageFire2Definition), new CharacterSkillUpgrade(improvedHealthMageFire2Definition), new CharacterSkillUpgrade(improvedDamageMageFire3Definition), new CharacterSkillUpgrade(improvedSpiritMageFire2Definition), new CharacterSkillUpgrade(fasterAttacksMageFire1Definition), new CharacterSkillUpgrade(spiritRegenerationMageFire2Definition)];
@@ -275,7 +275,7 @@ export function initializeContentClasses() {
       slot: "88",
       statType: 6
     }],
-    Ma: guardianStatMultipliers,
+    statMultipliers: guardianStatMultipliers,
     kc: rogueSpellDefinitions,
     Qg: function () {
       return [new CharacterSkillUpgrade(improvedArmorRogue1Definition), new CharacterSkillUpgrade(improvedArmorRogue2Definition), new CharacterSkillUpgrade(spiritRegenerationRogue1Definition), new CharacterSkillUpgrade(improvedArmorRogue3Definition), new LearnSpellUpgrade(stealthSpellDefinition), new CharacterSkillUpgrade(spiritRegenerationRogue2Definition), new CharacterSkillUpgrade(attacksPerTurnRogue1Definition2), new CharacterSkillUpgrade(improvedSpiritRogue1Definition), new CharacterSkillUpgrade(additionalAttackPercentRogue2Definition)];
@@ -321,7 +321,7 @@ export function initializeContentClasses() {
       slot: "7",
       statType: 4
     }],
-    Ma: guardianStatMultipliers,
+    statMultipliers: guardianStatMultipliers,
     kc: druidSpellDefinitions,
     Qg: function () {
       return [new LearnSpellUpgrade(summonWolfPackSpellDefinition), new CharacterSkillUpgrade(improvedDamageDruid1Definition), new CharacterSkillUpgrade(largerWolfPackDruid1Definition), new CharacterSkillUpgrade(improvedDamageDruid2Definition), new CharacterSkillUpgrade(fasterAttacksDruid1Definition), new CharacterSkillUpgrade(improvedDamageDruid3Definition), new CharacterSkillUpgrade(largerWolfPackDruid5Definition), new CharacterSkillUpgrade(fasterAttacksDruid2Definition), new LearnSpellUpgrade(minorHealSpellDefinition)];
@@ -421,7 +421,7 @@ export function initializeContentClasses() {
       slot: "182",
       statType: 6
     }],
-    Ma: casterStatMultipliers,
+    statMultipliers: casterStatMultipliers,
     kc: electricSpellDefinitions,
     Qg: function () {
       return [new LearnSpellUpgrade(shockSpellDefinition), new CharacterSkillUpgrade(improvedDamageMageElectric1Definition), new CharacterSkillUpgrade(healthRegenerationMageElectric2Definition), new CharacterSkillUpgrade(improvedDamageMageElectric2Definition), new CharacterSkillUpgrade(improvedHealthMageElectric2Definition), new CharacterSkillUpgrade(improvedDamageMageElectric3Definition), new CharacterSkillUpgrade(improvedSpiritMageElectric2Definition), new CharacterSkillUpgrade(fasterAttacksMageElectric1Definition), new CharacterSkillUpgrade(spiritRegenerationMageElectric2Definition)];
@@ -520,7 +520,7 @@ export function initializeContentClasses() {
       slot: "124",
       statType: 4
     }],
-    Ma: casterStatMultipliers,
+    statMultipliers: casterStatMultipliers,
     kc: necromancerSpellDefinitions,
     Qg: function () {
       return [new LearnSpellUpgrade(hurtSpellDefinition), new CharacterSkillUpgrade(improvedDamageNecromancer1Definition), new CharacterSkillUpgrade(healthRegenerationNecromancer2Definition), new CharacterSkillUpgrade(improvedDamageNecromancer2Definition), new CharacterSkillUpgrade(improvedHealthNecromancer2Definition), new CharacterSkillUpgrade(improvedDamageNecromancer3Definition), new CharacterSkillUpgrade(improvedSpiritNecromancer2Definition), new CharacterSkillUpgrade(fasterAttacksNecromancer1Definition), new CharacterSkillUpgrade(spiritRegenerationNecromancer2Definition)];
@@ -566,7 +566,7 @@ export function initializeContentClasses() {
       slot: "205",
       statType: 4
     }],
-    Ma: casterStatMultipliers,
+    statMultipliers: casterStatMultipliers,
     kc: chickenSpellDefinitions,
     Qg: function () {
       return [new LearnSpellUpgrade(summonChickensSpellDefinition), new CharacterSkillUpgrade(improvedArmorChickenKing1Definition), new CharacterSkillUpgrade(healthRegenerationChickenKing2Definition), new CharacterSkillUpgrade(improvedHealthChickenKing2Definition), new CharacterSkillUpgrade(improvedArmorChickenKing2Definition), new CharacterSkillUpgrade(largerFlockChickenKing1Definition), new CharacterSkillUpgrade(improvedSpiritChickenKing2Definition), new CharacterSkillUpgrade(improvedArmorChickenKing3Definition), new CharacterSkillUpgrade(rogueChanceChickenKingDefinition)];
@@ -604,7 +604,7 @@ export function initializeContentClasses() {
     cF: 160,
     kc: null,
     tb: null,
-    Ma: null
+    statMultipliers: null
   };
   scrollCasterClass = {
     characterClass: 0,
