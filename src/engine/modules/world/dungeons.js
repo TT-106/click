@@ -211,7 +211,7 @@ export function initializeWorldDungeons() {
   Dungeon.prototype.iw = function () {
     this.currentLevelIndex++;
     resetEncounter();
-    game.state.aa.$r();
+    game.state.statisticsRecorder.$r();
     if (this.currentLevelIndex < this.levelCount) {
       generateDungeonLevel((/** @type {any} */ (this)).er(), this.dungeonType, this.Aj, true);
       awardAdventurePoints(POINT_EVENT_LEVEL_CLEARED);
@@ -222,7 +222,7 @@ export function initializeWorldDungeons() {
       this.clearedTurn = game.state.turnNumber;
       game.dungeons.Is(this);
       this.zj.Is();
-      game.state.aa.Vr();
+      game.state.statisticsRecorder.Vr();
       awardAdventurePoints(POINT_EVENT_DUNGEON_CLEARED);
       recordGameEvent("Dungeon", "Dungeon Cleared");
       var a,

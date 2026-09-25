@@ -181,7 +181,7 @@ export function initializeRuntimeGame() {
       }(),
       runStatistics: new RunStatistics(),
       lifetimeStatistics: new LifetimeStatistics(),
-      aa: new StatisticsRecorder(),
+      statisticsRecorder: new StatisticsRecorder(),
       victoryStatistics: new function () {
         this.vn = this.mm = this.Xm = this.kn = this.jn = this.hn = 0;
         this.qo = {};

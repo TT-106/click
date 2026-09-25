@@ -86,7 +86,7 @@ export function advanceSimulation(a) {
     for (N = 0; N < v.length; N++) {
       updateCharacterEffects(v[N].effects, false);
     }
-    game.state.aa.is();
+    game.state.statisticsRecorder.is();
     var I = game.state.party;
     if (game.worldActive) {
       I.ou();
@@ -814,7 +814,7 @@ export function purchaseDungeonFarm(a, b) {
       d = c.Yw(a.bc()),
       f = c.Yw(a.cc());
     registerFarm(c, new Farm(a.dungeonId, d, f));
-    game.state.aa.Xr();
+    game.state.statisticsRecorder.Xr();
   }
 }
 export function initializeSimulationTick() {}

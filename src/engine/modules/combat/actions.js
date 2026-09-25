@@ -200,7 +200,7 @@ export function applySpellEffect(a, b) {
         h = new VisualEffect("Gold Sparkles", d, h, false, 1);
         addVisualEffect(game.effects, h);
         addGold(f.Xl);
-        game.state.aa.dp(f.Xl);
+        game.state.statisticsRecorder.dp(f.Xl);
         f.oh(true);
         removeGoldDrop(f);
         awardAdventurePoints(9);
@@ -228,7 +228,7 @@ export function applySpellEffect(a, b) {
           console.log("failed to find item character");
           h = null;
         }
-        game.state.aa.ep(f);
+        game.state.statisticsRecorder.ep(f);
         addInventoryItem(h.inventory, f);
         awardAdventurePoints(12);
         f = f.uf();
@@ -325,7 +325,7 @@ export function applyActionDamage(a) {
 export function resolveCharacterDefeat(a, b) {
   if (b.characterType === ADVENTURER_TYPE) {
     if (!b.effects.Kf) {
-      game.state.aa.Tr();
+      game.state.statisticsRecorder.Tr();
       b.effects.Kf = true;
       var c = b.position.levelPosition,
         d = new StatusEffect(13, game.state.turnNumber, stunEffectDefinition.Qd, game.animations.Zg(stunEffectDefinition.vd), stunEffectDefinition.Od, stunEffectDefinition.Pd, 0),
@@ -352,12 +352,12 @@ export function resolveCharacterDefeat(a, b) {
       if (isAdventurerOrMinion(d)) {
         d.stats.kills++;
         addKills(doubleKillsModifier.currentValue);
-        game.state.aa.cp();
+        game.state.statisticsRecorder.cp();
         if (5 === d.characterType) {
-          game.state.aa.gp();
+          game.state.statisticsRecorder.gp();
         }
         if (1 === a.characterType) {
-          game.state.aa.$k();
+          game.state.statisticsRecorder.$k();
         }
         d = b.Sb;
         addExperience(d.No * doubleExperienceModifier.currentValue);

@@ -44,7 +44,7 @@ export function initializeSimulationLoop() {
             for (c = 0; 200 > c && game.offlineProcessed < game.offlineDuration && !game.gameWon && game.processingOffline;) {
               advanceSimulation(15);
               game.offlineProcessed += this.turnDuration;
-              game.state.aa.fp(this.turnDuration);
+              game.state.statisticsRecorder.fp(this.turnDuration);
               c++;
             }
             if (game.offlineProcessed >= game.offlineDuration) {
@@ -92,7 +92,7 @@ export function initializeSimulationLoop() {
           }
         }
         if (!(game.paused || game.processingOffline)) {
-          game.state.aa.fp(a);
+          game.state.statisticsRecorder.fp(a);
         }
         this.lastTickAt = nowMilliseconds();
       } else {

@@ -97,7 +97,7 @@ export function spawnMinion(a, b, c) {
     }
   }
   game.minions.Tt(d);
-  game.state.aa.bs();
+  game.state.statisticsRecorder.bs();
   awardAdventurePoints(18);
 }
 export function createCastleGuardian(a, b, c) {
@@ -279,12 +279,12 @@ export function initializeSimulationCharacters() {
       if (isAdventurerOrMinion(f)) {
         f.stats.kills++;
         addKills(doubleKillsModifier.currentValue);
-        game.state.aa.cp();
+        game.state.statisticsRecorder.cp();
         if (5 === f.characterType) {
-          game.state.aa.gp();
+          game.state.statisticsRecorder.gp();
         }
         if (1 === a.characterType) {
-          game.state.aa.$k();
+          game.state.statisticsRecorder.$k();
           f.stats.$k();
         }
         f = b.Sb;

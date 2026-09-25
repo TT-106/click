@@ -252,7 +252,7 @@ export function initializeCharactersParty() {
       invalidateCastleRevision();
       refreshWorldBlocks(game.world);
       recordGameEvent("Castle", "已清空:" + a.castleName);
-      game.state.aa.Sr();
+      game.state.statisticsRecorder.Sr();
       refreshAttackableCastles(a);
       refreshScheduledCastles(a);
       awardAdventurePoints(19);

@@ -309,7 +309,7 @@ export function updateCharacter(a, b) {
                   var V = game.state.party;
                   if (!Q.Mb) {
                     Q.Mb = true;
-                    game.state.aa.Ur();
+                    game.state.statisticsRecorder.Ur();
                     awardAdventurePoints(2);
                     if (!Q.$d.Xi) {
                       populateEncounter(Q.$d);
@@ -447,7 +447,7 @@ export function updateCharacter(a, b) {
             }
           }
           if (isAdventurerOrMinion(a)) {
-            game.state.aa.as();
+            game.state.statisticsRecorder.as();
           }
         }
       } else if (a.actionType === MELEE_ACTION_TYPE) {
@@ -461,7 +461,7 @@ export function updateCharacter(a, b) {
             }
           }
           if (isAdventurerOrMinion(a)) {
-            game.state.aa.ds();
+            game.state.statisticsRecorder.ds();
           }
         }
       } else if (a.actionType === CAST_ACTION_TYPE) {
@@ -988,7 +988,7 @@ export function updateCharacter(a, b) {
             }
           }
           if (isAdventurerOrMinion(a)) {
-            game.state.aa.gs();
+            game.state.statisticsRecorder.gs();
           }
         }
       } else if (5 === a.actionType) {
@@ -999,7 +999,7 @@ export function updateCharacter(a, b) {
             showFloatingText(gj, a, Pe + "黄金", "yellow");
           }
           addGold(a.rh.Xl);
-          game.state.aa.dp(a.rh.Xl);
+          game.state.statisticsRecorder.dp(a.rh.Xl);
           a.rh.oh(true);
           removeGoldDrop(a.rh);
           a.rh = null;
@@ -1030,7 +1030,7 @@ export function updateCharacter(a, b) {
           var Qe = a.bj.getItem(),
             Cf = Qe.uf();
           addInventoryItem(Qe.nj.inventory, Qe);
-          game.state.aa.ep(Qe);
+          game.state.statisticsRecorder.ep(Qe);
           awardAdventurePoints(12);
           if (0 != Cf) {
             switch (Cf) {
@@ -1126,15 +1126,15 @@ export function updateCharacter(a, b) {
           showFloatingText(game.floatingText, a, "搜索!!!", "#FFF");
           switch (Ad) {
             case 1:
-              game.state.aa.hs();
+              game.state.statisticsRecorder.hs();
               awardAdventurePoints(6);
               break;
             case 2:
-              game.state.aa.js();
+              game.state.statisticsRecorder.js();
               awardAdventurePoints(7);
               break;
             case 3:
-              game.state.aa.Rr();
+              game.state.statisticsRecorder.Rr();
               awardAdventurePoints(8);
           }
           recordGameEvent("Treasure Chest", "Looted");
@@ -1200,7 +1200,7 @@ export function updateCharacter(a, b) {
                   removeInventoryItemAt(Sp, Ph);
                 }
               }
-              game.state.aa.Zr(Tp);
+              game.state.statisticsRecorder.Zr(Tp);
               showFloatingText(game.floatingText, yl, "黄金!", "yellow");
               var Vp = game.shops;
               Vp.ni += floorNumber(Al);

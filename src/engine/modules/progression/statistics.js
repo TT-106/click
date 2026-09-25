@@ -15,12 +15,12 @@ export function getSoloClassVictories(a, b) {
   return c ? c : 0;
 }
 export function StatisticsRecorder() {
-  this.lifetimeStatistics = this.aa = null;
+  this.lifetimeStatistics = this.statisticsRecorder = null;
 }
 export function bindStatistics() {
-  var a = game.state.aa,
+  var a = game.state.statisticsRecorder,
     b = game.state.lifetimeStatistics;
-  a.aa = game.state.runStatistics;
+  a.statisticsRecorder = game.state.runStatistics;
   a.lifetimeStatistics = b;
 }
 export function initializeProgressionStatistics() {
@@ -129,107 +129,107 @@ export function initializeProgressionStatistics() {
     console.log("Reset invoked on total statistics. Not resetting anything.");
   };
   StatisticsRecorder.prototype.is = function () {
-    this.aa.is();
+    this.statisticsRecorder.is();
     this.lifetimeStatistics.is();
   };
   StatisticsRecorder.prototype.Ur = function () {
-    this.aa.Ur();
+    this.statisticsRecorder.Ur();
     this.lifetimeStatistics.Ur();
   };
   StatisticsRecorder.prototype.es = function () {
-    this.aa.es();
+    this.statisticsRecorder.es();
     this.lifetimeStatistics.es();
   };
   StatisticsRecorder.prototype.$r = function () {
-    this.aa.$r();
+    this.statisticsRecorder.$r();
     this.lifetimeStatistics.$r();
   };
   StatisticsRecorder.prototype.Vr = function () {
-    this.aa.Vr();
+    this.statisticsRecorder.Vr();
     this.lifetimeStatistics.Vr();
   };
   StatisticsRecorder.prototype.Sr = function () {
-    this.aa.Sr();
+    this.statisticsRecorder.Sr();
     this.lifetimeStatistics.Sr();
   };
   StatisticsRecorder.prototype.Yr = function (a) {
-    this.aa.Yr(a);
+    this.statisticsRecorder.Yr(a);
     this.lifetimeStatistics.Yr(a);
   };
   StatisticsRecorder.prototype.dp = function (a) {
-    this.aa.dp(a);
+    this.statisticsRecorder.dp(a);
     this.lifetimeStatistics.dp(a);
   };
   StatisticsRecorder.prototype.Wr = function (a) {
-    this.aa.Wr(a);
+    this.statisticsRecorder.Wr(a);
     this.lifetimeStatistics.Wr(a);
   };
   StatisticsRecorder.prototype.cp = function () {
-    this.aa.cp();
+    this.statisticsRecorder.cp();
     this.lifetimeStatistics.cp();
   };
   StatisticsRecorder.prototype.gp = function () {
-    this.aa.gp();
+    this.statisticsRecorder.gp();
     this.lifetimeStatistics.gp();
   };
   StatisticsRecorder.prototype.$k = function () {
-    this.aa.$k();
+    this.statisticsRecorder.$k();
     this.lifetimeStatistics.$k();
   };
   StatisticsRecorder.prototype.bs = function () {
-    this.aa.bs();
+    this.statisticsRecorder.bs();
     this.lifetimeStatistics.bs();
   };
   StatisticsRecorder.prototype.Tr = function () {
-    this.aa.Tr();
+    this.statisticsRecorder.Tr();
     this.lifetimeStatistics.Tr();
   };
   StatisticsRecorder.prototype.as = function () {
-    this.aa.as();
+    this.statisticsRecorder.as();
     this.lifetimeStatistics.as();
   };
   StatisticsRecorder.prototype.ds = function () {
-    this.aa.ds();
+    this.statisticsRecorder.ds();
     this.lifetimeStatistics.ds();
   };
   StatisticsRecorder.prototype.gs = function () {
-    this.aa.gs();
+    this.statisticsRecorder.gs();
     this.lifetimeStatistics.gs();
   };
   StatisticsRecorder.prototype.cs = function () {
-    this.aa.cs();
+    this.statisticsRecorder.cs();
     this.lifetimeStatistics.cs();
   };
   StatisticsRecorder.prototype.fs = function () {
-    this.aa.fs();
+    this.statisticsRecorder.fs();
     this.lifetimeStatistics.fs();
   };
   StatisticsRecorder.prototype.Xr = function () {
-    this.aa.Xr();
+    this.statisticsRecorder.Xr();
     this.lifetimeStatistics.Xr();
   };
   StatisticsRecorder.prototype.fp = function (a) {
-    this.aa.fp(a);
+    this.statisticsRecorder.fp(a);
     this.lifetimeStatistics.fp(a);
   };
   StatisticsRecorder.prototype.Zr = function (a) {
-    this.aa.Zr(a);
+    this.statisticsRecorder.Zr(a);
     this.lifetimeStatistics.Zr(a);
   };
   StatisticsRecorder.prototype.ep = function (a) {
-    this.aa.ep(a);
+    this.statisticsRecorder.ep(a);
     this.lifetimeStatistics.ep(a);
   };
   StatisticsRecorder.prototype.hs = function () {
-    this.aa.hs();
+    this.statisticsRecorder.hs();
     this.lifetimeStatistics.hs();
   };
   StatisticsRecorder.prototype.js = function () {
-    this.aa.js();
+    this.statisticsRecorder.js();
     this.lifetimeStatistics.js();
   };
   StatisticsRecorder.prototype.Rr = function () {
-    this.aa.Rr();
+    this.statisticsRecorder.Rr();
     this.lifetimeStatistics.Rr();
   };
 }

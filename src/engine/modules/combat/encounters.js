@@ -262,7 +262,7 @@ export function initializeCombatEncounters() {
   EncounterState.prototype.ol = function () {
     if (1 > getMonsters().length) {
       this.ym = true;
-      game.state.aa.es();
+      game.state.statisticsRecorder.es();
       clearScrollTargets();
       awardAdventurePoints(POINT_EVENT_ENCOUNTER);
       var a, b;
