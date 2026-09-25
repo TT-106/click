@@ -30,7 +30,7 @@ export function DungeonRoom(a, b, c, d, f) {
   this.Yp = f;
   this.ro = [];
   this.Nc = [];
-  this.tileGrid = this.Ga = this.stairs = null;
+  this.tileGrid = this.theme = this.stairs = null;
   this.Xi = false;
 }
 export function roomLeftPixels(a) {
@@ -66,21 +66,21 @@ export function revealRoom(a) {
       h,
       l,
       n,
-      p = game.terrainSprites.getSprite(a.Ga.floor);
-    n = game.terrainSprites.getSprite(a.Ga.Kb.Cg);
-    var s = game.terrainSprites.getSprite(a.Ga.Kb.Eg);
+      p = game.terrainSprites.getSprite(a.theme.floor);
+    n = game.terrainSprites.getSprite(a.theme.Kb.Cg);
+    var s = game.terrainSprites.getSprite(a.theme.Kb.Eg);
     h = a.tileGrid[c - 1][f - 1];
     h.setBackgroundSprite(p);
-    h.setDecorationSprite(game.terrainSprites.getSprite(a.Ga.Kb.Gg));
+    h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.Kb.Gg));
     h = a.tileGrid[d][f - 1];
     h.setBackgroundSprite(p);
-    h.setDecorationSprite(game.terrainSprites.getSprite(a.Ga.Kb.Hg));
+    h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.Kb.Hg));
     h = a.tileGrid[c - 1][g];
     h.setBackgroundSprite(p);
-    h.setDecorationSprite(game.terrainSprites.getSprite(a.Ga.Kb.Dg));
+    h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.Kb.Dg));
     h = a.tileGrid[d][g];
     h.setBackgroundSprite(p);
-    h.setDecorationSprite(game.terrainSprites.getSprite(a.Ga.Kb.Fg));
+    h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.Kb.Fg));
     for (l = c; l < d; l++) {
       h = a.tileGrid[l][f - 1];
       h.setBackgroundSprite(p);
@@ -121,15 +121,15 @@ export function revealRoom(a) {
       h.setBackgroundSprite(p);
       if (f.Ho) {
         if (f.Mb) {
-          h.setDecorationSprite(game.terrainSprites.getSprite(a.Ga.Ac.kg));
+          h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.Ac.kg));
         } else {
-          h.setDecorationSprite(game.terrainSprites.getSprite(a.Ga.Ac.Vf));
+          h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.Ac.Vf));
         }
       } else {
         if (f.Mb) {
-          h.setDecorationSprite(game.terrainSprites.getSprite(a.Ga.Ac.jg));
+          h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.Ac.jg));
         } else {
-          h.setDecorationSprite(game.terrainSprites.getSprite(a.Ga.Ac.Uf));
+          h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.Ac.Uf));
         }
       }
     }
@@ -138,19 +138,19 @@ export function revealRoom(a) {
       h.setBackgroundSprite(p);
       if (a.stairs.Fq) {
         if (a.stairs.sq) {
-          h.setDecorationSprite(game.terrainSprites.getSprite(a.Ga.stairs.Lh));
+          h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.stairs.Lh));
         } else {
-          h.setDecorationSprite(game.terrainSprites.getSprite(a.Ga.stairs.di));
+          h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.stairs.di));
         }
       } else {
         if (a.stairs.sq) {
-          h.setDecorationSprite(game.terrainSprites.getSprite(a.Ga.stairs.Kh));
+          h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.stairs.Kh));
         } else {
-          h.setDecorationSprite(game.terrainSprites.getSprite(a.Ga.stairs.ci));
+          h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.stairs.ci));
         }
       }
     }
-    p = a.Ga.Th;
+    p = a.theme.Th;
     h = a.tileGrid;
     b = game.decorations;
     if (!(!p || 0 === p.length || 0.2 > b.seededRandom.random() || !(p = 1 === p.length ? p[0] : randomIntFrom(b.seededRandom, p.length)))) {
@@ -276,7 +276,7 @@ export function DungeonHallway(a, b, c, d) {
   this.Cl = c;
   this.Be = d;
   this.Sk = [];
-  this.tileGrid = this.Ga = null;
+  this.tileGrid = this.theme = null;
   this.Km = false;
 }
 export function getOppositeDoor(a, b) {
@@ -297,17 +297,17 @@ export function revealHallway(a, b) {
       d,
       f,
       g,
-      h = game.terrainSprites.getSprite(a.Ga.floor),
-      l = game.terrainSprites.getSprite(a.Ga.Kb.Cg),
-      n = game.terrainSprites.getSprite(a.Ga.Kb.Eg),
-      p = game.terrainSprites.getSprite(a.Ga.Kb.Hg),
-      s = game.terrainSprites.getSprite(a.Ga.Kb.Gg),
-      u = game.terrainSprites.getSprite(a.Ga.Kb.Fg),
-      y = game.terrainSprites.getSprite(a.Ga.Kb.Dg),
-      A = game.terrainSprites.getSprite(a.Ga.Kb.Bh),
-      C = game.terrainSprites.getSprite(a.Ga.Kb.Ah),
-      v = game.terrainSprites.getSprite(a.Ga.Kb.zh),
-      D = game.terrainSprites.getSprite(a.Ga.Kb.Ch);
+      h = game.terrainSprites.getSprite(a.theme.floor),
+      l = game.terrainSprites.getSprite(a.theme.Kb.Cg),
+      n = game.terrainSprites.getSprite(a.theme.Kb.Eg),
+      p = game.terrainSprites.getSprite(a.theme.Kb.Hg),
+      s = game.terrainSprites.getSprite(a.theme.Kb.Gg),
+      u = game.terrainSprites.getSprite(a.theme.Kb.Fg),
+      y = game.terrainSprites.getSprite(a.theme.Kb.Dg),
+      A = game.terrainSprites.getSprite(a.theme.Kb.Bh),
+      C = game.terrainSprites.getSprite(a.theme.Kb.Ah),
+      v = game.terrainSprites.getSprite(a.theme.Kb.zh),
+      D = game.terrainSprites.getSprite(a.theme.Kb.Ch);
     for (g = 0; g < c.length; g++) {
       d = c[g];
       f = a.tileGrid[d.x][d.y];
@@ -334,15 +334,15 @@ export function revealHallway(a, b) {
         f.setBackgroundSprite(h);
         if (a.af.Ho) {
           if (a.af.Mb) {
-            f.setDecorationSprite(game.terrainSprites.getSprite(a.Ga.Ac.kg));
+            f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.Ac.kg));
           } else {
-            f.setDecorationSprite(game.terrainSprites.getSprite(a.Ga.Ac.Vf));
+            f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.Ac.Vf));
           }
         } else {
           if (a.af.Mb) {
-            f.setDecorationSprite(game.terrainSprites.getSprite(a.Ga.Ac.jg));
+            f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.Ac.jg));
           } else {
-            f.setDecorationSprite(game.terrainSprites.getSprite(a.Ga.Ac.Uf));
+            f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.Ac.Uf));
           }
         }
         Q = z > I.y;
@@ -390,15 +390,15 @@ export function revealHallway(a, b) {
         f.setBackgroundSprite(h);
         if (a.Be.Ho) {
           if (a.Be.Mb) {
-            f.setDecorationSprite(game.terrainSprites.getSprite(a.Ga.Ac.kg));
+            f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.Ac.kg));
           } else {
-            f.setDecorationSprite(game.terrainSprites.getSprite(a.Ga.Ac.Vf));
+            f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.Ac.Vf));
           }
         } else {
           if (a.Be.Mb) {
-            f.setDecorationSprite(game.terrainSprites.getSprite(a.Ga.Ac.jg));
+            f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.Ac.jg));
           } else {
-            f.setDecorationSprite(game.terrainSprites.getSprite(a.Ga.Ac.Uf));
+            f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.Ac.Uf));
           }
         }
         f = z < N.y;
@@ -561,7 +561,7 @@ export function initializeWorldRooms() {
   };
   EMPTY_TILE = 0;
   DungeonRoom.prototype.xx = function (a, b) {
-    this.Ga = a;
+    this.theme = a;
     this.tileGrid = b;
   };
   DungeonRoom.prototype.yx = function () {
@@ -622,7 +622,7 @@ export function initializeWorldRooms() {
     return b * b + a * a;
   };
   DungeonHallway.prototype.xx = function (a, b) {
-    this.Ga = a;
+    this.theme = a;
     this.tileGrid = b;
   };
   DungeonHallway.prototype.Bq = function (a) {
