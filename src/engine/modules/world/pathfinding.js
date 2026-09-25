@@ -138,7 +138,7 @@ export function findHallwayPath(a, b, c) {
             l.xk = p;
           } else {
             if (0 > l.Ko) {
-              n = l.rl ? (n = l.rl.rl) && l.gh.T !== n.gh.T && l.gh.U !== n.gh.U ? 1.3 : 1 : 1;
+              n = l.rl ? (n = l.rl.rl) && l.gh.x !== n.gh.x && l.gh.y !== n.gh.y ? 1.3 : 1 : 1;
               l.Ko = l.gh.ac(f.gh) * n;
             }
             l.xk = p;
@@ -166,29 +166,29 @@ export function findHallwayPath(a, b, c) {
     g.Yk = l;
     h.Yk = l;
     for (f = 0; f < a.length; f++) {
-      if (d = a[f], !roomContainsTile(b, d.T, d.U) && !roomContainsTile(c, d.T, d.U)) {
-        if (roomContainsTile(c, d.T, d.U)) {
+      if (d = a[f], !roomContainsTile(b, d.x, d.y) && !roomContainsTile(c, d.x, d.y)) {
+        if (roomContainsTile(c, d.x, d.y)) {
           break;
         }
-        if (isRoomBorder(b, d.T, d.U)) {
+        if (isRoomBorder(b, d.x, d.y)) {
           p = g;
-          s = d.T;
-          n = d.U;
+          s = d.x;
+          n = d.y;
           p.wj = s;
           p.xj = n;
           p.me = s * game.tileSize;
           p.ne = n * game.tileSize;
-          g.Ho = d.T != a[f + 1].T;
+          g.Ho = d.x != a[f + 1].x;
         } else {
-          if (isRoomBorder(c, d.T, d.U)) {
+          if (isRoomBorder(c, d.x, d.y)) {
             p = h;
-            s = d.T;
-            n = d.U;
+            s = d.x;
+            n = d.y;
             p.wj = s;
             p.xj = n;
             p.me = s * game.tileSize;
             p.ne = n * game.tileSize;
-            h.Ho = d.T != a[f - 1].T;
+            h.Ho = d.x != a[f - 1].x;
           }
         }
         l.Sk.push(d);

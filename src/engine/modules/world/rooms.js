@@ -154,7 +154,7 @@ export function revealRoom(a) {
     b = game.decorations;
     if (!(!p || 0 === p.length || 0.2 > b.wa.random() || !(p = 1 === p.length ? p[0] : randomIntFrom(b.wa, p.length)))) {
       if (p.Oo && 0 < p.Oo.length) {
-        if (g = a.tileColumn, d = a.tileRow, f = d + a.heightInTiles - 1, g = g + 1 + randomIntFrom(b.wa, g + a.widthInTiles - 1 - g - 2), d = d + 1 + randomIntFrom(b.wa, f - d - 2), setVector(b.yh, g, d), f = b.yh, d = h[f.T][f.U], d) {
+        if (g = a.tileColumn, d = a.tileRow, f = d + a.heightInTiles - 1, g = g + 1 + randomIntFrom(b.wa, g + a.widthInTiles - 1 - g - 2), d = d + 1 + randomIntFrom(b.wa, f - d - 2), setVector(b.yh, g, d), f = b.yh, d = h[f.x][f.y], d) {
           if (!d.Yf) {
             if (f = p.Oo[randomIntFrom(b.wa, p.Oo.length)]) {
               d.ea(game.terrainSprites.v(f));
@@ -163,7 +163,7 @@ export function revealRoom(a) {
             }
           }
         } else {
-          console.log("invalid level tile. col=" + f.T + " row=" + f.U);
+          console.log("invalid level tile. col=" + f.x + " row=" + f.y);
         }
       }
       if (0.5 > b.wa.random()) {
@@ -174,7 +174,7 @@ export function revealRoom(a) {
         p = p.KC;
       }
       if (d && p && 0 !== p.length && canPlaceRoomObject(a, d)) {
-        if (h = h[d.T][d.U], h) {
+        if (h = h[d.x][d.y], h) {
           if (!h.bt) {
             if (b = p[randomIntFrom(b.wa, p.length)]) {
               h.bt = game.terrainSprites.v(b);
@@ -183,7 +183,7 @@ export function revealRoom(a) {
             }
           }
         } else {
-          console.log("invalid level tile. col=" + d.T + " row=" + d.U);
+          console.log("invalid level tile. col=" + d.x + " row=" + d.y);
         }
       }
     }
@@ -204,8 +204,8 @@ export function revealRoom(a) {
 }
 export function clampPointToRoom(a, b, c) {
   if (b) {
-    var d = b.T,
-      f = b.U,
+    var d = b.x,
+      f = b.y,
       g = (a.tileColumn - 1) * game.tileSize + c,
       h = roomRightPixels(a) - c,
       l = (a.tileRow - 1) * game.tileSize + c;
@@ -240,8 +240,8 @@ export function isPointNearDoor(a, b) {
   return false;
 }
 export function canPlaceRoomObject(a, b) {
-  var c = b.T,
-    d = b.U,
+  var c = b.x,
+    d = b.y,
     f;
   for (f = 0; f < a.Nc.length; f++) {
     if (c === a.Nc[f].wj && d === a.Nc[f].xj) {
@@ -309,7 +309,7 @@ export function revealHallway(a, b) {
       D = game.terrainSprites.v(a.Ga.Kb.Ch);
     for (g = 0; g < c.length; g++) {
       d = c[g];
-      f = a.G[d.T][d.U];
+      f = a.G[d.x][d.y];
       f.Qa(h);
     }
     var N = null,
@@ -326,8 +326,8 @@ export function revealHallway(a, b) {
     for (g = 0; g < c.length; g++) {
       d = c[g];
       I = g + 1 < c.length ? c[g + 1] : null;
-      x = d.T;
-      z = d.U;
+      x = d.x;
+      z = d.y;
       if (!N) {
         f = a.G[x][z];
         f.Qa(h);
@@ -344,10 +344,10 @@ export function revealHallway(a, b) {
             f.ea(game.terrainSprites.v(a.Ga.Ac.Uf));
           }
         }
-        Q = z > I.U;
-        V = z < I.U;
-        K = x > I.T;
-        na = x < I.T;
+        Q = z > I.y;
+        V = z < I.y;
+        K = x > I.x;
+        na = x < I.x;
         if (K) {
           f = a.G[x][z - 1];
           f.Qa(h);
@@ -400,10 +400,10 @@ export function revealHallway(a, b) {
             f.ea(game.terrainSprites.v(a.Ga.Ac.Uf));
           }
         }
-        f = z < N.U;
-        O = z > N.U;
-        la = x < N.T;
-        if (J = x > N.T) {
+        f = z < N.y;
+        O = z > N.y;
+        la = x < N.x;
+        if (J = x > N.x) {
           f = a.G[x][z - 1];
           f.Qa(h);
           f.ea(A);
@@ -440,14 +440,14 @@ export function revealHallway(a, b) {
         }
       }
       if (N && I) {
-        f = z < N.U;
-        O = z > N.U;
-        la = x < N.T;
-        J = x > N.T;
-        Q = z > I.U;
-        V = z < I.U;
-        K = x > I.T;
-        na = x < I.T;
+        f = z < N.y;
+        O = z > N.y;
+        la = x < N.x;
+        J = x > N.x;
+        Q = z > I.y;
+        V = z < I.y;
+        K = x > I.x;
+        na = x < I.x;
         if (f && K) {
           paintHallwayTile(a.G[x + 1][z], h, n, false);
           paintHallwayTile(a.G[x + 1][z - 1], h, p, true);
@@ -628,8 +628,8 @@ export function initializeWorldRooms() {
     var b, c;
     for (c = 0; c < this.Sk.length; c++) {
       b = this.Sk[c];
-      var d = b.T;
-      b = b.U;
+      var d = b.x;
+      b = b.y;
       var f = a[d - 1],
         g = a[d],
         d = a[d + 1];
@@ -649,7 +649,7 @@ export function initializeWorldRooms() {
     var b, c;
     for (c = 0; c < this.Sk.length; c++) {
       b = this.Sk[c];
-      a[b.T][b.U].Rb = 1;
+      a[b.x][b.y].Rb = 1;
     }
     a[this.af.wj][this.af.xj].Rb = 3;
     a[this.Be.wj][this.Be.xj].Rb = 3;

@@ -204,16 +204,16 @@ export function initializeCharactersMovement() {
     }
   };
   CharacterPosition.prototype.dc = function () {
-    return this.Db.T;
+    return this.Db.x;
   };
   CharacterPosition.prototype.ec = function () {
-    return this.Db.U;
+    return this.Db.y;
   };
   CharacterPosition.prototype.Ob = function () {
-    return this.u.T;
+    return this.u.x;
   };
   CharacterPosition.prototype.Pb = function () {
-    return this.u.U;
+    return this.u.y;
   };
   CharacterPosition.prototype.et = function (a) {
     this.Bc = a;

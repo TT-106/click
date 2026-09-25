@@ -511,8 +511,8 @@ export function initializeAiBehaviors() {
     normalizeVector(this.Jl);
     multiplyVector(this.Jl, this.bb);
     addVector(this.Jl, c);
-    c = this.Jl.T;
-    d = this.Jl.U;
+    c = this.Jl.x;
+    d = this.Jl.y;
     if (c < f) {
       c = f;
     } else {

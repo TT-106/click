@@ -76,8 +76,8 @@ export function spawnRoomTreasure(a) {
       h++;
     }
     if (f = g) {
-      g = f.T * game.tileSize;
-      f = f.U * game.tileSize;
+      g = f.x * game.tileSize;
+      f = f.y * game.tileSize;
       if (!c.jh) {
         if (d) {
           g += game.tileSize;

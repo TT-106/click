@@ -74,52 +74,52 @@ export function recordGameEvent(category, action) {
   for (const listener of eventListeners) listener({category, action});
 }
 export function Vector2() {
-  this.U = this.T = 0;
+  this.y = this.x = 0;
 }
 export function copyVector(a, b) {
-  a.T = b.T;
-  a.U = b.U;
+  a.x = b.x;
+  a.y = b.y;
 }
 export function setVector(a, b, c) {
-  a.T = b;
-  a.U = c;
+  a.x = b;
+  a.y = c;
 }
 export function assignVector(a, b) {
-  a.T = b.T;
-  a.U = b.U;
+  a.x = b.x;
+  a.y = b.y;
 }
 export function addVector(a, b) {
-  a.T += b.T;
-  a.U += b.U;
+  a.x += b.x;
+  a.y += b.y;
 }
 export function subtractVector(a, b) {
-  a.T -= b.T;
-  a.U -= b.U;
+  a.x -= b.x;
+  a.y -= b.y;
 }
 export function distanceToPoint(a, b, c) {
-  b = a.T - b;
-  a = a.U - c;
+  b = a.x - b;
+  a = a.y - c;
   return Math.sqrt(b * b + a * a);
 }
 export function distanceSquaredToPoint(a, b, c) {
-  b = a.T - b;
-  a = a.U - c;
+  b = a.x - b;
+  a = a.y - c;
   return b * b + a * a;
 }
 export function vectorLength(a) {
-  return Math.sqrt(a.T * a.T + a.U * a.U);
+  return Math.sqrt(a.x * a.x + a.y * a.y);
 }
 export function normalizeVector(a) {
-  var b = a.T * a.T + a.U * a.U;
+  var b = a.x * a.x + a.y * a.y;
   if (0 < b) {
     b = 1 / Math.sqrt(b);
-    a.T *= b;
-    a.U *= b;
+    a.x *= b;
+    a.y *= b;
   }
 }
 export function multiplyVector(a, b) {
-  a.T *= b;
-  a.U *= b;
+  a.x *= b;
+  a.y *= b;
 }
 export function initializeCoreMath() {
   SeededRandom.prototype.random = function () {
@@ -148,16 +148,16 @@ export function initializeCoreMath() {
   };
   FRAME_DURATION_MS = 1E3 / 60;
   Vector2.prototype.ac = function (a) {
-    var b = this.T - a.T;
-    a = this.U - a.U;
+    var b = this.x - a.x;
+    a = this.y - a.y;
     return Math.sqrt(b * b + a * a);
   };
   Vector2.prototype.Ud = function (a) {
-    var b = this.T - a.T;
-    a = this.U - a.U;
+    var b = this.x - a.x;
+    a = this.y - a.y;
     return b * b + a * a;
   };
   Vector2.prototype.toString = function () {
-    return "(" + this.T + ", " + this.U + ")";
+    return "(" + this.x + ", " + this.y + ")";
   };
 }

@@ -102,8 +102,8 @@ export function getEffectDirection(a) {
   assignVector(directionScratchVector, a.xi);
   subtractVector(directionScratchVector, a.wm);
   normalizeVector(directionScratchVector);
-  a = directionScratchVector.T;
-  var b = directionScratchVector.U,
+  a = directionScratchVector.x;
+  var b = directionScratchVector.y,
     c = 180 * -Math.atan2(b, a) / Math.PI;
   if (0 > c) {
     c += 360;

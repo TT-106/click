@@ -641,8 +641,8 @@ export function initializeRenderingScene() {
                 Ab = Wa.Zg();
                 Bb = Wa.wm;
                 bc = Wa.oc;
-                qb = Bb.T;
-                wb = Bb.U;
+                qb = Bb.x;
+                wb = Bb.y;
                 Ib = projectDungeonX(qb, wb) + 10;
                 Ec = projectDungeonY(qb, wb) + 10;
                 a.se.fx(Ab, bc, qb, wb, Ib, Ec, Ab.Ad.spriteSize, 0);
@@ -662,13 +662,13 @@ export function initializeRenderingScene() {
                 sa.context.lineWidth = 1;
                 sa.context.strokeStyle = "#FFD700";
                 Ja = Tb.iD;
-                Db = Ja.T;
-                gb = Ja.U;
+                Db = Ja.x;
+                gb = Ja.y;
                 rb = projectDungeonX(Db, gb) + game.tileSize;
                 dc = projectDungeonY(Db, gb) + game.tileSize;
                 qc = Tb.xi;
-                Fc = qc.T;
-                Cb = qc.U;
+                Fc = qc.x;
+                Cb = qc.y;
                 kb = projectDungeonX(Fc, Cb) + game.tileSize;
                 Ra = projectDungeonY(Fc, Cb) + game.tileSize;
                 sa.context.beginPath();

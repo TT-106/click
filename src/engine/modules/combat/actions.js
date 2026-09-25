@@ -535,8 +535,8 @@ export function createSpellAction(a) {
 }
 export function randomPointInRoom(a, b) {
   var c = new Vector2(),
-    d = a.T,
-    f = a.U,
+    d = a.x,
+    f = a.y,
     g = randomInt(40),
     h = randomInt(40),
     d = 0.5 >= Math.random() ? d + g : d - g,

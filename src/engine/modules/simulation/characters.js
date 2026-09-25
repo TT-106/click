@@ -58,10 +58,10 @@ export function spawnMinion(a, b, c) {
   g = d.p;
   g.w = b.p.w;
   g.cd = b.p.cd;
-  setVector(g.u, c.T, c.U);
+  setVector(g.u, c.x, c.y);
   var h = b.p.Db;
-  c = h.T + floorNumber(-10 + 20 * Math.random());
-  h = h.U + floorNumber(-10 + 20 * Math.random());
+  c = h.x + floorNumber(-10 + 20 * Math.random());
+  h = h.y + floorNumber(-10 + 20 * Math.random());
   setVector(g.Db, c, h);
   g = b.stats.characterLevel;
   d.summoner = b;

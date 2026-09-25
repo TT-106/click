@@ -384,7 +384,7 @@ export function advanceSimulation(a) {
         var Ja = kb.Ib;
         if (Ja && 12 === Ja.ga) {
           var Db = Ra.wm;
-          setVector(kb.Ca.p.u, Db.T, Db.U);
+          setVector(kb.Ca.p.u, Db.x, Db.y);
         }
       }
       if ((!Ra || Ra.Pk || Ra.bg) && advanceCombatAction(Cb, kb)) {
@@ -410,7 +410,7 @@ export function advanceSimulation(a) {
       db,
       Mc = 1 === Ga.characterType ? Ga.summoner.stats : Ga.stats;
     for (db = 0; db < gb.length; db++) {
-      if (rb = gb[db], !rb.Va && (dc = rb.p.u, Ka = game.level.Ai(dc.T), Xa = game.level.Bi(dc.U), (hb = game.level.hb(Ka, Xa)) && (lb = hb.Pq) && lb.Cj)) {
+      if (rb = gb[db], !rb.Va && (dc = rb.p.u, Ka = game.level.Ai(dc.x), Xa = game.level.Bi(dc.y), (hb = game.level.hb(Ka, Xa)) && (lb = hb.Pq) && lb.Cj)) {
         if (lb.bl()) {
           setTileEffect(hb, null);
         } else if (lb.bx !== lb.oc && (sc = hb.li, 0 !== sc && (Aa = randomInt(sc + 1), 0 !== Aa))) {

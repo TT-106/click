@@ -134,7 +134,7 @@ export function choosePointNearTarget(a, b, c) {
   if (0.5 > Math.random()) {
     f = -f;
   }
-  setVector(a, b.T + d, b.U + f);
+  setVector(a, b.x + d, b.y + f);
   if (c) {
     clampPointToRoom(c, a, 0);
   }

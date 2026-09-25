@@ -190,8 +190,8 @@ export function updateCharacter(a, b) {
             assignVector(c.ra, c.Ul);
             subtractVector(c.ra, c.Db);
             var d = b * c.MC * walkingSpeedBonus.t * walkingSpeedModifier.t,
-              f = game.world.bc(c.Db.T),
-              g = game.world.cc(c.Db.U);
+              f = game.world.bc(c.Db.x),
+              g = game.world.cc(c.Db.y);
             if (vectorLength(c.ra) <= d) {
               assignVector(c.Db, c.Ul);
               c.dd = true;
@@ -230,8 +230,8 @@ export function updateCharacter(a, b) {
           assignVector(c.ra, c.Ul);
           subtractVector(c.ra, c.Db);
           var h = b * c.MC * walkingSpeedBonus.t * walkingSpeedModifier.t,
-            l = game.world.bc(c.Db.T),
-            n = game.world.cc(c.Db.U);
+            l = game.world.bc(c.Db.x),
+            n = game.world.cc(c.Db.y);
           if (vectorLength(c.ra) <= h) {
             assignVector(c.Db, c.Ul);
             c.dd = true;
@@ -239,7 +239,7 @@ export function updateCharacter(a, b) {
             if (l === c.Rn && n === c.Sn) {
               c.dd = true;
             } else {
-              setVector(c.ra, c.Ul.T + 1, c.Ul.U + 1);
+              setVector(c.ra, c.Ul.x + 1, c.Ul.y + 1);
               subtractVector(c.ra, c.Db);
               if (separateWorldCharacters(c)) {
                 normalizeVector(c.ra);
@@ -357,12 +357,12 @@ export function updateCharacter(a, b) {
             if (S) {
               if (p.fg < H.length - 1) {
                 W = H[p.fg + 1];
-                da = game.level.hb(W.T, W.U);
+                da = game.level.hb(W.x, W.y);
               }
             } else {
               if (0 < p.fg) {
                 W = H[p.fg - 1];
-                da = game.level.hb(W.T, W.U);
+                da = game.level.hb(W.x, W.y);
               }
             }
             if (da) {
