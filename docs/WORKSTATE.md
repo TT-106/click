@@ -49,11 +49,17 @@ npm run perf             # 性能基线测量（重构 vs 原版）
 
 ## 6. 下一步（按优先级）
 
-1. **重命名波次 3**：技能/法术定义表字段（`c`→settingId/skillId/spellId 已有 HIGH 证据，含存档映射同步 game-save.js:953/543-551、entities.js:138-156）；`e/f/g/h` 等技能字段需**新取证**（派 Explore 智能体，产出格式同上批）。
-2. ~~交付物收尾~~ ✅ 已完成（REFACTOR_REPORT.md、PERFORMANCE_REPORT.md、COMPATIBILITY_REPORT.md、MIGRATION_MAP.md）。
-3. ~~扩展差分场景：prestige/victory~~ ✅ 12 场景矩阵已含 veteran-run/prestige-restart/full-reset；剩余：胜利瞬间触发（城堡征服）、法术分支。
-4. 类型体系（M10）：JSDoc 先行，core/ 与 persistence/ 优先。
-5. symbol-map.json 元数据刷新（本次 30+ 字段映射写入）。
+1. **波次 4 状态**：Ja/ka/Oa/Fa/Ca/ra/Y + 法术族（ta/ca/ya/Ra/ga/X）已落地全绿。**`Da` 三路拆分被回退**——引发变异存档场景分叉（levelCenter/levelSeed±1），调试路径与全部证据见 `docs/reverse-engineering/unresolved.md` U1（harness 已内置 RNG 栈记录器 `__rngLogFrom/To`）。
+2. **已取证待落地**（第四轮智能体 B，证据表见 unresolved.md 末尾）：fa→baseName、oa→isProjectile 组、ea→setDecorationSprite、wa→seededRandom、sa→shown、ua→dungeon、xa→spellDefinition、$→adventurerIndex、La→cooldownTurns（+mq）；na/ma/la/Ia 为 write-only 建议注记不改名。
+3. ~~交付物收尾~~ ✅ 已完成（REFACTOR_REPORT.md、PERFORMANCE_REPORT.md、COMPATIBILITY_REPORT.md、MIGRATION_MAP.md）。
+4. ~~扩展差分场景：prestige/victory~~ ✅ 12 场景矩阵已含 veteran-run/prestige-restart/full-reset；剩余：胜利瞬间触发（城堡征服）、法术分支。
+5. **M10 类型体系**：✅ 已启动（tsconfig checkJs 范围 core/+persistence/、SaveData DTO typedef `persistence/save-dto.js`、math.js JSDoc、`npm run typecheck` 已入 check 门禁）；38 文件 `@ts-nocheck` 待逐文件摘除（优先 simulation/tick.js、runtime/game.js）。
+6. symbol-map.json 元数据刷新（累计 60+ 字段映射待写入）。
+
+## 8. 智能体产出验收状态
+
+- 取证×5（字段语义四轮 + 文档三轮）：✅ 第四轮 A（角色/战斗 14 字段，含行为命名错位线索）、B（内容/物品 14 字段）已返回；A 组已全部落地，B 组证据在 unresolved.md 排队。
+- 文档×3：✅ 已提交并抽查。
 
 ## 7. 禁止回退的文件
 
