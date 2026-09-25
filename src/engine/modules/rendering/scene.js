@@ -144,7 +144,7 @@ export function drawDungeonCharacters(a, b) {
     f = c.position.Pb();
     g = projectDungeonX(d, f);
     h = projectDungeonY(d, f);
-    l = c.Ja.wg;
+    l = c.effects.wg;
     c = c.getSprite();
     a.se.dk(c, d, f, g, h, c.Ad.spriteSize, l ? 0.4 : 0);
   }
@@ -153,7 +153,7 @@ export function drawCharacterEffects(a, b) {
   var c, d, f, g, h, l, n, p, s, u, y;
   for (c = 0; c < b.length; c++) {
     if (f = b[c], !f.Va) {
-      for (y = false, p = f.Ja.of, d = 0; d < p.length; d++) {
+      for (y = false, p = f.effects.of, d = 0; d < p.length; d++) {
         if (s = p[d], s.Pd && (s = s.hD)) {
           u = p[d].Od;
           if (!y) {

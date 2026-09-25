@@ -170,7 +170,7 @@ export function getAllies() {
 }
 export function getOpponents(a) {
   var b = game.allies;
-  return a.Ja.bi ? isHostile(a) ? getMonsters() : b.Pf : isHostile(a) ? b.Pf : getMonsters();
+  return a.effects.bi ? isHostile(a) ? getMonsters() : b.Pf : isHostile(a) ? b.Pf : getMonsters();
 }
 export function getFriendlyTargets(a) {
   var b = game.allies;
@@ -267,7 +267,7 @@ export function initializeCombatEncounters() {
       awardAdventurePoints(POINT_EVENT_ENCOUNTER);
       var a, b;
       for (a = 0; a < game.state.adventurers.length; a++) {
-        b = game.state.adventurers[a].Ja;
+        b = game.state.adventurers[a].effects;
         if (b.Kf) {
           b.Kf = false;
           removeStunEffects(b);

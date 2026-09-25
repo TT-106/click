@@ -145,7 +145,7 @@ export function advanceEffectFrame(a, b) {
     a.oc += d;
     if (a.oc >= a.De) {
       if (a.uA) {
-        if (a.ud.Ja.Kf) {
+        if (a.ud.effects.Kf) {
           a.oc = 0;
         } else {
           a.bg = true;

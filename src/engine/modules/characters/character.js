@@ -55,7 +55,7 @@ export function Character(a, b, c, d, f) {
   this.equipment = b != MONSTER_TYPE ? new Equipment(this.Z, this.characterClass) : null;
   this.Sb = this.ee = null;
   this.position = new CharacterPosition(WORLD_WALK_SPEED, DUNGEON_WALK_SPEED);
-  this.Ja = new CharacterEffects(this);
+  this.effects = new CharacterEffects(this);
   if (this.inventory = f) {
     this.inventory.Bw = this;
   }
@@ -287,7 +287,7 @@ export function updateCharacter(a, b) {
                     J,
                     la = u.Yk.Km;
                   for (z = 0; z < O.length; z++) {
-                    if (O[z].Ja.Kd) {
+                    if (O[z].effects.Kd) {
                       x = false;
                       break a;
                     }
@@ -551,7 +551,7 @@ export function updateCharacter(a, b) {
                           if (!(Ha === ja || Ha === za || Ha === nb || Ha === fb || Ha === cb || Ha.Va || Ha.position.room !== pb)) {
                             wb = Ab.ac(Ha.position.levelPosition);
                             if (wb <= ac && (0 > Ec || wb < Ec)) {
-                              Ib = Ha.Ja;
+                              Ib = Ha.effects;
                               if (Ib.wg || Ib.Kd || Ib.bi) {
                                 qb = Ha;
                               } else {
@@ -919,7 +919,7 @@ export function updateCharacter(a, b) {
                       tl = xf.position.levelPosition,
                       kg,
                       ue = [];
-                    for (Vd = 0; Vd < Kh.length && (Nd = Kh[Vd], Nd.Va || Nd.position.room !== jg || hasStatusEffect(Nd.Ja, te) || (Nd === xf ? ue.push(Nd) : (kg = tl.ac(Nd.position.levelPosition), kg <= sl && ue.push(Nd)), !(1E3 <= ue.length))); Vd++) {}
+                    for (Vd = 0; Vd < Kh.length && (Nd = Kh[Vd], Nd.Va || Nd.position.room !== jg || hasStatusEffect(Nd.effects, te) || (Nd === xf ? ue.push(Nd) : (kg = tl.ac(Nd.position.levelPosition), kg <= sl && ue.push(Nd)), !(1E3 <= ue.length))); Vd++) {}
                     xd = ue;
                   } else {
                     xd = null;

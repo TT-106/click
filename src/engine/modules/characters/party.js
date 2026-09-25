@@ -535,7 +535,7 @@ export function initializeCharactersParty() {
         b = getAllies(),
         c;
       for (a = 0; a < b.length; a++) {
-        if (c = b[a], c.position.room && c.Ja.Kd) {
+        if (c = b[a], c.position.room && c.effects.Kd) {
           this.Mp = true;
           setPartyDestination(this, c.position.room);
           break a;

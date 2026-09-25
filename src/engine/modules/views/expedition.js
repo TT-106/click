@@ -401,7 +401,7 @@ export function initializeViewsExpedition() {
         if (this.rr !== p) {
           setElementHtml(this.Mq, formatAmount(p));
         }
-        c = a.Ja.of;
+        c = a.effects.of;
         f = false;
         this.De++;
         if (this.De >= this.qw) {

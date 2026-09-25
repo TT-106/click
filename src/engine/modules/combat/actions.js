@@ -144,7 +144,7 @@ export function applySpellEffect(a, b) {
       console.log("Failed to find char effect description: " + d);
       d = null;
     }
-    c = b.Da.Ja;
+    c = b.Da.effects;
     if (d) {
       c.of.push(d);
       if (isDisablingEffect(d)) {
@@ -284,7 +284,7 @@ export function applySpellEffect(a, b) {
       a.wu(b);
     } else {
       if (16 === d && (c = b.Da)) {
-        c = c.Ja;
+        c = c.effects;
         c.Kf = false;
         removeStunEffects(c);
       }
@@ -324,14 +324,14 @@ export function applyActionDamage(a) {
 }
 export function resolveCharacterDefeat(a, b) {
   if (b.characterType === ADVENTURER_TYPE) {
-    if (!b.Ja.Kf) {
+    if (!b.effects.Kf) {
       game.state.aa.Tr();
-      b.Ja.Kf = true;
+      b.effects.Kf = true;
       var c = b.position.levelPosition,
         d = new StatusEffect(13, game.state.turnNumber, stunEffectDefinition.Qd, game.animations.Zg(stunEffectDefinition.vd), stunEffectDefinition.Od, stunEffectDefinition.Pd, 0),
         c = new VisualEffect(stunEffectDefinition.vd, c, c, false, 1);
       b.stats.stunCount++;
-      var f = b.Ja;
+      var f = b.effects;
       if (d) {
         f.of.push(d);
         if (isDisablingEffect(d)) {
@@ -585,7 +585,7 @@ export function calculateAttackDamage(a, b) {
     l = statValue(d.armor),
     d = d.wo,
     c = c.lm;
-  if (!b.Ja.Kd && Math.random() > f / (f + h)) {
+  if (!b.effects.Kd && Math.random() > f / (f + h)) {
     return 0;
   }
   if (0 < c && Math.random() < c / 100) {

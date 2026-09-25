@@ -81,10 +81,10 @@ export function advanceSimulation(a) {
       D = getAllies(),
       N;
     for (N = 0; N < D.length; N++) {
-      updateCharacterEffects(D[N].Ja, true);
+      updateCharacterEffects(D[N].effects, true);
     }
     for (N = 0; N < v.length; N++) {
-      updateCharacterEffects(v[N].Ja, false);
+      updateCharacterEffects(v[N].effects, false);
     }
     game.state.aa.is();
     var I = game.state.party;
@@ -791,7 +791,7 @@ export function updateCharacterBehaviors(a) {
   for (b = 0; b < a.length; b++) {
     c = a[b];
     if (!c.Va) {
-      if (c.Ja.Kd) {
+      if (c.effects.Kd) {
         c.actionType = IDLE_ACTION;
       } else {
         c.dr();

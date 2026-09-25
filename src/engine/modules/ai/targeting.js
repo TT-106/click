@@ -43,7 +43,7 @@ export function findNearestOpponent(a) {
     l,
     n = -1;
   for (f = 0; f < b.length; f++) {
-    if (!(d = b[f], a === d || d.Va || d.position.room != c || (l = d.Ja, l.wg || d.characterType === ADVENTURER_TYPE && l.Kd || (l = g.Ud(d.position.levelPosition), !(0 > n || l < n))))) {
+    if (!(d = b[f], a === d || d.Va || d.position.room != c || (l = d.effects, l.wg || d.characterType === ADVENTURER_TYPE && l.Kd || (l = g.Ud(d.position.levelPosition), !(0 > n || l < n))))) {
       h = d;
       n = l;
     }
@@ -66,7 +66,7 @@ export function findNearestVisibleOpponent(a) {
     l,
     n = -1;
   for (f = 0; f < c.length; f++) {
-    if (!(d = c[f], a === d || d.Va || d.position.room != b || (l = d.Ja, l.wg || l.Kd || l.bi || (l = g.Ud(d.position.levelPosition), !(0 > n || l < n))))) {
+    if (!(d = c[f], a === d || d.Va || d.position.room != b || (l = d.effects, l.wg || l.Kd || l.bi || (l = g.Ud(d.position.levelPosition), !(0 > n || l < n))))) {
       h = d;
       n = l;
     }
@@ -92,7 +92,7 @@ export function findChainTarget(a) {
         l,
         n = -1;
       for (f = 0; f < b.length; f++) {
-        if (!(d = b[f], a === d || d.Va || d.position.room != c || (l = d.Ja, l.wg || l.Kd || l.bi || (l = g.Ud(d.position.levelPosition), !(0 > n || l < n))))) {
+        if (!(d = b[f], a === d || d.Va || d.position.room != c || (l = d.effects, l.wg || l.Kd || l.bi || (l = g.Ud(d.position.levelPosition), !(0 > n || l < n))))) {
           h = d;
           n = l;
         }
@@ -256,19 +256,19 @@ export function respondToTaunt(a, b) {
     c = null;
     b.Cb(null);
   }
-  if (c && c.Ja.Kf) {
+  if (c && c.effects.Kf) {
     c = null;
     b.Cb(null);
   }
-  if (c && c.Ja.wg) {
+  if (c && c.effects.wg) {
     c = null;
     b.Cb(null);
   }
-  if (c && c.Ja.Gn) {
+  if (c && c.effects.Gn) {
     return attackTauntingTarget(a, b), true;
   }
   for (var d = getOpponents(b), f, g = b.position.levelPosition, h, l = null, n = -1, c = 0; c < d.length; c++) {
-    if (f = d[c], b !== f && (h = f.Ja, h.Gn && !h.Kd && (h = g.Ud(f.position.levelPosition), 0 > n || h < n))) {
+    if (f = d[c], b !== f && (h = f.effects, h.Gn && !h.Kd && (h = g.Ud(f.position.levelPosition), 0 > n || h < n))) {
       l = f;
       n = h;
     }

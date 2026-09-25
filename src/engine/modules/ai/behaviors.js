@@ -463,7 +463,7 @@ export function initializeAiBehaviors() {
     } else {
       this.co = 0;
     }
-    if (this.Fa && !(this.Fa.Va || this.Fa.Ja.Kd || this.Fa.Ja.bi) && this.vx(a)) {
+    if (this.Fa && !(this.Fa.Va || this.Fa.effects.Kd || this.Fa.effects.bi) && this.vx(a)) {
       this.ax = game.state.turnNumber;
       var b = a.position.room;
       if (b && isAdventurerOrMinion(a)) {
@@ -490,7 +490,7 @@ export function initializeAiBehaviors() {
     setVector(this.Jl, 0, 0);
     for (s = 0; s < a.length; s++) {
       n = a[s];
-      if (!(n.Va || n.Ja.Kd || n.Ja.bi || n.position.room != d)) {
+      if (!(n.Va || n.effects.Kd || n.effects.bi || n.position.room != d)) {
         p = n.position.levelPosition;
         n = c.ac(p);
         if (!(n > this.CA)) {
@@ -622,7 +622,7 @@ export function initializeAiBehaviors() {
     return this.Hn;
   };
   LootGoldBehavior.prototype.Td = function (a) {
-    if (a.Ja.Gn || !hasOpponentsInRoom(a, a.position.room)) {
+    if (a.effects.Gn || !hasOpponentsInRoom(a, a.position.room)) {
       return null;
     }
     var b = a.stats;
@@ -658,7 +658,7 @@ export function initializeAiBehaviors() {
     if (!this.Fa) {
       return 0;
     }
-    if (a.Ja.wg) {
+    if (a.effects.wg) {
       this.bb = MELEE_ATTACK_RANGE;
       this.qk = 2;
     } else {
@@ -691,7 +691,7 @@ export function initializeAiBehaviors() {
     return this.Dn;
   };
   LootItemBehavior.prototype.Td = function (a) {
-    return a.Ja.wg || !hasOpponentsInRoom(a, a.position.room) ? null : a;
+    return a.effects.wg || !hasOpponentsInRoom(a, a.position.room) ? null : a;
   };
   LootScrollBehavior.prototype = new ExploreDungeonBehavior();
   LootScrollBehavior.prototype.Wa = function () {
@@ -741,7 +741,7 @@ export function initializeAiBehaviors() {
     return this.on;
   };
   LootScrollBehavior.prototype.Td = function (a) {
-    return a.Ja.Vs || !hasOpponentsInRoom(a, a.position.room) ? null : a;
+    return a.effects.Vs || !hasOpponentsInRoom(a, a.position.room) ? null : a;
   };
   GuardRangedBehavior.prototype.Wa = function () {
     this.Vq.Wa();
@@ -751,7 +751,7 @@ export function initializeAiBehaviors() {
     this.Vq.od(a);
   };
   GuardRangedBehavior.prototype.wd = function (a) {
-    return a.Ja.wg ? 0 : this.Vq.wd(a);
+    return a.effects.wg ? 0 : this.Vq.wd(a);
   };
   GuardRangedBehavior.prototype.Ta = function () {
     return this.Vq.Ta();
@@ -964,7 +964,7 @@ export function initializeAiBehaviors() {
       c = game.state.adventurers,
       d;
     for (b = 0; b < c.length; b++) {
-      if (d = c[b], d !== a && d.Ja.Kf) {
+      if (d = c[b], d !== a && d.effects.Kf) {
         return d;
       }
     }
