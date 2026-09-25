@@ -66,7 +66,27 @@
 | na/ma/la | ItemType | isMeleeWeapon/isArmor/isOffhandOrMagic | LOW/MEDIUM | write-only 死字段，语义来自数据模式；改名需注记 |
 | Ia | bossSpriteDefinitions | bossName | MEDIUM | write-only 死数据 |
 
-## 已落地（第四轮，全部 12/12 回归通过）
+## 第五轮取证已落地（2026-09-26）
+
+| 字段 | 新名 | 对象 |
+|---|---|---|
+| aa | statisticsRecorder | GameState |
+| aa | runStatistics | StatisticsRecorder 实例 |
+| Z | slotList | Character/Equipment/ItemType（含 split(" ") 变体 51 处字面量） |
+| Da | combatTarget/targetCharacter/selectedTarget | 三路拆分（见 U1 已解决） |
+
+## 第五轮取证待落地（证据全 HIGH）
+
+| 字段 | 提案名 | 对象 | 备注 |
+|---|---|---|---|
+| $ | adventurerIndex | views/character.js 12 视图类 + expedition.js AdventurerSummaryView | 与已落地的 LevelUpUpgrade.$ 同名同义 |
+| Ea | affordableSoon | Upgrade 及子类 | 每帧重算 |
+| Ga | theme | DungeonRoom/DungeonHallway | 按种子再生 |
+| Ma | statMultipliers | 职业/守卫/随从定义（6 键字面量组） | 静态数据，多文件字面量改名注意 facts#20 教训 |
+| Na | getUpgradeType | Upgrade + *Details 方法 | 返回值勿动 |
+| Wa | resetBehaviorState | 全部 Behavior 方法（66 处原型挂载） | 队列不进存档 |
+| Qa | setBackgroundSprite | WorldTile/DungeonTile 方法 | 与 setDecorationSprite 对应 |
+- 经验教训（已入 facts#20 扩展）：
 
 | 字段 | 新名 | 对象 |
 |---|---|---|
