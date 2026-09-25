@@ -16,7 +16,7 @@ export function Achievement(a) {
   this.Hb = a.Hb;
   this.pointEventTypeId = a.pointEventTypeId;
   this.Vt = pointEventsById[a.pointEventTypeId].yc;
-  this.ab = !!a.ab;
+  this.isVictoryAchievement = !!a.isVictoryAchievement;
   this.Rt = this.Pt = null;
 }
 export function getAchievementRewardLabel(a) {
