@@ -40,6 +40,29 @@ if (original) {
   restart = () => game.restartRun();
   reset = () => game.resetGame();
   syncLoopClock = () => { game.loop.lastTickAt = fixedNow; game.loop.lastFrameAt = fixedNow; };
+  // U1 调试（?watchDa 开启）：类型观察器——combatTarget/targetCharacter 的所有写操作经 setter 校验值形状，
+  // 违例（把角色塞给动作字段或反之）记入 window.__daAssert，用于定位 Da 拆分的残留误分类行。
+  if (new URLSearchParams(location.search).has('watchDa')) {
+    const { Character } = await import('../src/engine/modules/characters/character.js');
+    const { CombatAction } = await import('../src/engine/modules/combat/actions.js');
+    window.__daAssert = [];
+    const watch = (ctor, prop, validate) => {
+      const p = ctor.prototype;
+      Object.defineProperty(p, prop, {
+        configurable: true,
+        get() { return this['__' + prop]; },
+        set(v) {
+          if (v != null && !validate(v)) window.__daAssert.push(prop + ' ← ' + (v.constructor && v.constructor.name));
+          this['__' + prop] = v;
+        },
+      });
+    };
+    const isCharacter = v => v.stats !== undefined && v.position !== undefined && v.effects !== undefined;
+    const isAction = v => v.attacker !== undefined && v.xb !== undefined;
+    // 语义：CombatAction.targetCharacter 的值是被瞄准的 Character（与 combatTarget 同形）
+    watch(Character, 'combatTarget', isCharacter);
+    watch(CombatAction, 'targetCharacter', isCharacter);
+  }
 }
 game.onLoad();
 for (let attempt = 0; !ready() && attempt < 200; attempt++) {
