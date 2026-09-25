@@ -41,7 +41,7 @@ export function Character(a, b, c, d, f) {
   } else {
     a = null;
   }
-  this.Z = a;
+  this.slotList = a;
   if (d = d.tb) {
     a = {};
     for (c = 0; c < d.length; c++) {
@@ -52,7 +52,7 @@ export function Character(a, b, c, d, f) {
     d = null;
   }
   this.KD = d;
-  this.equipment = b != MONSTER_TYPE ? new Equipment(this.Z, this.characterClass) : null;
+  this.equipment = b != MONSTER_TYPE ? new Equipment(this.slotList, this.characterClass) : null;
   this.Sb = this.ee = null;
   this.position = new CharacterPosition(WORLD_WALK_SPEED, DUNGEON_WALK_SPEED);
   this.effects = new CharacterEffects(this);
@@ -159,7 +159,7 @@ export function equipItem(a, b) {
     c.damage.itemValue = 0;
     c.maxHealth.itemValue = 0;
     c.maxSpirit.itemValue = 0;
-    var g = c.no.Z,
+    var g = c.no.slotList,
       h = c.no.equipment;
     for (d = 0; d < g.length; d++) {
       if (f = h.ef(g[d])) {
@@ -1095,7 +1095,7 @@ export function updateCharacter(a, b) {
                 Np,
                 Op = game.itemGenerator,
                 wl = game.state.adventurers[randomInt(game.state.adventurers.length)],
-                Pp = wl.Z,
+                Pp = wl.slotList,
                 xA = Pp[randomInt(Pp.length)],
                 zA = (100 - Math.min(90, globalUpgradeDefinitions.itemQualityChance.currentValue + CHEST_ITEM_QUALITY_BONUS)) / 100,
                 AA = Op.uf(zA),

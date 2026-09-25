@@ -47,7 +47,7 @@ export function ItemEffectGenerator() {
 export function ItemType(a, b, c, d, f, g, h, l, n) {
   this.RD = a;
   this.baseName = b;
-  this.Z = c;
+  this.slotList = c;
   this.projectileAnimationId = n;
   if (!(this.lA = game.itemSprites.getSprite(d))) {
     console.log("error. invalid item sprite: " + d);
@@ -242,7 +242,7 @@ export function registerItemType(a, b, c) {
     }
   }
   g = f + "";
-  f = b.Z;
+  f = b.slotList;
   b = new ItemType(g, b.baseName, f, c, b.na, b.ma, b.la, b.isProjectile, b.projectileAnimationId);
   if (a.os[g]) {
     console.log("item type hash collision: " + d);
@@ -271,7 +271,7 @@ export function spawnItemDrop(a, b, c, d, f) {
   var g;
   g = game.itemGenerator;
   var h = game.state.adventurers[randomInt(game.state.adventurers.length)],
-    l = h.Z,
+    l = h.slotList,
     l = l[randomInt(l.length)],
     n = g.uf((100 - globalUpgradeDefinitions.itemQualityChance.currentValue) / 100);
   f = randomizeItemLevel(f, (100 - globalUpgradeDefinitions.higherLevelItemChance.currentValue) / 100);

@@ -7,7 +7,7 @@ import { getAllies, getMonsters } from "../combat/encounters.js";
 export function Equipment(a, b) {
   this.characterClass = b;
   this.hw = {};
-  this.Z = a;
+  this.slotList = a;
   this.Ey = this.fz = null;
   var c;
   for (c = 0; c < a.length; c++) {

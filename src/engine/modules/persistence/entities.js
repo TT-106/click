@@ -105,7 +105,7 @@ export function serializeCharacter(a) {
       n.push(serializeItem(p[s]));
     }
   }
-  p = a.Z;
+  p = a.slotList;
   s = a.equipment;
   var u = [];
   if (s && p) {

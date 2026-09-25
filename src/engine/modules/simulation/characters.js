@@ -129,7 +129,7 @@ export function createCastleGuardian(a, b, c) {
   return f;
 }
 export function initializeCharacterSkills(a, b) {
-  var c = a.Z;
+  var c = a.slotList;
   if (c && 0 < c.length) {
     var d, f;
     for (f = 0; f < c.length; f++) {

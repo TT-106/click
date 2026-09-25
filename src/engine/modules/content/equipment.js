@@ -13,7 +13,7 @@ export function initializeItemCatalog() {
       isProjectile: false,
       ma: false,
       la: false,
-      Z: ["20"]
+      slotList: ["20"]
     },
     d = {
       baseName: "斧",
@@ -21,7 +21,7 @@ export function initializeItemCatalog() {
       isProjectile: false,
       ma: false,
       la: false,
-      Z: ["21"]
+      slotList: ["21"]
     },
     f = {
       baseName: "锤",
@@ -29,7 +29,7 @@ export function initializeItemCatalog() {
       isProjectile: false,
       ma: false,
       la: false,
-      Z: ["21"]
+      slotList: ["21"]
     },
     g = {
       baseName: "匕首",
@@ -37,7 +37,7 @@ export function initializeItemCatalog() {
       isProjectile: false,
       ma: false,
       la: false,
-      Z: ["24", "33"]
+      slotList: ["24", "33"]
     },
     h = {
       baseName: "连枷",
@@ -45,7 +45,7 @@ export function initializeItemCatalog() {
       isProjectile: false,
       ma: false,
       la: false,
-      Z: ["22", "20", "21"]
+      slotList: ["22", "20", "21"]
     },
     l = {
       baseName: "权杖",
@@ -53,7 +53,7 @@ export function initializeItemCatalog() {
       isProjectile: false,
       ma: false,
       la: false,
-      Z: ["22", "20"]
+      slotList: ["22", "20"]
     },
     n = {
       baseName: "节杖",
@@ -61,7 +61,7 @@ export function initializeItemCatalog() {
       isProjectile: false,
       ma: false,
       la: false,
-      Z: ["32"]
+      slotList: ["32"]
     },
     p = {
       baseName: "双节棍",
@@ -69,7 +69,7 @@ export function initializeItemCatalog() {
       isProjectile: false,
       ma: false,
       la: false,
-      Z: ["29"]
+      slotList: ["29"]
     },
     s = {
       baseName: "棍棒",
@@ -77,7 +77,7 @@ export function initializeItemCatalog() {
       isProjectile: false,
       ma: false,
       la: true,
-      Z: ["26", "27", "28", "31"]
+      slotList: ["26", "27", "28", "31"]
     },
     u = {
       baseName: "镰刀",
@@ -85,7 +85,7 @@ export function initializeItemCatalog() {
       isProjectile: false,
       ma: false,
       la: false,
-      Z: ["30"]
+      slotList: ["30"]
     },
     y = {
       baseName: "骨头",
@@ -93,7 +93,7 @@ export function initializeItemCatalog() {
       isProjectile: false,
       ma: false,
       la: true,
-      Z: ["201"]
+      slotList: ["201"]
     },
     A = {
       baseName: "蜡烛",
@@ -101,7 +101,7 @@ export function initializeItemCatalog() {
       isProjectile: false,
       ma: false,
       la: true,
-      Z: ["203"]
+      slotList: ["203"]
     },
     C = {
       baseName: "灯笼",
@@ -109,7 +109,7 @@ export function initializeItemCatalog() {
       isProjectile: false,
       ma: false,
       la: true,
-      Z: ["203"]
+      slotList: ["203"]
     },
     v = {
       baseName: "灯",
@@ -117,7 +117,7 @@ export function initializeItemCatalog() {
       isProjectile: false,
       ma: false,
       la: true,
-      Z: ["203"]
+      slotList: ["203"]
     },
     D = {
       baseName: "硬币",
@@ -125,7 +125,7 @@ export function initializeItemCatalog() {
       isProjectile: false,
       ma: false,
       la: true,
-      Z: ["205"]
+      slotList: ["205"]
     },
     N = {
       baseName: "珠宝",
@@ -133,7 +133,7 @@ export function initializeItemCatalog() {
       isProjectile: false,
       ma: false,
       la: true,
-      Z: ["205"]
+      slotList: ["205"]
     },
     I = {
       baseName: "弓",
@@ -141,7 +141,7 @@ export function initializeItemCatalog() {
       isProjectile: false,
       ma: false,
       la: true,
-      Z: ["23"]
+      slotList: ["23"]
     },
     x = {
       baseName: "弩",
@@ -149,7 +149,7 @@ export function initializeItemCatalog() {
       isProjectile: false,
       ma: false,
       la: true,
-      Z: ["25"]
+      slotList: ["25"]
     },
     z = {
       baseName: "箭矢",
@@ -158,7 +158,7 @@ export function initializeItemCatalog() {
       ma: false,
       la: false,
       projectileAnimationId: 1,
-      Z: ["60"]
+      slotList: ["60"]
     },
     O = {
       baseName: "闪电",
@@ -167,7 +167,7 @@ export function initializeItemCatalog() {
       ma: false,
       la: false,
       projectileAnimationId: 2,
-      Z: ["61"]
+      slotList: ["61"]
     },
     J = {
       baseName: "护盾",
@@ -175,7 +175,7 @@ export function initializeItemCatalog() {
       isProjectile: false,
       ma: true,
       la: false,
-      Z: ["40", "41"]
+      slotList: ["40", "41"]
     },
     la = {
       baseName: "链甲",
@@ -183,7 +183,7 @@ export function initializeItemCatalog() {
       isProjectile: false,
       ma: true,
       la: false,
-      Z: ["80", "82", "81"]
+      slotList: ["80", "82", "81"]
     },
     Q = {
       baseName: "板甲",
@@ -191,7 +191,7 @@ export function initializeItemCatalog() {
       isProjectile: false,
       ma: true,
       la: false,
-      Z: ["80", "81"]
+      slotList: ["80", "81"]
     },
     V = {
       baseName: "板甲",
@@ -199,7 +199,7 @@ export function initializeItemCatalog() {
       isProjectile: false,
       ma: true,
       la: false,
-      Z: ["80", "82", "81"]
+      slotList: ["80", "82", "81"]
     },
     na = {
       baseName: "皮甲",
@@ -207,7 +207,7 @@ export function initializeItemCatalog() {
       isProjectile: false,
       ma: true,
       la: false,
-      Z: ["84", "83"]
+      slotList: ["84", "83"]
     },
     K = {
       baseName: "项链",
@@ -231,7 +231,7 @@ export function initializeItemCatalog() {
       isProjectile: false,
       ma: false,
       la: true,
-      Z: ["200"]
+      slotList: ["200"]
     },
     da = {
       baseName: "蘑菇",
@@ -239,7 +239,7 @@ export function initializeItemCatalog() {
       isProjectile: false,
       ma: false,
       la: true,
-      Z: ["202", "204"]
+      slotList: ["202", "204"]
     },
     W = {
       baseName: "头盔",
@@ -247,7 +247,7 @@ export function initializeItemCatalog() {
       isProjectile: false,
       ma: true,
       la: false,
-      Z: ["120"]
+      slotList: ["120"]
     },
     ia = {
       baseName: "王冠",
@@ -255,7 +255,7 @@ export function initializeItemCatalog() {
       isProjectile: false,
       ma: true,
       la: false,
-      Z: ["125"]
+      slotList: ["125"]
     },
     ea = {
       baseName: "巫师帽",
@@ -263,7 +263,7 @@ export function initializeItemCatalog() {
       isProjectile: false,
       ma: true,
       la: false,
-      Z: ["121", "122", "123", "124"]
+      slotList: ["121", "122", "123", "124"]
     },
     va = {
       baseName: "手套",
@@ -271,7 +271,7 @@ export function initializeItemCatalog() {
       isProjectile: false,
       ma: true,
       la: false,
-      Z: ["100", "101", "102"]
+      slotList: ["100", "101", "102"]
     },
     yb = {
       baseName: "长手套",
@@ -279,7 +279,7 @@ export function initializeItemCatalog() {
       isProjectile: false,
       ma: true,
       la: false,
-      Z: ["101", "102"]
+      slotList: ["101", "102"]
     },
     Fb = {
       baseName: "长袍",
@@ -287,7 +287,7 @@ export function initializeItemCatalog() {
       isProjectile: false,
       ma: true,
       la: false,
-      Z: ["85", "86", "87", "89", "91"]
+      slotList: ["85", "86", "87", "89", "91"]
     },
     pa = {
       baseName: "斗篷",
@@ -303,7 +303,7 @@ export function initializeItemCatalog() {
       isProjectile: false,
       ma: false,
       la: true,
-      Z: ["26"]
+      slotList: ["26"]
     },
     X = {
       baseName: "靴子",
@@ -319,7 +319,7 @@ export function initializeItemCatalog() {
       isProjectile: false,
       ma: true,
       la: false,
-      Z: ["3", "4", "5", "6", "7"]
+      slotList: ["3", "4", "5", "6", "7"]
     };
   registerItemType(b, la, "ArmorChainMailRusty.PNG");
   registerItemType(b, la, "ArmorChainMail.PNG");
@@ -555,7 +555,7 @@ export function initializeItemCatalog() {
     isProjectile: false,
     ma: false,
     la: true,
-    Z: ["203"]
+    slotList: ["203"]
   }, "Torch.PNG");
   registerItemType(b, v, "LightChalice.PNG");
   registerItemType(b, v, "LightOrb.PNG");
@@ -623,7 +623,7 @@ export function initializeItemCatalog() {
     ma: false,
     la: false,
     projectileAnimationId: 3,
-    Z: ["62"]
+    slotList: ["62"]
   }, "ThrowingStar.PNG");
   registerItemType(b, K, "NecklaceJewelSilver5.PNG");
   registerItemType(b, K, "NecklaceSilverJewelGreen.PNG");
@@ -674,7 +674,7 @@ export function initializeItemCatalog() {
     isProjectile: false,
     ma: false,
     la: true,
-    Z: ["204"]
+    slotList: ["204"]
   }, "FoodBread.PNG");
   registerItemType(b, {
     baseName: "啤酒",
@@ -682,7 +682,7 @@ export function initializeItemCatalog() {
     isProjectile: false,
     ma: false,
     la: true,
-    Z: ["204"]
+    slotList: ["204"]
   }, "FoodAle.PNG");
   registerItemType(b, {
     baseName: "鸡腿",
@@ -690,7 +690,7 @@ export function initializeItemCatalog() {
     isProjectile: false,
     ma: false,
     la: true,
-    Z: ["204"]
+    slotList: ["204"]
   }, "FoodDrumstick.PNG");
   registerItemType(b, {
     baseName: "火腿",
@@ -698,7 +698,7 @@ export function initializeItemCatalog() {
     isProjectile: false,
     ma: false,
     la: true,
-    Z: ["204"]
+    slotList: ["204"]
   }, "FoodShank.PNG");
   registerItemType(b, da, "FoodMushroomBlack.PNG");
   registerItemType(b, da, "FoodMushroomBlue.PNG");
@@ -820,7 +820,7 @@ export function initializeItemCatalog() {
     isProjectile: true,
     ma: false,
     la: false,
-    Z: ["230"]
+    slotList: ["230"]
   }, "Spear.PNG");
   registerItemType(b, {
     baseName: "虚拟护甲",
@@ -828,7 +828,7 @@ export function initializeItemCatalog() {
     isProjectile: false,
     ma: false,
     la: true,
-    Z: ["231"]
+    slotList: ["231"]
   }, "Spear.PNG");
   registerItemType(b, {
     baseName: "虚拟攻击等级",
@@ -836,7 +836,7 @@ export function initializeItemCatalog() {
     isProjectile: false,
     ma: false,
     la: true,
-    Z: ["232"]
+    slotList: ["232"]
   }, "Spear.PNG");
   registerItemType(b, {
     baseName: "虚拟防御等级",
@@ -844,7 +844,7 @@ export function initializeItemCatalog() {
     isProjectile: false,
     ma: false,
     la: true,
-    Z: ["233"]
+    slotList: ["233"]
   }, "Spear.PNG");
   registerItemType(b, {
     baseName: "虚拟最大生命",
@@ -852,7 +852,7 @@ export function initializeItemCatalog() {
     isProjectile: false,
     ma: false,
     la: true,
-    Z: ["234"]
+    slotList: ["234"]
   }, "Spear.PNG");
   registerItemType(b, {
     baseName: "虚拟最大法力",
@@ -860,7 +860,7 @@ export function initializeItemCatalog() {
     isProjectile: false,
     ma: false,
     la: true,
-    Z: ["235"]
+    slotList: ["235"]
   }, "Spear.PNG");
 }
 export function initializeContentEquipment() {}

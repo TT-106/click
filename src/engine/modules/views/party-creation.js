@@ -69,7 +69,7 @@ export function mountPartyCreation(a) {
           g.initialSpellSkillPoint = 1;
         }
         refreshPartyLevels();
-        for (var l = g.Z, s = p = undefined, s = 0; s < l.length; s++) {
+        for (var l = g.slotList, s = p = undefined, s = 0; s < l.length; s++) {
           if (p = generateItem(game.itemGenerator, l[s], g, 1, 0)) {
             g.Qk(p);
           }

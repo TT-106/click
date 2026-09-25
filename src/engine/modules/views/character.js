@@ -359,7 +359,7 @@ export function initializeViewsCharacter() {
         this.pf();
       }
       var a = game.state.adventurers[this.$],
-        b = a.Z;
+        b = a.slotList;
       if (b.length !== this.sf.length) {
         this.mk(b.length);
       }
