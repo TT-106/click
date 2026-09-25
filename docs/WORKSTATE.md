@@ -49,11 +49,11 @@ npm run perf             # 性能基线测量（重构 vs 原版）
 
 ## 6. 下一步（按优先级）
 
-1. **波次 4/5 状态**：Ja/ka/Oa/Fa/Ca/ra/Y/Z(slotList) + 法术族 + B 组九项 + **Da 三路拆分（combatTarget/targetCharacter/selectedTarget，U1 已解决，根因=616/682 动作自有字段误标）** + aa(statisticsRecorder/runStatistics) 全部落地全绿。**`Da` 三路拆分经两轮调试仍分叉，已回退**——关键实证：推进期 RNG delta 全程 0（非随机流分叉）、`createSpellAction/nu` 入参是多态角色（6 处误标已修正仍分叉）、最可疑链路是 FollowLeaderBehavior.wd 的"谁在打我"判定。完整证据与运行时断言方案见 `docs/reverse-engineering/unresolved.md` U1。
+1. **波次 4/5 状态**：Ja/ka/Oa/Fa/Ca/ra/Y/Z(slotList) + 法术族 + B 组九项 + 第五轮七项（$/Ea/Ga/Ma/Na/Wa/Qa）+ **Da 三路拆分（combatTarget/targetCharacter/selectedTarget，U1 已解决，根因=616/682 动作自有字段误标）** + aa(statisticsRecorder/runStatistics) 全部落地全绿。**`Da` 三路拆分经两轮调试仍分叉，已回退**——关键实证：推进期 RNG delta 全程 0（非随机流分叉）、`createSpellAction/nu` 入参是多态角色（6 处误标已修正仍分叉）、最可疑链路是 FollowLeaderBehavior.wd 的"谁在打我"判定。完整证据与运行时断言方案见 `docs/reverse-engineering/unresolved.md` U1。
 2. ~~已取证待落地~~ ✅ B 组九项全部落地（每字母独立全回归）。
 3. ~~交付物收尾~~ ✅ 已完成（REFACTOR_REPORT.md、PERFORMANCE_REPORT.md、COMPATIBILITY_REPORT.md、MIGRATION_MAP.md）。
 4. ~~扩展差分场景：prestige/victory~~ ✅ 12 场景矩阵已含 veteran-run/prestige-restart/full-reset；剩余：胜利瞬间触发（城堡征服）、法术分支。
-5. **M10 类型体系**：✅ 已启动（tsconfig checkJs 范围 core/+persistence/、SaveData DTO typedef `persistence/save-dto.js`、math.js JSDoc、`npm run typecheck` 已入 check 门禁）；30 文件 `@ts-nocheck` 待摘除（本轮已纳入：tick/game + targeting/scrolls/items/dungeons/pathfinding/regions/travel-costs，共 9 文件、9 处遗留错误以行为中立注解清零）；批量管理脚本 scripts/m10-nocheck.mjs（按 tsc 错误数自动筛选 ≤3 错误文件纳入）。
+5. **M10 类型体系**：✅ 已启动（tsconfig checkJs 范围 core/+persistence/、SaveData DTO typedef `persistence/save-dto.js`、math.js JSDoc、`npm run typecheck` 已入 check 门禁）；30 文件 `@ts-nocheck` 待摘除（m10-nocheck.mjs 批量管理； Views/世界等轻重文件分批策略已验证）（本轮已纳入：tick/game + targeting/scrolls/items/dungeons/pathfinding/regions/travel-costs，共 9 文件、9 处遗留错误以行为中立注解清零）；批量管理脚本 scripts/m10-nocheck.mjs（按 tsc 错误数自动筛选 ≤3 错误文件纳入）。
 6. symbol-map.json 元数据刷新（累计 60+ 字段映射待写入）。
 
 ## 8. 智能体产出验收状态

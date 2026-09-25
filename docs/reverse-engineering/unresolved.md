@@ -50,51 +50,6 @@
 
 - 剩余约 1,300 处；第四轮取证已覆盖 fa/ea/wa/sa/ua/xa/$/La/Ia/na/ma/la 的证据（见下方"已取证待落地"），Y/Z/aa 等其余字母待新取证。
 
-## 已取证待落地（第四轮智能体 B，证据在手）
+## 已取证待落地
 
-| 字段 | 对象 | 提案名 | 置信度 | 备注 |
-|---|---|---|---|---|
-| fa | ItemType + equipment.js 52 字面量 | baseName | HIGH | 改名安全；**值**参与 itemTypeId 哈希，勿改值 |
-| oa (+SC, Xn) | ItemType + equipment.js | isProjectile / isProjectileItem / projectileAnimationId | HIGH | 组名需同步 equipment.js 键 + items.js 字段 |
-| ea | WorldTile/DungeonTile 方法 | setDecorationSprite | HIGH | |
-| wa | 布局/装饰/命名生成器 | seededRandom | HIGH | |
-| sa | 16 个 *Details 视图 | shown | HIGH | |
-| ua | PurchaseDungeon/CastleUpgrade、DungeonRowView | dungeon | HIGH | |
-| xa | 法术包装定义（targeting.js ~37 个） | spellDefinition | HIGH | |
-| $ | LevelUpUpgrade | adventurerIndex | HIGH | |
-| La (+mq) | Spell + spells.js 定义键 | cooldownTurns（mq=lastCastTurn） | HIGH | |
-| na/ma/la | ItemType | isMeleeWeapon/isArmor/isOffhandOrMagic | LOW/MEDIUM | write-only 死字段，语义来自数据模式；改名需注记 |
-| Ia | bossSpriteDefinitions | bossName | MEDIUM | write-only 死数据 |
-
-## 第五轮取证已落地（2026-09-26）
-
-| 字段 | 新名 | 对象 |
-|---|---|---|
-| aa | statisticsRecorder | GameState |
-| aa | runStatistics | StatisticsRecorder 实例 |
-| Z | slotList | Character/Equipment/ItemType（含 split(" ") 变体 51 处字面量） |
-| Da | combatTarget/targetCharacter/selectedTarget | 三路拆分（见 U1 已解决） |
-
-## 第五轮取证待落地（证据全 HIGH）
-
-| 字段 | 提案名 | 对象 | 备注 |
-|---|---|---|---|
-| $ | adventurerIndex | views/character.js 12 视图类 + expedition.js AdventurerSummaryView | 与已落地的 LevelUpUpgrade.$ 同名同义 |
-| Ea | affordableSoon | Upgrade 及子类 | 每帧重算 |
-| Ga | theme | DungeonRoom/DungeonHallway | 按种子再生 |
-| Ma | statMultipliers | 职业/守卫/随从定义（6 键字面量组） | 静态数据，多文件字面量改名注意 facts#20 教训 |
-| Na | getUpgradeType | Upgrade + *Details 方法 | 返回值勿动 |
-| Wa | resetBehaviorState | 全部 Behavior 方法（66 处原型挂载） | 队列不进存档 |
-| Qa | setBackgroundSprite | WorldTile/DungeonTile 方法 | 与 setDecorationSprite 对应 |
-- 经验教训（已入 facts#20 扩展）：
-
-| 字段 | 新名 | 对象 |
-|---|---|---|
-| Ja | effects | Character |
-| ka | priorityWeight | 全部 Behavior |
-| Oa | notifySpellLearned | BehaviorQueue + Behavior 原型方法 |
-| Fa | targetCharacter | 攻击类 Behavior |
-| Ca | attacker | CombatAction |
-| ra | velocity | CharacterPosition |
-| Y | actionType | Character（含 party.js/tick.js 全覆盖——初版因 grep head 截断漏 2 处导致分叉，已修复并记入 facts#20 教训） |
-| ta/ca/ya/Ra/ga/X | name/impactEffectName/projectileEffectName/potencyPercent/spellCategoryId/statusEffectTypeId | 法术定义族（第四轮取证 A） |
+（第四轮 B 组九项 + 第五轮七项均已落地；剩余长尾见 artifacts/obfuscated-fields.json 高频清单——aa 之外的前列：$/Ea/Ga/Ma/Na/Wa/Qa 均已完成后，下一批为 bb/cc/dd 等字母，需新取证。）

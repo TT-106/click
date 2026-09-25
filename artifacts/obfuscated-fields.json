@@ -1,29 +1,5 @@
 [
   {
-    "name": "$",
-    "reads": 41,
-    "writes": 13,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\character.js:18",
-        "code": "this.$"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\character.js:25",
-        "code": "this.$"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\character.js:31",
-        "code": "this.$"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\views\\character.js",
-      "src\\engine\\modules\\views\\expedition.js"
-    ]
-  },
-  {
     "name": "na",
     "reads": 1,
     "writes": 52,
@@ -96,52 +72,6 @@
     ]
   },
   {
-    "name": "Ea",
-    "reads": 19,
-    "writes": 22,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:121",
-        "code": "this.Ea"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:125",
-        "code": "this.Ea"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:150",
-        "code": "this.Ea"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\progression\\upgrades.js"
-    ]
-  },
-  {
-    "name": "Ga",
-    "reads": 35,
-    "writes": 4,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\world\\rooms.js:33",
-        "code": "this.Ga"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\rooms.js:69",
-        "code": "a.Ga"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\rooms.js:70",
-        "code": "a.Ga"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\world\\rooms.js"
-    ]
-  },
-  {
     "name": "Ia",
     "reads": 0,
     "writes": 38,
@@ -165,86 +95,6 @@
     ]
   },
   {
-    "name": "Ma",
-    "reads": 10,
-    "writes": 27,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\encounters.js:124",
-        "code": "bossClass.Ma"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\classes.js:76",
-        "code": "Ma: {\n  Xf: 0.95,\n  Qf: 1,\n  Rf: 0.95,\n  Zf: 1.1,\n  Cf: 1.1,\n  Ef: 0.9\n}"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\classes.js:129",
-        "code": "Ma: {\n  Xf: 0.95,\n  Qf: 1,\n  Rf: 0.95,\n  Zf: 1.05,\n  Cf: 1,\n  Ef: 1.05\n}"
-      }
-    ],
-    "fileCount": 9,
-    "files": [
-      "src\\engine\\modules\\combat\\encounters.js",
-      "src\\engine\\modules\\content\\classes.js",
-      "src\\engine\\modules\\content\\guardians.js",
-      "src\\engine\\modules\\content\\minions.js",
-      "src\\engine\\modules\\loot\\items.js",
-      "src\\engine\\modules\\progression\\upgrades.js",
-      "src\\engine\\modules\\simulation\\characters.js",
-      "src\\engine\\modules\\views\\party-creation.js",
-      "src\\engine\\modules\\views\\upgrade-details.js"
-    ]
-  },
-  {
-    "name": "Na",
-    "reads": 3,
-    "writes": 34,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\skill-effects.js:20",
-        "code": "d.Na"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:277",
-        "code": "Upgrade.prototype.Na"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:320",
-        "code": "PurchaseItemUpgrade.prototype.Na"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\combat\\skill-effects.js",
-      "src\\engine\\modules\\progression\\upgrades.js",
-      "src\\engine\\modules\\views\\upgrade-details.js"
-    ]
-  },
-  {
-    "name": "Qa",
-    "reads": 35,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\world\\rooms.js:73",
-        "code": "h.Qa"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\rooms.js:76",
-        "code": "h.Qa"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\rooms.js:79",
-        "code": "h.Qa"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\world\\rooms.js",
-      "src\\engine\\modules\\world\\terrain.js"
-    ]
-  },
-  {
     "name": "Ta",
     "reads": 19,
     "writes": 17,
@@ -265,30 +115,6 @@
     "fileCount": 1,
     "files": [
       "src\\engine\\modules\\ai\\behaviors.js"
-    ]
-  },
-  {
-    "name": "Wa",
-    "reads": 2,
-    "writes": 33,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:307",
-        "code": "IdleBehavior.prototype.Wa"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:329",
-        "code": "ExploreDungeonBehavior.prototype.Wa"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:389",
-        "code": "FollowLeaderBehavior.prototype.Wa"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js",
-      "src\\engine\\modules\\simulation\\characters.js"
     ]
   },
   {
