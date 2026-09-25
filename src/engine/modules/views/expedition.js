@@ -20,7 +20,7 @@ import { TabView } from "./navigation.js";
 export function AdventurerSummaryView(a) {
   this.elementId = "gameTabAdventurerInfo" + a;
   this.visible = true;
-  this.$ = a;
+  this.adventurerIndex = a;
   this.Nq = null;
   this.Wl = ["adventurerEffectIconA" + a, "adventurerEffectIconB" + a, "adventurerEffectIconC" + a, "adventurerEffectIconD" + a, "adventurerEffectIconE" + a, "adventurerEffectIconF" + a];
   this.Ay = "adventurerHealthSlider" + a;
@@ -243,8 +243,8 @@ export function initializeViewsExpedition() {
     this.Nq = null;
     this.Oq = false;
     this.nn = null;
-    if (0 > this.$ || this.$ >= game.state.adventurers.length) {
-      if (this.$ >= 4 + partyCapacityBonus.currentValue) {
+    if (0 > this.adventurerIndex || this.adventurerIndex >= game.state.adventurers.length) {
+      if (this.adventurerIndex >= 4 + partyCapacityBonus.currentValue) {
         this.nn = createElement("div", getElement(this.elementId), null, "gameTabLockedAdventurerInfo");
         createElement("span", this.nn, null, "lockedSpanText").innerHTML = "未解锁";
         this.Oq = true;
@@ -264,7 +264,7 @@ export function initializeViewsExpedition() {
       var b = a.insertCell(0);
       b.className = "gameTabAdventurerIconCell";
       b.rowSpan = 2;
-      var c = game.state.adventurers[this.$],
+      var c = game.state.adventurers[this.adventurerIndex],
         d = c.getSprite(),
         b = createElement("img", b, null, "characterImage");
       b.src = "images/Transparent.gif";
@@ -352,15 +352,15 @@ export function initializeViewsExpedition() {
     }
   };
   AdventurerSummaryView.prototype.update = function () {
-    if (!(0 > this.$)) {
-      if (this.$ >= game.state.adventurers.length) {
-        if (this.Oq && this.$ < 4 + partyCapacityBonus.currentValue) {
+    if (!(0 > this.adventurerIndex)) {
+      if (this.adventurerIndex >= game.state.adventurers.length) {
+        if (this.Oq && this.adventurerIndex < 4 + partyCapacityBonus.currentValue) {
           this.Oq = false;
           this.nn.className = "gameTabBlankAdventurerInfo";
           clearElement(this.nn);
         }
       } else {
-        var a = game.state.adventurers[this.$],
+        var a = game.state.adventurers[this.adventurerIndex],
           b = a.stats,
           c = b.health,
           d = statValue(b.maxHealth),
@@ -387,7 +387,7 @@ export function initializeViewsExpedition() {
         }
         if (this.$f !== b) {
           this.$f = b;
-          setElementHtml(this.By, "等级" + b + " " + game.state.adventurers[this.$].classDefinition.className);
+          setElementHtml(this.By, "等级" + b + " " + game.state.adventurers[this.adventurerIndex].classDefinition.className);
         }
         if (this.qr !== h) {
           setElementHtml(this.Lq, formatAmount(h));
