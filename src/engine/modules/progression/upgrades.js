@@ -1204,8 +1204,8 @@ export function initializeProgressionUpgrades() {
     return this.canPurchase;
   };
   AdventurePointUpgrade.prototype.Qc = function () {
-    if (!(this.Hc || this.kh.Gb > game.state.ae.Dd)) {
-      var a = this.kh.Gb,
+    if (!(this.Hc || this.kh.pointCost > game.state.ae.Dd)) {
+      var a = this.kh.pointCost,
         b = game.state.ae;
       b.An += a;
       b.Dd -= a;
@@ -1220,13 +1220,13 @@ export function initializeProgressionUpgrades() {
     }
   };
   AdventurePointUpgrade.prototype.Bb = function () {
-    return this.kh.Gb;
+    return this.kh.pointCost;
   };
   AdventurePointUpgrade.prototype.lb = function () {
     return this.kh.mc;
   };
   AdventurePointUpgrade.prototype.Cd = function () {
-    this.canPurchase = !this.Hc && this.kh.Gb <= game.state.ae.Dd;
+    this.canPurchase = !this.Hc && this.kh.pointCost <= game.state.ae.Dd;
     var a = this.Ub !== this.canPurchase;
     this.Ub = this.canPurchase;
     return a;
