@@ -231,7 +231,7 @@ export function getMonsterTypesForLevel(a, b) {
       g = a.n[randomInt(a.n.length)];
       if (!(-1 < f.indexOf(g))) {
         f.push(g);
-        d.push(new MonsterType(g.o, g.d, b));
+        d.push(new MonsterType(g.name, g.d, b));
         h++;
       }
     }
