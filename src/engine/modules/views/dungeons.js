@@ -65,8 +65,8 @@ export function getVisibleTreasure() {
 }
 export function DungeonRowView(a, b) {
   this.lh = a;
-  this.ui = this.ua = null;
-  this.yr = new PurchaseDungeonUpgrade(this.ua);
+  this.ui = this.dungeon = null;
+  this.yr = new PurchaseDungeonUpgrade(this.dungeon);
   this.px = this.Gx = this.mf = this.Vg = this.wr = this.Co = null;
   this.pB = "secureCell_" + b + "_" + this.lh.rowIndex;
   this.upgradeButton = this.cj = this.ai = this.sh = this.ng = this.Ix = null;
@@ -177,14 +177,14 @@ export function initializeViewsDungeons() {
   };
   DungeonRowView.prototype.reset = function () {
     this.ui = null;
-    if (this.ua) {
+    if (this.dungeon) {
       this.upgradeButton.reset();
     }
   };
   DungeonRowView.prototype.ct = function (a) {
-    var b = !this.ua;
-    this.ua = a;
-    this.yr.ct(this.ua);
+    var b = !this.dungeon;
+    this.dungeon = a;
+    this.yr.ct(this.dungeon);
     this.upgradeButton.Rc(this.yr);
     this.mw = this.pu = -1;
     this.Gu = this.Bk = this.Qv = "";
@@ -200,8 +200,8 @@ export function initializeViewsDungeons() {
     this.Co.style.textAlign = "center";
     this.wr = createElement("img", this.Co, null, "terrainImage");
     this.wr.src = "images/Transparent.gif";
-    if (this.ua) {
-      var b = game.terrainSprites.getSprite(this.ua.Fo);
+    if (this.dungeon) {
+      var b = game.terrainSprites.getSprite(this.dungeon.Fo);
       this.wr.style.background = "url('spritesheet/terrain.png') -" + b.sourceX + "px -" + b.sourceY + "px";
     }
     this.Vg = a.insertCell(1);
@@ -239,25 +239,25 @@ export function initializeViewsDungeons() {
     this.Bt = true;
   };
   DungeonRowView.prototype.render = function () {
-    if (this.ua) {
-      var a = this.ua.discovered,
-        b = this.ua.cleared,
-        c = this.ua.dungeonName,
-        d = this.ua.zj.castleName,
-        f = this.ua.isFarm,
+    if (this.dungeon) {
+      var a = this.dungeon.discovered,
+        b = this.dungeon.cleared,
+        c = this.dungeon.dungeonName,
+        d = this.dungeon.zj.castleName,
+        f = this.dungeon.isFarm,
         g;
-      g = this.ua;
+      g = this.dungeon;
       g = g.isFarm ? g.cleared ? "等待中" : g.discovered && !g.cleared ? "收获中" : "收获" : g.cleared ? "已清空" : g.discovered && !g.cleared ? "探索中" : "已探索?";
       var h;
-      h = this.ua;
+      h = this.dungeon;
       h = h.cleared ? Math.max(0, Math.min(100, 100 * (game.state.turnNumber - h.clearedTurn) / 1500 | 0)) : 0;
       var l;
-      l = this.ua;
+      l = this.dungeon;
       l = l.cleared ? 0 : Math.max(0, Math.min(100, 100 * (game.state.turnNumber - l.farmStartTurn) / 1200 | 0));
       a = a && (f || b);
-      if (this.ui !== this.ua) {
-        this.ui = this.ua;
-        f = game.terrainSprites.getSprite(this.ua.Fo);
+      if (this.ui !== this.dungeon) {
+        this.ui = this.dungeon;
+        f = game.terrainSprites.getSprite(this.dungeon.Fo);
         this.wr.style.background = "url('spritesheet/terrain.png') -" + f.sourceX + "px -" + f.sourceY + "px";
       }
       if (this.Bk !== c) {
@@ -298,7 +298,7 @@ export function initializeViewsDungeons() {
           }
         }
       }
-      if (this.ua) {
+      if (this.dungeon) {
         refreshUpgradeAvailability(this.yr);
         this.upgradeButton.render();
       }
@@ -320,7 +320,7 @@ export function initializeViewsDungeons() {
     }
     var b;
     for (b = 0; b < this.rf.length; b++) {
-      if (this.rf[b].ua !== a[b]) {
+      if (this.rf[b].dungeon !== a[b]) {
         this.rf[b].ct(a[b]);
       }
       this.rf[b].render();

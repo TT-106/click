@@ -177,12 +177,12 @@ export function LearnSpellUpgrade(a) {
   this.zd = null;
 }
 export function PurchaseDungeonUpgrade(a) {
-  this.ua = a;
+  this.dungeon = a;
   this.Zj = this.Ub = this.$j = this.canPurchase = this.Ea = false;
 }
 export function PurchaseCastleUpgrade(a) {
   this.Ez = a;
-  this.ua = null;
+  this.dungeon = null;
   this.Zj = this.Ub = this.$j = this.canPurchase = this.Ea = false;
 }
 export function AutoPurchaseDungeonUpgrade() {
@@ -894,10 +894,10 @@ export function initializeProgressionUpgrades() {
   };
   PurchaseDungeonUpgrade.prototype = new Upgrade();
   PurchaseDungeonUpgrade.prototype.Wo = function () {
-    return this.ua;
+    return this.dungeon;
   };
   PurchaseDungeonUpgrade.prototype.ct = function (a) {
-    this.ua = a;
+    this.dungeon = a;
   };
   PurchaseDungeonUpgrade.prototype.Oc = function () {
     return this.canPurchase || this.Ea;
@@ -906,11 +906,11 @@ export function initializeProgressionUpgrades() {
     return this.canPurchase;
   };
   PurchaseDungeonUpgrade.prototype.lb = function () {
-    if (this.ua && !canFarmDungeon(this.ua)) {
-      if (this.ua.isFarm) {
+    if (this.dungeon && !canFarmDungeon(this.dungeon)) {
+      if (this.dungeon.isFarm) {
         return "收获地牢";
       }
-      if (!this.ua.zj.cb) {
+      if (!this.dungeon.zj.cb) {
         return "先要征服城堡";
       }
     }
@@ -920,22 +920,22 @@ export function initializeProgressionUpgrades() {
     return "地牢农场";
   };
   PurchaseDungeonUpgrade.prototype.He = function () {
-    return this.ua && this.ua.isFarm;
+    return this.dungeon && this.dungeon.isFarm;
   };
   PurchaseDungeonUpgrade.prototype.Na = function () {
     return 7;
   };
   PurchaseDungeonUpgrade.prototype.Bb = function () {
-    return this.ua ? floorNumber(this.ua.farmCost * dungeonCostBonus.currentValue) : 0;
+    return this.dungeon ? floorNumber(this.dungeon.farmCost * dungeonCostBonus.currentValue) : 0;
   };
   PurchaseDungeonUpgrade.prototype.Qc = function () {
     if (!(game.state.party.gold < this.Bb())) {
-      purchaseDungeonFarm(this.ua, this.Bb());
+      purchaseDungeonFarm(this.dungeon, this.Bb());
       markUpgradeChanged(this);
     }
   };
   PurchaseDungeonUpgrade.prototype.Cd = function () {
-    var a = canFarmDungeon(this.ua);
+    var a = canFarmDungeon(this.dungeon);
     this.canPurchase = a && game.state.party.gold >= this.Bb();
     this.Ea = a && !this.canPurchase && 120 > this.Bb() - game.state.party.gold;
     var a = this.Oc(),
@@ -947,7 +947,7 @@ export function initializeProgressionUpgrades() {
   };
   PurchaseCastleUpgrade.prototype = new Upgrade();
   PurchaseCastleUpgrade.prototype.Wo = function () {
-    return this.ua;
+    return this.dungeon;
   };
   PurchaseCastleUpgrade.prototype.Oc = function () {
     return this.canPurchase || this.Ea;
@@ -962,18 +962,18 @@ export function initializeProgressionUpgrades() {
     return "购买怪物农场";
   };
   PurchaseCastleUpgrade.prototype.He = function () {
-    return this.ua && this.ua.isFarm;
+    return this.dungeon && this.dungeon.isFarm;
   };
   PurchaseCastleUpgrade.prototype.Na = function () {
     return 8;
   };
   PurchaseCastleUpgrade.prototype.Bb = function () {
-    return this.ua ? floorNumber(this.ua.farmCost * dungeonCostBonus.currentValue) : 0;
+    return this.dungeon ? floorNumber(this.dungeon.farmCost * dungeonCostBonus.currentValue) : 0;
   };
   PurchaseCastleUpgrade.prototype.Qc = function () {
-    if (!(!this.ua || game.state.party.gold < this.Bb())) {
+    if (!(!this.dungeon || game.state.party.gold < this.Bb())) {
       this.canPurchase = false;
-      purchaseDungeonFarm(this.ua, this.Bb());
+      purchaseDungeonFarm(this.dungeon, this.Bb());
       markUpgradeChanged(this);
     }
   };
@@ -991,8 +991,8 @@ export function initializeProgressionUpgrades() {
       this.Ea = this.canPurchase = false;
     }
     var b = this.Oc(),
-      c = this.ua != a || this.Ub != this.canPurchase || this.Zj != this.Ea || this.$j != b;
-    this.ua = a;
+      c = this.dungeon != a || this.Ub != this.canPurchase || this.Zj != this.Ea || this.$j != b;
+    this.dungeon = a;
     this.Ub = this.canPurchase;
     this.Zj = this.Ea;
     this.$j = b;
