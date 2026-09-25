@@ -450,7 +450,7 @@ export function initializeProgressionUpgrades() {
       if (d && 0 !== d.length) {
         for (var f = undefined, g = undefined, h = undefined, l = 0, f = 0; f < d.length; f++) {
           g = d[f];
-          if (!((h = c.ef(g.r)) && !isBetterItem(g, h))) {
+          if (!((h = c.ef(g.slot)) && !isBetterItem(g, h))) {
             l++;
           }
         }

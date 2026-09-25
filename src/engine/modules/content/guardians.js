@@ -16,23 +16,23 @@ export function initializeContentGuardians() {
     descriptionText: "",
     fe: false,
     tb: [{
-      r: "230",
-      s: 1
+      slot: "230",
+      statType: 1
     }, {
-      r: "231",
-      s: 2
+      slot: "231",
+      statType: 2
     }, {
-      r: "232",
-      s: 3
+      slot: "232",
+      statType: 3
     }, {
-      r: "233",
-      s: 4
+      slot: "233",
+      statType: 4
     }, {
-      r: "234",
-      s: 5
+      slot: "234",
+      statType: 5
     }, {
-      r: "235",
-      s: 6
+      slot: "235",
+      statType: 6
     }],
     Ma: guardianStatMultipliers,
     kc: null,
@@ -50,23 +50,23 @@ export function initializeContentGuardians() {
     descriptionText: "",
     fe: false,
     tb: [{
-      r: "26",
-      s: 1
+      slot: "26",
+      statType: 1
     }, {
-      r: "85",
-      s: 2
+      slot: "85",
+      statType: 2
     }, {
-      r: "121",
-      s: 4
+      slot: "121",
+      statType: 4
     }, {
-      r: "160",
-      s: 5
+      slot: "160",
+      statType: 5
     }, {
-      r: "140",
-      s: 3
+      slot: "140",
+      statType: 3
     }, {
-      r: "182",
-      s: 6
+      slot: "182",
+      statType: 6
     }],
     Ma: casterStatMultipliers,
     kc: null,
@@ -87,20 +87,20 @@ export function initializeContentGuardians() {
     descriptionText: "",
     fe: false,
     tb: [{
-      r: "60",
-      s: 1
+      slot: "60",
+      statType: 1
     }, {
-      r: "23",
-      s: 3
+      slot: "23",
+      statType: 3
     }, {
-      r: "83",
-      s: 2
+      slot: "83",
+      statType: 2
     }, {
-      r: "143",
-      s: 5
+      slot: "143",
+      statType: 5
     }, {
-      r: "3",
-      s: 4
+      slot: "3",
+      statType: 4
     }],
     Ma: guardianStatMultipliers,
     kc: null,
@@ -125,23 +125,23 @@ export function initializeContentGuardians() {
     descriptionText: "",
     fe: false,
     tb: [{
-      r: "29",
-      s: 3
+      slot: "29",
+      statType: 3
     }, {
-      r: "62",
-      s: 1
+      slot: "62",
+      statType: 1
     }, {
-      r: "89",
-      s: 4
+      slot: "89",
+      statType: 4
     }, {
-      r: "186",
-      s: 2
+      slot: "186",
+      statType: 2
     }, {
-      r: "5",
-      s: 5
+      slot: "5",
+      statType: 5
     }, {
-      r: "33",
-      s: 6
+      slot: "33",
+      statType: 6
     }],
     Ma: {
       Xf: 1.1,
@@ -296,23 +296,23 @@ export function initializeContentGuardians() {
     descriptionText: "",
     fe: false,
     tb: [{
-      r: "230",
-      s: 1
+      slot: "230",
+      statType: 1
     }, {
-      r: "231",
-      s: 2
+      slot: "231",
+      statType: 2
     }, {
-      r: "232",
-      s: 3
+      slot: "232",
+      statType: 3
     }, {
-      r: "233",
-      s: 4
+      slot: "233",
+      statType: 4
     }, {
-      r: "234",
-      s: 5
+      slot: "234",
+      statType: 5
     }, {
-      r: "235",
-      s: 6
+      slot: "235",
+      statType: 6
     }],
     Ma: {
       Xf: 1.7,

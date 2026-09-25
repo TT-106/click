@@ -195,11 +195,11 @@ export function initializeCharactersMovement() {
     return this.fz;
   };
   Equipment.prototype.Qk = function (a) {
-    this.hw[a.r] = a;
+    this.hw[a.slot] = a;
     if (a.Cw()) {
       this.Ey = a;
     }
-    if (1 === a.s) {
+    if (1 === a.statType) {
       this.fz = a;
     }
   };

@@ -59,14 +59,14 @@ export function ItemType(a, b, c, d, f, g, h, l, n) {
 }
 export function Item(a, b, c, d, f, g, h, l, n, p) {
   this.op = a;
-  this.r = b;
+  this.slot = b;
   this.characterClass = c;
   this.Ew = d;
   this.kA = g;
   this.ns = f;
   this.zf = h;
   this.itemValue = l;
-  this.s = n;
+  this.characteristic = n;
   this.Rm = p;
   this.nj = null;
 }
@@ -74,7 +74,7 @@ export function isBetterItem(a, b) {
   return !b || a.itemValue > b.itemValue;
 }
 export function getItemStatLabel(a) {
-  switch (a.s) {
+  switch (a.characteristic) {
     case 2:
       return "护甲";
     case 3:

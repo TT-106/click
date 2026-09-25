@@ -142,7 +142,8 @@ try {
       console.log(`✓ ${scenario.name}`);
     } catch (error) {
       failures.push(scenario.name);
-      console.error(`✗ ${scenario.name}: ${error.message.split('\n')[0]}`);
+      if (process.env.SCENARIO_VERBOSE) console.error(error);
+      console.error(`✗ ${scenario.name}: ${error.message.split('\n').slice(0, process.env.SCENARIO_VERBOSE ? 8 : 1).join(' | ')}`);
     }
   }
 } finally {

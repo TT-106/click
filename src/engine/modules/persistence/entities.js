@@ -6,7 +6,7 @@ import { game } from "../runtime/game.js";
 import { MonsterType, advanceMonsterTypeRank } from "../combat/encounters.js";
 export function serializeItem(a) {
   var b = a.op.RD,
-    c = a.r,
+    c = a.slot,
     d = a.characterClass,
     f = a.Ew,
     g = a.uf(),
@@ -20,7 +20,7 @@ export function serializeItem(a) {
     itemLevel: a.ns,
     itemGold: a.zf,
     itemValue: a.itemValue,
-    itemCharacteristic: a.s,
+    itemCharacteristic: a.characteristic,
     itemEffect: h ? {
       itemEffectType: h.Dw,
       itemEffectAmount: h.LD,

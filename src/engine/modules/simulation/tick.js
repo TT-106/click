@@ -502,7 +502,7 @@ export function advanceSimulation(a) {
     for (tc = 0; tc < game.state.adventurers.length; tc++) {
       for (oe = game.state.adventurers[tc], ne = oe.inventory.items, Td = 0; Td < ne.length; Td++) {
         Y = ne[Td];
-        if (!((nf = oe.ef(Y.r)) && !isBetterItem(Y, nf))) {
+        if (!((nf = oe.ef(Y.slot)) && !isBetterItem(Y, nf))) {
           Ya.Fj.push(Y);
         }
       }

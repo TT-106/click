@@ -177,7 +177,7 @@ export function initializeViewsCharacter() {
       this.gf.innerHTML = formatAmount(this.item.zf);
       this.Oh.innerHTML = formatAmount(this.item.itemValue) + " " + getItemStatLabel(this.item);
       var c = game.state.adventurers[this.$],
-        b = c.ef(a.r);
+        b = c.ef(a.slot);
       this.Oh.className = b ? this.item.itemValue > b.itemValue ? "itemValueBetter" : this.item.itemValue < b.itemValue ? "itemValueWorse" : "" : "itemValueBetter";
       this.gf.className = b ? a.zf > b.zf ? "itemValueBetter" : a.zf < b.zf ? "itemValueWorse" : "" : "itemValueBetter";
       this.Ie.className = getRarityClass(this.item.uf());

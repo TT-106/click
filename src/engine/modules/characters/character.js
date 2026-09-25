@@ -34,7 +34,7 @@ export function Character(a, b, c, d, f) {
     c = [];
     var g;
     for (g = 0; g < a.length; g++) {
-      c.push(a[g].r);
+      c.push(a[g].slot);
     }
     a = c;
   } else {
@@ -44,7 +44,7 @@ export function Character(a, b, c, d, f) {
   if (d = d.tb) {
     a = {};
     for (c = 0; c < d.length; c++) {
-      a[d[c].r] = d[c].s;
+      a[d[c].slot] = d[c].statType;
     }
     d = a;
   } else {
@@ -139,9 +139,9 @@ export function isHostile(a) {
 }
 export function equipItem(a, b) {
   if (b.characterClass !== a.characterClass) {
-    console.log("failed to equip non-equipable item. itemSlot=" + b.r + " charClass=" + a.characterClass);
+    console.log("failed to equip non-equipable item. itemSlot=" + b.slot + " charClass=" + a.characterClass);
   } else if (a.equipment) {
-    var c = a.equipment.ef(b.r);
+    var c = a.equipment.ef(b.slot);
     a.equipment.Qk(b);
     if (a.inventory) {
       a.inventory.removeItem(b);
@@ -163,17 +163,17 @@ export function equipItem(a, b) {
     for (d = 0; d < g.length; d++) {
       if (f = h.ef(g[d])) {
         var l = c.damage;
-        l.itemValue += 1 === f.s ? f.itemValue : 0;
+        l.itemValue += 1 === f.characteristic ? f.itemValue : 0;
         l = c.armor;
-        l.itemValue += 2 === f.s ? f.itemValue : 0;
+        l.itemValue += 2 === f.characteristic ? f.itemValue : 0;
         l = c.attackRating;
-        l.itemValue += 3 === f.s ? f.itemValue : 0;
+        l.itemValue += 3 === f.characteristic ? f.itemValue : 0;
         l = c.defenceRating;
-        l.itemValue += 4 === f.s ? f.itemValue : 0;
+        l.itemValue += 4 === f.characteristic ? f.itemValue : 0;
         l = c.maxHealth;
-        l.itemValue += 5 === f.s ? f.itemValue : 0;
+        l.itemValue += 5 === f.characteristic ? f.itemValue : 0;
         l = c.maxSpirit;
-        l.itemValue += 6 === f.s ? f.itemValue : 0;
+        l.itemValue += 6 === f.characteristic ? f.itemValue : 0;
       }
     }
     c.health = Math.min(c.health, statValue(c.maxHealth));
@@ -1192,7 +1192,7 @@ export function updateCharacter(a, b) {
             if (0 !== zl.length) {
               for (var Ph = undefined, kj = undefined, Tp = 0, Up = undefined, Al = 0, LA = 0.1 + equipmentQualityBonus.t, Ph = zl.length - 1; 0 <= Ph; Ph--) {
                 kj = zl[Ph];
-                if ((Up = yl.ef(kj.r)) && !isBetterItem(kj, Up)) {
+                if ((Up = yl.ef(kj.slot)) && !isBetterItem(kj, Up)) {
                   Al += kj.zf * LA;
                   Tp++;
                   awardAdventurePoints(17);

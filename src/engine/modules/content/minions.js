@@ -16,23 +16,23 @@ export function initializeContentMinions() {
     descriptionText: "A cool wolf that fights for a time.",
     Oi: -1,
     tb: [{
-      r: "230",
-      s: 1
+      slot: "230",
+      statType: 1
     }, {
-      r: "231",
-      s: 2
+      slot: "231",
+      statType: 2
     }, {
-      r: "232",
-      s: 3
+      slot: "232",
+      statType: 3
     }, {
-      r: "233",
-      s: 4
+      slot: "233",
+      statType: 4
     }, {
-      r: "234",
-      s: 5
+      slot: "234",
+      statType: 5
     }, {
-      r: "235",
-      s: 6
+      slot: "235",
+      statType: 6
     }],
     Ma: minionStatMultipliers,
     kc: null,
@@ -49,23 +49,23 @@ export function initializeContentMinions() {
     descriptionText: "A Skeletal Warrior.",
     Oi: -1,
     tb: [{
-      r: "230",
-      s: 1
+      slot: "230",
+      statType: 1
     }, {
-      r: "231",
-      s: 2
+      slot: "231",
+      statType: 2
     }, {
-      r: "232",
-      s: 3
+      slot: "232",
+      statType: 3
     }, {
-      r: "233",
-      s: 4
+      slot: "233",
+      statType: 4
     }, {
-      r: "234",
-      s: 5
+      slot: "234",
+      statType: 5
     }, {
-      r: "235",
-      s: 6
+      slot: "235",
+      statType: 6
     }],
     Ma: minionStatMultipliers,
     kc: null,
@@ -82,23 +82,23 @@ export function initializeContentMinions() {
     descriptionText: "A chicken.",
     Oi: -1,
     tb: [{
-      r: "230",
-      s: 1
+      slot: "230",
+      statType: 1
     }, {
-      r: "231",
-      s: 2
+      slot: "231",
+      statType: 2
     }, {
-      r: "232",
-      s: 3
+      slot: "232",
+      statType: 3
     }, {
-      r: "233",
-      s: 4
+      slot: "233",
+      statType: 4
     }, {
-      r: "234",
-      s: 5
+      slot: "234",
+      statType: 5
     }, {
-      r: "235",
-      s: 6
+      slot: "235",
+      statType: 6
     }],
     Ma: minionStatMultipliers,
     kc: null,
@@ -115,23 +115,23 @@ export function initializeContentMinions() {
     descriptionText: "A chicken.",
     Oi: -1,
     tb: [{
-      r: "230",
-      s: 1
+      slot: "230",
+      statType: 1
     }, {
-      r: "231",
-      s: 2
+      slot: "231",
+      statType: 2
     }, {
-      r: "232",
-      s: 3
+      slot: "232",
+      statType: 3
     }, {
-      r: "233",
-      s: 4
+      slot: "233",
+      statType: 4
     }, {
-      r: "234",
-      s: 5
+      slot: "234",
+      statType: 5
     }, {
-      r: "235",
-      s: 6
+      slot: "235",
+      statType: 6
     }],
     Ma: minionStatMultipliers,
     jl: [barbarianSpellDefinitions.wB],
@@ -149,23 +149,23 @@ export function initializeContentMinions() {
     descriptionText: "A chicken.",
     Oi: -1,
     tb: [{
-      r: "29",
-      s: 3
+      slot: "29",
+      statType: 3
     }, {
-      r: "62",
-      s: 1
+      slot: "62",
+      statType: 1
     }, {
-      r: "89",
-      s: 4
+      slot: "89",
+      statType: 4
     }, {
-      r: "186",
-      s: 2
+      slot: "186",
+      statType: 2
     }, {
-      r: "5",
-      s: 5
+      slot: "5",
+      statType: 5
     }, {
-      r: "33",
-      s: 6
+      slot: "33",
+      statType: 6
     }],
     Ma: minionStatMultipliers,
     jl: [ninjaSpellDefinitions.Hx],
@@ -186,23 +186,23 @@ export function initializeContentMinions() {
     descriptionText: "A chicken.",
     Oi: -1,
     tb: [{
-      r: "24",
-      s: 3
+      slot: "24",
+      statType: 3
     }, {
-      r: "25",
-      s: 4
+      slot: "25",
+      statType: 4
     }, {
-      r: "61",
-      s: 1
+      slot: "61",
+      statType: 1
     }, {
-      r: "84",
-      s: 2
+      slot: "84",
+      statType: 2
     }, {
-      r: "100",
-      s: 5
+      slot: "100",
+      statType: 5
     }, {
-      r: "88",
-      s: 6
+      slot: "88",
+      statType: 6
     }],
     Ma: minionStatMultipliers,
     jl: [rogueSpellDefinitions.IB],
@@ -220,20 +220,20 @@ export function initializeContentMinions() {
     descriptionText: "A death chicken.",
     Oi: -1,
     tb: [{
-      r: "60",
-      s: 1
+      slot: "60",
+      statType: 1
     }, {
-      r: "23",
-      s: 3
+      slot: "23",
+      statType: 3
     }, {
-      r: "83",
-      s: 2
+      slot: "83",
+      statType: 2
     }, {
-      r: "143",
-      s: 5
+      slot: "143",
+      statType: 5
     }, {
-      r: "3",
-      s: 4
+      slot: "3",
+      statType: 4
     }],
     Ma: guardianStatMultipliers,
     kc: null,
@@ -257,23 +257,23 @@ export function initializeContentMinions() {
     descriptionText: "Floating Skull of Death.",
     Oi: -1,
     tb: [{
-      r: "230",
-      s: 1
+      slot: "230",
+      statType: 1
     }, {
-      r: "231",
-      s: 2
+      slot: "231",
+      statType: 2
     }, {
-      r: "232",
-      s: 3
+      slot: "232",
+      statType: 3
     }, {
-      r: "233",
-      s: 4
+      slot: "233",
+      statType: 4
     }, {
-      r: "234",
-      s: 5
+      slot: "234",
+      statType: 5
     }, {
-      r: "235",
-      s: 6
+      slot: "235",
+      statType: 6
     }],
     Ma: casterStatMultipliers,
     kc: null,
@@ -296,23 +296,23 @@ export function initializeContentMinions() {
     descriptionText: "His bite is bigger than his bark.",
     Oi: -1,
     tb: [{
-      r: "230",
-      s: 1
+      slot: "230",
+      statType: 1
     }, {
-      r: "231",
-      s: 2
+      slot: "231",
+      statType: 2
     }, {
-      r: "232",
-      s: 3
+      slot: "232",
+      statType: 3
     }, {
-      r: "233",
-      s: 4
+      slot: "233",
+      statType: 4
     }, {
-      r: "234",
-      s: 5
+      slot: "234",
+      statType: 5
     }, {
-      r: "235",
-      s: 6
+      slot: "235",
+      statType: 6
     }],
     Ma: guardianStatMultipliers,
     kc: null,

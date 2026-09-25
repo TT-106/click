@@ -55,23 +55,23 @@ export function initializeContentClasses() {
     requiredVictories: 0,
     fe: false,
     tb: [{
-      r: "20",
-      s: 1
+      slot: "20",
+      statType: 1
     }, {
-      r: "80",
-      s: 2
+      slot: "80",
+      statType: 2
     }, {
-      r: "40",
-      s: 4
+      slot: "40",
+      statType: 4
     }, {
-      r: "120",
-      s: 5
+      slot: "120",
+      statType: 5
     }, {
-      r: "101",
-      s: 3
+      slot: "101",
+      statType: 3
     }, {
-      r: "185",
-      s: 6
+      slot: "185",
+      statType: 6
     }],
     Ma: {
       Xf: 0.95,
@@ -108,23 +108,23 @@ export function initializeContentClasses() {
     requiredVictories: 0,
     fe: false,
     tb: [{
-      r: "22",
-      s: 1
+      slot: "22",
+      statType: 1
     }, {
-      r: "163",
-      s: 5
+      slot: "163",
+      statType: 5
     }, {
-      r: "82",
-      s: 2
+      slot: "82",
+      statType: 2
     }, {
-      r: "41",
-      s: 4
+      slot: "41",
+      statType: 4
     }, {
-      r: "181",
-      s: 3
+      slot: "181",
+      statType: 3
     }, {
-      r: "145",
-      s: 6
+      slot: "145",
+      statType: 6
     }],
     Ma: {
       Xf: 0.95,
@@ -161,20 +161,20 @@ export function initializeContentClasses() {
     requiredVictories: 0,
     fe: false,
     tb: [{
-      r: "60",
-      s: 1
+      slot: "60",
+      statType: 1
     }, {
-      r: "23",
-      s: 3
+      slot: "23",
+      statType: 3
     }, {
-      r: "83",
-      s: 2
+      slot: "83",
+      statType: 2
     }, {
-      r: "143",
-      s: 5
+      slot: "143",
+      statType: 5
     }, {
-      r: "3",
-      s: 4
+      slot: "3",
+      statType: 4
     }],
     Ma: {
       Xf: 1.15,
@@ -211,23 +211,23 @@ export function initializeContentClasses() {
     requiredVictories: 0,
     fe: true,
     tb: [{
-      r: "27",
-      s: 1
+      slot: "27",
+      statType: 1
     }, {
-      r: "86",
-      s: 2
+      slot: "86",
+      statType: 2
     }, {
-      r: "122",
-      s: 4
+      slot: "122",
+      statType: 4
     }, {
-      r: "161",
-      s: 5
+      slot: "161",
+      statType: 5
     }, {
-      r: "141",
-      s: 3
+      slot: "141",
+      statType: 3
     }, {
-      r: "183",
-      s: 6
+      slot: "183",
+      statType: 6
     }],
     Ma: casterStatMultipliers,
     kc: fireSpellDefinitions,
@@ -257,23 +257,23 @@ export function initializeContentClasses() {
     requiredVictories: 0,
     fe: false,
     tb: [{
-      r: "24",
-      s: 3
+      slot: "24",
+      statType: 3
     }, {
-      r: "25",
-      s: 4
+      slot: "25",
+      statType: 4
     }, {
-      r: "61",
-      s: 1
+      slot: "61",
+      statType: 1
     }, {
-      r: "84",
-      s: 2
+      slot: "84",
+      statType: 2
     }, {
-      r: "100",
-      s: 5
+      slot: "100",
+      statType: 5
     }, {
-      r: "88",
-      s: 6
+      slot: "88",
+      statType: 6
     }],
     Ma: guardianStatMultipliers,
     kc: rogueSpellDefinitions,
@@ -303,23 +303,23 @@ export function initializeContentClasses() {
     requiredVictories: 0,
     fe: true,
     tb: [{
-      r: "31",
-      s: 1
+      slot: "31",
+      statType: 1
     }, {
-      r: "91",
-      s: 2
+      slot: "91",
+      statType: 2
     }, {
-      r: "202",
-      s: 6
+      slot: "202",
+      statType: 6
     }, {
-      r: "203",
-      s: 5
+      slot: "203",
+      statType: 5
     }, {
-      r: "164",
-      s: 3
+      slot: "164",
+      statType: 3
     }, {
-      r: "7",
-      s: 4
+      slot: "7",
+      statType: 4
     }],
     Ma: guardianStatMultipliers,
     kc: druidSpellDefinitions,
@@ -350,23 +350,23 @@ export function initializeContentClasses() {
     requiredVictories: 1,
     fe: false,
     tb: [{
-      r: "21",
-      s: 1
+      slot: "21",
+      statType: 1
     }, {
-      r: "81",
-      s: 2
+      slot: "81",
+      statType: 2
     }, {
-      r: "102",
-      s: 3
+      slot: "102",
+      statType: 3
     }, {
-      r: "144",
-      s: 5
+      slot: "144",
+      statType: 5
     }, {
-      r: "180",
-      s: 4
+      slot: "180",
+      statType: 4
     }, {
-      r: "4",
-      s: 6
+      slot: "4",
+      statType: 6
     }],
     Ma: {
       Xf: 1.05,
@@ -403,23 +403,23 @@ export function initializeContentClasses() {
     requiredVictories: 1,
     fe: true,
     tb: [{
-      r: "26",
-      s: 1
+      slot: "26",
+      statType: 1
     }, {
-      r: "85",
-      s: 2
+      slot: "85",
+      statType: 2
     }, {
-      r: "121",
-      s: 4
+      slot: "121",
+      statType: 4
     }, {
-      r: "160",
-      s: 5
+      slot: "160",
+      statType: 5
     }, {
-      r: "140",
-      s: 3
+      slot: "140",
+      statType: 3
     }, {
-      r: "182",
-      s: 6
+      slot: "182",
+      statType: 6
     }],
     Ma: casterStatMultipliers,
     kc: electricSpellDefinitions,
@@ -449,23 +449,23 @@ export function initializeContentClasses() {
     requiredVictories: 2,
     fe: false,
     tb: [{
-      r: "29",
-      s: 3
+      slot: "29",
+      statType: 3
     }, {
-      r: "62",
-      s: 1
+      slot: "62",
+      statType: 1
     }, {
-      r: "89",
-      s: 4
+      slot: "89",
+      statType: 4
     }, {
-      r: "186",
-      s: 2
+      slot: "186",
+      statType: 2
     }, {
-      r: "5",
-      s: 5
+      slot: "5",
+      statType: 5
     }, {
-      r: "33",
-      s: 6
+      slot: "33",
+      statType: 6
     }],
     Ma: {
       Xf: 1.1,
@@ -502,23 +502,23 @@ export function initializeContentClasses() {
     requiredVictories: 2,
     fe: true,
     tb: [{
-      r: "30",
-      s: 1
+      slot: "30",
+      statType: 1
     }, {
-      r: "90",
-      s: 2
+      slot: "90",
+      statType: 2
     }, {
-      r: "200",
-      s: 6
+      slot: "200",
+      statType: 6
     }, {
-      r: "201",
-      s: 5
+      slot: "201",
+      statType: 5
     }, {
-      r: "6",
-      s: 3
+      slot: "6",
+      statType: 3
     }, {
-      r: "124",
-      s: 4
+      slot: "124",
+      statType: 4
     }],
     Ma: casterStatMultipliers,
     kc: necromancerSpellDefinitions,
@@ -548,23 +548,23 @@ export function initializeContentClasses() {
     requiredVictories: 3,
     fe: true,
     tb: [{
-      r: "32",
-      s: 1
+      slot: "32",
+      statType: 1
     }, {
-      r: "92",
-      s: 2
+      slot: "92",
+      statType: 2
     }, {
-      r: "204",
-      s: 6
+      slot: "204",
+      statType: 6
     }, {
-      r: "125",
-      s: 5
+      slot: "125",
+      statType: 5
     }, {
-      r: "165",
-      s: 3
+      slot: "165",
+      statType: 3
     }, {
-      r: "205",
-      s: 4
+      slot: "205",
+      statType: 4
     }],
     Ma: casterStatMultipliers,
     kc: chickenSpellDefinitions,
@@ -615,23 +615,23 @@ export function initializeContentClasses() {
     requiredVictories: 0,
     fe: false,
     tb: [{
-      r: "230",
-      s: 1
+      slot: "230",
+      statType: 1
     }, {
-      r: "231",
-      s: 2
+      slot: "231",
+      statType: 2
     }, {
-      r: "232",
-      s: 3
+      slot: "232",
+      statType: 3
     }, {
-      r: "233",
-      s: 4
+      slot: "233",
+      statType: 4
     }, {
-      r: "234",
-      s: 5
+      slot: "234",
+      statType: 5
     }, {
-      r: "235",
-      s: 6
+      slot: "235",
+      statType: 6
     }],
     Ma: {
       Xf: 1.2,
