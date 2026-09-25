@@ -49,8 +49,8 @@ npm run perf             # 性能基线测量（重构 vs 原版）
 
 ## 6. 下一步（按优先级）
 
-1. **波次 4 状态**：Ja/ka/Oa/Fa/Ca/ra/Y + 法术族（ta/ca/ya/Ra/ga/X）已落地全绿。**`Da` 三路拆分被回退**——引发变异存档场景分叉（levelCenter/levelSeed±1），调试路径与全部证据见 `docs/reverse-engineering/unresolved.md` U1（harness 已内置 RNG 栈记录器 `__rngLogFrom/To`）。
-2. **已取证待落地**（第四轮智能体 B，证据表见 unresolved.md 末尾）：fa→baseName、oa→isProjectile 组、ea→setDecorationSprite、wa→seededRandom、sa→shown、ua→dungeon、xa→spellDefinition、$→adventurerIndex、La→cooldownTurns（+mq）；na/ma/la/Ia 为 write-only 建议注记不改名。
+1. **波次 4 状态**：Ja/ka/Oa/Fa/Ca/ra/Y + 法术族（ta/ca/ya/Ra/ga/X）+ B 组（$/sa/ua/xa/La+mq/wa/ea/fa/oa 组）全部落地全绿。**`Da` 三路拆分经两轮调试仍分叉，已回退**——关键实证：推进期 RNG delta 全程 0（非随机流分叉）、`createSpellAction/nu` 入参是多态角色（6 处误标已修正仍分叉）、最可疑链路是 FollowLeaderBehavior.wd 的"谁在打我"判定。完整证据与运行时断言方案见 `docs/reverse-engineering/unresolved.md` U1。
+2. ~~已取证待落地~~ ✅ B 组九项全部落地（每字母独立全回归）。
 3. ~~交付物收尾~~ ✅ 已完成（REFACTOR_REPORT.md、PERFORMANCE_REPORT.md、COMPATIBILITY_REPORT.md、MIGRATION_MAP.md）。
 4. ~~扩展差分场景：prestige/victory~~ ✅ 12 场景矩阵已含 veteran-run/prestige-restart/full-reset；剩余：胜利瞬间触发（城堡征服）、法术分支。
 5. **M10 类型体系**：✅ 已启动（tsconfig checkJs 范围 core/+persistence/、SaveData DTO typedef `persistence/save-dto.js`、math.js JSDoc、`npm run typecheck` 已入 check 门禁）；38 文件 `@ts-nocheck` 待逐文件摘除（优先 simulation/tick.js、runtime/game.js）。
