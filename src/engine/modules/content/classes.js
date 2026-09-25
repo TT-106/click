@@ -73,7 +73,7 @@ export function initializeContentClasses() {
       slot: "185",
       statType: 6
     }],
-    Ma: {
+    statMultipliers: {
       Xf: 0.95,
       Qf: 1,
       Rf: 0.95,
@@ -126,7 +126,7 @@ export function initializeContentClasses() {
       slot: "145",
       statType: 6
     }],
-    Ma: {
+    statMultipliers: {
       Xf: 0.95,
       Qf: 1,
       Rf: 0.95,
@@ -176,7 +176,7 @@ export function initializeContentClasses() {
       slot: "3",
       statType: 4
     }],
-    Ma: {
+    statMultipliers: {
       Xf: 1.15,
       Qf: 0.9,
       Rf: 1.15,
@@ -368,7 +368,7 @@ export function initializeContentClasses() {
       slot: "4",
       statType: 6
     }],
-    Ma: {
+    statMultipliers: {
       Xf: 1.05,
       Qf: 0.95,
       Rf: 1.05,
@@ -467,7 +467,7 @@ export function initializeContentClasses() {
       slot: "33",
       statType: 6
     }],
-    Ma: {
+    statMultipliers: {
       Xf: 1.1,
       Qf: 0.9,
       Rf: 1.1,
@@ -633,7 +633,7 @@ export function initializeContentClasses() {
       slot: "235",
       statType: 6
     }],
-    Ma: {
+    statMultipliers: {
       Xf: 1.2,
       Qf: 1,
       Rf: 500,

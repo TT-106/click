@@ -121,7 +121,7 @@ export function spawnDungeonBoss(a, b) {
   f.behaviors = h;
   initializeCharacterSkills(f, c);
   l.characterLevel = c;
-  applyLevelStats(l, c, bossClass.Ma);
+  applyLevelStats(l, c, bossClass.statMultipliers);
   if (bossClass.eu) {
     for (c = 0; c < bossClass.eu.length; c++) {
       learnSpell(f, new Spell(bossClass.eu[c]));

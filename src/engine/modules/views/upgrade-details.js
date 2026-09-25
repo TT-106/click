@@ -402,7 +402,7 @@ export function initializeViewsUpgradeDetails() {
         this.Iu = a;
         this.Ju = b;
         var c = a.getSprite(),
-          d = a.classDefinition.Ma;
+          d = a.classDefinition.statMultipliers;
         this.hm.style.background = "url('spritesheet/monsters.png') -" + (c.sourceX + 10) + "px -" + (c.sourceY + 12) + "px";
         this.Ty.innerHTML = this.upgrade.lb();
         this.aD.innerHTML = formatAmount(a.stats.Am) + " XP";

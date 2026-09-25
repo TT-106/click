@@ -77,7 +77,7 @@ export function spawnMinion(a, b, c) {
   d.lifetimeTurns = a.Oi;
   initializeCharacterSkills(d, g);
   f.characterLevel = g;
-  applyLevelStats(f, g, a.Ma);
+  applyLevelStats(f, g, a.statMultipliers);
   if (a.jl) {
     for (b = 0; b < a.jl.length; b++) {
       learnSpell(d, new Spell(a.jl[b]));
@@ -110,7 +110,7 @@ export function createCastleGuardian(a, b, c) {
   f.behaviors = d;
   initializeCharacterSkills(f, b);
   g.characterLevel = b;
-  applyLevelStats(g, b, a.Ma);
+  applyLevelStats(g, b, a.statMultipliers);
   if (a.Jm) {
     for (b = 0; b < a.Jm.length; b++) {
       learnSpell(f, new Spell(a.Jm[b]));
@@ -150,7 +150,7 @@ export function chooseScrollCaster() {
     c = getPartyMinLevel();
   initializeCharacterSkills(a, c);
   b.characterLevel = c;
-  applyLevelStats(b, c, scrollCasterClass.Ma);
+  applyLevelStats(b, c, scrollCasterClass.statMultipliers);
   return a;
 }
 export function createBehaviorQueue(a) {

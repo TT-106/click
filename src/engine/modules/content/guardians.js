@@ -143,7 +143,7 @@ export function initializeContentGuardians() {
       slot: "33",
       statType: 6
     }],
-    Ma: {
+    statMultipliers: {
       Xf: 1.1,
       Qf: 0.8,
       Rf: 1.1,
@@ -314,7 +314,7 @@ export function initializeContentGuardians() {
       slot: "235",
       statType: 6
     }],
-    Ma: {
+    statMultipliers: {
       Xf: 1.7,
       Qf: 1.1,
       Rf: 1.6,

@@ -73,7 +73,7 @@ export function mountPartyCreation(a) {
             (/** @type {any} */ (g)).Qk(p);
           }
         }
-        applyLevelStats(n, 1, f.Ma);
+        applyLevelStats(n, 1, f.statMultipliers);
         f = g;
         game.state.adventurers.push(f);
         if (0 < d) {

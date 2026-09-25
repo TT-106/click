@@ -203,7 +203,7 @@ export function generateItem(a, b, c, d, f) {
   return b;
 }
 export function getClassStatMultiplier(a, b) {
-  var c = a.classDefinition.Ma;
+  var c = a.classDefinition.statMultipliers;
   if (!c) {
     return 1;
   }

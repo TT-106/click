@@ -542,7 +542,7 @@ export function initializeProgressionUpgrades() {
           f.experiencePoints = 0;
         }
         c = b.characterLevel + 1;
-        applyLevelStats(b, c, a.classDefinition.Ma);
+        applyLevelStats(b, c, a.classDefinition.statMultipliers);
         a.skillPoints++;
         a.hasUnspentSkills = hasUnspentSkills(a);
         b.characterLevel = c;
@@ -551,7 +551,7 @@ export function initializeProgressionUpgrades() {
             var g = b[f],
               h = c;
             g.stats.characterLevel = h;
-            applyLevelStats(g.stats, h, g.classDefinition.Ma);
+            applyLevelStats(g.stats, h, g.classDefinition.statMultipliers);
             initializeCharacterSkills(g, h);
           }
         }
@@ -562,7 +562,7 @@ export function initializeProgressionUpgrades() {
           b = d.stats;
           f = getPartyMinLevel();
           initializeCharacterSkills(d, f);
-          applyLevelStats(b, f, d.classDefinition.Ma);
+          applyLevelStats(b, f, d.classDefinition.statMultipliers);
           b.characterLevel = f;
         }
         awardAdventurePoints(22);
