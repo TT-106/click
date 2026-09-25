@@ -486,7 +486,7 @@ export function updateCharacter(a, b) {
                   ta = new CombatAction();
                   ta.attacker = a;
                   ta.Cb(qa);
-                  ta.Ib = X;
+                  ta.actionDefinition = X;
                   ta.yd = true;
                   eb = qa.position.levelPosition;
                   if (Da) {
@@ -526,7 +526,7 @@ export function updateCharacter(a, b) {
                     Va = new CombatAction();
                     Va.attacker = a;
                     Va.Cb(ja);
-                    Va.Ib = ha;
+                    Va.actionDefinition = ha;
                     Va.yd = true;
                     mc = ja.position.levelPosition;
                     Sb = new VisualEffect(null, zb, mc, true, 2);
@@ -597,7 +597,7 @@ export function updateCharacter(a, b) {
                       sa = new CombatAction();
                       sa.attacker = a;
                       sa.Cb(Qa);
-                      sa.Ib = cc;
+                      sa.actionDefinition = cc;
                       sa.yd = true;
                       if (qc) {
                         Tb = new VisualEffect(qc, Cb, Ra, true, 1);
@@ -654,7 +654,7 @@ export function updateCharacter(a, b) {
                   Ya.Cb(xb);
                   var tc = xb.position.levelPosition,
                     me = a.position.levelPosition;
-                  Ya.Ib = Na;
+                  Ya.actionDefinition = Na;
                   Ya.yd = true;
                   var ne = Na.projectileEffectName;
                   if (ne) {
@@ -750,7 +750,7 @@ export function updateCharacter(a, b) {
                     Vb.Cb(Gc);
                     Vb.Rd = false;
                     Vb.Jc = 0;
-                    Vb.Ib = ad;
+                    Vb.actionDefinition = ad;
                     Vb.yd = false;
                     var Tc = Gc.position.levelPosition,
                       hd = randomPointInRoom(Tc, Gc.position.room),
@@ -795,7 +795,7 @@ export function updateCharacter(a, b) {
                       ld.Cb(Oe);
                       ld.Rd = false;
                       ld.Jc = 0;
-                      ld.Ib = fg;
+                      ld.actionDefinition = fg;
                       ld.yd = true;
                       var pf = Ne.position.levelPosition,
                         qf = Oe.position.levelPosition,
@@ -827,7 +827,7 @@ export function updateCharacter(a, b) {
                 Md.Cb(a);
                 Md.Rd = false;
                 Md.Jc = 0;
-                Md.Ib = se;
+                Md.actionDefinition = se;
                 Md.yd = false;
                 var tf = a.position.levelPosition,
                   uf = randomPointInRoom(tf, a.position.room),
@@ -963,7 +963,7 @@ export function updateCharacter(a, b) {
                       yd = new CombatAction();
                       yd.attacker = a;
                       yd.Cb(Wd);
-                      yd.Ib = vf;
+                      yd.actionDefinition = vf;
                       yd.yd = true;
                       lg = Wd.position.levelPosition;
                       if (Af) {

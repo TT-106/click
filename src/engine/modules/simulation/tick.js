@@ -289,7 +289,7 @@ export function advanceSimulation(a) {
         if (!Ua || Ua.Pk || Ua.bg) {
           var Va = cb.xb;
           if (!Va.Cj) {
-            var mc = cb.Ib;
+            var mc = cb.actionDefinition;
             if (mc && 8 == mc.spellCategoryId) {
               var vb = cb,
                 Sb = game.upgradeRegistry,
@@ -306,7 +306,7 @@ export function advanceSimulation(a) {
                   Bb = undefined,
                   qb = undefined,
                   wb = undefined,
-                  Ib = vb.Ib;
+                  Ib = vb.actionDefinition;
                 if (Ib) {
                   wb = Ib.impactEffectName;
                 } else {
@@ -328,7 +328,7 @@ export function advanceSimulation(a) {
                     Wa.attacker = zb;
                     (/** @type {any} */ (Wa)).Cb(qb);
                     Wa.yd = false;
-                    Wa.Ib = Ib;
+                    Wa.actionDefinition = Ib;
                     applySeparationForce(Ab, Ha, jb, Hb);
                     var cc = new VisualEffect(wb, jb, Bb, false, 1);
                     Wa.xb = cc;
@@ -344,7 +344,7 @@ export function advanceSimulation(a) {
                   Tb.attacker = vb.attacker;
                   (/** @type {any} */ (Tb)).Cb(nc);
                   Tb.yd = false;
-                  Tb.Ib = Qa.Wq;
+                  Tb.actionDefinition = Qa.Wq;
                   if (!Qa.Wq) {
                     Qa.Wq = new Spell(blastStunSpell);
                   }
@@ -382,7 +382,7 @@ export function advanceSimulation(a) {
         addVisualEffect(game.effects, Ra);
       }
       if (Ra) {
-        var Ja = kb.Ib;
+        var Ja = kb.actionDefinition;
         if (Ja && 12 === Ja.spellCategoryId) {
           var Db = Ra.wm;
           setVector(kb.attacker.position.levelPosition, Db.x, Db.y);

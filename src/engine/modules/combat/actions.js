@@ -27,7 +27,7 @@ import { MELEE_ATTACK_RANGE, RANGED_ATTACK_RANGE } from "../content/classes.js";
 export function CombatAction() {
   this.Jc = 0;
   this.yd = this.Vn = this.Rd = false;
-  this.xb = this.Xb = this.attacker = this.targetCharacter = this.Ib = null;
+  this.xb = this.Xb = this.attacker = this.targetCharacter = this.actionDefinition = null;
   this.ut = this.Xs = false;
   this.chainCount = this.Ys = 0;
   this.pl = null;
@@ -64,7 +64,7 @@ export function advanceCombatAction(a, b) {
       return b.Vn = true;
     }
     addVisualEffect(game.effects, c);
-    var d = b.Ib;
+    var d = b.actionDefinition;
     if (d && d.td) {
       applySpellEffect(a, b);
     }
@@ -83,9 +83,9 @@ export function advanceCombatAction(a, b) {
   }
   if ((d = b.xb) && d.bx !== d.oc) {
     var f = d.To();
-    if (b.Ib) {
+    if (b.actionDefinition) {
       var g = b.targetCharacter,
-        h = b.Ib,
+        h = b.actionDefinition,
         l = h.spellCategoryId;
       if (g) {
         if (d = g.stats, 4 === l || 5 === l || 8 === l || 13 === l || 12 === l) {
@@ -113,10 +113,10 @@ export function advanceCombatAction(a, b) {
       }
     }
   }
-  return c && c.bl() ? ((c = b.Ib) && (c.td || applySpellEffect(a, b)), b.Vn = true) : false;
+  return c && c.bl() ? ((c = b.actionDefinition) && (c.td || applySpellEffect(a, b)), b.Vn = true) : false;
 }
 export function applySpellEffect(a, b) {
-  var c = b.Ib,
+  var c = b.actionDefinition,
     d = c.spellCategoryId;
   if (2 === d || 3 === d) {
     var f = b.attacker,
@@ -504,7 +504,7 @@ export function createSpellAction(a) {
   d.Cb(b);
   var f = b.position.levelPosition,
     g = a.position.levelPosition;
-  d.Ib = c;
+  d.actionDefinition = c;
   d.yd = true;
   var h = c.projectileEffectName;
   if (h) {
@@ -638,7 +638,7 @@ export function createChainAction(a) {
   d = calculateAttackDamage(a.attacker, d);
   h.Jc = d;
   h.Rd = 0 === d;
-  h.Ib = a.Ib;
+  h.actionDefinition = a.actionDefinition;
   h.Ys = b + 1;
   h.Xs = true;
   h.chainCount = c;
@@ -653,7 +653,7 @@ export function createReturningAction(a) {
     f.attacker = a.attacker;
     f.Cb(a.attacker);
     f.yd = true;
-    f.Ib = a.Ib;
+    f.actionDefinition = a.actionDefinition;
     f.ut = true;
     f.Ys = 1;
     f.chainCount = 0;
@@ -686,7 +686,7 @@ export function createReturningAction(a) {
   f = new CombatAction();
   f.attacker = a.attacker;
   f.yd = true;
-  f.Ib = a.Ib;
+  f.actionDefinition = a.actionDefinition;
   f.Ys = b + 1;
   f.ut = true;
   f.chainCount = c;
