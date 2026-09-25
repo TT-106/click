@@ -74,3 +74,35 @@ npm test && npm run check      # 一条命令测试
 ## 10. 结论
 
 Clickpocalypse II 的核心实现已从高混淆遗留代码中恢复出真实语义：关键玩法行为有自动化差分证据保护，存档/RNG/时间/离线机制经兼容验证，业务逻辑已迁入带清晰边界的现代模块，旧文件不再是唯一真相来源。这些改善由运行与差分证明，而非主观判断。
+
+---
+
+## 附录 A：验收矩阵（规范 §56，截至 2026-09-26）
+
+判定依据：VERIFIED=有差分/单测/E2E 自动化证据；PARTIAL=有证据但覆盖不全；未列出的长尾系统=依赖同构恢复+全局差分间接保护。
+
+| 系统 | 判定 | 证据 |
+|---|---|---|
+| Bootstrap/启动 | PASS | architecture.md §1 + E2E 启动断言 |
+| Party 创建 | PASS | E2E（建队/改名/开战）+ adapter.startParty 校验 |
+| 角色等级/XP/属性 | PASS | 差分 12 场景（adventurers 全字段逐回合相等） |
+| 角色技能/技能树 | PARTIAL | 差分覆盖常规技能升级；个别技能分支未专项触发 |
+| Inventory/Equipment/Auto equip | PASS | 场景矩阵（金币涌入触发购买/掉落/自动装备路径）+ itemsFound 统计相等 |
+| 怪物定义/升级 | PASS | 差分（monsterTypes 全量相等） |
+| Combat/Crit/Stun/Skills/Spells | PARTIAL | 9000 回合 + 12 场景战斗统计相等（melee/ranged 计数）；法术专项分支未逐一触发 |
+| Loot/Gold/Items | PASS | 场景矩阵 + 统计相等 |
+| Scrolls/Potions | PASS | 专项场景（激活/自动激活/库存） |
+| Treasure | PASS | 宝箱管理器状态差分相等（treasure 场景注入） |
+| Dungeon 生成/导航 | PASS | 差分（level/hallways/roomVisibility 全量相等） |
+| Castle/Farming | PARTIAL | 状态差分相等；城堡征服全程未专项触发 |
+| Adventure Points/Point upgrades | PASS | pointManagerState 差分相等（离线/长跑覆盖重算路径） |
+| Achievements/Statistics | PASS | achievementManager/statistics 全量差分相等 |
+| Pause/Background | PASS | E2E 暂停断言 + loop 守卫差分 |
+| Offline progression | PASS | offline-1h/8h/disabled 三向验证（收益真实发生 + 双端相等） |
+| Auto/Manual save/Load/Import/Export | PASS | parity + E2E + codec 单测 |
+| Legacy save compatibility | PASS | fixture 载入 + 往返 + 4477 键审计 |
+| Prestige/reset | PASS | prestige-restart/full-reset 场景（本次新增） |
+| RNG determinism | PASS | 单测位级差分 + 全部差分场景的确定性前提 |
+| Long-running stability | PARTIAL | 9000 回合 + 离线 18925 回合无 NaN/漂移；8h+ 连续 wall-clock soak 未跑 |
+| UI tabs/Canvas/Sprite lookup | PASS | E2E 面板断言 + 渲染路径差分（spriteName/getSprite 重命名后回归） |
+| 类型体系/TypeScript | FAIL（未开始，M10） | — |
