@@ -68,6 +68,13 @@ export function withOfflineProcessing(save, enabled) {
   return out;
 }
 
+/** 胜利次数（veteran 运：解锁按胜利数门槛的职业内容）。 */
+export function withVictories(save, count) {
+  const out = clone(save);
+  out.victoryCount = count;
+  return out;
+}
+
 /** 收集快照中与玩法相关的可观察量，用于"断言场景确实产生了变化"。 */
 export function summarize(snapshot) {
   return {

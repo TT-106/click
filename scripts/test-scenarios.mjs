@@ -6,6 +6,7 @@ import { chromium } from 'playwright';
 import {
   decodeFixture, encodeSave, summarize,
   withPotions, withScrolls, withGold, withTurns, withElapsed, withOfflineProcessing,
+  withVictories,
   HARNESS_FIXED_NOW,
 } from '../tests/scenarios/save-mutations.mjs';
 
@@ -68,6 +69,25 @@ const scenarios = [
     make: () => withTurns(base, base.turnNumber + 1000000),
     steps: [[500, null], [500, null]],
   },
+  {
+    name: 'veteran-run',
+    make: () => withVictories(base, 3),
+    steps: [[600, null], [600, null]],
+  },
+  {
+    // 胜利重置：保留统计、清空当前冒险状态、立即回写存档
+    name: 'prestige-restart',
+    make: () => base,
+    restart: true,
+    steps: [[300, null], [300, null]],
+  },
+  {
+    // 完全重置：回到开局状态（比较重置后的完整存档）
+    name: 'full-reset',
+    make: () => base,
+    reset: true,
+    steps: [[1, null]],
+  },
 ];
 
 const browser = await chromium.launch({ channel: 'chrome', headless: true });
@@ -112,10 +132,26 @@ try {
         }
       }
 
+      // 重置类场景：驱动两端各自的 reset/restart 原生入口后比较完整状态
+      if (scenario.restart || scenario.reset) {
+        const method = scenario.restart ? 'restart' : 'reset';
+        const resetStates = await Promise.all(pages.map(p => p.page.evaluate(m => window.harness[m](), method)));
+        try {
+          assert.deepEqual(resetStates[1], resetStates[0], '重置后状态分叉');
+        } catch (error) {
+          await fs.mkdir('output/scenarios', { recursive: true });
+          await fs.writeFile(`output/scenarios/${scenario.name}-reset-original.json`, JSON.stringify(resetStates[0], null, 2));
+          await fs.writeFile(`output/scenarios/${scenario.name}-reset-refactored.json`, JSON.stringify(resetStates[1], null, 2));
+          throw error;
+        }
+      }
+
       let previous = await Promise.all(pages.map(p => p.page.evaluate(() => window.harness.snapshot())));
       for (const [turns, check] of scenario.steps) {
         const states = await Promise.all(pages.map(async p => {
           await p.page.evaluate(ms => window.harness.setTime(ms), HARNESS_FIXED_NOW);
+          // 重置后无队伍：走真实帧循环（守卫路径），而非裸推进
+          if (scenario.restart || scenario.reset) return p.page.evaluate(n => window.harness.idle(n), turns);
           return p.page.evaluate(turns => window.harness.advance(turns), turns);
         }));
         try {

@@ -18,7 +18,7 @@
 
 ## 2. 行为兼容（原版 vs 重构差分）— VERIFIED（覆盖范围内）
 
-`scripts/test-scenarios.mjs` 的 9 个场景全部通过（固定 LCG 随机 + 固定时钟，双端逐字段比较完整存档 DTO）：
+`scripts/test-scenarios.mjs` 的 12 个场景全部通过（固定 LCG 随机 + 固定时钟，双端逐字段比较完整存档 DTO）：
 
 | 场景 | 变异 | 验证点 | 结果 |
 |---|---|---|---|
@@ -31,6 +31,9 @@
 | scrolls-stocked | 4 种卷轴入库解锁 | 600+600 回合相等 | ✅ |
 | gold-windfall | 金币 1,000,000 | 600+600 回合相等 | ✅ |
 | late-horizon | 回合数 +1,000,000 | 500+500 回合相等 | ✅ |
+| veteran-run | victoryCount=3（解锁门槛内容） | 600+600 回合相等 | ✅ |
+| prestige-restart | 胜利重置（保留统计、清当前冒险） | 重置状态相等 + 空转 300×2 相等 | ✅ |
+| full-reset | 完全重置回开局 | 重置状态相等 + 空转相等 | ✅ |
 
 ## 3. RNG 确定性 — VERIFIED
 
@@ -52,7 +55,6 @@
 ## 6. 未覆盖区域（如实陈述）— UNRESOLVED
 
 以下系统**未进入差分场景**（无 fixture/变异器，非已知不兼容）：
-- prestige/victory 全流程（胜利重置、职业解锁进阶）
 - 部分法术分支（如 blastStunSpell 系）
 - 大型城堡攻防战全程
 - 8 小时以上离线（12h 上限截断路径未测）
