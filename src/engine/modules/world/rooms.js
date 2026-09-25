@@ -153,11 +153,11 @@ export function revealRoom(a) {
     p = a.Ga.Th;
     h = a.tileGrid;
     b = game.decorations;
-    if (!(!p || 0 === p.length || 0.2 > b.wa.random() || !(p = 1 === p.length ? p[0] : randomIntFrom(b.wa, p.length)))) {
+    if (!(!p || 0 === p.length || 0.2 > b.seededRandom.random() || !(p = 1 === p.length ? p[0] : randomIntFrom(b.seededRandom, p.length)))) {
       if (p.Oo && 0 < p.Oo.length) {
-        if (g = a.tileColumn, d = a.tileRow, f = d + a.heightInTiles - 1, g = g + 1 + randomIntFrom(b.wa, g + a.widthInTiles - 1 - g - 2), d = d + 1 + randomIntFrom(b.wa, f - d - 2), setVector(b.yh, g, d), f = b.yh, d = h[f.x][f.y], d) {
+        if (g = a.tileColumn, d = a.tileRow, f = d + a.heightInTiles - 1, g = g + 1 + randomIntFrom(b.seededRandom, g + a.widthInTiles - 1 - g - 2), d = d + 1 + randomIntFrom(b.seededRandom, f - d - 2), setVector(b.yh, g, d), f = b.yh, d = h[f.x][f.y], d) {
           if (!d.Yf) {
-            if (f = p.Oo[randomIntFrom(b.wa, p.Oo.length)]) {
+            if (f = p.Oo[randomIntFrom(b.seededRandom, p.Oo.length)]) {
               d.ea(game.terrainSprites.getSprite(f));
             } else {
               console.log("failed to select floor sprite.");
@@ -167,7 +167,7 @@ export function revealRoom(a) {
           console.log("invalid level tile. col=" + f.x + " row=" + f.y);
         }
       }
-      if (0.5 > b.wa.random()) {
+      if (0.5 > b.seededRandom.random()) {
         d = b.Xw(a);
         p = p.JC;
       } else {
@@ -177,7 +177,7 @@ export function revealRoom(a) {
       if (d && p && 0 !== p.length && canPlaceRoomObject(a, d)) {
         if (h = h[d.x][d.y], h) {
           if (!h.bt) {
-            if (b = p[randomIntFrom(b.wa, p.length)]) {
+            if (b = p[randomIntFrom(b.seededRandom, p.length)]) {
               h.bt = game.terrainSprites.getSprite(b);
             } else {
               console.log("failed to select wall sprite.");

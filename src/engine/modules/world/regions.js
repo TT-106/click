@@ -8,7 +8,7 @@ import { refreshWorldBlocks } from "./terrain.js";
 import { castleTheme, caveTheme, chamberTheme, dungeonTheme, iceDungeonTheme, ironMineTheme, stoneDungeonTheme, templeTheme, towerTheme, woodenMineTheme } from "../content/dungeon-themes.js";
 export var WORLD_BLOCK_COLUMNS, WORLD_BLOCK_ROWS, WORLD_ORIGIN_COLUMN, WORLD_ORIGIN_ROW;
 export function DungeonNameGenerator(a) {
-  this.wa = a;
+  this.seededRandom = a;
   this.yy = "可恶的 遗弃的 讨厌的 诅咒的 有害的 血腥的 痛苦的 诅咒的 毁坏的 矛盾的 爬行的 该死的 破旧的 厌恶的 黑暗的 昏暗的 遗弃的 发狂的 死亡的 深渊的 积灰的 不安的 荒凉的 潮湿的 粗短的 恶心的 不安的 害怕的 犯规的 禁止的 不好的 遗忘的 肮脏的 可怕的 灰暗的 地狱的 可恨的 可怕的 潮湿的 感染的 感染的 地狱的 有害的 诽谤的 可憎的 厌恶的 失去的 发霉的 神秘的 无情的 雾霾的 下流的 不好的 崩坏的 恶心的 调皮的 正常的 恶臭的 讨厌的 可憎的 厌恶的 反对的 有毒的 苍白的 污染的 腐坏的 毁灭的 糟糕的 腐臭的 驱蚊的 敌对的 发散的 恶心的 恶臭的 腐臭的 破碎的 恶心的 笼罩的 悲伤的 秘密的 阴影的 折磨的 折磨的 邪恶的 未知的 无名的 邪恶的 低语的 邪恶的".split(" ");
   this.FA = "地洞 地窖 洞穴 窑洞 空洞 兽穴 深洞 迷宫 陵墓 墓穴 迷宫 沼泽 矿坑 通道 矿井 地道 底层 地穴 水坑 隧道".split(" ");
   this.cz = "地下墓穴 地窖 膛室 窄小通道 停尸房 土窖 坟墓 石窟 地狱 阴间 陵墓 太平间 墓地 藏骨堂 神圣庇护所 埋葬所 坟墓 拱顶".split(" ");
@@ -23,10 +23,10 @@ export function generateDungeonName(a, b) {
   var c;
   a: switch (b) {
     case 3:
-      c = a.Xz[randomIntFrom(a.wa, a.Xz.length)];
+      c = a.Xz[randomIntFrom(a.seededRandom, a.Xz.length)];
       break a;
     default:
-      c = a.yy[randomIntFrom(a.wa, a.yy.length)];
+      c = a.yy[randomIntFrom(a.seededRandom, a.yy.length)];
   }
   return "" + c + "" + getDungeonNoun(a, b);
 }
@@ -36,23 +36,23 @@ export function getDungeonNoun(a, b) {
     case 2:
     case 3:
     case 1:
-      return a.FA[randomIntFrom(a.wa, a.FA.length)];
+      return a.FA[randomIntFrom(a.seededRandom, a.FA.length)];
     case 4:
     case 5:
-      return a.zC[randomIntFrom(a.wa, a.zC.length)];
+      return a.zC[randomIntFrom(a.seededRandom, a.zC.length)];
     case 6:
-      return a.xr[randomIntFrom(a.wa, a.xr.length)];
+      return a.xr[randomIntFrom(a.seededRandom, a.xr.length)];
     case 7:
     case 8:
-      return a.cB[randomIntFrom(a.wa, a.cB.length)];
+      return a.cB[randomIntFrom(a.seededRandom, a.cB.length)];
     case 9:
-      return a.cz[randomIntFrom(a.wa, a.cz.length)];
+      return a.cz[randomIntFrom(a.seededRandom, a.cz.length)];
     case 10:
-      return a.TB[randomIntFrom(a.wa, a.TB.length)];
+      return a.TB[randomIntFrom(a.seededRandom, a.TB.length)];
     case 11:
-      return a.My[randomIntFrom(a.wa, a.My.length)];
+      return a.My[randomIntFrom(a.seededRandom, a.My.length)];
     default:
-      return a.xr[randomIntFrom(a.wa, a.xr.length)];
+      return a.xr[randomIntFrom(a.seededRandom, a.xr.length)];
   }
 }
 export function WorldRegion(a, b, c) {

@@ -16,7 +16,7 @@ import { IDLE_ACTION } from "../ai/targeting.js";
 import { clearMovementTarget } from "../characters/movement.js";
 import { spawnRoomTreasure } from "../loot/treasure.js";
 export function DungeonLayoutGenerator(a, b, c, d, f) {
-  this.wa = d;
+  this.seededRandom = d;
   this.fl = a;
   this.Nj = b;
   this.tileGrid = c;
@@ -37,10 +37,10 @@ export function placeHorizontalStairs(a, b, c) {
     g,
     h,
     l = b.tileRow - 1;
-  h = b.tileColumn + randomIntFrom(a.wa, b.widthInTiles);
+  h = b.tileColumn + randomIntFrom(a.seededRandom, b.widthInTiles);
   for (g = !a.dl(d, h, l); !g && 6 > f;) {
     f++;
-    h = b.tileColumn + randomIntFrom(a.wa, b.widthInTiles);
+    h = b.tileColumn + randomIntFrom(a.seededRandom, b.widthInTiles);
     g = !a.dl(d, h, l);
   }
   if (!g) {
@@ -58,10 +58,10 @@ export function placeVerticalStairs(a, b, c) {
     g,
     h = b.tileColumn - 1,
     l;
-  l = b.tileRow + randomIntFrom(a.wa, b.heightInTiles);
+  l = b.tileRow + randomIntFrom(a.seededRandom, b.heightInTiles);
   for (g = !a.dl(d, h, l); !g && 6 > f;) {
     f++;
-    l = b.tileRow + randomIntFrom(a.wa, b.heightInTiles);
+    l = b.tileRow + randomIntFrom(a.seededRandom, b.heightInTiles);
     g = !a.dl(d, h, l);
   }
   if (!g) {
@@ -112,7 +112,7 @@ export function roomOverlapsExisting(a, b) {
   return false;
 }
 export function CastleLayoutGenerator(a, b, c, d) {
-  this.wa = d;
+  this.seededRandom = d;
   this.fl = a;
   this.Nj = b;
   this.tileGrid = c;
@@ -135,7 +135,7 @@ export function appendDungeonRoom(a, b, c, d, f, g) {
 }
 export function DungeonDecorationGenerator() {
   this.yh = new Vector2();
-  this.wa = new SeededRandom(3);
+  this.seededRandom = new SeededRandom(3);
 }
 export function DungeonLevel() {
   this.Li = this.Ki = 0;
@@ -254,7 +254,7 @@ export function initializeWorldGeneration() {
     this.gd.length = 0;
     this.tf = this.Ce = null;
     a: {
-      var a = this.Ow + randomIntFrom(this.wa, this.xA - this.Ow),
+      var a = this.Ow + randomIntFrom(this.seededRandom, this.xA - this.Ow),
         b,
         c,
         d = this.DA,
@@ -263,13 +263,13 @@ export function initializeWorldGeneration() {
         h,
         l = 0;
       for (b = 0; b < a; b++) {
-        g = d + randomIntFrom(this.wa, f - d);
-        h = d + randomIntFrom(this.wa, f - d);
-        c = new DungeonRoom(1 + randomIntFrom(this.wa, this.fl - g - 1), 1 + randomIntFrom(this.wa, this.Nj - h - 1), g, h, 0);
+        g = d + randomIntFrom(this.seededRandom, f - d);
+        h = d + randomIntFrom(this.seededRandom, f - d);
+        c = new DungeonRoom(1 + randomIntFrom(this.seededRandom, this.fl - g - 1), 1 + randomIntFrom(this.seededRandom, this.Nj - h - 1), g, h, 0);
         for (l = 0; roomOverlapsExisting(this, c);) {
           var n = c,
-            p = 1 + randomIntFrom(this.wa, this.fl - g - 1),
-            s = 1 + randomIntFrom(this.wa, this.Nj - h - 1);
+            p = 1 + randomIntFrom(this.seededRandom, this.fl - g - 1),
+            s = 1 + randomIntFrom(this.seededRandom, this.Nj - h - 1);
           n.tileColumn = p;
           n.tileRow = s;
           l++;
@@ -284,7 +284,7 @@ export function initializeWorldGeneration() {
         this.yx(g);
         h = undefined;
         for (h = 0; 3 > h; h++) {
-          if (0.5 > this.wa.random()) {
+          if (0.5 > this.seededRandom.random()) {
             this.shiftLeft(g);
             this.gt(g);
           } else {
@@ -324,8 +324,8 @@ export function initializeWorldGeneration() {
     return true;
   };
   DungeonLayoutGenerator.prototype.uu = function () {
-    for (var a = this.Pa[randomIntFrom(this.wa, this.Pa.length)], b = this.Pa[randomIntFrom(this.wa, this.Pa.length)]; b === a;) {
-      b = this.Pa[randomIntFrom(this.wa, this.Pa.length)];
+    for (var a = this.Pa[randomIntFrom(this.seededRandom, this.Pa.length)], b = this.Pa[randomIntFrom(this.seededRandom, this.Pa.length)]; b === a;) {
+      b = this.Pa[randomIntFrom(this.seededRandom, this.Pa.length)];
     }
     var c = false;
     if (game.currentDungeon) {
@@ -343,7 +343,7 @@ export function initializeWorldGeneration() {
   };
   DungeonLayoutGenerator.prototype.to = function (a, b) {
     var c;
-    if (0.5 > this.wa.random()) {
+    if (0.5 > this.seededRandom.random()) {
       if (!(c = placeHorizontalStairs(this, a, b))) {
         c = placeVerticalStairs(this, a, b);
       }
@@ -466,14 +466,14 @@ export function initializeWorldGeneration() {
       g;
     if (0.5 > Math.random()) {
       f = a.tileColumn - 1;
-      for (g = a.tileRow + randomIntFrom(this.wa, a.heightInTiles); this.dl(d, f, g);) {
-        g = a.tileRow + randomIntFrom(this.wa, a.heightInTiles);
+      for (g = a.tileRow + randomIntFrom(this.seededRandom, a.heightInTiles); this.dl(d, f, g);) {
+        g = a.tileRow + randomIntFrom(this.seededRandom, a.heightInTiles);
       }
       c.Fq = true;
     } else {
       g = a.tileRow - 1;
-      for (f = a.tileColumn + randomIntFrom(this.wa, a.widthInTiles); this.dl(d, f, g);) {
-        f = a.tileColumn + randomIntFrom(this.wa, a.widthInTiles);
+      for (f = a.tileColumn + randomIntFrom(this.seededRandom, a.widthInTiles); this.dl(d, f, g);) {
+        f = a.tileColumn + randomIntFrom(this.seededRandom, a.widthInTiles);
       }
       c.Fq = false;
     }
@@ -493,14 +493,14 @@ export function initializeWorldGeneration() {
   DungeonDecorationGenerator.prototype.Xw = function (a) {
     var b = a.tileColumn,
       c = a.tileRow - 1;
-    a = b + 1 + randomIntFrom(this.wa, b + a.widthInTiles - 1 - b - 2);
+    a = b + 1 + randomIntFrom(this.seededRandom, b + a.widthInTiles - 1 - b - 2);
     setVector(this.yh, a, c);
     return this.yh;
   };
   DungeonDecorationGenerator.prototype.Zw = function (a) {
     var b = a.tileColumn - 1,
       c = a.tileRow;
-    a = c + 1 + randomIntFrom(this.wa, c + a.heightInTiles - 1 - c - 2);
+    a = c + 1 + randomIntFrom(this.seededRandom, c + a.heightInTiles - 1 - c - 2);
     setVector(this.yh, b, a);
     return this.yh;
   };
