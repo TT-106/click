@@ -1,36 +1,32 @@
 # 语义映射日志（2026-09-26 会话）
 
-> 本文件记录本次会话确认并落地的符号/字段语义映射。证据等级均为 HIGH（原版 c2.js 同构对照 + 引擎内消费点 + 序列化路径验证）。
+> 本文件记录本次会话确认并落地的符号/字段语义映射。证据等级均为 HIGH（原版 c2.js 同构对照 + 引擎内消费点 + 序列化路径验证），每个批次落地后均通过 parity + 场景矩阵 + E2E 三重回归。
 > 历史映射（1,228 符号 + 202 字段）见 `docs/symbol-map.json`。
 
-## 已落地的字段重命名（全部通过 parity + 场景矩阵 + E2E 回归）
+## 已落地的字段重命名（12 个批次，全部回归通过）
 
-| 原字段 | 新名 | 所有对象 | 同步的序列化映射点 |
+| 原字段 | 新名 | 所有对象 | 序列化同步点 |
 |---|---|---|---|
 | O / P / M / N | firstFrameColumn / firstFrameRow / lastRowFrameCount / lastFrameRow | 动画帧表条目（animations.js） | 无（静态定义） |
-| k / h / j / l / m | id / pointEventTypeId / requiredCount / name / requirementType | Achievement | game-save.js:1000(achievementId), 648 |
-| h | pointEventTypeId | PointEventDefinition | game-save.js:967→pointEventType |
-| A | canPurchase | Upgrade 及 15 个子类 | 无（每帧重算的运行时缓存） |
-| H | upgrade | UpgradeButtonView / 16 个 *Details 视图 | 无（视图层） |
-| T / U | x / y | Vector2（全引擎） | 无（经访问器序列化为 levelX 等） |
-| o | name | 怪物定义（monsters.js） | 无（存档为 name） |
-| r / s | slot / characteristic | Item 实例 | entities.js serializeItem/restoreItem（itemSlot/itemCharacteristic） |
-| r / s | slot / statType | 类定义 tb 槽条目（classes.js、**guardians.js、minions.js**） | 无（内容数据） |
-| d（monster defs）| name | 怪物定义 | 无 |
-
-## 已取证待落地（下一波重命名，证据 HIGH）
-
-| 字段 | 提案名 | 所有对象 | 备注 |
-|---|---|---|---|
-| c | settingId / skillId / spellId | 全局升级定义 / 技能定义 / 法术定义 | 存档键是**值**（"treasureChestChance"）非属性名，重命名安全；同步 game-save.js:953/543-551 与 entities.js:138-156 |
-| d | spriteName | 职业定义 / 怪物目录条目 / MonsterType | MonsterType 的存档键为 "sprite"（entities.js:192） |
-| v() | getSprite | SpriteSheet / Character | TerrainBiome.v→getBackgroundSpriteAt；DecorationBiome.v→getDecorationSpriteAt |
-| t | currentValue | 冒险点加成 {t,defaultValue,lf} / 药水修正 {t,defaultValue,nc} / 全局升级 {t,xf,md,$g} | 建议整组一起（lf=每级增量, nc=激活值, xf=初始, md=已购级数, $g=每级增量） |
-| C | tabState | 面板视图 / TabButtonView | 纯 UI |
-| q / R / L | worldBlocks / blockOriginColumn / blockOriginRow | WorldMap | 同步 game-save.js:66-67/717-718（blockShiftCol/Row）；tick.js 中同名成员属其他对象，需甄别 |
-| G | tileGrid | DungeonLevel / 布局生成器 | |
-| u / w | levelPosition / room | CharacterPosition | 同步 entities.js（levelX/levelY/roomId）；`.w` 需防 width 撞名 |
-| p | position | Character | 259 处读取、18 文件，需按所有者甄别 |
+| k / h / j / l / m | id / pointEventTypeId / requiredCount / name / requirementType | Achievement | game-save.js achievementId/648 |
+| h | pointEventTypeId | PointEventDefinition | game-save.js→pointEventType |
+| A | canPurchase | Upgrade 及 15 个子类 | 无（每帧重算） |
+| H | upgrade | UpgradeButtonView / *Details 视图 | 无（视图层） |
+| T / U | x / y | Vector2（全引擎） | 无（经访问器序列化） |
+| o | name | 怪物定义 | 无（存档为 name） |
+| r / s | slot / characteristic | Item | entities.js（itemSlot/itemCharacteristic） |
+| r / s | slot / statType | 类定义 tb 槽条目（classes/**guardians/minions**） | 无 |
+| p | position | Character | entities.js positionComponent |
+| u / w | levelPosition / room | CharacterPosition | entities.js levelX/levelY/roomId |
+| q / R / L | worldBlocks / blockOriginColumn / blockOriginRow | WorldMap | game-save.js blockShiftCol/Row |
+| G | tileGrid | DungeonLevel / 房间 / 走廊寻路器 | 无 |
+| d | spriteName | 职业/怪物/BOSS 定义、MonsterType | 存档键为 sprite（值经 getName()） |
+| v() | getSprite | SpriteSheet / Character | 无 |
+| v() | getBackgroundSpriteAt / getDecorationSpriteAt | TerrainBiome / DecorationBiome | 无 |
+| C | tabState | 面板视图 / TabButtonView | 无（UI） |
+| t / lf / nc / xf / md / $g | currentValue / levelIncrement / activeValue / baseValue / purchasedLevels / perLevelIncrement | 冒险点加成、药水修正、全局升级定义三组 | game-save.js settings.upgrades 值位（md→purchasedLevels，键不变） |
+| c | id | 技能定义（skills/*.js）、法术定义（targeting.js）——**统一为 id**（serializeUpgradeFlags 多态读取） | entities.js upgrades1-4（键为 id 的**值**，不变） |
+| c | settingId | 全局升级定义（balance.js） | game-save.js settings.upgrades 的**键**=值（"treasureChestChance"），不变 |
 
 ## 符号映射（原版全局/方法）
 
@@ -50,3 +46,9 @@
 | Z | Character 的槽位列表 | character.js |
 | ps / os | ItemGenerator 的 slot→types 缓存 / hash→type 表 | items.js |
 | ef | Equipment 按槽位取装备 | movement.js |
+| it / oq | CharacterSkillUpgrade 的技能定义 / LearnSpellUpgrade 的法术定义（Jr() 多态访问） | upgrades.js |
+| mg / mb | 药水条目的修正对象 / GlobalUpgrade 的定义对象 | potions.js / upgrades.js |
+
+## 待取证残留（约 1,300 处访问）
+
+高频：`e/f/g`（卷轴/法术/价格表数据字面量，380 写 each）、`V/W/X` 及长尾——工作清单 `artifacts/obfuscated-fields.json`（按频次排序，含样例代码）。取证方法与产出格式见 WORKSTATE.md 第 6 节。

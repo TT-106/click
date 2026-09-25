@@ -1,42 +1,5 @@
 [
   {
-    "name": "c",
-    "reads": 7,
-    "writes": 401,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\targeting.js:298",
-        "code": "c: \"summonDogSpell\""
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\targeting.js:302",
-        "code": "c: \"summonWolfPackSpell\""
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\targeting.js:306",
-        "code": "c: \"minorHealSpell\""
-      }
-    ],
-    "fileCount": 15,
-    "files": [
-      "src\\engine\\modules\\ai\\targeting.js",
-      "src\\engine\\modules\\content\\balance.js",
-      "src\\engine\\modules\\content\\skills\\barbarian.js",
-      "src\\engine\\modules\\content\\skills\\chicken-king.js",
-      "src\\engine\\modules\\content\\skills\\druid.js",
-      "src\\engine\\modules\\content\\skills\\electromancer.js",
-      "src\\engine\\modules\\content\\skills\\fighter.js",
-      "src\\engine\\modules\\content\\skills\\necromancer.js",
-      "src\\engine\\modules\\content\\skills\\ninja.js",
-      "src\\engine\\modules\\content\\skills\\priest.js",
-      "src\\engine\\modules\\content\\skills\\pyromancer.js",
-      "src\\engine\\modules\\content\\skills\\ranger.js",
-      "src\\engine\\modules\\content\\skills\\rogue.js",
-      "src\\engine\\modules\\persistence\\entities.js",
-      "src\\engine\\modules\\persistence\\game-save.js"
-    ]
-  },
-  {
     "name": "f",
     "reads": 5,
     "writes": 380,
@@ -18319,7 +18282,7 @@
       },
       {
         "loc": "src\\engine\\modules\\content\\balance.js:377",
-        "code": "As: {\n  c: \"minGoldPerDrop\",\n  title: \"最小黄金掉落\",\n  e: \"最小掉落黄金数量+10\",\n  currentValue: 0,\n  baseValue: 0,\n  perLevelIncrement: 10,\n  purchasedL"
+        "code": "As: {\n  settingId: \"minGoldPerDrop\",\n  title: \"最小黄金掉落\",\n  e: \"最小掉落黄金数量+10\",\n  currentValue: 0,\n  baseValue: 0,\n  perLevelIncrement: 10,\n  pu"
       },
       {
         "loc": "src\\engine\\modules\\content\\balance.js:488",
@@ -18343,7 +18306,7 @@
       },
       {
         "loc": "src\\engine\\modules\\content\\balance.js:364",
-        "code": "ys: {\n  c: \"maxGoldPerDrop\",\n  title: \"最大黄金掉落\",\n  e: \"最大掉落黄金数量+25\",\n  currentValue: 15,\n  baseValue: 15,\n  perLevelIncrement: 25,\n  purchase"
+        "code": "ys: {\n  settingId: \"maxGoldPerDrop\",\n  title: \"最大黄金掉落\",\n  e: \"最大掉落黄金数量+25\",\n  currentValue: 15,\n  baseValue: 15,\n  perLevelIncrement: 25,\n  "
       },
       {
         "loc": "src\\engine\\modules\\content\\balance.js:488",
@@ -18363,7 +18326,7 @@
     "samples": [
       {
         "loc": "src\\engine\\modules\\content\\balance.js:390",
-        "code": "Lr: {\n  c: \"goldDropChance\",\n  title: \"更多黄金掉落\",\n  e: \"每次杀怪黄金掉落几率+5%\",\n  currentValue: 25,\n  baseValue: 25,\n  perLevelIncrement: 5,\n  purchas"
+        "code": "Lr: {\n  settingId: \"goldDropChance\",\n  title: \"更多黄金掉落\",\n  e: \"每次杀怪黄金掉落几率+5%\",\n  currentValue: 25,\n  baseValue: 25,\n  perLevelIncrement: 5,\n "
       },
       {
         "loc": "src\\engine\\modules\\content\\balance.js:488",
@@ -18388,7 +18351,7 @@
     "samples": [
       {
         "loc": "src\\engine\\modules\\content\\balance.js:403",
-        "code": "$s: {\n  c: \"scrollDropChance\",\n  title: \"更多卷轴掉落\",\n  e: \"每次杀怪卷轴掉落几率+2%\",\n  currentValue: 20,\n  baseValue: 20,\n  perLevelIncrement: 2,\n  purch"
+        "code": "$s: {\n  settingId: \"scrollDropChance\",\n  title: \"更多卷轴掉落\",\n  e: \"每次杀怪卷轴掉落几率+2%\",\n  currentValue: 20,\n  baseValue: 20,\n  perLevelIncrement: 2,"
       },
       {
         "loc": "src\\engine\\modules\\content\\balance.js:488",
@@ -18413,7 +18376,7 @@
     "samples": [
       {
         "loc": "src\\engine\\modules\\content\\balance.js:416",
-        "code": "Ns: {\n  c: \"potionDropChance\",\n  title: \"更多药剂掉落\",\n  e: \"每次杀怪药剂掉落几率+0.5%\",\n  currentValue: 1,\n  baseValue: 1,\n  perLevelIncrement: 0.5,\n  pur"
+        "code": "Ns: {\n  settingId: \"potionDropChance\",\n  title: \"更多药剂掉落\",\n  e: \"每次杀怪药剂掉落几率+0.5%\",\n  currentValue: 1,\n  baseValue: 1,\n  perLevelIncrement: 0."
       },
       {
         "loc": "src\\engine\\modules\\content\\balance.js:488",
