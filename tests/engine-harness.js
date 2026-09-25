@@ -8,7 +8,7 @@ const resetRandom = () => { seed = 123456789; };
 Math.random = () => { seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0; return seed / 4294967296; };
 Date.now = () => fixedNow;
 const original = new URLSearchParams(location.search).has('original');
-let game, initialize, ready, snapshot, load, advance, isOffline, loopTick, restart, reset;
+let game, initialize, ready, snapshot, load, advance, isOffline, loopTick, restart, reset, syncLoopClock;
 if (original) {
   await new Promise((resolve, reject) => {
     const script = document.createElement('script');
@@ -25,6 +25,7 @@ if (original) {
   loopTick = () => game.Hr.Hr();
   restart = () => game.OA();
   reset = () => game.gE();
+  syncLoopClock = () => { game.Hr.Os = fixedNow; game.Hr.XA = fixedNow; };
 } else {
   ({ game } = await import('../src/engine/modules/runtime/index.js'));
   const saves = await import('../src/engine/modules/persistence/game-save.js');
@@ -38,6 +39,7 @@ if (original) {
   loopTick = () => game.loop.tick();
   restart = () => game.restartRun();
   reset = () => game.resetGame();
+  syncLoopClock = () => { game.loop.lastTickAt = fixedNow; game.loop.lastFrameAt = fixedNow; };
 }
 game.onLoad();
 for (let attempt = 0; !ready() && attempt < 200; attempt++) {
@@ -48,7 +50,12 @@ if (!ready()) throw new Error('测试引擎初始化失败');
 window.harness = {
   load(text) { resetRandom(); const ok = load(text); resetRandom(); if (!ok) throw new Error('存档载入失败'); return true; },
   snapshot,
-  setTime(ms) { fixedNow = ms; },
+  setTime(ms) {
+    fixedNow = ms;
+    // 时钟跳变后必须重置循环簿记，否则首帧帧差含历史偏移，
+    // 会让离线结算的回合数因测试顺序不同而漂移（引擎逻辑本身不受影响）。
+    syncLoopClock();
+  },
   advance(turns) { for (let i = 0; i < turns; i++) advance(); return snapshot(); },
   // 离线结算由帧循环驱动（两端 tick 内 1E3 < 帧差 才进入离线分支）：
   // 时间每次前移 2 秒并执行一帧，直到离线处理结束（上限 2000 帧）。

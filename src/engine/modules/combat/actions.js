@@ -86,11 +86,11 @@ export function advanceCombatAction(a, b) {
     if (b.Ib) {
       var g = b.Da,
         h = b.Ib,
-        l = h.ga;
+        l = h.spellCategoryId;
       if (g) {
         if (d = g.stats, 4 === l || 5 === l || 8 === l || 13 === l || 12 === l) {
           applyActionDamage(b);
-        } else if (1 === l && (h = h.Ra, l = statValue(d.maxHealth), d.health < l)) {
+        } else if (1 === l && (h = h.potencyPercent, l = statValue(d.maxHealth), d.health < l)) {
           var n = b.Ca.stats.Ts;
           if (1 < n) {
             h = Math.min(100, h * n);
@@ -117,11 +117,11 @@ export function advanceCombatAction(a, b) {
 }
 export function applySpellEffect(a, b) {
   var c = b.Ib,
-    d = c.ga;
+    d = c.spellCategoryId;
   if (2 === d || 3 === d) {
     var f = b.Ca,
       d = c.statusEffectTypeId,
-      c = c.Ra,
+      c = c.potencyPercent,
       g = statusEffectDefinitions[d];
     if (g) {
       var f = f.stats,
@@ -292,7 +292,7 @@ export function applySpellEffect(a, b) {
   }
 }
 export function summonSpellMinion(a, b, c) {
-  if (a = minionsBySpell[a.ta]) {
+  if (a = minionsBySpell[a.name]) {
     spawnMinion(a, b, c);
   } else {
     console.log("Failed to find minion for summon spell.");
@@ -506,17 +506,17 @@ export function createSpellAction(a) {
     g = a.position.levelPosition;
   d.Ib = c;
   d.yd = true;
-  var h = c.ya;
+  var h = c.projectileEffectName;
   if (h) {
     h = new VisualEffect(h, g, f, true, 1);
     h.ud = a;
     d.Xb = h;
   }
-  if (h = c.ca) {
+  if (h = c.impactEffectName) {
     f = new VisualEffect(h, g, f, false, 1);
     d.xb = f;
   }
-  c = c.ga;
+  c = c.spellCategoryId;
   if (4 === c) {
     b = calculateAttackDamage(a, b);
     d.Rd = 0 === b;
@@ -630,9 +630,9 @@ export function createChainAction(a) {
     n = d.position.levelPosition;
   h.Ca = a.Ca;
   h.Cb(d);
-  g = new VisualEffect(g.ca, l, n, false, 1);
+  g = new VisualEffect(g.impactEffectName, l, n, false, 1);
   h.xb = g;
-  f = new VisualEffect(f.ca, l, n, true, 1);
+  f = new VisualEffect(f.impactEffectName, l, n, true, 1);
   h.Xb = f;
   h.yd = true;
   d = calculateAttackDamage(a.Ca, d);
@@ -663,12 +663,12 @@ export function createReturningAction(a) {
       b = a.xb;
     f.Rd = false;
     if (c) {
-      c = new VisualEffect(c.ca, d, g, true, 1);
+      c = new VisualEffect(c.impactEffectName, d, g, true, 1);
       c.Gs = true;
       c.ud = a.Ca;
       f.Xb = c;
     }
-    a = new VisualEffect(b.ca, d, g, false, 1);
+    a = new VisualEffect(b.impactEffectName, d, g, false, 1);
     f.xb = a;
     return f;
   }
@@ -699,12 +699,12 @@ export function createReturningAction(a) {
   f.Jc = g;
   f.Rd = 0 === g;
   if (h) {
-    g = new VisualEffect(h.ca, b, c, true, 1);
+    g = new VisualEffect(h.impactEffectName, b, c, true, 1);
     g.Gs = true;
     g.ud = a.Ca;
     f.Xb = g;
   }
-  a = new VisualEffect(d.ca, b, c, false, 1);
+  a = new VisualEffect(d.impactEffectName, b, c, false, 1);
   f.xb = a;
   return f;
 }

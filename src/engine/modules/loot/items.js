@@ -26,23 +26,23 @@ export function ItemEffectGenerator() {
   this.xm = [];
   this.xm[FIRE_ITEM_EFFECT] = {
     description: "Fire Damage",
-    ca: "Red Damage"
+    weaponEffectAnimationName: "Red Damage"
   };
   this.xm[ICE_ITEM_EFFECT] = {
     description: "Ice Damage",
-    ca: "White Damage"
+    weaponEffectAnimationName: "White Damage"
   };
   this.xm[POISON_ITEM_EFFECT] = {
     description: "Poison Damage",
-    ca: "Green Damage"
+    weaponEffectAnimationName: "Green Damage"
   };
   this.xm[SHOCK_ITEM_EFFECT] = {
     description: "Shock Damage",
-    ca: "Electric Damage"
+    weaponEffectAnimationName: "Electric Damage"
   };
   this.xm[SONIC_ITEM_EFFECT] = {
     description: "Sonic Damage",
-    ca: "Sonic Damage"
+    weaponEffectAnimationName: "Sonic Damage"
   };
 }
 export function ItemType(a, b, c, d, f, g, h, l, n) {
@@ -176,7 +176,7 @@ export function generateItem(a, b, c, d, f) {
       u = 1;
     }
     p = p.xm[h];
-    p = new ItemEffect(h, u, "+" + formatAmount(u) + " " + p.description, p.ca);
+    p = new ItemEffect(h, u, "+" + formatAmount(u) + " " + p.description, p.weaponEffectAnimationName);
   }
   a = a.OD;
   switch (f) {

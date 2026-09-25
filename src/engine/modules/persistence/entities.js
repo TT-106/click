@@ -92,7 +92,7 @@ export function serializeCharacter(a) {
   if (n) {
     for (p = 0; p < n.length; p++) {
       l.push({
-        spellName: n[p].ta
+        spellName: n[p].name
       });
     }
   }

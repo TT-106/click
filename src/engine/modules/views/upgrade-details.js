@@ -700,15 +700,15 @@ export function initializeViewsUpgradeDetails() {
     var a = this.upgrade.uw();
     if (this.Lv !== a) {
       this.Lv = a;
-      var b = a.ga;
+      var b = a.spellCategoryId;
       if (10 === b || 9 === b || 17 === b || 11 === b) {
-        a = minionsBySpell[a.ta].spriteName;
+        a = minionsBySpell[a.name].spriteName;
         this.Dx = game.monsterSprites;
         this.zn = game.monsterSprites.getSprite(a);
         this.nd = false;
         this.yn.style.background = "url('spritesheet/monsters.png') -" + (this.zn.sourceX + 10) + "px -" + (this.zn.sourceY + 12) + "px";
       } else {
-        a = a.ca;
+        a = a.impactEffectName;
         this.Dx = game.animations.Yh[a];
         this.zn = game.animations.Zg(a);
         this.De = this.oc = 0;

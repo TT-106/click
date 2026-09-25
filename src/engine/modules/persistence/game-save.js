@@ -457,7 +457,7 @@ export function restoreGameState(a, b) {
                         if (Object.prototype.hasOwnProperty.call(rf, se)) {
                           if (gg = rf[se], !gg) {
                             console.log("spell lookup failure for key: " + se);
-                          } else if (gg.ta === Ch) {
+                          } else if (gg.name === Ch) {
                             sf = gg;
                             break c;
                           }

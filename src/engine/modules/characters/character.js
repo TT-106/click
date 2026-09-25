@@ -466,7 +466,7 @@ export function updateCharacter(a, b) {
         }
       } else if (a.Y === CAST_ACTION_TYPE) {
         if (a.ld) {
-          var pa = a.ld.ga,
+          var pa = a.ld.spellCategoryId,
             T = a.ld.statusEffectTypeId;
           if (2 !== pa || 4 !== T && 1 !== T && 0 !== T) {
             if (3 === pa) {
@@ -477,8 +477,8 @@ export function updateCharacter(a, b) {
                   ta,
                   eb,
                   Gb,
-                  Da = X.ya,
-                  ub = X.ca,
+                  Da = X.projectileEffectName,
+                  ub = X.impactEffectName,
                   mb = a.position.levelPosition,
                   Ea = getFriendlyTargets(a);
                 for (Ca = 0; Ca < Ea.length; Ca++) {
@@ -518,7 +518,7 @@ export function updateCharacter(a, b) {
                     Ua,
                     Va,
                     mc,
-                    vb = ha.ca,
+                    vb = ha.impactEffectName,
                     Sb,
                     Ma,
                     zb = a.position.levelPosition;
@@ -585,8 +585,8 @@ export function updateCharacter(a, b) {
                   var nc = a.stats.Qq + 1,
                     sa,
                     Tb,
-                    qc = cc.ya,
-                    Fc = cc.ca,
+                    qc = cc.projectileEffectName,
+                    Fc = cc.impactEffectName,
                     Cb = a.position.levelPosition,
                     kb = a.position.room,
                     Ra = Qa.position.levelPosition,
@@ -656,13 +656,13 @@ export function updateCharacter(a, b) {
                     me = a.position.levelPosition;
                   Ya.Ib = Na;
                   Ya.yd = true;
-                  var ne = Na.ya;
+                  var ne = Na.projectileEffectName;
                   if (ne) {
                     var Le = new VisualEffect(ne, me, tc, true, 1);
                     Le.ud = a;
                     Ya.Xb = Le;
                   }
-                  var Td = Na.ca;
+                  var Td = Na.impactEffectName;
                   if (Td) {
                     var oe = statValue(a.stats.damage);
                     Ya.Rd = false;
@@ -754,13 +754,13 @@ export function updateCharacter(a, b) {
                     Vb.yd = false;
                     var Tc = Gc.position.levelPosition,
                       hd = randomPointInRoom(Tc, Gc.position.room),
-                      id = ad.ya;
+                      id = ad.projectileEffectName;
                     if (id) {
                       var jd = new VisualEffect(id, Tc, hd, true, 1);
                       jd.ud = Gc;
                       Vb.Xb = jd;
                     }
-                    var kd = ad.ca;
+                    var kd = ad.impactEffectName;
                     if (kd) {
                       var eg = new VisualEffect(kd, Tc, hd, false, 1);
                       Vb.xb = eg;
@@ -799,13 +799,13 @@ export function updateCharacter(a, b) {
                       ld.yd = true;
                       var pf = Ne.position.levelPosition,
                         qf = Oe.position.levelPosition,
-                        rf = fg.ya;
+                        rf = fg.projectileEffectName;
                       if (rf) {
                         var sf = new VisualEffect(rf, pf, qf, true, 1);
                         sf.ud = Ne;
                         ld.Xb = sf;
                       }
-                      var Ch = fg.ca;
+                      var Ch = fg.impactEffectName;
                       if (Ch) {
                         var gg = new VisualEffect(Ch, pf, qf, false, 1);
                         ld.xb = gg;
@@ -831,13 +831,13 @@ export function updateCharacter(a, b) {
                 Md.yd = false;
                 var tf = a.position.levelPosition,
                   uf = randomPointInRoom(tf, a.position.room),
-                  Dh = se.ya;
+                  Dh = se.projectileEffectName;
                 if (Dh) {
                   var ej = new VisualEffect(Dh, tf, uf, true, 1);
                   ej.ud = a;
                   Md.Xb = ej;
                 }
-                var hg = se.ca;
+                var hg = se.impactEffectName;
                 if (hg) {
                   var ig = new VisualEffect(hg, tf, uf, false, 1);
                   Md.xb = ig;
@@ -955,8 +955,8 @@ export function updateCharacter(a, b) {
                     yd,
                     lg,
                     mg,
-                    Af = vf.ya,
-                    ng = vf.ca,
+                    Af = vf.projectileEffectName,
+                    ng = vf.impactEffectName,
                     Lh = a.position.levelPosition;
                   for (xe = 0; xe < Ud.length; xe++) {
                     if (Wd = Ud[xe], 4 !== Wd.characterType || 1 !== te && 0 !== te) {

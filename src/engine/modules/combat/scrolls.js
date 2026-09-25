@@ -14,12 +14,12 @@ import { updateCharacter } from "../characters/character.js";
 import { electricSpellDefinitions, fireSpellDefinitions } from "../content/spells.js";
 export var scrollDefinitions;
 export function Spell(a) {
-  this.ta = a.ta;
-  this.ga = a.ga;
-  this.ca = a.ca;
-  this.ya = a.ya;
+  this.name = a.name;
+  this.spellCategoryId = a.spellCategoryId;
+  this.impactEffectName = a.impactEffectName;
+  this.projectileEffectName = a.projectileEffectName;
   this.statusEffectTypeId = a.statusEffectTypeId;
-  this.Ra = a.Ra;
+  this.potencyPercent = a.potencyPercent;
   this.La = a.La;
   this.mq = game.state.turnNumber - 3 * this.La;
   this.td = a.td;

@@ -108,7 +108,7 @@ export function ChainDamageBehavior(a, b) {
 }
 export function SummonBehavior(a, b, c) {
   this.zd = null;
-  this.ga = c;
+  this.expectedSpellCategoryId = c;
   this.ka = b;
   this.bb = a;
 }
@@ -763,7 +763,7 @@ export function initializeAiBehaviors() {
     return this.ka;
   };
   TargetSpellBehavior.prototype.Oa = function (a) {
-    if (!(this.Vi || 6 !== a.ga)) {
+    if (!(this.Vi || 6 !== a.spellCategoryId)) {
       this.Vi = a;
     }
   };
@@ -806,7 +806,7 @@ export function initializeAiBehaviors() {
     this.fm = null;
   };
   HealBehavior.prototype.Oa = function (a) {
-    if (!(this.fm || 5 !== a.ga)) {
+    if (!(this.fm || 5 !== a.spellCategoryId)) {
       this.fm = a;
     }
   };
@@ -849,7 +849,7 @@ export function initializeAiBehaviors() {
     this.Zl = null;
   };
   AreaDamageBehavior.prototype.Oa = function (a) {
-    if (!(this.Zl || 8 !== a.ga)) {
+    if (!(this.Zl || 8 !== a.spellCategoryId)) {
       this.Zl = a;
     }
   };
@@ -870,7 +870,7 @@ export function initializeAiBehaviors() {
     this.In = null;
   };
   ChainDamageBehavior.prototype.Oa = function (a) {
-    if (!(this.In || 12 !== a.ga)) {
+    if (!(this.In || 12 !== a.spellCategoryId)) {
       this.In = a;
     }
   };
@@ -891,7 +891,7 @@ export function initializeAiBehaviors() {
     this.zd = null;
   };
   SummonBehavior.prototype.Oa = function (a) {
-    if (!(this.zd || a.ga !== this.ga)) {
+    if (!(this.zd || a.spellCategoryId !== this.expectedSpellCategoryId)) {
       this.zd = a;
     }
   };
@@ -912,7 +912,7 @@ export function initializeAiBehaviors() {
     this.Lm = null;
   };
   LifeDrainBehavior.prototype.Oa = function (a) {
-    if (!(this.Lm || 1 !== a.ga)) {
+    if (!(this.Lm || 1 !== a.spellCategoryId)) {
       this.Lm = a;
     }
   };
@@ -946,7 +946,7 @@ export function initializeAiBehaviors() {
     this.pn = null;
   };
   ReviveBehavior.prototype.Oa = function (a) {
-    if (!(this.pn || 16 !== a.ga)) {
+    if (!(this.pn || 16 !== a.spellCategoryId)) {
       this.pn = a;
     }
   };
@@ -1050,7 +1050,7 @@ export function initializeAiBehaviors() {
     this.Wm = null;
   };
   LootChestBehavior.prototype.Oa = function (a) {
-    if (!(this.Wm || 14 !== a.ga)) {
+    if (!(this.Wm || 14 !== a.spellCategoryId)) {
       this.Wm = a;
     }
   };
@@ -1071,7 +1071,7 @@ export function initializeAiBehaviors() {
     this.pm = null;
   };
   LootPotionBehavior.prototype.Oa = function (a) {
-    if (!(this.pm || 15 !== a.ga)) {
+    if (!(this.pm || 15 !== a.spellCategoryId)) {
       this.pm = a;
     }
   };
@@ -1380,7 +1380,7 @@ export function initializeAiBehaviors() {
     this.Sc = null;
   };
   SelfSpellBehavior.prototype.Oa = function (a) {
-    if (!(this.Sc || 9 !== a.ga)) {
+    if (!(this.Sc || 9 !== a.spellCategoryId)) {
       this.Sc = a;
     }
   };
@@ -1404,7 +1404,7 @@ export function initializeAiBehaviors() {
     this.Sc = null;
   };
   AreaSpellBehavior.prototype.Oa = function (a) {
-    if (!(this.Sc || a.ga !== this.KE)) {
+    if (!(this.Sc || a.spellCategoryId !== this.KE)) {
       this.Sc = a;
     }
   };
@@ -1429,7 +1429,7 @@ export function initializeAiBehaviors() {
     this.Sc = null;
   };
   CompanionSpellBehavior.prototype.Oa = function (a) {
-    if (!(this.Sc || 11 !== a.ga)) {
+    if (!(this.Sc || 11 !== a.spellCategoryId)) {
       this.Sc = a;
     }
   };

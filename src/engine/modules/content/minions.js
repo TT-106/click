@@ -287,7 +287,7 @@ export function initializeContentMinions() {
     }
   };
   minionsBySpell = {};
-  minionsBySpell[druidSpellDefinitions.LB.ta] = {
+  minionsBySpell[druidSpellDefinitions.LB.name] = {
     characterClass: 6,
     oi: true,
     className: "Dog",
@@ -321,9 +321,9 @@ export function initializeContentMinions() {
       return [new CooldownBehavior(160, 100), new SpecialAttackBehavior(MELEE_ATTACK_RANGE, 160, 90, 2), new PartyBuffBehavior(RANGED_ATTACK_RANGE, 8, 35), new PartyBuffBehavior(RANGED_ATTACK_RANGE, 5, 30), new ChangeFloorBehavior(), new TravelWorldBehavior(60, 10), new EnterDungeonBehavior(60, 10), new EnterCastleBehavior(60, 10), new UseShopBehavior(60, 10), new WaitBehavior()];
     }
   };
-  minionsBySpell[druidSpellDefinitions.PB.ta] = wolfMinion;
-  minionsBySpell[necromancerSpellDefinitions.OB.ta] = skeletonMinion;
-  minionsBySpell[necromancerSpellDefinitions.NB.ta] = phantomSkullMinion;
-  minionsBySpell[chickenSpellDefinitions.KB.ta] = chickenMinion;
-  minionsBySpell[chickenSpellDefinitions.MB.ta] = deathChickenMinion;
+  minionsBySpell[druidSpellDefinitions.PB.name] = wolfMinion;
+  minionsBySpell[necromancerSpellDefinitions.OB.name] = skeletonMinion;
+  minionsBySpell[necromancerSpellDefinitions.NB.name] = phantomSkullMinion;
+  minionsBySpell[chickenSpellDefinitions.KB.name] = chickenMinion;
+  minionsBySpell[chickenSpellDefinitions.MB.name] = deathChickenMinion;
 }

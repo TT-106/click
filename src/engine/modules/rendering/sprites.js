@@ -65,7 +65,7 @@ export function AnimationCatalog(a) {
   this.Zt = a;
 }
 export function VisualEffect(a, b, c, d, f) {
-  this.ca = a;
+  this.impactEffectName = a;
   this.Io = f;
   this.ew = this.ud = null;
   this.li = 0;

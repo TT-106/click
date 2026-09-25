@@ -290,7 +290,7 @@ export function advanceSimulation(a) {
           var Va = cb.xb;
           if (!Va.Cj) {
             var mc = cb.Ib;
-            if (mc && 8 == mc.ga) {
+            if (mc && 8 == mc.spellCategoryId) {
               var vb = cb,
                 Sb = game.upgradeRegistry,
                 Ma = vb.Da,
@@ -308,7 +308,7 @@ export function advanceSimulation(a) {
                   wb = undefined,
                   Ib = vb.Ib;
                 if (Ib) {
-                  wb = Ib.ca;
+                  wb = Ib.impactEffectName;
                 } else {
                   var Ec = zb.So(),
                     bc = Ec ? Ec.Rm : null,
@@ -348,7 +348,7 @@ export function advanceSimulation(a) {
                   if (!Qa.Wq) {
                     Qa.Wq = new Spell(blastStunSpell);
                   }
-                  var qc = Qa.Wq.ca;
+                  var qc = Qa.Wq.impactEffectName;
                   if (qc) {
                     var Fc = new VisualEffect(qc, sa, sa, false, 1);
                     Tb.xb = Fc;
@@ -383,7 +383,7 @@ export function advanceSimulation(a) {
       }
       if (Ra) {
         var Ja = kb.Ib;
-        if (Ja && 12 === Ja.ga) {
+        if (Ja && 12 === Ja.spellCategoryId) {
           var Db = Ra.wm;
           setVector(kb.Ca.position.levelPosition, Db.x, Db.y);
         }
