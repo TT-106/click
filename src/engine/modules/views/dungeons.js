@@ -68,7 +68,7 @@ export function DungeonRowView(a, b) {
   this.yr = new PurchaseDungeonUpgrade(this.ua);
   this.px = this.Gx = this.mf = this.Vg = this.wr = this.Co = null;
   this.pB = "secureCell_" + b + "_" + this.lh.rowIndex;
-  this.W = this.cj = this.ai = this.sh = this.ng = this.Ix = null;
+  this.upgradeButton = this.cj = this.ai = this.sh = this.ng = this.Ix = null;
   this.Gu = this.Bk = this.Qv = "";
   this.mw = this.pu = -1;
   this.Bt = false;
@@ -177,18 +177,18 @@ export function initializeViewsDungeons() {
   DungeonRowView.prototype.reset = function () {
     this.ui = null;
     if (this.ua) {
-      this.W.reset();
+      this.upgradeButton.reset();
     }
   };
   DungeonRowView.prototype.ct = function (a) {
     var b = !this.ua;
     this.ua = a;
     this.yr.ct(this.ua);
-    this.W.Rc(this.yr);
+    this.upgradeButton.Rc(this.yr);
     this.mw = this.pu = -1;
     this.Gu = this.Bk = this.Qv = "";
     if (b) {
-      this.W.reset();
+      this.upgradeButton.reset();
     }
   };
   DungeonRowView.prototype.qi = function () {
@@ -214,7 +214,7 @@ export function initializeViewsDungeons() {
     this.px.id = this.pB;
     this.Ix = a.insertCell(5);
     this.Ix.style.width = this.Ct + "px";
-    this.W = new UpgradeButtonView(this.pB, this.yr, this.lh.rowIndex, true);
+    this.upgradeButton = new UpgradeButtonView(this.pB, this.yr, this.lh.rowIndex, true);
     this.cj = createElement("div", this.Ix, null, null);
     this.cj.style.position = "relative";
     this.cj.style.border = "1px solid #2c2c50";
@@ -299,7 +299,7 @@ export function initializeViewsDungeons() {
       }
       if (this.ua) {
         refreshUpgradeAvailability(this.yr);
-        this.W.render();
+        this.upgradeButton.render();
       }
     }
   };

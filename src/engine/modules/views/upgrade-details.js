@@ -19,14 +19,14 @@ export function UpgradeButtonView(a, b, c, d) {
   this.upgrade = b;
   this.Ag = null;
   this.GC = d;
-  this.zo = this.W = null;
+  this.zo = this.buttonElement = null;
   this.ti = "";
 }
 export function mountUpgradeButton(a) {
   var b = getElement(a.QA);
   a.ti = a.Ro();
-  a.W = createElement("div", b, a.elementId, a.ti);
-  a.W.onmouseup = function () {
+  a.buttonElement = createElement("div", b, a.elementId, a.ti);
+  a.buttonElement.onmouseup = function () {
     a.Qc();
     return false;
   };
@@ -34,44 +34,44 @@ export function mountUpgradeButton(a) {
 export function createUpgradeDetails(a, b) {
   switch (b) {
     case 1:
-      return new ItemPurchaseDetails(a.upgrade, a.W);
+      return new ItemPurchaseDetails(a.upgrade, a.buttonElement);
     case 2:
-      return new EquipmentDetails(a.upgrade, a.W);
+      return new EquipmentDetails(a.upgrade, a.buttonElement);
     case 3:
-      return new GlobalUpgradeDetails(a.upgrade, a.W);
+      return new GlobalUpgradeDetails(a.upgrade, a.buttonElement);
     case 4:
-      return new EquipmentSetDetails(a.upgrade, a.W);
+      return new EquipmentSetDetails(a.upgrade, a.buttonElement);
     case SKILL_UPGRADE_TYPE:
-      return new SkillUpgradeDetails(a.upgrade, a.W);
+      return new SkillUpgradeDetails(a.upgrade, a.buttonElement);
     case 6:
-      return new SpellUpgradeDetails(a.upgrade, a.W);
+      return new SpellUpgradeDetails(a.upgrade, a.buttonElement);
     case 7:
-      return new MonsterLevelDetails(a.upgrade, a.W);
+      return new MonsterLevelDetails(a.upgrade, a.buttonElement);
     case 8:
-      return new DungeonPurchaseDetails(a.upgrade, a.W);
+      return new DungeonPurchaseDetails(a.upgrade, a.buttonElement);
     case 9:
-      return new CastlePurchaseDetails(a.upgrade, a.W);
+      return new CastlePurchaseDetails(a.upgrade, a.buttonElement);
     case 10:
-      return new FarmUpgradeDetails(a.upgrade, a.W);
+      return new FarmUpgradeDetails(a.upgrade, a.buttonElement);
     case 11:
-      return new CharacterLevelDetails(a.upgrade, a.W);
+      return new CharacterLevelDetails(a.upgrade, a.buttonElement);
     case 12:
-      return new ScrollUpgradeDetails(a.upgrade, a.W);
+      return new ScrollUpgradeDetails(a.upgrade, a.buttonElement);
     case 13:
-      return new AutoDungeonDetails(a.upgrade, a.W);
+      return new AutoDungeonDetails(a.upgrade, a.buttonElement);
     case 14:
-      return new AchievementClaimDetails(a.upgrade, a.W);
+      return new AchievementClaimDetails(a.upgrade, a.buttonElement);
     case 15:
-      return new AchievementProgressDetails(a.upgrade, a.W);
+      return new AchievementProgressDetails(a.upgrade, a.buttonElement);
     case 16:
-      return new PointUpgradeDetails(a.upgrade, a.W);
+      return new PointUpgradeDetails(a.upgrade, a.buttonElement);
     default:
       return null;
   }
 }
 export function ItemPurchaseDetails(a, b) {
   this.upgrade = a;
-  this.W = b;
+  this.contentContainer = b;
   this.Ii = this.Ji = this.Hi = this.rp = this.Lj = null;
   this.sa = false;
   this.Lb = -1;
@@ -79,7 +79,7 @@ export function ItemPurchaseDetails(a, b) {
 }
 export function EquipmentDetails(a, b) {
   this.upgrade = a;
-  this.W = b;
+  this.contentContainer = b;
   this.Sy = this.Py = this.Ry = this.Ty = this.hm = this.table = null;
   this.sa = false;
   this.Iu = null;
@@ -87,21 +87,21 @@ export function EquipmentDetails(a, b) {
 }
 export function GlobalUpgradeDetails(a, b) {
   this.upgrade = a;
-  this.W = b;
+  this.contentContainer = b;
   this.ks = this.iA = this.Fw = this.jA = this.Qm = this.kp = this.Bf = null;
   this.sa = false;
   this.cv = null;
 }
 export function AutoDungeonDetails(a, b) {
   this.upgrade = a;
-  this.W = b;
+  this.contentContainer = b;
   this.mf = this.we = this.mo = this.$e = null;
   this.sa = false;
   this.oz = this.fb = "";
 }
 export function EquipmentSetDetails(a, b) {
   this.upgrade = a;
-  this.W = b;
+  this.contentContainer = b;
   this.IA = [];
   this.JA = [];
   this.Rw = [];
@@ -127,14 +127,14 @@ export function appendEquipmentRow(a, b) {
 }
 export function SkillUpgradeDetails(a, b) {
   this.upgrade = a;
-  this.W = b;
+  this.contentContainer = b;
   this.sb = this.jb = this.kq = this.wn = null;
   this.sa = false;
   this.gb = this.fb = null;
 }
 export function SpellUpgradeDetails(a, b) {
   this.upgrade = a;
-  this.W = b;
+  this.contentContainer = b;
   this.vu = this.Ml = this.yn = this.table = null;
   this.sa = false;
   this.zn = this.Dx = this.Lv = null;
@@ -144,7 +144,7 @@ export function SpellUpgradeDetails(a, b) {
 }
 export function MonsterLevelDetails(a, b) {
   this.upgrade = a;
-  this.W = b;
+  this.contentContainer = b;
   this.ej = this.fj = this.dj = this.Dq = this.kk = null;
   this.sa = false;
   this.Lb = -1;
@@ -152,14 +152,14 @@ export function MonsterLevelDetails(a, b) {
 }
 export function DungeonPurchaseDetails(a, b) {
   this.upgrade = a;
-  this.W = b;
+  this.contentContainer = b;
   this.ui = this.Vg = this.we = this.Nd = this.bf = this.Cq = null;
   this.sa = false;
   this.Lb = -1;
 }
 export function ScrollUpgradeDetails(a, b) {
   this.upgrade = a;
-  this.W = b;
+  this.contentContainer = b;
   this.tm = this.dq = this.we = this.Vh = this.sn = this.Cq = null;
   this.sa = false;
   this.Az = null;
@@ -167,21 +167,21 @@ export function ScrollUpgradeDetails(a, b) {
 }
 export function CastlePurchaseDetails(a, b) {
   this.upgrade = a;
-  this.W = b;
+  this.contentContainer = b;
   this.ui = this.Vg = this.we = this.Nd = this.Cm = this.Uz = null;
   this.sa = false;
   this.Gk = -1;
 }
 export function FarmUpgradeDetails(a, b) {
   this.upgrade = a;
-  this.W = b;
+  this.contentContainer = b;
   this.ui = this.Vg = this.we = this.Nd = this.Hm = this.Tz = null;
   this.sa = false;
   this.Dk = -1;
 }
 export function CharacterLevelDetails(a, b) {
   this.upgrade = a;
-  this.W = b;
+  this.contentContainer = b;
   this.jr = this.hr = this.gr = this.ir = this.cn = this.an = this.$m = this.bn = 0;
   this.lr = this.Sq = this.Rq = this.kr = this.sb = this.jb = this.pi = this.Zm = this.table = null;
   this.sa = false;
@@ -191,21 +191,21 @@ export function CharacterLevelDetails(a, b) {
 }
 export function AchievementClaimDetails(a, b) {
   this.upgrade = a;
-  this.W = b;
+  this.contentContainer = b;
   this.sb = this.jb = null;
   this.sa = false;
   this.gb = this.fb = null;
 }
 export function AchievementProgressDetails(a, b) {
   this.upgrade = a;
-  this.W = b;
+  this.contentContainer = b;
   this.sb = this.jb = null;
   this.sa = false;
   this.gb = this.fb = null;
 }
 export function PointUpgradeDetails(a, b) {
   this.upgrade = a;
-  this.W = b;
+  this.contentContainer = b;
   this.pi = this.sb = this.jb = null;
   this.sa = false;
   this.gb = this.fb = null;
@@ -243,8 +243,8 @@ export function initializeViewsUpgradeDetails() {
       this.Ag.Rc(a);
     }
     if (!(this.GC || this.upgrade.Oc())) {
-      if (this.W) {
-        hideElement(this.W);
+      if (this.buttonElement) {
+        hideElement(this.buttonElement);
       }
     }
   };
@@ -253,7 +253,7 @@ export function initializeViewsUpgradeDetails() {
   };
   UpgradeButtonView.prototype.reset = function () {
     if (getElement(this.QA)) {
-      this.W = null;
+      this.buttonElement = null;
       mountUpgradeButton(this);
       this.zo = this.Ag = null;
     }
@@ -266,13 +266,13 @@ export function initializeViewsUpgradeDetails() {
   UpgradeButtonView.prototype.update = function () {
     var a = this.upgrade.Na(),
       b = this.Ro();
-    if (!this.W) {
+    if (!this.buttonElement) {
       mountUpgradeButton(this);
     }
     if (this.zo !== a) {
       this.zo = a;
       if (this.Ag && this.zo !== this.Ag.Na()) {
-        clearElement(this.W);
+        clearElement(this.buttonElement);
         this.Ag = null;
       }
       if (!this.Ag) {
@@ -287,7 +287,7 @@ export function initializeViewsUpgradeDetails() {
     }
     if (this.ti !== b) {
       this.ti = b;
-      this.W.className = b;
+      this.buttonElement.className = b;
     }
   };
   UpgradeButtonView.prototype.Ro = function () {
@@ -331,10 +331,10 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   ItemPurchaseDetails.prototype.eb = function () {
-    this.Lj = createElement("div", this.W, null, null);
+    this.Lj = createElement("div", this.contentContainer, null, null);
     this.Lj.style.position = "relative";
     this.Lj.style.height = "30px";
-    this.rp = createElement("div", this.W, null, null);
+    this.rp = createElement("div", this.contentContainer, null, null);
     this.rp.style.position = "relative";
     this.rp.style.height = "30px";
     var a = createElement("div", this.Lj, null, null);
@@ -414,7 +414,7 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   EquipmentDetails.prototype.eb = function () {
-    this.table = createElement("table", this.W, null, null);
+    this.table = createElement("table", this.contentContainer, null, null);
     this.table.style.width = "100%";
     var a = this.table.insertRow(0),
       b = this.table.insertRow(1),
@@ -480,7 +480,7 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   GlobalUpgradeDetails.prototype.eb = function () {
-    this.Bf = createElement("table", this.W, null, null);
+    this.Bf = createElement("table", this.contentContainer, null, null);
     this.Bf.style.width = "100%";
     var a = this.Bf.insertRow(0),
       b = this.Bf.insertRow(1),
@@ -550,7 +550,7 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   AutoDungeonDetails.prototype.eb = function () {
-    this.$e = createElement("table", this.W, null, null);
+    this.$e = createElement("table", this.contentContainer, null, null);
     this.$e.style.width = "100%";
     var a = this.$e.insertRow(0),
       b = this.$e.insertRow(1),
@@ -610,7 +610,7 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   EquipmentSetDetails.prototype.eb = function () {
-    this.Bf = createElement("table", this.W, null, null);
+    this.Bf = createElement("table", this.contentContainer, null, null);
     this.Bf.style.width = "100%";
     var a = this.Bf.insertRow(0).insertCell(0);
     a.colSpan = 2;
@@ -654,10 +654,10 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   SkillUpgradeDetails.prototype.eb = function () {
-    this.wn = createElement("div", this.W, null, null);
+    this.wn = createElement("div", this.contentContainer, null, null);
     this.wn.style.position = "relative";
     this.wn.style.height = "30px";
-    this.kq = createElement("div", this.W, null, null);
+    this.kq = createElement("div", this.contentContainer, null, null);
     this.kq.style.position = "relative";
     this.kq.style.height = "30px";
     this.jb = createElement("div", this.wn, null, null);
@@ -730,7 +730,7 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   SpellUpgradeDetails.prototype.eb = function () {
-    this.table = createElement("table", this.W, null, null);
+    this.table = createElement("table", this.contentContainer, null, null);
     this.table.style.width = "100%";
     this.table.style.height = "60px";
     var a = this.table.insertRow(0),
@@ -793,10 +793,10 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   MonsterLevelDetails.prototype.eb = function () {
-    this.kk = createElement("div", this.W, null, null);
+    this.kk = createElement("div", this.contentContainer, null, null);
     this.kk.style.position = "relative";
     this.kk.style.height = "30px";
-    this.Dq = createElement("div", this.W, null, null);
+    this.Dq = createElement("div", this.contentContainer, null, null);
     this.Dq.style.position = "relative";
     this.Dq.style.height = "30px";
     var a = createElement("div", this.kk, null, null);
@@ -869,7 +869,7 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   DungeonPurchaseDetails.prototype.eb = function () {
-    this.bf = createElement("table", this.W, null, null);
+    this.bf = createElement("table", this.contentContainer, null, null);
     this.bf.style.width = "100%";
     var a = this.bf.insertRow(0),
       b = this.bf.insertRow(1),
@@ -946,7 +946,7 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   ScrollUpgradeDetails.prototype.eb = function () {
-    this.sn = createElement("table", this.W, null, null);
+    this.sn = createElement("table", this.contentContainer, null, null);
     this.sn.style.width = "100%";
     var a = this.sn.insertRow(0),
       b = this.sn.insertRow(1),
@@ -1007,7 +1007,7 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   CastlePurchaseDetails.prototype.eb = function () {
-    this.Cm = createElement("table", this.W, null, null);
+    this.Cm = createElement("table", this.contentContainer, null, null);
     this.Cm.style.width = "100%";
     var a = this.Cm.insertRow(0),
       b = this.Cm.insertRow(1),
@@ -1071,7 +1071,7 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   FarmUpgradeDetails.prototype.eb = function () {
-    this.Hm = createElement("table", this.W, null, null);
+    this.Hm = createElement("table", this.contentContainer, null, null);
     this.Hm.style.width = "100%";
     var a = this.Hm.insertRow(0),
       b = this.Hm.insertRow(1),
@@ -1196,7 +1196,7 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   CharacterLevelDetails.prototype.eb = function () {
-    this.table = createElement("table", this.W, null, null);
+    this.table = createElement("table", this.contentContainer, null, null);
     this.table.style.width = "100%";
     var a = this.table.insertRow(0),
       b = this.table.insertRow(1),
@@ -1297,14 +1297,14 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   AchievementClaimDetails.prototype.eb = function () {
-    var a = createElement("div", this.W, null, null);
+    var a = createElement("div", this.contentContainer, null, null);
     a.style.padding = "5px";
     a.style.color = "#FA0";
     a.style.fontWeight = "bold";
     a.innerHTML = "成就!";
-    this.jb = createElement("div", this.W, null, null);
+    this.jb = createElement("div", this.contentContainer, null, null);
     this.jb.style.padding = "5px";
-    this.sb = createElement("div", this.W, null, null);
+    this.sb = createElement("div", this.contentContainer, null, null);
     this.sb.style.padding = "5px";
   };
   AchievementProgressDetails.prototype.Na = function () {
@@ -1339,9 +1339,9 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   AchievementProgressDetails.prototype.eb = function () {
-    this.jb = createElement("div", this.W, null, null);
+    this.jb = createElement("div", this.contentContainer, null, null);
     this.jb.style.padding = "5px";
-    this.sb = createElement("div", this.W, null, null);
+    this.sb = createElement("div", this.contentContainer, null, null);
     this.sb.style.padding = "5px";
   };
   PointUpgradeDetails.prototype.Na = function () {
@@ -1383,11 +1383,11 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   PointUpgradeDetails.prototype.eb = function () {
-    this.jb = createElement("div", this.W, null, null);
+    this.jb = createElement("div", this.contentContainer, null, null);
     this.jb.style.padding = "5px";
-    this.sb = createElement("div", this.W, null, null);
+    this.sb = createElement("div", this.contentContainer, null, null);
     this.sb.style.padding = "5px";
-    this.pi = createElement("div", this.W, null, null);
+    this.pi = createElement("div", this.contentContainer, null, null);
     this.pi.style.padding = "5px";
   };
   UpgradeListView.prototype = new View();

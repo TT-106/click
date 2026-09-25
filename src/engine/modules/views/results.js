@@ -251,16 +251,16 @@ export function initializeViewsResults() {
   OfflineProgressView.prototype.fr = function (a) {
     a = createElement("table", a, null, "centeredElement");
     var b = 0;
-    this.Qw = this.V(a, "杀死怪物", b++);
-    this.Tm = this.V(a, "找到道具", b++);
-    this.Um = this.V(a, "卖出道具", b++);
-    this.Vm = this.V(a, "清理关卡", b++);
-    this.vm = this.V(a, "清理地牢", b++);
-    this.$t = this.V(a, "攻击城堡", b++);
-    this.aj = this.V(a, "昏迷次数", b++);
-    this.Mt = this.V(a, "成就", b);
+    this.Qw = this.getOfflineProgressCell(a, "杀死怪物", b++);
+    this.Tm = this.getOfflineProgressCell(a, "找到道具", b++);
+    this.Um = this.getOfflineProgressCell(a, "卖出道具", b++);
+    this.Vm = this.getOfflineProgressCell(a, "清理关卡", b++);
+    this.vm = this.getOfflineProgressCell(a, "清理地牢", b++);
+    this.$t = this.getOfflineProgressCell(a, "攻击城堡", b++);
+    this.aj = this.getOfflineProgressCell(a, "昏迷次数", b++);
+    this.Mt = this.getOfflineProgressCell(a, "成就", b);
   };
-  OfflineProgressView.prototype.V = function (a, b, c) {
+  OfflineProgressView.prototype.getOfflineProgressCell = function (a, b, c) {
     a = a.insertRow(c);
     c = a.insertCell(0);
     c.className = "statisticsTableLabel";
