@@ -47,7 +47,7 @@ export function ItemEffectGenerator() {
 }
 export function ItemType(a, b, c, d, f, g, h, l, n) {
   this.RD = a;
-  this.fa = b;
+  this.baseName = b;
   this.Z = c;
   this.Xn = n;
   if (!(this.lA = game.itemSprites.getSprite(d))) {
@@ -126,7 +126,7 @@ export function getItemRarityLabel(a) {
   }
 }
 export function getHighlightedItemName(a) {
-  var b = a.op.fa;
+  var b = a.op.baseName;
   a = a.Ew;
   var c = a.indexOf(b);
   return -1 === c ? a : a.substring(0, c) + '<span style="color:#FAF;">' + b + "</span>" + a.substring(c + b.length);
@@ -198,7 +198,7 @@ export function generateItem(a, b, c, d, f) {
     default:
       a = a.$y;
   }
-  a = formatItemName(g.fa, a);
+  a = formatItemName(g.baseName, a);
   b = new Item(g, b, c.characterClass, a, d, f, s, n, l, p);
   b.nj = c;
   return b;
@@ -231,7 +231,7 @@ export function randomizeItemLevel(a, b) {
   return Math.random() < c ? a + 1 : a;
 }
 export function registerItemType(a, b, c) {
-  var d = b.fa + c;
+  var d = b.baseName + c;
   var f = 0,
     g,
     h;
@@ -244,7 +244,7 @@ export function registerItemType(a, b, c) {
   }
   g = f + "";
   f = b.Z;
-  b = new ItemType(g, b.fa, f, c, b.na, b.ma, b.la, b.oa, b.Xn);
+  b = new ItemType(g, b.baseName, f, c, b.na, b.ma, b.la, b.oa, b.Xn);
   if (a.os[g]) {
     console.log("item type hash collision: " + d);
   }

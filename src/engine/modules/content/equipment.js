@@ -8,7 +8,7 @@ export function initializeItemCatalog() {
   b.os = {};
   b.ps = {};
   var c = {
-      fa: "剑",
+      baseName: "剑",
       na: true,
       oa: false,
       ma: false,
@@ -16,7 +16,7 @@ export function initializeItemCatalog() {
       Z: ["20"]
     },
     d = {
-      fa: "斧",
+      baseName: "斧",
       na: true,
       oa: false,
       ma: false,
@@ -24,7 +24,7 @@ export function initializeItemCatalog() {
       Z: ["21"]
     },
     f = {
-      fa: "锤",
+      baseName: "锤",
       na: true,
       oa: false,
       ma: false,
@@ -32,7 +32,7 @@ export function initializeItemCatalog() {
       Z: ["21"]
     },
     g = {
-      fa: "匕首",
+      baseName: "匕首",
       na: true,
       oa: false,
       ma: false,
@@ -40,7 +40,7 @@ export function initializeItemCatalog() {
       Z: ["24", "33"]
     },
     h = {
-      fa: "连枷",
+      baseName: "连枷",
       na: true,
       oa: false,
       ma: false,
@@ -48,7 +48,7 @@ export function initializeItemCatalog() {
       Z: ["22", "20", "21"]
     },
     l = {
-      fa: "权杖",
+      baseName: "权杖",
       na: true,
       oa: false,
       ma: false,
@@ -56,7 +56,7 @@ export function initializeItemCatalog() {
       Z: ["22", "20"]
     },
     n = {
-      fa: "节杖",
+      baseName: "节杖",
       na: true,
       oa: false,
       ma: false,
@@ -64,7 +64,7 @@ export function initializeItemCatalog() {
       Z: ["32"]
     },
     p = {
-      fa: "双节棍",
+      baseName: "双节棍",
       na: true,
       oa: false,
       ma: false,
@@ -72,7 +72,7 @@ export function initializeItemCatalog() {
       Z: ["29"]
     },
     s = {
-      fa: "棍棒",
+      baseName: "棍棒",
       na: false,
       oa: false,
       ma: false,
@@ -80,7 +80,7 @@ export function initializeItemCatalog() {
       Z: ["26", "27", "28", "31"]
     },
     u = {
-      fa: "镰刀",
+      baseName: "镰刀",
       na: true,
       oa: false,
       ma: false,
@@ -88,7 +88,7 @@ export function initializeItemCatalog() {
       Z: ["30"]
     },
     y = {
-      fa: "骨头",
+      baseName: "骨头",
       na: false,
       oa: false,
       ma: false,
@@ -96,7 +96,7 @@ export function initializeItemCatalog() {
       Z: ["201"]
     },
     A = {
-      fa: "蜡烛",
+      baseName: "蜡烛",
       na: false,
       oa: false,
       ma: false,
@@ -104,7 +104,7 @@ export function initializeItemCatalog() {
       Z: ["203"]
     },
     C = {
-      fa: "灯笼",
+      baseName: "灯笼",
       na: false,
       oa: false,
       ma: false,
@@ -112,7 +112,7 @@ export function initializeItemCatalog() {
       Z: ["203"]
     },
     v = {
-      fa: "灯",
+      baseName: "灯",
       na: false,
       oa: false,
       ma: false,
@@ -120,7 +120,7 @@ export function initializeItemCatalog() {
       Z: ["203"]
     },
     D = {
-      fa: "硬币",
+      baseName: "硬币",
       na: false,
       oa: false,
       ma: false,
@@ -128,7 +128,7 @@ export function initializeItemCatalog() {
       Z: ["205"]
     },
     N = {
-      fa: "珠宝",
+      baseName: "珠宝",
       na: false,
       oa: false,
       ma: false,
@@ -136,7 +136,7 @@ export function initializeItemCatalog() {
       Z: ["205"]
     },
     I = {
-      fa: "弓",
+      baseName: "弓",
       na: false,
       oa: false,
       ma: false,
@@ -144,7 +144,7 @@ export function initializeItemCatalog() {
       Z: ["23"]
     },
     x = {
-      fa: "弩",
+      baseName: "弩",
       na: false,
       oa: false,
       ma: false,
@@ -152,7 +152,7 @@ export function initializeItemCatalog() {
       Z: ["25"]
     },
     z = {
-      fa: "箭矢",
+      baseName: "箭矢",
       na: false,
       oa: true,
       ma: false,
@@ -161,7 +161,7 @@ export function initializeItemCatalog() {
       Z: ["60"]
     },
     O = {
-      fa: "闪电",
+      baseName: "闪电",
       na: false,
       oa: true,
       ma: false,
@@ -170,7 +170,7 @@ export function initializeItemCatalog() {
       Z: ["61"]
     },
     J = {
-      fa: "护盾",
+      baseName: "护盾",
       na: false,
       oa: false,
       ma: true,
@@ -178,7 +178,7 @@ export function initializeItemCatalog() {
       Z: ["40", "41"]
     },
     la = {
-      fa: "链甲",
+      baseName: "链甲",
       na: false,
       oa: false,
       ma: true,
@@ -186,7 +186,7 @@ export function initializeItemCatalog() {
       Z: ["80", "82", "81"]
     },
     Q = {
-      fa: "板甲",
+      baseName: "板甲",
       na: false,
       oa: false,
       ma: true,
@@ -194,7 +194,7 @@ export function initializeItemCatalog() {
       Z: ["80", "81"]
     },
     V = {
-      fa: "板甲",
+      baseName: "板甲",
       na: false,
       oa: false,
       ma: true,
@@ -202,7 +202,7 @@ export function initializeItemCatalog() {
       Z: ["80", "82", "81"]
     },
     na = {
-      fa: "皮甲",
+      baseName: "皮甲",
       na: false,
       oa: false,
       ma: true,
@@ -210,7 +210,7 @@ export function initializeItemCatalog() {
       Z: ["84", "83"]
     },
     K = {
-      fa: "项链",
+      baseName: "项链",
       na: false,
       oa: false,
       ma: false,
@@ -218,7 +218,7 @@ export function initializeItemCatalog() {
       Z: "140 141 142 143 145 144".split(" ")
     },
     H = {
-      fa: "戒指",
+      baseName: "戒指",
       na: false,
       oa: false,
       ma: false,
@@ -226,7 +226,7 @@ export function initializeItemCatalog() {
       Z: "160 161 162 163 164 165".split(" ")
     },
     S = {
-      fa: "符号",
+      baseName: "符号",
       na: false,
       oa: false,
       ma: false,
@@ -234,7 +234,7 @@ export function initializeItemCatalog() {
       Z: ["200"]
     },
     da = {
-      fa: "蘑菇",
+      baseName: "蘑菇",
       na: false,
       oa: false,
       ma: false,
@@ -242,7 +242,7 @@ export function initializeItemCatalog() {
       Z: ["202", "204"]
     },
     W = {
-      fa: "头盔",
+      baseName: "头盔",
       na: false,
       oa: false,
       ma: true,
@@ -250,7 +250,7 @@ export function initializeItemCatalog() {
       Z: ["120"]
     },
     ia = {
-      fa: "王冠",
+      baseName: "王冠",
       na: false,
       oa: false,
       ma: true,
@@ -258,7 +258,7 @@ export function initializeItemCatalog() {
       Z: ["125"]
     },
     ea = {
-      fa: "巫师帽",
+      baseName: "巫师帽",
       na: false,
       oa: false,
       ma: true,
@@ -266,7 +266,7 @@ export function initializeItemCatalog() {
       Z: ["121", "122", "123", "124"]
     },
     va = {
-      fa: "手套",
+      baseName: "手套",
       na: false,
       oa: false,
       ma: true,
@@ -274,7 +274,7 @@ export function initializeItemCatalog() {
       Z: ["100", "101", "102"]
     },
     yb = {
-      fa: "长手套",
+      baseName: "长手套",
       na: false,
       oa: false,
       ma: true,
@@ -282,7 +282,7 @@ export function initializeItemCatalog() {
       Z: ["101", "102"]
     },
     Fb = {
-      fa: "长袍",
+      baseName: "长袍",
       na: false,
       oa: false,
       ma: true,
@@ -290,7 +290,7 @@ export function initializeItemCatalog() {
       Z: ["85", "86", "87", "89", "91"]
     },
     pa = {
-      fa: "斗篷",
+      baseName: "斗篷",
       na: false,
       oa: false,
       ma: true,
@@ -298,7 +298,7 @@ export function initializeItemCatalog() {
       Z: "85 86 87 88 90 92".split(" ")
     },
     T = {
-      fa: "魔杖",
+      baseName: "魔杖",
       na: false,
       oa: false,
       ma: false,
@@ -306,7 +306,7 @@ export function initializeItemCatalog() {
       Z: ["26"]
     },
     X = {
-      fa: "靴子",
+      baseName: "靴子",
       na: false,
       oa: false,
       ma: true,
@@ -314,7 +314,7 @@ export function initializeItemCatalog() {
       Z: "181 185 182 183 184 180 186".split(" ")
     },
     Ca = {
-      fa: "腰带",
+      baseName: "腰带",
       na: false,
       oa: false,
       ma: true,
@@ -550,7 +550,7 @@ export function initializeItemCatalog() {
   registerItemType(b, C, "Lantern.PNG");
   registerItemType(b, C, "LanternBronze.PNG");
   registerItemType(b, {
-    fa: "火炬",
+    baseName: "火炬",
     na: false,
     oa: false,
     ma: false,
@@ -617,7 +617,7 @@ export function initializeItemCatalog() {
   registerItemType(b, O, "BoltPoisoned4.PNG");
   registerItemType(b, O, "BoltWood.PNG");
   registerItemType(b, {
-    fa: "星星",
+    baseName: "星星",
     na: false,
     oa: true,
     ma: false,
@@ -669,7 +669,7 @@ export function initializeItemCatalog() {
   registerItemType(b, S, "GlyphRed.PNG");
   registerItemType(b, S, "GlyphYellow.PNG");
   registerItemType(b, {
-    fa: "面包",
+    baseName: "面包",
     na: false,
     oa: false,
     ma: false,
@@ -677,7 +677,7 @@ export function initializeItemCatalog() {
     Z: ["204"]
   }, "FoodBread.PNG");
   registerItemType(b, {
-    fa: "啤酒",
+    baseName: "啤酒",
     na: false,
     oa: false,
     ma: false,
@@ -685,7 +685,7 @@ export function initializeItemCatalog() {
     Z: ["204"]
   }, "FoodAle.PNG");
   registerItemType(b, {
-    fa: "鸡腿",
+    baseName: "鸡腿",
     na: false,
     oa: false,
     ma: false,
@@ -693,7 +693,7 @@ export function initializeItemCatalog() {
     Z: ["204"]
   }, "FoodDrumstick.PNG");
   registerItemType(b, {
-    fa: "火腿",
+    baseName: "火腿",
     na: false,
     oa: false,
     ma: false,
@@ -815,7 +815,7 @@ export function initializeItemCatalog() {
   registerItemType(b, Ca, "Valors_Belt.PNG");
   registerItemType(b, Ca, "Knight_Belt.PNG");
   registerItemType(b, {
-    fa: "虚拟伤害",
+    baseName: "虚拟伤害",
     na: false,
     oa: true,
     ma: false,
@@ -823,7 +823,7 @@ export function initializeItemCatalog() {
     Z: ["230"]
   }, "Spear.PNG");
   registerItemType(b, {
-    fa: "虚拟护甲",
+    baseName: "虚拟护甲",
     na: false,
     oa: false,
     ma: false,
@@ -831,7 +831,7 @@ export function initializeItemCatalog() {
     Z: ["231"]
   }, "Spear.PNG");
   registerItemType(b, {
-    fa: "虚拟攻击等级",
+    baseName: "虚拟攻击等级",
     na: false,
     oa: false,
     ma: false,
@@ -839,7 +839,7 @@ export function initializeItemCatalog() {
     Z: ["232"]
   }, "Spear.PNG");
   registerItemType(b, {
-    fa: "虚拟防御等级",
+    baseName: "虚拟防御等级",
     na: false,
     oa: false,
     ma: false,
@@ -847,7 +847,7 @@ export function initializeItemCatalog() {
     Z: ["233"]
   }, "Spear.PNG");
   registerItemType(b, {
-    fa: "虚拟最大生命",
+    baseName: "虚拟最大生命",
     na: false,
     oa: false,
     ma: false,
@@ -855,7 +855,7 @@ export function initializeItemCatalog() {
     Z: ["234"]
   }, "Spear.PNG");
   registerItemType(b, {
-    fa: "虚拟最大法力",
+    baseName: "虚拟最大法力",
     na: false,
     oa: false,
     ma: false,
