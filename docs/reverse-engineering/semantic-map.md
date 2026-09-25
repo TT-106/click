@@ -14,6 +14,7 @@
 | H | upgrade | UpgradeButtonView / *Details 视图 | 无（视图层） |
 | T / U | x / y | Vector2（全引擎） | 无（经访问器序列化） |
 | o | name | 怪物定义 | 无（存档为 name） |
+| Da | combatTarget（Character）/ targetCharacter（CombatAction）/ selectedTarget（Explore 系 Behavior） | 三类所有者三名的多态字段（第四轮 A 组证据 + 运行时类型观察器验证） | entities.js positionComponent 无关；CombatAction.Cb/Behavior.Cb 写入侧已同步 |
 | r / s | slot / characteristic | Item | entities.js（itemSlot/itemCharacteristic） |
 | r / s | slot / statType | 类定义 tb 槽条目（classes/**guardians/minions**） | 无 |
 | p | position | Character | entities.js positionComponent |
