@@ -113,7 +113,7 @@ export function findNextUnopenedDoor() {
     d,
     f,
     g = null,
-    h = a.p.u,
+    h = a.p.levelPosition,
     l = game.level.Pa,
     n = game.level.gd,
     p = 1E5;
@@ -125,7 +125,7 @@ export function findNextUnopenedDoor() {
       return b.Be;
     }
   }
-  if (d = a.p.w) {
+  if (d = a.p.room) {
     b = d.Nc;
     for (c = 0; c < b.length; c++) {
       d = b[c];
@@ -219,7 +219,7 @@ export function initializeCharactersParty() {
         b = d.p;
         clearMovementTarget(b);
         b.cd = null;
-        b.w = null;
+        b.room = null;
         d.Y = IDLE_ACTION;
       }
       clearItemDrops();
@@ -534,9 +534,9 @@ export function initializeCharactersParty() {
         b = getAllies(),
         c;
       for (a = 0; a < b.length; a++) {
-        if (c = b[a], c.p.w && c.Ja.Kd) {
+        if (c = b[a], c.p.room && c.Ja.Kd) {
           this.Mp = true;
-          setPartyDestination(this, c.p.w);
+          setPartyDestination(this, c.p.room);
           break a;
         }
       }
@@ -550,7 +550,7 @@ export function initializeCharactersParty() {
         if (this.Cc) {
           if (a = this.Cc.Xi) {
             a = getMonsters();
-            a = 0 === a.length ? true : this.Cc !== a[0].p.w;
+            a = 0 === a.length ? true : this.Cc !== a[0].p.room;
           }
           if (a) {
             this.Cc = null;

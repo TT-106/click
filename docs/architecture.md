@@ -1,0 +1,435 @@
+# Clickpocalypse II 语义恢复工程 · 架构文档
+
+> 本文回答"从加载到进入游戏""主循环""战斗""存档""离线"等 15 个架构问题，全部结论读自当前代码并附 `file:line` 证据（行号以本仓库工作区为准）。
+> 已验证的底层事实（RNG 变体、存档 4477 键、离线上限等）不再重复论证，见 `docs/reverse-engineering/facts.md`。
+> 语义符号对照见 `docs/symbol-map.json`；本文沿用重构后的符号名，必要处标注原缩写字段。
+
+---
+
+## 0. 总体分层
+
+```
+浏览器 (index.html)
+  └─ src/app.js（新 UI 壳，唯一 <script type=module> 入口）
+       ├─ src/ui/*           新 UI 组件（dashboard、party-builder、legacy-panels）
+       ├─ src/services/*     存档校验/Worker/localStorage 服务
+       └─ src/engine/adapter.js   产品层唯一引擎入口（快照 + 命令）
+            └─ src/engine/internal-api.js  内部接口（恢复引擎对象）
+                 └─ src/engine/modules/runtime/index.js  模块初始化编排 + game 导出
+                      └─ src/engine/modules/runtime/game.js  组合根（game 单例）
+                           └─ src/engine/modules/{core,content,world,combat,loot,characters,ai,simulation,progression,rendering,persistence,views}
+```
+
+---
+
+## 1. 页面从加载到进入游戏经过哪些步骤？
+
+1. `index.html:12` 以 ES module 加载 `./src/app.js`（无其他脚本入口）。
+2. `src/app.js:119-142` `boot()` 依次执行：
+   - `:120` 渲染图标；`:121` `loadGamePanels()` 把 `src/ui/panels/*.html`（含 shell + 5 份 character 模板）注入 `#legacy-host`（`src/ui/load-panels.js:9-14`）；
+   - `:123` `saves.prepare()`：读 localStorage 原始串并交 Worker 校验（`src/services/saves.js:33-41`）；
+   - `:124` `engine.boot(saves.persistence)`；
+   - `:127-129` 创建组队构建器、绑定事件、增强遗留控件；
+   - `:130-131` 隐藏 loading、显示应用；`:132` 按 `won/expedition` 导航；
+   - `:135-141` 启动 300ms 轮询：监测 `started/won/offline` 变化并调用 `refresh()`。
+3. `src/engine/adapter.js:20-30` `engine.boot`：`runtime.setPersistence(persistence)` 注入存储端口（`:21`），调 `game.onLoad()`（`:22`），然后轮询等待 `game.view.panels.length` 非空且（未开局时）DOM 出现 `#startQuestButton`，15 秒超时报错（`:24-27`）。
+4. `src/engine/modules/runtime/game.js:200-203` `game.onLoad()` = `bindVisibility()`（visibilitychange → `renderEnabled`）+ `game.loop.tick()` 启动帧循环。
+5. 帧循环 `GameLoop.prototype.tick`（`src/engine/modules/simulation/loop.js:33`）分三态：
+   - 资源未就绪：`resourcesReady = monsterSprites/terrainSprites/itemSprites/animations 的 .cl()`（`:219`），每帧重试并继续 `requestAnimationFrame`（`:222`）；
+   - `game.initialized` 为假（首次）：执行一次性初始化分支（见下）；
+   - 已初始化：正常模拟 + 渲染（见第 3/4 节）。
+6. 首次初始化分支（`loop.js:97-217`）：`game.initializeWorld()`（`:98`，填充怪物目录、物品目录、宝箱定义、区域与城堡，`game.js:204-350`）→ 先序列化一份空白存档 `initialSave`（`:102`）→ 尝试 `persistence.read()` + `restoreGameState`，失败则回滚到 `initialSave` 并回调 `onLoadError`（`:103-109`，保证坏档不破坏可用状态）→ 构建 15 个 Tab/Panel 视图并挂载（`:112-207`）→ 已有队伍则 `view.reset()`，离线中则 `onOfflineStart()`，已胜利则 `onGameWon()`（`:208-216`）。
+7. 模块级初始化（构造器原型、内容表）由 `src/engine/modules/runtime/index.js:77-150` 按固定顺序调用 60 余个 `initialize*()`，最后 `initializeRuntimeGame()`（`:150`）创建 `game` 组合根，`:151` 再导出 `game`。注释明确"模块初始化阶段只有这里拥有调用顺序"（`:76`）。
+
+### startup sequence
+
+```mermaid
+sequenceDiagram
+    participant B as 浏览器 index.html
+    participant A as app.js boot()
+    participant S as services/saves.js
+    participant E as adapter.js engine
+    participant G as game.js (game 单例)
+    participant L as loop.js GameLoop
+
+    B->>A: module 加载并执行 boot() (app.js:119)
+    A->>A: loadGamePanels() 注入面板 DOM (app.js:121)
+    A->>S: saves.prepare() Worker 校验 localStorage (app.js:123, saves.js:33)
+    A->>E: engine.boot(persistence) (app.js:124)
+    E->>E: runtime.setPersistence(persistence) (adapter.js:21)
+    E->>G: game.onLoad() (adapter.js:22, game.js:200)
+    G->>G: bindVisibility() renderEnabled 开关 (game.js:197)
+    G->>L: game.loop.tick() (game.js:202)
+    L->>L: 资源未就绪? 每帧探测 .cl() (loop.js:219)
+    L->>G: 首帧: initializeWorld() (loop.js:98, game.js:204)
+    L->>L: serializeGame(空白档) 作回滚底 (loop.js:102)
+    L->>L: persistence.read() + restoreGameState, 失败回滚 (loop.js:103-109)
+    L->>L: 构建 15 个 Tab/Panel 视图 (loop.js:112-207)
+    L->>L: requestAnimationFrame 自续 (loop.js:222)
+    E->>E: 轮询等待 panels + #startQuestButton (adapter.js:24-27)
+    E-->>A: boot 返回; 新档默认关 showFps (adapter.js:29)
+    A->>A: createPartyBuilder / bind / navigate (app.js:127-132)
+    A->>A: 300ms 轮询 engine.snapshot() 刷新 UI (app.js:135-141)
+```
+
+---
+
+## 2. GameState 的所有者是谁？
+
+**所有者是 `src/engine/modules/runtime/game.js` 导出的模块级单例 `game`**（组合根）：
+
+- `game.js:39` `export var game;`，由 `initializeRuntimeGame()`（`game.js:40-528`）一次性赋值；该函数只在 `runtime/index.js:150` 被调用一次。
+- 可序列化的"游戏状态"集中在 `game.state`（`game.js:146-191`）：`turnNumber`、`frameNumber`、`encounter`（`EncounterState`）、`party`（`PartyState`）、`adventurers`、`ae`（点数/升级）、`achievements`、`runStatistics`、`lifetimeStatistics`、`aa`（StatisticsRecorder）、`victoryStatistics`、`victoryCount`。
+- 会话级子系统直接挂在 `game` 上：`world`（WorldMap）、`monsters`/`minions`/`allies` 注册表、`dungeons`/`farms`/`shops`、`level`（DungeonLevel）、`loop`（GameLoop，`:88`）、`view`（GameView，`:89`）、`options`、各掉落/物品/卷轴/药水注册表、`saves`（saveKey=`C2_V1_001`、`autoSaveInterval=3E4`，`:129-135`）。
+- 传播方式：49 个域模块 `import { game } from "../runtime/game.js"`（grep 实测，涵盖 combat/world/loot/characters/ai/simulation/progression/rendering/persistence/views 全部目录）。即**状态所有权在 runtime，域模块通过活绑定（live binding）共享同一个 `game`**；`runtime/index.js:151` 的再导出与 `internal-api.js:11` 的 `runtime.game` 让适配层拿到同一实例。
+- 循环依赖的成立方式：`game.js` 反向 import 域模块的构造器（`game.js:4-38`），域模块 import `game`。因 `export var game` 提升 + 域模块只在函数执行期访问 `game`，而 `initializeRuntimeGame()` 在所有模块初始化的最后执行，构建时序由 `runtime/index.js:76-150` 的调用顺序保证。
+- `core/` 是唯一不依赖 `game` 的目录（`core/math.js`、`core/bootstrap-data.js` 无 game import，grep 实测），提供纯函数与数据。
+
+---
+
+## 3. 主循环在哪里？
+
+**主循环 = `GameLoop`（`src/engine/modules/simulation/loop.js`）的自续 `requestAnimationFrame` 帧循环。**
+
+- 构造器 `loop.js:20-31`：`resourcesReady=false`；`frameDuration = 1E3/60`（60Hz 帧假设，`:24`，与 `core/math.js:149` 的 `FRAME_DURATION_MS` 一致）；`turnDuration = 250`（一回合 250ms，`:25`）；`requestTick` 闭包（`:27-29`）。
+- `GameLoop.prototype.tick` 在 `initializeSimulationLoop()` 中定义（`loop.js:33`），每帧末尾 `requestAnimationFrame(this.requestTick)` 自续（`:222`）。
+- 入口：`game.onLoad()` → `game.loop.tick()`（`game.js:202`）；测试 harness 也直接调 `game.loop.tick()`（`tests/engine-harness.js:30,36`）。
+- 每帧的调度规则（`loop.js:41-96`）：
+  - 仅当 `game.partyCreated && !game.gameWon && !game.paused` 才推进模拟（`:41`）；
+  - 离线分支（`:42-51`，详见第 12 节）；否则 `advanceSimulation(帧差/frameDuration)`（`:53-56`）；
+  - 随后更新相机（`:57-71`）、渲染（`:74-80`）、FPS 统计写入 `game.state.dz`（`:81-86`）、30 秒自动存档（离线时跳过，`:87-92`）、非暂停时给统计器记时长 `aa.fp(a)`（`:93-95`）。
+
+---
+
+## 4. simulation 与 render 如何耦合？
+
+**两者在同一 `tick` 内顺序执行，由 `renderEnabled` 布尔开关解耦；渲染失败被 try/catch 吞掉，不影响模拟。**
+
+- `loop.js:53-56`：模拟推进量 = 实际帧差 / `frameDuration`（可 >1 帧），`advanceSimulation(c)`；
+- `loop.js:74-80`：`if (game.renderEnabled) { try { game.view.render(); } catch (l) { console.log(...) } }`——渲染异常只记日志（原版行为保留）；
+- `renderEnabled` 唯一写点是 `handleVisibility`：`game.renderEnabled = !document.hidden`（`game.js:192-196`），由 `bindVisibility` 在 visibilitychange 时触发（`game.js:197-199`）。即后台标签页跳过渲染但不跳过模拟（配合后台离线分支）；
+- `game.view.render()` 来自视图基类：`View.prototype.render` → 可见性切换 + `update()`；`CompositeView.update` → 递归 `render()` 所有子视图（`src/engine/modules/views/base.js:41-64`）。`GameView.prototype = new CompositeView()`（`views/navigation.js:87`），子视图含 `GameCanvasView`（画布渲染，`views/expedition.js:223` + `rendering/scene.js`）；
+- 反向耦合（UI → 模拟）：适配层 `showPanel` 会主动调一次 `game.view.render()` 立即重绘（`adapter.js:125-131`）；暂停只停模拟不停渲染（`:41` 的门条件不含渲染）。
+
+---
+
+## 5. UI 如何读取/修改 state？（快照 + 命令）
+
+**产品 UI 不直接持有 `game`；只通过 `src/engine/adapter.js` 的只读快照 `snapshot()` 与校验过的命令方法交互。**
+
+- `adapter.js:18` 注释明示"产品层的唯一引擎入口：校验命令并提供只读显示快照"；`internal-api.js:9` 注释"产品仅通过 adapter.js 的快照与命令访问"。
+- 读取：`engine.snapshot()`（`adapter.js:71-124`）每 300ms 被 `app.js:135-141` 拉取，产出扁平展示模型（`ready/started/paused/won/offline/turn/run/gold/kills/heroes[]/options` 等），例如 `gold: game.state.party.gold`（`:80`）、`inCombat: !game.state.encounter.ym`（`:87`）、英雄属性经 `runtime.statValue` 折算（`:103-107`）。新 UI `src/ui/dashboard.js:14-49` 只消费这个快照渲染 DOM。
+- 命令（写入路径）：
+  - `startParty(party)`（`adapter.js:51-70`）：校验数量/解锁/重名后，把数据塞进遗留 `PartyCreationView`（`selectedCharacters`、`validParty`）并调用其 `startButton.onclick()`（`:62-68`，即复用引擎自身的开局流程，`views/party-creation.js:36-44`），最后 `game.paused = false`；
+  - `pause(value)`（`:132-134`）、`setOption(name, enabled)`（`:135-146`，白名单映射到 `game.options` 六个字段）；
+  - `showPanel(id)`（`:125-131`）、`serialize()/importSave()/reset()`（`:147-155`）。
+- `src/app.js` 的使用点：`navigate` 读快照并 `engine.showPanel`（`app.js:35,49-51`）、暂停按钮 `engine.pause`（`:84`）、设置项 `engine.setOption`（`:108`）、存档服务经 `engine.serialize/importSave/reset`（`src/services/saves.js:55,74,76,92`）。
+- 遗留面板（引擎 views/*）仍直接操作 DOM 与 `game`，新 UI 通过 `mountExpedition()` 搬运节点、`enhanceLegacyControls()` 增强键盘可达性（`src/ui/legacy-panels.js:3-13,16`）。
+
+---
+
+## 6. encounter 如何开始？
+
+- 状态：`EncounterState`（`combat/encounters.js:19-24`）——`ym=true` 表示"无遭遇"；`beginEncounter(name, isBoss)`（`:32-38`）置 `ym=false` 并累加计数 `Ar`。
+- **`populateEncounter(room)`（`encounters.js:39-106`）是唯一批量刷怪入口**，仅在 `ym` 时生效（`:41`），按房间类型 `room.Yp` 分派：
+  - `Yp===0`（野外房间）：`bossEncounterModifier` 生效时 20% 概率（`0.2 > Math.random()`，`:44-45`）改走地下城 Boss；否则怪物数 `minMonsters + randomInt(max-min) + extraMonsters`（`:47-51`），等级在怪物目录解锁区间 `[hd, fc]` 内随机（`:52`），经 `getMonsterTypesForLevel` 取 20 只一组的类型缓存（`:52`，`:220-242`），逐只 `new Character("Monster", MONSTER_TYPE, 12, monsterClass, null)`（`:56`）、挂 `AttackBehavior`（`:61`）、按类型成长曲线填六维（`:64-77`）、在房间内随机落位（`:78-83`）、压入 `game.monsters.Pi`（`:84`），最后 `beginEncounter(...)`（`:86`）；
+  - `Yp===1`（城堡房间）：`spawnCastleGuardians(count, room)`（`:96`，实现 `:147-163`，从 `content/guardians.js` 的 `castleGuardianDefinitions` 抽取，`createCastleGuardian` 在 `simulation/characters.js:102-128`），遭遇名取自 `game.currentCastle.castleName`（`:97-98`）；
+  - `Yp===2`：`spawnDungeonBoss(room)`（`:101`，实现 `:107-146`：`bossClass` + 随机 Boss 贴图 + 队伍最高等级 + 技能初始化 + 附带一队守卫）。
+- 触发点：队伍推开房门时——`characters/character.js:312-317`：首次抵达门目标（`Q.Mb` 置位）→ `populateEncounter(Q.$d)` + `revealRoom` + `spawnRoomTreasure`。
+- 遭遇结束：`EncounterState.prototype.ol`（`encounters.js:261-276`）：`getMonsters().length < 1` 时置 `ym=true`、记统计 `aa.es()`、清卷轴目标、发 `POINT_EVENT_ENCOUNTER` 点数。怪物死亡移出由 `MonsterRegistry.prototype.ol`（`:300-310`，尸体缓存上限 50，`:246/:306`）完成，调用点在 `combat/actions.js:405`。
+
+---
+
+## 7. combat 如何推进？
+
+推进链：**帧循环 → advanceSimulation → 行为队列 → CombatAction 队列 → 结算/死亡/掉落**。
+
+1. `advanceSimulation(units)`（`simulation/tick.js:27`）先做回合切片：`lifecycle.Jo += units`，累计满 15 个模拟单位才算一回合（`Jo>=15` → `turnNumber++`，`tick.js:28-32`；与 facts 第 4 条一致）。回合级任务：生命/精神再生（每 3 回合，`zD=3`，`tick.js:34-51` + `simulation/characters.js:37`）、随从寿命（`:52-78`）、效果 tick（`:79-87`）、队伍回合逻辑（`:90-97`）、行为决策 `updateCharacterBehaviors`（`:104-105`）、药水到期（`:106-129`）、自动卷轴（`:130-142`）、农场/滋生的双回合节拍（`gD=2`，`:143-213`）、成就检查（每 4 回合，`PC=4`，`:214-236`）。
+2. 帧级任务：`updateCharacter` 依次作用于盟友与怪物（`:263-271`）。行为队列把"下一步动作"写入 `character.Y`：`BehaviorQueue.prototype.dr` 按世界/地牢分派（`ai/behaviors.js:217-223`），`AttackBehavior.prototype.dr` 选目标（`ai/targeting.js:425`）。
+3. 攻击发起：`updateCharacter` 内按动作类型分派——普通攻击 `Y===2`/近战类型时 `performMultiAttack` 或 `createAttackAction`（`character.js:438-465`），施法 `CAST_ACTION_TYPE` → `createSpellAction`（`character.js:466+`，`:852/:874/:883`）。
+4. **动作不是立即结算**：`createAttackAction/createSpellAction` 生成 `CombatAction`（攻击者 `Ca`、目标 `Da`、伤害 `Jc`、飞行特效 `Xb`、落地特效 `xb` 等，`combat/actions.js:26-33`）并 `enqueueCombatAction(game.combatQueue, ...)`（`:414-416`）。
+5. 每帧回合同步推进 `game.combatQueue.kj`（`tick.js:272-398`）：`advanceCombatAction`（`actions.js:59-116`）推进特效，特效到位（`xb.bx===xb.oc`）后才 `applyActionDamage` 或 `applySpellEffect`；伤害带随机浮动 `1 + randomInt(Jc-1)`（`actions.js:300-323`）。
+6. 死亡结算 `resolveCharacterDefeat`（`actions.js:324-413`）：冒险者→昏迷（Kf 标记 + 眩晕特效，`:325-344`）；随从→移除（`:345-346`）；怪物/Boss→击杀者 `kills++`、`addKills`、`aa.cp()`、经验 `addExperience(Sb.No×doubleExperienceModifier)`、`recordMonsterTypeKill`（`:347-364`），随后掉落金币（`10+randomInt(10)` 枚，`:372-381`）、物品（`7+randomInt(8)` 次 `spawnItemDrop`，`:382-388`）、卷轴与药水（`:389-401`），最后 `monsters.ol`（移出）+ `encounter.ol`（可能结束遭遇）（`:405-406`）。
+7. 地面 tile 效果伤害与动作清理收尾（`tick.js:399-439`），之后是特效帧推进（`:440-486`）、背包聚合刷新（`:487-513`）、升级条刷新（离线时跳过，`:515-528`）。
+
+### combat sequence
+
+```mermaid
+sequenceDiagram
+    participant L as loop.tick (loop.js:53)
+    participant T as advanceSimulation (tick.js:27)
+    participant B as BehaviorQueue (ai/behaviors.js:217)
+    participant C as updateCharacter (character.js:183)
+    participant A as actions.js
+    participant Q as game.combatQueue
+    participant E as encounters.js
+
+    L->>T: advanceSimulation(帧差/16.67ms)
+    T->>T: Jo 累积满 15 → turnNumber++ (tick.js:28-32)
+    T->>B: updateCharacterBehaviors(盟友+怪物) (tick.js:104)
+    B->>C: 设定 c.Y 动作 (behaviors.js:217-223)
+    C->>A: Y=攻击 → performMultiAttack/createAttackAction (character.js:438-465)
+    C->>A: Y=施法 → createSpellAction (character.js:466)
+    A->>Q: enqueueCombatAction(CombatAction) (actions.js:414)
+    T->>Q: 每帧遍历 kj → advanceCombatAction (tick.js:272, actions.js:59)
+    A->>A: 特效到位 → applyActionDamage 随机浮动 (actions.js:300-323)
+    A->>A: health=0 → resolveCharacterDefeat (actions.js:324)
+    A->>E: monsters.ol 移除 + encounter.ol 判定遭遇结束 (actions.js:405-406)
+    A->>A: 掉落金币/物品/卷轴/药水 + addExperience (actions.js:362-401)
+```
+
+---
+
+## 8. monster 如何生成？
+
+- **目录（定义层）**：`content/monsters.js:5+` `monsterDefinitions = [{name, d(贴图)}...]`（纯数据）；`game.monsterCatalog`（`game.js:95-104`）持有运行时目录：`n`（定义数组）、`hd/fc`（当前解锁的最低/最高怪物等级，初始 1）、`en`（按等级缓存类型组）。`initializeWorld` 每次重建目录（`game.js:205-210`）；`resetRun` 重置 `hd=fc=1`（`game.js:411-414`）。
+- **类型实例层**：`MonsterType(name, sprite, level)`（`encounters.js:178-186`）保存复数名 `nE`、六维成长与阶位；`advanceMonsterTypeRank`（`:195-207`）按 `10*(level-1)+rank` 从 `content/balance.js` 的 `monster*Curve` 缩放（`scaleByLevel`，`core/math.js:52-55`）；击杀升阶 `recordMonsterTypeKill`（`:187-194`，步长 `MONSTER_RANK_KILL_STEP=20`，`balance.js:117`）。
+- **等级组缓存**：`getMonsterTypesForLevel`（`:220-242`）按等级首次抽取 20 个不重复类型排序后缓存进 `catalog.en[level]`（循环上限 `20 > d.length`，`:230`）。
+- **实体层**：普通怪在 `populateEncounter` 中 `new Character("Monster", MONSTER_TYPE, 12, monsterClass, null)`（`encounters.js:56`）；Boss `spawnDungeonBoss` 用 `content/guardians.js` 的 `bossClass/bossSpriteDefinitions`（`:107-146`，`guardians.js` import 见 `encounters.js:16`）；城堡守卫用 `castleGuardianDefinitions` → `createCastleGuardian`（`simulation/characters.js:102-128`）。命名由 `MonsterNameGenerator`（`encounters.js:208-213`）+ `generateMonsterName/generateBossName`（`:214-219`）拼装。
+- 怪物保存/恢复只存等级（`MonsterSaveAdapter`，`persistence/entities.js`，挂载于 `game.saves.monsterAdapter`，`game.js:134`）。
+
+---
+
+## 9. item 如何生成？
+
+- **注册**：`content/equipment.js:6-8` `initializeItemCatalog()` 清空 `ItemGenerator.os（按 hash）/ps（按槽位）`，随后定义数百个基础类型（形如 `{fa:"剑", Z:["20"], na/oa/ma/la...}`，`:11-16`），逐个 `registerItemType(generator, def, png)`（`:324+`）。`loot/items.js:232-260` `registerItemType`：对 `fa+png` 做字符串哈希（`:234-244`）建 `ItemType`，写入 `os[hash]`（碰撞仅告警 `:247-249`），并按 `def.Z` 的每个槽位值（如 `"20"/"80"/"230"`）追加进 `ps[slot]` 缓存（`:251-259`，对应 facts 第 15 条）。
+- **生成**：`generateItem(generator, slot, ownerChar, level, rarity)`（`items.js:139-204`）：
+  1. 从 `ps[slot]` 随机取一个类型（`:141-149`；空槽位告警并返回 null——facts 第 13 条提到的 `slot=undefined` 崩溃即源于此）；
+  2. 稀有度 tier 匹配（`:154-163`）；
+  3. `ownerChar.KD[slot]` 取 statType（`:165`，`KD` 来自职业 `tb` 定义，`Character` 构造器 `character.js:44-53`），乘职业系数 `getClassStatMultiplier`（`:205-224`）；
+  4. 属性/金价 = `randomizeScaledValue(level, itemStatCurve/itemGoldCurve, 系数)`（`:167-168`；`core/math.js:56-60`，内部用 `Math.random` 抖动 ±10%）；
+  5. **特效判定：`1 === statType`（武器槽）且 `Math.random() < tier.jp` 时**生成火/冰/电/音/毒特效（`:169-179`，对应 facts 第 14 条）；
+  6. 名称由 `ItemNameGenerator` 按 tier 词库拼装（`:180-200`），最后 `new Item(...)` 回填 `nj=ownerChar`（`:201-202`）。
+- **稀有度掷点**：`ItemGenerator.prototype.uf(prob)`（`items.js:331-342`）按 `itemRarityProbabilities` 从高到低扣减 `Math.random` 命中。
+- **掉落入口**：
+  - 怪物死亡 `spawnItemDrop`（`items.js:270-281`）：随机选一名冒险者的 `Z` 槽位（`:273-275`），品质受全局升级 `itemQualityChance`（`:276`），等级 `randomizeItemLevel`（`:225-231`，可能 ±1 级）；
+  - 开箱 `character.js:1090-1105`（品质加成 `CHEST_ITEM_QUALITY_BONUS`）；
+  - 开局装备：`views/party-creation.js:72` 与 `initializeCharacterSkills`（`simulation/characters.js:130-145`，Boss/守卫生成时每槽位一件）。
+
+---
+
+## 10. dungeon 如何生成？
+
+- **种子**：`Dungeon.prototype.er() = hashCoordinates(worldColumn, worldRow, currentLevelIndex)`（`world/dungeons.js:202-206`；`hashCoordinates` 为位运算散列，`core/math.js:61-66`）——同一地牢同一层的布局是**种子确定**的。
+- **入口 `generateDungeonLevel(seed, type, allowCastle?, withParty)`**（`world/generation.js:148-224`）：
+  1. `game.level.sp = seed`，`new SeededRandom(seed)`（`:150-151`）——布局随机全部走 `randomIntFrom(gen.wa, n)`（SeededRandom 流）；
+  2. `type===11`（城堡）用 `CastleLayoutGenerator`（`:161-164`，参数更小的房间常量 `:113-127`），否则 `DungeonLayoutGenerator.rw()`（`:165`，原型实现 `:250+`，随机房间 + `findNearestConnectedRoom` 连通 + `placeHorizontal/VerticalStairs` 楼梯 `:33-74`）；失败则 `f.sp++` 换种子重试（`:165-171`）；
+  3. 房间/走廊挂上主题贴图 `getDungeonTheme`（`:177-183`）；清空地牢层掉落、宝箱、卷轴目标（`:184-202`）；`resetEncounter()`（`:203`）+ `clearMonsters()`（`:205`）；
+  4. `withParty` 为真（实际进入）时：揭示起始房间、把队员放到入口楼梯、**`populateEncounter(起始房间)`**、`spawnRoomTreasure`（`:206-223`）。
+- **触发点**：走进地牢入口 `Y===9` → `game.currentDungeon = dungeon; generateDungeonLevel(er(), dungeonType, Aj, true); worldActive=false`（`character.js:1142-1164`，关键行 `:1151-1154`）；进城堡 `Y===11` → `generateDungeonLevel(er(), 11, false, true)`（`character.js:1177-1179`）；下一层 `Dungeon.prototype.iw()` → `generateDungeonLevel(er(), dungeonType, Aj, true)` + `POINT_EVENT_LEVEL_CLEARED`（`dungeons.js:209-224`，关键行 `:216`）；存档恢复时按 `levelSeed` 重建但 `withParty=false`（`persistence/game-save.js:249`）。
+- 区域/城堡分布在大世界里，由 `initializeRegionsAndCastles()` 生成（`world/initialization.js:9+`，16×16 区域，`game.js:61-69` 的 `regions.Eh=16`）。
+
+---
+
+## 11. save 如何编码？
+
+**链路：`createSaveState`（内存→JSON 对象）→ `JSON.stringify` → LZ-string 1.3.3 Base64 → localStorage。**
+
+- `persistence/game-save.js:697-699` `serializeGame(a) = saveCodec.compress(JSON.stringify(createSaveState(a)))`；`src/engine/save-codec.js:4-5` 即 `lz-string-1.3.3` 的 `compressToBase64/decompressFromBase64`（facts 第 5 条）。
+- `createSaveState`（`:700-1049`）产出顶层 29 键对象（`:1006-1039`，与 facts 第 6 条一致）；注意 `:704` `d = Date.now()` —— `gameTimestamp` 写的是**序列化时刻**（facts 第 7 条）；未初始化时只写 `{saveKey, gameInitialized:false, partyCreated:false, gameWon:false}`（`:1041-1046`）。
+- 写盘：`saveProgress`（`:32-38`）= `serializeGame → persistence.write → lastSavedAt`。`persistence` 是注入端口（`runtime/storage-port.js:2-3`，引擎不直接依赖 localStorage）；产品实现 `src/services/saves.js:45-51`：`read` 返回启动时校验过的 `bootSave`，`write` 先把旧值挪到 `C2_V1_001_backup` 再写主键（`:22-31`；键名 `SAVE_KEY='C2_V1_001'`，`src/services/save-validation.js:3`）。
+- 导入/恢复：`restoreGameState`（`game-save.js:39-696`）= `decompress → JSON.parse → game.resetRun(true)` 清场（`:41-45`）→ 按语义键逐字段恢复；运行时字段与存档键的显式映射示例：`world.blockShiftCol/Row ↔ WorldMap.R/L`（`:64-67`，成对出现，facts 第 8 条）→ 末尾 `game.restoreRuntimeState()`（`:690`，含离线判定，见第 12 节）。
+- 产品层的导入还要过安全校验：`save-validation.js:42-52` `decodeSave`（Base64 字符集 → 解压 → JSON → `validateSave`），`validateSave`（`:9-40`）检查必备键、数组上限、角色职业枚举、`__proto__` 等原型污染键；校验在 Web Worker 中执行（`save-worker.js:2-5`，`saves.js:6-12`），导入失败回滚旧进度（`saves.js:69-84`）。
+
+### save/load sequence
+
+```mermaid
+sequenceDiagram
+    participant UI as app.js / 对话框
+    participant SV as save-service (services/saves.js)
+    participant WV as save-worker (decodeSave)
+    participant AD as adapter / runtime
+    participant GS as game-save.js
+    participant SC as save-codec (LZ-string)
+    participant LS as localStorage
+
+    rect rgb(235, 245, 255)
+    Note over UI,LS: 保存（手动/30s 自动/pagehide）
+    UI->>SV: save() (saves.js:52)
+    SV->>AD: engine.serialize() (adapter.js:147)
+    AD->>GS: serializeGame(game.saves) (internal-api.js:15)
+    GS->>GS: createSaveState: 29 顶层键 + Date.now() (game-save.js:700,704)
+    GS->>SC: compress(JSON.stringify) (game-save.js:697)
+    SC-->>GS: Base64 文本 (save-codec.js:4)
+    GS-->>SV: 文本
+    SV->>LS: 旧值→C2_V1_001_backup, 新值→C2_V1_001 (saves.js:22-31)
+    end
+
+    rect rgb(255, 245, 235)
+    Note over UI,LS: 导入
+    UI->>SV: import(text) (saves.js:69)
+    SV->>WV: postMessage(text) (saves.js:6-12)
+    WV->>WV: decodeSave: 字符集/解压/JSON/validateSave (save-validation.js:42)
+    WV-->>SV: ok / error
+    SV->>AD: engine.importSave(text) (adapter.js:150)
+    AD->>GS: game.importSave → restoreGameState (game.js:505-509)
+    GS->>GS: decompress→parse→resetRun(true)→逐字段恢复 (game-save.js:41-45)
+    GS->>GS: restoreRuntimeState: 技能重算 + 离线判定 (game-save.js:690, game.js:482)
+    GS->>SC: saveProgress 重新落盘 (game.js:508)
+    SV->>LS: write(新串), 原进度留作备份 (saves.js:82)
+    end
+
+    rect rgb(240, 255, 240)
+    Note over UI,LS: 启动恢复
+    LS-->>SV: prepare() 读原文并 Worker 校验 (saves.js:33-41)
+    SV-->>AD: persistence.read()=bootSave (saves.js:45)
+    AD->>GS: restoreGameState(b, storedSave) (loop.js:104-105)
+    GS-->>GS: 失败→回滚 initialSave + onLoadError (loop.js:106-109)
+    end
+```
+
+---
+
+## 12. offline progress 如何恢复？
+
+（与 facts 第 9-12 条互证。）
+
+1. **触发（恢复存档末尾）**：`restoreRuntimeState()`（`game.js:482-504`）在 `game.options.allowOfflineProgress && game.lastActiveAt` 时计算 `offlineDuration = Date.now() - lastActiveAt`（`:498-499`；`lastActiveAt` 来自存档旧 `gameTimestamp`，`game-save.js:51-52`），超过 `12E4`ms（2 分钟）才 `beginOfflineProgress()`（`:500-502`）。
+2. **上限**：`beginOfflineProgress`（`game.js:469-475`）：仅当 `!gameWon && partyCreated`（`:470`）；`offlineDuration = min(offlineDuration, 432E5 + offlineTimeBonus.t)`（12 小时 + 升成加成，`:471`，`offlineTimeBonus` 定义于 `content/balance.js:167`）；`processingOffline=true; offlineProcessed=0`（`:472-473`）。
+3. **驱动（帧循环，不是一次性结算）**：`loop.js:42` —— 帧差 `a > 1E3` 且 `allowBackgroundProgress` 时进入（首次会 `view.onOfflineStart()` 并把 `offlineDuration` 从 0 起累加，这就是后台标签页也走同一条路的机制，facts 第 11 条）；随后 `loop.js:43-48` 每帧最多 **200 回合**：`advanceSimulation(15)` → `offlineProcessed += turnDuration(250)` → `aa.fp(250)`；`offlineProcessed >= offlineDuration` 时 `finishOfflineProgress()`（`:49-51`；`game.js:476-481` 复位标志并 `view.onOfflineFinish()`）。
+4. 离线期间：不自动存档（`loop.js:87` 的 `!game.processingOffline` 门）、升级条刷新跳过（`tick.js:515-528`）、帧时长统计不走 `:93-95` 分支。
+5. 直连 `advanceSimulation` 会绕过该分支（它只认 `game.processingOffline`）——所以 harness 提供 `advanceOffline()`（`tests/engine-harness.js:51-55`）：每帧把虚拟时钟 +2000ms 再 `loop.tick()`，使 `1E3 < 帧差` 恒成立（facts 第 10 条）。差分场景 `offline-1h/8h/disabled` 验证两端一致（`scripts/test-scenarios.mjs:23-40`，facts 第 12 条）。
+6. UI 侧：离线进度经快照 `offlineProgress` 百分比展示（`adapter.js:88`），`app.js:138` 在离线结束瞬间强制重导航。
+
+### offline-resume sequence
+
+```mermaid
+sequenceDiagram
+    participant R as restoreGameState (game-save.js:39)
+    participant G as game (game.js)
+    participant L as loop.tick (loop.js:33)
+    participant S as advanceSimulation (tick.js:27)
+    participant V as view 面板
+
+    R->>R: lastActiveAt = 旧 gameTimestamp (game-save.js:51-52)
+    R->>G: restoreRuntimeState() (game-save.js:690)
+    G->>G: offlineDuration = now - lastActiveAt (game.js:498-499)
+    alt > 120000ms 且 allowOfflineProgress
+        G->>G: beginOfflineProgress(): 上限 12h+加成, processingOffline=true (game.js:469-475)
+        G->>V: onOfflineStart() (loop.js:42 / game.js:211-213)
+        loop 每帧 (loop.js:42-51)
+            L->>S: advanceSimulation(15) × ≤200
+            S-->>L: 回合推进
+            L->>L: offlineProcessed += 250; aa.fp(250)
+        end
+        alt offlineProcessed ≥ offlineDuration
+            L->>G: finishOfflineProgress() (loop.js:49-51)
+            G->>G: processingOffline=false, 计数清零 (game.js:476-481)
+            G->>V: onOfflineFinish() (game.js:480)
+        end
+    else 不足 2 分钟
+        G-->>L: 正常帧循环
+    end
+```
+
+---
+
+## 13. RNG 如何传播？
+
+双随机源（facts 第 2-3 条），在本仓库的分布：
+
+- **SeededRandom（MT19937 浮点变体）**：构造器 `core/math.js:5-20`（种子循环 `:16`），洗牌牌 + 输出在 `initializeCoreMath` 挂原型 `random()`（`:125-148`）。消费方式 `randomIntFrom(sr, n) = sr.random()*n|0`（`:21-23`）。**传播路径 = 显式传参**：谁创建实例谁持有，典型如地牢布局 `generateDungeonLevel` 里 `new SeededRandom(seed)` 局部实例（`generation.js:151`）、装饰生成器 `DungeonDecorationGenerator` 内置 `new SeededRandom(3)`（`:135-138`）、区域初始化 `world/initialization.js` 的 `randomIntFrom` 用法。它使**地牢/世界布局只由种子决定**（见第 10 节），与帧时序无关。
+- **全局 `Math.random`**：`randomInt(n)`（`core/math.js:29-31`）是封装点，被战斗/掉落/遭遇全量使用（例：`encounters.js:44,49-52`、`items.js:148,169-172,333`、`actions.js:305,372-398`）；另有直接调用 `Math.random` 的（`randomizeScaledValue`，`core/math.js:56-60`；Boss 概率 `encounters.js:44`）。**不落地、不持久化**——这就是存档不含随机态、两端差分测试必须用 harness 替换 `Math.random` 的原因（`tests/engine-harness.js:5-8` 的 LCG + `resetRandom`）。
+- 换言之：确定层（布局）靠 SeededRandom 种子；行为层（战斗、掉落、遭遇）靠 `Math.random` 流，回放确定性只在测试环境注入后成立。
+
+---
+
+## 14. achievement / statistics 如何更新？
+
+- **统计是单一事件源**：`StatisticsRecorder`（`progression/statistics.js:17-19`）持有 `runStatistics + lifetimeStatistics` 双份，全部 `is/es/cp/fp/...` 方法成对转发（`:131-234`）；`bindStatistics` 在开局/重置时重新绑定（`:20-25`；调用点 `game.js:363`）。`LifetimeStatistics` 的 `jx()`（清零）被刻意改为告警不清零（`:127-130`）——跨周目永久累计。
+- **写入点（采样）**：每回合 `aa.is()`（`tick.js:88`，回合计数）；帧/离线时长 `aa.fp`（`loop.js:46,93-95`）；进房 `aa.Ur()` + `awardAdventurePoints(2)`（`character.js:311-312`）；击杀 `aa.cp()`、随从击杀 `aa.$k()`（`actions.js:354-360`）；遭遇结束 `aa.es()`（`encounters.js:264`）；开箱/搜架 `aa.hs/js/Rr`（`character.js:1126-1138`）；买农场 `aa.Xr()`（`tick.js:816`附近，`tick.js:817`）。
+- **成就检查是回合节拍任务**：`lifecycle.Qt` 每 4 回合（`PC=4`，`simulation/characters.js:40`）跑一次（`tick.js:214-236`）：遍历待判定列表 `achievements.ik`，`qa.ab`（胜利类）→ `hasVictoryAchievement`（读 `victoryStatistics`，`achievements.js:48-64`），否则 `getAchievementProgress(qa) >= qa.requiredCount`（读 `lifetimeStatistics` 字段 switch，`:65-115`）；达标移入 `Ze` 待领取列表（`tick.js:219-229`），已应用（`Of`）的出队（`:230-235`）。
+- **领取（点数联动）**：`applyAchievementReward` → `increasePointEventReward(pointEventTypeId, Vt)` → `recalculateAdventurePoints`（`achievements.js:34-47` + `progression/points.js:47-62`）——即成就是"提高某类点数事件的单价"，点数总量按事件次数重算（`points.js:38-46`）。
+- 存档侧只持久化 `{achievementId, obtained, applied}`（`game-save.js:997-1005`，facts 第 16 条），恢复时按 `We/Of` 重建 `ik/Ze` 队列并补发已应用成就的单价（`game-save.js:620-656`）。
+
+---
+
+## 15. prestige / reset 如何重建 state？
+
+三个入口，共享 `resetRun`：
+
+- **`resetRun(full)`**（`game.js:351-418`，所有重置的基座）：`turnNumber=0`、`resetEncounter()`、新建 `PartyState`、清空 `adventurers/leader/scrollCaster`、`partyCreated=false; gameWon=false`（`:352-359`）；`full=true` 时额外：新建 `RunStatistics/LifetimeStatistics` + `bindStatistics()`、清零 `victoryStatistics`、`resetAdventurePoints()`、`resetAchievements()`（`:360-376`）；公共部分：世界/楼层对象整体换新、清掉落/背包/卷轴/药水、`resetDungeons/resetCastles/resetFarms/resetShops`、`clearCombatQueue/clearVisualEffects`、重置全部升级集（全局 + 每角色 4 棵技能树，`:398-407`）、清盟友/怪物/随从、怪物目录等级回 1（`:408-414`）；`full=true` 时 `victoryCount=0`（`:415-417`）。
+- **`resetGame()`**（`:521-526`）= 彻底重开（"重新开始"按钮）：`resetRun(true)` + `deleteStoredSave()` + `saveProgress()`（写空白档）+ `view.Js()` 重挂 UI。产品入口 `adapter.reset()`（`adapter.js:153-155`）→ `saves.reset()`（`saves.js:90-97`，事务保护 + 成功后 `location.reload()`）。
+- **`restartRun()`**（`:513-520`）= 胜利后重开本局：先清 `victoryStatistics.nm/mm`，`resetRun(false)`——**保留**成就、点数、终身统计与 `victoryCount`（这正是"转生/周目"的核心：永久成长跨局保留，仅世界与队伍重建），删档后立即写新档。
+- **`resetContinuation()`**（`:419-468`）= 第三种：胜利后**带着同一支队伍**继续（不重建 `adventurers`，只重置队伍关系字段、世界、地牢进度、保留地牢/城堡计数的 `Mk/Uj`），供"继续冒险"路径使用。
+- 全量重建的对照组：存档恢复走 `resetRun(true)` 后逐字段回填（`game-save.js:45`），所以"重置"与"读档"共享同一清场语义，保证恢复不会残留上一局引用。
+
+---
+
+## 模块依赖图
+
+按 `src/engine/modules/` 的 import 关系归纳。**注意两点评注**：
+- `runtime/game.js` 是状态汇聚点：所有域模块 import `game`（上向箭头），而 `game.js` 又 import 各域构造器做组合根——这是受控的循环，运行期由 `runtime/index.js:77-150` 的初始化顺序打破（第 2 节）。
+- `core/` 不依赖任何其他引擎模块，是唯一的纯底层。
+
+```mermaid
+flowchart BT
+    subgraph core[core 纯函数与数据]
+        MATH[core/math.js\nSeededRandom/randomInt/向量/曲线]
+        BOOT[core/bootstrap-data.js\n贴图清单等静态数据]
+    end
+
+    subgraph domain[域模块 按目录]
+        CONTENT[content/\nmonsters classes equipment guardians\nminions skills spells balance themes]
+        WORLD[world/\nterrain regions dungeons generation\nrooms pathfinding initialization]
+        CHAR[characters/\ncharacter stats effects movement party]
+        AI[ai/\ntargeting behaviors]
+        COMBAT[combat/\nencounters actions scrolls potions skill-effects]
+        LOOT[loot/\nitems item-names inventory treasure]
+        PROG[progression/\npoints achievements upgrades statistics]
+        SIM[simulation/\ntick loop characters]
+        RENDER[rendering/\nsprites scene floating-text]
+        PERSIST[persistence/\ngame-save entities]
+        VIEWS[views/\nnavigation expedition character\nmonsters dungeons castles results ...]
+    end
+
+    subgraph runtime[runtime 会话层]
+        GAME[runtime/game.js\ngame 组合根单例]
+        IDX[runtime/index.js\n初始化顺序编排 + 导出 game]
+        PORT[runtime/storage-port.js\npersistence 注入端口]
+    end
+
+    subgraph shell[产品壳]
+        IAPI[engine/internal-api.js]
+        ADPT[engine/adapter.js\n快照+命令]
+        CODEC[engine/save-codec.js]
+        SVC[services/\nsaves save-validation save-worker]
+        UIX[app.js + src/ui/*]
+    end
+
+    MATH --> CONTENT & WORLD & AI & COMBAT & LOOT & PERSIST
+    BOOT --> GAME
+    CONTENT --> COMBAT & CHAR & LOOT & WORLD
+    WORLD --> CHAR & COMBAT
+    AI --> CHAR
+    CHAR --> COMBAT & AI
+    LOOT --> COMBAT
+    PROG --> COMBAT & CHAR
+    GAME --> CONTENT & WORLD & CHAR & AI & COMBAT & LOOT & PROG & SIM & RENDER & PERSIST & VIEWS
+    DOMAIN1[域模块 ×49 个文件] -.->|import { game } 活绑定| GAME
+    IDX --> GAME
+    GAME --> IDX
+    PORT --> PERSIST
+    PERSIST --> CODEC
+    IAPI --> IDX & PORT & CONTENT & PROG & CODEC
+    ADPT --> IAPI
+    SVC --> ADPT & CODEC
+    UIX --> ADPT & SVC
+```
+
+（`SIM/RENDER/VIEWS/PERSIST` 亦依赖 `game`，图中以 `GAME --> ...` 与虚线统一表达；`simulation/loop.js` 额外被 `runtime/game.js:14` 引用为 `game.loop`。）
+
+---
+
+## 附：关键不变量速查
+
+| 不变量 | 证据 |
+| --- | --- |
+| 一回合 = 15 个模拟单位 = 250ms | `loop.js:25`、`tick.js:28-32`、`loop.js:44-45` |
+| 自动存档间隔 30s，离线期间暂停 | `game.js:132`、`loop.js:87-92` |
+| `renderEnabled` 只受页面可见性控制 | `game.js:192-199`、`loop.js:74` |
+| 存档键 `C2_V1_001`（备份 `+_backup`） | `save-validation.js:3`、`saves.js:21` |
+| 离线上限 12h + `offlineTimeBonus.t`，2 分钟起结 | `game.js:471`、`game.js:500` |
+| 遭遇结束条件 = 场上怪物清空 | `encounters.js:261-264` |
+| 成就检查节拍 = 每 4 回合 | `simulation/characters.js:40`、`tick.js:214-216` |
+| 地牢布局 = `hashCoordinates(col,row,level)` 种子 | `dungeons.js:202-206`、`generation.js:148-151` |

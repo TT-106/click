@@ -36,15 +36,15 @@ export function findTargetsInRange(a, b, c, d) {
   if (0 === a.length) {
     return null;
   }
-  var f = b.p.w;
+  var f = b.p.room;
   if (!f) {
     return null;
   }
   var g,
-    h = b.p.u,
+    h = b.p.levelPosition,
     l,
     n = [];
-  for (b = 0; b < a.length && (g = a[b], g.Va || g.p.w !== f || (l = h.ac(g.p.u), !(l <= d && (n.push(g), n.length >= c)))); b++) {}
+  for (b = 0; b < a.length && (g = a[b], g.Va || g.p.room !== f || (l = h.ac(g.p.levelPosition), !(l <= d && (n.push(g), n.length >= c)))); b++) {}
   return n;
 }
 export function CombatQueue() {
@@ -189,7 +189,7 @@ export function applySpellEffect(a, b) {
     }
     spawnMinion(g, c, d);
   } else if (14 === d) {
-    d = b.Ca.p.u;
+    d = b.Ca.p.levelPosition;
     g = game.goldDrops.pe;
     for (c = g.length - 1; 0 <= c; c--) {
       f = g[c];
@@ -205,7 +205,7 @@ export function applySpellEffect(a, b) {
         awardAdventurePoints(9);
       }
     }
-    d = b.Ca.p.u;
+    d = b.Ca.p.levelPosition;
     g = game.itemDrops.yf;
     for (c = g.length - 1; 0 <= c; c--) {
       if (h = g[c], !h.gc) {
@@ -248,7 +248,7 @@ export function applySpellEffect(a, b) {
         }
       }
     }
-    d = b.Ca.p.u;
+    d = b.Ca.p.levelPosition;
     g = game.scrollDrops.kf;
     for (c = g.length - 1; 0 <= c; c--) {
       f = g[c];
@@ -263,7 +263,7 @@ export function applySpellEffect(a, b) {
         awardAdventurePoints(10);
       }
     }
-    d = b.Ca.p.u;
+    d = b.Ca.p.levelPosition;
     g = game.potionDrops.Hf;
     for (c = g.length - 1; 0 <= c; c--) {
       f = g[c];
@@ -326,7 +326,7 @@ export function resolveCharacterDefeat(a, b) {
     if (!b.Ja.Kf) {
       game.state.aa.Tr();
       b.Ja.Kf = true;
-      var c = b.p.u,
+      var c = b.p.levelPosition,
         d = new StatusEffect(13, game.state.turnNumber, stunEffectDefinition.Qd, game.animations.Zg(stunEffectDefinition.vd), stunEffectDefinition.Od, stunEffectDefinition.Pd, 0),
         c = new VisualEffect(stunEffectDefinition.vd, c, c, false, 1);
       b.stats.stunCount++;
@@ -362,7 +362,7 @@ export function resolveCharacterDefeat(a, b) {
         addExperience(d.No * doubleExperienceModifier.t);
         recordMonsterTypeKill(d);
       }
-      var d = g.w,
+      var d = g.room,
         c = roomLeftPixels(d) + game.tileSize,
         f = roomRightPixels(d) - game.tileSize,
         h = roomTopPixels(d) + game.tileSize,
@@ -437,15 +437,15 @@ export function createAttackAction(a, b, c) {
   d.Ca = a;
   d.Cb(b);
   if (12 == a.characterClass) {
-    c = b.p.u;
+    c = b.p.levelPosition;
     a = calculateAttackDamage(a, b);
     d.Jc = a;
     d.Rd = 0 === a;
     d.yd = false;
     a = new VisualEffect("Red Splat", c, c, false, 1);
   } else if (c) {
-    c = b.p.u;
-    var f = a.p.u,
+    c = b.p.levelPosition;
+    var f = a.p.levelPosition,
       g = calculateAttackDamage(a, b);
     b = a.equipment ? a.equipment.Ey : null;
     var h = a.So(),
@@ -472,7 +472,7 @@ export function createAttackAction(a, b, c) {
     }
     a = new VisualEffect(g, c, c, false, 1);
   } else {
-    c = b.p.u;
+    c = b.p.levelPosition;
     f = calculateAttackDamage(a, b);
     b = (a = a.So()) ? a.Rm : null;
     a = null;
@@ -501,8 +501,8 @@ export function createSpellAction(a) {
   var d = new CombatAction();
   d.Ca = a;
   d.Cb(b);
-  var f = b.p.u,
-    g = a.p.u;
+  var f = b.p.levelPosition,
+    g = a.p.levelPosition;
   d.Ib = c;
   d.yd = true;
   var h = c.ya;
@@ -626,7 +626,7 @@ export function createChainAction(a) {
   }
   var h = new CombatAction(),
     l = g.xi,
-    n = d.p.u;
+    n = d.p.levelPosition;
   h.Ca = a.Ca;
   h.Cb(d);
   g = new VisualEffect(g.ca, l, n, false, 1);
@@ -657,7 +657,7 @@ export function createReturningAction(a) {
     f.Ys = 1;
     f.chainCount = 0;
     c = a.Xb;
-    d = a.Ca.p.u;
+    d = a.Ca.p.levelPosition;
     var g = a.pl,
       b = a.xb;
     f.Rd = false;
@@ -692,7 +692,7 @@ export function createReturningAction(a) {
   f.pl = a.pl;
   var h = a.Xb,
     b = d.xi,
-    c = g.p.u;
+    c = g.p.levelPosition;
   f.Cb(g);
   g = calculateSpellDamage(a.Ca, g);
   f.Jc = g;
@@ -715,7 +715,7 @@ export function initializeCombatActions() {
     return this.Ys;
   };
   CombatQueue.prototype.wu = function (a) {
-    if (a = getRoomTreasure(game.treasure, a.Ca.p.w)) {
+    if (a = getRoomTreasure(game.treasure, a.Ca.p.room)) {
       a.el = true;
       game.state.party.hq(a);
     }

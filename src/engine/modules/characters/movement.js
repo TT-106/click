@@ -22,9 +22,9 @@ export function CharacterPosition(a, b) {
   this.Wc = new Vector2();
   this.Jw = b;
   this.MC = a;
-  this.u = new Vector2();
+  this.levelPosition = new Vector2();
   this.Db = new Vector2();
-  this.w = this.cd = null;
+  this.room = this.cd = null;
   this.Ul = new Vector2();
   this.Sn = this.Rn = 0;
   this.Qb = new Vector2();
@@ -46,13 +46,13 @@ export function applySeparationForce(a, b, c, d) {
   if (!a.Gd) {
     a.Gd = new Vector2();
   }
-  if (a.u === c) {
-    assignVector(a.Gd, a.u);
+  if (a.levelPosition === c) {
+    assignVector(a.Gd, a.levelPosition);
     subtractVector(a.Gd, b);
     normalizeVector(a.Gd);
     multiplyVector(a.Gd, d);
   } else {
-    assignVector(a.Gd, a.u);
+    assignVector(a.Gd, a.levelPosition);
     subtractVector(a.Gd, c);
     b = vectorLength(a.Gd);
     if (0 !== b) {
@@ -102,13 +102,13 @@ export function separateDungeonCharacters(a) {
     if (b === a) {
       break;
     }
-    h = a.u.ac(b.u);
+    h = a.levelPosition.ac(b.levelPosition);
     if (40 > h) {
       if (0 === h) {
         setVector(a.Wc, Math.random(), Math.random());
       } else {
-        copyVector(a.Wc, a.u);
-        subtractVector(a.Wc, b.u);
+        copyVector(a.Wc, a.levelPosition);
+        subtractVector(a.Wc, b.levelPosition);
       }
       normalizeVector(a.Wc);
       addVector(a.lj, a.Wc);
@@ -119,13 +119,13 @@ export function separateDungeonCharacters(a) {
     b = g[c];
     b = b.p;
     if (b !== a) {
-      h = a.u.ac(b.u);
+      h = a.levelPosition.ac(b.levelPosition);
       if (50 > h) {
         if (0 === h) {
           setVector(a.Wc, Math.random(), Math.random());
         } else {
-          copyVector(a.Wc, a.u);
-          subtractVector(a.Wc, b.u);
+          copyVector(a.Wc, a.levelPosition);
+          subtractVector(a.Wc, b.levelPosition);
         }
         normalizeVector(a.Wc);
         addVector(a.lj, a.Wc);
@@ -137,13 +137,13 @@ export function separateDungeonCharacters(a) {
     b = f[c];
     b = b.p;
     if (b !== a) {
-      h = a.u.ac(b.u);
+      h = a.levelPosition.ac(b.levelPosition);
       if (50 > h) {
         if (0 === h) {
           setVector(a.Wc, Math.random(), Math.random());
         } else {
-          copyVector(a.Wc, a.u);
-          subtractVector(a.Wc, b.u);
+          copyVector(a.Wc, a.levelPosition);
+          subtractVector(a.Wc, b.levelPosition);
         }
         normalizeVector(a.Wc);
         addVector(a.lj, a.Wc);
@@ -210,10 +210,10 @@ export function initializeCharactersMovement() {
     return this.Db.y;
   };
   CharacterPosition.prototype.Ob = function () {
-    return this.u.x;
+    return this.levelPosition.x;
   };
   CharacterPosition.prototype.Pb = function () {
-    return this.u.y;
+    return this.levelPosition.y;
   };
   CharacterPosition.prototype.et = function (a) {
     this.Bc = a;

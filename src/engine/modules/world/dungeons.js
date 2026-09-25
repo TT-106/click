@@ -234,7 +234,7 @@ export function initializeWorldDungeons() {
         b = d.p;
         clearMovementTarget(b);
         b.cd = null;
-        b.w = null;
+        b.room = null;
         d.Y = IDLE_ACTION;
       }
       clearItemDrops();

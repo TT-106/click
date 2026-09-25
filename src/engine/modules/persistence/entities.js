@@ -74,7 +74,7 @@ export function serializeCharacter(a) {
   };
   var h;
   h = a.p;
-  var l = h.w,
+  var l = h.room,
     n = h.cd;
   h = {
     levelX: h.Ob(),

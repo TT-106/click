@@ -56,9 +56,9 @@ export function spawnMinion(a, b, c) {
   var g = createBehaviorQueue(a.nb());
   d.behaviors = g;
   g = d.p;
-  g.w = b.p.w;
+  g.room = b.p.room;
   g.cd = b.p.cd;
-  setVector(g.u, c.x, c.y);
+  setVector(g.levelPosition, c.x, c.y);
   var h = b.p.Db;
   c = h.x + floorNumber(-10 + 20 * Math.random());
   h = h.y + floorNumber(-10 + 20 * Math.random());
@@ -116,14 +116,14 @@ export function createCastleGuardian(a, b, c) {
     }
   }
   b = f.p;
-  b.w = c;
+  b.room = c;
   b.cd = null;
   var h = roomLeftPixels(c) + game.tileSize,
     g = roomTopPixels(c) + game.tileSize,
     d = roomBottomPixels(c) - game.tileSize;
   c = h + randomInt(roomRightPixels(c) - game.tileSize - h);
   g += randomInt(d - g);
-  setVector(b.u, c, g);
+  setVector(b.levelPosition, c, g);
   applyBonusList(f, a.Nr);
   return f;
 }
@@ -290,7 +290,7 @@ export function initializeSimulationCharacters() {
         addExperience(f.No * doubleExperienceModifier.t);
         recordMonsterTypeKill(f);
       }
-      var f = c.w,
+      var f = c.room,
         g = roomLeftPixels(f) + game.tileSize,
         h = roomRightPixels(f) - game.tileSize,
         l = roomTopPixels(f) + game.tileSize,

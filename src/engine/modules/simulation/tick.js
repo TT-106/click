@@ -253,9 +253,9 @@ export function advanceSimulation(a) {
         } else {
           multiplyVector(Da.Gd, (mb - ub) / mb);
         }
-        addVector(Da.u, Da.ra);
-        if (Da.w) {
-          clampPointToRoom(Da.w, Da.u, game.halfTileSize);
+        addVector(Da.levelPosition, Da.ra);
+        if (Da.room) {
+          clampPointToRoom(Da.room, Da.levelPosition, game.halfTileSize);
         }
       }
     }
@@ -299,8 +299,8 @@ export function advanceSimulation(a) {
               if (ac && 0 !== ac.length) {
                 var ob = undefined,
                   pb = undefined,
-                  Ha = zb.p.u,
-                  jb = Ma.p.u,
+                  Ha = zb.p.levelPosition,
+                  jb = Ma.p.levelPosition,
                   Ab = undefined,
                   Bb = undefined,
                   qb = undefined,
@@ -319,7 +319,7 @@ export function advanceSimulation(a) {
                 for (var Wa = undefined, ob = 0; ob < ac.length; ob++) {
                   qb = ac[ob];
                   Ab = qb.p;
-                  Bb = Ab.u;
+                  Bb = Ab.levelPosition;
                   if (qb === Ma) {
                     applySeparationForce(Ab, Ha, jb, Hb);
                   } else {
@@ -338,7 +338,7 @@ export function advanceSimulation(a) {
                   }
                   var Qa = Sb,
                     nc = qb,
-                    sa = nc.p.u,
+                    sa = nc.p.levelPosition,
                     Tb = new CombatAction();
                   Tb.Ca = vb.Ca;
                   Tb.Cb(nc);
@@ -384,7 +384,7 @@ export function advanceSimulation(a) {
         var Ja = kb.Ib;
         if (Ja && 12 === Ja.ga) {
           var Db = Ra.wm;
-          setVector(kb.Ca.p.u, Db.x, Db.y);
+          setVector(kb.Ca.p.levelPosition, Db.x, Db.y);
         }
       }
       if ((!Ra || Ra.Pk || Ra.bg) && advanceCombatAction(Cb, kb)) {
@@ -410,7 +410,7 @@ export function advanceSimulation(a) {
       db,
       Mc = 1 === Ga.characterType ? Ga.summoner.stats : Ga.stats;
     for (db = 0; db < gb.length; db++) {
-      if (rb = gb[db], !rb.Va && (dc = rb.p.u, Ka = game.level.Ai(dc.x), Xa = game.level.Bi(dc.y), (hb = game.level.hb(Ka, Xa)) && (lb = hb.Pq) && lb.Cj)) {
+      if (rb = gb[db], !rb.Va && (dc = rb.p.levelPosition, Ka = game.level.Ai(dc.x), Xa = game.level.Bi(dc.y), (hb = game.level.hb(Ka, Xa)) && (lb = hb.Pq) && lb.Cj)) {
         if (lb.bl()) {
           setTileEffect(hb, null);
         } else if (lb.bx !== lb.oc && (sc = hb.li, 0 !== sc && (Aa = randomInt(sc + 1), 0 !== Aa))) {
@@ -783,7 +783,7 @@ export function advanceSimulation(a) {
 export function positionScrollCaster(a) {
   a = 30 + 126 * a;
   var b = game.viewportHeight - 80;
-  setVector(game.state.scrollCaster.p.u, game.level.Ki + (0.5 * (a - game.viewportHalfWidth) + (b - game.viewportHalfHeight)) | 0, game.level.Li + (b - game.viewportHalfHeight - 0.5 * (a - game.viewportHalfWidth)) | 0);
+  setVector(game.state.scrollCaster.p.levelPosition, game.level.Ki + (0.5 * (a - game.viewportHalfWidth) + (b - game.viewportHalfHeight)) | 0, game.level.Li + (b - game.viewportHalfHeight - 0.5 * (a - game.viewportHalfWidth)) | 0);
 }
 export function updateCharacterBehaviors(a) {
   var b, c;
@@ -799,7 +799,7 @@ export function updateCharacterBehaviors(a) {
   }
 }
 export function showDeathEffect(a) {
-  a = game.worldActive ? a.p.Db : a.p.u;
+  a = game.worldActive ? a.p.Db : a.p.levelPosition;
   addVisualEffect(game.effects, new VisualEffect("Red Splat", a, a, false, 1));
 }
 export function purchaseDungeonFarm(a, b) {

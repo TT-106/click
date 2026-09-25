@@ -212,11 +212,11 @@ export function generateDungeonLevel(a, b, c, d) {
         h = d;
       a = g.p;
       a.cd = null;
-      a.w = h;
+      a.room = h;
       g.Y = IDLE_ACTION;
       clearMovementTarget(a);
       g = h.stairs;
-      setVector(a.u, g.tq, g.uq);
+      setVector(a.levelPosition, g.tq, g.uq);
     }
     populateEncounter(d);
     spawnRoomTreasure(f.Ce.$d);

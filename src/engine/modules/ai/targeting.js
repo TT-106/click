@@ -20,7 +20,7 @@ export function hasOpponentsInRoom(a, b) {
   }
   var d;
   for (d = 0; d < c.length; d++) {
-    if (a !== c[d] && c[d].p.w === b) {
+    if (a !== c[d] && c[d].p.room === b) {
       return true;
     }
   }
@@ -31,18 +31,18 @@ export function findNearestOpponent(a) {
   if (0 === b.length) {
     return null;
   }
-  var c = a.p.w;
+  var c = a.p.room;
   if (!c) {
     return null;
   }
   var d,
     f,
-    g = a.p.u,
+    g = a.p.levelPosition,
     h = null,
     l,
     n = -1;
   for (f = 0; f < b.length; f++) {
-    if (!(d = b[f], a === d || d.Va || d.p.w != c || (l = d.Ja, l.wg || d.characterType === ADVENTURER_TYPE && l.Kd || (l = g.Ud(d.p.u), !(0 > n || l < n))))) {
+    if (!(d = b[f], a === d || d.Va || d.p.room != c || (l = d.Ja, l.wg || d.characterType === ADVENTURER_TYPE && l.Kd || (l = g.Ud(d.p.levelPosition), !(0 > n || l < n))))) {
       h = d;
       n = l;
     }
@@ -50,7 +50,7 @@ export function findNearestOpponent(a) {
   return h;
 }
 export function findNearestVisibleOpponent(a) {
-  var b = a.p.w;
+  var b = a.p.room;
   if (!b) {
     return null;
   }
@@ -60,12 +60,12 @@ export function findNearestVisibleOpponent(a) {
   }
   var d,
     f,
-    g = a.p.u,
+    g = a.p.levelPosition,
     h = null,
     l,
     n = -1;
   for (f = 0; f < c.length; f++) {
-    if (!(d = c[f], a === d || d.Va || d.p.w != b || (l = d.Ja, l.wg || l.Kd || l.bi || (l = g.Ud(d.p.u), !(0 > n || l < n))))) {
+    if (!(d = c[f], a === d || d.Va || d.p.room != b || (l = d.Ja, l.wg || l.Kd || l.bi || (l = g.Ud(d.p.levelPosition), !(0 > n || l < n))))) {
       h = d;
       n = l;
     }
@@ -82,16 +82,16 @@ export function findChainTarget(a) {
   if (0 === b.length) {
     b = null;
   } else {
-    var c = a.p.w;
+    var c = a.p.room;
     if (c) {
       var d,
         f,
-        g = a.p.u,
+        g = a.p.levelPosition,
         h = null,
         l,
         n = -1;
       for (f = 0; f < b.length; f++) {
-        if (!(d = b[f], a === d || d.Va || d.p.w != c || (l = d.Ja, l.wg || l.Kd || l.bi || (l = g.Ud(d.p.u), !(0 > n || l < n))))) {
+        if (!(d = b[f], a === d || d.Va || d.p.room != c || (l = d.Ja, l.wg || l.Kd || l.bi || (l = g.Ud(d.p.levelPosition), !(0 > n || l < n))))) {
           h = d;
           n = l;
         }
@@ -111,7 +111,7 @@ export function findChainTarget(a) {
   }
   for (b = d[randomInt(d.length)]; b === a && 6 > c;) {
     b = d[randomInt(d.length)];
-    if (!b.p.w) {
+    if (!b.p.room) {
       b = null;
     }
     c++;
@@ -120,7 +120,7 @@ export function findChainTarget(a) {
 }
 export function findNearbyOpponent(a) {
   var b = findNearestOpponent(a);
-  return !b || 100 < a.p.u.ac(b.p.u) ? null : b;
+  return !b || 100 < a.p.levelPosition.ac(b.p.levelPosition) ? null : b;
 }
 export function approachValue(a, b, c) {
   return Math.max(b, (a - b) * (1 - c / 1E3) + b);
@@ -144,7 +144,7 @@ export function findRouteToDoor(a, b) {
   if (!b) {
     return null;
   }
-  var d = a.p.w,
+  var d = a.p.room,
     f = [];
   if (d) {
     var g = d.Nc,
@@ -164,7 +164,7 @@ export function findRouteToRoom(a, b) {
   if (!b) {
     return null;
   }
-  var d = a.p.w,
+  var d = a.p.room,
     f = [];
   if (d === b) {
     return null;
@@ -266,8 +266,8 @@ export function respondToTaunt(a, b) {
   if (c && c.Ja.Gn) {
     return attackTauntingTarget(a, b), true;
   }
-  for (var d = getOpponents(b), f, g = b.p.u, h, l = null, n = -1, c = 0; c < d.length; c++) {
-    if (f = d[c], b !== f && (h = f.Ja, h.Gn && !h.Kd && (h = g.Ud(f.p.u), 0 > n || h < n))) {
+  for (var d = getOpponents(b), f, g = b.p.levelPosition, h, l = null, n = -1, c = 0; c < d.length; c++) {
+    if (f = d[c], b !== f && (h = f.Ja, h.Gn && !h.Kd && (h = g.Ud(f.p.levelPosition), 0 > n || h < n))) {
       l = f;
       n = h;
     }
@@ -277,15 +277,15 @@ export function respondToTaunt(a, b) {
 export function attackTauntingTarget(a, b) {
   var c = b.Da.p,
     d = b.p;
-  if (c.w === d.w) {
-    if (d.u.ac(c.u) <= a.bb) {
+  if (c.room === d.room) {
+    if (d.levelPosition.ac(c.levelPosition) <= a.bb) {
       if (!canAttack(b)) {
         return;
       }
       markAttackTurn(b);
       b.Y = 2;
     } else {
-      choosePointNearTarget(d.Qb, c.u, b.p.w);
+      choosePointNearTarget(d.Qb, c.levelPosition, b.p.room);
       b.Y = 1;
     }
     clearMovementTarget(d);

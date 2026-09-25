@@ -112,16 +112,16 @@ export function castScroll(a, b) {
     if (0 === d.length) {
       c = null;
     } else {
-      var f = c.p.w;
+      var f = c.p.room;
       if (f) {
         var g,
           h,
-          l = c.p.u,
+          l = c.p.levelPosition,
           n = null,
           p,
           s = -1;
         for (h = 0; h < d.length; h++) {
-          if (!(g = d[h], c === g || g.Va || g.p.w !== f || (p = g.Ja, p.wg || p.Kd || p.bi || -1 < a.eq.yl.indexOf(g) || (p = l.Ud(g.p.u), !(0 > s || p < s))))) {
+          if (!(g = d[h], c === g || g.Va || g.p.room !== f || (p = g.Ja, p.wg || p.Kd || p.bi || -1 < a.eq.yl.indexOf(g) || (p = l.Ud(g.p.levelPosition), !(0 > s || p < s))))) {
             n = g;
             s = p;
           }
@@ -147,7 +147,7 @@ export function castScroll(a, b) {
         }
       }
       d = game.state.scrollCaster.p;
-      d.w = c.p.w;
+      d.room = c.p.room;
       game.state.scrollCaster.Cb(c);
       if (a.mB) {
         game.state.scrollCaster.ld = a.mB;
@@ -155,7 +155,7 @@ export function castScroll(a, b) {
       } else {
         game.state.scrollCaster.Y = MELEE_ACTION_TYPE;
       }
-      c = new VisualEffect("Red Damage", d.u, d.u, false, 1);
+      c = new VisualEffect("Red Damage", d.levelPosition, d.levelPosition, false, 1);
       addVisualEffect(game.effects, c);
       updateCharacter(game.state.scrollCaster, 1);
       game.state.aa.fs();
