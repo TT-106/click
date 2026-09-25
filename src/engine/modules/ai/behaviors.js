@@ -28,7 +28,7 @@ export function ExploreDungeonBehavior() {
   this.selectedTarget = null;
   this.SB = 0;
   this.un = null;
-  this.bb = 100;
+  this.actionRange = 100;
   this.Yt = false;
 }
 export function FollowLeaderBehavior() {
@@ -41,7 +41,7 @@ export function RangedAttackBehavior(a, b, c) {
   this.priorityWeight = c;
   this.targetCharacter = null;
   this.CA = a;
-  this.bb = b;
+  this.actionRange = b;
   this.fn = new Vector2();
   this.Jl = new Vector2();
   this.co = this.ax = 0;
@@ -50,31 +50,31 @@ export function MeleeAttackBehavior(a, b, c, d) {
   this.priorityWeight = b;
   this.targetCharacter = null;
   this.Ng = 0;
-  this.bb = a;
+  this.actionRange = a;
   this.qk = c;
   this.YD = d;
 }
 export function LootGoldBehavior(a) {
   this.Hn = null;
   this.priorityWeight = a;
-  this.bb = 10;
+  this.actionRange = 10;
 }
 export function OpportunisticAttackBehavior(a) {
   this.priorityWeight = a;
   this.targetCharacter = null;
   this.Ng = 0;
-  this.bb = RANGED_ATTACK_RANGE;
+  this.actionRange = RANGED_ATTACK_RANGE;
   this.qk = MELEE_ACTION_TYPE;
 }
 export function LootItemBehavior(a) {
   this.Dn = null;
   this.priorityWeight = a;
-  this.bb = 10;
+  this.actionRange = 10;
 }
 export function LootScrollBehavior(a) {
   this.on = null;
   this.priorityWeight = a;
-  this.bb = 10;
+  this.actionRange = 10;
 }
 export function GuardRangedBehavior(a, b, c) {
   this.Vq = new RangedAttackBehavior(a, b, c);
@@ -83,48 +83,48 @@ export function TargetSpellBehavior(a, b) {
   this.priorityWeight = b;
   this.targetCharacter = this.Vi = null;
   this.Ng = 0;
-  this.bb = a;
+  this.actionRange = a;
 }
 export function HealBehavior(a, b) {
   this.fm = null;
   this.priorityWeight = b;
-  this.bb = a;
+  this.actionRange = a;
 }
 export function ApplyEffectBehavior(a, b, c) {
   this.gm = null;
   this.statusEffectTypeId = c;
   this.priorityWeight = b;
-  this.bb = a;
+  this.actionRange = a;
 }
 export function AreaDamageBehavior(a, b) {
   this.Zl = null;
   this.priorityWeight = b;
-  this.bb = a;
+  this.actionRange = a;
 }
 export function ChainDamageBehavior(a, b) {
   this.In = null;
   this.priorityWeight = b;
-  this.bb = a;
+  this.actionRange = a;
 }
 export function SummonBehavior(a, b, c) {
   this.zd = null;
   this.expectedSpellCategoryId = c;
   this.priorityWeight = b;
-  this.bb = a;
+  this.actionRange = a;
 }
 export function LifeDrainBehavior(a, b) {
   this.priorityWeight = b;
-  this.bb = a;
+  this.actionRange = a;
   this.Lm = null;
 }
 export function ReviveBehavior(a, b) {
   this.priorityWeight = b;
-  this.bb = a;
+  this.actionRange = a;
   this.pn = null;
 }
 export function PartyBuffBehavior(a, b, c) {
   this.priorityWeight = c;
-  this.bb = a;
+  this.actionRange = a;
   this.statusEffectTypeId = b;
   this.zd = null;
 }
@@ -139,7 +139,7 @@ export function LootChestBehavior(a) {
   this.Wm = null;
   this.priorityWeight = a;
   this.Yt = true;
-  this.bb = 10;
+  this.actionRange = 10;
 }
 export function hasPendingLoot() {
   return 0 < game.goldDrops.pe.length || 0 < game.itemDrops.yf.length || 0 < game.scrollDrops.kf.length;
@@ -148,7 +148,7 @@ export function LootPotionBehavior(a) {
   this.pm = null;
   this.priorityWeight = a;
   this.Yt = true;
-  this.bb = 10;
+  this.actionRange = 10;
 }
 export function UseShopBehavior(a, b) {
   this.Mi = game.tileSize + 5;
@@ -186,18 +186,18 @@ export function ChangeFloorBehavior() {
 export function SelfSpellBehavior(a) {
   this.Sc = null;
   this.priorityWeight = a;
-  this.bb = 10;
+  this.actionRange = 10;
 }
 export function AreaSpellBehavior(a, b, c) {
   this.Sc = null;
   this.KE = c;
   this.priorityWeight = b;
-  this.bb = a;
+  this.actionRange = a;
 }
 export function CompanionSpellBehavior(a, b) {
   this.Sc = null;
   this.priorityWeight = b;
-  this.bb = a;
+  this.actionRange = a;
 }
 export function CooldownBehavior(a, b) {
   this.priorityWeight = b;
@@ -207,7 +207,7 @@ export function SpecialAttackBehavior(a, b, c, d) {
   this.priorityWeight = c;
   this.targetCharacter = null;
   this.Ng = 0;
-  this.bb = a;
+  this.actionRange = a;
   this.Uw = b;
   this.qk = d;
 }
@@ -335,7 +335,7 @@ export function initializeAiBehaviors() {
       a.Cb(this.selectedTarget);
       var b = a.position;
       this.SB = a === this.selectedTarget ? 0 : b.levelPosition.ac(this.selectedTarget.position.levelPosition);
-      if (this.SB <= this.bb) {
+      if (this.SB <= this.actionRange) {
         if (!this.Yt && !canAttack(a)) {
           return;
         }
@@ -510,7 +510,7 @@ export function initializeAiBehaviors() {
       return false;
     }
     normalizeVector(this.Jl);
-    multiplyVector(this.Jl, this.bb);
+    multiplyVector(this.Jl, this.actionRange);
     addVector(this.Jl, c);
     c = this.Jl.x;
     d = this.Jl.y;
@@ -543,7 +543,7 @@ export function initializeAiBehaviors() {
   MeleeAttackBehavior.prototype.od = function (a) {
     if (this.targetCharacter && !this.targetCharacter.isDead) {
       a.Cb(this.targetCharacter);
-      if (this.Ng <= this.bb) {
+      if (this.Ng <= this.actionRange) {
         if (!canAttack(a)) {
           return;
         }
@@ -636,7 +636,7 @@ export function initializeAiBehaviors() {
   OpportunisticAttackBehavior.prototype.od = function (a) {
     if (this.targetCharacter && !this.targetCharacter.isDead) {
       a.Cb(this.targetCharacter);
-      if (this.Ng <= this.bb) {
+      if (this.Ng <= this.actionRange) {
         if (!canAttack(a)) {
           return;
         }
@@ -659,10 +659,10 @@ export function initializeAiBehaviors() {
       return 0;
     }
     if (a.effects.wg) {
-      this.bb = MELEE_ATTACK_RANGE;
+      this.actionRange = MELEE_ATTACK_RANGE;
       this.qk = 2;
     } else {
-      this.bb = RANGED_ATTACK_RANGE;
+      this.actionRange = RANGED_ATTACK_RANGE;
       this.qk = MELEE_ACTION_TYPE;
     }
     this.Ng = a.position.levelPosition.ac(this.targetCharacter.position.levelPosition);
@@ -769,7 +769,7 @@ export function initializeAiBehaviors() {
   };
   TargetSpellBehavior.prototype.od = function (a) {
     if (this.Vi && canAttack(a) && isSpellReady(this.Vi)) {
-      if (a.Cb(this.targetCharacter), this.Ng <= this.bb) {
+      if (a.Cb(this.targetCharacter), this.Ng <= this.actionRange) {
         if (canAttack(a)) {
           markAttackTurn(a);
           this.Vi.lastCastTurn = game.state.turnNumber;
@@ -1510,7 +1510,7 @@ export function initializeAiBehaviors() {
   SpecialAttackBehavior.prototype.od = function (a) {
     if (this.targetCharacter && !this.targetCharacter.isDead) {
       a.Cb(this.targetCharacter);
-      if (this.Ng <= this.bb) {
+      if (this.Ng <= this.actionRange) {
         if (!canAttack(a)) {
           return;
         }

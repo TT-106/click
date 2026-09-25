@@ -244,7 +244,7 @@ export function searchRoomRoute(a, b, c, d, f) {
 }
 export function AttackBehavior(a, b) {
   this.Al = a;
-  this.bb = b;
+  this.actionRange = b;
 }
 export function respondToTaunt(a, b) {
   if (docileMonstersModifier.currentValue) {
@@ -278,7 +278,7 @@ export function attackTauntingTarget(a, b) {
   var c = b.combatTarget.position,
     d = b.position;
   if (c.room === d.room) {
-    if (d.levelPosition.ac(c.levelPosition) <= a.bb) {
+    if (d.levelPosition.ac(c.levelPosition) <= a.actionRange) {
       if (!canAttack(b)) {
         return;
       }
