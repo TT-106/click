@@ -24,7 +24,7 @@ export function IdleBehavior(a) {
   this.Al = null;
 }
 export function ExploreDungeonBehavior() {
-  this.ka = 10;
+  this.priorityWeight = 10;
   this.Da = null;
   this.SB = 0;
   this.un = null;
@@ -32,13 +32,13 @@ export function ExploreDungeonBehavior() {
   this.Yt = false;
 }
 export function FollowLeaderBehavior() {
-  this.ka = 100;
+  this.priorityWeight = 100;
   this.zE = RANGED_MIN_DISTANCE;
   this.AD = 0.8;
   this.Uq = null;
 }
 export function RangedAttackBehavior(a, b, c) {
-  this.ka = c;
+  this.priorityWeight = c;
   this.Fa = null;
   this.CA = a;
   this.bb = b;
@@ -47,7 +47,7 @@ export function RangedAttackBehavior(a, b, c) {
   this.co = this.ax = 0;
 }
 export function MeleeAttackBehavior(a, b, c, d) {
-  this.ka = b;
+  this.priorityWeight = b;
   this.Fa = null;
   this.Ng = 0;
   this.bb = a;
@@ -56,11 +56,11 @@ export function MeleeAttackBehavior(a, b, c, d) {
 }
 export function LootGoldBehavior(a) {
   this.Hn = null;
-  this.ka = a;
+  this.priorityWeight = a;
   this.bb = 10;
 }
 export function OpportunisticAttackBehavior(a) {
-  this.ka = a;
+  this.priorityWeight = a;
   this.Fa = null;
   this.Ng = 0;
   this.bb = RANGED_ATTACK_RANGE;
@@ -68,62 +68,62 @@ export function OpportunisticAttackBehavior(a) {
 }
 export function LootItemBehavior(a) {
   this.Dn = null;
-  this.ka = a;
+  this.priorityWeight = a;
   this.bb = 10;
 }
 export function LootScrollBehavior(a) {
   this.on = null;
-  this.ka = a;
+  this.priorityWeight = a;
   this.bb = 10;
 }
 export function GuardRangedBehavior(a, b, c) {
   this.Vq = new RangedAttackBehavior(a, b, c);
 }
 export function TargetSpellBehavior(a, b) {
-  this.ka = b;
+  this.priorityWeight = b;
   this.Fa = this.Vi = null;
   this.Ng = 0;
   this.bb = a;
 }
 export function HealBehavior(a, b) {
   this.fm = null;
-  this.ka = b;
+  this.priorityWeight = b;
   this.bb = a;
 }
 export function ApplyEffectBehavior(a, b, c) {
   this.gm = null;
   this.statusEffectTypeId = c;
-  this.ka = b;
+  this.priorityWeight = b;
   this.bb = a;
 }
 export function AreaDamageBehavior(a, b) {
   this.Zl = null;
-  this.ka = b;
+  this.priorityWeight = b;
   this.bb = a;
 }
 export function ChainDamageBehavior(a, b) {
   this.In = null;
-  this.ka = b;
+  this.priorityWeight = b;
   this.bb = a;
 }
 export function SummonBehavior(a, b, c) {
   this.zd = null;
   this.expectedSpellCategoryId = c;
-  this.ka = b;
+  this.priorityWeight = b;
   this.bb = a;
 }
 export function LifeDrainBehavior(a, b) {
-  this.ka = b;
+  this.priorityWeight = b;
   this.bb = a;
   this.Lm = null;
 }
 export function ReviveBehavior(a, b) {
-  this.ka = b;
+  this.priorityWeight = b;
   this.bb = a;
   this.pn = null;
 }
 export function PartyBuffBehavior(a, b, c) {
-  this.ka = c;
+  this.priorityWeight = c;
   this.bb = a;
   this.statusEffectTypeId = b;
   this.zd = null;
@@ -137,7 +137,7 @@ export function hasForcedDestination(a) {
 }
 export function LootChestBehavior(a) {
   this.Wm = null;
-  this.ka = a;
+  this.priorityWeight = a;
   this.Yt = true;
   this.bb = 10;
 }
@@ -146,65 +146,65 @@ export function hasPendingLoot() {
 }
 export function LootPotionBehavior(a) {
   this.pm = null;
-  this.ka = a;
+  this.priorityWeight = a;
   this.Yt = true;
   this.bb = 10;
 }
 export function UseShopBehavior(a, b) {
   this.Mi = game.tileSize + 5;
-  this.ka = a;
+  this.priorityWeight = a;
   this.il = b;
   this.qd = null;
   this.Wy = 0;
 }
 export function EnterDungeonBehavior(a, b) {
   this.Mi = game.tileSize + 5;
-  this.ka = a;
+  this.priorityWeight = a;
   this.il = b;
   this.bd = null;
   this.Zy = 0;
 }
 export function EnterCastleBehavior(a, b) {
   this.Mi = game.tileSize + 5;
-  this.ka = a;
+  this.priorityWeight = a;
   this.il = b;
   this.ad = null;
   this.Yy = 0;
 }
 export function TravelWorldBehavior(a, b) {
   this.Mi = game.tileSize + 5;
-  this.ka = a;
+  this.priorityWeight = a;
   this.il = b;
   this.$c = null;
   this.Xy = 0;
 }
 export function ChangeFloorBehavior() {
   this.Mi = game.tileSize + 1;
-  this.ka = 90;
+  this.priorityWeight = 90;
   this.lc = null;
 }
 export function SelfSpellBehavior(a) {
   this.Sc = null;
-  this.ka = a;
+  this.priorityWeight = a;
   this.bb = 10;
 }
 export function AreaSpellBehavior(a, b, c) {
   this.Sc = null;
   this.KE = c;
-  this.ka = b;
+  this.priorityWeight = b;
   this.bb = a;
 }
 export function CompanionSpellBehavior(a, b) {
   this.Sc = null;
-  this.ka = b;
+  this.priorityWeight = b;
   this.bb = a;
 }
 export function CooldownBehavior(a, b) {
-  this.ka = b;
+  this.priorityWeight = b;
   this.Uw = a;
 }
 export function SpecialAttackBehavior(a, b, c, d) {
-  this.ka = c;
+  this.priorityWeight = c;
   this.Fa = null;
   this.Ng = 0;
   this.bb = a;
@@ -384,7 +384,7 @@ export function initializeAiBehaviors() {
     return null;
   };
   ExploreDungeonBehavior.prototype.Ta = function () {
-    return this.ka;
+    return this.priorityWeight;
   };
   FollowLeaderBehavior.prototype.Wa = function () {};
   FollowLeaderBehavior.prototype.Oa = function () {};
@@ -447,10 +447,10 @@ export function initializeAiBehaviors() {
       c = null;
     }
     this.Uq = c;
-    return !this.Uq || a.position.levelPosition.ac(this.Uq.position.levelPosition) > this.zE ? 0 : (1 - b) * this.ka;
+    return !this.Uq || a.position.levelPosition.ac(this.Uq.position.levelPosition) > this.zE ? 0 : (1 - b) * this.priorityWeight;
   };
   FollowLeaderBehavior.prototype.Ta = function () {
-    return this.ka;
+    return this.priorityWeight;
   };
   RangedAttackBehavior.prototype.Wa = function () {
     this.co = this.ax = 0;
@@ -533,10 +533,10 @@ export function initializeAiBehaviors() {
   };
   RangedAttackBehavior.prototype.wd = function (a) {
     this.Fa = findNearestVisibleOpponent(a);
-    return this.Fa ? 2 < this.co ? this.co = 0 : a.position.levelPosition.ac(this.Fa.position.levelPosition) > this.CA ? 0 : this.ka : 0;
+    return this.Fa ? 2 < this.co ? this.co = 0 : a.position.levelPosition.ac(this.Fa.position.levelPosition) > this.CA ? 0 : this.priorityWeight : 0;
   };
   RangedAttackBehavior.prototype.Ta = function () {
-    return this.ka;
+    return this.priorityWeight;
   };
   MeleeAttackBehavior.prototype.Wa = function () {};
   MeleeAttackBehavior.prototype.Oa = function () {};
@@ -569,10 +569,10 @@ export function initializeAiBehaviors() {
       return 0;
     }
     this.Ng = a.position.levelPosition.ac(this.Fa.position.levelPosition);
-    return this.ka;
+    return this.priorityWeight;
   };
   MeleeAttackBehavior.prototype.Ta = function () {
-    return this.ka;
+    return this.priorityWeight;
   };
   LootGoldBehavior.prototype = new ExploreDungeonBehavior();
   LootGoldBehavior.prototype.Wa = function () {
@@ -666,10 +666,10 @@ export function initializeAiBehaviors() {
       this.qk = MELEE_ACTION_TYPE;
     }
     this.Ng = a.position.levelPosition.ac(this.Fa.position.levelPosition);
-    return this.ka;
+    return this.priorityWeight;
   };
   OpportunisticAttackBehavior.prototype.Ta = function () {
-    return this.ka;
+    return this.priorityWeight;
   };
   LootItemBehavior.prototype = new ExploreDungeonBehavior();
   LootItemBehavior.prototype.Wa = function () {
@@ -760,7 +760,7 @@ export function initializeAiBehaviors() {
     this.Vi = null;
   };
   TargetSpellBehavior.prototype.Ta = function () {
-    return this.ka;
+    return this.priorityWeight;
   };
   TargetSpellBehavior.prototype.Oa = function (a) {
     if (!(this.Vi || 6 !== a.spellCategoryId)) {
@@ -799,7 +799,7 @@ export function initializeAiBehaviors() {
         return 0;
       }
     }
-    return (this.Fa = selectScrollTarget(a)) ? this.ka : 0;
+    return (this.Fa = selectScrollTarget(a)) ? this.priorityWeight : 0;
   };
   HealBehavior.prototype = new ExploreDungeonBehavior();
   HealBehavior.prototype.Wa = function () {
@@ -1150,10 +1150,10 @@ export function initializeAiBehaviors() {
         this.Wy = Math.sqrt(n);
       }
     }
-    return this.qd ? approachValue(this.ka, this.il, this.Wy) : 0;
+    return this.qd ? approachValue(this.priorityWeight, this.il, this.Wy) : 0;
   };
   UseShopBehavior.prototype.Ta = function () {
-    return this.ka;
+    return this.priorityWeight;
   };
   EnterDungeonBehavior.prototype.Wa = function () {
     this.bd = null;
@@ -1213,10 +1213,10 @@ export function initializeAiBehaviors() {
         this.Zy = Math.sqrt(n);
       }
     }
-    return this.bd ? approachValue(this.ka, this.il, this.Zy) : 0;
+    return this.bd ? approachValue(this.priorityWeight, this.il, this.Zy) : 0;
   };
   EnterDungeonBehavior.prototype.Ta = function () {
-    return this.ka;
+    return this.priorityWeight;
   };
   EnterCastleBehavior.prototype.Wa = function () {
     this.ad = null;
@@ -1276,10 +1276,10 @@ export function initializeAiBehaviors() {
         this.Yy = Math.sqrt(n);
       }
     }
-    return this.ad ? approachValue(this.ka, this.il, this.Yy) : 0;
+    return this.ad ? approachValue(this.priorityWeight, this.il, this.Yy) : 0;
   };
   EnterCastleBehavior.prototype.Ta = function () {
-    return this.ka;
+    return this.priorityWeight;
   };
   TravelWorldBehavior.prototype.Wa = function () {
     this.$c = null;
@@ -1339,10 +1339,10 @@ export function initializeAiBehaviors() {
         this.Xy = Math.sqrt(n);
       }
     }
-    return this.$c ? approachValue(this.ka, this.il, this.Xy) : 0;
+    return this.$c ? approachValue(this.priorityWeight, this.il, this.Xy) : 0;
   };
   TravelWorldBehavior.prototype.Ta = function () {
-    return this.ka;
+    return this.priorityWeight;
   };
   ChangeFloorBehavior.prototype.Wa = function () {
     this.lc = null;
@@ -1370,10 +1370,10 @@ export function initializeAiBehaviors() {
       return 0;
     }
     this.lc = getRoomTreasure(game.treasure, b);
-    return !this.lc || this.lc.Kg || !this.lc.el || hasOpponentsInRoom(a, b) ? 0 : this.ka;
+    return !this.lc || this.lc.Kg || !this.lc.el || hasOpponentsInRoom(a, b) ? 0 : this.priorityWeight;
   };
   ChangeFloorBehavior.prototype.Ta = function () {
-    return this.ka;
+    return this.priorityWeight;
   };
   SelfSpellBehavior.prototype = new ExploreDungeonBehavior();
   SelfSpellBehavior.prototype.Wa = function () {
@@ -1500,10 +1500,10 @@ export function initializeAiBehaviors() {
     }
     var b = a.position;
     a = a.summoner.position;
-    return !b.room || !a.room || b.room !== a.room || b.levelPosition.ac(a.levelPosition) < this.Uw ? 0 : this.ka;
+    return !b.room || !a.room || b.room !== a.room || b.levelPosition.ac(a.levelPosition) < this.Uw ? 0 : this.priorityWeight;
   };
   CooldownBehavior.prototype.Ta = function () {
-    return this.ka;
+    return this.priorityWeight;
   };
   SpecialAttackBehavior.prototype.Wa = function () {};
   SpecialAttackBehavior.prototype.Oa = function () {};
@@ -1546,10 +1546,10 @@ export function initializeAiBehaviors() {
       return 0;
     }
     this.Ng = a.levelPosition.ac(b);
-    return this.ka;
+    return this.priorityWeight;
   };
   SpecialAttackBehavior.prototype.Ta = function () {
-    return this.ka;
+    return this.priorityWeight;
   };
   StunnedBehavior.prototype.Wa = function () {};
   StunnedBehavior.prototype.Oa = function () {};
