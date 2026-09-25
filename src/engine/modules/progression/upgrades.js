@@ -832,7 +832,7 @@ export function initializeProgressionUpgrades() {
   };
   LearnSpellUpgrade.prototype.uw = function () {
     if (!this.zd) {
-      this.zd = new Spell(this.oq.xa);
+      this.zd = new Spell(this.oq.spellDefinition);
     }
     return this.zd;
   };
@@ -840,13 +840,13 @@ export function initializeProgressionUpgrades() {
     return this.Zb;
   };
   LearnSpellUpgrade.prototype.ib = function () {
-    return this.oq.xa.name;
+    return this.oq.spellDefinition.name;
   };
   LearnSpellUpgrade.prototype.Bb = function () {
     return 1;
   };
   LearnSpellUpgrade.prototype.lb = function () {
-    return this.oq.xa.description;
+    return this.oq.spellDefinition.description;
   };
   LearnSpellUpgrade.prototype.Na = function () {
     return 6;
@@ -875,7 +875,7 @@ export function initializeProgressionUpgrades() {
           a.hasUnspentSkills = hasUnspentSkills(a);
           learnSpell(this.Zb, this.uw());
           markUpgradeChanged(this);
-          recordGameEvent("Spell", this.Zb.classDefinition.className + " " + this.oq.xa.name);
+          recordGameEvent("Spell", this.Zb.classDefinition.className + " " + this.oq.spellDefinition.name);
         }
       } else {
         console.log("error: adventurer not assigned to spell upgrade");

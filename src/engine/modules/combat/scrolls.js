@@ -41,7 +41,7 @@ export function Scroll(a, b) {
   this.sg = a.sg;
   this.Yi = a.Yi;
   this.Qh = a.Qh;
-  this.mB = a.xa ? new Spell(a.xa) : null;
+  this.mB = a.spellDefinition ? new Spell(a.spellDefinition) : null;
   this.tn = a.fq;
   this.locked = true;
   this.quantity = this.upgradeCount = 0;
