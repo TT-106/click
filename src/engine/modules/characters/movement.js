@@ -15,7 +15,7 @@ export function Equipment(a, b) {
   }
 }
 export function CharacterPosition(a, b) {
-  this.ra = new Vector2();
+  this.velocity = new Vector2();
   this.Gd = null;
   this.lj = new Vector2();
   this.Tl = new Vector2();

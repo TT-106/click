@@ -188,12 +188,12 @@ export function updateCharacter(a, b) {
         var c = a.position;
         if (a === game.state.leader) {
           a: {
-            assignVector(c.ra, c.Ul);
-            subtractVector(c.ra, c.Db);
+            assignVector(c.velocity, c.Ul);
+            subtractVector(c.velocity, c.Db);
             var d = b * c.MC * walkingSpeedBonus.currentValue * walkingSpeedModifier.currentValue,
               f = game.world.bc(c.Db.x),
               g = game.world.cc(c.Db.y);
-            if (vectorLength(c.ra) <= d) {
+            if (vectorLength(c.velocity) <= d) {
               assignVector(c.Db, c.Ul);
               c.dd = true;
             } else if (f === c.Rn && g === c.Sn) {
@@ -215,41 +215,41 @@ export function updateCharacter(a, b) {
                   }
                 }
               }
-              setVector(c.ra, c.Hh.dc() + 1, c.Hh.ec() + 1);
-              subtractVector(c.ra, c.Db);
+              setVector(c.velocity, c.Hh.dc() + 1, c.Hh.ec() + 1);
+              subtractVector(c.velocity, c.Db);
               if (separateWorldCharacters(c)) {
-                normalizeVector(c.ra);
+                normalizeVector(c.velocity);
                 multiplyVector(c.Tl, 0.5);
-                addVector(c.ra, c.Tl);
+                addVector(c.velocity, c.Tl);
               }
-              normalizeVector(c.ra);
-              multiplyVector(c.ra, d);
-              addVector(c.Db, c.ra);
+              normalizeVector(c.velocity);
+              multiplyVector(c.velocity, d);
+              addVector(c.Db, c.velocity);
             }
           }
         } else {
-          assignVector(c.ra, c.Ul);
-          subtractVector(c.ra, c.Db);
+          assignVector(c.velocity, c.Ul);
+          subtractVector(c.velocity, c.Db);
           var h = b * c.MC * walkingSpeedBonus.currentValue * walkingSpeedModifier.currentValue,
             l = game.world.bc(c.Db.x),
             n = game.world.cc(c.Db.y);
-          if (vectorLength(c.ra) <= h) {
+          if (vectorLength(c.velocity) <= h) {
             assignVector(c.Db, c.Ul);
             c.dd = true;
           } else {
             if (l === c.Rn && n === c.Sn) {
               c.dd = true;
             } else {
-              setVector(c.ra, c.Ul.x + 1, c.Ul.y + 1);
-              subtractVector(c.ra, c.Db);
+              setVector(c.velocity, c.Ul.x + 1, c.Ul.y + 1);
+              subtractVector(c.velocity, c.Db);
               if (separateWorldCharacters(c)) {
-                normalizeVector(c.ra);
+                normalizeVector(c.velocity);
                 multiplyVector(c.Tl, 0.5);
-                addVector(c.ra, c.Tl);
+                addVector(c.velocity, c.Tl);
               }
-              normalizeVector(c.ra);
-              multiplyVector(c.ra, h);
-              addVector(c.Db, c.ra);
+              normalizeVector(c.velocity);
+              multiplyVector(c.velocity, h);
+              addVector(c.Db, c.velocity);
             }
           }
         }
@@ -259,9 +259,9 @@ export function updateCharacter(a, b) {
         s = isAdventurerOrMinion(a) ? b * p.Jw * walkingSpeedBonus.currentValue * walkingSpeedModifier.currentValue : p.Jw * b;
         if (null != p.Ug && 0 < p.Ug.length) {
           var u = p.Ug[0];
-          setVector(p.ra, u.me, u.ne);
-          subtractVector(p.ra, p.levelPosition);
-          if (vectorLength(p.ra) <= s) {
+          setVector(p.velocity, u.me, u.ne);
+          subtractVector(p.velocity, p.levelPosition);
+          if (vectorLength(p.velocity) <= s) {
             var y;
             if (!(y = u.Mb)) {
               var A;
@@ -367,12 +367,12 @@ export function updateCharacter(a, b) {
               }
             }
             if (da) {
-              setVector(p.ra, da.Ob(), da.Pb());
+              setVector(p.velocity, da.Ob(), da.Pb());
             } else {
-              setVector(p.ra, u.me, u.ne);
+              setVector(p.velocity, u.me, u.ne);
             }
-            subtractVector(p.ra, p.levelPosition);
-            if (vectorLength(p.ra) <= s) {
+            subtractVector(p.velocity, p.levelPosition);
+            if (vectorLength(p.velocity) <= s) {
               if (da) {
                 setVector(p.levelPosition, da.Ob() | 0, da.Pb() | 0);
               } else {
@@ -384,23 +384,23 @@ export function updateCharacter(a, b) {
                 p.fg--;
               }
             } else {
-              normalizeVector(p.ra);
-              multiplyVector(p.ra, s);
-              addVector(p.levelPosition, p.ra);
+              normalizeVector(p.velocity);
+              multiplyVector(p.velocity, s);
+              addVector(p.levelPosition, p.velocity);
             }
           } else {
             if (separateDungeonCharacters(p)) {
-              normalizeVector(p.ra);
-              addVector(p.ra, p.lj);
+              normalizeVector(p.velocity);
+              addVector(p.velocity, p.lj);
             }
-            normalizeVector(p.ra);
-            multiplyVector(p.ra, s);
-            addVector(p.levelPosition, p.ra);
+            normalizeVector(p.velocity);
+            multiplyVector(p.velocity, s);
+            addVector(p.levelPosition, p.velocity);
           }
         } else {
-          assignVector(p.ra, p.Qb);
-          subtractVector(p.ra, p.levelPosition);
-          if (vectorLength(p.ra) <= s) {
+          assignVector(p.velocity, p.Qb);
+          subtractVector(p.velocity, p.levelPosition);
+          if (vectorLength(p.velocity) <= s) {
             assignVector(p.levelPosition, p.Qb);
             if (p.ed) {
               game.state.party.iw();
@@ -408,12 +408,12 @@ export function updateCharacter(a, b) {
             clearMovementTarget(p);
           } else {
             if (separateDungeonCharacters(p)) {
-              normalizeVector(p.ra);
-              addVector(p.ra, p.lj);
+              normalizeVector(p.velocity);
+              addVector(p.velocity, p.lj);
             }
-            normalizeVector(p.ra);
-            multiplyVector(p.ra, s);
-            addVector(p.levelPosition, p.ra);
+            normalizeVector(p.velocity);
+            multiplyVector(p.velocity, s);
+            addVector(p.levelPosition, p.velocity);
           }
         }
         if (p.room) {

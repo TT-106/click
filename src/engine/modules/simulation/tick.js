@@ -245,16 +245,16 @@ export function advanceSimulation(a) {
       var Da = eb;
       if (Da.Gd) {
         var ub = Da.Jw * a * 3;
-        assignVector(Da.ra, Da.Gd);
-        normalizeVector(Da.ra);
-        multiplyVector(Da.ra, ub);
+        assignVector(Da.velocity, Da.Gd);
+        normalizeVector(Da.velocity);
+        multiplyVector(Da.velocity, ub);
         var mb = vectorLength(Da.Gd);
         if (ub >= mb) {
           Da.Gd = null;
         } else {
           multiplyVector(Da.Gd, (mb - ub) / mb);
         }
-        addVector(Da.levelPosition, Da.ra);
+        addVector(Da.levelPosition, Da.velocity);
         if (Da.room) {
           clampPointToRoom(Da.room, Da.levelPosition, game.halfTileSize);
         }
