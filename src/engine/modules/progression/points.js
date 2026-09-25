@@ -13,11 +13,11 @@ export function resetAdventurePoints() {
   for (b = 0; b < pointEventDefinitions.length; b++) {
     c = pointEventDefinitions[b];
     c.Fb = c.Dc;
-    if (a.Qi[c.h]) {
-      console.log("error - duplicate point event type: " + c.h);
+    if (a.Qi[c.pointEventTypeId]) {
+      console.log("error - duplicate point event type: " + c.pointEventTypeId);
     }
-    a.Qi[c.h] = 0;
-    a.pj[c.h] = 0;
+    a.Qi[c.pointEventTypeId] = 0;
+    a.pj[c.pointEventTypeId] = 0;
   }
   for (b = 0; b < a.tl.length; b++) {
     a.tl[b].og();
@@ -57,7 +57,7 @@ export function increasePointEventReward(a, b) {
 export function recalculateAdventurePoints(a) {
   var b, c, d, f;
   for (b = a.Dd = 0; b < pointEventDefinitions.length; b++) {
-    f = pointEventDefinitions[b].h;
+    f = pointEventDefinitions[b].pointEventTypeId;
     c = pointEventDefinitions[b].Fb;
     if (!(d = a.pj[f])) {
       d = 0;
@@ -76,7 +76,7 @@ export function initializeProgressionPoints() {
   POINT_EVENT_LEVEL_CLEARED = 4;
   POINT_EVENT_DUNGEON_CLEARED = 5;
   killPointEvent = {
-    h: 1,
+    pointEventTypeId: 1,
     Fb: 1,
     Dc: 1,
     yc: 1,
@@ -84,7 +84,7 @@ export function initializeProgressionPoints() {
     Gc: "杀死怪物"
   };
   spellPointEvent = {
-    h: 2,
+    pointEventTypeId: 2,
     Fb: 1,
     Dc: 1,
     yc: 1,
@@ -92,7 +92,7 @@ export function initializeProgressionPoints() {
     Gc: "打开门"
   };
   encounterPointEvent = {
-    h: POINT_EVENT_ENCOUNTER,
+    pointEventTypeId: POINT_EVENT_ENCOUNTER,
     Fb: 5,
     Dc: 5,
     yc: 5,
@@ -100,7 +100,7 @@ export function initializeProgressionPoints() {
     Gc: "遭遇战胜利"
   };
   levelClearedPointEvent = {
-    h: POINT_EVENT_LEVEL_CLEARED,
+    pointEventTypeId: POINT_EVENT_LEVEL_CLEARED,
     Fb: 100,
     Dc: 100,
     yc: 100,
@@ -108,7 +108,7 @@ export function initializeProgressionPoints() {
     Gc: "清空关卡"
   };
   dungeonClearedPointEvent = {
-    h: POINT_EVENT_DUNGEON_CLEARED,
+    pointEventTypeId: POINT_EVENT_DUNGEON_CLEARED,
     Fb: 300,
     Dc: 300,
     yc: 300,
@@ -116,7 +116,7 @@ export function initializeProgressionPoints() {
     Gc: "征服地牢"
   };
   castleConqueredPointEvent = {
-    h: 19,
+    pointEventTypeId: 19,
     Fb: 2E3,
     Dc: 2E3,
     yc: 2E3,
@@ -124,7 +124,7 @@ export function initializeProgressionPoints() {
     Gc: "征服城堡"
   };
   chestPointEvent = {
-    h: 6,
+    pointEventTypeId: 6,
     Fb: 50,
     Dc: 50,
     yc: 50,
@@ -132,7 +132,7 @@ export function initializeProgressionPoints() {
     Gc: "搜索财宝箱"
   };
   bookcasePointEvent = {
-    h: 7,
+    pointEventTypeId: 7,
     Fb: 50,
     Dc: 50,
     yc: 50,
@@ -140,7 +140,7 @@ export function initializeProgressionPoints() {
     Gc: "搜索武器架"
   };
   weaponRackPointEvent = {
-    h: 8,
+    pointEventTypeId: 8,
     Fb: 50,
     Dc: 50,
     yc: 50,
@@ -148,7 +148,7 @@ export function initializeProgressionPoints() {
     Gc: "搜索书架"
   };
   scrollFoundPointEvent = {
-    h: 10,
+    pointEventTypeId: 10,
     Fb: 2,
     Dc: 2,
     yc: 2,
@@ -156,7 +156,7 @@ export function initializeProgressionPoints() {
     Gc: "找到卷轴"
   };
   potionFoundPointEvent = {
-    h: 11,
+    pointEventTypeId: 11,
     Fb: 15,
     Dc: 15,
     yc: 15,
@@ -164,7 +164,7 @@ export function initializeProgressionPoints() {
     Gc: "找到药剂"
   };
   itemFoundPointEvent = {
-    h: 12,
+    pointEventTypeId: 12,
     Fb: 1,
     Dc: 1,
     yc: 1,
@@ -172,7 +172,7 @@ export function initializeProgressionPoints() {
     Gc: "找到道具"
   };
   goldFoundPointEvent = {
-    h: 9,
+    pointEventTypeId: 9,
     Fb: 1,
     Dc: 1,
     yc: 1,
@@ -180,7 +180,7 @@ export function initializeProgressionPoints() {
     Gc: "找到黄金"
   };
   summonPointEvent = {
-    h: 18,
+    pointEventTypeId: 18,
     Fb: 15,
     Dc: 15,
     yc: 15,
@@ -188,7 +188,7 @@ export function initializeProgressionPoints() {
     Gc: "召唤宠物"
   };
   uncommonItemPointEvent = {
-    h: 13,
+    pointEventTypeId: 13,
     Fb: 5,
     Dc: 5,
     yc: 5,
@@ -196,7 +196,7 @@ export function initializeProgressionPoints() {
     Gc: "找到罕见道具"
   };
   rareItemPointEvent = {
-    h: 14,
+    pointEventTypeId: 14,
     Fb: 25,
     Dc: 25,
     yc: 25,
@@ -204,7 +204,7 @@ export function initializeProgressionPoints() {
     Gc: "找到稀有道具"
   };
   historicItemPointEvent = {
-    h: 15,
+    pointEventTypeId: 15,
     Fb: 200,
     Dc: 200,
     yc: 200,
@@ -212,7 +212,7 @@ export function initializeProgressionPoints() {
     Gc: "找到历史道具"
   };
   ancientItemPointEvent = {
-    h: 16,
+    pointEventTypeId: 16,
     Fb: 2E3,
     Dc: 2E3,
     yc: 2E3,
@@ -220,7 +220,7 @@ export function initializeProgressionPoints() {
     Gc: "找到远古道具"
   };
   itemSoldPointEvent = {
-    h: 17,
+    pointEventTypeId: 17,
     Fb: 1,
     Dc: 1,
     yc: 1,
@@ -228,7 +228,7 @@ export function initializeProgressionPoints() {
     Gc: "卖出道具"
   };
   itemEquippedPointEvent = {
-    h: 21,
+    pointEventTypeId: 21,
     Fb: 10,
     Dc: 10,
     yc: 10,
@@ -236,7 +236,7 @@ export function initializeProgressionPoints() {
     Gc: "装备道具"
   };
   levelUpPointEvent = {
-    h: 22,
+    pointEventTypeId: 22,
     Fb: 400,
     Dc: 400,
     yc: 400,

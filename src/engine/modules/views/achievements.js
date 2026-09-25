@@ -39,7 +39,7 @@ export function mountPointBreakdown(a) {
   var c;
   for (c = 0; c < pointEventDefinitions.length; c++) {
     var d = a,
-      f = pointEventDefinitions[c].h,
+      f = pointEventDefinitions[c].pointEventTypeId,
       g = b++,
       g = d.Ls.insertRow(g),
       h = g.insertCell(0);
@@ -182,7 +182,7 @@ export function initializeViewsAchievements() {
     this.ex = {};
     var a, b;
     for (a = 0; a < pointEventDefinitions.length; a++) {
-      b = pointEventDefinitions[a].h;
+      b = pointEventDefinitions[a].pointEventTypeId;
       this.Ao[b] = -1;
       this.sz[b] = -1;
       this.Dv[b] = -1;
@@ -203,7 +203,7 @@ export function initializeViewsAchievements() {
       l,
       n = game.state.ae;
     for (a = 0; a < pointEventDefinitions.length; a++) {
-      b = pointEventDefinitions[a].h;
+      b = pointEventDefinitions[a].pointEventTypeId;
       c = this.Ao[b];
       d = n.Qi[b];
       f = this.Ao[b];

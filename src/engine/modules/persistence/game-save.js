@@ -645,7 +645,7 @@ export function restoreGameState(a, b) {
             if (wc.We) {
               if (wc.Of) {
                 if (wc.We && wc.Of) {
-                  increasePointEventReward(wc.h, wc.Vt);
+                  increasePointEventReward(wc.pointEventTypeId, wc.Vt);
                 }
               } else {
                 Vc.Ze.push(wc);
@@ -964,7 +964,7 @@ export function createSaveState(a) {
       hb,
       lb;
     for (lb = 0; lb < pointEventDefinitions.length; lb++) {
-      Ka = pointEventDefinitions[lb].h;
+      Ka = pointEventDefinitions[lb].pointEventTypeId;
       Xa = rb.Qi[Ka];
       hb = rb.pj[Ka];
       dc.push({
@@ -997,7 +997,7 @@ export function createSaveState(a) {
     for (xb = 0; xb < ka.length; xb++) {
       var Na = ka[xb];
       Eb = {
-        achievementId: Na.k,
+        achievementId: Na.id,
         obtained: Na.We,
         applied: Na.Of
       };

@@ -172,10 +172,10 @@ export function initializeRuntimeGame() {
         for (a = 0; a < achievementDefinitions.length; a++) {
           b = new Achievement(achievementDefinitions[a]);
           this.jj.push(b);
-          if (this.Lt[b.k]) {
-            console.log("Error. Duplicate achievement id: " + b.k);
+          if (this.Lt[b.id]) {
+            console.log("Error. Duplicate achievement id: " + b.id);
           }
-          this.Lt[b.k] = b;
+          this.Lt[b.id] = b;
         }
       }(),
       runStatistics: new RunStatistics(),

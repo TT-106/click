@@ -201,7 +201,7 @@ export function ClaimAchievementUpgrade(a) {
 }
 export function AchievementUpgrade(a) {
   this.Ic = a;
-  this.Ve = this.Ic.We ? this.Ic.l : getAchievementRequirementLabel(this.Ic);
+  this.Ve = this.Ic.We ? this.Ic.name : getAchievementRequirementLabel(this.Ic);
   this.jk = getAchievementActionLabel(this);
   this.YA = this.VA = this.A = false;
 }
@@ -1137,7 +1137,7 @@ export function initializeProgressionUpgrades() {
     this.A = null != a;
     var b = this.Ic != a || this.Ub != this.A;
     if (b && a) {
-      this.Ve = a.l;
+      this.Ve = a.name;
       this.jk = "奖励:" + getAchievementRewardLabel(a);
     }
     this.Ic = a;
@@ -1171,7 +1171,7 @@ export function initializeProgressionUpgrades() {
     this.A = b && !a;
     var c = this.VA != a || this.YA != b;
     if (c) {
-      this.Ve = this.Ic.We ? this.Ic.l : getAchievementRequirementLabel(this.Ic);
+      this.Ve = this.Ic.We ? this.Ic.name : getAchievementRequirementLabel(this.Ic);
       this.jk = getAchievementActionLabel(this);
     }
     this.VA = a;

@@ -220,7 +220,7 @@ export function advanceSimulation(a) {
       for (X = T.ik.length - 1; 0 <= X; X--) {
         var qa = Ca = T.ik[X];
         if (!qa.We) {
-          qa.We = qa.ab ? hasVictoryAchievement(qa) : getAchievementProgress(qa) >= qa.j;
+          qa.We = qa.ab ? hasVictoryAchievement(qa) : getAchievementProgress(qa) >= qa.requiredCount;
         }
         if (qa.We) {
           T.ik.splice(X, 1);
