@@ -53,12 +53,12 @@ npm run perf             # 性能基线测量（重构 vs 原版）
 2. ~~已取证待落地~~ ✅ B 组九项全部落地（每字母独立全回归）。
 3. ~~交付物收尾~~ ✅ 已完成（REFACTOR_REPORT.md、PERFORMANCE_REPORT.md、COMPATIBILITY_REPORT.md、MIGRATION_MAP.md）。
 4. ~~扩展差分场景：prestige/victory~~ ✅ 12 场景矩阵已含 veteran-run/prestige-restart/full-reset；剩余：胜利瞬间触发（城堡征服）、法术分支。
-5. **M10 类型体系**：✅ 已启动（tsconfig checkJs 范围 core/+persistence/、SaveData DTO typedef `persistence/save-dto.js`、math.js JSDoc、`npm run typecheck` 已入 check 门禁）；38 文件 `@ts-nocheck` 待逐文件摘除（优先 simulation/tick.js、runtime/game.js）。
+5. **M10 类型体系**：✅ 已启动（tsconfig checkJs 范围 core/+persistence/、SaveData DTO typedef `persistence/save-dto.js`、math.js JSDoc、`npm run typecheck` 已入 check 门禁）；36 文件 `@ts-nocheck` 待摘除——simulation/tick.js 与 runtime/game.js 已于本轮进入检查范围（7 处遗留推断错误以行为中立注解清零）。
 6. symbol-map.json 元数据刷新（累计 60+ 字段映射待写入）。
 
 ## 8. 智能体产出验收状态
 
-- 取证×5（字段语义四轮 + 文档三轮）：✅ 第四轮 A（角色/战斗 14 字段，含行为命名错位线索）、B（内容/物品 14 字段）已返回；A 组已全部落地，B 组证据在 unresolved.md 排队。
+- 取证×5（字段语义四轮 + 文档三轮）：✅ 第四轮 A（角色/战斗 14 字段，含行为命名错位线索）、B（内容/物品 14 字段）已返回；A、B 两组全部落地。
 - 文档×3：✅ 已提交并抽查。
 
 ## 7. 禁止回退的文件
