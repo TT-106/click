@@ -5,945 +5,945 @@ export var monsterDefinitions;
 export function initializeContentMonsters() {
   monsterDefinitions = [{
     name: "棕色蝙蝠",
-    d: "RatBrownDark.PNG"
+    spriteName: "RatBrownDark.PNG"
   }, {
     name: "灰色蝙蝠",
-    d: "RatGrey.PNG"
+    spriteName: "RatGrey.PNG"
   }, {
     name: "实验蝙蝠",
-    d: "RatWhite.PNG"
+    spriteName: "RatWhite.PNG"
   }, {
     name: "绿色蜻蜓",
-    d: "DragonFlyGreen.PNG"
+    spriteName: "DragonFlyGreen.PNG"
   }, {
     name: "粉色蜻蜓",
-    d: "DragonFlyPink.PNG"
+    spriteName: "DragonFlyPink.PNG"
   }, {
     name: "橙色蜻蜓",
-    d: "DragonFlyOrange.PNG"
+    spriteName: "DragonFlyOrange.PNG"
   }, {
     name: "黑色蜻蜓",
-    d: "DragonFlyBlack.PNG"
+    spriteName: "DragonFlyBlack.PNG"
   }, {
     name: "白色蜻蜓",
-    d: "DragonFlyWhite.PNG"
+    spriteName: "DragonFlyWhite.PNG"
   }, {
     name: "棕色蝙蝠",
-    d: "BatBrown.PNG"
+    spriteName: "BatBrown.PNG"
   }, {
     name: "蓝色蝙蝠",
-    d: "BatBlueTail.PNG"
+    spriteName: "BatBlueTail.PNG"
   }, {
     name: "灰色蝙蝠",
-    d: "BatGrey.PNG"
+    spriteName: "BatGrey.PNG"
   }, {
     name: "红色蝙蝠",
-    d: "BatRedTail.PNG"
+    spriteName: "BatRedTail.PNG"
   }, {
     name: "银色蝙蝠",
-    d: "BatSilver.PNG"
+    spriteName: "BatSilver.PNG"
   }, {
     name: "蓝色蜈蚣",
-    d: "CentipedeBlue.PNG"
+    spriteName: "CentipedeBlue.PNG"
   }, {
     name: "粉色蜈蚣",
-    d: "CentipedePink.PNG"
+    spriteName: "CentipedePink.PNG"
   }, {
     name: "棕色蜈蚣",
-    d: "CentipedeBrown.PNG"
+    spriteName: "CentipedeBrown.PNG"
   }, {
     name: "灰色蜈蚣",
-    d: "CentipedeGrey.PNG"
+    spriteName: "CentipedeGrey.PNG"
   }, {
     name: "银色蜈蚣",
-    d: "CentipedeSilver.PNG"
+    spriteName: "CentipedeSilver.PNG"
   }, {
     name: "猩红蜈蚣",
-    d: "CentipedeRed.PNG"
+    spriteName: "CentipedeRed.PNG"
   }, {
     name: "棕色蜥蜴",
-    d: "LizardBrown.PNG"
+    spriteName: "LizardBrown.PNG"
   }, {
     name: "绿色蜥蜴",
-    d: "LizardGreen.PNG"
+    spriteName: "LizardGreen.PNG"
   }, {
     name: "灰色蜥蜴",
-    d: "LizardGrey.PNG"
+    spriteName: "LizardGrey.PNG"
   }, {
     name: "红色蜥蜴",
-    d: "LizardRed.PNG"
+    spriteName: "LizardRed.PNG"
   }, {
     name: "条纹蜥蜴",
-    d: "LizardStriped.PNG"
+    spriteName: "LizardStriped.PNG"
   }, {
     name: "苍白爬行者",
-    d: "CrawlerWhite.PNG"
+    spriteName: "CrawlerWhite.PNG"
   }, {
     name: "浅绿爬行者",
-    d: "CrawlerBlueLight.PNG"
+    spriteName: "CrawlerBlueLight.PNG"
   }, {
     name: "蓝色爬行者",
-    d: "CrawlerBlue.PNG"
+    spriteName: "CrawlerBlue.PNG"
   }, {
     name: "绿色爬行者",
-    d: "CrawlerGreen.PNG"
+    spriteName: "CrawlerGreen.PNG"
   }, {
     name: "灰色爬行者",
-    d: "CrawlerGrey.PNG"
+    spriteName: "CrawlerGrey.PNG"
   }, {
     name: "橙色爬行者",
-    d: "CrawlerOrange.PNG"
+    spriteName: "CrawlerOrange.PNG"
   }, {
     name: "银色爬行者",
-    d: "CrawlerSilver.PNG"
+    spriteName: "CrawlerSilver.PNG"
   }, {
     name: "红色爬行者",
-    d: "CrawlerRed.PNG"
+    spriteName: "CrawlerRed.PNG"
   }, {
     name: "棕色狗狗",
-    d: "DogBrown.PNG"
+    spriteName: "DogBrown.PNG"
   }, {
     name: "橙色狗狗",
-    d: "DogOrange.PNG"
+    spriteName: "DogOrange.PNG"
   }, {
     name: "灰色狗狗",
-    d: "DogGrey.PNG"
+    spriteName: "DogGrey.PNG"
   }, {
     name: "苍白狗狗",
-    d: "DogWhite.PNG"
+    spriteName: "DogWhite.PNG"
   }, {
     name: "阴影狗狗",
-    d: "DogDarkGrey.PNG"
+    spriteName: "DogDarkGrey.PNG"
   }, {
     name: "粉色狗狗",
-    d: "DogPink.PNG"
+    spriteName: "DogPink.PNG"
   }, {
     name: "蓝色蜘蛛",
-    d: "SpiderBlue.PNG"
+    spriteName: "SpiderBlue.PNG"
   }, {
     name: "黄金蜘蛛",
-    d: "SpiderGold.PNG"
+    spriteName: "SpiderGold.PNG"
   }, {
     name: "绿色蜘蛛",
-    d: "SpiderGreen.PNG"
+    spriteName: "SpiderGreen.PNG"
   }, {
     name: "紫色蜘蛛",
-    d: "SpiderPurple.PNG"
+    spriteName: "SpiderPurple.PNG"
   }, {
     name: "红色蜘蛛",
-    d: "SpiderRed.PNG"
+    spriteName: "SpiderRed.PNG"
   }, {
     name: "黑色蜘蛛",
-    d: "SpiderBlack.PNG"
+    spriteName: "SpiderBlack.PNG"
   }, {
     name: "巨型粉色青蛙",
-    d: "FrogGiantPink.PNG"
+    spriteName: "FrogGiantPink.PNG"
   }, {
     name: "巨型绿色青蛙",
-    d: "FrogGiantGreen.PNG"
+    spriteName: "FrogGiantGreen.PNG"
   }, {
     name: "棕色巨蛇",
-    d: "SnakeBrown.PNG"
+    spriteName: "SnakeBrown.PNG"
   }, {
     name: "蓝色巨蛇",
-    d: "SnakeBlue.PNG"
+    spriteName: "SnakeBlue.PNG"
   }, {
     name: "绿色巨蛇",
-    d: "SnakeGreen.PNG"
+    spriteName: "SnakeGreen.PNG"
   }, {
     name: "灰色巨蛇",
-    d: "SnakeGrey.PNG"
+    spriteName: "SnakeGrey.PNG"
   }, {
     name: "粉色巨蛇",
-    d: "SnakePink.PNG"
+    spriteName: "SnakePink.PNG"
   }, {
     name: "银色巨蛇",
-    d: "SnakeSilver.PNG"
+    spriteName: "SnakeSilver.PNG"
   }, {
     name: "白色巨蛇",
-    d: "SnakeWhite2.PNG"
+    spriteName: "SnakeWhite2.PNG"
   }, {
     name: "棕色活泥",
-    d: "LivingMoundBrown.PNG"
+    spriteName: "LivingMoundBrown.PNG"
   }, {
     name: "斑点活泥",
-    d: "LivingMoundBrownGreen.PNG"
+    spriteName: "LivingMoundBrownGreen.PNG"
   }, {
     name: "肉体活泥",
-    d: "LivingMoundFlesh.PNG"
+    spriteName: "LivingMoundFlesh.PNG"
   }, {
     name: "绿色活泥",
-    d: "LivingMoundGreen.PNG"
+    spriteName: "LivingMoundGreen.PNG"
   }, {
     name: "品红活泥",
-    d: "LivingMoundMagenta.PNG"
+    spriteName: "LivingMoundMagenta.PNG"
   }, {
     name: "橙色活泥",
-    d: "LivingMoundOrange.PNG"
+    spriteName: "LivingMoundOrange.PNG"
   }, {
     name: "红色活泥",
-    d: "LivingMoundRed.PNG"
+    spriteName: "LivingMoundRed.PNG"
   }, {
     name: "棕色乌龟",
-    d: "TurtleBrown.PNG"
+    spriteName: "TurtleBrown.PNG"
   }, {
     name: "蓝色乌龟",
-    d: "TurtleBlue.PNG"
+    spriteName: "TurtleBlue.PNG"
   }, {
     name: "绿色乌龟",
-    d: "TurtleGreen.PNG"
+    spriteName: "TurtleGreen.PNG"
   }, {
     name: "粉色乌龟",
-    d: "TurtlePink.PNG"
+    spriteName: "TurtlePink.PNG"
   }, {
     name: "黄色乌龟",
-    d: "TurtleYellow.PNG"
+    spriteName: "TurtleYellow.PNG"
   }, {
     name: "灰色乌龟",
-    d: "TurtleGrey.PNG"
+    spriteName: "TurtleGrey.PNG"
   }, {
     name: "灰色幽灵",
-    d: "Ghost3Grey.PNG"
+    spriteName: "Ghost3Grey.PNG"
   }, {
     name: "粉色幽灵",
-    d: "Ghost3Pink.PNG"
+    spriteName: "Ghost3Pink.PNG"
   }, {
     name: "蓝色幽灵",
-    d: "Ghost3Blue.PNG"
+    spriteName: "Ghost3Blue.PNG"
   }, {
     name: "绿色幽灵",
-    d: "GhostGreen.PNG"
+    spriteName: "GhostGreen.PNG"
   }, {
     name: "红色幽灵",
-    d: "GhostRed.PNG"
+    spriteName: "GhostRed.PNG"
   }, {
     name: "黑色幽灵",
-    d: "GhostBlack.PNG"
+    spriteName: "GhostBlack.PNG"
   }, {
     name: "蓝色浮眼",
-    d: "FloatingEyeBlue.PNG"
+    spriteName: "FloatingEyeBlue.PNG"
   }, {
     name: "绿色浮眼",
-    d: "FloatingEyeGreen.PNG"
+    spriteName: "FloatingEyeGreen.PNG"
   }, {
     name: "灰色浮眼",
-    d: "FloatingEyeGrey.PNG"
+    spriteName: "FloatingEyeGrey.PNG"
   }, {
     name: "红色浮眼",
-    d: "FloatingEyeRed.PNG"
+    spriteName: "FloatingEyeRed.PNG"
   }, {
     name: "触手浮眼",
-    d: "FloatingEyeTentacled3Eyes.PNG"
+    spriteName: "FloatingEyeTentacled3Eyes.PNG"
   }, {
     name: "成熟浮眼",
-    d: "FloatingEyeTentacled6Eyes.PNG"
+    spriteName: "FloatingEyeTentacled6Eyes.PNG"
   }, {
     name: "青色水母",
-    d: "JellyfishTeal.PNG"
+    spriteName: "JellyfishTeal.PNG"
   }, {
     name: "蓝色水母",
-    d: "JellyfishBlue.PNG"
+    spriteName: "JellyfishBlue.PNG"
   }, {
     name: "棕色水母",
-    d: "JellyfishBrown.PNG"
+    spriteName: "JellyfishBrown.PNG"
   }, {
     name: "绿色水母",
-    d: "JellyfishGreen.PNG"
+    spriteName: "JellyfishGreen.PNG"
   }, {
     name: "灰色水母",
-    d: "JellyfishGrey.PNG"
+    spriteName: "JellyfishGrey.PNG"
   }, {
     name: "橙色水母",
-    d: "JellyfishOrange.PNG"
+    spriteName: "JellyfishOrange.PNG"
   }, {
     name: "粉色水母",
-    d: "JellyfishPink.PNG"
+    spriteName: "JellyfishPink.PNG"
   }, {
     name: "红色水母",
-    d: "JellyfishRed.PNG"
+    spriteName: "JellyfishRed.PNG"
   }, {
     name: "白色水母",
-    d: "JellyfishWhite2.PNG"
+    spriteName: "JellyfishWhite2.PNG"
   }, {
     name: "黄色水母",
-    d: "JellyfishYellow.PNG"
+    spriteName: "JellyfishYellow.PNG"
   }, {
     name: "棕色霉菌",
-    d: "MoldBrown.PNG"
+    spriteName: "MoldBrown.PNG"
   }, {
     name: "蓝色霉菌",
-    d: "MoldBlue.PNG"
+    spriteName: "MoldBlue.PNG"
   }, {
     name: "灰色霉菌",
-    d: "MoldBlueGrey.PNG"
+    spriteName: "MoldBlueGrey.PNG"
   }, {
     name: "绿色霉菌",
-    d: "MoldGreen.PNG"
+    spriteName: "MoldGreen.PNG"
   }, {
     name: "紫色霉菌",
-    d: "MoldPurple.PNG"
+    spriteName: "MoldPurple.PNG"
   }, {
     name: "红色霉菌",
-    d: "MoldRed.PNG"
+    spriteName: "MoldRed.PNG"
   }, {
     name: "棕色眼镜蛇",
-    d: "SnakeCobraBrown.PNG"
+    spriteName: "SnakeCobraBrown.PNG"
   }, {
     name: "绿色眼镜蛇",
-    d: "SnakeCobraGreen.PNG"
+    spriteName: "SnakeCobraGreen.PNG"
   }, {
     name: "灰色眼镜蛇",
-    d: "SnakeCobraGrey.PNG"
+    spriteName: "SnakeCobraGrey.PNG"
   }, {
     name: "红色眼镜蛇",
-    d: "SnakeCobraRed.PNG"
+    spriteName: "SnakeCobraRed.PNG"
   }, {
     name: "蓝色雪人",
-    d: "YetiBlue.PNG"
+    spriteName: "YetiBlue.PNG"
   }, {
     name: "棕色雪人",
-    d: "YetiBrown.PNG"
+    spriteName: "YetiBrown.PNG"
   }, {
     name: "绿色雪人",
-    d: "YetiGreen.PNG"
+    spriteName: "YetiGreen.PNG"
   }, {
     name: "浅绿雪人",
-    d: "YetiGreenBlue.PNG"
+    spriteName: "YetiGreenBlue.PNG"
   }, {
     name: "灰色雪人",
-    d: "YetiGreyDark.PNG"
+    spriteName: "YetiGreyDark.PNG"
   }, {
     name: "橙色雪人",
-    d: "YetiOrange.PNG"
+    spriteName: "YetiOrange.PNG"
   }, {
     name: "粉色雪人",
-    d: "YetiPink.PNG"
+    spriteName: "YetiPink.PNG"
   }, {
     name: "黑色雪人",
-    d: "YetiBlack.PNG"
+    spriteName: "YetiBlack.PNG"
   }, {
     name: "幼年蓝龙",
-    d: "DragonBabyBlue.PNG"
+    spriteName: "DragonBabyBlue.PNG"
   }, {
     name: "幼年青铜龙",
-    d: "DragonBabyBronze.PNG"
+    spriteName: "DragonBabyBronze.PNG"
   }, {
     name: "幼年黄金龙",
-    d: "DragonBabyGold.PNG"
+    spriteName: "DragonBabyGold.PNG"
   }, {
     name: "幼年绿龙",
-    d: "DragonBabyGreen.PNG"
+    spriteName: "DragonBabyGreen.PNG"
   }, {
     name: "幼年彩虹龙",
-    d: "DragonBabyRainbow.PNG"
+    spriteName: "DragonBabyRainbow.PNG"
   }, {
     name: "幼年银龙",
-    d: "DragonBabySilver.PNG"
+    spriteName: "DragonBabySilver.PNG"
   }, {
     name: "幼年红龙",
-    d: "DragonBabyRed.PNG"
+    spriteName: "DragonBabyRed.PNG"
   }, {
     name: "幼年黑龙",
-    d: "DragonBabyBlack.PNG"
+    spriteName: "DragonBabyBlack.PNG"
   }, {
     name: "蓝色龙人",
-    d: "DragonManBlue.PNG"
+    spriteName: "DragonManBlue.PNG"
   }, {
     name: "青铜龙人",
-    d: "DragonManBronze.PNG"
+    spriteName: "DragonManBronze.PNG"
   }, {
     name: "黄金龙人",
-    d: "DragonManGold.PNG"
+    spriteName: "DragonManGold.PNG"
   }, {
     name: "绿色龙人",
-    d: "DragonManGreen.PNG"
+    spriteName: "DragonManGreen.PNG"
   }, {
     name: "彩虹龙人",
-    d: "DragonManRainbow.PNG"
+    spriteName: "DragonManRainbow.PNG"
   }, {
     name: "银色龙人",
-    d: "DragonManSilver.PNG"
+    spriteName: "DragonManSilver.PNG"
   }, {
     name: "红色龙人",
-    d: "DragonManRed.PNG"
+    spriteName: "DragonManRed.PNG"
   }, {
     name: "黑色龙人",
-    d: "DragonManBlack.PNG"
+    spriteName: "DragonManBlack.PNG"
   }, {
     name: "粉色木乃伊",
-    d: "MummyPink.PNG"
+    spriteName: "MummyPink.PNG"
   }, {
     name: "绿色木乃伊",
-    d: "MummyGreen.PNG"
+    spriteName: "MummyGreen.PNG"
   }, {
     name: "灰色木乃伊",
-    d: "MummyGrey.PNG"
+    spriteName: "MummyGrey.PNG"
   }, {
     name: "紫色木乃伊",
-    d: "MummyPurple.PNG"
+    spriteName: "MummyPurple.PNG"
   }, {
     name: "红色木乃伊",
-    d: "MummyRed.PNG"
+    spriteName: "MummyRed.PNG"
   }, {
     name: "青色木乃伊",
-    d: "MummyTeal.PNG"
+    spriteName: "MummyTeal.PNG"
   }, {
     name: "白色木乃伊",
-    d: "MummyWhite.PNG"
+    spriteName: "MummyWhite.PNG"
   }, {
     name: "黑色木乃伊",
-    d: "MummyYellow.PNG"
+    spriteName: "MummyYellow.PNG"
   }, {
     name: "棕色蝎子",
-    d: "ScorpionBrown.PNG"
+    spriteName: "ScorpionBrown.PNG"
   }, {
     name: "蓝色蝎子",
-    d: "ScorpionBlue.PNG"
+    spriteName: "ScorpionBlue.PNG"
   }, {
     name: "灰色蝎子",
-    d: "ScorpionGrey.PNG"
+    spriteName: "ScorpionGrey.PNG"
   }, {
     name: "粉色蝎子",
-    d: "ScorpionPink.PNG"
+    spriteName: "ScorpionPink.PNG"
   }, {
     name: "绿色蝎子",
-    d: "ScorpionGreenYellow.PNG"
+    spriteName: "ScorpionGreenYellow.PNG"
   }, {
     name: "黑色蝎子",
-    d: "ScorpionBlack.PNG"
+    spriteName: "ScorpionBlack.PNG"
   }, {
     name: "粉色恐龙",
-    d: "DinosaurBeastGiantPink.PNG"
+    spriteName: "DinosaurBeastGiantPink.PNG"
   }, {
     name: "棕色恐龙",
-    d: "DinosaurBeastGiantBrown.PNG"
+    spriteName: "DinosaurBeastGiantBrown.PNG"
   }, {
     name: "黄色恐龙",
-    d: "DinosaurBeastGiantYellow.PNG"
+    spriteName: "DinosaurBeastGiantYellow.PNG"
   }, {
     name: "绿色恐龙",
-    d: "DinosaurBeastGiantGreen.PNG"
+    spriteName: "DinosaurBeastGiantGreen.PNG"
   }, {
     name: "灰色恐龙",
-    d: "DinosaurBeastGiantGrey.PNG"
+    spriteName: "DinosaurBeastGiantGrey.PNG"
   }, {
     name: "红色恐龙",
-    d: "DinosaurBeastGiantRed.PNG"
+    spriteName: "DinosaurBeastGiantRed.PNG"
   }, {
     name: "青年蓝龙",
-    d: "DragonYoungBlue.PNG"
+    spriteName: "DragonYoungBlue.PNG"
   }, {
     name: "青年青铜龙",
-    d: "DragonYoungBronze.PNG"
+    spriteName: "DragonYoungBronze.PNG"
   }, {
     name: "青年黄金龙",
-    d: "DragonYoungGold.PNG"
+    spriteName: "DragonYoungGold.PNG"
   }, {
     name: "青年绿龙",
-    d: "DragonYoungGreen.PNG"
+    spriteName: "DragonYoungGreen.PNG"
   }, {
     name: "青年彩虹龙",
-    d: "DragonYoungRainbow.PNG"
+    spriteName: "DragonYoungRainbow.PNG"
   }, {
     name: "青年银龙",
-    d: "DragonYoungSilver.PNG"
+    spriteName: "DragonYoungSilver.PNG"
   }, {
     name: "青年红龙",
-    d: "DragonYoungRed.PNG"
+    spriteName: "DragonYoungRed.PNG"
   }, {
     name: "青年黑龙",
-    d: "DragonYoungBlack.PNG"
+    spriteName: "DragonYoungBlack.PNG"
   }, {
     name: "黑色巨熊",
-    d: "BlackBear.PNG"
+    spriteName: "BlackBear.PNG"
   }, {
     name: "棕色巨熊",
-    d: "BrownBear.PNG"
+    spriteName: "BrownBear.PNG"
   }, {
     name: "灰色巨熊",
-    d: "GrizzlyBear.PNG"
+    spriteName: "GrizzlyBear.PNG"
   }, {
     name: "气元素",
-    d: "ElementalAir.PNG"
+    spriteName: "ElementalAir.PNG"
   }, {
     name: "水元素",
-    d: "ElementalWater.PNG"
+    spriteName: "ElementalWater.PNG"
   }, {
     name: "土元素",
-    d: "ElementalEarth.PNG"
+    spriteName: "ElementalEarth.PNG"
   }, {
     name: "石元素",
-    d: "ElementalStone.PNG"
+    spriteName: "ElementalStone.PNG"
   }, {
     name: "火元素",
-    d: "ElementalFire.PNG"
+    spriteName: "ElementalFire.PNG"
   }, {
     name: "虚空元素",
-    d: "ElementalVoid.PNG"
+    spriteName: "ElementalVoid.PNG"
   }, {
     name: "僵尸",
-    d: "Zombie.PNG"
+    spriteName: "Zombie.PNG"
   }, {
     name: "蓝色僵尸",
-    d: "ZombieBlue.PNG"
+    spriteName: "ZombieBlue.PNG"
   }, {
     name: "红色僵尸",
-    d: "ZombieRed.PNG"
+    spriteName: "ZombieRed.PNG"
   }, {
     name: "水妖精",
-    d: "SpriteWater.PNG"
+    spriteName: "SpriteWater.PNG"
   }, {
     name: "火妖精",
-    d: "SpriteFire.PNG"
+    spriteName: "SpriteFire.PNG"
   }, {
     name: "棕色天使",
-    d: "AngelBrown.PNG"
+    spriteName: "AngelBrown.PNG"
   }, {
     name: "紫色天使",
-    d: "AngelPurple.PNG"
+    spriteName: "AngelPurple.PNG"
   }, {
     name: "蓝色天使",
-    d: "AngelBlue.PNG"
+    spriteName: "AngelBlue.PNG"
   }, {
     name: "橙色天使",
-    d: "AngelOrange.PNG"
+    spriteName: "AngelOrange.PNG"
   }, {
     name: "灰色天使",
-    d: "AngelGrey.PNG"
+    spriteName: "AngelGrey.PNG"
   }, {
     name: "银色天使",
-    d: "AngelSilver.PNG"
+    spriteName: "AngelSilver.PNG"
   }, {
     name: "猩红天使",
-    d: "AngelRed.PNG"
+    spriteName: "AngelRed.PNG"
   }, {
     name: "暗黑天使",
-    d: "AngelGrey2.PNG"
+    spriteName: "AngelGrey2.PNG"
   }, {
     name: "棕色鹰犬",
-    d: "EagleHoundBrown.PNG"
+    spriteName: "EagleHoundBrown.PNG"
   }, {
     name: "蓝色鹰犬",
-    d: "EagleHoundBlue.PNG"
+    spriteName: "EagleHoundBlue.PNG"
   }, {
     name: "黄金鹰犬",
-    d: "EagleHoundGold.PNG"
+    spriteName: "EagleHoundGold.PNG"
   }, {
     name: "绿色鹰犬",
-    d: "EagleHoundGreenDark.PNG"
+    spriteName: "EagleHoundGreenDark.PNG"
   }, {
     name: "灰色鹰犬",
-    d: "EagleHoundGrey.PNG"
+    spriteName: "EagleHoundGrey.PNG"
   }, {
     name: "暗黑鹰犬",
-    d: "EagleHoundGrey2.PNG"
+    spriteName: "EagleHoundGrey2.PNG"
   }, {
     name: "黑色鹰犬",
-    d: "EagleHoundBlack.PNG"
+    spriteName: "EagleHoundBlack.PNG"
   }, {
     name: "棕色两头蛇",
-    d: "Hydra2HeadBrown.PNG"
+    spriteName: "Hydra2HeadBrown.PNG"
   }, {
     name: "红色三头蛇",
-    d: "Hydra3HeadRed.PNG"
+    spriteName: "Hydra3HeadRed.PNG"
   }, {
     name: "灰色四头蛇",
-    d: "Hydra4HeadGrey.PNG"
+    spriteName: "Hydra4HeadGrey.PNG"
   }, {
     name: "白色五头蛇",
-    d: "Hydra5EyedWhite.PNG"
+    spriteName: "Hydra5EyedWhite.PNG"
   }, {
     name: "黄色六头蛇",
-    d: "Hydra6HeadYellow.PNG"
+    spriteName: "Hydra6HeadYellow.PNG"
   }, {
     name: "灰色七头蛇",
-    d: "Hydra7HeadGrey.PNG"
+    spriteName: "Hydra7HeadGrey.PNG"
   }, {
     name: "紫色八头蛇",
-    d: "Hydra8HeadPurple.PNG"
+    spriteName: "Hydra8HeadPurple.PNG"
   }, {
     name: "绿色九头蛇",
-    d: "Hydra9HeadedGreen.PNG"
+    spriteName: "Hydra9HeadedGreen.PNG"
   }, {
     name: "红色十头蛇",
-    d: "Hydra10HeadRed.PNG"
+    spriteName: "Hydra10HeadRed.PNG"
   }, {
     name: "郊区居民",
-    d: "People01.PNG"
+    spriteName: "People01.PNG"
   }, {
     name: "八旬老人",
-    d: "People02.PNG"
+    spriteName: "People02.PNG"
   }, {
     name: "百岁老人",
-    d: "People03.PNG"
+    spriteName: "People03.PNG"
   }, {
     name: "农民",
-    d: "PeopleFarmer.PNG"
+    spriteName: "PeopleFarmer.PNG"
   }, {
     name: "驼背",
-    d: "PeopleHunchback.PNG"
+    spriteName: "PeopleHunchback.PNG"
   }, {
     name: "粉色死亡蠕虫",
-    d: "WormMassPinkGrey.PNG"
+    spriteName: "WormMassPinkGrey.PNG"
   }, {
     name: "蓝色死亡蠕虫",
-    d: "WormMassBlue.PNG"
+    spriteName: "WormMassBlue.PNG"
   }, {
     name: "绿色死亡蠕虫",
-    d: "WormMassGreen.PNG"
+    spriteName: "WormMassGreen.PNG"
   }, {
     name: "灰色死亡蠕虫",
-    d: "WormMassGrey.PNG"
+    spriteName: "WormMassGrey.PNG"
   }, {
     name: "红色死亡蠕虫",
-    d: "WormMassRedPink.PNG"
+    spriteName: "WormMassRedPink.PNG"
   }, {
     name: "青色死亡蠕虫",
-    d: "WormMassTeal.PNG"
+    spriteName: "WormMassTeal.PNG"
   }, {
     name: "黄色死亡蠕虫",
-    d: "WormMassYellow.PNG"
+    spriteName: "WormMassYellow.PNG"
   }, {
     name: "蓝色鬼魂",
-    d: "WraithBlue.PNG"
+    spriteName: "WraithBlue.PNG"
   }, {
     name: "绿色鬼魂",
-    d: "WraithGreen.PNG"
+    spriteName: "WraithGreen.PNG"
   }, {
     name: "灰色鬼魂",
-    d: "WraithGrey.PNG"
+    spriteName: "WraithGrey.PNG"
   }, {
     name: "橙色鬼魂",
-    d: "WraithOrange.PNG"
+    spriteName: "WraithOrange.PNG"
   }, {
     name: "紫色鬼魂",
-    d: "WraithPurple.PNG"
+    spriteName: "WraithPurple.PNG"
   }, {
     name: "红色鬼魂",
-    d: "WraithRed.PNG"
+    spriteName: "WraithRed.PNG"
   }, {
     name: "鬼魂领主",
-    d: "WraithLord.PNG"
+    spriteName: "WraithLord.PNG"
   }, {
     name: "鬼魂国王",
-    d: "WraithKing.PNG"
+    spriteName: "WraithKing.PNG"
   }, {
     name: "棕色软泥",
-    d: "OozeBrown.PNG"
+    spriteName: "OozeBrown.PNG"
   }, {
     name: "蓝色软泥",
-    d: "OozeBlue.PNG"
+    spriteName: "OozeBlue.PNG"
   }, {
     name: "绿色软泥",
-    d: "OozeGreen.PNG"
+    spriteName: "OozeGreen.PNG"
   }, {
     name: "灰色软泥",
-    d: "OozeGrey.PNG"
+    spriteName: "OozeGrey.PNG"
   }, {
     name: "黑色软泥",
-    d: "OozeBlack.PNG"
+    spriteName: "OozeBlack.PNG"
   }, {
     name: "棕色蛇怪",
-    d: "BasiliskBrown.PNG"
+    spriteName: "BasiliskBrown.PNG"
   }, {
     name: "绿色蛇怪",
-    d: "BasiliskGreen.PNG"
+    spriteName: "BasiliskGreen.PNG"
   }, {
     name: "银色蛇怪",
-    d: "BasiliskSilver.PNG"
+    spriteName: "BasiliskSilver.PNG"
   }, {
     name: "猩红蛇怪",
-    d: "BasiliskRed.PNG"
+    spriteName: "BasiliskRed.PNG"
   }, {
     name: "蓝龙",
-    d: "DragonAdultBlue.PNG"
+    spriteName: "DragonAdultBlue.PNG"
   }, {
     name: "青铜龙",
-    d: "DragonAdultBronze.PNG"
+    spriteName: "DragonAdultBronze.PNG"
   }, {
     name: "黄金龙",
-    d: "DragonAdultGold.PNG"
+    spriteName: "DragonAdultGold.PNG"
   }, {
     name: "绿龙",
-    d: "DragonAdultGreen.PNG"
+    spriteName: "DragonAdultGreen.PNG"
   }, {
     name: "彩虹龙",
-    d: "DragonAdultRainbow.PNG"
+    spriteName: "DragonAdultRainbow.PNG"
   }, {
     name: "银龙",
-    d: "DragonAdultSilver.PNG"
+    spriteName: "DragonAdultSilver.PNG"
   }, {
     name: "红龙",
-    d: "DragonAdultRed.PNG"
+    spriteName: "DragonAdultRed.PNG"
   }, {
     name: "黑龙",
-    d: "DragonAdultBlack.PNG"
+    spriteName: "DragonAdultBlack.PNG"
   }, {
     name: "骷髅",
-    d: "Skeleton.PNG"
+    spriteName: "Skeleton.PNG"
   }, {
     name: "骷髅盗贼",
-    d: "SkeletonFighter.PNG"
+    spriteName: "SkeletonFighter.PNG"
   }, {
     name: "骷髅恶魔",
-    d: "SkeletonDemon.PNG"
+    spriteName: "SkeletonDemon.PNG"
   }, {
     name: "骷髅战士",
-    d: "SkeletonFighter3.PNG"
+    spriteName: "SkeletonFighter3.PNG"
   }, {
     name: "骷髅野蛮人",
-    d: "SkeletonFighter13.PNG"
+    spriteName: "SkeletonFighter13.PNG"
   }, {
     name: "骷髅刀锋战士",
-    d: "SkeletonFighter6.PNG"
+    spriteName: "SkeletonFighter6.PNG"
   }, {
     name: "骷髅恶魔战士",
-    d: "SkeletonDemonFighter.PNG"
+    spriteName: "SkeletonDemonFighter.PNG"
   }, {
     name: "绿色精灵",
-    d: "SpiritGreen.PNG"
+    spriteName: "SpiritGreen.PNG"
   }, {
     name: "棕色精灵",
-    d: "SpiritBrown.PNG"
+    spriteName: "SpiritBrown.PNG"
   }, {
     name: "土精灵",
-    d: "SpiritEarth.PNG"
+    spriteName: "SpiritEarth.PNG"
   }, {
     name: "气精灵",
-    d: "SpiritAir.PNG"
+    spriteName: "SpiritAir.PNG"
   }, {
     name: "暗黑精灵",
-    d: "SpiritGreyDark.PNG"
+    spriteName: "SpiritGreyDark.PNG"
   }, {
     name: "火精灵",
-    d: "SpiritFire.PNG"
+    spriteName: "SpiritFire.PNG"
   }, {
     name: "初拥吸血鬼",
-    d: "Vampire2.PNG"
+    spriteName: "Vampire2.PNG"
   }, {
     name: "吸血鬼",
-    d: "Vampire3.PNG"
+    spriteName: "Vampire3.PNG"
   }, {
     name: "长老吸血鬼",
-    d: "Vampire4.PNG"
+    spriteName: "Vampire4.PNG"
   }, {
     name: "远古吸血鬼",
-    d: "VampireMage1.PNG"
+    spriteName: "VampireMage1.PNG"
   }, {
     name: "远古蓝龙",
-    d: "DragonAncientBlue.PNG"
+    spriteName: "DragonAncientBlue.PNG"
   }, {
     name: "远古青铜龙",
-    d: "DragonAncientBronze.PNG"
+    spriteName: "DragonAncientBronze.PNG"
   }, {
     name: "远古黄金龙",
-    d: "DragonAncientGold.PNG"
+    spriteName: "DragonAncientGold.PNG"
   }, {
     name: "远古白龙",
-    d: "DragonAncientGoldWhite.PNG"
+    spriteName: "DragonAncientGoldWhite.PNG"
   }, {
     name: "远古绿龙",
-    d: "DragonAncientGreen.PNG"
+    spriteName: "DragonAncientGreen.PNG"
   }, {
     name: "远古彩虹龙",
-    d: "DragonAncientRainbow.PNG"
+    spriteName: "DragonAncientRainbow.PNG"
   }, {
     name: "远古银龙",
-    d: "DragonAncientSilver.PNG"
+    spriteName: "DragonAncientSilver.PNG"
   }, {
     name: "远古红龙",
-    d: "DragonAncientRed.PNG"
+    spriteName: "DragonAncientRed.PNG"
   }, {
     name: "远古黑龙",
-    d: "DragonAncientBlack.PNG"
+    spriteName: "DragonAncientBlack.PNG"
   }, {
     name: "青色魔像",
-    d: "GolemTeal.PNG"
+    spriteName: "GolemTeal.PNG"
   }, {
     name: "棕色魔像",
-    d: "GolemBrown.PNG"
+    spriteName: "GolemBrown.PNG"
   }, {
     name: "蓝色魔像",
-    d: "GolemBlue.PNG"
+    spriteName: "GolemBlue.PNG"
   }, {
     name: "灰色魔像",
-    d: "GolemGrey.PNG"
+    spriteName: "GolemGrey.PNG"
   }, {
     name: "武装魔像",
-    d: "GolemBrownStick.PNG"
+    spriteName: "GolemBrownStick.PNG"
   }, {
     name: "魔像领主",
-    d: "GolemBrownCaped.PNG"
+    spriteName: "GolemBrownCaped.PNG"
   }, {
     name: "电气魔像",
-    d: "GolemElectric.PNG"
+    spriteName: "GolemElectric.PNG"
   }, {
     name: "幻象之眼",
-    d: "PhantomEye.PNG"
+    spriteName: "PhantomEye.PNG"
   }, {
     name: "幻象之手",
-    d: "PhantomHand.PNG"
+    spriteName: "PhantomHand.PNG"
   }, {
     name: "幻象之骨",
-    d: "PhantomSkull.PNG"
+    spriteName: "PhantomSkull.PNG"
   }, {
     name: "蓝色鬼怪",
-    d: "SpectreBlue.PNG"
+    spriteName: "SpectreBlue.PNG"
   }, {
     name: "绿色鬼怪",
-    d: "SpectreGreen.PNG"
+    spriteName: "SpectreGreen.PNG"
   }, {
     name: "橙色鬼怪",
-    d: "SpectreOrange.PNG"
+    spriteName: "SpectreOrange.PNG"
   }, {
     name: "紫色鬼怪",
-    d: "SpectrePurple.PNG"
+    spriteName: "SpectrePurple.PNG"
   }, {
     name: "银色鬼怪",
-    d: "SpectreSilver.PNG"
+    spriteName: "SpectreSilver.PNG"
   }, {
     name: "红色鬼怪",
-    d: "SpectreRed.PNG"
+    spriteName: "SpectreRed.PNG"
   }, {
     name: "黑色鬼怪",
-    d: "SpectreBlack.PNG"
+    spriteName: "SpectreBlack.PNG"
   }, {
     name: "棕色骗子",
-    d: "TricksterBrown.PNG"
+    spriteName: "TricksterBrown.PNG"
   }, {
     name: "蓝色骗子",
-    d: "TricksterBlue.PNG"
+    spriteName: "TricksterBlue.PNG"
   }, {
     name: "绿色骗子",
-    d: "TricksterGreen.PNG"
+    spriteName: "TricksterGreen.PNG"
   }, {
     name: "黑色骗子",
-    d: "TricksterBlack.PNG"
+    spriteName: "TricksterBlack.PNG"
   }, {
     name: "红色骗子",
-    d: "TricksterRed.PNG"
+    spriteName: "TricksterRed.PNG"
   }, {
     name: "魔术骗子",
-    d: "TricksterPurpleMage.PNG"
+    spriteName: "TricksterPurpleMage.PNG"
   }, {
     name: "暗黑巨人",
-    d: "TrollDark.PNG"
+    spriteName: "TrollDark.PNG"
   }, {
     name: "巨人战士",
-    d: "TrollFighter2.PNG"
+    spriteName: "TrollFighter2.PNG"
   }, {
     name: "火巨人",
-    d: "TrollFire.PNG"
+    spriteName: "TrollFire.PNG"
   }, {
     name: "石巨人",
-    d: "TrollGrey.PNG"
+    spriteName: "TrollGrey.PNG"
   }, {
     name: "水巨人",
-    d: "TrollWater.PNG"
+    spriteName: "TrollWater.PNG"
   }, {
     name: "巨人僵尸",
-    d: "TrollZombie.PNG"
+    spriteName: "TrollZombie.PNG"
   }, {
     name: "巨人国王",
-    d: "TrollKing.PNG"
+    spriteName: "TrollKing.PNG"
   }, {
     name: "蓝龙领主",
-    d: "DragonAncientLordBlue.PNG"
+    spriteName: "DragonAncientLordBlue.PNG"
   }, {
     name: "青铜龙领主",
-    d: "DragonAncientLordBronze.PNG"
+    spriteName: "DragonAncientLordBronze.PNG"
   }, {
     name: "绿龙领主",
-    d: "DragonAncientLordGreen.PNG"
+    spriteName: "DragonAncientLordGreen.PNG"
   }, {
     name: "银龙领主",
-    d: "DragonAncientLordSilver.PNG"
+    spriteName: "DragonAncientLordSilver.PNG"
   }, {
     name: "红龙领主",
-    d: "DragonAncientLordRed.PNG"
+    spriteName: "DragonAncientLordRed.PNG"
   }, {
     name: "黑龙领主",
-    d: "DragonAncientLordBlack.PNG"
+    spriteName: "DragonAncientLordBlack.PNG"
   }, {
     name: "恶魔龙领主",
-    d: "DragonAncientLordSilverRed.PNG"
+    spriteName: "DragonAncientLordSilverRed.PNG"
   }, {
     name: "巨型蓝蜉蝣",
-    d: "DrakeGiantBlue.PNG"
+    spriteName: "DrakeGiantBlue.PNG"
   }, {
     name: "巨型青铜蜉蝣",
-    d: "DrakeGiantBronze.PNG"
+    spriteName: "DrakeGiantBronze.PNG"
   }, {
     name: "巨型灰蜉蝣",
-    d: "DrakeGiantGrey.PNG"
+    spriteName: "DrakeGiantGrey.PNG"
   }, {
     name: "巨型白蜉蝣",
-    d: "DrakeGiantWhite.PNG"
+    spriteName: "DrakeGiantWhite.PNG"
   }, {
     name: "巨型红蜉蝣",
-    d: "DrakeGiantRed.PNG"
+    spriteName: "DrakeGiantRed.PNG"
   }, {
     name: "巨型血蜉蝣",
-    d: "DrakeGiantRed2.PNG"
+    spriteName: "DrakeGiantRed2.PNG"
   }, {
     name: "巨型黑蜉蝣",
-    d: "DrakeGiantBlack.PNG"
+    spriteName: "DrakeGiantBlack.PNG"
   }, {
     name: "骨龙",
-    d: "DragonGiantBone.PNG"
+    spriteName: "DragonGiantBone.PNG"
   }, {
     name: "蓝色骨龙",
-    d: "DragonGiantBoneBlue.PNG"
+    spriteName: "DragonGiantBoneBlue.PNG"
   }, {
     name: "绿色骨龙",
-    d: "DragonGiantBoneGreen.PNG"
+    spriteName: "DragonGiantBoneGreen.PNG"
   }, {
     name: "灰色骨龙",
-    d: "DragonGiantBoneGrey.PNG"
+    spriteName: "DragonGiantBoneGrey.PNG"
   }, {
     name: "红色骨龙",
-    d: "DragonGiantBoneRed.PNG"
+    spriteName: "DragonGiantBoneRed.PNG"
   }, {
     name: "冰霜巨人",
-    d: "GiantFrost.PNG"
+    spriteName: "GiantFrost.PNG"
   }, {
     name: "山丘巨人",
-    d: "GiantHill.PNG"
+    spriteName: "GiantHill.PNG"
   }, {
     name: "风暴巨人",
-    d: "GiantStorm.PNG"
+    spriteName: "GiantStorm.PNG"
   }, {
     name: "双头巨人",
-    d: "GiantTwoHeaded.PNG"
+    spriteName: "GiantTwoHeaded.PNG"
   }, {
     name: "云层巨人",
-    d: "GiantCloud.PNG"
+    spriteName: "GiantCloud.PNG"
   }, {
     name: "火焰巨人",
-    d: "GiantFire.PNG"
+    spriteName: "GiantFire.PNG"
   }, {
     name: "谋杀牛",
-    d: "CowLeft.PNG"
+    spriteName: "CowLeft.PNG"
   }, {
     name: "噩梦小鸡",
-    d: "Chicken1.PNG"
+    spriteName: "Chicken1.PNG"
   }, {
     name: "死亡小鸡",
-    d: "Chicken2.PNG"
+    spriteName: "Chicken2.PNG"
   }, {
     name: "灰色骷髅领主",
-    d: "SkeletonFighterLord1.PNG"
+    spriteName: "SkeletonFighterLord1.PNG"
   }, {
     name: "紫色骷髅领主",
-    d: "SkeletonFighterLord2.PNG"
+    spriteName: "SkeletonFighterLord2.PNG"
   }, {
     name: "蓝色骷髅领主",
-    d: "SkeletonFighterLord3.PNG"
+    spriteName: "SkeletonFighterLord3.PNG"
   }, {
     name: "橙色骷髅领主",
-    d: "SkeletonFighterLord4.PNG"
+    spriteName: "SkeletonFighterLord4.PNG"
   }, {
     name: "骷髅国王",
-    d: "SkeletonKing.PNG"
+    spriteName: "SkeletonKing.PNG"
   }];
 }

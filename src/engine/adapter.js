@@ -30,7 +30,7 @@ export const engine = {
   },
   catalog() {
     return runtime.classes.map((entry, index) => {
-      const sprite = game.monsterSprites.v(entry.d);
+      const sprite = game.monsterSprites.v(entry.spriteName);
       return {
         id: index,
         name: entry.className,
@@ -92,7 +92,7 @@ export const engine = {
         farms: game.dungeons.dg.length
       },
       heroes: game.state.adventurers.map((hero, index) => {
-        const sprite = game.monsterSprites.v(hero.classDefinition.d),
+        const sprite = game.monsterSprites.v(hero.classDefinition.spriteName),
           stats = hero.stats;
         return {
           index,

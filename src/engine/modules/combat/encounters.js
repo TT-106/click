@@ -111,7 +111,7 @@ export function spawnDungeonBoss(a, b) {
   var f = bossSpriteDefinitions[randomInt(bossSpriteDefinitions.length)];
   d = d + " (等级." + c + ")";
   var g = game.monsters,
-    h = new MonsterType(bossClass.className, f.d, c),
+    h = new MonsterType(bossClass.className, f.spriteName, c),
     f = new Character(bossClass.defaultName, 4, bossClass.characterClass, bossClass, null),
     l = f.stats;
   f.gq(h);
@@ -178,7 +178,7 @@ export function getFriendlyTargets(a) {
 export function MonsterType(a, b, c) {
   this.dE = a;
   this.nE = endsWithText(a, "y") ? a.substring(0, a.length - 1) + "" : endsWithText(a, "Man") ? a.substring(0, a.length - 3) + "Men" : endsWithText(a, "fish") ? a : a + "";
-  this.d = b;
+  this.spriteName = b;
   this.xd = c;
   this.ll = game.monsterSprites.v(b);
   this.$o = this.Sj = this.Hp = this.Fp = this.Ep = this.Gp = this.No = this.ek = this.ml = this.xq = 0;
@@ -231,7 +231,7 @@ export function getMonsterTypesForLevel(a, b) {
       g = a.n[randomInt(a.n.length)];
       if (!(-1 < f.indexOf(g))) {
         f.push(g);
-        d.push(new MonsterType(g.name, g.d, b));
+        d.push(new MonsterType(g.name, g.spriteName, b));
         h++;
       }
     }

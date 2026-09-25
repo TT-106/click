@@ -365,36 +365,36 @@ sequenceDiagram
 ```mermaid
 flowchart BT
     subgraph core[core 纯函数与数据]
-        MATH[core/math.js\nSeededRandom/randomInt/向量/曲线]
-        BOOT[core/bootstrap-data.js\n贴图清单等静态数据]
+        MATH["core/math.js<br/>SeededRandom/randomInt/向量/曲线"]
+        BOOT["core/bootstrap-data.js<br/>贴图清单等静态数据"]
     end
 
     subgraph domain[域模块 按目录]
-        CONTENT[content/\nmonsters classes equipment guardians\nminions skills spells balance themes]
-        WORLD[world/\nterrain regions dungeons generation\nrooms pathfinding initialization]
-        CHAR[characters/\ncharacter stats effects movement party]
-        AI[ai/\ntargeting behaviors]
-        COMBAT[combat/\nencounters actions scrolls potions skill-effects]
-        LOOT[loot/\nitems item-names inventory treasure]
-        PROG[progression/\npoints achievements upgrades statistics]
-        SIM[simulation/\ntick loop characters]
-        RENDER[rendering/\nsprites scene floating-text]
-        PERSIST[persistence/\ngame-save entities]
-        VIEWS[views/\nnavigation expedition character\nmonsters dungeons castles results ...]
+        CONTENT["content/<br/>monsters classes equipment guardians<br/>minions skills spells balance themes"]
+        WORLD["world/<br/>terrain regions dungeons generation<br/>rooms pathfinding initialization"]
+        CHAR["characters/<br/>character stats effects movement party"]
+        AI["ai/<br/>targeting behaviors"]
+        COMBAT["combat/<br/>encounters actions scrolls potions skill-effects"]
+        LOOT["loot/<br/>items item-names inventory treasure"]
+        PROG["progression/<br/>points achievements upgrades statistics"]
+        SIM["simulation/<br/>tick loop characters"]
+        RENDER["rendering/<br/>sprites scene floating-text"]
+        PERSIST["persistence/<br/>game-save entities"]
+        VIEWS["views/<br/>navigation expedition character<br/>monsters dungeons castles results ..."]
     end
 
-    subgraph runtime[runtime 会话层]
-        GAME[runtime/game.js\ngame 组合根单例]
-        IDX[runtime/index.js\n初始化顺序编排 + 导出 game]
-        PORT[runtime/storage-port.js\npersistence 注入端口]
+    subgraph runtime["runtime 会话层"]
+        GAME["runtime/game.js<br/>game 组合根单例"]
+        IDX["runtime/index.js<br/>初始化顺序编排 + 导出 game"]
+        PORT["runtime/storage-port.js<br/>persistence 注入端口"]
     end
 
-    subgraph shell[产品壳]
+    subgraph shell["产品壳"]
         IAPI[engine/internal-api.js]
-        ADPT[engine/adapter.js\n快照+命令]
+        ADPT["engine/adapter.js<br/>快照+命令"]
         CODEC[engine/save-codec.js]
-        SVC[services/\nsaves save-validation save-worker]
-        UIX[app.js + src/ui/*]
+        SVC["services/<br/>saves save-validation save-worker"]
+        UIX["app.js + src/ui/*"]
     end
 
     MATH --> CONTENT & WORLD & AI & COMBAT & LOOT & PERSIST
@@ -406,7 +406,7 @@ flowchart BT
     LOOT --> COMBAT
     PROG --> COMBAT & CHAR
     GAME --> CONTENT & WORLD & CHAR & AI & COMBAT & LOOT & PROG & SIM & RENDER & PERSIST & VIEWS
-    DOMAIN1[域模块 ×49 个文件] -.->|import { game } 活绑定| GAME
+    DOMAIN1["域模块 49 个文件"] -.->|"import game 活绑定"| GAME
     IDX --> GAME
     GAME --> IDX
     PORT --> PERSIST

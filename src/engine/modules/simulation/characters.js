@@ -52,7 +52,7 @@ export function refreshUnspentSkillFlags() {
 export function spawnMinion(a, b, c) {
   var d = new Character(a.defaultName, 1, a.characterClass, a, null),
     f = d.stats;
-  d.ee = game.monsterSprites.v(a.d);
+  d.ee = game.monsterSprites.v(a.spriteName);
   var g = createBehaviorQueue(a.nb());
   d.behaviors = g;
   g = d.position;
@@ -100,7 +100,7 @@ export function spawnMinion(a, b, c) {
   awardAdventurePoints(18);
 }
 export function createCastleGuardian(a, b, c) {
-  var d = new MonsterType(a.className, a.d, b),
+  var d = new MonsterType(a.className, a.spriteName, b),
     f = new Character(a.defaultName, 3, a.characterClass, a, null),
     g = f.stats;
   f.gq(d);

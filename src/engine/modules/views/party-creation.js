@@ -48,7 +48,7 @@ export function mountPartyCreation(a) {
         f = b[d].classIndex;
         f = adventurerClasses[f];
         g = b[d].defaultName;
-        var l = f.d;
+        var l = f.spriteName;
         g = new Character(g, ADVENTURER_TYPE, f.characterClass, f, new Inventory());
         var n = g.stats;
         g.ee = game.monsterSprites.v(l);
@@ -128,7 +128,7 @@ export function mountClassChoices(a, b) {
       var d = a,
         l = h;
       g = createElement("table", g, null, "lockedCharacterSelectionTable").insertRow(0).insertCell(0);
-      var n = game.monsterSprites.v(adventurerClasses[l].d),
+      var n = game.monsterSprites.v(adventurerClasses[l].spriteName),
         p = createElement("img", g, null, "characterImage");
       p.src = "images/Transparent.gif";
       p.style.height = "35px";
@@ -199,7 +199,7 @@ export function mountClassChoice(a, b, c) {
   g = f.insertCell(0);
   g.style.width = "35px";
   g.style.textAlign = "center";
-  h = game.monsterSprites.v(d.d);
+  h = game.monsterSprites.v(d.spriteName);
   g = createElement("img", g, null, "characterImage");
   g.src = "images/Transparent.gif";
   g.style.height = "35px";
@@ -234,7 +234,7 @@ export function mountSelectedCharacter(a, b, c, d) {
   n = h.insertCell(0);
   n.style.width = "35px";
   n.style.textAlign = "center";
-  p = game.monsterSprites.v(f.d);
+  p = game.monsterSprites.v(f.spriteName);
   n = createElement("img", n, null, "characterImage");
   n.src = "images/Transparent.gif";
   n.style.height = "35px";

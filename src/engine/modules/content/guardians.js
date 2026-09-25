@@ -11,7 +11,7 @@ export function initializeContentGuardians() {
     characterClass: 0,
     className: "Guardian Fighter",
     Ws: false,
-    d: "HumanFighter33.PNG",
+    spriteName: "HumanFighter33.PNG",
     defaultName: "Zog",
     descriptionText: "",
     fe: false,
@@ -45,7 +45,7 @@ export function initializeContentGuardians() {
     characterClass: 3,
     className: "Guardian Mage",
     Ws: false,
-    d: "HumanMage11.PNG",
+    spriteName: "HumanMage11.PNG",
     defaultName: "Zar",
     descriptionText: "",
     fe: false,
@@ -82,7 +82,7 @@ export function initializeContentGuardians() {
     characterClass: 2,
     className: "Elven Archer",
     Ws: false,
-    d: "HB_Elvenarcher1.PNG",
+    spriteName: "HB_Elvenarcher1.PNG",
     defaultName: "Seth",
     descriptionText: "",
     fe: false,
@@ -120,7 +120,7 @@ export function initializeContentGuardians() {
     characterClass: 8,
     className: "Ninja Warrior",
     Ws: false,
-    d: "Ninja.PNG",
+    spriteName: "Ninja.PNG",
     defaultName: "N",
     descriptionText: "",
     fe: false,
@@ -174,118 +174,118 @@ export function initializeContentGuardians() {
     }]
   }];
   bossSpriteDefinitions = [{
-    d: "CubeGelatinous.PNG",
+    spriteName: "CubeGelatinous.PNG",
     Ia: "Gelatinous Cube"
   }, {
-    d: "FrogGiantGreen.PNG",
+    spriteName: "FrogGiantGreen.PNG",
     Ia: "Green Frog"
   }, {
-    d: "OgreBlack.PNG",
+    spriteName: "OgreBlack.PNG",
     Ia: "Black Ogre"
   }, {
-    d: "OrcRedKing.PNG",
+    spriteName: "OrcRedKing.PNG",
     Ia: "Orc King"
   }, {
-    d: "XornBlades.PNG",
+    spriteName: "XornBlades.PNG",
     Ia: "Xorn"
   }, {
-    d: "GolemBrownStick.PNG",
+    spriteName: "GolemBrownStick.PNG",
     Ia: "Brown Golem"
   }, {
-    d: "GolemDragonRed.PNG",
+    spriteName: "GolemDragonRed.PNG",
     Ia: "Red Dragon Golem"
   }, {
-    d: "GolemElectric.PNG",
+    spriteName: "GolemElectric.PNG",
     Ia: "Golem"
   }, {
-    d: "GiantTwoHeaded.PNG",
+    spriteName: "GiantTwoHeaded.PNG",
     Ia: ""
   }, {
-    d: "GiantCloud.PNG",
+    spriteName: "GiantCloud.PNG",
     Ia: ""
   }, {
-    d: "GiantFire.PNG",
+    spriteName: "GiantFire.PNG",
     Ia: ""
   }, {
-    d: "GiantFrost.PNG",
+    spriteName: "GiantFrost.PNG",
     Ia: ""
   }, {
-    d: "DrakeGiantWhite.PNG",
+    spriteName: "DrakeGiantWhite.PNG",
     Ia: ""
   }, {
-    d: "DrakeGiantRed2.PNG",
+    spriteName: "DrakeGiantRed2.PNG",
     Ia: ""
   }, {
-    d: "DrakeGiantGrey.PNG",
+    spriteName: "DrakeGiantGrey.PNG",
     Ia: ""
   }, {
-    d: "DrakeGiantBronze.PNG",
+    spriteName: "DrakeGiantBronze.PNG",
     Ia: ""
   }, {
-    d: "DragonGiantBoneRed.PNG",
+    spriteName: "DragonGiantBoneRed.PNG",
     Ia: ""
   }, {
-    d: "DragonGiantBoneGrey.PNG",
+    spriteName: "DragonGiantBoneGrey.PNG",
     Ia: ""
   }, {
-    d: "DragonAncientLordBlack.PNG",
+    spriteName: "DragonAncientLordBlack.PNG",
     Ia: ""
   }, {
-    d: "DragonAncientLordGreen.PNG",
+    spriteName: "DragonAncientLordGreen.PNG",
     Ia: ""
   }, {
-    d: "DragonAncientLordRed.PNG",
+    spriteName: "DragonAncientLordRed.PNG",
     Ia: ""
   }, {
-    d: "Pheonix.PNG",
+    spriteName: "Pheonix.PNG",
     Ia: ""
   }, {
-    d: "Race14Grey.PNG",
+    spriteName: "Race14Grey.PNG",
     Ia: ""
   }, {
-    d: "SkeletonKing.PNG",
+    spriteName: "SkeletonKing.PNG",
     Ia: ""
   }, {
-    d: "SpiritFire.PNG",
+    spriteName: "SpiritFire.PNG",
     Ia: ""
   }, {
-    d: "SpriteFire.PNG",
+    spriteName: "SpriteFire.PNG",
     Ia: ""
   }, {
-    d: "TrollWater.PNG",
+    spriteName: "TrollWater.PNG",
     Ia: ""
   }, {
-    d: "TrollKing.PNG",
+    spriteName: "TrollKing.PNG",
     Ia: ""
   }, {
-    d: "TrollZombie.PNG",
+    spriteName: "TrollZombie.PNG",
     Ia: ""
   }, {
-    d: "Unique7.PNG",
+    spriteName: "Unique7.PNG",
     Ia: ""
   }, {
-    d: "WarElephantBrown.PNG",
+    spriteName: "WarElephantBrown.PNG",
     Ia: ""
   }, {
-    d: "WarElephantGrey.PNG",
+    spriteName: "WarElephantGrey.PNG",
     Ia: ""
   }, {
-    d: "Xorn4Armed.PNG",
+    spriteName: "Xorn4Armed.PNG",
     Ia: ""
   }, {
-    d: "AngelRed.PNG",
+    spriteName: "AngelRed.PNG",
     Ia: ""
   }, {
-    d: "ElementalStone.PNG",
+    spriteName: "ElementalStone.PNG",
     Ia: ""
   }, {
-    d: "GolemBrownCaped.PNG",
+    spriteName: "GolemBrownCaped.PNG",
     Ia: ""
   }, {
-    d: "GryphonRed.PNG",
+    spriteName: "GryphonRed.PNG",
     Ia: ""
   }, {
-    d: "Hydra10HeadRed.PNG",
+    spriteName: "Hydra10HeadRed.PNG",
     Ia: ""
   }];
   bossClass = {

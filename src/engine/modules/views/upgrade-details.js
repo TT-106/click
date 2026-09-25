@@ -701,7 +701,7 @@ export function initializeViewsUpgradeDetails() {
       this.Lv = a;
       var b = a.ga;
       if (10 === b || 9 === b || 17 === b || 11 === b) {
-        a = minionsBySpell[a.ta].d;
+        a = minionsBySpell[a.ta].spriteName;
         this.Dx = game.monsterSprites;
         this.zn = game.monsterSprites.v(a);
         this.nd = false;
