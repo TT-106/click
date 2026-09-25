@@ -53,7 +53,7 @@ npm run perf             # 性能基线测量（重构 vs 原版）
 2. ~~已取证待落地~~ ✅ B 组九项全部落地（每字母独立全回归）。
 3. ~~交付物收尾~~ ✅ 已完成（REFACTOR_REPORT.md、PERFORMANCE_REPORT.md、COMPATIBILITY_REPORT.md、MIGRATION_MAP.md）。
 4. ~~扩展差分场景：prestige/victory~~ ✅ 12 场景矩阵已含 veteran-run/prestige-restart/full-reset；剩余：胜利瞬间触发（城堡征服）、法术分支。
-5. **M10 类型体系**：✅ 已启动（tsconfig checkJs 范围 core/+persistence/、SaveData DTO typedef `persistence/save-dto.js`、math.js JSDoc、`npm run typecheck` 已入 check 门禁）；30 文件 `@ts-nocheck` 待摘除（m10-nocheck.mjs 批量管理； Views/世界等轻重文件分批策略已验证）（本轮已纳入：tick/game + targeting/scrolls/items/dungeons/pathfinding/regions/travel-costs，共 9 文件、9 处遗留错误以行为中立注解清零）；批量管理脚本 scripts/m10-nocheck.mjs（按 tsc 错误数自动筛选 ≤3 错误文件纳入）。
+5. **M10 类型体系**：✅ 已启动（tsconfig checkJs 范围 core/+persistence/、SaveData DTO typedef `persistence/save-dto.js`、math.js JSDoc、`npm run typecheck` 已入 check 门禁）；23 文件 `@ts-nocheck` 待摘除（本轮新增纳入 loot/treasure.js；m10-round.cjs 支持按文件批处理并报告各自错误）；注意：light-file 纳入需要类成员级 JSDoc 专项（跨文件原型挂载成员 TS 不可见），非纯 any-cast 可覆盖（m10-nocheck.mjs 批量管理； Views/世界等轻重文件分批策略已验证）（本轮已纳入：tick/game + targeting/scrolls/items/dungeons/pathfinding/regions/travel-costs，共 9 文件、9 处遗留错误以行为中立注解清零）；批量管理脚本 scripts/m10-nocheck.mjs（按 tsc 错误数自动筛选 ≤3 错误文件纳入）。
 6. symbol-map.json 元数据刷新（累计 60+ 字段映射待写入）。
 
 ## 8. 智能体产出验收状态
