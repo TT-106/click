@@ -37,37 +37,6 @@
     ]
   },
   {
-    "name": "d",
-    "reads": 11,
-    "writes": 378,
-    "samples": [
-      {
-        "loc": "src\\engine\\adapter.js:33",
-        "code": "entry.d"
-      },
-      {
-        "loc": "src\\engine\\adapter.js:95",
-        "code": "hero.classDefinition.d"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\encounters.js:114",
-        "code": "f.d"
-      }
-    ],
-    "fileCount": 9,
-    "files": [
-      "src\\engine\\adapter.js",
-      "src\\engine\\modules\\combat\\encounters.js",
-      "src\\engine\\modules\\content\\classes.js",
-      "src\\engine\\modules\\content\\guardians.js",
-      "src\\engine\\modules\\content\\minions.js",
-      "src\\engine\\modules\\content\\monsters.js",
-      "src\\engine\\modules\\simulation\\characters.js",
-      "src\\engine\\modules\\views\\party-creation.js",
-      "src\\engine\\modules\\views\\upgrade-details.js"
-    ]
-  },
-  {
     "name": "f",
     "reads": 5,
     "writes": 380,
@@ -178,340 +147,6 @@
       "src\\engine\\modules\\content\\skills\\ranger.js",
       "src\\engine\\modules\\content\\skills\\rogue.js",
       "src\\engine\\modules\\progression\\upgrades.js"
-    ]
-  },
-  {
-    "name": "p",
-    "reads": 259,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:135",
-        "code": "a.p"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:234",
-        "code": "a.p"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:245",
-        "code": "a.p"
-      }
-    ],
-    "fileCount": 18,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js",
-      "src\\engine\\modules\\ai\\targeting.js",
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\characters\\movement.js",
-      "src\\engine\\modules\\characters\\party.js",
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\combat\\encounters.js",
-      "src\\engine\\modules\\combat\\scrolls.js",
-      "src\\engine\\modules\\persistence\\entities.js",
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\rendering\\floating-text.js",
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\simulation\\characters.js",
-      "src\\engine\\modules\\simulation\\tick.js",
-      "src\\engine\\modules\\views\\dungeons.js",
-      "src\\engine\\modules\\world\\dungeons.js",
-      "src\\engine\\modules\\world\\generation.js",
-      "src\\engine\\modules\\world\\terrain.js"
-    ]
-  },
-  {
-    "name": "q",
-    "reads": 169,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:68",
-        "code": "C.q"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:452",
-        "code": "game.world.q"
-      },
-      {
-        "loc": "src\\engine\\modules\\simulation\\tick.js:543",
-        "code": "q.q"
-      }
-    ],
-    "fileCount": 6,
-    "files": [
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\simulation\\tick.js",
-      "src\\engine\\modules\\world\\regions.js",
-      "src\\engine\\modules\\world\\terrain.js",
-      "src\\engine\\modules\\world\\travel-costs.js"
-    ]
-  },
-  {
-    "name": "t",
-    "reads": 109,
-    "writes": 51,
-    "samples": [
-      {
-        "loc": "src\\engine\\adapter.js:49",
-        "code": "runtime.partyBonus.t"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:362",
-        "code": "freeSpellsModifier.t"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:793",
-        "code": "freeSpellsModifier.t"
-      }
-    ],
-    "fileCount": 22,
-    "files": [
-      "src\\engine\\adapter.js",
-      "src\\engine\\modules\\ai\\behaviors.js",
-      "src\\engine\\modules\\ai\\targeting.js",
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\characters\\stats.js",
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\combat\\encounters.js",
-      "src\\engine\\modules\\combat\\potions.js",
-      "src\\engine\\modules\\combat\\scrolls.js",
-      "src\\engine\\modules\\content\\balance.js",
-      "src\\engine\\modules\\loot\\items.js",
-      "src\\engine\\modules\\loot\\treasure.js",
-      "src\\engine\\modules\\progression\\upgrades.js",
-      "src\\engine\\modules\\runtime\\game.js",
-      "src\\engine\\modules\\simulation\\characters.js",
-      "src\\engine\\modules\\simulation\\tick.js",
-      "src\\engine\\modules\\views\\character.js",
-      "src\\engine\\modules\\views\\expedition.js",
-      "src\\engine\\modules\\views\\monsters.js",
-      "src\\engine\\modules\\views\\party-creation.js",
-      "src\\engine\\modules\\world\\dungeons.js",
-      "src\\engine\\modules\\world\\rooms.js"
-    ]
-  },
-  {
-    "name": "u",
-    "reads": 134,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:336",
-        "code": "b.u"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:336",
-        "code": "this.Da.p.u"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:347",
-        "code": "this.Da.p.u"
-      }
-    ],
-    "fileCount": 12,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js",
-      "src\\engine\\modules\\ai\\targeting.js",
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\characters\\movement.js",
-      "src\\engine\\modules\\characters\\party.js",
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\combat\\encounters.js",
-      "src\\engine\\modules\\combat\\scrolls.js",
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\simulation\\characters.js",
-      "src\\engine\\modules\\simulation\\tick.js",
-      "src\\engine\\modules\\world\\generation.js"
-    ]
-  },
-  {
-    "name": "v",
-    "reads": 129,
-    "writes": 4,
-    "samples": [
-      {
-        "loc": "src\\engine\\adapter.js:33",
-        "code": "game.monsterSprites.v"
-      },
-      {
-        "loc": "src\\engine\\adapter.js:95",
-        "code": "game.monsterSprites.v"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:1232",
-        "code": "Character.prototype.v"
-      }
-    ],
-    "fileCount": 21,
-    "files": [
-      "src\\engine\\adapter.js",
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\combat\\encounters.js",
-      "src\\engine\\modules\\combat\\potions.js",
-      "src\\engine\\modules\\combat\\scrolls.js",
-      "src\\engine\\modules\\loot\\items.js",
-      "src\\engine\\modules\\persistence\\entities.js",
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\rendering\\sprites.js",
-      "src\\engine\\modules\\runtime\\game.js",
-      "src\\engine\\modules\\simulation\\characters.js",
-      "src\\engine\\modules\\views\\castles.js",
-      "src\\engine\\modules\\views\\dungeons.js",
-      "src\\engine\\modules\\views\\expedition.js",
-      "src\\engine\\modules\\views\\party-creation.js",
-      "src\\engine\\modules\\views\\results.js",
-      "src\\engine\\modules\\views\\upgrade-details.js",
-      "src\\engine\\modules\\world\\dungeons.js",
-      "src\\engine\\modules\\world\\rooms.js",
-      "src\\engine\\modules\\world\\terrain.js"
-    ]
-  },
-  {
-    "name": "w",
-    "reads": 106,
-    "writes": 12,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:310",
-        "code": "b.w"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:323",
-        "code": "a.p.w"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:351",
-        "code": "a.p.w"
-      }
-    ],
-    "fileCount": 15,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js",
-      "src\\engine\\modules\\ai\\targeting.js",
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\characters\\movement.js",
-      "src\\engine\\modules\\characters\\party.js",
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\combat\\encounters.js",
-      "src\\engine\\modules\\combat\\scrolls.js",
-      "src\\engine\\modules\\persistence\\entities.js",
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\simulation\\characters.js",
-      "src\\engine\\modules\\simulation\\tick.js",
-      "src\\engine\\modules\\views\\dungeons.js",
-      "src\\engine\\modules\\world\\dungeons.js",
-      "src\\engine\\modules\\world\\generation.js"
-    ]
-  },
-  {
-    "name": "C",
-    "reads": 94,
-    "writes": 17,
-    "samples": [
-      {
-        "loc": "src\\engine\\adapter.js:128",
-        "code": "tab.C"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\achievements.js:71",
-        "code": "this.C"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\achievements.js:318",
-        "code": "this.C"
-      }
-    ],
-    "fileCount": 11,
-    "files": [
-      "src\\engine\\adapter.js",
-      "src\\engine\\modules\\views\\achievements.js",
-      "src\\engine\\modules\\views\\castles.js",
-      "src\\engine\\modules\\views\\character.js",
-      "src\\engine\\modules\\views\\dungeons.js",
-      "src\\engine\\modules\\views\\expedition.js",
-      "src\\engine\\modules\\views\\information.js",
-      "src\\engine\\modules\\views\\monsters.js",
-      "src\\engine\\modules\\views\\navigation.js",
-      "src\\engine\\modules\\views\\party-creation.js",
-      "src\\engine\\modules\\views\\results.js"
-    ]
-  },
-  {
-    "name": "G",
-    "reads": 96,
-    "writes": 10,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\world\\generation.js:21",
-        "code": "this.G"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\generation.js:117",
-        "code": "this.G"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\generation.js:133",
-        "code": "a.G"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\world\\generation.js",
-      "src\\engine\\modules\\world\\pathfinding.js",
-      "src\\engine\\modules\\world\\rooms.js"
-    ]
-  },
-  {
-    "name": "L",
-    "reads": 80,
-    "writes": 9,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:67",
-        "code": "C.L"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:718",
-        "code": "y.L"
-      },
-      {
-        "loc": "src\\engine\\modules\\simulation\\tick.js:573",
-        "code": "q.L"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\simulation\\tick.js",
-      "src\\engine\\modules\\world\\terrain.js"
-    ]
-  },
-  {
-    "name": "R",
-    "reads": 80,
-    "writes": 5,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:66",
-        "code": "C.R"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:717",
-        "code": "y.R"
-      },
-      {
-        "loc": "src\\engine\\modules\\simulation\\tick.js:571",
-        "code": "q.R"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\simulation\\tick.js",
-      "src\\engine\\modules\\world\\terrain.js"
     ]
   },
   {
@@ -2464,7 +2099,7 @@
       },
       {
         "loc": "src\\engine\\modules\\world\\pathfinding.js:43",
-        "code": "a.G[b - 1][c].Rb"
+        "code": "a.tileGrid[b - 1][c].Rb"
       }
     ],
     "fileCount": 4,
@@ -2655,11 +2290,11 @@
     "samples": [
       {
         "loc": "src\\engine\\modules\\ai\\behaviors.js:336",
-        "code": "b.u.ac"
+        "code": "b.levelPosition.ac"
       },
       {
         "loc": "src\\engine\\modules\\ai\\behaviors.js:449",
-        "code": "a.p.u.ac"
+        "code": "a.position.levelPosition.ac"
       },
       {
         "loc": "src\\engine\\modules\\ai\\behaviors.js:494",
@@ -2962,30 +2597,6 @@
     ]
   },
   {
-    "name": "nc",
-    "reads": 3,
-    "writes": 20,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\potions.js:22",
-        "code": "a.mg.nc"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\potions.js:77",
-        "code": "a.mg.nc"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\potions.js:244",
-        "code": "this.mg.nc"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\combat\\potions.js",
-      "src\\engine\\modules\\content\\balance.js"
-    ]
-  },
-  {
     "name": "qc",
     "reads": 5,
     "writes": 18,
@@ -3175,7 +2786,7 @@
       },
       {
         "loc": "src\\engine\\modules\\runtime\\game.js:224",
-        "code": "Ec: game.terrainSprites.v(\"L2_Chest02.PNG\")"
+        "code": "Ec: game.terrainSprites.getSprite(\"L2_Chest02.PNG\")"
       }
     ],
     "fileCount": 2,
@@ -3310,7 +2921,7 @@
     "samples": [
       {
         "loc": "src\\engine\\modules\\ai\\behaviors.js:135",
-        "code": "a.p.Cc"
+        "code": "a.position.Cc"
       },
       {
         "loc": "src\\engine\\modules\\ai\\behaviors.js:998",
@@ -3682,11 +3293,11 @@
     "samples": [
       {
         "loc": "src\\engine\\modules\\ai\\targeting.js:157",
-        "code": "a.p.cd"
+        "code": "a.position.cd"
       },
       {
         "loc": "src\\engine\\modules\\ai\\targeting.js:180",
-        "code": "a.p.cd"
+        "code": "a.position.cd"
       },
       {
         "loc": "src\\engine\\modules\\characters\\character.js:272",
@@ -3733,31 +3344,6 @@
       "src\\engine\\modules\\progression\\upgrades.js",
       "src\\engine\\modules\\runtime\\game.js",
       "src\\engine\\modules\\views\\monsters.js"
-    ]
-  },
-  {
-    "name": "md",
-    "reads": 6,
-    "writes": 14,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\content\\balance.js:306",
-        "code": "md: 0"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\balance.js:319",
-        "code": "md: 0"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\balance.js:332",
-        "code": "md: 0"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\content\\balance.js",
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\progression\\upgrades.js"
     ]
   },
   {
@@ -6029,55 +5615,6 @@
     ]
   },
   {
-    "name": "xf",
-    "reads": 3,
-    "writes": 11,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\encounters.js:91",
-        "code": "globalUpgradeDefinitions.maxMonsters.xf"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\encounters.js:140",
-        "code": "globalUpgradeDefinitions.maxMonsters.xf"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\balance.js:304",
-        "code": "xf: 40"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\combat\\encounters.js",
-      "src\\engine\\modules\\content\\balance.js",
-      "src\\engine\\modules\\progression\\upgrades.js"
-    ]
-  },
-  {
-    "name": "lf",
-    "reads": 1,
-    "writes": 13,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\content\\balance.js:130",
-        "code": "lf: 0.1"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\balance.js:135",
-        "code": "lf: -0.1"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\balance.js:140",
-        "code": "lf: -0.1"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\content\\balance.js",
-      "src\\engine\\modules\\progression\\upgrades.js"
-    ]
-  },
-  {
     "name": "Cf",
     "reads": 3,
     "writes": 11,
@@ -7343,30 +6880,6 @@
     ]
   },
   {
-    "name": "$g",
-    "reads": 1,
-    "writes": 11,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\content\\balance.js:305",
-        "code": "$g: 2"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\balance.js:318",
-        "code": "$g: 2"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\balance.js:331",
-        "code": "$g: 1"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\content\\balance.js",
-      "src\\engine\\modules\\progression\\upgrades.js"
-    ]
-  },
-  {
     "name": "ah",
     "reads": 1,
     "writes": 11,
@@ -7596,7 +7109,7 @@
       },
       {
         "loc": "src\\engine\\modules\\runtime\\game.js:223",
-        "code": "xh: {\n  Ec: game.terrainSprites.v(\"L2_Chest02.PNG\"),\n  closed: game.terrainSprites.v(\"L2_Chest01.PNG\")\n}"
+        "code": "xh: {\n  Ec: game.terrainSprites.getSprite(\"L2_Chest02.PNG\"),\n  closed: game.terrainSprites.getSprite(\"L2_Chest01.PNG\")\n}"
       }
     ],
     "fileCount": 2,
@@ -7620,7 +7133,7 @@
       },
       {
         "loc": "src\\engine\\modules\\runtime\\game.js:227",
-        "code": "hh: {\n  Ec: game.terrainSprites.v(\"L2_Chest04.PNG\"),\n  closed: game.terrainSprites.v(\"L2_Chest03.PNG\")\n}"
+        "code": "hh: {\n  Ec: game.terrainSprites.getSprite(\"L2_Chest04.PNG\"),\n  closed: game.terrainSprites.getSprite(\"L2_Chest03.PNG\")\n}"
       }
     ],
     "fileCount": 2,
@@ -18806,7 +18319,7 @@
       },
       {
         "loc": "src\\engine\\modules\\content\\balance.js:377",
-        "code": "As: {\n  c: \"minGoldPerDrop\",\n  title: \"最小黄金掉落\",\n  e: \"最小掉落黄金数量+10\",\n  t: 0,\n  xf: 0,\n  $g: 10,\n  md: 0,\n  maxValue: 2E3,\n  rd: 300,\n  ah: 10"
+        "code": "As: {\n  c: \"minGoldPerDrop\",\n  title: \"最小黄金掉落\",\n  e: \"最小掉落黄金数量+10\",\n  currentValue: 0,\n  baseValue: 0,\n  perLevelIncrement: 10,\n  purchasedL"
       },
       {
         "loc": "src\\engine\\modules\\content\\balance.js:488",
@@ -18830,7 +18343,7 @@
       },
       {
         "loc": "src\\engine\\modules\\content\\balance.js:364",
-        "code": "ys: {\n  c: \"maxGoldPerDrop\",\n  title: \"最大黄金掉落\",\n  e: \"最大掉落黄金数量+25\",\n  t: 15,\n  xf: 15,\n  $g: 25,\n  md: 0,\n  maxValue: 2500,\n  rd: 200,\n  ah:"
+        "code": "ys: {\n  c: \"maxGoldPerDrop\",\n  title: \"最大黄金掉落\",\n  e: \"最大掉落黄金数量+25\",\n  currentValue: 15,\n  baseValue: 15,\n  perLevelIncrement: 25,\n  purchase"
       },
       {
         "loc": "src\\engine\\modules\\content\\balance.js:488",
@@ -18850,7 +18363,7 @@
     "samples": [
       {
         "loc": "src\\engine\\modules\\content\\balance.js:390",
-        "code": "Lr: {\n  c: \"goldDropChance\",\n  title: \"更多黄金掉落\",\n  e: \"每次杀怪黄金掉落几率+5%\",\n  t: 25,\n  xf: 25,\n  $g: 5,\n  md: 0,\n  maxValue: 100,\n  rd: 200,\n  ah:"
+        "code": "Lr: {\n  c: \"goldDropChance\",\n  title: \"更多黄金掉落\",\n  e: \"每次杀怪黄金掉落几率+5%\",\n  currentValue: 25,\n  baseValue: 25,\n  perLevelIncrement: 5,\n  purchas"
       },
       {
         "loc": "src\\engine\\modules\\content\\balance.js:488",
@@ -18875,7 +18388,7 @@
     "samples": [
       {
         "loc": "src\\engine\\modules\\content\\balance.js:403",
-        "code": "$s: {\n  c: \"scrollDropChance\",\n  title: \"更多卷轴掉落\",\n  e: \"每次杀怪卷轴掉落几率+2%\",\n  t: 20,\n  xf: 20,\n  $g: 2,\n  md: 0,\n  maxValue: 40,\n  rd: 200,\n  ah"
+        "code": "$s: {\n  c: \"scrollDropChance\",\n  title: \"更多卷轴掉落\",\n  e: \"每次杀怪卷轴掉落几率+2%\",\n  currentValue: 20,\n  baseValue: 20,\n  perLevelIncrement: 2,\n  purch"
       },
       {
         "loc": "src\\engine\\modules\\content\\balance.js:488",
@@ -18900,7 +18413,7 @@
     "samples": [
       {
         "loc": "src\\engine\\modules\\content\\balance.js:416",
-        "code": "Ns: {\n  c: \"potionDropChance\",\n  title: \"更多药剂掉落\",\n  e: \"每次杀怪药剂掉落几率+0.5%\",\n  t: 1,\n  xf: 1,\n  $g: 0.5,\n  md: 0,\n  maxValue: 5,\n  rd: 300,\n  a"
+        "code": "Ns: {\n  c: \"potionDropChance\",\n  title: \"更多药剂掉落\",\n  e: \"每次杀怪药剂掉落几率+0.5%\",\n  currentValue: 1,\n  baseValue: 1,\n  perLevelIncrement: 0.5,\n  pur"
       },
       {
         "loc": "src\\engine\\modules\\content\\balance.js:488",

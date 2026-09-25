@@ -1,73 +1,65 @@
 # WORKSTATE — Clickpocalypse II 语义恢复与现代化工程
 
-> 本文件是长程自治任务的**唯一续跑入口**。上下文压缩或中断后，先读本文件 + `git log`，再继续。
-> 最后更新：2026-09-26（第 2 次会话开始时）
+> 本文件是长程自治任务的**唯一续跑入口**。上下文压缩或中断后，先读本文件 + `git log --oneline`，再继续。
+> 最后更新：2026-09-26（第 2 次会话，中后期）
 
 ## 1. 项目概况
 
-- 原始遗产：`archive/original/c2.js`（46,980 行高度混淆的单体浏览器游戏，sha256 见 `archive/migration/recovery-manifest.json`）。
-- 现状：`src/engine/`（约 5.3 万行）是**经 AST 工具从 c2.js 机械恢复出的模块化引擎**（非重写），外部套有新的中文 UI 壳 `src/app.js` + `src/ui/`。
-- 恢复声明：`archive/migration/recovery-manifest.json`（sprite atlas 抽取、LZ codec 复用、ES module 化、持久化注入、30s 自动保存、`window.Game` 私有化）。
+- 原始遗产：`archive/original/c2.js`（46,980 行混淆单体，sha256 见 `archive/migration/recovery-manifest.json`）。
+- `src/engine/`：经 AST 工具从 c2.js **机械恢复**的模块化引擎（非重写），74 模块；`src/app.js`+`src/ui/` 为新 UI 壳。
+- 语义事实库：`docs/reverse-engineering/facts.md`（20 条已验证事实）+ `semantic-map.md`（重命名日志）+ `docs/symbol-map.json`（1,231 符号）。
 
-## 2. 当前里程碑状态
+## 2. 里程碑状态
 
 | Milestone | 状态 |
 |---|---|
-| M0 Original Baseline | ✅ 原版保留于 archive/original，可通过 tests/engine-harness.html?original 运行 |
-| M1 Static Map | ✅ docs/symbol-map.json：1,231 符号中 1,228 已重命名；74 模块 + 依赖图 |
-| M2 Core Runtime | ✅ bootstrap/GameState/主循环/时间/RNG/存档均已在 src/engine 恢复并有模块边界 |
-| M3 Behavioral Harness | ✅ 差分 harness + parity 测试 + E2E 冒烟均已存在且**实测通过** |
-| M4 High-Confidence Rename | 🟡 99.8% 符号已命名；**202 个字段仍为混淆名**（fields 节 renamed:0） |
-| M5 Foundation Extraction | ✅ RNG(core/math.js SeededRandom)、codec(save-codec.js + vendor lz-string 1.3.3)、clock、静态数据已独立 |
-| M6-M9 Domain/Presentation | ✅（结构上）modules/{characters,combat,loot,world,progression,rendering,views,simulation} |
-| M10 Type Hardening | ❌ 未开始（纯 JS，无 JSDoc 类型体系、无 typecheck） |
-| M11 Performance | ❌ 无 baseline、无测量 |
-| M12 Legacy Reduction | 🟡 src 内无 c2.js 残留；adapter 中仍引用混淆字段（ae.Dd、uj、ze、dg、ym） |
-| M13 Final Regression | ❌ 未开始 |
+| M0-M3 | ✅ 基线/静态图/运行时恢复/行为 harness 全部完成且实测通过 |
+| M4 High-Confidence Rename | 🟡 符号 99.8% 已命名；**字段重命名已完成 30+ 个字段身份**（动画帧表、Achievement 组、Upgrade.canPurchase、视图 upgrade、Vector2 x/y、Character.position、CharacterPosition.levelPosition/room、Item.slot/characteristic、tb slot/statType（含 guardians/minions）、怪物 name、WorldMap worldBlocks/blockOrigin*/tileGrid、spriteName、getSprite 方法族、tabState、数值组 currentValue/levelIncrement/activeValue/baseValue/purchasedLevels/perLevelIncrement）|
+| M5-M9 | ✅ 结构完成（见 MIGRATION_MAP.md） |
+| M10 Type Hardening | ❌ 未开始 |
+| M11 Performance | ✅ 基线完成（docs/performance-baseline.md）：重构/原版比值 1.0-1.1x；优化未开始（也无必要——模拟占回合预算 0.03%） |
+| M12 Legacy Reduction | 🟡 剩余约 1,300 处单字母字段访问（技能定义表 c/e/f/g/h 为主，artifacts/obfuscated-fields.json） |
+| M13 Final Regression | 🟡 回归体系全绿；prestige/victory/部分法术分支无差分场景 |
 
-## 3. 可运行状态与命令
+## 3. 可运行状态与命令（全部实测通过 @ commit 4665924+）
 
 ```bash
-npm run dev            # scripts/serve.mjs → http://127.0.0.1:4173（静态服务，无构建步骤）
-node scripts/test-parity.mjs   # 差分：原版 vs 重构，固定 LCG(seed 123456789)+固定 Date.now，推进 0/1/99/900 回合比完整存档
-node scripts/test-browser.mjs  # E2E：建队/暂停/面板/设置/导出导入/非法存档/刷新/三视口
+npm run dev              # http://127.0.0.1:4173（静态服务，测试前置）
+npm test                 # 单测 9 项：RNG 差分(提取原版 ga 对照 6 种子×100k)、codec 契约、格式化表
+npm run test:parity      # 原版 vs 重构：同存档+固定 RNG/时钟，0/1/99/900 回合全状态相等
+npm run test:scenarios   # 9 场景差分矩阵：long-run-9000 / offline-1h-8h-disabled(含收益断言) / 药水×2 / 卷轴 / 金币 / 后期
+npm run test:e2e         # 浏览器 E2E：建队/暂停/面板/设置/导入导出/非法存档/刷新/三视口
+npm run check            # 语法检查(104 文件) + 单测
+npm run perf             # 性能基线测量（重构 vs 原版）
 ```
 
-- 测试前置：`npm run dev` 需先在另一终端运行（或 `TEST_URL` 指向已启动实例）；需要 Chrome（playwright channel:'chrome'）。
-- Node 版本要求 ≥22（当前 v22.19.0 满足）。
-- **2026-09-26 实测**：parity 4 项全过；browser E2E 全过。
+## 4. 本会话关键发现（防重复踩坑）
 
-## 4. Git 状态
+1. **RNG 是 JS 浮点变体 MT19937**（seed 5489 首值 1859732469 ≠ C 标准 3499211612）——禁止替换"更标准"实现。
+2. **存档 4,477 个键全为语义化命名，无单字母键**——运行时字段重命名安全，但 game-save.js/entities.js 的映射行必须成对同步。
+3. **离线结算由帧循环驱动**（每帧≤200 回合；分支条件 `1E3 < 帧差`）——harness 用 `advanceOffline()`（每帧+2000ms）。
+4. **数据字面量键分布在多个 content 文件**（classes/guardians/minions/monsters/skills/*）——重命名数据键必须全库 grep；漏改会在后期内容触发崩溃（guardians 教训，facts.md 第 13/20 条）。
+5. **Windows Git-Bash**：`grep -rl | xargs sed` 会因反斜杠路径失败；复合 sed `'s/a/b; s/c/d'` 静默无效——必须逐表达式或 find 循环。
+6. 场景矩阵曾抓住 parity-900 抓不到的真实回归（guardians 崩溃）——**每个重命名批次必须跑全部三套测试**。
 
-- 仓库于本次会话初始化；首个 commit = 当前全部现状，tag `baseline/original-runnable`。
-- 每完成一个可验证切片即 commit（信息格式：`re:`/`refactor:`/`test:`/`perf:`/`docs:` 前缀 + 真实变化）。
+## 5. Git
 
-## 5. 已确认的关键语义（快照，详见 docs/symbol-map.json）
+- 每个可验证切片一个 commit（本次会话约 20 个）；baseline tag `baseline/original-runnable`。
+- 当前工作树干净，三套测试全绿。
 
-- `window.Game` → 私有 `game`（runtime/game.js），入口经 `src/engine/adapter.js`。
-- 存档键在原版就是语义化字符串（`gameInitialized`、`dungeonManagerState`…29 个顶层键），压缩为 LZ-string 1.3.3 Base64 → localStorage `C2_V1_001`（backup 键 `C2_V1_001_backup`）。
-- 原版 RNG：`ga` → `SeededRandom`（core/math.js）；测试 harness 用 LCG(1664525,1013904223) 替换 Math.random 实现双端确定性。
-- 存档 fixture：`tests/fixtures/original.c2save`（2026-09-25 采集，含进行中冒险）。
+## 6. 下一步（按优先级）
 
-## 6. 已知风险/未解点
+1. **重命名波次 3**：技能/法术定义表字段（`c`→settingId/skillId/spellId 已有 HIGH 证据，含存档映射同步 game-save.js:953/543-551、entities.js:138-156）；`e/f/g/h` 等技能字段需**新取证**（派 Explore 智能体，产出格式同上批）。
+2. 交付物收尾：REFACTOR_REPORT.md、PERFORMANCE_REPORT.md（数据已有）、COMPATIBILITY_REPORT.md（parity/场景/codec 证据已有）——大部分素材在 docs/ 与 facts.md。
+3. 扩展差分场景：prestige/victory 流程、法术分支、城堡战（需先读代码找触发入口，或经 refactored API 构造存档）。
+4. 类型体系（M10）：JSDoc 先行，core/ 与 persistence/ 优先。
+5. symbol-map.json 元数据刷新（本次 30+ 字段映射写入）。
 
-- 202 个混淆字段未重命名（高优先：adapter.js 引用的 `state.ae.Dd`（冒险点数）、`dungeons.uj/ze/dg`、`encounter.ym`）。**字段重命名不得改变 JSON 序列化键**——存档写入用的是另一套语义键（见 game-save.js），需先确认混淆字段与存档键的映射边界。
-- `package.json` 存在坏脚本：`build`/`check` 指向不存在文件；`test` glob 无匹配。→ 本次会话已列入待办。
-- docs/ 缺大部分规范要求的文档（architecture、game-state-schema、persistence、rng、time-model、baseline、formulas、reverse-engineering/facts）。
-- 尚无离线收益(offline processing)专项差分场景、无药水/卷轴激活专项场景、无更长时间推进(>900 回合)场景。
-- `.playwright-cli/original.c2save` 与 `tests/fixtures/original.c2save` 是同一存档的两份拷贝（疑似）。
+## 7. 禁止回退的文件
 
-## 7. 下一步（按优先级）
+`archive/original/**`、`tests/fixtures/original.c2save`、`docs/symbol-map.json`、`docs/reverse-engineering/**`、`src/vendor/lz-string-1.3.3.js`、`output/perf/perf-baseline.json`（基线数据）。
 
-1. 修 package.json（删/补 build、check、recover、test）+ 建立首批单测（codec 往返、RNG 确定性、存档往返）。
-2. 字段重命名波次 1：先核对 fields 映射表 → 在不改存档键的前提下重命名运行时字段 → parity 回归。
-3. 扩展差分场景：1500/5000 回合、多 fixture、药水/卷轴/离线注入。
-4. 补 docs 体系（architecture/game-state-schema/persistence/rng/time-model/baseline）。
-5. 性能基线（frame time、save/load 耗时、长跑内存）。
+## 8. 智能体产出验收状态
 
-## 8. 禁止回退的文件
-
-- `archive/original/**`（唯一原版样本，行为参照基准）
-- `tests/fixtures/original.c2save`（差分基准存档）
-- `docs/symbol-map.json`（语义事实库）
-- `src/vendor/lz-string-1.3.3.js`（存档兼容契约）
+- 取证×3（字段语义）：✅ 已验证并落地/记录（27 字段身份全 HIGH）。
+- 文档×3（architecture/runtime-entrypoints、game-state-schema/persistence、rng/time-model/baseline）：✅ 已提交；architecture.md 的 file:line 引用经智能体脚本核验；game-state 智能体发现 facts.md"29 键"笔误已修正为 30 键。
