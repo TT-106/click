@@ -181,152 +181,6 @@
     ]
   },
   {
-    "name": "h",
-    "reads": 14,
-    "writes": 350,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:648",
-        "code": "wc.h"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:967",
-        "code": "pointEventDefinitions[lb].h"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\achievements.js:17",
-        "code": "this.h"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\progression\\achievements.js",
-      "src\\engine\\modules\\progression\\points.js",
-      "src\\engine\\modules\\views\\achievements.js"
-    ]
-  },
-  {
-    "name": "j",
-    "reads": 6,
-    "writes": 329,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\progression\\achievements.js:15",
-        "code": "this.j"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\achievements.js:15",
-        "code": "a.j"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\achievements.js:52",
-        "code": "a.j"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\progression\\achievements.js",
-      "src\\engine\\modules\\simulation\\tick.js"
-    ]
-  },
-  {
-    "name": "k",
-    "reads": 5,
-    "writes": 329,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:1000",
-        "code": "Na.k"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\achievements.js:12",
-        "code": "this.k"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\achievements.js:12",
-        "code": "a.k"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\progression\\achievements.js",
-      "src\\engine\\modules\\runtime\\game.js"
-    ]
-  },
-  {
-    "name": "l",
-    "reads": 5,
-    "writes": 329,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\progression\\achievements.js:13",
-        "code": "this.l"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\achievements.js:13",
-        "code": "a.l"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\achievements.js:45",
-        "code": "a.l"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\progression\\achievements.js",
-      "src\\engine\\modules\\progression\\upgrades.js"
-    ]
-  },
-  {
-    "name": "m",
-    "reads": 4,
-    "writes": 329,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\progression\\achievements.js:14",
-        "code": "this.m"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\achievements.js:14",
-        "code": "a.m"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\achievements.js:50",
-        "code": "a.m"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\progression\\achievements.js"
-    ]
-  },
-  {
-    "name": "o",
-    "reads": 1,
-    "writes": 314,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\encounters.js:234",
-        "code": "g.o"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\monsters.js:7",
-        "code": "o: \"棕色蝙蝠\""
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\monsters.js:10",
-        "code": "o: \"灰色蝙蝠\""
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\combat\\encounters.js",
-      "src\\engine\\modules\\content\\monsters.js"
-    ]
-  },
-  {
     "name": "p",
     "reads": 259,
     "writes": 1,
@@ -392,70 +246,6 @@
       "src\\engine\\modules\\world\\regions.js",
       "src\\engine\\modules\\world\\terrain.js",
       "src\\engine\\modules\\world\\travel-costs.js"
-    ]
-  },
-  {
-    "name": "r",
-    "reads": 14,
-    "writes": 154,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:37",
-        "code": "a[g].r"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:47",
-        "code": "d[c].r"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:142",
-        "code": "b.r"
-      }
-    ],
-    "fileCount": 13,
-    "files": [
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\characters\\movement.js",
-      "src\\engine\\modules\\characters\\party.js",
-      "src\\engine\\modules\\content\\classes.js",
-      "src\\engine\\modules\\content\\guardians.js",
-      "src\\engine\\modules\\content\\minions.js",
-      "src\\engine\\modules\\loot\\inventory.js",
-      "src\\engine\\modules\\loot\\items.js",
-      "src\\engine\\modules\\persistence\\entities.js",
-      "src\\engine\\modules\\progression\\upgrades.js",
-      "src\\engine\\modules\\simulation\\tick.js",
-      "src\\engine\\modules\\views\\character.js",
-      "src\\engine\\modules\\views\\upgrade-details.js"
-    ]
-  },
-  {
-    "name": "s",
-    "reads": 10,
-    "writes": 154,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:47",
-        "code": "d[c].s"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:166",
-        "code": "f.s"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:168",
-        "code": "f.s"
-      }
-    ],
-    "fileCount": 7,
-    "files": [
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\characters\\movement.js",
-      "src\\engine\\modules\\content\\classes.js",
-      "src\\engine\\modules\\content\\guardians.js",
-      "src\\engine\\modules\\content\\minions.js",
-      "src\\engine\\modules\\loot\\items.js",
-      "src\\engine\\modules\\persistence\\entities.js"
     ]
   },
   {
@@ -617,29 +407,6 @@
     ]
   },
   {
-    "name": "A",
-    "reads": 65,
-    "writes": 51,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:120",
-        "code": "this.A"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:124",
-        "code": "this.A"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:149",
-        "code": "this.A"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\progression\\upgrades.js"
-    ]
-  },
-  {
     "name": "C",
     "reads": 94,
     "writes": 17,
@@ -698,29 +465,6 @@
     ]
   },
   {
-    "name": "H",
-    "reads": 71,
-    "writes": 34,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\upgrade-details.js:19",
-        "code": "this.H"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\upgrade-details.js:37",
-        "code": "a.H"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\upgrade-details.js:39",
-        "code": "a.H"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\upgrade-details.js"
-    ]
-  },
-  {
     "name": "L",
     "reads": 80,
     "writes": 9,
@@ -746,102 +490,6 @@
     ]
   },
   {
-    "name": "O",
-    "reads": 1,
-    "writes": 86,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\content\\animations.js:8",
-        "code": "O: 0"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\animations.js:14",
-        "code": "O: 0"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\animations.js:20",
-        "code": "O: 0"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\content\\animations.js",
-      "src\\engine\\modules\\rendering\\sprites.js"
-    ]
-  },
-  {
-    "name": "P",
-    "reads": 1,
-    "writes": 86,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\content\\animations.js:9",
-        "code": "P: 0"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\animations.js:15",
-        "code": "P: 1"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\animations.js:21",
-        "code": "P: 2"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\content\\animations.js",
-      "src\\engine\\modules\\rendering\\sprites.js"
-    ]
-  },
-  {
-    "name": "M",
-    "reads": 1,
-    "writes": 86,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\content\\animations.js:10",
-        "code": "M: 7"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\animations.js:16",
-        "code": "M: 7"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\animations.js:22",
-        "code": "M: 7"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\content\\animations.js",
-      "src\\engine\\modules\\rendering\\sprites.js"
-    ]
-  },
-  {
-    "name": "N",
-    "reads": 1,
-    "writes": 86,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\content\\animations.js:11",
-        "code": "N: 0"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\animations.js:17",
-        "code": "N: 1"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\animations.js:23",
-        "code": "N: 2"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\content\\animations.js",
-      "src\\engine\\modules\\rendering\\sprites.js"
-    ]
-  },
-  {
     "name": "R",
     "reads": 80,
     "writes": 5,
@@ -864,41 +512,6 @@
       "src\\engine\\modules\\persistence\\game-save.js",
       "src\\engine\\modules\\simulation\\tick.js",
       "src\\engine\\modules\\world\\terrain.js"
-    ]
-  },
-  {
-    "name": "T",
-    "reads": 65,
-    "writes": 8,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:514",
-        "code": "this.Jl.T"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\targeting.js:137",
-        "code": "b.T"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:193",
-        "code": "c.Db.T"
-      }
-    ],
-    "fileCount": 13,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js",
-      "src\\engine\\modules\\ai\\targeting.js",
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\characters\\movement.js",
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\core\\math.js",
-      "src\\engine\\modules\\loot\\treasure.js",
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\rendering\\sprites.js",
-      "src\\engine\\modules\\simulation\\characters.js",
-      "src\\engine\\modules\\simulation\\tick.js",
-      "src\\engine\\modules\\world\\pathfinding.js",
-      "src\\engine\\modules\\world\\rooms.js"
     ]
   },
   {
@@ -977,41 +590,6 @@
       "src\\engine\\modules\\combat\\skill-effects.js",
       "src\\engine\\modules\\content\\spells.js",
       "src\\engine\\modules\\views\\expedition.js"
-    ]
-  },
-  {
-    "name": "U",
-    "reads": 61,
-    "writes": 8,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:515",
-        "code": "this.Jl.U"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\targeting.js:137",
-        "code": "b.U"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:194",
-        "code": "c.Db.U"
-      }
-    ],
-    "fileCount": 13,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js",
-      "src\\engine\\modules\\ai\\targeting.js",
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\characters\\movement.js",
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\core\\math.js",
-      "src\\engine\\modules\\loot\\treasure.js",
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\rendering\\sprites.js",
-      "src\\engine\\modules\\simulation\\characters.js",
-      "src\\engine\\modules\\simulation\\tick.js",
-      "src\\engine\\modules\\world\\pathfinding.js",
-      "src\\engine\\modules\\world\\rooms.js"
     ]
   },
   {
@@ -2319,7 +1897,7 @@
       },
       {
         "loc": "src\\engine\\modules\\content\\classes.js:57",
-        "code": "tb: [{\n  r: \"20\",\n  s: 1\n}, {\n  r: \"80\",\n  s: 2\n}, {\n  r: \"40\",\n  s: 4\n}, {\n  r: \"120\",\n  s: 5\n}, {\n  r: \"101\",\n  s: 3\n}, {\n  r: \"185\",\n  s:"
+        "code": "tb: [{\n  slot: \"20\",\n  statType: 1\n}, {\n  slot: \"80\",\n  statType: 2\n}, {\n  slot: \"40\",\n  statType: 4\n}, {\n  slot: \"120\",\n  statType: 5\n}, {\n"
       }
     ],
     "fileCount": 4,
@@ -3613,7 +3191,7 @@
     "samples": [
       {
         "loc": "src\\engine\\modules\\progression\\achievements.js:18",
-        "code": "pointEventsById[a.h].yc"
+        "code": "pointEventsById[a.pointEventTypeId].yc"
       },
       {
         "loc": "src\\engine\\modules\\progression\\points.js:82",
@@ -3637,7 +3215,7 @@
     "samples": [
       {
         "loc": "src\\engine\\modules\\progression\\achievements.js:24",
-        "code": "pointEventsById[a.h].Fc"
+        "code": "pointEventsById[a.pointEventTypeId].Fc"
       },
       {
         "loc": "src\\engine\\modules\\progression\\points.js:83",
@@ -28649,7 +28227,7 @@
       },
       {
         "loc": "src\\engine\\modules\\views\\upgrade-details.js:928",
-        "code": "this.H.Pz"
+        "code": "this.upgrade.Pz"
       }
     ],
     "fileCount": 2,
@@ -28673,7 +28251,7 @@
       },
       {
         "loc": "src\\engine\\modules\\views\\upgrade-details.js:596",
-        "code": "this.H.Nz"
+        "code": "this.upgrade.Nz"
       }
     ],
     "fileCount": 2,
@@ -28697,7 +28275,7 @@
       },
       {
         "loc": "src\\engine\\modules\\views\\upgrade-details.js:467",
-        "code": "this.H.Oz"
+        "code": "this.upgrade.Oz"
       }
     ],
     "fileCount": 2,
