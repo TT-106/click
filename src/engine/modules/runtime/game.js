@@ -468,7 +468,7 @@ export function initializeRuntimeGame() {
     },
     beginOfflineProgress: function () {
       if (!game.gameWon && game.partyCreated) {
-        game.offlineDuration = Math.min(game.offlineDuration, 432E5 + offlineTimeBonus.t);
+        game.offlineDuration = Math.min(game.offlineDuration, 432E5 + offlineTimeBonus.currentValue);
         game.processingOffline = true;
         game.offlineProcessed = 0;
       }

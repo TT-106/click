@@ -131,48 +131,48 @@ export function initializeViewsMonsters() {
   MonsterLevelView.prototype = new View();
   MonsterLevelView.prototype.reset = function () {};
   MonsterLevelView.prototype.update = function () {
-    if (this.Wu !== globalUpgradeDefinitions.Lr.t) {
-      this.Wu = globalUpgradeDefinitions.Lr.t;
+    if (this.Wu !== globalUpgradeDefinitions.Lr.currentValue) {
+      this.Wu = globalUpgradeDefinitions.Lr.currentValue;
       setElementHtml("goldDropChance", this.Wu + "%");
     }
-    if (this.jv !== globalUpgradeDefinitions.ys.t) {
-      this.jv = globalUpgradeDefinitions.ys.t;
+    if (this.jv !== globalUpgradeDefinitions.ys.currentValue) {
+      this.jv = globalUpgradeDefinitions.ys.currentValue;
       setElementHtml("maxGoldPerDrop", this.jv + "");
     }
-    if (this.ov !== globalUpgradeDefinitions.As.t) {
-      this.ov = globalUpgradeDefinitions.As.t;
+    if (this.ov !== globalUpgradeDefinitions.As.currentValue) {
+      this.ov = globalUpgradeDefinitions.As.currentValue;
       setElementHtml("minGoldPerDrop", this.ov + "");
     }
-    if (this.ev !== globalUpgradeDefinitions.itemDropChance.t) {
-      this.ev = globalUpgradeDefinitions.itemDropChance.t;
+    if (this.ev !== globalUpgradeDefinitions.itemDropChance.currentValue) {
+      this.ev = globalUpgradeDefinitions.itemDropChance.currentValue;
       setElementHtml("itemDropChance", this.ev + "%");
     }
-    if (this.Fv !== globalUpgradeDefinitions.$s.t) {
-      this.Fv = globalUpgradeDefinitions.$s.t;
+    if (this.Fv !== globalUpgradeDefinitions.$s.currentValue) {
+      this.Fv = globalUpgradeDefinitions.$s.currentValue;
       setElementHtml("scrollDropChance", this.Fv + "%");
     }
-    if (this.zv !== globalUpgradeDefinitions.Ns.t) {
-      this.zv = globalUpgradeDefinitions.Ns.t;
+    if (this.zv !== globalUpgradeDefinitions.Ns.currentValue) {
+      this.zv = globalUpgradeDefinitions.Ns.currentValue;
       setElementHtml("potionDropChance", this.zv + "%");
     }
-    if (this.fv !== globalUpgradeDefinitions.higherLevelItemChance.t) {
-      this.fv = globalUpgradeDefinitions.higherLevelItemChance.t;
+    if (this.fv !== globalUpgradeDefinitions.higherLevelItemChance.currentValue) {
+      this.fv = globalUpgradeDefinitions.higherLevelItemChance.currentValue;
       setElementHtml("itemLevelBonus", this.fv + "%");
     }
-    if (this.Du !== globalUpgradeDefinitions.itemQualityChance.t) {
-      this.Du = globalUpgradeDefinitions.itemQualityChance.t;
+    if (this.Du !== globalUpgradeDefinitions.itemQualityChance.currentValue) {
+      this.Du = globalUpgradeDefinitions.itemQualityChance.currentValue;
       setElementHtml("itemRarityChance", this.Du + "%");
     }
-    if (this.Vv !== globalUpgradeDefinitions.treasureChance.t) {
-      this.Vv = globalUpgradeDefinitions.treasureChance.t;
+    if (this.Vv !== globalUpgradeDefinitions.treasureChance.currentValue) {
+      this.Vv = globalUpgradeDefinitions.treasureChance.currentValue;
       setElementHtml("treasureChestChance", this.Vv + "%");
     }
-    if (this.lv !== globalUpgradeDefinitions.maxMonsters.t) {
-      this.lv = globalUpgradeDefinitions.maxMonsters.t;
+    if (this.lv !== globalUpgradeDefinitions.maxMonsters.currentValue) {
+      this.lv = globalUpgradeDefinitions.maxMonsters.currentValue;
       setElementHtml("maxMonstersPerRoom", this.lv + "");
     }
-    if (this.pv !== globalUpgradeDefinitions.minMonsters.t) {
-      this.pv = globalUpgradeDefinitions.minMonsters.t;
+    if (this.pv !== globalUpgradeDefinitions.minMonsters.currentValue) {
+      this.pv = globalUpgradeDefinitions.minMonsters.currentValue;
       setElementHtml("minMonstersPerRoom", this.pv + "");
     }
   };

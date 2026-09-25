@@ -546,7 +546,7 @@ export function restoreGameState(a, b) {
           for (Vd in jg) {
             if (Object.prototype.hasOwnProperty.call(jg, Vd)) {
               if (Nd = globalUpgradesById[Vd]) {
-                Nd.md = jg[Vd];
+                Nd.purchasedLevels = jg[Vd];
               } else {
                 console.log("failed to lookup settingsId: " + Vd);
               }
@@ -950,7 +950,7 @@ export function createSaveState(a) {
     for (kb in globalUpgradeDefinitions) {
       if (Object.prototype.hasOwnProperty.call(globalUpgradeDefinitions, kb)) {
         Ra = globalUpgradeDefinitions[kb];
-        Ja[Ra.c] = Ra.md;
+        Ja[Ra.c] = Ra.purchasedLevels;
       }
     }
     var Db = {

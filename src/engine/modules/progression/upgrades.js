@@ -127,10 +127,10 @@ export function GlobalUpgrade(a) {
   recalculateGlobalUpgrade(this);
 }
 export function recalculateGlobalUpgrade(a) {
-  a.mb.rd = scaleByLevel(a.mb.ah + a.mb.md * a.mb.Pg, globalUpgradePriceCurve, 1);
-  a.mb.t = a.mb.xf + a.mb.md * a.mb.$g;
-  if (a.mb.t > a.mb.maxValue) {
-    a.mb.t = a.mb.maxValue;
+  a.mb.rd = scaleByLevel(a.mb.ah + a.mb.purchasedLevels * a.mb.Pg, globalUpgradePriceCurve, 1);
+  a.mb.currentValue = a.mb.baseValue + a.mb.purchasedLevels * a.mb.perLevelIncrement;
+  if (a.mb.currentValue > a.mb.maxValue) {
+    a.mb.currentValue = a.mb.maxValue;
   }
 }
 export function EquipBestItemUpgrade(a) {
@@ -214,7 +214,7 @@ export function AdventurePointUpgrade(a) {
 }
 export function applyPointUpgrade(a) {
   a = getPointUpgradeModifier(a);
-  a.t += a.lf;
+  a.currentValue += a.levelIncrement;
 }
 export function getPointUpgradeModifier(a) {
   switch (a.kh.Tb) {
@@ -351,12 +351,12 @@ export function initializeProgressionUpgrades() {
   };
   GlobalUpgrade.prototype = new Upgrade();
   GlobalUpgrade.prototype.us = function () {
-    if (0 < this.mb.md) {
+    if (0 < this.mb.purchasedLevels) {
       recalculateGlobalUpgrade(this);
     }
   };
   GlobalUpgrade.prototype.og = function () {
-    this.mb.md = 0;
+    this.mb.purchasedLevels = 0;
     recalculateGlobalUpgrade(this);
   };
   GlobalUpgrade.prototype.ib = function () {
@@ -374,11 +374,11 @@ export function initializeProgressionUpgrades() {
   GlobalUpgrade.prototype.Qc = function () {
     if (!(this.mb.rd > game.state.party.kills)) {
       spendKills(game.state.party, this.mb.rd);
-      this.mb.md++;
+      this.mb.purchasedLevels++;
       this.canPurchase = false;
       recalculateGlobalUpgrade(this);
       markUpgradeChanged(this);
-      recordGameEvent("Upgrade", this.mb.title + " 数值:" + this.mb.t);
+      recordGameEvent("Upgrade", this.mb.title + " 数值:" + this.mb.currentValue);
     }
   };
   GlobalUpgrade.prototype.Bb = function () {
@@ -388,15 +388,15 @@ export function initializeProgressionUpgrades() {
     return this.mb.e;
   };
   GlobalUpgrade.prototype.Cd = function () {
-    if (this.mb.t >= this.mb.maxValue) {
+    if (this.mb.currentValue >= this.mb.maxValue) {
       this.Ea = this.canPurchase = false;
     } else {
       this.canPurchase = this.mb.rd <= game.state.party.kills;
       this.Ea = !this.canPurchase && this.hu();
     }
     var a = this.Oc(),
-      b = this.$A !== this.mb.md || this.Ub !== this.canPurchase || this.Zj !== this.Ea || this.$j !== a;
-    this.$A = this.mb.md;
+      b = this.$A !== this.mb.purchasedLevels || this.Ub !== this.canPurchase || this.Zj !== this.Ea || this.$j !== a;
+    this.$A = this.mb.purchasedLevels;
     this.Ub = this.canPurchase;
     this.Zj = this.Ea;
     this.$j = a;
@@ -647,7 +647,7 @@ export function initializeProgressionUpgrades() {
     return true;
   };
   UnlockMonsterLevelUpgrade.prototype.Bb = function () {
-    return floorNumber(this.Ds * itemCostBonus.t);
+    return floorNumber(this.Ds * itemCostBonus.currentValue);
   };
   UnlockMonsterLevelUpgrade.prototype.qc = function () {
     return this.canPurchase;
@@ -725,7 +725,7 @@ export function initializeProgressionUpgrades() {
     return this.canPurchase || this.Ea;
   };
   RetireMonsterLevelUpgrade.prototype.Bb = function () {
-    return floorNumber(this.Cs * itemCostBonus.t);
+    return floorNumber(this.Cs * itemCostBonus.currentValue);
   };
   RetireMonsterLevelUpgrade.prototype.qc = function () {
     return this.canPurchase;
@@ -925,7 +925,7 @@ export function initializeProgressionUpgrades() {
     return 7;
   };
   PurchaseDungeonUpgrade.prototype.Bb = function () {
-    return this.ua ? floorNumber(this.ua.farmCost * dungeonCostBonus.t) : 0;
+    return this.ua ? floorNumber(this.ua.farmCost * dungeonCostBonus.currentValue) : 0;
   };
   PurchaseDungeonUpgrade.prototype.Qc = function () {
     if (!(game.state.party.gold < this.Bb())) {
@@ -967,7 +967,7 @@ export function initializeProgressionUpgrades() {
     return 8;
   };
   PurchaseCastleUpgrade.prototype.Bb = function () {
-    return this.ua ? floorNumber(this.ua.farmCost * dungeonCostBonus.t) : 0;
+    return this.ua ? floorNumber(this.ua.farmCost * dungeonCostBonus.currentValue) : 0;
   };
   PurchaseCastleUpgrade.prototype.Qc = function () {
     if (!(!this.ua || game.state.party.gold < this.Bb())) {
@@ -1183,7 +1183,7 @@ export function initializeProgressionUpgrades() {
     this.Hc = this.canPurchase = false;
     this.Ub = !this.canPurchase;
     var a = getPointUpgradeModifier(this);
-    a.t = a.defaultValue;
+    a.currentValue = a.defaultValue;
   };
   AdventurePointUpgrade.prototype.He = function () {
     return this.Hc;

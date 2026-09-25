@@ -19,11 +19,11 @@ export function setPotionActive(a, b) {
   a.active = b;
   if (a.active && !c) {
     if (a.mg) {
-      a.mg.t = a.mg.nc;
+      a.mg.currentValue = a.mg.activeValue;
     }
   } else {
     if (!a.active && c && a.mg) {
-      a.mg.t = a.mg.defaultValue;
+      a.mg.currentValue = a.mg.defaultValue;
     }
   }
 }
@@ -74,7 +74,7 @@ export function getPotionModifier(a) {
   return null;
 }
 export function isPotionModifierActive(a) {
-  return a.mg && a.mg.t === a.mg.nc;
+  return a.mg && a.mg.currentValue === a.mg.activeValue;
 }
 export function PotionDrop(a, b, c, d) {
   this.hc = a;
@@ -110,7 +110,7 @@ export function resetPotionInventory() {
 }
 export function addPotion(a) {
   var b = game.potions;
-  if (a && b.re.length < BASE_POTION_CAPACITY + potionCapacityBonus.t) {
+  if (a && b.re.length < BASE_POTION_CAPACITY + potionCapacityBonus.currentValue) {
     b.re.push(a);
   }
 }
@@ -241,7 +241,7 @@ export function initializeCombatPotions() {
       this.active = true;
       this.activationTurn = game.state.turnNumber;
       if (this.mg) {
-        this.mg.t = this.mg.nc;
+        this.mg.currentValue = this.mg.activeValue;
       }
       game.state.aa.cs();
     }

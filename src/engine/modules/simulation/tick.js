@@ -39,12 +39,12 @@ export function advanceSimulation(a) {
         var f = d[c].stats,
           g = statValue(f.maxHealth);
         if (f.health < g) {
-          var h = Math.max(1, floorNumber(g * (f.baseHealthRegenPercent + f.healthRegenBonus + healthRegenerationBonus.t) / 100));
+          var h = Math.max(1, floorNumber(g * (f.baseHealthRegenPercent + f.healthRegenBonus + healthRegenerationBonus.currentValue) / 100));
           f.health = Math.min(g, f.health + h);
         }
         var l = statValue(f.maxSpirit);
         if (f.spirit < l) {
-          var n = Math.max(1, floorNumber(l * (f.baseSpiritRegenPercent + f.spiritRegenBonus + spiritRegenerationBonus.t) / 100));
+          var n = Math.max(1, floorNumber(l * (f.baseSpiritRegenPercent + f.spiritRegenBonus + spiritRegenerationBonus.currentValue) / 100));
           f.spirit = Math.min(l, f.spirit + n);
         }
       }
@@ -109,12 +109,12 @@ export function advanceSimulation(a) {
       J,
       la,
       Q,
-      V = 800 + potionDurationBonus.t;
+      V = 800 + potionDurationBonus.currentValue;
     for (O = x.re.length - 1; 0 <= O; O--) {
       J = x.re[O];
       if (J.active) {
         Q = J.activationTurn;
-        if (z && potionDurationModifier.t && Q < game.state.turnNumber) {
+        if (z && potionDurationModifier.currentValue && Q < game.state.turnNumber) {
           Q++;
           J.activationTurn = Q;
         }
@@ -127,7 +127,7 @@ export function advanceSimulation(a) {
         }
       }
     }
-    if (autoScrollsModifier.t && 0 < getMonsters().length && (b.bu++, b.bu >= b.TC)) {
+    if (autoScrollsModifier.currentValue && 0 < getMonsters().length && (b.bu++, b.bu >= b.TC)) {
       b.bu = 0;
       var na = game.scrolls.Pl;
       if (b.rk >= na.length) {
@@ -174,9 +174,9 @@ export function advanceSimulation(a) {
       }
       var ea,
         va,
-        yb = fasterFarmingModifier.t,
-        Fb = fasterInfestationModifier.t,
-        pa = (100 + potionPowerBonus.t) * farmKillsModifier.t;
+        yb = fasterFarmingModifier.currentValue,
+        Fb = fasterInfestationModifier.currentValue,
+        pa = (100 + potionPowerBonus.currentValue) * farmKillsModifier.currentValue;
       for (H = 0; H < K.dg.length; H++) {
         S = K.dg[H];
         ea = S.clearedTurn;

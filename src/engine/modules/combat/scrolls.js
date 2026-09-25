@@ -53,7 +53,7 @@ export function getScrollSprite(a) {
 }
 export function addScrollCharge(a) {
   a.quantity++;
-  var b = 30 + scrollCapacityBonus.t;
+  var b = 30 + scrollCapacityBonus.currentValue;
   if (a.quantity > b) {
     a.quantity = b;
   }

@@ -41,13 +41,13 @@ export function populateEncounter(a) {
   if (game.state.encounter.ym) {
     var c = a.Yp;
     if (0 === c) {
-      if (bossEncounterModifier.t && 0.2 > Math.random()) {
+      if (bossEncounterModifier.currentValue && 0.2 > Math.random()) {
         spawnDungeonBoss(b, a);
       } else {
-        var c = globalUpgradeDefinitions.minMonsters.t,
-          d = Math.max(globalUpgradeDefinitions.maxMonsters.t, c),
+        var c = globalUpgradeDefinitions.minMonsters.currentValue,
+          d = Math.max(globalUpgradeDefinitions.maxMonsters.currentValue, c),
           c = c + randomInt(d - c),
-          c = c + extraMonstersModifier.t;
+          c = c + extraMonstersModifier.currentValue;
         if (0 < c) {
           for (var d = game.monsterCatalog, f = d.hd + randomInt(1 + d.fc - d.hd), d = getMonsterTypesForLevel(d, f), d = d[randomInt(d.length)], f = d.xd, b = b.dn.Vk(d.nE) + " (等级." + f + ")", f = 0; f < c; f++) {
             var g = game.monsters,
@@ -60,7 +60,7 @@ export function populateEncounter(a) {
             p.characterLevel = l.xd;
             n.behaviors = new AttackBehavior(h, MELEE_ATTACK_RANGE);
             n.position.room = h;
-            if (frailMonstersModifier.t) {
+            if (frailMonstersModifier.currentValue) {
               p.damage.levelValue = floorNumber(0.7 * l.Gp);
               p.armor.levelValue = floorNumber(0.7 * l.Ep);
               p.attackRating.levelValue = floorNumber(0.7 * l.Fp);
@@ -88,11 +88,11 @@ export function populateEncounter(a) {
       }
     } else {
       if (1 === c) {
-        c = Math.max(globalUpgradeDefinitions.maxMonsters.xf, globalUpgradeDefinitions.minMonsters.t);
-        d = Math.max(globalUpgradeDefinitions.maxMonsters.t, c);
+        c = Math.max(globalUpgradeDefinitions.maxMonsters.baseValue, globalUpgradeDefinitions.minMonsters.currentValue);
+        d = Math.max(globalUpgradeDefinitions.maxMonsters.currentValue, c);
         d = c + randomInt(d - c);
         c = game.monsterCatalog.fc;
-        d += extraMonstersModifier.t;
+        d += extraMonstersModifier.currentValue;
         spawnCastleGuardians(d, a);
         a = game.currentCastle ? generateMonsterName(b.dn, game.currentCastle.castleName) : generateMonsterName(b.dn, "Unknown Castle");
         beginEncounter(a + " (等级." + c + ")", false);
@@ -137,10 +137,10 @@ export function spawnDungeonBoss(a, b) {
   setVector(c.levelPosition, n, l);
   applyBonusList(f, bossClass.WC);
   g.Pi.push(f);
-  g = Math.max(globalUpgradeDefinitions.maxMonsters.xf, globalUpgradeDefinitions.minMonsters.t);
-  f = Math.max(globalUpgradeDefinitions.maxMonsters.t, g);
+  g = Math.max(globalUpgradeDefinitions.maxMonsters.baseValue, globalUpgradeDefinitions.minMonsters.currentValue);
+  f = Math.max(globalUpgradeDefinitions.maxMonsters.currentValue, g);
   g += randomInt(f - g);
-  g += extraMonstersModifier.t;
+  g += extraMonstersModifier.currentValue;
   spawnCastleGuardians(g, b);
   beginEncounter(d, true);
 }

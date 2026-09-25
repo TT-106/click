@@ -350,7 +350,7 @@ export function resolveCharacterDefeat(a, b) {
         d = 1 === a.characterType ? a.summoner : a;
       if (isAdventurerOrMinion(d)) {
         d.stats.kills++;
-        addKills(doubleKillsModifier.t);
+        addKills(doubleKillsModifier.currentValue);
         game.state.aa.cp();
         if (5 === d.characterType) {
           game.state.aa.gp();
@@ -359,7 +359,7 @@ export function resolveCharacterDefeat(a, b) {
           game.state.aa.$k();
         }
         d = b.Sb;
-        addExperience(d.No * doubleExperienceModifier.t);
+        addExperience(d.No * doubleExperienceModifier.currentValue);
         recordMonsterTypeKill(d);
       }
       var d = g.room,
@@ -371,7 +371,7 @@ export function resolveCharacterDefeat(a, b) {
         p = g.Pb(),
         s = 10 + randomInt(10),
         u;
-      if (doubleGoldDropsModifier.t) {
+      if (doubleGoldDropsModifier.currentValue) {
         s *= 2;
       }
       for (g = 0; g < s; g++) {
@@ -380,7 +380,7 @@ export function resolveCharacterDefeat(a, b) {
         game.goldDrops.pe.push(u);
       }
       s = 7 + randomInt(8);
-      if (doubleItemDropsModifier.t) {
+      if (doubleItemDropsModifier.currentValue) {
         s *= 2;
       }
       for (g = 0; g < s; g++) {
@@ -394,7 +394,7 @@ export function resolveCharacterDefeat(a, b) {
         game.scrollDrops.kf.push(u);
       }
       s = 0 + randomInt(2);
-      for (g = 0; g < s && game.potions.re.length < BASE_POTION_CAPACITY + potionCapacityBonus.t; g++) {
+      for (g = 0; g < s && game.potions.re.length < BASE_POTION_CAPACITY + potionCapacityBonus.currentValue; g++) {
         u = new Potion(potionDefinitions[randomInt(potionDefinitions.length)]);
         u = new PotionDrop(u, tickCharacterTurn(n, c, f), tickCharacterTurn(p, h, l), d);
         game.potionDrops.Hf.push(u);

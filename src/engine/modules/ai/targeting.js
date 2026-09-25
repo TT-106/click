@@ -247,7 +247,7 @@ export function AttackBehavior(a, b) {
   this.bb = b;
 }
 export function respondToTaunt(a, b) {
-  if (docileMonstersModifier.t) {
+  if (docileMonstersModifier.currentValue) {
     return false;
   }
   var c = b.Da;

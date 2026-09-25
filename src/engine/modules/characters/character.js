@@ -189,7 +189,7 @@ export function updateCharacter(a, b) {
           a: {
             assignVector(c.ra, c.Ul);
             subtractVector(c.ra, c.Db);
-            var d = b * c.MC * walkingSpeedBonus.t * walkingSpeedModifier.t,
+            var d = b * c.MC * walkingSpeedBonus.currentValue * walkingSpeedModifier.currentValue,
               f = game.world.bc(c.Db.x),
               g = game.world.cc(c.Db.y);
             if (vectorLength(c.ra) <= d) {
@@ -229,7 +229,7 @@ export function updateCharacter(a, b) {
         } else {
           assignVector(c.ra, c.Ul);
           subtractVector(c.ra, c.Db);
-          var h = b * c.MC * walkingSpeedBonus.t * walkingSpeedModifier.t,
+          var h = b * c.MC * walkingSpeedBonus.currentValue * walkingSpeedModifier.currentValue,
             l = game.world.bc(c.Db.x),
             n = game.world.cc(c.Db.y);
           if (vectorLength(c.ra) <= h) {
@@ -255,7 +255,7 @@ export function updateCharacter(a, b) {
       } else {
         var p = a.position,
           s;
-        s = isAdventurerOrMinion(a) ? b * p.Jw * walkingSpeedBonus.t * walkingSpeedModifier.t : p.Jw * b;
+        s = isAdventurerOrMinion(a) ? b * p.Jw * walkingSpeedBonus.currentValue * walkingSpeedModifier.currentValue : p.Jw * b;
         if (null != p.Ug && 0 < p.Ug.length) {
           var u = p.Ug[0];
           setVector(p.ra, u.me, u.ne);
@@ -1096,9 +1096,9 @@ export function updateCharacter(a, b) {
                 wl = game.state.adventurers[randomInt(game.state.adventurers.length)],
                 Pp = wl.Z,
                 xA = Pp[randomInt(Pp.length)],
-                zA = (100 - Math.min(90, globalUpgradeDefinitions.itemQualityChance.t + CHEST_ITEM_QUALITY_BONUS)) / 100,
+                zA = (100 - Math.min(90, globalUpgradeDefinitions.itemQualityChance.currentValue + CHEST_ITEM_QUALITY_BONUS)) / 100,
                 AA = Op.uf(zA),
-                CA = (100 - Math.min(90, globalUpgradeDefinitions.higherLevelItemChance.t + CHEST_ITEM_LEVEL_BONUS)) / 100,
+                CA = (100 - Math.min(90, globalUpgradeDefinitions.higherLevelItemChance.currentValue + CHEST_ITEM_LEVEL_BONUS)) / 100,
                 DA = randomizeItemLevel(wl.stats.characterLevel, CA);
               if (Np = generateItem(Op, xA, wl, DA, AA)) {
                 ij.yf.push(new ItemDrop(Np, Df, Oh, wA));
@@ -1116,7 +1116,7 @@ export function updateCharacter(a, b) {
           }
           if (1 === Ad) {
             var HA = 0 + randomInt(2);
-            for (Oc = 0; Oc < HA && game.potions.re.length < BASE_POTION_CAPACITY + potionCapacityBonus.t; Oc++) {
+            for (Oc = 0; Oc < HA && game.potions.re.length < BASE_POTION_CAPACITY + potionCapacityBonus.currentValue; Oc++) {
               var IA = new Potion(potionDefinitions[randomInt(potionDefinitions.length)]),
                 JA = new PotionDrop(IA, tickCharacterTurn(wc, Re, Zd), tickCharacterTurn(zd, Vc, Od), Yd);
               game.potionDrops.Hf.push(JA);
@@ -1190,7 +1190,7 @@ export function updateCharacter(a, b) {
               Sp = yl.inventory,
               zl = Sp.items;
             if (0 !== zl.length) {
-              for (var Ph = undefined, kj = undefined, Tp = 0, Up = undefined, Al = 0, LA = 0.1 + equipmentQualityBonus.t, Ph = zl.length - 1; 0 <= Ph; Ph--) {
+              for (var Ph = undefined, kj = undefined, Tp = 0, Up = undefined, Al = 0, LA = 0.1 + equipmentQualityBonus.currentValue, Ph = zl.length - 1; 0 <= Ph; Ph--) {
                 kj = zl[Ph];
                 if ((Up = yl.ef(kj.slot)) && !isBetterItem(kj, Up)) {
                   Al += kj.zf * LA;

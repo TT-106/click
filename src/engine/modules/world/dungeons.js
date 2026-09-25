@@ -71,7 +71,7 @@ export function DungeonRegistry() {
   this.lt = true;
   this.Sd = 0;
   this.EE = function (a, b) {
-    return floorNumber(a.farmCost * dungeonCostBonus.t) < floorNumber(b.farmCost * dungeonCostBonus.t) ? -1 : 1;
+    return floorNumber(a.farmCost * dungeonCostBonus.currentValue) < floorNumber(b.farmCost * dungeonCostBonus.currentValue) ? -1 : 1;
   };
 }
 export function resetDungeons() {

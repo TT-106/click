@@ -136,9 +136,9 @@ export function ScrollButtonView(a, b, c, d) {
   this.qp = d;
 }
 export function getScrollButtonClass(a) {
-  if (a.scroll && (0 < a.scroll.quantity || infiniteScrollsModifier.t)) {
+  if (a.scroll && (0 < a.scroll.quantity || infiniteScrollsModifier.currentValue)) {
     positionScrollCaster(a.YC);
-    castScroll(a.scroll, infiniteScrollsModifier.t);
+    castScroll(a.scroll, infiniteScrollsModifier.currentValue);
   }
 }
 export function mountScrollButton(a) {
@@ -183,7 +183,7 @@ export function PotionButtonView(a, b) {
 }
 export function mountPotionButton(a) {
   a.km = createElement("div", getElement(a.elementId), null, "potionContentContainer");
-  a.Sp = a.TA >= BASE_POTION_CAPACITY + potionCapacityBonus.t;
+  a.Sp = a.TA >= BASE_POTION_CAPACITY + potionCapacityBonus.currentValue;
   a.Si = createElement("table", a.km, null, a.Sp ? "potionButtonLocked" : "potionButtonDisabled");
   var b = a.Si.insertRow(0),
     c = a.Si.insertRow(1),
@@ -243,7 +243,7 @@ export function initializeViewsExpedition() {
     this.Oq = false;
     this.nn = null;
     if (0 > this.$ || this.$ >= game.state.adventurers.length) {
-      if (this.$ >= 4 + partyCapacityBonus.t) {
+      if (this.$ >= 4 + partyCapacityBonus.currentValue) {
         this.nn = createElement("div", getElement(this.elementId), null, "gameTabLockedAdventurerInfo");
         createElement("span", this.nn, null, "lockedSpanText").innerHTML = "未解锁";
         this.Oq = true;
@@ -353,7 +353,7 @@ export function initializeViewsExpedition() {
   AdventurerSummaryView.prototype.update = function () {
     if (!(0 > this.$)) {
       if (this.$ >= game.state.adventurers.length) {
-        if (this.Oq && this.$ < 4 + partyCapacityBonus.t) {
+        if (this.Oq && this.$ < 4 + partyCapacityBonus.currentValue) {
           this.Oq = false;
           this.nn.className = "gameTabBlankAdventurerInfo";
           clearElement(this.nn);
@@ -595,10 +595,10 @@ export function initializeViewsExpedition() {
       this.mx.innerHTML = b;
     }
     b = this.scroll ? this.scroll.quantity : -1;
-    if (infiniteScrollsModifier.t) {
+    if (infiniteScrollsModifier.currentValue) {
       b = -2;
     }
-    var c = 0 < b || infiniteScrollsModifier.t;
+    var c = 0 < b || infiniteScrollsModifier.currentValue;
     this.aq = !this.scroll.locked && c && !game.worldActive && 0 < getMonsters().length;
     if (a || this.Gv != this.aq) {
       this.Gv = this.aq;
@@ -608,7 +608,7 @@ export function initializeViewsExpedition() {
     if (this.rz !== b || this.wz != a) {
       this.rz = b;
       this.wz = a;
-      this.Cx.innerHTML = a ? "" : infiniteScrollsModifier.t ? "无限" : "x" + b;
+      this.Cx.innerHTML = a ? "" : infiniteScrollsModifier.currentValue ? "无限" : "x" + b;
     }
     a: {
       a = this.qp;
@@ -669,7 +669,7 @@ export function initializeViewsExpedition() {
     if (!this.Si) {
       mountPotionButton(this);
     }
-    if (this.Sp && this.TA < BASE_POTION_CAPACITY + potionCapacityBonus.t) {
+    if (this.Sp && this.TA < BASE_POTION_CAPACITY + potionCapacityBonus.currentValue) {
       this.Sp = false;
       this.Si.className = "potionButtonDisabled";
     }
@@ -695,7 +695,7 @@ export function initializeViewsExpedition() {
           showElement(this.pb);
           this.ak = true;
         }
-        a = Math.min(1, (game.state.turnNumber - this.hc.activationTurn) / (800 + potionDurationBonus.t));
+        a = Math.min(1, (game.state.turnNumber - this.hc.activationTurn) / (800 + potionDurationBonus.currentValue));
         a *= this.gu;
         if (this.Jh !== a) {
           this.Jh = a;

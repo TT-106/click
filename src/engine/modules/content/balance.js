@@ -6,9 +6,9 @@ import { AutoPurchaseDungeonUpgrade, ClaimAchievementUpgrade, CollectFarmUpgrade
 import { scrollDefinitions } from "../combat/scrolls.js";
 export var experienceCurve, healthCurve, spiritCurve, damageCurve, armorCurve, monsterHealthCurve, monsterSpiritCurve, monsterAttackCurve, monsterDefenceCurve, monsterDamageCurve, monsterArmorCurve, itemStatCurve, itemGoldCurve, dungeonPriceCurve, monsterUnlockPriceCurve, scrollPriceCurve, globalUpgradePriceCurve, MONSTER_RANK_KILL_STEP, DUNGEON_WALK_SPEED, WORLD_WALK_SPEED, DEFAULT_MULTI_ATTACK_CHANCE, DEFAULT_CHAIN_CHANCE, DEFAULT_MINION_LIMIT, BASE_INVENTORY_CAPACITY, RETREAT_HEALTH_RATIO, RETREAT_SPIRIT_RATIO, MAX_PRESTIGE_INVENTORY_BONUS, walkingSpeedBonus, dungeonCostBonus, itemCostBonus, scrollCapacityBonus, potionCapacityBonus, partyCapacityBonus, potionDurationBonus, potionPowerBonus, offlineTimeBonus, equipmentQualityBonus, attackCooldownBonus, healthRegenerationBonus, spiritRegenerationBonus, BASE_POTION_CAPACITY, doubleKillsModifier, doubleGoldModifier, doubleExperienceModifier, walkingSpeedModifier, fasterFarmingModifier, fasterInfestationModifier, infiniteScrollsModifier, extraMonstersModifier, guaranteedItemDropsModifier, potionDurationModifier, freeSpellsModifier, farmKillsModifier, docileMonstersModifier, itemGoldModifier, frailMonstersModifier, autoScrollsModifier, doubleGoldDropsModifier, doubleItemDropsModifier, treasureRoomModifier, bossEncounterModifier, CHEST_ITEM_QUALITY_BONUS, CHEST_ITEM_LEVEL_BONUS, MIN_ROOM_DIMENSION, MAX_ROOM_SIZE, ROOM_SPACING, globalUpgradeDefinitions, VISIBLE_MONSTER_LEVELS, BASE_HIGHER_ITEM_CHANCE, LOWER_ITEM_LEVEL_CHANCE, itemRarityProbabilities, itemRarityTiers, EFFECT_FRAME_DURATION_MS, PROJECTILE_FRAME_DURATION_MS, globalUpgradesById, globalUpgradesToIndex, upgradeIndexKey, upgradeIndexEntry, characterLevelUpgrades, equipmentUpgrades, globalUpgrades, scrollUpgradeIndex, scrollUpgrades, monsterLevelUpgrades, castleUpgrades, itemPurchaseUpgrades, achievementClaimUpgrades, farmAndDungeonUpgrades, monsterUpgradeCollection, characterUpgradeCollection, quickUpgradeCollection, upgradeCollections;
 export function rollGoldDrop() {
-  var a = globalUpgradeDefinitions.As.t,
-    b = Math.max(0, globalUpgradeDefinitions.ys.t - a),
-    c = doubleGoldModifier.t;
+  var a = globalUpgradeDefinitions.As.currentValue,
+    b = Math.max(0, globalUpgradeDefinitions.ys.currentValue - a),
+    c = doubleGoldModifier.currentValue;
   return (a + randomInt(b)) * c;
 }
 export function initializeContentBalance() {
@@ -125,170 +125,170 @@ export function initializeContentBalance() {
   RETREAT_SPIRIT_RATIO = 0.3;
   MAX_PRESTIGE_INVENTORY_BONUS = 10;
   walkingSpeedBonus = {
-    t: 1,
+    currentValue: 1,
     defaultValue: 1,
-    lf: 0.1
+    levelIncrement: 0.1
   };
   dungeonCostBonus = {
-    t: 1,
+    currentValue: 1,
     defaultValue: 1,
-    lf: -0.1
+    levelIncrement: -0.1
   };
   itemCostBonus = {
-    t: 1,
+    currentValue: 1,
     defaultValue: 1,
-    lf: -0.1
+    levelIncrement: -0.1
   };
   scrollCapacityBonus = {
-    t: 0,
+    currentValue: 0,
     defaultValue: 0,
-    lf: 10
+    levelIncrement: 10
   };
   potionCapacityBonus = {
-    t: 0,
+    currentValue: 0,
     defaultValue: 0,
-    lf: 1
+    levelIncrement: 1
   };
   partyCapacityBonus = {
-    t: 0,
+    currentValue: 0,
     defaultValue: 0,
-    lf: 1
+    levelIncrement: 1
   };
   potionDurationBonus = {
-    t: 0,
+    currentValue: 0,
     defaultValue: 0,
-    lf: 120
+    levelIncrement: 120
   };
   potionPowerBonus = {
-    t: 0,
+    currentValue: 0,
     defaultValue: 0,
-    lf: 20
+    levelIncrement: 20
   };
   offlineTimeBonus = {
-    t: 0,
+    currentValue: 0,
     defaultValue: 0,
-    lf: 72E5
+    levelIncrement: 72E5
   };
   equipmentQualityBonus = {
-    t: 0,
+    currentValue: 0,
     defaultValue: 0,
-    lf: 0.01
+    levelIncrement: 0.01
   };
   attackCooldownBonus = {
-    t: 0,
+    currentValue: 0,
     defaultValue: 0,
-    lf: -1
+    levelIncrement: -1
   };
   healthRegenerationBonus = {
-    t: 0,
+    currentValue: 0,
     defaultValue: 0,
-    lf: 1
+    levelIncrement: 1
   };
   spiritRegenerationBonus = {
-    t: 0,
+    currentValue: 0,
     defaultValue: 0,
-    lf: 1
+    levelIncrement: 1
   };
   BASE_POTION_CAPACITY = 6;
   doubleKillsModifier = {
-    t: 1,
+    currentValue: 1,
     defaultValue: 1,
-    nc: 2
+    activeValue: 2
   };
   doubleGoldModifier = {
-    t: 1,
+    currentValue: 1,
     defaultValue: 1,
-    nc: 2
+    activeValue: 2
   };
   doubleExperienceModifier = {
-    t: 1,
+    currentValue: 1,
     defaultValue: 1,
-    nc: 2
+    activeValue: 2
   };
   walkingSpeedModifier = {
-    t: 1,
+    currentValue: 1,
     defaultValue: 1,
-    nc: 1.25
+    activeValue: 1.25
   };
   fasterFarmingModifier = {
-    t: false,
+    currentValue: false,
     defaultValue: false,
-    nc: true
+    activeValue: true
   };
   fasterInfestationModifier = {
-    t: false,
+    currentValue: false,
     defaultValue: false,
-    nc: true
+    activeValue: true
   };
   infiniteScrollsModifier = {
-    t: false,
+    currentValue: false,
     defaultValue: false,
-    nc: true
+    activeValue: true
   };
   extraMonstersModifier = {
-    t: 0,
+    currentValue: 0,
     defaultValue: 0,
-    nc: 10
+    activeValue: 10
   };
   guaranteedItemDropsModifier = {
-    t: false,
+    currentValue: false,
     defaultValue: false,
-    nc: true
+    activeValue: true
   };
   potionDurationModifier = {
-    t: false,
+    currentValue: false,
     defaultValue: false,
-    nc: true
+    activeValue: true
   };
   freeSpellsModifier = {
-    t: false,
+    currentValue: false,
     defaultValue: false,
-    nc: true
+    activeValue: true
   };
   farmKillsModifier = {
-    t: 1,
+    currentValue: 1,
     defaultValue: 1,
-    nc: 2
+    activeValue: 2
   };
   docileMonstersModifier = {
-    t: false,
+    currentValue: false,
     defaultValue: false,
-    nc: true
+    activeValue: true
   };
   itemGoldModifier = {
-    t: 1,
+    currentValue: 1,
     defaultValue: 1,
-    nc: 1.2
+    activeValue: 1.2
   };
   frailMonstersModifier = {
-    t: false,
+    currentValue: false,
     defaultValue: false,
-    nc: true
+    activeValue: true
   };
   autoScrollsModifier = {
-    t: false,
+    currentValue: false,
     defaultValue: false,
-    nc: true
+    activeValue: true
   };
   doubleGoldDropsModifier = {
-    t: false,
+    currentValue: false,
     defaultValue: false,
-    nc: true
+    activeValue: true
   };
   doubleItemDropsModifier = {
-    t: false,
+    currentValue: false,
     defaultValue: false,
-    nc: true
+    activeValue: true
   };
   treasureRoomModifier = {
-    t: false,
+    currentValue: false,
     defaultValue: false,
-    nc: true
+    activeValue: true
   };
   bossEncounterModifier = {
-    t: false,
+    currentValue: false,
     defaultValue: false,
-    nc: true
+    activeValue: true
   };
   CHEST_ITEM_QUALITY_BONUS = 15;
   CHEST_ITEM_LEVEL_BONUS = 10;
@@ -300,10 +300,10 @@ export function initializeContentBalance() {
       c: "itemDropChance",
       title: "更多道具掉落",
       e: "每次杀怪道具掉落几率+2%",
-      t: 40,
-      xf: 40,
-      $g: 2,
-      md: 0,
+      currentValue: 40,
+      baseValue: 40,
+      perLevelIncrement: 2,
+      purchasedLevels: 0,
       maxValue: 100,
       rd: 40,
       ah: 1,
@@ -313,10 +313,10 @@ export function initializeContentBalance() {
       c: "maxMonstersPerRoom",
       title: "等多怪物",
       e: "房间内最多怪物数量(+2)",
-      t: 8,
-      xf: 8,
-      $g: 2,
-      md: 0,
+      currentValue: 8,
+      baseValue: 8,
+      perLevelIncrement: 2,
+      purchasedLevels: 0,
       maxValue: 50,
       rd: 100,
       ah: 2,
@@ -326,10 +326,10 @@ export function initializeContentBalance() {
       c: "minMonstersPerRoom",
       title: "平均怪物计数",
       e: "房间内最少怪物数量(+1)",
-      t: 0,
-      xf: 0,
-      $g: 1,
-      md: 0,
+      currentValue: 0,
+      baseValue: 0,
+      perLevelIncrement: 1,
+      purchasedLevels: 0,
       maxValue: 50,
       rd: 140,
       ah: 2,
@@ -339,10 +339,10 @@ export function initializeContentBalance() {
       c: "betterItemRarityChance",
       title: "稀有道具掉落",
       e: "更加稀有道具掉落几率(+2%)",
-      t: 0,
-      xf: 0,
-      $g: 2,
-      md: 0,
+      currentValue: 0,
+      baseValue: 0,
+      perLevelIncrement: 2,
+      purchasedLevels: 0,
       maxValue: 30,
       rd: 120,
       ah: 3,
@@ -352,10 +352,10 @@ export function initializeContentBalance() {
       c: "itemLevelBonus",
       title: "道具等级加成",
       e: "更高等级道具掉落几率(+3%)",
-      t: 0,
-      xf: 0,
-      $g: 3,
-      md: 0,
+      currentValue: 0,
+      baseValue: 0,
+      perLevelIncrement: 3,
+      purchasedLevels: 0,
       maxValue: 30,
       rd: 160,
       ah: 4,
@@ -365,10 +365,10 @@ export function initializeContentBalance() {
       c: "maxGoldPerDrop",
       title: "最大黄金掉落",
       e: "最大掉落黄金数量+25",
-      t: 15,
-      xf: 15,
-      $g: 25,
-      md: 0,
+      currentValue: 15,
+      baseValue: 15,
+      perLevelIncrement: 25,
+      purchasedLevels: 0,
       maxValue: 2500,
       rd: 200,
       ah: 6,
@@ -378,10 +378,10 @@ export function initializeContentBalance() {
       c: "minGoldPerDrop",
       title: "最小黄金掉落",
       e: "最小掉落黄金数量+10",
-      t: 0,
-      xf: 0,
-      $g: 10,
-      md: 0,
+      currentValue: 0,
+      baseValue: 0,
+      perLevelIncrement: 10,
+      purchasedLevels: 0,
       maxValue: 2E3,
       rd: 300,
       ah: 10,
@@ -391,10 +391,10 @@ export function initializeContentBalance() {
       c: "goldDropChance",
       title: "更多黄金掉落",
       e: "每次杀怪黄金掉落几率+5%",
-      t: 25,
-      xf: 25,
-      $g: 5,
-      md: 0,
+      currentValue: 25,
+      baseValue: 25,
+      perLevelIncrement: 5,
+      purchasedLevels: 0,
       maxValue: 100,
       rd: 200,
       ah: 5,
@@ -404,10 +404,10 @@ export function initializeContentBalance() {
       c: "scrollDropChance",
       title: "更多卷轴掉落",
       e: "每次杀怪卷轴掉落几率+2%",
-      t: 20,
-      xf: 20,
-      $g: 2,
-      md: 0,
+      currentValue: 20,
+      baseValue: 20,
+      perLevelIncrement: 2,
+      purchasedLevels: 0,
       maxValue: 40,
       rd: 200,
       ah: 7,
@@ -417,10 +417,10 @@ export function initializeContentBalance() {
       c: "potionDropChance",
       title: "更多药剂掉落",
       e: "每次杀怪药剂掉落几率+0.5%",
-      t: 1,
-      xf: 1,
-      $g: 0.5,
-      md: 0,
+      currentValue: 1,
+      baseValue: 1,
+      perLevelIncrement: 0.5,
+      purchasedLevels: 0,
       maxValue: 5,
       rd: 300,
       ah: 8,
@@ -430,10 +430,10 @@ export function initializeContentBalance() {
       c: "treasureChestChance",
       title: "更多财宝箱",
       e: "遇到财宝箱几率+2%",
-      t: 5,
-      xf: 5,
-      $g: 2,
-      md: 0,
+      currentValue: 5,
+      baseValue: 5,
+      perLevelIncrement: 2,
+      purchasedLevels: 0,
       maxValue: 20,
       rd: 340,
       ah: 9,

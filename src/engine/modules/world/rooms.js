@@ -54,7 +54,7 @@ export function revealRoom(a) {
   var b = !a.Xi;
   a.Xi = true;
   if (b) {
-    if (0 === a.Yp && treasureRoomModifier.t && 0.25 > Math.random()) {
+    if (0 === a.Yp && treasureRoomModifier.currentValue && 0.25 > Math.random()) {
       a.Yp = 3;
     }
     var c = a.tileColumn,

@@ -58,7 +58,7 @@ export function spawnRoomTreasure(a) {
       if (!c && 2 > a.Nc.length) {
         return;
       }
-      c = globalUpgradeDefinitions.treasureChance.t / 100;
+      c = globalUpgradeDefinitions.treasureChance.currentValue / 100;
       if (Math.random() > c) {
         return;
       }

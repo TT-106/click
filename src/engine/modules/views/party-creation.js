@@ -106,7 +106,7 @@ export function mountPartyIntroduction(a) {
   a.innerHTML = "只有你有这个能力让一切回归旧貌,选择你的队友,杀光大陆上所有的怪物.";
 }
 export function getPartyCapacityLabel() {
-  var a = 4 + partyCapacityBonus.t;
+  var a = 4 + partyCapacityBonus.currentValue;
   if (4 === a) {
     return "最多选择4名队员";
   }
@@ -185,7 +185,7 @@ export function mountClassChoice(a, b, c) {
   b = createElement("table", b, null, "characterSelectionButton");
   a.cr.push(b);
   b.onclick = function () {
-    if (!(a.selectedCharacters.length >= 4 + partyCapacityBonus.t)) {
+    if (!(a.selectedCharacters.length >= 4 + partyCapacityBonus.currentValue)) {
       a.selectedCharacters.push({
         classIndex: c,
         defaultName: adventurerClasses[c].defaultName
@@ -333,7 +333,7 @@ export function validateSelectedParty(a) {
   var b = true,
     c,
     d,
-    f = 4 + partyCapacityBonus.t,
+    f = 4 + partyCapacityBonus.currentValue,
     g = [],
     h = false;
   for (d = 0; d < a.selectedCharacters.length; d++) {

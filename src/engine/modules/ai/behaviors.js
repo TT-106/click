@@ -359,7 +359,7 @@ export function initializeAiBehaviors() {
     if (!b || !this.Wd(a)) {
       return 0;
     }
-    if (!freeSpellsModifier.t) {
+    if (!freeSpellsModifier.currentValue) {
       var c = a.stats,
         d = c.spirit,
         c = getSpellSpiritCost(c);
@@ -790,7 +790,7 @@ export function initializeAiBehaviors() {
     if (!this.Vi || !isSpellReady(this.Vi) || !a.position.room) {
       return 0;
     }
-    if (!freeSpellsModifier.t) {
+    if (!freeSpellsModifier.currentValue) {
       var b = a.stats,
         c = b.spirit,
         b = getSpellSpiritCost(b);

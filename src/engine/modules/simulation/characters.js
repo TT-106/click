@@ -136,7 +136,7 @@ export function initializeCharacterSkills(a, b) {
       var g = a,
         h = b,
         l = game.itemGenerator,
-        n = l.uf((100 - globalUpgradeDefinitions.itemQualityChance.t) / 100);
+        n = l.uf((100 - globalUpgradeDefinitions.itemQualityChance.currentValue) / 100);
       if (d = generateItem(l, d, g, h, n)) {
         a.Qk(d);
       }
@@ -277,7 +277,7 @@ export function initializeSimulationCharacters() {
         f = 1 === a.characterType ? a.summoner : a;
       if (isAdventurerOrMinion(f)) {
         f.stats.kills++;
-        addKills(doubleKillsModifier.t);
+        addKills(doubleKillsModifier.currentValue);
         game.state.aa.cp();
         if (5 === f.characterType) {
           game.state.aa.gp();
@@ -287,7 +287,7 @@ export function initializeSimulationCharacters() {
           f.stats.$k();
         }
         f = b.Sb;
-        addExperience(f.No * doubleExperienceModifier.t);
+        addExperience(f.No * doubleExperienceModifier.currentValue);
         recordMonsterTypeKill(f);
       }
       var f = c.room,
@@ -295,31 +295,31 @@ export function initializeSimulationCharacters() {
         h = roomRightPixels(f) - game.tileSize,
         l = roomTopPixels(f) + game.tileSize,
         n = roomBottomPixels(f) - game.tileSize;
-      if (randomInt(100) <= globalUpgradeDefinitions.Lr.t) {
+      if (randomInt(100) <= globalUpgradeDefinitions.Lr.currentValue) {
         var p = rollGoldDrop();
         if (0 < p) {
           var s = new GoldDrop(p, updateCharacterFrames(c.Ob(), g, h), updateCharacterFrames(c.Pb(), l, n), f);
           game.goldDrops.pe.push(s);
-          if (doubleGoldDropsModifier.t) {
+          if (doubleGoldDropsModifier.currentValue) {
             p = new GoldDrop(p, updateCharacterFrames(c.Ob(), g, h), updateCharacterFrames(c.Pb(), l, n), f);
             game.goldDrops.pe.push(p);
           }
         }
       }
-      if (randomInt(100) <= globalUpgradeDefinitions.$s.t) {
+      if (randomInt(100) <= globalUpgradeDefinitions.$s.currentValue) {
         p = game.scrolls.Pl;
         p = p[randomInt(p.length)];
         p = new ScrollDrop(p, updateCharacterFrames(c.Ob(), g, h), updateCharacterFrames(c.Pb(), l, n), f);
         game.scrollDrops.kf.push(p);
       }
-      if (100 * Math.random() <= globalUpgradeDefinitions.Ns.t) {
+      if (100 * Math.random() <= globalUpgradeDefinitions.Ns.currentValue) {
         p = new Potion(potionDefinitions[randomInt(potionDefinitions.length)]);
         p = new PotionDrop(p, updateCharacterFrames(c.Ob(), g, h), updateCharacterFrames(c.Pb(), l, n), f);
         game.potionDrops.Hf.push(p);
       }
-      if (randomInt(100) <= globalUpgradeDefinitions.itemDropChance.t || guaranteedItemDropsModifier.t) {
+      if (randomInt(100) <= globalUpgradeDefinitions.itemDropChance.currentValue || guaranteedItemDropsModifier.currentValue) {
         spawnItemDrop(game.itemDrops, updateCharacterFrames(c.Ob(), g, h), updateCharacterFrames(c.Pb(), l, n), f, d);
-        if (doubleItemDropsModifier.t) {
+        if (doubleItemDropsModifier.currentValue) {
           spawnItemDrop(game.itemDrops, updateCharacterFrames(c.Ob(), g, h), updateCharacterFrames(c.Pb(), l, n), f, d);
         }
       }

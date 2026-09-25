@@ -38,10 +38,10 @@ export function CharacterStats(a) {
   this.maxSpirit = new StatComponent(a);
 }
 export function getAttackCooldown(a, b) {
-  return b ? Math.max(4, a.baseAttackCooldown - a.attackCooldownReduction + attackCooldownBonus.t) : Math.max(4, a.baseAttackCooldown - a.attackCooldownReduction);
+  return b ? Math.max(4, a.baseAttackCooldown - a.attackCooldownReduction + attackCooldownBonus.currentValue) : Math.max(4, a.baseAttackCooldown - a.attackCooldownReduction);
 }
 export function spendSpirit(a, b) {
-  if (!freeSpellsModifier.t) {
+  if (!freeSpellsModifier.currentValue) {
     a.spirit -= b;
     if (0 > a.spirit) {
       a.spirit = 0;

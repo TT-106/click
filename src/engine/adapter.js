@@ -46,7 +46,7 @@ export const engine = {
     });
   },
   get capacity() {
-    return 4 + runtime.partyBonus.t;
+    return 4 + runtime.partyBonus.currentValue;
   },
   startParty(party) {
     if (game.partyCreated) throw new Error('当前冒险已经开始。');

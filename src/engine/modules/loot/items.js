@@ -165,7 +165,7 @@ export function generateItem(a, b, c, d, f) {
   l = c.KD[b];
   var s = getClassStatMultiplier(c, l) * h.pp;
   n = randomizeScaledValue(d, itemStatCurve, s);
-  s = randomizeScaledValue(d, itemGoldCurve, s) * itemGoldModifier.t;
+  s = randomizeScaledValue(d, itemGoldCurve, s) * itemGoldModifier.currentValue;
   if (1 === l && Math.random() < h.jp) {
     p = a.ND;
     h = Math.random();
@@ -273,8 +273,8 @@ export function spawnItemDrop(a, b, c, d, f) {
   var h = game.state.adventurers[randomInt(game.state.adventurers.length)],
     l = h.Z,
     l = l[randomInt(l.length)],
-    n = g.uf((100 - globalUpgradeDefinitions.itemQualityChance.t) / 100);
-  f = randomizeItemLevel(f, (100 - globalUpgradeDefinitions.higherLevelItemChance.t) / 100);
+    n = g.uf((100 - globalUpgradeDefinitions.itemQualityChance.currentValue) / 100);
+  f = randomizeItemLevel(f, (100 - globalUpgradeDefinitions.higherLevelItemChance.currentValue) / 100);
   if (g = generateItem(g, l, h, f, n)) {
     a.yf.push(new ItemDrop(g, b, c, d));
   }
