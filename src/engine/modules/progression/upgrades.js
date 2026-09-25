@@ -151,7 +151,7 @@ export function LevelUpUpgrade(a) {
   this.WA = -1;
   this.descriptionLabel = null;
   this.Lo = 0;
-  this.$ = a;
+  this.adventurerIndex = a;
 }
 export function UnlockMonsterLevelUpgrade() {
   this.qe = -1;
@@ -520,7 +520,7 @@ export function initializeProgressionUpgrades() {
     this.descriptionLabel = null;
   };
   LevelUpUpgrade.prototype.Vo = function () {
-    return this.$ >= game.state.adventurers.length ? null : game.state.adventurers[this.$];
+    return this.adventurerIndex >= game.state.adventurers.length ? null : game.state.adventurers[this.adventurerIndex];
   };
   LevelUpUpgrade.prototype.Na = function () {
     return 2;
@@ -529,9 +529,9 @@ export function initializeProgressionUpgrades() {
     return this.descriptionLabel;
   };
   LevelUpUpgrade.prototype.Qc = function () {
-    if (!(this.$ >= game.state.adventurers.length)) {
+    if (!(this.adventurerIndex >= game.state.adventurers.length)) {
       this.canPurchase = false;
-      var a = game.state.adventurers[this.$],
+      var a = game.state.adventurers[this.adventurerIndex],
         b = a.stats,
         c = b.Am,
         d = getPartyMinLevel();
@@ -573,7 +573,7 @@ export function initializeProgressionUpgrades() {
   };
   LevelUpUpgrade.prototype.hu = function () {
     var a = game.state.party.experiencePoints,
-      b = game.state.adventurers[this.$].stats.Am;
+      b = game.state.adventurers[this.adventurerIndex].stats.Am;
     if (a >= b) {
       return false;
     }
@@ -590,10 +590,10 @@ export function initializeProgressionUpgrades() {
     return this.canPurchase;
   };
   LevelUpUpgrade.prototype.Cd = function () {
-    if (this.$ >= game.state.adventurers.length) {
+    if (this.adventurerIndex >= game.state.adventurers.length) {
       this.Ea = this.canPurchase = false;
     } else {
-      var a = game.state.adventurers[this.$];
+      var a = game.state.adventurers[this.adventurerIndex];
       if (!this.descriptionLabel) {
         this.descriptionLabel = "升级" + a.adventurerName;
       }
