@@ -1,4 +1,3 @@
-// @ts-nocheck -- M10 渐进类型化：JSDoc 覆盖后摘除（见 docs/WORKSTATE.md）
 // 持久化由宿主注入，引擎不直接依赖 localStorage。
 
 /**
