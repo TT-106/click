@@ -1,196 +1,5 @@
 [
   {
-    "name": "f",
-    "reads": 5,
-    "writes": 380,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\scrolls.js:232",
-        "code": "this.tn.f"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\scrolls.js:279",
-        "code": "f: 20"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\scrolls.js:291",
-        "code": "f: 23"
-      }
-    ],
-    "fileCount": 17,
-    "files": [
-      "src\\engine\\modules\\combat\\scrolls.js",
-      "src\\engine\\modules\\combat\\skill-effects.js",
-      "src\\engine\\modules\\content\\guardians.js",
-      "src\\engine\\modules\\content\\minions.js",
-      "src\\engine\\modules\\content\\skills\\barbarian.js",
-      "src\\engine\\modules\\content\\skills\\chicken-king.js",
-      "src\\engine\\modules\\content\\skills\\druid.js",
-      "src\\engine\\modules\\content\\skills\\electromancer.js",
-      "src\\engine\\modules\\content\\skills\\fighter.js",
-      "src\\engine\\modules\\content\\skills\\necromancer.js",
-      "src\\engine\\modules\\content\\skills\\ninja.js",
-      "src\\engine\\modules\\content\\skills\\priest.js",
-      "src\\engine\\modules\\content\\skills\\pyromancer.js",
-      "src\\engine\\modules\\content\\skills\\ranger.js",
-      "src\\engine\\modules\\content\\skills\\rogue.js",
-      "src\\engine\\modules\\progression\\upgrades.js",
-      "src\\engine\\modules\\simulation\\characters.js"
-    ]
-  },
-  {
-    "name": "g",
-    "reads": 5,
-    "writes": 380,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\scrolls.js:232",
-        "code": "this.tn.g"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\scrolls.js:280",
-        "code": "g: 2"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\scrolls.js:292",
-        "code": "g: 1"
-      }
-    ],
-    "fileCount": 17,
-    "files": [
-      "src\\engine\\modules\\combat\\scrolls.js",
-      "src\\engine\\modules\\combat\\skill-effects.js",
-      "src\\engine\\modules\\content\\guardians.js",
-      "src\\engine\\modules\\content\\minions.js",
-      "src\\engine\\modules\\content\\skills\\barbarian.js",
-      "src\\engine\\modules\\content\\skills\\chicken-king.js",
-      "src\\engine\\modules\\content\\skills\\druid.js",
-      "src\\engine\\modules\\content\\skills\\electromancer.js",
-      "src\\engine\\modules\\content\\skills\\fighter.js",
-      "src\\engine\\modules\\content\\skills\\necromancer.js",
-      "src\\engine\\modules\\content\\skills\\ninja.js",
-      "src\\engine\\modules\\content\\skills\\priest.js",
-      "src\\engine\\modules\\content\\skills\\pyromancer.js",
-      "src\\engine\\modules\\content\\skills\\ranger.js",
-      "src\\engine\\modules\\content\\skills\\rogue.js",
-      "src\\engine\\modules\\progression\\upgrades.js",
-      "src\\engine\\modules\\simulation\\characters.js"
-    ]
-  },
-  {
-    "name": "e",
-    "reads": 6,
-    "writes": 379,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\content\\balance.js:302",
-        "code": "e: \"每次杀怪道具掉落几率+2%\""
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\balance.js:315",
-        "code": "e: \"房间内最多怪物数量(+2)\""
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\balance.js:328",
-        "code": "e: \"房间内最少怪物数量(+1)\""
-      }
-    ],
-    "fileCount": 13,
-    "files": [
-      "src\\engine\\modules\\content\\balance.js",
-      "src\\engine\\modules\\content\\skills\\barbarian.js",
-      "src\\engine\\modules\\content\\skills\\chicken-king.js",
-      "src\\engine\\modules\\content\\skills\\druid.js",
-      "src\\engine\\modules\\content\\skills\\electromancer.js",
-      "src\\engine\\modules\\content\\skills\\fighter.js",
-      "src\\engine\\modules\\content\\skills\\necromancer.js",
-      "src\\engine\\modules\\content\\skills\\ninja.js",
-      "src\\engine\\modules\\content\\skills\\priest.js",
-      "src\\engine\\modules\\content\\skills\\pyromancer.js",
-      "src\\engine\\modules\\content\\skills\\ranger.js",
-      "src\\engine\\modules\\content\\skills\\rogue.js",
-      "src\\engine\\modules\\progression\\upgrades.js"
-    ]
-  },
-  {
-    "name": "V",
-    "reads": 70,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\information.js:489",
-        "code": "this.V"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\information.js:490",
-        "code": "this.V"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\information.js:493",
-        "code": "this.V"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\views\\information.js",
-      "src\\engine\\modules\\views\\results.js"
-    ]
-  },
-  {
-    "name": "W",
-    "reads": 50,
-    "writes": 21,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:71",
-        "code": "this.W"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:180",
-        "code": "this.W"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:187",
-        "code": "this.W"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\views\\dungeons.js",
-      "src\\engine\\modules\\views\\upgrade-details.js"
-    ]
-  },
-  {
-    "name": "X",
-    "reads": 18,
-    "writes": 51,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:94",
-        "code": "this.X"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:127",
-        "code": "this.X"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:581",
-        "code": "a.X"
-      }
-    ],
-    "fileCount": 8,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js",
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\characters\\effects.js",
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\combat\\scrolls.js",
-      "src\\engine\\modules\\combat\\skill-effects.js",
-      "src\\engine\\modules\\content\\spells.js",
-      "src\\engine\\modules\\views\\expedition.js"
-    ]
-  },
-  {
     "name": "Y",
     "reads": 15,
     "writes": 49,
@@ -3152,7 +2961,7 @@
     "samples": [
       {
         "loc": "src\\engine\\modules\\views\\dungeons.js:187",
-        "code": "this.W.Rc"
+        "code": "this.upgradeButton.Rc"
       },
       {
         "loc": "src\\engine\\modules\\views\\upgrade-details.js:240",
@@ -15546,11 +15355,11 @@
       },
       {
         "loc": "src\\engine\\modules\\combat\\scrolls.js:278",
-        "code": "fq: {\n  f: 20,\n  g: 2\n}"
+        "code": "fq: {\n  statType: 20,\n  statBonusValue: 2\n}"
       },
       {
         "loc": "src\\engine\\modules\\combat\\scrolls.js:290",
-        "code": "fq: {\n  f: 23,\n  g: 1\n}"
+        "code": "fq: {\n  statType: 23,\n  statBonusValue: 1\n}"
       }
     ],
     "fileCount": 1,
@@ -15689,7 +15498,7 @@
       },
       {
         "loc": "src\\engine\\modules\\content\\minions.js:172",
-        "code": "Bp: [{\n  g: 1,\n  f: 28\n}]"
+        "code": "Bp: [{\n  statBonusValue: 1,\n  statType: 28\n}]"
       },
       {
         "loc": "src\\engine\\modules\\content\\minions.js:209",
@@ -18282,7 +18091,7 @@
       },
       {
         "loc": "src\\engine\\modules\\content\\balance.js:377",
-        "code": "As: {\n  settingId: \"minGoldPerDrop\",\n  title: \"最小黄金掉落\",\n  e: \"最小掉落黄金数量+10\",\n  currentValue: 0,\n  baseValue: 0,\n  perLevelIncrement: 10,\n  pu"
+        "code": "As: {\n  settingId: \"minGoldPerDrop\",\n  title: \"最小黄金掉落\",\n  description: \"最小掉落黄金数量+10\",\n  currentValue: 0,\n  baseValue: 0,\n  perLevelIncrement"
       },
       {
         "loc": "src\\engine\\modules\\content\\balance.js:488",
@@ -18306,7 +18115,7 @@
       },
       {
         "loc": "src\\engine\\modules\\content\\balance.js:364",
-        "code": "ys: {\n  settingId: \"maxGoldPerDrop\",\n  title: \"最大黄金掉落\",\n  e: \"最大掉落黄金数量+25\",\n  currentValue: 15,\n  baseValue: 15,\n  perLevelIncrement: 25,\n  "
+        "code": "ys: {\n  settingId: \"maxGoldPerDrop\",\n  title: \"最大黄金掉落\",\n  description: \"最大掉落黄金数量+25\",\n  currentValue: 15,\n  baseValue: 15,\n  perLevelIncreme"
       },
       {
         "loc": "src\\engine\\modules\\content\\balance.js:488",
@@ -18326,7 +18135,7 @@
     "samples": [
       {
         "loc": "src\\engine\\modules\\content\\balance.js:390",
-        "code": "Lr: {\n  settingId: \"goldDropChance\",\n  title: \"更多黄金掉落\",\n  e: \"每次杀怪黄金掉落几率+5%\",\n  currentValue: 25,\n  baseValue: 25,\n  perLevelIncrement: 5,\n "
+        "code": "Lr: {\n  settingId: \"goldDropChance\",\n  title: \"更多黄金掉落\",\n  description: \"每次杀怪黄金掉落几率+5%\",\n  currentValue: 25,\n  baseValue: 25,\n  perLevelIncre"
       },
       {
         "loc": "src\\engine\\modules\\content\\balance.js:488",
@@ -18351,7 +18160,7 @@
     "samples": [
       {
         "loc": "src\\engine\\modules\\content\\balance.js:403",
-        "code": "$s: {\n  settingId: \"scrollDropChance\",\n  title: \"更多卷轴掉落\",\n  e: \"每次杀怪卷轴掉落几率+2%\",\n  currentValue: 20,\n  baseValue: 20,\n  perLevelIncrement: 2,"
+        "code": "$s: {\n  settingId: \"scrollDropChance\",\n  title: \"更多卷轴掉落\",\n  description: \"每次杀怪卷轴掉落几率+2%\",\n  currentValue: 20,\n  baseValue: 20,\n  perLevelInc"
       },
       {
         "loc": "src\\engine\\modules\\content\\balance.js:488",
@@ -18376,7 +18185,7 @@
     "samples": [
       {
         "loc": "src\\engine\\modules\\content\\balance.js:416",
-        "code": "Ns: {\n  settingId: \"potionDropChance\",\n  title: \"更多药剂掉落\",\n  e: \"每次杀怪药剂掉落几率+0.5%\",\n  currentValue: 1,\n  baseValue: 1,\n  perLevelIncrement: 0."
+        "code": "Ns: {\n  settingId: \"potionDropChance\",\n  title: \"更多药剂掉落\",\n  description: \"每次杀怪药剂掉落几率+0.5%\",\n  currentValue: 1,\n  baseValue: 1,\n  perLevelInc"
       },
       {
         "loc": "src\\engine\\modules\\content\\balance.js:488",
@@ -18477,11 +18286,11 @@
       },
       {
         "loc": "src\\engine\\modules\\content\\guardians.js:77",
-        "code": "Nr: [{\n  g: 1,\n  f: 21\n}]"
+        "code": "Nr: [{\n  statBonusValue: 1,\n  statType: 21\n}]"
       },
       {
         "loc": "src\\engine\\modules\\content\\guardians.js:112",
-        "code": "Nr: [{\n  g: 1,\n  f: 23\n}, {\n  g: 40,\n  f: 24\n}]"
+        "code": "Nr: [{\n  statBonusValue: 1,\n  statType: 23\n}, {\n  statBonusValue: 40,\n  statType: 24\n}]"
       }
     ],
     "fileCount": 2,
@@ -26670,7 +26479,7 @@
       },
       {
         "loc": "src\\engine\\modules\\content\\spells.js:309",
-        "code": "LB: {\n  ta: \"狗狗守卫\",\n  description: \"犬科伙伴\",\n  ca: \"Red Damage\",\n  ya: null,\n  X: null,\n  ga: 9,\n  Ra: 1,\n  La: 25\n}"
+        "code": "LB: {\n  ta: \"狗狗守卫\",\n  description: \"犬科伙伴\",\n  ca: \"Red Damage\",\n  ya: null,\n  statusEffectTypeId: null,\n  ga: 9,\n  Ra: 1,\n  La: 25\n}"
       }
     ],
     "fileCount": 3,
@@ -26695,7 +26504,7 @@
       },
       {
         "loc": "src\\engine\\modules\\content\\spells.js:298",
-        "code": "PB: {\n  ta: \"狼群\",\n  description: \"召唤狼群\",\n  ca: \"Red Damage\",\n  ya: null,\n  X: null,\n  ga: 10,\n  Ra: 1,\n  La: 25,\n  bo: true\n}"
+        "code": "PB: {\n  ta: \"狼群\",\n  description: \"召唤狼群\",\n  ca: \"Red Damage\",\n  ya: null,\n  statusEffectTypeId: null,\n  ga: 10,\n  Ra: 1,\n  La: 25,\n  bo: true"
       }
     ],
     "fileCount": 3,
@@ -26720,7 +26529,7 @@
       },
       {
         "loc": "src\\engine\\modules\\content\\spells.js:355",
-        "code": "KB: {\n  ta: \"召唤鸡群\",\n  description: \"鸡王标配法术\",\n  ca: \"Red Damage\",\n  ya: null,\n  X: null,\n  ga: 17,\n  Ra: 1,\n  La: 25,\n  bo: true\n}"
+        "code": "KB: {\n  ta: \"召唤鸡群\",\n  description: \"鸡王标配法术\",\n  ca: \"Red Damage\",\n  ya: null,\n  statusEffectTypeId: null,\n  ga: 17,\n  Ra: 1,\n  La: 25,\n  bo: "
       }
     ],
     "fileCount": 3,
@@ -26745,7 +26554,7 @@
       },
       {
         "loc": "src\\engine\\modules\\content\\spells.js:366",
-        "code": "MB: {\n  ta: \"小鸡守卫\",\n  description: \"小鸡伙伴\",\n  ca: \"Red Damage\",\n  ya: null,\n  X: null,\n  ga: 9,\n  Ra: 1,\n  La: 25\n}"
+        "code": "MB: {\n  ta: \"小鸡守卫\",\n  description: \"小鸡伙伴\",\n  ca: \"Red Damage\",\n  ya: null,\n  statusEffectTypeId: null,\n  ga: 9,\n  Ra: 1,\n  La: 25\n}"
       }
     ],
     "fileCount": 3,
@@ -26770,7 +26579,7 @@
       },
       {
         "loc": "src\\engine\\modules\\content\\spells.js:276",
-        "code": "OB: {\n  ta: \"骷髅军队\",\n  description: \"骷髅复活!\",\n  ca: \"Red Damage\",\n  ya: \"Green Projectile\",\n  X: null,\n  ga: 11,\n  Ra: 1,\n  La: 25\n}"
+        "code": "OB: {\n  ta: \"骷髅军队\",\n  description: \"骷髅复活!\",\n  ca: \"Red Damage\",\n  ya: \"Green Projectile\",\n  statusEffectTypeId: null,\n  ga: 11,\n  Ra: 1,\n  L"
       }
     ],
     "fileCount": 3,
@@ -26795,7 +26604,7 @@
       },
       {
         "loc": "src\\engine\\modules\\content\\spells.js:286",
-        "code": "NB: {\n  ta: \"幽灵骷髅\",\n  description: \"法师同伴\",\n  ca: \"Red Damage\",\n  ya: null,\n  X: null,\n  ga: 9,\n  Ra: 1,\n  La: 25\n}"
+        "code": "NB: {\n  ta: \"幽灵骷髅\",\n  description: \"法师同伴\",\n  ca: \"Red Damage\",\n  ya: null,\n  statusEffectTypeId: null,\n  ga: 9,\n  Ra: 1,\n  La: 25\n}"
       }
     ],
     "fileCount": 3,
@@ -26820,7 +26629,7 @@
       },
       {
         "loc": "src\\engine\\modules\\content\\spells.js:243",
-        "code": "wB: {\n  ta: \"重锤\",\n  description: \"溅射伤害+击退\",\n  ca: \"Red Sparkles\",\n  ya: null,\n  X: null,\n  ga: 8,\n  Ra: 0,\n  La: 25\n}"
+        "code": "wB: {\n  ta: \"重锤\",\n  description: \"溅射伤害+击退\",\n  ca: \"Red Sparkles\",\n  ya: null,\n  statusEffectTypeId: null,\n  ga: 8,\n  Ra: 0,\n  La: 25\n}"
       }
     ],
     "fileCount": 3,
@@ -26845,7 +26654,7 @@
       },
       {
         "loc": "src\\engine\\modules\\content\\spells.js:197",
-        "code": "IB: {\n  ta: \"潜行\",\n  description: \"潜行背刺\",\n  ca: \"Color Spiral\",\n  ya: null,\n  X: 11,\n  ga: 2,\n  td: true,\n  Ra: 100,\n  La: 30\n}"
+        "code": "IB: {\n  ta: \"潜行\",\n  description: \"潜行背刺\",\n  ca: \"Color Spiral\",\n  ya: null,\n  statusEffectTypeId: 11,\n  ga: 2,\n  td: true,\n  Ra: 100,\n  La: 3"
       }
     ],
     "fileCount": 3,
@@ -26870,7 +26679,7 @@
       },
       {
         "loc": "src\\engine\\modules\\content\\spells.js:138",
-        "code": "Zz: {\n  ta: \"提高护甲\",\n  description: \"10%队伍护甲\",\n  ca: \"Shields\",\n  ya: null,\n  X: 5,\n  ga: 3,\n  Ra: 10,\n  td: true,\n  La: 700\n}"
+        "code": "Zz: {\n  ta: \"提高护甲\",\n  description: \"10%队伍护甲\",\n  ca: \"Shields\",\n  ya: null,\n  statusEffectTypeId: 5,\n  ga: 3,\n  Ra: 10,\n  td: true,\n  La: 700"
       }
     ],
     "fileCount": 3,
@@ -26895,7 +26704,7 @@
       },
       {
         "loc": "src\\engine\\modules\\content\\spells.js:171",
-        "code": "$z: {\n  ta: \"提高防御等级\",\n  description: \"10%队伍防御等级\",\n  ca: \"Armor\",\n  ya: null,\n  X: 8,\n  ga: 3,\n  Ra: 10,\n  td: true,\n  La: 700\n}"
+        "code": "$z: {\n  ta: \"提高防御等级\",\n  description: \"10%队伍防御等级\",\n  ca: \"Armor\",\n  ya: null,\n  statusEffectTypeId: 8,\n  ga: 3,\n  Ra: 10,\n  td: true,\n  La: 7"
       }
     ],
     "fileCount": 3,
@@ -26920,7 +26729,7 @@
       },
       {
         "loc": "src\\engine\\modules\\content\\spells.js:18",
-        "code": "sB: {\n  ta: \"休克\",\n  description: \"打击伤害\",\n  ca: \"Gold Sparkles\",\n  ya: \"Gold Sparkles\",\n  X: null,\n  ga: 4,\n  Ra: 0,\n  La: 13,\n  bo: true\n}"
+        "code": "sB: {\n  ta: \"休克\",\n  description: \"打击伤害\",\n  ca: \"Gold Sparkles\",\n  ya: \"Gold Sparkles\",\n  statusEffectTypeId: null,\n  ga: 4,\n  Ra: 0,\n  La: 1"
       }
     ],
     "fileCount": 3,
@@ -26945,7 +26754,7 @@
       },
       {
         "loc": "src\\engine\\modules\\content\\spells.js:29",
-        "code": "CB: {\n  ta: \"蛛网\",\n  description: \"用网捕捉敌人\",\n  ca: \"Spider Web\",\n  ya: \"Web\",\n  X: 1,\n  ga: 2,\n  td: true,\n  Ra: 20,\n  La: 20\n}"
+        "code": "CB: {\n  ta: \"蛛网\",\n  description: \"用网捕捉敌人\",\n  ca: \"Spider Web\",\n  ya: \"Web\",\n  statusEffectTypeId: 1,\n  ga: 2,\n  td: true,\n  Ra: 20,\n  La: 20"
       }
     ],
     "fileCount": 3,
@@ -26970,7 +26779,7 @@
       },
       {
         "loc": "src\\engine\\modules\\content\\spells.js:83",
-        "code": "Kz: {\n  ta: \"火球\",\n  description: \"爆裂火焰\",\n  ca: \"Orange Sparkles\",\n  ya: \"Yellow Star\",\n  X: null,\n  ga: 8,\n  Ra: 0,\n  La: 35\n}"
+        "code": "Kz: {\n  ta: \"火球\",\n  description: \"爆裂火焰\",\n  ca: \"Orange Sparkles\",\n  ya: \"Yellow Star\",\n  statusEffectTypeId: null,\n  ga: 8,\n  Ra: 0,\n  La: 3"
       }
     ],
     "fileCount": 3,
@@ -26995,7 +26804,7 @@
       },
       {
         "loc": "src\\engine\\modules\\content\\spells.js:73",
-        "code": "Lz: {\n  ta: \"火雨\",\n  description: \"轰轰烈烈的死亡.\",\n  ca: \"Fire Rain\",\n  ya: \"Yellow Star\",\n  X: null,\n  ga: 6,\n  Ra: 0,\n  La: 40\n}"
+        "code": "Lz: {\n  ta: \"火雨\",\n  description: \"轰轰烈烈的死亡.\",\n  ca: \"Fire Rain\",\n  ya: \"Yellow Star\",\n  statusEffectTypeId: null,\n  ga: 6,\n  Ra: 0,\n  La: 40\n"
       }
     ],
     "fileCount": 3,
@@ -31709,7 +31518,7 @@
       },
       {
         "loc": "src\\engine\\modules\\content\\spells.js:319",
-        "code": "cE: {\n  ta: \"小型治疗术\",\n  description: \"回复25%生命\",\n  ca: \"Red Crosses\",\n  ya: \"Red Crosses\",\n  X: null,\n  ga: 1,\n  Ra: 25,\n  La: 25\n}"
+        "code": "cE: {\n  ta: \"小型治疗术\",\n  description: \"回复25%生命\",\n  ca: \"Red Crosses\",\n  ya: \"Red Crosses\",\n  statusEffectTypeId: null,\n  ga: 1,\n  Ra: 25,\n  La"
       }
     ],
     "fileCount": 2,
@@ -31729,7 +31538,7 @@
       },
       {
         "loc": "src\\engine\\modules\\content\\spells.js:329",
-        "code": "DE: {\n  ta: \"睡眠\",\n  description: \"怪物陷入睡眠\",\n  ca: \"Sleep\",\n  ya: \"Pink Star\",\n  X: 0,\n  ga: 2,\n  td: true,\n  Ra: 0,\n  La: 20\n}"
+        "code": "DE: {\n  ta: \"睡眠\",\n  description: \"怪物陷入睡眠\",\n  ca: \"Sleep\",\n  ya: \"Pink Star\",\n  statusEffectTypeId: 0,\n  ga: 2,\n  td: true,\n  Ra: 0,\n  La: 20"
       }
     ],
     "fileCount": 2,
@@ -31749,7 +31558,7 @@
       },
       {
         "loc": "src\\engine\\modules\\content\\spells.js:255",
-        "code": "CD: {\n  ta: \"痛苦\",\n  description: \"对怪物无情\",\n  ca: \"Skull Cross\",\n  ya: \"Skull Cross\",\n  X: null,\n  ga: 4,\n  Ra: 0,\n  La: 13,\n  bo: true\n}"
+        "code": "CD: {\n  ta: \"痛苦\",\n  description: \"对怪物无情\",\n  ca: \"Skull Cross\",\n  ya: \"Skull Cross\",\n  statusEffectTypeId: null,\n  ga: 4,\n  Ra: 0,\n  La: 13,\n"
       }
     ],
     "fileCount": 2,
@@ -31769,7 +31578,7 @@
       },
       {
         "loc": "src\\engine\\modules\\content\\spells.js:266",
-        "code": "xD: {\n  ta: \"绿色死亡\",\n  description: \"弹跳死亡\",\n  ca: \"Green Skull\",\n  ya: \"Green Skull\",\n  X: null,\n  ga: 13,\n  Ra: 0,\n  La: 20\n}"
+        "code": "xD: {\n  ta: \"绿色死亡\",\n  description: \"弹跳死亡\",\n  ca: \"Green Skull\",\n  ya: \"Green Skull\",\n  statusEffectTypeId: null,\n  ga: 13,\n  Ra: 0,\n  La: 20"
       }
     ],
     "fileCount": 2,
@@ -31789,7 +31598,7 @@
       },
       {
         "loc": "src\\engine\\modules\\content\\spells.js:184",
-        "code": "ME: {\n  ta: \"嘲讽\",\n  description: \"吸引怪物攻击战士\",\n  ca: \"Target\",\n  ya: null,\n  X: 10,\n  ga: 2,\n  td: true,\n  Ra: 50,\n  La: 30\n}"
+        "code": "ME: {\n  ta: \"嘲讽\",\n  description: \"吸引怪物攻击战士\",\n  ca: \"Target\",\n  ya: null,\n  statusEffectTypeId: 10,\n  ga: 2,\n  td: true,\n  Ra: 50,\n  La: 30\n}"
       }
     ],
     "fileCount": 2,
@@ -31809,7 +31618,7 @@
       },
       {
         "loc": "src\\engine\\modules\\content\\spells.js:232",
-        "code": "rE: {\n  ta: \"愤怒\",\n  description: \"极大地提高伤害\",\n  ca: \"Totems\",\n  ya: null,\n  X: 12,\n  ga: 2,\n  td: true,\n  Ra: 100,\n  La: 40\n}"
+        "code": "rE: {\n  ta: \"愤怒\",\n  description: \"极大地提高伤害\",\n  ca: \"Totems\",\n  ya: null,\n  statusEffectTypeId: 12,\n  ga: 2,\n  td: true,\n  Ra: 100,\n  La: 40\n}"
       }
     ],
     "fileCount": 2,
@@ -31829,7 +31638,7 @@
       },
       {
         "loc": "src\\engine\\modules\\content\\spells.js:208",
-        "code": "ID: {\n  ta: \"立即搜索\",\n  description: \"快速搜索\",\n  ca: \"Gold Sparkles\",\n  ya: null,\n  X: null,\n  ga: 14,\n  td: true,\n  Ra: 0,\n  La: 10\n}"
+        "code": "ID: {\n  ta: \"立即搜索\",\n  description: \"快速搜索\",\n  ca: \"Gold Sparkles\",\n  ya: null,\n  statusEffectTypeId: null,\n  ga: 14,\n  td: true,\n  Ra: 0,\n  L"
       }
     ],
     "fileCount": 2,
@@ -31849,7 +31658,7 @@
       },
       {
         "loc": "src\\engine\\modules\\content\\spells.js:117",
-        "code": "yD: {\n  ta: \"治疗\",\n  description: \"恢复35%生命\",\n  ca: \"Red Crosses\",\n  ya: \"Red Crosses\",\n  X: null,\n  ga: 1,\n  Ra: 35,\n  La: 20\n}"
+        "code": "yD: {\n  ta: \"治疗\",\n  description: \"恢复35%生命\",\n  ca: \"Red Crosses\",\n  ya: \"Red Crosses\",\n  statusEffectTypeId: null,\n  ga: 1,\n  Ra: 35,\n  La: 2"
       }
     ],
     "fileCount": 2,
@@ -31869,7 +31678,7 @@
       },
       {
         "loc": "src\\engine\\modules\\content\\spells.js:149",
-        "code": "FD: {\n  ta: \"提高伤害\",\n  description: \"10%队伍伤害\",\n  ca: \"Arm Flex\",\n  ya: null,\n  X: 6,\n  ga: 3,\n  Ra: 10,\n  td: true,\n  La: 700\n}"
+        "code": "FD: {\n  ta: \"提高伤害\",\n  description: \"10%队伍伤害\",\n  ca: \"Arm Flex\",\n  ya: null,\n  statusEffectTypeId: 6,\n  ga: 3,\n  Ra: 10,\n  td: true,\n  La: 70"
       }
     ],
     "fileCount": 2,
@@ -31889,7 +31698,7 @@
       },
       {
         "loc": "src\\engine\\modules\\content\\spells.js:160",
-        "code": "ED: {\n  ta: \"提高攻击等级\",\n  description: \"10%队伍攻击等级\",\n  ca: \"Eagle\",\n  ya: null,\n  X: 7,\n  ga: 3,\n  Ra: 10,\n  td: true,\n  La: 700\n}"
+        "code": "ED: {\n  ta: \"提高攻击等级\",\n  description: \"10%队伍攻击等级\",\n  ca: \"Eagle\",\n  ya: null,\n  statusEffectTypeId: 7,\n  ga: 3,\n  Ra: 10,\n  td: true,\n  La: 7"
       }
     ],
     "fileCount": 2,
@@ -31909,7 +31718,7 @@
       },
       {
         "loc": "src\\engine\\modules\\content\\spells.js:127",
-        "code": "xE: {\n  ta: \"复活\",\n  description: \"移除昏迷效果\",\n  ca: \"White Crosses\",\n  ya: \"White Crosses\",\n  X: null,\n  ga: 16,\n  Ra: 1,\n  td: true,\n  La: 20\n"
+        "code": "xE: {\n  ta: \"复活\",\n  description: \"移除昏迷效果\",\n  ca: \"White Crosses\",\n  ya: \"White Crosses\",\n  statusEffectTypeId: null,\n  ga: 16,\n  Ra: 1,\n  td"
       }
     ],
     "fileCount": 2,
@@ -31929,7 +31738,7 @@
       },
       {
         "loc": "src\\engine\\modules\\content\\spells.js:40",
-        "code": "XD: {\n  ta: \"闪电雨\",\n  description: \"电雨带来死亡\",\n  ca: \"Lightning Rain\",\n  ya: \"Orange Star\",\n  X: null,\n  ga: 6,\n  Ra: 0,\n  La: 30\n}"
+        "code": "XD: {\n  ta: \"闪电雨\",\n  description: \"电雨带来死亡\",\n  ca: \"Lightning Rain\",\n  ya: \"Orange Star\",\n  statusEffectTypeId: null,\n  ga: 6,\n  Ra: 0,\n  La:"
       }
     ],
     "fileCount": 2,
@@ -31949,7 +31758,7 @@
       },
       {
         "loc": "src\\engine\\modules\\content\\spells.js:62",
-        "code": "rD: {\n  ta: \"火环\",\n  description: \"火焰之环\",\n  ca: \"Yellow Fire Ring\",\n  ya: \"Yellow Star\",\n  X: null,\n  ga: 4,\n  Ra: 0,\n  La: 13,\n  bo: true\n}"
+        "code": "rD: {\n  ta: \"火环\",\n  description: \"火焰之环\",\n  ca: \"Yellow Fire Ring\",\n  ya: \"Yellow Star\",\n  statusEffectTypeId: null,\n  ga: 4,\n  Ra: 0,\n  La: "
       }
     ],
     "fileCount": 2,
@@ -31969,7 +31778,7 @@
       },
       {
         "loc": "src\\engine\\modules\\content\\spells.js:93",
-        "code": "TE: {\n  ta: \"转变怪物\",\n  description: \"怪物攻击怪物\",\n  ca: \"Red Eye Blink\",\n  ya: \"Pink Star\",\n  X: 4,\n  ga: 2,\n  td: true,\n  Ra: 0,\n  La: 20\n}"
+        "code": "TE: {\n  ta: \"转变怪物\",\n  description: \"怪物攻击怪物\",\n  ca: \"Red Eye Blink\",\n  ya: \"Pink Star\",\n  statusEffectTypeId: 4,\n  ga: 2,\n  td: true,\n  Ra: 0"
       }
     ],
     "fileCount": 2,
@@ -32067,7 +31876,7 @@
       },
       {
         "loc": "src\\engine\\modules\\content\\guardians.js:330",
-        "code": "WC: [{\n  g: 30,\n  f: 17\n}, {\n  g: 2,\n  f: 18\n}, {\n  g: 40,\n  f: 19\n}, {\n  g: 3,\n  f: 10\n}]"
+        "code": "WC: [{\n  statBonusValue: 30,\n  statType: 17\n}, {\n  statBonusValue: 2,\n  statType: 18\n}, {\n  statBonusValue: 40,\n  statType: 19\n}, {\n  statBo"
       }
     ],
     "fileCount": 2,

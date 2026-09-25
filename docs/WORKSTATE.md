@@ -18,7 +18,7 @@
 | M5-M9 | ✅ 结构完成（见 MIGRATION_MAP.md） |
 | M10 Type Hardening | ❌ 未开始 |
 | M11 Performance | ✅ 基线完成（docs/performance-baseline.md）：重构/原版比值 1.0-1.1x；优化未开始（也无必要——模拟占回合预算 0.03%） |
-| M12 Legacy Reduction | 🟡 剩余约 1,300 处单字母字段访问（技能定义表 c/e/f/g/h 为主，artifacts/obfuscated-fields.json） |
+| M12 Legacy Reduction | 🟡 技能/法术/状态效果/视图高频字段已清（e/f/g/X/V/W/c 组落地）；剩余长尾字段约 1,300 处访问（Y/Z/aa/ca 等，需新取证） |
 | M13 Final Regression | 🟡 回归体系全绿；prestige/victory/部分法术分支无差分场景 |
 
 ## 3. 可运行状态与命令（全部实测通过 @ commit 4665924+）
@@ -50,8 +50,8 @@ npm run perf             # 性能基线测量（重构 vs 原版）
 ## 6. 下一步（按优先级）
 
 1. **重命名波次 3**：技能/法术定义表字段（`c`→settingId/skillId/spellId 已有 HIGH 证据，含存档映射同步 game-save.js:953/543-551、entities.js:138-156）；`e/f/g/h` 等技能字段需**新取证**（派 Explore 智能体，产出格式同上批）。
-2. 交付物收尾：REFACTOR_REPORT.md、PERFORMANCE_REPORT.md（数据已有）、COMPATIBILITY_REPORT.md（parity/场景/codec 证据已有）——大部分素材在 docs/ 与 facts.md。
-3. 扩展差分场景：prestige/victory 流程、法术分支、城堡战（需先读代码找触发入口，或经 refactored API 构造存档）。
+2. ~~交付物收尾~~ ✅ 已完成（REFACTOR_REPORT.md、PERFORMANCE_REPORT.md、COMPATIBILITY_REPORT.md、MIGRATION_MAP.md）。
+3. ~~扩展差分场景：prestige/victory~~ ✅ 12 场景矩阵已含 veteran-run/prestige-restart/full-reset；剩余：胜利瞬间触发（城堡征服）、法术分支。
 4. 类型体系（M10）：JSDoc 先行，core/ 与 persistence/ 优先。
 5. symbol-map.json 元数据刷新（本次 30+ 字段映射写入）。
 

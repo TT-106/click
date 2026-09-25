@@ -49,6 +49,17 @@
 | it / oq | CharacterSkillUpgrade 的技能定义 / LearnSpellUpgrade 的法术定义（Jr() 多态访问） | upgrades.js |
 | mg / mb | 药水条目的修正对象 / GlobalUpgrade 的定义对象 | potions.js / upgrades.js |
 
+## 波次 3 追加（第四轮取证落地）
+
+| 原字段 | 新名 | 所有对象 |
+|---|---|---|
+| e | description | 技能/全局升级定义 |
+| e | descriptionLabel | Upgrade 实例动态按钮文案 |
+| f / g | statType / statBonusValue | 技能/卷轴/守卫/随从加成条目（applyStatBonus 唯一消费漏斗） |
+| X | statusEffectTypeId | 状态效果定义/法术定义/Spell/StatusEffect/行为（枚举 0-14） |
+| V | getStatisticCell / getOfflineProgressCell | StatisticsView / OfflineProgressView |
+| W | buttonElement / contentContainer / upgradeButton | UpgradeButtonView / *Details / DungeonRowView |
+
 ## 待取证残留（约 1,300 处访问）
 
-高频：`e/f/g`（卷轴/法术/价格表数据字面量，380 写 each）、`V/W/X` 及长尾——工作清单 `artifacts/obfuscated-fields.json`（按频次排序，含样例代码）。取证方法与产出格式见 WORKSTATE.md 第 6 节。
+高频：`Y/Z/aa/ca/ea/ga/fa/ka/na` 等长尾——工作清单 `artifacts/obfuscated-fields.json`（按频次排序，含样例代码）。取证方法与产出格式见 WORKSTATE.md 第 6 节。
