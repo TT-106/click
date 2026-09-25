@@ -53,7 +53,7 @@ npm run perf             # 性能基线测量（重构 vs 原版）
 2. ~~已取证待落地~~ ✅ B 组九项全部落地（每字母独立全回归）。
 3. ~~交付物收尾~~ ✅ 已完成（REFACTOR_REPORT.md、PERFORMANCE_REPORT.md、COMPATIBILITY_REPORT.md、MIGRATION_MAP.md）。
 4. ~~扩展差分场景：prestige/victory~~ ✅ 12 场景矩阵已含 veteran-run/prestige-restart/full-reset；剩余：胜利瞬间触发（城堡征服）、法术分支。
-5. **M10 类型体系**：✅ 已启动（tsconfig checkJs 范围 core/+persistence/、SaveData DTO typedef `persistence/save-dto.js`、math.js JSDoc、`npm run typecheck` 已入 check 门禁）；36 文件 `@ts-nocheck` 待摘除——simulation/tick.js 与 runtime/game.js 已于本轮进入检查范围（7 处遗留推断错误以行为中立注解清零）。
+5. **M10 类型体系**：✅ 已启动（tsconfig checkJs 范围 core/+persistence/、SaveData DTO typedef `persistence/save-dto.js`、math.js JSDoc、`npm run typecheck` 已入 check 门禁）；31 文件 `@ts-nocheck` 待摘除（本轮已纳入：tick/game + targeting/scrolls/items/dungeons/pathfinding/regions/travel-costs，共 9 文件、9 处遗留错误以行为中立注解清零）；批量管理脚本 scripts/m10-nocheck.mjs（按 tsc 错误数自动筛选 ≤3 错误文件纳入）。
 6. symbol-map.json 元数据刷新（累计 60+ 字段映射待写入）。
 
 ## 8. 智能体产出验收状态
