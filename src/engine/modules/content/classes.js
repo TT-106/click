@@ -94,7 +94,7 @@ export function initializeContentClasses() {
     Tg: function () {
       return [new CharacterSkillUpgrade(improvedAttackRatingFighter1Definition), new CharacterSkillUpgrade(fasterAttacksFighter1Definition), new CharacterSkillUpgrade(improvedAttackRatingFighter2Definition), new CharacterSkillUpgrade(fasterAttacksFighter2Definition), new CharacterSkillUpgrade(criticalHitChanceFighter4Definition), new CharacterSkillUpgrade(improvedAttackRatingFighter3Definition), new CharacterSkillUpgrade(fasterAttacksFighter3Definition), new CharacterSkillUpgrade(attacksPerTurnFighter2Definition), new CharacterSkillUpgrade(additionalAttackPercentFighter3Definition)];
     },
-    nb: function () {
+    createBehaviors: function () {
       return [new FollowLeaderBehavior(), new StunnedBehavior(99), new LootGoldBehavior(98), new MeleeAttackBehavior(MELEE_ATTACK_RANGE, 90, 2, false), new ChangeFloorBehavior(), new TravelWorldBehavior(60, 10), new EnterDungeonBehavior(60, 10), new EnterCastleBehavior(60, 10), new UseShopBehavior(60, 10), new WaitBehavior()];
     }
   };
@@ -147,7 +147,7 @@ export function initializeContentClasses() {
     Tg: function () {
       return [new CharacterSkillUpgrade(spellCostPriest1Definition), new CharacterSkillUpgrade(improvedDefenseRatingPriest1Definition), new LearnSpellUpgrade(defenseRatingSpellDefinition), new CharacterSkillUpgrade(spellCostPriest2Definition), new CharacterSkillUpgrade(improvedDefenseRatingPriest3Definition), new CharacterSkillUpgrade(spiritRegenerationPriest1Definition), new CharacterSkillUpgrade(improvedDefenseRatingPriest2Definition), new CharacterSkillUpgrade(improvedDefenseRatingSpellPriestDefinition), new LearnSpellUpgrade(reviveSpellDefinition)];
     },
-    nb: function () {
+    createBehaviors: function () {
       return [new FollowLeaderBehavior(), new StunnedBehavior(99), new ReviveBehavior(MELEE_ATTACK_RANGE, 94), new LifeDrainBehavior(RANGED_ATTACK_RANGE, 90), new PartyBuffBehavior(RANGED_ATTACK_RANGE, 6, 81), new PartyBuffBehavior(RANGED_ATTACK_RANGE, 5, 80), new PartyBuffBehavior(RANGED_ATTACK_RANGE, 7, 79), new PartyBuffBehavior(RANGED_ATTACK_RANGE, 8, 78), new MeleeAttackBehavior(MELEE_ATTACK_RANGE, 60, 2, false), new ChangeFloorBehavior(), new TravelWorldBehavior(60, 10), new EnterDungeonBehavior(60, 10), new EnterCastleBehavior(60, 10), new UseShopBehavior(60, 10), new WaitBehavior()];
     }
   };
@@ -197,7 +197,7 @@ export function initializeContentClasses() {
     Tg: function () {
       return [new CharacterSkillUpgrade(improvedAttackRatingRanger1Definition), new CharacterSkillUpgrade(improvedHealthRanger2Definition), new CharacterSkillUpgrade(improvedAttackRatingRanger2Definition), new CharacterSkillUpgrade(fasterAttacksRanger1Definition), new CharacterSkillUpgrade(ricochetCountRanger4Definition), new CharacterSkillUpgrade(improvedAttackRatingRanger3Definition), new CharacterSkillUpgrade(ricochetPercentRanger4Definition), new CharacterSkillUpgrade(fasterAttacksRanger3Definition), new CharacterSkillUpgrade(criticalHitChanceRanger4Definition)];
     },
-    nb: function () {
+    createBehaviors: function () {
       return [new FollowLeaderBehavior(), new StunnedBehavior(99), new RangedAttackBehavior(RANGED_MIN_DISTANCE, RANGED_ATTACK_RANGE, 95), new MeleeAttackBehavior(RANGED_ATTACK_RANGE, 90, MELEE_ACTION_TYPE, false), new ChangeFloorBehavior(), new TravelWorldBehavior(60, 10), new EnterDungeonBehavior(60, 10), new EnterCastleBehavior(60, 10), new UseShopBehavior(60, 10), new WaitBehavior()];
     }
   };
@@ -243,7 +243,7 @@ export function initializeContentClasses() {
     Tg: function () {
       return [new CharacterSkillUpgrade(improvedDefenseRatingMageFire1Definition), new CharacterSkillUpgrade(improvedSpiritMageFire1Definition), new LearnSpellUpgrade(fireBallSpellDefinition), new CharacterSkillUpgrade(improvedDefenseRatingMageFire2Definition), new CharacterSkillUpgrade(improvedFireballMageFire1Definition), new CharacterSkillUpgrade(improvedDefenseRatingMageFire3Definition), new CharacterSkillUpgrade(improvedFireballMageFire2Definition), new CharacterSkillUpgrade(spellCostMageFire1Definition)];
     },
-    nb: function () {
+    createBehaviors: function () {
       return [new FollowLeaderBehavior(), new StunnedBehavior(99), new RangedAttackBehavior(RANGED_MIN_DISTANCE, RANGED_ATTACK_RANGE, 95), new AreaDamageBehavior(RANGED_ATTACK_RANGE, 95), new TargetSpellBehavior(RANGED_ATTACK_RANGE, 95), new SummonBehavior(RANGED_ATTACK_RANGE, 85, 4), new ApplyEffectBehavior(RANGED_ATTACK_RANGE, 60, 4), new ChangeFloorBehavior(), new TravelWorldBehavior(60, 10), new EnterDungeonBehavior(60, 10), new EnterCastleBehavior(60, 10), new UseShopBehavior(60, 10), new WaitBehavior()];
     }
   };
@@ -289,7 +289,7 @@ export function initializeContentClasses() {
     Tg: function () {
       return [new CharacterSkillUpgrade(improvedAttackRatingRogue1Definition), new CharacterSkillUpgrade(fasterAttacksRogue1Definition), new CharacterSkillUpgrade(attacksPerTurnRogue1Definition), new CharacterSkillUpgrade(improvedAttackRatingRogue2Definition), new CharacterSkillUpgrade(fasterAttacksRogue2Definition), new CharacterSkillUpgrade(additionalAttackPercentRogue1Definition), new CharacterSkillUpgrade(improvedAttackRatingRogue3Definition), new CharacterSkillUpgrade(fasterAttacksRogue3Definition), new LearnSpellUpgrade(detectTreasureChestSpellDefinition)];
     },
-    nb: function () {
+    createBehaviors: function () {
       return [new FollowLeaderBehavior(), new StunnedBehavior(99), new LootItemBehavior(98), new GuardRangedBehavior(RANGED_MIN_DISTANCE, RANGED_ATTACK_RANGE, 95), new OpportunisticAttackBehavior(95), new ChangeFloorBehavior(), new LootPotionBehavior(75), new LootChestBehavior(70), new TravelWorldBehavior(60, 10), new EnterDungeonBehavior(60, 10), new EnterCastleBehavior(60, 10), new UseShopBehavior(60, 10), new WaitBehavior()];
     }
   };
@@ -335,7 +335,7 @@ export function initializeContentClasses() {
     Tg: function () {
       return [new CharacterSkillUpgrade(improvedDefenseRatingDruid1Definition), new CharacterSkillUpgrade(improvedSpiritDruid1Definition), new CharacterSkillUpgrade(improvedDefenseRatingDruid2Definition), new CharacterSkillUpgrade(spellCostDruid1Definition), new CharacterSkillUpgrade(improvedSpiritDruid2Definition), new CharacterSkillUpgrade(improvedDefenseRatingDruid3Definition), new CharacterSkillUpgrade(largerWolfPackDruid4Definition), new CharacterSkillUpgrade(spellCostDruid2Definition), new LearnSpellUpgrade(summonDogSpellDefinition)];
     },
-    nb: function () {
+    createBehaviors: function () {
       return [new FollowLeaderBehavior(), new StunnedBehavior(99), new RangedAttackBehavior(RANGED_MIN_DISTANCE, RANGED_ATTACK_RANGE, 95), new SelfSpellBehavior(90), new AreaSpellBehavior(RANGED_ATTACK_RANGE, 85, 10), new LifeDrainBehavior(RANGED_ATTACK_RANGE, 75), new ApplyEffectBehavior(RANGED_ATTACK_RANGE, 60, 0), new ChangeFloorBehavior(), new TravelWorldBehavior(60, 10), new EnterDungeonBehavior(60, 10), new EnterCastleBehavior(60, 10), new UseShopBehavior(60, 10), new WaitBehavior()];
     }
   };
@@ -389,7 +389,7 @@ export function initializeContentClasses() {
     Tg: function () {
       return [new CharacterSkillUpgrade(improvedAttackRatingBarbarian1Definition), new CharacterSkillUpgrade(fasterAttacksBarbarian1Definition), new CharacterSkillUpgrade(spiritRegenerationBarbarian1Definition), new CharacterSkillUpgrade(improvedAttackRatingBarbarian2Definition), new CharacterSkillUpgrade(fasterAttacksBarbarian2Definition), new CharacterSkillUpgrade(improvedAttackRatingBarbarian3Definition), new CharacterSkillUpgrade(spiritRegenerationBarbarian2Definition), new CharacterSkillUpgrade(fasterAttacksBarbarian3Definition), new CharacterSkillUpgrade(criticalHitChanceBarbarian4Definition)];
     },
-    nb: function () {
+    createBehaviors: function () {
       return [new FollowLeaderBehavior(), new StunnedBehavior(99), new LootScrollBehavior(98), new AreaDamageBehavior(MELEE_ATTACK_RANGE, 100), new MeleeAttackBehavior(MELEE_ATTACK_RANGE, 90, 2, false), new ChangeFloorBehavior(), new TravelWorldBehavior(60, 10), new EnterDungeonBehavior(60, 10), new EnterCastleBehavior(60, 10), new UseShopBehavior(60, 10), new WaitBehavior()];
     }
   };
@@ -435,7 +435,7 @@ export function initializeContentClasses() {
     Tg: function () {
       return [new CharacterSkillUpgrade(improvedDefenseRatingMageElectric1Definition), new CharacterSkillUpgrade(improvedSpiritMageElectric1Definition), new LearnSpellUpgrade(chainedLightningSpellDefinition), new CharacterSkillUpgrade(improvedDefenseRatingMageElectric2Definition), new CharacterSkillUpgrade(improvedChainLightningMageElectric1Definition), new CharacterSkillUpgrade(improvedDefenseRatingMageElectric3Definition), new CharacterSkillUpgrade(improvedChainLightningMageElectric2Definition), new CharacterSkillUpgrade(spellCostMageElectric1Definition), new CharacterSkillUpgrade(improvedChainLightningMageElectric3Definition)];
     },
-    nb: function () {
+    createBehaviors: function () {
       return [new FollowLeaderBehavior(), new StunnedBehavior(99), new RangedAttackBehavior(RANGED_MIN_DISTANCE, RANGED_ATTACK_RANGE, 95), new HealBehavior(RANGED_ATTACK_RANGE, 95), new TargetSpellBehavior(RANGED_ATTACK_RANGE, 95), new SummonBehavior(RANGED_ATTACK_RANGE, 85, 4), new ApplyEffectBehavior(RANGED_ATTACK_RANGE, 60, 1), new ChangeFloorBehavior(), new TravelWorldBehavior(60, 10), new EnterDungeonBehavior(60, 10), new EnterCastleBehavior(60, 10), new UseShopBehavior(60, 10), new WaitBehavior()];
     }
   };
@@ -488,7 +488,7 @@ export function initializeContentClasses() {
     Tg: function () {
       return [new CharacterSkillUpgrade(improvedAttackRatingNinja1Definition), new CharacterSkillUpgrade(fasterAttacksNinja1Definition), new CharacterSkillUpgrade(attacksPerTurnNinja3Definition), new CharacterSkillUpgrade(improvedAttackRatingNinja2Definition), new CharacterSkillUpgrade(fasterAttacksNinja2Definition), new CharacterSkillUpgrade(additionalAttackPercentNinja1Definition), new CharacterSkillUpgrade(improvedAttackRatingNinja3Definition), new CharacterSkillUpgrade(fasterAttacksNinja3Definition), new CharacterSkillUpgrade(additionalAttackPercentNinja2Definition)];
     },
-    nb: function () {
+    createBehaviors: function () {
       return [new FollowLeaderBehavior(), new StunnedBehavior(99), new ChainDamageBehavior(RANGED_ATTACK_RANGE, 95), new RangedAttackBehavior(RANGED_MIN_DISTANCE, RANGED_ATTACK_RANGE, 90), new MeleeAttackBehavior(RANGED_ATTACK_RANGE, 85, MELEE_ACTION_TYPE, false), new ChangeFloorBehavior(), new TravelWorldBehavior(60, 10), new EnterDungeonBehavior(60, 10), new EnterCastleBehavior(60, 10), new UseShopBehavior(60, 10), new WaitBehavior()];
     }
   };
@@ -534,7 +534,7 @@ export function initializeContentClasses() {
     Tg: function () {
       return [new CharacterSkillUpgrade(improvedDefenseRatingNecromancer1Definition), new CharacterSkillUpgrade(improvedSpiritNecromancer1Definition), new LearnSpellUpgrade(greenDeathSpellDefinition), new CharacterSkillUpgrade(improvedDefenseRatingNecromancer2Definition), new CharacterSkillUpgrade(greenDeathRicochetCountNecromancer1Definition), new CharacterSkillUpgrade(spellCostNecromancer1Definition), new CharacterSkillUpgrade(greenDeathRicochetCountNecromancer2Definition), new CharacterSkillUpgrade(improvedDefenseRatingNecromancer3Definition), new CharacterSkillUpgrade(greenDeathRicochetCountNecromancer3Definition)];
     },
-    nb: function () {
+    createBehaviors: function () {
       return [new FollowLeaderBehavior(), new StunnedBehavior(99), new RangedAttackBehavior(RANGED_MIN_DISTANCE, RANGED_ATTACK_RANGE, 95), new SelfSpellBehavior(94), new CompanionSpellBehavior(RANGED_ATTACK_RANGE, 90), new SummonBehavior(RANGED_ATTACK_RANGE, 89, 13), new SummonBehavior(RANGED_ATTACK_RANGE, 85, 4), new ChangeFloorBehavior(), new TravelWorldBehavior(60, 10), new EnterDungeonBehavior(60, 10), new EnterCastleBehavior(60, 10), new UseShopBehavior(60, 10), new WaitBehavior()];
     }
   };
@@ -580,7 +580,7 @@ export function initializeContentClasses() {
     Tg: function () {
       return [new CharacterSkillUpgrade(improvedDefenseRatingChickenKing1Definition), new CharacterSkillUpgrade(improvedSpiritChickenKing1Definition), new CharacterSkillUpgrade(largerFlockChickenKing6Definition), new CharacterSkillUpgrade(improvedDefenseRatingChickenKing2Definition), new CharacterSkillUpgrade(spellCostChickenKing1Definition), new CharacterSkillUpgrade(largerFlockChickenKing2Definition), new CharacterSkillUpgrade(improvedDefenseRatingChickenKing3Definition), new CharacterSkillUpgrade(fasterAttacksChickenKing2Definition), new CharacterSkillUpgrade(barbarianChanceChickenKingDefinition)];
     },
-    nb: function () {
+    createBehaviors: function () {
       return [new FollowLeaderBehavior(), new StunnedBehavior(99), new RangedAttackBehavior(RANGED_MIN_DISTANCE, RANGED_ATTACK_RANGE, 95), new SelfSpellBehavior(90), new AreaSpellBehavior(RANGED_ATTACK_RANGE, 85, 17), new ChangeFloorBehavior(), new TravelWorldBehavior(60, 10), new EnterDungeonBehavior(60, 10), new EnterCastleBehavior(60, 10), new UseShopBehavior(60, 10), new WaitBehavior()];
     }
   };

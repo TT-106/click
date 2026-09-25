@@ -54,7 +54,7 @@ export function spawnMinion(a, b, c) {
   var d = new Character(a.defaultName, 1, a.characterClass, a, null),
     f = d.stats;
   d.ee = game.monsterSprites.getSprite(a.spriteName);
-  var g = createBehaviorQueue(a.nb());
+  var g = createBehaviorQueue(a.createBehaviors());
   d.behaviors = g;
   g = d.position;
   g.room = b.position.room;
@@ -106,7 +106,7 @@ export function createCastleGuardian(a, b, c) {
     g = f.stats;
   f.gq(d);
   f.ee = d.ll;
-  d = createBehaviorQueue(a.nb());
+  d = createBehaviorQueue(a.createBehaviors());
   f.behaviors = d;
   initializeCharacterSkills(f, b);
   g.characterLevel = b;

@@ -117,7 +117,7 @@ export function spawnDungeonBoss(a, b) {
     l = f.stats;
   f.gq(h);
   f.ee = h.ll;
-  h = createBehaviorQueue(bossClass.nb());
+  h = createBehaviorQueue(bossClass.createBehaviors());
   f.behaviors = h;
   initializeCharacterSkills(f, c);
   l.characterLevel = c;

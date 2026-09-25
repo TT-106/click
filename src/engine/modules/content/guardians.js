@@ -36,7 +36,7 @@ export function initializeContentGuardians() {
     }],
     statMultipliers: guardianStatMultipliers,
     kc: null,
-    nb: function () {
+    createBehaviors: function () {
       return [new MeleeAttackBehavior(MELEE_ATTACK_RANGE, 90, 2, false), new IdleBehavior(1)];
     },
     Jm: [],
@@ -70,7 +70,7 @@ export function initializeContentGuardians() {
     }],
     statMultipliers: casterStatMultipliers,
     kc: null,
-    nb: function () {
+    createBehaviors: function () {
       return [new RangedAttackBehavior(RANGED_MIN_DISTANCE, RANGED_ATTACK_RANGE, 95), new HealBehavior(RANGED_ATTACK_RANGE, 90), new SummonBehavior(RANGED_ATTACK_RANGE, 85, 4), new IdleBehavior(1)];
     },
     Jm: [electricSpellDefinitions.br, poisonCloudSpell],
@@ -105,7 +105,7 @@ export function initializeContentGuardians() {
     statMultipliers: guardianStatMultipliers,
     kc: null,
     YE: null,
-    nb: function () {
+    createBehaviors: function () {
       return [new RangedAttackBehavior(RANGED_MIN_DISTANCE, RANGED_ATTACK_RANGE, 95), new MeleeAttackBehavior(RANGED_ATTACK_RANGE, 90, MELEE_ACTION_TYPE, false), new IdleBehavior(1)];
     },
     Jm: [],
@@ -152,7 +152,7 @@ export function initializeContentGuardians() {
       Ef: 1.1
     },
     kc: null,
-    nb: function () {
+    createBehaviors: function () {
       return [new ChainDamageBehavior(RANGED_ATTACK_RANGE, 95), new RangedAttackBehavior(RANGED_MIN_DISTANCE, RANGED_ATTACK_RANGE, 90), new MeleeAttackBehavior(RANGED_ATTACK_RANGE, 85, MELEE_ACTION_TYPE, false), new IdleBehavior(1)];
     },
     Jm: [ninjaSpellDefinitions.Hx],
@@ -323,7 +323,7 @@ export function initializeContentGuardians() {
       Ef: 1.5
     },
     kc: null,
-    nb: function () {
+    createBehaviors: function () {
       return [new MeleeAttackBehavior(MELEE_ATTACK_RANGE, 90, 2, false), new IdleBehavior(1)];
     },
     eu: [],

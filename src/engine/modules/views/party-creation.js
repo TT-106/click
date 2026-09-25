@@ -52,7 +52,7 @@ export function mountPartyCreation(a) {
         g = new Character(g, ADVENTURER_TYPE, f.characterClass, f, new Inventory());
         var n = g.stats;
         g.ee = game.monsterSprites.getSprite(l);
-        l = createBehaviorQueue(f.nb());
+        l = createBehaviorQueue(f.createBehaviors());
         g.behaviors = l;
         n.baseAttackCooldown = 12;
         n.baseHealthRegenPercent = 2;

@@ -410,7 +410,7 @@ export function restoreGameState(a, b) {
                 kd = fc.upgrades4,
                 eg = classesById[vd],
                 hc = new Character(fc.adventurerName, fc.characterType, vd, eg, new Inventory()),
-                re = createBehaviorQueue(eg.nb());
+                re = createBehaviorQueue(eg.createBehaviors());
               hc.behaviors = re;
               hc.ee = game.monsterSprites.getSprite(qe);
               var of = hc;

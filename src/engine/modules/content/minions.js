@@ -36,7 +36,7 @@ export function initializeContentMinions() {
     }],
     statMultipliers: minionStatMultipliers,
     kc: null,
-    nb: function () {
+    createBehaviors: function () {
       return [new MeleeAttackBehavior(MELEE_ATTACK_RANGE, 90, 2, false), new ChangeFloorBehavior(), new TravelWorldBehavior(60, 10), new EnterDungeonBehavior(60, 10), new EnterCastleBehavior(60, 10), new UseShopBehavior(60, 10), new WaitBehavior()];
     }
   };
@@ -69,7 +69,7 @@ export function initializeContentMinions() {
     }],
     statMultipliers: minionStatMultipliers,
     kc: null,
-    nb: function () {
+    createBehaviors: function () {
       return [new MeleeAttackBehavior(MELEE_ATTACK_RANGE, 90, 2, false), new ChangeFloorBehavior(), new TravelWorldBehavior(60, 10), new EnterDungeonBehavior(60, 10), new EnterCastleBehavior(60, 10), new UseShopBehavior(60, 10), new WaitBehavior()];
     }
   };
@@ -102,7 +102,7 @@ export function initializeContentMinions() {
     }],
     statMultipliers: minionStatMultipliers,
     kc: null,
-    nb: function () {
+    createBehaviors: function () {
       return [new MeleeAttackBehavior(MELEE_ATTACK_RANGE, 90, 2, false), new ChangeFloorBehavior(), new TravelWorldBehavior(60, 10), new EnterDungeonBehavior(60, 10), new EnterCastleBehavior(60, 10), new UseShopBehavior(60, 10), new WaitBehavior()];
     }
   };
@@ -136,7 +136,7 @@ export function initializeContentMinions() {
     statMultipliers: minionStatMultipliers,
     jl: [barbarianSpellDefinitions.wB],
     Bp: [],
-    nb: function () {
+    createBehaviors: function () {
       return [new AreaDamageBehavior(MELEE_ATTACK_RANGE, 100), new MeleeAttackBehavior(MELEE_ATTACK_RANGE, 90, 2, false), new ChangeFloorBehavior(), new TravelWorldBehavior(60, 10), new EnterDungeonBehavior(60, 10), new EnterCastleBehavior(60, 10), new UseShopBehavior(60, 10), new WaitBehavior()];
     }
   };
@@ -173,7 +173,7 @@ export function initializeContentMinions() {
       statBonusValue: 1,
       statType: 28
     }],
-    nb: function () {
+    createBehaviors: function () {
       return [new ChainDamageBehavior(RANGED_ATTACK_RANGE, 95), new RangedAttackBehavior(RANGED_MIN_DISTANCE, RANGED_ATTACK_RANGE, 90), new MeleeAttackBehavior(RANGED_ATTACK_RANGE, 85, MELEE_ACTION_TYPE, false), new ChangeFloorBehavior(), new TravelWorldBehavior(60, 10), new EnterDungeonBehavior(60, 10), new EnterCastleBehavior(60, 10), new UseShopBehavior(60, 10), new WaitBehavior()];
     }
   };
@@ -207,7 +207,7 @@ export function initializeContentMinions() {
     statMultipliers: minionStatMultipliers,
     jl: [rogueSpellDefinitions.IB],
     Bp: [],
-    nb: function () {
+    createBehaviors: function () {
       return [new LootItemBehavior(100), new GuardRangedBehavior(RANGED_MIN_DISTANCE, RANGED_ATTACK_RANGE, 95), new OpportunisticAttackBehavior(95), new ChangeFloorBehavior(), new TravelWorldBehavior(60, 10), new EnterDungeonBehavior(60, 10), new EnterCastleBehavior(60, 10), new UseShopBehavior(60, 10), new WaitBehavior()];
     }
   };
@@ -244,7 +244,7 @@ export function initializeContentMinions() {
       statBonusValue: 40,
       statType: 24
     }],
-    nb: function () {
+    createBehaviors: function () {
       return [new CooldownBehavior(160, 100), new SpecialAttackBehavior(RANGED_ATTACK_RANGE, 160, 95, MELEE_ACTION_TYPE), new MeleeAttackBehavior(RANGED_ATTACK_RANGE, 65, MELEE_ACTION_TYPE, false), new ChangeFloorBehavior(), new TravelWorldBehavior(60, 10), new EnterDungeonBehavior(60, 10), new EnterCastleBehavior(60, 10), new UseShopBehavior(60, 10), new WaitBehavior()];
     }
   };
@@ -282,7 +282,7 @@ export function initializeContentMinions() {
       statBonusValue: 3,
       statType: 21
     }],
-    nb: function () {
+    createBehaviors: function () {
       return [new CooldownBehavior(160, 100), new HealBehavior(RANGED_ATTACK_RANGE, 95), new SummonBehavior(RANGED_ATTACK_RANGE, 85, 4), new ChangeFloorBehavior(), new TravelWorldBehavior(60, 10), new EnterDungeonBehavior(60, 10), new EnterCastleBehavior(60, 10), new UseShopBehavior(60, 10), new WaitBehavior()];
     }
   };
@@ -317,7 +317,7 @@ export function initializeContentMinions() {
     statMultipliers: guardianStatMultipliers,
     kc: null,
     jl: [priestSpellDefinitions.$z, priestSpellDefinitions.Zz],
-    nb: function () {
+    createBehaviors: function () {
       return [new CooldownBehavior(160, 100), new SpecialAttackBehavior(MELEE_ATTACK_RANGE, 160, 90, 2), new PartyBuffBehavior(RANGED_ATTACK_RANGE, 8, 35), new PartyBuffBehavior(RANGED_ATTACK_RANGE, 5, 30), new ChangeFloorBehavior(), new TravelWorldBehavior(60, 10), new EnterDungeonBehavior(60, 10), new EnterCastleBehavior(60, 10), new UseShopBehavior(60, 10), new WaitBehavior()];
     }
   };
