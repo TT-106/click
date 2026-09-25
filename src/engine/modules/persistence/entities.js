@@ -53,7 +53,7 @@ export function serializeCharacter(a) {
   var b = a.adventurerName,
     c = a.characterClass,
     d = a.characterType,
-    f = a.v().getName(),
+    f = a.getSprite().getName(),
     g;
   g = a.stats;
   g = {

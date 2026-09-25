@@ -180,7 +180,7 @@ export function MonsterType(a, b, c) {
   this.nE = endsWithText(a, "y") ? a.substring(0, a.length - 1) + "" : endsWithText(a, "Man") ? a.substring(0, a.length - 3) + "Men" : endsWithText(a, "fish") ? a : a + "";
   this.spriteName = b;
   this.xd = c;
-  this.ll = game.monsterSprites.v(b);
+  this.ll = game.monsterSprites.getSprite(b);
   this.$o = this.Sj = this.Hp = this.Fp = this.Ep = this.Gp = this.No = this.ek = this.ml = this.xq = 0;
   advanceMonsterTypeRank(this);
 }

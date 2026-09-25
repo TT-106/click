@@ -206,7 +206,7 @@ export function populateWorldBlock(a, b) {
         }
         g.Ln = "PPPP" === g.Kn || "OOOO" === g.Kn || "IIII" === g.Kn ? 1E5 : 0;
       }
-      if (h = game.terrainSprites.v(h)) {
+      if (h = game.terrainSprites.getSprite(h)) {
         g.Qa(h);
       }
     }
@@ -229,24 +229,24 @@ export function populateWorldBlock(a, b) {
           s = null;
           p = 0;
           if ("GGGG" === l) {
-            if (s = a.eg.v(g + f, h + d)) {
+            if (s = a.eg.getBackgroundSpriteAt(g + f, h + d)) {
               p = 10;
             } else {
-              if (s = a.wf.v(g + f, h + d)) {
+              if (s = a.wf.getDecorationSpriteAt(g + f, h + d)) {
                 p = 1E4;
               }
             }
           } else {
             if ("DDDD" === l) {
-              if (s = a.tj.v(g + f, h + d)) {
+              if (s = a.tj.getDecorationSpriteAt(g + f, h + d)) {
                 p = 1E4;
               }
             } else {
               if ("SSSS" === l) {
-                if (s = a.kt.v(g + f, h + d)) {
+                if (s = a.kt.getBackgroundSpriteAt(g + f, h + d)) {
                   p = 10;
                 } else {
-                  if (s = a.Bx.v(g + f, h + d)) {
+                  if (s = a.Bx.getDecorationSpriteAt(g + f, h + d)) {
                     p = 1E4;
                   }
                 }
@@ -265,16 +265,16 @@ export function populateWorldBlock(a, b) {
       }
     }
   }
-  if (c && !c.$b && ((d = (d = game.dungeons.Do[b.Hd + "_" + b.Id]) ? d : null) ? (f = d.bc(), g = d.cc(), (h = game.world.hb(f, g)) ? h.ea(game.terrainSprites.v(d.Fo)) : (console.log("no tile for: col=" + f + " row=" + g), d = null)) : d = null, d && ((f = game.farms.jw[d.dungeonId]) && (f = game.world.hb(f.kw, f.lw)) && f.ea(game.terrainSprites.v(game.farms.Gz)), a.Ut(d)), f = findCastle(b.Hd + "_" + b.Id))) {
+  if (c && !c.$b && ((d = (d = game.dungeons.Do[b.Hd + "_" + b.Id]) ? d : null) ? (f = d.bc(), g = d.cc(), (h = game.world.hb(f, g)) ? h.ea(game.terrainSprites.getSprite(d.Fo)) : (console.log("no tile for: col=" + f + " row=" + g), d = null)) : d = null, d && ((f = game.farms.jw[d.dungeonId]) && (f = game.world.hb(f.kw, f.lw)) && f.ea(game.terrainSprites.getSprite(game.farms.Gz)), a.Ut(d)), f = findCastle(b.Hd + "_" + b.Id))) {
     d = f.dm;
     f = f.em;
     if (g = game.world.hb(d, f)) {
-      g.ea(game.terrainSprites.v(game.castles.Ny));
+      g.ea(game.terrainSprites.getSprite(game.castles.Ny));
     } else {
       console.log("no tile for: col=" + d + " row=" + f);
     }
   }
-  f = game.terrainSprites.v(a.tE);
+  f = game.terrainSprites.getSprite(a.tE);
   g = findCastleByRegion(b.Hd + "_" + (b.Id - 1));
   h = findCastleByRegion(b.Hd - 1 + "_" + b.Id);
   l = findCastleByRegion(b.Hd - 1 + "_" + (b.Id - 1));
@@ -552,29 +552,29 @@ export function initializeWorldTerrain() {
   L2_ForestPine06Sprite = "L2_ForestPine06.PNG";
   L2_Terrain040Sprite = "L2_Terrain040.PNG";
   L1_Terrain039Sprite = "L1_Terrain039.PNG";
-  TerrainBiome.prototype.v = function (a, b) {
+  TerrainBiome.prototype.getBackgroundSpriteAt = function (a, b) {
     var c = a * game.tileSize,
       d = b * game.tileSize;
     if (-0.3 < sampleNoise(this.ow, c, d)) {
       return null;
     }
     c = (sampleNoise(this.qD, c, d) - -0.8) / (2 / this.Dr.length) | 0;
-    return c > this.Dr.length ? game.terrainSprites.v("L2_Town01.PNG") : game.terrainSprites.v(this.Dr[c]);
+    return c > this.Dr.length ? game.terrainSprites.getSprite("L2_Town01.PNG") : game.terrainSprites.getSprite(this.Dr[c]);
   };
-  DecorationBiome.prototype.v = function (a, b) {
+  DecorationBiome.prototype.getDecorationSpriteAt = function (a, b) {
     var c = a * game.tileSize,
       d = b * game.tileSize;
     if (-0.3 < sampleNoise(this.ow, c, d)) {
       return null;
     }
     c = (sampleNoise(this.fE, c, d) - -0.8) / (0.1 / this.Fs.length) | 0;
-    return c > this.Fs.length ? null : game.terrainSprites.v(this.Fs[c]);
+    return c > this.Fs.length ? null : game.terrainSprites.getSprite(this.Fs[c]);
   };
   WorldGenerator.prototype.Ut = function (a) {
     var b;
     if (b = game.shops.zx[a.dungeonId]) {
       if (a = game.world.hb(b.iq, b.jq)) {
-        b = game.terrainSprites.v(randomShopSprite(game.shops));
+        b = game.terrainSprites.getSprite(randomShopSprite(game.shops));
         a.ea(b);
       }
     } else {

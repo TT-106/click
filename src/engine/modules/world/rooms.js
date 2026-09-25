@@ -65,21 +65,21 @@ export function revealRoom(a) {
       h,
       l,
       n,
-      p = game.terrainSprites.v(a.Ga.floor);
-    n = game.terrainSprites.v(a.Ga.Kb.Cg);
-    var s = game.terrainSprites.v(a.Ga.Kb.Eg);
+      p = game.terrainSprites.getSprite(a.Ga.floor);
+    n = game.terrainSprites.getSprite(a.Ga.Kb.Cg);
+    var s = game.terrainSprites.getSprite(a.Ga.Kb.Eg);
     h = a.tileGrid[c - 1][f - 1];
     h.Qa(p);
-    h.ea(game.terrainSprites.v(a.Ga.Kb.Gg));
+    h.ea(game.terrainSprites.getSprite(a.Ga.Kb.Gg));
     h = a.tileGrid[d][f - 1];
     h.Qa(p);
-    h.ea(game.terrainSprites.v(a.Ga.Kb.Hg));
+    h.ea(game.terrainSprites.getSprite(a.Ga.Kb.Hg));
     h = a.tileGrid[c - 1][g];
     h.Qa(p);
-    h.ea(game.terrainSprites.v(a.Ga.Kb.Dg));
+    h.ea(game.terrainSprites.getSprite(a.Ga.Kb.Dg));
     h = a.tileGrid[d][g];
     h.Qa(p);
-    h.ea(game.terrainSprites.v(a.Ga.Kb.Fg));
+    h.ea(game.terrainSprites.getSprite(a.Ga.Kb.Fg));
     for (l = c; l < d; l++) {
       h = a.tileGrid[l][f - 1];
       h.Qa(p);
@@ -120,15 +120,15 @@ export function revealRoom(a) {
       h.Qa(p);
       if (f.Ho) {
         if (f.Mb) {
-          h.ea(game.terrainSprites.v(a.Ga.Ac.kg));
+          h.ea(game.terrainSprites.getSprite(a.Ga.Ac.kg));
         } else {
-          h.ea(game.terrainSprites.v(a.Ga.Ac.Vf));
+          h.ea(game.terrainSprites.getSprite(a.Ga.Ac.Vf));
         }
       } else {
         if (f.Mb) {
-          h.ea(game.terrainSprites.v(a.Ga.Ac.jg));
+          h.ea(game.terrainSprites.getSprite(a.Ga.Ac.jg));
         } else {
-          h.ea(game.terrainSprites.v(a.Ga.Ac.Uf));
+          h.ea(game.terrainSprites.getSprite(a.Ga.Ac.Uf));
         }
       }
     }
@@ -137,15 +137,15 @@ export function revealRoom(a) {
       h.Qa(p);
       if (a.stairs.Fq) {
         if (a.stairs.sq) {
-          h.ea(game.terrainSprites.v(a.Ga.stairs.Lh));
+          h.ea(game.terrainSprites.getSprite(a.Ga.stairs.Lh));
         } else {
-          h.ea(game.terrainSprites.v(a.Ga.stairs.di));
+          h.ea(game.terrainSprites.getSprite(a.Ga.stairs.di));
         }
       } else {
         if (a.stairs.sq) {
-          h.ea(game.terrainSprites.v(a.Ga.stairs.Kh));
+          h.ea(game.terrainSprites.getSprite(a.Ga.stairs.Kh));
         } else {
-          h.ea(game.terrainSprites.v(a.Ga.stairs.ci));
+          h.ea(game.terrainSprites.getSprite(a.Ga.stairs.ci));
         }
       }
     }
@@ -157,7 +157,7 @@ export function revealRoom(a) {
         if (g = a.tileColumn, d = a.tileRow, f = d + a.heightInTiles - 1, g = g + 1 + randomIntFrom(b.wa, g + a.widthInTiles - 1 - g - 2), d = d + 1 + randomIntFrom(b.wa, f - d - 2), setVector(b.yh, g, d), f = b.yh, d = h[f.x][f.y], d) {
           if (!d.Yf) {
             if (f = p.Oo[randomIntFrom(b.wa, p.Oo.length)]) {
-              d.ea(game.terrainSprites.v(f));
+              d.ea(game.terrainSprites.getSprite(f));
             } else {
               console.log("failed to select floor sprite.");
             }
@@ -177,7 +177,7 @@ export function revealRoom(a) {
         if (h = h[d.x][d.y], h) {
           if (!h.bt) {
             if (b = p[randomIntFrom(b.wa, p.length)]) {
-              h.bt = game.terrainSprites.v(b);
+              h.bt = game.terrainSprites.getSprite(b);
             } else {
               console.log("failed to select wall sprite.");
             }
@@ -296,17 +296,17 @@ export function revealHallway(a, b) {
       d,
       f,
       g,
-      h = game.terrainSprites.v(a.Ga.floor),
-      l = game.terrainSprites.v(a.Ga.Kb.Cg),
-      n = game.terrainSprites.v(a.Ga.Kb.Eg),
-      p = game.terrainSprites.v(a.Ga.Kb.Hg),
-      s = game.terrainSprites.v(a.Ga.Kb.Gg),
-      u = game.terrainSprites.v(a.Ga.Kb.Fg),
-      y = game.terrainSprites.v(a.Ga.Kb.Dg),
-      A = game.terrainSprites.v(a.Ga.Kb.Bh),
-      C = game.terrainSprites.v(a.Ga.Kb.Ah),
-      v = game.terrainSprites.v(a.Ga.Kb.zh),
-      D = game.terrainSprites.v(a.Ga.Kb.Ch);
+      h = game.terrainSprites.getSprite(a.Ga.floor),
+      l = game.terrainSprites.getSprite(a.Ga.Kb.Cg),
+      n = game.terrainSprites.getSprite(a.Ga.Kb.Eg),
+      p = game.terrainSprites.getSprite(a.Ga.Kb.Hg),
+      s = game.terrainSprites.getSprite(a.Ga.Kb.Gg),
+      u = game.terrainSprites.getSprite(a.Ga.Kb.Fg),
+      y = game.terrainSprites.getSprite(a.Ga.Kb.Dg),
+      A = game.terrainSprites.getSprite(a.Ga.Kb.Bh),
+      C = game.terrainSprites.getSprite(a.Ga.Kb.Ah),
+      v = game.terrainSprites.getSprite(a.Ga.Kb.zh),
+      D = game.terrainSprites.getSprite(a.Ga.Kb.Ch);
     for (g = 0; g < c.length; g++) {
       d = c[g];
       f = a.tileGrid[d.x][d.y];
@@ -333,15 +333,15 @@ export function revealHallway(a, b) {
         f.Qa(h);
         if (a.af.Ho) {
           if (a.af.Mb) {
-            f.ea(game.terrainSprites.v(a.Ga.Ac.kg));
+            f.ea(game.terrainSprites.getSprite(a.Ga.Ac.kg));
           } else {
-            f.ea(game.terrainSprites.v(a.Ga.Ac.Vf));
+            f.ea(game.terrainSprites.getSprite(a.Ga.Ac.Vf));
           }
         } else {
           if (a.af.Mb) {
-            f.ea(game.terrainSprites.v(a.Ga.Ac.jg));
+            f.ea(game.terrainSprites.getSprite(a.Ga.Ac.jg));
           } else {
-            f.ea(game.terrainSprites.v(a.Ga.Ac.Uf));
+            f.ea(game.terrainSprites.getSprite(a.Ga.Ac.Uf));
           }
         }
         Q = z > I.y;
@@ -389,15 +389,15 @@ export function revealHallway(a, b) {
         f.Qa(h);
         if (a.Be.Ho) {
           if (a.Be.Mb) {
-            f.ea(game.terrainSprites.v(a.Ga.Ac.kg));
+            f.ea(game.terrainSprites.getSprite(a.Ga.Ac.kg));
           } else {
-            f.ea(game.terrainSprites.v(a.Ga.Ac.Vf));
+            f.ea(game.terrainSprites.getSprite(a.Ga.Ac.Vf));
           }
         } else {
           if (a.Be.Mb) {
-            f.ea(game.terrainSprites.v(a.Ga.Ac.jg));
+            f.ea(game.terrainSprites.getSprite(a.Ga.Ac.jg));
           } else {
-            f.ea(game.terrainSprites.v(a.Ga.Ac.Uf));
+            f.ea(game.terrainSprites.getSprite(a.Ga.Ac.Uf));
           }
         }
         f = z < N.y;

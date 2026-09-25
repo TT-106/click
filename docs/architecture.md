@@ -99,6 +99,44 @@ sequenceDiagram
   - 离线分支（`:42-51`，详见第 12 节）；否则 `advanceSimulation(帧差/frameDuration)`（`:53-56`）；
   - 随后更新相机（`:57-71`）、渲染（`:74-80`）、FPS 统计写入 `game.state.dz`（`:81-86`）、30 秒自动存档（离线时跳过，`:87-92`）、非暂停时给统计器记时长 `aa.fp(a)`（`:93-95`）。
 
+### main-loop sequence
+
+```mermaid
+sequenceDiagram
+    participant RAF as requestAnimationFrame (loop.js:222)
+    participant L as loop.tick (loop.js:33)
+    participant S as advanceSimulation (tick.js:27)
+    participant C as camera (loop.js:57)
+    participant V as game.view.render (views/base.js:41)
+    participant P as saveProgress (game-save.js:32)
+
+    RAF->>L: 每帧回调
+    alt 资源未就绪 (loop.js:34,219)
+        L->>L: 探测 sprites/animations.cl()，继续等待
+    else 未初始化 (loop.js:97)
+        L->>L: initializeWorld + 恢复存档 + 建视图 (loop.js:98-216)
+    else 已初始化
+        L->>L: a = 帧差毫秒 (loop.js:36-38)
+        alt partyCreated 且未胜利未暂停 (loop.js:41)
+            alt 帧差>1s 且 allowBackgroundProgress / processingOffline (loop.js:42)
+                loop 每帧 ≤200 回合 (loop.js:43)
+                    L->>S: advanceSimulation(15)
+                    L->>L: offlineProcessed += 250 (loop.js:45)
+                end
+            else 正常帧
+                L->>S: advanceSimulation(帧差/16.67ms) (loop.js:53-56)
+            end
+            L->>C: 由队伍位置推相机 (loop.js:57-71)
+        end
+        L->>V: game.renderEnabled 为真才渲染，异常吞掉 (loop.js:74-80)
+        L->>L: FPS 采样 → game.state.dz (loop.js:81-86)
+        L->>P: 距上次保存>30s 且非离线 → 自动存档 (loop.js:87-92)
+        L->>L: 非暂停非离线：aa.fp(a) 记时长 (loop.js:93-95)
+        L->>RAF: requestAnimationFrame 自续 (loop.js:222)
+    end
+```
+
+
 ---
 
 ## 4. simulation 与 render 如何耦合？
@@ -118,7 +156,7 @@ sequenceDiagram
 **产品 UI 不直接持有 `game`；只通过 `src/engine/adapter.js` 的只读快照 `snapshot()` 与校验过的命令方法交互。**
 
 - `adapter.js:18` 注释明示"产品层的唯一引擎入口：校验命令并提供只读显示快照"；`internal-api.js:9` 注释"产品仅通过 adapter.js 的快照与命令访问"。
-- 读取：`engine.snapshot()`（`adapter.js:71-124`）每 300ms 被 `app.js:135-141` 拉取，产出扁平展示模型（`ready/started/paused/won/offline/turn/run/gold/kills/heroes[]/options` 等），例如 `gold: game.state.party.gold`（`:80`）、`inCombat: !game.state.encounter.ym`（`:87`）、英雄属性经 `runtime.statValue` 折算（`:103-107`）。新 UI `src/ui/dashboard.js:14-49` 只消费这个快照渲染 DOM。
+- 读取：`engine.snapshot()`（`adapter.js:71-124`）每 300ms 被 `app.js:135-141` 拉取，产出扁平展示模型（`ready/started/paused/won/offline/turn/run/gold/kills/heroes[]/options` 等），例如 `gold: game.state.party.gold`（`:80`）、`inCombat: !game.state.encounter.ym`（`:87`）、英雄属性经 `runtime.statValue` 折算（`:103-107`）。新 UI `src/ui/dashboard.js:14-44` 只消费这个快照渲染 DOM。
 - 命令（写入路径）：
   - `startParty(party)`（`adapter.js:51-70`）：校验数量/解锁/重名后，把数据塞进遗留 `PartyCreationView`（`selectedCharacters`、`validParty`）并调用其 `startButton.onclick()`（`:62-68`，即复用引擎自身的开局流程，`views/party-creation.js:36-44`），最后 `game.paused = false`；
   - `pause(value)`（`:132-134`）、`setOption(name, enabled)`（`:135-146`，白名单映射到 `game.options` 六个字段）；
@@ -131,7 +169,7 @@ sequenceDiagram
 ## 6. encounter 如何开始？
 
 - 状态：`EncounterState`（`combat/encounters.js:19-24`）——`ym=true` 表示"无遭遇"；`beginEncounter(name, isBoss)`（`:32-38`）置 `ym=false` 并累加计数 `Ar`。
-- **`populateEncounter(room)`（`encounters.js:39-106`）是唯一批量刷怪入口**，仅在 `ym` 时生效（`:41`），按房间类型 `room.Yp` 分派：
+- **`populateEncounter(room)`（`encounters.js:39-106`）是唯一批量刷怪入口**，仅在 `ym` 时生效（`:41`），按房间类型 `room.Yp` 分派（`Yp` 的 0/1/2 三分支行为如下所示；"野外/城堡"标签为按行为推断的语义命名——待验证：未在代码中找到 `Yp` 赋值处的命名证据）：
   - `Yp===0`（野外房间）：`bossEncounterModifier` 生效时 20% 概率（`0.2 > Math.random()`，`:44-45`）改走地下城 Boss；否则怪物数 `minMonsters + randomInt(max-min) + extraMonsters`（`:47-51`），等级在怪物目录解锁区间 `[hd, fc]` 内随机（`:52`），经 `getMonsterTypesForLevel` 取 20 只一组的类型缓存（`:52`，`:220-242`），逐只 `new Character("Monster", MONSTER_TYPE, 12, monsterClass, null)`（`:56`）、挂 `AttackBehavior`（`:61`）、按类型成长曲线填六维（`:64-77`）、在房间内随机落位（`:78-83`）、压入 `game.monsters.Pi`（`:84`），最后 `beginEncounter(...)`（`:86`）；
   - `Yp===1`（城堡房间）：`spawnCastleGuardians(count, room)`（`:96`，实现 `:147-163`，从 `content/guardians.js` 的 `castleGuardianDefinitions` 抽取，`createCastleGuardian` 在 `simulation/characters.js:102-128`），遭遇名取自 `game.currentCastle.castleName`（`:97-98`）；
   - `Yp===2`：`spawnDungeonBoss(room)`（`:101`，实现 `:107-146`：`bossClass` + 随机 Boss 贴图 + 队伍最高等级 + 技能初始化 + 附带一队守卫）。
@@ -146,7 +184,7 @@ sequenceDiagram
 
 1. `advanceSimulation(units)`（`simulation/tick.js:27`）先做回合切片：`lifecycle.Jo += units`，累计满 15 个模拟单位才算一回合（`Jo>=15` → `turnNumber++`，`tick.js:28-32`；与 facts 第 4 条一致）。回合级任务：生命/精神再生（每 3 回合，`zD=3`，`tick.js:34-51` + `simulation/characters.js:37`）、随从寿命（`:52-78`）、效果 tick（`:79-87`）、队伍回合逻辑（`:90-97`）、行为决策 `updateCharacterBehaviors`（`:104-105`）、药水到期（`:106-129`）、自动卷轴（`:130-142`）、农场/滋生的双回合节拍（`gD=2`，`:143-213`）、成就检查（每 4 回合，`PC=4`，`:214-236`）。
 2. 帧级任务：`updateCharacter` 依次作用于盟友与怪物（`:263-271`）。行为队列把"下一步动作"写入 `character.Y`：`BehaviorQueue.prototype.dr` 按世界/地牢分派（`ai/behaviors.js:217-223`），`AttackBehavior.prototype.dr` 选目标（`ai/targeting.js:425`）。
-3. 攻击发起：`updateCharacter` 内按动作类型分派——普通攻击 `Y===2`/近战类型时 `performMultiAttack` 或 `createAttackAction`（`character.js:438-465`），施法 `CAST_ACTION_TYPE` → `createSpellAction`（`character.js:466+`，`:852/:874/:883`）。
+3. 攻击发起：`updateCharacter` 内按动作类型分派——普通攻击 `Y===2`/近战类型时 `performMultiAttack` 或 `createAttackAction`（`characters/character.js:438-465`），施法 `CAST_ACTION_TYPE` → `createSpellAction`（`characters/character.js:466+`，`:852/:874/:883`）。
 4. **动作不是立即结算**：`createAttackAction/createSpellAction` 生成 `CombatAction`（攻击者 `Ca`、目标 `Da`、伤害 `Jc`、飞行特效 `Xb`、落地特效 `xb` 等，`combat/actions.js:26-33`）并 `enqueueCombatAction(game.combatQueue, ...)`（`:414-416`）。
 5. 每帧回合同步推进 `game.combatQueue.kj`（`tick.js:272-398`）：`advanceCombatAction`（`actions.js:59-116`）推进特效，特效到位（`xb.bx===xb.oc`）后才 `applyActionDamage` 或 `applySpellEffect`；伤害带随机浮动 `1 + randomInt(Jc-1)`（`actions.js:300-323`）。
 6. 死亡结算 `resolveCharacterDefeat`（`actions.js:324-413`）：冒险者→昏迷（Kf 标记 + 眩晕特效，`:325-344`）；随从→移除（`:345-346`）；怪物/Boss→击杀者 `kills++`、`addKills`、`aa.cp()`、经验 `addExperience(Sb.No×doubleExperienceModifier)`、`recordMonsterTypeKill`（`:347-364`），随后掉落金币（`10+randomInt(10)` 枚，`:372-381`）、物品（`7+randomInt(8)` 次 `spawnItemDrop`，`:382-388`）、卷轴与药水（`:389-401`），最后 `monsters.ol`（移出）+ `encounter.ol`（可能结束遭遇）（`:405-406`）。
@@ -203,7 +241,7 @@ sequenceDiagram
 - **稀有度掷点**：`ItemGenerator.prototype.uf(prob)`（`items.js:331-342`）按 `itemRarityProbabilities` 从高到低扣减 `Math.random` 命中。
 - **掉落入口**：
   - 怪物死亡 `spawnItemDrop`（`items.js:270-281`）：随机选一名冒险者的 `Z` 槽位（`:273-275`），品质受全局升级 `itemQualityChance`（`:276`），等级 `randomizeItemLevel`（`:225-231`，可能 ±1 级）；
-  - 开箱 `character.js:1090-1105`（品质加成 `CHEST_ITEM_QUALITY_BONUS`）；
+  - 开箱 `characters/character.js:1090-1105`（品质加成 `CHEST_ITEM_QUALITY_BONUS`）；
   - 开局装备：`views/party-creation.js:72` 与 `initializeCharacterSkills`（`simulation/characters.js:130-145`，Boss/守卫生成时每槽位一件）。
 
 ---
@@ -216,7 +254,7 @@ sequenceDiagram
   2. `type===11`（城堡）用 `CastleLayoutGenerator`（`:161-164`，参数更小的房间常量 `:113-127`），否则 `DungeonLayoutGenerator.rw()`（`:165`，原型实现 `:250+`，随机房间 + `findNearestConnectedRoom` 连通 + `placeHorizontal/VerticalStairs` 楼梯 `:33-74`）；失败则 `f.sp++` 换种子重试（`:165-171`）；
   3. 房间/走廊挂上主题贴图 `getDungeonTheme`（`:177-183`）；清空地牢层掉落、宝箱、卷轴目标（`:184-202`）；`resetEncounter()`（`:203`）+ `clearMonsters()`（`:205`）；
   4. `withParty` 为真（实际进入）时：揭示起始房间、把队员放到入口楼梯、**`populateEncounter(起始房间)`**、`spawnRoomTreasure`（`:206-223`）。
-- **触发点**：走进地牢入口 `Y===9` → `game.currentDungeon = dungeon; generateDungeonLevel(er(), dungeonType, Aj, true); worldActive=false`（`character.js:1142-1164`，关键行 `:1151-1154`）；进城堡 `Y===11` → `generateDungeonLevel(er(), 11, false, true)`（`character.js:1177-1179`）；下一层 `Dungeon.prototype.iw()` → `generateDungeonLevel(er(), dungeonType, Aj, true)` + `POINT_EVENT_LEVEL_CLEARED`（`dungeons.js:211-226`，关键行 `:216`）；存档恢复时按 `levelSeed` 重建但 `withParty=false`（`persistence/game-save.js:249`）。
+- **触发点**：走进地牢入口 `Y===9` → `game.currentDungeon = dungeon; generateDungeonLevel(er(), dungeonType, Aj, true); worldActive=false`（`characters/character.js:1142-1164`，关键行 `:1151-1154`）；进城堡 `Y===11` → `generateDungeonLevel(er(), 11, false, true)`（`characters/character.js:1177-1179`）；下一层 `Dungeon.prototype.iw()` → `generateDungeonLevel(er(), dungeonType, Aj, true)` + `POINT_EVENT_LEVEL_CLEARED`（`dungeons.js:211-226`，关键行 `:216`）；存档恢复时按 `levelSeed` 重建但 `withParty=false`（`persistence/game-save.js:249`）。
 - 区域/城堡分布在大世界里，由 `initializeRegionsAndCastles()` 生成（`world/initialization.js:9+`，16×16 区域，`game.js:61-69` 的 `regions.Eh=16`）。
 
 ---
@@ -337,7 +375,7 @@ sequenceDiagram
 ## 14. achievement / statistics 如何更新？
 
 - **统计是单一事件源**：`StatisticsRecorder`（`progression/statistics.js:17-19`）持有 `runStatistics + lifetimeStatistics` 双份，全部 `is/es/cp/fp/...` 方法成对转发（`:131-234`）；`bindStatistics` 在开局/重置时重新绑定（`:20-25`；调用点 `game.js:363`）。`LifetimeStatistics` 的 `jx()`（清零）被刻意改为告警不清零（`:127-130`）——跨周目永久累计。
-- **写入点（采样）**：每回合 `aa.is()`（`tick.js:88`，回合计数）；帧/离线时长 `aa.fp`（`loop.js:46,93-95`）；进房 `aa.Ur()` + `awardAdventurePoints(2)`（`character.js:311-312`）；击杀 `aa.cp()`、随从击杀 `aa.$k()`（`actions.js:354-360`）；遭遇结束 `aa.es()`（`encounters.js:264`）；开箱/搜架 `aa.hs/js/Rr`（`character.js:1128/1132/1136`）；买农场 `aa.Xr()`（`tick.js:816`）。
+- **写入点（采样）**：每回合 `aa.is()`（`tick.js:88`，回合计数）；帧/离线时长 `aa.fp`（`loop.js:46,93-95`）；进房 `aa.Ur()` + `awardAdventurePoints(2)`（`character.js:311-312`）；击杀 `aa.cp()`、随从击杀 `aa.$k()`（`actions.js:354-360`）；遭遇结束 `aa.es()`（`encounters.js:264`）；开箱/搜架 `aa.hs/js/Rr`（`characters/character.js:1128/1132/1136`）；买农场 `aa.Xr()`（`tick.js:816`）。
 - **成就检查是回合节拍任务**：`lifecycle.Qt` 每 4 回合（`PC=4`，`simulation/characters.js:40`）跑一次（`tick.js:214-236`）：遍历待判定列表 `achievements.ik`，`qa.ab`（胜利类）→ `hasVictoryAchievement`（读 `victoryStatistics`，`achievements.js:48-64`），否则 `getAchievementProgress(qa) >= qa.requiredCount`（读 `lifetimeStatistics` 字段 switch，`:65-115`）；达标移入 `Ze` 待领取列表（`tick.js:219-229`），已应用（`Of`）的出队（`:230-235`）。
 - **领取（点数联动）**：`applyAchievementReward` → `increasePointEventReward(pointEventTypeId, Vt)`（`points.js:47-56`）→ `recalculateAdventurePoints`（`points.js:57-70`）——即成就是"提高某类点数事件的单价"，点数总量按事件次数重算；事件计数入口 `awardAdventurePoints`（`points.js:26-45`）。触发处 `achievements.js:34-47`。
 - 存档侧只持久化 `{achievementId, obtained, applied}`（`game-save.js:997-1005`，facts 第 16 条），恢复时按 `We/Of` 重建 `ik/Ze` 队列并补发已应用成就的单价（`game-save.js:620-656`）。

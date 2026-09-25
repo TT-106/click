@@ -200,7 +200,7 @@ export function initializeViewsDungeons() {
     this.wr = createElement("img", this.Co, null, "terrainImage");
     this.wr.src = "images/Transparent.gif";
     if (this.ua) {
-      var b = game.terrainSprites.v(this.ua.Fo);
+      var b = game.terrainSprites.getSprite(this.ua.Fo);
       this.wr.style.background = "url('spritesheet/terrain.png') -" + b.sourceX + "px -" + b.sourceY + "px";
     }
     this.Vg = a.insertCell(1);
@@ -256,7 +256,7 @@ export function initializeViewsDungeons() {
       a = a && (f || b);
       if (this.ui !== this.ua) {
         this.ui = this.ua;
-        f = game.terrainSprites.v(this.ua.Fo);
+        f = game.terrainSprites.getSprite(this.ua.Fo);
         this.wr.style.background = "url('spritesheet/terrain.png') -" + f.sourceX + "px -" + f.sourceY + "px";
       }
       if (this.Bk !== c) {

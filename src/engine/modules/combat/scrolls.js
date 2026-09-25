@@ -35,7 +35,7 @@ export function isSpellReady(a) {
 export function Scroll(a, b) {
   this.eq = b;
   this.scrollId = a.scrollId;
-  this.Wh = game.itemSprites.v(a.Wh);
+  this.Wh = game.itemSprites.getSprite(a.Wh);
   this.ke = a.rg;
   this.sg = a.sg;
   this.Yi = a.Yi;

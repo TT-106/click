@@ -1229,7 +1229,7 @@ export function initializeCharactersCharacter() {
   Character.prototype.gq = function (a) {
     this.Sb = a;
   };
-  Character.prototype.v = function () {
+  Character.prototype.getSprite = function () {
     return this.ee;
   };
   Character.prototype.Cb = function (a) {

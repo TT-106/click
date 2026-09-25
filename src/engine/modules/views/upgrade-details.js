@@ -400,7 +400,7 @@ export function initializeViewsUpgradeDetails() {
       if (this.Iu !== a || this.Ju != b) {
         this.Iu = a;
         this.Ju = b;
-        var c = a.v(),
+        var c = a.getSprite(),
           d = a.classDefinition.Ma;
         this.hm.style.background = "url('spritesheet/monsters.png') -" + (c.sourceX + 10) + "px -" + (c.sourceY + 12) + "px";
         this.Ty.innerHTML = this.upgrade.lb();
@@ -468,7 +468,7 @@ export function initializeViewsUpgradeDetails() {
     if (this.cv !== a) {
       this.cv = a;
       var b = a.Uk(),
-        c = a.nj.v();
+        c = a.nj.getSprite();
       this.kp.style.background = "url('spritesheet/items.png') -" + b.sourceX + "px -" + b.sourceY + "px";
       this.jA.innerHTML = getHighlightedItemName(a);
       this.Fw.className = getRarityClass(a.uf());
@@ -563,7 +563,7 @@ export function initializeViewsUpgradeDetails() {
     this.mo.src = "images/Transparent.gif";
     this.mo.style.width = "50px";
     this.mo.style.height = "50px";
-    c = game.terrainSprites.v(game.castles.Ny);
+    c = game.terrainSprites.getSprite(game.castles.Ny);
     this.mo.style.background = "url('spritesheet/terrain.png') -" + c.sourceX + "px -" + c.sourceY + "px";
     a = a.insertCell(1);
     a.style.textAlign = "left";
@@ -703,7 +703,7 @@ export function initializeViewsUpgradeDetails() {
       if (10 === b || 9 === b || 17 === b || 11 === b) {
         a = minionsBySpell[a.ta].spriteName;
         this.Dx = game.monsterSprites;
-        this.zn = game.monsterSprites.v(a);
+        this.zn = game.monsterSprites.getSprite(a);
         this.nd = false;
         this.yn.style.background = "url('spritesheet/monsters.png') -" + (this.zn.sourceX + 10) + "px -" + (this.zn.sourceY + 12) + "px";
       } else {
@@ -863,7 +863,7 @@ export function initializeViewsUpgradeDetails() {
       this.Cq.innerHTML = formatAmount(a);
     }
     if (this.ui !== b && (this.ui = b)) {
-      a = game.terrainSprites.v(b.Fo);
+      a = game.terrainSprites.getSprite(b.Fo);
       this.Nd.style.background = "url('spritesheet/terrain.png') -" + a.sourceX + "px -" + a.sourceY + "px";
       this.Vg.innerHTML = b.dungeonName;
     }
@@ -1020,7 +1020,7 @@ export function initializeViewsUpgradeDetails() {
     this.Nd.src = "images/Transparent.gif";
     this.Nd.style.width = "50px";
     this.Nd.style.height = "50px";
-    c = game.terrainSprites.v("L2_DungeonE.PNG");
+    c = game.terrainSprites.getSprite("L2_DungeonE.PNG");
     this.Nd.style.background = "url('spritesheet/terrain.png') -" + c.sourceX + "px -" + c.sourceY + "px";
     c = a.insertCell(1);
     c.style.textAlign = "left";
@@ -1084,7 +1084,7 @@ export function initializeViewsUpgradeDetails() {
     this.Nd.src = "images/Transparent.gif";
     this.Nd.style.width = "50px";
     this.Nd.style.height = "50px";
-    c = game.terrainSprites.v("L2_Terrain077.PNG");
+    c = game.terrainSprites.getSprite("L2_Terrain077.PNG");
     this.Nd.style.background = "url('spritesheet/terrain.png') -" + c.sourceX + "px -" + c.sourceY + "px";
     c = a.insertCell(1);
     c.style.textAlign = "left";

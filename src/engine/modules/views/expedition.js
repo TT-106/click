@@ -264,7 +264,7 @@ export function initializeViewsExpedition() {
       b.className = "gameTabAdventurerIconCell";
       b.rowSpan = 2;
       var c = game.state.adventurers[this.$],
-        d = c.v(),
+        d = c.getSprite(),
         b = createElement("img", b, null, "characterImage");
       b.src = "images/Transparent.gif";
       b.style.height = "35px";

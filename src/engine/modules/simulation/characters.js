@@ -52,7 +52,7 @@ export function refreshUnspentSkillFlags() {
 export function spawnMinion(a, b, c) {
   var d = new Character(a.defaultName, 1, a.characterClass, a, null),
     f = d.stats;
-  d.ee = game.monsterSprites.v(a.spriteName);
+  d.ee = game.monsterSprites.getSprite(a.spriteName);
   var g = createBehaviorQueue(a.nb());
   d.behaviors = g;
   g = d.position;
@@ -186,15 +186,15 @@ export function applyLevelStats(a, b, c) {
 export function updateWorldTravel() {
   switch (randomInt(3)) {
     case 0:
-      return game.terrainSprites.v("L2_SkeletonHumanLarge.PNG");
+      return game.terrainSprites.getSprite("L2_SkeletonHumanLarge.PNG");
     case 1:
-      return game.terrainSprites.v("L2_SkeletonHumanMedium.PNG");
+      return game.terrainSprites.getSprite("L2_SkeletonHumanMedium.PNG");
     case 2:
-      return game.terrainSprites.v("L2_SkeletonDog.PNG");
+      return game.terrainSprites.getSprite("L2_SkeletonDog.PNG");
     case 3:
-      return game.terrainSprites.v("L2_SkeletonHumanSmall.PNG");
+      return game.terrainSprites.getSprite("L2_SkeletonHumanSmall.PNG");
     default:
-      return game.terrainSprites.v("L2_SkeletonHumanMedium2.PNG");
+      return game.terrainSprites.getSprite("L2_SkeletonHumanMedium2.PNG");
   }
 }
 export function updateDungeonTravel() {

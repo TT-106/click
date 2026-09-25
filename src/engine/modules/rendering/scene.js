@@ -125,7 +125,7 @@ export function drawWorldCharacters(a, b) {
     c = b[g];
     d = c.position.dc();
     f = c.position.ec();
-    c = c.v();
+    c = c.getSprite();
     a.se.dk(c, d, f, game.viewportHalfWidth + (d - game.world.he - (f - game.world.ie)), game.viewportHalfHeight + 0.5 * (d - game.world.he + (f - game.world.ie)), c.Ad.spriteSize, 0);
   }
 }
@@ -144,7 +144,7 @@ export function drawDungeonCharacters(a, b) {
     g = projectDungeonX(d, f);
     h = projectDungeonY(d, f);
     l = c.Ja.wg;
-    c = c.v();
+    c = c.getSprite();
     a.se.dk(c, d, f, g, h, c.Ad.spriteSize, l ? 0.4 : 0);
   }
 }
@@ -592,7 +592,7 @@ export function initializeRenderingScene() {
           fb = za.position.Pb();
           cb = projectWorldX(nb, fb);
           Ua = projectWorldY(nb, fb);
-          a.If(za.v(), cb, Ua);
+          a.If(za.getSprite(), cb, Ua);
         }
         var mc = getMonsters(),
           vb,
@@ -609,7 +609,7 @@ export function initializeRenderingScene() {
           Ma = vb.position.Pb();
           zb = projectDungeonX(Sb, Ma);
           Hb = projectDungeonY(Sb, Ma);
-          pb = vb.v();
+          pb = vb.getSprite();
           if (4 === vb.characterType) {
             a.se.dk(pb, Sb, Ma, zb - ac, Hb - ac, 3 * game.tileSize, 0);
           } else {

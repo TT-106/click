@@ -49,7 +49,7 @@ export function ItemType(a, b, c, d, f, g, h, l, n) {
   this.fa = b;
   this.Z = c;
   this.Xn = n;
-  if (!(this.lA = game.itemSprites.v(d))) {
+  if (!(this.lA = game.itemSprites.getSprite(d))) {
     console.log("error. invalid item sprite: " + d);
   }
   this.na = f;

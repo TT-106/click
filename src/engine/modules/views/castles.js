@@ -104,7 +104,7 @@ export function initializeViewsCastles() {
             h.src = "images/Transparent.gif";
             h.style.width = "35px";
             h.style.height = "35px";
-            var n = game.itemSprites.v("CrownGolden.PNG");
+            var n = game.itemSprites.getSprite("CrownGolden.PNG");
             h.style.background = "url('spritesheet/items.png') -" + n.sourceX + "px -" + n.sourceY + "px";
           }
         }

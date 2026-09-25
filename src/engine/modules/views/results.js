@@ -101,7 +101,7 @@ export function mountVictoryDecoration(a) {
 }
 export function appendRandomMonsterPortrait(a) {
   var b = monsterSpriteDefinitions[randomInt(monsterSpriteDefinitions.length)],
-    b = game.monsterSprites.v(b.a);
+    b = game.monsterSprites.getSprite(b.a);
   a = createElement("img", a, null, "characterImage");
   a.src = "images/Transparent.gif";
   a.style.background = "url('spritesheet/monsters.png') -" + b.sourceX + "px -" + (b.sourceY + 10) + "px";

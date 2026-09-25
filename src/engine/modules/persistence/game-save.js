@@ -411,7 +411,7 @@ export function restoreGameState(a, b) {
                 hc = new Character(fc.adventurerName, fc.characterType, vd, eg, new Inventory()),
                 re = createBehaviorQueue(eg.nb());
               hc.behaviors = re;
-              hc.ee = game.monsterSprites.v(qe);
+              hc.ee = game.monsterSprites.getSprite(qe);
               var of = hc;
               of.skillPoints = Vb ? Vb : 0;
               of.hasUnspentSkills = hasUnspentSkills(of);

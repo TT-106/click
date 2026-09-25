@@ -190,7 +190,7 @@ export function initializeRenderingSprites() {
       this.Yh[c.a] = new Sprite(this, c.b.x, c.b.y, c.a);
     }
   };
-  SpriteSheet.prototype.v = function (a) {
+  SpriteSheet.prototype.getSprite = function (a) {
     return this.Yh[a];
   };
   SpriteSheet.prototype.Hj = function () {

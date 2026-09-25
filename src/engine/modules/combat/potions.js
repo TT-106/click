@@ -6,7 +6,7 @@ import { BASE_POTION_CAPACITY, autoScrollsModifier, bossEncounterModifier, docil
 export var potionDefinitions;
 export function Potion(a) {
   this.potionId = a.potionId;
-  this.jc = game.itemSprites.v(a.jc);
+  this.jc = game.itemSprites.getSprite(a.jc);
   this.uc = a.uc;
   this.tc = a.tc;
   this.vc = a.vc;
