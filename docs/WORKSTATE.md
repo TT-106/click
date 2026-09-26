@@ -1,10 +1,11 @@
 # WORKSTATE — Clickpocalypse II 语义恢复与现代化工程
 
 > 本文件是长程自治任务的**唯一续跑入口**。上下文压缩或中断后，先读本文件 + `git log --oneline`，再继续。
-> 最后更新：2026-09-26（U35 主题装饰/区域网格字段落地后，混淆清单 977；验收矩阵 51 PASS / 0 PARTIAL、矩阵 59/59、soak 通过）
+> 最后更新：2026-09-26（U36 效果伤害/动画映射/房间发现字段落地后，混淆清单 972；验收矩阵 51 PASS / 0 PARTIAL、矩阵 59/59、soak 通过）
 
 ## 当前轮次状态（2026-09-26，M13 文档与验收收尾）
 
+- U36 效果伤害/动画映射/房间发现（2026-09-26，一笔提交，六门禁全绿，混淆清单 977 → 972）：Wh→spriteName（卷轴定义/实例贴纸名，getScrollSprite 返回值）、Qh→maxCharges（卷轴升级次数上限，满员即不可再购）、li→remainingEffectDamage（DungeonTile 地面效果剩余伤害 randomInt(li+1) 结算 + VisualEffect 同名字段，batch-7 证据 li→remainingEffectDamage 补齐）、Yh→animationMap（AnimationSheet/AnimationCatalog 名称→动画映射）、Xi→discovered（DungeonRoom 是否已探索/揭示，revealRoom 置位并触发财宝生成；character/party/scene/game-save 消费全量落地）。**Ai 主动延后**：DungeonLevel.Ai(pixel)→tileColumn 转换 vs DungeonTile/Room.Ai()→tileColumn 访问器双方法属主、签名不同，需与 Bi（行转换/行访问器）成对甄别后下一批拆名。
 - U35 主题装饰/区域网格字段（2026-09-26，一笔提交，六门禁全绿，混淆清单 984 → 977）：Th→decorationSets（每主题墙面装饰配置数组）、Oo→floorDecorations（房间内地面装饰池）、JC/KC→horizontalWallDecorations/verticalWallDecorations（**取证**：JC 与 Xw 配对——Xw 取房间顶边外一格即横墙；KC 与 Zw 配对——Zw 取左边外一格即纵墙）、Rh/Sh→regionGridOriginColumn/regionGridOriginRow（regions 构造时的 WORLD_ORIGIN_COLUMN/ROW）、Eh→regionGridSpan（每边 16 区域，边界=origin+span）。
 - U34 瓦片三兄弟/楼梯贴纸/特效池（2026-09-26，一笔提交，六门禁全绿，混淆清单 991 → 984）：qj/aB→currentWorldTile/previousWorldTile（与 nextWorldTile 成组闭环大地图移动三兄弟，12 处）；楼梯贴纸家族（文件名编码朝向）Lh/Kh→stairsDownNSSprite/stairsDownEWSprite、di/ci→stairDoorASprite/stairDoorBSprite（Door007/008 无方向信息，用中性 A/B；各 11 处）；Wg→pool（特效池容器字段，harness 两处引用同步，12 处）。
 - U33 视图/寻路/移动字段（2026-09-26，一笔提交，六门禁全绿，混淆清单 998 → 991）：Lg→childViews（View 基类子视图列表：addChildView/resetChildViews/renderChildren + loop 重置）、lh→rowElement（四个表行视图的宿主 tr）、bh→rowViews（EquipmentTableView 行视图）、Vg→labelCell（地牢行与详情标签单元格）、sh→progressFillElement（地牢行进度条填充 div）、gh→position（PathNode 世界坐标向量，A* 计分用）、Hh→nextWorldTile（大地图移动的下一格瓦片；兄弟字段 qj 当前瓦片/aB 前一瓦片留待下批成组处理）。
