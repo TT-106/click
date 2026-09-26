@@ -118,55 +118,6 @@
     ]
   },
   {
-    "name": "ab",
-    "reads": 0,
-    "writes": 30,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\progression\\achievements.js:1982",
-        "code": "ab: true"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\achievements.js:1989",
-        "code": "ab: true"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\achievements.js:1996",
-        "code": "ab: true"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\progression\\achievements.js"
-    ]
-  },
-  {
-    "name": "tb",
-    "reads": 2,
-    "writes": 27,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:34",
-        "code": "d.tb"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:45",
-        "code": "d.tb"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\classes.js:57",
-        "code": "tb: [{\n  slot: \"20\",\n  statType: 1\n}, {\n  slot: \"80\",\n  statType: 2\n}, {\n  slot: \"40\",\n  statType: 4\n}, {\n  slot: \"120\",\n  statType: 5\n}, {\n"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\content\\classes.js",
-      "src\\engine\\modules\\content\\guardians.js",
-      "src\\engine\\modules\\content\\minions.js"
-    ]
-  },
-  {
     "name": "Cb",
     "reads": 25,
     "writes": 2,
@@ -31633,6 +31584,21 @@
       {
         "loc": "src\\engine\\modules\\content\\classes.js:604",
         "code": "cF: 160"
+      }
+    ],
+    "fileCount": 1,
+    "files": [
+      "src\\engine\\modules\\content\\classes.js"
+    ]
+  },
+  {
+    "name": "tb",
+    "reads": 0,
+    "writes": 1,
+    "samples": [
+      {
+        "loc": "src\\engine\\modules\\content\\classes.js:606",
+        "code": "tb: null"
       }
     ],
     "fileCount": 1,

@@ -105,4 +105,4 @@ Clickpocalypse II 的核心实现已从高混淆遗留代码中恢复出真实�
 | RNG determinism | PASS | 单测位级差分 + 全部差分场景的确定性前提 |
 | Long-running stability | PARTIAL | 9000 回合 + 离线 18925 回合无 NaN/漂移；8h+ 连续 wall-clock soak 未跑 |
 | UI tabs/Canvas/Sprite lookup | PASS | E2E 面板断言 + 渲染路径差分（spriteName/getSprite 重命名后回归） |
-| 类型体系/TypeScript | FAIL（未开始，M10） | — |
+| 类型体系/TypeScript | PARTIAL（M10 已启动） | tsconfig checkJs：core/+persistence/+save-codec 全量 0 错误；SaveData DTO typedef；16 个引擎模块已纳入（tick/game/targeting/scrolls/items/treasure/dungeons/pathfinding/regions/travel-costs/minions/party/sprites/navigation/base/party-creation/initialization）；剩余 22 个重文件 @ts-nocheck 待类成员 JSDoc 专项 |
