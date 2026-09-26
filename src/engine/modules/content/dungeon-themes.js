@@ -17,7 +17,7 @@ export function initializeContentDungeonThemes() {
       Vf: "L2_Door003.PNG",
       Uf: "L2_Door004.PNG"
     },
-    Kb: {
+    wallSprites: {
       Cg: "L2_WallBrickNS.PNG",
       Eg: "L2_WallBrickEW.PNG",
       Fg: "L2_WallBrickNE.PNG",
@@ -54,7 +54,7 @@ export function initializeContentDungeonThemes() {
       Vf: "L2_Door003.PNG",
       Uf: "L2_Door004.PNG"
     },
-    Kb: {
+    wallSprites: {
       Cg: "L2_WallDarkBrickNS.PNG",
       Eg: "L2_WallDarkBrickEW.PNG",
       Fg: "L2_WallDarkBrickNE.PNG",
@@ -87,7 +87,7 @@ export function initializeContentDungeonThemes() {
       Vf: "L2_Door003.PNG",
       Uf: "L2_Door004.PNG"
     },
-    Kb: {
+    wallSprites: {
       Cg: "L2_WallCaveNS.PNG",
       Eg: "L2_WallCaveEW.PNG",
       Fg: "L2_WallCaveNE.PNG",
@@ -120,7 +120,7 @@ export function initializeContentDungeonThemes() {
       Vf: "L2_DoorBoneClosedNS.PNG",
       Uf: "L2_DoorBoneClosedEW.PNG"
     },
-    Kb: {
+    wallSprites: {
       Cg: "L2_WallBoneNS.PNG",
       Eg: "L2_WallBoneEW.PNG",
       Fg: "L2_WallBoneNE.PNG",
@@ -153,7 +153,7 @@ export function initializeContentDungeonThemes() {
       Vf: "L2_DoorDarkStoneClosedNS.PNG",
       Uf: "L2_DoorDarkStoneClosedEW.PNG"
     },
-    Kb: {
+    wallSprites: {
       Cg: "L2_WallDarkStoneNS.PNG",
       Eg: "L2_WallDarkStoneEW.PNG",
       Fg: "L2_WallDarkStoneNE.PNG",
@@ -186,7 +186,7 @@ export function initializeContentDungeonThemes() {
       Vf: "L2_DoorIceClosedNS.PNG",
       Uf: "L2_DoorIceClosedEW.PNG"
     },
-    Kb: {
+    wallSprites: {
       Cg: "L2_WallIceNS.PNG",
       Eg: "L2_WallIceEW.PNG",
       Fg: "L2_WallIceNE.PNG",
@@ -223,7 +223,7 @@ export function initializeContentDungeonThemes() {
       Vf: "L2_DoorIronClosedNS.PNG",
       Uf: "L2_DoorIronClosedEW.PNG"
     },
-    Kb: {
+    wallSprites: {
       Cg: "L2_WallIronNS.PNG",
       Eg: "L2_WallIronEW.PNG",
       Fg: "L2_WallIronNE.PNG",
@@ -256,7 +256,7 @@ export function initializeContentDungeonThemes() {
       Vf: "L2_DoorDarkStoneClosedNS.PNG",
       Uf: "L2_DoorDarkStoneClosedEW.PNG"
     },
-    Kb: {
+    wallSprites: {
       Cg: "L2_WallMineNS.PNG",
       Eg: "L2_WallMineEW.PNG",
       Fg: "L2_WallMineNE.PNG",
@@ -289,7 +289,7 @@ export function initializeContentDungeonThemes() {
       Vf: "L2_DoorClosedNS.PNG",
       Uf: "L2_DoorClosedEW.PNG"
     },
-    Kb: {
+    wallSprites: {
       Cg: "L2_WallStoneNS.PNG",
       Eg: "L2_WallStoneEW.PNG",
       Fg: "L2_WallStoneNE.PNG",
@@ -322,7 +322,7 @@ export function initializeContentDungeonThemes() {
       Vf: "L2_DoorHutClosedNS.PNG",
       Uf: "L2_DoorHutClosedEW.PNG"
     },
-    Kb: {
+    wallSprites: {
       Cg: "L2_WallWoodNS.PNG",
       Eg: "L2_WallWoodEW.PNG",
       Fg: "L2_WallWoodNE.PNG",

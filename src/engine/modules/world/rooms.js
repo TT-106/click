@@ -67,20 +67,20 @@ export function revealRoom(a) {
       l,
       n,
       p = game.terrainSprites.getSprite(a.theme.floor);
-    n = game.terrainSprites.getSprite(a.theme.Kb.Cg);
-    var s = game.terrainSprites.getSprite(a.theme.Kb.Eg);
+    n = game.terrainSprites.getSprite(a.theme.wallSprites.Cg);
+    var s = game.terrainSprites.getSprite(a.theme.wallSprites.Eg);
     h = a.tileGrid[c - 1][f - 1];
     h.setBackgroundSprite(p);
-    h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.Kb.Gg));
+    h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.wallSprites.Gg));
     h = a.tileGrid[d][f - 1];
     h.setBackgroundSprite(p);
-    h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.Kb.Hg));
+    h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.wallSprites.Hg));
     h = a.tileGrid[c - 1][g];
     h.setBackgroundSprite(p);
-    h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.Kb.Dg));
+    h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.wallSprites.Dg));
     h = a.tileGrid[d][g];
     h.setBackgroundSprite(p);
-    h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.Kb.Fg));
+    h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.wallSprites.Fg));
     for (l = c; l < d; l++) {
       h = a.tileGrid[l][f - 1];
       h.setBackgroundSprite(p);
@@ -298,16 +298,16 @@ export function revealHallway(a, b) {
       f,
       g,
       h = game.terrainSprites.getSprite(a.theme.floor),
-      l = game.terrainSprites.getSprite(a.theme.Kb.Cg),
-      n = game.terrainSprites.getSprite(a.theme.Kb.Eg),
-      p = game.terrainSprites.getSprite(a.theme.Kb.Hg),
-      s = game.terrainSprites.getSprite(a.theme.Kb.Gg),
-      u = game.terrainSprites.getSprite(a.theme.Kb.Fg),
-      y = game.terrainSprites.getSprite(a.theme.Kb.Dg),
-      A = game.terrainSprites.getSprite(a.theme.Kb.Bh),
-      C = game.terrainSprites.getSprite(a.theme.Kb.Ah),
-      v = game.terrainSprites.getSprite(a.theme.Kb.zh),
-      D = game.terrainSprites.getSprite(a.theme.Kb.Ch);
+      l = game.terrainSprites.getSprite(a.theme.wallSprites.Cg),
+      n = game.terrainSprites.getSprite(a.theme.wallSprites.Eg),
+      p = game.terrainSprites.getSprite(a.theme.wallSprites.Hg),
+      s = game.terrainSprites.getSprite(a.theme.wallSprites.Gg),
+      u = game.terrainSprites.getSprite(a.theme.wallSprites.Fg),
+      y = game.terrainSprites.getSprite(a.theme.wallSprites.Dg),
+      A = game.terrainSprites.getSprite(a.theme.wallSprites.Bh),
+      C = game.terrainSprites.getSprite(a.theme.wallSprites.Ah),
+      v = game.terrainSprites.getSprite(a.theme.wallSprites.zh),
+      D = game.terrainSprites.getSprite(a.theme.wallSprites.Ch);
     for (g = 0; g < c.length; g++) {
       d = c[g];
       f = a.tileGrid[d.x][d.y];
