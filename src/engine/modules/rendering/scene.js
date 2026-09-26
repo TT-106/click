@@ -1,4 +1,3 @@
-// @ts-nocheck -- M10 渐进类型化：JSDoc 覆盖后摘除（见 docs/WORKSTATE.md）
 /** 深度排序、即时渲染与地图画面。
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
@@ -344,7 +343,7 @@ export function initializeRenderingScene() {
   };
   GameCanvasView.prototype = new View();
   GameCanvasView.prototype.reset = function () {
-    this.pf();
+    (/** @type {GameCanvasView & { pf: () => void }} */ (/** @type {unknown} */ (this))).pf();
   };
   GameCanvasView.prototype.update = function () {
     var a = this.gB;
@@ -674,12 +673,10 @@ export function initializeRenderingScene() {
                 Ra = projectDungeonY(Fc, Cb) + game.tileSize;
                 sa.context.beginPath();
                 sa.context.moveTo(rb, dc);
-                var Ka = undefined,
-                  Xa = undefined,
-                  Ka = rb + (kb - rb) / 3 | 0,
-                  Xa = dc + (Ra - dc) / 3 | 0,
-                  Ka = Ka + randomLightningOffset(),
-                  Xa = Xa + randomLightningOffset();
+                var Ka = rb + (kb - rb) / 3 | 0,
+                  Xa = dc + (Ra - dc) / 3 | 0;
+                Ka = Ka + randomLightningOffset();
+                Xa = Xa + randomLightningOffset();
                 sa.context.lineTo(Ka, Xa);
                 Ka = Ka + (kb - Ka) / 2 | 0;
                 Xa = Xa + (Ra - Xa) / 2 | 0;
@@ -747,15 +744,15 @@ export function initializeRenderingScene() {
     var a = getElement(this.kE);
     if (a) {
       var b = this.elementId,
-        c = getElement(b);
-      if (!c) {
-        c = createElement("canvas", a, b, "gameTabTopLeftPanel");
+        c = /** @type {HTMLCanvasElement | null} */ (getElement(b));
+        if (!c) {
+          c = /** @type {HTMLCanvasElement} */ (createElement("canvas", a, b, "gameTabTopLeftPanel"));
         c.width = game.viewportWidth;
         c.height = game.viewportHeight;
         c.innerHTML = "你的浏览器不支持Html5.请升级你的浏览器.";
       }
       this.gB = new SceneRenderer(c.getContext("2d"));
-      this.visible = true;
+      (/** @type {GameCanvasView & { visible: boolean }} */ (/** @type {unknown} */ (this))).visible = true;
     }
   };
 }
