@@ -638,7 +638,7 @@ export function initializeRenderingScene() {
               nc = false;
             for (jb = 0; jb < Ha.length; jb++) {
               if (Wa = Ha[jb], cc = Wa.Io, 1 === cc) {
-                Ab = Wa.Zg();
+                Ab = Wa.getAnimation();
                 Bb = Wa.wm;
                 bc = Wa.frameIndex;
                 qb = Bb.x;
@@ -710,7 +710,7 @@ export function initializeRenderingScene() {
               for (xb = sc; xb <= db; xb++) {
                 for (Na = Aa; Na <= Mc; Na++) {
                   if ((ec = game.level.getTileAt(xb, Na)) && (hb = ec.tileEffect) && hb.hasSpawned && !hb.isFinished()) {
-                    lb = hb.Zg();
+                    lb = hb.getAnimation();
                     rc = hb.frameIndex;
                     Ub = ec.getPixelX();
                     sb = ec.getPixelY();

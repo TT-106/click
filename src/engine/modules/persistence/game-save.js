@@ -183,7 +183,7 @@ export function restoreGameState(a, b) {
             for (wa = 0; wa < La.castleList.length; wa++) {
               Fa = La.castleList[wa];
               if (canAttackCastle(Fa)) {
-                La.Jg.push(Fa);
+                La.attackableCastles.push(Fa);
               }
               if (Fa.attackScheduled && !Fa.conquered) {
                 La.Dh.push(Fa);
@@ -191,7 +191,7 @@ export function restoreGameState(a, b) {
               refreshCastleConquest(Fa);
             }
             sortCastles(La, La.Dh);
-            sortCastles(La, La.Jg);
+            sortCastles(La, La.attackableCastles);
             var ha = game.dungeons,
               ja;
             for (ja = 0; ja < ha.dungeonList.length; ja++) {
@@ -290,7 +290,7 @@ export function restoreGameState(a, b) {
                 Ra;
               b: {
                 for (var Ja = sa.settingsId, Db = game.treasure, gb = 0; gb < Db.targetDefinitions.length; gb++) {
-                  if (Db.targetDefinitions[gb].uh === Ja) {
+                  if (Db.targetDefinitions[gb].settingsId === Ja) {
                     Ra = Db.targetDefinitions[gb];
                     break b;
                   }
@@ -849,7 +849,7 @@ export function createSaveState(a) {
           levelX: za.levelX,
           levelY: za.levelY,
           opened: za.opened,
-          settingsId: za.definition.uh,
+          settingsId: za.definition.settingsId,
           westWall: za.westWall,
           roomId: za.room.roomId
         });

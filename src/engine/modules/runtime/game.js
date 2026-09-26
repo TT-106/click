@@ -69,7 +69,7 @@ export function initializeRuntimeGame() {
     }(),
     castles: new function () {
       this.castleList = [];
-      this.Jg = [];
+      this.attackableCastles = [];
       this.Dh = [];
       this.bm = {};
       this.Ny = "L2_Terrain087.PNG";
@@ -217,7 +217,7 @@ export function initializeRuntimeGame() {
       resetPotionInventory();
       var ta = game.treasure;
       ta.targetDefinitions.push({
-        uh: "chest1",
+        settingsId: "chest1",
         kind: 1,
         jh: false,
         xh: {
@@ -230,7 +230,7 @@ export function initializeRuntimeGame() {
         }
       });
       ta.targetDefinitions.push({
-        uh: "chest2",
+        settingsId: "chest2",
         kind: 1,
         jh: false,
         xh: {
@@ -243,7 +243,7 @@ export function initializeRuntimeGame() {
         }
       });
       ta.targetDefinitions.push({
-        uh: "chest3",
+        settingsId: "chest3",
         kind: 1,
         jh: false,
         xh: {
@@ -256,7 +256,7 @@ export function initializeRuntimeGame() {
         }
       });
       ta.targetDefinitions.push({
-        uh: "chest4",
+        settingsId: "chest4",
         kind: 1,
         jh: false,
         xh: {
@@ -269,7 +269,7 @@ export function initializeRuntimeGame() {
         }
       });
       ta.targetDefinitions.push({
-        uh: "rack1",
+        settingsId: "rack1",
         kind: 2,
         jh: true,
         xh: {
@@ -282,7 +282,7 @@ export function initializeRuntimeGame() {
         }
       });
       ta.targetDefinitions.push({
-        uh: "rack2",
+        settingsId: "rack2",
         kind: 2,
         jh: true,
         xh: {
@@ -295,7 +295,7 @@ export function initializeRuntimeGame() {
         }
       });
       ta.targetDefinitions.push({
-        uh: "rack3",
+        settingsId: "rack3",
         kind: 2,
         jh: true,
         xh: {
@@ -308,7 +308,7 @@ export function initializeRuntimeGame() {
         }
       });
       ta.targetDefinitions.push({
-        uh: "rack4",
+        settingsId: "rack4",
         kind: 2,
         jh: true,
         xh: {
@@ -321,7 +321,7 @@ export function initializeRuntimeGame() {
         }
       });
       ta.targetDefinitions.push({
-        uh: "case1",
+        settingsId: "case1",
         kind: 3,
         jh: true,
         xh: {
@@ -334,7 +334,7 @@ export function initializeRuntimeGame() {
         }
       });
       ta.targetDefinitions.push({
-        uh: "case2",
+        settingsId: "case2",
         kind: 3,
         jh: true,
         xh: {

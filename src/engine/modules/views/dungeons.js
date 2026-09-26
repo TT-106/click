@@ -68,7 +68,7 @@ export function DungeonRowView(a, b) {
   this.yr = new PurchaseDungeonUpgrade(this.dungeon);
   this.px = this.Gx = this.labelCell = this.Vg = this.wr = this.Co = null;
   this.pB = "secureCell_" + b + "_" + this.lh.rowIndex;
-  this.upgradeButton = this.cj = this.ai = this.sh = this.ng = this.Ix = null;
+  this.upgradeButton = this.cj = this.ai = this.sh = this.progressCell = this.Ix = null;
   this.Gu = this.Bk = this.Qv = "";
   this.mw = this.pu = -1;
   this.Bt = false;

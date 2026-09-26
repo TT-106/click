@@ -24,7 +24,7 @@ export function CastleTableView() {
 }
 export function CastleRowView(a) {
   this.lh = a;
-  this.progressTextElement = this.progressFillElement = this.ng = this.nameCell = this.castle = null;
+  this.progressTextElement = this.progressFillElement = this.progressCell = this.nameCell = this.castle = null;
   this.Us = 120;
   this.Rv = this.Cu = this.cachedDescriptionText = "";
   this.Kv = 0;
@@ -168,11 +168,11 @@ export function initializeViewsCastles() {
     var a = this.lh;
     this.nameCell = a.insertCell(0);
     this.nameCell.style.width = "240px";
-    this.ng = a.insertCell(1);
-    this.ng.style.width = this.Us + "px";
-    this.ng.style.paddingLeft = "5px";
-    this.ng.style.paddingRight = "5px";
-    a = createElement("div", this.ng, null, null);
+    this.progressCell = a.insertCell(1);
+    this.progressCell.style.width = this.Us + "px";
+    this.progressCell.style.paddingLeft = "5px";
+    this.progressCell.style.paddingRight = "5px";
+    a = createElement("div", this.progressCell, null, null);
     a.style.position = "relative";
     a.style.border = "1px solid #2c2c50";
     a.style.height = "15px";

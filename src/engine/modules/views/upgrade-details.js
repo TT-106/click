@@ -712,7 +712,7 @@ export function initializeViewsUpgradeDetails() {
       } else {
         a = a.impactEffectName;
         this.Dx = game.animations.Yh[a];
-        this.zn = game.animations.Zg(a);
+        this.zn = game.animations.getAnimation(a);
         this.frameAge = this.frameIndex = 0;
         this.isAnimated = true;
       }

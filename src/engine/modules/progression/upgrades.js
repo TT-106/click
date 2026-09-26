@@ -335,7 +335,7 @@ export function initializeProgressionUpgrades() {
   };
   PurchaseItemUpgrade.prototype.refreshAvailabilityState = function () {
     var a;
-    a = game.castles.Jg;
+    a = game.castles.attackableCastles;
     if (a = this.Ly < a.length ? a[this.Ly] : null) {
       this.canPurchase = game.monsterCatalog.maxUnlockedLevel >= a.requiredMonsterLevel;
       this.affordableSoon = !this.canPurchase;

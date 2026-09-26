@@ -1,30 +1,5 @@
 [
   {
-    "name": "ng",
-    "reads": 8,
-    "writes": 5,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\castles.js:27",
-        "code": "this.ng"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\castles.js:171",
-        "code": "this.ng"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\castles.js:172",
-        "code": "this.ng"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\views\\castles.js",
-      "src\\engine\\modules\\views\\dungeons.js",
-      "src\\engine\\modules\\views\\monsters.js"
-    ]
-  },
-  {
     "name": "$f",
     "reads": 4,
     "writes": 9,
@@ -123,33 +98,6 @@
       "src\\engine\\modules\\combat\\scrolls.js",
       "src\\engine\\modules\\loot\\items.js",
       "src\\engine\\modules\\loot\\treasure.js"
-    ]
-  },
-  {
-    "name": "Zg",
-    "reads": 9,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\actions.js:142",
-        "code": "game.animations.Zg"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\actions.js:332",
-        "code": "game.animations.Zg"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:641",
-        "code": "Wa.Zg"
-      }
-    ],
-    "fileCount": 5,
-    "files": [
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\rendering\\sprites.js",
-      "src\\engine\\modules\\views\\expedition.js",
-      "src\\engine\\modules\\views\\upgrade-details.js"
     ]
   },
   {
@@ -295,58 +243,6 @@
     "files": [
       "src\\engine\\modules\\loot\\treasure.js",
       "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\runtime\\game.js"
-    ]
-  },
-  {
-    "name": "Jg",
-    "reads": 11,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:186",
-        "code": "La.Jg"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:194",
-        "code": "La.Jg"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:338",
-        "code": "game.castles.Jg"
-      }
-    ],
-    "fileCount": 6,
-    "files": [
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\progression\\upgrades.js",
-      "src\\engine\\modules\\runtime\\game.js",
-      "src\\engine\\modules\\views\\results.js",
-      "src\\engine\\modules\\world\\initialization.js",
-      "src\\engine\\modules\\world\\regions.js"
-    ]
-  },
-  {
-    "name": "uh",
-    "reads": 2,
-    "writes": 10,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:293",
-        "code": "Db.targetDefinitions[gb].uh"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:852",
-        "code": "za.definition.uh"
-      },
-      {
-        "loc": "src\\engine\\modules\\runtime\\game.js:220",
-        "code": "uh: \"chest1\""
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\persistence\\game-save.js",
       "src\\engine\\modules\\runtime\\game.js"
     ]
   },

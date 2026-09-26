@@ -139,7 +139,7 @@ export function applySpellEffect(a, b) {
         case 8:
           h = f.Ss;
       }
-      d = new StatusEffect(d, game.state.turnNumber, g.durationTurns, game.animations.Zg(g.animationName), g.overlayFrameIndex, g.hasAnimation, 1 > h ? c : c * h);
+      d = new StatusEffect(d, game.state.turnNumber, g.durationTurns, game.animations.getAnimation(g.animationName), g.overlayFrameIndex, g.hasAnimation, 1 > h ? c : c * h);
     } else {
       console.log("Failed to find char effect description: " + d);
       d = null;
@@ -329,7 +329,7 @@ export function resolveCharacterDefeat(a, b) {
       game.state.statisticsRecorder.recordCharacterStunned();
       b.effects.isStunned = true;
       var c = b.position.levelPosition,
-        stunEffect = new StatusEffect(13, game.state.turnNumber, stunEffectDefinition.durationTurns, game.animations.Zg(stunEffectDefinition.animationName), stunEffectDefinition.overlayFrameIndex, stunEffectDefinition.hasAnimation, 0);
+        stunEffect = new StatusEffect(13, game.state.turnNumber, stunEffectDefinition.durationTurns, game.animations.getAnimation(stunEffectDefinition.animationName), stunEffectDefinition.overlayFrameIndex, stunEffectDefinition.hasAnimation, 0);
       c = new VisualEffect(stunEffectDefinition.animationName, c, c, false, 1);
       b.stats.stunCount++;
       var f = b.effects;

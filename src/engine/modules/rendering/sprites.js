@@ -85,7 +85,7 @@ export function VisualEffect(a, b, c, d, f) {
   this.Pk = false;
   this.projectileEffect = d;
   this.finished = this.hasSpawned = this.isReturning = false;
-  this.animation = a ? game.animations.Zg(a) : null;
+  this.animation = a ? game.animations.getAnimation(a) : null;
   if (a && !this.animation) {
     console.log("Failed to find animated sprite: " + a);
   }
@@ -213,7 +213,7 @@ export function initializeRenderingSprites() {
       this.Yh[d.animationName] = new SpriteAnimation(this, d.animationName, d.firstFrameColumn, d.firstFrameRow, d.lastRowFrameCount, d.lastFrameRow, b, d.isDirectional);
     }
   };
-  AnimationSheet.prototype.Zg = function (a) {
+  AnimationSheet.prototype.getAnimation = function (a) {
     return this.Yh[a];
   };
   AnimationSheet.prototype.Hj = function () {
@@ -222,9 +222,9 @@ export function initializeRenderingSprites() {
   AnimationSheet.prototype.cl = function () {
     return this.loaded;
   };
-  AnimationCatalog.prototype.Zg = function (a) {
+  AnimationCatalog.prototype.getAnimation = function (a) {
     var b = this.Yh[a];
-    return b ? b.Zg(a) : null;
+    return b ? b.getAnimation(a) : null;
   };
   AnimationCatalog.prototype.cl = function () {
     var a;
@@ -254,7 +254,7 @@ export function initializeRenderingSprites() {
   };
   TARGETED_EFFECT = 3;
   directionScratchVector = new Vector2();
-  VisualEffect.prototype.Zg = function () {
+  VisualEffect.prototype.getAnimation = function () {
     return this.animation;
   };
   VisualEffect.prototype.qB = function (a) {

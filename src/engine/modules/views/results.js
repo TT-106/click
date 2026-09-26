@@ -179,7 +179,7 @@ export function initializeViewsResults() {
     this.nA = a.itemsSold;
     this.sA = a.levelsCleared;
     this.Fz = a.dungeonsCleared;
-    this.Iy = game.castles.Jg.length;
+    this.Iy = game.castles.attackableCastles.length;
     this.JB = a.characterStunnedCount;
     this.wy = game.state.achievements.claimQueue.length;
     this.yu = this.Kk = this.Bu = this.Ck = this.Hk = this.Fk = this.Ek = this.vv = -1;
@@ -212,7 +212,7 @@ export function initializeViewsResults() {
       d = b.itemsSold - this.nA,
       f = b.levelsCleared - this.sA,
       g = b.dungeonsCleared - this.Fz,
-      h = game.castles.Jg.length - this.Iy,
+      h = game.castles.attackableCastles.length - this.Iy,
       b = /** @type {any} */ (b.characterStunnedCount - this.JB),
       l = game.state.achievements.claimQueue.length - this.wy;
     if (this.vv != a) {

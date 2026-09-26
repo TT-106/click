@@ -151,7 +151,7 @@ export function chooseAdjacentRegion(a, b, c, d) {
 }
 export function resetCastles() {
   var a = game.castles;
-  a.Jg.length = 0;
+  a.attackableCastles.length = 0;
   a.Dh.length = 0;
   a.cm = 0;
   a.Uj = 1;
@@ -187,15 +187,15 @@ export function findCastleByRegion(a) {
 export function refreshAttackableCastles(a) {
   var b = game.castles;
   b.cm++;
-  var c = b.Jg.indexOf(a);
+  var c = b.attackableCastles.indexOf(a);
   if (canAttackCastle(a)) {
     if (0 > c) {
-      b.Jg.push(a);
-      sortCastles(b, b.Jg);
+      b.attackableCastles.push(a);
+      sortCastles(b, b.attackableCastles);
     }
   } else {
     if (-1 < c) {
-      b.Jg.splice(c, 1);
+      b.attackableCastles.splice(c, 1);
     }
   }
 }

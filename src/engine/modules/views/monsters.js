@@ -23,7 +23,7 @@ export function MonsterLevelView() {
 export function MonsterRowView(a, b) {
   this.lh = a;
   this.monsterType = b;
-  this.progressTextElement = this.progressFillElement = this.ng = this.xo = this.$n = this.Yn = this.vo = this.Ij = this.Mo = this.wq = this.yq = this.Es = null;
+  this.progressTextElement = this.progressFillElement = this.progressCell = this.xo = this.$n = this.Yn = this.vo = this.Ij = this.Mo = this.wq = this.yq = this.Es = null;
   this.Sv = this.$f = this.Jh = this.Uv = -1;
   this.dx = 80;
   this.Cp = null;
@@ -225,11 +225,11 @@ export function initializeViewsMonsters() {
     this.wq.style.width = "80px";
     this.wq.style.textAlign = "right";
     this.wq.style.paddingRight = "5px";
-    this.ng = a.insertCell(10);
-    this.ng.style.width = this.dx + "px";
-    this.ng.style.paddingLeft = "5px";
-    this.ng.style.paddingRight = "5px";
-    a = createElement("div", this.ng, null, null);
+    this.progressCell = a.insertCell(10);
+    this.progressCell.style.width = this.dx + "px";
+    this.progressCell.style.paddingLeft = "5px";
+    this.progressCell.style.paddingRight = "5px";
+    a = createElement("div", this.progressCell, null, null);
     a.style.position = "relative";
     a.style.border = "1px solid #2c2c50";
     a.style.height = "15px";
