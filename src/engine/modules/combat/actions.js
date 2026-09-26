@@ -359,7 +359,7 @@ export function resolveCharacterDefeat(a, b) {
         if (1 === a.characterType) {
           game.state.statisticsRecorder.$k();
         }
-        d = b.Sb;
+        d = b.monsterType;
         addExperience(d.No * doubleExperienceModifier.currentValue);
         recordMonsterTypeKill(d);
       }

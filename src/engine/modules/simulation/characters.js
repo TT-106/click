@@ -287,7 +287,7 @@ export function initializeSimulationCharacters() {
           game.state.statisticsRecorder.$k();
           f.stats.$k();
         }
-        f = b.Sb;
+        f = b.monsterType;
         addExperience(f.No * doubleExperienceModifier.currentValue);
         recordMonsterTypeKill(f);
       }

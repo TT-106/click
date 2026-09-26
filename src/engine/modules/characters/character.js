@@ -53,7 +53,7 @@ export function Character(a, b, c, d, f) {
   }
   this.KD = d;
   this.equipment = b != MONSTER_TYPE ? new Equipment(this.slotList, this.characterClass) : null;
-  this.Sb = this.ee = null;
+  this.monsterType = this.ee = null;
   this.position = new CharacterPosition(WORLD_WALK_SPEED, DUNGEON_WALK_SPEED);
   this.effects = new CharacterEffects(this);
   if (this.inventory = f) {
@@ -1228,7 +1228,7 @@ export function initializeCharactersCharacter() {
     }
   };
   Character.prototype.gq = function (a) {
-    this.Sb = a;
+    this.monsterType = a;
   };
   Character.prototype.getSprite = function () {
     return this.ee;

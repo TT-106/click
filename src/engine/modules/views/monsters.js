@@ -22,7 +22,7 @@ export function MonsterLevelView() {
 }
 export function MonsterRowView(a, b) {
   this.lh = a;
-  this.Sb = b;
+  this.monsterType = b;
   this.kd = this.progressFillElement = this.ng = this.xo = this.$n = this.Yn = this.vo = this.Ij = this.Mo = this.wq = this.yq = this.Es = null;
   this.Sv = this.$f = this.Jh = this.Uv = -1;
   this.dx = 80;
@@ -177,11 +177,11 @@ export function initializeViewsMonsters() {
     }
   };
   MonsterRowView.prototype.gq = function (a) {
-    this.Sb = a;
+    this.monsterType = a;
   };
   MonsterRowView.prototype.qi = function () {
     var a = this.lh,
-      b = this.Sb.ll,
+      b = this.monsterType.ll,
       c = a.insertCell(0);
     c.style.width = "50px";
     c.style.padding = "0";
@@ -192,7 +192,7 @@ export function initializeViewsMonsters() {
     this.Cp.style.height = "30px";
     this.Es = a.insertCell(1);
     this.Es.style.width = "200px";
-    this.Es.innerHTML = this.Sb.Vk();
+    this.Es.innerHTML = this.monsterType.Vk();
     this.Mo = a.insertCell(2);
     this.Mo.style.width = "80px";
     this.Mo.style.textAlign = "right";
@@ -254,26 +254,26 @@ export function initializeViewsMonsters() {
     this.Jh = this.Uv = this.$f = this.Sv = -1;
   };
   MonsterRowView.prototype.render = function () {
-    var a = this.Sb.ml,
-      b = this.Sb.ek,
-      c = this.Sb.xq,
+    var a = this.monsterType.ml,
+      b = this.monsterType.ek,
+      c = this.monsterType.xq,
       d = Math.min(1, a / b),
       d = this.dx * d | 0;
-    if (this.$f != this.Sb.xd || this.Sv != this.Sb.Sj) {
-      this.Mo.innerHTML = formatAmount(this.Sb.No);
-      this.Ij.innerHTML = formatAmount(this.Sb.$o);
-      this.vo.innerHTML = formatAmount(this.Sb.Gp);
-      this.Yn.innerHTML = formatAmount(this.Sb.Ep);
-      this.$n.innerHTML = formatAmount(this.Sb.Fp);
-      this.xo.innerHTML = formatAmount(this.Sb.Hp);
-      this.wq.innerHTML = formatAmount(this.Sb.Sj);
-      if (this.$f != this.Sb.xd) {
-        this.Es.innerHTML = this.Sb.Vk();
-        var f = this.Sb.ll;
+    if (this.$f != this.monsterType.xd || this.Sv != this.monsterType.Sj) {
+      this.Mo.innerHTML = formatAmount(this.monsterType.No);
+      this.Ij.innerHTML = formatAmount(this.monsterType.$o);
+      this.vo.innerHTML = formatAmount(this.monsterType.Gp);
+      this.Yn.innerHTML = formatAmount(this.monsterType.Ep);
+      this.$n.innerHTML = formatAmount(this.monsterType.Fp);
+      this.xo.innerHTML = formatAmount(this.monsterType.Hp);
+      this.wq.innerHTML = formatAmount(this.monsterType.Sj);
+      if (this.$f != this.monsterType.xd) {
+        this.Es.innerHTML = this.monsterType.Vk();
+        var f = this.monsterType.ll;
         this.Cp.style.background = "url('spritesheet/monsters.png') -" + f.sourceX + "px -" + (f.sourceY + 10) + "px";
       }
-      this.$f = this.Sb.xd;
-      this.Sv = this.Sb.Sj;
+      this.$f = this.monsterType.xd;
+      this.Sv = this.monsterType.Sj;
     }
     if (this.Uv !== c) {
       this.Uv = c;
