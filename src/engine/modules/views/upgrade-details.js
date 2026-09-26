@@ -315,9 +315,9 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   ItemPurchaseDetails.prototype.update = function () {
-    var a = this.upgrade.Bb(),
-      b = this.upgrade.ib(),
-      c = this.upgrade.lb();
+    var a = this.upgrade.getCost(),
+      b = this.upgrade.getTitle(),
+      c = this.upgrade.getDescription();
     if (this.Lb !== a) {
       this.Lb = a;
       this.Hi.innerHTML = formatAmount(a);
@@ -404,7 +404,7 @@ export function initializeViewsUpgradeDetails() {
         var c = a.getSprite(),
           d = a.classDefinition.statMultipliers;
         this.hm.style.background = "url('spritesheet/monsters.png') -" + (c.sourceX + 10) + "px -" + (c.sourceY + 12) + "px";
-        this.Ty.innerHTML = this.upgrade.lb();
+        this.Ty.innerHTML = this.upgrade.getDescription();
         this.aD.innerHTML = formatAmount(a.stats.Am) + " XP";
         this.Ry.innerHTML = "等级 " + (b + 1);
         this.Py.innerHTML = ", " + formatAmount(scaleByLevel(b + 1, healthCurve, d.Cf)) + " HP";
@@ -539,8 +539,8 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   AutoDungeonDetails.prototype.update = function () {
-    var a = this.upgrade.lb(),
-      b = this.upgrade.ib();
+    var a = this.upgrade.getDescription(),
+      b = this.upgrade.getTitle();
     if (this.oz != b) {
       this.oz = b;
       this.we.innerHTML = b;
@@ -569,7 +569,7 @@ export function initializeViewsUpgradeDetails() {
     a = a.insertCell(1);
     a.style.textAlign = "left";
     this.we = createElement("span", a, null, null);
-    this.we.innerHTML = this.upgrade.ib();
+    this.we.innerHTML = this.upgrade.getTitle();
     this.mf = b.insertCell(0);
     this.mf.colSpan = 2;
     this.mf.style.width = "200px";
@@ -643,8 +643,8 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   SkillUpgradeDetails.prototype.update = function () {
-    var a = this.upgrade.ib(),
-      b = this.upgrade.lb();
+    var a = this.upgrade.getTitle(),
+      b = this.upgrade.getDescription();
     if (this.gb !== a) {
       this.gb = a;
       this.jb.innerHTML = a;
@@ -714,8 +714,8 @@ export function initializeViewsUpgradeDetails() {
         this.De = this.oc = 0;
         this.nd = true;
       }
-      this.Ml.innerHTML = this.upgrade.ib();
-      this.vu.innerHTML = this.upgrade.lb();
+      this.Ml.innerHTML = this.upgrade.getTitle();
+      this.vu.innerHTML = this.upgrade.getDescription();
     }
     if (this.nd) {
       this.De++;
@@ -777,9 +777,9 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   MonsterLevelDetails.prototype.update = function () {
-    var a = this.upgrade.Bb(),
-      b = this.upgrade.ib(),
-      c = this.upgrade.lb();
+    var a = this.upgrade.getCost(),
+      b = this.upgrade.getTitle(),
+      c = this.upgrade.getDescription();
     if (this.Lb !== a) {
       this.Lb = a;
       this.dj.innerHTML = formatAmount(a);
@@ -857,7 +857,7 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   DungeonPurchaseDetails.prototype.update = function () {
-    var a = this.upgrade.Bb(),
+    var a = this.upgrade.getCost(),
       b = this.upgrade.Wo();
     if (this.Lb !== a) {
       this.Lb = a;
@@ -886,7 +886,7 @@ export function initializeViewsUpgradeDetails() {
     c = a.insertCell(1);
     c.style.textAlign = "left";
     this.we = createElement("span", c, null, null);
-    this.we.innerHTML = this.upgrade.ib();
+    this.we.innerHTML = this.upgrade.getTitle();
     c = a.insertCell(2);
     this.Cq = createElement("span", c, null, null);
     a = a.insertCell(3);
@@ -925,10 +925,10 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   ScrollUpgradeDetails.prototype.update = function () {
-    var a = this.upgrade.Bb(),
+    var a = this.upgrade.getCost(),
       b = this.upgrade.Pz(),
-      c = this.upgrade.ib(),
-      d = this.upgrade.lb();
+      c = this.upgrade.getTitle(),
+      d = this.upgrade.getDescription();
     if (this.Lb !== a) {
       this.Lb = a;
       this.Cq.innerHTML = formatAmount(a);
@@ -943,7 +943,7 @@ export function initializeViewsUpgradeDetails() {
     }
     if (this.Az !== d) {
       this.Az = d;
-      this.we.innerHTML = this.upgrade.lb();
+      this.we.innerHTML = this.upgrade.getDescription();
     }
   };
   ScrollUpgradeDetails.prototype.eb = function () {
@@ -963,7 +963,7 @@ export function initializeViewsUpgradeDetails() {
     c = a.insertCell(1);
     c.style.textAlign = "left";
     this.we = createElement("span", c, null, null);
-    this.we.innerHTML = this.upgrade.ib();
+    this.we.innerHTML = this.upgrade.getTitle();
     c = a.insertCell(2);
     this.Cq = createElement("span", c, null, null);
     a = a.insertCell(3);
@@ -1027,7 +1027,7 @@ export function initializeViewsUpgradeDetails() {
     c.style.textAlign = "left";
     c.style.width = "150px";
     this.we = createElement("span", c, null, null);
-    this.we.innerHTML = this.upgrade ? this.upgrade.ib() : "收获地牢";
+    this.we.innerHTML = this.upgrade ? this.upgrade.getTitle() : "收获地牢";
     c = a.insertCell(2);
     this.Uz = createElement("span", c, null, null);
     a = a.insertCell(3);
@@ -1044,7 +1044,7 @@ export function initializeViewsUpgradeDetails() {
     b = b.insertCell(0);
     b.colSpan = 3;
     b.style.textAlign = "left";
-    b.innerHTML = this.upgrade ? this.upgrade.lb() : "收集杀戮农场";
+    b.innerHTML = this.upgrade ? this.upgrade.getDescription() : "收集杀戮农场";
   };
   FarmUpgradeDetails.prototype.getUpgradeType = function () {
     return 10;
@@ -1091,7 +1091,7 @@ export function initializeViewsUpgradeDetails() {
     c.style.textAlign = "left";
     c.style.width = "150px";
     this.we = createElement("span", c, null, null);
-    this.we.innerHTML = this.upgrade ? this.upgrade.ib() : "收集道具黄金";
+    this.we.innerHTML = this.upgrade ? this.upgrade.getTitle() : "收集道具黄金";
     c = a.insertCell(2);
     this.Tz = createElement("span", c, null, null);
     a = a.insertCell(3);
@@ -1108,7 +1108,7 @@ export function initializeViewsUpgradeDetails() {
     b = b.insertCell(0);
     b.colSpan = 3;
     b.style.textAlign = "left";
-    b.innerHTML = this.upgrade ? this.upgrade.lb() : "卖掉道具得到黄金";
+    b.innerHTML = this.upgrade ? this.upgrade.getDescription() : "卖掉道具得到黄金";
   };
   CharacterLevelDetails.prototype.getUpgradeType = function () {
     return 11;
@@ -1136,8 +1136,8 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   CharacterLevelDetails.prototype.update = function () {
-    var a = this.upgrade.Bb(),
-      b = this.upgrade.ib(),
+    var a = this.upgrade.getCost(),
+      b = this.upgrade.getTitle(),
       c = this.upgrade.Kr();
     if (this.Lb != a) {
       this.Lb = a;
@@ -1286,8 +1286,8 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   AchievementClaimDetails.prototype.update = function () {
-    var a = this.upgrade.ib(),
-      b = this.upgrade.lb();
+    var a = this.upgrade.getTitle(),
+      b = this.upgrade.getDescription();
     if (this.gb !== a) {
       this.gb = a;
       this.jb.innerHTML = a;
@@ -1328,8 +1328,8 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   AchievementProgressDetails.prototype.update = function () {
-    var a = this.upgrade.ib(),
-      b = this.upgrade.lb();
+    var a = this.upgrade.getTitle(),
+      b = this.upgrade.getDescription();
     if (this.gb !== a) {
       this.gb = a;
       this.jb.innerHTML = a;
@@ -1367,9 +1367,9 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   PointUpgradeDetails.prototype.update = function () {
-    var a = this.upgrade.ib(),
-      b = this.upgrade.lb(),
-      c = this.upgrade.Bb();
+    var a = this.upgrade.getTitle(),
+      b = this.upgrade.getDescription(),
+      c = this.upgrade.getCost();
     if (this.gb != a) {
       this.gb = a;
       this.jb.innerHTML = a;
