@@ -516,9 +516,12 @@ const scenarios = [
   },
   {
     name: 'bookcase-looted',
+    // 书架生成稀疏且随迷宫布局变化：场景组合一变（新场景插入会移动全局随机流位置），
+    // 30000 帧窗口可能恰好停在无书架可搜的布局上（全矩阵两次 53/53 绿后第三次失败即此因）。
+    // 与 ground-drops 的跨场景流漂移同型，加宽探索窗口降低布局敏感度。
     make: () => base,
     steps: [
-      { lootTreasureDuringExplore: 30000, treasureKind: 3, check: bookcaseWasLooted },
+      { lootTreasureDuringExplore: 60000, treasureKind: 3, check: bookcaseWasLooted },
       { turns: 900, check: bookcaseWasLooted },
     ],
   },
