@@ -478,14 +478,20 @@ window.harness = {
     let spawned = 0;
     for (let i = 0; i < maxTurns; i++) {
       advance();
-      spawned = Math.max(spawned, registry.Mn.length);
+      // 目标物字段：原版 Mn/Kg/Mf/Nn/el/hq，重构版已语义化为 targets/opened/kind/room/selected/setTargetTreasureChest
+      const targets = original ? registry.Mn : registry.targets;
+      spawned = Math.max(spawned, targets.length);
       if (i % 10 === 0 && snapshot().statistics[statKey] > before) break;
       // 与财宝房按钮相同：只选择角色所在房间、尚未搜索的目标物。
-      const chest = registry.Mn.find(chest => !chest.Kg && chest.Mf === kind && adventurers.some(a =>
-        (original ? a.p.w : a.position.room) === chest.Nn));
-      if (chest && !chest.el) {
-        chest.el = true;
-        party.hq(chest);
+      const openedKey = original ? 'Kg' : 'opened';
+      const kindKey = original ? 'Mf' : 'kind';
+      const roomKey = original ? 'Nn' : 'room';
+      const selectedKey = original ? 'el' : 'selected';
+      const chest = targets.find(chest => !chest[openedKey] && chest[kindKey] === kind && adventurers.some(a =>
+        (original ? a.p.w : a.position.room) === chest[roomKey]));
+      if (chest && !chest[selectedKey]) {
+        chest[selectedKey] = true;
+        if (original) party.hq(chest); else party.setTargetTreasureChest(chest);
         selected++;
       }
     }

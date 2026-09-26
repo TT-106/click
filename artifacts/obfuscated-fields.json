@@ -1192,32 +1192,6 @@
     ]
   },
   {
-    "name": "Mf",
-    "reads": 3,
-    "writes": 11,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:1064",
-        "code": "Xd.Mf"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:36",
-        "code": "this.Mf"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:36",
-        "code": "d.Mf"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\loot\\treasure.js",
-      "src\\engine\\modules\\runtime\\game.js",
-      "src\\engine\\modules\\views\\dungeons.js"
-    ]
-  },
-  {
     "name": "of",
     "reads": 13,
     "writes": 1,
@@ -1988,34 +1962,6 @@
       "src\\engine\\modules\\ai\\behaviors.js",
       "src\\engine\\modules\\characters\\character.js",
       "src\\engine\\modules\\characters\\movement.js"
-    ]
-  },
-  {
-    "name": "Kg",
-    "reads": 10,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1090",
-        "code": "a.Kg"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1355",
-        "code": "this.treasureChest.Kg"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1376",
-        "code": "this.treasureChest.Kg"
-      }
-    ],
-    "fileCount": 6,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js",
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\loot\\treasure.js",
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\views\\dungeons.js"
     ]
   },
   {
@@ -5489,32 +5435,6 @@
     ]
   },
   {
-    "name": "el",
-    "reads": 4,
-    "writes": 4,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1090",
-        "code": "a.el"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1376",
-        "code": "this.treasureChest.el"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\actions.js:721",
-        "code": "a.el"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js",
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\loot\\treasure.js",
-      "src\\engine\\modules\\views\\dungeons.js"
-    ]
-  },
-  {
     "name": "Qk",
     "reads": 6,
     "writes": 2,
@@ -7383,33 +7303,6 @@
     ]
   },
   {
-    "name": "Nn",
-    "reads": 6,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:1057",
-        "code": "Xd.Nn"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\party.js:547",
-        "code": "this.targetTreasureChest.Nn"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:32",
-        "code": "this.Nn"
-      }
-    ],
-    "fileCount": 5,
-    "files": [
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\characters\\party.js",
-      "src\\engine\\modules\\loot\\treasure.js",
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\rendering\\scene.js"
-    ]
-  },
-  {
     "name": "Om",
     "reads": 3,
     "writes": 4,
@@ -7822,32 +7715,6 @@
     "fileCount": 1,
     "files": [
       "src\\engine\\modules\\loot\\items.js"
-    ]
-  },
-  {
-    "name": "Mn",
-    "reads": 6,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:48",
-        "code": "this.Mn"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:89",
-        "code": "b.Mn"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:306",
-        "code": "dc.Mn"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\loot\\treasure.js",
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\world\\generation.js"
     ]
   },
   {
@@ -9190,34 +9057,6 @@
       "src\\engine\\modules\\combat\\actions.js",
       "src\\engine\\modules\\loot\\items.js",
       "src\\engine\\modules\\rendering\\scene.js"
-    ]
-  },
-  {
-    "name": "hq",
-    "reads": 4,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1356",
-        "code": "a.hq"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:1240",
-        "code": "Character.prototype.hq"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\party.js:202",
-        "code": "PartyState.prototype.hq"
-      }
-    ],
-    "fileCount": 6,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js",
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\characters\\party.js",
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\loot\\treasure.js",
-      "src\\engine\\modules\\views\\dungeons.js"
     ]
   },
   {
@@ -20807,56 +20646,6 @@
       "src\\engine\\modules\\loot\\treasure.js",
       "src\\engine\\modules\\rendering\\scene.js",
       "src\\engine\\modules\\runtime\\game.js"
-    ]
-  },
-  {
-    "name": "Vy",
-    "reads": 2,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:34",
-        "code": "this.Vy"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:574",
-        "code": "Ea.Vy"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:161",
-        "code": "a.Vy"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\loot\\treasure.js",
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\views\\dungeons.js"
-    ]
-  },
-  {
-    "name": "PA",
-    "reads": 2,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:35",
-        "code": "this.PA"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:574",
-        "code": "Ea.PA"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:161",
-        "code": "a.PA"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\loot\\treasure.js",
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\views\\dungeons.js"
     ]
   },
   {

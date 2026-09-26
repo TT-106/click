@@ -718,8 +718,8 @@ export function initializeCombatActions() {
   };
   CombatQueue.prototype.wu = function (a) {
     if (a = getRoomTreasure(game.treasure, a.attacker.position.room)) {
-      a.el = true;
-      game.state.party.hq(a);
+      a.selected = true;
+      game.state.party.setTargetTreasureChest(a);
     }
   };
 }

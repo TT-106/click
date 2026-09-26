@@ -22,10 +22,10 @@ export function mountTreasureLoot(a) {
     a.ti = a.Ro();
     a.button = createElement("div", container, a.elementId, a.ti);
     a.button.onmouseup = function () {
-      if (a.treasureChest && !a.treasureChest.Kg) {
+      if (a.treasureChest && !a.treasureChest.opened) {
         var b = a.treasureChest;
-        b.el = true;
-        game.state.party.hq(b);
+        b.selected = true;
+        game.state.party.setTargetTreasureChest(b);
       }
       return false;
     };
@@ -142,7 +142,7 @@ export function initializeViewsDungeons() {
   TreasureLootView.prototype = new View();
   TreasureLootView.prototype.isVisible = function () {
     var a = getVisibleTreasure();
-    return a && !a.Kg;
+    return a && !a.opened;
   };
   TreasureLootView.prototype.reset = function () {
     this.treasureChest = null;
@@ -154,11 +154,11 @@ export function initializeViewsDungeons() {
     }
     var a = getVisibleTreasure();
     if (a != this.treasureChest && (this.treasureChest = a)) {
-      var b = this.treasureChest.Mf;
+      var b = this.treasureChest.kind;
       this.Ml.innerHTML = 1 === b ? "搜索财宝箱!" : 2 === b ? "搜索武器架!" : 3 === b ? "搜索书架!" : "搜索事物!";
       this.om.innerHTML = "在房间内点击.";
       if (a) {
-        b = a.Kg ? a.PA : a.Vy;
+        b = a.opened ? a.openedSpriteName : a.closedSpriteName;
         this.po.style.background = "url('spritesheet/terrain.png') -" + b.sourceX + "px -" + b.sourceY + "px";
       }
     }
@@ -166,13 +166,13 @@ export function initializeViewsDungeons() {
     if (this.ti !== b) {
       this.ti = b;
       this.button.className = b;
-      if (a && a.el) {
+      if (a && a.selected) {
         this.om.innerHTML = "正在搜索中...";
       }
     }
   };
   TreasureLootView.prototype.Ro = function () {
-    return !this.treasureChest || this.treasureChest.Kg || this.treasureChest.el ? "lootButtonDisabled centeredElement" : "lootButton centeredElement";
+    return !this.treasureChest || this.treasureChest.opened || this.treasureChest.selected ? "lootButtonDisabled centeredElement" : "lootButton centeredElement";
   };
   DungeonRowView.prototype.reset = function () {
     this.ui = null;

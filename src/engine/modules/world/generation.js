@@ -196,8 +196,8 @@ export function generateDungeonLevel(a, b, c, d) {
     b.Hf.length = 0;
   }
   b = game.treasure;
-  if (0 < b.Mn.length) {
-    b.Mn.length = 0;
+  if (0 < b.targets.length) {
+    b.targets.length = 0;
     b.Dt = {};
   }
   clearScrollTargets();

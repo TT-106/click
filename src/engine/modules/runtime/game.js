@@ -218,7 +218,7 @@ export function initializeRuntimeGame() {
       var ta = game.treasure;
       ta.ve.push({
         uh: "chest1",
-        Mf: 1,
+        kind: 1,
         jh: false,
         xh: {
           opened: game.terrainSprites.getSprite("L2_Chest02.PNG"),
@@ -231,7 +231,7 @@ export function initializeRuntimeGame() {
       });
       ta.ve.push({
         uh: "chest2",
-        Mf: 1,
+        kind: 1,
         jh: false,
         xh: {
           opened: game.terrainSprites.getSprite("L2_Chest06.PNG"),
@@ -244,7 +244,7 @@ export function initializeRuntimeGame() {
       });
       ta.ve.push({
         uh: "chest3",
-        Mf: 1,
+        kind: 1,
         jh: false,
         xh: {
           opened: game.terrainSprites.getSprite("L2_Chest10.PNG"),
@@ -257,7 +257,7 @@ export function initializeRuntimeGame() {
       });
       ta.ve.push({
         uh: "chest4",
-        Mf: 1,
+        kind: 1,
         jh: false,
         xh: {
           opened: game.terrainSprites.getSprite("L2_Chest14.PNG"),
@@ -270,7 +270,7 @@ export function initializeRuntimeGame() {
       });
       ta.ve.push({
         uh: "rack1",
-        Mf: 2,
+        kind: 2,
         jh: true,
         xh: {
           opened: game.terrainSprites.getSprite("L3_Wall_WeapRack1_EW.PNG"),
@@ -283,7 +283,7 @@ export function initializeRuntimeGame() {
       });
       ta.ve.push({
         uh: "rack2",
-        Mf: 2,
+        kind: 2,
         jh: true,
         xh: {
           opened: game.terrainSprites.getSprite("L3_Wall_WeapRack1_EW.PNG"),
@@ -296,7 +296,7 @@ export function initializeRuntimeGame() {
       });
       ta.ve.push({
         uh: "rack3",
-        Mf: 2,
+        kind: 2,
         jh: true,
         xh: {
           opened: game.terrainSprites.getSprite("L3_Wall_WeapRack1_EW.PNG"),
@@ -309,7 +309,7 @@ export function initializeRuntimeGame() {
       });
       ta.ve.push({
         uh: "rack4",
-        Mf: 2,
+        kind: 2,
         jh: true,
         xh: {
           opened: game.terrainSprites.getSprite("L3_Wall_WeapRack5_EW.PNG"),
@@ -322,7 +322,7 @@ export function initializeRuntimeGame() {
       });
       ta.ve.push({
         uh: "case1",
-        Mf: 3,
+        kind: 3,
         jh: true,
         xh: {
           opened: game.terrainSprites.getSprite("L3_WallDeco04.PNG"),
@@ -335,7 +335,7 @@ export function initializeRuntimeGame() {
       });
       ta.ve.push({
         uh: "case2",
-        Mf: 3,
+        kind: 3,
         jh: true,
         xh: {
           opened: game.terrainSprites.getSprite("L3_WallDeco14.PNG"),

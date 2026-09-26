@@ -556,7 +556,7 @@ export function initializeRenderingScene() {
           Da = projectWorldY(ta, eb);
           a.If(qa.getItem().Uk(), Gb, Da);
         }
-        var mb = game.treasure.Mn,
+        var mb = game.treasure.targets,
           Ea,
           La,
           wa,
@@ -566,12 +566,12 @@ export function initializeRenderingScene() {
           Ga;
         for (ja = 0; ja < mb.length; ja++) {
           Ea = mb[ja];
-          if (Ea.Nn.Xi) {
+          if (Ea.room.Xi) {
             La = Ea.zq;
             wa = Ea.Aq;
             Fa = projectWorldX(La, wa);
             ha = projectWorldY(La, wa);
-            Ga = Ea.Kg ? Ea.PA : Ea.Vy;
+            Ga = Ea.opened ? Ea.openedSpriteName : Ea.closedSpriteName;
             if (Ea.BC.jh) {
               a.se.gx(Ga, La, wa, Fa, ha, Ga.spriteSheet.spriteSize, 0);
             } else {

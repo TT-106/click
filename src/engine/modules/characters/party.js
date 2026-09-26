@@ -199,7 +199,7 @@ export function findNextUnopenedDoor() {
   return g;
 }
 export function initializeCharactersParty() {
-  PartyState.prototype.hq = function (a) {
+  PartyState.prototype.setTargetTreasureChest = function (a) {
     this.targetTreasureChest = a;
   };
   PartyState.prototype.iw = function () {
@@ -544,7 +544,7 @@ export function initializeCharactersParty() {
     }
     if (!isPartyTravelling(this)) {
       if (this.targetTreasureChest) {
-        this.destinationRoom = this.targetTreasureChest.Nn;
+        this.destinationRoom = this.targetTreasureChest.room;
         this.targetDoor = this.targetRoom = null;
       } else if (!this.targetRoom && (!this.targetDoor || this.targetDoor.isOpen)) {
         if (this.destinationRoom) {

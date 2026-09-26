@@ -1087,7 +1087,7 @@ export function initializeAiBehaviors() {
       return 0;
     }
     a = getRoomTreasure(game.treasure, b);
-    return !a || a.Kg || a.el ? 0 : (/** @type {PrioritizedBehavior} */ (/** @type {unknown} */ (this))).getPriority();
+    return !a || a.opened || a.selected ? 0 : (/** @type {PrioritizedBehavior} */ (/** @type {unknown} */ (this))).getPriority();
   };
   LootPotionBehavior.prototype.Md = function () {
     return this.pm;
@@ -1352,8 +1352,8 @@ export function initializeAiBehaviors() {
   };
   ChangeFloorBehavior.prototype.notifySpellLearned = function () {};
   ChangeFloorBehavior.prototype.execute = function (a) {
-    if (this.treasureChest && !this.treasureChest.Kg) {
-      a.hq(this.treasureChest);
+    if (this.treasureChest && !this.treasureChest.opened) {
+      a.setTargetTreasureChest(this.treasureChest);
       if (distanceToPoint(a.position.levelPosition, this.treasureChest.zq, this.treasureChest.Aq) < this.Mi) {
         a.actionType = 12;
       } else {
@@ -1373,7 +1373,7 @@ export function initializeAiBehaviors() {
       return 0;
     }
     this.treasureChest = getRoomTreasure(game.treasure, b);
-    return !this.treasureChest || this.treasureChest.Kg || !this.treasureChest.el || hasOpponentsInRoom(a, b) ? 0 : this.priorityWeight;
+    return !this.treasureChest || this.treasureChest.opened || !this.treasureChest.selected || hasOpponentsInRoom(a, b) ? 0 : this.priorityWeight;
   };
   ChangeFloorBehavior.prototype.getPriority = function () {
     return this.priorityWeight;

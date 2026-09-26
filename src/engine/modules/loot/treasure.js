@@ -29,23 +29,23 @@ export function removeGoldDrop(a) {
 export function TreasureChest(a, b, c, d, f) {
   this.zq = a;
   this.Aq = b;
-  this.Nn = c;
-  this.Kg = false;
-  this.Vy = f ? d.xh.closed : d.hh.closed;
-  this.PA = f ? d.xh.opened : d.hh.opened;
-  this.Mf = d.Mf;
+  this.room = c;
+  this.opened = false;
+  this.closedSpriteName = f ? d.xh.closed : d.hh.closed;
+  this.openedSpriteName = f ? d.xh.opened : d.hh.opened;
+  this.kind = d.kind;
   this.VE = f;
   this.BC = d;
-  this.el = false;
+  this.selected = false;
 }
 export function setChestOpened(a, b) {
-  if (a.Kg = b) {
-    a.el = false;
-    game.state.party.hq(null);
+  if (a.opened = b) {
+    a.selected = false;
+    game.state.party.setTargetTreasureChest(null);
   }
 }
 export function TreasureRegistry() {
-  this.Mn = [];
+  this.targets = [];
   this.Dt = {};
   this.ve = [];
   this.yh = new Vector2();
@@ -86,8 +86,8 @@ export function spawnRoomTreasure(a) {
         }
       }
       a = new TreasureChest(g, f, a, c, d);
-      b.Mn.push(a);
-      b.Dt[a.Nn.roomId] = a;
+      b.targets.push(a);
+      b.Dt[a.room.roomId] = a;
     } else {
       console.log("failed to find treasure chest location.");
     }

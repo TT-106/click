@@ -1051,17 +1051,17 @@ export function updateCharacter(a, b) {
           a.bj = null;
         }
       } else if (12 === a.actionType) {
-        if (a.targetTreasureChest && !a.targetTreasureChest.Kg) {
+        if (a.targetTreasureChest && !a.targetTreasureChest.opened) {
           var Xd = a.targetTreasureChest,
             Oc,
-            Yd = Xd.Nn,
+            Yd = Xd.room,
             Re = roomLeftPixels(Yd) + game.tileSize,
             Zd = roomRightPixels(Yd) - game.tileSize,
             Vc = roomTopPixels(Yd) + game.tileSize,
             Od = roomBottomPixels(Yd) - game.tileSize,
             wc = Xd.zq,
             zd = Xd.Aq,
-            Ad = Xd.Mf;
+            Ad = Xd.kind;
           if (wc < Re) {
             wc = Re;
           } else {
@@ -1237,7 +1237,7 @@ export function initializeCharactersCharacter() {
   Character.prototype.setCombatTarget = function (a) {
     this.combatTarget = a;
   };
-  Character.prototype.hq = function (a) {
+  Character.prototype.setTargetTreasureChest = function (a) {
     this.targetTreasureChest = a;
   };
   Character.prototype.dr = function () {

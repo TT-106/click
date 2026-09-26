@@ -303,8 +303,8 @@ export function restoreGameState(a, b) {
               if (nc = rb) {
                 var dc = game.treasure,
                   Ka = nc;
-                dc.Mn.push(Ka);
-                dc.Dt[Ka.Nn.roomId] = Ka;
+                dc.targets.push(Ka);
+                dc.Dt[Ka.room.roomId] = Ka;
               }
             }
           }
@@ -840,7 +840,7 @@ export function createSaveState(a) {
     if (game.worldActive) {
       ha = null;
     } else {
-      var ja = game.treasure.Mn,
+      var ja = game.treasure.targets,
         Ga = [],
         bb;
       for (bb = 0; bb < ja.length; bb++) {
@@ -848,10 +848,10 @@ export function createSaveState(a) {
         Ga.push({
           levelX: za.zq,
           levelY: za.Aq,
-          opened: za.Kg,
+          opened: za.opened,
           settingsId: za.BC.uh,
           westWall: za.VE,
-          roomId: za.Nn.roomId
+          roomId: za.room.roomId
         });
       }
       ha = Ga;
