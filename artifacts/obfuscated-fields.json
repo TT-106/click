@@ -95,110 +95,6 @@
     ]
   },
   {
-    "name": "hb",
-    "reads": 30,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:234",
-        "code": "game.world.hb"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:236",
-        "code": "game.world.hb"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:245",
-        "code": "game.world.hb"
-      }
-    ],
-    "fileCount": 11,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js",
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\characters\\movement.js",
-      "src\\engine\\modules\\characters\\party.js",
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\simulation\\tick.js",
-      "src\\engine\\modules\\world\\dungeons.js",
-      "src\\engine\\modules\\world\\generation.js",
-      "src\\engine\\modules\\world\\terrain.js",
-      "src\\engine\\modules\\world\\travel-costs.js"
-    ]
-  },
-  {
-    "name": "ib",
-    "reads": 16,
-    "writes": 16,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:270",
-        "code": "Upgrade.prototype.ib"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:314",
-        "code": "PurchaseItemUpgrade.prototype.ib"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:363",
-        "code": "GlobalUpgrade.prototype.ib"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\progression\\upgrades.js",
-      "src\\engine\\modules\\views\\upgrade-details.js"
-    ]
-  },
-  {
-    "name": "fb",
-    "reads": 8,
-    "writes": 24,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\castles.js:30",
-        "code": "this.fb"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\castles.js:39",
-        "code": "a.fb"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\castles.js:197",
-        "code": "this.fb"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\views\\castles.js",
-      "src\\engine\\modules\\views\\upgrade-details.js"
-    ]
-  },
-  {
-    "name": "gb",
-    "reads": 8,
-    "writes": 24,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\upgrade-details.js:79",
-        "code": "this.gb"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\upgrade-details.js:134",
-        "code": "this.gb"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\upgrade-details.js:152",
-        "code": "this.gb"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\upgrade-details.js"
-    ]
-  },
-  {
     "name": "jb",
     "reads": 22,
     "writes": 10,
@@ -214,29 +110,6 @@
       {
         "loc": "src\\engine\\modules\\views\\upgrade-details.js:196",
         "code": "this.jb"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\upgrade-details.js"
-    ]
-  },
-  {
-    "name": "eb",
-    "reads": 16,
-    "writes": 16,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\upgrade-details.js:309",
-        "code": "this.eb"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\upgrade-details.js:334",
-        "code": "ItemPurchaseDetails.prototype.eb"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\upgrade-details.js:390",
-        "code": "this.eb"
       }
     ],
     "fileCount": 1,
@@ -265,30 +138,6 @@
     "fileCount": 1,
     "files": [
       "src\\engine\\modules\\progression\\upgrades.js"
-    ]
-  },
-  {
-    "name": "lb",
-    "reads": 13,
-    "writes": 18,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:294",
-        "code": "Upgrade.prototype.lb"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:311",
-        "code": "PurchaseItemUpgrade.prototype.lb"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:388",
-        "code": "GlobalUpgrade.prototype.lb"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\progression\\upgrades.js",
-      "src\\engine\\modules\\views\\upgrade-details.js"
     ]
   },
   {
@@ -390,30 +239,6 @@
     ]
   },
   {
-    "name": "Bb",
-    "reads": 17,
-    "writes": 11,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:298",
-        "code": "Upgrade.prototype.Bb"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:385",
-        "code": "GlobalUpgrade.prototype.Bb"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:586",
-        "code": "LevelUpUpgrade.prototype.Bb"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\progression\\upgrades.js",
-      "src\\engine\\modules\\views\\upgrade-details.js"
-    ]
-  },
-  {
     "name": "Cb",
     "reads": 25,
     "writes": 2,
@@ -439,80 +264,6 @@
       "src\\engine\\modules\\combat\\actions.js",
       "src\\engine\\modules\\combat\\scrolls.js",
       "src\\engine\\modules\\simulation\\tick.js"
-    ]
-  },
-  {
-    "name": "Ib",
-    "reads": 11,
-    "writes": 15,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:489",
-        "code": "ta.Ib"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:529",
-        "code": "Va.Ib"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:600",
-        "code": "sa.Ib"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\simulation\\tick.js"
-    ]
-  },
-  {
-    "name": "xb",
-    "reads": 10,
-    "writes": 16,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:499",
-        "code": "ta.xb"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:536",
-        "code": "Va.xb"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:614",
-        "code": "sa.xb"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\simulation\\tick.js"
-    ]
-  },
-  {
-    "name": "Kb",
-    "reads": 16,
-    "writes": 10,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\content\\dungeon-themes.js:20",
-        "code": "Kb: {\n  Cg: \"L2_WallBrickNS.PNG\",\n  Eg: \"L2_WallBrickEW.PNG\",\n  Fg: \"L2_WallBrickNE.PNG\",\n  Dg: \"L2_WallBrickES.PNG\",\n  Hg: \"L2_WallBrickNW."
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\dungeon-themes.js:57",
-        "code": "Kb: {\n  Cg: \"L2_WallDarkBrickNS.PNG\",\n  Eg: \"L2_WallDarkBrickEW.PNG\",\n  Fg: \"L2_WallDarkBrickNE.PNG\",\n  Dg: \"L2_WallDarkBrickES.PNG\",\n  Hg: "
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\dungeon-themes.js:90",
-        "code": "Kb: {\n  Cg: \"L2_WallCaveNS.PNG\",\n  Eg: \"L2_WallCaveEW.PNG\",\n  Fg: \"L2_WallCaveNE.PNG\",\n  Dg: \"L2_WallCaveES.PNG\",\n  Hg: \"L2_WallCaveNW.PNG\","
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\content\\dungeon-themes.js",
-      "src\\engine\\modules\\world\\rooms.js"
     ]
   },
   {
@@ -727,32 +478,6 @@
       "src\\engine\\modules\\simulation\\characters.js",
       "src\\engine\\modules\\simulation\\tick.js",
       "src\\engine\\modules\\world\\rooms.js"
-    ]
-  },
-  {
-    "name": "Xb",
-    "reads": 10,
-    "writes": 15,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:495",
-        "code": "ta.Xb"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:534",
-        "code": "Va.Xb"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:605",
-        "code": "sa.Xb"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\rendering\\sprites.js",
-      "src\\engine\\modules\\simulation\\tick.js"
     ]
   },
   {
@@ -7011,15 +6736,15 @@
     "samples": [
       {
         "loc": "src\\engine\\modules\\combat\\actions.js:155",
-        "code": "b.xb.xi"
+        "code": "b.impactEffect.xi"
       },
       {
         "loc": "src\\engine\\modules\\combat\\actions.js:158",
-        "code": "b.xb.xi"
+        "code": "b.impactEffect.xi"
       },
       {
         "loc": "src\\engine\\modules\\combat\\actions.js:170",
-        "code": "b.xb.xi"
+        "code": "b.impactEffect.xi"
       }
     ],
     "fileCount": 4,
@@ -32275,6 +32000,21 @@
     "fileCount": 1,
     "files": [
       "src\\engine\\modules\\content\\guardians.js"
+    ]
+  },
+  {
+    "name": "fb",
+    "reads": 0,
+    "writes": 1,
+    "samples": [
+      {
+        "loc": "src\\engine\\modules\\views\\castles.js:39",
+        "code": "a.fb"
+      }
+    ],
+    "fileCount": 1,
+    "files": [
+      "src\\engine\\modules\\views\\castles.js"
     ]
   }
 ]

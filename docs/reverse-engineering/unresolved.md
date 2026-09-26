@@ -50,6 +50,16 @@
 | Ab | dungeonList | game-save.js:198/735 + initialization.js:125/171/175 ✓ |
 | Pa | roomList | game-save.js:248(roomVisibility 读)↔836(写) 顺序配对 ✓ 全套回归含离线+地牢场景 |
 
+## 第八轮落地（2026-09-26，每项独立全回归）
+
+| 字段 | 新名 | 对象 |
+|---|---|---|
+| Ib | actionDefinition | CombatAction（法术/技能定义引用，多态来源 ld/Wq 已核） |
+| xb / Xb | impactEffect / projectileEffect | CombatAction 命中/弹道 VisualEffect 引用 |
+| Kb | wallSprites | 地牢主题定义（10 处字面量） |
+| hb（拆分） | getTileAt / getTileAtPixel | DungeonLevel（瓦片坐标）/ WorldMap（像素坐标）——11 文件 27 调用点按接收者分流 |
+| ib / lb / Bb | getTitle / getDescription / getCost | Upgrade 全家族访问器方法 |
+| eb / fb / gb | createDomElements / cachedDescriptionText / cachedTitleText | *Details 与 CastleRowView 视图缓存簇 |
 - 经验教训（已入 facts#20 扩展）：**重命名跨文件字段时，"读点全集"必须包含工厂函数/工具函数内按多态入参的访问**；Babel 静态 grep 对 `a.Da`（a 的类型随调用方变化）天然失真，应配运行时类型断言。
 
 ## U2 — 外部自动化脚本（c2c.user.js）DOM 契约未实测
