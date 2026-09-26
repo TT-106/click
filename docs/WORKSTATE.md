@@ -1,10 +1,11 @@
 # WORKSTATE — Clickpocalypse II 语义恢复与现代化工程
 
 > 本文件是长程自治任务的**唯一续跑入口**。上下文压缩或中断后，先读本文件 + `git log --oneline`，再继续。
-> 最后更新：2026-09-26（U26 效果/访问器/行为方法簇落地后，混淆清单 1,042；验收矩阵 51 PASS / 0 PARTIAL、矩阵 59/59、soak 通过）
+> 最后更新：2026-09-26（U27 行为/投射物/瓦片字段落地后，混淆清单 1,039；验收矩阵 51 PASS / 0 PARTIAL、矩阵 59/59、soak 通过）
 
 ## 当前轮次状态（2026-09-26，M13 文档与验收收尾）
 
+- U27 行为/投射物/瓦片字段（2026-09-26，一笔提交，六门禁全绿，混淆清单 1,042 → 1,039）：Ng→targetDistance（行为缓存的到目标距离，execute 时与 actionRange 比较）、Gs→isReturning（回旋镖类武器投射物标记，createReturningAction 置位，tick 用更小的接近半径处理回程）、Jn→backgroundSprite（DungeonTile 地面贴纸，setBackgroundSprite 已语义化）。**zh（wallSprites NES 墙面贴纸）主动延后**：墙体贴纸是按方向键的家族（Gg/Fg/Dg/Bh/Ah/zh/Ch/Cg/Eg 等），需逐方向取证后整族改名，单拆一个键会留下半混淆家族。
 - U26 效果/访问器/行为方法簇（2026-09-26，一笔提交，六门禁全绿，混淆清单 1,046 → 1,042）：bl 异主拆名——StatusEffect→isExpired（effects.js 2 处）vs VisualEffect→isFinished（actions/scene/tick 6 处，消费方全部据"已完成"移除或结算）；So→getEffectItem（Equipment 的特效物品：characteristic=1 时存入 fz，近战/远程命中读 itemEffect；character.js 委托与 typedef 注释一并计数 7 处）；vx→repositionInsideRoom（FollowLeader 随机角落与 RangedAttack 风筝走位都在房间内置 moveTargetPoint；MovingBehavior typedef 同步）；Ho→horizontalPassage（门走廊横向穿行标志）。
 - U25 过期/完成标志拆名 + 门的朝向 + 地形生物群系（2026-09-26，两笔提交，六门禁全绿，混淆清单 1,052 → 1,046）：
   1. **bg 异主拆名**：StatusEffect.bg→expired（now-startTurn≥durationTurns，bl() 返回它）vs VisualEffect.bg→finished（动画帧循环播完；bl()=finished||Pk 到达目标）；Vf/Uf→doorClosedASprite/doorClosedBSprite——Ho 取证为"路径横向穿行"标志（pathfinding.js 以 d.x!=next.x 赋值），故 A=Ho 朝向、B=另一朝向，与开门变体 doorOpenASprite/doorOpenBSprite 平行；贴纸美术未确认前不冒进 horizontal/vertical 命名。
