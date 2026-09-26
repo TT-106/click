@@ -112,6 +112,19 @@
 
 Xf/Qf/Rf/Zf/Cf/Ef → damageMultiplier/armorMultiplier/attackRatingMultiplier/defenceRatingMultiplier/maxHealthMultiplier/maxSpiritMultiplier。classes/guardians/minions 三文件字面量 + 全部消费点一次全改，独立全回归（check + parity + 12 场景 + E2E）通过。
 
+## 第八批落地续（2026-09-26，每项独立全回归）
+
+| 字段 | 新名 | 对象 |
+|---|---|---|
+| mb | definition | GlobalUpgrade 定义引用（30 处） |
+| Fb | currentPointReward | PointEventDefinition（Dc=基值未动，下一批） |
+| Ub | cachedCanPurchase | Upgrade 脏标记（og() 反向写特例保留） |
+| Rb | floorType | DungeonTile（0-3 枚举） |
+| Lb | cachedCostValue | *Details 成本缓存位 |
+| lc / gc / hc | treasureChest / collected / potion | 行为目标 / 四种 Drop / 药剂引用（拾取流顺序未动） |
+|  | regionLocked | Castle（存档键 castleRegionLocked 字面量未动，读写两端同步） |
+| fc | maxUnlockedLevel | MonsterCatalog（存档键 maxUnlockedLevel 字面量未动，entities.js:325/game-save.js:946 两端同步） |
+
 - 经验教训（已入 facts#20 扩展）：**重命名跨文件字段时，"读点全集"必须包含工厂函数/工具函数内按多态入参的访问**；Babel 静态 grep 对 `a.Da`（a 的类型随调用方变化）天然失真，应配运行时类型断言。
 
 ## U2 — ✅ 已关闭：c2c.user.js DOM 契约实测通过（2026-09-26）

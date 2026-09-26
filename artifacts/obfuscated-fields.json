@@ -1,28 +1,5 @@
 [
   {
-    "name": "mb",
-    "reads": 30,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:124",
-        "code": "this.mb"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:131",
-        "code": "a.mb"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:131",
-        "code": "a.mb"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\progression\\upgrades.js"
-    ]
-  },
-  {
     "name": "Cb",
     "reads": 25,
     "writes": 2,
@@ -51,30 +28,6 @@
     ]
   },
   {
-    "name": "Fb",
-    "reads": 3,
-    "writes": 23,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\progression\\points.js:15",
-        "code": "c.Fb"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\points.js:30",
-        "code": "c.Fb"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\points.js:51",
-        "code": "d.Fb"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\progression\\points.js",
-      "src\\engine\\modules\\views\\achievements.js"
-    ]
-  },
-  {
     "name": "Wb",
     "reads": 16,
     "writes": 9,
@@ -98,102 +51,6 @@
       "src\\engine\\modules\\characters\\character.js",
       "src\\engine\\modules\\characters\\party.js",
       "src\\engine\\modules\\runtime\\game.js"
-    ]
-  },
-  {
-    "name": "Ub",
-    "reads": 8,
-    "writes": 17,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:121",
-        "code": "this.Ub"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:127",
-        "code": "this.Ub"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:181",
-        "code": "this.Ub"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\progression\\upgrades.js"
-    ]
-  },
-  {
-    "name": "Rb",
-    "reads": 6,
-    "writes": 19,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:105",
-        "code": "g.Rb"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\generation.js:234",
-        "code": "f.Rb"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\pathfinding.js:43",
-        "code": "a.tileGrid[b - 1][c].Rb"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\world\\generation.js",
-      "src\\engine\\modules\\world\\pathfinding.js",
-      "src\\engine\\modules\\world\\rooms.js"
-    ]
-  },
-  {
-    "name": "Lb",
-    "reads": 6,
-    "writes": 19,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\upgrade-details.js:78",
-        "code": "this.Lb"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\upgrade-details.js:151",
-        "code": "this.Lb"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\upgrade-details.js:159",
-        "code": "this.Lb"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\upgrade-details.js"
-    ]
-  },
-  {
-    "name": "lc",
-    "reads": 18,
-    "writes": 6,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:184",
-        "code": "this.lc"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1348",
-        "code": "this.lc"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1352",
-        "code": "this.lc"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js",
-      "src\\engine\\modules\\views\\dungeons.js"
     ]
   },
   {
@@ -319,120 +176,6 @@
       "src\\engine\\modules\\core\\math.js",
       "src\\engine\\modules\\rendering\\scene.js",
       "src\\engine\\modules\\world\\pathfinding.js"
-    ]
-  },
-  {
-    "name": "gc",
-    "reads": 16,
-    "writes": 8,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1101",
-        "code": "this.qd.gc"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1139",
-        "code": "c.gc"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1164",
-        "code": "this.bd.gc"
-      }
-    ],
-    "fileCount": 7,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js",
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\combat\\potions.js",
-      "src\\engine\\modules\\combat\\scrolls.js",
-      "src\\engine\\modules\\loot\\items.js",
-      "src\\engine\\modules\\loot\\treasure.js"
-    ]
-  },
-  {
-    "name": "hc",
-    "reads": 19,
-    "writes": 5,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:1022",
-        "code": "a.hk.hc"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\actions.js:278",
-        "code": "f.hc"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\potions.js:80",
-        "code": "this.hc"
-      }
-    ],
-    "fileCount": 5,
-    "files": [
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\combat\\potions.js",
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\views\\expedition.js"
-    ]
-  },
-  {
-    "name": "$b",
-    "reads": 19,
-    "writes": 5,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\party.js:236",
-        "code": "g.$b"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\party.js:239",
-        "code": "g.$b"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\party.js:242",
-        "code": "g.$b"
-      }
-    ],
-    "fileCount": 6,
-    "files": [
-      "src\\engine\\modules\\characters\\party.js",
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\views\\castles.js",
-      "src\\engine\\modules\\world\\regions.js",
-      "src\\engine\\modules\\world\\terrain.js"
-    ]
-  },
-  {
-    "name": "fc",
-    "reads": 19,
-    "writes": 5,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\encounters.js:53",
-        "code": "d.fc"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\encounters.js:95",
-        "code": "game.monsterCatalog.fc"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\encounters.js:150",
-        "code": "game.monsterCatalog.fc"
-      }
-    ],
-    "fileCount": 8,
-    "files": [
-      "src\\engine\\modules\\combat\\encounters.js",
-      "src\\engine\\modules\\persistence\\entities.js",
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\progression\\upgrades.js",
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\runtime\\game.js",
-      "src\\engine\\modules\\views\\castles.js",
-      "src\\engine\\modules\\views\\monsters.js"
     ]
   },
   {
@@ -4324,11 +4067,11 @@
       },
       {
         "loc": "src\\engine\\modules\\ai\\behaviors.js:1352",
-        "code": "this.lc.Kg"
+        "code": "this.treasureChest.Kg"
       },
       {
         "loc": "src\\engine\\modules\\ai\\behaviors.js:1373",
-        "code": "this.lc.Kg"
+        "code": "this.treasureChest.Kg"
       }
     ],
     "fileCount": 6,
@@ -8034,7 +7777,7 @@
       },
       {
         "loc": "src\\engine\\modules\\ai\\behaviors.js:1373",
-        "code": "this.lc.el"
+        "code": "this.treasureChest.el"
       },
       {
         "loc": "src\\engine\\modules\\combat\\actions.js:720",
@@ -12456,11 +12199,11 @@
     "samples": [
       {
         "loc": "src\\engine\\modules\\ai\\behaviors.js:1354",
-        "code": "this.lc.zq"
+        "code": "this.treasureChest.zq"
       },
       {
         "loc": "src\\engine\\modules\\ai\\behaviors.js:1357",
-        "code": "this.lc.zq"
+        "code": "this.treasureChest.zq"
       },
       {
         "loc": "src\\engine\\modules\\characters\\character.js:1061",
@@ -12483,11 +12226,11 @@
     "samples": [
       {
         "loc": "src\\engine\\modules\\ai\\behaviors.js:1354",
-        "code": "this.lc.Aq"
+        "code": "this.treasureChest.Aq"
       },
       {
         "loc": "src\\engine\\modules\\ai\\behaviors.js:1357",
-        "code": "this.lc.Aq"
+        "code": "this.treasureChest.Aq"
       },
       {
         "loc": "src\\engine\\modules\\characters\\character.js:1062",
