@@ -100,7 +100,7 @@ export function refreshMonsterTabVisibility(a) {
   for (c = 0; c < a.zg.length; c++) {
     f = a.zg[c];
     d = f.view.xd;
-    d = b.hd <= d && d <= b.fc;
+    d = b.hd <= d && d <= b.maxUnlockedLevel;
     f.tabState.enabled = d;
     if (!d && f.tabState.selected) {
       f.tabState.selected = false;

@@ -68,14 +68,14 @@ export function Castle(a, b, c, d, f, g) {
   this.dm = f;
   this.em = g;
   this.Bj = this.conquered = false;
-  this.$b = true;
+  this.regionLocked = true;
   this.ye = false;
   this.requiredMonsterLevel = this.yk = 0;
   this.ck = [];
   this.dungeonList = [];
 }
 export function canAttackCastle(a) {
-  return !a.$b && !a.conquered && a.Bj && !a.ye;
+  return !a.regionLocked && !a.conquered && a.Bj && !a.ye;
 }
 export function refreshCastleConquest(a) {
   if (a.Bj || a.conquered) {
@@ -159,7 +159,7 @@ export function resetCastles() {
   for (b = 0; b < a.pd.length; b++) {
     var c = a.pd[b];
     c.conquered = false;
-    c.$b = true;
+    c.regionLocked = true;
     c.ye = false;
     c.yk = 0;
     c.requiredMonsterLevel = 0;
@@ -172,7 +172,7 @@ export function unlockStartingRegion() {
   a = a.Hd + "_" + a.Id;
   var b = findCastleByRegion(a);
   if (b) {
-    b.$b = false;
+    b.regionLocked = false;
     refreshWorldBlocks(game.world);
   } else {
     console.log("failed to find world block owner castle: " + a);

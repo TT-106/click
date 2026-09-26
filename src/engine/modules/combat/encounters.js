@@ -50,7 +50,7 @@ export function populateEncounter(a) {
           c = c + randomInt(d - c),
           c = c + extraMonstersModifier.currentValue;
         if (0 < c) {
-          for (var d = game.monsterCatalog, f = d.hd + randomInt(1 + d.fc - d.hd), d = getMonsterTypesForLevel(d, f), d = d[randomInt(d.length)], f = d.xd, b = b.dn.Vk(d.nE) + " (等级." + f + ")", f = 0; f < c; f++) {
+          for (var d = game.monsterCatalog, f = d.hd + randomInt(1 + d.maxUnlockedLevel - d.hd), d = getMonsterTypesForLevel(d, f), d = d[randomInt(d.length)], f = d.xd, b = b.dn.Vk(d.nE) + " (等级." + f + ")", f = 0; f < c; f++) {
             var g = game.monsters,
               h = a,
               l = d,
@@ -92,7 +92,7 @@ export function populateEncounter(a) {
         c = Math.max(globalUpgradeDefinitions.maxMonsters.baseValue, globalUpgradeDefinitions.minMonsters.currentValue);
         d = Math.max(globalUpgradeDefinitions.maxMonsters.currentValue, c);
         d = c + randomInt(d - c);
-        c = game.monsterCatalog.fc;
+        c = game.monsterCatalog.maxUnlockedLevel;
         d += extraMonstersModifier.currentValue;
         spawnCastleGuardians(d, a);
         a = game.currentCastle ? generateMonsterName(b.dn, game.currentCastle.castleName) : generateMonsterName(b.dn, "Unknown Castle");
@@ -147,7 +147,7 @@ export function spawnDungeonBoss(a, b) {
 }
 export function spawnCastleGuardians(a, b) {
   var c,
-    d = game.monsterCatalog.fc,
+    d = game.monsterCatalog.maxUnlockedLevel,
     f;
   if (0.5 > Math.random()) {
     for (c = 0; c < a; c++) {
@@ -222,8 +222,8 @@ export function getMonsterTypesForLevel(a, b) {
   if (b < a.hd) {
     console.log("getMonsterTypesForLevel. monsterLevel (" + b + ") less than min unlocked level: " + a.hd);
   }
-  if (b > a.fc + 1) {
-    console.log("getMonsterTypesForLevel. monsterLevel (" + b + ") greater than max unlocked level: " + a.fc);
+  if (b > a.maxUnlockedLevel + 1) {
+    console.log("getMonsterTypesForLevel. monsterLevel (" + b + ") greater than max unlocked level: " + a.maxUnlockedLevel);
   }
   var c = b + "",
     d = a.en[c];

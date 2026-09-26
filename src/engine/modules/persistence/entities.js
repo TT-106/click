@@ -322,7 +322,7 @@ export function initializePersistenceEntities() {
   MonsterSaveAdapter.prototype.Kw = function (a) {
     var b = game.monsterCatalog;
     b.hd = a.minUnlockedLevel;
-    b.fc = a.maxUnlockedLevel;
+    b.maxUnlockedLevel = a.maxUnlockedLevel;
     a = a.monsterLevelStates;
     for (b = 0; b < a.length; b++) {
       for (var c = a[b], d = c.level, c = c.monsterTypes, f = [], g = undefined, g = /** @type {any} */ (0); g < c.length; g++) {

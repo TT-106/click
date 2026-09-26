@@ -193,7 +193,7 @@ export function populateWorldBlock(a, b) {
     for (d = 0; d < a.sc; d++) {
       g = getBlockTile(b, f, d);
       h = undefined;
-      if (!c || c.$b) {
+      if (!c || c.regionLocked) {
         h = a.ZD;
         g.Kn = null;
         g.terrainMoveCost = 1E5;
@@ -214,7 +214,7 @@ export function populateWorldBlock(a, b) {
   }
   g = b.Hd * a.rc;
   h = b.Id * a.sc;
-  if (!c || c.$b) {
+  if (!c || c.regionLocked) {
     for (f = 0; f < a.rc; f++) {
       for (d = 0; d < a.sc; d++) {
         n = getBlockTile(b, f, d);
@@ -266,7 +266,7 @@ export function populateWorldBlock(a, b) {
       }
     }
   }
-  if (c && !c.$b && ((d = (d = game.dungeons.Do[b.Hd + "_" + b.Id]) ? d : null) ? (f = d.bc(), g = d.getWorldRow(), (h = game.world.getTileAtPixel(f, g)) ? h.setDecorationSprite(game.terrainSprites.getSprite(d.Fo)) : (console.log("no tile for: col=" + f + " row=" + g), d = null)) : d = null, d && ((f = game.farms.jw[d.dungeonId]) && (f = game.world.getTileAtPixel(f.kw, f.lw)) && f.setDecorationSprite(game.terrainSprites.getSprite(game.farms.Gz)), a.Ut(d)), f = findCastle(b.Hd + "_" + b.Id))) {
+  if (c && !c.regionLocked && ((d = (d = game.dungeons.Do[b.Hd + "_" + b.Id]) ? d : null) ? (f = d.bc(), g = d.getWorldRow(), (h = game.world.getTileAtPixel(f, g)) ? h.setDecorationSprite(game.terrainSprites.getSprite(d.Fo)) : (console.log("no tile for: col=" + f + " row=" + g), d = null)) : d = null, d && ((f = game.farms.jw[d.dungeonId]) && (f = game.world.getTileAtPixel(f.kw, f.lw)) && f.setDecorationSprite(game.terrainSprites.getSprite(game.farms.Gz)), a.Ut(d)), f = findCastle(b.Hd + "_" + b.Id))) {
     d = f.dm;
     f = f.em;
     if (g = game.world.getTileAtPixel(d, f)) {
@@ -303,7 +303,7 @@ export function getTerrainCode(a, b, c, d) {
   b *= game.tileSize;
   c *= game.tileSize;
   var f = sampleNoise(a.pE, b, c);
-  return !d || d.$b ? 0.5 > f && (a = sampleNoise(a.ox, b, c), -0.6 > a) ? "P" : "D" : d.conquered ? 0.5 > f && (a = sampleNoise(a.ox, b, c), -0.6 > a) ? OCEAN_TERRAIN_CODE : "G" : 0.5 > f && (a = sampleNoise(a.ox, b, c), -0.6 > a) ? "I" : "S";
+  return !d || d.regionLocked ? 0.5 > f && (a = sampleNoise(a.ox, b, c), -0.6 > a) ? "P" : "D" : d.conquered ? 0.5 > f && (a = sampleNoise(a.ox, b, c), -0.6 > a) ? OCEAN_TERRAIN_CODE : "G" : 0.5 > f && (a = sampleNoise(a.ox, b, c), -0.6 > a) ? "I" : "S";
 }
 export function WorldTile(a, b) {
   this.worldColumn = a;

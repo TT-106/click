@@ -233,21 +233,21 @@ export function initializeCharactersParty() {
         f = a.ck[d];
         c = f.Hd;
         f = f.Id;
-        if ((g = findCastleByRegion(c - 1 + "_" + f)) && g !== a && g.$b && 0 > b.indexOf(g)) {
+        if ((g = findCastleByRegion(c - 1 + "_" + f)) && g !== a && g.regionLocked && 0 > b.indexOf(g)) {
           b.push(g);
         }
-        if ((g = findCastleByRegion(c + 1 + "_" + f)) && g !== a && g.$b && 0 > b.indexOf(g)) {
+        if ((g = findCastleByRegion(c + 1 + "_" + f)) && g !== a && g.regionLocked && 0 > b.indexOf(g)) {
           b.push(g);
         }
-        if ((g = findCastleByRegion(c + "_" + (f - 1))) && g !== a && g.$b && 0 > b.indexOf(g)) {
+        if ((g = findCastleByRegion(c + "_" + (f - 1))) && g !== a && g.regionLocked && 0 > b.indexOf(g)) {
           b.push(g);
         }
-        if ((g = findCastleByRegion(c + "_" + (f + 1))) && g !== a && g.$b && 0 > b.indexOf(g)) {
+        if ((g = findCastleByRegion(c + "_" + (f + 1))) && g !== a && g.regionLocked && 0 > b.indexOf(g)) {
           b.push(g);
         }
       }
       for (c = 0; c < b.length; c++) {
-        b[c].$b = false;
+        b[c].regionLocked = false;
       }
       invalidateCastleRevision();
       refreshWorldBlocks(game.world);
@@ -351,7 +351,7 @@ export function initializeCharactersParty() {
         g,
         h;
       for (h = 0; h < a.pd.length; h++) {
-        if (f = a.pd[h], !f.$b && !f.conquered && (g = distanceSquaredToPoint(b, game.world.dc(f.dm), game.world.ec(f.em)), !c || g < d)) {
+        if (f = a.pd[h], !f.regionLocked && !f.conquered && (g = distanceSquaredToPoint(b, game.world.dc(f.dm), game.world.ec(f.em)), !c || g < d)) {
           c = f;
           d = g;
         }
@@ -452,7 +452,7 @@ export function initializeCharactersParty() {
             f = game.dungeons;
             g = null;
             for (p = h = 0; p < f.dungeonList.length; p++) {
-              if (!(l = f.dungeonList[p], l.isFarm || l.zj.$b || l.conquered || (n = distanceSquaredToPoint(d, l.dc(), l.ec()), g && !(n < h)))) {
+              if (!(l = f.dungeonList[p], l.isFarm || l.zj.regionLocked || l.conquered || (n = distanceSquaredToPoint(d, l.dc(), l.ec()), g && !(n < h)))) {
                 g = l;
                 h = n;
               }
@@ -462,7 +462,7 @@ export function initializeCharactersParty() {
               f = game.dungeons;
               g = null;
               for (p = h = 0; p < f.dungeonList.length; p++) {
-                if (!(l = f.dungeonList[p], l.isFarm || l.zj.$b || l.discovered && (!l.discovered || l.cleared) || (n = distanceSquaredToPoint(d, l.dc(), l.ec()), g && !(n < h)))) {
+                if (!(l = f.dungeonList[p], l.isFarm || l.zj.regionLocked || l.discovered && (!l.discovered || l.cleared) || (n = distanceSquaredToPoint(d, l.dc(), l.ec()), g && !(n < h)))) {
                   g = l;
                   h = n;
                 }
@@ -472,7 +472,7 @@ export function initializeCharactersParty() {
                 f = game.dungeons;
                 g = null;
                 for (p = h = 0; p < f.dungeonList.length; p++) {
-                  if (l = f.dungeonList[p], !l.isFarm && !l.zj.$b && (n = distanceSquaredToPoint(d, l.dc(), l.ec()), !g || n < h)) {
+                  if (l = f.dungeonList[p], !l.isFarm && !l.zj.regionLocked && (n = distanceSquaredToPoint(d, l.dc(), l.ec()), !g || n < h)) {
                     g = l;
                     h = n;
                   }

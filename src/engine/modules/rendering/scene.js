@@ -404,14 +404,14 @@ export function initializeRenderingScene() {
           a.context.save();
           a.context.translate(650, 280);
           a.context.rotate(Math.PI / 4);
-          var n = game.monsterCatalog.fc,
+          var n = game.monsterCatalog.maxUnlockedLevel,
             p = game.castles.pd,
             s,
             u;
           a.context.fillStyle = "gray";
           for (u = 0; u < p.length; u++) {
             s = p[u];
-            if (s.$b) {
+            if (s.regionLocked) {
               drawEntityHighlight(a, s, h, l);
             }
           }
@@ -446,7 +446,7 @@ export function initializeRenderingScene() {
           a.context.fillStyle = "white";
           for (u = 0; u < p.length; u++) {
             s = p[u];
-            if (!(canAttackCastle(s) || s.$b || s.ye || s.conquered)) {
+            if (!(canAttackCastle(s) || s.regionLocked || s.ye || s.conquered)) {
               drawEntityHighlight(a, s, h, l);
             }
           }

@@ -95,7 +95,7 @@ export function initializeRuntimeGame() {
     decorations: new DungeonDecorationGenerator(),
     monsterCatalog: new function () {
       this.n = [];
-      this.fc = this.hd = 1;
+      this.maxUnlockedLevel = this.hd = 1;
       this.en = {};
       this.HE = function (a, b) {
         var c = a.Vk(),
@@ -206,7 +206,7 @@ export function initializeRuntimeGame() {
       var a = game.monsterCatalog;
       a.en = {};
       a.hd = 1;
-      a.fc = 1;
+      a.maxUnlockedLevel = 1;
       a.n.length = 0;
       a.n.push(...monsterDefinitions);
       initializeItemCatalog();
@@ -411,7 +411,7 @@ export function initializeRuntimeGame() {
       clearMinions();
       b = game.monsterCatalog;
       b.hd = 1;
-      b.fc = 1;
+      b.maxUnlockedLevel = 1;
       b.en = {};
       if (a) {
         game.state.victoryCount = 0;

@@ -336,7 +336,7 @@ export function initializeProgressionUpgrades() {
     var a;
     a = game.castles.Jg;
     if (a = this.Ly < a.length ? a[this.Ly] : null) {
-      this.canPurchase = game.monsterCatalog.fc >= a.requiredMonsterLevel;
+      this.canPurchase = game.monsterCatalog.maxUnlockedLevel >= a.requiredMonsterLevel;
       this.affordableSoon = !this.canPurchase;
     } else {
       this.affordableSoon = this.canPurchase = false;
@@ -611,7 +611,7 @@ export function initializeProgressionUpgrades() {
   UnlockMonsterLevelUpgrade.prototype.us = function () {
     if (!this.Ql) {
       this.Ql = true;
-      this.qe = game.monsterCatalog.fc + 1;
+      this.qe = game.monsterCatalog.maxUnlockedLevel + 1;
       this.Ds = scaleByLevel(this.qe, monsterUnlockPriceCurve, 1);
       this.Ve = "解锁怪物等级" + this.qe;
     }
@@ -621,7 +621,7 @@ export function initializeProgressionUpgrades() {
   };
   UnlockMonsterLevelUpgrade.prototype.og = function () {
     this.Ql = false;
-    this.qe = game.monsterCatalog.fc + 1;
+    this.qe = game.monsterCatalog.maxUnlockedLevel + 1;
     this.Ds = scaleByLevel(this.qe, monsterUnlockPriceCurve, 1);
     this.Ve = "解锁怪物等级" + this.qe;
   };
@@ -638,7 +638,7 @@ export function initializeProgressionUpgrades() {
     if (this.canPurchase) {
       spendKills(game.state.party, this.getCost());
       var a = game.monsterCatalog;
-      a.fc = Math.max(a.fc, this.qe);
+      a.maxUnlockedLevel = Math.max(a.maxUnlockedLevel, this.qe);
       this.canPurchase = false;
       markUpgradeChanged(this);
       recordGameEvent("Monster Level", "解锁等级" + this.qe);
@@ -656,7 +656,7 @@ export function initializeProgressionUpgrades() {
   UnlockMonsterLevelUpgrade.prototype.Cd = function () {
     var a = this.canPurchase,
       b = this.qe,
-      c = game.monsterCatalog.fc + 1;
+      c = game.monsterCatalog.maxUnlockedLevel + 1;
     if (this.qe != c) {
       this.qe = c;
       this.Ds = scaleByLevel(this.qe, monsterUnlockPriceCurve, 1);
@@ -665,7 +665,7 @@ export function initializeProgressionUpgrades() {
     if (c = game.state.party.kills >= this.getCost()) {
       if (c = getPartyMinLevel() >= this.qe) {
         c = game.monsterCatalog;
-        c = 1 + c.fc - c.hd < VISIBLE_MONSTER_LEVELS;
+        c = 1 + c.maxUnlockedLevel - c.hd < VISIBLE_MONSTER_LEVELS;
       }
     }
     this.canPurchase = c;
@@ -703,7 +703,7 @@ export function initializeProgressionUpgrades() {
       spendKills(game.state.party, this.getCost());
       var a = this.Yd,
         b = game.monsterCatalog;
-      if (a >= b.fc) {
+      if (a >= b.maxUnlockedLevel) {
         console.log("setMonsterLevelRetired attempt to retire max level");
       } else {
         if (a < b.hd) {
@@ -740,7 +740,7 @@ export function initializeProgressionUpgrades() {
       this.Cs = scaleByLevel(this.Yd, monsterUnlockPriceCurve, 1);
       this.Ve = "退休怪物等级" + this.Yd;
     }
-    if (this.Yd < getPartyMinLevel() && this.Yd < game.monsterCatalog.fc - 1) {
+    if (this.Yd < getPartyMinLevel() && this.Yd < game.monsterCatalog.maxUnlockedLevel - 1) {
       this.canPurchase = game.state.party.kills >= this.getCost();
       this.affordableSoon = !this.canPurchase;
     } else {

@@ -168,7 +168,7 @@ export function restoreGameState(a, b) {
                   if (Ea) {
                     Ea.tx(eb ? true : false);
                     Ea.Bj = Gb ? true : false;
-                    Ea.$b = Da ? true : false;
+                    Ea.regionLocked = Da ? true : false;
                     Ea.ye = ub ? true : false;
                     invalidateCastleRevision();
                     Ea.requiredMonsterLevel = mb ? mb : 0;
@@ -770,7 +770,7 @@ export function createSaveState(a) {
         castleId: S.castleId,
         conquered: S.conquered,
         dungeonsConquered: S.Bj,
-        castleRegionLocked: S.$b,
+        castleRegionLocked: S.regionLocked,
         attackScheduled: S.ye,
         requiredMonsterLevel: S.requiredMonsterLevel
       };
@@ -935,7 +935,7 @@ export function createSaveState(a) {
       sa = game.monsterCatalog,
       Tb = [],
       qc = game.monsterCatalog,
-      Fc = qc.fc,
+      Fc = qc.maxUnlockedLevel,
       Cb;
     for (Cb = qc.hd; Cb <= Fc; Cb++) {
       Tb.push(serializeMonsterLevel(Cb, getMonsterTypesForLevel(qc, Cb)));
@@ -943,7 +943,7 @@ export function createSaveState(a) {
     nc = {
       monsterLevelStates: Tb,
       minUnlockedLevel: sa.hd,
-      maxUnlockedLevel: sa.fc
+      maxUnlockedLevel: sa.maxUnlockedLevel
     };
     var kb,
       Ra,
