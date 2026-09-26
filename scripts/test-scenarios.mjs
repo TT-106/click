@@ -65,6 +65,14 @@ const scrollWasCast = (s) => ({ scrollCast: (s.statistics?.scrollsUsed ?? 0) > (
 const farmWasPurchased = (s) => ({
   farmPurchased: (s.farms?.length ?? 0) > 0 && (s.statistics?.farmsPurchased ?? 0) > 0,
 });
+const farmWasHarvested = (s) => ({
+  farmHarvested: (s.statistics?.farmedKills ?? 0) > 0,
+  farmedKillsCleared: (s.dungeonManagerState?.farmedKills ?? 0) === 0,
+});
+const farmCycleAdvanced = (s) => ({
+  farmCycleHarvestCount: (s.statistics?.farmedKills ?? 0) >= 200,
+  farmCleared: s.dungeonManagerState?.dungeonStates?.find(d => d.dungeonFarm)?.cleared === true,
+});
 const treasureWasLooted = (s) => ({
   treasureLooted: (s.statistics?.treasureChestsLooted ?? 0) > (base.statistics?.treasureChestsLooted ?? 0),
 });
@@ -385,6 +393,27 @@ const scenarios = [
     ],
   },
   {
+    name: 'dungeon-farm-harvested',
+    // 购买农场后推演 1300 回合（>1200 回合生产周期），通过 AutoPurchaseDungeonUpgrade（type=9）收获产出并清零
+    make: () => withGold(withFarmableDungeon(base), 1000000),
+    steps: [
+      { turns: 0, purchaseDungeonFarm: true, check: farmWasPurchased },
+      { turns: 1300, harvestFarmKills: true, check: farmWasHarvested },
+      { turns: 500, check: farmWasHarvested },
+    ],
+  },
+  {
+    name: 'dungeon-farm-cycle-long-term',
+    // 长期周期跨越：购买 -> 1200+回合成熟收获 -> 再跨越 1500 回合再侵袭(cleared=false) -> 再次成熟(1200回合)二次收获
+    make: () => withGold(withFarmableDungeon(base), 1000000),
+    steps: [
+      { turns: 0, purchaseDungeonFarm: true, check: farmWasPurchased },
+      { turns: 1300, harvestFarmKills: true, check: farmWasHarvested },
+      { turns: 1600 },
+      { turns: 1300, harvestFarmKills: true, check: farmCycleAdvanced },
+    ],
+  },
+  {
     name: 'autosave-payload',
     // 自动保存计时分支 + 落盘字节比对：两端跑同样的真实帧循环，比较写进 localStorage 的原文。
     make: () => base,
@@ -512,7 +541,7 @@ try {
         // effectType 表示这一步改用"逐帧扫描活怪物效果队列"的推进方式，并直接对账施加次数。
         // purchaseUpgrades 表示这一步先推进再驱动升级购买（U7：只有视图层会触发的路径）。
         const step = Array.isArray(rawStep) ? { turns: rawStep[0], check: rawStep[1] } : rawStep;
-        const { turns, check, effectType, purchaseUpgrades, purchasePointUpgrades, claimAchievement, equipBestItems, castScrollDuringCombat, purchaseDungeonFarm, purchaseDungeonRowFarm, lootTreasureDuringExplore, treasureKind, activatePotions, frames } = step;
+        const { turns, check, effectType, purchaseUpgrades, purchasePointUpgrades, claimAchievement, equipBestItems, castScrollDuringCombat, purchaseDungeonFarm, purchaseDungeonRowFarm, harvestFarmKills, lootTreasureDuringExplore, treasureKind, activatePotions, frames } = step;
         const results = await Promise.all(pages.map(async p => {
           await p.page.evaluate(ms => window.harness.setTime(ms), HARNESS_FIXED_NOW);
           // 重置后无队伍：走真实帧循环（守卫路径），而非裸推进
@@ -525,6 +554,7 @@ try {
           if (castScrollDuringCombat !== undefined) return p.page.evaluate(a => window.harness.castScrollDuringCombat(a), { maxTurns: castScrollDuringCombat });
           if (purchaseDungeonFarm) return p.page.evaluate(a => window.harness.purchaseDungeonFarm(a), { turns });
           if (purchaseDungeonRowFarm) return p.page.evaluate(a => window.harness.purchaseDungeonRowFarm(a), { turns });
+          if (harvestFarmKills) return p.page.evaluate(a => window.harness.harvestFarmKills(a), { turns });
           if (lootTreasureDuringExplore !== undefined) return p.page.evaluate(a => window.harness.lootTreasureDuringExplore(a), { maxTurns: lootTreasureDuringExplore, kind: treasureKind });
           if (activatePotions !== undefined) return p.page.evaluate(a => window.harness.activatePotions(a), { turns, limit: activatePotions });
           // frames：走真实帧循环（loop.tick 内含 view.render 的 try/catch），随后读画布不透明像素
@@ -601,6 +631,14 @@ try {
           }
           assert.equal(results[1].purchased, results[0].purchased, '两端农场购买次数不同');
         }
+        if (harvestFarmKills) {
+          for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {
+            assert.ok(results[i].harvested > 0, `${label} 端必须真的收获地牢农场`);
+            assert.ok(results[i].killsHarvested > 0, `${label} 端收获的击杀数必须大于 0`);
+          }
+          assert.equal(results[1].harvested, results[0].harvested, '两端农场收获次数不同');
+          assert.equal(results[1].killsHarvested, results[0].killsHarvested, '两端农场收获击杀数不同');
+        }
         if (frames !== undefined) {
           const inks = results.map(r => r.ink);
           for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {
@@ -665,6 +703,10 @@ try {
             if (verdict.itemEquipEvents !== undefined) assert.equal(verdict.itemEquipEvents, true, `${label} 装备物品事件计数必须真实增长`);
             if (verdict.scrollCast !== undefined) assert.equal(verdict.scrollCast, true, `${label} 卷轴使用统计必须真实增长`);
             if (verdict.farmPurchased !== undefined) assert.equal(verdict.farmPurchased, true, `${label} 农场实体与购买统计必须真实增长`);
+            if (verdict.farmHarvested !== undefined) assert.equal(verdict.farmHarvested, true, `${label} 农场收获击杀统计（farmedKills）必须真实增长且大于 0`);
+            if (verdict.farmedKillsCleared !== undefined) assert.equal(verdict.farmedKillsCleared, true, `${label} 农场收获后待收获击杀池必须已被清零`);
+            if (verdict.farmCycleHarvestCount !== undefined) assert.equal(verdict.farmCycleHarvestCount, true, `${label} 农场完整生命周期多次收获累计击杀必须达到预期`);
+            if (verdict.farmCleared !== undefined) assert.equal(verdict.farmCleared, true, `${label} 农场在收获时必须处于已清理成熟状态`);
             if (verdict.treasureLooted !== undefined) assert.equal(verdict.treasureLooted, true, `${label} 财宝箱拾取统计必须真实增长`);
             if (verdict.weaponRackLooted !== undefined) assert.equal(verdict.weaponRackLooted, true, `${label} 武器架拾取统计必须真实增长`);
             if (verdict.bookcaseLooted !== undefined) assert.equal(verdict.bookcaseLooted, true, `${label} 书架拾取统计必须真实增长`);

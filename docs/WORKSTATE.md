@@ -5,6 +5,7 @@
 
 ## 当前轮次状态（2026-09-26，M13 文档与验收收尾）
 
+- U7 农场收获与长期收益差分闭环：新增 `dungeon-farm-harvested` 与 `dungeon-farm-cycle-long-term` 两个场景，紧接在 `ground-drops-collected` 之后。验证从农场建立（type=8）、推演成熟（1200 回合）、通过 `AutoPurchaseDungeonUpgrade`（type=9）触发收获并清空待收获池 `w.Aa.Sd`/`game.dungeons.Sd`、累加统计 `farmedKills`；长期跨越推演 1500 回合休耕再侵袭（`cleared=false`）并再次成熟（1200 回合）二次收获。两端直接断言 `harvested > 0`、`killsHarvested > 0`、`farmHarvested: true`、`farmedKillsCleared: true`、`farmCycleHarvestCount: >= 200`、`farmCleared: true` 及逐检查点完整 DTO 相等。经对抗性反向探针验证（跳过收获或提前收获必败）。差分场景总数扩充至 47/47，验收矩阵 51 行中农场行从 PARTIAL 调为 PASS，当前矩阵状态更新为 33 PASS / 18 PARTIAL / 0 未覆盖。未修改游戏数值、RNG、存档键或混淆清单。
 - U7 地面掉落四型：`ground-drops-collected` 从 fixture（四人 `spells=[]`，无“立即搜索”旁路）自然推进 9,000 回合，两端分别断言点数事件 9/10/11/12 的 count 增长，对应金币/卷轴/药水/物品常规拾取；逐检查点完整 DTO 相等。矩阵 45/45，验收矩阵 51 行调整为 32 PASS / 19 PARTIAL / 0 未覆盖，财宝房行从 PARTIAL 调为 PASS；逐件认领瞬时态仍非直接观察。引擎、数值、存档键、RNG 未改。
 - U7 财宝房三型补齐：原 `treasure-chest-looted` 驱动器增 `kind=1/2/3` 筛选，新增 `weapon-rack-looted` 与 `bookcase-looted`；固定随机流自然生成三型目标物，角色同房间按按钮路径选择并搜索，两端分别断言 `treasureChestsLooted`/`weaponRacksLooted`/`bookcasesLooted` 增长且随后 900 回合完整 DTO 相等。禁用目标设置时书架场景按预期失败。矩阵 44/44；财宝房行仍 PARTIAL，缺地面掉落逐项拾取。引擎、数值、存档键、RNG 未改。
 - U7 补实 `LearnSpellUpgrade`：`purchaseUpgrades` 返回购买类型分布，`upgrades-purchased` 两端各自断言 type=6 确有购买且次数相等、存档 `spells` 总数超过 fixture。独立运行两阶段各 2+1 次 type=6；暂时跳过该类型时场景按预期失败。check/typecheck/parity/42 场景/e2e 全绿；仅 harness/断言和文档变化，引擎、数值、存档键、RNG、混淆清单均未改。

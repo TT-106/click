@@ -293,6 +293,25 @@ window.harness = {
     }
     return { purchased: Number(purchased), snapshot: snapshot() };
   },
+  harvestFarmKills({ turns = 0 } = {}) {
+    for (let i = 0; i < turns; i++) advance();
+    const collections = original ? window.Nx : upgradeCollections;
+    const rows = collections.flatMap(collection => original ? collection.HC : collection.upgradeRows).flat();
+    let harvested = 0;
+    let killsHarvested = 0;
+    for (const upgrade of rows) {
+      if ((original ? upgrade.Na() : upgrade.getUpgradeType()) !== 9) continue;
+      upgrade.Cd();
+      if (original ? upgrade.qc() : upgrade.canPurchaseNow()) {
+        const pendingKills = original ? window.Game.Aa.Sd : game.dungeons.Sd;
+        killsHarvested = pendingKills;
+        if (original) upgrade.Qc(); else upgrade.purchase();
+        harvested++;
+        break;
+      }
+    }
+    return { harvested, killsHarvested, snapshot: snapshot() };
+  },
   lootTreasureDuringExplore({ maxTurns = 15000, kind = 1 } = {}) {
     const registry = original ? window.Game.th : game.treasure;
     const party = original ? window.Game.i.da : game.state.party;

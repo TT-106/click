@@ -66,9 +66,9 @@
 - 归因方式分层。只有 cat=2 的 type 0/4/14（harness 逐帧扫描活怪物效果队列的直接计数）与 cat=17（存档内 `minionsSummoned` 对账）有专属可观测量；其余类别依赖"该角色唯一注入法术 + 两端各自 `spellCastCount` 增长"的归因，再叠加逐检查点完整存档差分。
 - 入口分层。怪物/首领 AI 施法与卷轴施法两条入口与职业施法共用同一 `applySpellEffect` 分发，但没有按类别为这两条入口单独设场景（`scrolls-stocked` 抽到哪类卷轴取决于随机池，未被逐类别断言）。
 
-已转入差分覆盖（2026-09-26）：城堡攻防战全程与胜利瞬间（`castle-victory`，两端各自断言 gameWon/victoryCount/castlesConquered 后比较完整存档）、12h 离线截断（`offline-13h-capped`）、火球与两条控制/增益法术分支、召唤族两条分支（cat=9/11，两端各自断言 `minionsSummoned` 增长）、睡眠（cat=2、type=0），以及 Blast Stun 的直接执行计数——harness 逐帧扫描两端活怪物效果队列，`fireball-blast-stun` 实测原版与重构版各 31 次 type=14 施加，数值相等。同批次再补 10 条：cat=1 治疗、cat=4 火环、cat=5 连锁闪电、cat=6 闪电雨、cat=13 绿色死亡、cat=17 召唤鸡群（含 `Math.random` 概率模板分支），需要注入投射武器的 cat=12 快速打击（唯一 `td: false`）、cat=14 立即搜索、cat=15 发现财宝箱——后三条在注入前会命中原版自带的空武器解引用（`Aw`/`getProjectileAnimation` 对 `equipment.Ey` 无空值保护，两端同点同错，栈逐帧同构），属忠实保留而非重构差异，因此未改动引擎，只在存档里补回真实武器类型（盗贼槽 61、忍者槽 62）；以及 cat=16 复活（`withResurrectionTrial()` 激活 `randomBossEncounter` 药水并把三名队友压到 1 级 1 血，两端实测 `characterStunnedCount` 同为 22，真正打出"已有昏迷队友"的前置）。
+已转入差分覆盖（2026-09-26）：城堡攻防战全程与胜利瞬间（`castle-victory`，两端各自断言 gameWon/victoryCount/castlesConquered 后比较完整存档）、12h 离线截断（`offline-13h-capped`）、火球与两条控制/增益法术分支、召唤族两条分支（cat=9/11，两端各自断言 `minionsSummoned` 增长）、睡眠（cat=2、type=0），以及 Blast Stun 的直接执行计数——harness 逐帧扫描两端活怪物效果队列，`fireball-blast-stun` 实测原版与重构版各 31 次 type=14 施加，数值相等。同批次再补 10 条：cat=1 治疗、cat=4 火环、cat=5 连锁闪电、cat=6 闪电雨、cat=13 绿色死亡、cat=17 召唤鸡群（含 `Math.random` 概率模板分支），需要注入投射武器的 cat=12 快速打击（唯一 `td: false`）、cat=14 立即搜索、cat=15 发现财宝箱——后三条在注入前会命中原版自带的空武器解引用（`Aw`/`getProjectileAnimation` 对 `equipment.Ey` 无空值保护，两端同点同错，栈逐帧同构），属忠实保留而非重构差异，因此未改动引擎，只在存档里补回真实武器类型（盗贼槽 61、忍者槽 62）；以及 cat=16 复活（`withResurrectionTrial()` 激活 `randomBossEncounter` 药水并把三名队友压到 1 级 1 血，两端实测 `characterStunnedCount` 同为 22，真正打出"已有昏迷队友"的前置）；地牢农场购买、推演成熟收获、待收获击杀池清零、再侵袭休耕与二次成熟收获等全生命周期已由 `dungeon-farm-purchased`、`dungeon-row-farm-purchased`、`dungeon-farm-harvested`、`dungeon-farm-cycle-long-term` 差分场景完整覆盖并带负向探针验证。
 
-后续扩展路径：在 `tests/scenarios/save-mutations.mjs` 增加对应变异器，即可纳入 `test:scenarios` 矩阵（当前 45 个场景）。
+后续扩展路径：在 `tests/scenarios/save-mutations.mjs` 增加对应变异器，即可纳入 `test:scenarios` 矩阵（当前 47 个场景）。
 
 ## 7. 性能兼容 — PARTIALLY VERIFIED
 

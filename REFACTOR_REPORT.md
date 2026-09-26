@@ -35,12 +35,12 @@ archive/original/c2.js  ──AST 机械恢复──▶  src/engine/（77 模块
 | 外部契约 | `window.Game/lB/pB/hE` → adapter/runtime API（MIGRATION_MAP.md 对照表） |
 | 公式文档 | `docs/formulas/combat.md`（伤害/命中/暴击/眩晕/技能法术/治疗/目标选择/遭遇结束 + 随机数消耗顺序）、`items.md`（稀有度/等级/词缀/售价/掉落门）、`progression.md`（经验曲线/点数事件/升级价格/成就/统计/重置/离线），共 733 条 file:line 引用逐条回源核对 |
 
-## 5. 测试体系（全部实测通过，共 45 个差分场景）
+## 5. 测试体系（全部实测通过，共 47 个差分场景）
 
 | 层 | 内容 |
 |---|---|
 | L1 单元（9 项） | RNG 位级差分（Babel 从 c2.js 提取原版 `ga` 对照，6 种子×100k 值 + 黄金值）、LZ-string codec 契约、格式化表驱动 |
-| L3/L4 差分 | `test:parity`：同存档 + 固定 RNG/时钟，0/1/99/900 回合完整存档逐字段相等；`test:scenarios`：**45 场景**（长跑、离线四态 + 12h 截断、药水激活、卷轴施放、16 类法术分支、城堡征服→胜利、金币涌入、后期、veteran、prestige、full reset、升级购买与怪物等级解锁、冒险点消费、成就领取、自动装备、两条农场购买入口、财宝箱/武器架/书架搜索、四类地面掉落拾取、药水真实使用、渲染帧 + 自动落盘） |
+| L3/L4 差分 | `test:parity`：同存档 + 固定 RNG/时钟，0/1/99/900 回合完整存档逐字段相等；`test:scenarios`：**47 场景**（长跑、离线四态 + 12h 截断、药水激活、卷轴施放、16 类法术分支、城堡征服→胜利、金币涌入、后期、veteran、prestige、full reset、升级购买与怪物等级解锁、冒险点消费、成就领取、自动装备、两条农场购买入口、财宝箱/武器架/书架搜索、四类地面掉落拾取、农场收获与长期再侵袭生命周期跨越、药水真实使用、渲染帧 + 自动落盘） |
 | L5 集成 | 场景内的"两端各自增长断言 + 逐检查点全状态相等"即多模块组合验证（战斗→掉落→拾取→统计→存档） |
 | L6 浏览器 E2E | 建队/自动战斗/暂停/五类面板/**c2c.user.js 外部 DOM 契约**/设置/导出导入/非法存档/刷新恢复/键盘/三种视口 |
 | L7 长跑 soak | `test:soak`：115,200 与 345,600 等价回合（8h/24h），两端完整存档相等 + CDP 主动 GC 后堆增量样本 |
@@ -76,9 +76,9 @@ npm test && npm run check      # 一条命令测试
 
 ## 10. 结论
 
-Clickpocalypse II 的核心实现已从高混淆遗留代码中恢复出真实语义：关键玩法行为有 45 个差分场景 + 位级 RNG 单测 + 浏览器 E2E + 8h/24h 等价回合 soak 的自动化证据保护，存档/RNG/时间/离线/自动保存经兼容验证，业务逻辑已迁入带清晰边界的现代模块（77 个），旧文件不再是唯一真相来源。
+Clickpocalypse II 的核心实现已从高混淆遗留代码中恢复出真实语义：关键玩法行为有 47 个差分场景 + 位级 RNG 单测 + 浏览器 E2E + 8h/24h 等价回合 soak 的自动化证据保护，存档/RNG/时间/离线/自动保存经兼容验证，业务逻辑已迁入带清晰边界的现代模块（77 个），旧文件不再是唯一真相来源。
 
-这些结论由运行与差分证明，不是主观判断；同样明确的是**尚未证明的部分**：附录 A 实际有 51 行（逐行统计），其中 32 行 PASS、19 行 PARTIAL、0 行未覆盖；旧版写成 50 行及 28/17/5 是过时合计。缺口逐项写明，`docs/reverse-engineering/unresolved.md` 的 U5/U6/U7 是继续推进的入口。
+这些结论由运行与差分证明，不是主观判断；同样明确的是**尚未证明的部分**：附录 A 实际有 51 行（逐行统计），其中 33 行 PASS、18 行 PARTIAL、0 行未覆盖；旧版写成 50 行及 28/17/5 是过时合计。缺口逐项写明，`docs/reverse-engineering/unresolved.md` 的 U5/U6/U7 是继续推进的入口。
 
 ---
 
@@ -93,7 +93,7 @@ Clickpocalypse II 的核心实现已从高混淆遗留代码中恢复出真实�
 | 角色职业 | PARTIAL | 法术场景装载职业 3/4/6/7/8/9/10/11；0/1/2/5 未被装载，职业成长未跑 |
 | 角色升级 | PASS | `upgrades-purchased` 给足经验值后驱动 `LevelUpUpgrade.purchase`；两端各自断言 `characteristicsComponent.characterLevel` 超过 fixture 基线，逐检查点完整存档相等 |
 | 角色技能/技能树 | PASS | `purchaseUpgrades` 遍历每名角色的四棵技能树；两端各自断言 `upgrades1..4` 已解锁布尔位总数超过 fixture 基线，法术学习 type=6 实际购买且 `spells` 数量增长，逐检查点完整存档相等；未逐项验证每种技能的战斗效果 |
-| 角色属性 | PASS | 六个分量 + 生命/精神/击杀在 45 场景每个检查点全量相等 |
+| 角色属性 | PASS | 六个分量 + 生命/精神/击杀在 47 场景每个检查点全量相等 |
 | 背包 | PASS | 物品计数/容量在差分中相等（itemsFound 真实增长） |
 | 装备 | PARTIAL | 载入与生成之外，`auto-equipped` 已让装备槽与装备事件点数变化；手动逐件装备/卸下仍缺专项断言 |
 | 自动装备 | PASS | `auto-equipped` 两端调用 type=4 的 `EquipBestItemUpgrade`，各自断言装备槽变化与 itemEquipped 点数事件计数增长，逐检查点完整存档相等 |
@@ -118,7 +118,7 @@ Clickpocalypse II 的核心实现已从高混淆遗留代码中恢复出真实�
 | 地牢生成 | PASS | 楼层种子/房间可见性/走廊集合全量相等；生成侧 `widthInTiles/heightInTiles` 改名后回归通过 |
 | 地牢导航 | PASS | 门/走廊字段（`doorA/doorB/hallway/currentHallway/pathTiles/pixelColumn/pixelRow`）恢复语义后，开门数、走廊与房间位置逐检查点相等 |
 | 城堡 | PARTIAL | 征服→胜利全链路已覆盖；城堡购买与进攻花费是视图入口 |
-| 农场 | PARTIAL | `dungeon-farm-purchased` 与 `dungeon-row-farm-purchased` 分别驱动全局列表与地牢行购买，两端各自断言 `farms` 与 `farmsPurchased` 增长、完整存档相等；农场收获与长期收益仍缺专项断言 |
+| 农场 | PASS | 农场全局与地牢行购买（`dungeon-farm-purchased`/`dungeon-row-farm-purchased`）、推演成熟收获（`dungeon-farm-harvested`，通过 `AutoPurchaseDungeonUpgrade` 收获击杀并清零池）、休耕再侵袭与二次成熟（`dungeon-farm-cycle-long-term`，1500 回合再侵袭至 `cleared=false` + 1200 回合再次成熟并二次收获，累计击杀 `>=200`）全链路闭环，两端逐检查点完整 DTO 相等并带负向探针保护 |
 | 冒险点 | PASS | 21 个点数池与消费簿记逐检查点相等 |
 | 点数升级 | PARTIAL | `adventure-points-spent` 两端各自购买一项升级，断言 `spentAdventurePoints` 增长且 `pointUpgrades[].upgradePurchased` 为 true；其余点数升级及效果未逐项验证 |
 | 成就 | PARTIAL | 328 行成就定义与 `obtained` 集合相等并真实增长；`achievement-claimed` 让两端各自领一项并断言 `applied` 增长，其他成就奖励类型仍未逐项验证 |
