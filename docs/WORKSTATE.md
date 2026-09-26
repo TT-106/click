@@ -1,10 +1,13 @@
 # WORKSTATE — Clickpocalypse II 语义恢复与现代化工程
 
 > 本文件是长程自治任务的**唯一续跑入口**。上下文压缩或中断后，先读本文件 + `git log --oneline`，再继续。
-> 最后更新：2026-09-26（U19 掉落注册表/稀有度/效果簇落地后，混淆清单 1,082；验收矩阵 51 PASS / 0 PARTIAL、矩阵 59/59、soak 通过）
+> 最后更新：2026-09-26（U20 装备查找与命名池落地后，混淆清单 1,078；验收矩阵 51 PASS / 0 PARTIAL、矩阵 59/59、soak 通过）
 
 ## 当前轮次状态（2026-09-26，M13 文档与验收收尾）
 
+- U20 装备查找与物品命名池（2026-09-26，一笔提交，六门禁全绿，混淆清单 1,082 → 1,078）：
+  1. **ef→getSlotItem**（17 处，9 文件）：Equipment 原型 hw[slot] 查找 + Character 委托方法，消费方全部是 isBetterItem 换装比较；SlotEquipment 窄签名 typedef 早已记录该名。第 17 处为 character.js:29 typedef 注释内的 `ef:`。
+  2. **物品命名池**（31 处，item-names.js 单文件）：Ye→prefixAdjectives（"…的"前缀池，Tk 选取）、hf→titlePool（"X之"题名池，Gm 选取）、ih→suffixNouns（"之X"后缀池，Fm 选取）；五个稀有度命名类（Common/Uncommon/Rare/Historic/Ancient）同构字段一次改名。
 - U19 财宝定位/升级方法/掉落注册表簇（2026-09-26，两笔提交，六门禁全绿，混淆清单 1,095 → 1,082）：
   1. **财宝目标定位字段**（17 处）：zq/Aq→levelX/levelY（等级像素坐标，DTO 键同名可证）、BC→definition（含 kind/uh=settingsId/jh）、VE→westWall（西墙变体选择，DTO 键同名）。
   2. **升级/掉落方法簇**（40 处，UpgradeMethods typedef 同步）：vf 三属主拆名——ScrollUpgrade/ScrollDrop→getScroll（惰性缓存滚动器）、ScrollInventory→getScrollById（按 id 查找；upgrades.js 内 game.scrolls.vf 调用点先手工分离再跑执行器）、hu→isNearlyAffordable（全局 400 击杀/30% 或升级 300 经验/20% 的"即将可购"判定）、uw→getSpell（LearnSpellUpgrade 惰性法术 + SpellUpgradeDetails 消费点）、Wp→prerequisite（技能树前置节点，bindSkillTree 绑定）。
