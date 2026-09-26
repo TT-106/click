@@ -1,4 +1,3 @@
-// @ts-nocheck -- M10 渐进类型化：JSDoc 覆盖后摘除（见 docs/WORKSTATE.md）
 /** 宝箱交互、地牢列表与状态。
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
@@ -17,11 +16,11 @@ export function TreasureLootView() {
   this.om = this.Ml = this.po = this.treasureChest = this.button = null;
 }
 export function mountTreasureLoot(a) {
-  var b = getElement(a.elementId);
-  if (b) {
-    clearElement(b);
+  var container = getElement(a.elementId);
+  if (container) {
+    clearElement(container);
     a.ti = a.Ro();
-    a.button = createElement("div", b, a.elementId, a.ti);
+    a.button = createElement("div", container, a.elementId, a.ti);
     a.button.onmouseup = function () {
       if (a.treasureChest && !a.treasureChest.Kg) {
         var b = a.treasureChest;
@@ -74,7 +73,7 @@ export function DungeonRowView(a, b) {
   this.mw = this.pu = -1;
   this.Bt = false;
   this.Ct = 260;
-  this.qi();
+  /** @type {{qi: () => void}} */ (/** @type {unknown} */ (this)).qi();
 }
 export function DungeonListView(a, b, c) {
   this.elementId = c;
@@ -163,7 +162,7 @@ export function initializeViewsDungeons() {
         this.po.style.background = "url('spritesheet/terrain.png') -" + b.sourceX + "px -" + b.sourceY + "px";
       }
     }
-    b = this.Ro();
+    b = /** @type {{Ro: () => string}} */ (/** @type {unknown} */ (this)).Ro();
     if (this.ti !== b) {
       this.ti = b;
       this.button.className = b;
@@ -184,7 +183,7 @@ export function initializeViewsDungeons() {
   DungeonRowView.prototype.ct = function (a) {
     var b = !this.dungeon;
     this.dungeon = a;
-    this.yr.ct(this.dungeon);
+    /** @type {{ct: (dungeon: unknown) => void}} */ (/** @type {unknown} */ (this.yr)).ct(this.dungeon);
     this.upgradeButton.Rc(this.yr);
     this.mw = this.pu = -1;
     this.Gu = this.Bk = this.Qv = "";
@@ -312,11 +311,11 @@ export function initializeViewsDungeons() {
   };
   DungeonListView.prototype.update = function () {
     if (!this.bf) {
-      this.pf();
+      /** @type {{pf: () => void}} */ (/** @type {unknown} */ (this)).pf();
     }
     var a = getDungeonList(this);
     if (a.length !== this.rf.length) {
-      this.mk(a.length);
+      /** @type {{mk: (count: number) => void}} */ (/** @type {unknown} */ (this)).mk(a.length);
     }
     var b;
     for (b = 0; b < this.rf.length; b++) {
@@ -341,7 +340,7 @@ export function initializeViewsDungeons() {
     var b = getDungeonList(this),
       c;
     this.bf = createElement("table", getElement(a), null, "monsterTable");
-    this.Ri(this.bf.insertRow(0));
+    /** @type {{Ri: (row: HTMLTableRowElement) => void}} */ (/** @type {unknown} */ (this)).Ri(this.bf.insertRow(0));
     for (c = 0; c < b.length; c++) {
       a = new DungeonRowView(this.bf.insertRow(c + 1), this.dw);
       a.ct(b[c]);
