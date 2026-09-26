@@ -1,9 +1,14 @@
 # WORKSTATE — Clickpocalypse II 语义恢复与现代化工程
 
 > 本文件是长程自治任务的**唯一续跑入口**。上下文压缩或中断后，先读本文件 + `git log --oneline`，再继续。
-> 最后更新：2026-09-26（U15 行为/门/关卡字段重命名后，混淆清单 1,128；验收矩阵 51 PASS / 0 PARTIAL、矩阵 59/59、soak 通过）
+> 最后更新：2026-09-26（U16 验证器指定长尾字段落地后，混淆清单 1,112；验收矩阵 51 PASS / 0 PARTIAL、矩阵 59/59、soak 通过）
 
 ## 当前轮次状态（2026-09-26，M13 文档与验收收尾）
+
+- U16 验证器指定长尾字段落地（2026-09-26，两笔提交，六门禁全绿，混淆清单 1,128 → 1,112）：
+  1. **战斗/效果/掉落簇**（91 处）：Kd→isDisabled（CharacterEffects 禁用标志，行为/目标/推进全跳过）、Rd→noDamage（伤害被减免为 0 的动作标志）、Vn→resolved（动作已结算，tick 清除）、Ud 按属主拆三份——Vector2→squaredDistanceTo、DungeonRoom→squaredDistanceToRoom（中心距平方）、掉落物→getClaimDistance（读 ph→claimDistance；Se→setClaimDistance，领取时写入领取者距离、释放清零）。**behaviors.js 同文件内 `.Ud()` 无参（掉落物）与 `.Ud(pos)`（Vector2）混用，执行器按文件不能按接收者拆——先用 node 脚本手工分离 4 处掉落物调用点再跑执行器**。
+  2. **世界/库存/地牢注册表簇**（103 处）：he/ie→worldCenterX/Y（世界中心像素，DTO 键 worldCenterX/Y 同名可证）、Yd→retireLevel（退休怪物等级升级的缓存等级快照）、pe→drops（GoldDropRegistry 列表）、re→potionList（PotionInventory，harness activatePotions 同步双端分支）、地牢注册表五列表 ze→cleared（已清空待 1500 回合再侵袭）、uj→discovered、Ge→attackable、dg→farms（adapter 仪表盘键 discovered/cleared/farms 恰好同名）、bk→farmable。
+  教训补充：重命名容器字段后必须全库扫 harness/adapter 的旧名残留（本次 potions-activated 与 dungeon-row-farm-purchased 两场景即因 inventory.re / dungeons.bk 旧引用失败，双端分支修复后 59/59 恢复全绿）。
 
 - U15 后续重命名批次（2026-09-26，四笔独立提交，每组六门禁全绿，混淆清单 1,138 → 1,128）：
   1. **行为方法簇**（82 处，behaviors.js 单文件 + DungeonBehaviorMethods typedef 同步）：Td→selectTarget、Md→getActionTarget（返回法术或掉落物，存入 un→actionTarget）、Jd→getFinalScore、un→actionTarget、Kp→performOnArrival；执行器对 typedef 注释内的 `Kp:` 也计数（19 而非 18），--expect 按此调整。附带 Dt→targetByRoomId（财宝索引，5 处）。
