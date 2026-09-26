@@ -52,9 +52,10 @@ export function ItemType(a, b, c, d, f, g, h, l, n) {
   if (!(this.lA = game.itemSprites.getSprite(d))) {
     console.log("error. invalid item sprite: " + d);
   }
-  this.na = f;
-  this.ma = g;
-  this.la = h;
+  // write-only 分类旗标（原 na/ma/la；双端零读者，语义由数据模式推断：近战/护甲/杂项）
+  this.isMeleeWeapon = f;
+  this.isArmor = g;
+  this.isMiscItem = h;
   this.isProjectileItem = l;
 }
 export function Item(a, b, c, d, f, g, h, l, n, p) {
@@ -243,7 +244,7 @@ export function registerItemType(a, b, c) {
   }
   g = f + "";
   f = b.slotList;
-  b = new ItemType(g, b.baseName, f, c, b.na, b.ma, b.la, b.isProjectile, b.projectileAnimationId);
+  b = new ItemType(g, b.baseName, f, c, b.isMeleeWeapon, b.isArmor, b.isMiscItem, b.isProjectile, b.projectileAnimationId);
   if (a.os[g]) {
     console.log("item type hash collision: " + d);
   }

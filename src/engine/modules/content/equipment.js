@@ -9,316 +9,316 @@ export function initializeItemCatalog() {
   b.ps = {};
   var c = {
       baseName: "剑",
-      na: true,
+      isMeleeWeapon: true,
       isProjectile: false,
-      ma: false,
-      la: false,
+      isArmor: false,
+      isMiscItem: false,
       slotList: ["20"]
     },
     d = {
       baseName: "斧",
-      na: true,
+      isMeleeWeapon: true,
       isProjectile: false,
-      ma: false,
-      la: false,
+      isArmor: false,
+      isMiscItem: false,
       slotList: ["21"]
     },
     f = {
       baseName: "锤",
-      na: true,
+      isMeleeWeapon: true,
       isProjectile: false,
-      ma: false,
-      la: false,
+      isArmor: false,
+      isMiscItem: false,
       slotList: ["21"]
     },
     g = {
       baseName: "匕首",
-      na: true,
+      isMeleeWeapon: true,
       isProjectile: false,
-      ma: false,
-      la: false,
+      isArmor: false,
+      isMiscItem: false,
       slotList: ["24", "33"]
     },
     h = {
       baseName: "连枷",
-      na: true,
+      isMeleeWeapon: true,
       isProjectile: false,
-      ma: false,
-      la: false,
+      isArmor: false,
+      isMiscItem: false,
       slotList: ["22", "20", "21"]
     },
     l = {
       baseName: "权杖",
-      na: true,
+      isMeleeWeapon: true,
       isProjectile: false,
-      ma: false,
-      la: false,
+      isArmor: false,
+      isMiscItem: false,
       slotList: ["22", "20"]
     },
     n = {
       baseName: "节杖",
-      na: true,
+      isMeleeWeapon: true,
       isProjectile: false,
-      ma: false,
-      la: false,
+      isArmor: false,
+      isMiscItem: false,
       slotList: ["32"]
     },
     p = {
       baseName: "双节棍",
-      na: true,
+      isMeleeWeapon: true,
       isProjectile: false,
-      ma: false,
-      la: false,
+      isArmor: false,
+      isMiscItem: false,
       slotList: ["29"]
     },
     s = {
       baseName: "棍棒",
-      na: false,
+      isMeleeWeapon: false,
       isProjectile: false,
-      ma: false,
-      la: true,
+      isArmor: false,
+      isMiscItem: true,
       slotList: ["26", "27", "28", "31"]
     },
     u = {
       baseName: "镰刀",
-      na: true,
+      isMeleeWeapon: true,
       isProjectile: false,
-      ma: false,
-      la: false,
+      isArmor: false,
+      isMiscItem: false,
       slotList: ["30"]
     },
     y = {
       baseName: "骨头",
-      na: false,
+      isMeleeWeapon: false,
       isProjectile: false,
-      ma: false,
-      la: true,
+      isArmor: false,
+      isMiscItem: true,
       slotList: ["201"]
     },
     A = {
       baseName: "蜡烛",
-      na: false,
+      isMeleeWeapon: false,
       isProjectile: false,
-      ma: false,
-      la: true,
+      isArmor: false,
+      isMiscItem: true,
       slotList: ["203"]
     },
     C = {
       baseName: "灯笼",
-      na: false,
+      isMeleeWeapon: false,
       isProjectile: false,
-      ma: false,
-      la: true,
+      isArmor: false,
+      isMiscItem: true,
       slotList: ["203"]
     },
     v = {
       baseName: "灯",
-      na: false,
+      isMeleeWeapon: false,
       isProjectile: false,
-      ma: false,
-      la: true,
+      isArmor: false,
+      isMiscItem: true,
       slotList: ["203"]
     },
     D = {
       baseName: "硬币",
-      na: false,
+      isMeleeWeapon: false,
       isProjectile: false,
-      ma: false,
-      la: true,
+      isArmor: false,
+      isMiscItem: true,
       slotList: ["205"]
     },
     N = {
       baseName: "珠宝",
-      na: false,
+      isMeleeWeapon: false,
       isProjectile: false,
-      ma: false,
-      la: true,
+      isArmor: false,
+      isMiscItem: true,
       slotList: ["205"]
     },
     I = {
       baseName: "弓",
-      na: false,
+      isMeleeWeapon: false,
       isProjectile: false,
-      ma: false,
-      la: true,
+      isArmor: false,
+      isMiscItem: true,
       slotList: ["23"]
     },
     x = {
       baseName: "弩",
-      na: false,
+      isMeleeWeapon: false,
       isProjectile: false,
-      ma: false,
-      la: true,
+      isArmor: false,
+      isMiscItem: true,
       slotList: ["25"]
     },
     z = {
       baseName: "箭矢",
-      na: false,
+      isMeleeWeapon: false,
       isProjectile: true,
-      ma: false,
-      la: false,
+      isArmor: false,
+      isMiscItem: false,
       projectileAnimationId: 1,
       slotList: ["60"]
     },
     O = {
       baseName: "闪电",
-      na: false,
+      isMeleeWeapon: false,
       isProjectile: true,
-      ma: false,
-      la: false,
+      isArmor: false,
+      isMiscItem: false,
       projectileAnimationId: 2,
       slotList: ["61"]
     },
     J = {
       baseName: "护盾",
-      na: false,
+      isMeleeWeapon: false,
       isProjectile: false,
-      ma: true,
-      la: false,
+      isArmor: true,
+      isMiscItem: false,
       slotList: ["40", "41"]
     },
     la = {
       baseName: "链甲",
-      na: false,
+      isMeleeWeapon: false,
       isProjectile: false,
-      ma: true,
-      la: false,
+      isArmor: true,
+      isMiscItem: false,
       slotList: ["80", "82", "81"]
     },
     Q = {
       baseName: "板甲",
-      na: false,
+      isMeleeWeapon: false,
       isProjectile: false,
-      ma: true,
-      la: false,
+      isArmor: true,
+      isMiscItem: false,
       slotList: ["80", "81"]
     },
     V = {
       baseName: "板甲",
-      na: false,
+      isMeleeWeapon: false,
       isProjectile: false,
-      ma: true,
-      la: false,
+      isArmor: true,
+      isMiscItem: false,
       slotList: ["80", "82", "81"]
     },
     na = {
       baseName: "皮甲",
-      na: false,
+      isMeleeWeapon: false,
       isProjectile: false,
-      ma: true,
-      la: false,
+      isArmor: true,
+      isMiscItem: false,
       slotList: ["84", "83"]
     },
     K = {
       baseName: "项链",
-      na: false,
+      isMeleeWeapon: false,
       isProjectile: false,
-      ma: false,
-      la: true,
+      isArmor: false,
+      isMiscItem: true,
       slotList: "140 141 142 143 145 144".split(" ")
     },
     H = {
       baseName: "戒指",
-      na: false,
+      isMeleeWeapon: false,
       isProjectile: false,
-      ma: false,
-      la: true,
+      isArmor: false,
+      isMiscItem: true,
       slotList: "160 161 162 163 164 165".split(" ")
     },
     S = {
       baseName: "符号",
-      na: false,
+      isMeleeWeapon: false,
       isProjectile: false,
-      ma: false,
-      la: true,
+      isArmor: false,
+      isMiscItem: true,
       slotList: ["200"]
     },
     da = {
       baseName: "蘑菇",
-      na: false,
+      isMeleeWeapon: false,
       isProjectile: false,
-      ma: false,
-      la: true,
+      isArmor: false,
+      isMiscItem: true,
       slotList: ["202", "204"]
     },
     W = {
       baseName: "头盔",
-      na: false,
+      isMeleeWeapon: false,
       isProjectile: false,
-      ma: true,
-      la: false,
+      isArmor: true,
+      isMiscItem: false,
       slotList: ["120"]
     },
     ia = {
       baseName: "王冠",
-      na: false,
+      isMeleeWeapon: false,
       isProjectile: false,
-      ma: true,
-      la: false,
+      isArmor: true,
+      isMiscItem: false,
       slotList: ["125"]
     },
     ea = {
       baseName: "巫师帽",
-      na: false,
+      isMeleeWeapon: false,
       isProjectile: false,
-      ma: true,
-      la: false,
+      isArmor: true,
+      isMiscItem: false,
       slotList: ["121", "122", "123", "124"]
     },
     va = {
       baseName: "手套",
-      na: false,
+      isMeleeWeapon: false,
       isProjectile: false,
-      ma: true,
-      la: false,
+      isArmor: true,
+      isMiscItem: false,
       slotList: ["100", "101", "102"]
     },
     yb = {
       baseName: "长手套",
-      na: false,
+      isMeleeWeapon: false,
       isProjectile: false,
-      ma: true,
-      la: false,
+      isArmor: true,
+      isMiscItem: false,
       slotList: ["101", "102"]
     },
     Fb = {
       baseName: "长袍",
-      na: false,
+      isMeleeWeapon: false,
       isProjectile: false,
-      ma: true,
-      la: false,
+      isArmor: true,
+      isMiscItem: false,
       slotList: ["85", "86", "87", "89", "91"]
     },
     pa = {
       baseName: "斗篷",
-      na: false,
+      isMeleeWeapon: false,
       isProjectile: false,
-      ma: true,
-      la: false,
+      isArmor: true,
+      isMiscItem: false,
       slotList: "85 86 87 88 90 92".split(" ")
     },
     T = {
       baseName: "魔杖",
-      na: false,
+      isMeleeWeapon: false,
       isProjectile: false,
-      ma: false,
-      la: true,
+      isArmor: false,
+      isMiscItem: true,
       slotList: ["26"]
     },
     X = {
       baseName: "靴子",
-      na: false,
+      isMeleeWeapon: false,
       isProjectile: false,
-      ma: true,
-      la: false,
+      isArmor: true,
+      isMiscItem: false,
       slotList: "181 185 182 183 184 180 186".split(" ")
     },
     Ca = {
       baseName: "腰带",
-      na: false,
+      isMeleeWeapon: false,
       isProjectile: false,
-      ma: true,
-      la: false,
+      isArmor: true,
+      isMiscItem: false,
       slotList: ["3", "4", "5", "6", "7"]
     };
   registerItemType(b, la, "ArmorChainMailRusty.PNG");
@@ -551,10 +551,10 @@ export function initializeItemCatalog() {
   registerItemType(b, C, "LanternBronze.PNG");
   registerItemType(b, {
     baseName: "火炬",
-    na: false,
+    isMeleeWeapon: false,
     isProjectile: false,
-    ma: false,
-    la: true,
+    isArmor: false,
+    isMiscItem: true,
     slotList: ["203"]
   }, "Torch.PNG");
   registerItemType(b, v, "LightChalice.PNG");
@@ -618,10 +618,10 @@ export function initializeItemCatalog() {
   registerItemType(b, O, "BoltWood.PNG");
   registerItemType(b, {
     baseName: "星星",
-    na: false,
+    isMeleeWeapon: false,
     isProjectile: true,
-    ma: false,
-    la: false,
+    isArmor: false,
+    isMiscItem: false,
     projectileAnimationId: 3,
     slotList: ["62"]
   }, "ThrowingStar.PNG");
@@ -670,34 +670,34 @@ export function initializeItemCatalog() {
   registerItemType(b, S, "GlyphYellow.PNG");
   registerItemType(b, {
     baseName: "面包",
-    na: false,
+    isMeleeWeapon: false,
     isProjectile: false,
-    ma: false,
-    la: true,
+    isArmor: false,
+    isMiscItem: true,
     slotList: ["204"]
   }, "FoodBread.PNG");
   registerItemType(b, {
     baseName: "啤酒",
-    na: false,
+    isMeleeWeapon: false,
     isProjectile: false,
-    ma: false,
-    la: true,
+    isArmor: false,
+    isMiscItem: true,
     slotList: ["204"]
   }, "FoodAle.PNG");
   registerItemType(b, {
     baseName: "鸡腿",
-    na: false,
+    isMeleeWeapon: false,
     isProjectile: false,
-    ma: false,
-    la: true,
+    isArmor: false,
+    isMiscItem: true,
     slotList: ["204"]
   }, "FoodDrumstick.PNG");
   registerItemType(b, {
     baseName: "火腿",
-    na: false,
+    isMeleeWeapon: false,
     isProjectile: false,
-    ma: false,
-    la: true,
+    isArmor: false,
+    isMiscItem: true,
     slotList: ["204"]
   }, "FoodShank.PNG");
   registerItemType(b, da, "FoodMushroomBlack.PNG");
@@ -816,50 +816,50 @@ export function initializeItemCatalog() {
   registerItemType(b, Ca, "Knight_Belt.PNG");
   registerItemType(b, {
     baseName: "虚拟伤害",
-    na: false,
+    isMeleeWeapon: false,
     isProjectile: true,
-    ma: false,
-    la: false,
+    isArmor: false,
+    isMiscItem: false,
     slotList: ["230"]
   }, "Spear.PNG");
   registerItemType(b, {
     baseName: "虚拟护甲",
-    na: false,
+    isMeleeWeapon: false,
     isProjectile: false,
-    ma: false,
-    la: true,
+    isArmor: false,
+    isMiscItem: true,
     slotList: ["231"]
   }, "Spear.PNG");
   registerItemType(b, {
     baseName: "虚拟攻击等级",
-    na: false,
+    isMeleeWeapon: false,
     isProjectile: false,
-    ma: false,
-    la: true,
+    isArmor: false,
+    isMiscItem: true,
     slotList: ["232"]
   }, "Spear.PNG");
   registerItemType(b, {
     baseName: "虚拟防御等级",
-    na: false,
+    isMeleeWeapon: false,
     isProjectile: false,
-    ma: false,
-    la: true,
+    isArmor: false,
+    isMiscItem: true,
     slotList: ["233"]
   }, "Spear.PNG");
   registerItemType(b, {
     baseName: "虚拟最大生命",
-    na: false,
+    isMeleeWeapon: false,
     isProjectile: false,
-    ma: false,
-    la: true,
+    isArmor: false,
+    isMiscItem: true,
     slotList: ["234"]
   }, "Spear.PNG");
   registerItemType(b, {
     baseName: "虚拟最大法力",
-    na: false,
+    isMeleeWeapon: false,
     isProjectile: false,
-    ma: false,
-    la: true,
+    isArmor: false,
+    isMiscItem: true,
     slotList: ["235"]
   }, "Spear.PNG");
 }
