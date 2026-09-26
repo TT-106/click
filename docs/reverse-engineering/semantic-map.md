@@ -116,6 +116,22 @@ RunStatistics 的 `On/Lk/qn/Mj/wi/uk` → `turnCount/doorsOpened/roomsCleared/le
 
 `applySpellEffect`（`actions.js:118`）按 `spellCategoryId` 分发：cat 2/3 用 `statusEffectDefinitions[statusEffectTypeId]` 构造 StatusEffect 并 `effects.of.push`，禁用类效果再置 `effects.Kd = true`（`actions.js:121-153`）；cat 9/10 走 `summonSpellMinion`；cat 11 先把目标从 `game.monsters.Og` 移除再召唤；cat 17 按召唤者概率产出小鸡。进入该函数的既有三条路径：职业主动施法、卷轴施放（`combat/scrolls.js:149-160` 把 `Spell` 挂到 `scrollCaster.ld` 并置 `actionType = CAST_ACTION_TYPE`）、怪物 AI 施法（`ai/targeting.js:299-419` 的 `spellDefinition`）。`blastStunSpell`（cat=2、statusEffectTypeId=14）不属这三条，它由 `simulation/tick.js:346-348` 懒创建为二段打击动作的 `actionDefinition`，仍落在 cat 2/3 分支。怪物效果队列不入存档，因此"type 14 被施加了几次"的直接计数仍缺。
 
+## 怪物效果队列的两端符号对照（2026-09-26，Blast Stun 直接计数）
+
+原版 `archive/original/c2.js` 是顶层平铺的 classic script（`'use strict'; var aa=[…]` 起头，末尾 `window.Game = w;`），因此顶层 `function`/`var` 都是全局绑定，harness 才能直接取 `window.lB`、`window.pB`。据此确认的对照：
+
+| 原版 | 重构版 | 语义 |
+|---|---|---|
+| `function pw(a,b,c,d,f,g,h)` | `StatusEffect` | 效果实例；`this.X` → `statusEffectTypeId`，`this.jD` 起始回合，`this.Qd` 持续回合，`this.Ok` 强度，`this.bg` 过期位 |
+| `function kw(a,b)` | `applySpellEffect` | 效果施加分发 |
+| `function qw(d)` | `isDisablingEffect` | type 0/1/13/14 为致效型控制 |
+| `w.Gf`（`Gf: new Di`）/ `this.Og = []` | `game.monsters` / `Og` | 活怪物列表 |
+| `b.Da.Ja.of.push(d)` | `targetCharacter.effects.of.push(d)` | 写入角色的效果数组 |
+| `w.i.$a` | `game.state.turnNumber` | 当前回合 |
+| `b.Ib` | `actionDefinition` | 动作携带的法术定义 |
+
+这条对照是 `tests/engine-harness.js` 里 `countEffectApplications(turns, typeId)` 的依据：两端用同一套扫描逻辑、各自的名字表，逐帧统计"某类效果新落到某只活怪物身上"的次数。引擎效果队列不入存档，因此这类只读扫描是唯一能把瞬态行为变成可对比数字的入口。
+
 ## 待取证残留（约 1,300 处访问）
 
 高频：`Y/Z/aa/ca/ea/ga/fa/ka/na` 等长尾——工作清单 `artifacts/obfuscated-fields.json`（按频次排序，含样例代码）。取证方法与产出格式见 WORKSTATE.md 第 6 节。

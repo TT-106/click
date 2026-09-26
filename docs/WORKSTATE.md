@@ -29,8 +29,9 @@
 - Blast Stun 取证结论：`blastStunSpell` 是可学法术的假设不成立——注入法师 `spells` 后两端 `spellCastCount` 均不增长（原版同样不施放），它只在 `simulation/tick.js:346-348` 作为二段打击动作的 `actionDefinition` 懒创建并入队。直接入队计数断言仍开放，详见 `docs/reverse-engineering/unresolved.md` U4。
 - U4 再补两条法术分支差分（17 场景全绿）：`spell-status-transform` 注入火系"转变怪物"（spellCategoryId=2、statusEffectTypeId=4），`spell-buff-armor` 注入牧师"提高护甲"（cat=3、effect=5）；两端各自断言 `spellCastCount` 增长并在 3000/6000 回合比较完整存档。增量是给 cat2/cat3 的 `applySpellEffect` 分支补上"职业主动施法"这条驱动路径——此前该分支只有卷轴施放（`combat/scrolls.js:153`）和怪物 AI 施法两个入口，且没有场景单独断言两端确实施放了该类法术。
 - 新恢复的语义：未改名的 `td` 标记决定效果施加时机 — `td: true` 时由 `combat/actions.js:60-70` 在命中特效首次生成时施加，`td` 为假时由 `actions.js:116` 在动作收尾时施加。cat2/cat3 的 11 条法术定义全部 `td: true`，Blast Stun 亦在此列。
-- Blast Stun 的取证补充：它的效果施加走的正是上面这条 cat=2 分支（`spellCategoryId: 2` + `statusEffectDefinitions[14]`），入队点在 `simulation/tick.js:346-348`；仍缺的只是"type 14 被施加了几次"这一直接计数，因为怪物的 `effects.of` 不入存档、`characterStunnedCount` 只统计冒险者。
-- M13 补测：`npm run build` 产出 dist/ 174 个文件；`npm run perf` 在最近 HEAD 上给出重构版 vs 原版 回合推进 0.080/0.075 ms（1.06x）、存档序列化 0.13/0.07 ms、存档导入 32.8/28.2 ms、离线 1h 结算 178/156 ms CPU（同为 18,925 回合）。
+- Blast Stun 的取证补充：它的效果施加走的正是上面这条 cat=2 分支（`spellCategoryId: 2` + `statusEffectDefinitions[14]`），入队点在 `simulation/tick.js:346-348`。怪物效果队列不入存档、`characterStunnedCount` 只统计冒险者，所以早期的直接计数缺口由下一条的 harness 观察器补上。
+- Blast Stun 的直接观察已补上（提交 479e95a）：harness 增加逐帧扫描活怪物效果队列的只读计数器（原版 `w.Gf.Og`/`Ja.of`/`e.X`，重构版 `game.monsters.Og`/`effects.of`/`statusEffectTypeId`），场景步骤带 `effectType` 即改为"推进的同时计数，两端各自必须 > 0，且数值相等，然后照常做完整存档差分"。`fireball-blast-stun` 实测两端各 31 次 type=14 施加。计数口径：同一次采样间隔内对同一只怪的重复施加会合并，但一次采样只有 15ms 而眩晕时长以回合计（≥250ms），因此实际等于施加次数。type=14 在全仓库只有 `blastStunSpell` 一个来源（另一处 `new StatusEffect` 硬编码 type=13），所以这个计数就是 Blast Stun 的执行次数。
+- M13 补测：`npm run build` 产出 dist/ 174 个文件。`npm run perf` 两次实测（HEAD 7ca07df 与 6c4be10）：回合推进 0.080/0.077 ms vs 原版 0.075/0.064 ms（1.06x / 1.20x），存档序列化 0.13/0.11 ms vs 0.07/0.07 ms，存档导入 32.8/24.1 ms vs 28.2/27.4 ms，离线 1h 结算 CPU 178/179 ms vs 156/167 ms（同为 18,925 回合）。同一份代码两次比值在 1.06x~1.20x 之间波动，属单样本 CPU 噪声，不能当作精确倍数；可确认的是模块化未引入数量级退化。
 - U3 8h/24h 等价回合 soak 已连续三次实测通过（115,200/345,600 回合，完整存档两端相等，0 pageerror）；最近一次 CDP 主动 GC 后原版 JS 堆 8h→24h 为 6.27→6.28 MB，重构版 7.06→7.08 MB。`npm run test:soak` 独立于常规快测，样本输出 `output/soak/last-run.json`；短期稳定不等于严格泄漏证明。
 - M10 `world/rooms.js` 已摘除 `@ts-nocheck`：`revealRoom/revealHallway` 初始布尔位与后续复用变量分名，两个后挂载 `Lw` 调用标注签名；四套回归全绿。剩余 13 个忽略文件。
 - M10 `world/generation.js` 已摘除 `@ts-nocheck`：`LayoutMethods` 明确后挂载布局方法签名，生成随机流与入场角色的复用变量分开，最后楼层布尔条件分开；四套回归全绿。剩余 12 个。
@@ -63,9 +64,9 @@
 | M4 High-Confidence Rename | 🟡 符号 99.8% 已命名；**字段重命名已完成 30+ 个字段身份**（动画帧表、Achievement 组、Upgrade.canPurchase、视图 upgrade、Vector2 x/y、Character.position、CharacterPosition.levelPosition/room、Item.slot/characteristic、tb slot/statType（含 guardians/minions）、怪物 name、WorldMap worldBlocks/blockOrigin*/tileGrid、spriteName、getSprite 方法族、tabState、数值组 currentValue/levelIncrement/activeValue/baseValue/purchasedLevels/perLevelIncrement）|
 | M5-M9 | ✅ 结构完成（见 MIGRATION_MAP.md） |
 | M10 Type Hardening | ✅ 完成：`src/engine/modules` 下 `@ts-nocheck` 为 0（仅 `src/vendor/lz-string-1.3.3.js` 保留），全仓库 tsc 错误 0；每切片均过四套回归 |
-| M11 Performance | ✅ 基线完成（docs/performance-baseline.md）：重构/原版比值 1.0-1.1x；优化未开始（也无必要——模拟占回合预算 0.03%） |
+| M11 Performance | ✅ 基线完成（docs/performance-baseline.md）：重构/原版比值实测在 1.0-1.2x 之间波动（回合推进两次为 1.06x、1.20x，属单样本 CPU 噪声）；优化未开始（也无必要——模拟占回合预算 0.03%） |
 | M12 Legacy Reduction | 🟡 技能/法术/状态效果/视图高频字段已清（e/f/g/X/V/W/c 组落地）；剩余长尾字段约 1,300 处访问（Y/Z/aa/ca 等，需新取证） |
-| M13 Final Regression | ✅ check/parity/17 场景/e2e/soak 全绿，victory 差分已补（castle-victory），build 与 perf 已实测；Blast Stun 直接入队计数与剩余法术分支仍开放 |
+| M13 Final Regression | ✅ check/parity/17 场景/e2e/soak 全绿，build 与 perf 已实测；城堡征服→胜利瞬间（castle-victory）与 Blast Stun 直接计数（两端各 31 次 type=14）均已闭合；剩余法术分支（召唤/持续伤害/位移）仍开放 |
 
 ## 3. 可运行状态与命令（全部实测通过 @ commit 4665924+）
 
@@ -98,8 +99,8 @@ npm run perf             # 性能基线测量（重构 vs 原版）
 1. **波次 4/5 状态**：Ja/ka/Oa/Fa/Ca/ra/Y/Z(slotList) + 法术族 + B 组九项 + 第五轮七项（$/Ea/Ga/Ma/Na/Wa/Qa）+ **Da 三路拆分（combatTarget/targetCharacter/selectedTarget，U1 已解决，根因=616/682 动作自有字段误标）** + aa(statisticsRecorder/runStatistics) 全部落地全绿。**`Da` 三路拆分经两轮调试仍分叉，已回退**——关键实证：推进期 RNG delta 全程 0（非随机流分叉）、`createSpellAction/nu` 入参是多态角色（6 处误标已修正仍分叉）、最可疑链路是 FollowLeaderBehavior.wd 的"谁在打我"判定。完整证据与运行时断言方案见 `docs/reverse-engineering/unresolved.md` U1。
 2. ~~已取证待落地~~ ✅ B 组九项全部落地（每字母独立全回归）。
 3. ~~交付物收尾~~ ✅ 已完成（REFACTOR_REPORT.md、PERFORMANCE_REPORT.md、COMPATIBILITY_REPORT.md、MIGRATION_MAP.md）。
-4. ~~扩展差分场景：prestige/victory~~ ✅ 17 场景矩阵已含 veteran-run/prestige-restart/full-reset、城堡征服→胜利瞬间与 cat2/cat3 法术分支；剩余：Blast Stun 直接入队计数、召唤/DoT 类法术。
-5. **M10 类型体系**：✅ 已启动（tsconfig checkJs 范围 core/+persistence/、SaveData DTO typedef `persistence/save-dto.js`、math.js JSDoc、`npm run typecheck` 已入 check 门禁）。**已纳入检查范围（遗留错误行为中立清零）**：simulation/tick.js、runtime/game.js、ai/targeting.js、combat/scrolls.js、loot/{items,treasure}.js、world/{dungeons,pathfinding,regions,travel-costs}.js、characters/{minions,party}.js、views/{monsters,navigation,base,party-creation,expedition}.js、world/initialization.js。**剩余 23 个 `@ts-nocheck`**（重文件）；工具：`m10-round.cjs`（按文件移除并报告各自错误）、`m10-nocheck.mjs`/`restore-nocheck-baseline.cjs`（范围管理）；light-file 纳入需类成员级 JSDoc 专项（跨文件原型挂载成员 TS 不可见，非纯 any-cast 可覆盖）。
+4. ~~扩展差分场景：prestige/victory~~ ✅ 17 场景矩阵已含 veteran-run/prestige-restart/full-reset、城堡征服→胜利瞬间、cat2/cat3 法术分支，以及 Blast Stun 的直接执行计数（两端各 31 次 type=14）。剩余：召唤/持续伤害/位移类法术分支的专属场景。
+5. **M10 类型体系**：✅ 完成（`src/engine/modules` 下 `@ts-nocheck` 为 0，仅 vendored `src/vendor/lz-string-1.3.3.js` 保留；tsconfig checkJs + `npm run typecheck` 入门禁）。工具：`m10-round.cjs`（按文件移除并报告各自错误）、`m10-nocheck.mjs`/`restore-nocheck-baseline.cjs`（范围管理）；跨文件原型挂载成员仍需调用点窄签名或 JSDoc typedef（不能用整文件 any-cast）。
 6. symbol-map.json 元数据刷新（累计 60+ 字段映射待写入）。
 
 ## 8. 智能体产出验收状态
