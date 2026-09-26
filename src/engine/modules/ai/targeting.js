@@ -423,12 +423,12 @@ export function initializeAiTargeting() {
   CAST_ACTION_TYPE = 4;
   AttackBehavior.prototype.notifySpellLearned = function () {};
   AttackBehavior.prototype.dr = function (a) {
-    if (!respondToTaunt(this, a) && (a.position.dd || a.actionType === IDLE_ACTION)) {
+    if (!respondToTaunt(this, a) && (a.position.movementTargetCleared || a.actionType === IDLE_ACTION)) {
       var b = (this.Al.tileRow + 1) * game.tileSize,
         c = (this.Al.heightInTiles - 1) * game.tileSize;
       setVector(a.position.moveTargetPoint, (this.Al.tileColumn + 1) * game.tileSize + randomInt((this.Al.widthInTiles - 1) * game.tileSize), b + randomInt(c));
       a.actionType = 1;
-      a.position.dd = false;
+      a.position.movementTargetCleared = false;
     }
   };
 }

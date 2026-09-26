@@ -29,13 +29,13 @@ export function CharacterPosition(a, b) {
   this.Sn = this.Rn = 0;
   this.moveTargetPoint = new Vector2();
   this.Ug = null;
-  this.dd = false;
+  this.movementTargetCleared = false;
   this.ed = this.Cc = this.Bc = null;
   this.fg = -1;
   this.Hh = this.aB = this.qj = null;
 }
 export function clearMovementTarget(a) {
-  a.dd = true;
+  a.movementTargetCleared = true;
   a.Bc = null;
   a.Cc = null;
   a.ed = null;

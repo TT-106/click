@@ -263,10 +263,10 @@ export function initializeAiBehaviors() {
           return;
         }
         d = a.position;
-        if (d.dd || a.actionType === IDLE_ACTION) {
+        if (d.movementTargetCleared || a.actionType === IDLE_ACTION) {
           setWorldDestination(d, b, c);
           a.actionType = 1;
-          d.dd = false;
+          d.movementTargetCleared = false;
         }
       } else {
         b = getAllies();
@@ -310,12 +310,12 @@ export function initializeAiBehaviors() {
     var b = a.position,
       c = b.room;
     if (c) {
-      if (b.dd || this.Al != c) {
+      if (b.movementTargetCleared || this.Al != c) {
         this.Al = c;
         var d = roomTopPixels(c) + game.tileSize,
           f = (c.heightInTiles - 1) * game.tileSize;
         setVector(b.moveTargetPoint, roomLeftPixels(c) + game.tileSize + randomInt((c.widthInTiles - 1) * game.tileSize), d + randomInt(f));
-        b.dd = false;
+        b.movementTargetCleared = false;
       }
       a.actionType = 1;
     }
@@ -391,7 +391,7 @@ export function initializeAiBehaviors() {
   FollowLeaderBehavior.prototype.od = function (a) {
     if (this.Uq) {
       var b = a.position.room;
-      if (a.position.dd) {
+      if (a.position.movementTargetCleared) {
         if (!b) {
           return;
         }
@@ -401,7 +401,7 @@ export function initializeAiBehaviors() {
         forcePartyDestination(b);
       }
       a.actionType = 1;
-      a.position.dd = false;
+      a.position.movementTargetCleared = false;
       if (0 === game.state.turnNumber % 2) {
         showFloatingText(game.floatingText, a, "快逃!", "yellow");
       }
@@ -470,7 +470,7 @@ export function initializeAiBehaviors() {
         forcePartyDestination(b);
       }
       a.actionType = 1;
-      a.position.dd = false;
+      a.position.movementTargetCleared = false;
     }
   };
   RangedAttackBehavior.prototype.vx = function (a) {
@@ -1003,17 +1003,17 @@ export function initializeAiBehaviors() {
       if (d && d != f.Bc) {
         var g = findRouteToDoor(a, d);
         f.Ug = g;
-        f.dd = false;
+        f.movementTargetCleared = false;
       } else {
         if (b && b != f.ed) {
           g = findRouteToRoom(a, b.$d);
           f.Ug = g;
-          f.dd = false;
+          f.movementTargetCleared = false;
         } else {
           if (c && c != f.Cc) {
             g = findRouteToRoom(a, c);
             f.Ug = g;
-            f.dd = false;
+            f.movementTargetCleared = false;
           }
         }
       }
@@ -1560,8 +1560,8 @@ export function initializeAiBehaviors() {
         d = b.moveTargetPoint;
       assignVector(d, b.levelPosition);
       clampPointToRoom(c, d, game.tileSize + 1);
-      b.dd = false;
-      b.dd = false;
+      b.movementTargetCleared = false;
+      b.movementTargetCleared = false;
       a.actionType = 1;
     }
   };

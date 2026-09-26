@@ -195,9 +195,9 @@ export function updateCharacter(a, b) {
               g = game.world.pixelToTileRow(c.worldPosition.y);
             if (vectorLength(c.velocity) <= d) {
               assignVector(c.worldPosition, c.Ul);
-              c.dd = true;
+              c.movementTargetCleared = true;
             } else if (f === c.Rn && g === c.Sn) {
-              c.dd = true;
+              c.movementTargetCleared = true;
             } else {
               if (!c.Hh || !c.qj || c.qj.bc() !== f || c.qj.getWorldRow() !== g) {
                 c.aB = c.qj;
@@ -235,10 +235,10 @@ export function updateCharacter(a, b) {
             n = game.world.pixelToTileRow(c.worldPosition.y);
           if (vectorLength(c.velocity) <= h) {
             assignVector(c.worldPosition, c.Ul);
-            c.dd = true;
+            c.movementTargetCleared = true;
           } else {
             if (l === c.Rn && n === c.Sn) {
-              c.dd = true;
+              c.movementTargetCleared = true;
             } else {
               setVector(c.velocity, c.Ul.x + 1, c.Ul.y + 1);
               subtractVector(c.velocity, c.worldPosition);
