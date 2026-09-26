@@ -1,4 +1,3 @@
-// @ts-nocheck -- M10 渐进类型化：JSDoc 覆盖后摘除（见 docs/WORKSTATE.md）
 /** 角色属性、技能、背包和装备界面。
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
@@ -12,12 +11,14 @@ import { TabBar, TabState, TabView, addTab } from "./navigation.js";
 import { getAttackCooldown, statValue } from "../characters/stats.js";
 import { characterLevelUpgrades, healthRegenerationBonus, spiritRegenerationBonus } from "../content/balance.js";
 import { UpgradeCollection } from "../progression/upgrades.js";
+/** @typedef {{ reset: () => void, render: () => void }} ViewLifecycle */
+/** @typedef {{ pf: () => void, mk: (rowCount: number) => void, Ri: (row: HTMLTableRowElement) => void }} TableLifecycle */
 export function ItemRowBase() {}
 export function InventoryItemView(a, b) {
   this.lh = a;
   this.adventurerIndex = b;
   this.Ej = this.Cr = this.gf = this.Oh = this.Af = this.Ie = this.Fi = this.Ei = this.item = null;
-  this.qi();
+  (/** @type {InventoryItemView & { qi: () => void }} */ (/** @type {unknown} */ (this))).qi();
 }
 export function InventoryTableView(a, b) {
   this.elementId = a;
@@ -30,7 +31,7 @@ export function EquipmentItemRowView(a, b) {
   this.lh = a;
   this.adventurerIndex = b;
   this.Cr = this.gf = this.Oh = this.Af = this.Ie = this.Fi = this.Ei = this.item = null;
-  this.qi();
+  (/** @type {EquipmentItemRowView & { qi: () => void }} */ (/** @type {unknown} */ (this))).qi();
 }
 export function EquipmentTableView(a, b) {
   this.elementId = a;
@@ -47,7 +48,7 @@ export function EquipAllView(a) {
   this.gw = getElement("equipImprovements" + a);
   var b = this;
   this.gw.onclick = function () {
-    b.Br();
+    (/** @type {EquipAllView & { Br: () => void }} */ (/** @type {unknown} */ (b))).Br();
     return false;
   };
 }
@@ -84,7 +85,7 @@ export function CharacterSummaryView(a, b) {
   this.elementId = a;
   this.visible = true;
   this.adventurerIndex = b;
-  this.xy = this.Jy = this.AB = this.hz = this.gz = this.ez = this.aj = this.Ap = this.pA = this.EB = this.Wz = this.bz = this.DB = this.Ij = this.rA = this.be = null;
+  this.dD = this.xy = this.Jy = this.AB = this.hz = this.gz = this.ez = this.aj = this.Ap = this.pA = this.EB = this.Wz = this.bz = this.DB = this.Ij = this.rA = this.be = null;
   this.zu = this.iv = this.Mu = this.Ov = this.Pu = this.Ou = this.Nu = this.Kk = this.Ik = this.Gk = this.Pv = this.$u = this.Lu = this.Jk = this.Zu = this.$f = -1;
 }
 export function StatBreakdownView(a, b, c, d) {
@@ -117,13 +118,20 @@ export function CharacterAttributesView(a, b) {
   this.elementId = a;
   this.visible = true;
   this.adventurerIndex = b;
-  this.bB = new CharacterSummaryView(a, b);
-  this.iz = new StatBreakdownView(a, b, "伤害", 0);
-  this.Gy = new StatBreakdownView(a, b, "护甲", 1);
-  this.Hy = new StatBreakdownView(a, b, "攻击等级", 2);
-  this.lz = new StatBreakdownView(a, b, "防御等级", 3);
-  this.vA = new StatBreakdownView(a, b, "最大生命", 4);
-  this.yA = new StatBreakdownView(a, b, "最大法力", 5);
+  /** @type {CharacterSummaryView & ViewLifecycle} */
+  this.bB = /** @type {CharacterSummaryView & ViewLifecycle} */ (/** @type {unknown} */ (new CharacterSummaryView(a, b)));
+  /** @type {StatBreakdownView & ViewLifecycle} */
+  this.iz = /** @type {StatBreakdownView & ViewLifecycle} */ (/** @type {unknown} */ (new StatBreakdownView(a, b, "伤害", 0)));
+  /** @type {StatBreakdownView & ViewLifecycle} */
+  this.Gy = /** @type {StatBreakdownView & ViewLifecycle} */ (/** @type {unknown} */ (new StatBreakdownView(a, b, "护甲", 1)));
+  /** @type {StatBreakdownView & ViewLifecycle} */
+  this.Hy = /** @type {StatBreakdownView & ViewLifecycle} */ (/** @type {unknown} */ (new StatBreakdownView(a, b, "攻击等级", 2)));
+  /** @type {StatBreakdownView & ViewLifecycle} */
+  this.lz = /** @type {StatBreakdownView & ViewLifecycle} */ (/** @type {unknown} */ (new StatBreakdownView(a, b, "防御等级", 3)));
+  /** @type {StatBreakdownView & ViewLifecycle} */
+  this.vA = /** @type {StatBreakdownView & ViewLifecycle} */ (/** @type {unknown} */ (new StatBreakdownView(a, b, "最大生命", 4)));
+  /** @type {StatBreakdownView & ViewLifecycle} */
+  this.yA = /** @type {StatBreakdownView & ViewLifecycle} */ (/** @type {unknown} */ (new StatBreakdownView(a, b, "最大法力", 5)));
 }
 export function CharacterView(a, b, c) {
   this.elementId = b;
@@ -135,19 +143,19 @@ export function CharacterView(a, b, c) {
   addChildView(this, new CharacterTabsView("characterTabContainer" + c, c));
 }
 export function mountCharacterView(a) {
-  var b = a.adventurerIndex < game.state.adventurers.length,
+  var hasAdventurer = a.adventurerIndex < game.state.adventurers.length,
     c = a.tabState;
-  c.enabled = b;
+  c.enabled = hasAdventurer;
   c.selected = false;
-  if (b) {
-    b = game.state.adventurers[a.adventurerIndex];
-    a = a.tw(b);
-    b = b.classDefinition.shortName;
+  if (hasAdventurer) {
+    var adventurer = game.state.adventurers[a.adventurerIndex];
+    a = a.tw(adventurer);
+    var className = adventurer.classDefinition.shortName;
     if (0 < a) {
-      c.label = b + " " + a;
+      c.label = className + " " + a;
       c.highlighted = true;
     } else {
-      c.label = b;
+      c.label = className;
       c.highlighted = false;
     }
   }
@@ -241,11 +249,11 @@ export function initializeViewsCharacter() {
   InventoryTableView.prototype.update = function () {
     if (!(0 > this.adventurerIndex || this.adventurerIndex >= game.state.adventurers.length)) {
       if (!this.Jj) {
-        this.pf();
+        (/** @type {InventoryTableView & TableLifecycle} */ (/** @type {unknown} */ (this))).pf();
       }
       var a = game.state.adventurers[this.adventurerIndex].inventory.items;
       if (a.length !== this.bh.length) {
-        this.mk(a.length);
+        (/** @type {InventoryTableView & TableLifecycle} */ (/** @type {unknown} */ (this))).mk(a.length);
       }
       var b;
       for (b = 0; b < this.bh.length; b++) {
@@ -268,7 +276,7 @@ export function initializeViewsCharacter() {
     var a = this.elementId;
     clearElementById(a);
     this.Jj = createElement("table", getElement(a), null, "monsterTable");
-    this.Ri(this.Jj.insertRow(0));
+    (/** @type {InventoryTableView & TableLifecycle} */ (/** @type {unknown} */ (this))).Ri(this.Jj.insertRow(0));
   };
   InventoryTableView.prototype.Ri = function (a) {
     var b = appendHeaderCell(a);
@@ -356,12 +364,12 @@ export function initializeViewsCharacter() {
   EquipmentTableView.prototype.update = function () {
     if (!(0 > this.adventurerIndex || this.adventurerIndex >= game.state.adventurers.length)) {
       if (!this.zm) {
-        this.pf();
+        (/** @type {EquipmentTableView & TableLifecycle} */ (/** @type {unknown} */ (this))).pf();
       }
       var a = game.state.adventurers[this.adventurerIndex],
         b = a.slotList;
       if (b.length !== this.sf.length) {
-        this.mk(b.length);
+        (/** @type {EquipmentTableView & TableLifecycle} */ (/** @type {unknown} */ (this))).mk(b.length);
       }
       var c, d;
       for (c = 0; c < this.sf.length; c++) {
@@ -385,7 +393,7 @@ export function initializeViewsCharacter() {
     var a = this.elementId;
     clearElementById(a);
     this.zm = createElement("table", getElement(a), null, "monsterTable");
-    this.Ri(this.zm.insertRow(0));
+    (/** @type {EquipmentTableView & TableLifecycle} */ (/** @type {unknown} */ (this))).Ri(this.zm.insertRow(0));
   };
   EquipmentTableView.prototype.Ri = function (a) {
     var b = appendHeaderCell(a);
@@ -413,7 +421,7 @@ export function initializeViewsCharacter() {
   EquipAllView.prototype.reset = function () {};
   EquipAllView.prototype.update = function () {
     if (!(0 > this.adventurerIndex || this.adventurerIndex >= game.state.adventurers.length)) {
-      if (this.Wt()) {
+      if ((/** @type {EquipAllView & { Wt: () => boolean }} */ (/** @type {unknown} */ (this))).Wt()) {
         if (!this.Xq) {
           this.Xq = true;
           this.gw.className = "upgradeButton";
@@ -552,16 +560,16 @@ export function initializeViewsCharacter() {
   StatBreakdownView.prototype.reset = function () {
     this.Mv = this.Jv = this.hv = this.dv = this.Tv = -1;
     this.Cn = createElement("table", getElement(this.elementId), null, "characteristicsTable");
-    var a = this.qE + ":",
+    var label = this.qE + ":",
       b = this.Cn.insertRow(0),
       c = document.createElement("th");
     c.className = "characteristicsTableLabel";
     b.appendChild(c);
-    c.innerHTML = a;
-    a = document.createElement("th");
-    a.style.textAlign = "left";
-    b.appendChild(a);
-    this.XB = a;
+    c.innerHTML = label;
+    var valueCell = document.createElement("th");
+    valueCell.style.textAlign = "left";
+    b.appendChild(valueCell);
+    this.XB = valueCell;
     this.gA = appendAttributeRow(this.Cn, "道具加成:", 1);
     this.qA = appendAttributeRow(this.Cn, "等级加成:", 2);
     this.vB = appendAttributeRow(this.Cn, "技能加成:", 3);
@@ -646,17 +654,17 @@ export function initializeViewsCharacter() {
     this.Vc.length = 0;
     this.Nf.length = 0;
     this.Pn.length = 0;
-    this.Zn();
+    (/** @type {SkillsTabView & { Zn: () => void }} */ (/** @type {unknown} */ (this))).Zn();
     var a = this.elementId,
       b = getElement(a);
     if (b && !(0 > this.adventurerIndex || this.adventurerIndex >= game.state.adventurers.length)) {
       if (this.hj) {
         this.Ax = createElement("table", b, null, "adventurerSkillTreeTable");
-        var b = this.hj.upgrades,
+        var skillUpgrades = this.hj.upgrades,
           c = this.Rl.upgrades,
           d = this.qy.upgrades,
           f = this.ry.upgrades,
-          g = Math.max(b.length, Math.max(c.length, Math.max(d.length, f.length))),
+          g = Math.max(skillUpgrades.length, Math.max(c.length, Math.max(d.length, f.length))),
           h,
           l,
           n,
@@ -676,8 +684,8 @@ export function initializeViewsCharacter() {
           p.width = 150;
           s.width = 150;
           l.width = 150;
-          if (h < b.length) {
-            this.Uc.push(new UpgradeButtonView(n.id, b[h], h, true));
+          if (h < skillUpgrades.length) {
+            this.Uc.push(new UpgradeButtonView(n.id, skillUpgrades[h], h, true));
           }
           if (h < c.length) {
             this.Vc.push(new UpgradeButtonView(p.id, c[h], h, true));
