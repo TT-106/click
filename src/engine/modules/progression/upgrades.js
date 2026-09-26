@@ -118,13 +118,13 @@ export function PurchaseItemUpgrade(a) {
   this.Ly = a;
   this.xc = null;
   this.jk = "计划攻击";
-  this.Up = this.Ub = this.affordableSoon = this.canPurchase = false;
+  this.Up = this.cachedCanPurchase = this.affordableSoon = this.canPurchase = false;
 }
 export function GlobalUpgrade(a) {
   this.definition = a;
   this.canPurchase = this.affordableSoon = false;
   this.$A = -1;
-  this.Zj = this.Ub = this.$j = false;
+  this.Zj = this.cachedCanPurchase = this.$j = false;
   recalculateGlobalUpgrade(this);
 }
 export function recalculateGlobalUpgrade(a) {
@@ -178,15 +178,15 @@ export function LearnSpellUpgrade(a) {
 }
 export function PurchaseDungeonUpgrade(a) {
   this.dungeon = a;
-  this.Zj = this.Ub = this.$j = this.canPurchase = this.affordableSoon = false;
+  this.Zj = this.cachedCanPurchase = this.$j = this.canPurchase = this.affordableSoon = false;
 }
 export function PurchaseCastleUpgrade(a) {
   this.Ez = a;
   this.dungeon = null;
-  this.Zj = this.Ub = this.$j = this.canPurchase = this.affordableSoon = false;
+  this.Zj = this.cachedCanPurchase = this.$j = this.canPurchase = this.affordableSoon = false;
 }
 export function AutoPurchaseDungeonUpgrade() {
-  this.Ub = this.canPurchase = false;
+  this.cachedCanPurchase = this.canPurchase = false;
 }
 export function ScrollUpgrade(a) {
   this.scrollId = a;
@@ -198,7 +198,7 @@ export function ClaimAchievementUpgrade(a) {
   this.Ic = null;
   this.Ve = "Achievement";
   this.jk = "Reward";
-  this.Ub = this.canPurchase = false;
+  this.cachedCanPurchase = this.canPurchase = false;
 }
 export function AchievementUpgrade(a) {
   this.Ic = a;
@@ -211,7 +211,7 @@ export function getAchievementActionLabel(a) {
 }
 export function AdventurePointUpgrade(a) {
   this.kh = a;
-  this.Ub = this.Hc = this.canPurchase = false;
+  this.cachedCanPurchase = this.Hc = this.canPurchase = false;
 }
 export function applyPointUpgrade(a) {
   a = getPointUpgradeModifier(a);
@@ -250,7 +250,7 @@ export function getPointUpgradeModifier(a) {
   return null;
 }
 export function CollectFarmUpgrade() {
-  this.Ub = this.canPurchase = false;
+  this.cachedCanPurchase = this.canPurchase = false;
 }
 export function initializeProgressionUpgrades() {
   SKILL_UPGRADE_TYPE = 5;
@@ -341,12 +341,12 @@ export function initializeProgressionUpgrades() {
     } else {
       this.affordableSoon = this.canPurchase = false;
     }
-    var b = this.xc != a || this.Ub != this.canPurchase || this.Up != this.affordableSoon;
+    var b = this.xc != a || this.cachedCanPurchase != this.canPurchase || this.Up != this.affordableSoon;
     if (b && a) {
       this.jk = this.canPurchase ? a.castleName : "需要怪物等级: " + a.requiredMonsterLevel;
     }
     this.xc = a;
-    this.Ub = this.canPurchase;
+    this.cachedCanPurchase = this.canPurchase;
     this.Up = this.affordableSoon;
     return b;
   };
@@ -396,9 +396,9 @@ export function initializeProgressionUpgrades() {
       this.affordableSoon = !this.canPurchase && this.hu();
     }
     var a = this.Oc(),
-      b = this.$A !== this.definition.purchasedLevels || this.Ub !== this.canPurchase || this.Zj !== this.affordableSoon || this.$j !== a;
+      b = this.$A !== this.definition.purchasedLevels || this.cachedCanPurchase !== this.canPurchase || this.Zj !== this.affordableSoon || this.$j !== a;
     this.$A = this.definition.purchasedLevels;
-    this.Ub = this.canPurchase;
+    this.cachedCanPurchase = this.canPurchase;
     this.Zj = this.affordableSoon;
     this.$j = a;
     return b;
@@ -939,8 +939,8 @@ export function initializeProgressionUpgrades() {
     this.canPurchase = a && game.state.party.gold >= this.getCost();
     this.affordableSoon = a && !this.canPurchase && 120 > this.getCost() - game.state.party.gold;
     var a = this.Oc(),
-      b = this.Ub !== this.canPurchase || this.Zj !== this.affordableSoon || this.$j !== a;
-    this.Ub = this.canPurchase;
+      b = this.cachedCanPurchase !== this.canPurchase || this.Zj !== this.affordableSoon || this.$j !== a;
+    this.cachedCanPurchase = this.canPurchase;
     this.Zj = this.affordableSoon;
     this.$j = a;
     return b;
@@ -991,9 +991,9 @@ export function initializeProgressionUpgrades() {
       this.affordableSoon = this.canPurchase = false;
     }
     var b = this.Oc(),
-      c = this.dungeon != a || this.Ub != this.canPurchase || this.Zj != this.affordableSoon || this.$j != b;
+      c = this.dungeon != a || this.cachedCanPurchase != this.canPurchase || this.Zj != this.affordableSoon || this.$j != b;
     this.dungeon = a;
-    this.Ub = this.canPurchase;
+    this.cachedCanPurchase = this.canPurchase;
     this.Zj = this.affordableSoon;
     this.$j = b;
     return c;
@@ -1025,8 +1025,8 @@ export function initializeProgressionUpgrades() {
   };
   AutoPurchaseDungeonUpgrade.prototype.Cd = function () {
     this.canPurchase = 0 < game.dungeons.Sd;
-    var a = this.Ub !== this.canPurchase;
-    this.Ub = this.canPurchase;
+    var a = this.cachedCanPurchase !== this.canPurchase;
+    this.cachedCanPurchase = this.canPurchase;
     return a;
   };
   ScrollUpgrade.prototype = new Upgrade();
@@ -1136,13 +1136,13 @@ export function initializeProgressionUpgrades() {
     a = game.state.achievements.Ze;
     a = this.vy < a.length ? a[this.vy] : null;
     this.canPurchase = null != a;
-    var b = this.Ic != a || this.Ub != this.canPurchase;
+    var b = this.Ic != a || this.cachedCanPurchase != this.canPurchase;
     if (b && a) {
       this.Ve = a.name;
       this.jk = "奖励:" + getAchievementRewardLabel(a);
     }
     this.Ic = a;
-    this.Ub = this.canPurchase;
+    this.cachedCanPurchase = this.canPurchase;
     return b;
   };
   AchievementUpgrade.prototype = new Upgrade();
@@ -1182,7 +1182,7 @@ export function initializeProgressionUpgrades() {
   AdventurePointUpgrade.prototype = new Upgrade();
   AdventurePointUpgrade.prototype.og = function () {
     this.Hc = this.canPurchase = false;
-    this.Ub = !this.canPurchase;
+    this.cachedCanPurchase = !this.canPurchase;
     var a = getPointUpgradeModifier(this);
     a.currentValue = a.defaultValue;
   };
@@ -1227,8 +1227,8 @@ export function initializeProgressionUpgrades() {
   };
   AdventurePointUpgrade.prototype.Cd = function () {
     this.canPurchase = !this.Hc && this.kh.pointCost <= game.state.ae.Dd;
-    var a = this.Ub !== this.canPurchase;
-    this.Ub = this.canPurchase;
+    var a = this.cachedCanPurchase !== this.canPurchase;
+    this.cachedCanPurchase = this.canPurchase;
     return a;
   };
   CollectFarmUpgrade.prototype = new Upgrade();
@@ -1258,8 +1258,8 @@ export function initializeProgressionUpgrades() {
   };
   CollectFarmUpgrade.prototype.Cd = function () {
     this.canPurchase = 0 < game.shops.ni;
-    var a = this.Ub !== this.canPurchase;
-    this.Ub = this.canPurchase;
+    var a = this.cachedCanPurchase !== this.canPurchase;
+    this.cachedCanPurchase = this.canPurchase;
     return a;
   };
 }
