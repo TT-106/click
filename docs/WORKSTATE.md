@@ -3,6 +3,13 @@
 > 本文件是长程自治任务的**唯一续跑入口**。上下文压缩或中断后，先读本文件 + `git log --oneline`，再继续。
 > 最后更新：2026-09-26（cc/dc/ec/bc/ac 方法族修复后；下文较早批次的快照保留为历史记录）
 
+## 当前轮次状态（2026-09-26，M13 文档与验收收尾）
+
+- `upgrades-purchased` 已把 settings、characterLevels、skillTrees 三个升级族从日志观察提升为两端各自的必达断言：比较 fixture 基线上的设置等级总和、角色等级及四棵技能树解锁位总数；独立运行时两端各完成 28+24 次购买，三个断言均通过，逐检查点完整存档相等。未改引擎、数值、RNG、存档键，也未做字段重命名；混淆清单维持 1,175，fields 段维持 263。
+- `REFACTOR_REPORT.md` 附录 A 的角色升级与角色技能/技能树行已按可执行证据更新。逐行复核发现原先总数写错：实际为 51 行，现为 30 PASS / 18 PARTIAL / 3 未覆盖。U7 剩余升级族与拾取、卷轴路径仍开放。
+- 本轮全量回归通过：`check`（111 文件语法、9 单测、typecheck）、独立 `typecheck`、`test`、`test:parity`（0/1/99/900）、`test:scenarios`（34/34；升级场景完整序列两端各 28+25 次购买）、`test:e2e`、`test:soak`（8h/24h 完整存档相等）、`build`（174 文件）、`perf`、`perf:frames`（两个视图各 599 帧，p95 4.5/4.4ms，渲染异常 0）。无 lockfile 变化，未重装依赖。性能单次样本仅作基线，不能据此宣称改进。
+- 耗尽审计见 `docs/m13-exhaustion-audit.md`：精确标记 TODO/FIXME/HACK/@ts-ignore/eslint-disable 为 0；`unknown` 与 `any` 类型注解仍有欠账，原版继承的诊断日志与旧 DOM 桥接不宜在保真期直接删除。模块入口覆盖缺口已定位，未把静态未列入误判为无用文件。
+
 ## 当前续跑状态（优先阅读）
 
 - 交接时的损坏工作树已修复：`entities.js` 的 `h` 是 CharacterPosition，存档 `worldX/worldY` 读取 `getWorldPositionX/Y()`；`Vector2.ac` 的 20 个调用点、RenderCommand 排序比较器与 `WorldMap.vw()` 的内部 `bc(a)` 均已同步。调用点按接收者逐项核对。

@@ -22,15 +22,22 @@ const BASELINE_MAX_LEVEL = Math.max(1, ...(base.adventurers ?? []).map(a => a.ch
 const BASELINE_SKILLS = (base.adventurers ?? []).map((a) =>
   ['upgrades1', 'upgrades2', 'upgrades3', 'upgrades4'].reduce((n, k) => n + Object.values(a[k] ?? {}).filter(Boolean).length, 0));
 const BASELINE_SKILL_TOTAL = BASELINE_SKILLS.reduce((n, v) => n + v, 0);
+const BASELINE_SETTINGS_TOTAL = Object.values(base.settings?.upgrades ?? {}).reduce((n, v) => n + v, 0);
 const upgradedSomething = (s) => {
   const families = [];
-  if (Object.values(s.settings?.upgrades ?? {}).some(v => v > 0)) families.push('settings');
+  if (Object.values(s.settings?.upgrades ?? {}).reduce((n, v) => n + v, 0) > BASELINE_SETTINGS_TOTAL) families.push('settings');
   if ((s.pointManagerState?.spentAdventurePoints ?? 0) > 0) families.push('adventurePoints');
   if ((s.achievements ?? []).some(a => a.upgradePurchased)) families.push('achievementClaim');
   if ((s.monsterTypes?.monsterLevelStates?.length ?? 0) > BASELINE_MONSTER_LEVELS) families.push('monsterLevels');
   if ((s.adventurers ?? []).some(a => (a.characteristicsComponent?.characterLevel ?? 1) > BASELINE_MAX_LEVEL)) families.push('characterLevels');
   if ((s.adventurers ?? []).reduce((n, a, i) => n + ['upgrades1','upgrades2','upgrades3','upgrades4'].reduce((m, k) => m + Object.values(a[k] ?? {}).filter(Boolean).length, 0), 0) > BASELINE_SKILL_TOTAL) families.push('skillTrees');
-  return { upgraded: families.length > 0, note: '购买命中的升级族: ' + (families.join(' + ') || '无') };
+  return {
+    upgraded: families.length > 0,
+    settingsPurchased: families.includes('settings'),
+    characterLeveled: families.includes('characterLevels'),
+    skillLearned: families.includes('skillTrees'),
+    note: '购买命中的升级族: ' + (families.join(' + ') || '无'),
+  };
 };
 // U7：药水激活在视图之外没有入口，激活后存档里只有 statistics.potionsUsed 可证。
 const potionWasUsed = (s) => ({ potionUsed: (s.statistics?.potionsUsed ?? 0) > 0 });
@@ -227,8 +234,8 @@ const scenarios = [
   },
   {
     name: 'upgrades-purchased',
-    // U7：升级购买只有视图层入口（按钮 onmouseup）。这里给足金币让金价位升级可购，
-    // 再对两端各自渲染出的"可购"按钮派发真实 mouseup，然后继续差分。
+    // U7：升级购买只有视图层入口。给足金币、经验和技能点，
+    // 两端分别调用升级对象的同一购买方法，再验证三个升级族均实际改变。
     make: () => withExperience(withSkillPoints(withGold(base, 1000000), 5), 500000),
     steps: [
       { turns: 600, purchaseUpgrades: 60, check: upgradedSomething },
@@ -455,6 +462,9 @@ try {
             if (verdict.summoned !== undefined) assert.equal(verdict.summoned, true, `${label} 召唤场景必须真的召唤出随从`);
             if (verdict.stunned !== undefined) assert.equal(verdict.stunned, true, `${label} 必须真的出现冒险者被击倒（昏迷前置）`);
             if (verdict.upgraded !== undefined) assert.equal(verdict.upgraded, true, `${label} 必须真的完成至少一次升级购买`);
+            if (verdict.settingsPurchased !== undefined) assert.equal(verdict.settingsPurchased, true, `${label} 全局设置升级必须真实增长`);
+            if (verdict.characterLeveled !== undefined) assert.equal(verdict.characterLeveled, true, `${label} 角色等级必须真实上升`);
+            if (verdict.skillLearned !== undefined) assert.equal(verdict.skillLearned, true, `${label} 技能树布尔位必须真实解锁`);
             if (verdict.potionUsed !== undefined) assert.equal(verdict.potionUsed, true, `${label} 必须真的激活至少一瓶药水（potionsUsed 增长）`);
             if (verdict.note && i === 0) console.log(`  · ${verdict.note}`);
             if (verdict.victory !== undefined) assert.equal(verdict.victory, true, `${label} 必须真的走完征服尾部并触发胜利`);

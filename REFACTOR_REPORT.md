@@ -45,7 +45,7 @@ archive/original/c2.js  ──AST 机械恢复──▶  src/engine/（77 模块
 | L6 浏览器 E2E | 建队/自动战斗/暂停/五类面板/**c2c.user.js 外部 DOM 契约**/设置/导出导入/非法存档/刷新恢复/键盘/三种视口 |
 | L7 长跑 soak | `test:soak`：115,200 与 345,600 等价回合（8h/24h），两端完整存档相等 + CDP 主动 GC 后堆增量样本 |
 | 渲染等价 | `rendered-scene` / `autosave-payload`：真实帧循环 1,300 帧后比对主画布逐像素 FNV-1a 指纹（两端相同）与落盘存档解码内容 |
-| 工程门 | `npm run check`（109 文件语法 + 单测）、`npm run typecheck`（tsc 覆盖 76/77 引擎模块，经 import 图传递）；每切片一 commit |
+| 工程门 | `npm run check`（当前 111 文件语法 + 单测）、`npm run typecheck`（tsc 覆盖 76/77 引擎模块，经 import 图传递）；每切片一 commit |
 
 方法论实证：差分矩阵三次抓到人工没看到的真实缺陷——guardians/minions 数据键漏改导致城堡守卫生成崩溃；金堆房对 DungeonTile 误调角色坐标接口；以及本轮由新场景暴露的**自动保存间隔 3E4 vs 原版 3E5**（10 倍频率，改动前无任何测试能看到）。
 
@@ -59,10 +59,10 @@ archive/original/c2.js  ──AST 机械恢复──▶  src/engine/（77 模块
 
 ## 8. 剩余风险与未完成
 
-1. **字段重命名未竟**：`src` 内仍余 1,202 个混淆属性名（本次会话清零 29 个字母）。工作清单 `artifacts/obfuscated-fields.json`，取证→改名→四套回归的流程已固化在 `scripts/rename-field.mjs`。
-2. **UI 独占路径未进差分**（U7）：技能树购买、随从等级解锁、冒险点消费、农场购买、成就领取、自动装备、卷轴施放、宝箱与掉落物拾取（角色升级与药水激活已经纳入）——这些只能从视图入口进入，现有 harness 驱动命令尚未覆盖到它们（升级购买只命中了全局升级一支）。
+1. **字段重命名未竟**：`src` 内仍余 1,175 个混淆属性名（以最新工作清单为准）。工作清单 `artifacts/obfuscated-fields.json`，取证→改名→四套回归的流程已固化在 `scripts/rename-field.mjs`。
+2. **UI 独占路径仍有差分缺口**（U7）：随从等级解锁、冒险点消费、农场/地牢购买、成就领取、自动装备、卷轴施放、宝箱与掉落物拾取仍需前置变异器和专项断言。`upgrades-purchased` 已驱动全局升级、角色升级、技能树购买，`potions-activated` 已驱动药水激活；这两条路径已纳入差分。
 3. **验收口径分层**：16 类法术分支靠"唯一注入法术 + 两端各自施法计数增长"归因，只有 cat=2 的三种状态与 cat=17 有专属可观测量；渲染等价只在一条场景、一种视口下比对指纹。
-4. 双主字母 `Cb`/`Qc` 已按所有者拆开，`oc`/`$c` 仍待线级处理（见 semantic-map 第十二轮）。
+4. 双主字母 `Cb`/`Qc` 已按所有者拆开，`oc` 仍待线级处理；`$c` 已改为 `itemDrop`（见 semantic-map）。
 
 ## 9. 后续开发方式（对新开发者的承诺）
 
@@ -78,7 +78,7 @@ npm test && npm run check      # 一条命令测试
 
 Clickpocalypse II 的核心实现已从高混淆遗留代码中恢复出真实语义：关键玩法行为有 34 个差分场景 + 位级 RNG 单测 + 浏览器 E2E + 8h/24h 等价回合 soak 的自动化证据保护，存档/RNG/时间/离线/自动保存经兼容验证，业务逻辑已迁入带清晰边界的现代模块（77 个），旧文件不再是唯一真相来源。
 
-这些结论由运行与差分证明，不是主观判断；同样明确的是**尚未证明的部分**：附录 A 的 50 行里有 28 行 PASS、17 行 PARTIAL、5 行未覆盖，缺口逐项写明，`docs/reverse-engineering/unresolved.md` 的 U4/U5/U6/U7 是继续推进的入口。
+这些结论由运行与差分证明，不是主观判断；同样明确的是**尚未证明的部分**：附录 A 实际有 51 行（逐行统计），其中 30 行 PASS、18 行 PARTIAL、3 行未覆盖；旧版写成 50 行及 28/17/5 是过时合计。缺口逐项写明，`docs/reverse-engineering/unresolved.md` 的 U5/U6/U7 是继续推进的入口。
 
 ---
 
@@ -91,8 +91,8 @@ Clickpocalypse II 的核心实现已从高混淆遗留代码中恢复出真实�
 | Bootstrap 启动 | PASS | harness 两端 `ready()` 前置断言；E2E 载入 + 无 console/pageerror（渲染异常也纳入捕获） |
 | Party 创建 | PASS | E2E：推荐阵容→改名→开战，断言 4 名队员与姓名 |
 | 角色职业 | PARTIAL | 法术场景装载职业 3/4/6/7/8/9/10/11；0/1/2/5 未被装载，职业成长未跑 |
-| 角色升级 | PASS | `upgrades-purchased` 给足经验值后驱动 `LevelUpUpgrade.purchase`，两端 `characteristicsComponent.characterLevel` 都真实上升，逐检查点完整存档相等 |
-| 角色技能/技能树 | 未覆盖 | `upgrades1..4` 全 false、`skillPoints` 未变动；购买入口在视图层 |
+| 角色升级 | PASS | `upgrades-purchased` 给足经验值后驱动 `LevelUpUpgrade.purchase`；两端各自断言 `characteristicsComponent.characterLevel` 超过 fixture 基线，逐检查点完整存档相等 |
+| 角色技能/技能树 | PASS | `purchaseUpgrades` 遍历每名角色的四棵技能树；两端各自断言 `upgrades1..4` 已解锁布尔位总数超过 fixture 基线，逐检查点完整存档相等；未逐项验证每种技能的战斗效果 |
 | 角色属性 | PASS | 六个分量 + 生命/精神/击杀在 34 场景每个检查点全量相等 |
 | 背包 | PASS | 物品计数/容量在差分中相等（itemsFound 真实增长） |
 | 装备 | PARTIAL | 载入侧装备与怪物侧生成被覆盖；跑图中无装备变更事件 |
@@ -102,7 +102,7 @@ Clickpocalypse II 的核心实现已从高混淆遗留代码中恢复出真实�
 | 战斗 | PASS | 近战/远程计数 + 9,000~345,600 回合全状态相等 |
 | 暴击 | PARTIAL | 暴击判定消耗 RNG，错位即分叉（间接证据）；存档无暴击计数，玩家侧暴击技能未被驱动 |
 | 眩晕/状态效果 | PASS | `isStunned/isStealthed/isConverted` 语义已落地；type 13/14/0 直接计数两端同值，`characterStunnedCount` 增长断言 |
-| 技能效果层 | PARTIAL | 首领/守卫技能效果表被跑过；玩家习得技能路径未覆盖 |
+| 技能效果层 | PARTIAL | 首领/守卫技能效果表被跑过，玩家技能习得路径已驱动；各技能的战斗效果尚无专项断言 |
 | 法术 | PASS | 16 个 `spellCategoryId` 每条一个差分场景，两端各自断言施法计数增长 |
 | 伤害数字 | PARTIAL | 真实帧渲染后逐像素指纹两端相同（含飘字绘制），但未单独断言飘字池内容 |
 | 法术特效 | PARTIAL | 同上：绘制进帧指纹，特效池本身不入存档 |
@@ -139,4 +139,3 @@ Clickpocalypse II 的核心实现已从高混淆遗留代码中恢复出真实�
 | UI 标签页 | PARTIAL | 五类主面板 + c2c 依赖的 10 个选择器已断言；14 个 TabState 未逐个验证 |
 | Canvas 渲染 | PARTIAL | 1,300 真实帧后逐像素 FNV-1a 指纹两端相同，渲染异常纳入失败条件；仅一条场景一种视口，非全量像素回归 |
 | 精灵查找 | PARTIAL | `spriteName` 入档等值 + 像素证明确有绘制；`getSprite` 未命中路径未断言 |
-
