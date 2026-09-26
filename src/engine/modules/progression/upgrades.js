@@ -16,7 +16,7 @@ import { canFarmDungeon } from "../world/dungeons.js";
 import { purchaseDungeonFarm } from "../simulation/tick.js";
 import { updateScrollAccuracy } from "../characters/stats.js";
 import { applyAchievementReward, getAchievementRequirementLabel, getAchievementRewardLabel } from "./achievements.js";
-/** @typedef {{ qc: () => boolean, lastChangeFrame: number }} SortableUpgrade */
+/** @typedef {{ canPurchaseNow: () => boolean, lastChangeFrame: number }} SortableUpgrade */
 /** @typedef {{ getCost: () => number, Oc: () => boolean, hu: () => boolean, uw: () => Spell, getTitle: () => string, vf: () => import("../combat/scrolls.js").Scroll, Wp: { He: () => boolean } | null }} UpgradeMethods */
 export var SKILL_UPGRADE_TYPE;
 export function Upgrade() {
@@ -91,19 +91,19 @@ export function refreshUpgradeCollection(a) {
       var f = a.lastSortFrame;
       for (b = 0; b < a.upgrades.length; b++) {
         var sortUpgrade = /** @type {SortableUpgrade} */ (/** @type {unknown} */ (a.upgrades[b]));
-        if (sortUpgrade.qc() && sortUpgrade.lastChangeFrame < f) {
+        if (sortUpgrade.canPurchaseNow() && sortUpgrade.lastChangeFrame < f) {
           a.sortedUpgrades[d++] = a.upgrades[b];
         }
       }
       for (b = 0; b < a.upgrades.length; b++) {
         sortUpgrade = /** @type {SortableUpgrade} */ (/** @type {unknown} */ (a.upgrades[b]));
-        if (sortUpgrade.qc() && sortUpgrade.lastChangeFrame >= f) {
+        if (sortUpgrade.canPurchaseNow() && sortUpgrade.lastChangeFrame >= f) {
           a.sortedUpgrades[d++] = a.upgrades[b];
         }
       }
       for (b = 0; b < a.upgrades.length; b++) {
         sortUpgrade = /** @type {SortableUpgrade} */ (/** @type {unknown} */ (a.upgrades[b]));
-        if (!sortUpgrade.qc()) {
+        if (!sortUpgrade.canPurchaseNow()) {
           a.sortedUpgrades[d++] = a.upgrades[b];
         }
       }
@@ -117,7 +117,7 @@ export function refreshUpgradeCollection(a) {
 }
 export function PurchaseItemUpgrade(a) {
   this.Ly = a;
-  this.xc = null;
+  this.castle = null;
   this.jk = "计划攻击";
   this.Up = this.cachedCanPurchase = this.affordableSoon = this.canPurchase = false;
 }
@@ -169,12 +169,12 @@ export function RetireMonsterLevelUpgrade() {
 export function CharacterSkillUpgrade(a) {
   this.it = a;
   this.character = null;
-  this.Hc = this.canPurchase = false;
+  this.purchased = this.canPurchase = false;
 }
 export function LearnSpellUpgrade(a) {
   this.oq = a;
   this.character = null;
-  this.Hc = this.canPurchase = false;
+  this.purchased = this.canPurchase = false;
   this.zd = null;
 }
 export function PurchaseDungeonUpgrade(a) {
@@ -196,23 +196,23 @@ export function ScrollUpgrade(a) {
 }
 export function ClaimAchievementUpgrade(a) {
   this.vy = a;
-  this.Ic = null;
+  this.achievement = null;
   this.Ve = "Achievement";
   this.jk = "Reward";
   this.cachedCanPurchase = this.canPurchase = false;
 }
 export function AchievementUpgrade(a) {
-  this.Ic = a;
-  this.Ve = this.Ic.We ? this.Ic.name : getAchievementRequirementLabel(this.Ic);
+  this.achievement = a;
+  this.Ve = this.achievement.We ? this.achievement.name : getAchievementRequirementLabel(this.achievement);
   this.jk = getAchievementActionLabel(this);
   this.YA = this.VA = this.canPurchase = false;
 }
 export function getAchievementActionLabel(a) {
-  return a.Ic.We ? getAchievementRewardLabel(a.Ic) : "奖励不明";
+  return a.achievement.We ? getAchievementRewardLabel(a.achievement) : "奖励不明";
 }
 export function AdventurePointUpgrade(a) {
   this.kh = a;
-  this.cachedCanPurchase = this.Hc = this.canPurchase = false;
+  this.cachedCanPurchase = this.purchased = this.canPurchase = false;
 }
 export function applyPointUpgrade(a) {
   a = getPointUpgradeModifier(a);
@@ -259,7 +259,7 @@ export function initializeProgressionUpgrades() {
   Upgrade.prototype.Oc = function () {
     return true;
   };
-  Upgrade.prototype.qc = function () {
+  Upgrade.prototype.canPurchaseNow = function () {
     return false;
   };
   Upgrade.prototype.Wo = function () {
@@ -306,7 +306,7 @@ export function initializeProgressionUpgrades() {
   PurchaseItemUpgrade.prototype.Oc = function () {
     return this.canPurchase || this.affordableSoon;
   };
-  PurchaseItemUpgrade.prototype.qc = function () {
+  PurchaseItemUpgrade.prototype.canPurchaseNow = function () {
     return this.canPurchase;
   };
   PurchaseItemUpgrade.prototype.getDescription = function () {
@@ -316,20 +316,20 @@ export function initializeProgressionUpgrades() {
     return "攻击城堡";
   };
   PurchaseItemUpgrade.prototype.He = function () {
-    return this.xc && (this.xc.ye || this.xc.conquered);
+    return this.castle && (this.castle.ye || this.castle.conquered);
   };
   PurchaseItemUpgrade.prototype.getUpgradeType = function () {
     return 13;
   };
   PurchaseItemUpgrade.prototype.Qc = function () {
-    if (this.xc) {
-      recordGameEvent("Castle", "计划攻击:" + this.xc.castleName);
-      this.xc.ye = true;
+    if (this.castle) {
+      recordGameEvent("Castle", "计划攻击:" + this.castle.castleName);
+      this.castle.ye = true;
       invalidateCastleRevision();
-      refreshScheduledCastles(this.xc);
-      refreshAttackableCastles(this.xc);
+      refreshScheduledCastles(this.castle);
+      refreshAttackableCastles(this.castle);
       this.canPurchase = false;
-      this.xc = null;
+      this.castle = null;
       markUpgradeChanged(this);
     }
   };
@@ -342,11 +342,11 @@ export function initializeProgressionUpgrades() {
     } else {
       this.affordableSoon = this.canPurchase = false;
     }
-    var b = this.xc != a || this.cachedCanPurchase != this.canPurchase || this.Up != this.affordableSoon;
+    var b = this.castle != a || this.cachedCanPurchase != this.canPurchase || this.Up != this.affordableSoon;
     if (b && a) {
       this.jk = this.canPurchase ? a.castleName : "需要怪物等级: " + a.requiredMonsterLevel;
     }
-    this.xc = a;
+    this.castle = a;
     this.cachedCanPurchase = this.canPurchase;
     this.Up = this.affordableSoon;
     return b;
@@ -370,7 +370,7 @@ export function initializeProgressionUpgrades() {
   GlobalUpgrade.prototype.Oc = function () {
     return this.canPurchase || this.affordableSoon;
   };
-  GlobalUpgrade.prototype.qc = function () {
+  GlobalUpgrade.prototype.canPurchaseNow = function () {
     return this.canPurchase;
   };
   GlobalUpgrade.prototype.Qc = function () {
@@ -439,7 +439,7 @@ export function initializeProgressionUpgrades() {
   EquipBestItemUpgrade.prototype.Oc = function () {
     return this.vh;
   };
-  EquipBestItemUpgrade.prototype.qc = function () {
+  EquipBestItemUpgrade.prototype.canPurchaseNow = function () {
     return this.vh;
   };
   EquipBestItemUpgrade.prototype.Cd = function () {
@@ -497,7 +497,7 @@ export function initializeProgressionUpgrades() {
   EquipItemUpgrade.prototype.Oc = function () {
     return this.vh;
   };
-  EquipItemUpgrade.prototype.qc = function () {
+  EquipItemUpgrade.prototype.canPurchaseNow = function () {
     return this.vh;
   };
   EquipItemUpgrade.prototype.Cd = function () {
@@ -587,7 +587,7 @@ export function initializeProgressionUpgrades() {
   LevelUpUpgrade.prototype.getCost = function () {
     return this.Lo;
   };
-  LevelUpUpgrade.prototype.qc = function () {
+  LevelUpUpgrade.prototype.canPurchaseNow = function () {
     return this.canPurchase;
   };
   LevelUpUpgrade.prototype.Cd = function () {
@@ -651,7 +651,7 @@ export function initializeProgressionUpgrades() {
   UnlockMonsterLevelUpgrade.prototype.getCost = function () {
     return floorNumber(this.Ds * itemCostBonus.currentValue);
   };
-  UnlockMonsterLevelUpgrade.prototype.qc = function () {
+  UnlockMonsterLevelUpgrade.prototype.canPurchaseNow = function () {
     return this.canPurchase;
   };
   UnlockMonsterLevelUpgrade.prototype.Cd = function () {
@@ -729,7 +729,7 @@ export function initializeProgressionUpgrades() {
   RetireMonsterLevelUpgrade.prototype.getCost = function () {
     return floorNumber(this.Cs * itemCostBonus.currentValue);
   };
-  RetireMonsterLevelUpgrade.prototype.qc = function () {
+  RetireMonsterLevelUpgrade.prototype.canPurchaseNow = function () {
     return this.canPurchase;
   };
   RetireMonsterLevelUpgrade.prototype.Cd = function () {
@@ -757,14 +757,14 @@ export function initializeProgressionUpgrades() {
     return this.it;
   };
   CharacterSkillUpgrade.prototype.He = function () {
-    return this.Hc;
+    return this.purchased;
   };
   CharacterSkillUpgrade.prototype.ft = function (a) {
-    this.Hc = a;
+    this.purchased = a;
   };
   CharacterSkillUpgrade.prototype.og = function () {
     this.character = null;
-    this.Hc = false;
+    this.purchased = false;
   };
   CharacterSkillUpgrade.prototype.Vo = function () {
     return this.character;
@@ -784,15 +784,15 @@ export function initializeProgressionUpgrades() {
   CharacterSkillUpgrade.prototype.Oc = function () {
     return true;
   };
-  CharacterSkillUpgrade.prototype.qc = function () {
+  CharacterSkillUpgrade.prototype.canPurchaseNow = function () {
     return this.canPurchase;
   };
   CharacterSkillUpgrade.prototype.Qc = function () {
-    if (!this.Hc) {
+    if (!this.purchased) {
       if (!this.character) {
         console.log("error: adventurer not assigned to skill upgrade");
       } else if (!(1 > this.character.skillPoints)) {
-        this.Hc = true;
+        this.purchased = true;
         var a = this.character;
         a.skillPoints--;
         if (0 > a.skillPoints) {
@@ -809,7 +809,7 @@ export function initializeProgressionUpgrades() {
     if (this.character) {
       var a = this.canPurchase;
       var prerequisite = (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).Wp;
-      this.canPurchase = !this.Hc && (!prerequisite || prerequisite.He()) && 0 < this.character.skillPoints;
+      this.canPurchase = !this.purchased && (!prerequisite || prerequisite.He()) && 0 < this.character.skillPoints;
       return a !== this.canPurchase;
     }
     console.log("error: adventurer not assigned to skill upgrade");
@@ -822,14 +822,14 @@ export function initializeProgressionUpgrades() {
     return this.oq;
   };
   LearnSpellUpgrade.prototype.He = function () {
-    return this.Hc;
+    return this.purchased;
   };
   LearnSpellUpgrade.prototype.ft = function (a) {
-    this.Hc = a;
+    this.purchased = a;
   };
   LearnSpellUpgrade.prototype.og = function () {
     this.character = null;
-    this.Hc = false;
+    this.purchased = false;
     this.zd = null;
   };
   LearnSpellUpgrade.prototype.uw = function () {
@@ -856,15 +856,15 @@ export function initializeProgressionUpgrades() {
   LearnSpellUpgrade.prototype.Oc = function () {
     return true;
   };
-  LearnSpellUpgrade.prototype.qc = function () {
+  LearnSpellUpgrade.prototype.canPurchaseNow = function () {
     return this.canPurchase;
   };
   LearnSpellUpgrade.prototype.Qc = function () {
-    if (!this.Hc) {
+    if (!this.purchased) {
       if (this.character) {
         var a = this.character.initialSpellSkillPoint;
         if (!(1 > this.character.skillPoints && 1 > a)) {
-          this.Hc = true;
+          this.purchased = true;
           a = this.character;
           if (0 < a.initialSpellSkillPoint) {
             a.initialSpellSkillPoint = 0;
@@ -890,7 +890,7 @@ export function initializeProgressionUpgrades() {
         b = this.character.skillPoints,
         c = this.character.initialSpellSkillPoint;
       var prerequisite = (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).Wp;
-      this.canPurchase = !this.Hc && (!prerequisite || prerequisite.He()) && (0 < b || c);
+      this.canPurchase = !this.purchased && (!prerequisite || prerequisite.He()) && (0 < b || c);
       return a !== this.canPurchase;
     }
     console.log("error: adventurer not assigned to spell upgrade: " + (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).getTitle());
@@ -905,7 +905,7 @@ export function initializeProgressionUpgrades() {
   PurchaseDungeonUpgrade.prototype.Oc = function () {
     return this.canPurchase || this.affordableSoon;
   };
-  PurchaseDungeonUpgrade.prototype.qc = function () {
+  PurchaseDungeonUpgrade.prototype.canPurchaseNow = function () {
     return this.canPurchase;
   };
   PurchaseDungeonUpgrade.prototype.getDescription = function () {
@@ -955,7 +955,7 @@ export function initializeProgressionUpgrades() {
   PurchaseCastleUpgrade.prototype.Oc = function () {
     return this.canPurchase || this.affordableSoon;
   };
-  PurchaseCastleUpgrade.prototype.qc = function () {
+  PurchaseCastleUpgrade.prototype.canPurchaseNow = function () {
     return this.canPurchase;
   };
   PurchaseCastleUpgrade.prototype.getDescription = function () {
@@ -1005,7 +1005,7 @@ export function initializeProgressionUpgrades() {
   AutoPurchaseDungeonUpgrade.prototype.Oc = function () {
     return this.canPurchase;
   };
-  AutoPurchaseDungeonUpgrade.prototype.qc = function () {
+  AutoPurchaseDungeonUpgrade.prototype.canPurchaseNow = function () {
     return this.canPurchase;
   };
   AutoPurchaseDungeonUpgrade.prototype.getDescription = function () {
@@ -1061,7 +1061,7 @@ export function initializeProgressionUpgrades() {
   ScrollUpgrade.prototype.Oc = function () {
     return this.canPurchase || this.affordableSoon;
   };
-  ScrollUpgrade.prototype.qc = function () {
+  ScrollUpgrade.prototype.canPurchaseNow = function () {
     return this.canPurchase;
   };
   ScrollUpgrade.prototype.Qc = function () {
@@ -1109,7 +1109,7 @@ export function initializeProgressionUpgrades() {
   };
   ClaimAchievementUpgrade.prototype = new Upgrade();
   ClaimAchievementUpgrade.prototype.He = function () {
-    return this.Ic ? this.Ic.Of : false;
+    return this.achievement ? this.achievement.Of : false;
   };
   ClaimAchievementUpgrade.prototype.getTitle = function () {
     return this.Ve;
@@ -1123,13 +1123,13 @@ export function initializeProgressionUpgrades() {
   ClaimAchievementUpgrade.prototype.Oc = function () {
     return this.canPurchase;
   };
-  ClaimAchievementUpgrade.prototype.qc = function () {
+  ClaimAchievementUpgrade.prototype.canPurchaseNow = function () {
     return this.canPurchase;
   };
   ClaimAchievementUpgrade.prototype.Qc = function () {
-    if (this.Ic) {
-      applyAchievementReward(this.Ic);
-      this.Ic = null;
+    if (this.achievement) {
+      applyAchievementReward(this.achievement);
+      this.achievement = null;
       this.canPurchase = false;
       markUpgradeChanged(this);
     }
@@ -1139,18 +1139,18 @@ export function initializeProgressionUpgrades() {
     a = game.state.achievements.Ze;
     a = this.vy < a.length ? a[this.vy] : null;
     this.canPurchase = null != a;
-    var b = this.Ic != a || this.cachedCanPurchase != this.canPurchase;
+    var b = this.achievement != a || this.cachedCanPurchase != this.canPurchase;
     if (b && a) {
       this.Ve = a.name;
       this.jk = "奖励:" + getAchievementRewardLabel(a);
     }
-    this.Ic = a;
+    this.achievement = a;
     this.cachedCanPurchase = this.canPurchase;
     return b;
   };
   AchievementUpgrade.prototype = new Upgrade();
   AchievementUpgrade.prototype.He = function () {
-    return this.Ic.Of;
+    return this.achievement.Of;
   };
   AchievementUpgrade.prototype.getTitle = function () {
     return this.Ve;
@@ -1161,21 +1161,21 @@ export function initializeProgressionUpgrades() {
   AchievementUpgrade.prototype.getUpgradeType = function () {
     return 15;
   };
-  AchievementUpgrade.prototype.qc = function () {
+  AchievementUpgrade.prototype.canPurchaseNow = function () {
     return this.canPurchase;
   };
   AchievementUpgrade.prototype.Qc = function () {
-    applyAchievementReward(this.Ic);
+    applyAchievementReward(this.achievement);
     this.canPurchase = false;
     markUpgradeChanged(this);
   };
   AchievementUpgrade.prototype.Cd = function () {
-    var a = this.Ic.Of,
-      b = this.Ic.We;
+    var a = this.achievement.Of,
+      b = this.achievement.We;
     this.canPurchase = b && !a;
     var c = this.VA != a || this.YA != b;
     if (c) {
-      this.Ve = this.Ic.We ? this.Ic.name : getAchievementRequirementLabel(this.Ic);
+      this.Ve = this.achievement.We ? this.achievement.name : getAchievementRequirementLabel(this.achievement);
       this.jk = getAchievementActionLabel(this);
     }
     this.VA = a;
@@ -1184,16 +1184,16 @@ export function initializeProgressionUpgrades() {
   };
   AdventurePointUpgrade.prototype = new Upgrade();
   AdventurePointUpgrade.prototype.og = function () {
-    this.Hc = this.canPurchase = false;
+    this.purchased = this.canPurchase = false;
     this.cachedCanPurchase = !this.canPurchase;
     var a = getPointUpgradeModifier(this);
     a.currentValue = a.defaultValue;
   };
   AdventurePointUpgrade.prototype.He = function () {
-    return this.Hc;
+    return this.purchased;
   };
   AdventurePointUpgrade.prototype.ft = function (a) {
-    if (this.Hc = a) {
+    if (this.purchased = a) {
       applyPointUpgrade(this);
     }
   };
@@ -1203,11 +1203,11 @@ export function initializeProgressionUpgrades() {
   AdventurePointUpgrade.prototype.getUpgradeType = function () {
     return 16;
   };
-  AdventurePointUpgrade.prototype.qc = function () {
+  AdventurePointUpgrade.prototype.canPurchaseNow = function () {
     return this.canPurchase;
   };
   AdventurePointUpgrade.prototype.Qc = function () {
-    if (!(this.Hc || this.kh.pointCost > game.state.ae.Dd)) {
+    if (!(this.purchased || this.kh.pointCost > game.state.ae.Dd)) {
       var a = this.kh.pointCost,
         b = game.state.ae;
       b.An += a;
@@ -1215,7 +1215,7 @@ export function initializeProgressionUpgrades() {
       if (0 > b.Dd) {
         b.Dd = 0;
       }
-      this.Hc = true;
+      this.purchased = true;
       this.canPurchase = false;
       applyPointUpgrade(this);
       markUpgradeChanged(this);
@@ -1229,7 +1229,7 @@ export function initializeProgressionUpgrades() {
     return this.kh.descriptionText;
   };
   AdventurePointUpgrade.prototype.Cd = function () {
-    this.canPurchase = !this.Hc && this.kh.pointCost <= game.state.ae.Dd;
+    this.canPurchase = !this.purchased && this.kh.pointCost <= game.state.ae.Dd;
     var a = this.cachedCanPurchase !== this.canPurchase;
     this.cachedCanPurchase = this.canPurchase;
     return a;
@@ -1238,7 +1238,7 @@ export function initializeProgressionUpgrades() {
   CollectFarmUpgrade.prototype.Oc = function () {
     return this.canPurchase;
   };
-  CollectFarmUpgrade.prototype.qc = function () {
+  CollectFarmUpgrade.prototype.canPurchaseNow = function () {
     return this.canPurchase;
   };
   CollectFarmUpgrade.prototype.getDescription = function () {

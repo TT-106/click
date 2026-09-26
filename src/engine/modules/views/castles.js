@@ -24,14 +24,14 @@ export function CastleTableView() {
 }
 export function CastleRowView(a) {
   this.lh = a;
-  this.kd = this.progressFillElement = this.ng = this.mf = this.xc = null;
+  this.kd = this.progressFillElement = this.ng = this.mf = this.castle = null;
   this.Us = 120;
   this.Rv = this.Cu = this.cachedDescriptionText = "";
   this.Kv = 0;
   /** @type {{qi: () => void}} */ (/** @type {unknown} */ (this)).qi();
 }
 export function setCastleRowModel(a, b) {
-  a.xc = b;
+  a.castle = b;
   a.Cu = "";
   a.Rv = "";
   a.Kv = 0;
@@ -131,7 +131,7 @@ export function initializeViewsCastles() {
     }
     var b;
     for (b = 0; b < this.nf.length; b++) {
-      if (this.nf[b].xc !== a[b]) {
+      if (this.nf[b].castle !== a[b]) {
         setCastleRowModel(this.nf[b], a[b]);
       }
       this.nf[b].render();
@@ -194,31 +194,31 @@ export function initializeViewsCastles() {
     this.kd.style.zIndex = "10";
   };
   CastleRowView.prototype.render = function () {
-    if (this.xc) {
-      var a = this.xc.castleName;
+    if (this.castle) {
+      var a = this.castle.castleName;
       if (this.cachedDescriptionText !== a) {
         this.cachedDescriptionText = a;
         this.mf.innerHTML = a;
       }
-      a = getCastleStatusColor(this.xc);
+      a = getCastleStatusColor(this.castle);
       if (this.Cu != a) {
         this.Cu = a;
         this.progressFillElement.style.backgroundColor = a;
       }
-      a = this.xc;
+      a = this.castle;
       a = a.regionLocked ? "未解锁" : a.conquered ? "已征服" : canAttackCastle(a) ? game.monsterCatalog.maxUnlockedLevel >= a.requiredMonsterLevel ? "准备攻击" : "怪物等级" + a.requiredMonsterLevel : a.ye ? "计划攻击" : "地牢" + a.yk + " / " + a.dungeonList.length;
       if (this.Rv != a) {
         this.Rv = a;
         this.kd.innerHTML = a;
       }
-      a = this.xc;
+      a = this.castle;
       if (a.regionLocked) {
         a = 0;
       } else if (a.conquered || canAttackCastle(a) || a.ye || a.Bj) {
         a = this.Us;
       } else {
-        a = this.xc.yk;
-        var b = this.xc.dungeonList;
+        a = this.castle.yk;
+        var b = this.castle.dungeonList;
         a = 0 === b.length ? 1 : Math.min(1, a / b.length);
         a = this.Us * a | 0;
       }

@@ -28,6 +28,10 @@ const literalsOf = (s) => (s.match(/"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|`(?:[^`\
 const memberRe = new RegExp('\\.' + oldName + '\\b', 'g');
 const keyRe = new RegExp('^([ \\t]*)' + oldName + ':', 'gm');
 const shorthandRe = new RegExp('^([ \\t]*)' + oldName + '\\s*,', 'gm');
+// M10 的窄签名标注写在 /** @typedef ... */ / /** @type {...} */ 注释里，
+// 成员名不带前导点，因此只在含这两个标记的行内替换 `NAME:`。
+const typedefKeyRe = new RegExp('([\\{,\\s])' + oldName + ':(?=\\s)', 'g');
+const isTypeAnnotation = (line) => line.includes('@typedef') || line.includes('@type {');
 
 const staged = [];
 let totalHits = 0;
@@ -39,6 +43,9 @@ for (const file of files) {
   let next = orig.replace(memberRe, bump('.' + newName));
   next = next.replace(keyRe, (_m, ind) => { hits++; return ind + newName + ':'; });
   next = next.replace(shorthandRe, (_m, ind) => { hits++; return ind + newName + ','; });
+  next = next.split('\n').map((line) => (isTypeAnnotation(line)
+    ? line.replace(typedefKeyRe, (_m2, pre) => { hits++; return pre + newName + ':'; })
+    : line)).join('\n');
 
   const newLines = next.split('\n');
   if (newLines.length !== origLines.length) {

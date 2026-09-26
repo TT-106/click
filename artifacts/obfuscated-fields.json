@@ -54,30 +54,6 @@
     ]
   },
   {
-    "name": "qc",
-    "reads": 5,
-    "writes": 18,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:94",
-        "code": "sortUpgrade.qc"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:100",
-        "code": "sortUpgrade.qc"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:106",
-        "code": "sortUpgrade.qc"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\progression\\upgrades.js",
-      "src\\engine\\modules\\views\\upgrade-details.js"
-    ]
-  },
-  {
     "name": "rc",
     "reads": 20,
     "writes": 3,
@@ -348,30 +324,6 @@
     ]
   },
   {
-    "name": "xc",
-    "reads": 17,
-    "writes": 5,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:120",
-        "code": "this.xc"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:319",
-        "code": "this.xc"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:319",
-        "code": "this.xc"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\progression\\upgrades.js",
-      "src\\engine\\modules\\views\\castles.js"
-    ]
-  },
-  {
     "name": "Cc",
     "reads": 7,
     "writes": 14,
@@ -495,52 +447,6 @@
     "fileCount": 1,
     "files": [
       "src\\engine\\modules\\characters\\movement.js"
-    ]
-  },
-  {
-    "name": "Hc",
-    "reads": 9,
-    "writes": 12,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:172",
-        "code": "this.Hc"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:177",
-        "code": "this.Hc"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:215",
-        "code": "this.Hc"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\progression\\upgrades.js"
-    ]
-  },
-  {
-    "name": "Ic",
-    "reads": 17,
-    "writes": 4,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:199",
-        "code": "this.Ic"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:205",
-        "code": "this.Ic"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:206",
-        "code": "this.Ic"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\progression\\upgrades.js"
     ]
   },
   {
@@ -8173,7 +8079,7 @@
       },
       {
         "loc": "src\\engine\\modules\\views\\castles.js:220",
-        "code": "this.xc.yk"
+        "code": "this.castle.yk"
       },
       {
         "loc": "src\\engine\\modules\\world\\regions.js:73",

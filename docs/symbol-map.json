@@ -7588,7 +7588,11 @@
     "Po": "showFps",
     "uc": "displayName",
     "tc": "effectLabel",
-    "vc": "modifierId"
+    "vc": "modifierId",
+    "Ic": "achievement",
+    "Hc": "purchased",
+    "qc": "canPurchaseNow",
+    "xc": "castle"
   },
   "gameFields": {
     "B": "tileSize",

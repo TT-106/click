@@ -262,7 +262,7 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   UpgradeButtonView.prototype.Qc = function () {
-    if (this.upgrade.qc()) {
+    if (this.upgrade.canPurchaseNow()) {
       this.upgrade.Qc();
     }
   };
@@ -294,7 +294,7 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   UpgradeButtonView.prototype.Ro = function () {
-    return this.upgrade.qc() ? "upgradeButton centeredElement topMargin" : this.upgrade.He() ? "ownedUpgradeButton centeredElement topMargin" : "disabledUpgradeButton centeredElement topMargin";
+    return this.upgrade.canPurchaseNow() ? "upgradeButton centeredElement topMargin" : this.upgrade.He() ? "ownedUpgradeButton centeredElement topMargin" : "disabledUpgradeButton centeredElement topMargin";
   };
   ItemPurchaseDetails.prototype.getUpgradeType = function () {
     return 1;
