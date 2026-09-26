@@ -7,7 +7,7 @@ import { projectDungeonX, projectDungeonY } from "../simulation/characters.js";
 export function FloatingText(a, b) {
   this.text = a;
   this.SE = b;
-  this.De = this.yt = this.xt = 0;
+  this.frameAge = this.yt = this.xt = 0;
   var c = 1 + randomInt(1);
   this.GD = 0.5 > Math.random() ? -c : c;
   this.HD = -1 + -randomInt(1);
@@ -52,8 +52,8 @@ export function initializeRenderingFloatingText() {
       this.yt += this.HD;
     }
     this.pw = !this.pw;
-    this.De++;
-    return 60 <= this.De;
+    this.frameAge++;
+    return 60 <= this.frameAge;
   };
   FloatingTextLayer.prototype.oy = function () {
     var a,
@@ -65,7 +65,7 @@ export function initializeRenderingFloatingText() {
     }
     if (b) {
       for (a = this.al.length - 1; 0 <= a; a--) {
-        if (60 <= this.al[a].De) {
+        if (60 <= this.al[a].frameAge) {
           this.al.splice(a, 1);
         }
       }

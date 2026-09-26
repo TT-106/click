@@ -69,13 +69,13 @@ export function Castle(a, b, c, d, f, g) {
   this.em = g;
   this.Bj = this.conquered = false;
   this.regionLocked = true;
-  this.ye = false;
+  this.attackScheduled = false;
   this.requiredMonsterLevel = this.yk = 0;
   this.ck = [];
   this.dungeonList = [];
 }
 export function canAttackCastle(a) {
-  return !a.regionLocked && !a.conquered && a.Bj && !a.ye;
+  return !a.regionLocked && !a.conquered && a.Bj && !a.attackScheduled;
 }
 export function refreshCastleConquest(a) {
   if (a.Bj || a.conquered) {
@@ -160,7 +160,7 @@ export function resetCastles() {
     var c = a.castleList[b];
     c.conquered = false;
     c.regionLocked = true;
-    c.ye = false;
+    c.attackScheduled = false;
     c.yk = 0;
     c.requiredMonsterLevel = 0;
     c.Bj = 0 === c.dungeonList.length;
@@ -203,7 +203,7 @@ export function refreshScheduledCastles(a) {
   var b = game.castles;
   b.cm++;
   var c = b.Dh.indexOf(a);
-  if (a.ye) {
+  if (a.attackScheduled) {
     if (0 > c) {
       b.Dh.push(a);
       sortCastles(b, b.Dh);

@@ -89,7 +89,7 @@ export function VisualEffect(a, b, c, d, f) {
   if (a && !this.animation) {
     console.log("Failed to find animated sprite: " + a);
   }
-  this.De = this.animation ? this.animation.To() : 0;
+  this.frameCount = this.animation ? this.animation.To() : 0;
   this.bx = -1;
   this.frameIndex = 0;
   if (this.animation && this.animation.isDirectional) {
@@ -142,7 +142,7 @@ export function advanceEffectFrame(a, b) {
     var d = Math.min(1, floorNumber(a.yi / c));
     a.yi = Math.max(0, floorNumber(a.yi % c));
     a.frameIndex += d;
-    if (a.frameIndex >= a.De) {
+    if (a.frameIndex >= a.frameCount) {
       if (a.uA) {
         if (a.boundCharacter.effects.isStunned) {
           a.frameIndex = 0;
@@ -264,6 +264,6 @@ export function initializeRenderingSprites() {
     return this.bg || this.Pk;
   };
   VisualEffect.prototype.To = function () {
-    return this.De;
+    return this.frameCount;
   };
 }

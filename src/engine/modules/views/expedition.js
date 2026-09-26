@@ -37,7 +37,7 @@ export function AdventurerSummaryView(a) {
   this.lk = [null, null, null, null, null, null];
   this.Dm = [0, 0, 0, 0, 0, 0];
   this.qw = 8;
-  this.De = 0;
+  this.frameAge = 0;
   this.vj = -1;
   this.Oq = false;
 }
@@ -402,9 +402,9 @@ export function initializeViewsExpedition() {
         }
         c = a.effects.of;
         f = false;
-        this.De++;
-        if (this.De >= this.qw) {
-          this.De = 0;
+        this.frameAge++;
+        if (this.frameAge >= this.qw) {
+          this.frameAge = 0;
           f = true;
         }
         for (a = 0; a < this.lk.length; a++) {

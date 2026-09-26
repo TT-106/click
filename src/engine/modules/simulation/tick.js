@@ -240,18 +240,18 @@ export function advanceSimulation(a) {
     eb,
     Gb;
   for (Gb = 0; Gb < ta.length; Gb++) {
-    if (eb = ta[Gb].position, null != eb.Gd) {
+    if (eb = ta[Gb].position, null != eb.steeringVector) {
       var Da = eb;
-      if (Da.Gd) {
+      if (Da.steeringVector) {
         var ub = Da.Jw * a * 3;
-        assignVector(Da.velocity, Da.Gd);
+        assignVector(Da.velocity, Da.steeringVector);
         normalizeVector(Da.velocity);
         multiplyVector(Da.velocity, ub);
-        var mb = vectorLength(Da.Gd);
+        var mb = vectorLength(Da.steeringVector);
         if (ub >= mb) {
-          Da.Gd = null;
+          Da.steeringVector = null;
         } else {
-          multiplyVector(Da.Gd, (mb - ub) / mb);
+          multiplyVector(Da.steeringVector, (mb - ub) / mb);
         }
         addVector(Da.levelPosition, Da.velocity);
         if (Da.room) {

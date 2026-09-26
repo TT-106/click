@@ -168,7 +168,7 @@ export function restoreGameState(a, b) {
                     Ea.tx(eb ? true : false);
                     Ea.Bj = Gb ? true : false;
                     Ea.regionLocked = Da ? true : false;
-                    Ea.ye = ub ? true : false;
+                    Ea.attackScheduled = ub ? true : false;
                     invalidateCastleRevision();
                     Ea.requiredMonsterLevel = mb ? mb : 0;
                   } else {
@@ -185,7 +185,7 @@ export function restoreGameState(a, b) {
               if (canAttackCastle(Fa)) {
                 La.Jg.push(Fa);
               }
-              if (Fa.ye && !Fa.conquered) {
+              if (Fa.attackScheduled && !Fa.conquered) {
                 La.Dh.push(Fa);
               }
               refreshCastleConquest(Fa);
@@ -289,14 +289,14 @@ export function restoreGameState(a, b) {
                 kb = sa.roomId,
                 Ra;
               b: {
-                for (var Ja = sa.settingsId, Db = game.treasure, gb = 0; gb < Db.ve.length; gb++) {
-                  if (Db.ve[gb].uh === Ja) {
-                    Ra = Db.ve[gb];
+                for (var Ja = sa.settingsId, Db = game.treasure, gb = 0; gb < Db.targetDefinitions.length; gb++) {
+                  if (Db.targetDefinitions[gb].uh === Ja) {
+                    Ra = Db.targetDefinitions[gb];
                     break b;
                   }
                 }
                 console.log("failed to find treasure chest settings: " + Ja);
-                Ra = Db.ve[0];
+                Ra = Db.targetDefinitions[0];
               }
               var rb = new TreasureChest(Tb, qc, findRoom(kb), Ra, Cb);
               setChestOpened(rb, Fc);
@@ -770,7 +770,7 @@ export function createSaveState(a) {
         conquered: S.conquered,
         dungeonsConquered: S.Bj,
         castleRegionLocked: S.regionLocked,
-        attackScheduled: S.ye,
+        attackScheduled: S.attackScheduled,
         requiredMonsterLevel: S.requiredMonsterLevel
       };
       V.push(K);

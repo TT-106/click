@@ -223,7 +223,7 @@ export function initializeCharactersParty() {
         d.actionType = IDLE_ACTION;
       }
       clearItemDrops();
-      a.ye = false;
+      a.attackScheduled = false;
       invalidateCastleRevision();
       a.conquered = true;
       b = [];
@@ -402,7 +402,7 @@ export function initializeCharactersParty() {
         if (!this.activeCastle.Bj) {
           this.activeCastle = null;
         }
-      } else if (this.targetCastle.ye && !this.targetCastle.conquered) {
+      } else if (this.targetCastle.attackScheduled && !this.targetCastle.conquered) {
         this.activeCastle = this.targetCastle;
         b = true;
       } else {

@@ -7,7 +7,7 @@ import { View, addChildView, resetChildViews } from "./base.js";
 import { appendHeaderCell, clearElementById, createElement, getElement } from "./dom.js";
 import { TabView } from "./navigation.js";
 export function getCastleStatusColor(a) {
-  return a.regionLocked ? "#222" : a.conquered ? "#080" : canAttackCastle(a) ? game.monsterCatalog.maxUnlockedLevel >= a.requiredMonsterLevel ? "#850" : "#A30" : a.ye ? "#A80" : "#AAA";
+  return a.regionLocked ? "#222" : a.conquered ? "#080" : canAttackCastle(a) ? game.monsterCatalog.maxUnlockedLevel >= a.requiredMonsterLevel ? "#850" : "#A30" : a.attackScheduled ? "#A80" : "#AAA";
 }
 export function CastleMapView() {
   this.elementId = "castleMapContainer";
@@ -206,7 +206,7 @@ export function initializeViewsCastles() {
         this.progressFillElement.style.backgroundColor = a;
       }
       a = this.castle;
-      a = a.regionLocked ? "未解锁" : a.conquered ? "已征服" : canAttackCastle(a) ? game.monsterCatalog.maxUnlockedLevel >= a.requiredMonsterLevel ? "准备攻击" : "怪物等级" + a.requiredMonsterLevel : a.ye ? "计划攻击" : "地牢" + a.yk + " / " + a.dungeonList.length;
+      a = a.regionLocked ? "未解锁" : a.conquered ? "已征服" : canAttackCastle(a) ? game.monsterCatalog.maxUnlockedLevel >= a.requiredMonsterLevel ? "准备攻击" : "怪物等级" + a.requiredMonsterLevel : a.attackScheduled ? "计划攻击" : "地牢" + a.yk + " / " + a.dungeonList.length;
       if (this.Rv != a) {
         this.Rv = a;
         this.progressTextElement.innerHTML = a;
@@ -214,7 +214,7 @@ export function initializeViewsCastles() {
       a = this.castle;
       if (a.regionLocked) {
         a = 0;
-      } else if (a.conquered || canAttackCastle(a) || a.ye || a.Bj) {
+      } else if (a.conquered || canAttackCastle(a) || a.attackScheduled || a.Bj) {
         a = this.Us;
       } else {
         a = this.castle.yk;

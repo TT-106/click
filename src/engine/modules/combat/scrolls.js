@@ -243,7 +243,7 @@ export function initializeCombatScrolls() {
   ScrollDrop.prototype.oh = function (a) {
     this.collected = a;
   };
-  ScrollDrop.prototype.Re = function (a) {
+  ScrollDrop.prototype.setClaimedBy = function (a) {
     this.claimedBy = a;
   };
   ScrollDrop.prototype.getClaimDistance = function () {
@@ -255,7 +255,7 @@ export function initializeCombatScrolls() {
   ScrollDropRegistry.prototype.zl = function () {
     var a;
     for (a = 0; a < this.kf.length; a++) {
-      this.kf[a].Re(null);
+      this.kf[a].setClaimedBy(null);
       this.kf[a].setClaimDistance(0);
     }
   };

@@ -1125,7 +1125,7 @@ export function initializeAiBehaviors() {
       return 0;
     }
     if (this.goldDrop && this.goldDrop.claimedBy === a) {
-      this.goldDrop.Re(null);
+      this.goldDrop.setClaimedBy(null);
       this.goldDrop.setClaimDistance(0);
     }
     var b = game.goldDrops.drops,
@@ -1148,7 +1148,7 @@ export function initializeAiBehaviors() {
         }
       }
       if (this.goldDrop = g) {
-        this.goldDrop.Re(a);
+        this.goldDrop.setClaimedBy(a);
         this.goldDrop.setClaimDistance(n);
         this.Wy = Math.sqrt(n);
       }
@@ -1188,7 +1188,7 @@ export function initializeAiBehaviors() {
       return 0;
     }
     if (this.scrollDrop && this.scrollDrop.claimedBy === a) {
-      this.scrollDrop.Re(null);
+      this.scrollDrop.setClaimedBy(null);
       this.scrollDrop.setClaimDistance(0);
     }
     var b = game.scrollDrops.kf,
@@ -1211,7 +1211,7 @@ export function initializeAiBehaviors() {
         }
       }
       if (this.scrollDrop = g) {
-        this.scrollDrop.Re(a);
+        this.scrollDrop.setClaimedBy(a);
         this.scrollDrop.setClaimDistance(n);
         this.Zy = Math.sqrt(n);
       }
@@ -1251,7 +1251,7 @@ export function initializeAiBehaviors() {
       return 0;
     }
     if (this.potionDrop && this.potionDrop.claimedBy === a) {
-      this.potionDrop.Re(null);
+      this.potionDrop.setClaimedBy(null);
       this.potionDrop.setClaimDistance(0);
     }
     var b = game.potionDrops.Hf,
@@ -1274,7 +1274,7 @@ export function initializeAiBehaviors() {
         }
       }
       if (this.potionDrop = g) {
-        this.potionDrop.Re(a);
+        this.potionDrop.setClaimedBy(a);
         this.potionDrop.setClaimDistance(n);
         this.Yy = Math.sqrt(n);
       }
@@ -1314,7 +1314,7 @@ export function initializeAiBehaviors() {
       return 0;
     }
     if (this.itemDrop && this.itemDrop.claimedBy === a) {
-      this.itemDrop.Re(null);
+      this.itemDrop.setClaimedBy(null);
       this.itemDrop.setClaimDistance(0);
     }
     var b = game.itemDrops.yf,
@@ -1337,7 +1337,7 @@ export function initializeAiBehaviors() {
         }
       }
       if (this.itemDrop = g) {
-        this.itemDrop.Re(a);
+        this.itemDrop.setClaimedBy(a);
         this.itemDrop.setClaimDistance(n);
         this.Xy = Math.sqrt(n);
       }

@@ -424,7 +424,7 @@ export function initializeRenderingScene() {
           a.context.fillStyle = "#AA8800";
           for (u = 0; u < p.length; u++) {
             s = p[u];
-            if (s.ye) {
+            if (s.attackScheduled) {
               drawEntityHighlight(a, s, h, l);
             }
           }
@@ -445,7 +445,7 @@ export function initializeRenderingScene() {
           a.context.fillStyle = "white";
           for (u = 0; u < p.length; u++) {
             s = p[u];
-            if (!(canAttackCastle(s) || s.regionLocked || s.ye || s.conquered)) {
+            if (!(canAttackCastle(s) || s.regionLocked || s.attackScheduled || s.conquered)) {
               drawEntityHighlight(a, s, h, l);
             }
           }

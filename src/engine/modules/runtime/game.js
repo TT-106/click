@@ -216,7 +216,7 @@ export function initializeRuntimeGame() {
       resetScrollInventory();
       resetPotionInventory();
       var ta = game.treasure;
-      ta.ve.push({
+      ta.targetDefinitions.push({
         uh: "chest1",
         kind: 1,
         jh: false,
@@ -229,7 +229,7 @@ export function initializeRuntimeGame() {
           closed: game.terrainSprites.getSprite("L2_Chest03.PNG")
         }
       });
-      ta.ve.push({
+      ta.targetDefinitions.push({
         uh: "chest2",
         kind: 1,
         jh: false,
@@ -242,7 +242,7 @@ export function initializeRuntimeGame() {
           closed: game.terrainSprites.getSprite("L2_Chest07.PNG")
         }
       });
-      ta.ve.push({
+      ta.targetDefinitions.push({
         uh: "chest3",
         kind: 1,
         jh: false,
@@ -255,7 +255,7 @@ export function initializeRuntimeGame() {
           closed: game.terrainSprites.getSprite("L2_Chest11.PNG")
         }
       });
-      ta.ve.push({
+      ta.targetDefinitions.push({
         uh: "chest4",
         kind: 1,
         jh: false,
@@ -268,7 +268,7 @@ export function initializeRuntimeGame() {
           closed: game.terrainSprites.getSprite("L2_Chest15.PNG")
         }
       });
-      ta.ve.push({
+      ta.targetDefinitions.push({
         uh: "rack1",
         kind: 2,
         jh: true,
@@ -281,7 +281,7 @@ export function initializeRuntimeGame() {
           closed: game.terrainSprites.getSprite("L3_Wall_WeapRack2_NS.PNG")
         }
       });
-      ta.ve.push({
+      ta.targetDefinitions.push({
         uh: "rack2",
         kind: 2,
         jh: true,
@@ -294,7 +294,7 @@ export function initializeRuntimeGame() {
           closed: game.terrainSprites.getSprite("L3_Wall_WeapRack3_NS.PNG")
         }
       });
-      ta.ve.push({
+      ta.targetDefinitions.push({
         uh: "rack3",
         kind: 2,
         jh: true,
@@ -307,7 +307,7 @@ export function initializeRuntimeGame() {
           closed: game.terrainSprites.getSprite("L3_Wall_WeapRack4_NS.PNG")
         }
       });
-      ta.ve.push({
+      ta.targetDefinitions.push({
         uh: "rack4",
         kind: 2,
         jh: true,
@@ -320,7 +320,7 @@ export function initializeRuntimeGame() {
           closed: game.terrainSprites.getSprite("L3_Wall_WeapRack6_NS.PNG")
         }
       });
-      ta.ve.push({
+      ta.targetDefinitions.push({
         uh: "case1",
         kind: 3,
         jh: true,
@@ -333,7 +333,7 @@ export function initializeRuntimeGame() {
           closed: game.terrainSprites.getSprite("L3_WallDeco03.PNG")
         }
       });
-      ta.ve.push({
+      ta.targetDefinitions.push({
         uh: "case2",
         kind: 3,
         jh: true,

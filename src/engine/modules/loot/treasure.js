@@ -47,7 +47,7 @@ export function setChestOpened(a, b) {
 export function TreasureRegistry() {
   this.targets = [];
   this.targetByRoomId = {};
-  this.ve = [];
+  this.targetDefinitions = [];
   this.yh = new Vector2();
 }
 export function spawnRoomTreasure(a) {
@@ -63,7 +63,7 @@ export function spawnRoomTreasure(a) {
         return;
       }
     }
-    var c = b.ve[randomInt(b.ve.length)],
+    var c = b.targetDefinitions[randomInt(b.targetDefinitions.length)],
       d = 0.5 > Math.random(),
       f,
       g;
@@ -100,7 +100,7 @@ export function initializeLootTreasure() {
   GoldDrop.prototype.oh = function (a) {
     this.collected = a;
   };
-  GoldDrop.prototype.Re = function (a) {
+  GoldDrop.prototype.setClaimedBy = function (a) {
     this.claimedBy = a;
   };
   GoldDrop.prototype.getClaimDistance = function () {
@@ -112,7 +112,7 @@ export function initializeLootTreasure() {
   GoldDropRegistry.prototype.zl = function () {
     var a;
     for (a = 0; a < this.drops.length; a++) {
-      this.drops[a].Re(null);
+      this.drops[a].setClaimedBy(null);
       this.drops[a].setClaimDistance(0);
     }
   };

@@ -249,7 +249,7 @@ export function initializeCombatPotions() {
   PotionDrop.prototype.oh = function (a) {
     this.collected = a;
   };
-  PotionDrop.prototype.Re = function (a) {
+  PotionDrop.prototype.setClaimedBy = function (a) {
     this.claimedBy = a;
   };
   PotionDrop.prototype.getClaimDistance = function () {
@@ -261,7 +261,7 @@ export function initializeCombatPotions() {
   PotionDropRegistry.prototype.zl = function () {
     var a;
     for (a = 0; a < this.Hf.length; a++) {
-      this.Hf[a].Re(null);
+      this.Hf[a].setClaimedBy(null);
       this.Hf[a].setClaimDistance(0);
     }
   };

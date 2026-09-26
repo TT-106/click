@@ -1,29 +1,5 @@
 [
   {
-    "name": "Gd",
-    "reads": 15,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\movement.js:19",
-        "code": "this.Gd"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\movement.js:46",
-        "code": "a.Gd"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\movement.js:47",
-        "code": "a.Gd"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\characters\\movement.js",
-      "src\\engine\\modules\\simulation\\tick.js"
-    ]
-  },
-  {
     "name": "fe",
     "reads": 1,
     "writes": 17,
@@ -115,31 +91,6 @@
     "fileCount": 1,
     "files": [
       "src\\engine\\modules\\combat\\scrolls.js"
-    ]
-  },
-  {
-    "name": "ve",
-    "reads": 16,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:50",
-        "code": "this.ve"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:66",
-        "code": "b.ve"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:66",
-        "code": "b.ve"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\loot\\treasure.js",
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\runtime\\game.js"
     ]
   },
   {
@@ -235,33 +186,6 @@
     ]
   },
   {
-    "name": "Re",
-    "reads": 12,
-    "writes": 4,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1128",
-        "code": "this.goldDrop.Re"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1151",
-        "code": "this.goldDrop.Re"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1191",
-        "code": "this.scrollDrop.Re"
-      }
-    ],
-    "fileCount": 5,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js",
-      "src\\engine\\modules\\combat\\potions.js",
-      "src\\engine\\modules\\combat\\scrolls.js",
-      "src\\engine\\modules\\loot\\items.js",
-      "src\\engine\\modules\\loot\\treasure.js"
-    ]
-  },
-  {
     "name": "He",
     "reads": 7,
     "writes": 9,
@@ -286,83 +210,6 @@
       "src\\engine\\modules\\persistence\\entities.js",
       "src\\engine\\modules\\persistence\\game-save.js",
       "src\\engine\\modules\\progression\\upgrades.js",
-      "src\\engine\\modules\\views\\upgrade-details.js"
-    ]
-  },
-  {
-    "name": "ye",
-    "reads": 11,
-    "writes": 5,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\party.js:226",
-        "code": "a.ye"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\party.js:405",
-        "code": "this.targetCastle.ye"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:171",
-        "code": "Ea.ye"
-      }
-    ],
-    "fileCount": 6,
-    "files": [
-      "src\\engine\\modules\\characters\\party.js",
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\progression\\upgrades.js",
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\views\\castles.js",
-      "src\\engine\\modules\\world\\regions.js"
-    ]
-  },
-  {
-    "name": "Ve",
-    "reads": 4,
-    "writes": 12,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:161",
-        "code": "this.Ve"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:167",
-        "code": "this.Ve"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:200",
-        "code": "this.Ve"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\progression\\upgrades.js"
-    ]
-  },
-  {
-    "name": "De",
-    "reads": 6,
-    "writes": 10,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\rendering\\floating-text.js:10",
-        "code": "this.De"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\floating-text.js:55",
-        "code": "this.De"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\floating-text.js:56",
-        "code": "this.De"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\rendering\\floating-text.js",
-      "src\\engine\\modules\\rendering\\sprites.js",
-      "src\\engine\\modules\\views\\expedition.js",
       "src\\engine\\modules\\views\\upgrade-details.js"
     ]
   },
@@ -2029,7 +1876,7 @@
     "samples": [
       {
         "loc": "src\\engine\\modules\\persistence\\game-save.js:293",
-        "code": "Db.ve[gb].uh"
+        "code": "Db.targetDefinitions[gb].uh"
       },
       {
         "loc": "src\\engine\\modules\\persistence\\game-save.js:852",

@@ -158,13 +158,13 @@ export function UnlockMonsterLevelUpgrade() {
   this.qe = -1;
   this.Ds = 1;
   this.Ql = this.canPurchase = false;
-  this.Ve = "解锁怪物等级";
+  this.cachedTitle = "解锁怪物等级";
 }
 export function RetireMonsterLevelUpgrade() {
   this.retireLevel = -1;
   this.Cs = 1;
   this.Ql = this.affordableSoon = this.canPurchase = false;
-  this.Ve = "退休怪物等级";
+  this.cachedTitle = "退休怪物等级";
 }
 export function CharacterSkillUpgrade(a) {
   this.it = a;
@@ -197,13 +197,13 @@ export function ScrollUpgrade(a) {
 export function ClaimAchievementUpgrade(a) {
   this.vy = a;
   this.achievement = null;
-  this.Ve = "Achievement";
+  this.cachedTitle = "Achievement";
   this.jk = "Reward";
   this.cachedCanPurchase = this.canPurchase = false;
 }
 export function AchievementUpgrade(a) {
   this.achievement = a;
-  this.Ve = this.achievement.obtained ? this.achievement.name : getAchievementRequirementLabel(this.achievement);
+  this.cachedTitle = this.achievement.obtained ? this.achievement.name : getAchievementRequirementLabel(this.achievement);
   this.jk = getAchievementActionLabel(this);
   this.YA = this.VA = this.canPurchase = false;
 }
@@ -316,7 +316,7 @@ export function initializeProgressionUpgrades() {
     return "攻击城堡";
   };
   PurchaseItemUpgrade.prototype.He = function () {
-    return this.castle && (this.castle.ye || this.castle.conquered);
+    return this.castle && (this.castle.attackScheduled || this.castle.conquered);
   };
   PurchaseItemUpgrade.prototype.getUpgradeType = function () {
     return 13;
@@ -324,7 +324,7 @@ export function initializeProgressionUpgrades() {
   PurchaseItemUpgrade.prototype.purchase = function () {
     if (this.castle) {
       recordGameEvent("Castle", "计划攻击:" + this.castle.castleName);
-      this.castle.ye = true;
+      this.castle.attackScheduled = true;
       invalidateCastleRevision();
       refreshScheduledCastles(this.castle);
       refreshAttackableCastles(this.castle);
@@ -614,7 +614,7 @@ export function initializeProgressionUpgrades() {
       this.Ql = true;
       this.qe = game.monsterCatalog.maxUnlockedLevel + 1;
       this.Ds = scaleByLevel(this.qe, monsterUnlockPriceCurve, 1);
-      this.Ve = "解锁怪物等级" + this.qe;
+      this.cachedTitle = "解锁怪物等级" + this.qe;
     }
   };
   UnlockMonsterLevelUpgrade.prototype.Kr = function () {
@@ -624,10 +624,10 @@ export function initializeProgressionUpgrades() {
     this.Ql = false;
     this.qe = game.monsterCatalog.maxUnlockedLevel + 1;
     this.Ds = scaleByLevel(this.qe, monsterUnlockPriceCurve, 1);
-    this.Ve = "解锁怪物等级" + this.qe;
+    this.cachedTitle = "解锁怪物等级" + this.qe;
   };
   UnlockMonsterLevelUpgrade.prototype.getTitle = function () {
-    return this.Ve;
+    return this.cachedTitle;
   };
   UnlockMonsterLevelUpgrade.prototype.getUpgradeType = function () {
     return 11;
@@ -661,7 +661,7 @@ export function initializeProgressionUpgrades() {
     if (this.qe != c) {
       this.qe = c;
       this.Ds = scaleByLevel(this.qe, monsterUnlockPriceCurve, 1);
-      this.Ve = "解锁怪物等级" + this.qe;
+      this.cachedTitle = "解锁怪物等级" + this.qe;
     }
     if (c = game.state.party.kills >= (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).getCost()) {
       if (c = getPartyMinLevel() >= this.qe) {
@@ -678,7 +678,7 @@ export function initializeProgressionUpgrades() {
       this.Ql = true;
       this.retireLevel = game.monsterCatalog.minUnlockedLevel;
       this.Cs = scaleByLevel(this.retireLevel, monsterUnlockPriceCurve, 1);
-      this.Ve = "退休怪物等级" + this.retireLevel;
+      this.cachedTitle = "退休怪物等级" + this.retireLevel;
     }
   };
   RetireMonsterLevelUpgrade.prototype.Kr = function () {
@@ -688,10 +688,10 @@ export function initializeProgressionUpgrades() {
     this.Ql = false;
     this.retireLevel = game.monsterCatalog.minUnlockedLevel;
     this.Cs = scaleByLevel(this.retireLevel, monsterUnlockPriceCurve, 1);
-    this.Ve = "退休怪物等级" + this.retireLevel;
+    this.cachedTitle = "退休怪物等级" + this.retireLevel;
   };
   RetireMonsterLevelUpgrade.prototype.getTitle = function () {
-    return this.Ve;
+    return this.cachedTitle;
   };
   RetireMonsterLevelUpgrade.prototype.getUpgradeType = function () {
     return 11;
@@ -739,7 +739,7 @@ export function initializeProgressionUpgrades() {
     if (this.retireLevel != game.monsterCatalog.minUnlockedLevel) {
       this.retireLevel = game.monsterCatalog.minUnlockedLevel;
       this.Cs = scaleByLevel(this.retireLevel, monsterUnlockPriceCurve, 1);
-      this.Ve = "退休怪物等级" + this.retireLevel;
+      this.cachedTitle = "退休怪物等级" + this.retireLevel;
     }
     if (this.retireLevel < getPartyMinLevel() && this.retireLevel < game.monsterCatalog.maxUnlockedLevel - 1) {
       this.canPurchase = game.state.party.kills >= (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).getCost();
@@ -1112,7 +1112,7 @@ export function initializeProgressionUpgrades() {
     return this.achievement ? this.achievement.applied : false;
   };
   ClaimAchievementUpgrade.prototype.getTitle = function () {
-    return this.Ve;
+    return this.cachedTitle;
   };
   ClaimAchievementUpgrade.prototype.getDescription = function () {
     return this.jk;
@@ -1141,7 +1141,7 @@ export function initializeProgressionUpgrades() {
     this.canPurchase = null != a;
     var b = this.achievement != a || this.cachedCanPurchase != this.canPurchase;
     if (b && a) {
-      this.Ve = a.name;
+      this.cachedTitle = a.name;
       this.jk = "奖励:" + getAchievementRewardLabel(a);
     }
     this.achievement = a;
@@ -1153,7 +1153,7 @@ export function initializeProgressionUpgrades() {
     return this.achievement.applied;
   };
   AchievementUpgrade.prototype.getTitle = function () {
-    return this.Ve;
+    return this.cachedTitle;
   };
   AchievementUpgrade.prototype.getDescription = function () {
     return this.jk;
@@ -1175,7 +1175,7 @@ export function initializeProgressionUpgrades() {
     this.canPurchase = b && !a;
     var c = this.VA != a || this.YA != b;
     if (c) {
-      this.Ve = this.achievement.obtained ? this.achievement.name : getAchievementRequirementLabel(this.achievement);
+      this.cachedTitle = this.achievement.obtained ? this.achievement.name : getAchievementRequirementLabel(this.achievement);
       this.jk = getAchievementActionLabel(this);
     }
     this.VA = a;

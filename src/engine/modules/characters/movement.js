@@ -16,7 +16,7 @@ export function Equipment(a, b) {
 }
 export function CharacterPosition(a, b) {
   this.velocity = new Vector2();
-  this.Gd = null;
+  this.steeringVector = null;
   this.lj = new Vector2();
   this.Tl = new Vector2();
   this.separationDelta = new Vector2();
@@ -43,21 +43,21 @@ export function clearMovementTarget(a) {
   a.fg = -1;
 }
 export function applySeparationForce(a, b, c, d) {
-  if (!a.Gd) {
-    a.Gd = new Vector2();
+  if (!a.steeringVector) {
+    a.steeringVector = new Vector2();
   }
   if (a.levelPosition === c) {
-    assignVector(a.Gd, a.levelPosition);
-    subtractVector(a.Gd, b);
-    normalizeVector(a.Gd);
-    multiplyVector(a.Gd, d);
+    assignVector(a.steeringVector, a.levelPosition);
+    subtractVector(a.steeringVector, b);
+    normalizeVector(a.steeringVector);
+    multiplyVector(a.steeringVector, d);
   } else {
-    assignVector(a.Gd, a.levelPosition);
-    subtractVector(a.Gd, c);
-    b = vectorLength(a.Gd);
+    assignVector(a.steeringVector, a.levelPosition);
+    subtractVector(a.steeringVector, c);
+    b = vectorLength(a.steeringVector);
     if (0 !== b) {
-      normalizeVector(a.Gd);
-      multiplyVector(a.Gd, d * (1 - b / d));
+      normalizeVector(a.steeringVector);
+      multiplyVector(a.steeringVector, d * (1 - b / d));
     }
   }
 }

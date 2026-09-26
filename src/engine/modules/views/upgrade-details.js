@@ -141,7 +141,7 @@ export function SpellUpgradeDetails(a, b) {
   this.shown = false;
   this.zn = this.Dx = this.Lv = null;
   this.isAnimated = true;
-  this.De = this.frameIndex = 0;
+  this.frameAge = this.frameIndex = 0;
   this.qw = 8;
 }
 export function MonsterLevelDetails(a, b) {
@@ -713,16 +713,16 @@ export function initializeViewsUpgradeDetails() {
         a = a.impactEffectName;
         this.Dx = game.animations.Yh[a];
         this.zn = game.animations.Zg(a);
-        this.De = this.frameIndex = 0;
+        this.frameAge = this.frameIndex = 0;
         this.isAnimated = true;
       }
       this.Ml.innerHTML = this.upgrade.getTitle();
       this.vu.innerHTML = this.upgrade.getDescription();
     }
     if (this.isAnimated) {
-      this.De++;
-      if (this.De >= this.qw) {
-        this.De = 0;
+      this.frameAge++;
+      if (this.frameAge >= this.qw) {
+        this.frameAge = 0;
         this.frameIndex++;
         if (this.frameIndex >= this.zn.To()) {
           this.frameIndex = 0;

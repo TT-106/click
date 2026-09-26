@@ -294,7 +294,7 @@ export function initializeLootItems() {
   ItemDrop.prototype.oh = function (a) {
     this.collected = a;
   };
-  ItemDrop.prototype.Re = function (a) {
+  ItemDrop.prototype.setClaimedBy = function (a) {
     this.claimedBy = a;
   };
   ItemDrop.prototype.getClaimDistance = function () {
@@ -344,7 +344,7 @@ export function initializeLootItems() {
   ItemDropRegistry.prototype.zl = function () {
     var a;
     for (a = 0; a < this.yf.length; a++) {
-      this.yf[a].Re(null);
+      this.yf[a].setClaimedBy(null);
       this.yf[a].setClaimDistance(0);
     }
   };
