@@ -1,10 +1,11 @@
 # WORKSTATE — Clickpocalypse II 语义恢复与现代化工程
 
 > 本文件是长程自治任务的**唯一续跑入口**。上下文压缩或中断后，先读本文件 + `git log --oneline`，再继续。
-> 最后更新：2026-09-26（U37 Ai/Bi 坐标转换对拆名后，混淆清单 970；验收矩阵 51 PASS / 0 PARTIAL、矩阵 59/59、soak 通过）
+> 最后更新：2026-09-26（U38 A* 寻路字段簇落地后，混淆清单 959；验收矩阵 51 PASS / 0 PARTIAL、矩阵 59/59、soak 通过）
 
 ## 当前轮次状态（2026-09-26，M13 文档与验收收尾）
 
+- U38 A* 寻路字段簇（2026-09-26，一笔提交，六门禁全绿，混淆清单 970 → 959）：pathfinding.js 单文件 96 处整批语义化——Fl→grid（寻路器与节点双引用）、xk→costSoFar、Ko→heuristicScore（开放集按两者之和排序）、rl→parent（reconstructPath 回溯链）、It→visited、Hs→neighbors（房间墙邻接表）、Ui→nodes（PathOpenSet 有序数组）、nx→pooledNodes（节点池）、Ip/Sw→usedNodes/usedTiles（单次搜索簿记，结束后归还池）、Bl/Cl→grid 侧 fromRoom/toRoom + DungeonHallway 侧 roomA/roomB（写只字段，与 doorA/doorB 成对）。
 - U37 Ai/Bi 坐标转换对拆名（2026-09-26，一笔提交，六门禁全绿，混淆清单 972 → 970）：DungeonLevel.Ai/Bi(pixel)→pixelToTileColumn/pixelToTileRow（像素→瓦片列/行转换）；DungeonTile.Ai()/Bi()→getTileColumn()/getTileRow()（A* 寻路节点键与邻居计分的列/行访问器）。消费方按文件天然分离：game.level.X(pixel) 在 character/scene/tick，tile.X() 在 pathfinding——上轮延后的成对甄别就此闭环，全库 .Ai/.Bi 残留 0。
 - U36 效果伤害/动画映射/房间发现（2026-09-26，一笔提交，六门禁全绿，混淆清单 977 → 972）：Wh→spriteName（卷轴定义/实例贴纸名，getScrollSprite 返回值）、Qh→maxCharges（卷轴升级次数上限，满员即不可再购）、li→remainingEffectDamage（DungeonTile 地面效果剩余伤害 randomInt(li+1) 结算 + VisualEffect 同名字段，batch-7 证据 li→remainingEffectDamage 补齐）、Yh→animationMap（AnimationSheet/AnimationCatalog 名称→动画映射）、Xi→discovered（DungeonRoom 是否已探索/揭示，revealRoom 置位并触发财宝生成；character/party/scene/game-save 消费全量落地）。**Ai 主动延后**：DungeonLevel.Ai(pixel)→tileColumn 转换 vs DungeonTile/Room.Ai()→tileColumn 访问器双方法属主、签名不同，需与 Bi（行转换/行访问器）成对甄别后下一批拆名。
 - U35 主题装饰/区域网格字段（2026-09-26，一笔提交，六门禁全绿，混淆清单 984 → 977）：Th→decorationSets（每主题墙面装饰配置数组）、Oo→floorDecorations（房间内地面装饰池）、JC/KC→horizontalWallDecorations/verticalWallDecorations（**取证**：JC 与 Xw 配对——Xw 取房间顶边外一格即横墙；KC 与 Zw 配对——Zw 取左边外一格即纵墙）、Rh/Sh→regionGridOriginColumn/regionGridOriginRow（regions 构造时的 WORLD_ORIGIN_COLUMN/ROW）、Eh→regionGridSpan（每边 16 区域，边界=origin+span）。
