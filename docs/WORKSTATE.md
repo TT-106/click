@@ -26,6 +26,7 @@
 - U4 增加 `fireball-blast-stun`：class 4 法师唯一已学法术为火球，断言两端实际施法并推进 6000 回合完整差分。场景总数 14，四套回归全绿；Blast Stun 入队未独立观测，不能据此关闭全部法术分支缺口。
 - U3 8h/24h 等价回合 soak 已连续两次实测通过（115,200/345,600 回合，完整存档两端相等，0 pageerror）；最近一次 CDP 主动 GC 后原版 JS 堆 8h→24h 为 6.27→6.29 MB，重构版 7.06→7.08 MB。`npm run test:soak` 独立于常规快测，样本输出 `output/soak/last-run.json`；短期稳定不等于严格泄漏证明。
 - M10 `world/rooms.js` 已摘除 `@ts-nocheck`：`revealRoom/revealHallway` 初始布尔位与后续复用变量分名，两个后挂载 `Lw` 调用标注签名；四套回归全绿。剩余 13 个忽略文件。
+- M10 `world/generation.js` 已摘除 `@ts-nocheck`：`LayoutMethods` 明确后挂载布局方法签名，生成随机流与入场角色的复用变量分开，最后楼层布尔条件分开；四套回归全绿。剩余 12 个。
 - 本节优先于下方旧快照中的“当前工作树干净”“M10 未开始”“9 场景”等过时文字；提交与实际状态以 `git status`、`git log` 为准。
 
 ## 1. 项目概况

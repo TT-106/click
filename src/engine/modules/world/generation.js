@@ -1,4 +1,3 @@
-// @ts-nocheck -- M10 渐进类型化：JSDoc 覆盖后摘除（见 docs/WORKSTATE.md）
 /** 地牢、城堡楼层生成和装饰。
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
@@ -15,6 +14,7 @@ import { clearVisualEffects } from "../rendering/sprites.js";
 import { IDLE_ACTION } from "../ai/targeting.js";
 import { clearMovementTarget } from "../characters/movement.js";
 import { spawnRoomTreasure } from "../loot/treasure.js";
+/** @typedef {{yx: (room: DungeonRoom) => void, shiftLeft: (room: DungeonRoom) => void, gt: (room: DungeonRoom) => void, ru: () => boolean, uu: () => boolean, to: (room: DungeonRoom, entrance: boolean) => DungeonStairs, dl: (doors: unknown[], column: number, row: number) => boolean}} LayoutMethods */
 export function DungeonLayoutGenerator(a, b, c, d, f) {
   this.seededRandom = d;
   this.fl = a;
@@ -149,7 +149,7 @@ export function DungeonLevel() {
 export function generateDungeonLevel(a, b, c, d) {
   var f = game.level;
   f.sp = a;
-  var g = new SeededRandom(a);
+  var seededRandom = new SeededRandom(a);
   f.roomList.length = 0;
   f.gd.length = 0;
   f.Ce = null;
@@ -160,10 +160,10 @@ export function generateDungeonLevel(a, b, c, d) {
     f.Aw();
   }
   if (11 === b) {
-    c = new CastleLayoutGenerator(f.rc, f.sc, f.tileGrid, g);
+    c = new CastleLayoutGenerator(f.rc, f.sc, f.tileGrid, seededRandom);
     c.rw();
   } else {
-    for (a = 0, c = new DungeonLayoutGenerator(f.rc, f.sc, f.tileGrid, g, c); !c.rw();) {
+    for (a = 0, c = new DungeonLayoutGenerator(f.rc, f.sc, f.tileGrid, seededRandom, c); !c.rw();) {
       console.log("Level generation failed for seed: " + f.sp + " attempt: " + a);
       a++;
       f.sp++;
@@ -209,15 +209,15 @@ export function generateDungeonLevel(a, b, c, d) {
     d = f.Ce.$d;
     c = getAllies();
     for (b = 0; b < c.length; b++) {
-      var g = c[b],
+      var ally = c[b],
         h = d;
-      a = g.position;
+      a = ally.position;
       a.cd = null;
       a.room = h;
-      g.actionType = IDLE_ACTION;
+      ally.actionType = IDLE_ACTION;
       clearMovementTarget(a);
-      g = h.stairs;
-      setVector(a.levelPosition, g.tq, g.uq);
+      var stairs = h.stairs;
+      setVector(a.levelPosition, stairs.tq, stairs.uq);
     }
     populateEncounter(d);
     spawnRoomTreasure(f.Ce.$d);
@@ -249,6 +249,7 @@ export function findRoom(a) {
 }
 export function initializeWorldGeneration() {
   DungeonLayoutGenerator.prototype.rw = function () {
+    const methods = /** @type {LayoutMethods} */ (/** @type {unknown} */ (this));
     this.Xp = this.Zo = 0;
     this.roomList.length = 0;
     this.gd.length = 0;
@@ -281,21 +282,21 @@ export function initializeWorldGeneration() {
         c.roomId = g;
         this.roomList.push(c);
         g = c;
-        this.yx(g);
+        methods.yx(g);
         h = undefined;
         for (h = 0; 3 > h; h++) {
           if (0.5 > this.seededRandom.random()) {
-            this.shiftLeft(g);
-            this.gt(g);
+            methods.shiftLeft(g);
+            methods.gt(g);
           } else {
-            this.gt(g);
-            this.shiftLeft(g);
+            methods.gt(g);
+            methods.shiftLeft(g);
           }
         }
-        c.Bq(this.tileGrid);
+        /** @type {{Bq: (grid: unknown) => void}} */ (/** @type {unknown} */ (c)).Bq(this.tileGrid);
       }
     }
-    return this.ru() ? this.uu() ? true : (console.log("failed to create stairs."), false) : false;
+    return methods.ru() ? methods.uu() ? true : (console.log("failed to create stairs."), false) : false;
   };
   DungeonLayoutGenerator.prototype.ru = function () {
     var a,
@@ -324,21 +325,22 @@ export function initializeWorldGeneration() {
     return true;
   };
   DungeonLayoutGenerator.prototype.uu = function () {
+    const methods = /** @type {LayoutMethods} */ (/** @type {unknown} */ (this));
     for (var a = this.roomList[randomIntFrom(this.seededRandom, this.roomList.length)], b = this.roomList[randomIntFrom(this.seededRandom, this.roomList.length)]; b === a;) {
       b = this.roomList[randomIntFrom(this.seededRandom, this.roomList.length)];
     }
-    var c = false;
+    var isLastLevel = false;
     if (game.currentDungeon) {
-      c = game.currentDungeon;
-      c = c.currentLevelIndex >= c.levelCount - 1;
+      const currentDungeon = game.currentDungeon;
+      isLastLevel = currentDungeon.currentLevelIndex >= currentDungeon.levelCount - 1;
     } else {
       if (game.currentCastle) {
-        c = true;
+        isLastLevel = true;
       }
     }
-    c = c ? !this.Aj : this.Aj;
-    this.Ce = this.to(a, !this.Aj);
-    this.tf = this.to(b, c);
+    const secondEntrance = isLastLevel ? !this.Aj : this.Aj;
+    this.Ce = methods.to(a, !this.Aj);
+    this.tf = methods.to(b, secondEntrance);
     return null != this.Ce && null != this.tf;
   };
   DungeonLayoutGenerator.prototype.to = function (a, b) {
@@ -421,6 +423,7 @@ export function initializeWorldGeneration() {
     }
   };
   CastleLayoutGenerator.prototype.rw = function () {
+    const methods = /** @type {LayoutMethods} */ (/** @type {unknown} */ (this));
     this.Xp = this.Zo = 0;
     this.roomList.length = 0;
     this.gd.length = 0;
@@ -432,8 +435,8 @@ export function initializeWorldGeneration() {
     appendDungeonRoom(this, 1, 46, 15, 15, 1);
     appendDungeonRoom(this, 1, 69, 15, 15, 2);
     appendDungeonRoom(this, 27, 74, 5, 5, 3);
-    this.ru();
-    this.uu();
+    methods.ru();
+    methods.uu();
   };
   CastleLayoutGenerator.prototype.ru = function () {
     var a,
@@ -455,24 +458,26 @@ export function initializeWorldGeneration() {
     }
   };
   CastleLayoutGenerator.prototype.uu = function () {
+    const methods = /** @type {LayoutMethods} */ (/** @type {unknown} */ (this));
     var a = this.roomList[this.roomList.length - 1];
-    this.Ce = this.to(this.roomList[0], false);
-    this.tf = this.to(a, false);
+    this.Ce = methods.to(this.roomList[0], false);
+    this.tf = methods.to(a, false);
   };
   CastleLayoutGenerator.prototype.to = function (a, b) {
+    const methods = /** @type {LayoutMethods} */ (/** @type {unknown} */ (this));
     var c = new DungeonStairs(a),
       d = a.Nc,
       f,
       g;
     if (0.5 > Math.random()) {
       f = a.tileColumn - 1;
-      for (g = a.tileRow + randomIntFrom(this.seededRandom, a.heightInTiles); this.dl(d, f, g);) {
+      for (g = a.tileRow + randomIntFrom(this.seededRandom, a.heightInTiles); methods.dl(d, f, g);) {
         g = a.tileRow + randomIntFrom(this.seededRandom, a.heightInTiles);
       }
       c.Fq = true;
     } else {
       g = a.tileRow - 1;
-      for (f = a.tileColumn + randomIntFrom(this.seededRandom, a.widthInTiles); this.dl(d, f, g);) {
+      for (f = a.tileColumn + randomIntFrom(this.seededRandom, a.widthInTiles); methods.dl(d, f, g);) {
         f = a.tileColumn + randomIntFrom(this.seededRandom, a.widthInTiles);
       }
       c.Fq = false;
