@@ -14,7 +14,7 @@
 ## 3. 新架构
 
 ```
-archive/original/c2.js  ──AST 机械恢复──▶  src/engine/（74 模块，约 5.3 万行）
+archive/original/c2.js  ──AST 机械恢复──▶  src/engine/（77 模块，32,431 行）
                                             core ← content/characters/combat/loot/world/…
                                                    ← simulation ← runtime(组合根)
                                             唯一产品入口：src/engine/adapter.js（命令校验+只读快照）
@@ -34,32 +34,34 @@ archive/original/c2.js  ──AST 机械恢复──▶  src/engine/（74 模块
 | 领域字段 | 30+ 字段身份重命名落地（position/levelPosition/room/slot/characteristic/statType/spriteName/canPurchase/tabState/currentValue 组/tileGrid/worldBlocks 组/动画帧表组/Achievement 组…），映射与证据见 `docs/reverse-engineering/semantic-map.md` |
 | 外部契约 | `window.Game/lB/pB/hE` → adapter/runtime API（MIGRATION_MAP.md 对照表） |
 
-## 5. 测试体系（全部实测通过）
+## 5. 测试体系（全部实测通过，共 34 个差分场景）
 
 | 层 | 内容 |
 |---|---|
-| L1 单元 | RNG 位级差分（Babel 提取原版 `ga` 对照，6 种子×100k 值+黄金值）、codec 契约、格式化表驱动（9 项） |
-| L3/L4 差分 | parity：同存档+固定 RNG/时钟，0/1/99/900 回合全状态相等；场景矩阵 12 场景（离线 1h/8h/disabled 含"必须真增长/必须不变"断言、药水、卷轴、金币、后期、9000 回合、veteran 解锁、prestige 重置、完全重置） |
-| L6 E2E | 建队/自动战斗/暂停/五面板/设置/导出导入/非法存档/刷新恢复/键盘/三视口 |
-| 工程门 | `npm run check`（104 文件语法+单测）；每切片一 commit（本次会话 20+ 个，格式 `refactor:/test:/docs:/perf:`） |
+| L1 单元（9 项） | RNG 位级差分（Babel 从 c2.js 提取原版 `ga` 对照，6 种子×100k 值 + 黄金值）、LZ-string codec 契约、格式化表驱动 |
+| L3/L4 差分 | `test:parity`：同存档 + 固定 RNG/时钟，0/1/99/900 回合完整存档逐字段相等；`test:scenarios`：**34 场景**（长跑、离线四态 + 12h 截断、药水激活、卷轴、16 类法术分支、城堡征服→胜利、金币涌入、后期、veteran、prestige、full reset、升级购买、药水真实使用、渲染帧 + 自动落盘） |
+| L5 集成 | 场景内的"两端各自增长断言 + 逐检查点全状态相等"即多模块组合验证（战斗→掉落→拾取→统计→存档） |
+| L6 浏览器 E2E | 建队/自动战斗/暂停/五类面板/**c2c.user.js 外部 DOM 契约**/设置/导出导入/非法存档/刷新恢复/键盘/三种视口 |
+| L7 长跑 soak | `test:soak`：115,200 与 345,600 等价回合（8h/24h），两端完整存档相等 + CDP 主动 GC 后堆增量样本 |
+| 渲染等价 | `rendered-scene` / `autosave-payload`：真实帧循环 1,300 帧后比对主画布逐像素 FNV-1a 指纹（两端相同）与落盘存档解码内容 |
+| 工程门 | `npm run check`（109 文件语法 + 单测）、`npm run typecheck`（tsc 覆盖 76/77 引擎模块，经 import 图传递）；每切片一 commit |
 
-方法论实证：**场景矩阵抓住了 parity-900 无法覆盖的真实回归**（guardians.js/minions.js 数据键漏改 → 城堡守卫生成崩溃）——垂直内容只有长程场景能触达。
+方法论实证：差分矩阵三次抓到人工没看到的真实缺陷——guardians/minions 数据键漏改导致城堡守卫生成崩溃；金堆房对 DungeonTile 误调角色坐标接口；以及本轮由新场景暴露的**自动保存间隔 3E4 vs 原版 3E5**（10 倍频率，改动前无任何测试能看到）。
 
 ## 6. 兼容性（详见 COMPATIBILITY_REPORT.md）
 
-存档兼容、行为差分、RNG 确定性、离线语义 = **VERIFIED**；DOM 外部契约 = PARTIALLY VERIFIED（未用 c2c.user.js 实测）；prestige/victory/部分法术/城堡战 = UNRESOLVED（未纳入差分场景，非已知不兼容）。
+存档兼容、行为差分、RNG 确定性、离线语义、自动保存落盘内容 = **VERIFIED**；外部 DOM 契约已实测（选择器逐项断言 + 反向验证）；仍为 PARTIAL/未覆盖的区域逐项列在本文件附录 A 与 `docs/reverse-engineering/unresolved.md`（U4 覆盖口径、U5 长尾字段、U7 UI 独占路径）。
 
 ## 7. 性能（详见 PERFORMANCE_REPORT.md）
 
-重构/原版比值 1.0–1.1x（推进/序列化/导入/离线四项）；模拟占回合预算 0.03%。未做无数据驱动的优化。
+最新一次 `npm run perf` 实测比值：回合推进 1.09x、序列化 1.30x、导入 0.89x、离线 1h 结算 1.23x。多次采样同一代码的比值在 1.0~1.3 之间摆动，属单样本 CPU 噪声；可确认的是模块化未引入数量级退化，且模拟只占 250ms 回合预算的 0.03%。未做任何无数据驱动的优化。
 
 ## 8. 剩余风险与未完成
 
-1. **字段重命名未竟**：约 1,300 处单字母字段访问残留（技能定义表 `c/e/f/g/h` 为主）；`c` 已有 HIGH 证据待落地，其余需新取证。工作清单：`artifacts/obfuscated-fields.json`。
-2. **差分覆盖缺口**：prestige/victory、法术分支、城堡战（扩展 `save-mutations.mjs` 变异器即可纳入矩阵）。
-3. **M10 类型体系**未开始（建议 JSDoc 从 core/ 与 persistence/ 起步）。
-4. 渲染层真实帧时间/内存 soak 未测（harness 基线已就位）。
-5. 一处语义推断标注"待验证"（room.Yp 的 0/1/2 标签，见 architecture.md）。
+1. **字段重命名未竟**：`src` 内仍余 1,202 个混淆属性名（本次会话清零 29 个字母）。工作清单 `artifacts/obfuscated-fields.json`，取证→改名→四套回归的流程已固化在 `scripts/rename-field.mjs`。
+2. **UI 独占路径未进差分**（U7）：技能树购买、随从等级解锁、冒险点消费、农场购买、成就领取、自动装备、卷轴施放、宝箱与掉落物拾取——这些只能从视图入口进入，现有 harness 驱动命令尚未覆盖到它们（升级购买只命中了全局升级一支）。
+3. **验收口径分层**：16 类法术分支靠"唯一注入法术 + 两端各自施法计数增长"归因，只有 cat=2 的三种状态与 cat=17 有专属可观测量；渲染等价只在一条场景、一种视口下比对指纹。
+4. 双主字母 `Cb`/`Qc` 已按所有者拆开，`oc`/`$c` 仍待线级处理（见 semantic-map 第十二轮）。
 
 ## 9. 后续开发方式（对新开发者的承诺）
 
@@ -73,36 +75,67 @@ npm test && npm run check      # 一条命令测试
 
 ## 10. 结论
 
-Clickpocalypse II 的核心实现已从高混淆遗留代码中恢复出真实语义：关键玩法行为有自动化差分证据保护，存档/RNG/时间/离线机制经兼容验证，业务逻辑已迁入带清晰边界的现代模块，旧文件不再是唯一真相来源。这些改善由运行与差分证明，而非主观判断。
+Clickpocalypse II 的核心实现已从高混淆遗留代码中恢复出真实语义：关键玩法行为有 34 个差分场景 + 位级 RNG 单测 + 浏览器 E2E + 8h/24h 等价回合 soak 的自动化证据保护，存档/RNG/时间/离线/自动保存经兼容验证，业务逻辑已迁入带清晰边界的现代模块（77 个），旧文件不再是唯一真相来源。
+
+这些结论由运行与差分证明，不是主观判断；同样明确的是**尚未证明的部分**：附录 A 的 50 行里有 28 行 PASS、17 行 PARTIAL、5 行未覆盖，缺口逐项写明，`docs/reverse-engineering/unresolved.md` 的 U4/U5/U6/U7 是继续推进的入口。
 
 ---
 
-## 附录 A：验收矩阵（规范 §56，截至 2026-09-26）
+## 附录 A：验收矩阵（规范 §56，逐系统，附证据）
 
-判定依据：VERIFIED=有差分/单测/E2E 自动化证据；PARTIAL=有证据但覆盖不全；未列出的长尾系统=依赖同构恢复+全局差分间接保护。
+判定口径：**PASS** = 有自动化检查真的驱动该系统并对它作出断言；**PARTIAL** = 已驱动但存在写明缺口；**未覆盖** = 无专项检查，仅受"完整存档逐字段相等"间接约束。不得把 PARTIAL 写成 PASS。
 
-| 系统 | 判定 | 证据 |
+| 系统 | 判定 | 证据 / 缺口 |
 |---|---|---|
-| Bootstrap/启动 | PASS | architecture.md §1 + E2E 启动断言 |
-| Party 创建 | PASS | E2E（建队/改名/开战）+ adapter.startParty 校验 |
-| 角色等级/XP/属性 | PASS | 差分 12 场景（adventurers 全字段逐回合相等） |
-| 角色技能/技能树 | PARTIAL | 差分覆盖常规技能升级；个别技能分支未专项触发 |
-| Inventory/Equipment/Auto equip | PASS | 场景矩阵（金币涌入触发购买/掉落/自动装备路径）+ itemsFound 统计相等 |
-| 怪物定义/升级 | PASS | 差分（monsterTypes 全量相等） |
-| Combat/Crit/Stun/Skills/Spells | PARTIAL | 9000 回合 + 12 场景战斗统计相等（melee/ranged 计数）；法术专项分支未逐一触发 |
-| Loot/Gold/Items | PASS | 场景矩阵 + 统计相等 |
-| Scrolls/Potions | PASS | 专项场景（激活/自动激活/库存） |
-| Treasure | PASS | 宝箱管理器状态差分相等（treasure 场景注入） |
-| Dungeon 生成/导航 | PASS | 差分（level/hallways/roomVisibility 全量相等） |
-| Castle/Farming | PARTIAL | 状态差分相等；城堡征服全程未专项触发 |
-| Adventure Points/Point upgrades | PASS | pointManagerState 差分相等（离线/长跑覆盖重算路径） |
-| Achievements/Statistics | PASS | achievementManager/statistics 全量差分相等 |
-| Pause/Background | PASS | E2E 暂停断言 + loop 守卫差分 |
-| Offline progression | PASS | offline-1h/8h/disabled 三向验证（收益真实发生 + 双端相等） |
-| Auto/Manual save/Load/Import/Export | PASS | parity + E2E + codec 单测 |
-| Legacy save compatibility | PASS | fixture 载入 + 往返 + 4477 键审计 |
-| Prestige/reset | PASS | prestige-restart/full-reset 场景（本次新增） |
-| RNG determinism | PASS | 单测位级差分 + 全部差分场景的确定性前提 |
-| Long-running stability | PARTIAL | 9000 回合 + 离线 18925 回合无 NaN/漂移；8h+ 连续 wall-clock soak 未跑 |
-| UI tabs/Canvas/Sprite lookup | PASS | E2E 面板断言 + 渲染路径差分（spriteName/getSprite 重命名后回归） |
-| 类型体系/TypeScript | PARTIAL（M10 已启动） | tsconfig checkJs：core/+persistence/+save-codec 全量 0 错误；SaveData DTO typedef；16 个引擎模块已纳入（tick/game/targeting/scrolls/items/treasure/dungeons/pathfinding/regions/travel-costs/minions/party/sprites/navigation/base/party-creation/initialization）；剩余 22 个重文件 @ts-nocheck 待类成员 JSDoc 专项 |
+| Bootstrap 启动 | PASS | harness 两端 `ready()` 前置断言；E2E 载入 + 无 console/pageerror（渲染异常也纳入捕获） |
+| Party 创建 | PASS | E2E：推荐阵容→改名→开战，断言 4 名队员与姓名 |
+| 角色职业 | PARTIAL | 法术场景装载职业 3/4/6/7/8/9/10/11；0/1/2/5 未被装载，职业成长未跑 |
+| 角色升级 | 未覆盖 | 等级恒为 1：`LevelUpUpgrade.purchase` 只有视图入口，harness 购买命令当时命中的只有全局升级（U7） |
+| 角色技能/技能树 | 未覆盖 | `upgrades1..4` 全 false、`skillPoints` 未变动；购买入口在视图层 |
+| 角色属性 | PASS | 六个分量 + 生命/精神/击杀在 34 场景每个检查点全量相等 |
+| 背包 | PASS | 物品计数/容量在差分中相等（itemsFound 真实增长） |
+| 装备 | PARTIAL | 载入侧装备与怪物侧生成被覆盖；跑图中无装备变更事件 |
+| 自动装备 | 未覆盖 | 只有视图入口（角色面板按钮 / EquipBestItemUpgrade） |
+| 怪物定义 | PASS | 名称/精灵/每级击杀数在存档 DTO 全量相等 |
+| 怪物升级 | PARTIAL | 怪物 rank 随战斗推进被覆盖；`maxUnlockedLevel` 恒为 1（解锁购买是视图入口） |
+| 战斗 | PASS | 近战/远程计数 + 9,000~345,600 回合全状态相等 |
+| 暴击 | PARTIAL | 暴击判定消耗 RNG，错位即分叉（间接证据）；存档无暴击计数，玩家侧暴击技能未被驱动 |
+| 眩晕/状态效果 | PASS | `isStunned/isStealthed/isConverted` 语义已落地；type 13/14/0 直接计数两端同值，`characterStunnedCount` 增长断言 |
+| 技能效果层 | PARTIAL | 首领/守卫技能效果表被跑过；玩家习得技能路径未覆盖 |
+| 法术 | PASS | 16 个 `spellCategoryId` 每条一个差分场景，两端各自断言施法计数增长 |
+| 伤害数字 | PARTIAL | 真实帧渲染后逐像素指纹两端相同（含飘字绘制），但未单独断言飘字池内容 |
+| 法术特效 | PARTIAL | 同上：绘制进帧指纹，特效池本身不入存档 |
+| 普通遭遇 | PASS | 全场景都会进入遭遇；遭遇点数事件在存档中等值增长 |
+| 困难遭遇 | PARTIAL | 引擎内不存在该概念（c2.js/src 全文 0 命中）；按外部机器人定义"有队友昏迷"由眩晕计数覆盖 |
+| 首领遭遇 | PARTIAL | `randomBossEncounter` 药水被真实激活并产出昏迷；未直接断言首领生成 |
+| 掉落 | PASS | 物品/卷轴/药水/金币四类掉落路径均在长程差分中发生且相等；`claimedBy` 认领语义已恢复 |
+| 金币 | PASS | 队伍金币与累计金币在 DTO 中相等，金币涌入场景断言真实增长 |
+| 物品 | PASS | 稀有度计数增长且两端相等；远古档位在 fixture 场景内未出现 |
+| 卷轴 | PARTIAL | 库存/数量/解锁相等；`castScroll()` 需当场有可打目标，尚未驱动（U7） |
+| 药水 | PASS | `potions-activated` 直接驱动 `Potion.aw()`，`statistics.potionsUsed` 两端各自增长 |
+| 财宝房 | 未覆盖 | 未有任何场景让角色进入宝箱房；`treasureChestsLooted` 恒为 0 |
+| 地牢生成 | PASS | 楼层种子/房间可见性/走廊集合全量相等；生成侧 `widthInTiles/heightInTiles` 改名后回归通过 |
+| 地牢导航 | PASS | 门/走廊字段（`doorA/doorB/hallway/currentHallway/pathTiles/pixelColumn/pixelRow`）恢复语义后，开门数、走廊与房间位置逐检查点相等 |
+| 城堡 | PARTIAL | 征服→胜利全链路已覆盖；城堡购买与进攻花费是视图入口 |
+| 农场 | 未覆盖 | `farms` 恒空、`farmsPurchased` 恒 0，购买入口在视图层 |
+| 冒险点 | PASS | 21 个点数池与消费簿记逐检查点相等 |
+| 点数升级 | PARTIAL | 全局升级表购买已被驱动；`spentAdventurePoints` 仍为 0 |
+| 成就 | PARTIAL | 328 行成就定义与 `obtained` 集合相等并真实增长；`applied` 恒 0（领取是视图入口） |
+| 统计 | PASS | 30 个计数器 ×3 个区块（本轮/累计/每轮）全量差分相等 |
+| 暂停 | PASS | E2E 断言暂停时回合冻结、空格恢复 |
+| 后台行为 | PARTIAL | 离线分支与 >1s 帧差路径被覆盖；`allowBackgroundProgress` 未做关闭态实验 |
+| 离线推进 | PASS | 1h/8h/13h 截断/禁用四态，含"收益必须真实发生"与"关闭后必须不变" |
+| 自动保存 | PASS | `autosave-payload`：清空 localStorage 后跑 1,300 帧，两端都必须写入且解码内容一致；3E5 间隔有反向验证保护（改回 3E4 即失败） |
+| 手动保存 | PASS | E2E 保存→刷新→进度与设置仍在 |
+| 载入 | PASS | 两端载入同一原文并推进 |
+| 导入 | PASS | E2E：非法导入不得改动原存档 |
+| 导出 | PASS | E2E：真实下载→回填导入→状态一致 |
+| 旧版存档兼容 | PASS | 真实原版 fixture 解码/载入/推进 + 4,477 键审计；仅一份存档、一个版本 |
+| Prestige/reset | PASS | 胜利重置与完全重置两场景，重置后空转亦相等 |
+| 游戏结束/终局 | PARTIAL | `gameWon`/`victoryCount` 已断言；胜利面板与续战计数未断言 |
+| RNG 确定性 | PASS | 位级单测 + 全部差分的确定性前提 |
+| 长期稳定性 | PASS | 8h/24h 等价回合两端全等，堆增量 ~17KB 级；非严格泄漏证明 |
+| UI 标签页 | PARTIAL | 五类主面板 + c2c 依赖的 10 个选择器已断言；14 个 TabState 未逐个验证 |
+| Canvas 渲染 | PARTIAL | 1,300 真实帧后逐像素 FNV-1a 指纹两端相同，渲染异常纳入失败条件；仅一条场景一种视口，非全量像素回归 |
+| 精灵查找 | PARTIAL | `spriteName` 入档等值 + 像素证明确有绘制；`getSprite` 未命中路径未断言 |
+

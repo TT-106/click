@@ -18,22 +18,21 @@
 
 ## 2. 行为兼容（原版 vs 重构差分）— VERIFIED（覆盖范围内）
 
-`scripts/test-scenarios.mjs` 的 12 个场景全部通过（固定 LCG 随机 + 固定时钟，双端逐字段比较完整存档 DTO）：
+`scripts/test-scenarios.mjs` 的 **34 个场景**全部通过（同一变异存档 + 固定 LCG 随机流 + 固定时钟，双端逐字段比较完整存档 DTO；矩阵可用 `SCENARIO_FILTER=a,b` 单跑）：
 
-| 场景 | 变异 | 验证点 | 结果 |
-|---|---|---|---|
-| long-run-9000 | 基线存档连推 3000×3 回合 | 全状态相等 | ✅ |
-| offline-1h | 时间戳 -1h | 离线结算后金币**实际增长**且双端相等 | ✅ |
-| offline-8h | 时间戳 -8h | 离线结算后击杀**实际增长**且双端相等 | ✅ |
-| offline-disabled | 关闭离线开关 | 载入后金币**必须不变** | ✅ |
-| potions-active | 3 个药水（含激活态） | 600+600 回合相等 | ✅ |
-| potions-inactive-auto | 3 个药水（待自动激活） | 600+600 回合相等 | ✅ |
-| scrolls-stocked | 4 种卷轴入库解锁 | 600+600 回合相等 | ✅ |
-| gold-windfall | 金币 1,000,000 | 600+600 回合相等 | ✅ |
-| late-horizon | 回合数 +1,000,000 | 500+500 回合相等 | ✅ |
-| veteran-run | victoryCount=3（解锁门槛内容） | 600+600 回合相等 | ✅ |
-| prestige-restart | 胜利重置（保留统计、清当前冒险） | 重置状态相等 + 空转 300×2 相等 | ✅ |
-| full-reset | 完全重置回开局 | 重置状态相等 + 空转相等 | ✅ |
+| 组 | 场景 | 除全状态相等外的专项断言 |
+|---|---|---|
+| 长跑/后期 | long-run-9000、late-horizon | 9,000 与 +1,000,000 回合起点下逐检查点全等 |
+| 离线 | offline-1h、offline-8h、offline-13h-capped、offline-disabled | 金币/击杀必须真实增长；13h 必须被截为 12h；关闭离线后金币必须不变 |
+| 药水 | potions-active、potions-inactive-auto、**potions-activated** | 第三条直接驱动 `Potion.aw()`，两端 `statistics.potionsUsed` 各自增长 |
+| 卷轴 | scrolls-stocked | 库存/数量/解锁相等（施放路径未驱动，见 U7） |
+| 法术 | fireball-blast-stun、spell-status-transform、spell-buff-armor、spell-summon-ghost-skeleton、spell-summon-skeleton-army、spell-sleep、spell-heal、spell-area-bounce、spell-chain-lightning、spell-rain-damage、spell-bouncing-projectile、spell-chicken-swarm、spell-deferred-strike、spell-instant-search、spell-find-chest、spell-resurrect | 16 个 `spellCategoryId` 每条一个场景；cat=2 的 type 0/4/14 与 cat=17 另有直接计数/随从数对账；其余为"唯一注入法术 + 两端各自施法计数增长" |
+| 战斗与终局 | castle-victory | 两端各自断言 `gameWon`/`victoryCount=1`/`castlesConquered=1`/全城堡征服 |
+| 视图独占路径 | **upgrades-purchased** | 两端各完成 8+2 次升级购买，`settings.upgrades` 真实变动 |
+| 经济与成长 | gold-windfall、veteran-run、prestige-restart、full-reset | 重置后状态相等 + 空转相等 |
+| 渲染与落盘 | **rendered-scene、autosave-payload** | 1,300 真实帧后主画布逐像素 FNV-1a 指纹两端相同；清空 localStorage 后两端都必须写入且解码内容一致（守住原版 3E5 自动保存间隔） |
+
+矩阵的失败诊断保持"定位第一次分叉"：首处差异的字节偏移、两侧上下文与全保真序列化复核都会打印，差异样本落 `output/scenarios/`。
 
 ## 3. RNG 确定性 — VERIFIED
 
@@ -41,16 +40,17 @@
 - 黄金值锁定：这是 JS 浮点乘法变体 MT19937（seed 5489 首值 1859732469），**不得**替换为"更标准"实现（会破坏回放）。
 - 差分 harness 通过 LCG 替换 `Math.random` + 固定 `Date.now` 实现双端完全确定性——两条随机源路径都被覆盖。
 
-## 4. 时间/离线语义 — VERIFIED（机制级）
+## 4. 时间、暂停与自动保存 — VERIFIED（机制级）
 
 - 触发阈值（>120s）、时长上限（12h + 加成）、帧循环驱动（每帧≤200 回合）、后台标签页累加路径——两端代码同构且离线场景差分通过。
 - 药水时长单位为**回合数**（800 + 加成）——已在 rng/time-model 文档中锁定，防止未来"毫秒化"漂移。
+- **自动保存间隔 = 300,000 ms**（原版 `c2.js:44345` `this.UC = 3E5`）。重构版曾为 3E4（10 倍频率），由新增的 `autosave-payload` 场景暴露并修正；该场景改回 3E4 会失败，因此这个常量现在被测试守住。
 
-## 5. DOM/外部契约 — PARTIALLY VERIFIED
+## 5. DOM/外部契约 — VERIFIED（选择器级），非零散手工验证
 
-- 原版 DOM 面板结构由 `archive/migration/legacy-dom.html` 恢复并挂载，E2E 覆盖五类面板显示、设置持久化、暂停、键盘（VERIFIED）。
-- `c2c.user.js`（外部自动化脚本）依赖的 DOM 结构保留；但**未用该脚本实测**（UNRESOLVED，低风险）。
-- `window.Game` 已私有化（恢复工程的既定决策）；外部如直接依赖 `window.Game` 需走 `adapter.js`（有意的边界，非回归）。
+- 外部自动化脚本 `archive/original/c2c.user.js` 只通过 jQuery 选择器观察/操作游戏。`scripts/test-browser.mjs` 现在逐项断言它实际使用的 10 个选择器在活动 DOM 中存在：`#encounterNotificationPanel`、`#treasureChestLootButtonPanel`、`.gameTabLootButtonPanel`、`#adventurerEffectIconA0/B0`、`#potionButton_Row0_Col0`、`.potionContentContainer`、`#scrollButtonCell0`、`#pointUpgradesContainer_0_0_0`、`[id^="characterSkillsContainer0_0_0_"]`。缺失即失败，且经过反向验证（把 `#scrollButtonCell0` 指向不存在的 id 后 E2E 如期报错）。
+- 只在瞬时状态出现的契约（`.bossEncounterNotificationDiv`、`.lootButton`、`.potionButtonActive`、`.scrollButton`）未纳入，需要专门场景才有意义。
+- `window.Game` 已私有化（恢复工程的既定决策）；外部若直接依赖 `window.Game` 需走 `adapter.js`。这是有意的边界，不是回归——但确实意味着旧脚本若用全局对象而非 DOM 就需要改。
 
 ## 6. 未覆盖区域（如实陈述）— 法术类别已全覆盖，余下为归因与入口分层
 
@@ -62,6 +62,6 @@
 
 后续扩展路径：在 `tests/scenarios/save-mutations.mjs` 增加对应变异器，即可纳入 `test:scenarios` 矩阵（当前 30 个场景）。
 
-## 7. 性能兼容 — VERIFIED
+## 7. 性能兼容 — PARTIALLY VERIFIED
 
-重构引擎相对原版：回合推进 1.06x、序列化 ~1.0x、导入 0.94x、离线结算 1.07x（详见 `docs/performance-baseline.md`）。模块化未引入可测量的性能退化。
+最新 `output/perf/perf-baseline.json`：回合推进 0.0762 vs 0.070 ms（1.09x）、序列化 0.104 vs 0.08 ms（1.30x）、导入 27.2 vs 30.6 ms（0.89x）、离线 1h 结算 197.5 vs 160.1 ms（1.23x，同为 18,925 回合）。同一份代码多次采样的比值在 1.0~1.3 之间摆动，属单样本 CPU 噪声，不能当作精确倍数；能确认的是未出现数量级退化，且模拟只占 250ms 回合预算的 0.03%。真实帧时间分布（P50/P95/P99）尚未测量，因此性能等价只到"无数量级退化"这个强度。
