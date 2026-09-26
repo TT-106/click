@@ -245,54 +245,6 @@
     ]
   },
   {
-    "name": "Yb",
-    "reads": 2,
-    "writes": 23,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:596",
-        "code": "Mh.tl[Pe].kh.Yb"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:983",
-        "code": "db.kh.Yb"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\points.js:270",
-        "code": "Yb: \"moreScrollsInStack\""
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\progression\\points.js"
-    ]
-  },
-  {
-    "name": "Tb",
-    "reads": 2,
-    "writes": 23,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\progression\\points.js:274",
-        "code": "Tb: 1"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\points.js:280",
-        "code": "Tb: 5"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\points.js:286",
-        "code": "Tb: 3"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\progression\\points.js",
-      "src\\engine\\modules\\progression\\upgrades.js"
-    ]
-  },
-  {
     "name": "Ub",
     "reads": 8,
     "writes": 17,
@@ -449,37 +401,6 @@
       "src\\engine\\modules\\simulation\\tick.js",
       "src\\engine\\modules\\world\\dungeons.js",
       "src\\engine\\modules\\world\\terrain.js"
-    ]
-  },
-  {
-    "name": "cc",
-    "reads": 21,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:236",
-        "code": "game.world.cc"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:239",
-        "code": "d.cc"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:247",
-        "code": "game.world.cc"
-      }
-    ],
-    "fileCount": 9,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js",
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\characters\\movement.js",
-      "src\\engine\\modules\\characters\\party.js",
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\simulation\\tick.js",
-      "src\\engine\\modules\\world\\dungeons.js",
-      "src\\engine\\modules\\world\\terrain.js",
-      "src\\engine\\modules\\world\\travel-costs.js"
     ]
   },
   {
@@ -1461,32 +1382,6 @@
     ]
   },
   {
-    "name": "dd",
-    "reads": 4,
-    "writes": 16,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:266",
-        "code": "d.dd"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:269",
-        "code": "d.dd"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:313",
-        "code": "b.dd"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js",
-      "src\\engine\\modules\\ai\\targeting.js",
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\characters\\movement.js"
-    ]
-  },
-  {
     "name": "ld",
     "reads": 14,
     "writes": 6,
@@ -2299,35 +2194,6 @@
       "src\\engine\\modules\\loot\\treasure.js",
       "src\\engine\\modules\\world\\generation.js",
       "src\\engine\\modules\\world\\rooms.js"
-    ]
-  },
-  {
-    "name": "ee",
-    "reads": 6,
-    "writes": 12,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:56",
-        "code": "this.ee"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:1234",
-        "code": "this.ee"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\actions.js:405",
-        "code": "b.ee"
-      }
-    ],
-    "fileCount": 7,
-    "files": [
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\combat\\encounters.js",
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\simulation\\characters.js",
-      "src\\engine\\modules\\views\\party-creation.js"
     ]
   },
   {
@@ -8053,7 +7919,7 @@
     "samples": [
       {
         "loc": "src\\engine\\modules\\rendering\\scene.js:243",
-        "code": "this.ee.Hj"
+        "code": "this.sprite.Hj"
       },
       {
         "loc": "src\\engine\\modules\\rendering\\scene.js:247",
