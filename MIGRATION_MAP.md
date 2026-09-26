@@ -40,11 +40,11 @@ UI 壳（`src/app.js`、`src/ui/*`）为新增层，通过 `adapter.js` 访问�
 1. `tests/unit/rng.test.mjs` — RNG 位级差分（Babel 提取原版 `ga` 对照）。
 2. `tests/unit/save-codec.test.mjs` — 存档编码契约。
 3. `scripts/test-parity.mjs` — 同存档 + 固定 RNG/时钟，原版 vs 重构 0/1/99/900 回合全状态相等。
-4. `scripts/test-scenarios.mjs` — 当前 44 场景差分（离线四态、法术类别、城堡征服、升级/点数/成就/农场/三种财宝房入口、渲染与自动落盘等），两端逐检查点完整 DTO 相等并设专项必达断言。
+4. `scripts/test-scenarios.mjs` — 当前 45 场景差分（离线四态、法术类别、城堡征服、升级/点数/成就/农场/三种财宝房入口、四类地面掉落、渲染与自动落盘等），两端逐检查点完整 DTO 相等并设专项必达断言。
 5. `scripts/test-browser.mjs` — 真实浏览器 E2E。
 
 ## 已知未迁移/未验证区域（如实记录）
 
 - `artifacts/obfuscated-fields.json` 当前列出 1,171 个仍待取证的混淆属性**名**（不是访问次数）；映射与已落地记录见 `docs/reverse-engineering/semantic-map.md`。
-- prestige/reset、胜利终局、16 类法术和三种财宝房目标物已进入差分；地面掉落逐项拾取、农场收获及部分升级效果仍缺专项断言，详见 `REFACTOR_REPORT.md` 附录 A。
+- prestige/reset、胜利终局、16 类法术、三种财宝房目标物与四类地面掉落拾取已进入差分；农场收获及部分升级效果仍缺专项断言，详见 `REFACTOR_REPORT.md` 附录 A。
 - M10 已移除引擎模块的 `@ts-nocheck` 并通过 `npm run typecheck`；`unknown`/`any` 的细化债见 `docs/m13-exhaustion-audit.md`。

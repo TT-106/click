@@ -36,7 +36,7 @@
 
 17. 原版全局：`window.Game`（=w）、`Game.Hr`=GameLoop（sB 实例）、`Game.Hr.Hr()`=帧 tick、`window.lB()`=序列化、`window.pB(15)`=单回合步进、`game.hE(text)`=导入存档、`game.Em`=initialized、`game.ig`=processingOffline、`game.jf/Vj`=offlineDuration/offlineProcessed。
 18. 重构版入口：`src/engine/adapter.js`（唯一产品入口，命令校验 + 只读快照）；内部接口 `src/engine/internal-api.js`。
-19. 存档兼容契约：`tests/fixtures/original.c2save` + parity（0/1/99/900 回合）+ 场景矩阵（当前 44 场景）+ codec 单测 + `autosave-payload` 场景（比对真正落盘的原文）。
+19. 存档兼容契约：`tests/fixtures/original.c2save` + parity（0/1/99/900 回合）+ 场景矩阵（当前 45 场景）+ codec 单测 + `autosave-payload` 场景（比对真正落盘的原文）。
 
 ## 已修复的回归（方法论证据）
 
@@ -74,3 +74,5 @@
 34. `upgrades-purchased` 先前虽遍历四棵角色技能树，却没有单独证明 `LearnSpellUpgrade` 被购买。harness 现记录每次购买的 `getUpgradeType`（原版 `Na()`）；独立运行两端在两阶段各有 type=6 的 2+1 次购买，存档 `adventurers[].spells` 总数超过 fixture 基线，逐检查点完整 DTO 相等。暂时跳过 type=6 购买后场景按预期失败；这证明法术学习入口，而非逐一证明所学法术的战斗效果。
 
 35. 财宝房 `Mf` 的三种类型由 `runtime/game.js:219-347` 的注册表定义：1=财宝箱、2=武器架、3=书架。共享 fixture 加固定随机流自然生成全部三种；harness 仅在同房间选对应类型，角色的 `actionType=12` 分支分别调用 `recordTreasureChestLooted`、`recordWeaponRackLooted`、`recordBookcaseLooted`。三条场景两端各自观察对应计数增长并比较完整 DTO；禁用选中目标后书架场景在原版侧失败。地面掉落物逐项拾取仍是独立缺口。
+
+36. 四种地面掉落常规拾取分别在 `characters/character.js:991-1040` 的 actionType=5/7/8/6 分支调用 `awardAdventurePoints(9/10/11/12)`；`combat/actions.js:203-280` 的“立即搜索”也会发相同事件。fixture 四名角色 `spells=[]`，`ground-drops-collected` 只用该存档自然推进 9,000 回合，故不存在这条施法旁路；两端四种事件的 `count` 均超过 fixture 基线，且完整 DTO 相等。此证据覆盖四类常规拾取，不声称逐件掉落物轨迹或瞬时认领者已直接对账。

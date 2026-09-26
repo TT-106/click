@@ -74,6 +74,12 @@ const weaponRackWasLooted = (s) => ({
 const bookcaseWasLooted = (s) => ({
   bookcaseLooted: (s.statistics?.bookcasesLooted ?? 0) > (base.statistics?.bookcasesLooted ?? 0),
 });
+const groundDropsWereCollected = (s) => ({
+  noLootSpell: (s.adventurers ?? []).every(a => (a.spells?.length ?? 0) === 0),
+  collectedDropTypes: [9, 10, 11, 12].filter(type =>
+    (s.pointManagerState?.pointsByType ?? []).find(p => p.pointEventType === type)?.count
+      > (base.pointManagerState?.pointsByType ?? []).find(p => p.pointEventType === type)?.count),
+});
 // U7：药水激活在视图之外没有入口，激活后存档里只有 statistics.potionsUsed 可证。
 const potionWasUsed = (s) => ({ potionUsed: (s.statistics?.potionsUsed ?? 0) > 0 });
 const scenarios = [
@@ -367,6 +373,18 @@ const scenarios = [
     ],
   },
   {
+    name: 'ground-drops-collected',
+    // fixture 四人均无已学法术，不会走“立即搜索”旁路；9/10/11/12 四种点数事件分别对应常规金币/卷轴/药水/物品拾取。
+    make: () => {
+      assert.ok(base.adventurers.every(a => (a.spells?.length ?? 0) === 0), '地面掉落场景的 fixture 不得带已学法术');
+      return base;
+    },
+    steps: [
+      { turns: 9000, check: groundDropsWereCollected },
+      { turns: 9000, check: groundDropsWereCollected },
+    ],
+  },
+  {
     name: 'autosave-payload',
     // 自动保存计时分支 + 落盘字节比对：两端跑同样的真实帧循环，比较写进 localStorage 的原文。
     make: () => base,
@@ -650,6 +668,8 @@ try {
             if (verdict.treasureLooted !== undefined) assert.equal(verdict.treasureLooted, true, `${label} 财宝箱拾取统计必须真实增长`);
             if (verdict.weaponRackLooted !== undefined) assert.equal(verdict.weaponRackLooted, true, `${label} 武器架拾取统计必须真实增长`);
             if (verdict.bookcaseLooted !== undefined) assert.equal(verdict.bookcaseLooted, true, `${label} 书架拾取统计必须真实增长`);
+            if (verdict.collectedDropTypes !== undefined) assert.deepEqual(verdict.collectedDropTypes, [9, 10, 11, 12], `${label} 四种地面掉落物必须分别被拾取（9=金币、10=卷轴、11=药水、12=物品）`);
+            if (verdict.noLootSpell !== undefined) assert.equal(verdict.noLootSpell, true, `${label} 地面掉落场景不得在推进中学会“立即搜索”旁路法术`);
             if (verdict.potionUsed !== undefined) assert.equal(verdict.potionUsed, true, `${label} 必须真的激活至少一瓶药水（potionsUsed 增长）`);
             if (verdict.note && i === 0) console.log(`  · ${verdict.note}`);
             if (verdict.victory !== undefined) assert.equal(verdict.victory, true, `${label} 必须真的走完征服尾部并触发胜利`);

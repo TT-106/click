@@ -5,6 +5,7 @@
 
 ## 当前轮次状态（2026-09-26，M13 文档与验收收尾）
 
+- U7 地面掉落四型：`ground-drops-collected` 从 fixture（四人 `spells=[]`，无“立即搜索”旁路）自然推进 9,000 回合，两端分别断言点数事件 9/10/11/12 的 count 增长，对应金币/卷轴/药水/物品常规拾取；逐检查点完整 DTO 相等。矩阵 45/45，验收矩阵 51 行调整为 32 PASS / 19 PARTIAL / 0 未覆盖，财宝房行从 PARTIAL 调为 PASS；逐件认领瞬时态仍非直接观察。引擎、数值、存档键、RNG 未改。
 - U7 财宝房三型补齐：原 `treasure-chest-looted` 驱动器增 `kind=1/2/3` 筛选，新增 `weapon-rack-looted` 与 `bookcase-looted`；固定随机流自然生成三型目标物，角色同房间按按钮路径选择并搜索，两端分别断言 `treasureChestsLooted`/`weaponRacksLooted`/`bookcasesLooted` 增长且随后 900 回合完整 DTO 相等。禁用目标设置时书架场景按预期失败。矩阵 44/44；财宝房行仍 PARTIAL，缺地面掉落逐项拾取。引擎、数值、存档键、RNG 未改。
 - U7 补实 `LearnSpellUpgrade`：`purchaseUpgrades` 返回购买类型分布，`upgrades-purchased` 两端各自断言 type=6 确有购买且次数相等、存档 `spells` 总数超过 fixture。独立运行两阶段各 2+1 次 type=6；暂时跳过该类型时场景按预期失败。check/typecheck/parity/42 场景/e2e 全绿；仅 harness/断言和文档变化，引擎、数值、存档键、RNG、混淆清单均未改。
 - 文档一致性复核：当前代码重跑 `npm run perf`（回合 0.0824/0.0764ms、序列化 0.114/0.080ms、导入 22.4/30.0ms、离线 199.8/251.7ms；顺序重构/原版）与 `npm run perf:frames`（远征/点数面板各 599 次 rAF 间隔，P95 4.5/4.8ms、>50ms 0、渲染异常 0）。据实更新 `PERFORMANCE_REPORT.md`、`COMPATIBILITY_REPORT.md`、`docs/performance-{baseline,after}.md`，不再把单次倍数称性能持平或把 rAF 间隔当纯绘制时间。`MIGRATION_MAP.md` 的 30s 自动保存、9 场景、M10 未开始等旧结论也已纠为 300s、42 场景和已纳入 typecheck；本批仅文档，无引擎修改。
