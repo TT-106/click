@@ -47,3 +47,8 @@
 21. 原版自动保存间隔是 **300,000 ms**（`c2.js:44345` `this.UC = 3E5`，运行时读到的 `Game.pg` 即保存管理器为 `{qs: lastSavedAt, UC: 300000}`）。重构版曾写成 `3E4`，等于把自动保存频率放大 10 倍——`autosave-payload` 场景把它抓了出来：清掉 localStorage 后跑 1300 帧（325s 模拟时间），原版与重构版必须各自写入且解码后内容一致；把常量改回 3E4 该场景立刻失败（已实测该反向验证）。
 22. 渲染层可以逐像素对比，不需要截图基线：`harness.canvasInk()` 直接读主画布 `getImageData`，返回不透明像素数、非背景像素数与 FNV-1a 逐像素指纹；两端在同一固定时钟下指纹相同（例：`1853346327`，非背景 203,763）。该检查有牙齿——把 `rendering/scene.js:341` 的 `drawImage` 目标横移 2 像素，指纹即分叉、场景失败。
 23. `loop.js` 把 `view.render()` 的异常吞成 `console.log("Caught error. …")`，所以只听 `pageerror` 的差分矩阵看不见渲染崩溃；场景 runner 现在同时监听 console 并过滤 harness 页自发的 `/favicon.ico` 404（浏览器行为，非引擎行为）。
+
+## 改名的危险形状（第二次事故后固化）
+
+24. **数据表键与读取端分文件**是逐文件改名最危险的形状：稀有度表的 `Vp/pp/jp` 声明在 `content/balance.js:447-467`，读取端只在 `loot/items.js:158/167/170`。第一次改名只喂了读取端，键被留在原处 → `tier.statMultiplier` 为 undefined → 物品属性 NaN → 99 回合后 `characterHealth` 109 变 99，被 parity 与场景矩阵同时拦下。`rename-field.mjs` 因此新增写盘后全库回扫，列出未被本次文件表覆盖的同名残留。
+25. 物品运行时字段与存档 DTO 键现已同词：`restoreItem` 的入参名本身就是 `itemName/itemRarity/itemLevel/itemGold/itemValue/itemCharacteristic/itemEffect`（`entities.js:33-42`），把运行时字段改成同名后，"运行时字段 ↔ 存档键必须成对同步"的心智负担在该类字段上不复存在。

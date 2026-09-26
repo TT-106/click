@@ -84,6 +84,8 @@
 - 规范 §33 缺的三份公式文档已补齐并逐条核对：`docs/formulas/combat.md`（1,435 行、10 节 + 一次普通攻击的随机数消耗顺序附录）、`items.md`（738 行）、`progression.md`（976 行）。核对方式：脚本抽取全部 `file:line` 引用与 ```js 代码块，逐条回源——引用共 733 条全部命中存在文件且行号在范围内，combat.md 的 401 行引码逐字命中；items/progression 的少量"未命中"经逐条人工复核是多行字面量被压行、尾注并入等排版差异（如 `Vp: 0, pp: 1, jp: 0.2` 对应 balance.js:448-450 的三行），非编造。裸文件名歧义已就地消解 7 处，其余 24 处在各文档头部写明消歧约定。
 - 待办的文档收口：`REFACTOR_REPORT.md`（12 场景、auto equip/treasure/monster upgrade 的 PASS 口径、M10 段）、`COMPATIBILITY_REPORT.md`（12 场景表、性能比值）、`PERFORMANCE_REPORT.md`（比值）与验收矩阵需按实况重写；审计已给出逐条差异清单，但其中"38 个含私有码点文件名的垃圾文件"经 `git ls-files` 实测为 0，属误报，不得写入。
 
+- 第十六轮改名 14 个字母后发生并修复一次真实回归：稀有度表的键在 balance.js、读取端在 items.js，只改读取端令物品属性变 NaN，99 回合后 `characterHealth` 109→99，parity 与 32 个场景同时失败；补改键后全绿。工具已加写盘后全库回扫（facts#24）。混淆清单 1,189 → 1,175，fields 段 249 → 263。
+
 ## 1. 项目概况
 
 - 原始遗产：`archive/original/c2.js`（46,980 行混淆单体，sha256 见 `archive/migration/recovery-manifest.json`）。
