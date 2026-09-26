@@ -60,6 +60,9 @@
 | hb（拆分） | getTileAt / getTileAtPixel | DungeonLevel（瓦片坐标）/ WorldMap（像素坐标）——11 文件 27 调用点按接收者分流 |
 | ib / lb / Bb | getTitle / getDescription / getCost | Upgrade 全家族访问器方法 |
 | eb / fb / gb | createDomElements / cachedDescriptionText / cachedTitleText | *Details 与 CastleRowView 视图缓存簇 |
+| pb | progressFillElement | castles/expedition/monsters/results 行视图 |
+| jb / sb | titleElement / descriptionElement | SkillUpgradeDetails（消费点 650/654 已核：innerHTML 文本槽） |
+
 - 经验教训（已入 facts#20 扩展）：**重命名跨文件字段时，"读点全集"必须包含工厂函数/工具函数内按多态入参的访问**；Babel 静态 grep 对 `a.Da`（a 的类型随调用方变化）天然失真，应配运行时类型断言。
 
 ## U2 — 外部自动化脚本（c2c.user.js）DOM 契约未实测
