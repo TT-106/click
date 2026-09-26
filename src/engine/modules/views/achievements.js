@@ -16,7 +16,7 @@ export function AchievementListView(a) {
   this.Ot = this.Nt = this.Hq = this.Iq = null;
   this.firstColumnButtons = [];
   this.secondColumnButtons = [];
-  this.Nf = [];
+  this.buttons = [];
   this.QC = "achievementsHeaderSpan";
   this.pz = -1;
 }
@@ -84,7 +84,7 @@ export function initializeViewsAchievements() {
     this.Iq = null;
     this.firstColumnButtons.length = 0;
     this.secondColumnButtons.length = 0;
-    this.Nf.length = 0;
+    this.buttons.length = 0;
     /** @type {{Zn: () => void}} */ (/** @type {unknown} */ (this)).Zn();
     var a = this.elementId,
       container = getElement(a);
@@ -116,7 +116,7 @@ export function initializeViewsAchievements() {
           this.secondColumnButtons.push(new UpgradeButtonView(n.id, c[g], g, true));
         }
         if (g < d.length) {
-          this.Nf.push(new UpgradeButtonView(h.id, d[g], g, true));
+          this.buttons.push(new UpgradeButtonView(h.id, d[g], g, true));
         }
       }
     }
@@ -126,8 +126,8 @@ export function initializeViewsAchievements() {
     for (a = 0; a < this.secondColumnButtons.length; a++) {
       this.secondColumnButtons[a].reset();
     }
-    for (a = 0; a < this.Nf.length; a++) {
-      this.Nf[a].reset();
+    for (a = 0; a < this.buttons.length; a++) {
+      this.buttons[a].reset();
     }
   };
   AchievementListView.prototype.Zn = function () {
@@ -163,8 +163,8 @@ export function initializeViewsAchievements() {
     for (a = 0; a < this.secondColumnButtons.length; a++) {
       this.secondColumnButtons[a].render();
     }
-    for (a = 0; a < this.Nf.length; a++) {
-      this.Nf[a].render();
+    for (a = 0; a < this.buttons.length; a++) {
+      this.buttons[a].render();
     }
     var b = game.state.achievements;
     a = b.jj.length;

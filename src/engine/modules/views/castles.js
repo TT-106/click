@@ -19,7 +19,7 @@ export function CastleMapView() {
 export function CastleTableView() {
   this.elementId = "castleTableContainer";
   this.visible = true;
-  this.$e = null;
+  this.tableElement = null;
   this.nf = [];
 }
 export function CastleRowView(a) {
@@ -119,10 +119,10 @@ export function initializeViewsCastles() {
   CastleTableView.prototype.reset = function () {
     this.nf.length = 0;
     clearElementById(this.elementId);
-    this.$e = null;
+    this.tableElement = null;
   };
   CastleTableView.prototype.update = function () {
-    if (!this.$e) {
+    if (!this.tableElement) {
       /** @type {{createDomElements: () => void}} */ (/** @type {unknown} */ (this)).createDomElements();
     }
     var a = game.castles.castleList;
@@ -139,11 +139,11 @@ export function initializeViewsCastles() {
   };
   CastleTableView.prototype.mk = function (a) {
     for (; this.nf.length > a;) {
-      this.$e.deleteRow(-1);
+      this.tableElement.deleteRow(-1);
       this.nf.splice(this.nf.length - 1, 1);
     }
     for (; this.nf.length < a;) {
-      this.nf.push(new CastleRowView(this.$e.insertRow(this.nf.length + 1)));
+      this.nf.push(new CastleRowView(this.tableElement.insertRow(this.nf.length + 1)));
     }
   };
   CastleTableView.prototype.createDomElements = function () {
@@ -151,10 +151,10 @@ export function initializeViewsCastles() {
     clearElementById(a);
     var b = game.castles.castleList,
       c;
-    this.$e = createElement("table", getElement(a), null, "monsterTable");
-    /** @type {{createHeaderRow: (row: HTMLTableRowElement) => void}} */ (/** @type {unknown} */ (this)).createHeaderRow(this.$e.insertRow(0));
+    this.tableElement = createElement("table", getElement(a), null, "monsterTable");
+    /** @type {{createHeaderRow: (row: HTMLTableRowElement) => void}} */ (/** @type {unknown} */ (this)).createHeaderRow(this.tableElement.insertRow(0));
     for (c = 0; c < b.length; c++) {
-      var rowView = new CastleRowView(this.$e.insertRow(c + 1));
+      var rowView = new CastleRowView(this.tableElement.insertRow(c + 1));
       setCastleRowModel(rowView, b[c]);
       this.nf.push(rowView);
     }

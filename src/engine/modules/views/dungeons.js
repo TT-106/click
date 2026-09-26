@@ -79,7 +79,7 @@ export function DungeonListView(a, b, c) {
   this.elementId = c;
   this.tabState = a;
   this.dw = b;
-  this.bf = null;
+  this.tableElement = null;
   this.rf = [];
 }
 export function getDungeonList(a) {
@@ -307,10 +307,10 @@ export function initializeViewsDungeons() {
   DungeonListView.prototype.reset = function () {
     this.rf.length = 0;
     clearElementById(this.elementId);
-    this.bf = null;
+    this.tableElement = null;
   };
   DungeonListView.prototype.update = function () {
-    if (!this.bf) {
+    if (!this.tableElement) {
       /** @type {{createDomElements: () => void}} */ (/** @type {unknown} */ (this)).createDomElements();
     }
     var a = getDungeonList(this);
@@ -327,11 +327,11 @@ export function initializeViewsDungeons() {
   };
   DungeonListView.prototype.mk = function (a) {
     for (; this.rf.length > a;) {
-      this.bf.deleteRow(-1);
+      this.tableElement.deleteRow(-1);
       this.rf.splice(this.rf.length - 1, 1);
     }
     for (; this.rf.length < a;) {
-      this.rf.push(new DungeonRowView(this.bf.insertRow(this.rf.length + 1), this.dw));
+      this.rf.push(new DungeonRowView(this.tableElement.insertRow(this.rf.length + 1), this.dw));
     }
   };
   DungeonListView.prototype.createDomElements = function () {
@@ -339,10 +339,10 @@ export function initializeViewsDungeons() {
     clearElementById(a);
     var b = getDungeonList(this),
       c;
-    this.bf = createElement("table", getElement(a), null, "monsterTable");
-    /** @type {{createHeaderRow: (row: HTMLTableRowElement) => void}} */ (/** @type {unknown} */ (this)).createHeaderRow(this.bf.insertRow(0));
+    this.tableElement = createElement("table", getElement(a), null, "monsterTable");
+    /** @type {{createHeaderRow: (row: HTMLTableRowElement) => void}} */ (/** @type {unknown} */ (this)).createHeaderRow(this.tableElement.insertRow(0));
     for (c = 0; c < b.length; c++) {
-      a = new DungeonRowView(this.bf.insertRow(c + 1), this.dw);
+      a = new DungeonRowView(this.tableElement.insertRow(c + 1), this.dw);
       a.ct(b[c]);
       this.rf.push(a);
     }

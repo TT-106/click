@@ -97,7 +97,7 @@ export function GlobalUpgradeDetails(a, b) {
 export function AutoDungeonDetails(a, b) {
   this.upgrade = a;
   this.contentContainer = b;
-  this.mf = this.titleElement = this.mo = this.$e = null;
+  this.mf = this.titleElement = this.mo = this.tableElement = null;
   this.shown = false;
   this.cachedTitleText = this.oz = this.cachedDescriptionText = "";
 }
@@ -155,7 +155,7 @@ export function MonsterLevelDetails(a, b) {
 export function DungeonPurchaseDetails(a, b) {
   this.upgrade = a;
   this.contentContainer = b;
-  this.ui = this.Vg = this.titleElement = this.previewImageElement = this.bf = this.Cq = null;
+  this.ui = this.Vg = this.titleElement = this.previewImageElement = this.tableElement = this.Cq = null;
   this.shown = false;
   this.cachedCostValue = -1;
 }
@@ -532,11 +532,11 @@ export function initializeViewsUpgradeDetails() {
     this.upgrade = a;
   };
   AutoDungeonDetails.prototype.showDetails = function () {
-    if (!this.$e) {
+    if (!this.tableElement) {
       (/** @type {DomDetails} */ (/** @type {unknown} */ (this))).createDomElements();
     }
     if (!this.shown) {
-      showElement(this.$e);
+      showElement(this.tableElement);
       this.shown = true;
     }
   };
@@ -553,10 +553,10 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   AutoDungeonDetails.prototype.createDomElements = function () {
-    this.$e = createElement("table", this.contentContainer, null, null);
-    this.$e.style.width = "100%";
-    var a = this.$e.insertRow(0),
-      b = this.$e.insertRow(1),
+    this.tableElement = createElement("table", this.contentContainer, null, null);
+    this.tableElement.style.width = "100%";
+    var a = this.tableElement.insertRow(0),
+      b = this.tableElement.insertRow(1),
       c = a.insertCell(0);
     c.rowSpan = 2;
     c.style.width = "50px";
@@ -850,11 +850,11 @@ export function initializeViewsUpgradeDetails() {
     this.upgrade = a;
   };
   DungeonPurchaseDetails.prototype.showDetails = function () {
-    if (!this.bf) {
+    if (!this.tableElement) {
       (/** @type {DomDetails} */ (/** @type {unknown} */ (this))).createDomElements();
     }
     if (!this.shown) {
-      showElement(this.bf);
+      showElement(this.tableElement);
       this.shown = true;
     }
   };
@@ -872,10 +872,10 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   DungeonPurchaseDetails.prototype.createDomElements = function () {
-    this.bf = createElement("table", this.contentContainer, null, null);
-    this.bf.style.width = "100%";
-    var a = this.bf.insertRow(0),
-      b = this.bf.insertRow(1),
+    this.tableElement = createElement("table", this.contentContainer, null, null);
+    this.tableElement.style.width = "100%";
+    var a = this.tableElement.insertRow(0),
+      b = this.tableElement.insertRow(1),
       c = a.insertCell(0);
     c.rowSpan = 2;
     c.style.width = "50px";

@@ -17,7 +17,7 @@ export function ItemRowBase() {}
 export function InventoryItemView(a, b) {
   this.lh = a;
   this.adventurerIndex = b;
-  this.Ej = this.Cr = this.gf = this.Oh = this.Af = this.rarityCell = this.Fi = this.Ei = this.item = null;
+  this.Ej = this.Cr = this.goldCell = this.Oh = this.Af = this.rarityCell = this.Fi = this.Ei = this.item = null;
   (/** @type {InventoryItemView & { createRowCells: () => void }} */ (/** @type {unknown} */ (this))).createRowCells();
 }
 export function InventoryTableView(a, b) {
@@ -30,7 +30,7 @@ export function InventoryTableView(a, b) {
 export function EquipmentItemRowView(a, b) {
   this.lh = a;
   this.adventurerIndex = b;
-  this.Cr = this.gf = this.Oh = this.Af = this.rarityCell = this.Fi = this.Ei = this.item = null;
+  this.Cr = this.goldCell = this.Oh = this.Af = this.rarityCell = this.Fi = this.Ei = this.item = null;
   (/** @type {EquipmentItemRowView & { createRowCells: () => void }} */ (/** @type {unknown} */ (this))).createRowCells();
 }
 export function EquipmentTableView(a, b) {
@@ -167,7 +167,7 @@ export function SkillsTabView(a, b, c) {
   this.ry = this.qy = this.Rl = this.hj = this.Ax = null;
   this.firstColumnButtons = [];
   this.secondColumnButtons = [];
-  this.Nf = [];
+  this.buttons = [];
   this.Pn = [];
 }
 export function initializeViewsCharacter() {
@@ -183,12 +183,12 @@ export function initializeViewsCharacter() {
       this.Fi.innerHTML = getHighlightedItemName(this.item);
       this.rarityCell.innerHTML = getItemRarityLabel(this.item);
       this.Af.innerHTML = this.item.itemLevel + "";
-      this.gf.innerHTML = formatAmount(this.item.itemGold);
+      this.goldCell.innerHTML = formatAmount(this.item.itemGold);
       this.Oh.innerHTML = formatAmount(this.item.itemValue) + " " + getItemStatLabel(this.item);
       var c = game.state.adventurers[this.adventurerIndex],
         b = c.getSlotItem(a.slot);
       this.Oh.className = b ? this.item.itemValue > b.itemValue ? "itemValueBetter" : this.item.itemValue < b.itemValue ? "itemValueWorse" : "" : "itemValueBetter";
-      this.gf.className = b ? a.itemGold > b.itemGold ? "itemValueBetter" : a.itemGold < b.itemGold ? "itemValueWorse" : "" : "itemValueBetter";
+      this.goldCell.className = b ? a.itemGold > b.itemGold ? "itemValueBetter" : a.itemGold < b.itemGold ? "itemValueWorse" : "" : "itemValueBetter";
       this.rarityCell.className = getRarityClass(this.item.getRarity());
       if (!b || this.item.itemValue > b.itemValue) {
         this.Ej.style.display = "block";
@@ -205,7 +205,7 @@ export function initializeViewsCharacter() {
       this.rarityCell.innerHTML = "";
       this.Af.innerHTML = "";
       this.Oh.innerHTML = "";
-      this.gf.className = "";
+      this.goldCell.className = "";
       this.Ej.style.display = "none";
       this.Ej.onclick = null;
       this.rarityCell.className = "";
@@ -230,10 +230,10 @@ export function initializeViewsCharacter() {
     this.Af.style.width = "60px";
     this.Oh = a.insertCell(4);
     this.Oh.style.width = "120px";
-    this.gf = a.insertCell(5);
-    this.gf.style.textAlign = "right";
-    this.gf.style.paddingRight = "5px";
-    this.gf.style.width = "70px";
+    this.goldCell = a.insertCell(5);
+    this.goldCell.style.textAlign = "right";
+    this.goldCell.style.paddingRight = "5px";
+    this.goldCell.style.width = "70px";
     this.Cr = a.insertCell(6);
     this.Cr.style.width = "100px";
     this.Ej = createElement("div", this.Cr, null, "equipButtonDiv");
@@ -315,7 +315,7 @@ export function initializeViewsCharacter() {
       this.rarityCell.innerHTML = getItemRarityLabel(this.item);
       this.Af.innerHTML = this.item.itemLevel + "";
       this.Oh.innerHTML = formatAmount(this.item.itemValue) + " " + getItemStatLabel(this.item);
-      this.gf.innerHTML = formatAmount(this.item.itemGold);
+      this.goldCell.innerHTML = formatAmount(this.item.itemGold);
       this.rarityCell.className = getRarityClass(this.item.getRarity());
     } else {
       this.Ei.style.background = "";
@@ -323,7 +323,7 @@ export function initializeViewsCharacter() {
       this.rarityCell.innerHTML = "";
       this.Af.innerHTML = "";
       this.Oh.innerHTML = "";
-      this.gf.innerHTML = "";
+      this.goldCell.innerHTML = "";
       this.rarityCell.className = "";
     }
   };
@@ -346,10 +346,10 @@ export function initializeViewsCharacter() {
     this.Af.style.width = "70px";
     this.Oh = a.insertCell(4);
     this.Oh.style.width = "120px";
-    this.gf = a.insertCell(5);
-    this.gf.style.textAlign = "right";
-    this.gf.style.paddingRight = "5px";
-    this.gf.style.width = "80px";
+    this.goldCell = a.insertCell(5);
+    this.goldCell.style.textAlign = "right";
+    this.goldCell.style.paddingRight = "5px";
+    this.goldCell.style.width = "80px";
   };
   EquipmentTableView.prototype = new View();
   EquipmentTableView.prototype.reset = function () {
@@ -652,7 +652,7 @@ export function initializeViewsCharacter() {
     this.Ax = null;
     this.firstColumnButtons.length = 0;
     this.secondColumnButtons.length = 0;
-    this.Nf.length = 0;
+    this.buttons.length = 0;
     this.Pn.length = 0;
     (/** @type {SkillsTabView & { Zn: () => void }} */ (/** @type {unknown} */ (this))).Zn();
     var a = this.elementId,
@@ -691,7 +691,7 @@ export function initializeViewsCharacter() {
             this.secondColumnButtons.push(new UpgradeButtonView(p.id, c[h], h, true));
           }
           if (h < d.length) {
-            this.Nf.push(new UpgradeButtonView(s.id, d[h], h, true));
+            this.buttons.push(new UpgradeButtonView(s.id, d[h], h, true));
           }
           if (h < f.length) {
             this.Pn.push(new UpgradeButtonView(l.id, f[h], h, true));
@@ -707,8 +707,8 @@ export function initializeViewsCharacter() {
     for (a = 0; a < this.secondColumnButtons.length; a++) {
       this.secondColumnButtons[a].reset();
     }
-    for (a = 0; a < this.Nf.length; a++) {
-      this.Nf[a].reset();
+    for (a = 0; a < this.buttons.length; a++) {
+      this.buttons[a].reset();
     }
     for (a = 0; a < this.Pn.length; a++) {
       this.Pn[a].reset();
@@ -733,8 +733,8 @@ export function initializeViewsCharacter() {
     for (a = 0; a < this.secondColumnButtons.length; a++) {
       this.secondColumnButtons[a].render();
     }
-    for (a = 0; a < this.Nf.length; a++) {
-      this.Nf[a].render();
+    for (a = 0; a < this.buttons.length; a++) {
+      this.buttons[a].render();
     }
     for (a = 0; a < this.Pn.length; a++) {
       this.Pn[a].render();

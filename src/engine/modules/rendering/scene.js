@@ -89,7 +89,7 @@ export function drawWorldTileRow(a, b, c, d) {
       var l;
       l = game.camera;
       l = game.viewportHalfHeight + (c - l.vk + (b - l.wk)) * game.halfTileSize - l.At;
-      f.If(g.Jn, h, l);
+      f.drawSprite(g.Jn, h, l);
       var n = g.Yf;
       if (n) {
         f.spriteRenderer.dk(n, g.getPixelX(), g.getPixelY(), h, l, n.spriteSheet.spriteSize, 0);
@@ -108,7 +108,7 @@ export function drawDungeonTileRow(a, b, c, d) {
       var l;
       l = game.camera;
       l = game.viewportHalfHeight + (c - l.vk + (b - l.wk)) * game.halfTileSize - l.At;
-      f.If(g.Jn, h, l);
+      f.drawSprite(g.Jn, h, l);
       var n = g.Yf;
       if (n) {
         f.spriteRenderer.dk(n, g.getPixelX(), g.getPixelY(), h, l, n.spriteSheet.spriteSize, 0);
@@ -230,7 +230,7 @@ export function initializeRenderingScene() {
   RenderCommand.prototype.getRenderSortKey = function () {
     return this.ur - this.vr;
   };
-  RenderCommand.prototype.If = function (a) {
+  RenderCommand.prototype.draw = function (a) {
     if (this.pt) {
       if (0 < this.alpha) {
         a.save();
@@ -300,7 +300,7 @@ export function initializeRenderingScene() {
     }
     var a;
     for (a = this.Bn - 1; 0 <= a; a--) {
-      this.Hl[a].If(this.context);
+      this.Hl[a].draw(this.context);
     }
   };
   ImmediateRenderer.prototype.hB = function (a) {
@@ -310,32 +310,32 @@ export function initializeRenderingScene() {
     if (a) {
       b = acquireImmediateCommand(this);
       setSpriteRenderCommand(b, a, 0, d, f, g, h);
-      b.If(this.context);
+      b.draw(this.context);
     }
   };
   ImmediateRenderer.prototype.gx = function (a, b, c, d, f, g, h) {
     if (a) {
       b = acquireImmediateCommand(this);
       setSpriteRenderCommand(b, a, 0, d, f, g, h);
-      b.If(this.context);
+      b.draw(this.context);
     }
   };
   ImmediateRenderer.prototype.fB = function (a, b, c, d, f, g, h, l) {
     if (a) {
       c = acquireImmediateCommand(this);
       setAnimationRenderCommand(c, a, b, 0, f, g, h, l);
-      c.If(this.context);
+      c.draw(this.context);
     }
   };
   ImmediateRenderer.prototype.fx = function (a, b, c, d, f, g, h, l) {
     if (a) {
       c = acquireImmediateCommand(this);
       setAnimationRenderCommand(c, a, b, 0, f, g, h, l);
-      c.If(this.context);
+      c.draw(this.context);
     }
   };
   ImmediateRenderer.prototype.hx = function () {};
-  SceneRenderer.prototype.If = function (a, b, c) {
+  SceneRenderer.prototype.drawSprite = function (a, b, c) {
     if (a) {
       var d = a.spriteSheet.spriteSize;
       this.context.drawImage(a.Hj(), a.sourceX, a.sourceY, d, d, b, c, d, d);
@@ -509,7 +509,7 @@ export function initializeRenderingScene() {
           J = projectWorldY(x, z);
           var Q = I.Xl,
             V = game.goldDrops;
-          a.If(100 > Q ? V.Sz : 1E3 > Q ? V.xw : V.wD, O, J);
+          a.drawSprite(100 > Q ? V.Sz : 1E3 > Q ? V.xw : V.wD, O, J);
         }
         var na = game.scrollDrops.drops,
           K,
@@ -524,7 +524,7 @@ export function initializeRenderingScene() {
           S = K.cq;
           da = projectWorldX(H, S);
           W = projectWorldY(H, S);
-          a.If(getScrollSprite(K.getScroll()), da, W);
+          a.drawSprite(getScrollSprite(K.getScroll()), da, W);
         }
         var ea = game.potionDrops.drops,
           va,
@@ -539,7 +539,7 @@ export function initializeRenderingScene() {
           Fb = va.Rp;
           pa = projectWorldX(yb, Fb);
           T = projectWorldY(yb, Fb);
-          a.If(va.potion.potionSprite, pa, T);
+          a.drawSprite(va.potion.potionSprite, pa, T);
         }
         var Ca = game.itemDrops.drops,
           qa,
@@ -554,7 +554,7 @@ export function initializeRenderingScene() {
           eb = qa.np;
           Gb = projectWorldX(ta, eb);
           Da = projectWorldY(ta, eb);
-          a.If(qa.getItem().Uk(), Gb, Da);
+          a.drawSprite(qa.getItem().Uk(), Gb, Da);
         }
         var mb = game.treasure.targets,
           Ea,
@@ -592,7 +592,7 @@ export function initializeRenderingScene() {
           fb = za.position.getLevelPositionY();
           cb = projectWorldX(nb, fb);
           Ua = projectWorldY(nb, fb);
-          a.If(za.getSprite(), cb, Ua);
+          a.drawSprite(za.getSprite(), cb, Ua);
         }
         var mc = getMonsters(),
           vb,
