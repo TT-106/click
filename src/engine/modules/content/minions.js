@@ -15,7 +15,7 @@ export function initializeContentMinions() {
     defaultName: "Howler",
     descriptionText: "A cool wolf that fights for a time.",
     Oi: -1,
-    tb: [{
+    slotStatBonusList: [{
       slot: "230",
       statType: 1
     }, {
@@ -48,7 +48,7 @@ export function initializeContentMinions() {
     defaultName: "Bones",
     descriptionText: "A Skeletal Warrior.",
     Oi: -1,
-    tb: [{
+    slotStatBonusList: [{
       slot: "230",
       statType: 1
     }, {
@@ -81,7 +81,7 @@ export function initializeContentMinions() {
     defaultName: "Chicken",
     descriptionText: "A chicken.",
     Oi: -1,
-    tb: [{
+    slotStatBonusList: [{
       slot: "230",
       statType: 1
     }, {
@@ -114,7 +114,7 @@ export function initializeContentMinions() {
     defaultName: "Chicken",
     descriptionText: "A chicken.",
     Oi: -1,
-    tb: [{
+    slotStatBonusList: [{
       slot: "230",
       statType: 1
     }, {
@@ -148,7 +148,7 @@ export function initializeContentMinions() {
     defaultName: "Chicken",
     descriptionText: "A chicken.",
     Oi: -1,
-    tb: [{
+    slotStatBonusList: [{
       slot: "29",
       statType: 3
     }, {
@@ -185,7 +185,7 @@ export function initializeContentMinions() {
     defaultName: "Chicken",
     descriptionText: "A chicken.",
     Oi: -1,
-    tb: [{
+    slotStatBonusList: [{
       slot: "24",
       statType: 3
     }, {
@@ -219,7 +219,7 @@ export function initializeContentMinions() {
     defaultName: "Death Chicken",
     descriptionText: "A death chicken.",
     Oi: -1,
-    tb: [{
+    slotStatBonusList: [{
       slot: "60",
       statType: 1
     }, {
@@ -256,7 +256,7 @@ export function initializeContentMinions() {
     defaultName: "Kryptax",
     descriptionText: "Floating Skull of Death.",
     Oi: -1,
-    tb: [{
+    slotStatBonusList: [{
       slot: "230",
       statType: 1
     }, {
@@ -295,7 +295,7 @@ export function initializeContentMinions() {
     defaultName: "Scruffy",
     descriptionText: "His bite is bigger than his bark.",
     Oi: -1,
-    tb: [{
+    slotStatBonusList: [{
       slot: "230",
       statType: 1
     }, {

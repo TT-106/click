@@ -15,7 +15,7 @@ export function initializeContentGuardians() {
     defaultName: "Zog",
     descriptionText: "",
     fe: false,
-    tb: [{
+    slotStatBonusList: [{
       slot: "230",
       statType: 1
     }, {
@@ -49,7 +49,7 @@ export function initializeContentGuardians() {
     defaultName: "Zar",
     descriptionText: "",
     fe: false,
-    tb: [{
+    slotStatBonusList: [{
       slot: "26",
       statType: 1
     }, {
@@ -86,7 +86,7 @@ export function initializeContentGuardians() {
     defaultName: "Seth",
     descriptionText: "",
     fe: false,
-    tb: [{
+    slotStatBonusList: [{
       slot: "60",
       statType: 1
     }, {
@@ -124,7 +124,7 @@ export function initializeContentGuardians() {
     defaultName: "N",
     descriptionText: "",
     fe: false,
-    tb: [{
+    slotStatBonusList: [{
       slot: "29",
       statType: 3
     }, {
@@ -295,7 +295,7 @@ export function initializeContentGuardians() {
     defaultName: "Boss",
     descriptionText: "",
     fe: false,
-    tb: [{
+    slotStatBonusList: [{
       slot: "230",
       statType: 1
     }, {

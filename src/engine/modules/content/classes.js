@@ -54,7 +54,7 @@ export function initializeContentClasses() {
     descriptionText: "坦克角色.强力的近战攻击.",
     requiredVictories: 0,
     fe: false,
-    tb: [{
+    slotStatBonusList: [{
       slot: "20",
       statType: 1
     }, {
@@ -107,7 +107,7 @@ export function initializeContentClasses() {
     descriptionText: "医生兼杀手.利用近战伤害加成法术帮助队伍.",
     requiredVictories: 0,
     fe: false,
-    tb: [{
+    slotStatBonusList: [{
       slot: "22",
       statType: 1
     }, {
@@ -160,7 +160,7 @@ export function initializeContentClasses() {
     descriptionText: "美丽又致命.远程攻击.",
     requiredVictories: 0,
     fe: false,
-    tb: [{
+    slotStatBonusList: [{
       slot: "60",
       statType: 1
     }, {
@@ -210,7 +210,7 @@ export function initializeContentClasses() {
     descriptionText: "法术为基础的远程攻击.火焰魔法.",
     requiredVictories: 0,
     fe: true,
-    tb: [{
+    slotStatBonusList: [{
       slot: "27",
       statType: 1
     }, {
@@ -256,7 +256,7 @@ export function initializeContentClasses() {
     descriptionText: "潜行攻击.远程进战两相宜.强大的寻宝能力.",
     requiredVictories: 0,
     fe: false,
-    tb: [{
+    slotStatBonusList: [{
       slot: "24",
       statType: 3
     }, {
@@ -302,7 +302,7 @@ export function initializeContentClasses() {
     descriptionText: "强大的召唤师/牧师的结合体.能召唤野狼和一只宠物狗.",
     requiredVictories: 0,
     fe: true,
-    tb: [{
+    slotStatBonusList: [{
       slot: "31",
       statType: 1
     }, {
@@ -349,7 +349,7 @@ export function initializeContentClasses() {
     descriptionText: "坦克角色.能力:愤怒,猛锤.",
     requiredVictories: 1,
     fe: false,
-    tb: [{
+    slotStatBonusList: [{
       slot: "21",
       statType: 1
     }, {
@@ -402,7 +402,7 @@ export function initializeContentClasses() {
     descriptionText: "法术为基础的远程攻击.电气魔法.",
     requiredVictories: 1,
     fe: true,
-    tb: [{
+    slotStatBonusList: [{
       slot: "26",
       statType: 1
     }, {
@@ -448,7 +448,7 @@ export function initializeContentClasses() {
     descriptionText: "喜欢在海滩上散步和杀死怪物.",
     requiredVictories: 2,
     fe: false,
-    tb: [{
+    slotStatBonusList: [{
       slot: "29",
       statType: 3
     }, {
@@ -501,7 +501,7 @@ export function initializeContentClasses() {
     descriptionText: "召唤者:唤醒骷髅军队.",
     requiredVictories: 2,
     fe: true,
-    tb: [{
+    slotStatBonusList: [{
       slot: "30",
       statType: 1
     }, {
@@ -547,7 +547,7 @@ export function initializeContentClasses() {
     descriptionText: "纯鸡召唤者.",
     requiredVictories: 3,
     fe: true,
-    tb: [{
+    slotStatBonusList: [{
       slot: "32",
       statType: 1
     }, {
@@ -614,7 +614,7 @@ export function initializeContentClasses() {
     descriptionText: "Scroll Character Description",
     requiredVictories: 0,
     fe: false,
-    tb: [{
+    slotStatBonusList: [{
       slot: "230",
       statType: 1
     }, {

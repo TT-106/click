@@ -1979,28 +1979,28 @@ export function initializeProgressionAchievements() {
     requirementType: 23,
     requiredCount: 1,
     pointEventTypeId: POINT_EVENT_LEVEL_CLEARED,
-    ab: true
+    isVictoryAchievement: true
   }, {
     id: "reducedPartyVictory2",
     name: "使用2个冒险者获得胜利",
     requirementType: 23,
     requiredCount: 2,
     pointEventTypeId: 19,
-    ab: true
+    isVictoryAchievement: true
   }, {
     id: "reducedPartyVictory3",
     name: "使用3个冒险者获得胜利",
     requirementType: 23,
     requiredCount: 3,
     pointEventTypeId: 21,
-    ab: true
+    isVictoryAchievement: true
   }, {
     id: "singleClassVictory",
     name: "使用4个同职业冒险者获得胜利",
     requirementType: 24,
     requiredCount: 1,
     pointEventTypeId: 22,
-    ab: true
+    isVictoryAchievement: true
   }, {
     id: "barbarianVictory",
     name: "使用野蛮人获得胜利",
@@ -2008,7 +2008,7 @@ export function initializeProgressionAchievements() {
     Hb: 1,
     requiredCount: 1,
     pointEventTypeId: 16,
-    ab: true
+    isVictoryAchievement: true
   }, {
     id: "fighterVictory",
     name: "使用战士获得胜利",
@@ -2016,7 +2016,7 @@ export function initializeProgressionAchievements() {
     Hb: 0,
     requiredCount: 1,
     pointEventTypeId: 15,
-    ab: true
+    isVictoryAchievement: true
   }, {
     id: "priestVictory",
     name: "使用牧师获得胜利",
@@ -2024,7 +2024,7 @@ export function initializeProgressionAchievements() {
     Hb: 6,
     requiredCount: 1,
     pointEventTypeId: 14,
-    ab: true
+    isVictoryAchievement: true
   }, {
     id: "rangerVictory",
     name: "使用游侠获得胜利",
@@ -2032,7 +2032,7 @@ export function initializeProgressionAchievements() {
     Hb: 2,
     requiredCount: 1,
     pointEventTypeId: 13,
-    ab: true
+    isVictoryAchievement: true
   }, {
     id: "druidVictory",
     name: "使用德鲁伊获得胜利",
@@ -2040,7 +2040,7 @@ export function initializeProgressionAchievements() {
     Hb: 10,
     requiredCount: 1,
     pointEventTypeId: 8,
-    ab: true
+    isVictoryAchievement: true
   }, {
     id: "rogueVictory",
     name: "使用盗贼获得胜利",
@@ -2048,7 +2048,7 @@ export function initializeProgressionAchievements() {
     Hb: 7,
     requiredCount: 1,
     pointEventTypeId: 6,
-    ab: true
+    isVictoryAchievement: true
   }, {
     id: "pyromancerVictory",
     name: "使用火法师获得胜利",
@@ -2056,7 +2056,7 @@ export function initializeProgressionAchievements() {
     Hb: 4,
     requiredCount: 1,
     pointEventTypeId: 7,
-    ab: true
+    isVictoryAchievement: true
   }, {
     id: "electromancerVictory",
     name: "使用电法师获得胜利",
@@ -2064,7 +2064,7 @@ export function initializeProgressionAchievements() {
     Hb: 3,
     requiredCount: 1,
     pointEventTypeId: 12,
-    ab: true
+    isVictoryAchievement: true
   }, {
     id: "necromancerVictory",
     name: "使用死灵法师获得胜利",
@@ -2072,7 +2072,7 @@ export function initializeProgressionAchievements() {
     Hb: 9,
     requiredCount: 1,
     pointEventTypeId: 11,
-    ab: true
+    isVictoryAchievement: true
   }, {
     id: "chickenKingVictory",
     name: "使用鸡王获得胜利",
@@ -2080,7 +2080,7 @@ export function initializeProgressionAchievements() {
     Hb: 11,
     requiredCount: 1,
     pointEventTypeId: 9,
-    ab: true
+    isVictoryAchievement: true
   }, {
     id: "ninjaVictory",
     name: "使用忍者获得胜利",
@@ -2088,35 +2088,35 @@ export function initializeProgressionAchievements() {
     Hb: 8,
     requiredCount: 1,
     pointEventTypeId: 2,
-    ab: true
+    isVictoryAchievement: true
   }, {
     id: "continuationVictory1",
     name: "延续胜利",
     requirementType: 26,
     requiredCount: 1,
     pointEventTypeId: 10,
-    ab: true
+    isVictoryAchievement: true
   }, {
     id: "continuationVictory2",
     name: "第二次延续胜利",
     requirementType: 26,
     requiredCount: 2,
     pointEventTypeId: POINT_EVENT_LEVEL_CLEARED,
-    ab: true
+    isVictoryAchievement: true
   }, {
     id: "continuationVictory3",
     name: "第三次延续胜利",
     requirementType: 26,
     requiredCount: 3,
     pointEventTypeId: 22,
-    ab: true
+    isVictoryAchievement: true
   }, {
     id: "continuationVictory4",
     name: "第四次延续胜利",
     requirementType: 26,
     requiredCount: 4,
     pointEventTypeId: 2,
-    ab: true
+    isVictoryAchievement: true
   }, {
     id: "soloBarbarianVictory",
     name: "单独使用野蛮人获得胜利",
@@ -2124,7 +2124,7 @@ export function initializeProgressionAchievements() {
     Hb: 1,
     requiredCount: 1,
     pointEventTypeId: 22,
-    ab: true
+    isVictoryAchievement: true
   }, {
     id: "soloFighterVictory",
     name: "单独使用战士获得胜利",
@@ -2132,7 +2132,7 @@ export function initializeProgressionAchievements() {
     Hb: 0,
     requiredCount: 1,
     pointEventTypeId: 1,
-    ab: true
+    isVictoryAchievement: true
   }, {
     id: "soloPriestVictory",
     name: "单独使用牧师获得胜利",
@@ -2140,7 +2140,7 @@ export function initializeProgressionAchievements() {
     Hb: 6,
     requiredCount: 1,
     pointEventTypeId: 13,
-    ab: true
+    isVictoryAchievement: true
   }, {
     id: "soloRangerVictory",
     name: "单独使用游侠获得胜利",
@@ -2148,7 +2148,7 @@ export function initializeProgressionAchievements() {
     Hb: 2,
     requiredCount: 1,
     pointEventTypeId: 14,
-    ab: true
+    isVictoryAchievement: true
   }, {
     id: "soloDruidVictory",
     name: "单独使用德鲁伊获得胜利",
@@ -2156,7 +2156,7 @@ export function initializeProgressionAchievements() {
     Hb: 10,
     requiredCount: 1,
     pointEventTypeId: 15,
-    ab: true
+    isVictoryAchievement: true
   }, {
     id: "soloRogueVictory",
     name: "单独使用盗贼获得胜利",
@@ -2164,7 +2164,7 @@ export function initializeProgressionAchievements() {
     Hb: 7,
     requiredCount: 1,
     pointEventTypeId: 16,
-    ab: true
+    isVictoryAchievement: true
   }, {
     id: "soloPyromancerVictory",
     name: "单独使用火法师获得胜利",
@@ -2172,7 +2172,7 @@ export function initializeProgressionAchievements() {
     Hb: 4,
     requiredCount: 1,
     pointEventTypeId: 21,
-    ab: true
+    isVictoryAchievement: true
   }, {
     id: "soloElectromancerVictory",
     name: "单独使用电法师获得胜利",
@@ -2180,7 +2180,7 @@ export function initializeProgressionAchievements() {
     Hb: 3,
     requiredCount: 1,
     pointEventTypeId: POINT_EVENT_DUNGEON_CLEARED,
-    ab: true
+    isVictoryAchievement: true
   }, {
     id: "soloNecromancerVictory",
     name: "单独使用死灵法师获得胜利",
@@ -2188,7 +2188,7 @@ export function initializeProgressionAchievements() {
     Hb: 9,
     requiredCount: 1,
     pointEventTypeId: 19,
-    ab: true
+    isVictoryAchievement: true
   }, {
     id: "soloChickenKingVictory",
     name: "单独使用鸡王获得胜利",
@@ -2196,7 +2196,7 @@ export function initializeProgressionAchievements() {
     Hb: 11,
     requiredCount: 1,
     pointEventTypeId: POINT_EVENT_LEVEL_CLEARED,
-    ab: true
+    isVictoryAchievement: true
   }, {
     id: "soloNinjaVictory",
     name: "单独使用忍者获得胜利",
@@ -2204,6 +2204,6 @@ export function initializeProgressionAchievements() {
     Hb: 8,
     requiredCount: 1,
     pointEventTypeId: 17,
-    ab: true
+    isVictoryAchievement: true
   }];
 }

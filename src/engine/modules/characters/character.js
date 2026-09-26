@@ -31,7 +31,7 @@ export function Character(a, b, c, d, f) {
   this.characterType = b;
   this.classDefinition = d;
   this.characterClass = c;
-  if ((a = d.tb) && 0 !== a.length) {
+  if ((a = d.slotStatBonusList) && 0 !== a.length) {
     c = [];
     var g;
     for (g = 0; g < a.length; g++) {
@@ -42,7 +42,7 @@ export function Character(a, b, c, d, f) {
     a = null;
   }
   this.slotList = a;
-  if (d = d.tb) {
+  if (d = d.slotStatBonusList) {
     a = {};
     for (c = 0; c < d.length; c++) {
       a[d[c].slot] = d[c].statType;
