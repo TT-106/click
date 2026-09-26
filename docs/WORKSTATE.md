@@ -1,10 +1,13 @@
 # WORKSTATE — Clickpocalypse II 语义恢复与现代化工程
 
 > 本文件是长程自治任务的**唯一续跑入口**。上下文压缩或中断后，先读本文件 + `git log --oneline`，再继续。
-> 最后更新：2026-09-26（fe/ke/rg 卷轴字段落地后，混淆清单 1,103；验收矩阵 51 PASS / 0 PARTIAL、矩阵 59/59、soak 通过）
+> 最后更新：2026-09-26（U18 He/qe/se/we/te/be/Ie/Nd 落地后，混淆清单 1,095；验收矩阵 51 PASS / 0 PARTIAL、矩阵 59/59、soak 通过）
 
 ## 当前轮次状态（2026-09-26，M13 文档与验收收尾）
 
+- U18 验证器指定长尾第三批（2026-09-26，两笔提交，六门禁全绿，混淆清单 1,106 → 1,095）：
+  1. **升级层级 He→isOwned**（17 处，6 文件 + UpgradeMethods typedef 同步）：9 个原型实现（base false、技能/学法术/冒险点→purchased、成就→applied、买地牢/城堡→目标状态达成）语义统一为"该升级是否已购/已生效"；消费方＝技能树前置链（prerequisite.isOwned()）、DTO upgradePurchased 与 upgrades1..4 映射（entities.js:144）、视图 ownedUpgradeButton 类名、hasUnpurchasedUpgrade。**甄别结论：虽跨 6 文件但语义单一，无需拆名**；第 17 处为 typedef 注释内 `He:`（执行器会计数，--expect 按 17）。
+  2. **视图/渲染单属主字段**（102 处）：qe→unlockLevel（解锁怪物等级升级缓存，与 retireLevel 对偶）、se→spriteRenderer（SceneRenderer 活动绘制后端：按 depthSortSprites 选项切 DepthSorted/Immediate）、te→showDetails（各 Details 子类的 DOM 显示钩子）、we→titleElement（标题 span）、be→tableElement（CharacterSummaryView 属性表）、Ie→rarityCell（InventoryItemView 品质单元格）、Nd→previewImageElement（50px 精灵预览 img）。
 - U17 验证器指定长尾第二批（2026-09-26，三笔提交，六门禁全绿，混淆清单 1,112 → 1,106）：
   1. **战斗/掉落簇**（91 处）：Kd→isDisabled（禁用标志）、Rd→noDamage（伤害被减免为 0）、Vn→resolved（动作已结算）、Ud 三属主拆名（Vector2→squaredDistanceTo、DungeonRoom→squaredDistanceToRoom、掉落物→getClaimDistance）、ph→claimDistance、Se→setClaimDistance。
   2. **世界/库存/地牢注册表簇**（103 处）：he/ie→worldCenterX/Y、Yd→retireLevel、pe→drops、re→potionList、地牢注册表五列表 ze→cleared/uj→discovered/Ge→attackable/dg→farms/bk→farmable（adapter 仪表盘键同名）。
