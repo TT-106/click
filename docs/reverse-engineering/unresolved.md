@@ -136,10 +136,14 @@ Xf/Qf/Rf/Zf/Cf/Ef → damageMultiplier/armorMultiplier/attackRatingMultiplier/de
 
 - `npm run test:soak` 在同一固定存档/随机流下分别推进 115,200 与 345,600 回合（250ms/回合），两个检查点的原版/重构版完整存档相等，浏览器无 pageerror。经 Chrome CDP 主动 GC 后采样 `JSHeapUsedSize`；最近一次原版 8h/24h 为 6,265,120 / 6,283,088 bytes，重构版为 7,062,668 / 7,079,852 bytes，增量分别为 17,968 / 17,184 bytes。连续三次运行通过；短期稳定不能证明不存在所有内存泄漏。可复核产出位于 `output/soak/last-run.json`。
 
-## U4 — 差分覆盖缺口
+## U4 — 差分覆盖缺口（2026-09-26 更新）
 
-- 胜利瞬间（城堡征服全流程）、部分法术分支仍待覆盖。`fireball-blast-stun` 已用 class 4 法师存档注入唯一已学法术“火球”（spellCategoryId=8），两端 3000 回合内 `spellCastCount` 均增长并在 6000 回合比较完整存档；尚未独立断言 Blast Stun 入队次数。12h 离线上限截断路径已由 `offline-13h-capped` 场景覆盖：同一 13h 旧存档载入两端后均断言待结算时长为 12h，再推进离线帧并比较完整存档与后续回合。
-- 扩展方式：`tests/scenarios/save-mutations.mjs` 增加对应变异器。
+- ✅ 城堡征服全流程与胜利瞬间已关闭：`castle-victory` 场景用 `withCastleVictory()` 把 34 座城堡置为已征服、最后一座置为"区域未锁 + 地牢已全清 + 攻击已排期"，两端各自走进城堡并从出口楼梯离开，触发 `PartyState.iw` 的征服尾部。15,000 回合分 5 个检查点比较完整存档，终点在两端各自断言 `gameWon`、`victoryCount=1`、`castlesConquered=1` 与全城堡征服。15 场景矩阵全绿，8h/24h soak 全绿。
+- 该场景暴露并修复了两处重构遗留缺陷：`world/rooms.js` 金堆房把 DungeonTile 当作 CharacterPosition 调用 `getLevelPositionX/Y`（原为 `Ob/Pb` 的瓦片变体，约 6900 回合首次触发即 TypeError）；`progression/achievements.js` 定义表 22 条 `Hb:` 与读端 `a.characterClass` 未同步，导致职业胜利成就在重构版永远不达成（胜利瞬间两端 `obtained` 集合分叉）。两处均按原版语义修复，未改数值。
+- 仍然开放：Blast Stun 的直接入队计数断言。取证结论是 `blastStunSpell` 并非可学可施的法术——把它注入法师的 `spells` 后两端 `spellCastCount` 都不增长（原版同样不施放，属引擎事实）。它只在 `simulation/tick.js:346-348` 被懒创建为二段打击动作的 `actionDefinition` 并入队。`fireball-blast-stun` 场景已让火球系法术走完整 6000 回合差分，若该入队或执行分叉，被眩晕怪造成的伤害与击杀会让完整存档分叉，因此执行路径受间接约束；直接观测需要能读取两端怪物效果队列的钩子，原版侧尚未找到稳定入口。
+- 仍然开放：其余未覆盖的法术分支（电系/火系高阶效果、`potencyPercent` 非零的减益类），仍只有 `scrolls-stocked` 的 shock/web/arrow/fireball 四种卷轴与火球注入被直接驱动。
+- 12h 离线上限截断路径已由 `offline-13h-capped` 场景覆盖：同一 13h 旧存档载入两端后均断言待结算时长为 12h，再推进离线帧并比较完整存档与后续回合。
+- 扩展方式：`tests/scenarios/save-mutations.mjs` 增加对应变异器，`scripts/test-scenarios.mjs` 注册场景并为两端各自写有效性断言。
 
 ## U5 — 长尾字段重命名
 

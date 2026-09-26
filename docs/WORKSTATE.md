@@ -24,6 +24,10 @@
 - M10 `persistence/game-save.js` 已摘除 `@ts-nocheck`：七个重复索引声明合并，CharacterStats 后挂载的 `setMinionKills` 在调用点标注签名；四套回归全绿，存档 JSON 键无改动。剩余 14 个。
 - U4 的 12h 离线上限截断差分已补：`offline-13h-capped` 在两端载入后直接断言待结算时长 12h，再比较离线结算完整状态和后续 200 回合。场景总数 13，四套回归全绿；U4 仍缺胜利瞬间和部分法术分支。
 - U4 增加 `fireball-blast-stun`：class 4 法师唯一已学法术为火球，断言两端实际施法并推进 6000 回合完整差分。场景总数 14，四套回归全绿；Blast Stun 入队未独立观测，不能据此关闭全部法术分支缺口。
+- U4 增加 `castle-victory`（提交 da5cbd4）：`withCastleVictory()` 只留一座待攻克城堡，两端各自走"进城—到出口—离城"的征服尾部，15,000 回合分 5 个检查点比较完整存档，终点在两端分别断言 `gameWon`/`victoryCount=1`/`castlesConquered=1`/全城堡征服。场景总数 15，四套回归与 8h/24h soak 全绿。
+- 该场景抓到并修掉两处重构遗留缺陷（提交 90a6cbb、789e2b3）：`world/rooms.js` 金堆房对 DungeonTile 误调 CharacterPosition 的 `getLevelPositionX/Y`，首次进入该分支即 TypeError；`progression/achievements.js` 定义表 22 处 `Hb:` 与读端 `a.characterClass` 未同步，职业胜利成就在重构版永不达成、胜利瞬间两端 `obtained` 集合分叉。两处按原版语义修复，未动数值与存档键。
+- Blast Stun 取证结论：`blastStunSpell` 是可学法术的假设不成立——注入法师 `spells` 后两端 `spellCastCount` 均不增长（原版同样不施放），它只在 `simulation/tick.js:346-348` 作为二段打击动作的 `actionDefinition` 懒创建并入队。直接入队计数断言仍开放，详见 `docs/reverse-engineering/unresolved.md` U4。
+- M13 补测：`npm run build` 产出 dist/ 174 个文件；`npm run perf` 在最近 HEAD 上给出重构版 vs 原版 回合推进 0.080/0.075 ms（1.06x）、存档序列化 0.13/0.07 ms、存档导入 32.8/28.2 ms、离线 1h 结算 178/156 ms CPU（同为 18,925 回合）。
 - U3 8h/24h 等价回合 soak 已连续三次实测通过（115,200/345,600 回合，完整存档两端相等，0 pageerror）；最近一次 CDP 主动 GC 后原版 JS 堆 8h→24h 为 6.27→6.28 MB，重构版 7.06→7.08 MB。`npm run test:soak` 独立于常规快测，样本输出 `output/soak/last-run.json`；短期稳定不等于严格泄漏证明。
 - M10 `world/rooms.js` 已摘除 `@ts-nocheck`：`revealRoom/revealHallway` 初始布尔位与后续复用变量分名，两个后挂载 `Lw` 调用标注签名；四套回归全绿。剩余 13 个忽略文件。
 - M10 `world/generation.js` 已摘除 `@ts-nocheck`：`LayoutMethods` 明确后挂载布局方法签名，生成随机流与入场角色的复用变量分开，最后楼层布尔条件分开；四套回归全绿。剩余 12 个。
@@ -58,7 +62,7 @@
 | M10 Type Hardening | ✅ 完成：`src/engine/modules` 下 `@ts-nocheck` 为 0（仅 `src/vendor/lz-string-1.3.3.js` 保留），全仓库 tsc 错误 0；每切片均过四套回归 |
 | M11 Performance | ✅ 基线完成（docs/performance-baseline.md）：重构/原版比值 1.0-1.1x；优化未开始（也无必要——模拟占回合预算 0.03%） |
 | M12 Legacy Reduction | 🟡 技能/法术/状态效果/视图高频字段已清（e/f/g/X/V/W/c 组落地）；剩余长尾字段约 1,300 处访问（Y/Z/aa/ca 等，需新取证） |
-| M13 Final Regression | 🟡 回归体系全绿；prestige/victory/部分法术分支无差分场景 |
+| M13 Final Regression | ✅ check/parity/15 场景/e2e/soak 全绿，victory 差分已补（castle-victory），build 与 perf 已实测；Blast Stun 直接入队计数与其余法术分支仍开放 |
 
 ## 3. 可运行状态与命令（全部实测通过 @ commit 4665924+）
 
@@ -91,7 +95,7 @@ npm run perf             # 性能基线测量（重构 vs 原版）
 1. **波次 4/5 状态**：Ja/ka/Oa/Fa/Ca/ra/Y/Z(slotList) + 法术族 + B 组九项 + 第五轮七项（$/Ea/Ga/Ma/Na/Wa/Qa）+ **Da 三路拆分（combatTarget/targetCharacter/selectedTarget，U1 已解决，根因=616/682 动作自有字段误标）** + aa(statisticsRecorder/runStatistics) 全部落地全绿。**`Da` 三路拆分经两轮调试仍分叉，已回退**——关键实证：推进期 RNG delta 全程 0（非随机流分叉）、`createSpellAction/nu` 入参是多态角色（6 处误标已修正仍分叉）、最可疑链路是 FollowLeaderBehavior.wd 的"谁在打我"判定。完整证据与运行时断言方案见 `docs/reverse-engineering/unresolved.md` U1。
 2. ~~已取证待落地~~ ✅ B 组九项全部落地（每字母独立全回归）。
 3. ~~交付物收尾~~ ✅ 已完成（REFACTOR_REPORT.md、PERFORMANCE_REPORT.md、COMPATIBILITY_REPORT.md、MIGRATION_MAP.md）。
-4. ~~扩展差分场景：prestige/victory~~ ✅ 12 场景矩阵已含 veteran-run/prestige-restart/full-reset；剩余：胜利瞬间触发（城堡征服）、法术分支。
+4. ~~扩展差分场景：prestige/victory~~ ✅ 15 场景矩阵已含 veteran-run/prestige-restart/full-reset 与城堡征服→胜利瞬间（castle-victory）；剩余：Blast Stun 直接入队计数断言、其余法术分支。
 5. **M10 类型体系**：✅ 已启动（tsconfig checkJs 范围 core/+persistence/、SaveData DTO typedef `persistence/save-dto.js`、math.js JSDoc、`npm run typecheck` 已入 check 门禁）。**已纳入检查范围（遗留错误行为中立清零）**：simulation/tick.js、runtime/game.js、ai/targeting.js、combat/scrolls.js、loot/{items,treasure}.js、world/{dungeons,pathfinding,regions,travel-costs}.js、characters/{minions,party}.js、views/{monsters,navigation,base,party-creation,expedition}.js、world/initialization.js。**剩余 23 个 `@ts-nocheck`**（重文件）；工具：`m10-round.cjs`（按文件移除并报告各自错误）、`m10-nocheck.mjs`/`restore-nocheck-baseline.cjs`（范围管理）；light-file 纳入需类成员级 JSDoc 专项（跨文件原型挂载成员 TS 不可见，非纯 any-cast 可覆盖）。
 6. symbol-map.json 元数据刷新（累计 60+ 字段映射待写入）。
 

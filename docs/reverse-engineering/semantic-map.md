@@ -96,6 +96,20 @@ RunStatistics 的 `On/Lk/qn/Mj/wi/uk` → `turnCount/doorsOpened/roomsCleared/le
 
 统计物品组：`Ph/Gi/Ol/xl/Zk/nk/Nl/Sl/tk` → `itemsSold/itemsFound/uncommonItemsFound/rareItemsFound/historicItemsFound/ancientItemsFound/treasureChestsLooted/weaponRacksLooted/bookcasesLooted`。存档读写、`recordItemFound` 按稀有度分发、成就、信息面板及离线结果视图同步；JSON 键不变。
 
+## 城堡征服与胜利瞬间（2026-09-26，U4 差分驱动）
+
+`PartyState.prototype.iw`（`characters/party.js:205`）是"离开已清空城堡"的收尾函数：清空队员移动目标与掉落物 → `game.currentCastle = null`、`game.worldActive = true` → `castle.ye = false`、`castle.conquered = true` → 遍历 `castle.ck` 的四个相邻区域解锁邻堡 `regionLocked` → `invalidateCastleRevision()` + `refreshWorldBlocks()` + `recordGameEvent("Castle", "已清空:"+castleName)` → `recordCastleConquered()` → `awardAdventurePoints(19)` → 统计 `game.castles.pd` 中未征服者，数量为 0 时执行 `victoryCount++`、`game.gameWon = true`、`finishOfflineProgress()`、`saveProgress()`、`view.onGameWon()`，再按队伍规模写 `victoryStatistics.hn/jn/kn`、按队员职业写 `victoryStatistics.qo[class]`。
+
+触发点在 `characters/character.js:407`：非世界态下角色抵达 `moveTargetPoint` 且其 `position.ed` 非空即调用 `iw()`。`position.ed` 由 `ai/behaviors.js:1004` 从 `PartyState.ed` 复制，而 `PartyState.ed` 只在 `characters/party.js:562` 被赋值为 `game.level.tf`（出口房间），因此征服只能由"走进城堡、走到出口楼梯、离开"这条物理路径触发；引擎不存在"地牢已全部征服即直接占领城堡"的捷径（战斗中 `castle.conquered` 只有 `iw` 一处赋值，另一处是存档 `tx()`）。城堡的攻击计划位 `ye`（存档键 `attackScheduled`）只由 `progression/upgrades.js:327` 的"攻击城堡"升级购买写入，载入时按存档值重建 `Jg`/`Dh` 两个列表。
+
+## 成就职业字段：定义表与读端补齐（2026-09-26）
+
+`Hb` → `characterClass`：成就实例字段与 `hasVictoryAchievement` 的读取早已用语义名（`progression/achievements.js:16,56,60`），而定义表里 22 条职业胜利/独职业胜利记录仍写作 `Hb:`（原版同名键，见 `c2.js` 的 `barbarianVictory` 等）。读端因此恒为 undefined，`getClassVictories()` 取 `qo[undefined]` 得 0，requirementType 25/27 的成就在重构版永远无法置为 obtained。本批把 22 个定义键改为 `characterClass:`，与读端同名。涉及的存档键只有 `achievementManager.achievements[].obtained` 与 `victoryStatistics.classVictories`，均未改动。
+
+## Ob/Pb 接收者修正：房间金币堆（2026-09-26）
+
+`world/rooms.js` 的揭示房间分支（`roomType 3` 金堆房）对 `a.tileGrid[col][row]` 取到的 DungeonTile 调用了 CharacterPosition 变体 `getLevelPositionX/Y`。原版此处接收者是 DungeonTile（`f.Ob()/f.Pb()` 返回 `VD/WD`，即语义化后的 `pixelColumn/pixelRow`），已改回 `getPixelX()/getPixelY()`。这条分支在既有 14 个场景里从未被执行，城堡征服差分推进到约 6900 回合时以 `TypeError: f.getLevelPositionX is not a function` 暴露。全仓库其余 22 处 `getLevelPosition*` 调用点已逐一核对接收者，均为 CharacterPosition。
+
 ## 待取证残留（约 1,300 处访问）
 
 高频：`Y/Z/aa/ca/ea/ga/fa/ka/na` 等长尾——工作清单 `artifacts/obfuscated-fields.json`（按频次排序，含样例代码）。取证方法与产出格式见 WORKSTATE.md 第 6 节。
