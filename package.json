@@ -18,7 +18,8 @@
     "test:e2e": "node scripts/test-browser.mjs",
     "check": "node scripts/check.mjs",
     "typecheck": "tsc -p tsconfig.json",
-    "perf": "node scripts/measure-perf.mjs"
+    "perf": "node scripts/measure-perf.mjs",
+    "perf:frames": "node scripts/measure-frames.mjs"
   },
   "devDependencies": {
     "@babel/generator": "7.29.8",
