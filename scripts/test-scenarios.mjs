@@ -6,7 +6,7 @@ import { chromium } from 'playwright';
 import {
   decodeFixture, encodeSave, summarize,
   withPotions, withScrolls, withGold, withTurns, withElapsed, withOfflineProcessing,
-  withVictories, withClassSpell,
+  withVictories, withClassSpell, withCastleVictory,
   HARNESS_FIXED_NOW,
 } from '../tests/scenarios/save-mutations.mjs';
 
@@ -70,6 +70,24 @@ const scenarios = [
     name: 'fireball-blast-stun',
     make: () => withClassSpell(base, 4, '火球'),
     steps: [[3000, snap => ({ spellCast: snap.statistics.spellCastCount > base.statistics.spellCastCount })], [3000, null]],
+  },
+  {
+    // 城堡征服全流程：只剩最后一座城堡待攻克，队伍走进城堡再从出口离开，
+    // 触发 iw() 的征服尾部（解锁邻区、recordCastleConquered）与胜利瞬间。
+    // 断言放在终点：castlesConquered 在载入后为 0，只有真的走完征服尾部才会变成 1。
+    name: 'castle-victory',
+    make: () => withCastleVictory(base),
+    steps: [
+      [3000, null],
+      [3000, null],
+      [3000, null],
+      [3000, null],
+      [3000, snap => ({
+        victory: snap.gameWon === true && snap.victoryCount === 1
+          && snap.statistics.castlesConquered === 1
+          && snap.castleManager.castleStates.every(c => c.conquered),
+      })],
+    ],
   },
   {
     name: 'gold-windfall',
@@ -197,7 +215,8 @@ try {
             const verdict = check(states[i]);
             if (verdict.changed !== undefined) assert.equal(verdict.changed, true, `${label} 离线后金币应增长`);
             if (verdict.unchanged !== undefined) assert.equal(verdict.unchanged, true, `${label} 关闭离线后金币不应变化`);
-            if (verdict.spellCast !== undefined) assert.equal(verdict.spellCast, true, `${label} 火球场景必须实际施法`);
+            if (verdict.spellCast !== undefined) assert.equal(verdict.spellCast, true, `${label} 法术场景必须实际施法`);
+            if (verdict.victory !== undefined) assert.equal(verdict.victory, true, `${label} 必须真的走完征服尾部并触发胜利`);
           }
         }
         previous = states;

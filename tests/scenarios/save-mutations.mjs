@@ -75,6 +75,27 @@ export function withVictories(save, count) {
   return out;
 }
 
+/** 城堡征服终局：只保留一座待攻克城堡，其余标记已征服，地牢全部已清空。
+ *  用于驱动征服尾部（regionLocked 解锁、recordCastleConquered）与胜利瞬间
+ *  （victoryCount++ / gameWon）——两端都必须真的走到 iw() 的离开城堡分支。 */
+export function withCastleVictory(save) {
+  const out = clone(save);
+  for (const dungeon of out.dungeonManagerState.dungeonStates) {
+    dungeon.discovered = true;
+    dungeon.conquered = true;
+    dungeon.cleared = true;
+  }
+  const unlocked = out.castleManager.castleStates.filter(c => !c.castleRegionLocked);
+  if (unlocked.length !== 1) throw new Error(`fixture 应恰好有一座未锁城堡，实际 ${unlocked.length}`);
+  const finalCastleId = unlocked[0].castleId;
+  for (const castle of out.castleManager.castleStates) {
+    castle.conquered = castle.castleId !== finalCastleId;
+    castle.dungeonsConquered = true;
+    castle.attackScheduled = castle.castleId === finalCastleId;
+  }
+  return out;
+}
+
 /** 给存档中指定职业的角色装载一项已学法术；用于差分驱动具体法术分支。 */
 export function withClassSpell(save, characterClass, spellName) {
   const out = clone(save);
