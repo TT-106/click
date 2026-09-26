@@ -5,6 +5,12 @@
 
 ## 当前轮次状态（2026-09-26，M13 文档与验收收尾）
 
+- U14 三个语义簇重命名（2026-09-26，三笔独立提交，每组六门禁全绿，混淆清单 1,158 → 1,138）：
+  1. **成就状态簇**（47 处）：We→obtained、Of→applied（与存档 DTO 键同名镜像，game-save 读写两端同 commit）、Ze→claimQueue（tick 解锁入队/领取出队/4 个领取槽索引）、Vt→pointRewardBonus（increasePointEventReward 输入）。
+  2. **状态效果簇**（97 处）：定义字面量 Te→spritesheetPath、Qd→durationTurns（now-startTurn≥durationTurns 过期）、Od→overlayFrameIndex（角色头顶静态帧）、Pd→hasAnimation、cf→tooltipLabel；实例 jD→startTurn、hD→animation、Ok→potencyMultiplier（addSpellStatBonus 输入）。
+  3. **财宝目标簇**（52 处）：Mn→targets、Nn→room、Kg→opened（DTO 键 opened 未动）、Mf→kind（1 宝箱/2 武器架/3 书架；**定义字面量 Mf: 在 runtime/game.js 10 处**）、el→selected（队伍已选中标志）、hq→setTargetTreasureChest（PartyState+Character 双原型）、PA/Vy→openedSpriteName/closedSpriteName；harness lootTreasureDuringExplore 同步双端字段名分支。
+  至此第七批取证全部落地完毕；第八批余项（bc/ac 方法拆名、jc/kc/mc/Zb、Dt 索引等）仍有证据待落地。
+
 - U13 验收矩阵全闭环（2026-09-26，提交 9973320 / 2d5ea8e 系列 / e1b8f8b / 多项提交 / f9af2a2 / 2e74c7d）：**附录 A 51 行全部 PASS，0 PARTIAL / 0 未覆盖**，差分矩阵扩至 **59/59**，U3 soak 在新 HEAD 复跑通过（8h/24h 完整存档一致，GC 后堆原版 6,278,324/6,296,272 vs 重构版 7,094,344/7,111,312 bytes，增量 16k/17k）。本批闭环的七行：
   1. **角色职业**：`class-barbarian-growth`（withCharacterClass 新变异器 + 槽 21 职业匹配锤武器 itemTypeId=hash("锤"+sprite)），四棵野蛮人技能树 + LearnSpellUpgrade；职业 5 不存在（12 正式职业 + 2 特殊类型），0/2/4/6 默认阵容、3/7/8/9/10/11 法术场景已覆盖，反向探针验证。
   2. **城堡**：`castle-attack-planned`（withAttackableCastle：唯一未锁城堡地牢清空 → canAttackCastle 成立 → 载入重建 Jg），type=13 购买免费、门控 maxUnlockedLevel≥requiredMonsterLevel——**旧矩阵"城堡购买/进攻花费"系误记，原版无此花费**；harness purchaseUpgrades 驱动器补上与视图同路径的 refreshAvailabilityState 前置刷新。
