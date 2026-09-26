@@ -163,6 +163,13 @@ export function withResurrectionTrial(save, { casterIndex, victimIndexes }) {
 }
 
 /** 收集快照中与玩法相关的可观察量，用于"断言场景确实产生了变化"。 */
+/** 直接抬高队伍经验值：让"升级冒险者"这类只有视图入口的升级变为可购。 */
+export function withExperience(save, experiencePoints) {
+  const out = clone(save);
+  out.party.experiencePoints = experiencePoints;
+  return out;
+}
+
 /** 给全部冒险者发放技能点：让"技能升级"这条只有视图层能进入的购买路径变成可购。 */
 export function withSkillPoints(save, points) {
   const out = clone(save);

@@ -59,7 +59,7 @@ archive/original/c2.js  ──AST 机械恢复──▶  src/engine/（77 模块
 ## 8. 剩余风险与未完成
 
 1. **字段重命名未竟**：`src` 内仍余 1,202 个混淆属性名（本次会话清零 29 个字母）。工作清单 `artifacts/obfuscated-fields.json`，取证→改名→四套回归的流程已固化在 `scripts/rename-field.mjs`。
-2. **UI 独占路径未进差分**（U7）：技能树购买、随从等级解锁、冒险点消费、农场购买、成就领取、自动装备、卷轴施放、宝箱与掉落物拾取——这些只能从视图入口进入，现有 harness 驱动命令尚未覆盖到它们（升级购买只命中了全局升级一支）。
+2. **UI 独占路径未进差分**（U7）：技能树购买、随从等级解锁、冒险点消费、农场购买、成就领取、自动装备、卷轴施放、宝箱与掉落物拾取（角色升级与药水激活已经纳入）——这些只能从视图入口进入，现有 harness 驱动命令尚未覆盖到它们（升级购买只命中了全局升级一支）。
 3. **验收口径分层**：16 类法术分支靠"唯一注入法术 + 两端各自施法计数增长"归因，只有 cat=2 的三种状态与 cat=17 有专属可观测量；渲染等价只在一条场景、一种视口下比对指纹。
 4. 双主字母 `Cb`/`Qc` 已按所有者拆开，`oc`/`$c` 仍待线级处理（见 semantic-map 第十二轮）。
 
@@ -90,7 +90,7 @@ Clickpocalypse II 的核心实现已从高混淆遗留代码中恢复出真实�
 | Bootstrap 启动 | PASS | harness 两端 `ready()` 前置断言；E2E 载入 + 无 console/pageerror（渲染异常也纳入捕获） |
 | Party 创建 | PASS | E2E：推荐阵容→改名→开战，断言 4 名队员与姓名 |
 | 角色职业 | PARTIAL | 法术场景装载职业 3/4/6/7/8/9/10/11；0/1/2/5 未被装载，职业成长未跑 |
-| 角色升级 | 未覆盖 | 等级恒为 1：`LevelUpUpgrade.purchase` 只有视图入口，harness 购买命令当时命中的只有全局升级（U7） |
+| 角色升级 | PASS | `upgrades-purchased` 给足经验值后驱动 `LevelUpUpgrade.purchase`，两端 `characteristicsComponent.characterLevel` 都真实上升，逐检查点完整存档相等 |
 | 角色技能/技能树 | 未覆盖 | `upgrades1..4` 全 false、`skillPoints` 未变动；购买入口在视图层 |
 | 角色属性 | PASS | 六个分量 + 生命/精神/击杀在 34 场景每个检查点全量相等 |
 | 背包 | PASS | 物品计数/容量在差分中相等（itemsFound 真实增长） |

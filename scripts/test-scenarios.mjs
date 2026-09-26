@@ -7,13 +7,14 @@ import saveCodec from '../src/engine/save-codec.js';
 import {
   decodeFixture, encodeSave, summarize,
   withPotions, withScrolls, withGold, withTurns, withElapsed, withOfflineProcessing,
-  withVictories, withClassSpell, withCastleVictory, withReclassedSpell, withEquippedItem, withResurrectionTrial, withSkillPoints,
+  withVictories, withClassSpell, withCastleVictory, withReclassedSpell, withEquippedItem, withResurrectionTrial, withSkillPoints, withExperience,
   HARNESS_FIXED_NOW,
 } from '../tests/scenarios/save-mutations.mjs';
 
 const baseURL = process.env.TEST_URL || 'http://127.0.0.1:4173';
 const base = decodeFixture();
 const BASELINE_MONSTER_LEVELS = base.monsterTypes?.monsterLevelStates?.length ?? 0;
+const BASELINE_MAX_LEVEL = Math.max(1, ...(base.adventurers ?? []).map(a => a.characteristicsComponent?.characterLevel ?? 1));
 
 // 场景定义：steps 中的每个 (推进回合数, 断言钩子) 依次执行。
 // U7：升级购买在存档里有四处可观察量——全局升级表、冒险点花费、成就领取、技能树布尔表。
@@ -24,6 +25,7 @@ const upgradedSomething = (s) => {
   if ((s.achievements ?? []).some(a => a.upgradePurchased)) families.push('achievementClaim');
   if ((s.adventurers ?? []).some(a => ['upgrades1', 'upgrades2', 'upgrades3', 'upgrades4'].some(k => Object.values(a[k] ?? {}).some(Boolean)))) families.push('skills');
   if ((s.monsterTypes?.monsterLevelStates?.length ?? 0) > BASELINE_MONSTER_LEVELS) families.push('monsterLevels');
+  if ((s.adventurers ?? []).some(a => (a.characteristicsComponent?.characterLevel ?? 1) > BASELINE_MAX_LEVEL)) families.push('characterLevels');
   return { upgraded: families.length > 0, note: '购买命中的升级族: ' + (families.join(' + ') || '无') };
 };
 // U7：药水激活在视图之外没有入口，激活后存档里只有 statistics.potionsUsed 可证。
@@ -223,10 +225,11 @@ const scenarios = [
     name: 'upgrades-purchased',
     // U7：升级购买只有视图层入口（按钮 onmouseup）。这里给足金币让金价位升级可购，
     // 再对两端各自渲染出的"可购"按钮派发真实 mouseup，然后继续差分。
-    make: () => withSkillPoints(withGold(base, 1000000), 5),
+    make: () => withExperience(withSkillPoints(withGold(base, 1000000), 5), 500000),
     steps: [
-      { turns: 600, purchaseUpgrades: 8, check: upgradedSomething },
-      { turns: 600, purchaseUpgrades: 8, check: null },
+      { turns: 600, purchaseUpgrades: 60, check: upgradedSomething },
+      { turns: 900, purchaseUpgrades: 60, check: upgradedSomething },
+      { turns: 900 },
     ],
   },
   {

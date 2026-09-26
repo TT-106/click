@@ -175,7 +175,8 @@ Xf/Qf/Rf/Zf/Cf/Ef → damageMultiplier/armorMultiplier/attackRatingMultiplier/de
   - `upgrades-purchased`：百万金币 + 每人 5 技能点，两端各完成 8 次购买，推进 600 回合后再各买 2 次（前一批解锁了后续项），每个检查点完整存档相等；存档侧确证命中的升级族是 `settings.upgrades`（全局升级表）。
   - `potions-activated`：三瓶未激活药水入库，驱动 `Potion.aw()` 之后 `statistics.potionsUsed` 两端各自增长，随后完整存档相等——旧场景 `potions-inactive-auto` 里 `active` 恒为 false 的空白由此补上。
 - 仍开放（如实陈述）：
-  - 购买命令按集合顺序取前 N 个可购项，当时可购的只有全局升级，因此 `CharacterSkillUpgrade`（技能树布尔表）、`LearnSpellUpgrade`、`UnlockMonsterLevelUpgrade`（`monsterTypes.monsterLevelStates` 长度未变）、`AdventurePointUpgrade`（`spentAdventurePoints` 仍为 0）、农场/地牢购买、`ClaimAchievementUpgrade` 仍未被驱动。覆盖它们需按升级类型筛选可购项，或先补相应前置的变异器（成就达成、地牢解锁、对应点类型的冒险点）。
+  - 升级族覆盖仍不完整：加大 limit 并给足经验值后，`upgrades-purchased` 已命中全局升级 + `LevelUpUpgrade`（两端 `characterLevel` 真实上升），但 `CharacterSkillUpgrade`（技能树布尔表）"
+、`LearnSpellUpgrade`、`UnlockMonsterLevelUpgrade`（`monsterTypes.monsterLevelStates` 长度未变）、`AdventurePointUpgrade`（`spentAdventurePoints` 仍为 0）、农场/地牢购买、`EquipBestItemUpgrade`、`ClaimAchievementUpgrade` 仍未被驱动。技能升级不在 `upgradeCollections` 里，而在每个角色的 `skillTree1..4`（tick.js:523-526 单独刷新），购买命令要覆盖它们需增加对角色技能树的遍历；其余项需先补对应前置的变异器（成就达成、地牢解锁、对应点类型的冒险点）。
   - `castScroll()` 未驱动：它要求当前房间有可打目标（`getOpponents` 非空），需要在遭遇进行中精确触发。
   - DOM 路线已实测不可行并排除：7 个升级 `canPurchase` 为真时，渲染出的 558 个按钮仍全部是 `disabledUpgradeButton`（哪一行拿到 `.upgradeButton` 类取决于排序后的可见槽位），且原版一侧没有新 UI 壳可点。
 
