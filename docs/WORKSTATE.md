@@ -99,12 +99,12 @@ npm run perf             # 性能基线测量（重构 vs 原版）
 
 ## 6. 下一步（按优先级）
 
-1. **波次 4/5 状态**：Ja/ka/Oa/Fa/Ca/ra/Y/Z(slotList) + 法术族 + B 组九项 + 第五轮七项（$/Ea/Ga/Ma/Na/Wa/Qa）+ **Da 三路拆分（combatTarget/targetCharacter/selectedTarget，U1 已解决，根因=616/682 动作自有字段误标）** + aa(statisticsRecorder/runStatistics) 全部落地全绿。**`Da` 三路拆分经两轮调试仍分叉，已回退**——关键实证：推进期 RNG delta 全程 0（非随机流分叉）、`createSpellAction/nu` 入参是多态角色（6 处误标已修正仍分叉）、最可疑链路是 FollowLeaderBehavior.wd 的"谁在打我"判定。完整证据与运行时断言方案见 `docs/reverse-engineering/unresolved.md` U1。
+1. **波次 4/5 状态**：Ja/ka/Oa/Fa/Ca/ra/Y/Z(slotList) + 法术族 + B 组九项 + 第五轮七项（$/Ea/Ga/Ma/Na/Wa/Qa）+ aa(statisticsRecorder/runStatistics) 全部落地全绿。**`Da` 三路拆分（combatTarget/targetCharacter/selectedTarget）已落地并验证关闭（U1）**——早前"两轮调试仍分叉、已回退"的记录已过期：当时的根因是把 616/682 动作自有字段误标为 `Da`，且 `createSpellAction/nu` 的接收者是多态角色；修正后 `applyActionDamage` 等读端已按语义名落地，26 场景矩阵与四套回归全绿。历史证据链仍在 `docs/reverse-engineering/unresolved.md` U1。
 2. ~~已取证待落地~~ ✅ B 组九项全部落地（每字母独立全回归）。
 3. ~~交付物收尾~~ ✅ 已完成（REFACTOR_REPORT.md、PERFORMANCE_REPORT.md、COMPATIBILITY_REPORT.md、MIGRATION_MAP.md）。
 4. ~~扩展差分场景：prestige/victory~~ ✅ 26 场景矩阵已含 veteran-run/prestige-restart/full-reset、城堡征服→胜利瞬间、cat2/cat3 法术分支、Blast Stun 直接执行计数（两端各 31 次 type=14）、两条召唤分支（cat=9/11）与睡眠直接计数（type=0），另补 cat=1/4/5/6/13/17 六条。剩余：cat=12/14/15（被原版空武器崩溃挡住，两端同点抛错）与 cat=16（需要 fixture 内出现昏迷冒险者）。
 5. **M10 类型体系**：✅ 完成（`src/engine/modules` 下 `@ts-nocheck` 为 0，仅 vendored `src/vendor/lz-string-1.3.3.js` 保留；tsconfig checkJs + `npm run typecheck` 入门禁）。工具：`m10-round.cjs`（按文件移除并报告各自错误）、`m10-nocheck.mjs`/`restore-nocheck-baseline.cjs`（范围管理）；跨文件原型挂载成员仍需调用点窄签名或 JSDoc typedef（不能用整文件 any-cast）。
-6. symbol-map.json 元数据刷新（累计 60+ 字段映射待写入）。
+6. symbol-map.json 元数据刷新：`symbols` 段（1,231 条）已含本轮恢复的函数名（`applySpellEffect`/`isDisablingEffect`/`summonSpellMinion`/`spawnMinion`/`getProjectileAnimation` 等）；`fields` 段仍是 202 条"原字母 → 语义名"全局映射，新恢复的 StatusEffect 内部成员（`X`/`jD`/`Qd`/`Ok`/`bg`）与 `spellCategoryId`/`statusEffectTypeId`/`potencyPercent` 尚未写入——这些字母在 c2.js 里跨类复用，逐条写回前必须先确认唯一性，因此仍开放（对照表见 `docs/reverse-engineering/semantic-map.md`）。
 
 ## 8. 智能体产出验收状态
 
