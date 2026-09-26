@@ -118,7 +118,7 @@ export function revealRoom(a) {
       f = b[d];
       h = a.tileGrid[f.wj][f.xj];
       h.setBackgroundSprite(p);
-      if (f.Ho) {
+      if (f.horizontalPassage) {
         if (f.isOpen) {
           h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.doorSprites.doorOpenASprite));
         } else {
@@ -253,7 +253,7 @@ export function canPlaceRoomObject(a, b) {
 export function DungeonDoor(a) {
   this.pixelRow = this.pixelColumn = this.xj = this.wj = 0;
   this.isOpen = false;
-  this.Ho = true;
+  this.horizontalPassage = true;
   this.leadsTo = a;
   this.hallway = null;
 }
@@ -331,7 +331,7 @@ export function revealHallway(a, b) {
       if (!N) {
         f = a.tileGrid[x][z];
         f.setBackgroundSprite(h);
-        if (a.doorA.Ho) {
+        if (a.doorA.horizontalPassage) {
           if (a.doorA.isOpen) {
             f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.doorSprites.doorOpenASprite));
           } else {
@@ -387,7 +387,7 @@ export function revealHallway(a, b) {
       if (!I) {
         f = a.tileGrid[x][z];
         f.setBackgroundSprite(h);
-        if (a.doorB.Ho) {
+        if (a.doorB.horizontalPassage) {
           if (a.doorB.isOpen) {
             f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.doorSprites.doorOpenASprite));
           } else {

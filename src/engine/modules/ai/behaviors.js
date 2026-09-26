@@ -16,7 +16,7 @@ import { showFloatingText } from "../rendering/floating-text.js";
 import { isSpellReady } from "../combat/scrolls.js";
 import { getRoomTreasure } from "../loot/treasure.js";
 /** @typedef {{ getPriority: () => number }} PrioritizedBehavior */
-/** @typedef {{ vx: (character: unknown) => unknown }} MovingBehavior */
+/** @typedef {{ repositionInsideRoom: (character: unknown) => unknown }} MovingBehavior */
 /** @typedef {{ performOnArrival: (character: unknown) => void, canExecute: (character: unknown) => boolean, selectTarget: (character: unknown) => any, getActionTarget: () => any, getFinalScore: (character: unknown) => number }} DungeonBehaviorMethods */
 /** @typedef {{ resetBehaviorState: () => void, execute: (character: unknown) => void, getBehaviorScore: (character: unknown) => number, getPriority: () => number }} RangedBehaviorMethods */
 export function BehaviorQueue() {
@@ -398,7 +398,7 @@ export function initializeAiBehaviors() {
         if (!b) {
           return;
         }
-        (/** @type {MovingBehavior} */ (/** @type {unknown} */ (this))).vx(a);
+        (/** @type {MovingBehavior} */ (/** @type {unknown} */ (this))).repositionInsideRoom(a);
       }
       if (b && isAdventurerOrMinion(a)) {
         forcePartyDestination(b);
@@ -410,7 +410,7 @@ export function initializeAiBehaviors() {
       }
     }
   };
-  FollowLeaderBehavior.prototype.vx = function (a) {
+  FollowLeaderBehavior.prototype.repositionInsideRoom = function (a) {
     var b = randomInt(3);
     a = a.position;
     var room = a.room,
@@ -466,7 +466,7 @@ export function initializeAiBehaviors() {
     } else {
       this.co = 0;
     }
-    if (this.targetCharacter && !(this.targetCharacter.isDead || this.targetCharacter.effects.isDisabled || this.targetCharacter.effects.isConverted) && (/** @type {MovingBehavior} */ (/** @type {unknown} */ (this))).vx(a)) {
+    if (this.targetCharacter && !(this.targetCharacter.isDead || this.targetCharacter.effects.isDisabled || this.targetCharacter.effects.isConverted) && (/** @type {MovingBehavior} */ (/** @type {unknown} */ (this))).repositionInsideRoom(a)) {
       this.ax = game.state.turnNumber;
       var b = a.position.room;
       if (b && isAdventurerOrMinion(a)) {
@@ -476,7 +476,7 @@ export function initializeAiBehaviors() {
       a.position.movementTargetCleared = false;
     }
   };
-  RangedAttackBehavior.prototype.vx = function (a) {
+  RangedAttackBehavior.prototype.repositionInsideRoom = function (a) {
     var b = a.position,
       c = b.levelPosition,
       d = b.room,

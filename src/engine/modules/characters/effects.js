@@ -99,7 +99,7 @@ export function updateCharacterEffects(a, b) {
   }
   if (g) {
     for (c = a.activeEffects.length - 1; 0 <= c; c--) {
-      if (a.activeEffects[c].bl()) {
+      if (a.activeEffects[c].isExpired()) {
         a.activeEffects.splice(c, 1);
       }
     }
@@ -137,7 +137,7 @@ export function hasStatusEffect(a, b) {
   return false;
 }
 export function initializeCharactersEffects() {
-  StatusEffect.prototype.bl = function () {
+  StatusEffect.prototype.isExpired = function () {
     return this.expired;
   };
 }

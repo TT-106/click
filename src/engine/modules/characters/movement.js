@@ -191,7 +191,7 @@ export function initializeCharactersMovement() {
   Equipment.prototype.getSlotItem = function (a) {
     return this.hw[a];
   };
-  Equipment.prototype.So = function () {
+  Equipment.prototype.getEffectItem = function () {
     return this.fz;
   };
   Equipment.prototype.Qk = function (a) {

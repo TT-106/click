@@ -3617,33 +3617,6 @@
     ]
   },
   {
-    "name": "bl",
-    "reads": 6,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\effects.js:102",
-        "code": "a.activeEffects[c].bl"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\effects.js:140",
-        "code": "StatusEffect.prototype.bl"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\actions.js:116",
-        "code": "c.bl"
-      }
-    ],
-    "fileCount": 5,
-    "files": [
-      "src\\engine\\modules\\characters\\effects.js",
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\rendering\\sprites.js",
-      "src\\engine\\modules\\simulation\\tick.js"
-    ]
-  },
-  {
     "name": "$k",
     "reads": 5,
     "writes": 3,
@@ -7066,32 +7039,6 @@
     ]
   },
   {
-    "name": "So",
-    "reads": 4,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:1222",
-        "code": "Character.prototype.So"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:1223",
-        "code": "(/** @type {SlotEquipment} */this.equipment).So"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\movement.js:194",
-        "code": "Equipment.prototype.So"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\characters\\movement.js",
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\simulation\\tick.js"
-    ]
-  },
-  {
     "name": "gq",
     "reads": 4,
     "writes": 2,
@@ -9076,30 +9023,6 @@
     "fileCount": 1,
     "files": [
       "src\\engine\\modules\\world\\pathfinding.js"
-    ]
-  },
-  {
-    "name": "Ho",
-    "reads": 3,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\world\\pathfinding.js:181",
-        "code": "g.Ho"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\pathfinding.js:191",
-        "code": "h.Ho"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\rooms.js:121",
-        "code": "f.Ho"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\world\\pathfinding.js",
-      "src\\engine\\modules\\world\\rooms.js"
     ]
   },
   {
@@ -11871,29 +11794,6 @@
       "src\\engine\\modules\\ai\\behaviors.js",
       "src\\engine\\modules\\characters\\party.js",
       "src\\engine\\modules\\simulation\\tick.js"
-    ]
-  },
-  {
-    "name": "vx",
-    "reads": 2,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:401",
-        "code": "(/** @type {MovingBehavior} */ /** @type {unknown} */this).vx"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:413",
-        "code": "FollowLeaderBehavior.prototype.vx"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:469",
-        "code": "(/** @type {MovingBehavior} */ /** @type {unknown} */this).vx"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js"
     ]
   },
   {

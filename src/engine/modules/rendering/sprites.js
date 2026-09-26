@@ -260,7 +260,7 @@ export function initializeRenderingSprites() {
   VisualEffect.prototype.qB = function (a) {
     this.li = a;
   };
-  VisualEffect.prototype.bl = function () {
+  VisualEffect.prototype.isFinished = function () {
     return this.finished || this.Pk;
   };
   VisualEffect.prototype.To = function () {

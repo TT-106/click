@@ -178,7 +178,7 @@ export function findHallwayPath(a, b, c) {
           p.xj = n;
           p.pixelColumn = s * game.tileSize;
           p.pixelRow = n * game.tileSize;
-          g.Ho = d.x != a[f + 1].x;
+          g.horizontalPassage = d.x != a[f + 1].x;
         } else {
           if (isRoomBorder(c, d.x, d.y)) {
             p = h;
@@ -188,7 +188,7 @@ export function findHallwayPath(a, b, c) {
             p.xj = n;
             p.pixelColumn = s * game.tileSize;
             p.pixelRow = n * game.tileSize;
-            h.Ho = d.x != a[f - 1].x;
+            h.horizontalPassage = d.x != a[f - 1].x;
           }
         }
         l.pathTiles.push(d);

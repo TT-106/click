@@ -309,7 +309,7 @@ export function advanceSimulation(a) {
                 if (Ib) {
                   wb = Ib.impactEffectName;
                 } else {
-                  var Ec = zb.So(),
+                  var Ec = zb.getEffectItem(),
                     bc = Ec ? Ec.itemEffect : null,
                     wb = bc ? bc.ms : null;
                 }
@@ -357,7 +357,7 @@ export function advanceSimulation(a) {
               }
             }
             addVisualEffect(game.effects, Va);
-          } else if (Va.bl()) {
+          } else if (Va.isFinished()) {
             fb = cb.resolved = true;
             break a;
           }
@@ -411,7 +411,7 @@ export function advanceSimulation(a) {
       Mc = 1 === Ga.characterType ? Ga.summoner.stats : Ga.stats;
     for (db = 0; db < gb.length; db++) {
       if (rb = gb[db], !rb.isDead && (dc = rb.position.levelPosition, Ka = game.level.Ai(dc.x), Xa = game.level.Bi(dc.y), (hb = game.level.getTileAt(Ka, Xa)) && (lb = hb.tileEffect) && lb.hasSpawned)) {
-        if (lb.bl()) {
+        if (lb.isFinished()) {
           setTileEffect(hb, null);
         } else if (lb.bx !== lb.frameIndex && (sc = hb.li, 0 !== sc && (Aa = randomInt(sc + 1), 0 !== Aa))) {
           hb.qB(Math.max(0, sc - Aa));
@@ -480,7 +480,7 @@ export function advanceSimulation(a) {
     }
   }
   for (sb = Ub.Wg.length - 1; 0 <= sb; sb--) {
-    if (Ub.Wg[sb].bl()) {
+    if (Ub.Wg[sb].isFinished()) {
       Ub.Wg.splice(sb, 1);
     }
   }

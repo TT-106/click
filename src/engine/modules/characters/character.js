@@ -26,7 +26,7 @@ import { tickCharacterTurn } from "../simulation/characters.js";
 import { generateDungeonLevel } from "../world/generation.js";
 import { discoverDungeon } from "../world/dungeons.js";
 /** CombatAction.setTargetCharacter 由 combat/actions.js 后挂到原型，调用点窄签名。 @typedef {CombatAction & { setTargetCharacter: (target: unknown) => void }} TargetedCombatAction */
-/** Equipment.getSlotItem/So 由 characters/movement.js 后挂到原型，调用点窄签名。 @typedef {Equipment & { getSlotItem: (slot: unknown) => unknown, So: () => unknown }} SlotEquipment */
+/** Equipment.getSlotItem/So 由 characters/movement.js 后挂到原型，调用点窄签名。 @typedef {Equipment & { getSlotItem: (slot: unknown) => unknown, getEffectItem: () => unknown }} SlotEquipment */
 export function Character(a, b, c, d, f) {
   this.adventurerName = a;
   this.characterType = b;
@@ -1219,8 +1219,8 @@ export function initializeCharactersCharacter() {
   Character.prototype.getSlotItem = function (a) {
     return this.equipment ? (/** @type {SlotEquipment} */ (this.equipment)).getSlotItem(a) : null;
   };
-  Character.prototype.So = function () {
-    return this.equipment ? (/** @type {SlotEquipment} */ (this.equipment)).So() : null;
+  Character.prototype.getEffectItem = function () {
+    return this.equipment ? (/** @type {SlotEquipment} */ (this.equipment)).getEffectItem() : null;
   };
   Character.prototype.Qk = function (a) {
     equipItem(this, a);

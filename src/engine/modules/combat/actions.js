@@ -113,7 +113,7 @@ export function advanceCombatAction(a, b) {
       }
     }
   }
-  return c && c.bl() ? ((c = b.actionDefinition) && (c.applyEffectOnImpact || applySpellEffect(a, b)), b.resolved = true) : false;
+  return c && c.isFinished() ? ((c = b.actionDefinition) && (c.applyEffectOnImpact || applySpellEffect(a, b)), b.resolved = true) : false;
 }
 export function applySpellEffect(a, b) {
   var c = b.actionDefinition,
@@ -450,7 +450,7 @@ export function createAttackAction(a, b, c) {
     var f = a.position.levelPosition,
       g = calculateAttackDamage(a, b);
     b = a.equipment ? a.equipment.Ey : null;
-    var h = a.So(),
+    var h = a.getEffectItem(),
       h = h ? h.itemEffect : null;
     d.remainingDamage = g;
     d.noDamage = 0 === g;
@@ -476,7 +476,7 @@ export function createAttackAction(a, b, c) {
   } else {
     c = b.position.levelPosition;
     f = calculateAttackDamage(a, b);
-    b = (a = a.So()) ? a.itemEffect : null;
+    b = (a = a.getEffectItem()) ? a.itemEffect : null;
     a = null;
     d.remainingDamage = f;
     d.noDamage = 0 === f;
