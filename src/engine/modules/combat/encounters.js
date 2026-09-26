@@ -87,7 +87,7 @@ export function populateEncounter(a) {
               spawnX = left + randomInt(roomRightPixels(room) - game.tileSize - left),
               spawnY = top + randomInt(bottom - top);
             setVector(monster.position.levelPosition, spawnX, spawnY);
-            registry.Pi.push(monster);
+            registry.activeMonsters.push(monster);
           }
           beginEncounter(encounterName, false);
         }
@@ -141,7 +141,7 @@ export function spawnDungeonBoss(a, b) {
     spawnY = top + randomInt(bottom - top);
   setVector(c.levelPosition, spawnX, spawnY);
   applyBonusList(boss, bossClass.WC);
-  g.Pi.push(boss);
+  g.activeMonsters.push(boss);
   g = Math.max(globalUpgradeDefinitions.maxMonsters.baseValue, globalUpgradeDefinitions.minMonsters.currentValue);
   var maxCount = Math.max(globalUpgradeDefinitions.maxMonsters.currentValue, g);
   g += randomInt(maxCount - g);
@@ -157,12 +157,12 @@ export function spawnCastleGuardians(a, b) {
     for (c = 0; c < a; c++) {
       f = castleGuardianDefinitions[randomInt(castleGuardianDefinitions.length)];
       f = createCastleGuardian(f, d, b);
-      game.monsters.Pi.push(f);
+      game.monsters.activeMonsters.push(f);
     }
   } else {
     for (f = castleGuardianDefinitions[randomInt(castleGuardianDefinitions.length)], c = 0; c < a; c++) {
       var g = createCastleGuardian(f, d, b);
-      game.monsters.Pi.push(g);
+      game.monsters.activeMonsters.push(g);
     }
   }
 }
@@ -247,17 +247,17 @@ export function getMonsterTypesForLevel(a, b) {
   return d;
 }
 export function MonsterRegistry() {
-  this.Pi = [];
+  this.activeMonsters = [];
   this.defeatedMonsters = [];
   this.aE = 50;
 }
 export function getMonsters() {
-  return game.monsters.Pi;
+  return game.monsters.activeMonsters;
 }
 export function clearMonsters() {
   var a = game.monsters;
-  if (0 != a.Pi.length) {
-    a.Pi.length = 0;
+  if (0 != a.activeMonsters.length) {
+    a.activeMonsters.length = 0;
   }
   if (0 != a.defeatedMonsters.length) {
     a.defeatedMonsters.length = 0;
@@ -306,9 +306,9 @@ export function initializeCombatEncounters() {
   };
   MonsterRegistry.prototype.ol = function (a) {
     if (a) {
-      var b = this.Pi.indexOf(a);
+      var b = this.activeMonsters.indexOf(a);
       if (-1 < b) {
-        this.Pi.splice(b, 1);
+        this.activeMonsters.splice(b, 1);
       }
       for (this.defeatedMonsters.push(a); this.defeatedMonsters.length > this.aE;) {
         this.defeatedMonsters.shift();

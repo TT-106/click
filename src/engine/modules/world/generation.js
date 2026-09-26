@@ -138,7 +138,7 @@ export function DungeonDecorationGenerator() {
   this.seededRandom = new SeededRandom(3);
 }
 export function DungeonLevel() {
-  this.Li = this.Ki = 0;
+  this.centerY = this.centerX = 0;
   this.widthInTiles = this.heightInTiles = 120;
   this.tileGrid = null;
   this.roomList = [];

@@ -60,8 +60,8 @@ export function initializeSimulationLoop() {
               d = game.world.worldCenterX;
               f = game.world.worldCenterY;
             } else {
-              d = game.level.Ki;
-              f = game.level.Li;
+              d = game.level.centerX;
+              f = game.level.centerY;
             }
             g = Math.round(d % game.tileSize);
             h = Math.round(f % game.tileSize);

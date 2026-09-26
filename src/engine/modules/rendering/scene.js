@@ -261,8 +261,8 @@ export function initializeRenderingScene() {
       a = game.world.worldCenterX + (0.5 * (b - game.viewportHalfWidth) + (c - game.viewportHalfHeight)) | 0;
       b = game.world.worldCenterY + (c - game.viewportHalfHeight - 0.5 * (b - game.viewportHalfWidth)) | 0;
     } else {
-      a = game.level.Ki + (0.5 * (b - game.viewportHalfWidth) + (c - game.viewportHalfHeight)) | 0;
-      b = game.level.Li + (c - game.viewportHalfHeight - 0.5 * (b - game.viewportHalfWidth)) | 0;
+      a = game.level.centerX + (0.5 * (b - game.viewportHalfWidth) + (c - game.viewportHalfHeight)) | 0;
+      b = game.level.centerY + (c - game.viewportHalfHeight - 0.5 * (b - game.viewportHalfWidth)) | 0;
     }
     setVector(this.ko, a, b);
   };
@@ -457,8 +457,8 @@ export function initializeRenderingScene() {
           a.context.restore();
         }
       } else {
-        var v = game.level.pixelToTileColumn(game.level.Ki),
-          D = game.level.pixelToTileRow(game.level.Li) - 18;
+        var v = game.level.pixelToTileColumn(game.level.centerX),
+          D = game.level.pixelToTileRow(game.level.centerY) - 18;
         drawDungeonTileRow(a, D++, v - 5, v - 3);
         drawDungeonTileRow(a, D++, v - 6, v - 2);
         drawDungeonTileRow(a, D++, v - 7, v - 1);

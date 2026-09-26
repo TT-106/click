@@ -38,7 +38,7 @@ export function Scroll(a, b) {
   this.spriteName = game.itemSprites.getSprite(a.spriteName);
   this.baseName = a.baseName;
   this.baseCapacity = a.baseCapacity;
-  this.Yi = a.Yi;
+  this.capacityIncrement = a.capacityIncrement;
   this.maxCharges = a.maxCharges;
   this.mB = a.spellDefinition ? new Spell(a.spellDefinition) : null;
   this.tn = a.fq;
@@ -59,7 +59,7 @@ export function addScrollCharge(a) {
   }
 }
 export function getScrollUpgradeCost(a) {
-  return scaleByLevel(a.locked ? a.baseCapacity : a.baseCapacity + (a.upgradeCount + 1) * a.Yi, scrollPriceCurve, 1);
+  return scaleByLevel(a.locked ? a.baseCapacity : a.baseCapacity + (a.upgradeCount + 1) * a.capacityIncrement, scrollPriceCurve, 1);
 }
 export function getScrollLabel(a) {
   if (a.locked) {
@@ -265,7 +265,7 @@ export function initializeCombatScrolls() {
     spriteName: "Scroll0028.PNG",
     spellDefinition: electricSpellDefinitions.sB,
     baseCapacity: 0,
-    Yi: 4,
+    capacityIncrement: 4,
     maxCharges: 0
   }, {
     scrollId: "spiderWebScroll",
@@ -273,7 +273,7 @@ export function initializeCombatScrolls() {
     spriteName: "Scroll0054.PNG",
     spellDefinition: electricSpellDefinitions.CB,
     baseCapacity: 3,
-    Yi: 4,
+    capacityIncrement: 4,
     maxCharges: 4,
     fq: {
       statType: 20,
@@ -285,7 +285,7 @@ export function initializeCombatScrolls() {
     spriteName: "Scroll0012.PNG",
     spellDefinition: null,
     baseCapacity: 6,
-    Yi: 4,
+    capacityIncrement: 4,
     maxCharges: 4,
     fq: {
       statType: 23,
@@ -297,7 +297,7 @@ export function initializeCombatScrolls() {
     spriteName: "Scroll0022.PNG",
     spellDefinition: fireSpellDefinitions.Lz,
     baseCapacity: 9,
-    Yi: 4,
+    capacityIncrement: 4,
     maxCharges: 2,
     fq: {
       statType: 22,
@@ -309,7 +309,7 @@ export function initializeCombatScrolls() {
     spriteName: "Scroll0034.PNG",
     spellDefinition: electricSpellDefinitions.br,
     baseCapacity: 12,
-    Yi: 4,
+    capacityIncrement: 4,
     maxCharges: 3,
     fq: {
       statType: 21,
@@ -321,7 +321,7 @@ export function initializeCombatScrolls() {
     spriteName: "Scroll0097.PNG",
     spellDefinition: fireSpellDefinitions.Kz,
     baseCapacity: 15,
-    Yi: 4,
+    capacityIncrement: 4,
     maxCharges: 2,
     fq: {
       statType: 25,

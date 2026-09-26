@@ -19,10 +19,10 @@ import { GoldDrop } from "../loot/treasure.js";
 import { Potion, PotionDrop, potionDefinitions } from "../combat/potions.js";
 import { showFloatingText } from "../rendering/floating-text.js";
 export function projectDungeonX(a, b) {
-  return Math.round(game.viewportHalfWidth + (a - game.level.Ki - (b - game.level.Li)));
+  return Math.round(game.viewportHalfWidth + (a - game.level.centerX - (b - game.level.centerY)));
 }
 export function projectDungeonY(a, b) {
-  return Math.round(game.viewportHalfHeight + 0.5 * (a - game.level.Ki + (b - game.level.Li)));
+  return Math.round(game.viewportHalfHeight + 0.5 * (a - game.level.centerX + (b - game.level.centerY)));
 }
 export function projectWorldX(a, b) {
   var c = game.camera;

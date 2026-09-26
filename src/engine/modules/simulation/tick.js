@@ -776,14 +776,14 @@ export function advanceSimulation(a) {
     }
     var of = $ / U.length,
       wd = game.level;
-    wd.Ki = Z / U.length;
-    wd.Li = of;
+    wd.centerX = Z / U.length;
+    wd.centerY = of;
   }
 }
 export function positionScrollCaster(a) {
   a = 30 + 126 * a;
   var b = game.viewportHeight - 80;
-  setVector(game.state.scrollCaster.position.levelPosition, game.level.Ki + (0.5 * (a - game.viewportHalfWidth) + (b - game.viewportHalfHeight)) | 0, game.level.Li + (b - game.viewportHalfHeight - 0.5 * (a - game.viewportHalfWidth)) | 0);
+  setVector(game.state.scrollCaster.position.levelPosition, game.level.centerX + (0.5 * (a - game.viewportHalfWidth) + (b - game.viewportHalfHeight)) | 0, game.level.centerY + (b - game.viewportHalfHeight - 0.5 * (a - game.viewportHalfWidth)) | 0);
 }
 export function updateCharacterBehaviors(a) {
   var b, c;

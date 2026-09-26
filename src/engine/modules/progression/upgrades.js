@@ -1097,7 +1097,7 @@ export function initializeProgressionUpgrades() {
     var a = (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).getScroll(),
       b = this.canPurchase,
       c = game.state.scrollCaster.stats.characterLevel,
-      d = a.locked ? a.baseCapacity : a.baseCapacity + (a.upgradeCount + 1) * a.Yi;
+      d = a.locked ? a.baseCapacity : a.baseCapacity + (a.upgradeCount + 1) * a.capacityIncrement;
     if (a.locked) {
       this.canPurchase = c >= d && game.state.party.gold >= a.rn;
       this.affordableSoon = !this.canPurchase && c >= d;

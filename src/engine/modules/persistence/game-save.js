@@ -248,8 +248,8 @@ export function restoreGameState(a, b) {
               Ha = Ma.hallways;
             generateDungeonLevel(Ma.levelSeed, zb, Hb, false);
             var jb = game.level;
-            jb.Ki = ac;
-            jb.Li = ob;
+            jb.centerX = ac;
+            jb.centerY = ob;
             var Ab,
               Bb = game.level.hallwayList;
             if (Bb.length !== Ha.length) {
@@ -808,8 +808,8 @@ export function createSaveState(a) {
       Ca = null;
     } else {
       var qa = game.level,
-        ta = qa.Ki,
-        eb = qa.Li,
+        ta = qa.centerX,
+        eb = qa.centerY,
         Gb = qa.sp,
         Da = qa.roomList,
         ub = [],

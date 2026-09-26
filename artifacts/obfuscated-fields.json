@@ -25,53 +25,6 @@
     ]
   },
   {
-    "name": "Pi",
-    "reads": 9,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\encounters.js:90",
-        "code": "registry.Pi"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\encounters.js:144",
-        "code": "g.Pi"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\encounters.js:160",
-        "code": "game.monsters.Pi"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\combat\\encounters.js"
-    ]
-  },
-  {
-    "name": "Yi",
-    "reads": 3,
-    "writes": 7,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\scrolls.js:41",
-        "code": "this.Yi"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\scrolls.js:41",
-        "code": "a.Yi"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\scrolls.js:62",
-        "code": "a.Yi"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\combat\\scrolls.js",
-      "src\\engine\\modules\\progression\\upgrades.js"
-    ]
-  },
-  {
     "name": "oi",
     "reads": 1,
     "writes": 9,
@@ -117,62 +70,6 @@
     "files": [
       "src\\engine\\modules\\content\\minions.js",
       "src\\engine\\modules\\simulation\\characters.js"
-    ]
-  },
-  {
-    "name": "Ki",
-    "reads": 7,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:251",
-        "code": "jb.Ki"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:811",
-        "code": "qa.Ki"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:264",
-        "code": "game.level.Ki"
-      }
-    ],
-    "fileCount": 6,
-    "files": [
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\simulation\\characters.js",
-      "src\\engine\\modules\\simulation\\loop.js",
-      "src\\engine\\modules\\simulation\\tick.js",
-      "src\\engine\\modules\\world\\generation.js"
-    ]
-  },
-  {
-    "name": "Li",
-    "reads": 7,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:252",
-        "code": "jb.Li"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:812",
-        "code": "qa.Li"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:265",
-        "code": "game.level.Li"
-      }
-    ],
-    "fileCount": 6,
-    "files": [
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\simulation\\characters.js",
-      "src\\engine\\modules\\simulation\\loop.js",
-      "src\\engine\\modules\\simulation\\tick.js",
-      "src\\engine\\modules\\world\\generation.js"
     ]
   },
   {

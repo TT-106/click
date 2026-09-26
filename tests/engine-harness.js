@@ -244,7 +244,7 @@ window.harness = {
   trackBossEncounter({ turns = 0 } = {}) {
     const isOriginal = original;
     const getEncounter = () => (isOriginal ? window.Game.i.Xg : game.state.encounter);
-    const getMonsters = () => (isOriginal ? window.Game.Gf.Pi : game.monsters.Pi);
+    const getMonsters = () => (isOriginal ? window.Game.Gf.Pi : game.monsters.activeMonsters);
     const getFloating = () => (isOriginal ? window.Game.pc.al : game.floatingText.al);
     let bossEncounterTurns = 0;
     let bossSeenTurns = 0;
