@@ -170,16 +170,26 @@ window.harness = {
     for (let i = 0; i < turns; i++) advance();
     const collections = original ? window.Nx : upgradeCollections;
     if (!Array.isArray(collections)) throw new Error('升级集合访问失败');
-    let purchased = 0;
+    // 技能树不在 upgradeCollections 里，而是挂在每个角色身上（原版 ei/fi/gi/hi，
+    // 见 c2.js:21558；重构版 skillTree1..4），要覆盖 CharacterSkillUpgrade 必须单独遍历。
+    const groups = [];
     for (const collection of collections) {
-      for (const group of (original ? collection.HC : collection.upgradeRows)) {
-        for (const upgrade of group) {
-          if (purchased >= limit) break;
-          const ready = original ? upgrade.qc() : upgrade.canPurchaseNow();
-          if (ready) {
-            if (original) upgrade.Qc(); else upgrade.purchase();
-            purchased++;
-          }
+      groups.push(...(original ? collection.HC : collection.upgradeRows));
+    }
+    for (const character of (original ? window.Game.i.D : game.state.adventurers)) {
+      const trees = original
+        ? [character.ei, character.fi, character.gi, character.hi]
+        : [character.skillTree1, character.skillTree2, character.skillTree3, character.skillTree4];
+      for (const tree of trees) if (tree) groups.push(...(original ? tree.HC : tree.upgradeRows));
+    }
+    let purchased = 0;
+    for (const group of groups) {
+      for (const upgrade of group) {
+        if (purchased >= limit) break;
+        const ready = original ? upgrade.qc() : upgrade.canPurchaseNow();
+        if (ready) {
+          if (original) upgrade.Qc(); else upgrade.purchase();
+          purchased++;
         }
       }
     }

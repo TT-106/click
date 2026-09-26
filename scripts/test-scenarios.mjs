@@ -18,14 +18,18 @@ const BASELINE_MAX_LEVEL = Math.max(1, ...(base.adventurers ?? []).map(a => a.ch
 
 // 场景定义：steps 中的每个 (推进回合数, 断言钩子) 依次执行。
 // U7：升级购买在存档里有四处可观察量——全局升级表、冒险点花费、成就领取、技能树布尔表。
+// 技能升级写在角色的 upgrades1..4 布尔表里，取任一 true 即证明购买真的落到角色身上。
+const BASELINE_SKILLS = (base.adventurers ?? []).map((a) =>
+  ['upgrades1', 'upgrades2', 'upgrades3', 'upgrades4'].reduce((n, k) => n + Object.values(a[k] ?? {}).filter(Boolean).length, 0));
+const BASELINE_SKILL_TOTAL = BASELINE_SKILLS.reduce((n, v) => n + v, 0);
 const upgradedSomething = (s) => {
   const families = [];
   if (Object.values(s.settings?.upgrades ?? {}).some(v => v > 0)) families.push('settings');
   if ((s.pointManagerState?.spentAdventurePoints ?? 0) > 0) families.push('adventurePoints');
   if ((s.achievements ?? []).some(a => a.upgradePurchased)) families.push('achievementClaim');
-  if ((s.adventurers ?? []).some(a => ['upgrades1', 'upgrades2', 'upgrades3', 'upgrades4'].some(k => Object.values(a[k] ?? {}).some(Boolean)))) families.push('skills');
   if ((s.monsterTypes?.monsterLevelStates?.length ?? 0) > BASELINE_MONSTER_LEVELS) families.push('monsterLevels');
   if ((s.adventurers ?? []).some(a => (a.characteristicsComponent?.characterLevel ?? 1) > BASELINE_MAX_LEVEL)) families.push('characterLevels');
+  if ((s.adventurers ?? []).reduce((n, a, i) => n + ['upgrades1','upgrades2','upgrades3','upgrades4'].reduce((m, k) => m + Object.values(a[k] ?? {}).filter(Boolean).length, 0), 0) > BASELINE_SKILL_TOTAL) families.push('skillTrees');
   return { upgraded: families.length > 0, note: '购买命中的升级族: ' + (families.join(' + ') || '无') };
 };
 // U7：药水激活在视图之外没有入口，激活后存档里只有 statistics.potionsUsed 可证。

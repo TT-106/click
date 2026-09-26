@@ -1,32 +1,5 @@
 [
   {
-    "name": "Bc",
-    "reads": 10,
-    "writes": 12,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1003",
-        "code": "b.Bc"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1006",
-        "code": "f.Bc"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1576",
-        "code": "b.Bc"
-      }
-    ],
-    "fileCount": 5,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js",
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\characters\\movement.js",
-      "src\\engine\\modules\\characters\\party.js",
-      "src\\engine\\modules\\runtime\\game.js"
-    ]
-  },
-  {
     "name": "oc",
     "reads": 9,
     "writes": 13,
@@ -51,109 +24,6 @@
       "src\\engine\\modules\\rendering\\sprites.js",
       "src\\engine\\modules\\simulation\\tick.js",
       "src\\engine\\modules\\views\\upgrade-details.js"
-    ]
-  },
-  {
-    "name": "Cc",
-    "reads": 7,
-    "writes": 14,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:139",
-        "code": "a.position.Cc"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1002",
-        "code": "b.Cc"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1016",
-        "code": "f.Cc"
-      }
-    ],
-    "fileCount": 5,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js",
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\characters\\movement.js",
-      "src\\engine\\modules\\characters\\party.js",
-      "src\\engine\\modules\\runtime\\game.js"
-    ]
-  },
-  {
-    "name": "Sc",
-    "reads": 12,
-    "writes": 9,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:190",
-        "code": "this.Sc"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:195",
-        "code": "this.Sc"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:201",
-        "code": "this.Sc"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js"
-    ]
-  },
-  {
-    "name": "Nc",
-    "reads": 20,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\targeting.js:150",
-        "code": "d.Nc"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\targeting.js:173",
-        "code": "d.Nc"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\targeting.js:203",
-        "code": "h.Nc"
-      }
-    ],
-    "fileCount": 6,
-    "files": [
-      "src\\engine\\modules\\ai\\targeting.js",
-      "src\\engine\\modules\\characters\\party.js",
-      "src\\engine\\modules\\loot\\treasure.js",
-      "src\\engine\\modules\\world\\generation.js",
-      "src\\engine\\modules\\world\\pathfinding.js",
-      "src\\engine\\modules\\world\\rooms.js"
-    ]
-  },
-  {
-    "name": "Jc",
-    "reads": 4,
-    "writes": 17,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:541",
-        "code": "Va.Jc"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:610",
-        "code": "sa.Jc"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:670",
-        "code": "Ya.Jc"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\simulation\\tick.js"
     ]
   },
   {
@@ -202,207 +72,6 @@
     "files": [
       "src\\engine\\modules\\views\\achievements.js",
       "src\\engine\\modules\\views\\character.js"
-    ]
-  },
-  {
-    "name": "ld",
-    "reads": 14,
-    "writes": 6,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:291",
-        "code": "a.ld"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:347",
-        "code": "a.ld"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:779",
-        "code": "a.ld"
-      }
-    ],
-    "fileCount": 5,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js",
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\combat\\scrolls.js",
-      "src\\engine\\modules\\runtime\\game.js"
-    ]
-  },
-  {
-    "name": "hd",
-    "reads": 15,
-    "writes": 5,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\encounters.js:55",
-        "code": "catalog.hd"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\encounters.js:55",
-        "code": "catalog.hd"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\encounters.js:226",
-        "code": "a.hd"
-      }
-    ],
-    "fileCount": 6,
-    "files": [
-      "src\\engine\\modules\\combat\\encounters.js",
-      "src\\engine\\modules\\persistence\\entities.js",
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\progression\\upgrades.js",
-      "src\\engine\\modules\\runtime\\game.js",
-      "src\\engine\\modules\\views\\monsters.js"
-    ]
-  },
-  {
-    "name": "kd",
-    "reads": 16,
-    "writes": 4,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\castles.js:27",
-        "code": "this.kd"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\castles.js:187",
-        "code": "this.kd"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\castles.js:188",
-        "code": "this.kd"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\views\\castles.js",
-      "src\\engine\\modules\\views\\monsters.js"
-    ]
-  },
-  {
-    "name": "ae",
-    "reads": 18,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\adapter.js:83",
-        "code": "game.state.ae"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:568",
-        "code": "game.state.ae"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:578",
-        "code": "game.state.ae"
-      }
-    ],
-    "fileCount": 7,
-    "files": [
-      "src\\engine\\adapter.js",
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\progression\\points.js",
-      "src\\engine\\modules\\progression\\upgrades.js",
-      "src\\engine\\modules\\runtime\\game.js",
-      "src\\engine\\modules\\views\\achievements.js",
-      "src\\engine\\modules\\views\\expedition.js"
-    ]
-  },
-  {
-    "name": "zd",
-    "reads": 10,
-    "writes": 9,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:113",
-        "code": "this.zd"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:132",
-        "code": "this.zd"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:894",
-        "code": "this.zd"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js",
-      "src\\engine\\modules\\progression\\upgrades.js"
-    ]
-  },
-  {
-    "name": "$c",
-    "reads": 15,
-    "writes": 4,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:181",
-        "code": "this.$c"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1288",
-        "code": "this.$c"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1292",
-        "code": "this.$c"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js"
-    ]
-  },
-  {
-    "name": "wd",
-    "reads": 2,
-    "writes": 17,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:299",
-        "code": "d.wd"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:326",
-        "code": "IdleBehavior.prototype.wd"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:361",
-        "code": "ExploreDungeonBehavior.prototype.wd"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js"
-    ]
-  },
-  {
-    "name": "od",
-    "reads": 2,
-    "writes": 17,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:301",
-        "code": "f.od"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:312",
-        "code": "IdleBehavior.prototype.od"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:336",
-        "code": "ExploreDungeonBehavior.prototype.od"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js"
     ]
   },
   {
@@ -1680,33 +1349,6 @@
     ]
   },
   {
-    "name": "Dd",
-    "reads": 6,
-    "writes": 9,
-    "samples": [
-      {
-        "loc": "src\\engine\\adapter.js:83",
-        "code": "game.state.ae.Dd"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\points.js:8",
-        "code": "a.Dd"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\points.js:31",
-        "code": "b.Dd"
-      }
-    ],
-    "fileCount": 5,
-    "files": [
-      "src\\engine\\adapter.js",
-      "src\\engine\\modules\\progression\\points.js",
-      "src\\engine\\modules\\progression\\upgrades.js",
-      "src\\engine\\modules\\runtime\\game.js",
-      "src\\engine\\modules\\views\\expedition.js"
-    ]
-  },
-  {
     "name": "kf",
     "reads": 14,
     "writes": 1,
@@ -2133,33 +1775,6 @@
     ]
   },
   {
-    "name": "zf",
-    "reads": 13,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:1198",
-        "code": "kj.zf"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\inventory.js:28",
-        "code": "g.zf"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\inventory.js:30",
-        "code": "g.zf"
-      }
-    ],
-    "fileCount": 5,
-    "files": [
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\loot\\inventory.js",
-      "src\\engine\\modules\\loot\\items.js",
-      "src\\engine\\modules\\persistence\\entities.js",
-      "src\\engine\\modules\\views\\character.js"
-    ]
-  },
-  {
     "name": "of",
     "reads": 13,
     "writes": 1,
@@ -2456,7 +2071,7 @@
       },
       {
         "loc": "src\\engine\\modules\\progression\\points.js:23",
-        "code": "a.tl[b].og"
+        "code": "a.pointUpgrades[b].og"
       },
       {
         "loc": "src\\engine\\modules\\progression\\upgrades.js:65",
@@ -3612,7 +3227,7 @@
     "samples": [
       {
         "loc": "src\\engine\\modules\\persistence\\game-save.js:595",
-        "code": "Mh.tl[Pe].kh"
+        "code": "Mh.pointUpgrades[Pe].kh"
       },
       {
         "loc": "src\\engine\\modules\\persistence\\game-save.js:982",
@@ -4865,32 +4480,6 @@
     ]
   },
   {
-    "name": "Qi",
-    "reads": 8,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:578",
-        "code": "game.state.ae.Qi"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:968",
-        "code": "rb.Qi"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\points.js:10",
-        "code": "a.Qi"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\progression\\points.js",
-      "src\\engine\\modules\\runtime\\game.js",
-      "src\\engine\\modules\\views\\achievements.js"
-    ]
-  },
-  {
     "name": "hj",
     "reads": 5,
     "writes": 5,
@@ -5742,32 +5331,6 @@
       "src\\engine\\modules\\runtime\\game.js",
       "src\\engine\\modules\\world\\initialization.js",
       "src\\engine\\modules\\world\\regions.js"
-    ]
-  },
-  {
-    "name": "pj",
-    "reads": 7,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:579",
-        "code": "game.state.ae.pj"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:969",
-        "code": "rb.pj"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\points.js:11",
-        "code": "a.pj"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\progression\\points.js",
-      "src\\engine\\modules\\runtime\\game.js",
-      "src\\engine\\modules\\views\\achievements.js"
     ]
   },
   {
@@ -6981,7 +6544,7 @@
       },
       {
         "loc": "src\\engine\\modules\\loot\\items.js:321",
-        "code": "this.op.Uk"
+        "code": "this.itemType.Uk"
       }
     ],
     "fileCount": 4,
@@ -6990,32 +6553,6 @@
       "src\\engine\\modules\\rendering\\scene.js",
       "src\\engine\\modules\\views\\character.js",
       "src\\engine\\modules\\views\\upgrade-details.js"
-    ]
-  },
-  {
-    "name": "tl",
-    "reads": 7,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:594",
-        "code": "Mh.tl"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:595",
-        "code": "Mh.tl"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:596",
-        "code": "Mh.tl"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\progression\\points.js",
-      "src\\engine\\modules\\runtime\\game.js",
-      "src\\engine\\modules\\views\\achievements.js"
     ]
   },
   {
@@ -8631,32 +8168,6 @@
     ]
   },
   {
-    "name": "Rm",
-    "reads": 6,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\actions.js:454",
-        "code": "h.Rm"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\actions.js:479",
-        "code": "a.Rm"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\items.js:71",
-        "code": "this.Rm"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\loot\\items.js",
-      "src\\engine\\modules\\persistence\\entities.js",
-      "src\\engine\\modules\\simulation\\tick.js"
-    ]
-  },
-  {
     "name": "dn",
     "reads": 6,
     "writes": 1,
@@ -10242,11 +9753,11 @@
     "samples": [
       {
         "loc": "src\\engine\\modules\\ai\\behaviors.js:1297",
-        "code": "this.$c.mp"
+        "code": "this.itemDrop.mp"
       },
       {
         "loc": "src\\engine\\modules\\ai\\behaviors.js:1300",
-        "code": "this.$c.mp"
+        "code": "this.itemDrop.mp"
       },
       {
         "loc": "src\\engine\\modules\\ai\\behaviors.js:1332",
@@ -10268,11 +9779,11 @@
     "samples": [
       {
         "loc": "src\\engine\\modules\\ai\\behaviors.js:1297",
-        "code": "this.$c.np"
+        "code": "this.itemDrop.np"
       },
       {
         "loc": "src\\engine\\modules\\ai\\behaviors.js:1300",
-        "code": "this.$c.np"
+        "code": "this.itemDrop.np"
       },
       {
         "loc": "src\\engine\\modules\\ai\\behaviors.js:1332",
@@ -11002,78 +10513,6 @@
     ]
   },
   {
-    "name": "Vp",
-    "reads": 1,
-    "writes": 5,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\content\\balance.js:448",
-        "code": "Vp: 0"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\balance.js:452",
-        "code": "Vp: 1"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\balance.js:456",
-        "code": "Vp: 2"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\content\\balance.js",
-      "src\\engine\\modules\\loot\\items.js"
-    ]
-  },
-  {
-    "name": "pp",
-    "reads": 1,
-    "writes": 5,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\content\\balance.js:449",
-        "code": "pp: 1"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\balance.js:453",
-        "code": "pp: 1.2"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\balance.js:457",
-        "code": "pp: 1.35"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\content\\balance.js",
-      "src\\engine\\modules\\loot\\items.js"
-    ]
-  },
-  {
-    "name": "jp",
-    "reads": 1,
-    "writes": 5,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\content\\balance.js:450",
-        "code": "jp: 0.2"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\balance.js:454",
-        "code": "jp: 0.5"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\balance.js:458",
-        "code": "jp: 0.75"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\content\\balance.js",
-      "src\\engine\\modules\\loot\\items.js"
-    ]
-  },
-  {
     "name": "Oo",
     "reads": 4,
     "writes": 2,
@@ -11216,30 +10655,6 @@
     ]
   },
   {
-    "name": "op",
-    "reads": 5,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\loot\\items.js:62",
-        "code": "this.op"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\items.js:129",
-        "code": "a.op"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\items.js:321",
-        "code": "this.op"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\loot\\items.js",
-      "src\\engine\\modules\\persistence\\entities.js"
-    ]
-  },
-  {
     "name": "Do",
     "reads": 4,
     "writes": 2,
@@ -11290,32 +10705,6 @@
       "src\\engine\\modules\\views\\upgrade-details.js",
       "src\\engine\\modules\\world\\dungeons.js",
       "src\\engine\\modules\\world\\terrain.js"
-    ]
-  },
-  {
-    "name": "An",
-    "reads": 2,
-    "writes": 4,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:568",
-        "code": "game.state.ae.An"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:959",
-        "code": "game.state.ae.An"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\points.js:9",
-        "code": "a.An"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\progression\\points.js",
-      "src\\engine\\modules\\progression\\upgrades.js",
-      "src\\engine\\modules\\runtime\\game.js"
     ]
   },
   {
@@ -13548,32 +12937,6 @@
       "src\\engine\\modules\\loot\\inventory.js",
       "src\\engine\\modules\\progression\\upgrades.js",
       "src\\engine\\modules\\views\\character.js"
-    ]
-  },
-  {
-    "name": "ns",
-    "reads": 4,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\loot\\items.js:67",
-        "code": "this.ns"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\entities.js:20",
-        "code": "a.ns"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\character.js:185",
-        "code": "this.item.ns"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\loot\\items.js",
-      "src\\engine\\modules\\persistence\\entities.js",
-      "src\\engine\\modules\\views\\character.js",
-      "src\\engine\\modules\\views\\upgrade-details.js"
     ]
   },
   {
@@ -16175,7 +15538,7 @@
       },
       {
         "loc": "src\\engine\\modules\\loot\\items.js:91",
-        "code": "a.Rm.Dw"
+        "code": "a.itemEffect.Dw"
       }
     ],
     "fileCount": 3,
@@ -16421,31 +15784,6 @@
     "files": [
       "src\\engine\\modules\\loot\\inventory.js",
       "src\\engine\\modules\\views\\character.js"
-    ]
-  },
-  {
-    "name": "Ew",
-    "reads": 3,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\loot\\items.js:65",
-        "code": "this.Ew"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\items.js:130",
-        "code": "a.Ew"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\entities.js:11",
-        "code": "a.Ew"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\loot\\items.js",
-      "src\\engine\\modules\\persistence\\entities.js",
-      "src\\engine\\modules\\progression\\upgrades.js"
     ]
   },
   {
@@ -22125,29 +21463,6 @@
     ]
   },
   {
-    "name": "kA",
-    "reads": 2,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\loot\\items.js:66",
-        "code": "this.kA"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\items.js:113",
-        "code": "a.kA"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\items.js:327",
-        "code": "this.kA"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\loot\\items.js"
-    ]
-  },
-  {
     "name": "Sz",
     "reads": 1,
     "writes": 2,
@@ -27199,7 +26514,7 @@
       },
       {
         "loc": "src\\engine\\modules\\persistence\\entities.js:8",
-        "code": "a.op.RD"
+        "code": "a.itemType.RD"
       }
     ],
     "fileCount": 2,
