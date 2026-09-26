@@ -622,8 +622,8 @@ export function restoreGameState(a, b) {
                   if (Oc) {
                     var Zd = game.state.achievements.Lt[Oc];
                     if (Zd) {
-                      Zd.We = Yd ? true : false;
-                      Zd.Of = Re ? true : false;
+                      Zd.obtained = Yd ? true : false;
+                      Zd.applied = Re ? true : false;
                     } else {
                       console.log("Failed to find achievement: " + Oc);
                     }
@@ -636,19 +636,19 @@ export function restoreGameState(a, b) {
           if (0 != Vc.ik.length) {
             Vc.ik.length = 0;
           }
-          if (0 != Vc.Ze.length) {
-            Vc.Ze.length = 0;
+          if (0 != Vc.claimQueue.length) {
+            Vc.claimQueue.length = 0;
           }
           var Od, wc;
           for (Od = 0; Od < Vc.jj.length; Od++) {
             wc = Vc.jj[Od];
-            if (wc.We) {
-              if (wc.Of) {
-                if (wc.We && wc.Of) {
-                  increasePointEventReward(wc.pointEventTypeId, wc.Vt);
+            if (wc.obtained) {
+              if (wc.applied) {
+                if (wc.obtained && wc.applied) {
+                  increasePointEventReward(wc.pointEventTypeId, wc.pointRewardBonus);
                 }
               } else {
-                Vc.Ze.push(wc);
+                Vc.claimQueue.push(wc);
               }
             } else {
               Vc.ik.push(wc);
@@ -998,8 +998,8 @@ export function createSaveState(a) {
       var Na = ka[xb];
       Eb = {
         achievementId: Na.id,
-        obtained: Na.We,
-        applied: Na.Of
+        obtained: Na.obtained,
+        applied: Na.applied
       };
       sb.push(Eb);
     }

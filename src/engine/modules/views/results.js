@@ -181,7 +181,7 @@ export function initializeViewsResults() {
     this.Fz = a.dungeonsCleared;
     this.Iy = game.castles.Jg.length;
     this.JB = a.characterStunnedCount;
-    this.wy = game.state.achievements.Ze.length;
+    this.wy = game.state.achievements.claimQueue.length;
     this.yu = this.Kk = this.Bu = this.Ck = this.Hk = this.Fk = this.Ek = this.vv = -1;
   };
   OfflineProgressView.prototype.onOfflineFinish = function () {
@@ -214,7 +214,7 @@ export function initializeViewsResults() {
       g = b.dungeonsCleared - this.Fz,
       h = game.castles.Jg.length - this.Iy,
       b = /** @type {any} */ (b.characterStunnedCount - this.JB),
-      l = game.state.achievements.Ze.length - this.wy;
+      l = game.state.achievements.claimQueue.length - this.wy;
     if (this.vv != a) {
       this.vv = a;
       this.Qw.innerHTML = formatAmount(a);

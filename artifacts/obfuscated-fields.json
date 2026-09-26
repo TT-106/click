@@ -1102,61 +1102,6 @@
     ]
   },
   {
-    "name": "We",
-    "reads": 11,
-    "writes": 4,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:625",
-        "code": "Zd.We"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:645",
-        "code": "wc.We"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:647",
-        "code": "wc.We"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\progression\\achievements.js",
-      "src\\engine\\modules\\progression\\upgrades.js",
-      "src\\engine\\modules\\simulation\\tick.js"
-    ]
-  },
-  {
-    "name": "Ze",
-    "reads": 14,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:639",
-        "code": "Vc.Ze"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:640",
-        "code": "Vc.Ze"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:651",
-        "code": "Vc.Ze"
-      }
-    ],
-    "fileCount": 7,
-    "files": [
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\progression\\achievements.js",
-      "src\\engine\\modules\\progression\\upgrades.js",
-      "src\\engine\\modules\\runtime\\game.js",
-      "src\\engine\\modules\\simulation\\tick.js",
-      "src\\engine\\modules\\views\\achievements.js",
-      "src\\engine\\modules\\views\\results.js"
-    ]
-  },
-  {
     "name": "$e",
     "reads": 10,
     "writes": 5,
@@ -1950,32 +1895,6 @@
     "files": [
       "src\\engine\\modules\\content\\dungeon-themes.js",
       "src\\engine\\modules\\world\\rooms.js"
-    ]
-  },
-  {
-    "name": "Of",
-    "reads": 9,
-    "writes": 4,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:626",
-        "code": "Zd.Of"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:646",
-        "code": "wc.Of"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:647",
-        "code": "wc.Of"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\progression\\achievements.js",
-      "src\\engine\\modules\\progression\\upgrades.js",
-      "src\\engine\\modules\\simulation\\tick.js"
     ]
   },
   {
@@ -15533,30 +15452,6 @@
     "files": [
       "src\\engine\\modules\\persistence\\game-save.js",
       "src\\engine\\modules\\runtime\\game.js"
-    ]
-  },
-  {
-    "name": "Vt",
-    "reads": 3,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:648",
-        "code": "wc.Vt"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\achievements.js:18",
-        "code": "this.Vt"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\achievements.js:24",
-        "code": "a.Vt"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\progression\\achievements.js"
     ]
   },
   {

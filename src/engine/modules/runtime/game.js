@@ -167,7 +167,7 @@ export function initializeRuntimeGame() {
         this.jj = [];
         this.Lt = {};
         this.ik = [];
-        this.Ze = [];
+        this.claimQueue = [];
         var a, b;
         for (a = 0; a < achievementDefinitions.length; a++) {
           b = new Achievement(achievementDefinitions[a]);

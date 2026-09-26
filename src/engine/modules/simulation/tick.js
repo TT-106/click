@@ -219,18 +219,18 @@ export function advanceSimulation(a) {
         Ca;
       for (X = T.ik.length - 1; 0 <= X; X--) {
         var qa = Ca = T.ik[X];
-        if (!qa.We) {
-          qa.We = qa.isVictoryAchievement ? hasVictoryAchievement(qa) : getAchievementProgress(qa) >= qa.requiredCount;
+        if (!qa.obtained) {
+          qa.obtained = qa.isVictoryAchievement ? hasVictoryAchievement(qa) : getAchievementProgress(qa) >= qa.requiredCount;
         }
-        if (qa.We) {
+        if (qa.obtained) {
           T.ik.splice(X, 1);
-          T.Ze.push(Ca);
+          T.claimQueue.push(Ca);
         }
       }
-      for (X = T.Ze.length - 1; 0 <= X; X--) {
-        Ca = T.Ze[X];
-        if (Ca.Of) {
-          T.Ze.splice(X, 1);
+      for (X = T.claimQueue.length - 1; 0 <= X; X--) {
+        Ca = T.claimQueue[X];
+        if (Ca.applied) {
+          T.claimQueue.splice(X, 1);
         }
       }
     }

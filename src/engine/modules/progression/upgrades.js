@@ -203,12 +203,12 @@ export function ClaimAchievementUpgrade(a) {
 }
 export function AchievementUpgrade(a) {
   this.achievement = a;
-  this.Ve = this.achievement.We ? this.achievement.name : getAchievementRequirementLabel(this.achievement);
+  this.Ve = this.achievement.obtained ? this.achievement.name : getAchievementRequirementLabel(this.achievement);
   this.jk = getAchievementActionLabel(this);
   this.YA = this.VA = this.canPurchase = false;
 }
 export function getAchievementActionLabel(a) {
-  return a.achievement.We ? getAchievementRewardLabel(a.achievement) : "奖励不明";
+  return a.achievement.obtained ? getAchievementRewardLabel(a.achievement) : "奖励不明";
 }
 export function AdventurePointUpgrade(a) {
   this.kh = a;
@@ -1109,7 +1109,7 @@ export function initializeProgressionUpgrades() {
   };
   ClaimAchievementUpgrade.prototype = new Upgrade();
   ClaimAchievementUpgrade.prototype.He = function () {
-    return this.achievement ? this.achievement.Of : false;
+    return this.achievement ? this.achievement.applied : false;
   };
   ClaimAchievementUpgrade.prototype.getTitle = function () {
     return this.Ve;
@@ -1136,7 +1136,7 @@ export function initializeProgressionUpgrades() {
   };
   ClaimAchievementUpgrade.prototype.refreshAvailabilityState = function () {
     var a;
-    a = game.state.achievements.Ze;
+    a = game.state.achievements.claimQueue;
     a = this.vy < a.length ? a[this.vy] : null;
     this.canPurchase = null != a;
     var b = this.achievement != a || this.cachedCanPurchase != this.canPurchase;
@@ -1150,7 +1150,7 @@ export function initializeProgressionUpgrades() {
   };
   AchievementUpgrade.prototype = new Upgrade();
   AchievementUpgrade.prototype.He = function () {
-    return this.achievement.Of;
+    return this.achievement.applied;
   };
   AchievementUpgrade.prototype.getTitle = function () {
     return this.Ve;
@@ -1170,12 +1170,12 @@ export function initializeProgressionUpgrades() {
     markUpgradeChanged(this);
   };
   AchievementUpgrade.prototype.refreshAvailabilityState = function () {
-    var a = this.achievement.Of,
-      b = this.achievement.We;
+    var a = this.achievement.applied,
+      b = this.achievement.obtained;
     this.canPurchase = b && !a;
     var c = this.VA != a || this.YA != b;
     if (c) {
-      this.Ve = this.achievement.We ? this.achievement.name : getAchievementRequirementLabel(this.achievement);
+      this.Ve = this.achievement.obtained ? this.achievement.name : getAchievementRequirementLabel(this.achievement);
       this.jk = getAchievementActionLabel(this);
     }
     this.VA = a;

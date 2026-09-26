@@ -168,7 +168,7 @@ export function initializeViewsAchievements() {
     }
     var b = game.state.achievements;
     a = b.jj.length;
-    b = b.Ze.length + (a - b.ik.length);
+    b = b.claimQueue.length + (a - b.ik.length);
     if (this.pz != b) {
       this.pz = b;
       setElementHtml(this.QC, "成就(" + b + "/" + a + ")");

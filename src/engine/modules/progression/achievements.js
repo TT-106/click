@@ -8,20 +8,20 @@ import { getClassVictories, getSoloClassVictories } from "./statistics.js";
 import { getPartyMaxLevel } from "../characters/party.js";
 export var achievementDefinitions;
 export function Achievement(a) {
-  this.Of = this.We = false;
+  this.applied = this.obtained = false;
   this.id = a.id;
   this.name = a.name;
   this.requirementType = a.requirementType;
   this.requiredCount = a.requiredCount;
   this.characterClass = a.characterClass;
   this.pointEventTypeId = a.pointEventTypeId;
-  this.Vt = pointEventsById[a.pointEventTypeId].achievementPointBonus;
+  this.pointRewardBonus = pointEventsById[a.pointEventTypeId].achievementPointBonus;
   this.isVictoryAchievement = !!a.isVictoryAchievement;
   this.Rt = this.Pt = null;
 }
 export function getAchievementRewardLabel(a) {
   if (!a.Pt) {
-    a.Pt = "+" + a.Vt + "成就点每" + pointEventsById[a.pointEventTypeId].fullEventLabel;
+    a.Pt = "+" + a.pointRewardBonus + "成就点每" + pointEventsById[a.pointEventTypeId].fullEventLabel;
   }
   return a.Pt;
 }
@@ -32,15 +32,15 @@ export function getAchievementRequirementLabel(a) {
   return a.Rt;
 }
 export function applyAchievementReward(a) {
-  if (!a.We || a.Of) {
-    console.log("not applying achievement bonus. obtained=" + a.We + " applied=" + a.Of);
+  if (!a.obtained || a.applied) {
+    console.log("not applying achievement bonus. obtained=" + a.obtained + " applied=" + a.applied);
   } else {
-    increasePointEventReward(a.pointEventTypeId, a.Vt);
-    a.Of = true;
+    increasePointEventReward(a.pointEventTypeId, a.pointRewardBonus);
+    a.applied = true;
     var b = game.state.achievements,
-      c = b.Ze.indexOf(a);
+      c = b.claimQueue.indexOf(a);
     if (-1 < c) {
-      b.Ze.splice(c, 1);
+      b.claimQueue.splice(c, 1);
     }
     recordGameEvent("Achievement", a.name);
   }
@@ -178,11 +178,11 @@ export function resetAchievements() {
     b;
   for (b = 0; b < a.jj.length; b++) {
     var c = a.jj[b];
-    c.Of = false;
-    c.We = false;
+    c.applied = false;
+    c.obtained = false;
   }
   a.ik.length = 0;
-  a.Ze.length = 0;
+  a.claimQueue.length = 0;
 }
 export function initializeProgressionAchievements() {
   achievementDefinitions = [{
