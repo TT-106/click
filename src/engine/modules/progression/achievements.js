@@ -66,9 +66,9 @@ export function getAchievementProgress(a) {
   var b = game.state.lifetimeStatistics;
   switch (a.requirementType) {
     case 1:
-      return b.si;
+      return b.directKills;
     case 2:
-      return b.Dl;
+      return b.scrollKills;
     case 3:
       return b.El;
     case 4:
@@ -82,7 +82,7 @@ export function getAchievementProgress(a) {
     case 8:
       return b.Ph;
     case 9:
-      return b.Rk;
+      return b.farmsPurchased;
     case 10:
       return b.dungeonsCleared;
     case 11:

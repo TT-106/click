@@ -174,13 +174,13 @@ export function initializeViewsResults() {
     a.selected = true;
     this.Jh = -1;
     a = game.state.runStatistics;
-    this.HA = a.si;
+    this.HA = a.directKills;
     this.mA = a.Gi;
     this.nA = a.Ph;
     this.sA = a.levelsCleared;
     this.Fz = a.dungeonsCleared;
     this.Iy = game.castles.Jg.length;
-    this.JB = a.oj;
+    this.JB = a.characterStunnedCount;
     this.wy = game.state.achievements.Ze.length;
     this.yu = this.Kk = this.Bu = this.Ck = this.Hk = this.Fk = this.Ek = this.vv = -1;
   };
@@ -207,13 +207,13 @@ export function initializeViewsResults() {
       this.progressFillElement.style.width = a + "px";
     }
     var b = game.state.runStatistics,
-      a = b.si - this.HA,
+      a = b.directKills - this.HA,
       c = b.Gi - this.mA,
       d = b.Ph - this.nA,
       f = b.levelsCleared - this.sA,
       g = b.dungeonsCleared - this.Fz,
       h = game.castles.Jg.length - this.Iy,
-      b = /** @type {any} */ (b.oj - this.JB),
+      b = /** @type {any} */ (b.characterStunnedCount - this.JB),
       l = game.state.achievements.Ze.length - this.wy;
     if (this.vv != a) {
       this.vv = a;

@@ -320,7 +320,7 @@ export function initializeCharactersParty() {
             a.vn += 1;
           }
         }
-        c = game.state.runStatistics.Xj;
+        c = game.state.runStatistics.playedMillis;
         a = floorNumber(c / 36E5);
         b = floorNumber(c / 6E4 % 60);
         c = floorNumber(c / 1E3 % 60);

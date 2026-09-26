@@ -218,21 +218,21 @@ export function restoreMonsterType(a, b) {
 export function StatisticsSaveAdapter() {}
 export function serializeStatistics(a) {
   return {
-    playedMillis: a.Xj,
+    playedMillis: a.playedMillis,
     turnCount: a.turnCount,
     doorsOpened: a.doorsOpened,
     roomsCleared: a.roomsCleared,
     levelsCleared: a.levelsCleared,
     dungeonsCleared: a.dungeonsCleared,
     castlesConquered: a.castlesConquered,
-    farmsPurchased: a.Rk,
-    totalGoldFromMonsters: a.Xk,
-    totalGoldFromItems: a.Wk,
-    directKills: a.si,
-    scrollKills: a.Dl,
+    farmsPurchased: a.farmsPurchased,
+    totalGoldFromMonsters: a.totalGoldFromMonsters,
+    totalGoldFromItems: a.totalGoldFromItems,
+    directKills: a.directKills,
+    scrollKills: a.scrollKills,
     minionKills: a.minionKills,
-    farmedKills: a.Sd,
-    characterStunnedCount: a.oj,
+    farmedKills: a.farmedKills,
+    characterStunnedCount: a.characterStunnedCount,
     meleeAttackCount: a.hl,
     rangedAttackCount: a.wl,
     spellCastCount: a.Gl,
@@ -286,21 +286,21 @@ export function restoreStatistics(a, b, c) {
   if (!u) {
     u = game.dungeons.dg.length;
   }
-  b.Xj = c ? Math.max(0, d ? d : f) : Math.max(0, f ? f : 0);
+  b.playedMillis = c ? Math.max(0, d ? d : f) : Math.max(0, f ? f : 0);
   b.turnCount = g ? g : 0;
   b.doorsOpened = h ? h : 0;
   b.roomsCleared = l ? l : 0;
   b.levelsCleared = n ? n : 0;
   b.dungeonsCleared = p ? p : 0;
   b.castlesConquered = s ? s : 0;
-  b.Rk = u;
-  b.Xk = y ? y : 0;
-  b.Wk = A ? A : 0;
-  b.si = C ? C : 0;
-  b.Dl = v ? v : 0;
+  b.farmsPurchased = u;
+  b.totalGoldFromMonsters = y ? y : 0;
+  b.totalGoldFromItems = A ? A : 0;
+  b.directKills = C ? C : 0;
+  b.scrollKills = v ? v : 0;
   b.setMinionKills(D ? D : 0);
   b.setFarmedKills(N ? N : 0);
-  b.oj = I ? I : 0;
+  b.characterStunnedCount = I ? I : 0;
   b.hl = x ? x : 0;
   b.wl = z ? z : 0;
   b.Gl = O ? O : 0;
