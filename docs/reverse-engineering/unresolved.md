@@ -132,7 +132,7 @@ Xf/Qf/Rf/Zf/Cf/Ef → damageMultiplier/armorMultiplier/attackRatingMultiplier/de
 - 更正记录：本节此前写"test-browser.mjs 新增断言——#scrollButtonCell0 等"，但 `grep -c 'scrollButtonCell0' scripts/test-browser.mjs` 实测为 **0**，该关闭声明没有对应代码，属未取证的子智能体产出被当成事实。现在断言真的写进 `scripts/test-browser.mjs` 了。
 - 实际覆盖（在真实活动 DOM 上逐项 `querySelectorAll(...).length===0` 收集缺失项，非空即失败）：`#encounterNotificationPanel`、`#treasureChestLootButtonPanel`、`.gameTabLootButtonPanel`、`#adventurerEffectIconA0`、`#adventurerEffectIconB0`、`#potionButton_Row0_Col0`、`.potionContentContainer`、`#scrollButtonCell0`、`#pointUpgradesContainer_0_0_0`、`[id^="characterSkillsContainer0_0_0_"]`——全部取自 `archive/original/c2c.user.js` 实际使用的选择器（该脚本只经 jQuery 取 DOM，不出现 `document.` 字样，所以按 id/class 字面量抽取）。
 - 反向验证：临时把 `#scrollButtonCell0` 改成不存在的 `#scrollButtonCell99` 后跑 E2E，断言以"c2c.user.js 依赖的外部 DOM 契约出现缺失"失败，确认该检查不是空过。
-- 未纳入本项的契约：`.bossEncounterNotificationDiv`、`.lootButton`、`.potionButtonActive`、`.scrollButton` 只在首领遭遇/拾取/激活等瞬时状态下出现，需要专门场景才有意义；冒险点升级按钮的"点击→购买"链目前两端差分未覆盖（见 U7）。
+- 未纳入本项的契约：`.bossEncounterNotificationDiv`、`.lootButton`、`.potionButtonActive`、`.scrollButton` 只在首领遭遇/拾取/激活等瞬时状态下出现，需要专门场景才有意义；升级按钮的"点击→购买"链已在引擎侧进入差分（命中全局升级一支），但冒险点升级一支仍未被驱动，见 U7。
 
 ## U3 — ✅ 8h/24h 等价回合 soak 已跑（2026-09-26）
 
@@ -171,7 +171,13 @@ Xf/Qf/Rf/Zf/Cf/Ef → damageMultiplier/armorMultiplier/attackRatingMultiplier/de
 - 现象：这批行为只能从视图层入口进入，30 场景矩阵因此完全没跑到它们，实测特征是中局存档里 `statistics.upgradePurchased=0`、`pointManagerState.spentAdventurePoints=0`、`farms=[]`、`achievements.applied=0`、`treasureChestsLooted=0`、冒险者 `characterLevel` 恒为 1、`skillPoints` 恒为 0（`output/parity/*.json` 与 `output/scenarios/*-original.json` 各检查点相同）。
 - 入口清单：`views/upgrade-details.js` 的 `onPurchaseClicked → Upgrade.purchase`（升级族 19 个实现）、`views/character.js` 的自动装备、`potions.js` 的 `aw()` 激活、`scrolls.js` 的 `castScroll()`、`combat/actions.js` 与 `characters/character.js` 里的掉落物 `claimedBy`/拾取分支。
 - 为什么浏览器 E2E 不是答案：本次尝试过在 `test-browser.mjs` 里点真按钮，但两点不成立——开局存档无可购项（唯一 `.upgradeButton` 是复用样式的 `#pauseButton`），中局 fixture 载入后 `pointUpgradesContainer_*` 全部为 `disabledUpgradeButton` 且矩形 0×0，Playwright 等不到可见元素。视图层点击既脆弱又不能与原版对照（原版那一侧没有新 UI 壳）。
-- 建议做法：在 `tests/engine-harness.js` 增加 `purchaseUpgrade(side, kind, index)` 与 `activatePotionAt(side, index)`、`castScrollAt(side, index)` 三只命令，双端各自按自己那一套（重构版用语义名，原版用 `Qc`/`aw` 等原符号）调用同一入口，然后按既有约定"两端各自断言可观察量增长 + 逐检查点完整存档相等"。可一次性把角色等级、技能树、随从等级解锁、农场购买、成就领取、自动装备六行验收矩阵从"未覆盖"抬到"已验证"。
+- 已落地（2026-09-26，第 31/32 个场景）：`tests/engine-harness.js` 新增 `purchaseUpgrades({turns,limit})` 与 `activatePotions({turns,limit})`，各自按本侧符号驱动同一入口（原版 `Nx`/`HC`/`qc()`/`Qc()`；重构版 `upgradeCollections`/`upgradeRows`/`canPurchaseNow()`/`purchase()`。药水侧容器原版 `Game.Yj`、重构 `game.potions`，数组字段 `re` 与方法 `aw()` 两端同名，同一行代码即可驱动两侧）。
+  - `upgrades-purchased`：百万金币 + 每人 5 技能点，两端各完成 8 次购买，推进 600 回合后再各买 2 次（前一批解锁了后续项），每个检查点完整存档相等；存档侧确证命中的升级族是 `settings.upgrades`（全局升级表）。
+  - `potions-activated`：三瓶未激活药水入库，驱动 `Potion.aw()` 之后 `statistics.potionsUsed` 两端各自增长，随后完整存档相等——旧场景 `potions-inactive-auto` 里 `active` 恒为 false 的空白由此补上。
+- 仍开放（如实陈述）：
+  - 购买命令按集合顺序取前 N 个可购项，当时可购的只有全局升级，因此 `CharacterSkillUpgrade`（技能树布尔表）、`LearnSpellUpgrade`、`UnlockMonsterLevelUpgrade`（`monsterTypes.monsterLevelStates` 长度未变）、`AdventurePointUpgrade`（`spentAdventurePoints` 仍为 0）、农场/地牢购买、`ClaimAchievementUpgrade` 仍未被驱动。覆盖它们需按升级类型筛选可购项，或先补相应前置的变异器（成就达成、地牢解锁、对应点类型的冒险点）。
+  - `castScroll()` 未驱动：它要求当前房间有可打目标（`getOpponents` 非空），需要在遭遇进行中精确触发。
+  - DOM 路线已实测不可行并排除：7 个升级 `canPurchase` 为真时，渲染出的 558 个按钮仍全部是 `disabledUpgradeButton`（哪一行拿到 `.upgradeButton` 类取决于排序后的可见槽位），且原版一侧没有新 UI 壳可点。
 
 ## 已取证待落地
 

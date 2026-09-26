@@ -12,15 +12,21 @@ import {
 
 const baseURL = process.env.TEST_URL || 'http://127.0.0.1:4173';
 const base = decodeFixture();
+const BASELINE_MONSTER_LEVELS = base.monsterTypes?.monsterLevelStates?.length ?? 0;
 
 // 场景定义：steps 中的每个 (推进回合数, 断言钩子) 依次执行。
 // U7：升级购买在存档里有四处可观察量——全局升级表、冒险点花费、成就领取、技能树布尔表。
-const upgradedSomething = (s) => ({
-  upgraded: Object.values(s.settings?.upgrades ?? {}).some(v => v > 0)
-    || (s.pointManagerState?.spentAdventurePoints ?? 0) > 0
-    || (s.achievements ?? []).some(a => a.upgradePurchased)
-    || (s.adventurers ?? []).some(a => ['upgrades1', 'upgrades2', 'upgrades3', 'upgrades4'].some(k => Object.values(a[k] ?? {}).some(Boolean))),
-});
+const upgradedSomething = (s) => {
+  const families = [];
+  if (Object.values(s.settings?.upgrades ?? {}).some(v => v > 0)) families.push('settings');
+  if ((s.pointManagerState?.spentAdventurePoints ?? 0) > 0) families.push('adventurePoints');
+  if ((s.achievements ?? []).some(a => a.upgradePurchased)) families.push('achievementClaim');
+  if ((s.adventurers ?? []).some(a => ['upgrades1', 'upgrades2', 'upgrades3', 'upgrades4'].some(k => Object.values(a[k] ?? {}).some(Boolean)))) families.push('skills');
+  if ((s.monsterTypes?.monsterLevelStates?.length ?? 0) > BASELINE_MONSTER_LEVELS) families.push('monsterLevels');
+  return { upgraded: families.length > 0, note: '购买命中的升级族: ' + (families.join(' + ') || '无') };
+};
+// U7：药水激活在视图之外没有入口，激活后存档里只有 statistics.potionsUsed 可证。
+const potionWasUsed = (s) => ({ potionUsed: (s.statistics?.potionsUsed ?? 0) > 0 });
 const scenarios = [
   {
     name: 'long-run-9000',
@@ -213,6 +219,15 @@ const scenarios = [
     ],
   },
   {
+    name: 'potions-activated',
+    // U7：三瓶未激活药水入库 → 推进 → 直接驱动 Potion.aw（视图层唯一入口）→ 再推进差分。
+    make: () => withPotions(base, ['doubleGold', 'doubleKills', 'walkingSpeed']),
+    steps: [
+      { turns: 300, activatePotions: 3, check: potionWasUsed },
+      [600, null],
+    ],
+  },
+  {
     name: 'late-horizon',
     make: () => withTurns(base, base.turnNumber + 1000000),
     steps: [[500, null], [500, null]],
@@ -309,17 +324,18 @@ try {
 
       let previous = await Promise.all(pages.map(p => p.page.evaluate(() => window.harness.snapshot())));
       for (const rawStep of scenario.steps) {
-        // 步骤可以是 [turns, check] 或 { turns, check, effectType, clickUpgrades }
+        // 步骤可以是 [turns, check] 或 { turns, check, effectType, purchaseUpgrades, activatePotions }
         // effectType 表示这一步改用"逐帧扫描活怪物效果队列"的推进方式，并直接对账施加次数。
         // purchaseUpgrades 表示这一步先推进再驱动升级购买（U7：只有视图层会触发的路径）。
         const step = Array.isArray(rawStep) ? { turns: rawStep[0], check: rawStep[1] } : rawStep;
-        const { turns, check, effectType, purchaseUpgrades } = step;
+        const { turns, check, effectType, purchaseUpgrades, activatePotions } = step;
         const results = await Promise.all(pages.map(async p => {
           await p.page.evaluate(ms => window.harness.setTime(ms), HARNESS_FIXED_NOW);
           // 重置后无队伍：走真实帧循环（守卫路径），而非裸推进
           if (scenario.restart || scenario.reset) return { snapshot: await p.page.evaluate(n => window.harness.idle(n), turns) };
           if (effectType !== undefined) return p.page.evaluate(a => window.harness.countEffectApplications(a.turns, a.effectType), { turns, effectType });
           if (purchaseUpgrades !== undefined) return p.page.evaluate(a => window.harness.purchaseUpgrades(a), { turns, limit: purchaseUpgrades });
+          if (activatePotions !== undefined) return p.page.evaluate(a => window.harness.activatePotions(a), { turns, limit: activatePotions });
           return { snapshot: await p.page.evaluate(turns => window.harness.advance(turns), turns) };
         }));
         const states = results.map(r => r.snapshot);
@@ -351,6 +367,13 @@ try {
           assert.equal(counts[1], counts[0], `两端完成的购买次数不一致（原版 ${counts[0]} / 重构版 ${counts[1]}）`);
           console.log(`  · 两端各自完成升级购买 ${counts[0]} 次`);
         }
+        if (activatePotions !== undefined) {
+          const attempts = results.map(r => r.attempted);
+          for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {
+            assert.ok(attempts[i] > 0, `${label} 端库存里必须真的有待激活药水`);
+          }
+          assert.equal(attempts[1], attempts[0], `两端尝试激活的药水数不一致（原版 ${attempts[0]} / 重构版 ${attempts[1]}）`);
+        }
         if (effectType !== undefined) {
           const counts = results.map(r => r.applications);
           for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {
@@ -369,6 +392,8 @@ try {
             if (verdict.summoned !== undefined) assert.equal(verdict.summoned, true, `${label} 召唤场景必须真的召唤出随从`);
             if (verdict.stunned !== undefined) assert.equal(verdict.stunned, true, `${label} 必须真的出现冒险者被击倒（昏迷前置）`);
             if (verdict.upgraded !== undefined) assert.equal(verdict.upgraded, true, `${label} 必须真的完成至少一次升级购买`);
+            if (verdict.potionUsed !== undefined) assert.equal(verdict.potionUsed, true, `${label} 必须真的激活至少一瓶药水（potionsUsed 增长）`);
+            if (verdict.note && i === 0) console.log(`  · ${verdict.note}`);
             if (verdict.victory !== undefined) assert.equal(verdict.victory, true, `${label} 必须真的走完征服尾部并触发胜利`);
           }
         }

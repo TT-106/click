@@ -169,6 +169,22 @@ window.harness = {
       }
     }
     return { purchased, snapshot: snapshot() };
+  },
+  // U7：药水激活也没有非视图入口（Potion.aw 只由药水按钮调用），激活会在存档里
+  // 记 statistics.potionsUsed，因此两端各自断言计数增长，再照常做完整存档差分。
+  // aw / 库存数组字段 re 两端同名（尚未重命名），只有 Game 上的容器字段不同名。
+  activatePotions({ turns = 0, limit = 3 } = {}) {
+    for (let i = 0; i < turns; i++) advance();
+    const inventory = original ? window.Game.Yj : game.potions;
+    const list = inventory && inventory.re;
+    if (!Array.isArray(list)) throw new Error('药水库存访问失败');
+    let attempted = 0;
+    for (const potion of list) {
+      if (attempted >= limit) break;
+      potion.aw();
+      attempted++;
+    }
+    return { attempted, snapshot: snapshot() };
   }
 };
 
