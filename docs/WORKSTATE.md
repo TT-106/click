@@ -5,6 +5,12 @@
 
 ## 当前轮次状态（2026-09-26，M13 文档与验收收尾）
 
+- U12 第七批长尾字母重命名落地（2026-09-26，三组提交 656a95f / d3a2fb9 / c2c7f74，每组独立六门禁全绿）：
+  1. 组 1（战斗）：yd→hasProjectilePhase、ud→boundCharacter（**甄别纠错：取证建议 attacker 只覆盖投射物一半产生点，昏迷特效路径 ud=受击者，改用绑定角色语义**）、td→applyEffectOnImpact（cat=12 快速打击唯一 false，红线未"修正"）、vd→animationName。
+  2. 组 2（队伍导航+渲染）：ed→targetRoom（PartyState 与 CharacterPosition 双属主同名无需拆）+ rB→setTargetRoom、pd→castleList、nd 异主拆名（渲染句柄→animation 15 处；upgrade-details 预览标志→isAnimated 4 处）、Ad→spriteSheet。
+  3. 组 3（成长/行为）：xd→level（MonsterType+MonsterTableView 双属主；game-save.js:521 局部变量未触碰）、rd→cost（击杀造价语义未动）、Cd→refreshAvailabilityState（harness 6 处调用点改双端分支）、Wd→canExecute（typedef 同步）。
+  4. 方法论新坑（已入 facts#20 系）：执行器 shorthand 模式 `^yd,` 会命中 var 声明列表中的**局部变量**——character.js:956 局部 `yd` 若直接跑执行器会只改声明不改使用而崩；对策：先手工重命名局部变量（spellAction）再跑执行器。混淆清单 1,171 → 1,158，12 字段各 19 处 + rB 3 处 = 231 处精确命中，存档键/数值/RNG 未动。
+
 - U11 装备手动穿卸闭环（2026-09-26，提交 2113944）：
   1. harness 新增 `equipFromInventory`：按角色索引与物品名从背包取件，驱动原版 `Character.prototype.Qk`（c2.js:21607，内部 `$w` 交换 + `Kd(21)`）与重构版 `Character.Qk`（character.js:1225 → equipItem + awardAdventurePoints(21)）。实测确认交换语义：新装备（金属的权杖）入槽、换下旧装备（人民之美好的权杖）回背包、itemEquipped 事件 23→24。
   2. 新增 `manual-equip-swap` 场景（矩阵第 53 个）：turns=0 立即装备（避免自然掉落移动背包索引），断言 swapDone + itemEquippedGrew；第二步 600 回合自然推进只做 DTO 全等——调试中确认商店卖店路径（actionType 10 → removeInventoryItemAt）会卖掉换下的旧装备，交换断言只在装备动作后立即做，两引擎行为一致非分叉。

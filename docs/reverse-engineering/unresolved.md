@@ -101,6 +101,25 @@
 | Wf / ge | targetCastle / activeCastle | Party 导航（纠错后语义：城堡非地牢） |
 | Ue / Lf | targetTreasureChest / targetShop | Party 导航 |
 
+## 第七批长尾字母已落地（2026-09-26，三组提交 656a95f / d3a2fb9 / c2c7f74，每组独立六门禁）
+
+| 字段 | 新名 | 对象与甄别结论 |
+|---|---|---|
+| ed / rB | targetRoom / setTargetRoom | PartyState 与 CharacterPosition 双属主同名（双方语义都是"目标房间"，无需拆名）；character.js:956 局部变量 `yd` 不涉此项 |
+| yd | hasProjectilePhase | CombatAction：远程/法术动作生成投射物承载伤害阶段（tick.js 飞行分支读取）；忍者快速打击等瞬发为 false。character.js 法术循环局部变量 `yd` 先手工改 spellAction，避免执行器 shorthand 误替换声明而不替换使用 |
+| ud | boundCharacter | VisualEffect 绑定角色：投射物特效=施放者、昏迷特效=受击者（**纠错：取证建议 attacker 只覆盖一半产生点**，actions.js:343 昏迷路径 ud=受害者）；sprites.js:147 与 tick.js:427/452 两类消费都兼容 |
+| pd | castleList | CastleCatalog 列表（与 dungeonList 成对） |
+| td | applyEffectOnImpact | Spell 定义与实例：法术效果延迟到投射物命中时施加（cat=12 快速打击唯一 false，行为未"修正"） |
+| vd | animationName | 状态效果定义的动画名（Zg 查找 + VisualEffect 首参） |
+| xd | level | 双属主：MonsterType 等级 + MonsterTableView 当前显示等级；game-save.js:521 局部变量 xd 未触碰 |
+| rd | cost | 全局升级击杀数造价（**红线遵守：未"修正"其击杀语义**） |
+| Cd | refreshAvailabilityState | Upgrade 可购状态刷新（upgrades.js 19 处）；harness 6 处调用点改为 original?Cd():refreshAvailabilityState() 双端分支 |
+| nd | animation / isAnimated | 异主拆名：渲染动画句柄（sprites/scene/tick 15 处）→ animation；upgrade-details 预览动画标志（4 处）→ isAnimated |
+| Ad | spriteSheet | 精灵表引用（sprites.js/scene.js） |
+| Wd | canExecute | DungeonBehaviorMethods 行为前置检查（17 原型实现 + 1 调用点 + typedef 同步） |
+
+混淆清单 1,171 → 1,158。全程 scripts/rename-field.mjs --expect 精确命中（12 字段各 19 处 + rB 3 处 = 231 处），存档键、数值、RNG、掉率未动。
+
 ## 第八批取证已返回（2026-09-26，待落地）
 
 1. **statMultipliers 六键（全 HIGH，原子式改名红线）**：Xf→damageMultiplier、Qf→armorMultiplier、Rf→attackRatingMultiplier、Zf→defenceRatingMultiplier、Cf→maxHealthMultiplier、Ef→maxSpiritMultiplier。实证：applyLevelStats（simulation/characters.js:167-186）赋值目标顺序 + items.js getClassStatMultiplier 按 statType 1-6 映射 + c2.js:29706-29716 同构。落点全集：classes.js 11 处、guardians.js 4 处、minions.js 3 处字面量 + 4 个消费点。**部分改名会让 applyLevelStats 读到 undefined → NaN 沿等级曲线扩散**。
