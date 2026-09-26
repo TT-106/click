@@ -1,10 +1,14 @@
 # WORKSTATE — Clickpocalypse II 语义恢复与现代化工程
 
 > 本文件是长程自治任务的**唯一续跑入口**。上下文压缩或中断后，先读本文件 + `git log --oneline`，再继续。
-> 最后更新：2026-09-26（U18 He/qe/se/we/te/be/Ie/Nd 落地后，混淆清单 1,095；验收矩阵 51 PASS / 0 PARTIAL、矩阵 59/59、soak 通过）
+> 最后更新：2026-09-26（U19 财宝定位与升级方法簇落地后，混淆清单 1,087；验收矩阵 51 PASS / 0 PARTIAL、矩阵 59/59、soak 通过）
 
 ## 当前轮次状态（2026-09-26，M13 文档与验收收尾）
 
+- U19 财宝定位与升级方法簇（2026-09-26，一笔提交，六门禁全绿，混淆清单 1,095 → 1,087）：
+  1. **财宝目标定位字段**（17 处）：zq/Aq→levelX/levelY（等级像素坐标，DTO 键同名可证）、BC→definition（含 kind/uh=settingsId/jh）、VE→westWall（西墙变体选择，DTO 键同名）。
+  2. **升级/掉落方法簇**（40 处，UpgradeMethods typedef 同步）：vf 三属主拆名——ScrollUpgrade/ScrollDrop→getScroll（惰性缓存滚动器）、ScrollInventory→getScrollById（按 id 查找；upgrades.js 内 game.scrolls.vf 调用点先手工分离再跑执行器）、hu→isNearlyAffordable（全局 400 击杀/30% 或升级 300 经验/20% 的"即将可购"判定）、uw→getSpell（LearnSpellUpgrade 惰性法术 + SpellUpgradeDetails 消费点）、Wp→prerequisite（技能树前置节点，bindSkillTree 绑定）。
+  方法论：执行器对 typedef 注释内方法名（vf/hu/uw/Wp 各 +1）与残留扫描都会计入，--expect 前先 grep -c 逐文件清点；同一文件内同字母不同属主时先 node 手工分离少数派，再按属主分批执行。
 - U18 验证器指定长尾第三批（2026-09-26，两笔提交，六门禁全绿，混淆清单 1,106 → 1,095）：
   1. **升级层级 He→isOwned**（17 处，6 文件 + UpgradeMethods typedef 同步）：9 个原型实现（base false、技能/学法术/冒险点→purchased、成就→applied、买地牢/城堡→目标状态达成）语义统一为"该升级是否已购/已生效"；消费方＝技能树前置链（prerequisite.isOwned()）、DTO upgradePurchased 与 upgrades1..4 映射（entities.js:144）、视图 ownedUpgradeButton 类名、hasUnpurchasedUpgrade。**甄别结论：虽跨 6 文件但语义单一，无需拆名**；第 17 处为 typedef 注释内 `He:`（执行器会计数，--expect 按 17）。
   2. **视图/渲染单属主字段**（102 处）：qe→unlockLevel（解锁怪物等级升级缓存，与 retireLevel 对偶）、se→spriteRenderer（SceneRenderer 活动绘制后端：按 depthSortSprites 选项切 DepthSorted/Immediate）、te→showDetails（各 Details 子类的 DOM 显示钩子）、we→titleElement（标题 span）、be→tableElement（CharacterSummaryView 属性表）、Ie→rarityCell（InventoryItemView 品质单元格）、Nd→previewImageElement（50px 精灵预览 img）。
