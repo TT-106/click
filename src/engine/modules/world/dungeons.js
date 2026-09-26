@@ -62,7 +62,7 @@ export function randomDungeonType(a) {
 export function DungeonRegistry() {
   this.dungeonList = [];
   this.Do = {};
-  this.Mk = 0;
+  this.discoveredDungeonCount = 0;
   this.attackable = [];
   this.cleared = [];
   this.farms = [];
@@ -81,7 +81,7 @@ export function resetDungeons() {
   a.cleared.length = 0;
   a.farms.length = 0;
   a.farmable.length = 0;
-  a.Mk = 0;
+  a.discoveredDungeonCount = 0;
   a.pendingFarmKills = 0;
   var b;
   for (b = 0; b < a.dungeonList.length; b++) {
@@ -98,7 +98,7 @@ export function discoverDungeon(a) {
   var b = game.dungeons;
   if (0 > b.discovered.indexOf(a)) {
     b.discovered.push(a);
-    b.Mk++;
+    b.discoveredDungeonCount++;
   }
   if (a.discovered && !a.cleared && !a.isFarm && 0 > b.attackable.indexOf(a)) {
     b.attackable.push(a);

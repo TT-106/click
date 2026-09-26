@@ -122,59 +122,6 @@
     ]
   },
   {
-    "name": "Mk",
-    "reads": 2,
-    "writes": 6,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:1161",
-        "code": "game.dungeons.Mk"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:135",
-        "code": "game.dungeons.Mk"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:732",
-        "code": "game.dungeons.Mk"
-      }
-    ],
-    "fileCount": 5,
-    "files": [
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\runtime\\game.js",
-      "src\\engine\\modules\\world\\dungeons.js",
-      "src\\engine\\modules\\world\\initialization.js"
-    ]
-  },
-  {
-    "name": "$k",
-    "reads": 5,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\stats.js:99",
-        "code": "CharacterStats.prototype.$k"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\actions.js:361",
-        "code": "game.state.statisticsRecorder.$k"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:69",
-        "code": "RunStatistics.prototype.$k"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\characters\\stats.js",
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\progression\\statistics.js",
-      "src\\engine\\modules\\simulation\\characters.js"
-    ]
-  },
-  {
     "name": "Vk",
     "reads": 6,
     "writes": 2,
@@ -5506,29 +5453,6 @@
       "src\\engine\\modules\\characters\\character.js",
       "src\\engine\\modules\\characters\\movement.js",
       "src\\engine\\modules\\characters\\party.js"
-    ]
-  },
-  {
-    "name": "Al",
-    "reads": 4,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\targeting.js:246",
-        "code": "this.Al"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\targeting.js:427",
-        "code": "this.Al"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\targeting.js:428",
-        "code": "this.Al"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\ai\\targeting.js"
     ]
   },
   {

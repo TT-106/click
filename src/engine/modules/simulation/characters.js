@@ -283,8 +283,8 @@ export function initializeSimulationCharacters() {
           game.state.statisticsRecorder.recordScrollKill();
         }
         if (1 === a.characterType) {
-          game.state.statisticsRecorder.$k();
-          f.stats.$k();
+          game.state.statisticsRecorder.recordMinionKill();
+          f.stats.recordMinionKill();
         }
         f = b.monsterType;
         addExperience(f.No * doubleExperienceModifier.currentValue);

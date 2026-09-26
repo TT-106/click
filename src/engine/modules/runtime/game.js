@@ -447,7 +447,7 @@ export function initializeRuntimeGame() {
       clearScrollTargets();
       a = game.dungeons.farms.length;
       resetDungeons();
-      game.dungeons.Mk = a;
+      game.dungeons.discoveredDungeonCount = a;
       a = game.castles.nextRequiredMonsterLevel;
       resetCastles();
       game.castles.nextRequiredMonsterLevel = a;

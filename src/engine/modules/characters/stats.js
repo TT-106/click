@@ -96,7 +96,7 @@ export function initializeCharactersStats() {
   CharacterStats.prototype.setMinionKills = function (a) {
     this.minionKills = a;
   };
-  CharacterStats.prototype.$k = function () {
+  CharacterStats.prototype.recordMinionKill = function () {
     this.minionKills++;
   };
   CharacterStats.prototype.Ir = function () {

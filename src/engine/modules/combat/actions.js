@@ -358,7 +358,7 @@ export function resolveCharacterDefeat(a, b) {
           game.state.statisticsRecorder.recordScrollKill();
         }
         if (1 === a.characterType) {
-          game.state.statisticsRecorder.$k();
+          game.state.statisticsRecorder.recordMinionKill();
         }
         d = b.monsterType;
         addExperience(d.No * doubleExperienceModifier.currentValue);

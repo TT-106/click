@@ -66,7 +66,7 @@ export function initializeProgressionStatistics() {
   RunStatistics.prototype.recordScrollKill = function () {
     this.scrollKills++;
   };
-  RunStatistics.prototype.$k = function () {
+  RunStatistics.prototype.recordMinionKill = function () {
     this.minionKills++;
   };
   RunStatistics.prototype.setMinionKills = function (a) {
@@ -172,9 +172,9 @@ export function initializeProgressionStatistics() {
     this.statisticsRecorder.recordScrollKill();
     this.lifetimeStatistics.recordScrollKill();
   };
-  StatisticsRecorder.prototype.$k = function () {
-    this.statisticsRecorder.$k();
-    this.lifetimeStatistics.$k();
+  StatisticsRecorder.prototype.recordMinionKill = function () {
+    this.statisticsRecorder.recordMinionKill();
+    this.lifetimeStatistics.recordMinionKill();
   };
   StatisticsRecorder.prototype.recordMinionSummoned = function () {
     this.statisticsRecorder.recordMinionSummoned();

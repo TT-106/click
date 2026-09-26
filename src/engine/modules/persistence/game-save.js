@@ -132,7 +132,7 @@ export function restoreGameState(a, b) {
             }
           }
           game.dungeons.setFarmedKills(D ? D : 0);
-          game.dungeons.Mk = N ? N : 0;
+          game.dungeons.discoveredDungeonCount = N ? N : 0;
           var va = d.currentDungeon;
           if (va) {
             var yb = va.dungeonId,
@@ -729,7 +729,7 @@ export function createSaveState(a) {
       fpsVisible: C.showFps
     };
     var v = game.dungeons.pendingFarmKills,
-      D = game.dungeons.Mk,
+      D = game.dungeons.discoveredDungeonCount,
       N = [],
       I = game.dungeons.dungeonList,
       x,

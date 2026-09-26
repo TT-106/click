@@ -1158,7 +1158,7 @@ export function updateCharacter(a, b) {
               recordGameEvent("Dungeon", "Entering Dungeon Again");
             } else {
               ye.discovered = true;
-              ye.farmCost = scaleByLevel(game.dungeons.Mk + 1, dungeonPriceCurve, 1);
+              ye.farmCost = scaleByLevel(game.dungeons.discoveredDungeonCount + 1, dungeonPriceCurve, 1);
               discoverDungeon(ye);
               recordGameEvent("Dungeon", "Discovered Dungeon");
             }

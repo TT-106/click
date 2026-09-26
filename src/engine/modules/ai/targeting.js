@@ -243,7 +243,7 @@ export function searchRoomRoute(a, b, c, d, f) {
   return null;
 }
 export function AttackBehavior(a, b) {
-  this.Al = a;
+  this.patrolRoom = a;
   this.actionRange = b;
 }
 export function respondToTaunt(a, b) {
@@ -424,9 +424,9 @@ export function initializeAiTargeting() {
   AttackBehavior.prototype.notifySpellLearned = function () {};
   AttackBehavior.prototype.dr = function (a) {
     if (!respondToTaunt(this, a) && (a.position.movementTargetCleared || a.actionType === IDLE_ACTION)) {
-      var b = (this.Al.tileRow + 1) * game.tileSize,
-        c = (this.Al.heightInTiles - 1) * game.tileSize;
-      setVector(a.position.moveTargetPoint, (this.Al.tileColumn + 1) * game.tileSize + randomInt((this.Al.widthInTiles - 1) * game.tileSize), b + randomInt(c));
+      var b = (this.patrolRoom.tileRow + 1) * game.tileSize,
+        c = (this.patrolRoom.heightInTiles - 1) * game.tileSize;
+      setVector(a.position.moveTargetPoint, (this.patrolRoom.tileColumn + 1) * game.tileSize + randomInt((this.patrolRoom.widthInTiles - 1) * game.tileSize), b + randomInt(c));
       a.actionType = 1;
       a.position.movementTargetCleared = false;
     }

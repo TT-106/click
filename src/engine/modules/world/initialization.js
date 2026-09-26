@@ -127,7 +127,7 @@ export function initializeRegionsAndCastles() {
   Ja.attackable.length = 0;
   Ja.cleared.length = 0;
   Ja.farms.length = 0;
-  Ja.Mk = 0;
+  Ja.discoveredDungeonCount = 0;
   Ja.farmable.length = 0;
   Ja.pendingFarmKills = 0;
   Ja.Do = {};
