@@ -314,7 +314,7 @@ export function initializeAiBehaviors() {
         this.Al = c;
         var d = roomTopPixels(c) + game.tileSize,
           f = (c.heightInTiles - 1) * game.tileSize;
-        setVector(b.Qb, roomLeftPixels(c) + game.tileSize + randomInt((c.widthInTiles - 1) * game.tileSize), d + randomInt(f));
+        setVector(b.moveTargetPoint, roomLeftPixels(c) + game.tileSize + randomInt((c.widthInTiles - 1) * game.tileSize), d + randomInt(f));
         b.dd = false;
       }
       a.actionType = 1;
@@ -345,7 +345,7 @@ export function initializeAiBehaviors() {
         a.actionType = CAST_ACTION_TYPE;
         this.Kp(a);
       } else {
-        assignVector(b.Qb, this.selectedTarget.position.levelPosition);
+        assignVector(b.moveTargetPoint, this.selectedTarget.position.levelPosition);
         a.actionType = 1;
       }
       clearMovementTarget(b);
@@ -416,15 +416,15 @@ export function initializeAiBehaviors() {
       g = roomRightPixels(c),
       c = roomBottomPixels(c);
     if (0 === b) {
-      setVector(a.Qb, d + 1, f + 1);
+      setVector(a.moveTargetPoint, d + 1, f + 1);
     } else {
       if (1 === b) {
-        setVector(a.Qb, g - 1, f + 1);
+        setVector(a.moveTargetPoint, g - 1, f + 1);
       } else {
         if (2 === b) {
-          setVector(a.Qb, d + 1, c - 1);
+          setVector(a.moveTargetPoint, d + 1, c - 1);
         } else {
-          setVector(a.Qb, g - 1, c - 1);
+          setVector(a.moveTargetPoint, g - 1, c - 1);
         }
       }
     }
@@ -528,7 +528,7 @@ export function initializeAiBehaviors() {
         d = l;
       }
     }
-    setVector(b.Qb, c, d);
+    setVector(b.moveTargetPoint, c, d);
     return true;
   };
   RangedAttackBehavior.prototype.wd = function (a) {
@@ -550,7 +550,7 @@ export function initializeAiBehaviors() {
         markAttackTurn(a);
         a.actionType = this.qk;
       } else {
-        choosePointNearTarget(a.position.Qb, this.targetCharacter.position.levelPosition, a.position.room);
+        choosePointNearTarget(a.position.moveTargetPoint, this.targetCharacter.position.levelPosition, a.position.room);
         a.actionType = 1;
       }
       var b = a.position.room;
@@ -643,7 +643,7 @@ export function initializeAiBehaviors() {
         markAttackTurn(a);
         a.actionType = this.qk;
       } else {
-        choosePointNearTarget(a.position.Qb, this.targetCharacter.position.levelPosition, a.position.room);
+        choosePointNearTarget(a.position.moveTargetPoint, this.targetCharacter.position.levelPosition, a.position.room);
         a.actionType = 1;
       }
       var b = a.position.room;
@@ -782,7 +782,7 @@ export function initializeAiBehaviors() {
           }
         }
       } else {
-        assignVector(a.position.Qb, this.targetCharacter.position.levelPosition);
+        assignVector(a.position.moveTargetPoint, this.targetCharacter.position.levelPosition);
         a.actionType = 1;
       }
     }
@@ -1021,11 +1021,11 @@ export function initializeAiBehaviors() {
       f.Cc = c;
       f.rB(b);
       if (d) {
-        setVector(f.Qb, d.me, d.ne);
+        setVector(f.moveTargetPoint, d.me, d.ne);
         a.actionType = 1;
       } else {
         if (b) {
-          setVector(f.Qb, b.tq, b.uq);
+          setVector(f.moveTargetPoint, b.tq, b.uq);
           a.actionType = 1;
         } else {
           if (c) {
@@ -1105,7 +1105,7 @@ export function initializeAiBehaviors() {
         if (distanceToPoint(a.position.levelPosition, this.qd.Xo, this.qd.Yo) < this.Mi) {
           a.actionType = 5;
         } else {
-          setVector(a.position.Qb, this.qd.Xo, this.qd.Yo);
+          setVector(a.position.moveTargetPoint, this.qd.Xo, this.qd.Yo);
           a.actionType = 1;
         }
         clearMovementTarget(a.position);
@@ -1168,7 +1168,7 @@ export function initializeAiBehaviors() {
         if (distanceToPoint(a.position.levelPosition, this.bd.bq, this.bd.cq) < this.Mi) {
           a.actionType = 7;
         } else {
-          setVector(a.position.Qb, this.bd.bq, this.bd.cq);
+          setVector(a.position.moveTargetPoint, this.bd.bq, this.bd.cq);
           a.actionType = 1;
         }
         clearMovementTarget(a.position);
@@ -1231,7 +1231,7 @@ export function initializeAiBehaviors() {
         if (distanceToPoint(a.position.levelPosition, this.ad.Qp, this.ad.Rp) < this.Mi) {
           a.actionType = 8;
         } else {
-          setVector(a.position.Qb, this.ad.Qp, this.ad.Rp);
+          setVector(a.position.moveTargetPoint, this.ad.Qp, this.ad.Rp);
           a.actionType = 1;
         }
         clearMovementTarget(a.position);
@@ -1294,7 +1294,7 @@ export function initializeAiBehaviors() {
         if (distanceToPoint(a.position.levelPosition, this.$c.mp, this.$c.np) < this.Mi) {
           a.actionType = 6;
         } else {
-          setVector(a.position.Qb, this.$c.mp, this.$c.np);
+          setVector(a.position.moveTargetPoint, this.$c.mp, this.$c.np);
           a.actionType = 1;
         }
         clearMovementTarget(a.position);
@@ -1354,7 +1354,7 @@ export function initializeAiBehaviors() {
       if (distanceToPoint(a.position.levelPosition, this.lc.zq, this.lc.Aq) < this.Mi) {
         a.actionType = 12;
       } else {
-        setVector(a.position.Qb, this.lc.zq, this.lc.Aq);
+        setVector(a.position.moveTargetPoint, this.lc.zq, this.lc.Aq);
         a.actionType = 1;
       }
       clearMovementTarget(a.position);
@@ -1490,7 +1490,7 @@ export function initializeAiBehaviors() {
   CooldownBehavior.prototype.resetBehaviorState = function () {};
   CooldownBehavior.prototype.notifySpellLearned = function () {};
   CooldownBehavior.prototype.od = function (a) {
-    choosePointNearTarget(a.position.Qb, a.summoner.position.levelPosition, a.position.room);
+    choosePointNearTarget(a.position.moveTargetPoint, a.summoner.position.levelPosition, a.position.room);
     a.actionType = 1;
     clearMovementTarget(a.position);
   };
@@ -1517,7 +1517,7 @@ export function initializeAiBehaviors() {
         markAttackTurn(a);
         a.actionType = this.qk;
       } else {
-        choosePointNearTarget(a.position.Qb, this.targetCharacter.position.levelPosition, a.position.room);
+        choosePointNearTarget(a.position.moveTargetPoint, this.targetCharacter.position.levelPosition, a.position.room);
         a.actionType = 1;
       }
       var b = a.position.room;
@@ -1557,7 +1557,7 @@ export function initializeAiBehaviors() {
     var b = a.position;
     if (b.room) {
       var c = b.room,
-        d = b.Qb;
+        d = b.moveTargetPoint;
       assignVector(d, b.levelPosition);
       clampPointToRoom(c, d, game.tileSize + 1);
       b.dd = false;

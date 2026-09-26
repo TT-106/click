@@ -120,13 +120,13 @@ export function revealRoom(a) {
       h = a.tileGrid[f.wj][f.xj];
       h.setBackgroundSprite(p);
       if (f.Ho) {
-        if (f.Mb) {
+        if (f.isOpen) {
           h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.Ac.kg));
         } else {
           h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.Ac.Vf));
         }
       } else {
-        if (f.Mb) {
+        if (f.isOpen) {
           h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.Ac.jg));
         } else {
           h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.Ac.Uf));
@@ -253,7 +253,7 @@ export function canPlaceRoomObject(a, b) {
 }
 export function DungeonDoor(a) {
   this.ne = this.me = this.xj = this.wj = 0;
-  this.Mb = false;
+  this.isOpen = false;
   this.Ho = true;
   this.$d = a;
   this.Yk = null;
@@ -333,13 +333,13 @@ export function revealHallway(a, b) {
         f = a.tileGrid[x][z];
         f.setBackgroundSprite(h);
         if (a.af.Ho) {
-          if (a.af.Mb) {
+          if (a.af.isOpen) {
             f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.Ac.kg));
           } else {
             f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.Ac.Vf));
           }
         } else {
-          if (a.af.Mb) {
+          if (a.af.isOpen) {
             f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.Ac.jg));
           } else {
             f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.Ac.Uf));
@@ -389,13 +389,13 @@ export function revealHallway(a, b) {
         f = a.tileGrid[x][z];
         f.setBackgroundSprite(h);
         if (a.Be.Ho) {
-          if (a.Be.Mb) {
+          if (a.Be.isOpen) {
             f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.Ac.kg));
           } else {
             f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.Ac.Vf));
           }
         } else {
-          if (a.Be.Mb) {
+          if (a.Be.isOpen) {
             f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.Ac.jg));
           } else {
             f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.Ac.Uf));

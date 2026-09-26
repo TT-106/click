@@ -13,7 +13,7 @@ export function Achievement(a) {
   this.name = a.name;
   this.requirementType = a.requirementType;
   this.requiredCount = a.requiredCount;
-  this.Hb = a.Hb;
+  this.characterClass = a.characterClass;
   this.pointEventTypeId = a.pointEventTypeId;
   this.Vt = pointEventsById[a.pointEventTypeId].yc;
   this.isVictoryAchievement = !!a.isVictoryAchievement;
@@ -53,11 +53,11 @@ export function hasVictoryAchievement(a) {
     case 24:
       return 0 < b.vn;
     case 25:
-      return 0 < getClassVictories(b, a.Hb);
+      return 0 < getClassVictories(b, a.characterClass);
     case 26:
       return b.Xm >= a.requiredCount;
     case 27:
-      return 0 < getSoloClassVictories(b, a.Hb);
+      return 0 < getSoloClassVictories(b, a.characterClass);
     default:
       return false;
   }

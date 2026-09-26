@@ -119,10 +119,10 @@ export function findNextUnopenedDoor() {
     n = game.level.gd,
     p = 1E5;
   if (b = a.position.cd) {
-    if (!b.af.Mb) {
+    if (!b.af.isOpen) {
       return b.af;
     }
-    if (!b.Be.Mb) {
+    if (!b.Be.isOpen) {
       return b.Be;
     }
   }
@@ -130,7 +130,7 @@ export function findNextUnopenedDoor() {
     b = d.Nc;
     for (c = 0; c < b.length; c++) {
       d = b[c];
-      if (!d.Mb) {
+      if (!d.isOpen) {
         if (g) {
           f = distanceSquaredToPoint(h, d.me, d.ne);
           if (f < p) {
@@ -151,7 +151,7 @@ export function findNextUnopenedDoor() {
     if (d = l[a], d.Xi) {
       for (b = d.Nc, c = 0; c < b.length; c++) {
         d = b[c];
-        if (!d.Mb) {
+        if (!d.isOpen) {
           if (g) {
             f = distanceSquaredToPoint(h, d.me, d.ne);
             if (f < p) {
@@ -170,7 +170,7 @@ export function findNextUnopenedDoor() {
     b = n[a];
     if (b.Km) {
       d = b.af;
-      if (!d.Mb) {
+      if (!d.isOpen) {
         if (g) {
           f = distanceSquaredToPoint(h, d.me, d.ne);
           if (f < p) {
@@ -183,7 +183,7 @@ export function findNextUnopenedDoor() {
         }
       }
       d = b.Be;
-      if (!d.Mb) {
+      if (!d.isOpen) {
         if (g) {
           f = distanceSquaredToPoint(h, d.me, d.ne);
           if (f < p) {
@@ -547,7 +547,7 @@ export function initializeCharactersParty() {
       if (this.Ue) {
         this.Cc = this.Ue.Nn;
         this.Bc = this.ed = null;
-      } else if (!this.ed && (!this.Bc || this.Bc.Mb)) {
+      } else if (!this.ed && (!this.Bc || this.Bc.isOpen)) {
         if (this.Cc) {
           if (a = this.Cc.Xi) {
             a = getMonsters();

@@ -27,7 +27,7 @@ export function CharacterPosition(a, b) {
   this.room = this.cd = null;
   this.Ul = new Vector2();
   this.Sn = this.Rn = 0;
-  this.Qb = new Vector2();
+  this.moveTargetPoint = new Vector2();
   this.Ug = null;
   this.dd = false;
   this.ed = this.Cc = this.Bc = null;

@@ -263,7 +263,7 @@ export function updateCharacter(a, b) {
           subtractVector(p.velocity, p.levelPosition);
           if (vectorLength(p.velocity) <= s) {
             var y;
-            if (!(y = u.Mb)) {
+            if (!(y = u.isOpen)) {
               var A;
               a: {
                 var C,
@@ -304,11 +304,11 @@ export function updateCharacter(a, b) {
             if (y) {
               setVector(p.levelPosition, u.me | 0, u.ne | 0);
               var Q = p.Ug.shift();
-              if (!Q.Mb) {
+              if (!Q.isOpen) {
                 a: {
                   var V = game.state.party;
-                  if (!Q.Mb) {
-                    Q.Mb = true;
+                  if (!Q.isOpen) {
+                    Q.isOpen = true;
                     game.state.statisticsRecorder.Ur();
                     awardAdventurePoints(2);
                     if (!Q.$d.Xi) {
@@ -320,7 +320,7 @@ export function updateCharacter(a, b) {
                     if (!na.Km) {
                       revealHallway(na, true);
                       var K = getOppositeDoor(na, Q);
-                      if (!K.Mb) {
+                      if (!K.isOpen) {
                         V.et(K);
                         V.Cc = K.$d;
                         break a;
@@ -398,10 +398,10 @@ export function updateCharacter(a, b) {
             addVector(p.levelPosition, p.velocity);
           }
         } else {
-          assignVector(p.velocity, p.Qb);
+          assignVector(p.velocity, p.moveTargetPoint);
           subtractVector(p.velocity, p.levelPosition);
           if (vectorLength(p.velocity) <= s) {
-            assignVector(p.levelPosition, p.Qb);
+            assignVector(p.levelPosition, p.moveTargetPoint);
             if (p.ed) {
               game.state.party.iw();
             }

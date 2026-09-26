@@ -187,7 +187,7 @@ export function searchDoorRoute(a, b, c, d, f) {
   if (c === b) {
     return g = [], g.push(c), g;
   }
-  if (!c.Mb) {
+  if (!c.isOpen) {
     return null;
   }
   if (-1 < d.indexOf(c)) {
@@ -217,7 +217,7 @@ export function searchRoomRoute(a, b, c, d, f) {
   if (c.$d === b) {
     return g = [], g.push(c), g;
   }
-  if (!c.Mb) {
+  if (!c.isOpen) {
     return null;
   }
   if (-1 < d.indexOf(c)) {
@@ -285,7 +285,7 @@ export function attackTauntingTarget(a, b) {
       markAttackTurn(b);
       b.actionType = 2;
     } else {
-      choosePointNearTarget(d.Qb, c.levelPosition, b.position.room);
+      choosePointNearTarget(d.moveTargetPoint, c.levelPosition, b.position.room);
       b.actionType = 1;
     }
     clearMovementTarget(d);
@@ -426,7 +426,7 @@ export function initializeAiTargeting() {
     if (!respondToTaunt(this, a) && (a.position.dd || a.actionType === IDLE_ACTION)) {
       var b = (this.Al.tileRow + 1) * game.tileSize,
         c = (this.Al.heightInTiles - 1) * game.tileSize;
-      setVector(a.position.Qb, (this.Al.tileColumn + 1) * game.tileSize + randomInt((this.Al.widthInTiles - 1) * game.tileSize), b + randomInt(c));
+      setVector(a.position.moveTargetPoint, (this.Al.tileColumn + 1) * game.tileSize + randomInt((this.Al.widthInTiles - 1) * game.tileSize), b + randomInt(c));
       a.actionType = 1;
       a.position.dd = false;
     }
