@@ -7,7 +7,7 @@ import saveCodec from '../src/engine/save-codec.js';
 import {
   decodeFixture, encodeSave, summarize,
   withPotions, withScrolls, withGold, withKills, withPointPools, withFarmableDungeon, withTurns, withElapsed, withOfflineProcessing, withBackgroundProcessing,
-  withVictories, withClassSpell, withCastleVictory, withReclassedSpell, withEquippedItem, withResurrectionTrial, withSkillPoints, withExperience, withCharacterClass, withAttackableCastle,
+  withVictories, withClassSpell, withCastleVictory, withReclassedSpell, withEquippedItem, withResurrectionTrial, withSkillPoints, withExperience, withCharacterClass, withAttackableCastle, withClaimableAchievements,
   HARNESS_FIXED_NOW,
 } from '../tests/scenarios/save-mutations.mjs';
 
@@ -106,6 +106,12 @@ const barbarianGrew = (s) => {
     spellsLearned: (adv.spells?.length ?? 0) > (bAdv.spells?.length ?? 0),
   };
 };
+const multipleAchievementsClaimed = (s) => ({
+  appliedDelta: (s.achievementManager?.achievements ?? []).filter(a => a.applied).length
+    - (base.achievementManager?.achievements ?? []).filter(a => a.applied).length,
+  killRewardGrew: ((s.pointManagerState?.pointsByType ?? []).find(p => p.pointEventType === 1)?.points ?? 0)
+    > ((base.pointManagerState?.pointsByType ?? []).find(p => p.pointEventType === 1)?.points ?? 0),
+});
 const castleAttackPlanned = (s) => ({
   attackPlanned: (s.castleManager?.castleStates ?? []).filter(c => c.attackScheduled || c.conquered).length
     > (base.castleManager?.castleStates ?? []).filter(c => c.attackScheduled || c.conquered).length,
@@ -468,6 +474,18 @@ const scenarios = [
     ],
   },
   {
+    name: 'achievement-rewards-multiple',
+    // 成就奖励机制闭环：全部 328 项成就的奖励是同一机制 increasePointEventReward(typeId, Vt)，
+    // 差别只在事件类型与点数。把 8 个未获得成就置为"已达成未领取"（优先击杀类），
+    // 驱动 4 个领取槽多轮刷新领取（limit 8），断言 applied 至少增长 3 且击杀事件奖励行
+    // pointsByType[1].points（= reward × count，count 注入 1,000,000）真实抬升。
+    make: () => withPointPools(withClaimableAchievements(base, 8), { 1: { points: 1000000, count: 1000000 } }),
+    steps: [
+      { turns: 0, claimAchievement: 8, check: multipleAchievementsClaimed },
+      { turns: 600 },
+    ],
+  },
+  {
     name: 'auto-equipped',
     // fixture 每人背包里已有强于当前装备的物品；原版/重构版走同一个升级 type=4。
     make: () => base,
@@ -723,7 +741,7 @@ try {
           if (effectType !== undefined) return p.page.evaluate(a => window.harness.countEffectApplications(a.turns, a.effectType), { turns, effectType });
           if (purchaseUpgrades !== undefined) return p.page.evaluate(a => window.harness.purchaseUpgrades(a), { turns, limit: purchaseUpgrades });
           if (purchasePointUpgrades !== undefined) return p.page.evaluate(a => window.harness.purchasePointUpgrades(a), { turns, limit: purchasePointUpgrades });
-          if (claimAchievement) return p.page.evaluate(a => window.harness.claimAchievement(a), { turns });
+          if (claimAchievement) return p.page.evaluate(a => window.harness.claimAchievement(a), { turns, limit: claimAchievement === true ? 1 : claimAchievement });
           if (equipBestItems) return p.page.evaluate(a => window.harness.equipBestItems(a), { turns });
           if (castScrollDuringCombat !== undefined) return p.page.evaluate(a => window.harness.castScrollDuringCombat(a), { maxTurns: castScrollDuringCombat, scrollId });
           if (purchaseDungeonFarm) return p.page.evaluate(a => window.harness.purchaseDungeonFarm(a), { turns });
@@ -942,6 +960,8 @@ try {
             if (verdict.skillsLearned !== undefined) assert.equal(verdict.skillsLearned, true, `${label} 野蛮人四棵技能树的解锁布尔位必须真实增长`);
             if (verdict.spellsLearned !== undefined) assert.equal(verdict.spellsLearned, true, `${label} 野蛮人必须经 LearnSpellUpgrade 真实学会职业法术`);
             if (verdict.attackPlanned !== undefined) assert.equal(verdict.attackPlanned, true, `${label} 攻击城堡计划（type 13 → attackScheduled）必须真实发生`);
+            if (verdict.appliedDelta !== undefined) assert.ok(verdict.appliedDelta >= 3, `${label} 多次领取后 applied 计数必须至少增长 3（实际 ${verdict.appliedDelta}）`);
+            if (verdict.killRewardGrew !== undefined) assert.equal(verdict.killRewardGrew, true, `${label} 击杀事件奖励（pointsByType[1].points = reward × count）必须真实抬升`);
             if (verdict.achievementClaimed !== undefined) assert.equal(verdict.achievementClaimed, true, `${label} 成就奖励必须真实领取并标记 applied`);
             if (verdict.equipmentChanged !== undefined) assert.equal(verdict.equipmentChanged, true, `${label} 自动装备后装备槽必须真实变化`);
             if (verdict.itemEquipEvents !== undefined) assert.equal(verdict.itemEquipEvents, true, `${label} 装备物品事件计数必须真实增长`);

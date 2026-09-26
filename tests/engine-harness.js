@@ -324,19 +324,25 @@ window.harness = {
     }
     return { purchased, readyCount, availablePoints: original ? window.Game.i.ae.Dd : game.state.adventurePoints.availablePoints, snapshot: snapshot() };
   },
-  claimAchievement({ turns = 0 } = {}) {
+  claimAchievement({ turns = 0, limit = 1 } = {}) {
     for (let i = 0; i < turns; i++) advance();
     const collections = original ? window.Nx : upgradeCollections;
     const rows = collections.flatMap(collection => original ? collection.HC : collection.upgradeRows).flat();
+    const slots = rows.filter(upgrade => (original ? upgrade.Na() : upgrade.getUpgradeType()) === 14);
     let claimed = 0;
-    for (const upgrade of rows) {
-      if ((original ? upgrade.Na() : upgrade.getUpgradeType()) !== 14) continue;
-      if (original) upgrade.Cd(); else upgrade.refreshAvailabilityState(); // 与升级面板刷新可购状态相同
-      if (original ? upgrade.qc() : upgrade.canPurchaseNow()) {
-        if (original) upgrade.Qc(); else upgrade.purchase();
-        claimed++;
-        break;
+    // 领取槽只有 4 个但成就队列可能更长：每轮刷新后逐槽领取，直到领满或队列排空
+    for (let pass = 0; pass < 20 && claimed < limit; pass++) {
+      let progress = 0;
+      for (const upgrade of slots) {
+        if (claimed >= limit) break;
+        if (original) upgrade.Cd(); else upgrade.refreshAvailabilityState(); // 与升级面板刷新可购状态相同
+        if (original ? upgrade.qc() : upgrade.canPurchaseNow()) {
+          if (original) upgrade.Qc(); else upgrade.purchase();
+          claimed++;
+          progress++;
+        }
       }
+      if (progress === 0) break;
     }
     return { claimed, snapshot: snapshot() };
   },

@@ -139,6 +139,24 @@ export function withCastleVictory(save) {
   return out;
 }
 
+/** 把 count 个未获得的击杀类成就置为"已达成未领取"（优先 achievementId 含 Kills 的条目），
+ *  供多次领取场景驱动成就队列（原版 Ze 队列 4 个领取槽）。成就奖励统一走
+ *  increasePointEventReward(pointEventTypeId, Vt)：领取后对应事件类型的 currentPointReward 抬升，
+ *  在注入 count>0 的 pointsByType 行上表现为 points = reward × count 真实增长。 */
+export function withClaimableAchievements(save, count = 8) {
+  const out = clone(save);
+  const am = out.achievementManager.achievements;
+  const killPool = am.filter(a => !a.obtained && /Kills/i.test(a.achievementId));
+  const restPool = am.filter(a => !a.obtained && !/Kills/i.test(a.achievementId));
+  const pool = killPool.concat(restPool);
+  if (pool.length < count) throw new Error(`fixture 可领取成就不足 ${count}（仅 ${pool.length}）`);
+  for (let i = 0; i < count; i++) {
+    pool[i].obtained = true;
+    pool[i].applied = false;
+  }
+  return out;
+}
+
 /** 城堡进攻计划前置态：把唯一未锁城堡（100_100）变成"可进攻"——
  *  地牢清空并标记 dungeonsConquered（载入时直接恢复为 Bj，使 canAttackCastle 成立），
  *  未征服、未计划攻击、所需怪物等级清零。载入时 game-save 按 canAttackCastle 重建
