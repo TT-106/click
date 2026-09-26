@@ -28,8 +28,8 @@ export function showFloatingText(a, b, c, d) {
     c = new FloatingText(c, d);
     b = b.position;
     if (game.worldActive) {
-      d = b.dc();
-      var f = b.ec();
+      d = b.getWorldPositionX();
+      var f = b.getWorldPositionY();
       b = game.viewportHalfWidth + (d - game.world.he - (f - game.world.ie)) + a.cA;
       d = game.viewportHalfHeight + 0.5 * (d - game.world.he + (f - game.world.ie)) + a.dA;
     } else {

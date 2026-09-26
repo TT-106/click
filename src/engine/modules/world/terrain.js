@@ -266,7 +266,7 @@ export function populateWorldBlock(a, b) {
       }
     }
   }
-  if (c && !c.regionLocked && ((d = (d = game.dungeons.Do[b.Hd + "_" + b.Id]) ? d : null) ? (f = d.bc(), g = d.getWorldRow(), (h = game.world.getTileAtPixel(f, g)) ? h.setDecorationSprite(game.terrainSprites.getSprite(d.Fo)) : (console.log("no tile for: col=" + f + " row=" + g), d = null)) : d = null, d && ((f = game.farms.jw[d.dungeonId]) && (f = game.world.getTileAtPixel(f.kw, f.lw)) && f.setDecorationSprite(game.terrainSprites.getSprite(game.farms.Gz)), a.Ut(d)), f = findCastle(b.Hd + "_" + b.Id))) {
+  if (c && !c.regionLocked && ((d = (d = game.dungeons.Do[b.Hd + "_" + b.Id]) ? d : null) ? (f = d.getWorldColumn(), g = d.getWorldRow(), (h = game.world.getTileAtPixel(f, g)) ? h.setDecorationSprite(game.terrainSprites.getSprite(d.Fo)) : (console.log("no tile for: col=" + f + " row=" + g), d = null)) : d = null, d && ((f = game.farms.jw[d.dungeonId]) && (f = game.world.getTileAtPixel(f.kw, f.lw)) && f.setDecorationSprite(game.terrainSprites.getSprite(game.farms.Gz)), a.Ut(d)), f = findCastle(b.Hd + "_" + b.Id))) {
     d = f.dm;
     f = f.em;
     if (g = game.world.getTileAtPixel(d, f)) {
@@ -580,20 +580,20 @@ export function initializeWorldTerrain() {
       }
     } else {
       b = game.shops;
-      for (var c = a.vw(), d = a.ww(), f = a.bc(), g = a.getWorldRow(), h = 1 + c * WORLD_BLOCK_COLUMNS + randomInt(WORLD_BLOCK_COLUMNS - 1), l = 1 + d * WORLD_BLOCK_ROWS + randomInt(WORLD_BLOCK_ROWS - 1); h === f && l === g;) {
+      for (var c = a.vw(), d = a.ww(), f = a.getWorldColumn(), g = a.getWorldRow(), h = 1 + c * WORLD_BLOCK_COLUMNS + randomInt(WORLD_BLOCK_COLUMNS - 1), l = 1 + d * WORLD_BLOCK_ROWS + randomInt(WORLD_BLOCK_ROWS - 1); h === f && l === g;) {
         h = 1 + c * WORLD_BLOCK_COLUMNS + randomInt(WORLD_BLOCK_COLUMNS - 1);
         l = 1 + d * WORLD_BLOCK_ROWS + randomInt(WORLD_BLOCK_ROWS - 1);
       }
       b.Ut(new Shop(a.dungeonId, h, l));
     }
   };
-  WorldTile.prototype.dc = function () {
+  WorldTile.prototype.getPixelX = function () {
     return this.NC;
   };
-  WorldTile.prototype.ec = function () {
+  WorldTile.prototype.getPixelY = function () {
     return this.OC;
   };
-  WorldTile.prototype.bc = function () {
+  WorldTile.prototype.getWorldColumn = function () {
     return this.worldColumn;
   };
   WorldTile.prototype.getWorldRow = function () {
@@ -628,22 +628,22 @@ export function initializeWorldTerrain() {
     c = this.worldBlocks[c][d];
     return getBlockTile(c, a - (c.yp / game.tileSize | 0), b - (c.zp / game.tileSize | 0));
   };
-  WorldMap.prototype.bc = function (a) {
+  WorldMap.prototype.pixelToTileColumn = function (a) {
     return a / game.tileSize | 0;
   };
   WorldMap.prototype.pixelToTileRow = function (a) {
     return a / game.tileSize | 0;
   };
   WorldMap.prototype.vw = function (a) {
-    return this.bc(a) / WORLD_BLOCK_COLUMNS | 0;
+    return this.pixelToTileColumn(a) / WORLD_BLOCK_COLUMNS | 0;
   };
   WorldMap.prototype.ww = function (a) {
     return this.pixelToTileRow(a) / WORLD_BLOCK_ROWS | 0;
   };
-  WorldMap.prototype.dc = function (a) {
+  WorldMap.prototype.tileToPixelX = function (a) {
     return a * game.tileSize | 0;
   };
-  WorldMap.prototype.ec = function (a) {
+  WorldMap.prototype.tileToPixelY = function (a) {
     return a * game.tileSize | 0;
   };
 }

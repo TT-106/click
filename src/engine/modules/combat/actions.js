@@ -45,7 +45,7 @@ export function findTargetsInRange(a, b, c, d) {
     h = b.position.levelPosition,
     l,
     n = [];
-  for (b = 0; b < a.length && (g = a[b], g.isDead || g.position.room !== f || (l = h.ac(g.position.levelPosition), !(l <= d && (n.push(g), n.length >= c)))); b++) {}
+  for (b = 0; b < a.length && (g = a[b], g.isDead || g.position.room !== f || (l = h.distanceTo(g.position.levelPosition), !(l <= d && (n.push(g), n.length >= c)))); b++) {}
   return n;
 }
 export function CombatQueue() {

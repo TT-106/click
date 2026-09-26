@@ -62,6 +62,20 @@
 | V | getStatisticCell / getOfflineProgressCell | StatisticsView / OfflineProgressView |
 | W | buttonElement / contentContainer / upgradeButton | UpgradeButtonView / *Details / DungeonRowView |
 
+## 第八批方法族续：按接收者拆分（2026-09-26）
+
+| 原方法 | 新名 | 接收者与行为 |
+|---|---|---|
+| bc() | getWorldColumn() | WorldTile / Dungeon：读取世界瓦片列 |
+| bc(a) | pixelToTileColumn(a) | WorldMap：像素列换算为瓦片列，内部 vw() 同步 |
+| dc() / ec() | getPixelX() / getPixelY() | WorldTile / Dungeon：读取世界像素坐标 |
+| dc(a) / ec(a) | tileToPixelX(a) / tileToPixelY(a) | WorldMap：瓦片坐标换算为像素坐标 |
+| dc() / ec() | getWorldPositionX() / getWorldPositionY() | CharacterPosition：读取世界坐标；存档键 worldX/worldY 不变 |
+| ac(a) | distanceTo(a) | Vector2：欧氏距离 |
+| ac() | getRenderSortKey() | RenderCommand：深度排序键 ur-vr |
+
+首次批量脚本误把 entities.js 的 CharacterPosition `h` 当作 WorldTile，且遗漏 Vector2、RenderCommand 调用点及 WorldMap.vw() 的内部调用；修正后 check、parity、12 场景、E2E 均通过。
+
 ## 待取证残留（约 1,300 处访问）
 
 高频：`Y/Z/aa/ca/ea/ga/fa/ka/na` 等长尾——工作清单 `artifacts/obfuscated-fields.json`（按频次排序，含样例代码）。取证方法与产出格式见 WORKSTATE.md 第 6 节。

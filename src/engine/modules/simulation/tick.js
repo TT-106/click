@@ -533,8 +533,8 @@ export function advanceSimulation(a) {
     $ = 0;
   if (game.worldActive) {
     for (uc = 0; uc < U.length; uc++) {
-      Z += U[uc].position.dc();
-      $ += U[uc].position.ec();
+      Z += U[uc].position.getWorldPositionX();
+      $ += U[uc].position.getWorldPositionY();
     }
     var ba = Z / U.length,
       ca = $ / U.length,
@@ -811,7 +811,7 @@ export function purchaseDungeonFarm(a, b) {
     a.farmStartTurn = game.state.turnNumber;
     registerDungeonFarm(a);
     var c = game.farms,
-      d = c.Yw(a.bc()),
+      d = c.Yw(a.getWorldColumn()),
       f = c.Yw(a.getWorldRow());
     registerFarm(c, new Farm(a.dungeonId, d, f));
     game.state.statisticsRecorder.recordFarmPurchased();

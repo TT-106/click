@@ -351,7 +351,7 @@ export function initializeCharactersParty() {
         g,
         h;
       for (h = 0; h < a.pd.length; h++) {
-        if (f = a.pd[h], !f.regionLocked && !f.conquered && (g = distanceSquaredToPoint(b, game.world.dc(f.dm), game.world.ec(f.em)), !c || g < d)) {
+        if (f = a.pd[h], !f.regionLocked && !f.conquered && (g = distanceSquaredToPoint(b, game.world.tileToPixelX(f.dm), game.world.tileToPixelY(f.em)), !c || g < d)) {
           c = f;
           d = g;
         }
@@ -388,7 +388,7 @@ export function initializeCharactersParty() {
         b = game.state.leader.position.worldPosition;
         c = null;
         for (h = d = 0; h < a.ht.length; h++) {
-          if (f = a.ht[h], g = distanceSquaredToPoint(b, game.world.dc(f.iq), game.world.ec(f.jq)), !c || g < d) {
+          if (f = a.ht[h], g = distanceSquaredToPoint(b, game.world.tileToPixelX(f.iq), game.world.tileToPixelY(f.jq)), !c || g < d) {
             c = f;
             d = g;
           }
@@ -411,7 +411,7 @@ export function initializeCharactersParty() {
         d = game.state.leader.position.worldPosition;
         f = null;
         for (n = g = 0; n < c.Dh.length; n++) {
-          if (h = c.Dh[n], l = distanceSquaredToPoint(d, game.world.dc(h.dm), game.world.ec(h.em)), !f || l < g) {
+          if (h = c.Dh[n], l = distanceSquaredToPoint(d, game.world.tileToPixelX(h.dm), game.world.tileToPixelY(h.em)), !f || l < g) {
             f = h;
             g = l;
           }
@@ -442,7 +442,7 @@ export function initializeCharactersParty() {
           var n = /** @type {any} */ (this.targetCastle.dungeonList),
             p;
           for (p = 0; p < n.length; p++) {
-            if (h = n[p], !h.conquered && (l = distanceSquaredToPoint(d, h.dc(), h.ec()), !f || l < g)) {
+            if (h = n[p], !h.conquered && (l = distanceSquaredToPoint(d, h.getPixelX(), h.getPixelY()), !f || l < g)) {
               f = h;
               g = l;
             }
@@ -452,7 +452,7 @@ export function initializeCharactersParty() {
             f = game.dungeons;
             g = null;
             for (p = h = 0; p < f.dungeonList.length; p++) {
-              if (!(l = f.dungeonList[p], l.isFarm || l.zj.regionLocked || l.conquered || (n = distanceSquaredToPoint(d, l.dc(), l.ec()), g && !(n < h)))) {
+              if (!(l = f.dungeonList[p], l.isFarm || l.zj.regionLocked || l.conquered || (n = distanceSquaredToPoint(d, l.getPixelX(), l.getPixelY()), g && !(n < h)))) {
                 g = l;
                 h = n;
               }
@@ -462,7 +462,7 @@ export function initializeCharactersParty() {
               f = game.dungeons;
               g = null;
               for (p = h = 0; p < f.dungeonList.length; p++) {
-                if (!(l = f.dungeonList[p], l.isFarm || l.zj.regionLocked || l.discovered && (!l.discovered || l.cleared) || (n = distanceSquaredToPoint(d, l.dc(), l.ec()), g && !(n < h)))) {
+                if (!(l = f.dungeonList[p], l.isFarm || l.zj.regionLocked || l.discovered && (!l.discovered || l.cleared) || (n = distanceSquaredToPoint(d, l.getPixelX(), l.getPixelY()), g && !(n < h)))) {
                   g = l;
                   h = n;
                 }
@@ -472,7 +472,7 @@ export function initializeCharactersParty() {
                 f = game.dungeons;
                 g = null;
                 for (p = h = 0; p < f.dungeonList.length; p++) {
-                  if (l = f.dungeonList[p], !l.isFarm && !l.zj.regionLocked && (n = distanceSquaredToPoint(d, l.dc(), l.ec()), !g || n < h)) {
+                  if (l = f.dungeonList[p], !l.isFarm && !l.zj.regionLocked && (n = distanceSquaredToPoint(d, l.getPixelX(), l.getPixelY()), !g || n < h)) {
                     g = l;
                     h = n;
                   }
@@ -494,7 +494,7 @@ export function initializeCharactersParty() {
         c = this.activeCastle.dm;
         d = this.activeCastle.em;
       } else if (this.Wb) {
-        c = this.Wb.bc();
+        c = this.Wb.getWorldColumn();
         d = this.Wb.getWorldRow();
       } else {
         return;
@@ -512,8 +512,8 @@ export function initializeCharactersParty() {
       } else {
         if (a = this.hp) {
           b = game.state.leader.position;
-          a = this.Nm - game.world.bc(b.dc());
-          b = this.Om - game.world.pixelToTileRow(b.ec());
+          a = this.Nm - game.world.pixelToTileColumn(b.getWorldPositionX());
+          b = this.Om - game.world.pixelToTileRow(b.getWorldPositionY());
           a = 8 > Math.sqrt(a * a + b * b);
         }
         if (a) {

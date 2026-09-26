@@ -233,10 +233,10 @@ export function initializeAiBehaviors() {
         if (c) {
           if (b = c.iq, c = c.jq, d = game.world.getTileAtPixel(b, c)) {
             b = a.position;
-            if (game.world.getTileAtPixel(game.world.bc(b.dc()), game.world.pixelToTileRow(b.ec())) === d) {
+            if (game.world.getTileAtPixel(game.world.pixelToTileColumn(b.getWorldPositionX()), game.world.pixelToTileRow(b.getWorldPositionY())) === d) {
               a.actionType = 10;
             } else {
-              setWorldDestination(b, d.bc(), d.getWorldRow());
+              setWorldDestination(b, d.getWorldColumn(), d.getWorldRow());
               a.actionType = 1;
             }
             return;
@@ -244,20 +244,20 @@ export function initializeAiBehaviors() {
         } else if (d) {
           if (b = d.dm, c = d.em, d = game.world.getTileAtPixel(b, c)) {
             b = a.position;
-            if (game.world.getTileAtPixel(game.world.bc(b.dc()), game.world.pixelToTileRow(b.ec())) === d) {
+            if (game.world.getTileAtPixel(game.world.pixelToTileColumn(b.getWorldPositionX()), game.world.pixelToTileRow(b.getWorldPositionY())) === d) {
               a.actionType = 11;
             } else {
-              setWorldDestination(b, d.bc(), d.getWorldRow());
+              setWorldDestination(b, d.getWorldColumn(), d.getWorldRow());
               a.actionType = 1;
             }
             return;
           }
-        } else if (b = f.bc(), c = f.getWorldRow(), d = game.world.getTileAtPixel(b, c)) {
+        } else if (b = f.getWorldColumn(), c = f.getWorldRow(), d = game.world.getTileAtPixel(b, c)) {
           b = a.position;
-          if (game.world.getTileAtPixel(game.world.bc(b.dc()), game.world.pixelToTileRow(b.ec())) === d) {
+          if (game.world.getTileAtPixel(game.world.pixelToTileColumn(b.getWorldPositionX()), game.world.pixelToTileRow(b.getWorldPositionY())) === d) {
             a.actionType = 9;
           } else {
-            setWorldDestination(b, d.bc(), d.getWorldRow());
+            setWorldDestination(b, d.getWorldColumn(), d.getWorldRow());
             a.actionType = 1;
           }
           return;
@@ -272,7 +272,7 @@ export function initializeAiBehaviors() {
         b = getAllies();
         c = b.indexOf(a);
         b = 1 === a.characterType ? a.summoner : 0 > c ? game.state.leader : b[c - 1];
-        setWorldDestination(a.position, game.world.bc(b.position.dc()), game.world.pixelToTileRow(b.position.ec()));
+        setWorldDestination(a.position, game.world.pixelToTileColumn(b.position.getWorldPositionX()), game.world.pixelToTileRow(b.position.getWorldPositionY()));
         a.actionType = 1;
       }
     } else {
@@ -334,7 +334,7 @@ export function initializeAiBehaviors() {
     if (this.selectedTarget && this.un) {
       a.Cb(this.selectedTarget);
       var b = a.position;
-      this.SB = a === this.selectedTarget ? 0 : b.levelPosition.ac(this.selectedTarget.position.levelPosition);
+      this.SB = a === this.selectedTarget ? 0 : b.levelPosition.distanceTo(this.selectedTarget.position.levelPosition);
       if (this.SB <= this.actionRange) {
         if (!this.Yt && !canAttack(a)) {
           return;
@@ -447,7 +447,7 @@ export function initializeAiBehaviors() {
       c = null;
     }
     this.Uq = c;
-    return !this.Uq || a.position.levelPosition.ac(this.Uq.position.levelPosition) > this.zE ? 0 : (1 - b) * this.priorityWeight;
+    return !this.Uq || a.position.levelPosition.distanceTo(this.Uq.position.levelPosition) > this.zE ? 0 : (1 - b) * this.priorityWeight;
   };
   FollowLeaderBehavior.prototype.getPriority = function () {
     return this.priorityWeight;
@@ -492,7 +492,7 @@ export function initializeAiBehaviors() {
       n = a[s];
       if (!(n.isDead || n.effects.Kd || n.effects.bi || n.position.room != d)) {
         p = n.position.levelPosition;
-        n = c.ac(p);
+        n = c.distanceTo(p);
         if (!(n > this.CA)) {
           if (0 === n) {
             setVector(this.fn, Math.random(), Math.random());
@@ -533,7 +533,7 @@ export function initializeAiBehaviors() {
   };
   RangedAttackBehavior.prototype.wd = function (a) {
     this.targetCharacter = findNearestVisibleOpponent(a);
-    return this.targetCharacter ? 2 < this.co ? this.co = 0 : a.position.levelPosition.ac(this.targetCharacter.position.levelPosition) > this.CA ? 0 : this.priorityWeight : 0;
+    return this.targetCharacter ? 2 < this.co ? this.co = 0 : a.position.levelPosition.distanceTo(this.targetCharacter.position.levelPosition) > this.CA ? 0 : this.priorityWeight : 0;
   };
   RangedAttackBehavior.prototype.getPriority = function () {
     return this.priorityWeight;
@@ -568,7 +568,7 @@ export function initializeAiBehaviors() {
     if (!this.targetCharacter) {
       return 0;
     }
-    this.Ng = a.position.levelPosition.ac(this.targetCharacter.position.levelPosition);
+    this.Ng = a.position.levelPosition.distanceTo(this.targetCharacter.position.levelPosition);
     return this.priorityWeight;
   };
   MeleeAttackBehavior.prototype.getPriority = function () {
@@ -665,7 +665,7 @@ export function initializeAiBehaviors() {
       this.actionRange = RANGED_ATTACK_RANGE;
       this.qk = MELEE_ACTION_TYPE;
     }
-    this.Ng = a.position.levelPosition.ac(this.targetCharacter.position.levelPosition);
+    this.Ng = a.position.levelPosition.distanceTo(this.targetCharacter.position.levelPosition);
     return this.priorityWeight;
   };
   OpportunisticAttackBehavior.prototype.getPriority = function () {
@@ -1500,7 +1500,7 @@ export function initializeAiBehaviors() {
     }
     var b = a.position;
     a = a.summoner.position;
-    return !b.room || !a.room || b.room !== a.room || b.levelPosition.ac(a.levelPosition) < this.Uw ? 0 : this.priorityWeight;
+    return !b.room || !a.room || b.room !== a.room || b.levelPosition.distanceTo(a.levelPosition) < this.Uw ? 0 : this.priorityWeight;
   };
   CooldownBehavior.prototype.getPriority = function () {
     return this.priorityWeight;
@@ -1542,10 +1542,10 @@ export function initializeAiBehaviors() {
       return 0;
     }
     b = this.targetCharacter.position.levelPosition;
-    if (c.levelPosition.ac(b) > this.Uw) {
+    if (c.levelPosition.distanceTo(b) > this.Uw) {
       return 0;
     }
-    this.Ng = a.levelPosition.ac(b);
+    this.Ng = a.levelPosition.distanceTo(b);
     return this.priorityWeight;
   };
   SpecialAttackBehavior.prototype.getPriority = function () {

@@ -131,7 +131,7 @@ export function findHallwayPath(a, b, c) {
       }
       h = h.Hs;
       for (s = 0; s < h.length; s++) {
-        if (l = h[s], !l.closed && (p = g.xk + l.gh.ac(g.gh), n = l.It, !n || p < l.xk)) {
+        if (l = h[s], !l.closed && (p = g.xk + l.gh.distanceTo(g.gh), n = l.It, !n || p < l.xk)) {
           l.rl = g;
           if (n) {
             a.open.remove(l);
@@ -139,7 +139,7 @@ export function findHallwayPath(a, b, c) {
           } else {
             if (0 > l.Ko) {
               n = l.rl ? (n = l.rl.rl) && l.gh.x !== n.gh.x && l.gh.y !== n.gh.y ? 1.3 : 1 : 1;
-              l.Ko = l.gh.ac(f.gh) * n;
+              l.Ko = l.gh.distanceTo(f.gh) * n;
             }
             l.xk = p;
             l.It = true;

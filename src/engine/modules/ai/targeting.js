@@ -120,7 +120,7 @@ export function findChainTarget(a) {
 }
 export function findNearbyOpponent(a) {
   var b = findNearestOpponent(a);
-  return !b || 100 < a.position.levelPosition.ac(b.position.levelPosition) ? null : b;
+  return !b || 100 < a.position.levelPosition.distanceTo(b.position.levelPosition) ? null : b;
 }
 export function approachValue(a, b, c) {
   return Math.max(b, (a - b) * (1 - c / 1E3) + b);
@@ -278,7 +278,7 @@ export function attackTauntingTarget(a, b) {
   var c = b.combatTarget.position,
     d = b.position;
   if (c.room === d.room) {
-    if (d.levelPosition.ac(c.levelPosition) <= a.actionRange) {
+    if (d.levelPosition.distanceTo(c.levelPosition) <= a.actionRange) {
       if (!canAttack(b)) {
         return;
       }

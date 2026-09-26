@@ -173,7 +173,7 @@ export function initializeCoreMath() {
     return ((a ^ a >>> 18) >>> 0) * this.unitScale;
   };
   FRAME_DURATION_MS = 1E3 / 60;
-  Vector2.prototype.ac = function (a) {
+  Vector2.prototype.distanceTo = function (a) {
     var b = this.x - a.x;
     a = this.y - a.y;
     return Math.sqrt(b * b + a * a);

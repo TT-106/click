@@ -79,8 +79,8 @@ export function serializeCharacter(a) {
   h = {
     levelX: h.getLevelPositionX(),
     levelY: h.getLevelPositionY(),
-    worldX: h.dc(),
-    worldY: h.ec(),
+    worldX: h.getWorldPositionX(),
+    worldY: h.getWorldPositionY(),
     roomId: l ? l.roomId : -1,
     floorPositionIndex: h.fg,
     hallwayId: n ? n.hallwayId : -1

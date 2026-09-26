@@ -64,10 +64,10 @@ export function applySeparationForce(a, b, c, d) {
 export function setWorldDestination(a, b, c) {
   a.Rn = b;
   a.Sn = c;
-  setVector(a.Ul, game.world.dc(b), game.world.ec(c));
+  setVector(a.Ul, game.world.tileToPixelX(b), game.world.tileToPixelY(c));
 }
 export function findCheapestNeighbor(a, b) {
-  var c = a.bc(),
+  var c = a.getWorldColumn(),
     d = a.getWorldRow(),
     f,
     g,
@@ -102,7 +102,7 @@ export function separateDungeonCharacters(a) {
     if (b === a) {
       break;
     }
-    h = a.levelPosition.ac(b.levelPosition);
+    h = a.levelPosition.distanceTo(b.levelPosition);
     if (40 > h) {
       if (0 === h) {
         setVector(a.Wc, Math.random(), Math.random());
@@ -119,7 +119,7 @@ export function separateDungeonCharacters(a) {
     b = g[c];
     b = b.position;
     if (b !== a) {
-      h = a.levelPosition.ac(b.levelPosition);
+      h = a.levelPosition.distanceTo(b.levelPosition);
       if (50 > h) {
         if (0 === h) {
           setVector(a.Wc, Math.random(), Math.random());
@@ -137,7 +137,7 @@ export function separateDungeonCharacters(a) {
     b = f[c];
     b = b.position;
     if (b !== a) {
-      h = a.levelPosition.ac(b.levelPosition);
+      h = a.levelPosition.distanceTo(b.levelPosition);
       if (50 > h) {
         if (0 === h) {
           setVector(a.Wc, Math.random(), Math.random());
@@ -168,7 +168,7 @@ export function separateWorldCharacters(a) {
     b = f[c];
     b = b.position;
     if (b !== a) {
-      g = a.worldPosition.ac(b.worldPosition);
+      g = a.worldPosition.distanceTo(b.worldPosition);
       if (40 > g) {
         if (0 === g) {
           setVector(a.Wc, Math.random(), Math.random());
@@ -203,10 +203,10 @@ export function initializeCharactersMovement() {
       this.fz = a;
     }
   };
-  CharacterPosition.prototype.dc = function () {
+  CharacterPosition.prototype.getWorldPositionX = function () {
     return this.worldPosition.x;
   };
-  CharacterPosition.prototype.ec = function () {
+  CharacterPosition.prototype.getWorldPositionY = function () {
     return this.worldPosition.y;
   };
   CharacterPosition.prototype.getLevelPositionX = function () {

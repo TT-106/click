@@ -191,7 +191,7 @@ export function updateCharacter(a, b) {
             assignVector(c.velocity, c.Ul);
             subtractVector(c.velocity, c.worldPosition);
             var d = b * c.MC * walkingSpeedBonus.currentValue * walkingSpeedModifier.currentValue,
-              f = game.world.bc(c.worldPosition.x),
+              f = game.world.pixelToTileColumn(c.worldPosition.x),
               g = game.world.pixelToTileRow(c.worldPosition.y);
             if (vectorLength(c.velocity) <= d) {
               assignVector(c.worldPosition, c.Ul);
@@ -199,7 +199,7 @@ export function updateCharacter(a, b) {
             } else if (f === c.Rn && g === c.Sn) {
               c.movementTargetCleared = true;
             } else {
-              if (!c.Hh || !c.qj || c.qj.bc() !== f || c.qj.getWorldRow() !== g) {
+              if (!c.Hh || !c.qj || c.qj.getWorldColumn() !== f || c.qj.getWorldRow() !== g) {
                 c.aB = c.qj;
                 c.qj = game.world.getTileAtPixel(f, g);
                 if (!c.qj) {
@@ -210,12 +210,12 @@ export function updateCharacter(a, b) {
                   c.Hh = game.world.getTileAtPixel(c.Rn, c.Sn);
                 } else {
                   c.Hh = findCheapestNeighbor(c.qj, c.aB);
-                  if (c.Hh && c.Hh.bc() !== c.Rn && c.Hh.getWorldRow() !== c.Sn) {
+                  if (c.Hh && c.Hh.getWorldColumn() !== c.Rn && c.Hh.getWorldRow() !== c.Sn) {
                     c.Hh = findCheapestNeighbor(c.Hh, c.qj);
                   }
                 }
               }
-              setVector(c.velocity, c.Hh.dc() + 1, c.Hh.ec() + 1);
+              setVector(c.velocity, c.Hh.getPixelX() + 1, c.Hh.getPixelY() + 1);
               subtractVector(c.velocity, c.worldPosition);
               if (separateWorldCharacters(c)) {
                 normalizeVector(c.velocity);
@@ -231,7 +231,7 @@ export function updateCharacter(a, b) {
           assignVector(c.velocity, c.Ul);
           subtractVector(c.velocity, c.worldPosition);
           var h = b * c.MC * walkingSpeedBonus.currentValue * walkingSpeedModifier.currentValue,
-            l = game.world.bc(c.worldPosition.x),
+            l = game.world.pixelToTileColumn(c.worldPosition.x),
             n = game.world.pixelToTileRow(c.worldPosition.y);
           if (vectorLength(c.velocity) <= h) {
             assignVector(c.worldPosition, c.Ul);
@@ -549,7 +549,7 @@ export function updateCharacter(a, b) {
                         for (var Ha = undefined, jb = undefined, Ab = ja.position.levelPosition, Bb = null, qb = null, wb = undefined, Ib = undefined, Ec = -1, jb = 0; jb < ob.length; jb++) {
                           Ha = ob[jb];
                           if (!(Ha === ja || Ha === za || Ha === nb || Ha === fb || Ha === cb || Ha.isDead || Ha.position.room !== pb)) {
-                            wb = Ab.ac(Ha.position.levelPosition);
+                            wb = Ab.distanceTo(Ha.position.levelPosition);
                             if (wb <= ac && (0 > Ec || wb < Ec)) {
                               Ib = Ha.effects;
                               if (Ib.wg || Ib.Kd || Ib.bi) {
@@ -919,7 +919,7 @@ export function updateCharacter(a, b) {
                       tl = xf.position.levelPosition,
                       kg,
                       ue = [];
-                    for (Vd = 0; Vd < Kh.length && (Nd = Kh[Vd], Nd.isDead || Nd.position.room !== jg || hasStatusEffect(Nd.effects, te) || (Nd === xf ? ue.push(Nd) : (kg = tl.ac(Nd.position.levelPosition), kg <= sl && ue.push(Nd)), !(1E3 <= ue.length))); Vd++) {}
+                    for (Vd = 0; Vd < Kh.length && (Nd = Kh[Vd], Nd.isDead || Nd.position.room !== jg || hasStatusEffect(Nd.effects, te) || (Nd === xf ? ue.push(Nd) : (kg = tl.distanceTo(Nd.position.levelPosition), kg <= sl && ue.push(Nd)), !(1E3 <= ue.length))); Vd++) {}
                     xd = ue;
                   } else {
                     xd = null;

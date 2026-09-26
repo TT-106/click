@@ -187,13 +187,13 @@ export function initializeWorldDungeons() {
   Dungeon.prototype.tx = function (a) {
     this.conquered = a;
   };
-  Dungeon.prototype.dc = function () {
-    return game.world.dc(this.worldColumn);
+  Dungeon.prototype.getPixelX = function () {
+    return game.world.tileToPixelX(this.worldColumn);
   };
-  Dungeon.prototype.ec = function () {
-    return game.world.ec(this.worldRow);
+  Dungeon.prototype.getPixelY = function () {
+    return game.world.tileToPixelY(this.worldRow);
   };
-  Dungeon.prototype.bc = function () {
+  Dungeon.prototype.getWorldColumn = function () {
     return this.worldColumn;
   };
   Dungeon.prototype.getWorldRow = function () {

@@ -22,7 +22,7 @@ export function calculateWorldCosts(a, b, c) {
   }
   if (c = game.world.getTileAtPixel(b, c)) {
     for (b = [], c.pathDistanceToDestination = 0, b.push(c), c = [null, null, null, null]; 0 < b.length;) {
-      for (g = b.shift(), a = g.pathDistanceToDestination, d = c, f = g.bc(), g = g.getWorldRow(), d[0] = game.world.getTileAtPixel(f, g - 1), d[1] = game.world.getTileAtPixel(f - 1, g), d[2] = game.world.getTileAtPixel(f + 1, g), d[3] = game.world.getTileAtPixel(f, g + 1), g = 0; g < c.length; g++) {
+      for (g = b.shift(), a = g.pathDistanceToDestination, d = c, f = g.getWorldColumn(), g = g.getWorldRow(), d[0] = game.world.getTileAtPixel(f, g - 1), d[1] = game.world.getTileAtPixel(f - 1, g), d[2] = game.world.getTileAtPixel(f + 1, g), d[3] = game.world.getTileAtPixel(f, g + 1), g = 0; g < c.length; g++) {
         if (d = c[g]) {
           f = a + d.terrainMoveCost + 1;
           if (f < d.pathDistanceToDestination) {

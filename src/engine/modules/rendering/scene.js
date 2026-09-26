@@ -47,7 +47,7 @@ export function setAnimationRenderCommand(a, b, c, d, f, g, h, l) {
 }
 export function DepthSortedRenderer() {
   this.FE = function (a, b) {
-    return a.ac() - b.ac();
+    return a.getRenderSortKey() - b.getRenderSortKey();
   };
   this.ko = new Vector2();
   this.Hl = [];
@@ -93,7 +93,7 @@ export function drawWorldTileRow(a, b, c, d) {
       f.If(g.Jn, h, l);
       var n = g.Yf;
       if (n) {
-        f.se.dk(n, g.dc(), g.ec(), h, l, n.Ad.spriteSize, 0);
+        f.se.dk(n, g.getPixelX(), g.getPixelY(), h, l, n.Ad.spriteSize, 0);
       }
     }
   }
@@ -124,8 +124,8 @@ export function drawWorldCharacters(a, b) {
   var c, d, f, g;
   for (g = b.length - 1; 0 <= g; g--) {
     c = b[g];
-    d = c.position.dc();
-    f = c.position.ec();
+    d = c.position.getWorldPositionX();
+    f = c.position.getWorldPositionY();
     c = c.getSprite();
     a.se.dk(c, d, f, game.viewportHalfWidth + (d - game.world.he - (f - game.world.ie)), game.viewportHalfHeight + 0.5 * (d - game.world.he + (f - game.world.ie)), c.Ad.spriteSize, 0);
   }
@@ -228,7 +228,7 @@ export function GameCanvasView() {
   this.gB = null;
 }
 export function initializeRenderingScene() {
-  RenderCommand.prototype.ac = function () {
+  RenderCommand.prototype.getRenderSortKey = function () {
     return this.ur - this.vr;
   };
   RenderCommand.prototype.If = function (a) {
@@ -352,7 +352,7 @@ export function initializeRenderingScene() {
     a.se.hB(a.context);
     if (game.world.ty) {
       if (a.context.fillStyle = "#000000", a.context.fillRect(0, 0, game.viewportWidth, game.viewportHeight), game.worldActive) {
-        var b = game.world.bc(game.world.he),
+        var b = game.world.pixelToTileColumn(game.world.he),
           c = game.world.pixelToTileRow(game.world.ie) - 18;
         drawWorldTileRow(a, c++, b - 5, b - 3);
         drawWorldTileRow(a, c++, b - 6, b - 2);
