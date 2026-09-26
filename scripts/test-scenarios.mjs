@@ -34,6 +34,13 @@ const scenarios = [
     steps: [[0, snap => ({ changed: summarize(snap).kills > base.party.kills })], [200, null]],
   },
   {
+    name: 'offline-13h-capped',
+    make: () => withElapsed(withOfflineProcessing(base, true), 13 * 3600e3),
+    offline: true,
+    expectedOfflineDuration: 12 * 3600e3,
+    steps: [[0, snap => ({ changed: summarize(snap).kills > base.party.kills })], [200, null]],
+  },
+  {
     name: 'offline-disabled',
     make: () => withElapsed(withOfflineProcessing(base, false), 3600e3),
     offline: true,
@@ -109,6 +116,11 @@ try {
       // 两端载入同一变异存档（harness.load 内部重置随机种子，保证相同随机流起点）
       const loaded = await Promise.all(pages.map(p => p.page.evaluate(text => window.harness.load(text), saveText)));
       assert.deepEqual(loaded, [true, true], '两端都必须成功载入');
+
+      if (scenario.expectedOfflineDuration !== undefined) {
+        const durations = await Promise.all(pages.map(p => p.page.evaluate(() => window.harness.offlineDuration())));
+        assert.deepEqual(durations, [scenario.expectedOfflineDuration, scenario.expectedOfflineDuration], '两端都必须触发 12 小时离线上限');
+      }
 
       await Promise.all(pages.map(p => p.page.evaluate(ms => window.harness.setTime(ms), HARNESS_FIXED_NOW)));
 

@@ -94,6 +94,7 @@ if (!ready()) throw new Error('测试引擎初始化失败');
 window.harness = {
   load(text) { resetRandom(); const ok = load(text); resetRandom(); if (!ok) throw new Error('存档载入失败'); return true; },
   snapshot,
+  offlineDuration() { return original ? game.jf : game.offlineDuration; },
   setTime(ms) {
     fixedNow = ms;
     // 时钟跳变后必须重置循环簿记，否则首帧帧差含历史偏移，

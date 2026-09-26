@@ -138,7 +138,7 @@ Xf/Qf/Rf/Zf/Cf/Ef → damageMultiplier/armorMultiplier/attackRatingMultiplier/de
 
 ## U4 — 差分覆盖缺口
 
-- 胜利瞬间（城堡征服全流程）、部分法术分支（blastStun 系）、12h 离线上限截断路径。
+- 胜利瞬间（城堡征服全流程）、部分法术分支（blastStun 系）仍待覆盖。12h 离线上限截断路径已由 `offline-13h-capped` 场景覆盖：同一 13h 旧存档载入两端后均断言待结算时长为 12h，再推进离线帧并比较完整存档与后续回合。
 - 扩展方式：`tests/scenarios/save-mutations.mjs` 增加对应变异器。
 
 ## U5 — 长尾字段重命名
