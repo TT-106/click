@@ -1,4 +1,3 @@
-// @ts-nocheck -- M10 渐进类型化：JSDoc 覆盖后摘除（见 docs/WORKSTATE.md）
 /** 地牢网格、房间、门、走廊与可见性。
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
@@ -52,9 +51,9 @@ export function isRoomBorder(a, b, c) {
   return c === a.tileRow - 1 || c === a.tileRow + a.heightInTiles ? b >= a.tileColumn - 1 && b <= a.tileColumn + a.widthInTiles : b === a.tileColumn - 1 || b === a.tileColumn + a.widthInTiles ? c >= a.tileRow - 1 && c <= a.tileRow + a.heightInTiles : false;
 }
 export function revealRoom(a) {
-  var b = !a.Xi;
+  var wasHidden = !a.Xi;
   a.Xi = true;
-  if (b) {
+  if (wasHidden) {
     if (0 === a.Yp && treasureRoomModifier.currentValue && 0.25 > Math.random()) {
       a.Yp = 3;
     }
@@ -290,9 +289,9 @@ export function getOppositeDoor(a, b) {
   return null;
 }
 export function revealHallway(a, b) {
-  var c = b && !a.Km;
+  var shouldReveal = b && !a.Km;
   a.Km = b;
-  if (c) {
+  if (shouldReveal) {
     var c = a.Sk,
       d,
       f,
@@ -583,7 +582,7 @@ export function initializeWorldRooms() {
     }
   };
   DungeonRoom.prototype.Bq = function (a) {
-    this.Lw(a);
+    /** @type {{Lw: (grid: unknown) => void}} */ (/** @type {unknown} */ (this)).Lw(a);
     var b, c;
     c = this.tileRow - 1;
     for (b = this.tileColumn - 1; b < this.tileColumn + this.widthInTiles + 1; b++) {
@@ -644,7 +643,7 @@ export function initializeWorldRooms() {
       d[b].floorType = 2;
       d[b + 1].floorType = 2;
     }
-    this.Lw(a);
+    /** @type {{Lw: (grid: unknown) => void}} */ (/** @type {unknown} */ (this)).Lw(a);
   };
   DungeonHallway.prototype.Lw = function (a) {
     var b, c;
