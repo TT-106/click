@@ -27,7 +27,7 @@ export function CastleRowView(a) {
   this.lh = a;
   this.kd = this.pb = this.ng = this.mf = this.xc = null;
   this.Us = 120;
-  this.Rv = this.Cu = this.fb = "";
+  this.Rv = this.Cu = this.cachedDescriptionText = "";
   this.Kv = 0;
   this.qi();
 }
@@ -194,8 +194,8 @@ export function initializeViewsCastles() {
   CastleRowView.prototype.render = function () {
     if (this.xc) {
       var a = this.xc.castleName;
-      if (this.fb !== a) {
-        this.fb = a;
+      if (this.cachedDescriptionText !== a) {
+        this.cachedDescriptionText = a;
         this.mf.innerHTML = a;
       }
       a = getCastleStatusColor(this.xc);
