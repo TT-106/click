@@ -1003,7 +1003,7 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   CastlePurchaseDetails.prototype.update = function () {
-    var a = game.dungeons.Sd;
+    var a = game.dungeons.pendingFarmKills;
     if (this.Gk !== a) {
       this.Gk = a;
       this.Uz.innerHTML = "+" + formatAmount(a);

@@ -470,7 +470,7 @@ window.harness = {
       if ((original ? upgrade.Na() : upgrade.getUpgradeType()) !== 9) continue;
       if (original) upgrade.Cd(); else upgrade.refreshAvailabilityState();
       if (original ? upgrade.qc() : upgrade.canPurchaseNow()) {
-        const pendingKills = original ? window.Game.Aa.Sd : game.dungeons.Sd;
+        const pendingKills = original ? window.Game.Aa.Sd : game.dungeons.pendingFarmKills;
         killsHarvested = pendingKills;
         if (original) upgrade.Qc(); else upgrade.purchase();
         harvested++;

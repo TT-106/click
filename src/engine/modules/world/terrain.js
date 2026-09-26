@@ -15,9 +15,9 @@ export function FractalNoise(a, b, c, d, f) {
   for (a = 0; 256 > a; a++) {
     l[a] = Math.floor(256 * (/** @type {{random: () => number}} */ (/** @type {unknown} */ (h))).random());
   }
-  g.Wj = [];
+  g.permutation = [];
   for (a = 0; 512 > a; a++) {
-    g.Wj[a] = l[a & 255];
+    g.permutation[a] = l[a & 255];
   }
   this.NE = 1;
   this.QE = b;
@@ -69,9 +69,9 @@ export function sampleNoise(a, b, c) {
     v = D - 1 + 2 * v;
     I = A & 255;
     x = C & 255;
-    A = l.Wj[I + l.Wj[x]] % 12;
-    C = l.Wj[I + n + l.Wj[x + p]] % 12;
-    I = l.Wj[I + 1 + l.Wj[x + 1]] % 12;
+    A = l.permutation[I + l.permutation[x]] % 12;
+    C = l.permutation[I + n + l.permutation[x + p]] % 12;
+    I = l.permutation[I + 1 + l.permutation[x + 1]] % 12;
     x = 0.5 - s * s - D * D;
     if (0 > x) {
       s = 0;

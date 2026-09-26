@@ -1019,7 +1019,7 @@ export function initializeProgressionUpgrades() {
   };
   AutoPurchaseDungeonUpgrade.prototype.purchase = function () {
     recordGameEvent("Dungeon", "农场已收获");
-    var a = game.dungeons.Sd;
+    var a = game.dungeons.pendingFarmKills;
     game.state.statisticsRecorder.recordFarmHarvest(a);
     addKills(a);
     game.dungeons.setFarmedKills(0);
@@ -1027,7 +1027,7 @@ export function initializeProgressionUpgrades() {
     markUpgradeChanged(this);
   };
   AutoPurchaseDungeonUpgrade.prototype.refreshAvailabilityState = function () {
-    this.canPurchase = 0 < game.dungeons.Sd;
+    this.canPurchase = 0 < game.dungeons.pendingFarmKills;
     var a = this.cachedCanPurchase !== this.canPurchase;
     this.cachedCanPurchase = this.canPurchase;
     return a;

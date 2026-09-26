@@ -69,7 +69,7 @@ export function DungeonRegistry() {
   this.discovered = [];
   this.farmable = [];
   this.lt = true;
-  this.Sd = 0;
+  this.pendingFarmKills = 0;
   this.EE = function (a, b) {
     return floorNumber(a.farmCost * dungeonCostBonus.currentValue) < floorNumber(b.farmCost * dungeonCostBonus.currentValue) ? -1 : 1;
   };
@@ -82,7 +82,7 @@ export function resetDungeons() {
   a.farms.length = 0;
   a.farmable.length = 0;
   a.Mk = 0;
-  a.Sd = 0;
+  a.pendingFarmKills = 0;
   var b;
   for (b = 0; b < a.dungeonList.length; b++) {
     var c = a.dungeonList[b];
@@ -241,7 +241,7 @@ export function initializeWorldDungeons() {
     }
   };
   DungeonRegistry.prototype.setFarmedKills = function (a) {
-    this.Sd = a;
+    this.pendingFarmKills = a;
   };
   DungeonRegistry.prototype.Is = function (a) {
     if (0 > this.cleared.indexOf(a)) {

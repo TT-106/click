@@ -38,7 +38,7 @@ export function initializeRegionsAndCastles() {
   ha.scheduledCastles.length = 0;
   ha.bm = {};
   ha.cm = 0;
-  ha.Uj = 1;
+  ha.nextRequiredMonsterLevel = 1;
   var ja = new RegionLayout(),
     Ga = new SeededRandom(11),
     bb = new DungeonNameGenerator(Ga),
@@ -129,7 +129,7 @@ export function initializeRegionsAndCastles() {
   Ja.farms.length = 0;
   Ja.Mk = 0;
   Ja.farmable.length = 0;
-  Ja.Sd = 0;
+  Ja.pendingFarmKills = 0;
   Ja.Do = {};
   var Db,
     gb = new SeededRandom(1),

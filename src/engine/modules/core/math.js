@@ -32,7 +32,7 @@ export function randomIntFrom(a, b) {
 }
 export function SimplexNoise() {
   this.Im = [[1, 1, 0], [-1, 1, 0], [1, -1, 0], [-1, -1, 0], [1, 0, 1], [-1, 0, 1], [1, 0, -1], [-1, 0, -1], [0, 1, 1], [0, -1, 1], [0, 1, -1], [0, -1, -1]];
-  this.Wj = [];
+  this.permutation = [];
   this.HB = Math.sqrt(3);
 }
 /**

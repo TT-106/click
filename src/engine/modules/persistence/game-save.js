@@ -151,7 +151,7 @@ export function restoreGameState(a, b) {
           var T = d.castleManager;
           if (T) {
             var X = T.castleStates;
-            game.castles.Uj = T.nextRequiredMonsterLevel;
+            game.castles.nextRequiredMonsterLevel = T.nextRequiredMonsterLevel;
             var Ca;
             for (Ca = 0; Ca < X.length; Ca++) {
               var qa = X[Ca];
@@ -633,15 +633,15 @@ export function restoreGameState(a, b) {
             }
           }
           var Vc = game.state.achievements;
-          if (0 != Vc.ik.length) {
-            Vc.ik.length = 0;
+          if (0 != Vc.obtainedList.length) {
+            Vc.obtainedList.length = 0;
           }
           if (0 != Vc.claimQueue.length) {
             Vc.claimQueue.length = 0;
           }
           var Od, wc;
-          for (Od = 0; Od < Vc.jj.length; Od++) {
-            wc = Vc.jj[Od];
+          for (Od = 0; Od < Vc.achievementList.length; Od++) {
+            wc = Vc.achievementList[Od];
             if (wc.obtained) {
               if (wc.applied) {
                 if (wc.obtained && wc.applied) {
@@ -651,7 +651,7 @@ export function restoreGameState(a, b) {
                 Vc.claimQueue.push(wc);
               }
             } else {
-              Vc.ik.push(wc);
+              Vc.obtainedList.push(wc);
             }
           }
           var zd = d.potionInventory;
@@ -728,7 +728,7 @@ export function createSaveState(a) {
       spriteRenderOrderEnabled: C.depthSortSprites,
       fpsVisible: C.showFps
     };
-    var v = game.dungeons.Sd,
+    var v = game.dungeons.pendingFarmKills,
       D = game.dungeons.Mk,
       N = [],
       I = game.dungeons.dungeonList,
@@ -758,7 +758,7 @@ export function createSaveState(a) {
       la = {
         collectedGold: game.shops.collectedGold
       },
-      Q = game.castles.Uj,
+      Q = game.castles.nextRequiredMonsterLevel,
       V = [],
       na = game.castles.castleList,
       K,
@@ -991,7 +991,7 @@ export function createSaveState(a) {
         pointUpgrades: rc
       },
       sb = [],
-      ka = game.state.achievements.jj,
+      ka = game.state.achievements.achievementList,
       Eb,
       xb;
     for (xb = 0; xb < ka.length; xb++) {

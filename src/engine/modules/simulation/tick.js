@@ -204,7 +204,7 @@ export function advanceSimulation(a) {
             S.farmStartTurn = va;
           }
           if (1200 <= ia - va) {
-            K.Sd += pa;
+            K.pendingFarmKills += pa;
             S.cleared = true;
             S.clearedTurn = ia;
           }
@@ -217,13 +217,13 @@ export function advanceSimulation(a) {
       var T = game.state.achievements,
         X,
         Ca;
-      for (X = T.ik.length - 1; 0 <= X; X--) {
-        var qa = Ca = T.ik[X];
+      for (X = T.obtainedList.length - 1; 0 <= X; X--) {
+        var qa = Ca = T.obtainedList[X];
         if (!qa.obtained) {
           qa.obtained = qa.isVictoryAchievement ? hasVictoryAchievement(qa) : getAchievementProgress(qa) >= qa.requiredCount;
         }
         if (qa.obtained) {
-          T.ik.splice(X, 1);
+          T.obtainedList.splice(X, 1);
           T.claimQueue.push(Ca);
         }
       }

@@ -90,8 +90,8 @@ export function refreshCastleConquest(a) {
     if (a.yk === a.dungeonList.length) {
       a.dungeonsConquered = true;
       b = game.castles;
-      b.Uj++;
-      a.requiredMonsterLevel = b.Uj;
+      b.nextRequiredMonsterLevel++;
+      a.requiredMonsterLevel = b.nextRequiredMonsterLevel;
       invalidateCastleRevision();
     }
     if (canAttackCastle(a)) {
@@ -154,7 +154,7 @@ export function resetCastles() {
   a.attackableCastles.length = 0;
   a.scheduledCastles.length = 0;
   a.cm = 0;
-  a.Uj = 1;
+  a.nextRequiredMonsterLevel = 1;
   var b;
   for (b = 0; b < a.castleList.length; b++) {
     var c = a.castleList[b];

@@ -131,7 +131,7 @@ export function initializeViewsAchievements() {
     }
   };
   AchievementListView.prototype.Zn = function () {
-    var a = game.state.achievements.jj,
+    var a = game.state.achievements.achievementList,
       b = [],
       c = [],
       d = [],
@@ -167,8 +167,8 @@ export function initializeViewsAchievements() {
       this.buttons[a].render();
     }
     var b = game.state.achievements;
-    a = b.jj.length;
-    b = b.claimQueue.length + (a - b.ik.length);
+    a = b.achievementList.length;
+    b = b.claimQueue.length + (a - b.obtainedList.length);
     if (this.pz != b) {
       this.pz = b;
       setElementHtml(this.QC, "成就(" + b + "/" + a + ")");

@@ -74,7 +74,7 @@ export function initializeRuntimeGame() {
       this.bm = {};
       this.Ny = "L2_Terrain087.PNG";
       this.ju = {};
-      this.Uj = 1;
+      this.nextRequiredMonsterLevel = 1;
       this.cm = 0;
       this.GE = function (a, b) {
         return a.requiredMonsterLevel < b.requiredMonsterLevel ? -1 : 1;
@@ -164,14 +164,14 @@ export function initializeRuntimeGame() {
         this.pointUpgrades = b;
       }(),
       achievements: new function () {
-        this.jj = [];
+        this.achievementList = [];
         this.Lt = {};
-        this.ik = [];
+        this.obtainedList = [];
         this.claimQueue = [];
         var a, b;
         for (a = 0; a < achievementDefinitions.length; a++) {
           b = new Achievement(achievementDefinitions[a]);
-          this.jj.push(b);
+          this.achievementList.push(b);
           if (this.Lt[b.id]) {
             console.log("Error. Duplicate achievement id: " + b.id);
           }
@@ -448,9 +448,9 @@ export function initializeRuntimeGame() {
       a = game.dungeons.farms.length;
       resetDungeons();
       game.dungeons.Mk = a;
-      a = game.castles.Uj;
+      a = game.castles.nextRequiredMonsterLevel;
       resetCastles();
-      game.castles.Uj = a;
+      game.castles.nextRequiredMonsterLevel = a;
       resetFarms();
       resetShops();
       clearCombatQueue();

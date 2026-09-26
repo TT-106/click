@@ -176,12 +176,12 @@ export function describeAchievementRequirement(a) {
 export function resetAchievements() {
   var a = game.state.achievements,
     b;
-  for (b = 0; b < a.jj.length; b++) {
-    var c = a.jj[b];
+  for (b = 0; b < a.achievementList.length; b++) {
+    var c = a.achievementList[b];
     c.applied = false;
     c.obtained = false;
   }
-  a.ik.length = 0;
+  a.obtainedList.length = 0;
   a.claimQueue.length = 0;
 }
 export function initializeProgressionAchievements() {
