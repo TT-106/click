@@ -210,7 +210,7 @@ export function initializeViewsAchievements() {
       f = this.Ao[b];
       g = n.pj[b];
       h = this.Dv[b];
-      l = pointEventDefinitions[a].Fb;
+      l = pointEventDefinitions[a].currentPointReward;
       if (c != d) {
         this.Ao[b] = d;
         c = this.sy[b];
