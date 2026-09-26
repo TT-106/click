@@ -145,131 +145,131 @@ export function applyStatBonus(a, b, c) {
 export function initializeCombatSkillEffects() {
   stunEffectDefinition = {
     statusEffectTypeId: 13,
-    Te: "spritesheet/SpellFXAnim2.png",
+    spritesheetPath: "spritesheet/SpellFXAnim2.png",
     animationName: "Bubbles",
-    Od: 1,
-    Pd: false,
-    Qd: 100,
-    cf: "昏迷"
+    overlayFrameIndex: 1,
+    hasAnimation: false,
+    durationTurns: 100,
+    tooltipLabel: "昏迷"
   };
   statusEffectDefinitions = {
     0: {
       statusEffectTypeId: 0,
-      Te: "spritesheet/SpellFXAnim4.png",
+      spritesheetPath: "spritesheet/SpellFXAnim4.png",
       animationName: "Sleep",
-      Od: 7,
-      Pd: true,
-      Qd: 100,
-      cf: "睡着"
+      overlayFrameIndex: 7,
+      hasAnimation: true,
+      durationTurns: 100,
+      tooltipLabel: "睡着"
     },
     1: {
       statusEffectTypeId: 1,
-      Te: "spritesheet/SpellFXAnim1.png",
+      spritesheetPath: "spritesheet/SpellFXAnim1.png",
       animationName: "Spider Web",
-      Od: 7,
-      Pd: true,
-      Qd: 100,
-      cf: "定身"
+      overlayFrameIndex: 7,
+      hasAnimation: true,
+      durationTurns: 100,
+      tooltipLabel: "定身"
     },
     3: {
       statusEffectTypeId: 3,
-      Te: "spritesheet/SpellFXAnim4.png",
+      spritesheetPath: "spritesheet/SpellFXAnim4.png",
       animationName: "Blind Eye Blink",
-      Od: 7,
-      Pd: true,
-      Qd: 100,
-      cf: "失明"
+      overlayFrameIndex: 7,
+      hasAnimation: true,
+      durationTurns: 100,
+      tooltipLabel: "失明"
     },
     4: {
       statusEffectTypeId: 4,
-      Te: "spritesheet/SpellFXAnim4.png",
+      spritesheetPath: "spritesheet/SpellFXAnim4.png",
       animationName: "Red Eye Blink",
-      Od: 6,
-      Pd: true,
-      Qd: 100,
-      cf: "转变"
+      overlayFrameIndex: 6,
+      hasAnimation: true,
+      durationTurns: 100,
+      tooltipLabel: "转变"
     },
     5: {
       statusEffectTypeId: 5,
-      Te: "spritesheet/SpellFXAnim3.png",
+      spritesheetPath: "spritesheet/SpellFXAnim3.png",
       animationName: "Shield",
-      Od: 6,
-      Pd: false,
-      Qd: 700,
-      cf: "护甲提高"
+      overlayFrameIndex: 6,
+      hasAnimation: false,
+      durationTurns: 700,
+      tooltipLabel: "护甲提高"
     },
     6: {
       statusEffectTypeId: 6,
-      Te: "spritesheet/SpellFXAnim3.png",
+      spritesheetPath: "spritesheet/SpellFXAnim3.png",
       animationName: "Arm Flex",
-      Od: 0,
-      Pd: false,
-      Qd: 700,
-      cf: "伤害提高"
+      overlayFrameIndex: 0,
+      hasAnimation: false,
+      durationTurns: 700,
+      tooltipLabel: "伤害提高"
     },
     7: {
       statusEffectTypeId: 7,
-      Te: "spritesheet/SpellFXAnim4.png",
+      spritesheetPath: "spritesheet/SpellFXAnim4.png",
       animationName: "Eagle",
-      Od: 0,
-      Pd: false,
-      Qd: 700,
-      cf: "攻击等级提高"
+      overlayFrameIndex: 0,
+      hasAnimation: false,
+      durationTurns: 700,
+      tooltipLabel: "攻击等级提高"
     },
     8: {
       statusEffectTypeId: 8,
-      Te: "spritesheet/SpellFXAnim4.png",
+      spritesheetPath: "spritesheet/SpellFXAnim4.png",
       animationName: "Armor",
-      Od: 3,
-      Pd: false,
-      Qd: 700,
-      cf: "防御等级提高"
+      overlayFrameIndex: 3,
+      hasAnimation: false,
+      durationTurns: 700,
+      tooltipLabel: "防御等级提高"
     },
     9: {
       statusEffectTypeId: 9,
-      Te: "spritesheet/SpellFXAnim3.png",
+      spritesheetPath: "spritesheet/SpellFXAnim3.png",
       animationName: "Super Speed",
-      Od: 0,
-      Pd: false,
-      Qd: 100,
-      cf: "迅捷"
+      overlayFrameIndex: 0,
+      hasAnimation: false,
+      durationTurns: 100,
+      tooltipLabel: "迅捷"
     },
     10: {
       statusEffectTypeId: 10,
-      Te: "spritesheet/SpellFXAnim3.png",
+      spritesheetPath: "spritesheet/SpellFXAnim3.png",
       animationName: "Target",
-      Od: 8,
-      Pd: false,
-      Qd: 50,
-      cf: "怪物目标"
+      overlayFrameIndex: 8,
+      hasAnimation: false,
+      durationTurns: 50,
+      tooltipLabel: "怪物目标"
     },
     11: {
       statusEffectTypeId: 11,
-      Te: "spritesheet/SpellFXAnim3.png",
+      spritesheetPath: "spritesheet/SpellFXAnim3.png",
       animationName: "Color Spiral",
-      Od: 8,
-      Pd: false,
-      Qd: 50,
-      cf: "潜行模式"
+      overlayFrameIndex: 8,
+      hasAnimation: false,
+      durationTurns: 50,
+      tooltipLabel: "潜行模式"
     },
     12: {
       statusEffectTypeId: 12,
-      Te: "spritesheet/SpellFXAnim4.png",
+      spritesheetPath: "spritesheet/SpellFXAnim4.png",
       animationName: "Totems",
-      Od: 2,
-      Pd: false,
-      Qd: 50,
-      cf: "暴怒"
+      overlayFrameIndex: 2,
+      hasAnimation: false,
+      durationTurns: 50,
+      tooltipLabel: "暴怒"
     }
   };
   statusEffectDefinitions[13] = stunEffectDefinition;
   statusEffectDefinitions[14] = {
     statusEffectTypeId: 14,
-    Te: "spritesheet/SpellFXAnim2.png",
+    spritesheetPath: "spritesheet/SpellFXAnim2.png",
     animationName: "Bubbles",
-    Od: 1,
-    Pd: false,
-    Qd: 10,
-    cf: "Stunned"
+    overlayFrameIndex: 1,
+    hasAnimation: false,
+    durationTurns: 10,
+    tooltipLabel: "Stunned"
   };
 }

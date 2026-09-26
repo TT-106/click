@@ -153,8 +153,8 @@ export function drawCharacterEffects(a, b) {
   for (c = 0; c < b.length; c++) {
     if (f = b[c], !f.isDead) {
       for (y = false, p = f.effects.of, d = 0; d < p.length; d++) {
-        if (s = p[d], s.Pd && (s = s.hD)) {
-          u = p[d].Od;
+        if (s = p[d], s.hasAnimation && (s = s.animation)) {
+          u = p[d].overlayFrameIndex;
           if (!y) {
             g = f.position.getLevelPositionX();
             h = f.position.getLevelPositionY();

@@ -423,7 +423,7 @@ export function initializeViewsExpedition() {
             if (c && c === g) {
               if (f) {
                 g = statusEffectDefinitions[c];
-                c = g.Te;
+                c = g.spritesheetPath;
                 d = game.animations.Zg(g.animationName);
                 this.Dm[a]++;
                 if (this.Dm[a] >= d.To()) {
@@ -437,13 +437,13 @@ export function initializeViewsExpedition() {
               c = g;
               this.qm[a] = c;
               g = statusEffectDefinitions[c];
-              c = g.Te;
+              c = g.spritesheetPath;
               d = game.animations.Zg(g.animationName);
               this.Dm[a] = 0;
               d = d.frames[0];
               b = getElement(this.Wl[a]);
               b.style.background = "url('" + c + "') -" + d.frameSourceX + "px -" + d.frameSourceY + "px";
-              b.title = g.cf;
+              b.title = g.tooltipLabel;
               showElementById(this.Wl[a]);
             }
           } else {

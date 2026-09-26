@@ -183,83 +183,6 @@
     ]
   },
   {
-    "name": "Qd",
-    "reads": 3,
-    "writes": 15,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\effects.js:10",
-        "code": "this.Qd"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\effects.js:48",
-        "code": "h.Qd"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\actions.js:142",
-        "code": "g.Qd"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\characters\\effects.js",
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\combat\\skill-effects.js"
-    ]
-  },
-  {
-    "name": "Od",
-    "reads": 3,
-    "writes": 15,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\effects.js:12",
-        "code": "this.Od"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\actions.js:142",
-        "code": "g.Od"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\actions.js:332",
-        "code": "stunEffectDefinition.Od"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\characters\\effects.js",
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\combat\\skill-effects.js",
-      "src\\engine\\modules\\rendering\\scene.js"
-    ]
-  },
-  {
-    "name": "Pd",
-    "reads": 3,
-    "writes": 15,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\effects.js:14",
-        "code": "this.Pd"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\actions.js:142",
-        "code": "g.Pd"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\actions.js:332",
-        "code": "stunEffectDefinition.Pd"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\characters\\effects.js",
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\combat\\skill-effects.js",
-      "src\\engine\\modules\\rendering\\scene.js"
-    ]
-  },
-  {
     "name": "Gd",
     "reads": 15,
     "writes": 3,
@@ -849,30 +772,6 @@
     ]
   },
   {
-    "name": "Te",
-    "reads": 2,
-    "writes": 14,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\skill-effects.js:148",
-        "code": "Te: \"spritesheet/SpellFXAnim2.png\""
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\skill-effects.js:158",
-        "code": "Te: \"spritesheet/SpellFXAnim4.png\""
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\skill-effects.js:167",
-        "code": "Te: \"spritesheet/SpellFXAnim1.png\""
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\combat\\skill-effects.js",
-      "src\\engine\\modules\\views\\expedition.js"
-    ]
-  },
-  {
     "name": "Ge",
     "reads": 15,
     "writes": 1,
@@ -1029,30 +928,6 @@
       "src\\engine\\modules\\simulation\\tick.js",
       "src\\engine\\modules\\views\\character.js",
       "src\\engine\\modules\\views\\upgrade-details.js"
-    ]
-  },
-  {
-    "name": "cf",
-    "reads": 1,
-    "writes": 14,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\skill-effects.js:153",
-        "code": "cf: \"昏迷\""
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\skill-effects.js:163",
-        "code": "cf: \"睡着\""
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\skill-effects.js:172",
-        "code": "cf: \"定身\""
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\combat\\skill-effects.js",
-      "src\\engine\\modules\\views\\expedition.js"
     ]
   },
   {
@@ -5792,29 +5667,6 @@
       "src\\engine\\modules\\runtime\\game.js",
       "src\\engine\\modules\\world\\dungeons.js",
       "src\\engine\\modules\\world\\initialization.js"
-    ]
-  },
-  {
-    "name": "Ok",
-    "reads": 7,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\effects.js:15",
-        "code": "this.Ok"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\effects.js:57",
-        "code": "f.Ok"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\effects.js:60",
-        "code": "f.Ok"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\characters\\effects.js"
     ]
   },
   {
@@ -25639,45 +25491,6 @@
     "files": [
       "src\\engine\\modules\\characters\\character.js",
       "src\\engine\\modules\\loot\\items.js"
-    ]
-  },
-  {
-    "name": "jD",
-    "reads": 1,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\effects.js:9",
-        "code": "this.jD"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\effects.js:48",
-        "code": "h.jD"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\characters\\effects.js"
-    ]
-  },
-  {
-    "name": "hD",
-    "reads": 1,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\effects.js:11",
-        "code": "this.hD"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:156",
-        "code": "s.hD"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\characters\\effects.js",
-      "src\\engine\\modules\\rendering\\scene.js"
     ]
   },
   {

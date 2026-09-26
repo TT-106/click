@@ -6,13 +6,13 @@ import { addSpellStatBonus, statValue } from "./stats.js";
 import { floorNumber } from "../core/math.js";
 export function StatusEffect(a, b, c, d, f, g, h) {
   this.statusEffectTypeId = a;
-  this.jD = b;
-  this.Qd = c;
-  this.hD = d;
-  this.Od = f;
+  this.startTurn = b;
+  this.durationTurns = c;
+  this.animation = d;
+  this.overlayFrameIndex = f;
   this.bg = false;
-  this.Pd = g;
-  this.Ok = h;
+  this.hasAnimation = g;
+  this.potencyMultiplier = h;
 }
 export function isDisablingEffect(a) {
   return 0 === a.statusEffectTypeId || 1 === a.statusEffectTypeId || 13 === a.statusEffectTypeId || 14 === a.statusEffectTypeId;
@@ -45,7 +45,7 @@ export function updateCharacterEffects(a, b) {
   u.spellBonusPercent = 0;
   for (c = y.spellBonusPercent = 0; c < a.of.length; c++) {
     h = f = a.of[c];
-    h.bg = d - h.jD >= h.Qd;
+    h.bg = d - h.startTurn >= h.durationTurns;
     if (h.bg) {
       g = true;
     } else {
@@ -54,28 +54,28 @@ export function updateCharacterEffects(a, b) {
       }
       h = f.statusEffectTypeId;
       if (5 === h) {
-        addSpellStatBonus(s, f.Ok);
+        addSpellStatBonus(s, f.potencyMultiplier);
       } else {
         if (6 === h && p) {
-          addSpellStatBonus(p, f.Ok);
+          addSpellStatBonus(p, f.potencyMultiplier);
         } else {
           if (7 === h) {
-            addSpellStatBonus(u, f.Ok);
+            addSpellStatBonus(u, f.potencyMultiplier);
           } else {
             if (8 === h) {
-              addSpellStatBonus(y, f.Ok);
+              addSpellStatBonus(y, f.potencyMultiplier);
             } else {
               if (10 === h) {
                 a.Gn = true;
-                addSpellStatBonus(y, f.Ok);
+                addSpellStatBonus(y, f.potencyMultiplier);
               } else {
                 if (11 === h) {
                   a.isStealthed = true;
-                  addSpellStatBonus(u, f.Ok);
+                  addSpellStatBonus(u, f.potencyMultiplier);
                 } else {
                   if (12 === h) {
                     a.Vs = true;
-                    addSpellStatBonus(p, f.Ok);
+                    addSpellStatBonus(p, f.potencyMultiplier);
                   } else {
                     if (4 === h) {
                       a.isConverted = true;
