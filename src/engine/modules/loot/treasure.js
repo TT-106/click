@@ -13,7 +13,7 @@ export function GoldDrop(a, b, c, d) {
   this.vD = d;
   this.collected = false;
   this.claimedBy = null;
-  this.ph = 0;
+  this.claimDistance = 0;
 }
 export function GoldDropRegistry() {
   this.pe = [];
@@ -103,17 +103,17 @@ export function initializeLootTreasure() {
   GoldDrop.prototype.Re = function (a) {
     this.claimedBy = a;
   };
-  GoldDrop.prototype.Ud = function () {
-    return this.ph;
+  GoldDrop.prototype.getClaimDistance = function () {
+    return this.claimDistance;
   };
-  GoldDrop.prototype.Se = function (a) {
-    this.ph = a;
+  GoldDrop.prototype.setClaimDistance = function (a) {
+    this.claimDistance = a;
   };
   GoldDropRegistry.prototype.zl = function () {
     var a;
     for (a = 0; a < this.pe.length; a++) {
       this.pe[a].Re(null);
-      this.pe[a].Se(0);
+      this.pe[a].setClaimDistance(0);
     }
   };
   TreasureRegistry.prototype.Xw = function (a) {

@@ -19,7 +19,7 @@ export function isDisablingEffect(a) {
 }
 export function CharacterEffects(a) {
   this.no = a;
-  this.isStunned = this.isStealthed = this.isConverted = this.Vs = this.Gn = this.Kd = false;
+  this.isStunned = this.isStealthed = this.isConverted = this.Vs = this.Gn = this.isDisabled = false;
   this.of = [];
 }
 export function updateCharacterEffects(a, b) {
@@ -29,7 +29,7 @@ export function updateCharacterEffects(a, b) {
     g = false,
     h,
     l = a.isStunned;
-  a.Kd = false;
+  a.isDisabled = false;
   a.Gn = false;
   a.Vs = false;
   a.isConverted = false;
@@ -50,7 +50,7 @@ export function updateCharacterEffects(a, b) {
       g = true;
     } else {
       if (isDisablingEffect(f)) {
-        a.Kd = true;
+        a.isDisabled = true;
       }
       h = f.statusEffectTypeId;
       if (5 === h) {
@@ -126,7 +126,7 @@ export function hasStatusEffect(a, b) {
     case 13:
     case 14:
     case 0:
-      return a.Kd;
+      return a.isDisabled;
     case 4:
       return a.isConverted;
     case 10:

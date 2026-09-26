@@ -466,7 +466,7 @@ export function initializeAiBehaviors() {
     } else {
       this.co = 0;
     }
-    if (this.targetCharacter && !(this.targetCharacter.isDead || this.targetCharacter.effects.Kd || this.targetCharacter.effects.isConverted) && (/** @type {MovingBehavior} */ (/** @type {unknown} */ (this))).vx(a)) {
+    if (this.targetCharacter && !(this.targetCharacter.isDead || this.targetCharacter.effects.isDisabled || this.targetCharacter.effects.isConverted) && (/** @type {MovingBehavior} */ (/** @type {unknown} */ (this))).vx(a)) {
       this.ax = game.state.turnNumber;
       var b = a.position.room;
       if (b && isAdventurerOrMinion(a)) {
@@ -493,7 +493,7 @@ export function initializeAiBehaviors() {
     setVector(this.Jl, 0, 0);
     for (s = 0; s < a.length; s++) {
       n = a[s];
-      if (!(n.isDead || n.effects.Kd || n.effects.isConverted || n.position.room != d)) {
+      if (!(n.isDead || n.effects.isDisabled || n.effects.isConverted || n.position.room != d)) {
         p = n.position.levelPosition;
         n = c.distanceTo(p);
         if (!(n > this.CA)) {
@@ -1126,7 +1126,7 @@ export function initializeAiBehaviors() {
     }
     if (this.goldDrop && this.goldDrop.claimedBy === a) {
       this.goldDrop.Re(null);
-      this.goldDrop.Se(0);
+      this.goldDrop.setClaimDistance(0);
     }
     var b = game.goldDrops.pe,
       c,
@@ -1141,7 +1141,7 @@ export function initializeAiBehaviors() {
         c = b[d];
         if (!(c.collected || c.vD !== l)) {
           h = distanceSquaredToPoint(f, c.Xo, c.Yo);
-          if (!(c.claimedBy && h > c.Ud() || !(0 > n || h < n))) {
+          if (!(c.claimedBy && h > c.getClaimDistance() || !(0 > n || h < n))) {
             g = c;
             n = h;
           }
@@ -1149,7 +1149,7 @@ export function initializeAiBehaviors() {
       }
       if (this.goldDrop = g) {
         this.goldDrop.Re(a);
-        this.goldDrop.Se(n);
+        this.goldDrop.setClaimDistance(n);
         this.Wy = Math.sqrt(n);
       }
     }
@@ -1189,7 +1189,7 @@ export function initializeAiBehaviors() {
     }
     if (this.scrollDrop && this.scrollDrop.claimedBy === a) {
       this.scrollDrop.Re(null);
-      this.scrollDrop.Se(0);
+      this.scrollDrop.setClaimDistance(0);
     }
     var b = game.scrollDrops.kf,
       c,
@@ -1204,7 +1204,7 @@ export function initializeAiBehaviors() {
         c = b[d];
         if (!(c.collected || c.BE !== l)) {
           h = distanceSquaredToPoint(f, c.bq, c.cq);
-          if (!(c.claimedBy && h > c.Ud() || !(0 > n || h < n))) {
+          if (!(c.claimedBy && h > c.getClaimDistance() || !(0 > n || h < n))) {
             g = c;
             n = h;
           }
@@ -1212,7 +1212,7 @@ export function initializeAiBehaviors() {
       }
       if (this.scrollDrop = g) {
         this.scrollDrop.Re(a);
-        this.scrollDrop.Se(n);
+        this.scrollDrop.setClaimDistance(n);
         this.Zy = Math.sqrt(n);
       }
     }
@@ -1252,7 +1252,7 @@ export function initializeAiBehaviors() {
     }
     if (this.potionDrop && this.potionDrop.claimedBy === a) {
       this.potionDrop.Re(null);
-      this.potionDrop.Se(0);
+      this.potionDrop.setClaimDistance(0);
     }
     var b = game.potionDrops.Hf,
       c,
@@ -1267,7 +1267,7 @@ export function initializeAiBehaviors() {
         c = b[d];
         if (!(c.collected || c.oE !== l)) {
           h = distanceSquaredToPoint(f, c.Qp, c.Rp);
-          if (!(c.claimedBy && h > c.Ud() || !(0 > n || h < n))) {
+          if (!(c.claimedBy && h > c.getClaimDistance() || !(0 > n || h < n))) {
             g = c;
             n = h;
           }
@@ -1275,7 +1275,7 @@ export function initializeAiBehaviors() {
       }
       if (this.potionDrop = g) {
         this.potionDrop.Re(a);
-        this.potionDrop.Se(n);
+        this.potionDrop.setClaimDistance(n);
         this.Yy = Math.sqrt(n);
       }
     }
@@ -1315,7 +1315,7 @@ export function initializeAiBehaviors() {
     }
     if (this.itemDrop && this.itemDrop.claimedBy === a) {
       this.itemDrop.Re(null);
-      this.itemDrop.Se(0);
+      this.itemDrop.setClaimDistance(0);
     }
     var b = game.itemDrops.yf,
       c,
@@ -1330,7 +1330,7 @@ export function initializeAiBehaviors() {
         c = b[d];
         if (!(c.collected || c.PD !== l)) {
           h = distanceSquaredToPoint(f, c.mp, c.np);
-          if (!(c.claimedBy && h > c.Ud() || !(0 > n || h < n))) {
+          if (!(c.claimedBy && h > c.getClaimDistance() || !(0 > n || h < n))) {
             g = c;
             n = h;
           }
@@ -1338,7 +1338,7 @@ export function initializeAiBehaviors() {
       }
       if (this.itemDrop = g) {
         this.itemDrop.Re(a);
-        this.itemDrop.Se(n);
+        this.itemDrop.setClaimDistance(n);
         this.Xy = Math.sqrt(n);
       }
     }
@@ -1483,7 +1483,7 @@ export function initializeAiBehaviors() {
       h,
       l = -1;
     for (d = 0; d < b.length; d++) {
-      if (a = b[d], a.position.room === c && (h = f.Ud(a.position.levelPosition), 0 > l || h < l)) {
+      if (a = b[d], a.position.room === c && (h = f.squaredDistanceTo(a.position.levelPosition), 0 > l || h < l)) {
         g = a;
         l = h;
       }

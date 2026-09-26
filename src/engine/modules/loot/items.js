@@ -13,7 +13,7 @@ export function ItemDrop(a, b, c, d) {
   this.PD = d;
   this.collected = false;
   this.claimedBy = null;
-  this.ph = 0;
+  this.claimDistance = 0;
 }
 export function ItemEffect(a, b, c, d) {
   this.Dw = a;
@@ -297,11 +297,11 @@ export function initializeLootItems() {
   ItemDrop.prototype.Re = function (a) {
     this.claimedBy = a;
   };
-  ItemDrop.prototype.Ud = function () {
-    return this.ph;
+  ItemDrop.prototype.getClaimDistance = function () {
+    return this.claimDistance;
   };
-  ItemDrop.prototype.Se = function (a) {
-    this.ph = a;
+  ItemDrop.prototype.setClaimDistance = function (a) {
+    this.claimDistance = a;
   };
   FIRE_ITEM_EFFECT = 1;
   ICE_ITEM_EFFECT = 2;
@@ -345,7 +345,7 @@ export function initializeLootItems() {
     var a;
     for (a = 0; a < this.yf.length; a++) {
       this.yf[a].Re(null);
-      this.yf[a].Se(0);
+      this.yf[a].setClaimDistance(0);
     }
   };
 }

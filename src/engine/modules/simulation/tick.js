@@ -332,7 +332,7 @@ export function advanceSimulation(a) {
                     var cc = new VisualEffect(wb, jb, Bb, false, 1);
                     Wa.impactEffect = cc;
                     pb = Math.max(1, calculateAttackDamage(zb, Ma));
-                    Wa.Rd = false;
+                    Wa.noDamage = false;
                     Wa.remainingDamage = pb;
                     enqueueCombatAction(game.combatQueue, Wa);
                   }
@@ -358,7 +358,7 @@ export function advanceSimulation(a) {
             }
             addVisualEffect(game.effects, Va);
           } else if (Va.bl()) {
-            fb = cb.Vn = true;
+            fb = cb.resolved = true;
             break a;
           }
         }
@@ -372,7 +372,7 @@ export function advanceSimulation(a) {
         }
       }
     } else if (Ga.isDead) {
-      bb = ja.Vn = true;
+      bb = ja.resolved = true;
     } else if (ja.hasProjectilePhase) {
       var Cb = Fa,
         kb = ja,
@@ -432,7 +432,7 @@ export function advanceSimulation(a) {
   }
   if (bb) {
     for (ha = Fa.kj.length - 1; 0 <= ha; ha--) {
-      if (Fa.kj[ha].Vn) {
+      if (Fa.kj[ha].resolved) {
         Fa.kj.splice(ha, 1);
       }
     }
@@ -790,7 +790,7 @@ export function updateCharacterBehaviors(a) {
   for (b = 0; b < a.length; b++) {
     c = a[b];
     if (!c.isDead) {
-      if (c.effects.Kd) {
+      if (c.effects.isDisabled) {
         c.actionType = IDLE_ACTION;
       } else {
         c.dr();

@@ -178,7 +178,7 @@ export function initializeCoreMath() {
     a = this.y - a.y;
     return Math.sqrt(b * b + a * a);
   };
-  Vector2.prototype.Ud = function (a) {
+  Vector2.prototype.squaredDistanceTo = function (a) {
     var b = this.x - a.x;
     a = this.y - a.y;
     return b * b + a * a;

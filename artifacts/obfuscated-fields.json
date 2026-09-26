@@ -1,91 +1,5 @@
 [
   {
-    "name": "Kd",
-    "reads": 13,
-    "writes": 5,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:469",
-        "code": "this.targetCharacter.effects.Kd"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:496",
-        "code": "n.effects.Kd"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\targeting.js:45",
-        "code": "l.Kd"
-      }
-    ],
-    "fileCount": 8,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js",
-      "src\\engine\\modules\\ai\\targeting.js",
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\characters\\effects.js",
-      "src\\engine\\modules\\characters\\party.js",
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\combat\\scrolls.js",
-      "src\\engine\\modules\\simulation\\tick.js"
-    ]
-  },
-  {
-    "name": "Ud",
-    "reads": 12,
-    "writes": 6,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1144",
-        "code": "c.Ud"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1207",
-        "code": "c.Ud"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1270",
-        "code": "c.Ud"
-      }
-    ],
-    "fileCount": 9,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js",
-      "src\\engine\\modules\\ai\\targeting.js",
-      "src\\engine\\modules\\combat\\potions.js",
-      "src\\engine\\modules\\combat\\scrolls.js",
-      "src\\engine\\modules\\core\\math.js",
-      "src\\engine\\modules\\loot\\items.js",
-      "src\\engine\\modules\\loot\\treasure.js",
-      "src\\engine\\modules\\world\\generation.js",
-      "src\\engine\\modules\\world\\rooms.js"
-    ]
-  },
-  {
-    "name": "Rd",
-    "reads": 1,
-    "writes": 17,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:540",
-        "code": "Va.Rd"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:609",
-        "code": "sa.Rd"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:669",
-        "code": "Ya.Rd"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\simulation\\tick.js"
-    ]
-  },
-  {
     "name": "Gd",
     "reads": 15,
     "writes": 3,
@@ -501,33 +415,6 @@
       {
         "loc": "src\\engine\\modules\\ai\\behaviors.js:1191",
         "code": "this.scrollDrop.Re"
-      }
-    ],
-    "fileCount": 5,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js",
-      "src\\engine\\modules\\combat\\potions.js",
-      "src\\engine\\modules\\combat\\scrolls.js",
-      "src\\engine\\modules\\loot\\items.js",
-      "src\\engine\\modules\\loot\\treasure.js"
-    ]
-  },
-  {
-    "name": "Se",
-    "reads": 12,
-    "writes": 4,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1129",
-        "code": "this.goldDrop.Se"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1152",
-        "code": "this.goldDrop.Se"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1192",
-        "code": "this.scrollDrop.Se"
       }
     ],
     "fileCount": 5,
@@ -2014,32 +1901,6 @@
       "src\\engine\\modules\\rendering\\sprites.js",
       "src\\engine\\modules\\views\\expedition.js",
       "src\\engine\\modules\\views\\upgrade-details.js"
-    ]
-  },
-  {
-    "name": "ph",
-    "reads": 4,
-    "writes": 8,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\potions.js:86",
-        "code": "this.ph"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\potions.js:256",
-        "code": "this.ph"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\potions.js:259",
-        "code": "this.ph"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\combat\\potions.js",
-      "src\\engine\\modules\\combat\\scrolls.js",
-      "src\\engine\\modules\\loot\\items.js",
-      "src\\engine\\modules\\loot\\treasure.js"
     ]
   },
   {
@@ -9223,30 +9084,6 @@
       "src\\engine\\modules\\combat\\actions.js",
       "src\\engine\\modules\\combat\\skill-effects.js",
       "src\\engine\\modules\\views\\character.js"
-    ]
-  },
-  {
-    "name": "Vn",
-    "reads": 1,
-    "writes": 5,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\actions.js:28",
-        "code": "this.Vn"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\actions.js:64",
-        "code": "b.Vn"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\actions.js:116",
-        "code": "b.Vn"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\simulation\\tick.js"
     ]
   },
   {

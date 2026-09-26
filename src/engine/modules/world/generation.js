@@ -79,7 +79,7 @@ export function findNearestConnectedRoom(a, b, c, d) {
   if (0 === f.length) {
     return b;
   }
-  var g = b.Ud(d),
+  var g = b.squaredDistanceToRoom(d),
     h,
     l,
     n;
@@ -87,7 +87,7 @@ export function findNearestConnectedRoom(a, b, c, d) {
     h = f[n];
     if (!(0 <= c.indexOf(h) || h === d)) {
       h = findNearestConnectedRoom(a, h, c, d);
-      l = h.Ud(d);
+      l = h.squaredDistanceToRoom(d);
       if (l < g) {
         g = l;
         b = h;

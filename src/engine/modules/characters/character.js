@@ -288,7 +288,7 @@ export function updateCharacter(a, b) {
                     J,
                     la = u.hallway.Km;
                   for (z = 0; z < O.length; z++) {
-                    if (O[z].effects.Kd) {
+                    if (O[z].effects.isDisabled) {
                       x = false;
                       break a;
                     }
@@ -537,7 +537,7 @@ export function updateCharacter(a, b) {
                     Va.impactEffect = Hb;
                     zb = mc;
                     Ma = Math.max(1, calculateAttackDamage(a, ja));
-                    Va.Rd = 0 === Ma;
+                    Va.noDamage = 0 === Ma;
                     Va.remainingDamage = Ma;
                     enqueueCombatAction(game.combatQueue, Va);
                     var ac = RANGED_ATTACK_RANGE,
@@ -553,7 +553,7 @@ export function updateCharacter(a, b) {
                             wb = Ab.distanceTo(Ha.position.levelPosition);
                             if (wb <= ac && (0 > Ec || wb < Ec)) {
                               Ib = Ha.effects;
-                              if (Ib.isStealthed || Ib.Kd || Ib.isConverted) {
+                              if (Ib.isStealthed || Ib.isDisabled || Ib.isConverted) {
                                 qb = Ha;
                               } else {
                                 Bb = Ha;
@@ -606,7 +606,7 @@ export function updateCharacter(a, b) {
                         sa.projectileEffect = Tb;
                       }
                       Ja = statValue(a.stats.damage);
-                      sa.Rd = false;
+                      sa.noDamage = false;
                       sa.remainingDamage = Ja;
                       Db = new VisualEffect(Fc, Cb, Ra, false, TARGETED_EFFECT);
                       Db.boundCharacter = a;
@@ -666,7 +666,7 @@ export function updateCharacter(a, b) {
                   var Td = Na.impactEffectName;
                   if (Td) {
                     var oe = statValue(a.stats.damage);
-                    Ya.Rd = false;
+                    Ya.noDamage = false;
                     Ya.remainingDamage = oe;
                     var Y = new VisualEffect(Td, me, tc, false, TARGETED_EFFECT),
                       nf = xb.position.room;
@@ -749,7 +749,7 @@ export function updateCharacter(a, b) {
                       Vb = new CombatAction();
                     Vb.attacker = Gc;
                     (/** @type {TargetedCombatAction} */ (Vb)).setTargetCharacter(Gc);
-                    Vb.Rd = false;
+                    Vb.noDamage = false;
                     Vb.remainingDamage = 0;
                     Vb.actionDefinition = ad;
                     Vb.hasProjectilePhase = false;
@@ -794,7 +794,7 @@ export function updateCharacter(a, b) {
                         ld = new CombatAction();
                       ld.attacker = Ne;
                       (/** @type {TargetedCombatAction} */ (ld)).setTargetCharacter(Oe);
-                      ld.Rd = false;
+                      ld.noDamage = false;
                       ld.remainingDamage = 0;
                       ld.actionDefinition = fg;
                       ld.hasProjectilePhase = true;
@@ -826,7 +826,7 @@ export function updateCharacter(a, b) {
                 var Md = new CombatAction();
                 Md.attacker = a;
                 (/** @type {TargetedCombatAction} */ (Md)).setTargetCharacter(a);
-                Md.Rd = false;
+                Md.noDamage = false;
                 Md.remainingDamage = 0;
                 Md.actionDefinition = se;
                 Md.hasProjectilePhase = false;
@@ -866,7 +866,7 @@ export function updateCharacter(a, b) {
                 }
                 var Gh = calculateSpellDamage(a, bd.targetCharacter);
                 bd.remainingDamage = Gh;
-                bd.Rd = 0 === Gh;
+                bd.noDamage = 0 === Gh;
                 var Hh = bd.projectileEffect;
                 if (Hh) {
                   Hh.Gs = true;

@@ -121,7 +121,7 @@ export function castScroll(a, b) {
           p,
           s = -1;
         for (h = 0; h < d.length; h++) {
-          if (!(g = d[h], c === g || g.isDead || g.position.room !== f || (p = g.effects, p.isStealthed || p.Kd || p.isConverted || -1 < a.eq.yl.indexOf(g) || (p = l.Ud(g.position.levelPosition), !(0 > s || p < s))))) {
+          if (!(g = d[h], c === g || g.isDead || g.position.room !== f || (p = g.effects, p.isStealthed || p.isDisabled || p.isConverted || -1 < a.eq.yl.indexOf(g) || (p = l.squaredDistanceTo(g.position.levelPosition), !(0 > s || p < s))))) {
             n = g;
             s = p;
           }
@@ -181,7 +181,7 @@ export function ScrollDrop(a, b, c, d) {
   this.BE = d;
   this.collected = false;
   this.claimedBy = null;
-  this.ph = 0;
+  this.claimDistance = 0;
 }
 export function ScrollDropRegistry() {
   this.kf = [];
@@ -246,17 +246,17 @@ export function initializeCombatScrolls() {
   ScrollDrop.prototype.Re = function (a) {
     this.claimedBy = a;
   };
-  ScrollDrop.prototype.Ud = function () {
-    return this.ph;
+  ScrollDrop.prototype.getClaimDistance = function () {
+    return this.claimDistance;
   };
-  ScrollDrop.prototype.Se = function (a) {
-    this.ph = a;
+  ScrollDrop.prototype.setClaimDistance = function (a) {
+    this.claimDistance = a;
   };
   ScrollDropRegistry.prototype.zl = function () {
     var a;
     for (a = 0; a < this.kf.length; a++) {
       this.kf[a].Re(null);
-      this.kf[a].Se(0);
+      this.kf[a].setClaimDistance(0);
     }
   };
   scrollDefinitions = [{

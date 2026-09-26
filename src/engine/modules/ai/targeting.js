@@ -42,7 +42,7 @@ export function findNearestOpponent(a) {
     l,
     n = -1;
   for (f = 0; f < b.length; f++) {
-    if (!(d = b[f], a === d || d.isDead || d.position.room != c || (l = d.effects, l.isStealthed || d.characterType === ADVENTURER_TYPE && l.Kd || (l = g.Ud(d.position.levelPosition), !(0 > n || l < n))))) {
+    if (!(d = b[f], a === d || d.isDead || d.position.room != c || (l = d.effects, l.isStealthed || d.characterType === ADVENTURER_TYPE && l.isDisabled || (l = g.squaredDistanceTo(d.position.levelPosition), !(0 > n || l < n))))) {
       h = d;
       n = l;
     }
@@ -65,7 +65,7 @@ export function findNearestVisibleOpponent(a) {
     l,
     n = -1;
   for (f = 0; f < c.length; f++) {
-    if (!(d = c[f], a === d || d.isDead || d.position.room != b || (l = d.effects, l.isStealthed || l.Kd || l.isConverted || (l = g.Ud(d.position.levelPosition), !(0 > n || l < n))))) {
+    if (!(d = c[f], a === d || d.isDead || d.position.room != b || (l = d.effects, l.isStealthed || l.isDisabled || l.isConverted || (l = g.squaredDistanceTo(d.position.levelPosition), !(0 > n || l < n))))) {
       h = d;
       n = l;
     }
@@ -91,7 +91,7 @@ export function findChainTarget(a) {
         l,
         n = -1;
       for (f = 0; f < b.length; f++) {
-        if (!(d = b[f], a === d || d.isDead || d.position.room != c || (l = d.effects, l.isStealthed || l.Kd || l.isConverted || (l = g.Ud(d.position.levelPosition), !(0 > n || l < n))))) {
+        if (!(d = b[f], a === d || d.isDead || d.position.room != c || (l = d.effects, l.isStealthed || l.isDisabled || l.isConverted || (l = g.squaredDistanceTo(d.position.levelPosition), !(0 > n || l < n))))) {
           h = d;
           n = l;
         }
@@ -267,7 +267,7 @@ export function respondToTaunt(a, b) {
     return attackTauntingTarget(a, b), true;
   }
   for (var d = getOpponents(b), f, g = b.position.levelPosition, h, l = null, n = -1, c = /** @type {any} */ (0); c < d.length; c++) {
-    if (f = d[c], b !== f && (h = f.effects, h.Gn && !h.Kd && (h = g.Ud(f.position.levelPosition), 0 > n || h < n))) {
+    if (f = d[c], b !== f && (h = f.effects, h.Gn && !h.isDisabled && (h = g.squaredDistanceTo(f.position.levelPosition), 0 > n || h < n))) {
       l = f;
       n = h;
     }

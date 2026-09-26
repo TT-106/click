@@ -615,7 +615,7 @@ export function initializeWorldRooms() {
       }
     }
   };
-  DungeonRoom.prototype.Ud = function (a) {
+  DungeonRoom.prototype.squaredDistanceToRoom = function (a) {
     var b = a.tileColumn + a.widthInTiles / 2 - (this.tileColumn + this.widthInTiles / 2);
     a = a.tileRow + a.heightInTiles / 2 - (this.tileRow + this.heightInTiles / 2);
     return b * b + a * a;

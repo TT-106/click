@@ -25,7 +25,7 @@ import { clampPointToRoom, roomBottomPixels, roomLeftPixels, roomRightPixels, ro
 import { MELEE_ATTACK_RANGE, RANGED_ATTACK_RANGE } from "../content/classes.js";
 export function CombatAction() {
   this.remainingDamage = 0;
-  this.hasProjectilePhase = this.Vn = this.Rd = false;
+  this.hasProjectilePhase = this.resolved = this.noDamage = false;
   this.impactEffect = this.projectileEffect = this.attacker = this.targetCharacter = this.actionDefinition = null;
   this.ut = this.Xs = false;
   this.chainCount = this.Ys = 0;
@@ -60,8 +60,8 @@ export function clearCombatQueue() {
 export function advanceCombatAction(a, b) {
   var c = b.impactEffect;
   if (c && !c.hasSpawned) {
-    if (b.Rd) {
-      return b.Vn = true;
+    if (b.noDamage) {
+      return b.resolved = true;
     }
     addVisualEffect(game.effects, c);
     var d = b.actionDefinition;
@@ -113,7 +113,7 @@ export function advanceCombatAction(a, b) {
       }
     }
   }
-  return c && c.bl() ? ((c = b.actionDefinition) && (c.applyEffectOnImpact || applySpellEffect(a, b)), b.Vn = true) : false;
+  return c && c.bl() ? ((c = b.actionDefinition) && (c.applyEffectOnImpact || applySpellEffect(a, b)), b.resolved = true) : false;
 }
 export function applySpellEffect(a, b) {
   var c = b.actionDefinition,
@@ -148,7 +148,7 @@ export function applySpellEffect(a, b) {
     if (d) {
       c.of.push(d);
       if (isDisablingEffect(d)) {
-        c.Kd = true;
+        c.isDisabled = true;
       }
     }
   } else if (10 === d || 9 === d) {
@@ -336,7 +336,7 @@ export function resolveCharacterDefeat(a, b) {
       if (stunEffect) {
         f.of.push(stunEffect);
         if (isDisablingEffect(stunEffect)) {
-          f.Kd = true;
+          f.isDisabled = true;
         }
       }
       c.uA = true;
@@ -442,7 +442,7 @@ export function createAttackAction(a, b, c) {
     c = b.position.levelPosition;
     a = calculateAttackDamage(a, b);
     d.remainingDamage = a;
-    d.Rd = 0 === a;
+    d.noDamage = 0 === a;
     d.hasProjectilePhase = false;
     a = new VisualEffect("Red Splat", c, c, false, 1);
   } else if (c) {
@@ -453,7 +453,7 @@ export function createAttackAction(a, b, c) {
     var h = a.So(),
       h = h ? h.itemEffect : null;
     d.remainingDamage = g;
-    d.Rd = 0 === g;
+    d.noDamage = 0 === g;
     d.hasProjectilePhase = true;
     g = "Red Splat";
     if (h) {
@@ -479,7 +479,7 @@ export function createAttackAction(a, b, c) {
     b = (a = a.So()) ? a.itemEffect : null;
     a = null;
     d.remainingDamage = f;
-    d.Rd = 0 === f;
+    d.noDamage = 0 === f;
     d.hasProjectilePhase = false;
     if (b && (f = b.ms)) {
       a = new VisualEffect(f, c, c, false, 1);
@@ -520,12 +520,12 @@ export function createSpellAction(a) {
   c = c.spellCategoryId;
   if (4 === c) {
     b = calculateAttackDamage(a, b);
-    d.Rd = 0 === b;
+    d.noDamage = 0 === b;
     d.remainingDamage = b;
   } else {
     if (13 === c) {
       b = Math.max(1, calculateAttackDamage(a, b));
-      d.Rd = false;
+      d.noDamage = false;
       d.remainingDamage = b;
     }
   }
@@ -586,7 +586,7 @@ export function calculateAttackDamage(a, b) {
     l = statValue(d.armor),
     d = d.wo,
     c = c.lm;
-  if (!b.effects.Kd && Math.random() > f / (f + h)) {
+  if (!b.effects.isDisabled && Math.random() > f / (f + h)) {
     return 0;
   }
   if (0 < c && Math.random() < c / 100) {
@@ -638,7 +638,7 @@ export function createChainAction(a) {
   h.hasProjectilePhase = true;
   d = calculateAttackDamage(a.attacker, d);
   h.remainingDamage = d;
-  h.Rd = 0 === d;
+  h.noDamage = 0 === d;
   h.actionDefinition = a.actionDefinition;
   h.Ys = b + 1;
   h.Xs = true;
@@ -662,7 +662,7 @@ export function createReturningAction(a) {
     d = a.attacker.position.levelPosition;
     var g = a.pl,
       b = a.impactEffect;
-    f.Rd = false;
+    f.noDamage = false;
     if (c) {
       c = new VisualEffect(c.impactEffectName, d, g, true, 1);
       c.Gs = true;
@@ -698,7 +698,7 @@ export function createReturningAction(a) {
   (/** @type {TargetedCombatAction} */ (f)).setTargetCharacter(g);
   g = calculateSpellDamage(a.attacker, g);
   f.remainingDamage = g;
-  f.Rd = 0 === g;
+  f.noDamage = 0 === g;
   if (h) {
     g = new VisualEffect(h.impactEffectName, b, c, true, 1);
     g.Gs = true;
