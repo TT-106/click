@@ -49,12 +49,12 @@ export function findTargetsInRange(a, b, c, d) {
   return n;
 }
 export function CombatQueue() {
-  this.kj = [];
+  this.queue = [];
 }
 export function clearCombatQueue() {
   var a = game.combatQueue;
-  if (0 < a.kj.length) {
-    a.kj.length = 0;
+  if (0 < a.queue.length) {
+    a.queue.length = 0;
   }
 }
 export function advanceCombatAction(a, b) {
@@ -414,7 +414,7 @@ export function resolveCharacterDefeat(a, b) {
   }
 }
 export function enqueueCombatAction(a, b) {
-  a.kj.push(b);
+  a.queue.push(b);
 }
 export function performMultiAttack(a, b) {
   var c = a.stats,

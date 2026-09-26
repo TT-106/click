@@ -84,7 +84,7 @@ export function initializeRegionsAndCastles() {
     Bb.push(jb);
     var qb = jb,
       wb = game.regions.sk[ob];
-    qb.ck.push(wb);
+    qb.regions.push(wb);
     wb.cu = qb;
     Sb++;
   }
@@ -92,7 +92,7 @@ export function initializeRegionsAndCastles() {
     for (za = 0; za < Bb.length; za++) {
       jb = Bb[za];
       a: {
-        for (var bc = ja, Wa = vb, cc = Ga, Qa = jb.ck, nc = undefined, sa = undefined, sa = /** @type {any} */ (0); sa < Qa.length; sa++) {
+        for (var bc = ja, Wa = vb, cc = Ga, Qa = jb.regions, nc = undefined, sa = undefined, sa = /** @type {any} */ (0); sa < Qa.length; sa++) {
           if (nc = chooseAdjacentRegion(bc, Qa[sa], Wa, cc)) {
             Ib = nc;
             break a;
@@ -103,7 +103,7 @@ export function initializeRegionsAndCastles() {
       if (Ib) {
         var Tb = jb,
           qc = Ib;
-        Tb.ck.push(qc);
+        Tb.regions.push(qc);
         qc.cu = Tb;
         vb[Ib.io] = true;
         Sb++;
@@ -114,7 +114,7 @@ export function initializeRegionsAndCastles() {
   ha.castleList = Bb;
   var Fc, Cb, kb, Ra;
   for (Fc = 0; Fc < ha.castleList.length; Fc++) {
-    for (kb = ha.castleList[Fc], ha.bm[kb.castleId] && console.log("duplicate castle id: " + kb.castleId), ha.bm[kb.castleId] = kb, Ra = kb.ck, Cb = 0; Cb < Ra.length; Cb++) {
+    for (kb = ha.castleList[Fc], ha.bm[kb.castleId] && console.log("duplicate castle id: " + kb.castleId), ha.bm[kb.castleId] = kb, Ra = kb.regions, Cb = 0; Cb < Ra.length; Cb++) {
       if (ha.ju[Ra[Cb].io]) {
         console.log("duplicate castle owner: " + Ra[Cb].io);
       }
@@ -152,7 +152,7 @@ export function initializeRegionsAndCastles() {
     xb = {},
     Na = [];
   for (ka = 0; ka < dc.length; ka++) {
-    for (Ka = dc[ka], Xa = Ka.ck, sc = Ka.dm, Aa = Ka.em, Eb = 0; Eb < Xa.length; Eb++) {
+    for (Ka = dc[ka], Xa = Ka.regions, sc = Ka.dm, Aa = Ka.em, Eb = 0; Eb < Xa.length; Eb++) {
       if (db = Xa[Eb].regionColumn, Mc = Xa[Eb].regionRow, !(0.7 < (/** @type {any} */ (gb)).random())) {
         ec = 1 + db * WORLD_BLOCK_COLUMNS + randomIntFrom(gb, WORLD_BLOCK_COLUMNS - 1);
         for (Ub = 1 + Mc * WORLD_BLOCK_ROWS + randomIntFrom(gb, WORLD_BLOCK_ROWS - 1); ec === sc && Ub === Aa;) {

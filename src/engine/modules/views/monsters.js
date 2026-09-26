@@ -259,21 +259,21 @@ export function initializeViewsMonsters() {
       c = this.monsterType.xq,
       d = Math.min(1, a / b),
       d = this.dx * d | 0;
-    if (this.cachedLevel != this.monsterType.level || this.Sv != this.monsterType.Sj) {
+    if (this.cachedLevel != this.monsterType.level || this.Sv != this.monsterType.rank) {
       this.Mo.innerHTML = formatAmount(this.monsterType.No);
       this.Ij.innerHTML = formatAmount(this.monsterType.$o);
       this.vo.innerHTML = formatAmount(this.monsterType.Gp);
       this.Yn.innerHTML = formatAmount(this.monsterType.Ep);
       this.$n.innerHTML = formatAmount(this.monsterType.Fp);
       this.xo.innerHTML = formatAmount(this.monsterType.Hp);
-      this.wq.innerHTML = formatAmount(this.monsterType.Sj);
+      this.wq.innerHTML = formatAmount(this.monsterType.rank);
       if (this.cachedLevel != this.monsterType.level) {
         this.Es.innerHTML = this.monsterType.Vk();
         var f = this.monsterType.ll;
         this.Cp.style.background = "url('spritesheet/monsters.png') -" + f.sourceX + "px -" + (f.sourceY + 10) + "px";
       }
       this.cachedLevel = this.monsterType.level;
-      this.Sv = this.monsterType.Sj;
+      this.Sv = this.monsterType.rank;
     }
     if (this.Uv !== c) {
       this.Uv = c;

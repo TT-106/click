@@ -166,7 +166,7 @@ export function restoreGameState(a, b) {
                   var Ea = game.castles.bm[ta];
                   if (Ea) {
                     Ea.tx(eb ? true : false);
-                    Ea.Bj = Gb ? true : false;
+                    Ea.dungeonsConquered = Gb ? true : false;
                     Ea.regionLocked = Da ? true : false;
                     Ea.attackScheduled = ub ? true : false;
                     invalidateCastleRevision();
@@ -768,7 +768,7 @@ export function createSaveState(a) {
       K = {
         castleId: S.castleId,
         conquered: S.conquered,
-        dungeonsConquered: S.Bj,
+        dungeonsConquered: S.dungeonsConquered,
         castleRegionLocked: S.regionLocked,
         attackScheduled: S.attackScheduled,
         requiredMonsterLevel: S.requiredMonsterLevel

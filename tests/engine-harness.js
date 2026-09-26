@@ -114,6 +114,18 @@ window.harness = {
   snapshot,
   offlineDuration() { return original ? game.jf : game.offlineDuration; },
   clock() { return fixedNow; },
+  __dbgFarmable2() {
+    const f = game.dungeons.farmable;
+    const bad = f.filter(d => !d.region);
+    return { len: f.length, bad: bad.length, badIds: bad.slice(0, 3).map(d => d.dungeonId),
+      ctor: f[0] ? f[0].constructor.name : '?' };
+  },
+  __dbgFarmable() {
+    const f = original ? window.Game.Aa.bk : game.dungeons.farmable;
+    return f.slice(0, 6).map(d => original
+      ? { zj: !!d.zj, conquered: d.zj ? d.zj.conquered : null, isFarm: d.isFarm }
+      : { region: !!d.region, conquered: d.region ? d.region.conquered : null, isFarm: d.isFarm });
+  },
   // frames 场景用：把"距上次保存"拨回 310s，使 325s 的帧窗口确定性跨过 300s 自动保存阈值
   //（lastSavedAt 可能被载入写入钉在场景顺序相关的累积时钟上）。原版 qc 无此字段名，pg.qs 即上次保存时刻。
   rewindAutosaveTimer() {

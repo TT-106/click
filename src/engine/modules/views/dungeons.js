@@ -242,7 +242,7 @@ export function initializeViewsDungeons() {
       var a = this.dungeon.discovered,
         b = this.dungeon.cleared,
         c = this.dungeon.dungeonName,
-        d = this.dungeon.zj.castleName,
+        d = this.dungeon.region.castleName,
         f = this.dungeon.isFarm,
         g;
       g = this.dungeon;

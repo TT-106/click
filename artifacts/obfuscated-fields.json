@@ -1,132 +1,5 @@
 [
   {
-    "name": "ck",
-    "reads": 8,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\party.js:231",
-        "code": "a.ck"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\party.js:232",
-        "code": "a.ck"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:183",
-        "code": "b.ck"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\characters\\party.js",
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\world\\initialization.js",
-      "src\\engine\\modules\\world\\regions.js"
-    ]
-  },
-  {
-    "name": "Bj",
-    "reads": 5,
-    "writes": 4,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\party.js:402",
-        "code": "this.activeCastle.Bj"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:169",
-        "code": "Ea.Bj"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:771",
-        "code": "S.Bj"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\characters\\party.js",
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\views\\castles.js",
-      "src\\engine\\modules\\world\\regions.js"
-    ]
-  },
-  {
-    "name": "zj",
-    "reads": 8,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\party.js:454",
-        "code": "l.zj"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\party.js:464",
-        "code": "l.zj"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\party.js:474",
-        "code": "l.zj"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\characters\\party.js",
-      "src\\engine\\modules\\progression\\upgrades.js",
-      "src\\engine\\modules\\views\\dungeons.js",
-      "src\\engine\\modules\\world\\dungeons.js"
-    ]
-  },
-  {
-    "name": "kj",
-    "reads": 8,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\actions.js:52",
-        "code": "this.kj"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\actions.js:56",
-        "code": "a.kj"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\actions.js:57",
-        "code": "a.kj"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\simulation\\tick.js"
-    ]
-  },
-  {
-    "name": "Sj",
-    "reads": 6,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\encounters.js:189",
-        "code": "this.Sj"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\encounters.js:195",
-        "code": "a.Sj"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\encounters.js:201",
-        "code": "a.Sj"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\combat\\encounters.js",
-      "src\\engine\\modules\\persistence\\entities.js",
-      "src\\engine\\modules\\views\\monsters.js"
-    ]
-  },
-  {
     "name": "Wj",
     "reads": 7,
     "writes": 2,
@@ -148,32 +21,6 @@
     "files": [
       "src\\engine\\modules\\core\\math.js",
       "src\\engine\\modules\\world\\terrain.js"
-    ]
-  },
-  {
-    "name": "Fj",
-    "reads": 8,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\loot\\inventory.js:54",
-        "code": "this.Fj"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:420",
-        "code": "game.inventories.Fj"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:504",
-        "code": "game.inventories.Fj"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\loot\\inventory.js",
-      "src\\engine\\modules\\progression\\upgrades.js",
-      "src\\engine\\modules\\runtime\\game.js",
-      "src\\engine\\modules\\simulation\\tick.js"
     ]
   },
   {
@@ -281,76 +128,6 @@
       "src\\engine\\modules\\views\\upgrade-details.js",
       "src\\engine\\modules\\world\\dungeons.js",
       "src\\engine\\modules\\world\\initialization.js"
-    ]
-  },
-  {
-    "name": "mj",
-    "reads": 2,
-    "writes": 7,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:58",
-        "code": "this.mj"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:67",
-        "code": "a.mj"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:77",
-        "code": "a.mj"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\progression\\upgrades.js",
-      "src\\engine\\modules\\views\\upgrade-details.js"
-    ]
-  },
-  {
-    "name": "jk",
-    "reads": 3,
-    "writes": 6,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:121",
-        "code": "this.jk"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:201",
-        "code": "this.jk"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:207",
-        "code": "this.jk"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\progression\\upgrades.js"
-    ]
-  },
-  {
-    "name": "Zj",
-    "reads": 3,
-    "writes": 6,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:128",
-        "code": "this.Zj"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:182",
-        "code": "this.Zj"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:187",
-        "code": "this.Zj"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\progression\\upgrades.js"
     ]
   },
   {
@@ -7231,7 +7008,7 @@
       },
       {
         "loc": "src\\engine\\modules\\world\\dungeons.js:224",
-        "code": "this.zj.Is"
+        "code": "this.region.Is"
       }
     ],
     "fileCount": 3,

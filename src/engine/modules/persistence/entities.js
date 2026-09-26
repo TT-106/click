@@ -199,7 +199,7 @@ export function restoreMonsterType(a, b) {
     c = c ? c : 0;
   d.xq = 0;
   d.ml = 0;
-  d.Sj = 0;
+  d.rank = 0;
   d.Ep = 0;
   d.Gp = 0;
   d.Fp = 0;

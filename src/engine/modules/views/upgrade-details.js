@@ -218,7 +218,7 @@ export function UpgradeListView(a, b, c) {
   this.elementId = a;
   this.visible = true;
   this.py = b;
-  this.mj = -100;
+  this.cachedUpdateCounter = -100;
   this.buttons = [];
   var d = b.upgrades;
   for (b = 0; b < d.length; b++) {
@@ -1404,13 +1404,13 @@ export function initializeViewsUpgradeDetails() {
     for (a = 0; a < this.buttons.length; a++) {
       (/** @type {UpgradeButtonView & ActiveUpgradeButton} */ (/** @type {unknown} */ (this.buttons[a]))).attachUpgrade(b[a]);
     }
-    this.mj = -100;
+    this.cachedUpdateCounter = -100;
   };
   UpgradeListView.prototype.update = function () {
     var a;
-    a = this.py.mj;
-    if (this.mj !== a) {
-      this.mj = a;
+    a = this.py.updateCounter;
+    if (this.cachedUpdateCounter !== a) {
+      this.cachedUpdateCounter = a;
       var b = this.py.upgrades;
       for (a = 0; a < this.buttons.length; a++) {
         (/** @type {UpgradeButtonView & ActiveUpgradeButton} */ (/** @type {unknown} */ (this.buttons[a]))).attachUpgrade(b[a]);

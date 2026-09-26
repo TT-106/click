@@ -186,22 +186,22 @@ export function MonsterType(a, b, c) {
   this.spriteName = b;
   this.level = c;
   this.ll = game.monsterSprites.getSprite(b);
-  this.$o = this.Sj = this.Hp = this.Fp = this.Ep = this.Gp = this.No = this.ek = this.ml = this.xq = 0;
+  this.$o = this.rank = this.Hp = this.Fp = this.Ep = this.Gp = this.No = this.ek = this.ml = this.xq = 0;
   advanceMonsterTypeRank(this);
 }
 export function recordMonsterTypeKill(a) {
   a.xq++;
   a.ml++;
-  if (a.ml >= a.ek && 5 > a.Sj) {
+  if (a.ml >= a.ek && 5 > a.rank) {
     a.ml -= a.ek;
     advanceMonsterTypeRank(a);
   }
 }
 export function advanceMonsterTypeRank(a) {
-  if (!(5 <= a.Sj)) {
-    a.Sj++;
+  if (!(5 <= a.rank)) {
+    a.rank++;
     a.ek += MONSTER_RANK_KILL_STEP;
-    var b = 10 * (a.level - 1) + a.Sj;
+    var b = 10 * (a.level - 1) + a.rank;
     a.$o = scaleByLevel(b, monsterDamageCurve, 1);
     a.No = scaleByLevel(b, monsterArmorCurve, 1);
     a.Gp = scaleByLevel(b, monsterHealthCurve, 1);

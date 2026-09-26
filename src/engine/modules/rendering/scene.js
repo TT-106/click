@@ -180,7 +180,7 @@ export function drawFloatingText(a) {
   }
 }
 export function drawEntityHighlight(a, b, c, d) {
-  b = b.ck;
+  b = b.regions;
   var f, g;
   g = game.regions;
   var h = g.regionGridOriginColumn,

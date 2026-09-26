@@ -214,7 +214,7 @@ export function initializeViewsCastles() {
       a = this.castle;
       if (a.regionLocked) {
         a = 0;
-      } else if (a.conquered || canAttackCastle(a) || a.attackScheduled || a.Bj) {
+      } else if (a.conquered || canAttackCastle(a) || a.attackScheduled || a.dungeonsConquered) {
         a = this.Us;
       } else {
         a = this.castle.yk;

@@ -276,8 +276,8 @@ export function advanceSimulation(a) {
     bb = false,
     za,
     nb = false;
-  for (ha = 0; ha < Fa.kj.length; ha++) {
-    if (ja = Fa.kj[ha], Ga = ja.attacker, (za = ja.impactEffect) && za.Io === TARGETED_EFFECT) {
+  for (ha = 0; ha < Fa.queue.length; ha++) {
+    if (ja = Fa.queue[ha], Ga = ja.attacker, (za = ja.impactEffect) && za.Io === TARGETED_EFFECT) {
       var fb;
       a: {
         var cb = ja,
@@ -431,9 +431,9 @@ export function advanceSimulation(a) {
     }
   }
   if (bb) {
-    for (ha = Fa.kj.length - 1; 0 <= ha; ha--) {
-      if (Fa.kj[ha].resolved) {
-        Fa.kj.splice(ha, 1);
+    for (ha = Fa.queue.length - 1; 0 <= ha; ha--) {
+      if (Fa.queue[ha].resolved) {
+        Fa.queue.splice(ha, 1);
       }
     }
   }
@@ -497,18 +497,18 @@ export function advanceSimulation(a) {
     }
   }
   if (Le) {
-    Ya.Fj.length = 0;
+    Ya.list.length = 0;
     var Td, oe, Y, nf;
     for (tc = 0; tc < game.state.adventurers.length; tc++) {
       for (oe = game.state.adventurers[tc], ne = oe.inventory.items, Td = 0; Td < ne.length; Td++) {
         Y = ne[Td];
         if (!((nf = oe.getSlotItem(Y.slot)) && !isBetterItem(Y, nf))) {
-          Ya.Fj.push(Y);
+          Ya.list.push(Y);
         }
       }
     }
-    if (1 < Ya.Fj.length) {
-      sortInventory(Ya, Ya.Fj);
+    if (1 < Ya.list.length) {
+      sortInventory(Ya, Ya.list);
     }
   }
   game.floatingText.oy();

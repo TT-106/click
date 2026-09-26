@@ -26,10 +26,10 @@ export function Dungeon(a, b, c, d, f, g, h, l, n) {
   this.XE = h;
   this.levelCount = l;
   this.currentLevelIndex = 0;
-  this.zj = n;
+  this.region = n;
 }
 export function canFarmDungeon(a) {
-  return a.discovered && a.conquered && !a.isFarm && a.zj.conquered;
+  return a.discovered && a.conquered && !a.isFarm && a.region.conquered;
 }
 export function randomDungeonType(a) {
   switch (randomIntFrom(a, 11)) {
@@ -221,7 +221,7 @@ export function initializeWorldDungeons() {
       this.conquered = this.cleared = game.worldActive = true;
       this.clearedTurn = game.state.turnNumber;
       game.dungeons.Is(this);
-      this.zj.Is();
+      this.region.Is();
       game.state.statisticsRecorder.recordDungeonCleared();
       awardAdventurePoints(POINT_EVENT_DUNGEON_CLEARED);
       recordGameEvent("Dungeon", "Dungeon Cleared");

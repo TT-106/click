@@ -51,7 +51,7 @@ export function removeInventoryItemAt(a, b) {
   }
 }
 export function InventoryRegistry() {
-  this.Fj = [];
+  this.list = [];
   this.IE = function (a, b) {
     return b.itemGold - a.itemGold;
   };

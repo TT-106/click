@@ -383,8 +383,8 @@ export function initializeRuntimeGame() {
       game.currentCastle = null;
       clearItemDrops();
       b = game.inventories;
-      if (0 < b.Fj.length) {
-        b.Fj.length = 0;
+      if (0 < b.list.length) {
+        b.list.length = 0;
       }
       resetScrollInventory();
       resetPotionInventory();
