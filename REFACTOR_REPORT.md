@@ -78,7 +78,7 @@ npm test && npm run check      # 一条命令测试
 
 Clickpocalypse II 的核心实现已从高混淆遗留代码中恢复出真实语义：关键玩法行为有 50 个差分场景 + 位级 RNG 单测 + 浏览器 E2E + 8h/24h 等价回合 soak 的自动化证据保护，存档/RNG/时间/离线/自动保存经兼容验证，业务逻辑已迁入带清晰边界的现代模块（77 个），旧文件不再是唯一真相来源。
 
-这些结论由运行与差分证明，不是主观判断；同样明确的是**尚未证明的部分**：附录 A 实际有 51 行（逐行统计），其中 49 行 PASS、2 行 PARTIAL、0 行未覆盖；缺口逐项写明，`docs/reverse-engineering/unresolved.md` 的 U5/U6/U7 是继续推进的入口。
+这些结论由运行与差分证明，不是主观判断；同样明确的是**尚未证明的部分**：附录 A 实际有 51 行（逐行统计），其中 50 行 PASS、1 行 PARTIAL、0 行未覆盖；缺口逐项写明，`docs/reverse-engineering/unresolved.md` 的 U5/U6/U7 是继续推进的入口。
 
 ---
 
@@ -105,7 +105,7 @@ Clickpocalypse II 的核心实现已从高混淆遗留代码中恢复出真实�
 | 技能效果层 | PASS | `skill-combat-effects` 驱动战士多重攻击（statType 18 extraAttackCount + 19 extraAttackChance，performMultiAttack 分支）与游侠跳弹链（statType 23 chainCount + 24 chainChance，命中后 createChainAction 沿 Xs 链扩展）共 14 个技能位习得，随后 1500 回合实战直接采样伤害飘字（两端 149 次 / 累计 -52345 完全一致），带"跳过技能购买步即失败"反向探针；暴击几率技能族另有 combat-critical-hits 直接对账；剩余被动属性类技能（statType 1-17/20-22/25-32）改写 stats 字段后即进入全量 DTO 差分覆盖 |
 | 法术 | PASS | 16 个 `spellCategoryId` 每条一个差分场景，两端各自断言施法计数增长 |
 | 伤害数字 | PASS | 500 回合实战逐帧直接采样浮动文字层，正则匹配负数伤害文本数量（57 次）与累计总伤害（-616 点），两端完全一致，带反向探针验证 |
-| 法术特效 | PARTIAL | 同上：绘制进帧指纹，特效池本身不入存档 |
+| 法术特效 | PASS | `spell-visual-effects` 直接对账特效池（不入存档 DTO 的差分盲区）：harness countVisualEffects 逐帧采样原版 Game.df.Wg（名字段 ca）/ 重构版 game.effects.Wg（impactEffectName），火法师装载火球术自然战斗 3000+1000 回合，两端特效总数（719）、逐类计数（Red Splat/Green Damage/Small Green Projectiles 等 3 种）与创建顺序序列完全一致；反向验证：字段名取错时原版 0 vs 重构版 132 即失败 |
 | 普通遭遇 | PASS | 全场景都会进入遭遇；遭遇点数事件在存档中等值增长 |
 | 困难遭遇 | PASS | 引擎内不存在该概念（c2.js/src 全文 0 命中，复核于 2026-09-26）；概念源自外部脚本 c2c.user.js:29-31，其自有定义"一名及以上队友昏迷"的直接信号（眩晕施加 type=13/14 计数与 characterStunnedCount）已由眩晕行 PASS 与 fireball-blast-stun 直接观察覆盖，无引擎行为可分叉 |
 | 首领遭遇 | PASS | castle-victory 用 trackBossEncounter 逐帧扫描 encounter.du（首领遭遇状态）、characterType === 4（首领存活）、"击杀首领!" 浮动文字三重直接因果指标，两端全等（首领战 7611 回合、首领存活 2898 回合、击杀 1 次、名称一致），带双向对抗性探针验证 |

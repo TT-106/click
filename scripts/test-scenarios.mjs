@@ -521,6 +521,17 @@ const scenarios = [
     ],
   },
   {
+    name: 'spell-visual-effects',
+    // 法术视觉特效直接对账：特效池不入存档 DTO，是差分盲区（facts#41 同类）。harness
+    // countVisualEffects 逐帧差分采样池内 VisualEffect.impactEffectName（创建次序=战斗事件次序），
+    // 火法师装载火球术（cat=2 弹射投射）自然施法 3000 回合，断言两端特效总数/逐类计数/顺序一致。
+    make: () => withClassSpell(base, 4, '火球术'),
+    steps: [
+      { turns: 3000, spellEffects: true },
+      { turns: 1000, spellEffects: true },
+    ],
+  },
+  {
     name: 'scroll-cast-in-combat',
     // 全 6 类卷轴（休克、蛛网、箭矢、火雨、闪电、火球）：活怪物存在时逐一施放，断言使用统计真实增长与两端状态等价
     make: () => withScrolls(base, [
@@ -759,7 +770,7 @@ try {
         // effectType 表示这一步改用"逐帧扫描活怪物效果队列"的推进方式，并直接对账施加次数。
         // purchaseUpgrades 表示这一步先推进再驱动升级购买（U7：只有视图层会触发的路径）。
         const step = Array.isArray(rawStep) ? { turns: rawStep[0], check: rawStep[1] } : rawStep;
-        const { turns, check, effectType, purchaseUpgrades, purchasePointUpgrades, claimAchievement, equipBestItems, castScrollDuringCombat, scrollId, purchaseDungeonFarm, purchaseDungeonRowFarm, harvestFarmKills, lootTreasureDuringExplore, treasureKind, activatePotions, floatingText, damageNumbers, trackBoss, frames, frameGap, victoryPanel, equipFromInventory } = step;
+        const { turns, check, effectType, purchaseUpgrades, purchasePointUpgrades, claimAchievement, equipBestItems, castScrollDuringCombat, scrollId, purchaseDungeonFarm, purchaseDungeonRowFarm, harvestFarmKills, lootTreasureDuringExplore, treasureKind, activatePotions, floatingText, damageNumbers, spellEffects, trackBoss, frames, frameGap, victoryPanel, equipFromInventory } = step;
         const results = await Promise.all(pages.map(async p => {
           await p.page.evaluate(ms => window.harness.setTime(ms), HARNESS_FIXED_NOW);
           // 重置后无队伍：走真实帧循环（守卫路径），而非裸推进
@@ -777,6 +788,7 @@ try {
           if (activatePotions !== undefined) return p.page.evaluate(a => window.harness.activatePotions(a), { turns, limit: activatePotions });
           if (floatingText !== undefined) return p.page.evaluate(a => window.harness.countFloatingText(a), { turns, text: floatingText });
           if (damageNumbers !== undefined) return p.page.evaluate(a => window.harness.countFloatingText(a), { turns, pattern: '^-[0-9]+$' });
+          if (spellEffects !== undefined) return p.page.evaluate(a => window.harness.countVisualEffects(a), { turns });
           if (trackBoss !== undefined) return p.page.evaluate(a => window.harness.trackBossEncounter(a), { turns });
           if (victoryPanel !== undefined) return p.page.evaluate(n => { window.harness.idle(n); return window.harness.observeVictoryPanel(); }, victoryPanel);
           if (equipFromInventory !== undefined) return p.page.evaluate(a => window.harness.equipFromInventory(a), equipFromInventory);
@@ -924,6 +936,16 @@ try {
           assert.equal(counts[1], counts[0], `两端伤害浮动文字数量不一致（原版 ${counts[0]} / 重构版 ${counts[1]}）`);
           assert.equal(sums[1], sums[0], `两端伤害浮动文字总和不一致（原版 ${sums[0]} / 重构版 ${sums[1]}）`);
           console.log(`  · 伤害数字直接计数与总伤害两端一致 = ${counts[0]} 次, 累计扣血 ${sums[0]}`);
+        }
+        if (spellEffects !== undefined) {
+          const totals = results.map(r => r.total);
+          for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {
+            assert.ok(totals[i] >= 20, `${label} 特效池必须采样到足够视觉特效（实际 ${totals[i]}）`);
+          }
+          assert.equal(totals[1], totals[0], `两端特效总数不一致（原版 ${totals[0]} / 重构版 ${totals[1]}）`);
+          assert.deepEqual(results[1].namesByType, results[0].namesByType, `两端逐类特效计数不一致（原版 ${JSON.stringify(results[0].namesByType)} / 重构版 ${JSON.stringify(results[1].namesByType)}）`);
+          assert.deepEqual(results[1].namesInOrder, results[0].namesInOrder, `两端特效创建顺序不一致`);
+          console.log(`  · 特效池逐帧采样两端一致 = ${totals[0]} 个特效，${Object.keys(results[0].namesByType).length} 种`);
         }
         if (trackBoss !== undefined) {
           const encounters = results.map(r => r.bossEncounterTurns);
