@@ -114,7 +114,7 @@ export function hasUnpurchasedUpgrade(a) {
   if (a) {
     var b;
     for (b = 0; b < a.length; b++) {
-      if (!a[b].He()) {
+      if (!a[b].isOwned()) {
         return true;
       }
     }

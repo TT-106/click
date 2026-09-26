@@ -1,28 +1,5 @@
 [
   {
-    "name": "be",
-    "reads": 16,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\character.js:88",
-        "code": "this.be"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\character.js:458",
-        "code": "this.be"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\character.js:459",
-        "code": "this.be"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\character.js"
-    ]
-  },
-  {
     "name": "Nd",
     "reads": 12,
     "writes": 6,
@@ -43,149 +20,6 @@
     "fileCount": 1,
     "files": [
       "src\\engine\\modules\\views\\upgrade-details.js"
-    ]
-  },
-  {
-    "name": "qe",
-    "reads": 13,
-    "writes": 4,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:158",
-        "code": "this.qe"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:615",
-        "code": "this.qe"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:616",
-        "code": "this.qe"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\progression\\upgrades.js"
-    ]
-  },
-  {
-    "name": "se",
-    "reads": 15,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:77",
-        "code": "this.se"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:95",
-        "code": "f.se"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:114",
-        "code": "f.se"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\rendering\\scene.js"
-    ]
-  },
-  {
-    "name": "we",
-    "reads": 7,
-    "writes": 10,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\upgrade-details.js:100",
-        "code": "this.we"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\upgrade-details.js:158",
-        "code": "this.we"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\upgrade-details.js:165",
-        "code": "this.we"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\upgrade-details.js"
-    ]
-  },
-  {
-    "name": "te",
-    "reads": 1,
-    "writes": 16,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\upgrade-details.js:285",
-        "code": "this.Ag.te"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\upgrade-details.js:309",
-        "code": "ItemPurchaseDetails.prototype.te"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\upgrade-details.js:390",
-        "code": "EquipmentDetails.prototype.te"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\upgrade-details.js"
-    ]
-  },
-  {
-    "name": "He",
-    "reads": 7,
-    "writes": 9,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:117",
-        "code": "a[b].He"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\skill-effects.js:20",
-        "code": "d.He"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\entities.js:144",
-        "code": "c.He"
-      }
-    ],
-    "fileCount": 6,
-    "files": [
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\combat\\skill-effects.js",
-      "src\\engine\\modules\\persistence\\entities.js",
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\progression\\upgrades.js",
-      "src\\engine\\modules\\views\\upgrade-details.js"
-    ]
-  },
-  {
-    "name": "Ie",
-    "reads": 12,
-    "writes": 4,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\character.js:20",
-        "code": "this.Ie"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\character.js:33",
-        "code": "this.Ie"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\character.js:184",
-        "code": "this.Ie"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\character.js"
     ]
   },
   {
@@ -4061,15 +3895,15 @@
     "samples": [
       {
         "loc": "src\\engine\\modules\\rendering\\scene.js:95",
-        "code": "f.se.dk"
+        "code": "f.spriteRenderer.dk"
       },
       {
         "loc": "src\\engine\\modules\\rendering\\scene.js:114",
-        "code": "f.se.dk"
+        "code": "f.spriteRenderer.dk"
       },
       {
         "loc": "src\\engine\\modules\\rendering\\scene.js:129",
-        "code": "a.se.dk"
+        "code": "a.spriteRenderer.dk"
       }
     ],
     "fileCount": 1,
@@ -14503,7 +14337,7 @@
     "samples": [
       {
         "loc": "src\\engine\\modules\\rendering\\scene.js:117",
-        "code": "f.se.gx"
+        "code": "f.spriteRenderer.gx"
       },
       {
         "loc": "src\\engine\\modules\\rendering\\scene.js:275",
@@ -14526,7 +14360,7 @@
     "samples": [
       {
         "loc": "src\\engine\\modules\\rendering\\scene.js:165",
-        "code": "a.se.fx"
+        "code": "a.spriteRenderer.fx"
       },
       {
         "loc": "src\\engine\\modules\\rendering\\scene.js:289",
@@ -14557,7 +14391,7 @@
       },
       {
         "loc": "src\\engine\\modules\\rendering\\scene.js:396",
-        "code": "a.se.hx"
+        "code": "a.spriteRenderer.hx"
       }
     ],
     "fileCount": 1,
@@ -20194,7 +20028,7 @@
       },
       {
         "loc": "src\\engine\\modules\\rendering\\scene.js:351",
-        "code": "a.se.hB"
+        "code": "a.spriteRenderer.hB"
       }
     ],
     "fileCount": 1,
@@ -20217,7 +20051,7 @@
       },
       {
         "loc": "src\\engine\\modules\\rendering\\scene.js:719",
-        "code": "a.se.fB"
+        "code": "a.spriteRenderer.fB"
       }
     ],
     "fileCount": 1,

@@ -980,7 +980,7 @@ export function createSaveState(a) {
       var db = sc[Aa];
       rc.push({
         upgradeId: db.kh.upgradeId,
-        upgradePurchased: db.He()
+        upgradePurchased: db.isOwned()
       });
     }
     var Mc = Ca,

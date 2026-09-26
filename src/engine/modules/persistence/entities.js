@@ -141,7 +141,7 @@ export function serializeUpgradeFlags(a) {
     d;
   for (d = 0; d < a.length; d++) {
     c = a[d];
-    b[c.Jr().id] = c.He();
+    b[c.Jr().id] = c.isOwned();
   }
   return b;
 }

@@ -17,7 +17,7 @@ export function ItemRowBase() {}
 export function InventoryItemView(a, b) {
   this.lh = a;
   this.adventurerIndex = b;
-  this.Ej = this.Cr = this.gf = this.Oh = this.Af = this.Ie = this.Fi = this.Ei = this.item = null;
+  this.Ej = this.Cr = this.gf = this.Oh = this.Af = this.rarityCell = this.Fi = this.Ei = this.item = null;
   (/** @type {InventoryItemView & { qi: () => void }} */ (/** @type {unknown} */ (this))).qi();
 }
 export function InventoryTableView(a, b) {
@@ -30,7 +30,7 @@ export function InventoryTableView(a, b) {
 export function EquipmentItemRowView(a, b) {
   this.lh = a;
   this.adventurerIndex = b;
-  this.Cr = this.gf = this.Oh = this.Af = this.Ie = this.Fi = this.Ei = this.item = null;
+  this.Cr = this.gf = this.Oh = this.Af = this.rarityCell = this.Fi = this.Ei = this.item = null;
   (/** @type {EquipmentItemRowView & { qi: () => void }} */ (/** @type {unknown} */ (this))).qi();
 }
 export function EquipmentTableView(a, b) {
@@ -85,7 +85,7 @@ export function CharacterSummaryView(a, b) {
   this.elementId = a;
   this.visible = true;
   this.adventurerIndex = b;
-  this.dD = this.xy = this.Jy = this.AB = this.hz = this.gz = this.ez = this.aj = this.Ap = this.pA = this.EB = this.Wz = this.bz = this.DB = this.Ij = this.rA = this.be = null;
+  this.dD = this.xy = this.Jy = this.AB = this.hz = this.gz = this.ez = this.aj = this.Ap = this.pA = this.EB = this.Wz = this.bz = this.DB = this.Ij = this.rA = this.tableElement = null;
   this.zu = this.iv = this.Mu = this.Ov = this.Pu = this.Ou = this.Nu = this.Kk = this.Ik = this.Gk = this.Pv = this.$u = this.Lu = this.Jk = this.Zu = this.$f = -1;
 }
 export function StatBreakdownView(a, b, c, d) {
@@ -181,7 +181,7 @@ export function initializeViewsCharacter() {
       var b = this.item.Uk();
       this.Ei.style.background = "url('spritesheet/items.png') -" + b.sourceX + "px -" + b.sourceY + "px";
       this.Fi.innerHTML = getHighlightedItemName(this.item);
-      this.Ie.innerHTML = getItemRarityLabel(this.item);
+      this.rarityCell.innerHTML = getItemRarityLabel(this.item);
       this.Af.innerHTML = this.item.itemLevel + "";
       this.gf.innerHTML = formatAmount(this.item.itemGold);
       this.Oh.innerHTML = formatAmount(this.item.itemValue) + " " + getItemStatLabel(this.item);
@@ -189,7 +189,7 @@ export function initializeViewsCharacter() {
         b = c.ef(a.slot);
       this.Oh.className = b ? this.item.itemValue > b.itemValue ? "itemValueBetter" : this.item.itemValue < b.itemValue ? "itemValueWorse" : "" : "itemValueBetter";
       this.gf.className = b ? a.itemGold > b.itemGold ? "itemValueBetter" : a.itemGold < b.itemGold ? "itemValueWorse" : "" : "itemValueBetter";
-      this.Ie.className = getRarityClass(this.item.uf());
+      this.rarityCell.className = getRarityClass(this.item.uf());
       if (!b || this.item.itemValue > b.itemValue) {
         this.Ej.style.display = "block";
         this.Ej.onclick = function () {
@@ -202,13 +202,13 @@ export function initializeViewsCharacter() {
     } else {
       this.Ei.style.background = "";
       this.Fi.innerHTML = "";
-      this.Ie.innerHTML = "";
+      this.rarityCell.innerHTML = "";
       this.Af.innerHTML = "";
       this.Oh.innerHTML = "";
       this.gf.className = "";
       this.Ej.style.display = "none";
       this.Ej.onclick = null;
-      this.Ie.className = "";
+      this.rarityCell.className = "";
     }
   };
   InventoryItemView.prototype.qi = function () {
@@ -221,9 +221,9 @@ export function initializeViewsCharacter() {
     this.Ei.src = "images/Transparent.gif";
     this.Fi = a.insertCell(1);
     this.Fi.style.width = "250px";
-    this.Ie = a.insertCell(2);
-    this.Ie.style.width = "110px";
-    this.Ie.style.textAlign = "center";
+    this.rarityCell = a.insertCell(2);
+    this.rarityCell.style.width = "110px";
+    this.rarityCell.style.textAlign = "center";
     this.Af = a.insertCell(3);
     this.Af.style.textAlign = "right";
     this.Af.style.paddingRight = "5px";
@@ -312,19 +312,19 @@ export function initializeViewsCharacter() {
       a = this.item.Uk();
       this.Ei.style.background = "url('spritesheet/items.png') -" + a.sourceX + "px -" + a.sourceY + "px";
       this.Fi.innerHTML = getHighlightedItemName(this.item);
-      this.Ie.innerHTML = getItemRarityLabel(this.item);
+      this.rarityCell.innerHTML = getItemRarityLabel(this.item);
       this.Af.innerHTML = this.item.itemLevel + "";
       this.Oh.innerHTML = formatAmount(this.item.itemValue) + " " + getItemStatLabel(this.item);
       this.gf.innerHTML = formatAmount(this.item.itemGold);
-      this.Ie.className = getRarityClass(this.item.uf());
+      this.rarityCell.className = getRarityClass(this.item.uf());
     } else {
       this.Ei.style.background = "";
       this.Fi.innerHTML = "";
-      this.Ie.innerHTML = "";
+      this.rarityCell.innerHTML = "";
       this.Af.innerHTML = "";
       this.Oh.innerHTML = "";
       this.gf.innerHTML = "";
-      this.Ie.className = "";
+      this.rarityCell.className = "";
     }
   };
   EquipmentItemRowView.prototype.qi = function () {
@@ -337,9 +337,9 @@ export function initializeViewsCharacter() {
     this.Ei.src = "images/Transparent.gif";
     this.Fi = a.insertCell(1);
     this.Fi.style.width = "280px";
-    this.Ie = a.insertCell(2);
-    this.Ie.style.width = "110px";
-    this.Ie.style.textAlign = "center";
+    this.rarityCell = a.insertCell(2);
+    this.rarityCell.style.width = "110px";
+    this.rarityCell.style.textAlign = "center";
     this.Af = a.insertCell(3);
     this.Af.style.textAlign = "right";
     this.Af.style.paddingRight = "5px";
@@ -455,23 +455,23 @@ export function initializeViewsCharacter() {
   CharacterSummaryView.prototype.reset = function () {
     this.zu = this.iv = this.Mu = this.Ov = this.Pu = this.Ou = this.Nu = this.Kk = this.Ik = this.Gk = this.Pv = this.$u = this.Lu = this.Jk = this.Zu = this.$f = -1;
     var a = 0;
-    this.be = createElement("table", getElement(this.elementId), null, "characteristicsTable");
-    this.rA = appendAttributeRow(this.be, "等级:", a++);
-    this.Ij = appendAttributeRow(this.be, "生命:", a++);
-    this.DB = appendAttributeRow(this.be, "法力:", a++);
-    this.Wz = appendAttributeRow(this.be, "生命回复:", a++);
-    this.EB = appendAttributeRow(this.be, "法力回复:", a++);
-    this.pA = appendAttributeRow(this.be, "杀死:", a++);
-    this.Ap = appendAttributeRow(this.be, "宠物杀死:", a++);
-    this.aj = appendAttributeRow(this.be, "昏迷次数:", a++);
-    this.ez = appendAttributeRow(this.be, "输出伤害:", a++);
-    this.gz = appendAttributeRow(this.be, "受到伤害:", a++);
-    this.hz = appendAttributeRow(this.be, "伤害抵抗:", a++);
-    this.AB = appendAttributeRow(this.be, "法术忽视:", a++);
-    this.dD = appendAttributeRow(this.be, "暴击几率:", a++);
-    this.bz = appendAttributeRow(this.be, "冷却回合:", a++);
-    this.Jy = appendAttributeRow(this.be, "每回合攻击次数:", a++);
-    this.xy = appendAttributeRow(this.be, "额外攻击:", a);
+    this.tableElement = createElement("table", getElement(this.elementId), null, "characteristicsTable");
+    this.rA = appendAttributeRow(this.tableElement, "等级:", a++);
+    this.Ij = appendAttributeRow(this.tableElement, "生命:", a++);
+    this.DB = appendAttributeRow(this.tableElement, "法力:", a++);
+    this.Wz = appendAttributeRow(this.tableElement, "生命回复:", a++);
+    this.EB = appendAttributeRow(this.tableElement, "法力回复:", a++);
+    this.pA = appendAttributeRow(this.tableElement, "杀死:", a++);
+    this.Ap = appendAttributeRow(this.tableElement, "宠物杀死:", a++);
+    this.aj = appendAttributeRow(this.tableElement, "昏迷次数:", a++);
+    this.ez = appendAttributeRow(this.tableElement, "输出伤害:", a++);
+    this.gz = appendAttributeRow(this.tableElement, "受到伤害:", a++);
+    this.hz = appendAttributeRow(this.tableElement, "伤害抵抗:", a++);
+    this.AB = appendAttributeRow(this.tableElement, "法术忽视:", a++);
+    this.dD = appendAttributeRow(this.tableElement, "暴击几率:", a++);
+    this.bz = appendAttributeRow(this.tableElement, "冷却回合:", a++);
+    this.Jy = appendAttributeRow(this.tableElement, "每回合攻击次数:", a++);
+    this.xy = appendAttributeRow(this.tableElement, "额外攻击:", a);
   };
   CharacterSummaryView.prototype.update = function () {
     var a = game.state.adventurers[this.adventurerIndex].stats,
