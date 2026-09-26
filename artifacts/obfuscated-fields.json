@@ -1,100 +1,5 @@
 [
   {
-    "name": "na",
-    "reads": 1,
-    "writes": 52,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\content\\equipment.js:12",
-        "code": "na: true"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\equipment.js:20",
-        "code": "na: true"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\equipment.js:28",
-        "code": "na: true"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\content\\equipment.js",
-      "src\\engine\\modules\\loot\\items.js"
-    ]
-  },
-  {
-    "name": "ma",
-    "reads": 1,
-    "writes": 52,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\content\\equipment.js:14",
-        "code": "ma: false"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\equipment.js:22",
-        "code": "ma: false"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\equipment.js:30",
-        "code": "ma: false"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\content\\equipment.js",
-      "src\\engine\\modules\\loot\\items.js"
-    ]
-  },
-  {
-    "name": "la",
-    "reads": 1,
-    "writes": 52,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\content\\equipment.js:15",
-        "code": "la: false"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\equipment.js:23",
-        "code": "la: false"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\equipment.js:31",
-        "code": "la: false"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\content\\equipment.js",
-      "src\\engine\\modules\\loot\\items.js"
-    ]
-  },
-  {
-    "name": "Ia",
-    "reads": 0,
-    "writes": 38,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\content\\guardians.js:178",
-        "code": "Ia: \"Gelatinous Cube\""
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\guardians.js:181",
-        "code": "Ia: \"Green Frog\""
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\guardians.js:184",
-        "code": "Ia: \"Black Ogre\""
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\content\\guardians.js"
-    ]
-  },
-  {
     "name": "mb",
     "reads": 30,
     "writes": 1,
@@ -8727,7 +8632,7 @@
         "code": "ScrollDropRegistry.prototype.zl"
       },
       {
-        "loc": "src\\engine\\modules\\loot\\items.js:343",
+        "loc": "src\\engine\\modules\\loot\\items.js:344",
         "code": "ItemDropRegistry.prototype.zl"
       }
     ],
@@ -8817,15 +8722,15 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\loot\\items.js:310",
+        "loc": "src\\engine\\modules\\loot\\items.js:311",
         "code": "ItemType.prototype.Uk"
       },
       {
-        "loc": "src\\engine\\modules\\loot\\items.js:319",
+        "loc": "src\\engine\\modules\\loot\\items.js:320",
         "code": "Item.prototype.Uk"
       },
       {
-        "loc": "src\\engine\\modules\\loot\\items.js:320",
+        "loc": "src\\engine\\modules\\loot\\items.js:321",
         "code": "this.op.Uk"
       }
     ],
@@ -10931,7 +10836,7 @@
         "code": "a.Rm"
       },
       {
-        "loc": "src\\engine\\modules\\loot\\items.js:70",
+        "loc": "src\\engine\\modules\\loot\\items.js:71",
         "code": "this.Rm"
       }
     ],
@@ -13632,15 +13537,15 @@
     "writes": 1,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\loot\\items.js:61",
+        "loc": "src\\engine\\modules\\loot\\items.js:62",
         "code": "this.op"
       },
       {
-        "loc": "src\\engine\\modules\\loot\\items.js:128",
+        "loc": "src\\engine\\modules\\loot\\items.js:129",
         "code": "a.op"
       },
       {
-        "loc": "src\\engine\\modules\\loot\\items.js:320",
+        "loc": "src\\engine\\modules\\loot\\items.js:321",
         "code": "this.op"
       }
     ],
@@ -15850,11 +15755,11 @@
         "code": "b.os"
       },
       {
-        "loc": "src\\engine\\modules\\loot\\items.js:137",
+        "loc": "src\\engine\\modules\\loot\\items.js:138",
         "code": "this.os"
       },
       {
-        "loc": "src\\engine\\modules\\loot\\items.js:247",
+        "loc": "src\\engine\\modules\\loot\\items.js:248",
         "code": "a.os"
       }
     ],
@@ -15875,11 +15780,11 @@
         "code": "b.ps"
       },
       {
-        "loc": "src\\engine\\modules\\loot\\items.js:136",
+        "loc": "src\\engine\\modules\\loot\\items.js:137",
         "code": "this.ps"
       },
       {
-        "loc": "src\\engine\\modules\\loot\\items.js:141",
+        "loc": "src\\engine\\modules\\loot\\items.js:142",
         "code": "a.ps"
       }
     ],
@@ -15967,7 +15872,7 @@
     "writes": 1,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\loot\\items.js:66",
+        "loc": "src\\engine\\modules\\loot\\items.js:67",
         "code": "this.ns"
       },
       {
@@ -18308,11 +18213,11 @@
         "code": "a.Cw"
       },
       {
-        "loc": "src\\engine\\modules\\loot\\items.js:316",
+        "loc": "src\\engine\\modules\\loot\\items.js:317",
         "code": "ItemType.prototype.Cw"
       },
       {
-        "loc": "src\\engine\\modules\\loot\\items.js:328",
+        "loc": "src\\engine\\modules\\loot\\items.js:329",
         "code": "Item.prototype.Cw"
       }
     ],
@@ -18561,7 +18466,7 @@
         "code": "this.Dw"
       },
       {
-        "loc": "src\\engine\\modules\\loot\\items.js:90",
+        "loc": "src\\engine\\modules\\loot\\items.js:91",
         "code": "a.Rm.Dw"
       }
     ],
@@ -18582,11 +18487,11 @@
         "code": "a.sw"
       },
       {
-        "loc": "src\\engine\\modules\\loot\\items.js:313",
+        "loc": "src\\engine\\modules\\loot\\items.js:314",
         "code": "ItemType.prototype.sw"
       },
       {
-        "loc": "src\\engine\\modules\\loot\\items.js:322",
+        "loc": "src\\engine\\modules\\loot\\items.js:323",
         "code": "Item.prototype.sw"
       }
     ],
@@ -18816,11 +18721,11 @@
     "writes": 1,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\loot\\items.js:64",
+        "loc": "src\\engine\\modules\\loot\\items.js:65",
         "code": "this.Ew"
       },
       {
-        "loc": "src\\engine\\modules\\loot\\items.js:129",
+        "loc": "src\\engine\\modules\\loot\\items.js:130",
         "code": "a.Ew"
       },
       {
@@ -24497,11 +24402,11 @@
         "code": "this.$y"
       },
       {
-        "loc": "src\\engine\\modules\\loot\\items.js:183",
+        "loc": "src\\engine\\modules\\loot\\items.js:184",
         "code": "a.$y"
       },
       {
-        "loc": "src\\engine\\modules\\loot\\items.js:198",
+        "loc": "src\\engine\\modules\\loot\\items.js:199",
         "code": "a.$y"
       }
     ],
@@ -24517,15 +24422,15 @@
     "writes": 1,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\loot\\items.js:65",
+        "loc": "src\\engine\\modules\\loot\\items.js:66",
         "code": "this.kA"
       },
       {
-        "loc": "src\\engine\\modules\\loot\\items.js:112",
+        "loc": "src\\engine\\modules\\loot\\items.js:113",
         "code": "a.kA"
       },
       {
-        "loc": "src\\engine\\modules\\loot\\items.js:326",
+        "loc": "src\\engine\\modules\\loot\\items.js:327",
         "code": "this.kA"
       }
     ],
@@ -29187,7 +29092,7 @@
         "code": "this.KD"
       },
       {
-        "loc": "src\\engine\\modules\\loot\\items.js:165",
+        "loc": "src\\engine\\modules\\loot\\items.js:166",
         "code": "c.KD"
       }
     ],
@@ -29419,7 +29324,7 @@
         "code": "this.LE"
       },
       {
-        "loc": "src\\engine\\modules\\loot\\items.js:186",
+        "loc": "src\\engine\\modules\\loot\\items.js:187",
         "code": "a.LE"
       }
     ],
@@ -29439,7 +29344,7 @@
         "code": "this.lE"
       },
       {
-        "loc": "src\\engine\\modules\\loot\\items.js:189",
+        "loc": "src\\engine\\modules\\loot\\items.js:190",
         "code": "a.lE"
       }
     ],
@@ -29459,7 +29364,7 @@
         "code": "this.BD"
       },
       {
-        "loc": "src\\engine\\modules\\loot\\items.js:192",
+        "loc": "src\\engine\\modules\\loot\\items.js:193",
         "code": "a.BD"
       }
     ],
@@ -29479,7 +29384,7 @@
         "code": "this.UE"
       },
       {
-        "loc": "src\\engine\\modules\\loot\\items.js:195",
+        "loc": "src\\engine\\modules\\loot\\items.js:196",
         "code": "a.UE"
       }
     ],
@@ -29559,7 +29464,7 @@
         "code": "this.lA"
       },
       {
-        "loc": "src\\engine\\modules\\loot\\items.js:311",
+        "loc": "src\\engine\\modules\\loot\\items.js:312",
         "code": "this.lA"
       }
     ],
@@ -29574,11 +29479,11 @@
     "writes": 1,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\loot\\items.js:134",
+        "loc": "src\\engine\\modules\\loot\\items.js:135",
         "code": "this.OD"
       },
       {
-        "loc": "src\\engine\\modules\\loot\\items.js:180",
+        "loc": "src\\engine\\modules\\loot\\items.js:181",
         "code": "a.OD"
       }
     ],
@@ -29593,11 +29498,11 @@
     "writes": 1,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\loot\\items.js:135",
+        "loc": "src\\engine\\modules\\loot\\items.js:136",
         "code": "this.ND"
       },
       {
-        "loc": "src\\engine\\modules\\loot\\items.js:170",
+        "loc": "src\\engine\\modules\\loot\\items.js:171",
         "code": "a.ND"
       }
     ],
