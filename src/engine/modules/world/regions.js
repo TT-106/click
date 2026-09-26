@@ -152,7 +152,7 @@ export function chooseAdjacentRegion(a, b, c, d) {
 export function resetCastles() {
   var a = game.castles;
   a.attackableCastles.length = 0;
-  a.Dh.length = 0;
+  a.scheduledCastles.length = 0;
   a.cm = 0;
   a.Uj = 1;
   var b;
@@ -202,15 +202,15 @@ export function refreshAttackableCastles(a) {
 export function refreshScheduledCastles(a) {
   var b = game.castles;
   b.cm++;
-  var c = b.Dh.indexOf(a);
+  var c = b.scheduledCastles.indexOf(a);
   if (a.attackScheduled) {
     if (0 > c) {
-      b.Dh.push(a);
-      sortCastles(b, b.Dh);
+      b.scheduledCastles.push(a);
+      sortCastles(b, b.scheduledCastles);
     }
   } else {
     if (-1 < c) {
-      b.Dh.splice(c, 1);
+      b.scheduledCastles.splice(c, 1);
     }
   }
 }

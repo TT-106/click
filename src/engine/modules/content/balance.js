@@ -306,8 +306,8 @@ export function initializeContentBalance() {
       purchasedLevels: 0,
       maxValue: 100,
       cost: 40,
-      ah: 1,
-      Pg: 11
+      baseCost: 1,
+      costPerLevel: 11
     },
     maxMonsters: {
       settingId: "maxMonstersPerRoom",
@@ -319,8 +319,8 @@ export function initializeContentBalance() {
       purchasedLevels: 0,
       maxValue: 50,
       cost: 100,
-      ah: 2,
-      Pg: 11
+      baseCost: 2,
+      costPerLevel: 11
     },
     minMonsters: {
       settingId: "minMonstersPerRoom",
@@ -332,8 +332,8 @@ export function initializeContentBalance() {
       purchasedLevels: 0,
       maxValue: 50,
       cost: 140,
-      ah: 2,
-      Pg: 11
+      baseCost: 2,
+      costPerLevel: 11
     },
     itemQualityChance: {
       settingId: "betterItemRarityChance",
@@ -345,8 +345,8 @@ export function initializeContentBalance() {
       purchasedLevels: 0,
       maxValue: 30,
       cost: 120,
-      ah: 3,
-      Pg: 11
+      baseCost: 3,
+      costPerLevel: 11
     },
     higherLevelItemChance: {
       settingId: "itemLevelBonus",
@@ -358,8 +358,8 @@ export function initializeContentBalance() {
       purchasedLevels: 0,
       maxValue: 30,
       cost: 160,
-      ah: 4,
-      Pg: 11
+      baseCost: 4,
+      costPerLevel: 11
     },
     ys: {
       settingId: "maxGoldPerDrop",
@@ -371,8 +371,8 @@ export function initializeContentBalance() {
       purchasedLevels: 0,
       maxValue: 2500,
       cost: 200,
-      ah: 6,
-      Pg: 11
+      baseCost: 6,
+      costPerLevel: 11
     },
     As: {
       settingId: "minGoldPerDrop",
@@ -384,8 +384,8 @@ export function initializeContentBalance() {
       purchasedLevels: 0,
       maxValue: 2E3,
       cost: 300,
-      ah: 10,
-      Pg: 11
+      baseCost: 10,
+      costPerLevel: 11
     },
     Lr: {
       settingId: "goldDropChance",
@@ -397,8 +397,8 @@ export function initializeContentBalance() {
       purchasedLevels: 0,
       maxValue: 100,
       cost: 200,
-      ah: 5,
-      Pg: 11
+      baseCost: 5,
+      costPerLevel: 11
     },
     $s: {
       settingId: "scrollDropChance",
@@ -410,8 +410,8 @@ export function initializeContentBalance() {
       purchasedLevels: 0,
       maxValue: 40,
       cost: 200,
-      ah: 7,
-      Pg: 11
+      baseCost: 7,
+      costPerLevel: 11
     },
     Ns: {
       settingId: "potionDropChance",
@@ -423,8 +423,8 @@ export function initializeContentBalance() {
       purchasedLevels: 0,
       maxValue: 5,
       cost: 300,
-      ah: 8,
-      Pg: 11
+      baseCost: 8,
+      costPerLevel: 11
     },
     treasureChance: {
       settingId: "treasureChestChance",
@@ -436,8 +436,8 @@ export function initializeContentBalance() {
       purchasedLevels: 0,
       maxValue: 20,
       cost: 340,
-      ah: 9,
-      Pg: 11
+      baseCost: 9,
+      costPerLevel: 11
     }
   };
   VISIBLE_MONSTER_LEVELS = 5;

@@ -1,100 +1,5 @@
 [
   {
-    "name": "ah",
-    "reads": 1,
-    "writes": 11,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\content\\balance.js:309",
-        "code": "ah: 1"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\balance.js:322",
-        "code": "ah: 2"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\balance.js:335",
-        "code": "ah: 2"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\content\\balance.js",
-      "src\\engine\\modules\\progression\\upgrades.js"
-    ]
-  },
-  {
-    "name": "Pg",
-    "reads": 1,
-    "writes": 11,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\content\\balance.js:310",
-        "code": "Pg: 11"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\balance.js:323",
-        "code": "Pg: 11"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\balance.js:336",
-        "code": "Pg: 11"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\content\\balance.js",
-      "src\\engine\\modules\\progression\\upgrades.js"
-    ]
-  },
-  {
-    "name": "kh",
-    "reads": 11,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:595",
-        "code": "Mh.pointUpgrades[Pe].kh"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:982",
-        "code": "db.kh"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:214",
-        "code": "this.kh"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\progression\\upgrades.js"
-    ]
-  },
-  {
-    "name": "vh",
-    "reads": 7,
-    "writes": 5,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:139",
-        "code": "this.vh"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:145",
-        "code": "this.vh"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:440",
-        "code": "this.vh"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\progression\\upgrades.js"
-    ]
-  },
-  {
     "name": "Wg",
     "reads": 11,
     "writes": 1,
@@ -264,31 +169,6 @@
     ]
   },
   {
-    "name": "Zh",
-    "reads": 5,
-    "writes": 6,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:292",
-        "code": "a.Zh"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1170",
-        "code": "a.Zh"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:65",
-        "code": "this.Zh"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js",
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\runtime\\game.js"
-    ]
-  },
-  {
     "name": "Hh",
     "reads": 7,
     "writes": 4,
@@ -310,33 +190,6 @@
     "files": [
       "src\\engine\\modules\\characters\\character.js",
       "src\\engine\\modules\\characters\\movement.js"
-    ]
-  },
-  {
-    "name": "Dh",
-    "reads": 10,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\party.js:412",
-        "code": "c.Dh"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\party.js:413",
-        "code": "c.Dh"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:189",
-        "code": "La.Dh"
-      }
-    ],
-    "fileCount": 5,
-    "files": [
-      "src\\engine\\modules\\characters\\party.js",
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\runtime\\game.js",
-      "src\\engine\\modules\\world\\initialization.js",
-      "src\\engine\\modules\\world\\regions.js"
     ]
   },
   {

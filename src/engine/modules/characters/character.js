@@ -62,7 +62,7 @@ export function Character(a, b, c, d, f) {
   }
   this.actionType = IDLE_ACTION;
   this.isDead = false;
-  this.spellToCast = this.targetTreasureChest = this.bj = this.hk = this.Zh = this.targetGoldDrop = this.combatTarget = this.behaviors = null;
+  this.spellToCast = this.targetTreasureChest = this.bj = this.hk = this.targetScrollDrop = this.targetGoldDrop = this.combatTarget = this.behaviors = null;
   this.stats = new CharacterStats(this);
   this.au = -3 * getAttackCooldown(this.stats, true);
   this.summoner = null;
@@ -1007,12 +1007,12 @@ export function updateCharacter(a, b) {
           awardAdventurePoints(9);
         }
       } else if (7 === a.actionType) {
-        if (a.Zh && !a.Zh.collected) {
+        if (a.targetScrollDrop && !a.targetScrollDrop.collected) {
           showFloatingText(game.floatingText, a, "卷轴!", "white");
-          addScrollCharge(a.Zh.getScroll());
-          a.Zh.setCollected(true);
-          removeScrollDrop(a.Zh);
-          a.Zh = null;
+          addScrollCharge(a.targetScrollDrop.getScroll());
+          a.targetScrollDrop.setCollected(true);
+          removeScrollDrop(a.targetScrollDrop);
+          a.targetScrollDrop = null;
           awardAdventurePoints(10);
         }
       } else if (8 === a.actionType) {
@@ -1021,7 +1021,7 @@ export function updateCharacter(a, b) {
           a.hk.setCollected(true);
           removePotionDrop(a.hk);
           addPotion(a.hk.potion);
-          a.Zh = null;
+          a.targetScrollDrop = null;
           awardAdventurePoints(11);
         }
       } else if (6 === a.actionType) {

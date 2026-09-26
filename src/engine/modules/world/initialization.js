@@ -35,7 +35,7 @@ export function initializeRegionsAndCastles() {
   var ha = game.castles;
   ha.castleList.length = 0;
   ha.attackableCastles.length = 0;
-  ha.Dh.length = 0;
+  ha.scheduledCastles.length = 0;
   ha.bm = {};
   ha.cm = 0;
   ha.Uj = 1;

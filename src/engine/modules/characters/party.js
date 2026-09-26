@@ -409,8 +409,8 @@ export function initializeCharactersParty() {
         c = game.castles;
         d = game.state.leader.position.worldPosition;
         f = null;
-        for (n = g = 0; n < c.Dh.length; n++) {
-          if (h = c.Dh[n], l = distanceSquaredToPoint(d, game.world.tileToPixelX(h.dm), game.world.tileToPixelY(h.em)), !f || l < g) {
+        for (n = g = 0; n < c.scheduledCastles.length; n++) {
+          if (h = c.scheduledCastles[n], l = distanceSquaredToPoint(d, game.world.tileToPixelX(h.dm), game.world.tileToPixelY(h.em)), !f || l < g) {
             f = h;
             g = l;
           }

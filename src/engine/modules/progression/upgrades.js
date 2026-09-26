@@ -129,20 +129,20 @@ export function GlobalUpgrade(a) {
   recalculateGlobalUpgrade(this);
 }
 export function recalculateGlobalUpgrade(a) {
-  a.definition.cost = scaleByLevel(a.definition.ah + a.definition.purchasedLevels * a.definition.Pg, globalUpgradePriceCurve, 1);
+  a.definition.cost = scaleByLevel(a.definition.baseCost + a.definition.purchasedLevels * a.definition.costPerLevel, globalUpgradePriceCurve, 1);
   a.definition.currentValue = a.definition.baseValue + a.definition.purchasedLevels * a.definition.perLevelIncrement;
   if (a.definition.currentValue > a.definition.maxValue) {
     a.definition.currentValue = a.definition.maxValue;
   }
 }
 export function EquipBestItemUpgrade(a) {
-  this.vh = false;
+  this.hasCandidate = false;
   this.Yz = -1;
   this.descriptionLabel = "";
   this.vp = a;
 }
 export function EquipItemUpgrade(a, b) {
-  this.vh = false;
+  this.hasCandidate = false;
   this.hA = a;
   this.descriptionLabel = this.item = null;
   this.vp = b;
@@ -211,7 +211,7 @@ export function getAchievementActionLabel(a) {
   return a.achievement.obtained ? getAchievementRewardLabel(a.achievement) : "奖励不明";
 }
 export function AdventurePointUpgrade(a) {
-  this.kh = a;
+  this.definition = a;
   this.cachedCanPurchase = this.purchased = this.canPurchase = false;
 }
 export function applyPointUpgrade(a) {
@@ -219,7 +219,7 @@ export function applyPointUpgrade(a) {
   a.currentValue += a.levelIncrement;
 }
 export function getPointUpgradeModifier(a) {
-  switch (a.kh.bonusIndex) {
+  switch (a.definition.bonusIndex) {
     case 5:
       return dungeonCostBonus;
     case 4:
@@ -247,7 +247,7 @@ export function getPointUpgradeModifier(a) {
     case 13:
       return spiritRegenerationBonus;
   }
-  console.log("Failed to find point upgrade setting: " + a.kh.bonusIndex);
+  console.log("Failed to find point upgrade setting: " + a.definition.bonusIndex);
   return null;
 }
 export function CollectFarmUpgrade() {
@@ -437,10 +437,10 @@ export function initializeProgressionUpgrades() {
     markUpgradeChanged(this);
   };
   EquipBestItemUpgrade.prototype.isDisplayable = function () {
-    return this.vh;
+    return this.hasCandidate;
   };
   EquipBestItemUpgrade.prototype.canPurchaseNow = function () {
-    return this.vh;
+    return this.hasCandidate;
   };
   EquipBestItemUpgrade.prototype.refreshAvailabilityState = function () {
     var a,
@@ -464,10 +464,10 @@ export function initializeProgressionUpgrades() {
     }
     a = b;
     var hasBetterItems = a > this.vp;
-    if (c = this.vh !== hasBetterItems || this.Yz !== a) {
+    if (c = this.hasCandidate !== hasBetterItems || this.Yz !== a) {
       this.descriptionLabel = "装备所有更好的道具(" + a + ")";
     }
-    this.vh = hasBetterItems;
+    this.hasCandidate = hasBetterItems;
     this.Yz = a;
     return c;
   };
@@ -495,26 +495,26 @@ export function initializeProgressionUpgrades() {
     }
   };
   EquipItemUpgrade.prototype.isDisplayable = function () {
-    return this.vh;
+    return this.hasCandidate;
   };
   EquipItemUpgrade.prototype.canPurchaseNow = function () {
-    return this.vh;
+    return this.hasCandidate;
   };
   EquipItemUpgrade.prototype.refreshAvailabilityState = function () {
     var a = game.inventories.Fj,
-      b = this.vh,
+      b = this.hasCandidate,
       c = this.item;
     if (a.length <= this.vp && a.length > this.hA) {
       this.item = a[this.hA];
       if (c != this.item) {
         this.descriptionLabel = "Equip " + this.item.itemName;
       }
-      this.vh = true;
+      this.hasCandidate = true;
     } else {
       this.descriptionLabel = this.item = null;
-      this.vh = false;
+      this.hasCandidate = false;
     }
-    return b != this.vh || c != this.item;
+    return b != this.hasCandidate || c != this.item;
   };
   LevelUpUpgrade.prototype = new Upgrade();
   LevelUpUpgrade.prototype.resetState = function () {
@@ -1198,7 +1198,7 @@ export function initializeProgressionUpgrades() {
     }
   };
   AdventurePointUpgrade.prototype.getTitle = function () {
-    return this.kh.title;
+    return this.definition.title;
   };
   AdventurePointUpgrade.prototype.getUpgradeType = function () {
     return 16;
@@ -1207,8 +1207,8 @@ export function initializeProgressionUpgrades() {
     return this.canPurchase;
   };
   AdventurePointUpgrade.prototype.purchase = function () {
-    if (!(this.purchased || this.kh.pointCost > game.state.adventurePoints.availablePoints)) {
-      var a = this.kh.pointCost,
+    if (!(this.purchased || this.definition.pointCost > game.state.adventurePoints.availablePoints)) {
+      var a = this.definition.pointCost,
         b = game.state.adventurePoints;
       b.spentPoints += a;
       b.availablePoints -= a;
@@ -1219,17 +1219,17 @@ export function initializeProgressionUpgrades() {
       this.canPurchase = false;
       applyPointUpgrade(this);
       markUpgradeChanged(this);
-      recordGameEvent("Points Upgrade", this.kh.title);
+      recordGameEvent("Points Upgrade", this.definition.title);
     }
   };
   AdventurePointUpgrade.prototype.getCost = function () {
-    return this.kh.pointCost;
+    return this.definition.pointCost;
   };
   AdventurePointUpgrade.prototype.getDescription = function () {
-    return this.kh.descriptionText;
+    return this.definition.descriptionText;
   };
   AdventurePointUpgrade.prototype.refreshAvailabilityState = function () {
-    this.canPurchase = !this.purchased && this.kh.pointCost <= game.state.adventurePoints.availablePoints;
+    this.canPurchase = !this.purchased && this.definition.pointCost <= game.state.adventurePoints.availablePoints;
     var a = this.cachedCanPurchase !== this.canPurchase;
     this.cachedCanPurchase = this.canPurchase;
     return a;

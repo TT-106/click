@@ -186,11 +186,11 @@ export function restoreGameState(a, b) {
                 La.attackableCastles.push(Fa);
               }
               if (Fa.attackScheduled && !Fa.conquered) {
-                La.Dh.push(Fa);
+                La.scheduledCastles.push(Fa);
               }
               refreshCastleConquest(Fa);
             }
-            sortCastles(La, La.Dh);
+            sortCastles(La, La.scheduledCastles);
             sortCastles(La, La.attackableCastles);
             var ha = game.dungeons,
               ja;
@@ -592,7 +592,7 @@ export function restoreGameState(a, b) {
                       Bf = undefined;
                     b: {
                       for (var Mh = game.state.adventurePoints, Pe = 0; Pe < Mh.pointUpgrades.length; Pe++) {
-                        if (Mh.pointUpgrades[Pe].kh.upgradeId === Lh) {
+                        if (Mh.pointUpgrades[Pe].definition.upgradeId === Lh) {
                           Bf = Mh.pointUpgrades[Pe];
                           break b;
                         }
@@ -979,7 +979,7 @@ export function createSaveState(a) {
     for (Aa = 0; Aa < sc.length; Aa++) {
       var db = sc[Aa];
       rc.push({
-        upgradeId: db.kh.upgradeId,
+        upgradeId: db.definition.upgradeId,
         upgradePurchased: db.isOwned()
       });
     }

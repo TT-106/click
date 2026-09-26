@@ -289,7 +289,7 @@ export function initializeAiBehaviors() {
     a.bj = null;
     a.targetTreasureChest = null;
     a.spellToCast = null;
-    a.Zh = null;
+    a.targetScrollDrop = null;
     a.hk = null;
     var b,
       c = 0,
@@ -1167,7 +1167,7 @@ export function initializeAiBehaviors() {
       if (this.scrollDrop.collected) {
         this.scrollDrop = null;
       } else if (this.scrollDrop.claimedBy == a) {
-        a.Zh = this.scrollDrop;
+        a.targetScrollDrop = this.scrollDrop;
         if (distanceToPoint(a.position.levelPosition, this.scrollDrop.bq, this.scrollDrop.cq) < this.Mi) {
           a.actionType = 7;
         } else {
