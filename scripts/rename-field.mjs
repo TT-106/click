@@ -2,6 +2,7 @@
 // 命中数、行数、字符串字面量多重集与缩进结构。任一校验失败则整批不写盘。
 // 用法: node scripts/rename-field.mjs <old>=<new> <file...> --expect <count>
 import fs from 'node:fs';
+import path from 'node:path';
 
 const args = process.argv.slice(2);
 if (args.length < 2) {
@@ -79,7 +80,7 @@ console.log(`合计 ${totalHits} 处已写入。`);
 // 事后全库回扫：同名字段若还有残留在别处（尤其是另一文件里的数据表字面量键），
 // 读取端就会拿到 undefined。本轮这类事故真实发生过（rarity 表的键在 balance.js，
 // 读取端在 items.js），差分流水在 99 回合后才发现，故在此当场报出。
-const leftoverRe = new RegExp('(^|[ \\t])' + escaped + ':|\\\\.' + escaped + '\\\\b');
+const leftoverRe = new RegExp('(^|[ \\t])' + escaped + ':|\\.' + escaped + '\\b');
 const stagedFiles = new Set(staged.map((s) => s.file.split(path.sep).join('/')));
 const leftovers = [];
 (function scan(dir) {

@@ -274,3 +274,9 @@ RunStatistics 的 `On/Lk/qn/Mj/wi/uk` → `turnCount/doorsOpened/roomsCleared/le
 ## 待取证残留（约 1,300 处访问）
 
 高频：`Y/Z/aa/ca/ea/ga/fa/ka/na` 等长尾——工作清单 `artifacts/obfuscated-fields.json`（按频次排序，含样例代码）。取证方法与产出格式见 WORKSTATE.md 第 6 节。
+
+## 第十七轮落地：卷轴定义法术键 `xa` → `spellDefinition`（2026-09-26）
+
+`Scroll` 构造器在原版 `c2.js:12892` 读取 `a.xa` 并建立法术对象，六条卷轴定义在 `c2.js:13027-13088` 同名赋值。重构 `combat/scrolls.js:43` 的读取端已经是 `a.spellDefinition`，定义端 `:263-322` 却遗留六个 `xa:`。这是同文件两处声明/消费失配，而非新玩法。把六个定义键改成 `spellDefinition`，保留各定义指向的法术对象、null 值及顺序，存档键不变。`scroll-cast-in-combat` 在修复前令原版 `spellCastCount` +1、重构版 `rangedAttackCount` +1；修复后两端完整 DTO 相等。`src` 内 `xa:` 与 `.xa` 均 0 命中；`symbol-map.json` fields 加入一对一映射。
+
+回归：check/typecheck/parity/39 场景/e2e/8h+24h soak 全绿；`analyze-fields.mjs` 清单 1,175 → 1,174，fields 段 263 → 264。重命名执行器的事后回扫漏导入 `node:path`，本次写盘成功后才报 ReferenceError；已修复并用临时文件零命中、源树残留阳性探针确认能完整退出并报告遗漏。

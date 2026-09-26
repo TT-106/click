@@ -10490,29 +10490,6 @@
     ]
   },
   {
-    "name": "xa",
-    "reads": 0,
-    "writes": 6,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\scrolls.js:266",
-        "code": "xa: electricSpellDefinitions.sB"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\scrolls.js:274",
-        "code": "xa: electricSpellDefinitions.CB"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\scrolls.js:286",
-        "code": "xa: null"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\combat\\scrolls.js"
-    ]
-  },
-  {
     "name": "Oo",
     "reads": 4,
     "writes": 2,

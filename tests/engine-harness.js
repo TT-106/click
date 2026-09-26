@@ -8,7 +8,7 @@ const resetRandom = () => { seed = 123456789; };
 Math.random = () => { seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0; return seed / 4294967296; };
 Date.now = () => fixedNow;
 const original = new URLSearchParams(location.search).has('original');
-let game, initialize, ready, snapshot, load, advance, isOffline, loopTick, restart, reset, syncLoopClock, upgradeCollections;
+let game, initialize, ready, snapshot, load, advance, isOffline, loopTick, restart, reset, syncLoopClock, upgradeCollections, castScroll;
 if (original) {
   await new Promise((resolve, reject) => {
     const script = document.createElement('script');
@@ -31,6 +31,7 @@ if (original) {
   const saves = await import('../src/engine/modules/persistence/game-save.js');
   const simulation = await import('../src/engine/modules/simulation/tick.js');
   ({ upgradeCollections } = await import('../src/engine/modules/content/balance.js'));
+  ({ castScroll } = await import('../src/engine/modules/combat/scrolls.js'));
   // 引擎不直接碰 localStorage（宿主注入端口）。差分要比对"自动保存真正落盘的字节"，
   // 这里按 src/services/saves.js 的同一套键与备份语义注入端口。
   {
@@ -245,6 +246,20 @@ window.harness = {
       }
     }
     return { equipped, snapshot: snapshot() };
+  },
+  castScrollDuringCombat({ maxTurns = 3000 } = {}) {
+    const scroll = (original ? window.Game.nh.at.find(s => !s.Qe && s.mh > 0) : game.scrolls.at.find(s => !s.locked && s.quantity > 0));
+    if (!scroll) throw new Error('没有已解锁且有库存的卷轴');
+    const before = snapshot().statistics.scrollsUsed;
+    let attempts = 0;
+    for (let i = 0; i < maxTurns; i++) {
+      advance();
+      if ((original ? window.Game.Gf.Og : game.monsters.Og).length === 0) continue;
+      attempts++;
+      if (original) window.Hq(scroll, false); else castScroll(scroll, false);
+      if (snapshot().statistics.scrollsUsed > before) break;
+    }
+    return { attempts, cast: snapshot().statistics.scrollsUsed - before, snapshot: snapshot() };
   },
   // U7：药水激活也没有非视图入口（Potion.aw 只由药水按钮调用），激活会在存档里
   // 记 statistics.potionsUsed，因此两端各自断言计数增长，再照常做完整存档差分。

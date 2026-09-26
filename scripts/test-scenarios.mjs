@@ -58,6 +58,7 @@ const equipmentChanged = (s) => ({
   itemEquipEvents: (s.pointManagerState?.pointsByType ?? []).find(p => p.pointEventType === 21)?.count
     > (base.pointManagerState?.pointsByType ?? []).find(p => p.pointEventType === 21)?.count,
 });
+const scrollWasCast = (s) => ({ scrollCast: (s.statistics?.scrollsUsed ?? 0) > (base.statistics?.scrollsUsed ?? 0) });
 // U7：药水激活在视图之外没有入口，激活后存档里只有 statistics.potionsUsed 可证。
 const potionWasUsed = (s) => ({ potionUsed: (s.statistics?.potionsUsed ?? 0) > 0 });
 const scenarios = [
@@ -300,6 +301,15 @@ const scenarios = [
     ],
   },
   {
+    name: 'scroll-cast-in-combat',
+    // 只在活怪物存在时尝试施放，直到两端各自观察到卷轴使用统计增长。
+    make: () => withScrolls(base, [{ scrollId: 'shockScroll', count: 23 }]),
+    steps: [
+      { castScrollDuringCombat: 3000, check: scrollWasCast },
+      { turns: 900, check: scrollWasCast },
+    ],
+  },
+  {
     name: 'autosave-payload',
     // 自动保存计时分支 + 落盘字节比对：两端跑同样的真实帧循环，比较写进 localStorage 的原文。
     make: () => base,
@@ -427,7 +437,7 @@ try {
         // effectType 表示这一步改用"逐帧扫描活怪物效果队列"的推进方式，并直接对账施加次数。
         // purchaseUpgrades 表示这一步先推进再驱动升级购买（U7：只有视图层会触发的路径）。
         const step = Array.isArray(rawStep) ? { turns: rawStep[0], check: rawStep[1] } : rawStep;
-        const { turns, check, effectType, purchaseUpgrades, purchasePointUpgrades, claimAchievement, equipBestItems, activatePotions, frames } = step;
+        const { turns, check, effectType, purchaseUpgrades, purchasePointUpgrades, claimAchievement, equipBestItems, castScrollDuringCombat, activatePotions, frames } = step;
         const results = await Promise.all(pages.map(async p => {
           await p.page.evaluate(ms => window.harness.setTime(ms), HARNESS_FIXED_NOW);
           // 重置后无队伍：走真实帧循环（守卫路径），而非裸推进
@@ -437,6 +447,7 @@ try {
           if (purchasePointUpgrades !== undefined) return p.page.evaluate(a => window.harness.purchasePointUpgrades(a), { turns, limit: purchasePointUpgrades });
           if (claimAchievement) return p.page.evaluate(a => window.harness.claimAchievement(a), { turns });
           if (equipBestItems) return p.page.evaluate(a => window.harness.equipBestItems(a), { turns });
+          if (castScrollDuringCombat !== undefined) return p.page.evaluate(a => window.harness.castScrollDuringCombat(a), { maxTurns: castScrollDuringCombat });
           if (activatePotions !== undefined) return p.page.evaluate(a => window.harness.activatePotions(a), { turns, limit: activatePotions });
           // frames：走真实帧循环（loop.tick 内含 view.render 的 try/catch），随后读画布不透明像素
           if (frames !== undefined) return p.page.evaluate(n => {
@@ -493,6 +504,12 @@ try {
           }
           assert.equal(results[1].equipped, results[0].equipped, '两端自动装备升级次数不同');
         }
+        if (castScrollDuringCombat !== undefined) {
+          for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {
+            assert.ok(results[i].attempts > 0 && results[i].cast > 0, `${label} 端必须在有怪物时真的施放卷轴`);
+          }
+          assert.equal(results[1].cast, results[0].cast, '两端卷轴施放次数不同');
+        }
         if (frames !== undefined) {
           const inks = results.map(r => r.ink);
           for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {
@@ -547,6 +564,7 @@ try {
             if (verdict.achievementClaimed !== undefined) assert.equal(verdict.achievementClaimed, true, `${label} 成就奖励必须真实领取并标记 applied`);
             if (verdict.equipmentChanged !== undefined) assert.equal(verdict.equipmentChanged, true, `${label} 自动装备后装备槽必须真实变化`);
             if (verdict.itemEquipEvents !== undefined) assert.equal(verdict.itemEquipEvents, true, `${label} 装备物品事件计数必须真实增长`);
+            if (verdict.scrollCast !== undefined) assert.equal(verdict.scrollCast, true, `${label} 卷轴使用统计必须真实增长`);
             if (verdict.potionUsed !== undefined) assert.equal(verdict.potionUsed, true, `${label} 必须真的激活至少一瓶药水（potionsUsed 增长）`);
             if (verdict.note && i === 0) console.log(`  · ${verdict.note}`);
             if (verdict.victory !== undefined) assert.equal(verdict.victory, true, `${label} 必须真的走完征服尾部并触发胜利`);

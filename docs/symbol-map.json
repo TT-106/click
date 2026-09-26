@@ -7646,7 +7646,8 @@
     "An": "spentPoints",
     "Qi": "pointsByEventType",
     "pj": "countsByEventType",
-    "tl": "pointUpgrades"
+    "tl": "pointUpgrades",
+    "xa": "spellDefinition"
   },
   "gameFields": {
     "B": "tileSize",

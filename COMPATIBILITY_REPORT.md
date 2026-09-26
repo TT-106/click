@@ -18,14 +18,14 @@
 
 ## 2. 行为兼容（原版 vs 重构差分）— VERIFIED（覆盖范围内）
 
-`scripts/test-scenarios.mjs` 的 **38 个场景**全部通过（同一变异存档 + 固定 LCG 随机流 + 固定时钟，双端逐字段比较完整存档 DTO；矩阵可用 `SCENARIO_FILTER=a,b` 单跑）：
+`scripts/test-scenarios.mjs` 的 **39 个场景**全部通过（同一变异存档 + 固定 LCG 随机流 + 固定时钟，双端逐字段比较完整存档 DTO；矩阵可用 `SCENARIO_FILTER=a,b` 单跑）：
 
 | 组 | 场景 | 除全状态相等外的专项断言 |
 |---|---|---|
 | 长跑/后期 | long-run-9000、late-horizon | 9,000 与 +1,000,000 回合起点下逐检查点全等 |
 | 离线 | offline-1h、offline-8h、offline-13h-capped、offline-disabled | 金币/击杀必须真实增长；13h 必须被截为 12h；关闭离线后金币必须不变 |
 | 药水 | potions-active、potions-inactive-auto、**potions-activated** | 第三条直接驱动 `Potion.aw()`，两端 `statistics.potionsUsed` 各自增长 |
-| 卷轴 | scrolls-stocked | 库存/数量/解锁相等（施放路径未驱动，见 U7） |
+| 卷轴 | scrolls-stocked、**scroll-cast-in-combat** | 库存/数量/解锁相等；第二条在活怪物存在时施放休克卷轴，两端各自断言 `scrollsUsed` 增长后比较完整存档；其他卷轴类型未逐一施放 |
 | 法术 | fireball-blast-stun、spell-status-transform、spell-buff-armor、spell-summon-ghost-skeleton、spell-summon-skeleton-army、spell-sleep、spell-heal、spell-area-bounce、spell-chain-lightning、spell-rain-damage、spell-bouncing-projectile、spell-chicken-swarm、spell-deferred-strike、spell-instant-search、spell-find-chest、spell-resurrect | 16 个 `spellCategoryId` 每条一个场景；cat=2 的 type 0/4/14 与 cat=17 另有直接计数/随从数对账；其余为"唯一注入法术 + 两端各自施法计数增长" |
 | 战斗与终局 | castle-victory | 两端各自断言 `gameWon`/`victoryCount=1`/`castlesConquered=1`/全城堡征服 |
 | 视图独占路径 | **upgrades-purchased** | 独立运行时两端各完成 28+24 次购买；逐检查点分别断言 `settings.upgrades`、角色等级、`upgrades1..4` 解锁位超过 fixture 基线，并比较完整存档 |
@@ -64,7 +64,7 @@
 
 已转入差分覆盖（2026-09-26）：城堡攻防战全程与胜利瞬间（`castle-victory`，两端各自断言 gameWon/victoryCount/castlesConquered 后比较完整存档）、12h 离线截断（`offline-13h-capped`）、火球与两条控制/增益法术分支、召唤族两条分支（cat=9/11，两端各自断言 `minionsSummoned` 增长）、睡眠（cat=2、type=0），以及 Blast Stun 的直接执行计数——harness 逐帧扫描两端活怪物效果队列，`fireball-blast-stun` 实测原版与重构版各 31 次 type=14 施加，数值相等。同批次再补 10 条：cat=1 治疗、cat=4 火环、cat=5 连锁闪电、cat=6 闪电雨、cat=13 绿色死亡、cat=17 召唤鸡群（含 `Math.random` 概率模板分支），需要注入投射武器的 cat=12 快速打击（唯一 `td: false`）、cat=14 立即搜索、cat=15 发现财宝箱——后三条在注入前会命中原版自带的空武器解引用（`Aw`/`getProjectileAnimation` 对 `equipment.Ey` 无空值保护，两端同点同错，栈逐帧同构），属忠实保留而非重构差异，因此未改动引擎，只在存档里补回真实武器类型（盗贼槽 61、忍者槽 62）；以及 cat=16 复活（`withResurrectionTrial()` 激活 `randomBossEncounter` 药水并把三名队友压到 1 级 1 血，两端实测 `characterStunnedCount` 同为 22，真正打出"已有昏迷队友"的前置）。
 
-后续扩展路径：在 `tests/scenarios/save-mutations.mjs` 增加对应变异器，即可纳入 `test:scenarios` 矩阵（当前 38 个场景）。
+后续扩展路径：在 `tests/scenarios/save-mutations.mjs` 增加对应变异器，即可纳入 `test:scenarios` 矩阵（当前 39 个场景）。
 
 ## 7. 性能兼容 — PARTIALLY VERIFIED
 
