@@ -134,7 +134,7 @@ export function appendDungeonRoom(a, b, c, d, f, g) {
   b.Bq(a.tileGrid);
 }
 export function DungeonDecorationGenerator() {
-  this.yh = new Vector2();
+  this.spawnPointScratch = new Vector2();
   this.seededRandom = new SeededRandom(3);
 }
 export function DungeonLevel() {
@@ -499,15 +499,15 @@ export function initializeWorldGeneration() {
     var b = a.tileColumn,
       c = a.tileRow - 1;
     a = b + 1 + randomIntFrom(this.seededRandom, b + a.widthInTiles - 1 - b - 2);
-    setVector(this.yh, a, c);
-    return this.yh;
+    setVector(this.spawnPointScratch, a, c);
+    return this.spawnPointScratch;
   };
   DungeonDecorationGenerator.prototype.Zw = function (a) {
     var b = a.tileColumn - 1,
       c = a.tileRow;
     a = c + 1 + randomIntFrom(this.seededRandom, c + a.heightInTiles - 1 - c - 2);
-    setVector(this.yh, b, a);
-    return this.yh;
+    setVector(this.spawnPointScratch, b, a);
+    return this.spawnPointScratch;
   };
   DungeonLevel.prototype.Aw = function () {
     var a, b, c, d, f;

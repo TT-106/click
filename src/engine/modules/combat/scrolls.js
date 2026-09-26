@@ -240,7 +240,7 @@ export function initializeCombatScrolls() {
   ScrollDrop.prototype.getScroll = function () {
     return this.scroll;
   };
-  ScrollDrop.prototype.oh = function (a) {
+  ScrollDrop.prototype.setCollected = function (a) {
     this.collected = a;
   };
   ScrollDrop.prototype.setClaimedBy = function (a) {

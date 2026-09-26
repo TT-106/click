@@ -86,7 +86,7 @@ export function CharacterSummaryView(a, b) {
   this.visible = true;
   this.adventurerIndex = b;
   this.dD = this.xy = this.Jy = this.AB = this.hz = this.gz = this.ez = this.aj = this.Ap = this.pA = this.EB = this.Wz = this.bz = this.DB = this.Ij = this.rA = this.tableElement = null;
-  this.zu = this.iv = this.Mu = this.Ov = this.Pu = this.Ou = this.Nu = this.Kk = this.Ik = this.Gk = this.Pv = this.$u = this.Lu = this.Jk = this.Zu = this.$f = -1;
+  this.zu = this.iv = this.Mu = this.Ov = this.Pu = this.Ou = this.Nu = this.Kk = this.Ik = this.Gk = this.Pv = this.$u = this.Lu = this.Jk = this.Zu = this.cachedLevel = -1;
 }
 export function StatBreakdownView(a, b, c, d) {
   this.elementId = a;
@@ -453,7 +453,7 @@ export function initializeViewsCharacter() {
   };
   CharacterSummaryView.prototype = new View();
   CharacterSummaryView.prototype.reset = function () {
-    this.zu = this.iv = this.Mu = this.Ov = this.Pu = this.Ou = this.Nu = this.Kk = this.Ik = this.Gk = this.Pv = this.$u = this.Lu = this.Jk = this.Zu = this.$f = -1;
+    this.zu = this.iv = this.Mu = this.Ov = this.Pu = this.Ou = this.Nu = this.Kk = this.Ik = this.Gk = this.Pv = this.$u = this.Lu = this.Jk = this.Zu = this.cachedLevel = -1;
     var a = 0;
     this.tableElement = createElement("table", getElement(this.elementId), null, "characteristicsTable");
     this.rA = appendAttributeRow(this.tableElement, "等级:", a++);
@@ -491,8 +491,8 @@ export function initializeViewsCharacter() {
       C = a.lm,
       v = 1 + a.extraAttackCount,
       a = 0 < a.extraAttackCount ? a.extraAttackChance : 0;
-    if (this.$f !== b) {
-      this.$f = b;
+    if (this.cachedLevel !== b) {
+      this.cachedLevel = b;
       this.rA.innerHTML = b + "";
     }
     if (this.Zu !== c) {

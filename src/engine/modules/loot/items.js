@@ -291,7 +291,7 @@ export function initializeLootItems() {
   ItemDrop.prototype.getItem = function () {
     return this.item;
   };
-  ItemDrop.prototype.oh = function (a) {
+  ItemDrop.prototype.setCollected = function (a) {
     this.collected = a;
   };
   ItemDrop.prototype.setClaimedBy = function (a) {

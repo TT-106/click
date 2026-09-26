@@ -201,7 +201,7 @@ export function applySpellEffect(a, b) {
         addVisualEffect(game.effects, goldEffect);
         addGold(f.Xl);
         game.state.statisticsRecorder.recordGoldFromMonsters(f.Xl);
-        f.oh(true);
+        f.setCollected(true);
         removeGoldDrop(f);
         awardAdventurePoints(9);
       }
@@ -216,7 +216,7 @@ export function applySpellEffect(a, b) {
         var itemEffect = new VisualEffect("Blue Sparkles", d, itemOffset, false, 1);
         addVisualEffect(game.effects, itemEffect);
         f = itemDrop.getItem();
-        itemDrop.oh(true);
+        itemDrop.setCollected(true);
         removeItemDrop(itemDrop);
         a: {
           var itemOwner = undefined;
@@ -259,7 +259,7 @@ export function applySpellEffect(a, b) {
         setVector(scrollOffset, f.bq, f.cq);
         var scrollEffect = new VisualEffect("Pink Sparkles", d, scrollOffset, false, 1);
         addVisualEffect(game.effects, scrollEffect);
-        f.oh(true);
+        f.setCollected(true);
         removeScrollDrop(f);
         addScrollCharge(f.getScroll());
         awardAdventurePoints(10);
@@ -274,7 +274,7 @@ export function applySpellEffect(a, b) {
         setVector(potionOffset, f.Qp, f.Rp);
         var potionEffect = new VisualEffect("Green Sparkles", d, potionOffset, false, 1);
         addVisualEffect(game.effects, potionEffect);
-        f.oh(true);
+        f.setCollected(true);
         removePotionDrop(f);
         addPotion(f.potion);
         awardAdventurePoints(11);

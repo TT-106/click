@@ -284,7 +284,7 @@ export function initializeAiBehaviors() {
   };
   BehaviorQueue.prototype.nu = function (a) {
     a.actionType = IDLE_ACTION;
-    a.rh = null;
+    a.targetGoldDrop = null;
     a.combatTarget = null;
     a.bj = null;
     a.targetTreasureChest = null;
@@ -1104,7 +1104,7 @@ export function initializeAiBehaviors() {
       if (this.goldDrop.collected) {
         this.goldDrop = null;
       } else if (this.goldDrop.claimedBy == a) {
-        a.rh = this.goldDrop;
+        a.targetGoldDrop = this.goldDrop;
         if (distanceToPoint(a.position.levelPosition, this.goldDrop.Xo, this.goldDrop.Yo) < this.Mi) {
           a.actionType = 5;
         } else {

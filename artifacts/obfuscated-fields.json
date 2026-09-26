@@ -1,106 +1,5 @@
 [
   {
-    "name": "$f",
-    "reads": 4,
-    "writes": 9,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\character.js:89",
-        "code": "this.$f"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\character.js:456",
-        "code": "this.$f"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\character.js:494",
-        "code": "this.$f"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\views\\character.js",
-      "src\\engine\\modules\\views\\expedition.js",
-      "src\\engine\\modules\\views\\monsters.js"
-    ]
-  },
-  {
-    "name": "zg",
-    "reads": 12,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\monsters.js:42",
-        "code": "this.zg"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\monsters.js:44",
-        "code": "this.zg"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\monsters.js:47",
-        "code": "this.zg"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\monsters.js"
-    ]
-  },
-  {
-    "name": "rh",
-    "reads": 7,
-    "writes": 5,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:287",
-        "code": "a.rh"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1107",
-        "code": "a.rh"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:65",
-        "code": "this.rh"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js",
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\runtime\\game.js"
-    ]
-  },
-  {
-    "name": "oh",
-    "reads": 8,
-    "writes": 4,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:1004",
-        "code": "a.rh.oh"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:1013",
-        "code": "a.Zh.oh"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:1021",
-        "code": "a.hk.oh"
-      }
-    ],
-    "fileCount": 6,
-    "files": [
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\combat\\potions.js",
-      "src\\engine\\modules\\combat\\scrolls.js",
-      "src\\engine\\modules\\loot\\items.js",
-      "src\\engine\\modules\\loot\\treasure.js"
-    ]
-  },
-  {
     "name": "ah",
     "reads": 1,
     "writes": 11,
@@ -146,104 +45,6 @@
     "files": [
       "src\\engine\\modules\\content\\balance.js",
       "src\\engine\\modules\\progression\\upgrades.js"
-    ]
-  },
-  {
-    "name": "xh",
-    "reads": 2,
-    "writes": 10,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:34",
-        "code": "d.xh"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:35",
-        "code": "d.xh"
-      },
-      {
-        "loc": "src\\engine\\modules\\runtime\\game.js:223",
-        "code": "xh: {\n  opened: game.terrainSprites.getSprite(\"L2_Chest02.PNG\"),\n  closed: game.terrainSprites.getSprite(\"L2_Chest01.PNG\")\n}"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\loot\\treasure.js",
-      "src\\engine\\modules\\runtime\\game.js"
-    ]
-  },
-  {
-    "name": "hh",
-    "reads": 2,
-    "writes": 10,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:34",
-        "code": "d.hh"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:35",
-        "code": "d.hh"
-      },
-      {
-        "loc": "src\\engine\\modules\\runtime\\game.js:227",
-        "code": "hh: {\n  opened: game.terrainSprites.getSprite(\"L2_Chest04.PNG\"),\n  closed: game.terrainSprites.getSprite(\"L2_Chest03.PNG\")\n}"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\loot\\treasure.js",
-      "src\\engine\\modules\\runtime\\game.js"
-    ]
-  },
-  {
-    "name": "yh",
-    "reads": 10,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:51",
-        "code": "this.yh"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:122",
-        "code": "this.yh"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:123",
-        "code": "this.yh"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\loot\\treasure.js",
-      "src\\engine\\modules\\world\\generation.js",
-      "src\\engine\\modules\\world\\rooms.js"
-    ]
-  },
-  {
-    "name": "jh",
-    "reads": 2,
-    "writes": 10,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:81",
-        "code": "c.jh"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:575",
-        "code": "Ea.definition.jh"
-      },
-      {
-        "loc": "src\\engine\\modules\\runtime\\game.js:222",
-        "code": "jh: false"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\loot\\treasure.js",
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\runtime\\game.js"
     ]
   },
   {
@@ -4603,15 +4404,15 @@
     "samples": [
       {
         "loc": "src\\engine\\modules\\characters\\character.js:997",
-        "code": "a.rh.Xl"
+        "code": "a.targetGoldDrop.Xl"
       },
       {
         "loc": "src\\engine\\modules\\characters\\character.js:1002",
-        "code": "a.rh.Xl"
+        "code": "a.targetGoldDrop.Xl"
       },
       {
         "loc": "src\\engine\\modules\\characters\\character.js:1003",
-        "code": "a.rh.Xl"
+        "code": "a.targetGoldDrop.Xl"
       }
     ],
     "fileCount": 4,

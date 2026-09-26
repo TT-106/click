@@ -219,12 +219,12 @@ export function initializeRuntimeGame() {
       ta.targetDefinitions.push({
         settingsId: "chest1",
         kind: 1,
-        jh: false,
-        xh: {
+        flushPlacement: false,
+        westWallVariants: {
           opened: game.terrainSprites.getSprite("L2_Chest02.PNG"),
           closed: game.terrainSprites.getSprite("L2_Chest01.PNG")
         },
-        hh: {
+        standardVariants: {
           opened: game.terrainSprites.getSprite("L2_Chest04.PNG"),
           closed: game.terrainSprites.getSprite("L2_Chest03.PNG")
         }
@@ -232,12 +232,12 @@ export function initializeRuntimeGame() {
       ta.targetDefinitions.push({
         settingsId: "chest2",
         kind: 1,
-        jh: false,
-        xh: {
+        flushPlacement: false,
+        westWallVariants: {
           opened: game.terrainSprites.getSprite("L2_Chest06.PNG"),
           closed: game.terrainSprites.getSprite("L2_Chest05.PNG")
         },
-        hh: {
+        standardVariants: {
           opened: game.terrainSprites.getSprite("L2_Chest08.PNG"),
           closed: game.terrainSprites.getSprite("L2_Chest07.PNG")
         }
@@ -245,12 +245,12 @@ export function initializeRuntimeGame() {
       ta.targetDefinitions.push({
         settingsId: "chest3",
         kind: 1,
-        jh: false,
-        xh: {
+        flushPlacement: false,
+        westWallVariants: {
           opened: game.terrainSprites.getSprite("L2_Chest10.PNG"),
           closed: game.terrainSprites.getSprite("L2_Chest09.PNG")
         },
-        hh: {
+        standardVariants: {
           opened: game.terrainSprites.getSprite("L2_Chest12.PNG"),
           closed: game.terrainSprites.getSprite("L2_Chest11.PNG")
         }
@@ -258,12 +258,12 @@ export function initializeRuntimeGame() {
       ta.targetDefinitions.push({
         settingsId: "chest4",
         kind: 1,
-        jh: false,
-        xh: {
+        flushPlacement: false,
+        westWallVariants: {
           opened: game.terrainSprites.getSprite("L2_Chest14.PNG"),
           closed: game.terrainSprites.getSprite("L2_Chest13.PNG")
         },
-        hh: {
+        standardVariants: {
           opened: game.terrainSprites.getSprite("L2_Chest16.PNG"),
           closed: game.terrainSprites.getSprite("L2_Chest15.PNG")
         }
@@ -271,12 +271,12 @@ export function initializeRuntimeGame() {
       ta.targetDefinitions.push({
         settingsId: "rack1",
         kind: 2,
-        jh: true,
-        xh: {
+        flushPlacement: true,
+        westWallVariants: {
           opened: game.terrainSprites.getSprite("L3_Wall_WeapRack1_EW.PNG"),
           closed: game.terrainSprites.getSprite("L3_Wall_WeapRack2_EW.PNG")
         },
-        hh: {
+        standardVariants: {
           opened: game.terrainSprites.getSprite("L3_Wall_WeapRack1_NS.PNG"),
           closed: game.terrainSprites.getSprite("L3_Wall_WeapRack2_NS.PNG")
         }
@@ -284,12 +284,12 @@ export function initializeRuntimeGame() {
       ta.targetDefinitions.push({
         settingsId: "rack2",
         kind: 2,
-        jh: true,
-        xh: {
+        flushPlacement: true,
+        westWallVariants: {
           opened: game.terrainSprites.getSprite("L3_Wall_WeapRack1_EW.PNG"),
           closed: game.terrainSprites.getSprite("L3_Wall_WeapRack3_EW.PNG")
         },
-        hh: {
+        standardVariants: {
           opened: game.terrainSprites.getSprite("L3_Wall_WeapRack1_NS.PNG"),
           closed: game.terrainSprites.getSprite("L3_Wall_WeapRack3_NS.PNG")
         }
@@ -297,12 +297,12 @@ export function initializeRuntimeGame() {
       ta.targetDefinitions.push({
         settingsId: "rack3",
         kind: 2,
-        jh: true,
-        xh: {
+        flushPlacement: true,
+        westWallVariants: {
           opened: game.terrainSprites.getSprite("L3_Wall_WeapRack1_EW.PNG"),
           closed: game.terrainSprites.getSprite("L3_Wall_WeapRack4_EW.PNG")
         },
-        hh: {
+        standardVariants: {
           opened: game.terrainSprites.getSprite("L3_Wall_WeapRack1_NS.PNG"),
           closed: game.terrainSprites.getSprite("L3_Wall_WeapRack4_NS.PNG")
         }
@@ -310,12 +310,12 @@ export function initializeRuntimeGame() {
       ta.targetDefinitions.push({
         settingsId: "rack4",
         kind: 2,
-        jh: true,
-        xh: {
+        flushPlacement: true,
+        westWallVariants: {
           opened: game.terrainSprites.getSprite("L3_Wall_WeapRack5_EW.PNG"),
           closed: game.terrainSprites.getSprite("L3_Wall_WeapRack6_EW.PNG")
         },
-        hh: {
+        standardVariants: {
           opened: game.terrainSprites.getSprite("L3_Wall_WeapRack5_NS.PNG"),
           closed: game.terrainSprites.getSprite("L3_Wall_WeapRack6_NS.PNG")
         }
@@ -323,12 +323,12 @@ export function initializeRuntimeGame() {
       ta.targetDefinitions.push({
         settingsId: "case1",
         kind: 3,
-        jh: true,
-        xh: {
+        flushPlacement: true,
+        westWallVariants: {
           opened: game.terrainSprites.getSprite("L3_WallDeco04.PNG"),
           closed: game.terrainSprites.getSprite("L3_WallDeco04.PNG")
         },
-        hh: {
+        standardVariants: {
           opened: game.terrainSprites.getSprite("L3_WallDeco03.PNG"),
           closed: game.terrainSprites.getSprite("L3_WallDeco03.PNG")
         }
@@ -336,12 +336,12 @@ export function initializeRuntimeGame() {
       ta.targetDefinitions.push({
         settingsId: "case2",
         kind: 3,
-        jh: true,
-        xh: {
+        flushPlacement: true,
+        westWallVariants: {
           opened: game.terrainSprites.getSprite("L3_WallDeco14.PNG"),
           closed: game.terrainSprites.getSprite("L3_WallDeco14.PNG")
         },
-        hh: {
+        standardVariants: {
           opened: game.terrainSprites.getSprite("L3_WallDeco13.PNG"),
           closed: game.terrainSprites.getSprite("L3_WallDeco13.PNG")
         }
@@ -459,7 +459,7 @@ export function initializeRuntimeGame() {
       clearMonsters();
       clearMinions();
       for (var b, a = /** @type {any} */ (0); a < game.state.adventurers.length; a++) {
-        if (b = game.state.adventurers[a], b.summonedMinions = null, b.companion = null, b.combatTarget = null, b.rh = null, b.Zh = null, b.hk = null, b.bj = null, b.targetTreasureChest = null, b.spellToCast = null, b.au = -3 * getAttackCooldown(b.stats, true), b.spells && 0 < b.spells.length) {
+        if (b = game.state.adventurers[a], b.summonedMinions = null, b.companion = null, b.combatTarget = null, b.targetGoldDrop = null, b.Zh = null, b.hk = null, b.bj = null, b.targetTreasureChest = null, b.spellToCast = null, b.au = -3 * getAttackCooldown(b.stats, true), b.spells && 0 < b.spells.length) {
           for (var c = 0; c < b.spells.length; c++) {
             resetSpellCooldown(b.spells[c]);
           }

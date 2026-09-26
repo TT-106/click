@@ -572,7 +572,7 @@ export function initializeRenderingScene() {
             Fa = projectWorldX(La, wa);
             ha = projectWorldY(La, wa);
             Ga = Ea.opened ? Ea.openedSpriteName : Ea.closedSpriteName;
-            if (Ea.definition.jh) {
+            if (Ea.definition.flushPlacement) {
               a.spriteRenderer.gx(Ga, La, wa, Fa, ha, Ga.spriteSheet.spriteSize, 0);
             } else {
               a.spriteRenderer.dk(Ga, La, wa, Fa, ha, Ga.spriteSheet.spriteSize, 0);

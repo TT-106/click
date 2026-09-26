@@ -32,7 +32,7 @@ export function AdventurerSummaryView(a) {
   this.Dy = "adventurerSpiritPowerSlider" + a;
   this.Cy = "adventurerSpiritPower" + a;
   this.nn = this.Ak = this.pk = this.ok = this.zk = null;
-  this.uv = this.sv = this.rv = this.tv = this.$f = this.rr = this.pr = this.or = this.qr = this.mv = this.Jk = this.kv = this.av = -1;
+  this.uv = this.sv = this.rv = this.tv = this.cachedLevel = this.rr = this.pr = this.or = this.qr = this.mv = this.Jk = this.kv = this.av = -1;
   this.qm = [null, null, null, null, null, null];
   this.lk = [null, null, null, null, null, null];
   this.Dm = [0, 0, 0, 0, 0, 0];
@@ -251,7 +251,7 @@ export function initializeViewsExpedition() {
         this.nn = createElement("div", getElement(this.elementId), null, "gameTabBlankAdventurerInfo");
       }
     } else {
-      this.vj = this.rr = this.pr = this.or = this.qr = this.mv = this.Jk = this.kv = this.av = this.$f = -1;
+      this.vj = this.rr = this.pr = this.or = this.qr = this.mv = this.Jk = this.kv = this.av = this.cachedLevel = -1;
       var a;
       for (a = 0; a < this.qm.length; a++) {
         this.qm[a] = null;
@@ -384,8 +384,8 @@ export function initializeViewsExpedition() {
           this.Jk = f;
           this.mv = g;
         }
-        if (this.$f !== b) {
-          this.$f = b;
+        if (this.cachedLevel !== b) {
+          this.cachedLevel = b;
           setElementHtml(this.By, "等级" + b + " " + game.state.adventurers[this.adventurerIndex].classDefinition.className);
         }
         if (this.qr !== h) {

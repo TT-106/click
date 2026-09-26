@@ -31,8 +31,8 @@ export function TreasureChest(a, b, c, d, f) {
   this.levelY = b;
   this.room = c;
   this.opened = false;
-  this.closedSpriteName = f ? d.xh.closed : d.hh.closed;
-  this.openedSpriteName = f ? d.xh.opened : d.hh.opened;
+  this.closedSpriteName = f ? d.westWallVariants.closed : d.standardVariants.closed;
+  this.openedSpriteName = f ? d.westWallVariants.opened : d.standardVariants.opened;
   this.kind = d.kind;
   this.westWall = f;
   this.definition = d;
@@ -48,7 +48,7 @@ export function TreasureRegistry() {
   this.targets = [];
   this.targetByRoomId = {};
   this.targetDefinitions = [];
-  this.yh = new Vector2();
+  this.spawnPointScratch = new Vector2();
 }
 export function spawnRoomTreasure(a) {
   var b = game.treasure;
@@ -78,7 +78,7 @@ export function spawnRoomTreasure(a) {
     if (f = g) {
       g = f.x * game.tileSize;
       f = f.y * game.tileSize;
-      if (!c.jh) {
+      if (!c.flushPlacement) {
         if (d) {
           g += game.tileSize;
         } else {
@@ -97,7 +97,7 @@ export function getRoomTreasure(a, b) {
   return b ? a.targetByRoomId[b.roomId] : null;
 }
 export function initializeLootTreasure() {
-  GoldDrop.prototype.oh = function (a) {
+  GoldDrop.prototype.setCollected = function (a) {
     this.collected = a;
   };
   GoldDrop.prototype.setClaimedBy = function (a) {
@@ -119,13 +119,13 @@ export function initializeLootTreasure() {
   TreasureRegistry.prototype.Xw = function (a) {
     var b = a.tileRow;
     a = a.tileColumn + randomInt(a.widthInTiles);
-    setVector(this.yh, a, b - 1);
-    return this.yh;
+    setVector(this.spawnPointScratch, a, b - 1);
+    return this.spawnPointScratch;
   };
   TreasureRegistry.prototype.Zw = function (a) {
     var b = a.tileColumn;
     a = a.tileRow + randomInt(a.heightInTiles);
-    setVector(this.yh, b - 1, a);
-    return this.yh;
+    setVector(this.spawnPointScratch, b - 1, a);
+    return this.spawnPointScratch;
   };
 }

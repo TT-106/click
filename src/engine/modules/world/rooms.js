@@ -154,7 +154,7 @@ export function revealRoom(a) {
     b = game.decorations;
     if (!(!p || 0 === p.length || 0.2 > b.seededRandom.random() || !(p = 1 === p.length ? p[0] : randomIntFrom(b.seededRandom, p.length)))) {
       if (p.Oo && 0 < p.Oo.length) {
-        if (g = a.tileColumn, d = a.tileRow, f = d + a.heightInTiles - 1, g = g + 1 + randomIntFrom(b.seededRandom, g + a.widthInTiles - 1 - g - 2), d = d + 1 + randomIntFrom(b.seededRandom, f - d - 2), setVector(b.yh, g, d), f = b.yh, d = h[f.x][f.y], d) {
+        if (g = a.tileColumn, d = a.tileRow, f = d + a.heightInTiles - 1, g = g + 1 + randomIntFrom(b.seededRandom, g + a.widthInTiles - 1 - g - 2), d = d + 1 + randomIntFrom(b.seededRandom, f - d - 2), setVector(b.spawnPointScratch, g, d), f = b.spawnPointScratch, d = h[f.x][f.y], d) {
           if (!d.decorationSprite) {
             if (f = p.Oo[randomIntFrom(b.seededRandom, p.Oo.length)]) {
               d.setDecorationSprite(game.terrainSprites.getSprite(f));

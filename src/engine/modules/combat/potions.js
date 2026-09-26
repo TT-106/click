@@ -246,7 +246,7 @@ export function initializeCombatPotions() {
       game.state.statisticsRecorder.recordPotionUsed();
     }
   };
-  PotionDrop.prototype.oh = function (a) {
+  PotionDrop.prototype.setCollected = function (a) {
     this.collected = a;
   };
   PotionDrop.prototype.setClaimedBy = function (a) {

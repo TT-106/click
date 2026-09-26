@@ -24,7 +24,7 @@ export function MonsterRowView(a, b) {
   this.lh = a;
   this.monsterType = b;
   this.progressTextElement = this.progressFillElement = this.progressCell = this.xo = this.$n = this.Yn = this.vo = this.Ij = this.Mo = this.wq = this.yq = this.Es = null;
-  this.Sv = this.$f = this.Jh = this.Uv = -1;
+  this.Sv = this.cachedLevel = this.Jh = this.Uv = -1;
   this.dx = 80;
   this.Cp = null;
   (/** @type {any} */ (this)).createRowCells();
@@ -39,20 +39,20 @@ export function MonsterLevelTabView(a, b) {
 export function MonsterView(a) {
   this.elementId = "monstersTabContent";
   this.tabState = a;
-  this.zg = [];
+  this.levelTables = [];
   for (a = 0; a < VISIBLE_MONSTER_LEVELS; a++) {
-    this.zg.push(mountMonsterTable(a, a + 1));
+    this.levelTables.push(mountMonsterTable(a, a + 1));
   }
   var b = new TabBar("monsterTabMenu");
-  for (a = 0; a < this.zg.length; a++) {
-    addTab(b, this.zg[a].tabState);
+  for (a = 0; a < this.levelTables.length; a++) {
+    addTab(b, this.levelTables[a].tabState);
   }
   addChildView(this, new MonsterUpgradeSummaryView());
   addChildView(this, new MonsterLevelView());
   addChildView(this, new UpgradeListView("monsterUpgradeButtonsContainer", monsterUpgradeCollection, false));
   addChildView(this, b);
-  for (a = 0; a < this.zg.length; a++) {
-    addChildView(this, this.zg[a].view);
+  for (a = 0; a < this.levelTables.length; a++) {
+    addChildView(this, this.levelTables[a].view);
   }
 }
 export function mountMonsterTable(a, b) {
@@ -81,8 +81,8 @@ export function updateMonsterTabLabels(a) {
     c = game.monsterCatalog.minUnlockedLevel,
     d,
     f;
-  for (f = 0; f < a.zg.length; f++) {
-    d = a.zg[f];
+  for (f = 0; f < a.levelTables.length; f++) {
+    d = a.levelTables[f];
     b = d.view.level;
     if (b !== c) {
       d.tabState.label = "等级 " + c;
@@ -97,8 +97,8 @@ export function refreshMonsterTabVisibility(a) {
     d,
     f,
     g = false;
-  for (c = 0; c < a.zg.length; c++) {
-    f = a.zg[c];
+  for (c = 0; c < a.levelTables.length; c++) {
+    f = a.levelTables[c];
     d = f.view.level;
     d = b.minUnlockedLevel <= d && d <= b.maxUnlockedLevel;
     f.tabState.enabled = d;
@@ -108,9 +108,9 @@ export function refreshMonsterTabVisibility(a) {
     }
   }
   if (g) {
-    for (c = 0; c < a.zg.length; c++) {
-      if (a.zg[c].tabState.enabled) {
-        a.zg[c].tabState.selected = true;
+    for (c = 0; c < a.levelTables.length; c++) {
+      if (a.levelTables[c].tabState.enabled) {
+        a.levelTables[c].tabState.selected = true;
         break;
       }
     }
@@ -251,7 +251,7 @@ export function initializeViewsMonsters() {
     this.progressTextElement.style.zIndex = "10";
   };
   MonsterRowView.prototype.reset = function () {
-    this.Jh = this.Uv = this.$f = this.Sv = -1;
+    this.Jh = this.Uv = this.cachedLevel = this.Sv = -1;
   };
   MonsterRowView.prototype.render = function () {
     var a = this.monsterType.ml,
@@ -259,7 +259,7 @@ export function initializeViewsMonsters() {
       c = this.monsterType.xq,
       d = Math.min(1, a / b),
       d = this.dx * d | 0;
-    if (this.$f != this.monsterType.level || this.Sv != this.monsterType.Sj) {
+    if (this.cachedLevel != this.monsterType.level || this.Sv != this.monsterType.Sj) {
       this.Mo.innerHTML = formatAmount(this.monsterType.No);
       this.Ij.innerHTML = formatAmount(this.monsterType.$o);
       this.vo.innerHTML = formatAmount(this.monsterType.Gp);
@@ -267,12 +267,12 @@ export function initializeViewsMonsters() {
       this.$n.innerHTML = formatAmount(this.monsterType.Fp);
       this.xo.innerHTML = formatAmount(this.monsterType.Hp);
       this.wq.innerHTML = formatAmount(this.monsterType.Sj);
-      if (this.$f != this.monsterType.level) {
+      if (this.cachedLevel != this.monsterType.level) {
         this.Es.innerHTML = this.monsterType.Vk();
         var f = this.monsterType.ll;
         this.Cp.style.background = "url('spritesheet/monsters.png') -" + f.sourceX + "px -" + (f.sourceY + 10) + "px";
       }
-      this.$f = this.monsterType.level;
+      this.cachedLevel = this.monsterType.level;
       this.Sv = this.monsterType.Sj;
     }
     if (this.Uv !== c) {
