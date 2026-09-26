@@ -27,7 +27,7 @@ import { MELEE_ATTACK_RANGE, RANGED_ATTACK_RANGE } from "../content/classes.js";
 export function CombatAction() {
   this.Jc = 0;
   this.yd = this.Vn = this.Rd = false;
-  this.xb = this.Xb = this.attacker = this.targetCharacter = this.actionDefinition = null;
+  this.impactEffect = this.projectileEffect = this.attacker = this.targetCharacter = this.actionDefinition = null;
   this.ut = this.Xs = false;
   this.chainCount = this.Ys = 0;
   this.pl = null;
@@ -58,7 +58,7 @@ export function clearCombatQueue() {
   }
 }
 export function advanceCombatAction(a, b) {
-  var c = b.xb;
+  var c = b.impactEffect;
   if (c && !c.Cj) {
     if (b.Rd) {
       return b.Vn = true;
@@ -81,7 +81,7 @@ export function advanceCombatAction(a, b) {
       }
     }
   }
-  if ((d = b.xb) && d.bx !== d.oc) {
+  if ((d = b.impactEffect) && d.bx !== d.oc) {
     var f = d.To();
     if (b.actionDefinition) {
       var g = b.targetCharacter,
@@ -152,10 +152,10 @@ export function applySpellEffect(a, b) {
       }
     }
   } else if (10 === d || 9 === d) {
-    summonSpellMinion(c, b.attacker, b.xb.xi);
+    summonSpellMinion(c, b.attacker, b.impactEffect.xi);
   } else if (11 === d) {
     d = b.attacker;
-    g = b.xb.xi;
+    g = b.impactEffect.xi;
     h = b.targetCharacter;
     f = game.monsters;
     if (h) {
@@ -167,7 +167,7 @@ export function applySpellEffect(a, b) {
     summonSpellMinion(c, d, g);
   } else if (17 === d) {
     c = b.attacker;
-    d = b.xb.xi;
+    d = b.impactEffect.xi;
     h = c.stats;
     g = h.ku;
     f = h.lu;
@@ -465,7 +465,7 @@ export function createAttackAction(a, b, c) {
       f = new VisualEffect(getProjectileAnimation(b, null), f, c, true, 1);
     }
     f.ud = a;
-    d.Xb = f;
+    d.projectileEffect = f;
     a = a.stats.Ir();
     if (0 < a) {
       d.Xs = true;
@@ -487,7 +487,7 @@ export function createAttackAction(a, b, c) {
       a = new VisualEffect("Red Splat", c, c, false, 1);
     }
   }
-  d.xb = a;
+  d.impactEffect = a;
   enqueueCombatAction(game.combatQueue, d);
 }
 export function createSpellAction(a) {
@@ -510,11 +510,11 @@ export function createSpellAction(a) {
   if (h) {
     h = new VisualEffect(h, g, f, true, 1);
     h.ud = a;
-    d.Xb = h;
+    d.projectileEffect = h;
   }
   if (h = c.impactEffectName) {
     f = new VisualEffect(h, g, f, false, 1);
-    d.xb = f;
+    d.impactEffect = f;
   }
   c = c.spellCategoryId;
   if (4 === c) {
@@ -617,11 +617,11 @@ export function createChainAction(a) {
   if (!d) {
     return null;
   }
-  var f = a.Xb;
+  var f = a.projectileEffect;
   if (!f) {
     return null;
   }
-  var g = a.xb;
+  var g = a.impactEffect;
   if (!g) {
     return null;
   }
@@ -631,9 +631,9 @@ export function createChainAction(a) {
   h.attacker = a.attacker;
   h.Cb(d);
   g = new VisualEffect(g.impactEffectName, l, n, false, 1);
-  h.xb = g;
+  h.impactEffect = g;
   f = new VisualEffect(f.impactEffectName, l, n, true, 1);
-  h.Xb = f;
+  h.projectileEffect = f;
   h.yd = true;
   d = calculateAttackDamage(a.attacker, d);
   h.Jc = d;
@@ -657,25 +657,25 @@ export function createReturningAction(a) {
     f.ut = true;
     f.Ys = 1;
     f.chainCount = 0;
-    c = a.Xb;
+    c = a.projectileEffect;
     d = a.attacker.position.levelPosition;
     var g = a.pl,
-      b = a.xb;
+      b = a.impactEffect;
     f.Rd = false;
     if (c) {
       c = new VisualEffect(c.impactEffectName, d, g, true, 1);
       c.Gs = true;
       c.ud = a.attacker;
-      f.Xb = c;
+      f.projectileEffect = c;
     }
     a = new VisualEffect(b.impactEffectName, d, g, false, 1);
-    f.xb = a;
+    f.impactEffect = a;
     return f;
   }
   if (b > c) {
     return null;
   }
-  d = a.xb;
+  d = a.impactEffect;
   if (!d) {
     return null;
   }
@@ -691,7 +691,7 @@ export function createReturningAction(a) {
   f.ut = true;
   f.chainCount = c;
   f.pl = a.pl;
-  var h = a.Xb,
+  var h = a.projectileEffect,
     b = d.xi,
     c = g.position.levelPosition;
   f.Cb(g);
@@ -702,10 +702,10 @@ export function createReturningAction(a) {
     g = new VisualEffect(h.impactEffectName, b, c, true, 1);
     g.Gs = true;
     g.ud = a.attacker;
-    f.Xb = g;
+    f.projectileEffect = g;
   }
   a = new VisualEffect(d.impactEffectName, b, c, false, 1);
-  f.xb = a;
+  f.impactEffect = a;
   return f;
 }
 export function initializeCombatActions() {

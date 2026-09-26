@@ -492,11 +492,11 @@ export function updateCharacter(a, b) {
                   if (Da) {
                     Gb = new VisualEffect(Da, mb, eb, true, 1);
                     Gb.ud = a;
-                    ta.Xb = Gb;
+                    ta.projectileEffect = Gb;
                   }
                   if (ub) {
                     var La = new VisualEffect(ub, mb, eb, false, 1);
-                    ta.xb = La;
+                    ta.impactEffect = La;
                   }
                   enqueueCombatAction(game.combatQueue, ta);
                 }
@@ -531,9 +531,9 @@ export function updateCharacter(a, b) {
                     mc = ja.position.levelPosition;
                     Sb = new VisualEffect(null, zb, mc, true, 2);
                     Sb.ud = a;
-                    Va.Xb = Sb;
+                    Va.projectileEffect = Sb;
                     var Hb = new VisualEffect(vb, mc, mc, false, 1);
-                    Va.xb = Hb;
+                    Va.impactEffect = Hb;
                     zb = mc;
                     Ma = Math.max(1, calculateAttackDamage(a, ja));
                     Va.Rd = 0 === Ma;
@@ -602,7 +602,7 @@ export function updateCharacter(a, b) {
                       if (qc) {
                         Tb = new VisualEffect(qc, Cb, Ra, true, 1);
                         Tb.ud = a;
-                        sa.Xb = Tb;
+                        sa.projectileEffect = Tb;
                       }
                       Ja = statValue(a.stats.damage);
                       sa.Rd = false;
@@ -611,7 +611,7 @@ export function updateCharacter(a, b) {
                       Db.ud = a;
                       Db.ew = kb;
                       Db.li = Ja;
-                      sa.xb = Db;
+                      sa.impactEffect = Db;
                       var gb = Qa.position,
                         rb = gb.room,
                         dc = game.level.Ai(gb.Ob()),
@@ -660,7 +660,7 @@ export function updateCharacter(a, b) {
                   if (ne) {
                     var Le = new VisualEffect(ne, me, tc, true, 1);
                     Le.ud = a;
-                    Ya.Xb = Le;
+                    Ya.projectileEffect = Le;
                   }
                   var Td = Na.impactEffectName;
                   if (Td) {
@@ -672,7 +672,7 @@ export function updateCharacter(a, b) {
                     Y.ud = a;
                     Y.ew = nf;
                     Y.li = oe;
-                    Ya.xb = Y;
+                    Ya.impactEffect = Y;
                     var Nc = a.stats.ho + 1,
                       gd = xb.position,
                       uc = gd.room,
@@ -758,12 +758,12 @@ export function updateCharacter(a, b) {
                     if (id) {
                       var jd = new VisualEffect(id, Tc, hd, true, 1);
                       jd.ud = Gc;
-                      Vb.Xb = jd;
+                      Vb.projectileEffect = jd;
                     }
                     var kd = ad.impactEffectName;
                     if (kd) {
                       var eg = new VisualEffect(kd, Tc, hd, false, 1);
-                      Vb.xb = eg;
+                      Vb.impactEffect = eg;
                       enqueueCombatAction(game.combatQueue, Vb);
                     } else {
                       console.log("error: summon spell has no effect name!");
@@ -803,12 +803,12 @@ export function updateCharacter(a, b) {
                       if (rf) {
                         var sf = new VisualEffect(rf, pf, qf, true, 1);
                         sf.ud = Ne;
-                        ld.Xb = sf;
+                        ld.projectileEffect = sf;
                       }
                       var Ch = fg.impactEffectName;
                       if (Ch) {
                         var gg = new VisualEffect(Ch, pf, qf, false, 1);
-                        ld.xb = gg;
+                        ld.impactEffect = gg;
                         enqueueCombatAction(game.combatQueue, ld);
                       } else {
                         console.log("error: summon spell has no effect name!");
@@ -835,12 +835,12 @@ export function updateCharacter(a, b) {
                 if (Dh) {
                   var ej = new VisualEffect(Dh, tf, uf, true, 1);
                   ej.ud = a;
-                  Md.Xb = ej;
+                  Md.projectileEffect = ej;
                 }
                 var hg = se.impactEffectName;
                 if (hg) {
                   var ig = new VisualEffect(hg, tf, uf, false, 1);
-                  Md.xb = ig;
+                  Md.impactEffect = ig;
                   var Eh = a.stats,
                     Sa = getSpellSpiritCost(Eh);
                   spendSpirit(Eh, Sa);
@@ -866,7 +866,7 @@ export function updateCharacter(a, b) {
                 var Gh = calculateSpellDamage(a, bd.targetCharacter);
                 bd.Jc = Gh;
                 bd.Rd = 0 === Gh;
-                var Hh = bd.Xb;
+                var Hh = bd.projectileEffect;
                 if (Hh) {
                   Hh.Gs = true;
                 }
@@ -969,11 +969,11 @@ export function updateCharacter(a, b) {
                       if (Af) {
                         mg = new VisualEffect(Af, Lh, lg, true, 1);
                         mg.ud = a;
-                        yd.Xb = mg;
+                        yd.projectileEffect = mg;
                       }
                       if (ng) {
                         var ul = new VisualEffect(ng, Lh, lg, false, 1);
-                        yd.xb = ul;
+                        yd.impactEffect = ul;
                       }
                       enqueueCombatAction(game.combatQueue, yd);
                     } else {

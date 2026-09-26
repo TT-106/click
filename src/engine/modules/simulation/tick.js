@@ -278,16 +278,16 @@ export function advanceSimulation(a) {
     za,
     nb = false;
   for (ha = 0; ha < Fa.kj.length; ha++) {
-    if (ja = Fa.kj[ha], Ga = ja.attacker, (za = ja.xb) && za.Io === TARGETED_EFFECT) {
+    if (ja = Fa.kj[ha], Ga = ja.attacker, (za = ja.impactEffect) && za.Io === TARGETED_EFFECT) {
       var fb;
       a: {
         var cb = ja,
-          Ua = cb.Xb;
+          Ua = cb.projectileEffect;
         if (Ua && !Ua.Cj) {
-          addVisualEffect(game.effects, cb.Xb);
+          addVisualEffect(game.effects, cb.projectileEffect);
         }
         if (!Ua || Ua.Pk || Ua.bg) {
-          var Va = cb.xb;
+          var Va = cb.impactEffect;
           if (!Va.Cj) {
             var mc = cb.actionDefinition;
             if (mc && 8 == mc.spellCategoryId) {
@@ -331,7 +331,7 @@ export function advanceSimulation(a) {
                     Wa.actionDefinition = Ib;
                     applySeparationForce(Ab, Ha, jb, Hb);
                     var cc = new VisualEffect(wb, jb, Bb, false, 1);
-                    Wa.xb = cc;
+                    Wa.impactEffect = cc;
                     pb = Math.max(1, calculateAttackDamage(zb, Ma));
                     Wa.Rd = false;
                     Wa.Jc = pb;
@@ -351,7 +351,7 @@ export function advanceSimulation(a) {
                   var qc = Qa.Wq.impactEffectName;
                   if (qc) {
                     var Fc = new VisualEffect(qc, sa, sa, false, 1);
-                    Tb.xb = Fc;
+                    Tb.impactEffect = Fc;
                   }
                   enqueueCombatAction(game.combatQueue, Tb);
                 }
@@ -377,7 +377,7 @@ export function advanceSimulation(a) {
     } else if (ja.yd) {
       var Cb = Fa,
         kb = ja,
-        Ra = kb.Xb;
+        Ra = kb.projectileEffect;
       if (Ra && !Ra.Cj) {
         addVisualEffect(game.effects, Ra);
       }
@@ -445,7 +445,7 @@ export function advanceSimulation(a) {
       Eb = a;
     ka.Cj = true;
     if (1 === ka.Io) {
-      if (ka.Xb && !ka.Pk) {
+      if (ka.projectileEffect && !ka.Pk) {
         assignVector(directionScratchVector, ka.xi);
         subtractVector(directionScratchVector, ka.wm);
         var xb = vectorLength(directionScratchVector),

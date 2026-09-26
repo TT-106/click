@@ -83,7 +83,7 @@ export function VisualEffect(a, b, c, d, f) {
   this.wm = f;
   this.xi = c;
   this.Pk = false;
-  this.Xb = d;
+  this.projectileEffect = d;
   this.bg = this.Cj = this.Gs = false;
   this.nd = a ? game.animations.Zg(a) : null;
   if (a && !this.nd) {
@@ -136,7 +136,7 @@ export function getEffectDirection(a) {
 }
 export function advanceEffectFrame(a, b) {
   a.yi += b * FRAME_DURATION_MS;
-  var c = a.Xb ? PROJECTILE_FRAME_DURATION_MS : EFFECT_FRAME_DURATION_MS;
+  var c = a.projectileEffect ? PROJECTILE_FRAME_DURATION_MS : EFFECT_FRAME_DURATION_MS;
   a.bx = a.oc;
   if (a.yi >= c) {
     var d = Math.min(1, floorNumber(a.yi / c));
@@ -150,7 +150,7 @@ export function advanceEffectFrame(a, b) {
           a.bg = true;
         }
       } else {
-        if (a.Xb) {
+        if (a.projectileEffect) {
           a.oc = 0;
         } else {
           a.bg = true;
