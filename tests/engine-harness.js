@@ -8,7 +8,7 @@ const resetRandom = () => { seed = 123456789; };
 Math.random = () => { seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0; return seed / 4294967296; };
 Date.now = () => fixedNow;
 const original = new URLSearchParams(location.search).has('original');
-let game, initialize, ready, snapshot, load, advance, isOffline, loopTick, restart, reset, syncLoopClock;
+let game, initialize, ready, snapshot, load, advance, isOffline, loopTick, restart, reset, syncLoopClock, upgradeCollections;
 if (original) {
   await new Promise((resolve, reject) => {
     const script = document.createElement('script');
@@ -30,6 +30,7 @@ if (original) {
   ({ game } = await import('../src/engine/modules/runtime/index.js'));
   const saves = await import('../src/engine/modules/persistence/game-save.js');
   const simulation = await import('../src/engine/modules/simulation/tick.js');
+  ({ upgradeCollections } = await import('../src/engine/modules/content/balance.js'));
   initialize = () => game.loop.tick();
   ready = () => game.initialized;
   snapshot = () => saves.createSaveState(game.saves);
@@ -145,6 +146,29 @@ window.harness = {
       }
     }
     return { applications, snapshot: snapshot() };
+  },
+  // U7：驱动"升级购买"这条只有视图层会触发的路径。视图里按钮的处理就是
+  // `if (upgrade.canPurchaseNow()) upgrade.purchase()`，这里按同一条判断驱动引擎侧对象。
+  // 不走 DOM：可购行是否渲染成 .upgradeButton 取决于排序后的可见槽位——实测 7 个 canPurchase
+  // 为真的升级对应的 558 个按钮全部是 disabledUpgradeButton，DOM 路线不稳定且只能覆盖一侧。
+  purchaseUpgrades({ turns = 0, limit = 8 } = {}) {
+    for (let i = 0; i < turns; i++) advance();
+    const collections = original ? window.Nx : upgradeCollections;
+    if (!Array.isArray(collections)) throw new Error('升级集合访问失败');
+    let purchased = 0;
+    for (const collection of collections) {
+      for (const group of (original ? collection.HC : collection.upgradeRows)) {
+        for (const upgrade of group) {
+          if (purchased >= limit) break;
+          const ready = original ? upgrade.qc() : upgrade.canPurchaseNow();
+          if (ready) {
+            if (original) upgrade.Qc(); else upgrade.purchase();
+            purchased++;
+          }
+        }
+      }
+    }
+    return { purchased, snapshot: snapshot() };
   }
 };
 

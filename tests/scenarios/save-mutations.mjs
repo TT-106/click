@@ -163,6 +163,15 @@ export function withResurrectionTrial(save, { casterIndex, victimIndexes }) {
 }
 
 /** 收集快照中与玩法相关的可观察量，用于"断言场景确实产生了变化"。 */
+/** 给全部冒险者发放技能点：让"技能升级"这条只有视图层能进入的购买路径变成可购。 */
+export function withSkillPoints(save, points) {
+  const out = clone(save);
+  for (const adventurer of out.adventurers) {
+    adventurer.skillPoints = points;
+  }
+  return out;
+}
+
 export function summarize(snapshot) {
   return {
     turn: snapshot.turnNumber,
