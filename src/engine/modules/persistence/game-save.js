@@ -102,7 +102,7 @@ export function restoreGameState(a, b) {
                     W.farmCost = H;
                     var ia = S ? S : 0;
                     W.dungeonType = ia;
-                    W.Aj = !(4 === ia || 5 === ia || 7 === ia || 8 === ia);
+                    W.hasSecondEntrance = !(4 === ia || 5 === ia || 7 === ia || 8 === ia);
                     W.Fo = getDungeonMapSprite(ia);
                     W.levelCount = da;
                     if (J) {
@@ -216,7 +216,7 @@ export function restoreGameState(a, b) {
           if (nb) {
             fb = nb.collectedGold;
           }
-          game.shops.ni = fb ? fb : 0;
+          game.shops.collectedGold = fb ? fb : 0;
           var cb = d.farms;
           if (cb) {
             var Ua;
@@ -237,7 +237,7 @@ export function restoreGameState(a, b) {
             var zb, Hb;
             if (game.currentDungeon) {
               zb = game.currentDungeon.dungeonType;
-              Hb = game.currentDungeon.Aj;
+              Hb = game.currentDungeon.hasSecondEntrance;
             } else {
               zb = 11;
               Hb = false;
@@ -756,7 +756,7 @@ export function createSaveState(a) {
         dungeonStates: N
       },
       la = {
-        collectedGold: game.shops.ni
+        collectedGold: game.shops.collectedGold
       },
       Q = game.castles.Uj,
       V = [],

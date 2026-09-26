@@ -20,7 +20,7 @@ export function DungeonLayoutGenerator(a, b, c, d, f) {
   this.fl = a;
   this.Nj = b;
   this.tileGrid = c;
-  this.Aj = f;
+  this.hasSecondEntrance = f;
   this.iB = ROOM_SPACING;
   this.Ow = MIN_ROOM_DIMENSION;
   this.xA = MAX_ROOM_SIZE;
@@ -338,8 +338,8 @@ export function initializeWorldGeneration() {
         isLastLevel = true;
       }
     }
-    const secondEntrance = isLastLevel ? !this.Aj : this.Aj;
-    this.entranceDoor = methods.to(a, !this.Aj);
+    const secondEntrance = isLastLevel ? !this.hasSecondEntrance : this.hasSecondEntrance;
+    this.entranceDoor = methods.to(a, !this.hasSecondEntrance);
     this.exitDoor = methods.to(b, secondEntrance);
     return null != this.entranceDoor && null != this.exitDoor;
   };

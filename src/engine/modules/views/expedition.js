@@ -176,7 +176,7 @@ export function PotionButtonView(a, b) {
   this.TA = b;
   this.yo = this.sm = null;
   this.gu = 192;
-  this.Pp = this.Op = this.Tp = this.yj = this.Si = this.progressFillElement = this.km = null;
+  this.Pp = this.Op = this.Tp = this.yj = this.tableElement = this.progressFillElement = this.km = null;
   this.ak = false;
   this.cachedFillWidth = -1;
   this.Sp = this.Bo = false;
@@ -184,9 +184,9 @@ export function PotionButtonView(a, b) {
 export function mountPotionButton(a) {
   a.km = createElement("div", getElement(a.elementId), null, "potionContentContainer");
   a.Sp = a.TA >= BASE_POTION_CAPACITY + potionCapacityBonus.currentValue;
-  a.Si = createElement("table", a.km, null, a.Sp ? "potionButtonLocked" : "potionButtonDisabled");
-  var b = a.Si.insertRow(0),
-    c = a.Si.insertRow(1),
+  a.tableElement = createElement("table", a.km, null, a.Sp ? "potionButtonLocked" : "potionButtonDisabled");
+  var b = a.tableElement.insertRow(0),
+    c = a.tableElement.insertRow(1),
     d = b.insertCell(0);
   d.rowSpan = 2;
   a.Tp = b.insertCell(1);
@@ -662,26 +662,26 @@ export function initializeViewsExpedition() {
   PotionButtonView.prototype = new View();
   PotionButtonView.prototype.reset = function () {
     clearElementById(this.elementId);
-    this.Pp = this.Op = this.Tp = this.yj = this.Si = this.progressFillElement = this.km = this.yo = this.sm = this.potion = null;
+    this.Pp = this.Op = this.Tp = this.yj = this.tableElement = this.progressFillElement = this.km = this.yo = this.sm = this.potion = null;
     this.ak = this.Sp = false;
   };
   PotionButtonView.prototype.update = function () {
-    if (!this.Si) {
+    if (!this.tableElement) {
       mountPotionButton(this);
     }
     if (this.Sp && this.TA < BASE_POTION_CAPACITY + potionCapacityBonus.currentValue) {
       this.Sp = false;
-      this.Si.className = "potionButtonDisabled";
+      this.tableElement.className = "potionButtonDisabled";
     }
     if (this.potion) {
       if (!this.sm) {
-        showElement(this.Si);
+        showElement(this.tableElement);
       }
       var a;
       a = (a = this.potion) ? !a.active && isPotionModifierActive(a) ? "potionButtonDisabled" : a.active ? "potionButtonActive" : "potionButton" : "potionButtonDisabled";
       if (this.yo != a) {
         this.yo = a;
-        this.Si.className = a;
+        this.tableElement.className = a;
       }
       if (this.potion != this.sm) {
         this.Tp.innerHTML = this.potion.displayName;
@@ -726,7 +726,7 @@ export function initializeViewsExpedition() {
           this.ak = false;
         }
         this.yo = "potionButtonDisabled";
-        this.Si.className = this.yo;
+        this.tableElement.className = this.yo;
       }
     }
   };

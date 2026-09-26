@@ -12,7 +12,7 @@ export function Inventory() {
 }
 export function addInventoryItem(a, b) {
   if (a.items.length < a.vp) {
-    b.nj = a.Bw;
+    b.inventory = a.Bw;
     a.items.push(b);
     a.ip = true;
     sortInventory(game.inventories, a.items);
@@ -36,7 +36,7 @@ export function addInventoryItem(a, b) {
     c = d;
     if (-1 < c && isBetterItem(b, a.items[c])) {
       removeInventoryItemAt(a, c);
-      b.nj = a.Bw;
+      b.inventory = a.Bw;
       a.items.push(b);
       a.ip = true;
       sortInventory(game.inventories, a.items);
@@ -45,7 +45,7 @@ export function addInventoryItem(a, b) {
 }
 export function removeInventoryItemAt(a, b) {
   if (-1 !== b) {
-    a.items[b].nj = null;
+    a.items[b].inventory = null;
     a.items.splice(b, 1);
     a.ip = true;
   }

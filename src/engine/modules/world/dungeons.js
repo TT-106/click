@@ -16,7 +16,7 @@ export function Dungeon(a, b, c, d, f, g, h, l, n) {
   this.dungeonName = b;
   this.dungeonType = c;
   this.farmCost = 0;
-  this.Aj = !(4 === c || 5 === c || 7 === c || 8 === c);
+  this.hasSecondEntrance = !(4 === c || 5 === c || 7 === c || 8 === c);
   this.Fo = getDungeonMapSprite(c);
   this.conquered = this.isFarm = this.cleared = this.discovered = false;
   this.farmStartTurn = this.clearedTurn = 0;
@@ -171,13 +171,13 @@ export function Shop(a, b, c) {
 export function ShopRegistry() {
   this.ht = [];
   this.zx = {};
-  this.ni = 0;
+  this.collectedGold = 0;
   this.tB = "L2_Terrain089.PNG L2_Terrain077.PNG L2_Terrain077.PNG L2_Terrain076.PNG L2_Terrain078.PNG L2_Terrain079.PNG L2_Terrain083.PNG L2_Terrain084.PNG L2_Terrain085.PNG".split(" ");
 }
 export function resetShops() {
   var a = game.shops;
   a.ht.length = 0;
-  a.ni = 0;
+  a.collectedGold = 0;
   a.zx = {};
 }
 export function randomShopSprite(a) {
@@ -213,7 +213,7 @@ export function initializeWorldDungeons() {
     resetEncounter();
     game.state.statisticsRecorder.$r();
     if (this.currentLevelIndex < this.levelCount) {
-      generateDungeonLevel((/** @type {any} */ (this)).er(), this.dungeonType, this.Aj, true);
+      generateDungeonLevel((/** @type {any} */ (this)).er(), this.dungeonType, this.hasSecondEntrance, true);
       awardAdventurePoints(POINT_EVENT_LEVEL_CLEARED);
       recordGameEvent("Dungeon", "进入等级" + this.currentLevelIndex);
     } else {

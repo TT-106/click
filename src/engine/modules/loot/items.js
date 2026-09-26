@@ -69,7 +69,7 @@ export function Item(a, b, c, d, f, g, h, l, n, p) {
   this.itemValue = l;
   this.characteristic = n;
   this.itemEffect = p;
-  this.nj = null;
+  this.inventory = null;
 }
 export function isBetterItem(a, b) {
   return !b || a.itemValue > b.itemValue;
@@ -200,7 +200,7 @@ export function generateItem(a, b, c, d, f) {
   }
   a = formatItemName(g.baseName, a);
   b = new Item(g, b, c.characterClass, a, d, f, s, n, l, p);
-  b.nj = c;
+  b.inventory = c;
   return b;
 }
 export function getClassStatMultiplier(a, b) {

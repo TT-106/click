@@ -17,7 +17,7 @@ export function Equipment(a, b) {
 export function CharacterPosition(a, b) {
   this.velocity = new Vector2();
   this.steeringVector = null;
-  this.lj = new Vector2();
+  this.separationVector = new Vector2();
   this.Tl = new Vector2();
   this.separationDelta = new Vector2();
   this.Jw = b;
@@ -89,7 +89,7 @@ export function findCheapestNeighbor(a, b) {
   return l;
 }
 export function separateDungeonCharacters(a) {
-  setVector(a.lj, 0, 0);
+  setVector(a.separationVector, 0, 0);
   var b,
     c,
     d = false,
@@ -111,7 +111,7 @@ export function separateDungeonCharacters(a) {
         subtractVector(a.separationDelta, b.levelPosition);
       }
       normalizeVector(a.separationDelta);
-      addVector(a.lj, a.separationDelta);
+      addVector(a.separationVector, a.separationDelta);
       d = true;
     }
   }
@@ -128,7 +128,7 @@ export function separateDungeonCharacters(a) {
           subtractVector(a.separationDelta, b.levelPosition);
         }
         normalizeVector(a.separationDelta);
-        addVector(a.lj, a.separationDelta);
+        addVector(a.separationVector, a.separationDelta);
         d = true;
       }
     }
@@ -146,14 +146,14 @@ export function separateDungeonCharacters(a) {
           subtractVector(a.separationDelta, b.levelPosition);
         }
         normalizeVector(a.separationDelta);
-        addVector(a.lj, a.separationDelta);
+        addVector(a.separationVector, a.separationDelta);
         d = true;
       }
     }
   }
   if (d) {
-    normalizeVector(a.lj);
-    multiplyVector(a.lj, 0.5);
+    normalizeVector(a.separationVector);
+    multiplyVector(a.separationVector, 0.5);
   }
   return d;
 }

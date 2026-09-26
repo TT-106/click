@@ -392,7 +392,7 @@ export function updateCharacter(a, b) {
           } else {
             if (separateDungeonCharacters(p)) {
               normalizeVector(p.velocity);
-              addVector(p.velocity, p.lj);
+              addVector(p.velocity, p.separationVector);
             }
             normalizeVector(p.velocity);
             multiplyVector(p.velocity, s);
@@ -410,7 +410,7 @@ export function updateCharacter(a, b) {
           } else {
             if (separateDungeonCharacters(p)) {
               normalizeVector(p.velocity);
-              addVector(p.velocity, p.lj);
+              addVector(p.velocity, p.separationVector);
             }
             normalizeVector(p.velocity);
             multiplyVector(p.velocity, s);
@@ -1030,7 +1030,7 @@ export function updateCharacter(a, b) {
           removeItemDrop(a.targetItemDrop);
           var Qe = a.targetItemDrop.getItem(),
             Cf = Qe.getRarity();
-          addInventoryItem(Qe.nj.inventory, Qe);
+          addInventoryItem(Qe.inventory.inventory, Qe);
           game.state.statisticsRecorder.recordItemFound(Qe);
           awardAdventurePoints(12);
           if (0 != Cf) {
@@ -1152,7 +1152,7 @@ export function updateCharacter(a, b) {
             var ye = Ef.targetDungeon;
             game.currentDungeon = ye;
             ye.currentLevelIndex = 0;
-            generateDungeonLevel(ye.er(), ye.dungeonType, ye.Aj, true);
+            generateDungeonLevel(ye.er(), ye.dungeonType, ye.hasSecondEntrance, true);
             game.worldActive = false;
             if (ye.discovered) {
               recordGameEvent("Dungeon", "Entering Dungeon Again");
@@ -1204,7 +1204,7 @@ export function updateCharacter(a, b) {
               game.state.statisticsRecorder.recordItemsSold(Tp);
               showFloatingText(game.floatingText, yl, "黄金!", "yellow");
               var Vp = game.shops;
-              Vp.ni += floorNumber(Al);
+              Vp.collectedGold += floorNumber(Al);
             }
           }
           recordGameEvent("Shop", "卖出所有道具");

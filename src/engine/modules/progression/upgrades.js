@@ -488,7 +488,7 @@ export function initializeProgressionUpgrades() {
     return this.descriptionLabel;
   };
   EquipItemUpgrade.prototype.purchase = function () {
-    var a = this.item.nj;
+    var a = this.item.inventory;
     if (a) {
       a.Qk(this.item);
       markUpgradeChanged(this);
@@ -1252,15 +1252,15 @@ export function initializeProgressionUpgrades() {
   };
   CollectFarmUpgrade.prototype.purchase = function () {
     recordGameEvent("Shop", "Gold Collected");
-    var a = game.shops.ni;
+    var a = game.shops.collectedGold;
     addGold(a);
     game.state.statisticsRecorder.recordGoldFromItems(a);
-    game.shops.ni = 0;
+    game.shops.collectedGold = 0;
     this.canPurchase = false;
     markUpgradeChanged(this);
   };
   CollectFarmUpgrade.prototype.refreshAvailabilityState = function () {
-    this.canPurchase = 0 < game.shops.ni;
+    this.canPurchase = 0 < game.shops.collectedGold;
     var a = this.cachedCanPurchase !== this.canPurchase;
     this.cachedCanPurchase = this.canPurchase;
     return a;
