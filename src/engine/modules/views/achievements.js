@@ -62,7 +62,7 @@ export function mountPointBreakdown(a) {
 export function PointUpgradeListView(a) {
   this.elementId = a;
   this.visible = true;
-  this.Rl = this.hj = this.Gt = null;
+  this.Rl = this.skillCollection = this.Gt = null;
   this.firstColumnButtons = [];
   this.secondColumnButtons = [];
 }
@@ -256,7 +256,7 @@ export function initializeViewsAchievements() {
       container = getElement(a);
     if (container) {
       this.Gt = createElement("table", container, null, "adventurerSkillTreeTable");
-      var b = this.hj.upgrades,
+      var b = this.skillCollection.upgrades,
         c = this.Rl.upgrades,
         d = Math.max(b.length, c.length),
         f,
@@ -296,14 +296,14 @@ export function initializeViewsAchievements() {
         c.push(a[d + 1]);
       }
     }
-    this.hj = new UpgradeCollection([b], false);
+    this.skillCollection = new UpgradeCollection([b], false);
     this.Rl = new UpgradeCollection([c], false);
   };
   PointUpgradeListView.prototype.update = function () {
-    if (!(this.hj && this.Gt)) {
+    if (!(this.skillCollection && this.Gt)) {
       /** @type {{uo: () => void}} */ (/** @type {unknown} */ (this)).uo();
     }
-    refreshUpgradeCollection(this.hj);
+    refreshUpgradeCollection(this.skillCollection);
     refreshUpgradeCollection(this.Rl);
     var a;
     for (a = 0; a < this.firstColumnButtons.length; a++) {

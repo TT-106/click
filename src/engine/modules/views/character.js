@@ -17,7 +17,7 @@ export function ItemRowBase() {}
 export function InventoryItemView(a, b) {
   this.rowElement = a;
   this.adventurerIndex = b;
-  this.Ej = this.Cr = this.goldCell = this.valueCell = this.levelCell = this.rarityCell = this.Fi = this.Ei = this.item = null;
+  this.Ej = this.Cr = this.goldCell = this.valueCell = this.levelCell = this.rarityCell = this.nameLabel = this.descriptionLabel = this.item = null;
   (/** @type {InventoryItemView & { createRowCells: () => void }} */ (/** @type {unknown} */ (this))).createRowCells();
 }
 export function InventoryTableView(a, b) {
@@ -30,7 +30,7 @@ export function InventoryTableView(a, b) {
 export function EquipmentItemRowView(a, b) {
   this.rowElement = a;
   this.adventurerIndex = b;
-  this.Cr = this.goldCell = this.valueCell = this.levelCell = this.rarityCell = this.Fi = this.Ei = this.item = null;
+  this.Cr = this.goldCell = this.valueCell = this.levelCell = this.rarityCell = this.nameLabel = this.descriptionLabel = this.item = null;
   (/** @type {EquipmentItemRowView & { createRowCells: () => void }} */ (/** @type {unknown} */ (this))).createRowCells();
 }
 export function EquipmentTableView(a, b) {
@@ -164,7 +164,7 @@ export function SkillsTabView(a, b, c) {
   this.elementId = b;
   this.tabState = a;
   this.adventurerIndex = c;
-  this.ry = this.qy = this.Rl = this.hj = this.Ax = null;
+  this.ry = this.qy = this.Rl = this.skillCollection = this.Ax = null;
   this.firstColumnButtons = [];
   this.secondColumnButtons = [];
   this.buttons = [];
@@ -179,8 +179,8 @@ export function initializeViewsCharacter() {
   InventoryItemView.prototype.ux = function (a) {
     if (this.item = a) {
       var b = this.item.Uk();
-      this.Ei.style.background = "url('spritesheet/items.png') -" + b.sourceX + "px -" + b.sourceY + "px";
-      this.Fi.innerHTML = getHighlightedItemName(this.item);
+      this.descriptionLabel.style.background = "url('spritesheet/items.png') -" + b.sourceX + "px -" + b.sourceY + "px";
+      this.nameLabel.innerHTML = getHighlightedItemName(this.item);
       this.rarityCell.innerHTML = getItemRarityLabel(this.item);
       this.levelCell.innerHTML = this.item.itemLevel + "";
       this.goldCell.innerHTML = formatAmount(this.item.itemGold);
@@ -200,8 +200,8 @@ export function initializeViewsCharacter() {
         this.Ej.style.display = "none";
       }
     } else {
-      this.Ei.style.background = "";
-      this.Fi.innerHTML = "";
+      this.descriptionLabel.style.background = "";
+      this.nameLabel.innerHTML = "";
       this.rarityCell.innerHTML = "";
       this.levelCell.innerHTML = "";
       this.valueCell.innerHTML = "";
@@ -217,10 +217,10 @@ export function initializeViewsCharacter() {
     b.style.width = "50px";
     b.style.padding = "0";
     b.style.textAlign = "center";
-    this.Ei = createElement("img", b, null, "itemImage");
-    this.Ei.src = "images/Transparent.gif";
-    this.Fi = a.insertCell(1);
-    this.Fi.style.width = "250px";
+    this.descriptionLabel = createElement("img", b, null, "itemImage");
+    this.descriptionLabel.src = "images/Transparent.gif";
+    this.nameLabel = a.insertCell(1);
+    this.nameLabel.style.width = "250px";
     this.rarityCell = a.insertCell(2);
     this.rarityCell.style.width = "110px";
     this.rarityCell.style.textAlign = "center";
@@ -310,16 +310,16 @@ export function initializeViewsCharacter() {
   EquipmentItemRowView.prototype.ux = function (a) {
     if (this.item = a) {
       a = this.item.Uk();
-      this.Ei.style.background = "url('spritesheet/items.png') -" + a.sourceX + "px -" + a.sourceY + "px";
-      this.Fi.innerHTML = getHighlightedItemName(this.item);
+      this.descriptionLabel.style.background = "url('spritesheet/items.png') -" + a.sourceX + "px -" + a.sourceY + "px";
+      this.nameLabel.innerHTML = getHighlightedItemName(this.item);
       this.rarityCell.innerHTML = getItemRarityLabel(this.item);
       this.levelCell.innerHTML = this.item.itemLevel + "";
       this.valueCell.innerHTML = formatAmount(this.item.itemValue) + " " + getItemStatLabel(this.item);
       this.goldCell.innerHTML = formatAmount(this.item.itemGold);
       this.rarityCell.className = getRarityClass(this.item.getRarity());
     } else {
-      this.Ei.style.background = "";
-      this.Fi.innerHTML = "";
+      this.descriptionLabel.style.background = "";
+      this.nameLabel.innerHTML = "";
       this.rarityCell.innerHTML = "";
       this.levelCell.innerHTML = "";
       this.valueCell.innerHTML = "";
@@ -333,10 +333,10 @@ export function initializeViewsCharacter() {
     b.style.width = "50px";
     b.style.padding = "0";
     b.style.textAlign = "center";
-    this.Ei = createElement("img", b, null, "itemImage");
-    this.Ei.src = "images/Transparent.gif";
-    this.Fi = a.insertCell(1);
-    this.Fi.style.width = "280px";
+    this.descriptionLabel = createElement("img", b, null, "itemImage");
+    this.descriptionLabel.src = "images/Transparent.gif";
+    this.nameLabel = a.insertCell(1);
+    this.nameLabel.style.width = "280px";
     this.rarityCell = a.insertCell(2);
     this.rarityCell.style.width = "110px";
     this.rarityCell.style.textAlign = "center";
@@ -658,9 +658,9 @@ export function initializeViewsCharacter() {
     var a = this.elementId,
       b = getElement(a);
     if (b && !(0 > this.adventurerIndex || this.adventurerIndex >= game.state.adventurers.length)) {
-      if (this.hj) {
+      if (this.skillCollection) {
         this.Ax = createElement("table", b, null, "adventurerSkillTreeTable");
-        var skillUpgrades = this.hj.upgrades,
+        var skillUpgrades = this.skillCollection.upgrades,
           c = this.Rl.upgrades,
           d = this.qy.upgrades,
           f = this.ry.upgrades,
@@ -716,10 +716,10 @@ export function initializeViewsCharacter() {
   };
   SkillsTabView.prototype.Zn = function () {
     if (0 > this.adventurerIndex || this.adventurerIndex >= game.state.adventurers.length) {
-      this.ry = this.qy = this.Rl = this.hj = null;
+      this.ry = this.qy = this.Rl = this.skillCollection = null;
     } else {
       var a = game.state.adventurers[this.adventurerIndex];
-      this.hj = a.skillTree1;
+      this.skillCollection = a.skillTree1;
       this.Rl = a.skillTree2;
       this.qy = a.skillTree3;
       this.ry = a.skillTree4;

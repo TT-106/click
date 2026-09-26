@@ -113,7 +113,7 @@ export function OfflineProgressView(a) {
   this.tabState = a;
   this.$l = this.progressFillElement = null;
   this.gu = 500;
-  this.Jh = -1;
+  this.cachedFillWidth = -1;
   this.Mt = this.aj = this.$t = this.vm = this.Vm = this.Um = this.Tm = this.Qw = null;
   this.yu = this.Kk = this.Bu = this.Ck = this.Hk = this.Fk = this.Ek = this.vv = this.wy = this.JB = this.Iy = this.Fz = this.sA = this.nA = this.mA = this.HA = -1;
 }
@@ -172,7 +172,7 @@ export function initializeViewsResults() {
     var a = this.tabState;
     a.enabled = true;
     a.selected = true;
-    this.Jh = -1;
+    this.cachedFillWidth = -1;
     a = game.state.runStatistics;
     this.HA = a.directKills;
     this.mA = a.itemsFound;
@@ -202,8 +202,8 @@ export function initializeViewsResults() {
     }
     var a = Math.min(1, game.offlineProcessed / game.offlineDuration),
       a = this.gu * a;
-    if (this.Jh != a) {
-      this.Jh = a;
+    if (this.cachedFillWidth != a) {
+      this.cachedFillWidth = a;
       this.progressFillElement.style.width = a + "px";
     }
     var b = game.state.runStatistics,

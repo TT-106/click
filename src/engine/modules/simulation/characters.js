@@ -69,11 +69,11 @@ export function spawnMinion(a, b, c) {
     b.summonedMinions = [];
   }
   b.summonedMinions.push(d);
-  if (1 === d.characterType && d.classDefinition.oi) {
+  if (1 === d.characterType && d.classDefinition.isCompanion) {
     b.companion = d;
   }
   d.summonedAtTurn = game.state.turnNumber;
-  d.lifetimeTurns = a.Oi;
+  d.lifetimeTurns = a.lifetimeTurnsLimit;
   initializeCharacterSkills(d, level);
   f.characterLevel = level;
   applyLevelStats(f, level, a.statMultipliers);

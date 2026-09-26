@@ -178,7 +178,7 @@ export function PotionButtonView(a, b) {
   this.gu = 192;
   this.Pp = this.Op = this.Tp = this.yj = this.Si = this.progressFillElement = this.km = null;
   this.ak = false;
-  this.Jh = -1;
+  this.cachedFillWidth = -1;
   this.Sp = this.Bo = false;
 }
 export function mountPotionButton(a) {
@@ -697,8 +697,8 @@ export function initializeViewsExpedition() {
         }
         a = Math.min(1, (game.state.turnNumber - this.potion.activationTurn) / (800 + potionDurationBonus.currentValue));
         a *= this.gu;
-        if (this.Jh !== a) {
-          this.Jh = a;
+        if (this.cachedFillWidth !== a) {
+          this.cachedFillWidth = a;
           this.progressFillElement.style.width = a + "px";
         }
       } else {

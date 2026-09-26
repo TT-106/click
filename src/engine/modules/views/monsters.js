@@ -24,7 +24,7 @@ export function MonsterRowView(a, b) {
   this.rowElement = a;
   this.monsterType = b;
   this.progressTextElement = this.progressFillElement = this.progressCell = this.xo = this.$n = this.Yn = this.vo = this.Ij = this.Mo = this.wq = this.yq = this.Es = null;
-  this.Sv = this.cachedLevel = this.Jh = this.Uv = -1;
+  this.Sv = this.cachedLevel = this.cachedFillWidth = this.Uv = -1;
   this.dx = 80;
   this.Cp = null;
   (/** @type {any} */ (this)).createRowCells();
@@ -251,7 +251,7 @@ export function initializeViewsMonsters() {
     this.progressTextElement.style.zIndex = "10";
   };
   MonsterRowView.prototype.reset = function () {
-    this.Jh = this.Uv = this.cachedLevel = this.Sv = -1;
+    this.cachedFillWidth = this.Uv = this.cachedLevel = this.Sv = -1;
   };
   MonsterRowView.prototype.render = function () {
     var a = this.monsterType.ml,
@@ -279,8 +279,8 @@ export function initializeViewsMonsters() {
       this.Uv = c;
       this.yq.innerHTML = formatAmount(c);
     }
-    if (this.Jh !== d) {
-      this.Jh = d;
+    if (this.cachedFillWidth !== d) {
+      this.cachedFillWidth = d;
       this.progressFillElement.style.width = d + "px";
       this.progressTextElement.innerHTML = a > b ? "最大" : formatAmount(a) + " / " + formatAmount(b);
     }

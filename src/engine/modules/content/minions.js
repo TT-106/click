@@ -9,12 +9,12 @@ export var wolfMinion, skeletonMinion, chickenMinion, barbarianChickenMinion, ni
 export function initializeContentMinions() {
   wolfMinion = {
     characterClass: 0,
-    oi: false,
+    isCompanion: false,
     className: "Wolf",
     spriteName: "Wolf.PNG",
     defaultName: "Howler",
     descriptionText: "A cool wolf that fights for a time.",
-    Oi: -1,
+    lifetimeTurnsLimit: -1,
     slotStatBonusList: [{
       slot: "230",
       statType: 1
@@ -42,12 +42,12 @@ export function initializeContentMinions() {
   };
   skeletonMinion = {
     characterClass: 0,
-    oi: false,
+    isCompanion: false,
     className: "Skeleton",
     spriteName: "SkeletonFighter3.PNG",
     defaultName: "Bones",
     descriptionText: "A Skeletal Warrior.",
-    Oi: -1,
+    lifetimeTurnsLimit: -1,
     slotStatBonusList: [{
       slot: "230",
       statType: 1
@@ -75,12 +75,12 @@ export function initializeContentMinions() {
   };
   chickenMinion = {
     characterClass: 0,
-    oi: false,
+    isCompanion: false,
     className: "Chicken",
     spriteName: "Chicken1.PNG",
     defaultName: "Chicken",
     descriptionText: "A chicken.",
-    Oi: -1,
+    lifetimeTurnsLimit: -1,
     slotStatBonusList: [{
       slot: "230",
       statType: 1
@@ -108,12 +108,12 @@ export function initializeContentMinions() {
   };
   barbarianChickenMinion = {
     characterClass: 1,
-    oi: false,
+    isCompanion: false,
     className: "Chicken",
     spriteName: "Chicken1.PNG",
     defaultName: "Chicken",
     descriptionText: "A chicken.",
-    Oi: -1,
+    lifetimeTurnsLimit: -1,
     slotStatBonusList: [{
       slot: "230",
       statType: 1
@@ -142,12 +142,12 @@ export function initializeContentMinions() {
   };
   ninjaChickenMinion = {
     characterClass: 8,
-    oi: false,
+    isCompanion: false,
     className: "Chicken",
     spriteName: "Chicken1.PNG",
     defaultName: "Chicken",
     descriptionText: "A chicken.",
-    Oi: -1,
+    lifetimeTurnsLimit: -1,
     slotStatBonusList: [{
       slot: "29",
       statType: 3
@@ -179,12 +179,12 @@ export function initializeContentMinions() {
   };
   rogueChickenMinion = {
     characterClass: 7,
-    oi: false,
+    isCompanion: false,
     className: "Chicken",
     spriteName: "Chicken1.PNG",
     defaultName: "Chicken",
     descriptionText: "A chicken.",
-    Oi: -1,
+    lifetimeTurnsLimit: -1,
     slotStatBonusList: [{
       slot: "24",
       statType: 3
@@ -213,12 +213,12 @@ export function initializeContentMinions() {
   };
   deathChickenMinion = {
     characterClass: 2,
-    oi: true,
+    isCompanion: true,
     className: "Death Chicken",
     spriteName: "Chicken2.PNG",
     defaultName: "Death Chicken",
     descriptionText: "A death chicken.",
-    Oi: -1,
+    lifetimeTurnsLimit: -1,
     slotStatBonusList: [{
       slot: "60",
       statType: 1
@@ -250,12 +250,12 @@ export function initializeContentMinions() {
   };
   phantomSkullMinion = {
     characterClass: 3,
-    oi: true,
+    isCompanion: true,
     className: "Phantom Skull",
     spriteName: "PhantomSkull.PNG",
     defaultName: "Kryptax",
     descriptionText: "Floating Skull of Death.",
-    Oi: -1,
+    lifetimeTurnsLimit: -1,
     slotStatBonusList: [{
       slot: "230",
       statType: 1
@@ -289,12 +289,12 @@ export function initializeContentMinions() {
   minionsBySpell = {};
   minionsBySpell[druidSpellDefinitions.LB.name] = {
     characterClass: 6,
-    oi: true,
+    isCompanion: true,
     className: "Dog",
     spriteName: "DogWhite.PNG",
     defaultName: "Scruffy",
     descriptionText: "His bite is bigger than his bark.",
-    Oi: -1,
+    lifetimeTurnsLimit: -1,
     slotStatBonusList: [{
       slot: "230",
       statType: 1
