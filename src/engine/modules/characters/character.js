@@ -192,14 +192,14 @@ export function updateCharacter(a, b) {
             subtractVector(c.velocity, c.worldPosition);
             var d = b * c.MC * walkingSpeedBonus.currentValue * walkingSpeedModifier.currentValue,
               f = game.world.bc(c.worldPosition.x),
-              g = game.world.cc(c.worldPosition.y);
+              g = game.world.pixelToTileRow(c.worldPosition.y);
             if (vectorLength(c.velocity) <= d) {
               assignVector(c.worldPosition, c.Ul);
               c.dd = true;
             } else if (f === c.Rn && g === c.Sn) {
               c.dd = true;
             } else {
-              if (!c.Hh || !c.qj || c.qj.bc() !== f || c.qj.cc() !== g) {
+              if (!c.Hh || !c.qj || c.qj.bc() !== f || c.qj.getWorldRow() !== g) {
                 c.aB = c.qj;
                 c.qj = game.world.getTileAtPixel(f, g);
                 if (!c.qj) {
@@ -210,7 +210,7 @@ export function updateCharacter(a, b) {
                   c.Hh = game.world.getTileAtPixel(c.Rn, c.Sn);
                 } else {
                   c.Hh = findCheapestNeighbor(c.qj, c.aB);
-                  if (c.Hh && c.Hh.bc() !== c.Rn && c.Hh.cc() !== c.Sn) {
+                  if (c.Hh && c.Hh.bc() !== c.Rn && c.Hh.getWorldRow() !== c.Sn) {
                     c.Hh = findCheapestNeighbor(c.Hh, c.qj);
                   }
                 }
@@ -232,7 +232,7 @@ export function updateCharacter(a, b) {
           subtractVector(c.velocity, c.worldPosition);
           var h = b * c.MC * walkingSpeedBonus.currentValue * walkingSpeedModifier.currentValue,
             l = game.world.bc(c.worldPosition.x),
-            n = game.world.cc(c.worldPosition.y);
+            n = game.world.pixelToTileRow(c.worldPosition.y);
           if (vectorLength(c.velocity) <= h) {
             assignVector(c.worldPosition, c.Ul);
             c.dd = true;

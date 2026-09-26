@@ -353,7 +353,7 @@ export function initializeRenderingScene() {
     if (game.world.ty) {
       if (a.context.fillStyle = "#000000", a.context.fillRect(0, 0, game.viewportWidth, game.viewportHeight), game.worldActive) {
         var b = game.world.bc(game.world.he),
-          c = game.world.cc(game.world.ie) - 18;
+          c = game.world.pixelToTileRow(game.world.ie) - 18;
         drawWorldTileRow(a, c++, b - 5, b - 3);
         drawWorldTileRow(a, c++, b - 6, b - 2);
         drawWorldTileRow(a, c++, b - 7, b - 1);

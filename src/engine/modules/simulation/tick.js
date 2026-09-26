@@ -812,7 +812,7 @@ export function purchaseDungeonFarm(a, b) {
     registerDungeonFarm(a);
     var c = game.farms,
       d = c.Yw(a.bc()),
-      f = c.Yw(a.cc());
+      f = c.Yw(a.getWorldRow());
     registerFarm(c, new Farm(a.dungeonId, d, f));
     game.state.statisticsRecorder.Xr();
   }

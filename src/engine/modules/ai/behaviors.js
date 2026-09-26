@@ -233,10 +233,10 @@ export function initializeAiBehaviors() {
         if (c) {
           if (b = c.iq, c = c.jq, d = game.world.getTileAtPixel(b, c)) {
             b = a.position;
-            if (game.world.getTileAtPixel(game.world.bc(b.dc()), game.world.cc(b.ec())) === d) {
+            if (game.world.getTileAtPixel(game.world.bc(b.dc()), game.world.pixelToTileRow(b.ec())) === d) {
               a.actionType = 10;
             } else {
-              setWorldDestination(b, d.bc(), d.cc());
+              setWorldDestination(b, d.bc(), d.getWorldRow());
               a.actionType = 1;
             }
             return;
@@ -244,20 +244,20 @@ export function initializeAiBehaviors() {
         } else if (d) {
           if (b = d.dm, c = d.em, d = game.world.getTileAtPixel(b, c)) {
             b = a.position;
-            if (game.world.getTileAtPixel(game.world.bc(b.dc()), game.world.cc(b.ec())) === d) {
+            if (game.world.getTileAtPixel(game.world.bc(b.dc()), game.world.pixelToTileRow(b.ec())) === d) {
               a.actionType = 11;
             } else {
-              setWorldDestination(b, d.bc(), d.cc());
+              setWorldDestination(b, d.bc(), d.getWorldRow());
               a.actionType = 1;
             }
             return;
           }
-        } else if (b = f.bc(), c = f.cc(), d = game.world.getTileAtPixel(b, c)) {
+        } else if (b = f.bc(), c = f.getWorldRow(), d = game.world.getTileAtPixel(b, c)) {
           b = a.position;
-          if (game.world.getTileAtPixel(game.world.bc(b.dc()), game.world.cc(b.ec())) === d) {
+          if (game.world.getTileAtPixel(game.world.bc(b.dc()), game.world.pixelToTileRow(b.ec())) === d) {
             a.actionType = 9;
           } else {
-            setWorldDestination(b, d.bc(), d.cc());
+            setWorldDestination(b, d.bc(), d.getWorldRow());
             a.actionType = 1;
           }
           return;
@@ -272,7 +272,7 @@ export function initializeAiBehaviors() {
         b = getAllies();
         c = b.indexOf(a);
         b = 1 === a.characterType ? a.summoner : 0 > c ? game.state.leader : b[c - 1];
-        setWorldDestination(a.position, game.world.bc(b.position.dc()), game.world.cc(b.position.ec()));
+        setWorldDestination(a.position, game.world.bc(b.position.dc()), game.world.pixelToTileRow(b.position.ec()));
         a.actionType = 1;
       }
     } else {

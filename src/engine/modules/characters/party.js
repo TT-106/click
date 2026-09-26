@@ -495,7 +495,7 @@ export function initializeCharactersParty() {
         d = this.ge.em;
       } else if (this.Wb) {
         c = this.Wb.bc();
-        d = this.Wb.cc();
+        d = this.Wb.getWorldRow();
       } else {
         return;
       }
@@ -513,7 +513,7 @@ export function initializeCharactersParty() {
         if (a = this.hp) {
           b = game.state.leader.position;
           a = this.Nm - game.world.bc(b.dc());
-          b = this.Om - game.world.cc(b.ec());
+          b = this.Om - game.world.pixelToTileRow(b.ec());
           a = 8 > Math.sqrt(a * a + b * b);
         }
         if (a) {

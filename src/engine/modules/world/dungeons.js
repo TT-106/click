@@ -196,7 +196,7 @@ export function initializeWorldDungeons() {
   Dungeon.prototype.bc = function () {
     return this.worldColumn;
   };
-  Dungeon.prototype.cc = function () {
+  Dungeon.prototype.getWorldRow = function () {
     return this.worldRow;
   };
   Dungeon.prototype.vw = function () {

@@ -68,7 +68,7 @@ export function setWorldDestination(a, b, c) {
 }
 export function findCheapestNeighbor(a, b) {
   var c = a.bc(),
-    d = a.cc(),
+    d = a.getWorldRow(),
     f,
     g,
     h = 1E9,
