@@ -566,7 +566,7 @@ export function initializeRenderingScene() {
           Ga;
         for (ja = 0; ja < mb.length; ja++) {
           Ea = mb[ja];
-          if (Ea.room.Xi) {
+          if (Ea.room.discovered) {
             La = Ea.levelX;
             wa = Ea.levelY;
             Fa = projectWorldX(La, wa);

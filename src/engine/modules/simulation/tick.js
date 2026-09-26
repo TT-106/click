@@ -413,7 +413,7 @@ export function advanceSimulation(a) {
       if (rb = gb[db], !rb.isDead && (dc = rb.position.levelPosition, Ka = game.level.Ai(dc.x), Xa = game.level.Bi(dc.y), (hb = game.level.getTileAt(Ka, Xa)) && (lb = hb.tileEffect) && lb.hasSpawned)) {
         if (lb.isFinished()) {
           setTileEffect(hb, null);
-        } else if (lb.bx !== lb.frameIndex && (sc = hb.li, 0 !== sc && (Aa = randomInt(sc + 1), 0 !== Aa))) {
+        } else if (lb.bx !== lb.frameIndex && (sc = hb.remainingEffectDamage, 0 !== sc && (Aa = randomInt(sc + 1), 0 !== Aa))) {
           hb.qB(Math.max(0, sc - Aa));
           var ec = rc = rb.stats;
           ec.health -= floorNumber(Aa);

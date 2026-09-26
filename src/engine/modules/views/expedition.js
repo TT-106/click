@@ -586,7 +586,7 @@ export function initializeViewsExpedition() {
     }
     var a = false;
     if (this.scroll != this.tm && (this.tm = this.scroll, a = true, this.scroll)) {
-      var b = this.scroll.Wh;
+      var b = this.scroll.spriteName;
       this.Vh.style.background = "url('spritesheet/items.png') -" + b.sourceX + "px -" + b.sourceY + "px";
     }
     b = this.scroll.label;

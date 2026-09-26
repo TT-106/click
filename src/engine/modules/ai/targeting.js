@@ -201,7 +201,7 @@ export function searchDoorRoute(a, b, c, d, f) {
   } else {
     var h = c.leadsTo;
     f = h.doorList;
-    if (!h.Xi) {
+    if (!h.discovered) {
       return null;
     }
     for (h = 0; h < f.length; h++) {
@@ -231,7 +231,7 @@ export function searchRoomRoute(a, b, c, d, f) {
   } else {
     var h = c.leadsTo;
     f = h.doorList;
-    if (!h.Xi) {
+    if (!h.discovered) {
       return null;
     }
     for (h = 0; h < f.length; h++) {

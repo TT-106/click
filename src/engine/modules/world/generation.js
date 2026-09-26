@@ -233,7 +233,7 @@ export function clearDungeonTiles(a) {
       f.bt = null;
       f.floorType = EMPTY_TILE;
       f.tileEffect = null;
-      f.li = 0;
+      f.remainingEffectDamage = 0;
     }
   }
 }

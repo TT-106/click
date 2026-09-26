@@ -14,7 +14,7 @@ export function Sprite(a, b, c, d) {
 export function SpriteSheet(a, b, c) {
   this.loaded = false;
   this.spriteSize = b;
-  this.Yh = {};
+  this.animationMap = {};
   var d = this;
   this.Il = new Image();
   this.Il.onload = function () {
@@ -49,7 +49,7 @@ export function AnimationSheet(a, b, c, d) {
   this.loaded = false;
   this.fileName = a;
   this.spriteSize = b;
-  this.Yh = {};
+  this.animationMap = {};
   this.FB = [];
   var f = this;
   this.Il = new Image();
@@ -60,14 +60,14 @@ export function AnimationSheet(a, b, c, d) {
   this.Il.src = a;
 }
 export function AnimationCatalog(a) {
-  this.Yh = null;
+  this.animationMap = null;
   this.Zt = a;
 }
 export function VisualEffect(a, b, c, d, f) {
   this.impactEffectName = a;
   this.Io = f;
   this.ew = this.boundCharacter = null;
-  this.li = 0;
+  this.remainingEffectDamage = 0;
   if (d) {
     f = new Vector2();
     copyVector(f, b);
@@ -187,11 +187,11 @@ export function initializeRenderingSprites() {
     var b, c;
     for (b = 0; b < a.length; b++) {
       c = a[b];
-      this.Yh[c.a] = new Sprite(this, c.b.x, c.b.y, c.a);
+      this.animationMap[c.a] = new Sprite(this, c.b.x, c.b.y, c.a);
     }
   };
   SpriteSheet.prototype.getSprite = function (a) {
-    return this.Yh[a];
+    return this.animationMap[a];
   };
   SpriteSheet.prototype.Hj = function () {
     return this.Il;
@@ -210,11 +210,11 @@ export function initializeRenderingSprites() {
     for (c = 0; c < a.length; c++) {
       d = a[c];
       this.FB.push(d.animationName);
-      this.Yh[d.animationName] = new SpriteAnimation(this, d.animationName, d.firstFrameColumn, d.firstFrameRow, d.lastRowFrameCount, d.lastFrameRow, b, d.isDirectional);
+      this.animationMap[d.animationName] = new SpriteAnimation(this, d.animationName, d.firstFrameColumn, d.firstFrameRow, d.lastRowFrameCount, d.lastFrameRow, b, d.isDirectional);
     }
   };
   AnimationSheet.prototype.getAnimation = function (a) {
-    return this.Yh[a];
+    return this.animationMap[a];
   };
   AnimationSheet.prototype.Hj = function () {
     return this.Il;
@@ -223,7 +223,7 @@ export function initializeRenderingSprites() {
     return this.loaded;
   };
   AnimationCatalog.prototype.getAnimation = function (a) {
-    var b = this.Yh[a];
+    var b = this.animationMap[a];
     return b ? b.getAnimation(a) : null;
   };
   AnimationCatalog.prototype.cl = function () {
@@ -233,7 +233,7 @@ export function initializeRenderingSprites() {
         return false;
       }
     }
-    if (!this.Yh) {
+    if (!this.animationMap) {
       a = this.Zt;
       var b,
         c,
@@ -248,7 +248,7 @@ export function initializeRenderingSprites() {
           g[f[c]] = d;
         }
       }
-      this.Yh = g;
+      this.animationMap = g;
     }
     return true;
   };
@@ -258,7 +258,7 @@ export function initializeRenderingSprites() {
     return this.animation;
   };
   VisualEffect.prototype.qB = function (a) {
-    this.li = a;
+    this.remainingEffectDamage = a;
   };
   VisualEffect.prototype.isFinished = function () {
     return this.finished || this.Pk;

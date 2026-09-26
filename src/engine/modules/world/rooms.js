@@ -14,11 +14,11 @@ export function DungeonTile(a, b, c, d) {
   this.bt = this.decorationSprite = this.backgroundSprite = null;
   this.floorType = EMPTY_TILE;
   this.tileEffect = null;
-  this.li = 0;
+  this.remainingEffectDamage = 0;
 }
 export function setTileEffect(a, b) {
   a.tileEffect = b;
-  a.li = b ? randomInt(b.li) : 0;
+  a.remainingEffectDamage = b ? randomInt(b.remainingEffectDamage) : 0;
 }
 export function DungeonRoom(a, b, c, d, f) {
   this.roomId = 0;
@@ -30,7 +30,7 @@ export function DungeonRoom(a, b, c, d, f) {
   this.ro = [];
   this.doorList = [];
   this.tileGrid = this.theme = this.stairs = null;
-  this.Xi = false;
+  this.discovered = false;
 }
 export function roomLeftPixels(a) {
   return a.tileColumn * game.tileSize;
@@ -51,8 +51,8 @@ export function isRoomBorder(a, b, c) {
   return c === a.tileRow - 1 || c === a.tileRow + a.heightInTiles ? b >= a.tileColumn - 1 && b <= a.tileColumn + a.widthInTiles : b === a.tileColumn - 1 || b === a.tileColumn + a.widthInTiles ? c >= a.tileRow - 1 && c <= a.tileRow + a.heightInTiles : false;
 }
 export function revealRoom(a) {
-  var wasHidden = !a.Xi;
-  a.Xi = true;
+  var wasHidden = !a.discovered;
+  a.discovered = true;
   if (wasHidden) {
     if (0 === a.Yp && treasureRoomModifier.currentValue && 0.25 > Math.random()) {
       a.Yp = 3;
@@ -556,7 +556,7 @@ export function initializeWorldRooms() {
     this.decorationSprite = a;
   };
   DungeonTile.prototype.qB = function (a) {
-    this.li = a;
+    this.remainingEffectDamage = a;
   };
   EMPTY_TILE = 0;
   DungeonRoom.prototype.xx = function (a, b) {

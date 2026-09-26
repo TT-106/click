@@ -312,7 +312,7 @@ export function updateCharacter(a, b) {
                     Q.isOpen = true;
                     game.state.statisticsRecorder.recordDoorOpened();
                     awardAdventurePoints(2);
-                    if (!Q.leadsTo.Xi) {
+                    if (!Q.leadsTo.discovered) {
                       populateEncounter(Q.leadsTo);
                       revealRoom(Q.leadsTo);
                       spawnRoomTreasure(Q.leadsTo);
@@ -611,7 +611,7 @@ export function updateCharacter(a, b) {
                       Db = new VisualEffect(Fc, Cb, Ra, false, TARGETED_EFFECT);
                       Db.boundCharacter = a;
                       Db.ew = kb;
-                      Db.li = Ja;
+                      Db.remainingEffectDamage = Ja;
                       sa.impactEffect = Db;
                       var gb = Qa.position,
                         rb = gb.room,
@@ -672,7 +672,7 @@ export function updateCharacter(a, b) {
                       nf = xb.position.room;
                     Y.boundCharacter = a;
                     Y.ew = nf;
-                    Y.li = oe;
+                    Y.remainingEffectDamage = oe;
                     Ya.impactEffect = Y;
                     var Nc = a.stats.ho + 1,
                       gd = xb.position,

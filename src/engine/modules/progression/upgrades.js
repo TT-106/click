@@ -1075,7 +1075,7 @@ export function initializeProgressionUpgrades() {
           registerUnlockedScroll(game.scrolls, a);
           recordGameEvent("Scroll Unlock", a.label);
         } else {
-          if (a.upgradeCount >= a.Qh) {
+          if (a.upgradeCount >= a.maxCharges) {
             break a;
           }
           a.upgradeCount++;
@@ -1102,8 +1102,8 @@ export function initializeProgressionUpgrades() {
       this.canPurchase = c >= d && game.state.party.gold >= a.rn;
       this.affordableSoon = !this.canPurchase && c >= d;
     } else {
-      this.canPurchase = a.upgradeCount < a.Qh && c >= d && game.state.party.gold >= a.rn;
-      this.affordableSoon = !this.canPurchase && a.upgradeCount < a.Qh && c >= d;
+      this.canPurchase = a.upgradeCount < a.maxCharges && c >= d && game.state.party.gold >= a.rn;
+      this.affordableSoon = !this.canPurchase && a.upgradeCount < a.maxCharges && c >= d;
     }
     return b !== this.canPurchase;
   };

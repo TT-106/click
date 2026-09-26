@@ -35,11 +35,11 @@ export function isSpellReady(a) {
 export function Scroll(a, b) {
   this.eq = b;
   this.scrollId = a.scrollId;
-  this.Wh = game.itemSprites.getSprite(a.Wh);
+  this.spriteName = game.itemSprites.getSprite(a.spriteName);
   this.baseName = a.baseName;
   this.baseCapacity = a.baseCapacity;
   this.Yi = a.Yi;
-  this.Qh = a.Qh;
+  this.maxCharges = a.maxCharges;
   this.mB = a.spellDefinition ? new Spell(a.spellDefinition) : null;
   this.tn = a.fq;
   this.locked = true;
@@ -49,7 +49,7 @@ export function Scroll(a, b) {
   this.lx = getNextScrollLabel(this);
 }
 export function getScrollSprite(a) {
-  return a.Wh;
+  return a.spriteName;
 }
 export function addScrollCharge(a) {
   a.quantity++;
@@ -262,19 +262,19 @@ export function initializeCombatScrolls() {
   scrollDefinitions = [{
     scrollId: "shockScroll",
     baseName: "休克",
-    Wh: "Scroll0028.PNG",
+    spriteName: "Scroll0028.PNG",
     spellDefinition: electricSpellDefinitions.sB,
     baseCapacity: 0,
     Yi: 4,
-    Qh: 0
+    maxCharges: 0
   }, {
     scrollId: "spiderWebScroll",
     baseName: "蛛网",
-    Wh: "Scroll0054.PNG",
+    spriteName: "Scroll0054.PNG",
     spellDefinition: electricSpellDefinitions.CB,
     baseCapacity: 3,
     Yi: 4,
-    Qh: 4,
+    maxCharges: 4,
     fq: {
       statType: 20,
       statBonusValue: 2
@@ -282,11 +282,11 @@ export function initializeCombatScrolls() {
   }, {
     scrollId: "arrowScroll",
     baseName: "箭矢",
-    Wh: "Scroll0012.PNG",
+    spriteName: "Scroll0012.PNG",
     spellDefinition: null,
     baseCapacity: 6,
     Yi: 4,
-    Qh: 4,
+    maxCharges: 4,
     fq: {
       statType: 23,
       statBonusValue: 1
@@ -294,11 +294,11 @@ export function initializeCombatScrolls() {
   }, {
     scrollId: "fireRainScroll",
     baseName: "火雨",
-    Wh: "Scroll0022.PNG",
+    spriteName: "Scroll0022.PNG",
     spellDefinition: fireSpellDefinitions.Lz,
     baseCapacity: 9,
     Yi: 4,
-    Qh: 2,
+    maxCharges: 2,
     fq: {
       statType: 22,
       statBonusValue: 1
@@ -306,11 +306,11 @@ export function initializeCombatScrolls() {
   }, {
     scrollId: "chainedLightningScroll",
     baseName: "闪电",
-    Wh: "Scroll0034.PNG",
+    spriteName: "Scroll0034.PNG",
     spellDefinition: electricSpellDefinitions.br,
     baseCapacity: 12,
     Yi: 4,
-    Qh: 3,
+    maxCharges: 3,
     fq: {
       statType: 21,
       statBonusValue: 1
@@ -318,11 +318,11 @@ export function initializeCombatScrolls() {
   }, {
     scrollId: "fireBallScroll",
     baseName: "火球",
-    Wh: "Scroll0097.PNG",
+    spriteName: "Scroll0097.PNG",
     spellDefinition: fireSpellDefinitions.Kz,
     baseCapacity: 15,
     Yi: 4,
-    Qh: 2,
+    maxCharges: 2,
     fq: {
       statType: 25,
       statBonusValue: 1

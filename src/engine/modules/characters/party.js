@@ -147,7 +147,7 @@ export function findNextUnopenedDoor() {
     }
   }
   for (a = 0; a < l.length; a++) {
-    if (d = l[a], d.Xi) {
+    if (d = l[a], d.discovered) {
       for (b = d.doorList, c = 0; c < b.length; c++) {
         d = b[c];
         if (!d.isOpen) {
@@ -548,7 +548,7 @@ export function initializeCharactersParty() {
         this.targetDoor = this.targetRoom = null;
       } else if (!this.targetRoom && (!this.targetDoor || this.targetDoor.isOpen)) {
         if (this.destinationRoom) {
-          if (a = this.destinationRoom.Xi) {
+          if (a = this.destinationRoom.discovered) {
             a = getMonsters();
             a = 0 === a.length ? true : this.destinationRoom !== a[0].position.room;
           }

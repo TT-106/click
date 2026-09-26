@@ -711,7 +711,7 @@ export function initializeViewsUpgradeDetails() {
         this.yn.style.background = "url('spritesheet/monsters.png') -" + (this.zn.sourceX + 10) + "px -" + (this.zn.sourceY + 12) + "px";
       } else {
         a = a.impactEffectName;
-        this.Dx = game.animations.Yh[a];
+        this.Dx = game.animations.animationMap[a];
         this.zn = game.animations.getAnimation(a);
         this.frameAge = this.frameIndex = 0;
         this.isAnimated = true;
@@ -936,7 +936,7 @@ export function initializeViewsUpgradeDetails() {
       this.Cq.innerHTML = formatAmount(a);
     }
     if (this.tm !== b && (this.tm = b)) {
-      a = b.Wh;
+      a = b.spriteName;
       this.Vh.style.background = "url('spritesheet/items.png') -" + a.sourceX + "px -" + a.sourceY + "px";
     }
     if (this.cachedTitleText !== c) {

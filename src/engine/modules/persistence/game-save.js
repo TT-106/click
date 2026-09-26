@@ -815,7 +815,7 @@ export function createSaveState(a) {
         ub = [],
         mb;
       for (mb = 0; mb < Da.length; mb++) {
-        ub.push(Da[mb].Xi);
+        ub.push(Da[mb].discovered);
       }
       var Ea = qa.hallwayList,
         La = [],
