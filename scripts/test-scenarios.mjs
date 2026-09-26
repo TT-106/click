@@ -106,6 +106,19 @@ const barbarianGrew = (s) => {
     spellsLearned: (adv.spells?.length ?? 0) > (bAdv.spells?.length ?? 0),
   };
 };
+const attackSkillsLearned = (s) => {
+  const fighter = s.adventurers?.[0];
+  const ranger = s.adventurers?.[2];
+  const bits = (who, names) => {
+    const trees = [who?.upgrades1, who?.upgrades2, who?.upgrades3, who?.upgrades4];
+    return names.reduce((n, k) => n + (trees.some(tree => tree?.[k]) ? 1 : 0), 0);
+  };
+  const multi = bits(fighter, ['attacksPerTurnFighter1', 'attacksPerTurnFighter2', 'attacksPerTurnFighter3',
+    'additionalAttackPercentFighter1', 'additionalAttackPercentFighter2', 'additionalAttackPercentFighter3']);
+  const chain = bits(ranger, ['ricochetCountRanger1', 'ricochetCountRanger2', 'ricochetCountRanger3', 'ricochetCountRanger4',
+    'ricochetPercentRanger1', 'ricochetPercentRanger2', 'ricochetPercentRanger3', 'ricochetPercentRanger4']);
+  return { multiLearned: multi, chainLearned: chain, enough: multi >= 4 && chain >= 6 };
+};
 const multipleAchievementsClaimed = (s) => ({
   appliedDelta: (s.achievementManager?.achievements ?? []).filter(a => a.applied).length
     - (base.achievementManager?.achievements ?? []).filter(a => a.applied).length,
@@ -402,6 +415,19 @@ const scenarios = [
       { turns: 300, purchaseUpgrades: 60 },
       { turns: 300, purchaseUpgrades: 60, check: criticalHitSkillsLearned },
       { turns: 1000, floatingText: '暴击!', check: criticalHitSkillsLearned },
+    ],
+  },
+  {
+    name: 'skill-combat-effects',
+    // 技能战斗效果层闭环：习得战士多重攻击（statType 18 extraAttackCount + 19 extraAttackChance，
+    // 走 performMultiAttack 分支）与游侠跳弹（statType 23 chainCount + 24 chainChance，投射命中后
+    // createChainAction 沿 Xs 链扩展），随后 1500 回合实战直接采样伤害飘字数量与总量——
+    // 技能生效必然抬高攻击频次与弹跳次数，两端飘字计数/求和必须一致且 DTO 全等。
+    make: () => withSkillPoints(withExperience(withGold(base, 1000000), 500000), 60),
+    steps: [
+      { turns: 300, purchaseUpgrades: 60 },
+      { turns: 300, purchaseUpgrades: 60, check: attackSkillsLearned },
+      { turns: 1500, damageNumbers: true, check: attackSkillsLearned },
     ],
   },
   {
@@ -962,6 +988,7 @@ try {
             if (verdict.attackPlanned !== undefined) assert.equal(verdict.attackPlanned, true, `${label} 攻击城堡计划（type 13 → attackScheduled）必须真实发生`);
             if (verdict.appliedDelta !== undefined) assert.ok(verdict.appliedDelta >= 3, `${label} 多次领取后 applied 计数必须至少增长 3（实际 ${verdict.appliedDelta}）`);
             if (verdict.killRewardGrew !== undefined) assert.equal(verdict.killRewardGrew, true, `${label} 击杀事件奖励（pointsByType[1].points = reward × count）必须真实抬升`);
+            if (verdict.enough !== undefined) assert.equal(verdict.enough, true, `${label} 战士多重攻击位 ${verdict.multiLearned}/6、游侠跳弹位 ${verdict.chainLearned}/8 必须真实习得（多重 ≥4 且跳弹 ≥6）`);
             if (verdict.achievementClaimed !== undefined) assert.equal(verdict.achievementClaimed, true, `${label} 成就奖励必须真实领取并标记 applied`);
             if (verdict.equipmentChanged !== undefined) assert.equal(verdict.equipmentChanged, true, `${label} 自动装备后装备槽必须真实变化`);
             if (verdict.itemEquipEvents !== undefined) assert.equal(verdict.itemEquipEvents, true, `${label} 装备物品事件计数必须真实增长`);
