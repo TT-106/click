@@ -31,6 +31,21 @@ if (original) {
   const saves = await import('../src/engine/modules/persistence/game-save.js');
   const simulation = await import('../src/engine/modules/simulation/tick.js');
   ({ upgradeCollections } = await import('../src/engine/modules/content/balance.js'));
+  // 引擎不直接碰 localStorage（宿主注入端口）。差分要比对"自动保存真正落盘的字节"，
+  // 这里按 src/services/saves.js 的同一套键与备份语义注入端口。
+  {
+    const { configurePersistence } = await import('../src/engine/modules/runtime/storage-port.js');
+    const { SAVE_KEY } = await import('../src/services/save-validation.js');
+    configurePersistence({
+      read: () => localStorage.getItem(SAVE_KEY),
+      write: (value) => {
+        const previous = localStorage.getItem(SAVE_KEY);
+        if (previous && previous !== value) localStorage.setItem(SAVE_KEY + '_backup', previous);
+        localStorage.setItem(SAVE_KEY, value);
+      },
+      remove: () => localStorage.removeItem(SAVE_KEY),
+    });
+  }
   initialize = () => game.loop.tick();
   ready = () => game.initialized;
   snapshot = () => saves.createSaveState(game.saves);

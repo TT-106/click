@@ -129,7 +129,7 @@ export function initializeRuntimeGame() {
     saves: new function () {
       this.saveKey = "C2_V1_001";
       this.lastSavedAt = nowMilliseconds();
-      this.autoSaveInterval = 3E4;
+      this.autoSaveInterval = 3E5;
       this.statisticsAdapter = new StatisticsSaveAdapter();
       this.monsterAdapter = new MonsterSaveAdapter();
     }(),

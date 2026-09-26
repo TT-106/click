@@ -36,8 +36,14 @@
 
 17. 原版全局：`window.Game`（=w）、`Game.Hr`=GameLoop（sB 实例）、`Game.Hr.Hr()`=帧 tick、`window.lB()`=序列化、`window.pB(15)`=单回合步进、`game.hE(text)`=导入存档、`game.Em`=initialized、`game.ig`=processingOffline、`game.jf/Vj`=offlineDuration/offlineProcessed。
 18. 重构版入口：`src/engine/adapter.js`（唯一产品入口，命令校验 + 只读快照）；内部接口 `src/engine/internal-api.js`。
-19. 存档兼容契约：`tests/fixtures/original.c2save` + parity（0/1/99/900 回合）+ 场景矩阵（9 场景）+ codec 单测。
+19. 存档兼容契约：`tests/fixtures/original.c2save` + parity（0/1/99/900 回合）+ 场景矩阵（34 场景）+ codec 单测 + `autosave-payload` 场景（比对真正落盘的原文）。
 
 ## 已修复的回归（方法论证据）
 
 20. 差分场景矩阵曾在重命名波次中抓住 900 回合 parity 无法覆盖的回归：guardians.js/minions.js 的 `r:`/`s:` 数据键漏改 → 城堡守卫生成 `generateItem(undefined)` 崩溃。教训：**数据字面量键重命名必须全库 grep（含所有 content/*.js）**。
+
+## 自动保存与渲染的可观察量（2026-09-26 实测）
+
+21. 原版自动保存间隔是 **300,000 ms**（`c2.js:44345` `this.UC = 3E5`，运行时读到的 `Game.pg` 即保存管理器为 `{qs: lastSavedAt, UC: 300000}`）。重构版曾写成 `3E4`，等于把自动保存频率放大 10 倍——`autosave-payload` 场景把它抓了出来：清掉 localStorage 后跑 1300 帧（325s 模拟时间），原版与重构版必须各自写入且解码后内容一致；把常量改回 3E4 该场景立刻失败（已实测该反向验证）。
+22. 渲染层可以逐像素对比，不需要截图基线：`harness.canvasInk()` 直接读主画布 `getImageData`，返回不透明像素数、非背景像素数与 FNV-1a 逐像素指纹；两端在同一固定时钟下指纹相同（例：`1853346327`，非背景 203,763）。该检查有牙齿——把 `rendering/scene.js:341` 的 `drawImage` 目标横移 2 像素，指纹即分叉、场景失败。
+23. `loop.js` 把 `view.render()` 的异常吞成 `console.log("Caught error. …")`，所以只听 `pageerror` 的差分矩阵看不见渲染崩溃；场景 runner 现在同时监听 console 并过滤 harness 页自发的 `/favicon.ico` 404（浏览器行为，非引擎行为）。

@@ -3,6 +3,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import { chromium } from 'playwright';
+import saveCodec from '../src/engine/save-codec.js';
 import {
   decodeFixture, encodeSave, summarize,
   withPotions, withScrolls, withGold, withTurns, withElapsed, withOfflineProcessing,
@@ -34,7 +35,7 @@ const scenarios = [
     // 再照常比较完整存档；渲染异常由 console 捕获通道兜住。
     make: () => base,
     steps: [
-      { frames: 400 },
+      { frames: 1300 },
       { turns: 300 },
     ],
   },
@@ -229,6 +230,14 @@ const scenarios = [
     ],
   },
   {
+    name: 'autosave-payload',
+    // 自动保存计时分支 + 落盘字节比对：两端跑同样的真实帧循环，比较写进 localStorage 的原文。
+    make: () => base,
+    steps: [
+      { frames: 1300 },
+    ],
+  },
+  {
     name: 'potions-activated',
     // U7：三瓶未激活药水入库 → 推进 → 直接驱动 Potion.aw（视图层唯一入口）→ 再推进差分。
     make: () => withPotions(base, ['doubleGold', 'doubleKills', 'walkingSpeed']),
@@ -275,7 +284,10 @@ const browser = await chromium.launch({ channel: 'chrome', headless: true });
 const failures = [];
 try {
   const pages = await Promise.all([true, false].map(async original => {
-    const page = await browser.newPage();
+    // 每端独立浏览器上下文：自动保存写的是同一个 localStorage 键，
+    // 共用上下文会让后写者覆盖前者，两端写入内容就没法对比了。
+    const context = await browser.newContext();
+    const page = await context.newPage();
     const errors = [];
     page.on('pageerror', error => errors.push(error.stack));
     // loop.js 把渲染异常吞成 console.log("Caught error. …")，只听 pageerror 会漏掉整条渲染路径
@@ -354,7 +366,11 @@ try {
           if (purchaseUpgrades !== undefined) return p.page.evaluate(a => window.harness.purchaseUpgrades(a), { turns, limit: purchaseUpgrades });
           if (activatePotions !== undefined) return p.page.evaluate(a => window.harness.activatePotions(a), { turns, limit: activatePotions });
           // frames：走真实帧循环（loop.tick 内含 view.render 的 try/catch），随后读画布不透明像素
-          if (frames !== undefined) return p.page.evaluate(n => ({ snapshot: window.harness.idle(n), ink: window.harness.canvasInk() }), frames);
+          if (frames !== undefined) return p.page.evaluate(n => {
+            localStorage.removeItem('C2_V1_001'); // 抹掉载入时的写入，剩下的只能是自动保存
+            const snapshot = window.harness.idle(n);
+            return { snapshot, ink: window.harness.canvasInk(), savedAfter: localStorage.getItem('C2_V1_001') };
+          }, frames);
           return { snapshot: await p.page.evaluate(turns => window.harness.advance(turns), turns) };
         }));
         const states = results.map(r => r.snapshot);
@@ -393,6 +409,19 @@ try {
           }
           assert.equal(inks[1].pixelsHash, inks[0].pixelsHash, `两端渲染输出逐像素指纹不一致（原版 ${inks[0].pixelsHash} / 重构版 ${inks[1].pixelsHash}）`);
           console.log(`  · 渲染后画布：非背景像素 两端各 ${inks[0].nonBackgroundInk}，逐像素指纹相同 = ${inks[0].pixelsHash}（画布数 ${inks[0].canvasCount}）`);
+          // 落盘内容比对：两端写进 localStorage 的原文解码后必须表示同一状态。
+          // 压缩原文本身不做逐字节比对——gameTimestamp 取真实挂钟，两端写入时刻不同；
+          // 自动保存的“触发时机”同样不可比（见 unresolved U8）。
+          for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {
+            assert.ok(typeof results[i].savedAfter === 'string' && results[i].savedAfter.length > 0, `${label} 端跑过 ${frames} 帧（${frames * 250 / 1000}s 模拟时间）后自动保存没有写入 localStorage`);
+          }
+          const savedStates = results.map(r => JSON.parse(saveCodec.decompress(r.savedAfter)));
+          for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {
+            assert.equal(typeof savedStates[i].saveKey, 'string', `${label} 端落盘原文无法解码为存档`);
+            delete savedStates[i].gameTimestamp; // 挂钟读数，两端写入时刻不同，不参与比对
+          }
+          assert.deepEqual(savedStates[1], savedStates[0], '两端落盘的存档内容不一致');
+          console.log(`  · 两端落盘存档解码后一致（${results[0].savedAfter.length} / ${results[1].savedAfter.length} 字节，回合 ${savedStates[0].turnNumber}）`);
         }
         if (activatePotions !== undefined) {
           const attempts = results.map(r => r.attempted);
