@@ -239,15 +239,15 @@ export function serializeStatistics(a) {
     potionsUsed: a.potionsUsed,
     scrollsUsed: a.scrollsUsed,
     minionsSummoned: a.minionsSummoned,
-    itemsSold: a.Ph,
-    itemsFound: a.Gi,
-    uncommonItemsFound: a.Ol,
-    rareItemsFound: a.xl,
-    historicItemsFound: a.Zk,
-    ancientItemsFound: a.nk,
-    treasureChestsLooted: a.Nl,
-    weaponRacksLooted: a.Sl,
-    bookcasesLooted: a.tk
+    itemsSold: a.itemsSold,
+    itemsFound: a.itemsFound,
+    uncommonItemsFound: a.uncommonItemsFound,
+    rareItemsFound: a.rareItemsFound,
+    historicItemsFound: a.historicItemsFound,
+    ancientItemsFound: a.ancientItemsFound,
+    treasureChestsLooted: a.treasureChestsLooted,
+    weaponRacksLooted: a.weaponRacksLooted,
+    bookcasesLooted: a.bookcasesLooted
   };
 }
 export function restoreStatistics(a, b, c) {
@@ -307,16 +307,16 @@ export function restoreStatistics(a, b, c) {
   b.potionsUsed = J ? J : 0;
   b.scrollsUsed = la ? la : 0;
   b.minionsSummoned = Q ? Q : 0;
-  b.Ph = V ? V : 0;
-  b.Gi = na ? na : 0;
-  b.Ol = K ? K : 0;
-  b.xl = H ? H : 0;
-  b.Zk = S ? S : 0;
-  b.nk = da ? da : 0;
-  b.Nl = W ? W : 0;
-  b.tk = a ? a : 0;
+  b.itemsSold = V ? V : 0;
+  b.itemsFound = na ? na : 0;
+  b.uncommonItemsFound = K ? K : 0;
+  b.rareItemsFound = H ? H : 0;
+  b.historicItemsFound = S ? S : 0;
+  b.ancientItemsFound = da ? da : 0;
+  b.treasureChestsLooted = W ? W : 0;
+  b.bookcasesLooted = a ? a : 0;
   c = Math.max(ia ? ia : 0, ea ? ea : 0);
-  b.Sl = c;
+  b.weaponRacksLooted = c;
 }
 export function initializePersistenceEntities() {
   MonsterSaveAdapter.prototype.Kw = function (a) {

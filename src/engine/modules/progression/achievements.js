@@ -74,13 +74,13 @@ export function getAchievementProgress(a) {
     case 4:
       return b.potionsUsed;
     case 5:
-      return b.Nl;
+      return b.treasureChestsLooted;
     case 6:
-      return b.Sl;
+      return b.weaponRacksLooted;
     case 7:
-      return b.tk;
+      return b.bookcasesLooted;
     case 8:
-      return b.Ph;
+      return b.itemsSold;
     case 9:
       return b.farmsPurchased;
     case 10:
@@ -100,15 +100,15 @@ export function getAchievementProgress(a) {
     case 17:
       return b.doorsOpened;
     case 18:
-      return b.Gi;
+      return b.itemsFound;
     case 19:
-      return b.Ol;
+      return b.uncommonItemsFound;
     case 20:
-      return b.xl;
+      return b.rareItemsFound;
     case 21:
-      return b.Zk;
+      return b.historicItemsFound;
     case 22:
-      return b.nk;
+      return b.ancientItemsFound;
     case 28:
       return b.minionKills;
   }

@@ -175,8 +175,8 @@ export function initializeViewsResults() {
     this.Jh = -1;
     a = game.state.runStatistics;
     this.HA = a.directKills;
-    this.mA = a.Gi;
-    this.nA = a.Ph;
+    this.mA = a.itemsFound;
+    this.nA = a.itemsSold;
     this.sA = a.levelsCleared;
     this.Fz = a.dungeonsCleared;
     this.Iy = game.castles.Jg.length;
@@ -208,8 +208,8 @@ export function initializeViewsResults() {
     }
     var b = game.state.runStatistics,
       a = b.directKills - this.HA,
-      c = b.Gi - this.mA,
-      d = b.Ph - this.nA,
+      c = b.itemsFound - this.mA,
+      d = b.itemsSold - this.nA,
       f = b.levelsCleared - this.sA,
       g = b.dungeonsCleared - this.Fz,
       h = game.castles.Jg.length - this.Iy,

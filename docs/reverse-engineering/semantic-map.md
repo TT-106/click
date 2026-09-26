@@ -94,6 +94,8 @@ RunStatistics 的 `On/Lk/qn/Mj/wi/uk` → `turnCount/doorsOpened/roomsCleared/le
 
 统计战斗组：`hl/wl/Gl/ul/El/kl` → `meleeAttackCount/rangedAttackCount/spellCastCount/potionsUsed/scrollsUsed/minionsSummoned`。RunStatistics 记录方法、存档读写、成就分支与信息面板同步；JSON 键不变。
 
+统计物品组：`Ph/Gi/Ol/xl/Zk/nk/Nl/Sl/tk` → `itemsSold/itemsFound/uncommonItemsFound/rareItemsFound/historicItemsFound/ancientItemsFound/treasureChestsLooted/weaponRacksLooted/bookcasesLooted`。存档读写、`recordItemFound` 按稀有度分发、成就、信息面板及离线结果视图同步；JSON 键不变。
+
 ## 待取证残留（约 1,300 处访问）
 
 高频：`Y/Z/aa/ca/ea/ga/fa/ka/na` 等长尾——工作清单 `artifacts/obfuscated-fields.json`（按频次排序，含样例代码）。取证方法与产出格式见 WORKSTATE.md 第 6 节。
