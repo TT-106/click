@@ -198,7 +198,7 @@ export function generateDungeonLevel(a, b, c, d) {
   b = game.treasure;
   if (0 < b.targets.length) {
     b.targets.length = 0;
-    b.Dt = {};
+    b.targetByRoomId = {};
   }
   clearScrollTargets();
   resetEncounter();

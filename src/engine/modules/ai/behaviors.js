@@ -17,7 +17,7 @@ import { isSpellReady } from "../combat/scrolls.js";
 import { getRoomTreasure } from "../loot/treasure.js";
 /** @typedef {{ getPriority: () => number }} PrioritizedBehavior */
 /** @typedef {{ vx: (character: unknown) => unknown }} MovingBehavior */
-/** @typedef {{ Kp: (character: unknown) => void, canExecute: (character: unknown) => boolean, Td: (character: unknown) => any, Md: () => any, Jd: (character: unknown) => number }} DungeonBehaviorMethods */
+/** @typedef {{ performOnArrival: (character: unknown) => void, canExecute: (character: unknown) => boolean, selectTarget: (character: unknown) => any, getActionTarget: () => any, getFinalScore: (character: unknown) => number }} DungeonBehaviorMethods */
 /** @typedef {{ resetBehaviorState: () => void, execute: (character: unknown) => void, getBehaviorScore: (character: unknown) => number, getPriority: () => number }} RangedBehaviorMethods */
 export function BehaviorQueue() {
   this.fo = [];
@@ -30,7 +30,7 @@ export function ExploreDungeonBehavior() {
   this.priorityWeight = 10;
   this.selectedTarget = null;
   this.SB = 0;
-  this.un = null;
+  this.actionTarget = null;
   this.actionRange = 100;
   this.Yt = false;
 }
@@ -330,11 +330,11 @@ export function initializeAiBehaviors() {
     return this.kB;
   };
   ExploreDungeonBehavior.prototype.resetBehaviorState = function () {
-    this.selectedTarget = this.un = null;
+    this.selectedTarget = this.actionTarget = null;
   };
   ExploreDungeonBehavior.prototype.notifySpellLearned = function () {};
   ExploreDungeonBehavior.prototype.execute = function (a) {
-    if (this.selectedTarget && this.un) {
+    if (this.selectedTarget && this.actionTarget) {
       a.setCombatTarget(this.selectedTarget);
       var b = a.position;
       this.SB = a === this.selectedTarget ? 0 : b.levelPosition.distanceTo(this.selectedTarget.position.levelPosition);
@@ -343,10 +343,10 @@ export function initializeAiBehaviors() {
           return;
         }
         markAttackTurn(a);
-        this.un.lastCastTurn = game.state.turnNumber;
-        a.spellToCast = this.un;
+        this.actionTarget.lastCastTurn = game.state.turnNumber;
+        a.spellToCast = this.actionTarget;
         a.actionType = CAST_ACTION_TYPE;
-        (/** @type {DungeonBehaviorMethods} */ (/** @type {unknown} */ (this))).Kp(a);
+        (/** @type {DungeonBehaviorMethods} */ (/** @type {unknown} */ (this))).performOnArrival(a);
       } else {
         assignVector(b.moveTargetPoint, this.selectedTarget.position.levelPosition);
         a.actionType = 1;
@@ -357,7 +357,7 @@ export function initializeAiBehaviors() {
       }
     }
   };
-  ExploreDungeonBehavior.prototype.Kp = function () {};
+  ExploreDungeonBehavior.prototype.performOnArrival = function () {};
   ExploreDungeonBehavior.prototype.getBehaviorScore = function (a) {
     var b = a.position.room;
     if (!b || !(/** @type {DungeonBehaviorMethods} */ (/** @type {unknown} */ (this))).canExecute(a)) {
@@ -371,19 +371,19 @@ export function initializeAiBehaviors() {
         return 0;
       }
     }
-    this.selectedTarget = (/** @type {DungeonBehaviorMethods} */ (/** @type {unknown} */ (this))).Td(a);
-    return this.selectedTarget && this.selectedTarget.position.room === b ? (this.un = (/** @type {DungeonBehaviorMethods} */ (/** @type {unknown} */ (this))).Md()) ? (/** @type {DungeonBehaviorMethods} */ (/** @type {unknown} */ (this))).Jd(a) : 0 : 0;
+    this.selectedTarget = (/** @type {DungeonBehaviorMethods} */ (/** @type {unknown} */ (this))).selectTarget(a);
+    return this.selectedTarget && this.selectedTarget.position.room === b ? (this.actionTarget = (/** @type {DungeonBehaviorMethods} */ (/** @type {unknown} */ (this))).getActionTarget()) ? (/** @type {DungeonBehaviorMethods} */ (/** @type {unknown} */ (this))).getFinalScore(a) : 0 : 0;
   };
   ExploreDungeonBehavior.prototype.canExecute = function () {
     return true;
   };
-  ExploreDungeonBehavior.prototype.Jd = function () {
+  ExploreDungeonBehavior.prototype.getFinalScore = function () {
     return 0;
   };
-  ExploreDungeonBehavior.prototype.Md = function () {
+  ExploreDungeonBehavior.prototype.getActionTarget = function () {
     return null;
   };
-  ExploreDungeonBehavior.prototype.Td = function () {
+  ExploreDungeonBehavior.prototype.selectTarget = function () {
     return null;
   };
   ExploreDungeonBehavior.prototype.getPriority = function () {
@@ -586,7 +586,7 @@ export function initializeAiBehaviors() {
       this.Hn = a;
     }
   };
-  LootGoldBehavior.prototype.Kp = function (a) {
+  LootGoldBehavior.prototype.performOnArrival = function (a) {
     var b;
     switch (randomInt(8)) {
       case 0:
@@ -618,13 +618,13 @@ export function initializeAiBehaviors() {
   LootGoldBehavior.prototype.canExecute = function () {
     return this.Hn && isSpellReady(this.Hn);
   };
-  LootGoldBehavior.prototype.Jd = function () {
+  LootGoldBehavior.prototype.getFinalScore = function () {
     return (/** @type {PrioritizedBehavior} */ (/** @type {unknown} */ (this))).getPriority();
   };
-  LootGoldBehavior.prototype.Md = function () {
+  LootGoldBehavior.prototype.getActionTarget = function () {
     return this.Hn;
   };
-  LootGoldBehavior.prototype.Td = function (a) {
+  LootGoldBehavior.prototype.selectTarget = function (a) {
     if (a.effects.Gn || !hasOpponentsInRoom(a, a.position.room)) {
       return null;
     }
@@ -683,17 +683,17 @@ export function initializeAiBehaviors() {
       this.Dn = a;
     }
   };
-  LootItemBehavior.prototype.Kp = function () {};
+  LootItemBehavior.prototype.performOnArrival = function () {};
   LootItemBehavior.prototype.canExecute = function () {
     return this.Dn && isSpellReady(this.Dn);
   };
-  LootItemBehavior.prototype.Jd = function () {
+  LootItemBehavior.prototype.getFinalScore = function () {
     return (/** @type {PrioritizedBehavior} */ (/** @type {unknown} */ (this))).getPriority();
   };
-  LootItemBehavior.prototype.Md = function () {
+  LootItemBehavior.prototype.getActionTarget = function () {
     return this.Dn;
   };
-  LootItemBehavior.prototype.Td = function (a) {
+  LootItemBehavior.prototype.selectTarget = function (a) {
     return a.effects.isStealthed || !hasOpponentsInRoom(a, a.position.room) ? null : a;
   };
   LootScrollBehavior.prototype = new ExploreDungeonBehavior();
@@ -705,7 +705,7 @@ export function initializeAiBehaviors() {
       this.on = a;
     }
   };
-  LootScrollBehavior.prototype.Kp = function (a) {
+  LootScrollBehavior.prototype.performOnArrival = function (a) {
     var b;
     switch (randomInt(8)) {
       case 0:
@@ -737,13 +737,13 @@ export function initializeAiBehaviors() {
   LootScrollBehavior.prototype.canExecute = function () {
     return this.on && isSpellReady(this.on);
   };
-  LootScrollBehavior.prototype.Jd = function () {
+  LootScrollBehavior.prototype.getFinalScore = function () {
     return (/** @type {PrioritizedBehavior} */ (/** @type {unknown} */ (this))).getPriority();
   };
-  LootScrollBehavior.prototype.Md = function () {
+  LootScrollBehavior.prototype.getActionTarget = function () {
     return this.on;
   };
-  LootScrollBehavior.prototype.Td = function (a) {
+  LootScrollBehavior.prototype.selectTarget = function (a) {
     return a.effects.Vs || !hasOpponentsInRoom(a, a.position.room) ? null : a;
   };
   GuardRangedBehavior.prototype.resetBehaviorState = function () {
@@ -816,14 +816,14 @@ export function initializeAiBehaviors() {
   HealBehavior.prototype.canExecute = function () {
     return this.fm && isSpellReady(this.fm);
   };
-  HealBehavior.prototype.Md = function () {
+  HealBehavior.prototype.getActionTarget = function () {
     return this.fm;
   };
-  HealBehavior.prototype.Jd = function (a) {
+  HealBehavior.prototype.getFinalScore = function (a) {
     a = getOpponents(a);
     return 0 === a.length ? 0 : Math.min((/** @type {PrioritizedBehavior} */ (/** @type {unknown} */ (this))).getPriority(), 5 / a.length * (/** @type {PrioritizedBehavior} */ (/** @type {unknown} */ (this))).getPriority());
   };
-  HealBehavior.prototype.Td = function (a) {
+  HealBehavior.prototype.selectTarget = function (a) {
     return selectScrollTarget(a);
   };
   ApplyEffectBehavior.prototype = new ExploreDungeonBehavior();
@@ -838,13 +838,13 @@ export function initializeAiBehaviors() {
   ApplyEffectBehavior.prototype.canExecute = function () {
     return this.gm && isSpellReady(this.gm);
   };
-  ApplyEffectBehavior.prototype.Md = function () {
+  ApplyEffectBehavior.prototype.getActionTarget = function () {
     return this.gm;
   };
-  ApplyEffectBehavior.prototype.Jd = function () {
+  ApplyEffectBehavior.prototype.getFinalScore = function () {
     return (/** @type {PrioritizedBehavior} */ (/** @type {unknown} */ (this))).getPriority();
   };
-  ApplyEffectBehavior.prototype.Td = function (a) {
+  ApplyEffectBehavior.prototype.selectTarget = function (a) {
     return selectScrollTarget(a);
   };
   AreaDamageBehavior.prototype = new ExploreDungeonBehavior();
@@ -859,13 +859,13 @@ export function initializeAiBehaviors() {
   AreaDamageBehavior.prototype.canExecute = function () {
     return this.Zl && isSpellReady(this.Zl);
   };
-  AreaDamageBehavior.prototype.Md = function () {
+  AreaDamageBehavior.prototype.getActionTarget = function () {
     return this.Zl;
   };
-  AreaDamageBehavior.prototype.Jd = function () {
+  AreaDamageBehavior.prototype.getFinalScore = function () {
     return (/** @type {PrioritizedBehavior} */ (/** @type {unknown} */ (this))).getPriority();
   };
-  AreaDamageBehavior.prototype.Td = function (a) {
+  AreaDamageBehavior.prototype.selectTarget = function (a) {
     return selectScrollTarget(a);
   };
   ChainDamageBehavior.prototype = new ExploreDungeonBehavior();
@@ -880,13 +880,13 @@ export function initializeAiBehaviors() {
   ChainDamageBehavior.prototype.canExecute = function () {
     return this.In && isSpellReady(this.In);
   };
-  ChainDamageBehavior.prototype.Md = function () {
+  ChainDamageBehavior.prototype.getActionTarget = function () {
     return this.In;
   };
-  ChainDamageBehavior.prototype.Jd = function () {
+  ChainDamageBehavior.prototype.getFinalScore = function () {
     return (/** @type {PrioritizedBehavior} */ (/** @type {unknown} */ (this))).getPriority();
   };
-  ChainDamageBehavior.prototype.Td = function (a) {
+  ChainDamageBehavior.prototype.selectTarget = function (a) {
     return selectScrollTarget(a);
   };
   SummonBehavior.prototype = new ExploreDungeonBehavior();
@@ -901,13 +901,13 @@ export function initializeAiBehaviors() {
   SummonBehavior.prototype.canExecute = function () {
     return this.spell && isSpellReady(this.spell);
   };
-  SummonBehavior.prototype.Md = function () {
+  SummonBehavior.prototype.getActionTarget = function () {
     return this.spell;
   };
-  SummonBehavior.prototype.Jd = function () {
+  SummonBehavior.prototype.getFinalScore = function () {
     return (/** @type {PrioritizedBehavior} */ (/** @type {unknown} */ (this))).getPriority();
   };
-  SummonBehavior.prototype.Td = function (a) {
+  SummonBehavior.prototype.selectTarget = function (a) {
     return selectScrollTarget(a);
   };
   LifeDrainBehavior.prototype = new ExploreDungeonBehavior();
@@ -919,17 +919,17 @@ export function initializeAiBehaviors() {
       this.Lm = a;
     }
   };
-  LifeDrainBehavior.prototype.Jd = function () {
+  LifeDrainBehavior.prototype.getFinalScore = function () {
     var a = (/** @type {LifeDrainBehavior & { selectedTarget: import("../characters/character.js").Character }} */ (/** @type {unknown} */ (this))).selectedTarget;
     return Math.max(0, (1 - a.stats.health / statValue(a.stats.maxHealth)) * (/** @type {PrioritizedBehavior} */ (/** @type {unknown} */ (this))).getPriority());
   };
   LifeDrainBehavior.prototype.canExecute = function () {
     return this.Lm && isSpellReady(this.Lm);
   };
-  LifeDrainBehavior.prototype.Md = function () {
+  LifeDrainBehavior.prototype.getActionTarget = function () {
     return this.Lm;
   };
-  LifeDrainBehavior.prototype.Td = function (a) {
+  LifeDrainBehavior.prototype.selectTarget = function (a) {
     var b = null,
       c = 1,
       d = getFriendlyTargets(a),
@@ -953,16 +953,16 @@ export function initializeAiBehaviors() {
       this.pn = a;
     }
   };
-  ReviveBehavior.prototype.Jd = function () {
+  ReviveBehavior.prototype.getFinalScore = function () {
     return (/** @type {PrioritizedBehavior} */ (/** @type {unknown} */ (this))).getPriority();
   };
   ReviveBehavior.prototype.canExecute = function () {
     return this.pn && isSpellReady(this.pn);
   };
-  ReviveBehavior.prototype.Md = function () {
+  ReviveBehavior.prototype.getActionTarget = function () {
     return this.pn;
   };
-  ReviveBehavior.prototype.Td = function (a) {
+  ReviveBehavior.prototype.selectTarget = function (a) {
     var b,
       c = game.state.adventurers,
       d;
@@ -985,13 +985,13 @@ export function initializeAiBehaviors() {
   PartyBuffBehavior.prototype.canExecute = function () {
     return this.spell && isSpellReady(this.spell);
   };
-  PartyBuffBehavior.prototype.Jd = function () {
+  PartyBuffBehavior.prototype.getFinalScore = function () {
     return (/** @type {PrioritizedBehavior} */ (/** @type {unknown} */ (this))).getPriority();
   };
-  PartyBuffBehavior.prototype.Md = function () {
+  PartyBuffBehavior.prototype.getActionTarget = function () {
     return this.spell;
   };
-  PartyBuffBehavior.prototype.Td = function (a) {
+  PartyBuffBehavior.prototype.selectTarget = function (a) {
     return a;
   };
   WaitBehavior.prototype.resetBehaviorState = function () {};
@@ -1060,13 +1060,13 @@ export function initializeAiBehaviors() {
   LootChestBehavior.prototype.canExecute = function () {
     return this.Wm && isSpellReady(this.Wm);
   };
-  LootChestBehavior.prototype.Jd = function (a) {
+  LootChestBehavior.prototype.getFinalScore = function (a) {
     return hasOpponentsInRoom(a, a.position.room) ? 0 : hasPendingLoot() ? (/** @type {PrioritizedBehavior} */ (/** @type {unknown} */ (this))).getPriority() : 0;
   };
-  LootChestBehavior.prototype.Md = function () {
+  LootChestBehavior.prototype.getActionTarget = function () {
     return this.Wm;
   };
-  LootChestBehavior.prototype.Td = function (a) {
+  LootChestBehavior.prototype.selectTarget = function (a) {
     return hasPendingLoot() ? a : null;
   };
   LootPotionBehavior.prototype = new ExploreDungeonBehavior();
@@ -1081,7 +1081,7 @@ export function initializeAiBehaviors() {
   LootPotionBehavior.prototype.canExecute = function () {
     return this.pm && isSpellReady(this.pm);
   };
-  LootPotionBehavior.prototype.Jd = function (a) {
+  LootPotionBehavior.prototype.getFinalScore = function (a) {
     var b = a.position.room;
     if (!b || hasOpponentsInRoom(a, b)) {
       return 0;
@@ -1089,10 +1089,10 @@ export function initializeAiBehaviors() {
     a = getRoomTreasure(game.treasure, b);
     return !a || a.opened || a.selected ? 0 : (/** @type {PrioritizedBehavior} */ (/** @type {unknown} */ (this))).getPriority();
   };
-  LootPotionBehavior.prototype.Md = function () {
+  LootPotionBehavior.prototype.getActionTarget = function () {
     return this.pm;
   };
-  LootPotionBehavior.prototype.Td = function (a) {
+  LootPotionBehavior.prototype.selectTarget = function (a) {
     return a;
   };
   UseShopBehavior.prototype.resetBehaviorState = function () {
@@ -1387,19 +1387,19 @@ export function initializeAiBehaviors() {
       this.spell = a;
     }
   };
-  SelfSpellBehavior.prototype.Kp = function (a) {
+  SelfSpellBehavior.prototype.performOnArrival = function (a) {
     showFloatingText(game.floatingText, a, "Protect me", "white");
   };
   SelfSpellBehavior.prototype.canExecute = function (a) {
     return this.spell && isSpellReady(this.spell) && !a.companion ? true : false;
   };
-  SelfSpellBehavior.prototype.Jd = function () {
+  SelfSpellBehavior.prototype.getFinalScore = function () {
     return (/** @type {PrioritizedBehavior} */ (/** @type {unknown} */ (this))).getPriority();
   };
-  SelfSpellBehavior.prototype.Md = function () {
+  SelfSpellBehavior.prototype.getActionTarget = function () {
     return this.spell;
   };
-  SelfSpellBehavior.prototype.Td = function (a) {
+  SelfSpellBehavior.prototype.selectTarget = function (a) {
     return a;
   };
   AreaSpellBehavior.prototype = new ExploreDungeonBehavior();
@@ -1418,13 +1418,13 @@ export function initializeAiBehaviors() {
     var b = a.stats.maxSummonedMinions;
     return countSummonedMinions(a) < b;
   };
-  AreaSpellBehavior.prototype.Jd = function () {
+  AreaSpellBehavior.prototype.getFinalScore = function () {
     return (/** @type {PrioritizedBehavior} */ (/** @type {unknown} */ (this))).getPriority();
   };
-  AreaSpellBehavior.prototype.Md = function () {
+  AreaSpellBehavior.prototype.getActionTarget = function () {
     return this.spell;
   };
-  AreaSpellBehavior.prototype.Td = function (a) {
+  AreaSpellBehavior.prototype.selectTarget = function (a) {
     return a;
   };
   CompanionSpellBehavior.prototype = new ExploreDungeonBehavior();
@@ -1462,13 +1462,13 @@ export function initializeAiBehaviors() {
     b = a.stats.maxSummonedMinions;
     return countSummonedMinions(a) < b;
   };
-  CompanionSpellBehavior.prototype.Jd = function () {
+  CompanionSpellBehavior.prototype.getFinalScore = function () {
     return (/** @type {PrioritizedBehavior} */ (/** @type {unknown} */ (this))).getPriority();
   };
-  CompanionSpellBehavior.prototype.Md = function () {
+  CompanionSpellBehavior.prototype.getActionTarget = function () {
     return this.spell;
   };
-  CompanionSpellBehavior.prototype.Td = function (a) {
+  CompanionSpellBehavior.prototype.selectTarget = function (a) {
     var b = game.monsters.Og;
     if (0 === b.length) {
       return null;

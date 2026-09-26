@@ -1,74 +1,5 @@
 [
   {
-    "name": "Td",
-    "reads": 1,
-    "writes": 17,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:374",
-        "code": "(/** @type {DungeonBehaviorMethods} */ /** @type {unknown} */this).Td"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:386",
-        "code": "ExploreDungeonBehavior.prototype.Td"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:627",
-        "code": "LootGoldBehavior.prototype.Td"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js"
-    ]
-  },
-  {
-    "name": "Md",
-    "reads": 1,
-    "writes": 17,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:375",
-        "code": "(/** @type {DungeonBehaviorMethods} */ /** @type {unknown} */this).Md"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:383",
-        "code": "ExploreDungeonBehavior.prototype.Md"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:624",
-        "code": "LootGoldBehavior.prototype.Md"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js"
-    ]
-  },
-  {
-    "name": "Jd",
-    "reads": 1,
-    "writes": 17,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:375",
-        "code": "(/** @type {DungeonBehaviorMethods} */ /** @type {unknown} */this).Jd"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:380",
-        "code": "ExploreDungeonBehavior.prototype.Jd"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:621",
-        "code": "LootGoldBehavior.prototype.Jd"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js"
-    ]
-  },
-  {
     "name": "Kd",
     "reads": 13,
     "writes": 5,
@@ -8656,29 +8587,6 @@
     ]
   },
   {
-    "name": "un",
-    "reads": 3,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:33",
-        "code": "this.un"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:333",
-        "code": "this.un"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:337",
-        "code": "this.un"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js"
-    ]
-  },
-  {
     "name": "co",
     "reads": 1,
     "writes": 5,
@@ -8774,29 +8682,6 @@
       "src\\engine\\modules\\characters\\party.js",
       "src\\engine\\modules\\world\\dungeons.js",
       "src\\engine\\modules\\world\\terrain.js"
-    ]
-  },
-  {
-    "name": "Kp",
-    "reads": 1,
-    "writes": 5,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:349",
-        "code": "(/** @type {DungeonBehaviorMethods} */ /** @type {unknown} */this).Kp"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:360",
-        "code": "ExploreDungeonBehavior.prototype.Kp"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:589",
-        "code": "LootGoldBehavior.prototype.Kp"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js"
     ]
   },
   {
@@ -12147,31 +12032,6 @@
       "src\\engine\\modules\\loot\\inventory.js",
       "src\\engine\\modules\\progression\\upgrades.js",
       "src\\engine\\modules\\views\\character.js"
-    ]
-  },
-  {
-    "name": "Dt",
-    "reads": 3,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:49",
-        "code": "this.Dt"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:90",
-        "code": "b.Dt"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:97",
-        "code": "a.Dt"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\loot\\treasure.js",
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\world\\generation.js"
     ]
   },
   {

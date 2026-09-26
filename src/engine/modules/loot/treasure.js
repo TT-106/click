@@ -46,7 +46,7 @@ export function setChestOpened(a, b) {
 }
 export function TreasureRegistry() {
   this.targets = [];
-  this.Dt = {};
+  this.targetByRoomId = {};
   this.ve = [];
   this.yh = new Vector2();
 }
@@ -87,14 +87,14 @@ export function spawnRoomTreasure(a) {
       }
       a = new TreasureChest(g, f, a, c, d);
       b.targets.push(a);
-      b.Dt[a.room.roomId] = a;
+      b.targetByRoomId[a.room.roomId] = a;
     } else {
       console.log("failed to find treasure chest location.");
     }
   }
 }
 export function getRoomTreasure(a, b) {
-  return b ? a.Dt[b.roomId] : null;
+  return b ? a.targetByRoomId[b.roomId] : null;
 }
 export function initializeLootTreasure() {
   GoldDrop.prototype.oh = function (a) {

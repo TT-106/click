@@ -304,7 +304,7 @@ export function restoreGameState(a, b) {
                 var dc = game.treasure,
                   Ka = nc;
                 dc.targets.push(Ka);
-                dc.Dt[Ka.room.roomId] = Ka;
+                dc.targetByRoomId[Ka.room.roomId] = Ka;
               }
             }
           }
