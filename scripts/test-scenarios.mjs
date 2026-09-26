@@ -6,7 +6,7 @@ import { chromium } from 'playwright';
 import {
   decodeFixture, encodeSave, summarize,
   withPotions, withScrolls, withGold, withTurns, withElapsed, withOfflineProcessing,
-  withVictories, withClassSpell, withCastleVictory,
+  withVictories, withClassSpell, withCastleVictory, withReclassedSpell,
   HARNESS_FIXED_NOW,
 } from '../tests/scenarios/save-mutations.mjs';
 
@@ -88,6 +88,26 @@ const scenarios = [
     steps: [[3000, snap => ({ spellCast: snap.statistics.spellCastCount > base.statistics.spellCastCount })], [3000, null]],
   },
   {
+    // 召唤类分支：spellCategoryId=9 → applySpellEffect 走 summonSpellMinion，
+    // 召唤数写入存档统计 minionsSummoned，因此两端各自的增长可直接对账。
+    name: 'spell-summon-ghost-skeleton',
+    make: () => withReclassedSpell(base, 3, 9, '幽灵骷髅'),
+    steps: [{ turns: 3000, check: snap => ({ spellCast: snap.statistics.spellCastCount > base.statistics.spellCastCount, summoned: snap.statistics.minionsSummoned > base.statistics.minionsSummoned }) }, [3000, null]],
+  },
+  {
+    // 召唤+移除目标分支：spellCategoryId=11 先把目标怪从活怪物列表 splice 掉再召唤
+    name: 'spell-summon-skeleton-army',
+    make: () => withReclassedSpell(base, 3, 9, '骷髅军队'),
+    steps: [{ turns: 3000, check: snap => ({ spellCast: snap.statistics.spellCastCount > base.statistics.spellCastCount, summoned: snap.statistics.minionsSummoned > base.statistics.minionsSummoned }) }, [3000, null]],
+  },
+  {
+    // 控制类分支：spellCategoryId=2、statusEffectTypeId=0（睡眠），
+    // 用逐帧扫描直接计数睡眠落到活怪物上的次数。
+    name: 'spell-sleep',
+    make: () => withReclassedSpell(base, 3, 10, '睡眠'),
+    steps: [{ turns: 3000, check: snap => ({ spellCast: snap.statistics.spellCastCount > base.statistics.spellCastCount }), effectType: 0 }, [3000, null]],
+  },
+  {
     // 城堡征服全流程：只剩最后一座城堡待攻克，队伍走进城堡再从出口离开，
     // 触发 iw() 的征服尾部（解锁邻区、recordCastleConquered）与胜利瞬间。
     // 断言放在终点：castlesConquered 在载入后为 0，只有真的走完征服尾部才会变成 1。
@@ -136,6 +156,14 @@ const scenarios = [
   },
 ];
 
+// SCENARIO_FILTER=a,b 只跑指定场景，便于新场景快速迭代；不设置时跑全部。
+const filter = process.env.SCENARIO_FILTER?.split(',').map(s => s.trim()).filter(Boolean);
+const selected = filter ? scenarios.filter(s => filter.includes(s.name)) : scenarios;
+if (filter && selected.length !== filter.length) {
+  console.error(`SCENARIO_FILTER 含未注册场景: ${filter.join(',')} —— 实际匹配 ${selected.length}`);
+  process.exit(1);
+}
+
 const browser = await chromium.launch({ channel: 'chrome', headless: true });
 const failures = [];
 try {
@@ -149,7 +177,7 @@ try {
   }));
   const engineErrors = () => pages.flatMap(p => p.errors);
 
-  for (const scenario of scenarios) {
+  for (const scenario of selected) {
     const saveText = encodeSave(scenario.make());
     try {
       // 两端载入同一变异存档（harness.load 内部重置随机种子，保证相同随机流起点）
@@ -246,6 +274,7 @@ try {
             if (verdict.changed !== undefined) assert.equal(verdict.changed, true, `${label} 离线后金币应增长`);
             if (verdict.unchanged !== undefined) assert.equal(verdict.unchanged, true, `${label} 关闭离线后金币不应变化`);
             if (verdict.spellCast !== undefined) assert.equal(verdict.spellCast, true, `${label} 法术场景必须实际施法`);
+            if (verdict.summoned !== undefined) assert.equal(verdict.summoned, true, `${label} 召唤场景必须真的召唤出随从`);
             if (verdict.victory !== undefined) assert.equal(verdict.victory, true, `${label} 必须真的走完征服尾部并触发胜利`);
           }
         }
@@ -267,4 +296,4 @@ if (failures.length) {
   console.error(`失败场景: ${failures.join(', ')}`);
   process.exit(1);
 }
-console.log(`✓ 全部 ${scenarios.length} 个差分场景通过`);
+console.log(`✓ ${selected.length} / ${scenarios.length} 个差分场景通过`);

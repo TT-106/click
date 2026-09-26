@@ -105,6 +105,17 @@ export function withClassSpell(save, characterClass, spellName) {
   return out;
 }
 
+/** 把指定下标的队员改成目标职业并装载法术；用于 fixture 队伍里没有的职业分支（召唤、睡眠等）。
+ *  两端载入同一份改动存档，职业定义由各自的存档载入路径按 characterClass 重建。 */
+export function withReclassedSpell(save, index, characterClass, spellName) {
+  const out = clone(save);
+  const character = out.adventurers[index];
+  if (!character) throw new Error(`fixture 缺少队员下标 ${index}`);
+  character.characterClass = characterClass;
+  character.spells = [{ spellName }];
+  return out;
+}
+
 /** 收集快照中与玩法相关的可观察量，用于"断言场景确实产生了变化"。 */
 export function summarize(snapshot) {
   return {
