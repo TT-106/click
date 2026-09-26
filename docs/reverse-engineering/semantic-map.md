@@ -170,6 +170,7 @@ RunStatistics 的 `On/Lk/qn/Mj/wi/uk` → `turnCount/doorsOpened/roomsCleared/le
 | `Wb` | `targetDungeon` | PartyState | 赋值源全是 `dungeonList` 过滤出的最近地牢，读取为 `getWorldColumn/Row`，兄弟字段已叫 targetCastle/targetShop | 否 |
 
 同名冲突排查：`Cb` 经取证确认在 `Character.prototype` 与 `CombatAction.prototype` 上是**两个不同语义的 setter**（`setCombatTarget` / `setTargetCharacter`），而 `characters/character.js` 一个文件里同时含定义与 8 处另一主的调用点，按接收者拆分无法用逐文件工具完成，因此本轮不动、留作线级专项（见 unresolved U6）。
+**U6 已随后闭合**：`Cb` 按所有者拆为 `Character.prototype.setCombatTarget` 与 `CombatAction.prototype.setTargetCharacter`，30 处命中全部清零；`character.js:1237` 那一行是逐文件工具做不到、需单独改回的一处。因双主语义，该字母不进全局 fields 段。
 
 工具边界（本轮实测）：`rename-field.mjs` 的字符串字面量守卫比较的是全部字面量的多重集（含重复项），且基准取自替换前的原文，因此"改坏一处重复字面量"不会被放过；但它只能做逐文件的替换，`Cb` 这类"同一文件里既有本类定义又有他类调用点"的按接收者拆分超出它的能力，需要线级人工处理。
 

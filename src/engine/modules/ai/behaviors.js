@@ -335,7 +335,7 @@ export function initializeAiBehaviors() {
   ExploreDungeonBehavior.prototype.notifySpellLearned = function () {};
   ExploreDungeonBehavior.prototype.od = function (a) {
     if (this.selectedTarget && this.un) {
-      a.Cb(this.selectedTarget);
+      a.setCombatTarget(this.selectedTarget);
       var b = a.position;
       this.SB = a === this.selectedTarget ? 0 : b.levelPosition.distanceTo(this.selectedTarget.position.levelPosition);
       if (this.SB <= this.actionRange) {
@@ -545,7 +545,7 @@ export function initializeAiBehaviors() {
   MeleeAttackBehavior.prototype.notifySpellLearned = function () {};
   MeleeAttackBehavior.prototype.od = function (a) {
     if (this.targetCharacter && !this.targetCharacter.isDead) {
-      a.Cb(this.targetCharacter);
+      a.setCombatTarget(this.targetCharacter);
       if (this.Ng <= this.actionRange) {
         if (!canAttack(a)) {
           return;
@@ -638,7 +638,7 @@ export function initializeAiBehaviors() {
   OpportunisticAttackBehavior.prototype.notifySpellLearned = function () {};
   OpportunisticAttackBehavior.prototype.od = function (a) {
     if (this.targetCharacter && !this.targetCharacter.isDead) {
-      a.Cb(this.targetCharacter);
+      a.setCombatTarget(this.targetCharacter);
       if (this.Ng <= this.actionRange) {
         if (!canAttack(a)) {
           return;
@@ -772,7 +772,7 @@ export function initializeAiBehaviors() {
   };
   TargetSpellBehavior.prototype.od = function (a) {
     if (this.Vi && canAttack(a) && isSpellReady(this.Vi)) {
-      if (a.Cb(this.targetCharacter), this.Ng <= this.actionRange) {
+      if (a.setCombatTarget(this.targetCharacter), this.Ng <= this.actionRange) {
         if (canAttack(a)) {
           markAttackTurn(a);
           this.Vi.lastCastTurn = game.state.turnNumber;
@@ -1512,7 +1512,7 @@ export function initializeAiBehaviors() {
   SpecialAttackBehavior.prototype.notifySpellLearned = function () {};
   SpecialAttackBehavior.prototype.od = function (a) {
     if (this.targetCharacter && !this.targetCharacter.isDead) {
-      a.Cb(this.targetCharacter);
+      a.setCombatTarget(this.targetCharacter);
       if (this.Ng <= this.actionRange) {
         if (!canAttack(a)) {
           return;

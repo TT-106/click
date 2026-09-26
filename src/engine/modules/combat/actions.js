@@ -31,7 +31,7 @@ export function CombatAction() {
   this.chainCount = this.Ys = 0;
   this.pl = null;
 }
-/** @typedef {CombatAction & { Cb: (target: unknown) => void }} TargetedCombatAction */
+/** @typedef {CombatAction & { setTargetCharacter: (target: unknown) => void }} TargetedCombatAction */
 export function findTargetsInRange(a, b, c, d) {
   a = getOpponents(a);
   if (0 === a.length) {
@@ -437,7 +437,7 @@ export function performMultiAttack(a, b) {
 export function createAttackAction(a, b, c) {
   var d = new CombatAction();
   d.attacker = a;
-  (/** @type {TargetedCombatAction} */ (d)).Cb(b);
+  (/** @type {TargetedCombatAction} */ (d)).setTargetCharacter(b);
   if (12 == a.characterClass) {
     c = b.position.levelPosition;
     a = calculateAttackDamage(a, b);
@@ -502,7 +502,7 @@ export function createSpellAction(a) {
   }
   var d = new CombatAction();
   d.attacker = a;
-  (/** @type {TargetedCombatAction} */ (d)).Cb(b);
+  (/** @type {TargetedCombatAction} */ (d)).setTargetCharacter(b);
   var f = b.position.levelPosition,
     g = a.position.levelPosition;
   d.actionDefinition = c;
@@ -630,7 +630,7 @@ export function createChainAction(a) {
     l = g.xi,
     n = d.position.levelPosition;
   h.attacker = a.attacker;
-  (/** @type {TargetedCombatAction} */ (h)).Cb(d);
+  (/** @type {TargetedCombatAction} */ (h)).setTargetCharacter(d);
   g = new VisualEffect(g.impactEffectName, l, n, false, 1);
   h.impactEffect = g;
   f = new VisualEffect(f.impactEffectName, l, n, true, 1);
@@ -652,7 +652,7 @@ export function createReturningAction(a) {
   if (b === c) {
     var f = new CombatAction();
     f.attacker = a.attacker;
-    (/** @type {TargetedCombatAction} */ (f)).Cb(a.attacker);
+    (/** @type {TargetedCombatAction} */ (f)).setTargetCharacter(a.attacker);
     f.yd = true;
     f.actionDefinition = a.actionDefinition;
     f.ut = true;
@@ -695,7 +695,7 @@ export function createReturningAction(a) {
   var h = a.projectileEffect,
     b = d.xi,
     c = g.position.levelPosition;
-  (/** @type {TargetedCombatAction} */ (f)).Cb(g);
+  (/** @type {TargetedCombatAction} */ (f)).setTargetCharacter(g);
   g = calculateSpellDamage(a.attacker, g);
   f.Jc = g;
   f.Rd = 0 === g;
@@ -710,7 +710,7 @@ export function createReturningAction(a) {
   return f;
 }
 export function initializeCombatActions() {
-  CombatAction.prototype.Cb = function (a) {
+  CombatAction.prototype.setTargetCharacter = function (a) {
     this.targetCharacter = a;
   };
   CombatAction.prototype.Ir = function () {

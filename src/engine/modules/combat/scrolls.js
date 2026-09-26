@@ -148,7 +148,7 @@ export function castScroll(a, b) {
       }
       d = game.state.scrollCaster.position;
       d.room = c.position.room;
-      game.state.scrollCaster.Cb(c);
+      game.state.scrollCaster.setCombatTarget(c);
       if (a.mB) {
         game.state.scrollCaster.ld = a.mB;
         game.state.scrollCaster.actionType = CAST_ACTION_TYPE;

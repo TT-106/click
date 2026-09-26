@@ -1,33 +1,5 @@
 [
   {
-    "name": "Cb",
-    "reads": 25,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:338",
-        "code": "a.Cb"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:548",
-        "code": "a.Cb"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:641",
-        "code": "a.Cb"
-      }
-    ],
-    "fileCount": 6,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js",
-      "src\\engine\\modules\\ai\\targeting.js",
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\combat\\scrolls.js",
-      "src\\engine\\modules\\simulation\\tick.js"
-    ]
-  },
-  {
     "name": "rc",
     "reads": 20,
     "writes": 3,

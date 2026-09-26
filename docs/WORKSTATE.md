@@ -66,8 +66,8 @@
 
 - 累计落地 12 个混淆字母清零：Potion 三元组（`uc/tc/vc`）＋升级行四字段（`Ic/Hc/qc/xc` → `achievement/purchased/canPurchaseNow/castle`）＋点位事件四元组（`Dc/yc/Fc/Gc` → `basePointReward/achievementPointBonus/fullEventLabel/shortEventLabel`）＋内容表三组（`Ec`→`opened`、`zc`→`isDirectional`、`Ac`→`doorSprites`）＋`Wb`→`targetDungeon`。混淆属性清单 1,238 → 1,223，`symbol-map.json` fields 202 → 217。
 - 每批均为"取命中数 → `scripts/rename-field.mjs` 守卫替换 → check/typecheck/parity/30 场景/e2e 全绿 → 一 commit"。三次真实拦截均由工具或 tsc 抓到：bash 吞 `$1` 抹平缩进、`\s*` 在 CRLF 上并行、M10 的 `@typedef` 窄签名漏改（工具已加注释行规则）。
-- 新增未决项 **U6**：`Cb` 是双主方法（`Character.prototype.Cb` 写 `combatTarget`，`CombatAction.prototype.Cb` 写 `targetCharacter`，定义与调用点同处 `characters/character.js`），逐文件工具无法拆分，需按接收者做线级编辑；拆完前不得写入全局 fields 段。
-- 下一步：继续按排行榜取组（`Bc`、`oc`、`Cc`、`Nc`、`Sc`、`Jc`、`Vc/Uc/Rc/Ic/Oc/Qc` 与 `views/*` 表行字段），并把 `Cb` 线级拆分排在一次纯方法批次里。
+- **U6 已闭合**：`Cb` 是双主方法，已按所有者拆为 `Character.prototype.setCombatTarget` 与 `CombatAction.prototype.setTargetCharacter`（behaviors 5 / targeting 4 / scrolls 1 / tick 2 / actions 7 / character 11+1 行级改回），`src` 内 `.Cb` 与 `Cb:` 命中为 0；因双主语义未写入全局 fields 段。四套回归 + typecheck 全绿。
+- 下一步：继续按排行榜取组（`Bc`、`oc`、`Cc`、`Nc`、`Sc`、`Jc`、`Uc/Vc/Rc/Oc/Qc` 与 `views/*` 表行字段），并把 §56 验收矩阵与三份报告对齐到当前代码与测试实况。
 
 ## 1. 项目概况
 

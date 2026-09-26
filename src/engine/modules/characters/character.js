@@ -25,7 +25,7 @@ import { ItemDrop, generateItem, isBetterItem, randomizeItemLevel, removeItemDro
 import { tickCharacterTurn } from "../simulation/characters.js";
 import { generateDungeonLevel } from "../world/generation.js";
 import { discoverDungeon } from "../world/dungeons.js";
-/** CombatAction.Cb 由 combat/actions.js 后挂到原型，调用点窄签名。 @typedef {CombatAction & { Cb: (target: unknown) => void }} TargetedCombatAction */
+/** CombatAction.setTargetCharacter 由 combat/actions.js 后挂到原型，调用点窄签名。 @typedef {CombatAction & { setTargetCharacter: (target: unknown) => void }} TargetedCombatAction */
 /** Equipment.ef/So 由 characters/movement.js 后挂到原型，调用点窄签名。 @typedef {Equipment & { ef: (slot: unknown) => unknown, So: () => unknown }} SlotEquipment */
 export function Character(a, b, c, d, f) {
   this.adventurerName = a;
@@ -486,7 +486,7 @@ export function updateCharacter(a, b) {
                   qa = Ea[Ca];
                   ta = new CombatAction();
                   ta.attacker = a;
-                  (/** @type {TargetedCombatAction} */ (ta)).Cb(qa);
+                  (/** @type {TargetedCombatAction} */ (ta)).setTargetCharacter(qa);
                   ta.actionDefinition = X;
                   ta.yd = true;
                   eb = qa.position.levelPosition;
@@ -526,7 +526,7 @@ export function updateCharacter(a, b) {
                   for (Ua = 0; Ua < Ga && ja; Ua++) {
                     Va = new CombatAction();
                     Va.attacker = a;
-                    (/** @type {TargetedCombatAction} */ (Va)).Cb(ja);
+                    (/** @type {TargetedCombatAction} */ (Va)).setTargetCharacter(ja);
                     Va.actionDefinition = ha;
                     Va.yd = true;
                     mc = ja.position.levelPosition;
@@ -597,7 +597,7 @@ export function updateCharacter(a, b) {
                     if (Fc) {
                       sa = new CombatAction();
                       sa.attacker = a;
-                      (/** @type {TargetedCombatAction} */ (sa)).Cb(Qa);
+                      (/** @type {TargetedCombatAction} */ (sa)).setTargetCharacter(Qa);
                       sa.actionDefinition = cc;
                       sa.yd = true;
                       if (qc) {
@@ -652,7 +652,7 @@ export function updateCharacter(a, b) {
                 if (Na) {
                   var Ya = new CombatAction();
                   Ya.attacker = a;
-                  (/** @type {TargetedCombatAction} */ (Ya)).Cb(xb);
+                  (/** @type {TargetedCombatAction} */ (Ya)).setTargetCharacter(xb);
                   var tc = xb.position.levelPosition,
                     me = a.position.levelPosition;
                   Ya.actionDefinition = Na;
@@ -748,7 +748,7 @@ export function updateCharacter(a, b) {
                       ad = Gc.ld,
                       Vb = new CombatAction();
                     Vb.attacker = Gc;
-                    (/** @type {TargetedCombatAction} */ (Vb)).Cb(Gc);
+                    (/** @type {TargetedCombatAction} */ (Vb)).setTargetCharacter(Gc);
                     Vb.Rd = false;
                     Vb.Jc = 0;
                     Vb.actionDefinition = ad;
@@ -793,7 +793,7 @@ export function updateCharacter(a, b) {
                         fg = Ne.ld,
                         ld = new CombatAction();
                       ld.attacker = Ne;
-                      (/** @type {TargetedCombatAction} */ (ld)).Cb(Oe);
+                      (/** @type {TargetedCombatAction} */ (ld)).setTargetCharacter(Oe);
                       ld.Rd = false;
                       ld.Jc = 0;
                       ld.actionDefinition = fg;
@@ -825,7 +825,7 @@ export function updateCharacter(a, b) {
               if (se) {
                 var Md = new CombatAction();
                 Md.attacker = a;
-                (/** @type {TargetedCombatAction} */ (Md)).Cb(a);
+                (/** @type {TargetedCombatAction} */ (Md)).setTargetCharacter(a);
                 Md.Rd = false;
                 Md.Jc = 0;
                 Md.actionDefinition = se;
@@ -963,7 +963,7 @@ export function updateCharacter(a, b) {
                     if (Wd = Ud[xe], 4 !== Wd.characterType || 1 !== te && 0 !== te) {
                       yd = new CombatAction();
                       yd.attacker = a;
-                      (/** @type {TargetedCombatAction} */ (yd)).Cb(Wd);
+                      (/** @type {TargetedCombatAction} */ (yd)).setTargetCharacter(Wd);
                       yd.actionDefinition = vf;
                       yd.yd = true;
                       lg = Wd.position.levelPosition;
@@ -1234,7 +1234,7 @@ export function initializeCharactersCharacter() {
   Character.prototype.getSprite = function () {
     return this.sprite;
   };
-  Character.prototype.Cb = function (a) {
+  Character.prototype.setCombatTarget = function (a) {
     this.combatTarget = a;
   };
   Character.prototype.hq = function (a) {

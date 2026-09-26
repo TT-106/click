@@ -325,7 +325,7 @@ export function advanceSimulation(a) {
                   } else {
                     Wa = new CombatAction();
                     Wa.attacker = zb;
-                    (/** @type {any} */ (Wa)).Cb(qb);
+                    (/** @type {any} */ (Wa)).setTargetCharacter(qb);
                     Wa.yd = false;
                     Wa.actionDefinition = Ib;
                     applySeparationForce(Ab, Ha, jb, Hb);
@@ -341,7 +341,7 @@ export function advanceSimulation(a) {
                     sa = nc.position.levelPosition,
                     Tb = new CombatAction();
                   Tb.attacker = vb.attacker;
-                  (/** @type {any} */ (Tb)).Cb(nc);
+                  (/** @type {any} */ (Tb)).setTargetCharacter(nc);
                   Tb.yd = false;
                   Tb.actionDefinition = Qa.Wq;
                   if (!Qa.Wq) {

@@ -253,15 +253,15 @@ export function respondToTaunt(a, b) {
   var c = b.combatTarget;
   if (c && c.isDead) {
     c = null;
-    b.Cb(null);
+    b.setCombatTarget(null);
   }
   if (c && c.effects.Kf) {
     c = null;
-    b.Cb(null);
+    b.setCombatTarget(null);
   }
   if (c && c.effects.wg) {
     c = null;
-    b.Cb(null);
+    b.setCombatTarget(null);
   }
   if (c && c.effects.Gn) {
     return attackTauntingTarget(a, b), true;
@@ -272,7 +272,7 @@ export function respondToTaunt(a, b) {
       n = h;
     }
   }
-  return (c = l) || (c = findNearbyOpponent(b)) ? (b.Cb(c), attackTauntingTarget(a, b), true) : false;
+  return (c = l) || (c = findNearbyOpponent(b)) ? (b.setCombatTarget(c), attackTauntingTarget(a, b), true) : false;
 }
 export function attackTauntingTarget(a, b) {
   var c = b.combatTarget.position,
