@@ -1,10 +1,11 @@
 # WORKSTATE — Clickpocalypse II 语义恢复与现代化工程
 
 > 本文件是长程自治任务的**唯一续跑入口**。上下文压缩或中断后，先读本文件 + `git log --oneline`，再继续。
-> 最后更新：2026-09-26（U23 行视图/单元格/布局字段落地后，混淆清单 1,059；验收矩阵 51 PASS / 0 PARTIAL、矩阵 59/59、soak 通过）
+> 最后更新：2026-09-26（U24 升级/移动/盟友/药水/卷轴/主题字段落地后，混淆清单 1,052；验收矩阵 51 PASS / 0 PARTIAL、矩阵 59/59、soak 通过）
 
 ## 当前轮次状态（2026-09-26，M13 文档与验收收尾）
 
+- U24 升级/移动/盟友/药水/卷轴/主题字段（2026-09-26，一笔提交，六门禁全绿，混淆清单 1,059 → 1,052）：og→resetState（11 个升级原型的状态重置，载入恢复后统一调用）、fg→floorPositionIndex（走廊 pathTiles 索引，DTO 键同名）、Pf→allies（AllyRegistry 盟友列表，getOpponents 按转化/敌我切换）、mg→modifier（药水激活修正器：激活时 currentValue=activeValue、过期恢复 defaultValue）、sg→baseCapacity（卷轴定义基础容量：0=未解锁态，升级造价按 baseCapacity+(count+1)*Yi 曲线；6 个数据字面量）、kg/jg→doorOpenASprite/doorOpenBSprite（主题开门贴纸按门的朝向标志二选一；关门变体 Vf/Uf 留待下批）。甄别注意：kg/jg 在 character.js/game-save.js 还有同名局部变量，执行器 member/literal 模式不触局部变量故安全。
 - U23 行视图/单元格/布局字段（2026-09-26，一笔提交，六门禁全绿，混淆清单 1,066 → 1,059）：nf→rowViews（城堡表行视图数组）、sf/rf→rowViews（角色装备/地牢列表行视图数组，与 Tj→rowViews 命名统一）、mf 按属主拆名——nameCell（CastleRowView 城堡名单元格）/labelCell（DungeonRowView 与 UpgradeDetails 标签单元格）、Af→levelCell（物品等级单元格）、Bf→tableElement（装备/法术/怪物详情表）、Ce→entranceDoor（布局生成器入口门：roomList[0] 的门，revealRoom/spawnRoomTreasure 从此链式展开）。
 - U22 表格/按钮/渲染字段（2026-09-26，一笔提交，六门禁全绿，混淆清单 1,071 → 1,066）：$e→tableElement（CastleTableView/UpgradeDetails 表）、gf→goldCell（InventoryItemView 金币单元格）、bf→tableElement（DungeonListView/DungeonPurchaseDetails 表，**残留扫描抓到执行器文件表外的 upgrade-details 同名**）、If 同文件双属主手工拆分——RenderCommand.draw(context) 与 SceneRenderer.drawSprite(sprite,x,y)（调用形态 .If(this.context) vs .If(sprite,x,y) 可区分）、Nf→buttons（成就/角色升级按钮列表）。
 - U21 视图生命周期簇（2026-09-26，一笔提交，六门禁全绿，混淆清单 1,078 → 1,071）：**第七批取证第 3 组证据落地**——pf→createDomElements（表/画布视图 DOM 构建，19 处含 `{{pf: () => void}}` 内联类型标注计数）、so→createDomElements（ScrollBar/PotionBar）、qi→createRowCells（行视图单元格，14 处）、Ri→createHeaderRow（表头行，13 处）、Dp→tableElement、Tj→rowViews（MonsterLevelTabView 表状态）、Vw→cachedVisible（View 基类可见性缓存）。教训：内联 `/** @type {{pf: ...}} */` 标注中的 `pf:` 会被执行器 typedef 规则计数——--expect = 成员数 + 标注数，先小批探数再落盘（执行器事务性，错了不写）。
