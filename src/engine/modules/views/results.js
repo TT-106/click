@@ -1,4 +1,3 @@
-// @ts-nocheck -- M10 渐进类型化：JSDoc 覆盖后摘除（见 docs/WORKSTATE.md）
 /** 胜利、继承与离线收益面板。
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
@@ -214,7 +213,7 @@ export function initializeViewsResults() {
       f = b.Mj - this.sA,
       g = b.wi - this.Fz,
       h = game.castles.Jg.length - this.Iy,
-      b = b.oj - this.JB,
+      b = /** @type {any} */ (b.oj - this.JB),
       l = game.state.achievements.Ze.length - this.wy;
     if (this.vv != a) {
       this.vv = a;
@@ -252,14 +251,14 @@ export function initializeViewsResults() {
   OfflineProgressView.prototype.fr = function (a) {
     a = createElement("table", a, null, "centeredElement");
     var b = 0;
-    this.Qw = this.getOfflineProgressCell(a, "杀死怪物", b++);
-    this.Tm = this.getOfflineProgressCell(a, "找到道具", b++);
-    this.Um = this.getOfflineProgressCell(a, "卖出道具", b++);
-    this.Vm = this.getOfflineProgressCell(a, "清理关卡", b++);
-    this.vm = this.getOfflineProgressCell(a, "清理地牢", b++);
-    this.$t = this.getOfflineProgressCell(a, "攻击城堡", b++);
-    this.aj = this.getOfflineProgressCell(a, "昏迷次数", b++);
-    this.Mt = this.getOfflineProgressCell(a, "成就", b);
+    this.Qw = (/** @type {any} */ (this)).getOfflineProgressCell(a, "杀死怪物", b++);
+    this.Tm = (/** @type {any} */ (this)).getOfflineProgressCell(a, "找到道具", b++);
+    this.Um = (/** @type {any} */ (this)).getOfflineProgressCell(a, "卖出道具", b++);
+    this.Vm = (/** @type {any} */ (this)).getOfflineProgressCell(a, "清理关卡", b++);
+    this.vm = (/** @type {any} */ (this)).getOfflineProgressCell(a, "清理地牢", b++);
+    this.$t = (/** @type {any} */ (this)).getOfflineProgressCell(a, "攻击城堡", b++);
+    this.aj = (/** @type {any} */ (this)).getOfflineProgressCell(a, "昏迷次数", b++);
+    this.Mt = (/** @type {any} */ (this)).getOfflineProgressCell(a, "成就", b);
   };
   OfflineProgressView.prototype.getOfflineProgressCell = function (a, b, c) {
     a = a.insertRow(c);
