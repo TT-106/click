@@ -1,10 +1,11 @@
 # WORKSTATE — Clickpocalypse II 语义恢复与现代化工程
 
 > 本文件是长程自治任务的**唯一续跑入口**。上下文压缩或中断后，先读本文件 + `git log --oneline`，再继续。
-> 最后更新：2026-09-26（U42 视图单元格/详情缓存字段落地后，混淆清单 935；验收矩阵 51 PASS / 0 PARTIAL、矩阵 59/59、soak 通过）
+> 最后更新：2026-09-26（U43 物品/地牢定义与详情单元格落地后，混淆清单 922；验收矩阵 51 PASS / 0 PARTIAL、矩阵 59/59、soak 通过）
 
 ## 当前轮次状态（2026-09-26，M13 文档与验收收尾）
 
+- U43 物品/地牢定义与详情单元格（2026-09-26，一笔提交，六门禁全绿，混淆清单 935 → 922）：nj→inventory（Item 的所属背包回引）、ni→collectedGold（商店注册表待收金币池，CollectFarmUpgrade 收取）、Aj→hasSecondEntrance（地牢第二入口门旗标，末层取反；game-save 按地牢类型重建）、lj→separationVector（CharacterPosition 人群分离转向量，tick 并入速度）；upgrade-details 标签格 dj/pi→costLabel、fj→titleLabel、ej→descriptionLabel、gj→buttons。
 - U42 视图单元格/详情缓存字段（2026-09-26，一笔提交，六门禁全绿，混淆清单 940 → 935）：aj→stunCountCell（角色/信息/结算三视图的"昏迷次数"单元格，残留扫描发现跨文件同名 7 处）、ti→buttonLabel（地牢行按钮文字 + upgrade-details 标题缓存）、ui→selectedDungeon（地牢行选中对象）/selectedDungeonId（CharacterLevelDetails 缓存怪物等级选择器）、cj→progressContainer（地牢行进度条容器 div）、Si→tableElement（药水按钮表格）、vi→cachedLevel（CharacterLevelDetails 缓存怪物等级；monsters.js 侧同名上批已落地）。
 - U41 随从定义/视图缓存字段（2026-09-26，一笔提交，六门禁全绿，混淆清单 946 → 940）：oi→isCompanion、Oi→lifetimeTurnsLimit（随从定义旗标：伙伴标记与召唤存续回合上限，spawnMinion 消费）、hj→skillCollection（成就/角色页技能升级集合视图）、Fi/Ei→nameLabel/descriptionLabel（InventoryItemView 物品名与描述单元格）、Jh→cachedFillWidth（远征药剂/怪物/结算三视图的进度条填充宽度缓存）。**勘误**：U39 提交信息曾误称 Jh→selectedPotionIndex 已落地，实际当时未执行；本批以 cachedFillWidth 语义落地（三视图同义统一）。
 - U40 怪物列表/卷轴容量/关卡中心（2026-09-26，一笔提交，六门禁全绿，混淆清单 950 → 946）：Pi→activeMonsters（MonsterRegistry 活怪物列表，getMonsters() 返回值）、Yi→capacityIncrement（卷轴每次升级的容量增量，造价=(upgradeCount+1)*capacityIncrement；spells.js 定义字面量一并计入）、Ki/Li→centerX/centerY（DungeonLevel 像素中心，等距投影 projectDungeonX/Y 的原点偏移；game-save 持久化）。**教训强化**：Pi 改名后 harness 有两处独立扫描器（countEffectApplications 与 trackBossEncounter）各持一份 getMonsters——逐扫描器 grep 而非只改第一处；castle-victory 的首领观察失败即由此暴露。
