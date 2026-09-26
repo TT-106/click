@@ -5,6 +5,12 @@
 
 ## 当前轮次状态（2026-09-26，M13 文档与验收收尾）
 
+- U9 验收矩阵三行升级（2026-09-26，提交 70b460d）：
+  1. 困难遭遇 → PASS：引擎内概念不存在（c2.js/src 全文 0 命中复核）；概念源自 c2c.user.js:29-31 自有定义"一名及以上队友昏迷"，其直接信号（眩晕 type=13/14 计数、characterStunnedCount）已由眩晕行与 fireball-blast-stun 直接观察覆盖，无引擎行为可分叉。
+  2. UI 标签页 → PASS：E2E 扩展角色分页 1-3（推荐阵容 4 人，Char4 需 5 人队）与经设置页的 infoTabContent 断言；14 个静态 TabState 逐一对账，游戏结束/离线为状态门控面板（门控状态由引擎差分行断言）。
+  3. 精灵查找 → PASS：新增 tests/unit/sprite-lookup.test.mjs，Babel 提取原版 Pb（SpriteSheet）查找方法与重构版 getSprite 对账——命中同表项、未命中 undefined 不抛错、原型链继承键两侧同为继承函数（原版怪癖忠实保留）、非法输入两侧 undefined。注意重构版 getSprite 与原版 v 同为 init 期原型挂载，单测需先调 initializeRenderingSprites()。
+  当前矩阵 42 PASS / 9 PARTIAL / 0 未覆盖；剩余 PARTIAL（角色职业 0/1/2/5 未装载、技能效果层、法术特效、城堡购买花费、点数升级其余项、成就其余奖励、装备手动穿卸、游戏结束面板、Canvas 多视口）的升级路径已在本文件早前轮次与交接记录中写明。
+
 - U8 伤害数字与首领遭遇直接观察双项闭环（2026-09-26，工作树中待本批提交）：
   1. harness countFloatingText 扩展 pattern 正则匹配、sum 数值求和与 texts 列表收集；trackBossEncounter 逐帧扫描 encounter.du（首领遭遇状态）、characterType === 4（原版 zb === 4，首领怪物存活）、"击杀首领!" 浮动文字与 enc.fw 首领命名，返回四维指标。
   2. 新增 combat-damage-numbers 场景（第 51 个）：500 回合实战，正则 ^-[0-9]+$ 匹配伤害飘字，两端数量（57 次）与累计总伤害（-616 点）完全一致，带反向探针（sums > 0 或破坏正则即刻失败）。
