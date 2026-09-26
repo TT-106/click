@@ -1,4 +1,3 @@
-// @ts-nocheck -- M10 渐进类型化：JSDoc 覆盖后摘除（见 docs/WORKSTATE.md）
 /** 原版存档控件、统计和说明。
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
@@ -50,7 +49,7 @@ export function SaveControlsView() {
     return false;
   };
   getElement("exportSaveButton").onclick = function () {
-    var a = getElement("exportSaveInput");
+    var a = /** @type {HTMLInputElement} */ (getElement("exportSaveInput"));
     a.value = serializeGame(game.saves);
     showElementById("exportSaveContainer");
     hideElementById("exportSaveButton");
@@ -60,19 +59,19 @@ export function SaveControlsView() {
   getElement("cancelExportButton").onclick = function () {
     hideElementById("exportSaveContainer");
     showElementById("exportSaveButton");
-    getElement("exportSaveInput").value = "";
+    /** @type {HTMLInputElement} */ (getElement("exportSaveInput")).value = "";
     return false;
   };
   getElement("importSaveButton").onclick = function () {
     hideElementById("importErrorMessage");
     hideElementById("importSuccessMessage");
-    getElement("importSaveInput").value = "";
+    /** @type {HTMLInputElement} */ (getElement("importSaveInput")).value = "";
     showElementById("importSaveContainer");
     hideElementById("importSaveButton");
     return false;
   };
   getElement("importOkButton").onclick = function () {
-    if (game.importSave(getElement("importSaveInput").value)) {
+    if (game.importSave(/** @type {HTMLInputElement} */ (getElement("importSaveInput")).value)) {
       hideElementById("importErrorMessage");
       showElementById("importSuccessMessage");
     } else {
@@ -84,7 +83,7 @@ export function SaveControlsView() {
   getElement("importCloseButton").onclick = function () {
     hideElementById("importErrorMessage");
     hideElementById("importSuccessMessage");
-    getElement("importSaveInput").value = "";
+    /** @type {HTMLInputElement} */ (getElement("importSaveInput")).value = "";
     hideElementById("importSaveContainer");
     showElementById("importSaveButton");
     return false;
@@ -97,6 +96,13 @@ export function InformationView(a) {
   addChildView(this, new StatisticsView());
   addChildView(this, new OptionsView());
 }
+/** StatisticsView.prototype 在初始化里被 new View() 替换，后挂成员对 TS 不可见；用 this 类型标注这几个方法。
+ * @typedef {Object} MountedStatisticsViewMethods
+ * @property {function(): void} fr 重建统计表 DOM。
+ * @property {function(number, number, number): string} Er 拼时、分、秒。
+ * @property {function(number): void} St 在表尾插入一行表头。
+ * @property {function(HTMLTableRowElement, number): HTMLTableCellElement} getStatisticCell 取指定行的单元格。
+ */
 export function StatisticsView() {
   this.elementId = "statisticsContainer";
   this.visible = true;
@@ -149,11 +155,11 @@ export function initializeViewsInformation() {
     resetChildViews(this);
   };
   StatisticsView.prototype = new View();
-  StatisticsView.prototype.reset = function () {
+  StatisticsView.prototype.reset = /** @this {StatisticsView & MountedStatisticsViewMethods} */ function () {
     this.Jx = this.Au = this.Ux = this.bv = this.fy = this.Cv = this.my = this.Yv = this.Vx = this.Ek = this.Wx = this.Fk = this.iy = this.Iv = this.dy = this.Av = this.jy = this.Nv = this.ey = this.Bv = this.Yx = this.nv = this.Mx = this.Ku = this.Qx = this.Tu = this.Zx = this.Ik = this.hy = this.Hv = this.Nx = this.Qu = this.Sx = this.Xu = this.Tx = this.Yu = this.Kx = this.Eu = this.ny = this.$v = this.ky = this.Wv = this.$x = this.qv = this.Rx = this.Uu = this.Lx = this.Hu = this.Px = this.Ck = this.Xx = this.Hk = this.Ox = this.Ru = this.gy = this.Ev = this.ly = this.Xv = this.cy = this.by = this.ay = this.yv = this.xv = this.wv = this.Zv = -1;
     this.fr();
   };
-  StatisticsView.prototype.update = function () {
+  StatisticsView.prototype.update = /** @this {StatisticsView & MountedStatisticsViewMethods} */ function () {
     if (!this.st) {
       this.fr();
     }
@@ -478,136 +484,106 @@ export function initializeViewsInformation() {
   StatisticsView.prototype.Er = function (a, b, c) {
     return (10 > a ? "0" : "") + a + ":" + (10 > b ? "0" : "") + b + ":" + (10 > c ? "0" : "") + c;
   };
-  StatisticsView.prototype.fr = function () {
+  StatisticsView.prototype.fr = /** @this {StatisticsView & MountedStatisticsViewMethods} */ function () {
     clearElementById(this.elementId);
-    var a = getElement(this.elementId);
-    createElement("div", a, null, "sectionTitle").innerHTML = "统计";
-    this.st = createElement("table", a, null, "statisticsTable");
-    a = 0;
-    this.St(a++);
-    var b = a++,
-      b = appendStatisticsRow(this, "游戏胜利:", b);
-    this.getStatisticCell(b, 1).innerHTML = "无";
-    this.xC = this.getStatisticCell(b, 2);
-    b = a++;
-    b = appendStatisticsRow(this, "游戏时间:", b);
-    this.SA = this.getStatisticCell(b, 1);
-    this.lC = this.getStatisticCell(b, 2);
-    b = a++;
-    b = appendStatisticsRow(this, "游戏回合:", b);
-    this.CC = this.getStatisticCell(b, 1);
-    this.vC = this.getStatisticCell(b, 2);
-    b = a++;
-    b = appendStatisticsRow(this, "打开大门:", b);
-    this.Dz = this.getStatisticCell(b, 1);
-    this.ZB = this.getStatisticCell(b, 2);
-    b = a++;
-    b = appendStatisticsRow(this, "清理房间:", b);
-    this.jB = this.getStatisticCell(b, 1);
-    this.pC = this.getStatisticCell(b, 2);
-    b = a++;
-    b = appendStatisticsRow(this, "清理管卡:", b);
-    this.Vm = this.getStatisticCell(b, 1);
-    this.hC = this.getStatisticCell(b, 2);
-    b = a++;
-    b = appendStatisticsRow(this, "清理地牢:", b);
-    this.vm = this.getStatisticCell(b, 1);
-    this.$B = this.getStatisticCell(b, 2);
-    b = a++;
-    b = appendStatisticsRow(this, "征服城堡:", b);
-    this.Oy = this.getStatisticCell(b, 1);
-    this.WB = this.getStatisticCell(b, 2);
-    b = a++;
-    b = appendStatisticsRow(this, "购买农场:", b);
-    this.Jz = this.getStatisticCell(b, 1);
-    this.bC = this.getStatisticCell(b, 2);
-    b = a++;
-    b = appendStatisticsRow(this, "召唤宠物:", b);
-    this.GA = this.getStatisticCell(b, 1);
-    this.kC = this.getStatisticCell(b, 2);
-    b = a++;
-    b = appendStatisticsRow(this, "财宝箱:", b);
-    this.AC = this.getStatisticCell(b, 1);
-    this.uC = this.getStatisticCell(b, 2);
-    b = a++;
-    b = appendStatisticsRow(this, "武器架:", b);
-    this.LC = this.getStatisticCell(b, 1);
-    this.yC = this.getStatisticCell(b, 2);
-    b = a++;
-    b = appendStatisticsRow(this, "书架:", b);
-    this.Ky = this.getStatisticCell(b, 1);
-    this.VB = this.getStatisticCell(b, 2);
-    b = a++;
-    b = appendStatisticsRow(this, "怪物黄金:", b);
-    this.Rz = this.getStatisticCell(b, 1);
-    this.dC = this.getStatisticCell(b, 2);
-    b = a++;
-    b = appendStatisticsRow(this, "道具黄金:", b);
-    this.Qz = this.getStatisticCell(b, 1);
-    this.cC = this.getStatisticCell(b, 2);
-    b = a++;
-    b = appendStatisticsRow(this, "直接杀死:", b);
-    this.mz = this.getStatisticCell(b, 1);
-    this.YB = this.getStatisticCell(b, 2);
-    b = a++;
-    b = appendStatisticsRow(this, "卷轴杀死:", b);
-    this.lB = this.getStatisticCell(b, 1);
-    this.qC = this.getStatisticCell(b, 2);
-    b = a++;
-    b = appendStatisticsRow(this, "宠物杀死:", b);
-    this.Ap = this.getStatisticCell(b, 1);
-    this.jC = this.getStatisticCell(b, 2);
-    b = a++;
-    b = appendStatisticsRow(this, "农场杀戮:", b);
-    this.Iz = this.getStatisticCell(b, 1);
-    this.aC = this.getStatisticCell(b, 2);
-    b = a++;
-    b = appendStatisticsRow(this, "昏迷次数:", b);
-    this.aj = this.getStatisticCell(b, 1);
-    this.tC = this.getStatisticCell(b, 2);
-    b = a++;
-    b = appendStatisticsRow(this, "近战攻击:", b);
-    this.zA = this.getStatisticCell(b, 1);
-    this.iC = this.getStatisticCell(b, 2);
-    b = a++;
-    b = appendStatisticsRow(this, "远程攻击:", b);
-    this.dB = this.getStatisticCell(b, 1);
-    this.nC = this.getStatisticCell(b, 2);
-    b = a++;
-    b = appendStatisticsRow(this, "施放法术:", b);
-    this.BB = this.getStatisticCell(b, 1);
-    this.sC = this.getStatisticCell(b, 2);
-    b = a++;
-    b = appendStatisticsRow(this, "使用药剂:", b);
-    this.UA = this.getStatisticCell(b, 1);
-    this.mC = this.getStatisticCell(b, 2);
-    b = a++;
-    b = appendStatisticsRow(this, "使用卷轴:", b);
-    this.nB = this.getStatisticCell(b, 1);
-    this.rC = this.getStatisticCell(b, 2);
-    b = a++;
-    b = appendStatisticsRow(this, "卖出道具:", b);
-    this.Um = this.getStatisticCell(b, 1);
-    this.gC = this.getStatisticCell(b, 2);
-    b = a++;
-    b = appendStatisticsRow(this, "找到道具:", b);
-    this.Tm = this.getStatisticCell(b, 1);
-    this.fC = this.getStatisticCell(b, 2);
-    b = a++;
-    b = appendStatisticsRow(this, "罕见道具:", b);
-    this.DC = this.getStatisticCell(b, 1);
-    this.wC = this.getStatisticCell(b, 2);
-    b = a++;
-    b = appendStatisticsRow(this, "稀有道具:", b);
-    this.eB = this.getStatisticCell(b, 1);
-    this.oC = this.getStatisticCell(b, 2);
-    b = a++;
-    b = appendStatisticsRow(this, "历史道具:", b);
-    this.Vz = this.getStatisticCell(b, 1);
-    this.eC = this.getStatisticCell(b, 2);
-    a = appendStatisticsRow(this, "远古道具:", a);
-    this.Fy = this.getStatisticCell(a, 1);
-    this.UB = this.getStatisticCell(a, 2);
+    var container = /** @type {HTMLDivElement} */ (getElement(this.elementId));
+    createElement("div", container, null, "sectionTitle").innerHTML = "统计";
+    this.st = createElement("table", container, null, "statisticsTable");
+    var rowIndex = 0;
+    this.St(rowIndex++);
+    var row = appendStatisticsRow(this, "游戏胜利:", rowIndex++);
+    this.getStatisticCell(row, 1).innerHTML = "无";
+    this.xC = this.getStatisticCell(row, 2);
+    row = appendStatisticsRow(this, "游戏时间:", rowIndex++);
+    this.SA = this.getStatisticCell(row, 1);
+    this.lC = this.getStatisticCell(row, 2);
+    row = appendStatisticsRow(this, "游戏回合:", rowIndex++);
+    this.CC = this.getStatisticCell(row, 1);
+    this.vC = this.getStatisticCell(row, 2);
+    row = appendStatisticsRow(this, "打开大门:", rowIndex++);
+    this.Dz = this.getStatisticCell(row, 1);
+    this.ZB = this.getStatisticCell(row, 2);
+    row = appendStatisticsRow(this, "清理房间:", rowIndex++);
+    this.jB = this.getStatisticCell(row, 1);
+    this.pC = this.getStatisticCell(row, 2);
+    row = appendStatisticsRow(this, "清理管卡:", rowIndex++);
+    this.Vm = this.getStatisticCell(row, 1);
+    this.hC = this.getStatisticCell(row, 2);
+    row = appendStatisticsRow(this, "清理地牢:", rowIndex++);
+    this.vm = this.getStatisticCell(row, 1);
+    this.$B = this.getStatisticCell(row, 2);
+    row = appendStatisticsRow(this, "征服城堡:", rowIndex++);
+    this.Oy = this.getStatisticCell(row, 1);
+    this.WB = this.getStatisticCell(row, 2);
+    row = appendStatisticsRow(this, "购买农场:", rowIndex++);
+    this.Jz = this.getStatisticCell(row, 1);
+    this.bC = this.getStatisticCell(row, 2);
+    row = appendStatisticsRow(this, "召唤宠物:", rowIndex++);
+    this.GA = this.getStatisticCell(row, 1);
+    this.kC = this.getStatisticCell(row, 2);
+    row = appendStatisticsRow(this, "财宝箱:", rowIndex++);
+    this.AC = this.getStatisticCell(row, 1);
+    this.uC = this.getStatisticCell(row, 2);
+    row = appendStatisticsRow(this, "武器架:", rowIndex++);
+    this.LC = this.getStatisticCell(row, 1);
+    this.yC = this.getStatisticCell(row, 2);
+    row = appendStatisticsRow(this, "书架:", rowIndex++);
+    this.Ky = this.getStatisticCell(row, 1);
+    this.VB = this.getStatisticCell(row, 2);
+    row = appendStatisticsRow(this, "怪物黄金:", rowIndex++);
+    this.Rz = this.getStatisticCell(row, 1);
+    this.dC = this.getStatisticCell(row, 2);
+    row = appendStatisticsRow(this, "道具黄金:", rowIndex++);
+    this.Qz = this.getStatisticCell(row, 1);
+    this.cC = this.getStatisticCell(row, 2);
+    row = appendStatisticsRow(this, "直接杀死:", rowIndex++);
+    this.mz = this.getStatisticCell(row, 1);
+    this.YB = this.getStatisticCell(row, 2);
+    row = appendStatisticsRow(this, "卷轴杀死:", rowIndex++);
+    this.lB = this.getStatisticCell(row, 1);
+    this.qC = this.getStatisticCell(row, 2);
+    row = appendStatisticsRow(this, "宠物杀死:", rowIndex++);
+    this.Ap = this.getStatisticCell(row, 1);
+    this.jC = this.getStatisticCell(row, 2);
+    row = appendStatisticsRow(this, "农场杀戮:", rowIndex++);
+    this.Iz = this.getStatisticCell(row, 1);
+    this.aC = this.getStatisticCell(row, 2);
+    row = appendStatisticsRow(this, "昏迷次数:", rowIndex++);
+    this.aj = this.getStatisticCell(row, 1);
+    this.tC = this.getStatisticCell(row, 2);
+    row = appendStatisticsRow(this, "近战攻击:", rowIndex++);
+    this.zA = this.getStatisticCell(row, 1);
+    this.iC = this.getStatisticCell(row, 2);
+    row = appendStatisticsRow(this, "远程攻击:", rowIndex++);
+    this.dB = this.getStatisticCell(row, 1);
+    this.nC = this.getStatisticCell(row, 2);
+    row = appendStatisticsRow(this, "施放法术:", rowIndex++);
+    this.BB = this.getStatisticCell(row, 1);
+    this.sC = this.getStatisticCell(row, 2);
+    row = appendStatisticsRow(this, "使用药剂:", rowIndex++);
+    this.UA = this.getStatisticCell(row, 1);
+    this.mC = this.getStatisticCell(row, 2);
+    row = appendStatisticsRow(this, "使用卷轴:", rowIndex++);
+    this.nB = this.getStatisticCell(row, 1);
+    this.rC = this.getStatisticCell(row, 2);
+    row = appendStatisticsRow(this, "卖出道具:", rowIndex++);
+    this.Um = this.getStatisticCell(row, 1);
+    this.gC = this.getStatisticCell(row, 2);
+    row = appendStatisticsRow(this, "找到道具:", rowIndex++);
+    this.Tm = this.getStatisticCell(row, 1);
+    this.fC = this.getStatisticCell(row, 2);
+    row = appendStatisticsRow(this, "罕见道具:", rowIndex++);
+    this.DC = this.getStatisticCell(row, 1);
+    this.wC = this.getStatisticCell(row, 2);
+    row = appendStatisticsRow(this, "稀有道具:", rowIndex++);
+    this.eB = this.getStatisticCell(row, 1);
+    this.oC = this.getStatisticCell(row, 2);
+    row = appendStatisticsRow(this, "历史道具:", rowIndex++);
+    this.Vz = this.getStatisticCell(row, 1);
+    this.eC = this.getStatisticCell(row, 2);
+    row = appendStatisticsRow(this, "远古道具:", rowIndex++);
+    this.Fy = this.getStatisticCell(row, 1);
+    this.UB = this.getStatisticCell(row, 2);
   };
   StatisticsView.prototype.St = function (a) {
     a = this.st.insertRow(a);
@@ -627,13 +603,13 @@ export function initializeViewsInformation() {
   };
   OptionsView.prototype = new View();
   OptionsView.prototype.reset = function () {
-    var a = getElement("infoTextEnabledCheckbox"),
-      b = getElement("spellEffectsEnabledCheckbox"),
-      c = getElement("mapOverlayEnabledCheckbox"),
-      d = getElement("offlineProcessingEnabledCheckbox"),
-      f = getElement("inactiveTabProcessingEnabledCheckbox"),
-      g = getElement("spriteRenderOrderEnabledCheckbox"),
-      h = getElement("fpsVisibleCheckbox");
+    var a = /** @type {HTMLInputElement} */ (getElement("infoTextEnabledCheckbox")),
+      b = /** @type {HTMLInputElement} */ (getElement("spellEffectsEnabledCheckbox")),
+      c = /** @type {HTMLInputElement} */ (getElement("mapOverlayEnabledCheckbox")),
+      d = /** @type {HTMLInputElement} */ (getElement("offlineProcessingEnabledCheckbox")),
+      f = /** @type {HTMLInputElement} */ (getElement("inactiveTabProcessingEnabledCheckbox")),
+      g = /** @type {HTMLInputElement} */ (getElement("spriteRenderOrderEnabledCheckbox")),
+      h = /** @type {HTMLInputElement} */ (getElement("fpsVisibleCheckbox"));
     a.checked = game.options.showCombatText;
     b.checked = game.options.showSpellEffects;
     c.checked = game.options.showMapOverlay;

@@ -38,7 +38,9 @@
 - M10 `simulation/loop.js` 已摘除 `@ts-nocheck`：`tick()` 初始化分支的复用 `var`（视图/14 个 TabState/15 个 View）全部拆为具名变量，创建与注册顺序不变；存档读取回退逻辑保留，PersistencePort 在 `storage-port.js` JSDoc 补充可选 `onLoadError`。tsc 错误清零，四套回归及 8h/24h soak（完整存档两端一致，0 pageerror）全绿。剩余 3 个忽略文件（character.js / information.js / terrain.js）。
 - M10 `world/terrain.js` 已摘除 `@ts-nocheck`：`sampleNoise` 的重复 `var` 声明拆为逐条赋值并把菱形分支的 `n/p` 拆成 `e/o`，`populateWorldBlock` 中被复用为 tile 的 `g/n/h` 拆成 `shoreTile`/`lockedTile`/`decoTile`/`entranceTile`/`castleTile` 等具名变量，相邻区块比较的 `g/h/l` 拆为 `northCastle`/`westCastle`/`nwCastle`；`getTileAtPixel` 的 `c` 拆出 `block`；后挂载的 `random`/`Aw`/`pixelToTileColumn`/`pixelToTileRow` 在调用点作窄签名标注。数值、噪声调用与区块生成顺序未改。tsc 全仓库清零，四套回归及 8h/24h soak 全绿（完整存档两端一致）。剩余 2 个忽略文件。
 - M10 `characters/character.js` 已摘除 `@ts-nocheck`：新增 `TargetedCombatAction`/`SlotEquipment` 两个窄签名 typedef，8 个后挂载 `CombatAction.Cb` 调用点和 `equipment.ef`/`equipment.So` 按其标注；两处同一 `var` 列表内先 `undefined` 后被循环初值立即覆盖的重复声明（`jb`、`Ph`）去掉冗余的首次赋值。战斗数值、随机调用与目标选择顺序未改。tsc 清零，四套回归与 8h/24h soak 全绿。剩余 1 个忽略文件。
-- 本节优先于下方旧快照中的“当前工作树干净”“M10 未开始”“9 场景”等过时文字；提交与实际状态以 `git status`、`git log` 为准。
+- M10 `views/information.js` 已摘除 `@ts-nocheck`，**`src/engine/modules` 下 `@ts-nocheck` 已清零**（仅 `src/vendor/lz-string-1.3.3.js` 保留，属第三方 vendored 代码）：`StatisticsView.prototype = new View()` 整体替换原型使后挂成员不可见，给 `reset`/`update`/`fr` 加 `@this {StatisticsView & MountedStatisticsViewMethods}`；`fr` 内复用为行号的 `a` 和复用为行元素的 `b` 拆成 `container`/`rowIndex`/`row`，30 组“`b = a++; b = appendStatisticsRow(...)`”合并为一次 `rowIndex++`；导出/导入框与 7 个复选框按 `HTMLInputElement` 收窄。首版脚本把 `Checkbox` 后缀重复拼成 `xxxCheckboxCheckbox`，四套回归当场全红（`OptionsView.reset` 设置 null.checked）——已修正并逐字比对字符串字面量集合不变，四套回归重新全绿。
+- 脚本化行级替换的新教训：捕获组若已含后缀，替换串不得再拼一次同名词；类型检查与 `node --check` 都抓不到错误 DOM id，只有浏览器回归能抓到。批量替换后必须比对字符串字面量计数并跑完整回归。
+- 本节优先于下方旧快照中的“当前工作树干净”“M10 未开始”“9 场景”“剩余 23 个”等过时文字；提交与实际状态以 `git status`、`git log`、`rg -l '^// @ts-nocheck' src/engine/modules --glob '*.js'` 为准。
 
 ## 1. 项目概况
 
@@ -53,7 +55,7 @@
 | M0-M3 | ✅ 基线/静态图/运行时恢复/行为 harness 全部完成且实测通过 |
 | M4 High-Confidence Rename | 🟡 符号 99.8% 已命名；**字段重命名已完成 30+ 个字段身份**（动画帧表、Achievement 组、Upgrade.canPurchase、视图 upgrade、Vector2 x/y、Character.position、CharacterPosition.levelPosition/room、Item.slot/characteristic、tb slot/statType（含 guardians/minions）、怪物 name、WorldMap worldBlocks/blockOrigin*/tileGrid、spriteName、getSprite 方法族、tabState、数值组 currentValue/levelIncrement/activeValue/baseValue/purchasedLevels/perLevelIncrement）|
 | M5-M9 | ✅ 结构完成（见 MIGRATION_MAP.md） |
-| M10 Type Hardening | 🟡 进行中：`src/engine/modules` 下 `@ts-nocheck` 仅剩 2 个文件（`characters/character.js`、`views/information.js`），全仓库 tsc 错误 0；以实时 `rg -l '^// @ts-nocheck' src/engine/modules --glob '*.js'` 为准 |
+| M10 Type Hardening | ✅ 完成：`src/engine/modules` 下 `@ts-nocheck` 为 0（仅 `src/vendor/lz-string-1.3.3.js` 保留），全仓库 tsc 错误 0；每切片均过四套回归 |
 | M11 Performance | ✅ 基线完成（docs/performance-baseline.md）：重构/原版比值 1.0-1.1x；优化未开始（也无必要——模拟占回合预算 0.03%） |
 | M12 Legacy Reduction | 🟡 技能/法术/状态效果/视图高频字段已清（e/f/g/X/V/W/c 组落地）；剩余长尾字段约 1,300 处访问（Y/Z/aa/ca 等，需新取证） |
 | M13 Final Regression | 🟡 回归体系全绿；prestige/victory/部分法术分支无差分场景 |
