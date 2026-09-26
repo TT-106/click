@@ -73,7 +73,7 @@ export function DungeonRowView(a, b) {
   this.mw = this.pu = -1;
   this.Bt = false;
   this.Ct = 260;
-  /** @type {{qi: () => void}} */ (/** @type {unknown} */ (this)).qi();
+  /** @type {{createRowCells: () => void}} */ (/** @type {unknown} */ (this)).createRowCells();
 }
 export function DungeonListView(a, b, c) {
   this.elementId = c;
@@ -191,7 +191,7 @@ export function initializeViewsDungeons() {
       this.upgradeButton.reset();
     }
   };
-  DungeonRowView.prototype.qi = function () {
+  DungeonRowView.prototype.createRowCells = function () {
     var a = this.lh;
     this.Co = a.insertCell(0);
     this.Co.style.width = "50px";
@@ -311,7 +311,7 @@ export function initializeViewsDungeons() {
   };
   DungeonListView.prototype.update = function () {
     if (!this.bf) {
-      /** @type {{pf: () => void}} */ (/** @type {unknown} */ (this)).pf();
+      /** @type {{createDomElements: () => void}} */ (/** @type {unknown} */ (this)).createDomElements();
     }
     var a = getDungeonList(this);
     if (a.length !== this.rf.length) {
@@ -334,20 +334,20 @@ export function initializeViewsDungeons() {
       this.rf.push(new DungeonRowView(this.bf.insertRow(this.rf.length + 1), this.dw));
     }
   };
-  DungeonListView.prototype.pf = function () {
+  DungeonListView.prototype.createDomElements = function () {
     var a = this.elementId;
     clearElementById(a);
     var b = getDungeonList(this),
       c;
     this.bf = createElement("table", getElement(a), null, "monsterTable");
-    /** @type {{Ri: (row: HTMLTableRowElement) => void}} */ (/** @type {unknown} */ (this)).Ri(this.bf.insertRow(0));
+    /** @type {{createHeaderRow: (row: HTMLTableRowElement) => void}} */ (/** @type {unknown} */ (this)).createHeaderRow(this.bf.insertRow(0));
     for (c = 0; c < b.length; c++) {
       a = new DungeonRowView(this.bf.insertRow(c + 1), this.dw);
       a.ct(b[c]);
       this.rf.push(a);
     }
   };
-  DungeonListView.prototype.Ri = function (a) {
+  DungeonListView.prototype.createHeaderRow = function (a) {
     appendHeaderCell(a).innerHTML = "图标";
     appendHeaderCell(a).innerHTML = "地牢";
     appendHeaderCell(a).innerHTML = "城堡";

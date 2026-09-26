@@ -94,33 +94,6 @@
     ]
   },
   {
-    "name": "pf",
-    "reads": 7,
-    "writes": 7,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:346",
-        "code": "(/** @type {GameCanvasView & { pf: () => void }} */ /** @type {unknown} */this).pf"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:743",
-        "code": "GameCanvasView.prototype.pf"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\castles.js:56",
-        "code": "(/** @type {unknown} */this).pf"
-      }
-    ],
-    "fileCount": 5,
-    "files": [
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\views\\castles.js",
-      "src\\engine\\modules\\views\\character.js",
-      "src\\engine\\modules\\views\\dungeons.js",
-      "src\\engine\\modules\\views\\monsters.js"
-    ]
-  },
-  {
     "name": "Nf",
     "reads": 12,
     "writes": 2,
@@ -2619,58 +2592,6 @@
     ]
   },
   {
-    "name": "qi",
-    "reads": 5,
-    "writes": 5,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\castles.js:31",
-        "code": "(/** @type {unknown} */this).qi"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\castles.js:167",
-        "code": "CastleRowView.prototype.qi"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\character.js:21",
-        "code": "(/** @type {InventoryItemView & { qi: () => void }} */ /** @type {unknown} */this).qi"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\views\\castles.js",
-      "src\\engine\\modules\\views\\character.js",
-      "src\\engine\\modules\\views\\dungeons.js",
-      "src\\engine\\modules\\views\\monsters.js"
-    ]
-  },
-  {
-    "name": "Ri",
-    "reads": 5,
-    "writes": 5,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\castles.js:155",
-        "code": "(/** @type {unknown} */this).Ri"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\castles.js:162",
-        "code": "CastleTableView.prototype.Ri"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\character.js:279",
-        "code": "(/** @type {InventoryTableView & TableLifecycle} */ /** @type {unknown} */this).Ri"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\views\\castles.js",
-      "src\\engine\\modules\\views\\character.js",
-      "src\\engine\\modules\\views\\dungeons.js",
-      "src\\engine\\modules\\views\\monsters.js"
-    ]
-  },
-  {
     "name": "Fi",
     "reads": 6,
     "writes": 4,
@@ -3827,29 +3748,6 @@
     "fileCount": 1,
     "files": [
       "src\\engine\\modules\\views\\expedition.js"
-    ]
-  },
-  {
-    "name": "Tj",
-    "reads": 8,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\monsters.js:37",
-        "code": "this.Tj"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\monsters.js:292",
-        "code": "this.Tj"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\monsters.js:293",
-        "code": "this.Tj"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\monsters.js"
     ]
   },
   {
@@ -9176,29 +9074,6 @@
     ]
   },
   {
-    "name": "so",
-    "reads": 4,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\expedition.js:631",
-        "code": "(/** @type {any} */this).so"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\expedition.js:635",
-        "code": "(/** @type {any} */this).so"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\expedition.js:649",
-        "code": "ScrollBarView.prototype.so"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\expedition.js"
-    ]
-  },
-  {
     "name": "xo",
     "reads": 4,
     "writes": 2,
@@ -9375,29 +9250,6 @@
       {
         "loc": "src\\engine\\modules\\views\\monsters.js:190",
         "code": "this.Cp"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\monsters.js"
-    ]
-  },
-  {
-    "name": "Dp",
-    "reads": 4,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\monsters.js:35",
-        "code": "this.Dp"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\monsters.js:290",
-        "code": "this.Dp"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\monsters.js:303",
-        "code": "this.Dp"
       }
     ],
     "fileCount": 1,
@@ -14455,30 +14307,6 @@
     "files": [
       "src\\engine\\modules\\views\\achievements.js",
       "src\\engine\\modules\\views\\information.js"
-    ]
-  },
-  {
-    "name": "Vw",
-    "reads": 1,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\base.js:7",
-        "code": "this.Vw"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\base.js:44",
-        "code": "this.Vw"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\base.js:45",
-        "code": "this.Vw"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\views\\base.js",
-      "src\\engine\\modules\\views\\expedition.js"
     ]
   },
   {

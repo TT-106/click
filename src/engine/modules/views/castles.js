@@ -28,7 +28,7 @@ export function CastleRowView(a) {
   this.Us = 120;
   this.Rv = this.Cu = this.cachedDescriptionText = "";
   this.Kv = 0;
-  /** @type {{qi: () => void}} */ (/** @type {unknown} */ (this)).qi();
+  /** @type {{createRowCells: () => void}} */ (/** @type {unknown} */ (this)).createRowCells();
 }
 export function setCastleRowModel(a, b) {
   a.castle = b;
@@ -53,7 +53,7 @@ export function initializeViewsCastles() {
   };
   CastleMapView.prototype.update = function () {
     if (!this.ws) {
-      /** @type {{pf: () => void}} */ (/** @type {unknown} */ (this)).pf();
+      /** @type {{createDomElements: () => void}} */ (/** @type {unknown} */ (this)).createDomElements();
     }
     var a;
     a = game.castles.cm;
@@ -79,7 +79,7 @@ export function initializeViewsCastles() {
       }
     }
   };
-  CastleMapView.prototype.pf = function () {
+  CastleMapView.prototype.createDomElements = function () {
     var containerId = this.elementId;
     clearElementById(containerId);
     var b = game.regions,
@@ -123,7 +123,7 @@ export function initializeViewsCastles() {
   };
   CastleTableView.prototype.update = function () {
     if (!this.$e) {
-      /** @type {{pf: () => void}} */ (/** @type {unknown} */ (this)).pf();
+      /** @type {{createDomElements: () => void}} */ (/** @type {unknown} */ (this)).createDomElements();
     }
     var a = game.castles.castleList;
     if (a.length !== this.nf.length) {
@@ -146,25 +146,25 @@ export function initializeViewsCastles() {
       this.nf.push(new CastleRowView(this.$e.insertRow(this.nf.length + 1)));
     }
   };
-  CastleTableView.prototype.pf = function () {
+  CastleTableView.prototype.createDomElements = function () {
     var a = this.elementId;
     clearElementById(a);
     var b = game.castles.castleList,
       c;
     this.$e = createElement("table", getElement(a), null, "monsterTable");
-    /** @type {{Ri: (row: HTMLTableRowElement) => void}} */ (/** @type {unknown} */ (this)).Ri(this.$e.insertRow(0));
+    /** @type {{createHeaderRow: (row: HTMLTableRowElement) => void}} */ (/** @type {unknown} */ (this)).createHeaderRow(this.$e.insertRow(0));
     for (c = 0; c < b.length; c++) {
       var rowView = new CastleRowView(this.$e.insertRow(c + 1));
       setCastleRowModel(rowView, b[c]);
       this.nf.push(rowView);
     }
   };
-  CastleTableView.prototype.Ri = function (a) {
+  CastleTableView.prototype.createHeaderRow = function (a) {
     appendHeaderCell(a).innerHTML = "名称";
     appendHeaderCell(a).innerHTML = "状态";
   };
   CastleRowView.prototype.reset = function () {};
-  CastleRowView.prototype.qi = function () {
+  CastleRowView.prototype.createRowCells = function () {
     var a = this.lh;
     this.mf = a.insertCell(0);
     this.mf.style.width = "240px";

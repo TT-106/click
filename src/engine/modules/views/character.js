@@ -12,13 +12,13 @@ import { getAttackCooldown, statValue } from "../characters/stats.js";
 import { characterLevelUpgrades, healthRegenerationBonus, spiritRegenerationBonus } from "../content/balance.js";
 import { UpgradeCollection } from "../progression/upgrades.js";
 /** @typedef {{ reset: () => void, render: () => void }} ViewLifecycle */
-/** @typedef {{ pf: () => void, mk: (rowCount: number) => void, Ri: (row: HTMLTableRowElement) => void }} TableLifecycle */
+/** @typedef {{ createDomElements: () => void, mk: (rowCount: number) => void, createHeaderRow: (row: HTMLTableRowElement) => void }} TableLifecycle */
 export function ItemRowBase() {}
 export function InventoryItemView(a, b) {
   this.lh = a;
   this.adventurerIndex = b;
   this.Ej = this.Cr = this.gf = this.Oh = this.Af = this.rarityCell = this.Fi = this.Ei = this.item = null;
-  (/** @type {InventoryItemView & { qi: () => void }} */ (/** @type {unknown} */ (this))).qi();
+  (/** @type {InventoryItemView & { createRowCells: () => void }} */ (/** @type {unknown} */ (this))).createRowCells();
 }
 export function InventoryTableView(a, b) {
   this.elementId = a;
@@ -31,7 +31,7 @@ export function EquipmentItemRowView(a, b) {
   this.lh = a;
   this.adventurerIndex = b;
   this.Cr = this.gf = this.Oh = this.Af = this.rarityCell = this.Fi = this.Ei = this.item = null;
-  (/** @type {EquipmentItemRowView & { qi: () => void }} */ (/** @type {unknown} */ (this))).qi();
+  (/** @type {EquipmentItemRowView & { createRowCells: () => void }} */ (/** @type {unknown} */ (this))).createRowCells();
 }
 export function EquipmentTableView(a, b) {
   this.elementId = a;
@@ -211,7 +211,7 @@ export function initializeViewsCharacter() {
       this.rarityCell.className = "";
     }
   };
-  InventoryItemView.prototype.qi = function () {
+  InventoryItemView.prototype.createRowCells = function () {
     var a = this.lh,
       b = a.insertCell(0);
     b.style.width = "50px";
@@ -249,7 +249,7 @@ export function initializeViewsCharacter() {
   InventoryTableView.prototype.update = function () {
     if (!(0 > this.adventurerIndex || this.adventurerIndex >= game.state.adventurers.length)) {
       if (!this.Jj) {
-        (/** @type {InventoryTableView & TableLifecycle} */ (/** @type {unknown} */ (this))).pf();
+        (/** @type {InventoryTableView & TableLifecycle} */ (/** @type {unknown} */ (this))).createDomElements();
       }
       var a = game.state.adventurers[this.adventurerIndex].inventory.items;
       if (a.length !== this.bh.length) {
@@ -272,13 +272,13 @@ export function initializeViewsCharacter() {
       this.bh.push(new InventoryItemView(this.Jj.insertRow(this.bh.length + 1), this.adventurerIndex));
     }
   };
-  InventoryTableView.prototype.pf = function () {
+  InventoryTableView.prototype.createDomElements = function () {
     var a = this.elementId;
     clearElementById(a);
     this.Jj = createElement("table", getElement(a), null, "monsterTable");
-    (/** @type {InventoryTableView & TableLifecycle} */ (/** @type {unknown} */ (this))).Ri(this.Jj.insertRow(0));
+    (/** @type {InventoryTableView & TableLifecycle} */ (/** @type {unknown} */ (this))).createHeaderRow(this.Jj.insertRow(0));
   };
-  InventoryTableView.prototype.Ri = function (a) {
+  InventoryTableView.prototype.createHeaderRow = function (a) {
     var b = appendHeaderCell(a);
     b.style.textAlign = "center";
     b.style.padding = "0";
@@ -327,7 +327,7 @@ export function initializeViewsCharacter() {
       this.rarityCell.className = "";
     }
   };
-  EquipmentItemRowView.prototype.qi = function () {
+  EquipmentItemRowView.prototype.createRowCells = function () {
     var a = this.lh,
       b = a.insertCell(0);
     b.style.width = "50px";
@@ -364,7 +364,7 @@ export function initializeViewsCharacter() {
   EquipmentTableView.prototype.update = function () {
     if (!(0 > this.adventurerIndex || this.adventurerIndex >= game.state.adventurers.length)) {
       if (!this.zm) {
-        (/** @type {EquipmentTableView & TableLifecycle} */ (/** @type {unknown} */ (this))).pf();
+        (/** @type {EquipmentTableView & TableLifecycle} */ (/** @type {unknown} */ (this))).createDomElements();
       }
       var a = game.state.adventurers[this.adventurerIndex],
         b = a.slotList;
@@ -389,13 +389,13 @@ export function initializeViewsCharacter() {
       this.sf.push(new EquipmentItemRowView(this.zm.insertRow(this.sf.length + 1), this.adventurerIndex));
     }
   };
-  EquipmentTableView.prototype.pf = function () {
+  EquipmentTableView.prototype.createDomElements = function () {
     var a = this.elementId;
     clearElementById(a);
     this.zm = createElement("table", getElement(a), null, "monsterTable");
-    (/** @type {EquipmentTableView & TableLifecycle} */ (/** @type {unknown} */ (this))).Ri(this.zm.insertRow(0));
+    (/** @type {EquipmentTableView & TableLifecycle} */ (/** @type {unknown} */ (this))).createHeaderRow(this.zm.insertRow(0));
   };
-  EquipmentTableView.prototype.Ri = function (a) {
+  EquipmentTableView.prototype.createHeaderRow = function (a) {
     var b = appendHeaderCell(a);
     b.style.textAlign = "center";
     b.style.padding = "0";

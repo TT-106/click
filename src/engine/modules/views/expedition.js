@@ -496,7 +496,7 @@ export function initializeViewsExpedition() {
     var a = getElement(this.elementId);
     this.nl = createElement("div", a, null, "dungeonNotificationDiv");
     hideElement(a);
-    (/** @type {any} */ (this)).Vw = false;
+    (/** @type {any} */ (this)).cachedVisible = false;
   };
   DungeonNotificationView.prototype.isVisible = function () {
     return !game.worldActive;
@@ -628,11 +628,11 @@ export function initializeViewsExpedition() {
   ScrollBarView.prototype.reset = function () {
     clearElementById(this.elementId);
     this.Zs.length = 0;
-    (/** @type {any} */ (this)).so();
+    (/** @type {any} */ (this)).createDomElements();
   };
   ScrollBarView.prototype.update = function () {
     if (!this.fu) {
-      (/** @type {any} */ (this)).so();
+      (/** @type {any} */ (this)).createDomElements();
     }
     var a,
       b = game.scrolls.at,
@@ -646,7 +646,7 @@ export function initializeViewsExpedition() {
     }
     scrollButtonsChanged(this.Qr);
   };
-  ScrollBarView.prototype.so = function () {
+  ScrollBarView.prototype.createDomElements = function () {
     this.fu = createElement("table", getElement(this.elementId), null, null);
     var a = this.fu.insertRow(0),
       b,
@@ -748,11 +748,11 @@ export function initializeViewsExpedition() {
     clearElementById(this.elementId);
     this.Ms.length = 0;
     this.su = false;
-    (/** @type {any} */ (this)).so();
+    (/** @type {any} */ (this)).createDomElements();
   };
   PotionBarView.prototype.update = function () {
     if (!this.su) {
-      (/** @type {any} */ (this)).so();
+      (/** @type {any} */ (this)).createDomElements();
     }
     var a,
       b = game.potions.potionList,
@@ -765,7 +765,7 @@ export function initializeViewsExpedition() {
       c.render();
     }
   };
-  PotionBarView.prototype.so = function () {
+  PotionBarView.prototype.createDomElements = function () {
     var a = getElement(this.elementId);
     this.su = true;
     var b,

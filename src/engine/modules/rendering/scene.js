@@ -343,7 +343,7 @@ export function initializeRenderingScene() {
   };
   GameCanvasView.prototype = new View();
   GameCanvasView.prototype.reset = function () {
-    (/** @type {GameCanvasView & { pf: () => void }} */ (/** @type {unknown} */ (this))).pf();
+    (/** @type {GameCanvasView & { createDomElements: () => void }} */ (/** @type {unknown} */ (this))).createDomElements();
   };
   GameCanvasView.prototype.update = function () {
     var a = this.gB;
@@ -740,7 +740,7 @@ export function initializeRenderingScene() {
       a.context.fillText("帧数: " + game.state.dz, 10, 20);
     }
   };
-  GameCanvasView.prototype.pf = function () {
+  GameCanvasView.prototype.createDomElements = function () {
     var a = getElement(this.kE);
     if (a) {
       var b = this.elementId,

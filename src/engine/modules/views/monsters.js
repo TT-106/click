@@ -27,14 +27,14 @@ export function MonsterRowView(a, b) {
   this.Sv = this.$f = this.Jh = this.Uv = -1;
   this.dx = 80;
   this.Cp = null;
-  (/** @type {any} */ (this)).qi();
+  (/** @type {any} */ (this)).createRowCells();
 }
 export function MonsterLevelTabView(a, b) {
   this.elementId = b;
   this.tabState = a;
-  this.Dp = null;
+  this.tableElement = null;
   this.vi = this.level = -1;
-  this.Tj = [];
+  this.rowViews = [];
 }
 export function MonsterView(a) {
   this.elementId = "monstersTabContent";
@@ -179,7 +179,7 @@ export function initializeViewsMonsters() {
   MonsterRowView.prototype.gq = function (a) {
     this.monsterType = a;
   };
-  MonsterRowView.prototype.qi = function () {
+  MonsterRowView.prototype.createRowCells = function () {
     var a = this.lh,
       b = this.monsterType.ll,
       c = a.insertCell(0);
@@ -287,10 +287,10 @@ export function initializeViewsMonsters() {
   };
   MonsterLevelTabView.prototype = new TabView();
   MonsterLevelTabView.prototype.reset = function () {
-    if (this.Dp) {
+    if (this.tableElement) {
       var a;
-      for (a = 0; a < this.Tj.length; a++) {
-        this.Tj[a].reset();
+      for (a = 0; a < this.rowViews.length; a++) {
+        this.rowViews[a].reset();
       }
     }
     this.level = -1;
@@ -300,39 +300,39 @@ export function initializeViewsMonsters() {
     if (1 > this.level) {
       console.log("MonsterTableView.updateViewContents  monsterLevel=" + this.level);
     } else {
-      if (this.Dp) {
+      if (this.tableElement) {
         if (this.vi !== this.level) {
           var a = getMonsterTypesForLevel(game.monsterCatalog, this.level),
             b;
-          if (a.length !== this.Tj.length) {
+          if (a.length !== this.rowViews.length) {
             console.log("MonsterTableView.updateMonsterLevelRows length mismatch");
           } else {
-            for (b = 0; b < this.Tj.length; b++) {
-              this.Tj[b].gq(a[b]);
+            for (b = 0; b < this.rowViews.length; b++) {
+              this.rowViews[b].gq(a[b]);
             }
           }
         }
       } else {
-        (/** @type {any} */ (this)).pf();
+        (/** @type {any} */ (this)).createDomElements();
       }
       this.vi = this.level;
-      for (a = 0; a < this.Tj.length; a++) {
-        this.Tj[a].render();
+      for (a = 0; a < this.rowViews.length; a++) {
+        this.rowViews[a].render();
       }
     }
   };
-  MonsterLevelTabView.prototype.pf = function () {
+  MonsterLevelTabView.prototype.createDomElements = function () {
     var a = this.elementId;
     clearElementById(a);
     var b = getElement(a),
       a = getMonsterTypesForLevel(game.monsterCatalog, this.level);
-    this.Dp = createElement("table", b, null, "monsterTable");
-    (/** @type {any} */ (this)).Ri(this.Dp.insertRow(0));
+    this.tableElement = createElement("table", b, null, "monsterTable");
+    (/** @type {any} */ (this)).createHeaderRow(this.tableElement.insertRow(0));
     for (var bi = 0; bi < a.length; bi++) {
-      this.Tj.push(new MonsterRowView(this.Dp.insertRow(bi + 1), a[bi]));
+      this.rowViews.push(new MonsterRowView(this.tableElement.insertRow(bi + 1), a[bi]));
     }
   };
-  MonsterLevelTabView.prototype.Ri = function (a) {
+  MonsterLevelTabView.prototype.createHeaderRow = function (a) {
     var b = appendHeaderCell(a);
     b.style.textAlign = "center";
     b.style.padding = "0";

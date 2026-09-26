@@ -4,7 +4,7 @@
 import { hideElementById, showElementById } from "./dom.js";
 export function View() {
   this.elementId = null;
-  this.Vw = false;
+  this.cachedVisible = false;
 }
 export function CompositeView() {
   this.Lg = null;
@@ -41,8 +41,8 @@ export function initializeViewsBase() {
   View.prototype.render = function () {
     if (this.elementId) {
       var a = (/** @type {any} */ (this)).isVisible();
-      if (this.Vw != a) {
-        if (this.Vw = a) {
+      if (this.cachedVisible != a) {
+        if (this.cachedVisible = a) {
           showElementById(this.elementId);
         } else {
           hideElementById(this.elementId);
