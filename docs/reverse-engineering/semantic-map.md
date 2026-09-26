@@ -80,6 +80,8 @@
 
 `jc` → `potionSprite`：药水定义中的值为 PNG 名，`Potion` 构造函数用 `game.itemSprites.getSprite()` 转为 Sprite 实例；世界掉落渲染与药水按钮均读取实例 Sprite。定义、构造桥接及两个读取点同批更新，存档键不涉及此字段。
 
+`kc` → `spellDefinitions`：职业定义保存“法术键 → 定义记录”的对象或 null；存档载入时 `game-save.js` 遍历此对象，按法术名称反查定义。classes/guardians/minions 的字面量键与载入读取同批更新，存档 `spellName` 键不变。
+
 ## 待取证残留（约 1,300 处访问）
 
 高频：`Y/Z/aa/ca/ea/ga/fa/ka/na` 等长尾——工作清单 `artifacts/obfuscated-fields.json`（按频次排序，含样例代码）。取证方法与产出格式见 WORKSTATE.md 第 6 节。

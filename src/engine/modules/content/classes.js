@@ -81,7 +81,7 @@ export function initializeContentClasses() {
       maxHealthMultiplier: 1.1,
       maxSpiritMultiplier: 0.9
     },
-    kc: fighterSpellDefinitions,
+    spellDefinitions: fighterSpellDefinitions,
     Qg: function () {
       return [new CharacterSkillUpgrade(improvedArmorFighter1Definition), new CharacterSkillUpgrade(ignoreDamageFighter1Definition), new CharacterSkillUpgrade(improvedArmorFighter2Definition), new CharacterSkillUpgrade(ignoreDamageFighter2Definition), new CharacterSkillUpgrade(criticalHitChanceFighter1Definition), new CharacterSkillUpgrade(improvedArmorFighter3Definition), new CharacterSkillUpgrade(ignoreDamageFighter3Definition), new LearnSpellUpgrade(tauntSpellDefinition), new CharacterSkillUpgrade(ignoreDamageFighter4Definition)];
     },
@@ -134,7 +134,7 @@ export function initializeContentClasses() {
       maxHealthMultiplier: 1,
       maxSpiritMultiplier: 1.05
     },
-    kc: priestSpellDefinitions,
+    spellDefinitions: priestSpellDefinitions,
     Qg: function () {
       return [new LearnSpellUpgrade(healSpellDefinition), new CharacterSkillUpgrade(improvedArmorPriest1Definition), new LearnSpellUpgrade(armorSpellDefinition), new CharacterSkillUpgrade(improvedHealingSpellPriestDefinition), new CharacterSkillUpgrade(improvedArmorPriest2Definition), new CharacterSkillUpgrade(healthRegenerationPriest2Definition), new CharacterSkillUpgrade(improvedArmorPriest3Definition), new CharacterSkillUpgrade(improvedArmorSpellPriestDefinition), new CharacterSkillUpgrade(fasterAttacksPriest1Definition)];
     },
@@ -184,7 +184,7 @@ export function initializeContentClasses() {
       maxHealthMultiplier: 0.9,
       maxSpiritMultiplier: 0.9
     },
-    kc: null,
+    spellDefinitions: null,
     Qg: function () {
       return [new CharacterSkillUpgrade(improvedArmorRanger1Definition), new CharacterSkillUpgrade(ricochetCountRanger1Definition), new CharacterSkillUpgrade(improvedArmorRanger2Definition), new CharacterSkillUpgrade(ricochetPercentRanger1Definition), new CharacterSkillUpgrade(criticalHitChanceRanger1Definition), new CharacterSkillUpgrade(healthRegenerationRanger1Definition), new CharacterSkillUpgrade(improvedArmorRanger3Definition), new CharacterSkillUpgrade(fasterAttacksRanger2Definition)];
     },
@@ -230,7 +230,7 @@ export function initializeContentClasses() {
       statType: 6
     }],
     statMultipliers: casterStatMultipliers,
-    kc: fireSpellDefinitions,
+    spellDefinitions: fireSpellDefinitions,
     Qg: function () {
       return [new LearnSpellUpgrade(fireBlastSpellDefinition), new CharacterSkillUpgrade(improvedDamageMageFire1Definition), new CharacterSkillUpgrade(healthRegenerationMageFire2Definition), new CharacterSkillUpgrade(improvedDamageMageFire2Definition), new CharacterSkillUpgrade(improvedHealthMageFire2Definition), new CharacterSkillUpgrade(improvedDamageMageFire3Definition), new CharacterSkillUpgrade(improvedSpiritMageFire2Definition), new CharacterSkillUpgrade(fasterAttacksMageFire1Definition), new CharacterSkillUpgrade(spiritRegenerationMageFire2Definition)];
     },
@@ -276,7 +276,7 @@ export function initializeContentClasses() {
       statType: 6
     }],
     statMultipliers: guardianStatMultipliers,
-    kc: rogueSpellDefinitions,
+    spellDefinitions: rogueSpellDefinitions,
     Qg: function () {
       return [new CharacterSkillUpgrade(improvedArmorRogue1Definition), new CharacterSkillUpgrade(improvedArmorRogue2Definition), new CharacterSkillUpgrade(spiritRegenerationRogue1Definition), new CharacterSkillUpgrade(improvedArmorRogue3Definition), new LearnSpellUpgrade(stealthSpellDefinition), new CharacterSkillUpgrade(spiritRegenerationRogue2Definition), new CharacterSkillUpgrade(attacksPerTurnRogue1Definition2), new CharacterSkillUpgrade(improvedSpiritRogue1Definition), new CharacterSkillUpgrade(additionalAttackPercentRogue2Definition)];
     },
@@ -322,7 +322,7 @@ export function initializeContentClasses() {
       statType: 4
     }],
     statMultipliers: guardianStatMultipliers,
-    kc: druidSpellDefinitions,
+    spellDefinitions: druidSpellDefinitions,
     Qg: function () {
       return [new LearnSpellUpgrade(summonWolfPackSpellDefinition), new CharacterSkillUpgrade(improvedDamageDruid1Definition), new CharacterSkillUpgrade(largerWolfPackDruid1Definition), new CharacterSkillUpgrade(improvedDamageDruid2Definition), new CharacterSkillUpgrade(fasterAttacksDruid1Definition), new CharacterSkillUpgrade(improvedDamageDruid3Definition), new CharacterSkillUpgrade(largerWolfPackDruid5Definition), new CharacterSkillUpgrade(fasterAttacksDruid2Definition), new LearnSpellUpgrade(minorHealSpellDefinition)];
     },
@@ -376,7 +376,7 @@ export function initializeContentClasses() {
       maxHealthMultiplier: 1,
       maxSpiritMultiplier: 1
     },
-    kc: barbarianSpellDefinitions,
+    spellDefinitions: barbarianSpellDefinitions,
     Qg: function () {
       return [new CharacterSkillUpgrade(improvedArmorBarbarian1Definition), new CharacterSkillUpgrade(ignoreDamageBarbarian1Definition), new LearnSpellUpgrade(sledgeHammerSpellDefinition), new CharacterSkillUpgrade(improvedArmorBarbarian2Definition), new CharacterSkillUpgrade(ignoreDamageBarbarian2Definition), new CharacterSkillUpgrade(improvedSledgeHammerBarbarian1Definition), new CharacterSkillUpgrade(improvedArmorBarbarian3Definition), new CharacterSkillUpgrade(ignoreDamageBarbarian3Definition), new CharacterSkillUpgrade(improvedSledgeHammerBarbarian2Definition)];
     },
@@ -422,7 +422,7 @@ export function initializeContentClasses() {
       statType: 6
     }],
     statMultipliers: casterStatMultipliers,
-    kc: electricSpellDefinitions,
+    spellDefinitions: electricSpellDefinitions,
     Qg: function () {
       return [new LearnSpellUpgrade(shockSpellDefinition), new CharacterSkillUpgrade(improvedDamageMageElectric1Definition), new CharacterSkillUpgrade(healthRegenerationMageElectric2Definition), new CharacterSkillUpgrade(improvedDamageMageElectric2Definition), new CharacterSkillUpgrade(improvedHealthMageElectric2Definition), new CharacterSkillUpgrade(improvedDamageMageElectric3Definition), new CharacterSkillUpgrade(improvedSpiritMageElectric2Definition), new CharacterSkillUpgrade(fasterAttacksMageElectric1Definition), new CharacterSkillUpgrade(spiritRegenerationMageElectric2Definition)];
     },
@@ -475,7 +475,7 @@ export function initializeContentClasses() {
       maxHealthMultiplier: 1,
       maxSpiritMultiplier: 1
     },
-    kc: ninjaSpellDefinitions,
+    spellDefinitions: ninjaSpellDefinitions,
     Qg: function () {
       return [new CharacterSkillUpgrade(improvedArmorNinja1Definition), new CharacterSkillUpgrade(attacksPerTurnNinja1Definition), new LearnSpellUpgrade(swiftStrikeSpellDefinition), new CharacterSkillUpgrade(improvedArmorNinja2Definition), new CharacterSkillUpgrade(criticalHitChanceNinja4Definition), new CharacterSkillUpgrade(swiftStrikeUpgradeNinja1Definition), new CharacterSkillUpgrade(improvedArmorNinja3Definition), new CharacterSkillUpgrade(criticalHitChanceNinja5Definition), new CharacterSkillUpgrade(swiftStrikeUpgradeNinja2Definition)];
     },
@@ -521,7 +521,7 @@ export function initializeContentClasses() {
       statType: 4
     }],
     statMultipliers: casterStatMultipliers,
-    kc: necromancerSpellDefinitions,
+    spellDefinitions: necromancerSpellDefinitions,
     Qg: function () {
       return [new LearnSpellUpgrade(hurtSpellDefinition), new CharacterSkillUpgrade(improvedDamageNecromancer1Definition), new CharacterSkillUpgrade(healthRegenerationNecromancer2Definition), new CharacterSkillUpgrade(improvedDamageNecromancer2Definition), new CharacterSkillUpgrade(improvedHealthNecromancer2Definition), new CharacterSkillUpgrade(improvedDamageNecromancer3Definition), new CharacterSkillUpgrade(improvedSpiritNecromancer2Definition), new CharacterSkillUpgrade(fasterAttacksNecromancer1Definition), new CharacterSkillUpgrade(spiritRegenerationNecromancer2Definition)];
     },
@@ -567,7 +567,7 @@ export function initializeContentClasses() {
       statType: 4
     }],
     statMultipliers: casterStatMultipliers,
-    kc: chickenSpellDefinitions,
+    spellDefinitions: chickenSpellDefinitions,
     Qg: function () {
       return [new LearnSpellUpgrade(summonChickensSpellDefinition), new CharacterSkillUpgrade(improvedArmorChickenKing1Definition), new CharacterSkillUpgrade(healthRegenerationChickenKing2Definition), new CharacterSkillUpgrade(improvedHealthChickenKing2Definition), new CharacterSkillUpgrade(improvedArmorChickenKing2Definition), new CharacterSkillUpgrade(largerFlockChickenKing1Definition), new CharacterSkillUpgrade(improvedSpiritChickenKing2Definition), new CharacterSkillUpgrade(improvedArmorChickenKing3Definition), new CharacterSkillUpgrade(rogueChanceChickenKingDefinition)];
     },
@@ -602,7 +602,7 @@ export function initializeContentClasses() {
     className: "Monster",
     bF: 50,
     cF: 160,
-    kc: null,
+    spellDefinitions: null,
     tb: null,
     statMultipliers: null
   };

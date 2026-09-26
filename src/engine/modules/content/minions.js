@@ -35,7 +35,7 @@ export function initializeContentMinions() {
       statType: 6
     }],
     statMultipliers: minionStatMultipliers,
-    kc: null,
+    spellDefinitions: null,
     createBehaviors: function () {
       return [new MeleeAttackBehavior(MELEE_ATTACK_RANGE, 90, 2, false), new ChangeFloorBehavior(), new TravelWorldBehavior(60, 10), new EnterDungeonBehavior(60, 10), new EnterCastleBehavior(60, 10), new UseShopBehavior(60, 10), new WaitBehavior()];
     }
@@ -68,7 +68,7 @@ export function initializeContentMinions() {
       statType: 6
     }],
     statMultipliers: minionStatMultipliers,
-    kc: null,
+    spellDefinitions: null,
     createBehaviors: function () {
       return [new MeleeAttackBehavior(MELEE_ATTACK_RANGE, 90, 2, false), new ChangeFloorBehavior(), new TravelWorldBehavior(60, 10), new EnterDungeonBehavior(60, 10), new EnterCastleBehavior(60, 10), new UseShopBehavior(60, 10), new WaitBehavior()];
     }
@@ -101,7 +101,7 @@ export function initializeContentMinions() {
       statType: 6
     }],
     statMultipliers: minionStatMultipliers,
-    kc: null,
+    spellDefinitions: null,
     createBehaviors: function () {
       return [new MeleeAttackBehavior(MELEE_ATTACK_RANGE, 90, 2, false), new ChangeFloorBehavior(), new TravelWorldBehavior(60, 10), new EnterDungeonBehavior(60, 10), new EnterCastleBehavior(60, 10), new UseShopBehavior(60, 10), new WaitBehavior()];
     }
@@ -236,7 +236,7 @@ export function initializeContentMinions() {
       statType: 4
     }],
     statMultipliers: guardianStatMultipliers,
-    kc: null,
+    spellDefinitions: null,
     Bp: [{
       statBonusValue: 2,
       statType: 23
@@ -276,7 +276,7 @@ export function initializeContentMinions() {
       statType: 6
     }],
     statMultipliers: casterStatMultipliers,
-    kc: null,
+    spellDefinitions: null,
     jl: [electricSpellDefinitions.br, poisonCloudSpell],
     Bp: [{
       statBonusValue: 3,
@@ -315,7 +315,7 @@ export function initializeContentMinions() {
       statType: 6
     }],
     statMultipliers: guardianStatMultipliers,
-    kc: null,
+    spellDefinitions: null,
     jl: [priestSpellDefinitions.$z, priestSpellDefinitions.Zz],
     createBehaviors: function () {
       return [new CooldownBehavior(160, 100), new SpecialAttackBehavior(MELEE_ATTACK_RANGE, 160, 90, 2), new PartyBuffBehavior(RANGED_ATTACK_RANGE, 8, 35), new PartyBuffBehavior(RANGED_ATTACK_RANGE, 5, 30), new ChangeFloorBehavior(), new TravelWorldBehavior(60, 10), new EnterDungeonBehavior(60, 10), new EnterCastleBehavior(60, 10), new UseShopBehavior(60, 10), new WaitBehavior()];

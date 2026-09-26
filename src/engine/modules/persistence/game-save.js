@@ -446,7 +446,7 @@ export function restoreGameState(a, b) {
                 ld = $c;
               if (ld) {
                 for (var pf = undefined, qf = undefined, pf = 0; pf < ld.length; pf++) {
-                  var rf = fg.classDefinition.kc,
+                  var rf = fg.classDefinition.spellDefinitions,
                     sf = undefined;
                   if (rf) {
                     c: {

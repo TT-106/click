@@ -35,7 +35,7 @@ export function initializeContentGuardians() {
       statType: 6
     }],
     statMultipliers: guardianStatMultipliers,
-    kc: null,
+    spellDefinitions: null,
     createBehaviors: function () {
       return [new MeleeAttackBehavior(MELEE_ATTACK_RANGE, 90, 2, false), new IdleBehavior(1)];
     },
@@ -69,7 +69,7 @@ export function initializeContentGuardians() {
       statType: 6
     }],
     statMultipliers: casterStatMultipliers,
-    kc: null,
+    spellDefinitions: null,
     createBehaviors: function () {
       return [new RangedAttackBehavior(RANGED_MIN_DISTANCE, RANGED_ATTACK_RANGE, 95), new HealBehavior(RANGED_ATTACK_RANGE, 90), new SummonBehavior(RANGED_ATTACK_RANGE, 85, 4), new IdleBehavior(1)];
     },
@@ -103,7 +103,7 @@ export function initializeContentGuardians() {
       statType: 4
     }],
     statMultipliers: guardianStatMultipliers,
-    kc: null,
+    spellDefinitions: null,
     YE: null,
     createBehaviors: function () {
       return [new RangedAttackBehavior(RANGED_MIN_DISTANCE, RANGED_ATTACK_RANGE, 95), new MeleeAttackBehavior(RANGED_ATTACK_RANGE, 90, MELEE_ACTION_TYPE, false), new IdleBehavior(1)];
@@ -151,7 +151,7 @@ export function initializeContentGuardians() {
       maxHealthMultiplier: 0.8,
       maxSpiritMultiplier: 1.1
     },
-    kc: null,
+    spellDefinitions: null,
     createBehaviors: function () {
       return [new ChainDamageBehavior(RANGED_ATTACK_RANGE, 95), new RangedAttackBehavior(RANGED_MIN_DISTANCE, RANGED_ATTACK_RANGE, 90), new MeleeAttackBehavior(RANGED_ATTACK_RANGE, 85, MELEE_ACTION_TYPE, false), new IdleBehavior(1)];
     },
@@ -322,7 +322,7 @@ export function initializeContentGuardians() {
       maxHealthMultiplier: 10,
       maxSpiritMultiplier: 1.5
     },
-    kc: null,
+    spellDefinitions: null,
     createBehaviors: function () {
       return [new MeleeAttackBehavior(MELEE_ATTACK_RANGE, 90, 2, false), new IdleBehavior(1)];
     },
