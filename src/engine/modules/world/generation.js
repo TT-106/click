@@ -229,7 +229,7 @@ export function clearDungeonTiles(a) {
     for (d = a.tileGrid[c], b = 0; b < a.heightInTiles; b++) {
       var f = d[b];
       f.Jn = null;
-      f.Yf = null;
+      f.decorationSprite = null;
       f.bt = null;
       f.floorType = EMPTY_TILE;
       f.tileEffect = null;

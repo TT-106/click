@@ -1,54 +1,5 @@
 [
   {
-    "name": "wf",
-    "reads": 13,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\world\\terrain.js:133",
-        "code": "this.wf"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\terrain.js:134",
-        "code": "this.wf"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\terrain.js:135",
-        "code": "this.wf"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\world\\terrain.js"
-    ]
-  },
-  {
-    "name": "Yf",
-    "reads": 8,
-    "writes": 5,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:93",
-        "code": "g.Yf"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:112",
-        "code": "g.Yf"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\generation.js:232",
-        "code": "f.Yf"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\world\\generation.js",
-      "src\\engine\\modules\\world\\rooms.js",
-      "src\\engine\\modules\\world\\terrain.js"
-    ]
-  },
-  {
     "name": "ng",
     "reads": 8,
     "writes": 5,
@@ -142,29 +93,6 @@
     "fileCount": 1,
     "files": [
       "src\\engine\\modules\\views\\upgrade-details.js"
-    ]
-  },
-  {
-    "name": "eg",
-    "reads": 12,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\world\\terrain.js:121",
-        "code": "this.eg"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\terrain.js:122",
-        "code": "this.eg"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\terrain.js:123",
-        "code": "this.eg"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\world\\terrain.js"
     ]
   },
   {

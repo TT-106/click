@@ -118,31 +118,31 @@ export function addDecorationTileSet(a, b) {
 export function WorldGenerator(a, b) {
   this.pE = new FractalNoise(10, 2.012, 0.5, 5, 1E-4);
   this.ox = new FractalNoise(2, 2, 0.5, 3, 5E-4);
-  this.eg = new TerrainBiome();
-  addTerrainTileSet(this.eg, L2_ForestCanopy01Sprite);
-  addTerrainTileSet(this.eg, L2_ForestCanopy03Sprite);
-  addTerrainTileSet(this.eg, L2_ForestPine01Sprite);
-  addTerrainTileSet(this.eg, L2_ForestPine02Sprite);
-  addTerrainTileSet(this.eg, L2_ForestPine03Sprite);
-  addTerrainTileSet(this.eg, L2_ForestPine07Sprite);
-  addTerrainTileSet(this.eg, L2_ForestPine08Sprite);
-  addTerrainTileSet(this.eg, L2_ForestPine09Sprite);
-  addTerrainTileSet(this.eg, L2_ForestWillow03Sprite);
-  addTerrainTileSet(this.eg, L2_ForestMixed05Sprite);
-  addTerrainTileSet(this.eg, L2_ForestMaple03Sprite);
-  this.wf = new DecorationBiome();
-  addDecorationTileSet(this.wf, L2_MountainBigEarth01Sprite);
-  addDecorationTileSet(this.wf, L2_MountainBigRock01Sprite);
-  addDecorationTileSet(this.wf, L2_MountainBigVolcano01Sprite);
-  addDecorationTileSet(this.wf, L2_MountainBigVolcanoActive01Sprite);
-  addDecorationTileSet(this.wf, L2_MountainBigVolcanoErupt01Sprite);
-  addDecorationTileSet(this.wf, L2_MountainRocky01Sprite);
-  addDecorationTileSet(this.wf, L2_MountainRocky02Sprite);
-  addDecorationTileSet(this.wf, L2_MountainRocky03Sprite);
-  addDecorationTileSet(this.wf, L2_MountainRocky04Sprite);
-  addDecorationTileSet(this.wf, L2_MountainRocky05Sprite);
-  addDecorationTileSet(this.wf, L2_Terrain041Sprite);
-  addDecorationTileSet(this.wf, L1_HillsSprite);
+  this.terrainBiome = new TerrainBiome();
+  addTerrainTileSet(this.terrainBiome, L2_ForestCanopy01Sprite);
+  addTerrainTileSet(this.terrainBiome, L2_ForestCanopy03Sprite);
+  addTerrainTileSet(this.terrainBiome, L2_ForestPine01Sprite);
+  addTerrainTileSet(this.terrainBiome, L2_ForestPine02Sprite);
+  addTerrainTileSet(this.terrainBiome, L2_ForestPine03Sprite);
+  addTerrainTileSet(this.terrainBiome, L2_ForestPine07Sprite);
+  addTerrainTileSet(this.terrainBiome, L2_ForestPine08Sprite);
+  addTerrainTileSet(this.terrainBiome, L2_ForestPine09Sprite);
+  addTerrainTileSet(this.terrainBiome, L2_ForestWillow03Sprite);
+  addTerrainTileSet(this.terrainBiome, L2_ForestMixed05Sprite);
+  addTerrainTileSet(this.terrainBiome, L2_ForestMaple03Sprite);
+  this.decorationBiome = new DecorationBiome();
+  addDecorationTileSet(this.decorationBiome, L2_MountainBigEarth01Sprite);
+  addDecorationTileSet(this.decorationBiome, L2_MountainBigRock01Sprite);
+  addDecorationTileSet(this.decorationBiome, L2_MountainBigVolcano01Sprite);
+  addDecorationTileSet(this.decorationBiome, L2_MountainBigVolcanoActive01Sprite);
+  addDecorationTileSet(this.decorationBiome, L2_MountainBigVolcanoErupt01Sprite);
+  addDecorationTileSet(this.decorationBiome, L2_MountainRocky01Sprite);
+  addDecorationTileSet(this.decorationBiome, L2_MountainRocky02Sprite);
+  addDecorationTileSet(this.decorationBiome, L2_MountainRocky03Sprite);
+  addDecorationTileSet(this.decorationBiome, L2_MountainRocky04Sprite);
+  addDecorationTileSet(this.decorationBiome, L2_MountainRocky05Sprite);
+  addDecorationTileSet(this.decorationBiome, L2_Terrain041Sprite);
+  addDecorationTileSet(this.decorationBiome, L1_HillsSprite);
   this.kt = new TerrainBiome();
   addTerrainTileSet(this.kt, L2_ForestPine04Sprite);
   addTerrainTileSet(this.kt, L2_ForestPine05Sprite);
@@ -230,10 +230,10 @@ export function populateWorldBlock(a, b) {
           s = null;
           p = 0;
           if ("GGGG" === l) {
-            if (s = a.eg.getBackgroundSpriteAt(g + f, h + d)) {
+            if (s = a.terrainBiome.getBackgroundSpriteAt(g + f, h + d)) {
               p = 10;
             } else {
-              if (s = a.wf.getDecorationSpriteAt(g + f, h + d)) {
+              if (s = a.decorationBiome.getDecorationSpriteAt(g + f, h + d)) {
                 p = 1E4;
               }
             }
@@ -311,7 +311,7 @@ export function WorldTile(a, b) {
   this.worldRow = b;
   this.NC = a * game.tileSize;
   this.OC = b * game.tileSize;
-  this.Yf = this.Jn = null;
+  this.decorationSprite = this.Jn = null;
   this.Kn = "GGGG";
   this.xB = this.KA = this.yB = this.LA = OCEAN_TERRAIN_CODE;
   this.terrainMoveCost = this.pathDistanceToDestination = 0;
@@ -604,7 +604,7 @@ export function initializeWorldTerrain() {
     this.Jn = a;
   };
   WorldTile.prototype.setDecorationSprite = function (a) {
-    this.Yf = a;
+    this.decorationSprite = a;
   };
   WorldBlock.prototype.Aw = function () {
     var a,

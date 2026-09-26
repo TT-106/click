@@ -11,7 +11,7 @@ export function DungeonTile(a, b, c, d) {
   this.tileRow = b;
   this.pixelColumn = c;
   this.pixelRow = d;
-  this.bt = this.Yf = this.Jn = null;
+  this.bt = this.decorationSprite = this.Jn = null;
   this.floorType = EMPTY_TILE;
   this.tileEffect = null;
   this.li = 0;
@@ -83,28 +83,28 @@ export function revealRoom(a) {
     for (l = c; l < d; l++) {
       h = a.tileGrid[l][f - 1];
       h.setBackgroundSprite(p);
-      if (!h.Yf) {
+      if (!h.decorationSprite) {
         h.setDecorationSprite(n);
       }
     }
     for (l = c; l < d; l++) {
       h = a.tileGrid[l][g];
       h.setBackgroundSprite(p);
-      if (!h.Yf) {
+      if (!h.decorationSprite) {
         h.setDecorationSprite(n);
       }
     }
     for (n = f; n < g; n++) {
       h = a.tileGrid[c - 1][n];
       h.setBackgroundSprite(p);
-      if (!h.Yf) {
+      if (!h.decorationSprite) {
         h.setDecorationSprite(s);
       }
     }
     for (n = f; n < g; n++) {
       h = a.tileGrid[d][n];
       h.setBackgroundSprite(p);
-      if (!h.Yf) {
+      if (!h.decorationSprite) {
         h.setDecorationSprite(s);
       }
     }
@@ -155,7 +155,7 @@ export function revealRoom(a) {
     if (!(!p || 0 === p.length || 0.2 > b.seededRandom.random() || !(p = 1 === p.length ? p[0] : randomIntFrom(b.seededRandom, p.length)))) {
       if (p.Oo && 0 < p.Oo.length) {
         if (g = a.tileColumn, d = a.tileRow, f = d + a.heightInTiles - 1, g = g + 1 + randomIntFrom(b.seededRandom, g + a.widthInTiles - 1 - g - 2), d = d + 1 + randomIntFrom(b.seededRandom, f - d - 2), setVector(b.yh, g, d), f = b.yh, d = h[f.x][f.y], d) {
-          if (!d.Yf) {
+          if (!d.decorationSprite) {
             if (f = p.Oo[randomIntFrom(b.seededRandom, p.Oo.length)]) {
               d.setDecorationSprite(game.terrainSprites.getSprite(f));
             } else {
@@ -531,7 +531,7 @@ export function revealHallway(a, b) {
 export function paintHallwayTile(a, b, c, d) {
   if (1 !== a.floorType) {
     a.setBackgroundSprite(b);
-    if (!(!d && a.Yf)) {
+    if (!(!d && a.decorationSprite)) {
       a.setDecorationSprite(c);
     }
   }
@@ -553,7 +553,7 @@ export function initializeWorldRooms() {
     this.Jn = a;
   };
   DungeonTile.prototype.setDecorationSprite = function (a) {
-    this.Yf = a;
+    this.decorationSprite = a;
   };
   DungeonTile.prototype.qB = function (a) {
     this.li = a;
