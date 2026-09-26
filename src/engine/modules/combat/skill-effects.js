@@ -146,7 +146,7 @@ export function initializeCombatSkillEffects() {
   stunEffectDefinition = {
     statusEffectTypeId: 13,
     Te: "spritesheet/SpellFXAnim2.png",
-    vd: "Bubbles",
+    animationName: "Bubbles",
     Od: 1,
     Pd: false,
     Qd: 100,
@@ -156,7 +156,7 @@ export function initializeCombatSkillEffects() {
     0: {
       statusEffectTypeId: 0,
       Te: "spritesheet/SpellFXAnim4.png",
-      vd: "Sleep",
+      animationName: "Sleep",
       Od: 7,
       Pd: true,
       Qd: 100,
@@ -165,7 +165,7 @@ export function initializeCombatSkillEffects() {
     1: {
       statusEffectTypeId: 1,
       Te: "spritesheet/SpellFXAnim1.png",
-      vd: "Spider Web",
+      animationName: "Spider Web",
       Od: 7,
       Pd: true,
       Qd: 100,
@@ -174,7 +174,7 @@ export function initializeCombatSkillEffects() {
     3: {
       statusEffectTypeId: 3,
       Te: "spritesheet/SpellFXAnim4.png",
-      vd: "Blind Eye Blink",
+      animationName: "Blind Eye Blink",
       Od: 7,
       Pd: true,
       Qd: 100,
@@ -183,7 +183,7 @@ export function initializeCombatSkillEffects() {
     4: {
       statusEffectTypeId: 4,
       Te: "spritesheet/SpellFXAnim4.png",
-      vd: "Red Eye Blink",
+      animationName: "Red Eye Blink",
       Od: 6,
       Pd: true,
       Qd: 100,
@@ -192,7 +192,7 @@ export function initializeCombatSkillEffects() {
     5: {
       statusEffectTypeId: 5,
       Te: "spritesheet/SpellFXAnim3.png",
-      vd: "Shield",
+      animationName: "Shield",
       Od: 6,
       Pd: false,
       Qd: 700,
@@ -201,7 +201,7 @@ export function initializeCombatSkillEffects() {
     6: {
       statusEffectTypeId: 6,
       Te: "spritesheet/SpellFXAnim3.png",
-      vd: "Arm Flex",
+      animationName: "Arm Flex",
       Od: 0,
       Pd: false,
       Qd: 700,
@@ -210,7 +210,7 @@ export function initializeCombatSkillEffects() {
     7: {
       statusEffectTypeId: 7,
       Te: "spritesheet/SpellFXAnim4.png",
-      vd: "Eagle",
+      animationName: "Eagle",
       Od: 0,
       Pd: false,
       Qd: 700,
@@ -219,7 +219,7 @@ export function initializeCombatSkillEffects() {
     8: {
       statusEffectTypeId: 8,
       Te: "spritesheet/SpellFXAnim4.png",
-      vd: "Armor",
+      animationName: "Armor",
       Od: 3,
       Pd: false,
       Qd: 700,
@@ -228,7 +228,7 @@ export function initializeCombatSkillEffects() {
     9: {
       statusEffectTypeId: 9,
       Te: "spritesheet/SpellFXAnim3.png",
-      vd: "Super Speed",
+      animationName: "Super Speed",
       Od: 0,
       Pd: false,
       Qd: 100,
@@ -237,7 +237,7 @@ export function initializeCombatSkillEffects() {
     10: {
       statusEffectTypeId: 10,
       Te: "spritesheet/SpellFXAnim3.png",
-      vd: "Target",
+      animationName: "Target",
       Od: 8,
       Pd: false,
       Qd: 50,
@@ -246,7 +246,7 @@ export function initializeCombatSkillEffects() {
     11: {
       statusEffectTypeId: 11,
       Te: "spritesheet/SpellFXAnim3.png",
-      vd: "Color Spiral",
+      animationName: "Color Spiral",
       Od: 8,
       Pd: false,
       Qd: 50,
@@ -255,7 +255,7 @@ export function initializeCombatSkillEffects() {
     12: {
       statusEffectTypeId: 12,
       Te: "spritesheet/SpellFXAnim4.png",
-      vd: "Totems",
+      animationName: "Totems",
       Od: 2,
       Pd: false,
       Qd: 50,
@@ -266,7 +266,7 @@ export function initializeCombatSkillEffects() {
   statusEffectDefinitions[14] = {
     statusEffectTypeId: 14,
     Te: "spritesheet/SpellFXAnim2.png",
-    vd: "Bubbles",
+    animationName: "Bubbles",
     Od: 1,
     Pd: false,
     Qd: 10,

@@ -10,7 +10,7 @@ export function initializeContentSpells() {
     projectileEffectName: null,
     statusEffectTypeId: 14,
     spellCategoryId: 2,
-    td: true,
+    applyEffectOnImpact: true,
     potencyPercent: 0,
     cooldownTurns: 15
   };
@@ -33,7 +33,7 @@ export function initializeContentSpells() {
       projectileEffectName: "Web",
       statusEffectTypeId: 1,
       spellCategoryId: 2,
-      td: true,
+      applyEffectOnImpact: true,
       potencyPercent: 20,
       cooldownTurns: 20
     },
@@ -97,7 +97,7 @@ export function initializeContentSpells() {
       projectileEffectName: "Pink Star",
       statusEffectTypeId: 4,
       spellCategoryId: 2,
-      td: true,
+      applyEffectOnImpact: true,
       potencyPercent: 0,
       cooldownTurns: 20
     }
@@ -132,7 +132,7 @@ export function initializeContentSpells() {
       statusEffectTypeId: null,
       spellCategoryId: 16,
       potencyPercent: 1,
-      td: true,
+      applyEffectOnImpact: true,
       cooldownTurns: 20
     },
     Zz: {
@@ -143,7 +143,7 @@ export function initializeContentSpells() {
       statusEffectTypeId: 5,
       spellCategoryId: 3,
       potencyPercent: 10,
-      td: true,
+      applyEffectOnImpact: true,
       cooldownTurns: 700
     },
     FD: {
@@ -154,7 +154,7 @@ export function initializeContentSpells() {
       statusEffectTypeId: 6,
       spellCategoryId: 3,
       potencyPercent: 10,
-      td: true,
+      applyEffectOnImpact: true,
       cooldownTurns: 700
     },
     ED: {
@@ -165,7 +165,7 @@ export function initializeContentSpells() {
       statusEffectTypeId: 7,
       spellCategoryId: 3,
       potencyPercent: 10,
-      td: true,
+      applyEffectOnImpact: true,
       cooldownTurns: 700
     },
     $z: {
@@ -176,7 +176,7 @@ export function initializeContentSpells() {
       statusEffectTypeId: 8,
       spellCategoryId: 3,
       potencyPercent: 10,
-      td: true,
+      applyEffectOnImpact: true,
       cooldownTurns: 700
     }
   };
@@ -188,7 +188,7 @@ export function initializeContentSpells() {
       projectileEffectName: null,
       statusEffectTypeId: 10,
       spellCategoryId: 2,
-      td: true,
+      applyEffectOnImpact: true,
       potencyPercent: 50,
       cooldownTurns: 30
     }
@@ -201,7 +201,7 @@ export function initializeContentSpells() {
       projectileEffectName: null,
       statusEffectTypeId: 11,
       spellCategoryId: 2,
-      td: true,
+      applyEffectOnImpact: true,
       potencyPercent: 100,
       cooldownTurns: 30
     },
@@ -212,7 +212,7 @@ export function initializeContentSpells() {
       projectileEffectName: null,
       statusEffectTypeId: null,
       spellCategoryId: 14,
-      td: true,
+      applyEffectOnImpact: true,
       potencyPercent: 0,
       cooldownTurns: 10
     },
@@ -223,7 +223,7 @@ export function initializeContentSpells() {
       projectileEffectName: null,
       statusEffectTypeId: null,
       spellCategoryId: 15,
-      td: true,
+      applyEffectOnImpact: true,
       potencyPercent: 0,
       cooldownTurns: 10
     }
@@ -236,7 +236,7 @@ export function initializeContentSpells() {
       projectileEffectName: null,
       statusEffectTypeId: 12,
       spellCategoryId: 2,
-      td: true,
+      applyEffectOnImpact: true,
       potencyPercent: 100,
       cooldownTurns: 40
     },
@@ -333,7 +333,7 @@ export function initializeContentSpells() {
       projectileEffectName: "Pink Star",
       statusEffectTypeId: 0,
       spellCategoryId: 2,
-      td: true,
+      applyEffectOnImpact: true,
       potencyPercent: 0,
       cooldownTurns: 20
     }
@@ -346,7 +346,7 @@ export function initializeContentSpells() {
       projectileEffectName: "Grey Bullet",
       statusEffectTypeId: null,
       spellCategoryId: 12,
-      td: false,
+      applyEffectOnImpact: false,
       potencyPercent: 100,
       cooldownTurns: 30
     }

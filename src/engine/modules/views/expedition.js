@@ -424,7 +424,7 @@ export function initializeViewsExpedition() {
               if (f) {
                 g = statusEffectDefinitions[c];
                 c = g.Te;
-                d = game.animations.Zg(g.vd);
+                d = game.animations.Zg(g.animationName);
                 this.Dm[a]++;
                 if (this.Dm[a] >= d.To()) {
                   this.Dm[a] = 0;
@@ -438,7 +438,7 @@ export function initializeViewsExpedition() {
               this.qm[a] = c;
               g = statusEffectDefinitions[c];
               c = g.Te;
-              d = game.animations.Zg(g.vd);
+              d = game.animations.Zg(g.animationName);
               this.Dm[a] = 0;
               d = d.frames[0];
               b = getElement(this.Wl[a]);

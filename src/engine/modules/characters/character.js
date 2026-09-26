@@ -488,11 +488,11 @@ export function updateCharacter(a, b) {
                   ta.attacker = a;
                   (/** @type {TargetedCombatAction} */ (ta)).setTargetCharacter(qa);
                   ta.actionDefinition = X;
-                  ta.yd = true;
+                  ta.hasProjectilePhase = true;
                   eb = qa.position.levelPosition;
                   if (Da) {
                     Gb = new VisualEffect(Da, mb, eb, true, 1);
-                    Gb.ud = a;
+                    Gb.boundCharacter = a;
                     ta.projectileEffect = Gb;
                   }
                   if (ub) {
@@ -528,10 +528,10 @@ export function updateCharacter(a, b) {
                     Va.attacker = a;
                     (/** @type {TargetedCombatAction} */ (Va)).setTargetCharacter(ja);
                     Va.actionDefinition = ha;
-                    Va.yd = true;
+                    Va.hasProjectilePhase = true;
                     mc = ja.position.levelPosition;
                     Sb = new VisualEffect(null, zb, mc, true, 2);
-                    Sb.ud = a;
+                    Sb.boundCharacter = a;
                     Va.projectileEffect = Sb;
                     var Hb = new VisualEffect(vb, mc, mc, false, 1);
                     Va.impactEffect = Hb;
@@ -599,17 +599,17 @@ export function updateCharacter(a, b) {
                       sa.attacker = a;
                       (/** @type {TargetedCombatAction} */ (sa)).setTargetCharacter(Qa);
                       sa.actionDefinition = cc;
-                      sa.yd = true;
+                      sa.hasProjectilePhase = true;
                       if (qc) {
                         Tb = new VisualEffect(qc, Cb, Ra, true, 1);
-                        Tb.ud = a;
+                        Tb.boundCharacter = a;
                         sa.projectileEffect = Tb;
                       }
                       Ja = statValue(a.stats.damage);
                       sa.Rd = false;
                       sa.remainingDamage = Ja;
                       Db = new VisualEffect(Fc, Cb, Ra, false, TARGETED_EFFECT);
-                      Db.ud = a;
+                      Db.boundCharacter = a;
                       Db.ew = kb;
                       Db.li = Ja;
                       sa.impactEffect = Db;
@@ -656,11 +656,11 @@ export function updateCharacter(a, b) {
                   var tc = xb.position.levelPosition,
                     me = a.position.levelPosition;
                   Ya.actionDefinition = Na;
-                  Ya.yd = true;
+                  Ya.hasProjectilePhase = true;
                   var ne = Na.projectileEffectName;
                   if (ne) {
                     var Le = new VisualEffect(ne, me, tc, true, 1);
-                    Le.ud = a;
+                    Le.boundCharacter = a;
                     Ya.projectileEffect = Le;
                   }
                   var Td = Na.impactEffectName;
@@ -670,7 +670,7 @@ export function updateCharacter(a, b) {
                     Ya.remainingDamage = oe;
                     var Y = new VisualEffect(Td, me, tc, false, TARGETED_EFFECT),
                       nf = xb.position.room;
-                    Y.ud = a;
+                    Y.boundCharacter = a;
                     Y.ew = nf;
                     Y.li = oe;
                     Ya.impactEffect = Y;
@@ -752,13 +752,13 @@ export function updateCharacter(a, b) {
                     Vb.Rd = false;
                     Vb.remainingDamage = 0;
                     Vb.actionDefinition = ad;
-                    Vb.yd = false;
+                    Vb.hasProjectilePhase = false;
                     var Tc = Gc.position.levelPosition,
                       hd = randomPointInRoom(Tc, Gc.position.room),
                       id = ad.projectileEffectName;
                     if (id) {
                       var jd = new VisualEffect(id, Tc, hd, true, 1);
-                      jd.ud = Gc;
+                      jd.boundCharacter = Gc;
                       Vb.projectileEffect = jd;
                     }
                     var kd = ad.impactEffectName;
@@ -797,13 +797,13 @@ export function updateCharacter(a, b) {
                       ld.Rd = false;
                       ld.remainingDamage = 0;
                       ld.actionDefinition = fg;
-                      ld.yd = true;
+                      ld.hasProjectilePhase = true;
                       var pf = Ne.position.levelPosition,
                         qf = Oe.position.levelPosition,
                         rf = fg.projectileEffectName;
                       if (rf) {
                         var sf = new VisualEffect(rf, pf, qf, true, 1);
-                        sf.ud = Ne;
+                        sf.boundCharacter = Ne;
                         ld.projectileEffect = sf;
                       }
                       var Ch = fg.impactEffectName;
@@ -829,13 +829,13 @@ export function updateCharacter(a, b) {
                 Md.Rd = false;
                 Md.remainingDamage = 0;
                 Md.actionDefinition = se;
-                Md.yd = false;
+                Md.hasProjectilePhase = false;
                 var tf = a.position.levelPosition,
                   uf = randomPointInRoom(tf, a.position.room),
                   Dh = se.projectileEffectName;
                 if (Dh) {
                   var ej = new VisualEffect(Dh, tf, uf, true, 1);
-                  ej.ud = a;
+                  ej.boundCharacter = a;
                   Md.projectileEffect = ej;
                 }
                 var hg = se.impactEffectName;
@@ -953,7 +953,7 @@ export function updateCharacter(a, b) {
                 if (Ud && 0 !== Ud.length) {
                   var xe,
                     Wd,
-                    yd,
+                    spellAction,
                     lg,
                     mg,
                     Af = vf.projectileEffectName,
@@ -961,22 +961,22 @@ export function updateCharacter(a, b) {
                     Lh = a.position.levelPosition;
                   for (xe = 0; xe < Ud.length; xe++) {
                     if (Wd = Ud[xe], 4 !== Wd.characterType || 1 !== te && 0 !== te) {
-                      yd = new CombatAction();
-                      yd.attacker = a;
-                      (/** @type {TargetedCombatAction} */ (yd)).setTargetCharacter(Wd);
-                      yd.actionDefinition = vf;
-                      yd.yd = true;
+                      spellAction = new CombatAction();
+                      spellAction.attacker = a;
+                      (/** @type {TargetedCombatAction} */ (spellAction)).setTargetCharacter(Wd);
+                      spellAction.actionDefinition = vf;
+                      spellAction.hasProjectilePhase = true;
                       lg = Wd.position.levelPosition;
                       if (Af) {
                         mg = new VisualEffect(Af, Lh, lg, true, 1);
-                        mg.ud = a;
-                        yd.projectileEffect = mg;
+                        mg.boundCharacter = a;
+                        spellAction.projectileEffect = mg;
                       }
                       if (ng) {
                         var ul = new VisualEffect(ng, Lh, lg, false, 1);
-                        yd.impactEffect = ul;
+                        spellAction.impactEffect = ul;
                       }
-                      enqueueCombatAction(game.combatQueue, yd);
+                      enqueueCombatAction(game.combatQueue, spellAction);
                     } else {
                       showFloatingText(game.floatingText, Wd, "免疫!", "white");
                     }

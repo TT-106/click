@@ -66,7 +66,7 @@ export function AnimationCatalog(a) {
 export function VisualEffect(a, b, c, d, f) {
   this.impactEffectName = a;
   this.Io = f;
-  this.ew = this.ud = null;
+  this.ew = this.boundCharacter = null;
   this.li = 0;
   if (d) {
     f = new Vector2();
@@ -144,7 +144,7 @@ export function advanceEffectFrame(a, b) {
     a.frameIndex += d;
     if (a.frameIndex >= a.De) {
       if (a.uA) {
-        if (a.ud.effects.isStunned) {
+        if (a.boundCharacter.effects.isStunned) {
           a.frameIndex = 0;
         } else {
           a.bg = true;

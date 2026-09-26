@@ -25,7 +25,7 @@ import { clampPointToRoom, roomBottomPixels, roomLeftPixels, roomRightPixels, ro
 import { MELEE_ATTACK_RANGE, RANGED_ATTACK_RANGE } from "../content/classes.js";
 export function CombatAction() {
   this.remainingDamage = 0;
-  this.yd = this.Vn = this.Rd = false;
+  this.hasProjectilePhase = this.Vn = this.Rd = false;
   this.impactEffect = this.projectileEffect = this.attacker = this.targetCharacter = this.actionDefinition = null;
   this.ut = this.Xs = false;
   this.chainCount = this.Ys = 0;
@@ -65,7 +65,7 @@ export function advanceCombatAction(a, b) {
     }
     addVisualEffect(game.effects, c);
     var d = b.actionDefinition;
-    if (d && d.td) {
+    if (d && d.applyEffectOnImpact) {
       applySpellEffect(a, b);
     }
     if (0 < b.remainingDamage) {
@@ -113,7 +113,7 @@ export function advanceCombatAction(a, b) {
       }
     }
   }
-  return c && c.bl() ? ((c = b.actionDefinition) && (c.td || applySpellEffect(a, b)), b.Vn = true) : false;
+  return c && c.bl() ? ((c = b.actionDefinition) && (c.applyEffectOnImpact || applySpellEffect(a, b)), b.Vn = true) : false;
 }
 export function applySpellEffect(a, b) {
   var c = b.actionDefinition,
@@ -139,7 +139,7 @@ export function applySpellEffect(a, b) {
         case 8:
           h = f.Ss;
       }
-      d = new StatusEffect(d, game.state.turnNumber, g.Qd, game.animations.Zg(g.vd), g.Od, g.Pd, 1 > h ? c : c * h);
+      d = new StatusEffect(d, game.state.turnNumber, g.Qd, game.animations.Zg(g.animationName), g.Od, g.Pd, 1 > h ? c : c * h);
     } else {
       console.log("Failed to find char effect description: " + d);
       d = null;
@@ -329,8 +329,8 @@ export function resolveCharacterDefeat(a, b) {
       game.state.statisticsRecorder.recordCharacterStunned();
       b.effects.isStunned = true;
       var c = b.position.levelPosition,
-        stunEffect = new StatusEffect(13, game.state.turnNumber, stunEffectDefinition.Qd, game.animations.Zg(stunEffectDefinition.vd), stunEffectDefinition.Od, stunEffectDefinition.Pd, 0);
-      c = new VisualEffect(stunEffectDefinition.vd, c, c, false, 1);
+        stunEffect = new StatusEffect(13, game.state.turnNumber, stunEffectDefinition.Qd, game.animations.Zg(stunEffectDefinition.animationName), stunEffectDefinition.Od, stunEffectDefinition.Pd, 0);
+      c = new VisualEffect(stunEffectDefinition.animationName, c, c, false, 1);
       b.stats.stunCount++;
       var f = b.effects;
       if (stunEffect) {
@@ -340,7 +340,7 @@ export function resolveCharacterDefeat(a, b) {
         }
       }
       c.uA = true;
-      c.ud = b;
+      c.boundCharacter = b;
       addVisualEffect(game.effects, c);
       showFloatingText(game.floatingText, b, "昏迷!", "white");
     }
@@ -443,7 +443,7 @@ export function createAttackAction(a, b, c) {
     a = calculateAttackDamage(a, b);
     d.remainingDamage = a;
     d.Rd = 0 === a;
-    d.yd = false;
+    d.hasProjectilePhase = false;
     a = new VisualEffect("Red Splat", c, c, false, 1);
   } else if (c) {
     c = b.position.levelPosition;
@@ -454,7 +454,7 @@ export function createAttackAction(a, b, c) {
       h = h ? h.itemEffect : null;
     d.remainingDamage = g;
     d.Rd = 0 === g;
-    d.yd = true;
+    d.hasProjectilePhase = true;
     g = "Red Splat";
     if (h) {
       var l = h.ms;
@@ -465,7 +465,7 @@ export function createAttackAction(a, b, c) {
     } else {
       f = new VisualEffect(getProjectileAnimation(b, null), f, c, true, 1);
     }
-    f.ud = a;
+    f.boundCharacter = a;
     d.projectileEffect = f;
     a = a.stats.Ir();
     if (0 < a) {
@@ -480,7 +480,7 @@ export function createAttackAction(a, b, c) {
     a = null;
     d.remainingDamage = f;
     d.Rd = 0 === f;
-    d.yd = false;
+    d.hasProjectilePhase = false;
     if (b && (f = b.ms)) {
       a = new VisualEffect(f, c, c, false, 1);
     }
@@ -506,11 +506,11 @@ export function createSpellAction(a) {
   var f = b.position.levelPosition,
     g = a.position.levelPosition;
   d.actionDefinition = c;
-  d.yd = true;
+  d.hasProjectilePhase = true;
   var h = c.projectileEffectName;
   if (h) {
     h = new VisualEffect(h, g, f, true, 1);
-    h.ud = a;
+    h.boundCharacter = a;
     d.projectileEffect = h;
   }
   if (h = c.impactEffectName) {
@@ -635,7 +635,7 @@ export function createChainAction(a) {
   h.impactEffect = g;
   f = new VisualEffect(f.impactEffectName, l, n, true, 1);
   h.projectileEffect = f;
-  h.yd = true;
+  h.hasProjectilePhase = true;
   d = calculateAttackDamage(a.attacker, d);
   h.remainingDamage = d;
   h.Rd = 0 === d;
@@ -653,7 +653,7 @@ export function createReturningAction(a) {
     var f = new CombatAction();
     f.attacker = a.attacker;
     (/** @type {TargetedCombatAction} */ (f)).setTargetCharacter(a.attacker);
-    f.yd = true;
+    f.hasProjectilePhase = true;
     f.actionDefinition = a.actionDefinition;
     f.ut = true;
     f.Ys = 1;
@@ -666,7 +666,7 @@ export function createReturningAction(a) {
     if (c) {
       c = new VisualEffect(c.impactEffectName, d, g, true, 1);
       c.Gs = true;
-      c.ud = a.attacker;
+      c.boundCharacter = a.attacker;
       f.projectileEffect = c;
     }
     a = new VisualEffect(b.impactEffectName, d, g, false, 1);
@@ -686,7 +686,7 @@ export function createReturningAction(a) {
   }
   f = new CombatAction();
   f.attacker = a.attacker;
-  f.yd = true;
+  f.hasProjectilePhase = true;
   f.actionDefinition = a.actionDefinition;
   f.Ys = b + 1;
   f.ut = true;
@@ -702,7 +702,7 @@ export function createReturningAction(a) {
   if (h) {
     g = new VisualEffect(h.impactEffectName, b, c, true, 1);
     g.Gs = true;
-    g.ud = a.attacker;
+    g.boundCharacter = a.attacker;
     f.projectileEffect = g;
   }
   a = new VisualEffect(d.impactEffectName, b, c, false, 1);

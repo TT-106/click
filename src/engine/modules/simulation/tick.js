@@ -326,7 +326,7 @@ export function advanceSimulation(a) {
                     Wa = new CombatAction();
                     Wa.attacker = zb;
                     (/** @type {any} */ (Wa)).setTargetCharacter(qb);
-                    Wa.yd = false;
+                    Wa.hasProjectilePhase = false;
                     Wa.actionDefinition = Ib;
                     applySeparationForce(Ab, Ha, jb, Hb);
                     var cc = new VisualEffect(wb, jb, Bb, false, 1);
@@ -342,7 +342,7 @@ export function advanceSimulation(a) {
                     Tb = new CombatAction();
                   Tb.attacker = vb.attacker;
                   (/** @type {any} */ (Tb)).setTargetCharacter(nc);
-                  Tb.yd = false;
+                  Tb.hasProjectilePhase = false;
                   Tb.actionDefinition = Qa.Wq;
                   if (!Qa.Wq) {
                     Qa.Wq = new Spell(blastStunSpell);
@@ -373,7 +373,7 @@ export function advanceSimulation(a) {
       }
     } else if (Ga.isDead) {
       bb = ja.Vn = true;
-    } else if (ja.yd) {
+    } else if (ja.hasProjectilePhase) {
       var Cb = Fa,
         kb = ja,
         Ra = kb.projectileEffect;
@@ -424,7 +424,7 @@ export function advanceSimulation(a) {
           rc.damageReceived += Aa;
           showDamageText(rb, Aa);
           if (0 === rc.health) {
-            resolveCharacterDefeat(lb.ud, rb);
+            resolveCharacterDefeat(lb.boundCharacter, rb);
           }
         }
       }
@@ -449,7 +449,7 @@ export function advanceSimulation(a) {
         subtractVector(directionScratchVector, ka.wm);
         var xb = vectorLength(directionScratchVector),
           Na = undefined,
-          Na = /** @type {any} */ (ka.ud === game.state.scrollCaster ? 11 * Eb : ka.Gs ? 5 * Eb : 7 * Eb);
+          Na = /** @type {any} */ (ka.boundCharacter === game.state.scrollCaster ? 11 * Eb : ka.Gs ? 5 * Eb : 7 * Eb);
         if (xb <= Na) {
           assignVector(ka.wm, ka.xi);
           ka.Pk = true;

@@ -21,7 +21,7 @@ export function Spell(a) {
   this.potencyPercent = a.potencyPercent;
   this.cooldownTurns = a.cooldownTurns;
   this.lastCastTurn = game.state.turnNumber - 3 * this.cooldownTurns;
-  this.td = a.td;
+  this.applyEffectOnImpact = a.applyEffectOnImpact;
 }
 export function resetSpellCooldown(a) {
   a.lastCastTurn = game.state.turnNumber - 3 * a.cooldownTurns;
