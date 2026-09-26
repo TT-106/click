@@ -1,4 +1,3 @@
-// @ts-nocheck -- M10 渐进类型化：JSDoc 覆盖后摘除（见 docs/WORKSTATE.md）
 /** 原版存档格式、全状态恢复与保存。
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
@@ -290,7 +289,7 @@ export function restoreGameState(a, b) {
                 kb = sa.roomId,
                 Ra;
               b: {
-                for (var Ja = sa.settingsId, Db = game.treasure, gb = undefined, gb = 0; gb < Db.ve.length; gb++) {
+                for (var Ja = sa.settingsId, Db = game.treasure, gb = 0; gb < Db.ve.length; gb++) {
                   if (Db.ve[gb].uh === Ja) {
                     Ra = Db.ve[gb];
                     break b;
@@ -431,7 +430,7 @@ export function restoreGameState(a, b) {
               if (-1 < dj) {
                 var Me;
                 b: {
-                  for (var Ne = game.level, Oe = undefined, Oe = 0; Oe < Ne.gd.length; Oe++) {
+                  for (var Ne = game.level, Oe = 0; Oe < Ne.gd.length; Oe++) {
                     if (Ne.gd[Oe].hallwayId === dj) {
                       Me = Ne.gd[Oe];
                       break b;
@@ -445,7 +444,7 @@ export function restoreGameState(a, b) {
               var fg = hc,
                 ld = $c;
               if (ld) {
-                for (var pf = undefined, qf = undefined, pf = 0; pf < ld.length; pf++) {
+                for (var qf = undefined, pf = 0; pf < ld.length; pf++) {
                   var rf = fg.classDefinition.spellDefinitions,
                     sf = undefined;
                   if (rf) {
@@ -478,7 +477,7 @@ export function restoreGameState(a, b) {
               var Md = hc.inventory,
                 tf = Gc;
               if (tf) {
-                for (var uf = undefined, Dh = undefined, uf = 0; uf < tf.length; uf++) {
+                for (var Dh = undefined, uf = 0; uf < tf.length; uf++) {
                   if (Dh = restoreItem(tf[uf])) {
                     addInventoryItem(Md, Dh);
                   }
@@ -487,7 +486,7 @@ export function restoreGameState(a, b) {
               var ej = hc,
                 hg = ad;
               if (hg) {
-                for (var ig = undefined, Eh = undefined, ig = 0; ig < hg.length; ig++) {
+                for (var Eh = undefined, ig = 0; ig < hg.length; ig++) {
                   if (Eh = restoreItem(hg[ig])) {
                     equipItem(ej, Eh);
                   }
@@ -516,7 +515,7 @@ export function restoreGameState(a, b) {
               Sa.health = floorNumber(Fh ? Fh : Sa.health);
               Sa.spirit = Gh ? Gh : Sa.spirit;
               Sa.kills = Hh ? Hh : Sa.kills;
-              Sa.setMinionKills(xf ? xf : Sa.minionKills);
+              /** @type {{setMinionKills: (count: number) => void}} */ (/** @type {unknown} */ (Sa)).setMinionKills(xf ? xf : Sa.minionKills);
               Sa.stunCount = Ud ? Ud : Sa.stunCount;
               Sa.damageGiven = yf ? yf : Sa.damageGiven;
               Sa.damageReceived = xd ? xd : Sa.damageReceived;
@@ -592,7 +591,7 @@ export function restoreGameState(a, b) {
                     var ul = !!ng.upgradePurchased,
                       Bf = undefined;
                     b: {
-                      for (var Mh = game.state.ae, Pe = undefined, Pe = 0; Pe < Mh.tl.length; Pe++) {
+                      for (var Mh = game.state.ae, Pe = 0; Pe < Mh.tl.length; Pe++) {
                         if (Mh.tl[Pe].kh.upgradeId === Lh) {
                           Bf = Mh.tl[Pe];
                           break b;
@@ -664,7 +663,7 @@ export function restoreGameState(a, b) {
                 vl = Nh.activeStartTurn,
                 og;
               b: {
-                for (var ij = Nh.potionId, Df = undefined, Df = 0; Df < potionDefinitions.length; Df++) {
+                for (var ij = Nh.potionId, Df = 0; Df < potionDefinitions.length; Df++) {
                   if (ij === potionDefinitions[Df].potionId) {
                     og = potionDefinitions[Df];
                     break b;

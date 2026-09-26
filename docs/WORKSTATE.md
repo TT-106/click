@@ -21,6 +21,7 @@
 - M10 `views/dungeons.js` 已摘除 `@ts-nocheck`：表容器与表行变量拆开，后挂载的 `qi/Ro/ct/pf/mk/Ri` 在调用处限定签名；tsc 与四套回归全绿。剩余 18 个。
 - M10 `runtime/game.js` 摘除 `@ts-nocheck` 后直接零类型错误，四套回归全绿。剩余 17 个。
 - M10 `simulation/tick.js` 摘除忽略标记后零错误；`characters/party.js` 将 `targetCastle.dungeonList` 从复用的数值局部变量 `n` 拆为 `castleDungeons` 后零错误。两文件同批四套回归全绿，剩余 15 个。
+- M10 `persistence/game-save.js` 已摘除 `@ts-nocheck`：七个重复索引声明合并，CharacterStats 后挂载的 `setMinionKills` 在调用点标注签名；四套回归全绿，存档 JSON 键无改动。剩余 14 个。
 - 本节优先于下方旧快照中的“当前工作树干净”“M10 未开始”“9 场景”等过时文字；提交与实际状态以 `git status`、`git log` 为准。
 
 ## 1. 项目概况
