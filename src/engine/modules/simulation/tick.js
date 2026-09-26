@@ -439,8 +439,8 @@ export function advanceSimulation(a) {
   }
   var Ub = game.effects,
     sb;
-  for (sb = 0; sb < Ub.Wg.length; sb++) {
-    var ka = Ub.Wg[sb],
+  for (sb = 0; sb < Ub.pool.length; sb++) {
+    var ka = Ub.pool[sb],
       Eb = a;
     ka.hasSpawned = true;
     if (1 === ka.Io) {
@@ -479,9 +479,9 @@ export function advanceSimulation(a) {
       }
     }
   }
-  for (sb = Ub.Wg.length - 1; 0 <= sb; sb--) {
-    if (Ub.Wg[sb].isFinished()) {
-      Ub.Wg.splice(sb, 1);
+  for (sb = Ub.pool.length - 1; 0 <= sb; sb--) {
+    if (Ub.pool[sb].isFinished()) {
+      Ub.pool.splice(sb, 1);
     }
   }
   var Ya = game.inventories,

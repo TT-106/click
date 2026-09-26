@@ -214,11 +214,11 @@ window.harness = {
     }
     return { count, sum, texts, snapshot: snapshot() };
   },
-  // 法术/攻击视觉特效直接对账：特效池（原版 Game.df.Wg / 重构版 game.effects.Wg）不入存档 DTO，
+  // 法术/攻击视觉特效直接对账：特效池（原版 Game.df.Wg / 重构版 game.effects.pool）不入存档 DTO，
   // 渲染帧每帧消费池内 VisualEffect（sprites.js:164 清空标记 bg/Pk）。逐帧差分采样新入池特效的
   // impactEffectName 序列（创建次序即战斗事件次序），返回各类名称计数、总数与顺序列表。
   countVisualEffects({ turns = 0 } = {}) {
-    const pool = () => (original ? window.Game.df.Wg : game.effects.Wg);
+    const pool = () => (original ? window.Game.df.Wg : game.effects.pool);
     // 特效名字段：原版 Zb 构造器存 this.ca（c2.js:7184），重构版已语义化为 impactEffectName
     const nameOf = effect => (original ? effect.ca : effect.impactEffectName);
     const namesByType = {};

@@ -622,7 +622,7 @@ export function initializeRenderingScene() {
         drawCharacterEffects(a, game.minions.minionList);
         drawCharacterEffects(a, game.state.adventurers);
         if (game.options.showSpellEffects) {
-          var Ha = game.effects.Wg;
+          var Ha = game.effects.pool;
           if (Ha && 0 !== Ha.length) {
             var jb,
               Ab,

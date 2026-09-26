@@ -137,15 +137,15 @@ export function revealRoom(a) {
       h.setBackgroundSprite(p);
       if (a.stairs.Fq) {
         if (a.stairs.sq) {
-          h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.stairs.Lh));
+          h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.stairs.stairsDownNSSprite));
         } else {
-          h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.stairs.di));
+          h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.stairs.stairDoorASprite));
         }
       } else {
         if (a.stairs.sq) {
-          h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.stairs.Kh));
+          h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.stairs.stairsDownEWSprite));
         } else {
-          h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.stairs.ci));
+          h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.stairs.stairDoorBSprite));
         }
       }
     }

@@ -1,31 +1,5 @@
 [
   {
-    "name": "Wg",
-    "reads": 11,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:625",
-        "code": "game.effects.Wg"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\sprites.js:164",
-        "code": "a.Wg"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\sprites.js:166",
-        "code": "a.Wg"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\rendering\\sprites.js",
-      "src\\engine\\modules\\runtime\\game.js",
-      "src\\engine\\modules\\simulation\\tick.js"
-    ]
-  },
-  {
     "name": "Wh",
     "reads": 4,
     "writes": 7,
@@ -72,102 +46,6 @@
     "files": [
       "src\\engine\\modules\\combat\\scrolls.js",
       "src\\engine\\modules\\progression\\upgrades.js"
-    ]
-  },
-  {
-    "name": "di",
-    "reads": 1,
-    "writes": 10,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\content\\dungeon-themes.js:9",
-        "code": "di: \"L2_Door007.PNG\""
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\dungeon-themes.js:46",
-        "code": "di: \"L2_DarkStoneStairsUpNS.PNG\""
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\dungeon-themes.js:79",
-        "code": "di: \"L2_StairsHutUpNS.PNG\""
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\content\\dungeon-themes.js",
-      "src\\engine\\modules\\world\\rooms.js"
-    ]
-  },
-  {
-    "name": "ci",
-    "reads": 1,
-    "writes": 10,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\content\\dungeon-themes.js:10",
-        "code": "ci: \"L2_Door008.PNG\""
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\dungeon-themes.js:47",
-        "code": "ci: \"L2_DarkStoneStairsUpEW.PNG\""
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\dungeon-themes.js:80",
-        "code": "ci: \"L2_StairsHutUpEW.PNG\""
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\content\\dungeon-themes.js",
-      "src\\engine\\modules\\world\\rooms.js"
-    ]
-  },
-  {
-    "name": "Lh",
-    "reads": 1,
-    "writes": 10,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\content\\dungeon-themes.js:11",
-        "code": "Lh: \"L2_StairsDownNS.PNG\""
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\dungeon-themes.js:48",
-        "code": "Lh: \"L2_DarkStoneStairsDownNS.PNG\""
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\dungeon-themes.js:81",
-        "code": "Lh: \"L2_StairsHutDownNS.PNG\""
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\content\\dungeon-themes.js",
-      "src\\engine\\modules\\world\\rooms.js"
-    ]
-  },
-  {
-    "name": "Kh",
-    "reads": 1,
-    "writes": 10,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\content\\dungeon-themes.js:12",
-        "code": "Kh: \"L2_StairsDownEW.PNG\""
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\dungeon-themes.js:49",
-        "code": "Kh: \"L2_DarkStoneStairsDownEW.PNG\""
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\dungeon-themes.js:82",
-        "code": "Kh: \"L2_StairsHutDownEW.PNG\""
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\content\\dungeon-themes.js",
-      "src\\engine\\modules\\world\\rooms.js"
     ]
   },
   {
@@ -1220,30 +1098,6 @@
       "src\\engine\\modules\\ai\\behaviors.js",
       "src\\engine\\modules\\characters\\character.js",
       "src\\engine\\modules\\runtime\\game.js"
-    ]
-  },
-  {
-    "name": "qj",
-    "reads": 7,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:203",
-        "code": "c.qj"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:203",
-        "code": "c.qj"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:203",
-        "code": "c.qj"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\characters\\movement.js"
     ]
   },
   {
@@ -16724,30 +16578,6 @@
       {
         "loc": "src\\engine\\modules\\characters\\movement.js:24",
         "code": "this.MC"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\characters\\movement.js"
-    ]
-  },
-  {
-    "name": "aB",
-    "reads": 1,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:204",
-        "code": "c.aB"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:213",
-        "code": "c.aB"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\movement.js:35",
-        "code": "this.aB"
       }
     ],
     "fileCount": 2,

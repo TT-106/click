@@ -6,10 +6,10 @@ export function initializeContentDungeonThemes() {
   templeTheme = {
     floor: "L1_Terrain014.PNG",
     stairs: {
-      di: "L2_Door007.PNG",
-      ci: "L2_Door008.PNG",
-      Lh: "L2_StairsDownNS.PNG",
-      Kh: "L2_StairsDownEW.PNG"
+      stairDoorASprite: "L2_Door007.PNG",
+      stairDoorBSprite: "L2_Door008.PNG",
+      stairsDownNSSprite: "L2_StairsDownNS.PNG",
+      stairsDownEWSprite: "L2_StairsDownEW.PNG"
     },
     doorSprites: {
       doorOpenASprite: "L2_Door001.PNG",
@@ -43,10 +43,10 @@ export function initializeContentDungeonThemes() {
   caveTheme = {
     floor: "L1_Terrain015.PNG",
     stairs: {
-      di: "L2_DarkStoneStairsUpNS.PNG",
-      ci: "L2_DarkStoneStairsUpEW.PNG",
-      Lh: "L2_DarkStoneStairsDownNS.PNG",
-      Kh: "L2_DarkStoneStairsDownEW.PNG"
+      stairDoorASprite: "L2_DarkStoneStairsUpNS.PNG",
+      stairDoorBSprite: "L2_DarkStoneStairsUpEW.PNG",
+      stairsDownNSSprite: "L2_DarkStoneStairsDownNS.PNG",
+      stairsDownEWSprite: "L2_DarkStoneStairsDownEW.PNG"
     },
     doorSprites: {
       doorOpenASprite: "L2_Door001.PNG",
@@ -76,10 +76,10 @@ export function initializeContentDungeonThemes() {
   towerTheme = {
     floor: "L1_Terrain013.PNG",
     stairs: {
-      di: "L2_StairsHutUpNS.PNG",
-      ci: "L2_StairsHutUpEW.PNG",
-      Lh: "L2_StairsHutDownNS.PNG",
-      Kh: "L2_StairsHutDownEW.PNG"
+      stairDoorASprite: "L2_StairsHutUpNS.PNG",
+      stairDoorBSprite: "L2_StairsHutUpEW.PNG",
+      stairsDownNSSprite: "L2_StairsHutDownNS.PNG",
+      stairsDownEWSprite: "L2_StairsHutDownEW.PNG"
     },
     doorSprites: {
       doorOpenASprite: "L2_Door001.PNG",
@@ -109,10 +109,10 @@ export function initializeContentDungeonThemes() {
   castleTheme = {
     floor: "L1_FloorPattern.PNG",
     stairs: {
-      di: "L2_StairsBoneUpNS.PNG",
-      ci: "L2_StairsBoneUpEW.PNG",
-      Lh: "L2_StairsBoneDownNS.PNG",
-      Kh: "L2_StairsBoneDownEW.PNG"
+      stairDoorASprite: "L2_StairsBoneUpNS.PNG",
+      stairDoorBSprite: "L2_StairsBoneUpEW.PNG",
+      stairsDownNSSprite: "L2_StairsBoneDownNS.PNG",
+      stairsDownEWSprite: "L2_StairsBoneDownEW.PNG"
     },
     doorSprites: {
       doorOpenASprite: "L2_DoorBoneOpenNS.PNG",
@@ -142,10 +142,10 @@ export function initializeContentDungeonThemes() {
   dungeonTheme = {
     floor: "L1_Terrain049.PNG",
     stairs: {
-      di: "L2_DarkStoneStairsUpNS.PNG",
-      ci: "L2_DarkStoneStairsUpEW.PNG",
-      Lh: "L2_DarkStoneStairsDownNS.PNG",
-      Kh: "L2_DarkStoneStairsDownEW.PNG"
+      stairDoorASprite: "L2_DarkStoneStairsUpNS.PNG",
+      stairDoorBSprite: "L2_DarkStoneStairsUpEW.PNG",
+      stairsDownNSSprite: "L2_DarkStoneStairsDownNS.PNG",
+      stairsDownEWSprite: "L2_DarkStoneStairsDownEW.PNG"
     },
     doorSprites: {
       doorOpenASprite: "L2_DoorDarkStoneOpenNS.PNG",
@@ -175,10 +175,10 @@ export function initializeContentDungeonThemes() {
   iceDungeonTheme = {
     floor: "L1_Terrain004.PNG",
     stairs: {
-      di: "L2_StairsIceUpNS.PNG",
-      ci: "L2_StairsIceUpEW.PNG",
-      Lh: "L2_StairsIceDownNS.PNG",
-      Kh: "L2_StairsIceDownEW.PNG"
+      stairDoorASprite: "L2_StairsIceUpNS.PNG",
+      stairDoorBSprite: "L2_StairsIceUpEW.PNG",
+      stairsDownNSSprite: "L2_StairsIceDownNS.PNG",
+      stairsDownEWSprite: "L2_StairsIceDownEW.PNG"
     },
     doorSprites: {
       doorOpenASprite: "L2_DoorIceOpenNS.PNG",
@@ -212,10 +212,10 @@ export function initializeContentDungeonThemes() {
   ironMineTheme = {
     floor: "L1_Terrain049.PNG",
     stairs: {
-      di: "L2_StairsIronUpNS.PNG",
-      ci: "L2_StairsIronUpEW.PNG",
-      Lh: "L2_StairsIronDownNS.PNG",
-      Kh: "L2_StairsIronDownEW.PNG"
+      stairDoorASprite: "L2_StairsIronUpNS.PNG",
+      stairDoorBSprite: "L2_StairsIronUpEW.PNG",
+      stairsDownNSSprite: "L2_StairsIronDownNS.PNG",
+      stairsDownEWSprite: "L2_StairsIronDownEW.PNG"
     },
     doorSprites: {
       doorOpenASprite: "L2_DoorIronOpenNS.PNG",
@@ -245,10 +245,10 @@ export function initializeContentDungeonThemes() {
   stoneDungeonTheme = {
     floor: "L1_Terrain049.PNG",
     stairs: {
-      di: "L2_DarkStoneStairsUpNS.PNG",
-      ci: "L2_DarkStoneStairsUpEW.PNG",
-      Lh: "L2_DarkStoneStairsDownNS.PNG",
-      Kh: "L2_DarkStoneStairsDownEW.PNG"
+      stairDoorASprite: "L2_DarkStoneStairsUpNS.PNG",
+      stairDoorBSprite: "L2_DarkStoneStairsUpEW.PNG",
+      stairsDownNSSprite: "L2_DarkStoneStairsDownNS.PNG",
+      stairsDownEWSprite: "L2_DarkStoneStairsDownEW.PNG"
     },
     doorSprites: {
       doorOpenASprite: "L2_DoorDarkStoneOpenNS.PNG",
@@ -278,10 +278,10 @@ export function initializeContentDungeonThemes() {
   chamberTheme = {
     floor: "L1_Terrain010.PNG",
     stairs: {
-      di: "L2_StairsUpNS.PNG",
-      ci: "L2_StairsUpEW.PNG",
-      Lh: "L2_StairsDownNS.PNG",
-      Kh: "L2_StairsDownEW.PNG"
+      stairDoorASprite: "L2_StairsUpNS.PNG",
+      stairDoorBSprite: "L2_StairsUpEW.PNG",
+      stairsDownNSSprite: "L2_StairsDownNS.PNG",
+      stairsDownEWSprite: "L2_StairsDownEW.PNG"
     },
     doorSprites: {
       doorOpenASprite: "L2_DoorOpenNS.PNG",
@@ -311,10 +311,10 @@ export function initializeContentDungeonThemes() {
   woodenMineTheme = {
     floor: "L1_Terrain011.PNG",
     stairs: {
-      di: "L2_StairsHutUpNS.PNG",
-      ci: "L2_StairsHutUpEW.PNG",
-      Lh: "L2_StairsHutDownNS.PNG",
-      Kh: "L2_StairsHutDownEW.PNG"
+      stairDoorASprite: "L2_StairsHutUpNS.PNG",
+      stairDoorBSprite: "L2_StairsHutUpEW.PNG",
+      stairsDownNSSprite: "L2_StairsHutDownNS.PNG",
+      stairsDownEWSprite: "L2_StairsHutDownEW.PNG"
     },
     doorSprites: {
       doorOpenASprite: "L2_DoorHutOpenNS.PNG",

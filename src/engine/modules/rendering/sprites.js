@@ -161,19 +161,19 @@ export function advanceEffectFrame(a, b) {
 }
 export function clearVisualEffects() {
   var a = game.effects;
-  if (0 < a.Wg.length) {
+  if (0 < a.pool.length) {
     var b;
-    for (b = 0; b < a.Wg.length; b++) {
-      var c = a.Wg[b];
+    for (b = 0; b < a.pool.length; b++) {
+      var c = a.pool[b];
       c.finished = true;
       c.Pk = true;
     }
-    a.Wg.length = 0;
+    a.pool.length = 0;
   }
 }
 export function addVisualEffect(a, b) {
   if (b) {
-    a.Wg.push(b);
+    a.pool.push(b);
   }
 }
 export function initializeRenderingSprites() {

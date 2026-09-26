@@ -118,7 +118,7 @@ export function initializeRuntimeGame() {
       this.dn = new MonsterNameGenerator();
     }(),
     effects: new function () {
-      this.Wg = [];
+      this.pool = [];
     }(),
     combatQueue: new CombatQueue(),
     upgradeRegistry: new function () {

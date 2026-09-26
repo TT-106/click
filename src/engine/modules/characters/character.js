@@ -200,19 +200,19 @@ export function updateCharacter(a, b) {
             } else if (f === c.Rn && g === c.Sn) {
               c.movementTargetCleared = true;
             } else {
-              if (!c.nextWorldTile || !c.qj || c.qj.getWorldColumn() !== f || c.qj.getWorldRow() !== g) {
-                c.aB = c.qj;
-                c.qj = game.world.getTileAtPixel(f, g);
-                if (!c.qj) {
+              if (!c.nextWorldTile || !c.currentWorldTile || c.currentWorldTile.getWorldColumn() !== f || c.currentWorldTile.getWorldRow() !== g) {
+                c.previousWorldTile = c.currentWorldTile;
+                c.currentWorldTile = game.world.getTileAtPixel(f, g);
+                if (!c.currentWorldTile) {
                   console.log("no current world tile!");
                   break a;
                 }
                 if (1 >= Math.abs(f - c.Rn) && 1 >= Math.abs(g - c.Sn)) {
                   c.nextWorldTile = game.world.getTileAtPixel(c.Rn, c.Sn);
                 } else {
-                  c.nextWorldTile = findCheapestNeighbor(c.qj, c.aB);
+                  c.nextWorldTile = findCheapestNeighbor(c.currentWorldTile, c.previousWorldTile);
                   if (c.nextWorldTile && c.nextWorldTile.getWorldColumn() !== c.Rn && c.nextWorldTile.getWorldRow() !== c.Sn) {
-                    c.nextWorldTile = findCheapestNeighbor(c.nextWorldTile, c.qj);
+                    c.nextWorldTile = findCheapestNeighbor(c.nextWorldTile, c.currentWorldTile);
                   }
                 }
               }
