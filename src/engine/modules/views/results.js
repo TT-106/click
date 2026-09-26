@@ -177,8 +177,8 @@ export function initializeViewsResults() {
     this.HA = a.si;
     this.mA = a.Gi;
     this.nA = a.Ph;
-    this.sA = a.Mj;
-    this.Fz = a.wi;
+    this.sA = a.levelsCleared;
+    this.Fz = a.dungeonsCleared;
     this.Iy = game.castles.Jg.length;
     this.JB = a.oj;
     this.wy = game.state.achievements.Ze.length;
@@ -210,8 +210,8 @@ export function initializeViewsResults() {
       a = b.si - this.HA,
       c = b.Gi - this.mA,
       d = b.Ph - this.nA,
-      f = b.Mj - this.sA,
-      g = b.wi - this.Fz,
+      f = b.levelsCleared - this.sA,
+      g = b.dungeonsCleared - this.Fz,
       h = game.castles.Jg.length - this.Iy,
       b = /** @type {any} */ (b.oj - this.JB),
       l = game.state.achievements.Ze.length - this.wy;

@@ -84,9 +84,9 @@ export function getAchievementProgress(a) {
     case 9:
       return b.Rk;
     case 10:
-      return b.wi;
+      return b.dungeonsCleared;
     case 11:
-      return b.uk;
+      return b.castlesConquered;
     case 12:
       return b.Gl;
     case 13:
@@ -98,7 +98,7 @@ export function getAchievementProgress(a) {
     case 16:
       return getPartyMaxLevel(game.state.party);
     case 17:
-      return b.Lk;
+      return b.doorsOpened;
     case 18:
       return b.Gi;
     case 19:

@@ -86,6 +86,10 @@
 
 `Zb` → `character`：CharacterSkillUpgrade 与 LearnSpellUpgrade 持有的目标 Character，赋值、清空、购买和可购买性判断共 24 个所有者引用同批更新；存档通过既有升级状态映射，不直接保存该运行时引用。
 
+## 统计计数字段：推进事件组（2026-09-26）
+
+RunStatistics 的 `On/Lk/qn/Mj/wi/uk` → `turnCount/doorsOpened/roomsCleared/levelsCleared/dungeonsCleared/castlesConquered`。证据为各 `record*` 的自增目标及 `entities.js` 同名存档键；构造与 reset、存档读写、成就、信息面板，以及额外发现的 `views/results.js` 离线进度面板同步。`LifetimeStatistics.prototype = new RunStatistics()` 的继承关系保留，六个 JSON 键未改。
+
 ## 待取证残留（约 1,300 处访问）
 
 高频：`Y/Z/aa/ca/ea/ga/fa/ka/na` 等长尾——工作清单 `artifacts/obfuscated-fields.json`（按频次排序，含样例代码）。取证方法与产出格式见 WORKSTATE.md 第 6 节。

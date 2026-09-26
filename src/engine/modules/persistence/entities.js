@@ -219,12 +219,12 @@ export function StatisticsSaveAdapter() {}
 export function serializeStatistics(a) {
   return {
     playedMillis: a.Xj,
-    turnCount: a.On,
-    doorsOpened: a.Lk,
-    roomsCleared: a.qn,
-    levelsCleared: a.Mj,
-    dungeonsCleared: a.wi,
-    castlesConquered: a.uk,
+    turnCount: a.turnCount,
+    doorsOpened: a.doorsOpened,
+    roomsCleared: a.roomsCleared,
+    levelsCleared: a.levelsCleared,
+    dungeonsCleared: a.dungeonsCleared,
+    castlesConquered: a.castlesConquered,
     farmsPurchased: a.Rk,
     totalGoldFromMonsters: a.Xk,
     totalGoldFromItems: a.Wk,
@@ -287,12 +287,12 @@ export function restoreStatistics(a, b, c) {
     u = game.dungeons.dg.length;
   }
   b.Xj = c ? Math.max(0, d ? d : f) : Math.max(0, f ? f : 0);
-  b.On = g ? g : 0;
-  b.Lk = h ? h : 0;
-  b.qn = l ? l : 0;
-  b.Mj = n ? n : 0;
-  b.wi = p ? p : 0;
-  b.uk = s ? s : 0;
+  b.turnCount = g ? g : 0;
+  b.doorsOpened = h ? h : 0;
+  b.roomsCleared = l ? l : 0;
+  b.levelsCleared = n ? n : 0;
+  b.dungeonsCleared = p ? p : 0;
+  b.castlesConquered = s ? s : 0;
   b.Rk = u;
   b.Xk = y ? y : 0;
   b.Wk = A ? A : 0;

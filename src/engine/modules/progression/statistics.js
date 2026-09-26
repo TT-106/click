@@ -3,7 +3,7 @@
  */
 import { game } from "../runtime/game.js";
 export function RunStatistics() {
-  this.tk = this.Sl = this.Nl = this.nk = this.Zk = this.xl = this.Ol = this.Gi = this.Ph = this.kl = this.Xj = this.El = this.ul = this.Gl = this.wl = this.hl = this.oj = this.Sd = this.minionKills = this.Dl = this.si = this.Wk = this.Xk = this.Rk = this.uk = this.wi = this.Mj = this.qn = this.Lk = this.On = 0;
+  this.tk = this.Sl = this.Nl = this.nk = this.Zk = this.xl = this.Ol = this.Gi = this.Ph = this.kl = this.Xj = this.El = this.ul = this.Gl = this.wl = this.hl = this.oj = this.Sd = this.minionKills = this.Dl = this.si = this.Wk = this.Xk = this.Rk = this.castlesConquered = this.dungeonsCleared = this.levelsCleared = this.roomsCleared = this.doorsOpened = this.turnCount = 0;
 }
 export function LifetimeStatistics() {}
 export function getClassVictories(a, b) {
@@ -25,25 +25,25 @@ export function bindStatistics() {
 }
 export function initializeProgressionStatistics() {
   RunStatistics.prototype.resetRunStatistics = function () {
-    this.tk = this.Sl = this.Nl = this.nk = this.Zk = this.xl = this.Ol = this.Gi = this.Ph = this.kl = this.Xj = this.El = this.ul = this.Gl = this.wl = this.hl = this.oj = this.Sd = this.minionKills = this.Dl = this.si = this.Wk = this.Xk = this.Rk = this.uk = this.wi = this.Mj = this.qn = this.Lk = this.On = 0;
+    this.tk = this.Sl = this.Nl = this.nk = this.Zk = this.xl = this.Ol = this.Gi = this.Ph = this.kl = this.Xj = this.El = this.ul = this.Gl = this.wl = this.hl = this.oj = this.Sd = this.minionKills = this.Dl = this.si = this.Wk = this.Xk = this.Rk = this.castlesConquered = this.dungeonsCleared = this.levelsCleared = this.roomsCleared = this.doorsOpened = this.turnCount = 0;
   };
   RunStatistics.prototype.recordTurn = function () {
-    this.On++;
+    this.turnCount++;
   };
   RunStatistics.prototype.recordRoomCleared = function () {
-    this.qn++;
+    this.roomsCleared++;
   };
   RunStatistics.prototype.recordDoorOpened = function () {
-    this.Lk++;
+    this.doorsOpened++;
   };
   RunStatistics.prototype.$r = function () {
-    this.Mj++;
+    this.levelsCleared++;
   };
   RunStatistics.prototype.recordDungeonCleared = function () {
-    this.wi++;
+    this.dungeonsCleared++;
   };
   RunStatistics.prototype.recordCastleConquered = function () {
-    this.uk++;
+    this.castlesConquered++;
   };
   RunStatistics.prototype.recordFarmPurchased = function () {
     this.Rk++;
