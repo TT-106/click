@@ -1,10 +1,11 @@
 # WORKSTATE — Clickpocalypse II 语义恢复与现代化工程
 
 > 本文件是长程自治任务的**唯一续跑入口**。上下文压缩或中断后，先读本文件 + `git log --oneline`，再继续。
-> 最后更新：2026-09-26（U29 技能树/怪物/随从/布局字段落地后，混淆清单 1,016；验收矩阵 51 PASS / 0 PARTIAL、矩阵 59/59、soak 通过）
+> 最后更新：2026-09-26（U30 动画查找/城堡/进度字段落地后，混淆清单 1,012；验收矩阵 51 PASS / 0 PARTIAL、矩阵 59/59、soak 通过）
 
 ## 当前轮次状态（2026-09-26，M13 文档与验收收尾）
 
+- U30 动画查找/城堡/进度字段（2026-09-26，一笔提交，六门禁全绿，混淆清单 1,016 → 1,012）：Zg→getAnimation（AnimationSheet 名称查找 + AnimationCatalog 委托 + VisualEffect 自访问器，12 处 5 文件）、ng→progressCell（Castle/Monster 行视图进度单元格；dungeons.js 一处死初始化顺带清除，1 处）、Jg→attackableCastles（CastleRegistry 可进攻列表，与地牢 attackable 成对；runtime/game.js 构造与 initialization 重置由残留扫描抓出补齐）、uh→settingsId（财宝目标定义 id，DTO 键 settingsId 同名，12 处）。
 - U29 技能树/怪物/随从/布局/详情字段（2026-09-26，一笔提交，六门禁全绿，混淆清单 1,025 → 1,016）：Qg/Rg/Sg/Tg→buildSkillTree1..4（职业定义的四棵技能树构建器，11 个职业字面量 + Character 初始化单点消费）、Og→defeatedMonsters（MonsterRegistry 战败怪物环形缓冲，上限 50——**注意并非"活怪物列表"**，harness 两处 monsterList 分支已同步；首次 replace 只替换首个匹配导致 veteran-run 分叉，改用 split/join 全量替换）、eh→minionList（MinionRegistry 列表）、Ug→routeQueue（CharacterPosition 移动路由队列：findRouteToDoor/findRouteToRoom 结果，到门即 shift）、tf→exitDoor（布局出口门，与 entranceDoor 成对：roomList[0] 为入口、末房间为出口）、Ag→activeDetails（升级详情当前显示的子视图）。
 - U28 wallSprites 方向贴纸家族整族落地（2026-09-26，一笔提交，六门禁全绿，混淆清单 1,039 → 1,025）：贴纸文件名直接编码方向语义（L2_WallBrickNES.PNG 等），整族自证——双面墙 Cg/Eg/Fg/Dg/Hg/Gg→wallNS/wallEW/wallNE/wallES/wallNW/wallSW（rooms.js 成员消费 2 处 + 每主题字面量 10 处）、三面墙 Ah/Bh/zh/Ch→wallESW/wallNEW/wallNES/wallNSW（1+10）、仅字面量键 ii/stateSize/E/ji/ki→wallNESW/wallW/wallN/wallE/wallS（10，无成员消费）。上轮延后的 zh 就此关闭。core/math.js 的 stateSize 是 MT19937 状态数组大小，同名无关，正确保留未动。
 - U27 行为/投射物/瓦片字段（2026-09-26，一笔提交，六门禁全绿，混淆清单 1,042 → 1,039）：Ng→targetDistance（行为缓存的到目标距离，execute 时与 actionRange 比较）、Gs→isReturning（回旋镖类武器投射物标记，createReturningAction 置位，tick 用更小的接近半径处理回程）、Jn→backgroundSprite（DungeonTile 地面贴纸，setBackgroundSprite 已语义化）。**zh（wallSprites NES 墙面贴纸）主动延后**：墙体贴纸是按方向键的家族（Gg/Fg/Dg/Bh/Ah/zh/Ch/Cg/Eg 等），需逐方向取证后整族改名，单拆一个键会留下半混淆家族。
