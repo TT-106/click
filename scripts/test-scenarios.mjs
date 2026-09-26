@@ -52,6 +52,12 @@ const achievementWasClaimed = (s) => ({
   achievementClaimed: (s.achievementManager?.achievements ?? []).filter(a => a.applied).length
     > (base.achievementManager?.achievements ?? []).filter(a => a.applied).length,
 });
+const equipmentChanged = (s) => ({
+  equipmentChanged: (s.adventurers ?? []).some((a, i) =>
+    JSON.stringify(a.equippedItemCollection) !== JSON.stringify(base.adventurers?.[i]?.equippedItemCollection)),
+  itemEquipEvents: (s.pointManagerState?.pointsByType ?? []).find(p => p.pointEventType === 21)?.count
+    > (base.pointManagerState?.pointsByType ?? []).find(p => p.pointEventType === 21)?.count,
+});
 // U7：药水激活在视图之外没有入口，激活后存档里只有 statistics.potionsUsed 可证。
 const potionWasUsed = (s) => ({ potionUsed: (s.statistics?.potionsUsed ?? 0) > 0 });
 const scenarios = [
@@ -285,6 +291,15 @@ const scenarios = [
     ],
   },
   {
+    name: 'auto-equipped',
+    // fixture 每人背包里已有强于当前装备的物品；原版/重构版走同一个升级 type=4。
+    make: () => base,
+    steps: [
+      { turns: 0, equipBestItems: true, check: equipmentChanged },
+      { turns: 900, check: equipmentChanged },
+    ],
+  },
+  {
     name: 'autosave-payload',
     // 自动保存计时分支 + 落盘字节比对：两端跑同样的真实帧循环，比较写进 localStorage 的原文。
     make: () => base,
@@ -412,7 +427,7 @@ try {
         // effectType 表示这一步改用"逐帧扫描活怪物效果队列"的推进方式，并直接对账施加次数。
         // purchaseUpgrades 表示这一步先推进再驱动升级购买（U7：只有视图层会触发的路径）。
         const step = Array.isArray(rawStep) ? { turns: rawStep[0], check: rawStep[1] } : rawStep;
-        const { turns, check, effectType, purchaseUpgrades, purchasePointUpgrades, claimAchievement, activatePotions, frames } = step;
+        const { turns, check, effectType, purchaseUpgrades, purchasePointUpgrades, claimAchievement, equipBestItems, activatePotions, frames } = step;
         const results = await Promise.all(pages.map(async p => {
           await p.page.evaluate(ms => window.harness.setTime(ms), HARNESS_FIXED_NOW);
           // 重置后无队伍：走真实帧循环（守卫路径），而非裸推进
@@ -421,6 +436,7 @@ try {
           if (purchaseUpgrades !== undefined) return p.page.evaluate(a => window.harness.purchaseUpgrades(a), { turns, limit: purchaseUpgrades });
           if (purchasePointUpgrades !== undefined) return p.page.evaluate(a => window.harness.purchasePointUpgrades(a), { turns, limit: purchasePointUpgrades });
           if (claimAchievement) return p.page.evaluate(a => window.harness.claimAchievement(a), { turns });
+          if (equipBestItems) return p.page.evaluate(a => window.harness.equipBestItems(a), { turns });
           if (activatePotions !== undefined) return p.page.evaluate(a => window.harness.activatePotions(a), { turns, limit: activatePotions });
           // frames：走真实帧循环（loop.tick 内含 view.render 的 try/catch），随后读画布不透明像素
           if (frames !== undefined) return p.page.evaluate(n => {
@@ -470,6 +486,12 @@ try {
             assert.ok(results[i].claimed > 0, `${label} 端必须真的领取至少一项成就`);
           }
           assert.equal(results[1].claimed, results[0].claimed, '两端领取的成就数不同');
+        }
+        if (equipBestItems) {
+          for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {
+            assert.ok(results[i].equipped > 0, `${label} 端必须真的执行自动装备升级`);
+          }
+          assert.equal(results[1].equipped, results[0].equipped, '两端自动装备升级次数不同');
         }
         if (frames !== undefined) {
           const inks = results.map(r => r.ink);
@@ -523,6 +545,8 @@ try {
             if (verdict.monsterUnlocked !== undefined) assert.equal(verdict.monsterUnlocked, true, `${label} 怪物最高解锁等级和存档等级表长度必须真实增长；${verdict.note}`);
             if (verdict.pointUpgradePurchased !== undefined) assert.equal(verdict.pointUpgradePurchased, true, `${label} 冒险点必须真实支出且升级状态必须变为已购买`);
             if (verdict.achievementClaimed !== undefined) assert.equal(verdict.achievementClaimed, true, `${label} 成就奖励必须真实领取并标记 applied`);
+            if (verdict.equipmentChanged !== undefined) assert.equal(verdict.equipmentChanged, true, `${label} 自动装备后装备槽必须真实变化`);
+            if (verdict.itemEquipEvents !== undefined) assert.equal(verdict.itemEquipEvents, true, `${label} 装备物品事件计数必须真实增长`);
             if (verdict.potionUsed !== undefined) assert.equal(verdict.potionUsed, true, `${label} 必须真的激活至少一瓶药水（potionsUsed 增长）`);
             if (verdict.note && i === 0) console.log(`  · ${verdict.note}`);
             if (verdict.victory !== undefined) assert.equal(verdict.victory, true, `${label} 必须真的走完征服尾部并触发胜利`);

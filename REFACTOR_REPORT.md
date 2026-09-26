@@ -35,12 +35,12 @@ archive/original/c2.js  ──AST 机械恢复──▶  src/engine/（77 模块
 | 外部契约 | `window.Game/lB/pB/hE` → adapter/runtime API（MIGRATION_MAP.md 对照表） |
 | 公式文档 | `docs/formulas/combat.md`（伤害/命中/暴击/眩晕/技能法术/治疗/目标选择/遭遇结束 + 随机数消耗顺序）、`items.md`（稀有度/等级/词缀/售价/掉落门）、`progression.md`（经验曲线/点数事件/升级价格/成就/统计/重置/离线），共 733 条 file:line 引用逐条回源核对 |
 
-## 5. 测试体系（全部实测通过，共 37 个差分场景）
+## 5. 测试体系（全部实测通过，共 38 个差分场景）
 
 | 层 | 内容 |
 |---|---|
 | L1 单元（9 项） | RNG 位级差分（Babel 从 c2.js 提取原版 `ga` 对照，6 种子×100k 值 + 黄金值）、LZ-string codec 契约、格式化表驱动 |
-| L3/L4 差分 | `test:parity`：同存档 + 固定 RNG/时钟，0/1/99/900 回合完整存档逐字段相等；`test:scenarios`：**37 场景**（长跑、离线四态 + 12h 截断、药水激活、卷轴、16 类法术分支、城堡征服→胜利、金币涌入、后期、veteran、prestige、full reset、升级购买与怪物等级解锁、冒险点消费、成就领取、药水真实使用、渲染帧 + 自动落盘） |
+| L3/L4 差分 | `test:parity`：同存档 + 固定 RNG/时钟，0/1/99/900 回合完整存档逐字段相等；`test:scenarios`：**38 场景**（长跑、离线四态 + 12h 截断、药水激活、卷轴、16 类法术分支、城堡征服→胜利、金币涌入、后期、veteran、prestige、full reset、升级购买与怪物等级解锁、冒险点消费、成就领取、自动装备、药水真实使用、渲染帧 + 自动落盘） |
 | L5 集成 | 场景内的"两端各自增长断言 + 逐检查点全状态相等"即多模块组合验证（战斗→掉落→拾取→统计→存档） |
 | L6 浏览器 E2E | 建队/自动战斗/暂停/五类面板/**c2c.user.js 外部 DOM 契约**/设置/导出导入/非法存档/刷新恢复/键盘/三种视口 |
 | L7 长跑 soak | `test:soak`：115,200 与 345,600 等价回合（8h/24h），两端完整存档相等 + CDP 主动 GC 后堆增量样本 |
@@ -60,7 +60,7 @@ archive/original/c2.js  ──AST 机械恢复──▶  src/engine/（77 模块
 ## 8. 剩余风险与未完成
 
 1. **字段重命名未竟**：`src` 内仍余 1,175 个混淆属性名（以最新工作清单为准）。工作清单 `artifacts/obfuscated-fields.json`，取证→改名→四套回归的流程已固化在 `scripts/rename-field.mjs`。
-2. **UI 独占路径仍有差分缺口**（U7）：农场/地牢购买、自动装备、卷轴施放、宝箱与掉落物拾取仍需前置变异器和专项断言。`upgrades-purchased` 已驱动全局升级、角色升级、技能树购买，`monster-level-unlocked` 已驱动怪物等级解锁，`adventure-points-spent` 已驱动一项冒险点升级，`achievement-claimed` 已驱动一次成就领取，`potions-activated` 已驱动药水激活。
+2. **UI 独占路径仍有差分缺口**（U7）：农场/地牢购买、卷轴施放、宝箱与掉落物拾取仍需前置变异器和专项断言。`upgrades-purchased` 已驱动全局升级、角色升级、技能树购买，`monster-level-unlocked` 已驱动怪物等级解锁，`adventure-points-spent` 已驱动一项冒险点升级，`achievement-claimed` 已驱动一次成就领取，`auto-equipped` 已驱动自动装备，`potions-activated` 已驱动药水激活。
 3. **验收口径分层**：16 类法术分支靠"唯一注入法术 + 两端各自施法计数增长"归因，只有 cat=2 的三种状态与 cat=17 有专属可观测量；渲染等价只在一条场景、一种视口下比对指纹。
 4. 双主字母 `Cb`/`Qc` 已按所有者拆开，`oc` 仍待线级处理；`$c` 已改为 `itemDrop`（见 semantic-map）。
 
@@ -76,9 +76,9 @@ npm test && npm run check      # 一条命令测试
 
 ## 10. 结论
 
-Clickpocalypse II 的核心实现已从高混淆遗留代码中恢复出真实语义：关键玩法行为有 37 个差分场景 + 位级 RNG 单测 + 浏览器 E2E + 8h/24h 等价回合 soak 的自动化证据保护，存档/RNG/时间/离线/自动保存经兼容验证，业务逻辑已迁入带清晰边界的现代模块（77 个），旧文件不再是唯一真相来源。
+Clickpocalypse II 的核心实现已从高混淆遗留代码中恢复出真实语义：关键玩法行为有 38 个差分场景 + 位级 RNG 单测 + 浏览器 E2E + 8h/24h 等价回合 soak 的自动化证据保护，存档/RNG/时间/离线/自动保存经兼容验证，业务逻辑已迁入带清晰边界的现代模块（77 个），旧文件不再是唯一真相来源。
 
-这些结论由运行与差分证明，不是主观判断；同样明确的是**尚未证明的部分**：附录 A 实际有 51 行（逐行统计），其中 30 行 PASS、18 行 PARTIAL、3 行未覆盖；旧版写成 50 行及 28/17/5 是过时合计。缺口逐项写明，`docs/reverse-engineering/unresolved.md` 的 U5/U6/U7 是继续推进的入口。
+这些结论由运行与差分证明，不是主观判断；同样明确的是**尚未证明的部分**：附录 A 实际有 51 行（逐行统计），其中 31 行 PASS、18 行 PARTIAL、2 行未覆盖；旧版写成 50 行及 28/17/5 是过时合计。缺口逐项写明，`docs/reverse-engineering/unresolved.md` 的 U5/U6/U7 是继续推进的入口。
 
 ---
 
@@ -93,10 +93,10 @@ Clickpocalypse II 的核心实现已从高混淆遗留代码中恢复出真实�
 | 角色职业 | PARTIAL | 法术场景装载职业 3/4/6/7/8/9/10/11；0/1/2/5 未被装载，职业成长未跑 |
 | 角色升级 | PASS | `upgrades-purchased` 给足经验值后驱动 `LevelUpUpgrade.purchase`；两端各自断言 `characteristicsComponent.characterLevel` 超过 fixture 基线，逐检查点完整存档相等 |
 | 角色技能/技能树 | PASS | `purchaseUpgrades` 遍历每名角色的四棵技能树；两端各自断言 `upgrades1..4` 已解锁布尔位总数超过 fixture 基线，逐检查点完整存档相等；未逐项验证每种技能的战斗效果 |
-| 角色属性 | PASS | 六个分量 + 生命/精神/击杀在 37 场景每个检查点全量相等 |
+| 角色属性 | PASS | 六个分量 + 生命/精神/击杀在 38 场景每个检查点全量相等 |
 | 背包 | PASS | 物品计数/容量在差分中相等（itemsFound 真实增长） |
-| 装备 | PARTIAL | 载入侧装备与怪物侧生成被覆盖；跑图中无装备变更事件 |
-| 自动装备 | 未覆盖 | 只有视图入口（角色面板按钮 / EquipBestItemUpgrade） |
+| 装备 | PARTIAL | 载入与生成之外，`auto-equipped` 已让装备槽与装备事件点数变化；手动逐件装备/卸下仍缺专项断言 |
+| 自动装备 | PASS | `auto-equipped` 两端调用 type=4 的 `EquipBestItemUpgrade`，各自断言装备槽变化与 itemEquipped 点数事件计数增长，逐检查点完整存档相等 |
 | 怪物定义 | PASS | 名称/精灵/每级击杀数在存档 DTO 全量相等 |
 | 怪物升级 | PARTIAL | 怪物 rank 随战斗推进被覆盖；`monster-level-unlocked` 两端各自买入并断言 `maxUnlockedLevel` 与 `monsterLevelStates` 长度从 1 增至 2；等级退休路径尚无专项断言 |
 | 战斗 | PASS | 近战/远程计数 + 9,000~345,600 回合全状态相等 |

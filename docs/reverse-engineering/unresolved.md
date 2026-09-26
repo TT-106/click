@@ -175,7 +175,7 @@ Xf/Qf/Rf/Zf/Cf/Ef → damageMultiplier/armorMultiplier/attackRatingMultiplier/de
   - `upgrades-purchased`：百万金币 + 每人 5 技能点，两端各完成 8 次购买，推进 600 回合后再各买 2 次（前一批解锁了后续项），每个检查点完整存档相等；存档侧确证命中的升级族是 `settings.upgrades`（全局升级表）。
   - `potions-activated`：三瓶未激活药水入库，驱动 `Potion.aw()` 之后 `statistics.potionsUsed` 两端各自增长，随后完整存档相等——旧场景 `potions-inactive-auto` 里 `active` 恒为 false 的空白由此补上。
 - 仍开放（如实陈述）：
-  - 升级族覆盖仍不完整：`upgrades-purchased` 已遍历角色四棵技能树并断言全局设置、角色等级、技能解锁；`monster-level-unlocked` 驱动怪物等级表从 1 增至 2；`adventure-points-spent` 驱动一项点数升级并断言消费。`achievement-claimed` 利用 fixture 已达成未领取的成就，按 type=14 的升级入口两端各领取一次，`applied` 增长且完整存档相等。`LearnSpellUpgrade`、其余点数升级、农场/地牢购买、`EquipBestItemUpgrade` 仍未被专项驱动。它们需先补对应前置的变异器（地牢解锁、可替换装备）。
+  - 升级族覆盖仍不完整：`upgrades-purchased` 已遍历角色四棵技能树并断言全局设置、角色等级、技能解锁；`monster-level-unlocked` 驱动怪物等级表从 1 增至 2；`adventure-points-spent` 驱动一项点数升级并断言消费；`achievement-claimed` 两端各领取一次并断言 `applied`；`auto-equipped` 以 fixture 内现有更好物品驱动 type=4 的 `EquipBestItemUpgrade`，两端装备槽和装备事件点数计数均变化，完整存档相等。`LearnSpellUpgrade`、其余点数升级、农场/地牢购买、逐件手动装备仍未被专项驱动。
   - 入口纠错：`content/balance.js:497` 的 `farmAndDungeonUpgrades` 实际只有 `AutoPurchaseDungeonUpgrade`（收获农场击杀）和 `CollectFarmUpgrade`（收集商店金币），两者不购买农场。真正购买用 `PurchaseCastleUpgrade`（`balance.js:494`）与地牢行视图持有的 `PurchaseDungeonUpgrade`（`views/dungeons.js:68`）；原版 `c2.js:23399/27759` 有同构构造点。后续农场场景必须沿这两个入口，不应把快捷收获当购买。
   - `castScroll()` 未驱动：它要求当前房间有可打目标（`getOpponents` 非空），需要在遭遇进行中精确触发。
   - DOM 路线已实测不可行并排除：7 个升级 `canPurchase` 为真时，渲染出的 558 个按钮仍全部是 `disabledUpgradeButton`（哪一行拿到 `.upgradeButton` 类取决于排序后的可见槽位），且原版一侧没有新 UI 壳可点。
