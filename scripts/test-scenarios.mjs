@@ -47,6 +47,31 @@ const monsterLevelWasUnlocked = (s) => ({
     && (s.monsterTypes?.monsterLevelStates?.length ?? 0) > BASELINE_MONSTER_LEVELS,
   note: `怪物最高等级 ${s.monsterTypes?.maxUnlockedLevel}，等级表 ${s.monsterTypes?.monsterLevelStates?.length}，队伍最低等级 ${Math.min(...(s.adventurers ?? []).map(a => a.characteristicsComponent?.characterLevel ?? 1))}，可用击杀 ${s.party?.kills}`,
 });
+const monsterLevelWasRetired = (s) => ({
+  minLevelRetired: (s.monsterTypes?.minUnlockedLevel ?? 1) > (base.monsterTypes?.minUnlockedLevel ?? 1),
+  maxLevelUnlocked: (s.monsterTypes?.maxUnlockedLevel ?? 1) >= 3,
+  retiredLevelExcluded: (s.monsterTypes?.monsterLevelStates?.[0]?.level ?? 1) > 1,
+  note: `最低等级 ${s.monsterTypes?.minUnlockedLevel}，最高等级 ${s.monsterTypes?.maxUnlockedLevel}，首个有效怪物等级 ${s.monsterTypes?.monsterLevelStates?.[0]?.level}，等级表长度 ${s.monsterTypes?.monsterLevelStates?.length}`,
+});
+const criticalHitSkillsLearned = (s) => {
+  const fighter = s.adventurers?.[0];
+  const ranger = s.adventurers?.[2];
+  const fighterCrits = [
+    fighter?.upgrades1?.criticalHitChanceFighter1,
+    fighter?.upgrades2?.criticalHitChanceFighter2,
+    fighter?.upgrades3?.criticalHitChanceFighter3,
+    fighter?.upgrades4?.criticalHitChanceFighter4,
+  ].filter(Boolean).length;
+  const rangerCrits = [
+    ranger?.upgrades1?.criticalHitChanceRanger1,
+    ranger?.upgrades2?.criticalHitChanceRanger2,
+    ranger?.upgrades3?.criticalHitChanceRanger3,
+  ].filter(Boolean).length;
+  return {
+    criticalSkillsActive: fighterCrits >= 4 && rangerCrits >= 3,
+    note: `战士暴击技能 ${fighterCrits}/4，游侠暴击技能 ${rangerCrits}/3，已激活暴击技能总数 ${fighterCrits + rangerCrits}`,
+  };
+};
 const pointUpgradeWasPurchased = (s) => ({
   pointUpgradePurchased: (s.pointManagerState?.spentAdventurePoints ?? 0) > (base.pointManagerState?.spentAdventurePoints ?? 0)
     && (s.pointManagerState?.pointUpgrades ?? []).some(u => u.upgradePurchased),
@@ -306,6 +331,33 @@ const scenarios = [
     ],
   },
   {
+    name: 'monster-level-retired',
+    // RetireMonsterLevelUpgrade (type=11) 要求 minUnlockedLevel < partyMinLevel 且 minUnlockedLevel < maxUnlockedLevel - 1。
+    // 队伍先升级至 3+ 级并解锁怪物等级 2 与 3 (maxUnlockedLevel=3+)，随后退休怪物等级 1，minUnlockedLevel 升至 2。
+    make: () => withKills(withExperience(withGold(base, 1000000), 500000), 1000000),
+    steps: [
+      { turns: 600, purchaseUpgrades: 60 },
+      { turns: 900, purchaseUpgrades: 60 },
+      { turns: 900, purchaseUpgrades: 60 },
+      { turns: 900, purchaseUpgrades: 60, check: monsterLevelWasRetired },
+      { turns: 900, check: monsterLevelWasRetired },
+    ],
+  },
+  {
+    name: 'combat-critical-hits',
+    // 玩家暴击闭环：注入经验与技能点，战士与游侠在 5 轮升级中解锁 7 个暴击几率技能（Fighter 4 档 + Ranger 3 档），
+    // 随后在 1000 回合实战中直接采样“暴击!”浮动文字（两端同为 6 次，无技能时为 0），验证跳过护甲伤害与 RNG 顺序一致。
+    make: () => withSkillPoints(withExperience(withGold(base, 1000000), 500000), 20),
+    steps: [
+      { turns: 300, purchaseUpgrades: 60 },
+      { turns: 300, purchaseUpgrades: 60 },
+      { turns: 300, purchaseUpgrades: 60 },
+      { turns: 300, purchaseUpgrades: 60 },
+      { turns: 300, purchaseUpgrades: 60, check: criticalHitSkillsLearned },
+      { turns: 1000, floatingText: '暴击!', check: criticalHitSkillsLearned },
+    ],
+  },
+  {
     name: 'adventure-points-spent',
     // 击杀事件每次给 1 点；载入时按 count 重算余额，不直接篡改运行时可用点数。
     make: () => withPointPools(base, { 1: { points: 1000000, count: 1000000 } }),
@@ -483,8 +535,8 @@ const scenarios = [
 
 // SCENARIO_FILTER=a,b 只跑指定场景，便于新场景快速迭代；不设置时跑全部。
 const filter = process.env.SCENARIO_FILTER?.split(',').map(s => s.trim()).filter(Boolean);
-const selected = filter ? scenarios.filter(s => filter.includes(s.name)) : scenarios;
-if (filter && selected.length !== filter.length) {
+const selected = filter?.length ? scenarios.filter(s => filter.includes(s.name)) : scenarios;
+if (filter?.length && selected.length !== filter.length) {
   console.error(`SCENARIO_FILTER 含未注册场景: ${filter.join(',')} —— 实际匹配 ${selected.length}`);
   process.exit(1);
 }
@@ -566,7 +618,7 @@ try {
         // effectType 表示这一步改用"逐帧扫描活怪物效果队列"的推进方式，并直接对账施加次数。
         // purchaseUpgrades 表示这一步先推进再驱动升级购买（U7：只有视图层会触发的路径）。
         const step = Array.isArray(rawStep) ? { turns: rawStep[0], check: rawStep[1] } : rawStep;
-        const { turns, check, effectType, purchaseUpgrades, purchasePointUpgrades, claimAchievement, equipBestItems, castScrollDuringCombat, scrollId, purchaseDungeonFarm, purchaseDungeonRowFarm, harvestFarmKills, lootTreasureDuringExplore, treasureKind, activatePotions, frames, frameGap } = step;
+        const { turns, check, effectType, purchaseUpgrades, purchasePointUpgrades, claimAchievement, equipBestItems, castScrollDuringCombat, scrollId, purchaseDungeonFarm, purchaseDungeonRowFarm, harvestFarmKills, lootTreasureDuringExplore, treasureKind, activatePotions, floatingText, frames, frameGap } = step;
         const results = await Promise.all(pages.map(async p => {
           await p.page.evaluate(ms => window.harness.setTime(ms), HARNESS_FIXED_NOW);
           // 重置后无队伍：走真实帧循环（守卫路径），而非裸推进
@@ -582,6 +634,7 @@ try {
           if (harvestFarmKills) return p.page.evaluate(a => window.harness.harvestFarmKills(a), { turns });
           if (lootTreasureDuringExplore !== undefined) return p.page.evaluate(a => window.harness.lootTreasureDuringExplore(a), { maxTurns: lootTreasureDuringExplore, kind: treasureKind });
           if (activatePotions !== undefined) return p.page.evaluate(a => window.harness.activatePotions(a), { turns, limit: activatePotions });
+          if (floatingText !== undefined) return p.page.evaluate(a => window.harness.countFloatingText(a), { turns, text: floatingText });
           if (frameGap !== undefined) return p.page.evaluate(n => window.harness.advanceFrameGap(n), frameGap);
           // frames：走真实帧循环（loop.tick 内含 view.render 的 try/catch），随后读画布不透明像素
           if (frames !== undefined) return p.page.evaluate(n => {
@@ -708,6 +761,14 @@ try {
           assert.equal(counts[1], counts[0], `两端 type=${effectType} 施加次数不一致（原版 ${counts[0]} / 重构版 ${counts[1]}）`);
           console.log(`  · type=${effectType} 直接计数两端一致 = ${counts[0]}`);
         }
+        if (floatingText !== undefined) {
+          const counts = results.map(r => r.count);
+          for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {
+            assert.ok(counts[i] > 0, `${label} 必须在习得暴击技能后真正触发暴击浮动文字（text=${floatingText}）`);
+          }
+          assert.equal(counts[1], counts[0], `两端暴击浮动文字触发次数不一致（原版 ${counts[0]} / 重构版 ${counts[1]}）`);
+          console.log(`  · 暴击文字直接计数两端一致 = ${counts[0]}`);
+        }
         if (lootTreasureDuringExplore !== undefined) {
           for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {
             assert.ok(results[i].selected > 0, `${label} 端必须选择角色所在房间的财宝房目标物；最多曾生成 ${results[i].spawned} 个`);
@@ -729,7 +790,10 @@ try {
             if (verdict.characterLeveled !== undefined) assert.equal(verdict.characterLeveled, true, `${label} 角色等级必须真实上升`);
             if (verdict.skillLearned !== undefined) assert.equal(verdict.skillLearned, true, `${label} 技能树布尔位必须真实解锁`);
             if (verdict.spellLearned !== undefined) assert.equal(verdict.spellLearned, true, `${label} 已学法术必须真实增加`);
+            if (verdict.criticalSkillsActive !== undefined) assert.equal(verdict.criticalSkillsActive, true, `${label} 战士与游侠暴击技能必须全部习得；${verdict.note}`);
             if (verdict.monsterUnlocked !== undefined) assert.equal(verdict.monsterUnlocked, true, `${label} 怪物最高解锁等级和存档等级表长度必须真实增长；${verdict.note}`);
+            if (verdict.minLevelRetired !== undefined) assert.equal(verdict.minLevelRetired, true, `${label} 怪物最低解锁等级（minUnlockedLevel）必须真实增长（退休）；${verdict.note}`);
+            if (verdict.retiredLevelExcluded !== undefined) assert.equal(verdict.retiredLevelExcluded, true, `${label} 首个有效怪物等级必须大于 1（等级 1 已退休排除）；${verdict.note}`);
             if (verdict.pointUpgradePurchased !== undefined) assert.equal(verdict.pointUpgradePurchased, true, `${label} 冒险点必须真实支出且升级状态必须变为已购买`);
             if (verdict.achievementClaimed !== undefined) assert.equal(verdict.achievementClaimed, true, `${label} 成就奖励必须真实领取并标记 applied`);
             if (verdict.equipmentChanged !== undefined) assert.equal(verdict.equipmentChanged, true, `${label} 自动装备后装备槽必须真实变化`);

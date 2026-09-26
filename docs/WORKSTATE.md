@@ -5,6 +5,10 @@
 
 ## 当前轮次状态（2026-09-26，M13 文档与验收收尾）
 
+- U7 怪物等级退休与暴击系统直接观察双项闭环（2026-09-26）：
+  1. 新增 `monster-level-retired` 场景：在队伍升至 3+ 级并解锁怪物等级 2 与 3 的前提下，驱动购买 `RetireMonsterLevelUpgrade`（type=11），断言最低等级 `minUnlockedLevel` 从 1 升至 2，首个有效怪物等级抬高至 2（等级 1 排除），两端 5 步递进与完整 DTO 完全相等，带反向破坏探针验证。
+  2. 新增 `combat-critical-hits` 场景：注入技能点与经验，驱动战士 4 档（`criticalHitChanceFighter1..4`）与游侠 3 档（`criticalHitChanceRanger1..3`）共 7 档暴击几率技能点亮，随后 1000 回合实战通过 harness `countFloatingText` 在两端活动浮动文字层（原版 `Game.pc.al` / 重构版 `game.floatingText.al`）采样黄色 `"暴击!"` 次数，两端触发次数精确全等（各 11 次，无技能时为 0），验证跳过护甲扣除与 RNG 顺序一致，1000 回合后两端完整 DTO 完全相等，带非暴击文字负向探针验证。
+  3. 差分矩阵扩充至 50/50 全绿。附录 A 验收矩阵中“怪物升级”与“暴击”两行从 PARTIAL 升级为 PASS，当前矩阵状态更新为 37 PASS / 14 PARTIAL / 0 未覆盖。未修改游戏数值、RNG、存档键或混淆清单。
 - U7 卷轴全类施放与后台行为关闭态双项闭环：
   1. `scroll-cast-in-combat` 场景扩充至全部 6 种卷轴（休克 `shockScroll`、蛛网 `spiderWebScroll`、箭矢 `arrowScroll`、火雨 `fireRainScroll`、闪电 `chainedLightningScroll`、火球 `fireBallScroll`），在战斗中有活怪物时分 6 步逐一施放，验证无对应法术的箭矢回退至普通攻击与其余 5 类法术绑定施放，两端断言各卷轴 ID、施放计数与随后 900 回合全量 DTO 相等；
   2. 新增 `background-progress-disabled` 场景，载入 `inactiveTabProcessingEnabled: false` 存档，注入 5000ms 帧间隙（`advanceFrameGap: 5000`），实测两端 `turnDelta === 1` 且严格未进入离线追赶模式，与开启态下 `turnDelta === 20`（5000ms/250ms）形成严密因果对照与反向探针保护。

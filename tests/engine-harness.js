@@ -171,6 +171,25 @@ window.harness = {
     }
     return { applications, snapshot: snapshot() };
   },
+  // 采样浮动战斗文字（用于暴击、治疗、免疫等瞬时视觉的直接计数对账）。
+  countFloatingText({ turns = 0, text = '暴击!' } = {}) {
+    const list = () => (original ? window.Game.pc.al : game.floatingText.al);
+    let count = 0;
+    const seen = new Set();
+    for (let i = 0; i < turns; i++) {
+      advance();
+      const current = list();
+      if (Array.isArray(current)) {
+        for (const item of current) {
+          if (item.text === text && !seen.has(item)) {
+            seen.add(item);
+            count++;
+          }
+        }
+      }
+    }
+    return { count, snapshot: snapshot() };
+  },
   // U7：驱动"升级购买"这条只有视图层会触发的路径。视图里按钮的处理就是
   // `if (upgrade.canPurchaseNow()) upgrade.purchase()`，这里按同一条判断驱动引擎侧对象。
   // 不走 DOM：可购行是否渲染成 .upgradeButton 取决于排序后的可见槽位——实测 7 个 canPurchase
