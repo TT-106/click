@@ -460,7 +460,7 @@ export function advanceSimulation(a) {
           addVector(ka.wm, directionScratchVector);
         }
       }
-      if (ka.nd.isDirectional) {
+      if (ka.animation.isDirectional) {
         ka.frameIndex = getEffectDirection(ka);
       } else {
         advanceEffectFrame(ka, Eb);

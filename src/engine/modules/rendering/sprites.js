@@ -6,7 +6,7 @@ import { game } from "../runtime/game.js";
 import { EFFECT_FRAME_DURATION_MS, PROJECTILE_FRAME_DURATION_MS } from "../content/balance.js";
 export var TARGETED_EFFECT, directionScratchVector;
 export function Sprite(a, b, c, d) {
-  this.Ad = a;
+  this.spriteSheet = a;
   this.sourceX = b;
   this.sourceY = c;
   this.name = d;
@@ -24,14 +24,14 @@ export function SpriteSheet(a, b, c) {
   this.Il.src = a;
 }
 export function SpriteAnimation(a, b, c, d, f, g, h, l) {
-  this.Ad = a;
+  this.spriteSheet = a;
   this.animationName = b;
   this.isDirectional = l;
   a = [];
   var n, p, s;
   b = 0;
   var u;
-  l = this.Ad.spriteSize;
+  l = this.spriteSheet.spriteSize;
   for (n = d; n <= g; n++) {
     for (s = n * l, u = n < g ? h : Math.min(f, h), d = c; d <= u; d++) {
       p = d * l;
@@ -85,14 +85,14 @@ export function VisualEffect(a, b, c, d, f) {
   this.Pk = false;
   this.projectileEffect = d;
   this.bg = this.hasSpawned = this.Gs = false;
-  this.nd = a ? game.animations.Zg(a) : null;
-  if (a && !this.nd) {
+  this.animation = a ? game.animations.Zg(a) : null;
+  if (a && !this.animation) {
     console.log("Failed to find animated sprite: " + a);
   }
-  this.De = this.nd ? this.nd.To() : 0;
+  this.De = this.animation ? this.animation.To() : 0;
   this.bx = -1;
   this.frameIndex = 0;
-  if (this.nd && this.nd.isDirectional) {
+  if (this.animation && this.animation.isDirectional) {
     this.frameIndex = getEffectDirection(this);
   }
   this.yi = 0;
@@ -181,7 +181,7 @@ export function initializeRenderingSprites() {
     return this.name;
   };
   Sprite.prototype.Hj = function () {
-    return this.Ad.Hj();
+    return this.spriteSheet.Hj();
   };
   SpriteSheet.prototype.$w = function (a) {
     var b, c;
@@ -200,7 +200,7 @@ export function initializeRenderingSprites() {
     return this.loaded;
   };
   SpriteAnimation.prototype.Hj = function () {
-    return this.Ad.Hj();
+    return this.spriteSheet.Hj();
   };
   SpriteAnimation.prototype.To = function () {
     return this.frames.length;
@@ -255,7 +255,7 @@ export function initializeRenderingSprites() {
   TARGETED_EFFECT = 3;
   directionScratchVector = new Vector2();
   VisualEffect.prototype.Zg = function () {
-    return this.nd;
+    return this.animation;
   };
   VisualEffect.prototype.qB = function (a) {
     this.li = a;

@@ -272,7 +272,7 @@ export function initializeViewsInformation() {
     }
     if (this.Hu != D) {
       this.Hu = D;
-      this.Oy.innerHTML = formatAmount(D) + "/" + game.castles.pd.length;
+      this.Oy.innerHTML = formatAmount(D) + "/" + game.castles.castleList.length;
     }
     if (this.Lx != v) {
       this.Lx = v;

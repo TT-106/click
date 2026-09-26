@@ -140,7 +140,7 @@ export function SpellUpgradeDetails(a, b) {
   this.vu = this.Ml = this.yn = this.table = null;
   this.shown = false;
   this.zn = this.Dx = this.Lv = null;
-  this.nd = true;
+  this.isAnimated = true;
   this.De = this.frameIndex = 0;
   this.qw = 8;
 }
@@ -707,19 +707,19 @@ export function initializeViewsUpgradeDetails() {
         a = minionsBySpell[a.name].spriteName;
         this.Dx = game.monsterSprites;
         this.zn = game.monsterSprites.getSprite(a);
-        this.nd = false;
+        this.isAnimated = false;
         this.yn.style.background = "url('spritesheet/monsters.png') -" + (this.zn.sourceX + 10) + "px -" + (this.zn.sourceY + 12) + "px";
       } else {
         a = a.impactEffectName;
         this.Dx = game.animations.Yh[a];
         this.zn = game.animations.Zg(a);
         this.De = this.frameIndex = 0;
-        this.nd = true;
+        this.isAnimated = true;
       }
       this.Ml.innerHTML = this.upgrade.getTitle();
       this.vu.innerHTML = this.upgrade.getDescription();
     }
-    if (this.nd) {
+    if (this.isAnimated) {
       this.De++;
       if (this.De >= this.qw) {
         this.De = 0;

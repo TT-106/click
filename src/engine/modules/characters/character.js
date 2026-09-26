@@ -343,7 +343,7 @@ export function updateCharacter(a, b) {
               }
               p.fg = -1;
               if (0 === p.Ug.length) {
-                if (!p.ed) {
+                if (!p.targetRoom) {
                   clearMovementTarget(p);
                 }
               }
@@ -403,7 +403,7 @@ export function updateCharacter(a, b) {
           subtractVector(p.velocity, p.levelPosition);
           if (vectorLength(p.velocity) <= s) {
             assignVector(p.levelPosition, p.moveTargetPoint);
-            if (p.ed) {
+            if (p.targetRoom) {
               game.state.party.iw();
             }
             clearMovementTarget(p);
@@ -1147,7 +1147,7 @@ export function updateCharacter(a, b) {
           if (Ef.targetDungeon && !Ef.targetDungeon.isFarm) {
             Ef.destinationRoom = null;
             Ef.targetDoor = null;
-            Ef.ed = null;
+            Ef.targetRoom = null;
             Ef.targetTreasureChest = null;
             var ye = Ef.targetDungeon;
             game.currentDungeon = ye;
@@ -1173,7 +1173,7 @@ export function updateCharacter(a, b) {
             } else {
               Se.destinationRoom = null;
               Se.targetDoor = null;
-              Se.ed = null;
+              Se.targetRoom = null;
               Se.targetTreasureChest = null;
               var xl = Se.activeCastle;
               game.currentCastle = xl;

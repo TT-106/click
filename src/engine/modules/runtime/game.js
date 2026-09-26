@@ -68,7 +68,7 @@ export function initializeRuntimeGame() {
       this.Mr = [];
     }(),
     castles: new function () {
-      this.pd = [];
+      this.castleList = [];
       this.Jg = [];
       this.Dh = [];
       this.bm = {};
@@ -427,7 +427,7 @@ export function initializeRuntimeGame() {
       a.targetTreasureChest = null;
       a.destinationRoom = null;
       a.targetDoor = null;
-      a.ed = null;
+      a.targetRoom = null;
       a.Ks = false;
       a.gn = null;
       a.Mp = false;

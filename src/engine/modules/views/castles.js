@@ -125,7 +125,7 @@ export function initializeViewsCastles() {
     if (!this.$e) {
       /** @type {{pf: () => void}} */ (/** @type {unknown} */ (this)).pf();
     }
-    var a = game.castles.pd;
+    var a = game.castles.castleList;
     if (a.length !== this.nf.length) {
       /** @type {{mk: (count: number) => void}} */ (/** @type {unknown} */ (this)).mk(a.length);
     }
@@ -149,7 +149,7 @@ export function initializeViewsCastles() {
   CastleTableView.prototype.pf = function () {
     var a = this.elementId;
     clearElementById(a);
-    var b = game.castles.pd,
+    var b = game.castles.castleList,
       c;
     this.$e = createElement("table", getElement(a), null, "monsterTable");
     /** @type {{Ri: (row: HTMLTableRowElement) => void}} */ (/** @type {unknown} */ (this)).Ri(this.$e.insertRow(0));

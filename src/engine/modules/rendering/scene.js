@@ -13,7 +13,7 @@ import { getMonsters } from "../combat/encounters.js";
 import { TARGETED_EFFECT } from "./sprites.js";
 import { createElement, getElement } from "../views/dom.js";
 export function RenderCommand() {
-  this.nd = this.sprite = null;
+  this.animation = this.sprite = null;
   this.vr = this.ur = this.frameIndex = 0;
   this.pt = false;
   this.alpha = this.am = this.$q = this.Zq = 0;
@@ -21,7 +21,7 @@ export function RenderCommand() {
 export function resetRenderCommand(a) {
   a.pt = false;
   a.sprite = null;
-  a.nd = null;
+  a.animation = null;
   a.ur = 1E5;
   a.vr = 0;
 }
@@ -35,7 +35,7 @@ export function setSpriteRenderCommand(a, b, c, d, f, g, h) {
   a.pt = true;
 }
 export function setAnimationRenderCommand(a, b, c, d, f, g, h, l) {
-  a.nd = b;
+  a.animation = b;
   a.frameIndex = c;
   a.ur = d;
   a.Zq = f;
@@ -92,7 +92,7 @@ export function drawWorldTileRow(a, b, c, d) {
       f.If(g.Jn, h, l);
       var n = g.Yf;
       if (n) {
-        f.se.dk(n, g.getPixelX(), g.getPixelY(), h, l, n.Ad.spriteSize, 0);
+        f.se.dk(n, g.getPixelX(), g.getPixelY(), h, l, n.spriteSheet.spriteSize, 0);
       }
     }
   }
@@ -111,10 +111,10 @@ export function drawDungeonTileRow(a, b, c, d) {
       f.If(g.Jn, h, l);
       var n = g.Yf;
       if (n) {
-        f.se.dk(n, g.getPixelX(), g.getPixelY(), h, l, n.Ad.spriteSize, 0);
+        f.se.dk(n, g.getPixelX(), g.getPixelY(), h, l, n.spriteSheet.spriteSize, 0);
       }
       if (n = g.bt) {
-        f.se.gx(n, g.getPixelX(), g.getPixelY(), h, l, n.Ad.spriteSize, 0);
+        f.se.gx(n, g.getPixelX(), g.getPixelY(), h, l, n.spriteSheet.spriteSize, 0);
       }
     }
   }
@@ -126,7 +126,7 @@ export function drawWorldCharacters(a, b) {
     d = c.position.getWorldPositionX();
     f = c.position.getWorldPositionY();
     c = c.getSprite();
-    a.se.dk(c, d, f, game.viewportHalfWidth + (d - game.world.he - (f - game.world.ie)), game.viewportHalfHeight + 0.5 * (d - game.world.he + (f - game.world.ie)), c.Ad.spriteSize, 0);
+    a.se.dk(c, d, f, game.viewportHalfWidth + (d - game.world.he - (f - game.world.ie)), game.viewportHalfHeight + 0.5 * (d - game.world.he + (f - game.world.ie)), c.spriteSheet.spriteSize, 0);
   }
 }
 export function drawDungeonCharacters(a, b) {
@@ -145,7 +145,7 @@ export function drawDungeonCharacters(a, b) {
     h = projectDungeonY(d, f);
     l = c.effects.isStealthed;
     c = c.getSprite();
-    a.se.dk(c, d, f, g, h, c.Ad.spriteSize, l ? 0.4 : 0);
+    a.se.dk(c, d, f, g, h, c.spriteSheet.spriteSize, l ? 0.4 : 0);
   }
 }
 export function drawCharacterEffects(a, b) {
@@ -162,7 +162,7 @@ export function drawCharacterEffects(a, b) {
             n = projectDungeonY(g, h) + 10;
             y = true;
           }
-          a.se.fx(s, u, g, h, l, n, s.Ad.spriteSize, 0);
+          a.se.fx(s, u, g, h, l, n, s.spriteSheet.spriteSize, 0);
         }
       }
     }
@@ -238,12 +238,12 @@ export function initializeRenderingScene() {
       }
       var b;
       if (this.sprite) {
-        b = this.sprite.Ad.spriteSize;
+        b = this.sprite.spriteSheet.spriteSize;
         a.drawImage(this.sprite.Hj(), this.sprite.sourceX, this.sprite.sourceY, b, b, this.Zq, this.$q, this.am, this.am);
-      } else if (this.nd) {
-        var c = this.nd.frames[this.frameIndex];
-        b = this.nd.Ad.spriteSize;
-        a.drawImage(this.nd.Hj(), c.frameSourceX, c.frameSourceY, b, b, this.Zq, this.$q, this.am, this.am);
+      } else if (this.animation) {
+        var c = this.animation.frames[this.frameIndex];
+        b = this.animation.spriteSheet.spriteSize;
+        a.drawImage(this.animation.Hj(), c.frameSourceX, c.frameSourceY, b, b, this.Zq, this.$q, this.am, this.am);
       }
       if (0 < this.alpha) {
         a.restore();
@@ -337,7 +337,7 @@ export function initializeRenderingScene() {
   ImmediateRenderer.prototype.hx = function () {};
   SceneRenderer.prototype.If = function (a, b, c) {
     if (a) {
-      var d = a.Ad.spriteSize;
+      var d = a.spriteSheet.spriteSize;
       this.context.drawImage(a.Hj(), a.sourceX, a.sourceY, d, d, b, c, d, d);
     }
   };
@@ -404,7 +404,7 @@ export function initializeRenderingScene() {
           a.context.translate(650, 280);
           a.context.rotate(Math.PI / 4);
           var n = game.monsterCatalog.maxUnlockedLevel,
-            p = game.castles.pd,
+            p = game.castles.castleList,
             s,
             u;
           a.context.fillStyle = "gray";
@@ -573,9 +573,9 @@ export function initializeRenderingScene() {
             ha = projectWorldY(La, wa);
             Ga = Ea.Kg ? Ea.PA : Ea.Vy;
             if (Ea.BC.jh) {
-              a.se.gx(Ga, La, wa, Fa, ha, Ga.Ad.spriteSize, 0);
+              a.se.gx(Ga, La, wa, Fa, ha, Ga.spriteSheet.spriteSize, 0);
             } else {
-              a.se.dk(Ga, La, wa, Fa, ha, Ga.Ad.spriteSize, 0);
+              a.se.dk(Ga, La, wa, Fa, ha, Ga.spriteSheet.spriteSize, 0);
             }
           }
         }
@@ -613,7 +613,7 @@ export function initializeRenderingScene() {
           if (4 === vb.characterType) {
             a.se.dk(pb, Sb, Ma, zb - ac, Hb - ac, 3 * game.tileSize, 0);
           } else {
-            a.se.dk(pb, Sb, Ma, zb, Hb, pb.Ad.spriteSize, 0);
+            a.se.dk(pb, Sb, Ma, zb, Hb, pb.spriteSheet.spriteSize, 0);
           }
         }
         drawDungeonCharacters(a, game.minions.eh);
@@ -645,7 +645,7 @@ export function initializeRenderingScene() {
                 wb = Bb.y;
                 Ib = projectDungeonX(qb, wb) + 10;
                 Ec = projectDungeonY(qb, wb) + 10;
-                a.se.fx(Ab, bc, qb, wb, Ib, Ec, Ab.Ad.spriteSize, 0);
+                a.se.fx(Ab, bc, qb, wb, Ib, Ec, Ab.spriteSheet.spriteSize, 0);
               } else if (2 === cc) {
                 var sa = a,
                   Tb = Wa,
@@ -716,7 +716,7 @@ export function initializeRenderingScene() {
                     sb = ec.getPixelY();
                     ka = projectDungeonX(Ub, sb) + 10;
                     Eb = projectDungeonY(Ub, sb) + 10;
-                    a.se.fB(lb, rc, Ub, sb, ka, Eb, lb.Ad.spriteSize, 0);
+                    a.se.fB(lb, rc, Ub, sb, ka, Eb, lb.spriteSheet.spriteSize, 0);
                   }
                 }
               }

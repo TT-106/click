@@ -156,8 +156,8 @@ export function resetCastles() {
   a.cm = 0;
   a.Uj = 1;
   var b;
-  for (b = 0; b < a.pd.length; b++) {
-    var c = a.pd[b];
+  for (b = 0; b < a.castleList.length; b++) {
+    var c = a.castleList[b];
     c.conquered = false;
     c.regionLocked = true;
     c.ye = false;

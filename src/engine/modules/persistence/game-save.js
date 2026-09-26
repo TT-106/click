@@ -180,8 +180,8 @@ export function restoreGameState(a, b) {
             var La = game.castles,
               wa,
               Fa;
-            for (wa = 0; wa < La.pd.length; wa++) {
-              Fa = La.pd[wa];
+            for (wa = 0; wa < La.castleList.length; wa++) {
+              Fa = La.castleList[wa];
               if (canAttackCastle(Fa)) {
                 La.Jg.push(Fa);
               }
@@ -760,7 +760,7 @@ export function createSaveState(a) {
       },
       Q = game.castles.Uj,
       V = [],
-      na = game.castles.pd,
+      na = game.castles.castleList,
       K,
       H;
     for (H = 0; H < na.length; H++) {

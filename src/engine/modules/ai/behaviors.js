@@ -1001,14 +1001,14 @@ export function initializeAiBehaviors() {
       var b = game.state.party,
         c = b.destinationRoom,
         d = b.targetDoor,
-        b = b.ed,
+        b = b.targetRoom,
         f = a.position;
       if (d && d != f.targetDoor) {
         var g = findRouteToDoor(a, d);
         f.Ug = g;
         f.movementTargetCleared = false;
       } else {
-        if (b && b != f.ed) {
+        if (b && b != f.targetRoom) {
           g = findRouteToRoom(a, b.$d);
           f.Ug = g;
           f.movementTargetCleared = false;
@@ -1022,7 +1022,7 @@ export function initializeAiBehaviors() {
       }
       f.et(d);
       f.destinationRoom = c;
-      f.rB(b);
+      f.setTargetRoom(b);
       if (d) {
         setVector(f.moveTargetPoint, d.pixelColumn, d.pixelRow);
         a.actionType = 1;
@@ -1573,7 +1573,7 @@ export function initializeAiBehaviors() {
       return 0;
     }
     var b = a.position;
-    if (b.Ug && 0 < b.Ug.length || b.targetDoor || b.ed || b.destinationRoom) {
+    if (b.Ug && 0 < b.Ug.length || b.targetDoor || b.targetRoom || b.destinationRoom) {
       return 0;
     }
     a = b.room;

@@ -33,7 +33,7 @@ export function initializeRegionsAndCastles() {
     eb.Mr.push(mb);
   }
   var ha = game.castles;
-  ha.pd.length = 0;
+  ha.castleList.length = 0;
   ha.Jg.length = 0;
   ha.Dh.length = 0;
   ha.bm = {};
@@ -111,10 +111,10 @@ export function initializeRegionsAndCastles() {
     }
     Ec++;
   }
-  ha.pd = Bb;
+  ha.castleList = Bb;
   var Fc, Cb, kb, Ra;
-  for (Fc = 0; Fc < ha.pd.length; Fc++) {
-    for (kb = ha.pd[Fc], ha.bm[kb.castleId] && console.log("duplicate castle id: " + kb.castleId), ha.bm[kb.castleId] = kb, Ra = kb.ck, Cb = 0; Cb < Ra.length; Cb++) {
+  for (Fc = 0; Fc < ha.castleList.length; Fc++) {
+    for (kb = ha.castleList[Fc], ha.bm[kb.castleId] && console.log("duplicate castle id: " + kb.castleId), ha.bm[kb.castleId] = kb, Ra = kb.ck, Cb = 0; Cb < Ra.length; Cb++) {
       if (ha.ju[Ra[Cb].io]) {
         console.log("duplicate castle owner: " + Ra[Cb].io);
       }
@@ -134,7 +134,7 @@ export function initializeRegionsAndCastles() {
   var Db,
     gb = new SeededRandom(1),
     rb = new DungeonNameGenerator(gb),
-    dc = game.castles.pd,
+    dc = game.castles.castleList,
     Ka,
     Xa,
     hb,
