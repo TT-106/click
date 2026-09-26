@@ -14,8 +14,8 @@ export function initializeContentDungeonThemes() {
     doorSprites: {
       doorOpenASprite: "L2_Door001.PNG",
       doorOpenBSprite: "L2_Door002.PNG",
-      Vf: "L2_Door003.PNG",
-      Uf: "L2_Door004.PNG"
+      doorClosedASprite: "L2_Door003.PNG",
+      doorClosedBSprite: "L2_Door004.PNG"
     },
     wallSprites: {
       Cg: "L2_WallBrickNS.PNG",
@@ -51,8 +51,8 @@ export function initializeContentDungeonThemes() {
     doorSprites: {
       doorOpenASprite: "L2_Door001.PNG",
       doorOpenBSprite: "L2_Door002.PNG",
-      Vf: "L2_Door003.PNG",
-      Uf: "L2_Door004.PNG"
+      doorClosedASprite: "L2_Door003.PNG",
+      doorClosedBSprite: "L2_Door004.PNG"
     },
     wallSprites: {
       Cg: "L2_WallDarkBrickNS.PNG",
@@ -84,8 +84,8 @@ export function initializeContentDungeonThemes() {
     doorSprites: {
       doorOpenASprite: "L2_Door001.PNG",
       doorOpenBSprite: "L2_Door002.PNG",
-      Vf: "L2_Door003.PNG",
-      Uf: "L2_Door004.PNG"
+      doorClosedASprite: "L2_Door003.PNG",
+      doorClosedBSprite: "L2_Door004.PNG"
     },
     wallSprites: {
       Cg: "L2_WallCaveNS.PNG",
@@ -117,8 +117,8 @@ export function initializeContentDungeonThemes() {
     doorSprites: {
       doorOpenASprite: "L2_DoorBoneOpenNS.PNG",
       doorOpenBSprite: "L2_DoorBoneOpenEW.PNG",
-      Vf: "L2_DoorBoneClosedNS.PNG",
-      Uf: "L2_DoorBoneClosedEW.PNG"
+      doorClosedASprite: "L2_DoorBoneClosedNS.PNG",
+      doorClosedBSprite: "L2_DoorBoneClosedEW.PNG"
     },
     wallSprites: {
       Cg: "L2_WallBoneNS.PNG",
@@ -150,8 +150,8 @@ export function initializeContentDungeonThemes() {
     doorSprites: {
       doorOpenASprite: "L2_DoorDarkStoneOpenNS.PNG",
       doorOpenBSprite: "L2_DoorDarkStoneOpenEW.PNG",
-      Vf: "L2_DoorDarkStoneClosedNS.PNG",
-      Uf: "L2_DoorDarkStoneClosedEW.PNG"
+      doorClosedASprite: "L2_DoorDarkStoneClosedNS.PNG",
+      doorClosedBSprite: "L2_DoorDarkStoneClosedEW.PNG"
     },
     wallSprites: {
       Cg: "L2_WallDarkStoneNS.PNG",
@@ -183,8 +183,8 @@ export function initializeContentDungeonThemes() {
     doorSprites: {
       doorOpenASprite: "L2_DoorIceOpenNS.PNG",
       doorOpenBSprite: "L2_DoorIceOpenEW.PNG",
-      Vf: "L2_DoorIceClosedNS.PNG",
-      Uf: "L2_DoorIceClosedEW.PNG"
+      doorClosedASprite: "L2_DoorIceClosedNS.PNG",
+      doorClosedBSprite: "L2_DoorIceClosedEW.PNG"
     },
     wallSprites: {
       Cg: "L2_WallIceNS.PNG",
@@ -220,8 +220,8 @@ export function initializeContentDungeonThemes() {
     doorSprites: {
       doorOpenASprite: "L2_DoorIronOpenNS.PNG",
       doorOpenBSprite: "L2_DoorIronOpenEW.PNG",
-      Vf: "L2_DoorIronClosedNS.PNG",
-      Uf: "L2_DoorIronClosedEW.PNG"
+      doorClosedASprite: "L2_DoorIronClosedNS.PNG",
+      doorClosedBSprite: "L2_DoorIronClosedEW.PNG"
     },
     wallSprites: {
       Cg: "L2_WallIronNS.PNG",
@@ -253,8 +253,8 @@ export function initializeContentDungeonThemes() {
     doorSprites: {
       doorOpenASprite: "L2_DoorDarkStoneOpenNS.PNG",
       doorOpenBSprite: "L2_DoorDarkStoneOpenEW.PNG",
-      Vf: "L2_DoorDarkStoneClosedNS.PNG",
-      Uf: "L2_DoorDarkStoneClosedEW.PNG"
+      doorClosedASprite: "L2_DoorDarkStoneClosedNS.PNG",
+      doorClosedBSprite: "L2_DoorDarkStoneClosedEW.PNG"
     },
     wallSprites: {
       Cg: "L2_WallMineNS.PNG",
@@ -286,8 +286,8 @@ export function initializeContentDungeonThemes() {
     doorSprites: {
       doorOpenASprite: "L2_DoorOpenNS.PNG",
       doorOpenBSprite: "L2_DoorOpenEW.PNG",
-      Vf: "L2_DoorClosedNS.PNG",
-      Uf: "L2_DoorClosedEW.PNG"
+      doorClosedASprite: "L2_DoorClosedNS.PNG",
+      doorClosedBSprite: "L2_DoorClosedEW.PNG"
     },
     wallSprites: {
       Cg: "L2_WallStoneNS.PNG",
@@ -319,8 +319,8 @@ export function initializeContentDungeonThemes() {
     doorSprites: {
       doorOpenASprite: "L2_DoorHutOpenNS.PNG",
       doorOpenBSprite: "L2_DoorHutOpenEW.PNG",
-      Vf: "L2_DoorHutClosedNS.PNG",
-      Uf: "L2_DoorHutClosedEW.PNG"
+      doorClosedASprite: "L2_DoorHutClosedNS.PNG",
+      doorClosedBSprite: "L2_DoorHutClosedEW.PNG"
     },
     wallSprites: {
       Cg: "L2_WallWoodNS.PNG",

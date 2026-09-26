@@ -285,7 +285,7 @@ export function advanceSimulation(a) {
         if (Ua && !Ua.hasSpawned) {
           addVisualEffect(game.effects, cb.projectileEffect);
         }
-        if (!Ua || Ua.Pk || Ua.bg) {
+        if (!Ua || Ua.Pk || Ua.finished) {
           var Va = cb.impactEffect;
           if (!Va.hasSpawned) {
             var mc = cb.actionDefinition;
@@ -387,7 +387,7 @@ export function advanceSimulation(a) {
           setVector(kb.attacker.position.levelPosition, Db.x, Db.y);
         }
       }
-      if ((!Ra || Ra.Pk || Ra.bg) && advanceCombatAction(Cb, kb)) {
+      if ((!Ra || Ra.Pk || Ra.finished) && advanceCombatAction(Cb, kb)) {
         bb = true;
       }
     } else {
@@ -453,7 +453,7 @@ export function advanceSimulation(a) {
         if (xb <= Na) {
           assignVector(ka.wm, ka.xi);
           ka.Pk = true;
-          ka.bg = true;
+          ka.finished = true;
         } else {
           normalizeVector(directionScratchVector);
           multiplyVector(directionScratchVector, Na);
@@ -472,7 +472,7 @@ export function advanceSimulation(a) {
         if (2 === ka.Io) {
           ka.yi += Eb * FRAME_DURATION_MS;
           if (400 <= ka.yi) {
-            ka.bg = true;
+            ka.finished = true;
             ka.Pk = true;
           }
         }

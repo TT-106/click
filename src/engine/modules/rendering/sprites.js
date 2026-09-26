@@ -84,7 +84,7 @@ export function VisualEffect(a, b, c, d, f) {
   this.xi = c;
   this.Pk = false;
   this.projectileEffect = d;
-  this.bg = this.hasSpawned = this.Gs = false;
+  this.finished = this.hasSpawned = this.Gs = false;
   this.animation = a ? game.animations.Zg(a) : null;
   if (a && !this.animation) {
     console.log("Failed to find animated sprite: " + a);
@@ -147,13 +147,13 @@ export function advanceEffectFrame(a, b) {
         if (a.boundCharacter.effects.isStunned) {
           a.frameIndex = 0;
         } else {
-          a.bg = true;
+          a.finished = true;
         }
       } else {
         if (a.projectileEffect) {
           a.frameIndex = 0;
         } else {
-          a.bg = true;
+          a.finished = true;
         }
       }
     }
@@ -165,7 +165,7 @@ export function clearVisualEffects() {
     var b;
     for (b = 0; b < a.Wg.length; b++) {
       var c = a.Wg[b];
-      c.bg = true;
+      c.finished = true;
       c.Pk = true;
     }
     a.Wg.length = 0;
@@ -261,7 +261,7 @@ export function initializeRenderingSprites() {
     this.li = a;
   };
   VisualEffect.prototype.bl = function () {
-    return this.bg || this.Pk;
+    return this.finished || this.Pk;
   };
   VisualEffect.prototype.To = function () {
     return this.frameCount;

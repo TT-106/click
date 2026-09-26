@@ -10,7 +10,7 @@ export function StatusEffect(a, b, c, d, f, g, h) {
   this.durationTurns = c;
   this.animation = d;
   this.overlayFrameIndex = f;
-  this.bg = false;
+  this.expired = false;
   this.hasAnimation = g;
   this.potencyMultiplier = h;
 }
@@ -45,8 +45,8 @@ export function updateCharacterEffects(a, b) {
   u.spellBonusPercent = 0;
   for (c = y.spellBonusPercent = 0; c < a.activeEffects.length; c++) {
     h = f = a.activeEffects[c];
-    h.bg = d - h.startTurn >= h.durationTurns;
-    if (h.bg) {
+    h.expired = d - h.startTurn >= h.durationTurns;
+    if (h.expired) {
       g = true;
     } else {
       if (isDisablingEffect(f)) {
@@ -138,6 +138,6 @@ export function hasStatusEffect(a, b) {
 }
 export function initializeCharactersEffects() {
   StatusEffect.prototype.bl = function () {
-    return this.bg;
+    return this.expired;
   };
 }
