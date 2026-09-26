@@ -32,7 +32,7 @@ export function CharacterPosition(a, b) {
   this.movementTargetCleared = false;
   this.targetRoom = this.destinationRoom = this.targetDoor = null;
   this.floorPositionIndex = -1;
-  this.Hh = this.aB = this.qj = null;
+  this.nextWorldTile = this.aB = this.qj = null;
 }
 export function clearMovementTarget(a) {
   a.movementTargetCleared = true;

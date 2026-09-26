@@ -21,7 +21,7 @@ export function MonsterLevelView() {
   this.ov = this.jv = this.Vv = this.zv = this.Fv = this.Wu = this.fv = this.Du = this.pv = this.lv = this.ev = -1;
 }
 export function MonsterRowView(a, b) {
-  this.lh = a;
+  this.rowElement = a;
   this.monsterType = b;
   this.progressTextElement = this.progressFillElement = this.progressCell = this.xo = this.$n = this.Yn = this.vo = this.Ij = this.Mo = this.wq = this.yq = this.Es = null;
   this.Sv = this.cachedLevel = this.Jh = this.Uv = -1;
@@ -180,7 +180,7 @@ export function initializeViewsMonsters() {
     this.monsterType = a;
   };
   MonsterRowView.prototype.createRowCells = function () {
-    var a = this.lh,
+    var a = this.rowElement,
       b = this.monsterType.ll,
       c = a.insertCell(0);
     c.style.width = "50px";

@@ -29,7 +29,7 @@ export function getPathNode(a, b) {
       f.rl = null;
       f.It = false;
       f.closed = false;
-      setVector(f.gh, b.Ai(), b.Bi());
+      setVector(f.position, b.Ai(), b.Bi());
       f.Hs.length = 0;
     } else {
       d = new PathNode(a, b);
@@ -55,15 +55,15 @@ export function PathNode(a, b) {
   this.Ko = -1;
   this.rl = null;
   this.closed = this.It = false;
-  this.gh = new Vector2();
-  setVector(this.gh, b.Ai(), b.Bi());
+  this.position = new Vector2();
+  setVector(this.position, b.Ai(), b.Bi());
   this.Hs = [];
 }
 export function reconstructPath(a) {
   var b;
   b = a.rl ? reconstructPath(a.rl) : [];
   var c = new Vector2();
-  copyVector(c, a.gh);
+  copyVector(c, a.position);
   b.push(c);
   return b;
 }
@@ -131,15 +131,15 @@ export function findHallwayPath(a, b, c) {
       }
       h = h.Hs;
       for (s = 0; s < h.length; s++) {
-        if (l = h[s], !l.closed && (p = g.xk + l.gh.distanceTo(g.gh), n = l.It, !n || p < l.xk)) {
+        if (l = h[s], !l.closed && (p = g.xk + l.position.distanceTo(g.position), n = l.It, !n || p < l.xk)) {
           l.rl = g;
           if (n) {
             a.open.remove(l);
             l.xk = p;
           } else {
             if (0 > l.Ko) {
-              n = l.rl ? (n = l.rl.rl) && l.gh.x !== n.gh.x && l.gh.y !== n.gh.y ? 1.3 : 1 : 1;
-              l.Ko = l.gh.distanceTo(f.gh) * n;
+              n = l.rl ? (n = l.rl.rl) && l.position.x !== n.position.x && l.position.y !== n.position.y ? 1.3 : 1 : 1;
+              l.Ko = l.position.distanceTo(f.position) * n;
             }
             l.xk = p;
             l.It = true;

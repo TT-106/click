@@ -155,7 +155,7 @@ export function MonsterLevelDetails(a, b) {
 export function DungeonPurchaseDetails(a, b) {
   this.upgrade = a;
   this.contentContainer = b;
-  this.ui = this.Vg = this.titleElement = this.previewImageElement = this.tableElement = this.Cq = null;
+  this.ui = this.labelCell = this.titleElement = this.previewImageElement = this.tableElement = this.Cq = null;
   this.shown = false;
   this.cachedCostValue = -1;
 }
@@ -171,14 +171,14 @@ export function ScrollUpgradeDetails(a, b) {
 export function CastlePurchaseDetails(a, b) {
   this.upgrade = a;
   this.contentContainer = b;
-  this.ui = this.Vg = this.titleElement = this.previewImageElement = this.Cm = this.Uz = null;
+  this.ui = this.labelCell = this.titleElement = this.previewImageElement = this.Cm = this.Uz = null;
   this.shown = false;
   this.Gk = -1;
 }
 export function FarmUpgradeDetails(a, b) {
   this.upgrade = a;
   this.contentContainer = b;
-  this.ui = this.Vg = this.titleElement = this.previewImageElement = this.Hm = this.Tz = null;
+  this.ui = this.labelCell = this.titleElement = this.previewImageElement = this.Hm = this.Tz = null;
   this.shown = false;
   this.Dk = -1;
 }
@@ -868,7 +868,7 @@ export function initializeViewsUpgradeDetails() {
     if (this.ui !== b && (this.ui = b)) {
       a = game.terrainSprites.getSprite(b.Fo);
       this.previewImageElement.style.background = "url('spritesheet/terrain.png') -" + a.sourceX + "px -" + a.sourceY + "px";
-      this.Vg.innerHTML = b.dungeonName;
+      this.labelCell.innerHTML = b.dungeonName;
     }
   };
   DungeonPurchaseDetails.prototype.createDomElements = function () {
@@ -902,10 +902,10 @@ export function initializeViewsUpgradeDetails() {
     a.src = "images/Transparent.gif";
     a.style.width = "100%";
     a.style.height = "15px";
-    this.Vg = b.insertCell(0);
-    this.Vg.colSpan = 3;
-    this.Vg.style.width = "200px";
-    this.Vg.style.textAlign = "left";
+    this.labelCell = b.insertCell(0);
+    this.labelCell.colSpan = 3;
+    this.labelCell.style.width = "200px";
+    this.labelCell.style.textAlign = "left";
   };
   ScrollUpgradeDetails.prototype.getUpgradeType = function () {
     return 12;

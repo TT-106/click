@@ -15,7 +15,7 @@ import { UpgradeCollection } from "../progression/upgrades.js";
 /** @typedef {{ createDomElements: () => void, mk: (rowCount: number) => void, createHeaderRow: (row: HTMLTableRowElement) => void }} TableLifecycle */
 export function ItemRowBase() {}
 export function InventoryItemView(a, b) {
-  this.lh = a;
+  this.rowElement = a;
   this.adventurerIndex = b;
   this.Ej = this.Cr = this.goldCell = this.Oh = this.levelCell = this.rarityCell = this.Fi = this.Ei = this.item = null;
   (/** @type {InventoryItemView & { createRowCells: () => void }} */ (/** @type {unknown} */ (this))).createRowCells();
@@ -25,10 +25,10 @@ export function InventoryTableView(a, b) {
   this.visible = true;
   this.adventurerIndex = b;
   this.Jj = null;
-  this.bh = [];
+  this.rowViews = [];
 }
 export function EquipmentItemRowView(a, b) {
-  this.lh = a;
+  this.rowElement = a;
   this.adventurerIndex = b;
   this.Cr = this.goldCell = this.Oh = this.levelCell = this.rarityCell = this.Fi = this.Ei = this.item = null;
   (/** @type {EquipmentItemRowView & { createRowCells: () => void }} */ (/** @type {unknown} */ (this))).createRowCells();
@@ -212,7 +212,7 @@ export function initializeViewsCharacter() {
     }
   };
   InventoryItemView.prototype.createRowCells = function () {
-    var a = this.lh,
+    var a = this.rowElement,
       b = a.insertCell(0);
     b.style.width = "50px";
     b.style.padding = "0";
@@ -242,7 +242,7 @@ export function initializeViewsCharacter() {
   };
   InventoryTableView.prototype = new View();
   InventoryTableView.prototype.reset = function () {
-    this.bh.length = 0;
+    this.rowViews.length = 0;
     clearElementById(this.elementId);
     this.Jj = null;
   };
@@ -252,24 +252,24 @@ export function initializeViewsCharacter() {
         (/** @type {InventoryTableView & TableLifecycle} */ (/** @type {unknown} */ (this))).createDomElements();
       }
       var a = game.state.adventurers[this.adventurerIndex].inventory.items;
-      if (a.length !== this.bh.length) {
+      if (a.length !== this.rowViews.length) {
         (/** @type {InventoryTableView & TableLifecycle} */ (/** @type {unknown} */ (this))).mk(a.length);
       }
       var b;
-      for (b = 0; b < this.bh.length; b++) {
-        if (a[b] !== this.bh[b].item) {
-          this.bh[b].ux(a[b]);
+      for (b = 0; b < this.rowViews.length; b++) {
+        if (a[b] !== this.rowViews[b].item) {
+          this.rowViews[b].ux(a[b]);
         }
       }
     }
   };
   InventoryTableView.prototype.mk = function (a) {
-    for (; this.bh.length > a;) {
+    for (; this.rowViews.length > a;) {
       this.Jj.deleteRow(-1);
-      this.bh.splice(this.bh.length - 1, 1);
+      this.rowViews.splice(this.rowViews.length - 1, 1);
     }
-    for (; this.bh.length < a;) {
-      this.bh.push(new InventoryItemView(this.Jj.insertRow(this.bh.length + 1), this.adventurerIndex));
+    for (; this.rowViews.length < a;) {
+      this.rowViews.push(new InventoryItemView(this.Jj.insertRow(this.rowViews.length + 1), this.adventurerIndex));
     }
   };
   InventoryTableView.prototype.createDomElements = function () {
@@ -328,7 +328,7 @@ export function initializeViewsCharacter() {
     }
   };
   EquipmentItemRowView.prototype.createRowCells = function () {
-    var a = this.lh,
+    var a = this.rowElement,
       b = a.insertCell(0);
     b.style.width = "50px";
     b.style.padding = "0";

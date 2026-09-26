@@ -23,7 +23,7 @@ export function CastleTableView() {
   this.rowViews = [];
 }
 export function CastleRowView(a) {
-  this.lh = a;
+  this.rowElement = a;
   this.progressTextElement = this.progressFillElement = this.progressCell = this.nameCell = this.castle = null;
   this.Us = 120;
   this.Rv = this.Cu = this.cachedDescriptionText = "";
@@ -165,7 +165,7 @@ export function initializeViewsCastles() {
   };
   CastleRowView.prototype.reset = function () {};
   CastleRowView.prototype.createRowCells = function () {
-    var a = this.lh;
+    var a = this.rowElement;
     this.nameCell = a.insertCell(0);
     this.nameCell.style.width = "240px";
     this.progressCell = a.insertCell(1);

@@ -169,8 +169,8 @@ export function initializeSimulationLoop() {
         addTab(gameView.tabBar, pointsTab);
         addTab(gameView.tabBar, offlineTab);
         addTab(gameView.tabBar, informationTab);
-        if (gameView.Lg) {
-          gameView.Lg.length = 0;
+        if (gameView.childViews) {
+          gameView.childViews.length = 0;
         }
         addChildView(gameView, gameView.tabBar);
         addChildView(gameView, partyCreationView);

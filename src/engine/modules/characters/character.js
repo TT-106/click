@@ -200,7 +200,7 @@ export function updateCharacter(a, b) {
             } else if (f === c.Rn && g === c.Sn) {
               c.movementTargetCleared = true;
             } else {
-              if (!c.Hh || !c.qj || c.qj.getWorldColumn() !== f || c.qj.getWorldRow() !== g) {
+              if (!c.nextWorldTile || !c.qj || c.qj.getWorldColumn() !== f || c.qj.getWorldRow() !== g) {
                 c.aB = c.qj;
                 c.qj = game.world.getTileAtPixel(f, g);
                 if (!c.qj) {
@@ -208,15 +208,15 @@ export function updateCharacter(a, b) {
                   break a;
                 }
                 if (1 >= Math.abs(f - c.Rn) && 1 >= Math.abs(g - c.Sn)) {
-                  c.Hh = game.world.getTileAtPixel(c.Rn, c.Sn);
+                  c.nextWorldTile = game.world.getTileAtPixel(c.Rn, c.Sn);
                 } else {
-                  c.Hh = findCheapestNeighbor(c.qj, c.aB);
-                  if (c.Hh && c.Hh.getWorldColumn() !== c.Rn && c.Hh.getWorldRow() !== c.Sn) {
-                    c.Hh = findCheapestNeighbor(c.Hh, c.qj);
+                  c.nextWorldTile = findCheapestNeighbor(c.qj, c.aB);
+                  if (c.nextWorldTile && c.nextWorldTile.getWorldColumn() !== c.Rn && c.nextWorldTile.getWorldRow() !== c.Sn) {
+                    c.nextWorldTile = findCheapestNeighbor(c.nextWorldTile, c.qj);
                   }
                 }
               }
-              setVector(c.velocity, c.Hh.getPixelX() + 1, c.Hh.getPixelY() + 1);
+              setVector(c.velocity, c.nextWorldTile.getPixelX() + 1, c.nextWorldTile.getPixelY() + 1);
               subtractVector(c.velocity, c.worldPosition);
               if (separateWorldCharacters(c)) {
                 normalizeVector(c.velocity);

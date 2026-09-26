@@ -7,29 +7,29 @@ export function View() {
   this.cachedVisible = false;
 }
 export function CompositeView() {
-  this.Lg = null;
+  this.childViews = null;
 }
 export function addChildView(a, b) {
   if (b) {
-    if (!a.Lg) {
-      a.Lg = [];
+    if (!a.childViews) {
+      a.childViews = [];
     }
-    a.Lg.push(b);
+    a.childViews.push(b);
   }
 }
 export function resetChildViews(a) {
-  if (a.Lg) {
+  if (a.childViews) {
     var b;
-    for (b = 0; b < a.Lg.length; b++) {
-      a.Lg[b].reset();
+    for (b = 0; b < a.childViews.length; b++) {
+      a.childViews[b].reset();
     }
   }
 }
 export function updateChildViews(a) {
-  if (a.Lg) {
+  if (a.childViews) {
     var b;
-    for (b = 0; b < a.Lg.length; b++) {
-      a.Lg[b].render();
+    for (b = 0; b < a.childViews.length; b++) {
+      a.childViews[b].render();
     }
   }
 }

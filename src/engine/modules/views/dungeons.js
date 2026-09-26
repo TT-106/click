@@ -63,12 +63,12 @@ export function getVisibleTreasure() {
   return null;
 }
 export function DungeonRowView(a, b) {
-  this.lh = a;
+  this.rowElement = a;
   this.ui = this.dungeon = null;
   this.yr = new PurchaseDungeonUpgrade(this.dungeon);
-  this.px = this.Gx = this.labelCell = this.Vg = this.wr = this.Co = null;
-  this.pB = "secureCell_" + b + "_" + this.lh.rowIndex;
-  this.upgradeButton = this.cj = this.ai = this.sh = this.progressCell = this.Ix = null;
+  this.px = this.Gx = this.labelCell = this.labelCell = this.wr = this.Co = null;
+  this.pB = "secureCell_" + b + "_" + this.rowElement.rowIndex;
+  this.upgradeButton = this.cj = this.ai = this.progressFillElement = this.progressCell = this.Ix = null;
   this.Gu = this.Bk = this.Qv = "";
   this.mw = this.pu = -1;
   this.Bt = false;
@@ -192,7 +192,7 @@ export function initializeViewsDungeons() {
     }
   };
   DungeonRowView.prototype.createRowCells = function () {
-    var a = this.lh;
+    var a = this.rowElement;
     this.Co = a.insertCell(0);
     this.Co.style.width = "50px";
     this.Co.style.padding = "0";
@@ -203,8 +203,8 @@ export function initializeViewsDungeons() {
       var b = game.terrainSprites.getSprite(this.dungeon.Fo);
       this.wr.style.background = "url('spritesheet/terrain.png') -" + b.sourceX + "px -" + b.sourceY + "px";
     }
-    this.Vg = a.insertCell(1);
-    this.Vg.style.width = "200px";
+    this.labelCell = a.insertCell(1);
+    this.labelCell.style.width = "200px";
     this.labelCell = a.insertCell(2);
     this.labelCell.style.width = "200px";
     this.Gx = a.insertCell(3);
@@ -214,19 +214,19 @@ export function initializeViewsDungeons() {
     this.px.id = this.pB;
     this.Ix = a.insertCell(5);
     this.Ix.style.width = this.Ct + "px";
-    this.upgradeButton = new UpgradeButtonView(this.pB, this.yr, this.lh.rowIndex, true);
+    this.upgradeButton = new UpgradeButtonView(this.pB, this.yr, this.rowElement.rowIndex, true);
     this.cj = createElement("div", this.Ix, null, null);
     this.cj.style.position = "relative";
     this.cj.style.border = "1px solid #2c2c50";
     this.cj.style.height = "15px";
     this.cj.style.width = this.Ct + "px";
-    this.sh = createElement("div", this.cj, null, null);
-    this.sh.style.position = "absolute";
-    this.sh.style.top = "0";
-    this.sh.style.left = "0";
-    this.sh.style.backgroundColor = "#F00";
-    this.sh.style.height = "15px";
-    this.sh.style.width = "0px";
+    this.progressFillElement = createElement("div", this.cj, null, null);
+    this.progressFillElement.style.position = "absolute";
+    this.progressFillElement.style.top = "0";
+    this.progressFillElement.style.left = "0";
+    this.progressFillElement.style.backgroundColor = "#F00";
+    this.progressFillElement.style.height = "15px";
+    this.progressFillElement.style.width = "0px";
     this.ai = createElement("div", this.cj, null, null);
     this.ai.style.position = "absolute";
     this.ai.style.textAlign = "center";
@@ -261,7 +261,7 @@ export function initializeViewsDungeons() {
       }
       if (this.Bk !== c) {
         this.Bk = c;
-        this.Vg.innerHTML = c;
+        this.labelCell.innerHTML = c;
       }
       if (this.Gu !== d) {
         this.Gu = d;
@@ -283,16 +283,16 @@ export function initializeViewsDungeons() {
           if (this.pu !== h) {
             this.pu = h;
             b = h / 100 * this.Ct | 0;
-            this.sh.style.width = b + "px";
-            this.sh.style.backgroundColor = "#F00";
+            this.progressFillElement.style.width = b + "px";
+            this.progressFillElement.style.backgroundColor = "#F00";
             this.ai.innerHTML = "地牢再次受到侵袭 " + h + "%";
           }
         } else {
           if (this.mw !== l) {
             this.mw = l;
             b = l / 100 * this.Ct | 0;
-            this.sh.style.width = b + "px";
-            this.sh.style.backgroundColor = "#080";
+            this.progressFillElement.style.width = b + "px";
+            this.progressFillElement.style.backgroundColor = "#080";
             this.ai.innerHTML = "收获地牢 " + l + "%";
           }
         }
