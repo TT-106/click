@@ -33,7 +33,7 @@ export function MonsterLevelTabView(a, b) {
   this.elementId = b;
   this.tabState = a;
   this.tableElement = null;
-  this.vi = this.level = -1;
+  this.cachedLevel = this.level = -1;
   this.rowViews = [];
 }
 export function MonsterView(a) {
@@ -294,14 +294,14 @@ export function initializeViewsMonsters() {
       }
     }
     this.level = -1;
-    this.vi = -2;
+    this.cachedLevel = -2;
   };
   MonsterLevelTabView.prototype.update = function () {
     if (1 > this.level) {
       console.log("MonsterTableView.updateViewContents  monsterLevel=" + this.level);
     } else {
       if (this.tableElement) {
-        if (this.vi !== this.level) {
+        if (this.cachedLevel !== this.level) {
           var a = getMonsterTypesForLevel(game.monsterCatalog, this.level),
             b;
           if (a.length !== this.rowViews.length) {
@@ -315,7 +315,7 @@ export function initializeViewsMonsters() {
       } else {
         (/** @type {any} */ (this)).createDomElements();
       }
-      this.vi = this.level;
+      this.cachedLevel = this.level;
       for (a = 0; a < this.rowViews.length; a++) {
         this.rowViews[a].render();
       }

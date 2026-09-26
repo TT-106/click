@@ -22,12 +22,12 @@ export function UpgradeButtonView(a, b, c, d) {
   this.activeDetails = null;
   this.GC = d;
   this.zo = this.buttonElement = null;
-  this.ti = "";
+  this.buttonLabel = "";
 }
 export function mountUpgradeButton(a) {
   var b = getElement(a.QA);
-  a.ti = a.Ro();
-  a.buttonElement = createElement("div", b, a.elementId, a.ti);
+  a.buttonLabel = a.Ro();
+  a.buttonElement = createElement("div", b, a.elementId, a.buttonLabel);
   a.buttonElement.onmouseup = function () {
     a.onPurchaseClicked();
     return false;
@@ -155,7 +155,7 @@ export function MonsterLevelDetails(a, b) {
 export function DungeonPurchaseDetails(a, b) {
   this.upgrade = a;
   this.contentContainer = b;
-  this.ui = this.labelCell = this.titleElement = this.previewImageElement = this.tableElement = this.Cq = null;
+  this.selectedDungeon = this.labelCell = this.titleElement = this.previewImageElement = this.tableElement = this.Cq = null;
   this.shown = false;
   this.cachedCostValue = -1;
 }
@@ -171,14 +171,14 @@ export function ScrollUpgradeDetails(a, b) {
 export function CastlePurchaseDetails(a, b) {
   this.upgrade = a;
   this.contentContainer = b;
-  this.ui = this.labelCell = this.titleElement = this.previewImageElement = this.Cm = this.Uz = null;
+  this.selectedDungeon = this.labelCell = this.titleElement = this.previewImageElement = this.Cm = this.Uz = null;
   this.shown = false;
   this.Gk = -1;
 }
 export function FarmUpgradeDetails(a, b) {
   this.upgrade = a;
   this.contentContainer = b;
-  this.ui = this.labelCell = this.titleElement = this.previewImageElement = this.Hm = this.Tz = null;
+  this.selectedDungeon = this.labelCell = this.titleElement = this.previewImageElement = this.Hm = this.Tz = null;
   this.shown = false;
   this.Dk = -1;
 }
@@ -190,7 +190,7 @@ export function CharacterLevelDetails(a, b) {
   this.shown = false;
   this.cachedCostValue = -1;
   this.cachedTitleText = this.Bs = null;
-  this.vi = -1;
+  this.cachedLevel = -1;
 }
 export function AchievementClaimDetails(a, b) {
   this.upgrade = a;
@@ -288,8 +288,8 @@ export function initializeViewsUpgradeDetails() {
     if (this.activeDetails) {
       this.activeDetails.update();
     }
-    if (this.ti !== b) {
-      this.ti = b;
+    if (this.buttonLabel !== b) {
+      this.buttonLabel = b;
       this.buttonElement.className = b;
     }
   };
@@ -844,7 +844,7 @@ export function initializeViewsUpgradeDetails() {
   };
   DungeonPurchaseDetails.prototype.reset = function () {
     this.cachedCostValue = -1;
-    this.ui = null;
+    this.selectedDungeon = null;
   };
   DungeonPurchaseDetails.prototype.attachUpgrade = function (a) {
     this.upgrade = a;
@@ -865,7 +865,7 @@ export function initializeViewsUpgradeDetails() {
       this.cachedCostValue = a;
       this.Cq.innerHTML = formatAmount(a);
     }
-    if (this.ui !== b && (this.ui = b)) {
+    if (this.selectedDungeon !== b && (this.selectedDungeon = b)) {
       a = game.terrainSprites.getSprite(b.Fo);
       this.previewImageElement.style.background = "url('spritesheet/terrain.png') -" + a.sourceX + "px -" + a.sourceY + "px";
       this.labelCell.innerHTML = b.dungeonName;
@@ -1118,14 +1118,14 @@ export function initializeViewsUpgradeDetails() {
   CharacterLevelDetails.prototype.reset = function () {
     this.cachedCostValue = -1;
     this.cachedTitleText = this.Bs = null;
-    this.vi = -1;
+    this.cachedLevel = -1;
     this.cn = this.an = this.$m = this.bn = this.jr = this.hr = this.ir = this.gr = 0;
   };
   CharacterLevelDetails.prototype.attachUpgrade = function (a) {
     this.upgrade = a;
     this.cachedCostValue = -1;
     this.cachedTitleText = this.Bs = null;
-    this.vi = -1;
+    this.cachedLevel = -1;
     this.cn = this.an = this.$m = this.bn = this.jr = this.hr = this.ir = this.gr = 0;
   };
   CharacterLevelDetails.prototype.showDetails = function () {
@@ -1149,9 +1149,9 @@ export function initializeViewsUpgradeDetails() {
       this.cachedTitleText = b;
       this.titleElement.innerHTML = b;
     }
-    if (this.vi != c) {
-      this.vi = c;
-      a = Math.max(1, 10 * (this.vi - 1)) + 1;
+    if (this.cachedLevel != c) {
+      this.cachedLevel = c;
+      a = Math.max(1, 10 * (this.cachedLevel - 1)) + 1;
       this.bn = scaleByLevel(a, monsterHealthCurve, 1);
       this.$m = scaleByLevel(a, monsterSpiritCurve, 1);
       this.an = scaleByLevel(a, monsterAttackCurve, 1);

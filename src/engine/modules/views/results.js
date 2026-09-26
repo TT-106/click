@@ -114,7 +114,7 @@ export function OfflineProgressView(a) {
   this.$l = this.progressFillElement = null;
   this.gu = 500;
   this.cachedFillWidth = -1;
-  this.Mt = this.aj = this.$t = this.vm = this.Vm = this.Um = this.Tm = this.Qw = null;
+  this.Mt = this.stunCountCell = this.$t = this.vm = this.Vm = this.Um = this.Tm = this.Qw = null;
   this.yu = this.Kk = this.Bu = this.Ck = this.Hk = this.Fk = this.Ek = this.vv = this.wy = this.JB = this.Iy = this.Fz = this.sA = this.nA = this.mA = this.HA = -1;
 }
 export function mountOfflineProgress(a) {
@@ -190,7 +190,7 @@ export function initializeViewsResults() {
     a.selected = false;
     if (this.$l) {
       clearElementById(this.elementId);
-      this.Mt = this.aj = this.$t = this.vm = this.Vm = this.Um = this.Tm = this.Qw = this.progressFillElement = this.$l = null;
+      this.Mt = this.stunCountCell = this.$t = this.vm = this.Vm = this.Um = this.Tm = this.Qw = this.progressFillElement = this.$l = null;
     }
   };
   OfflineProgressView.prototype.reset = function () {
@@ -241,7 +241,7 @@ export function initializeViewsResults() {
     }
     if (this.Kk != b) {
       this.Kk = b;
-      this.aj.innerHTML = formatAmount(b);
+      this.stunCountCell.innerHTML = formatAmount(b);
     }
     if (this.yu != l) {
       this.yu = l;
@@ -257,7 +257,7 @@ export function initializeViewsResults() {
     this.Vm = (/** @type {any} */ (this)).getOfflineProgressCell(a, "清理关卡", b++);
     this.vm = (/** @type {any} */ (this)).getOfflineProgressCell(a, "清理地牢", b++);
     this.$t = (/** @type {any} */ (this)).getOfflineProgressCell(a, "攻击城堡", b++);
-    this.aj = (/** @type {any} */ (this)).getOfflineProgressCell(a, "昏迷次数", b++);
+    this.stunCountCell = (/** @type {any} */ (this)).getOfflineProgressCell(a, "昏迷次数", b++);
     this.Mt = (/** @type {any} */ (this)).getOfflineProgressCell(a, "成就", b);
   };
   OfflineProgressView.prototype.getOfflineProgressCell = function (a, b, c) {

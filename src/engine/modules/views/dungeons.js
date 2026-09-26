@@ -12,15 +12,15 @@ import { GoldView } from "./resources.js";
 export function TreasureLootView() {
   this.elementId = "treasureChestLootButtonPanel";
   this.visible = false;
-  this.ti = "";
+  this.buttonLabel = "";
   this.om = this.Ml = this.po = this.treasureChest = this.button = null;
 }
 export function mountTreasureLoot(a) {
   var container = getElement(a.elementId);
   if (container) {
     clearElement(container);
-    a.ti = a.Ro();
-    a.button = createElement("div", container, a.elementId, a.ti);
+    a.buttonLabel = a.Ro();
+    a.button = createElement("div", container, a.elementId, a.buttonLabel);
     a.button.onmouseup = function () {
       if (a.treasureChest && !a.treasureChest.opened) {
         var b = a.treasureChest;
@@ -64,11 +64,11 @@ export function getVisibleTreasure() {
 }
 export function DungeonRowView(a, b) {
   this.rowElement = a;
-  this.ui = this.dungeon = null;
+  this.selectedDungeon = this.dungeon = null;
   this.yr = new PurchaseDungeonUpgrade(this.dungeon);
   this.px = this.Gx = this.labelCell = this.labelCell = this.wr = this.Co = null;
   this.pB = "secureCell_" + b + "_" + this.rowElement.rowIndex;
-  this.upgradeButton = this.cj = this.progressTextElement = this.progressFillElement = this.progressCell = this.Ix = null;
+  this.upgradeButton = this.progressContainer = this.progressTextElement = this.progressFillElement = this.progressCell = this.Ix = null;
   this.Gu = this.Bk = this.Qv = "";
   this.mw = this.pu = -1;
   this.Bt = false;
@@ -163,8 +163,8 @@ export function initializeViewsDungeons() {
       }
     }
     b = /** @type {{Ro: () => string}} */ (/** @type {unknown} */ (this)).Ro();
-    if (this.ti !== b) {
-      this.ti = b;
+    if (this.buttonLabel !== b) {
+      this.buttonLabel = b;
       this.button.className = b;
       if (a && a.selected) {
         this.om.innerHTML = "正在搜索中...";
@@ -175,7 +175,7 @@ export function initializeViewsDungeons() {
     return !this.treasureChest || this.treasureChest.opened || this.treasureChest.selected ? "lootButtonDisabled centeredElement" : "lootButton centeredElement";
   };
   DungeonRowView.prototype.reset = function () {
-    this.ui = null;
+    this.selectedDungeon = null;
     if (this.dungeon) {
       this.upgradeButton.reset();
     }
@@ -215,19 +215,19 @@ export function initializeViewsDungeons() {
     this.Ix = a.insertCell(5);
     this.Ix.style.width = this.Ct + "px";
     this.upgradeButton = new UpgradeButtonView(this.pB, this.yr, this.rowElement.rowIndex, true);
-    this.cj = createElement("div", this.Ix, null, null);
-    this.cj.style.position = "relative";
-    this.cj.style.border = "1px solid #2c2c50";
-    this.cj.style.height = "15px";
-    this.cj.style.width = this.Ct + "px";
-    this.progressFillElement = createElement("div", this.cj, null, null);
+    this.progressContainer = createElement("div", this.Ix, null, null);
+    this.progressContainer.style.position = "relative";
+    this.progressContainer.style.border = "1px solid #2c2c50";
+    this.progressContainer.style.height = "15px";
+    this.progressContainer.style.width = this.Ct + "px";
+    this.progressFillElement = createElement("div", this.progressContainer, null, null);
     this.progressFillElement.style.position = "absolute";
     this.progressFillElement.style.top = "0";
     this.progressFillElement.style.left = "0";
     this.progressFillElement.style.backgroundColor = "#F00";
     this.progressFillElement.style.height = "15px";
     this.progressFillElement.style.width = "0px";
-    this.progressTextElement = createElement("div", this.cj, null, null);
+    this.progressTextElement = createElement("div", this.progressContainer, null, null);
     this.progressTextElement.style.position = "absolute";
     this.progressTextElement.style.textAlign = "center";
     this.progressTextElement.style.top = "0";
@@ -254,8 +254,8 @@ export function initializeViewsDungeons() {
       l = this.dungeon;
       l = l.cleared ? 0 : Math.max(0, Math.min(100, 100 * (game.state.turnNumber - l.farmStartTurn) / 1200 | 0));
       a = a && (f || b);
-      if (this.ui !== this.dungeon) {
-        this.ui = this.dungeon;
+      if (this.selectedDungeon !== this.dungeon) {
+        this.selectedDungeon = this.dungeon;
         f = game.terrainSprites.getSprite(this.dungeon.Fo);
         this.wr.style.background = "url('spritesheet/terrain.png') -" + f.sourceX + "px -" + f.sourceY + "px";
       }
@@ -273,9 +273,9 @@ export function initializeViewsDungeons() {
       }
       if (this.Bt !== a) {
         if (this.Bt = a) {
-          showElement(this.cj);
+          showElement(this.progressContainer);
         } else {
-          hideElement(this.cj);
+          hideElement(this.progressContainer);
         }
       }
       if (a) {

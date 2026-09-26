@@ -85,7 +85,7 @@ export function CharacterSummaryView(a, b) {
   this.elementId = a;
   this.visible = true;
   this.adventurerIndex = b;
-  this.dD = this.xy = this.Jy = this.AB = this.hz = this.gz = this.ez = this.aj = this.Ap = this.pA = this.EB = this.Wz = this.bz = this.DB = this.Ij = this.rA = this.tableElement = null;
+  this.dD = this.xy = this.Jy = this.AB = this.hz = this.gz = this.ez = this.stunCountCell = this.Ap = this.pA = this.EB = this.Wz = this.bz = this.DB = this.Ij = this.rA = this.tableElement = null;
   this.zu = this.iv = this.Mu = this.Ov = this.Pu = this.Ou = this.Nu = this.Kk = this.Ik = this.Gk = this.Pv = this.$u = this.Lu = this.Jk = this.Zu = this.cachedLevel = -1;
 }
 export function StatBreakdownView(a, b, c, d) {
@@ -463,7 +463,7 @@ export function initializeViewsCharacter() {
     this.EB = appendAttributeRow(this.tableElement, "法力回复:", a++);
     this.pA = appendAttributeRow(this.tableElement, "杀死:", a++);
     this.Ap = appendAttributeRow(this.tableElement, "宠物杀死:", a++);
-    this.aj = appendAttributeRow(this.tableElement, "昏迷次数:", a++);
+    this.stunCountCell = appendAttributeRow(this.tableElement, "昏迷次数:", a++);
     this.ez = appendAttributeRow(this.tableElement, "输出伤害:", a++);
     this.gz = appendAttributeRow(this.tableElement, "受到伤害:", a++);
     this.hz = appendAttributeRow(this.tableElement, "伤害抵抗:", a++);
@@ -525,7 +525,7 @@ export function initializeViewsCharacter() {
     }
     if (this.Kk !== p) {
       this.Kk = p;
-      this.aj.innerHTML = formatAmount(p);
+      this.stunCountCell.innerHTML = formatAmount(p);
     }
     if (this.Nu !== s) {
       this.Nu = s;
