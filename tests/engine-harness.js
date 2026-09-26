@@ -185,6 +185,40 @@ window.harness = {
       attempted++;
     }
     return { attempted, snapshot: snapshot() };
+  },
+  // 渲染面观察（完全引擎无关，只看 DOM 画布）：不透明像素数。
+  // 用于证明真实绘制确实发生——存档差分看不见画布，而渲染异常会被 loop.js 的
+  // try/catch 吞成 console.log("Caught error. …")，所以这里配合 runner 侧的
+  // console 监听才有意义。
+  canvasInk() {
+    let ink = 0;
+    let spriteInk = 0;
+    let pixelsHash = 0;
+    const canvases = [...document.querySelectorAll('canvas')];
+    for (const canvas of canvases) {
+      try {
+        const context = canvas.getContext('2d');
+        const data = context.getImageData(0, 0, canvas.width, canvas.height).data;
+        const base = [data[0], data[1], data[2], data[3]];
+        let painted = 0;
+        let aboveBackground = 0;
+        let hash = 2166136261;
+        for (let i = 0; i < data.length; i += 4) {
+          if (data[i + 3] !== 0) painted++;
+          if (data[i] !== base[0] || data[i + 1] !== base[1] || data[i + 2] !== base[2] || data[i + 3] !== base[3]) aboveBackground++;
+          // 位置敏感的像素指纹：同一像素序列在两版必须得到同一个数（FNV-1a 逐字节）
+          for (const channel of [data[i], data[i + 1], data[i + 2], data[i + 3]]) {
+            hash = Math.imul(hash ^ channel, 16777619) >>> 0;
+          }
+        }
+        ink += painted;
+        spriteInk += aboveBackground;
+        pixelsHash = (Math.imul(pixelsHash ^ hash, 16777619) + canvas.width * 31 + canvas.height * 17) >>> 0;
+      } catch {
+        // 无 2d 上下文或被污染的画布：不计入
+      }
+    }
+    return { ink, nonBackgroundInk: spriteInk, pixelsHash, canvasCount: canvases.length };
   }
 };
 

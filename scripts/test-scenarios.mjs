@@ -29,6 +29,16 @@ const upgradedSomething = (s) => {
 const potionWasUsed = (s) => ({ potionUsed: (s.statistics?.potionsUsed ?? 0) > 0 });
 const scenarios = [
   {
+    name: 'rendered-scene',
+    // 渲染面差分：400 帧真实帧循环（含 view.render），断言两端都真的画出像素，
+    // 再照常比较完整存档；渲染异常由 console 捕获通道兜住。
+    make: () => base,
+    steps: [
+      { frames: 400 },
+      { turns: 300 },
+    ],
+  },
+  {
     name: 'long-run-9000',
     make: () => base,
     steps: [[3000, null], [3000, null], [3000, null]],
@@ -268,6 +278,13 @@ try {
     const page = await browser.newPage();
     const errors = [];
     page.on('pageerror', error => errors.push(error.stack));
+    // loop.js 把渲染异常吞成 console.log("Caught error. …")，只听 pageerror 会漏掉整条渲染路径
+    page.on('console', message => {
+      const text = message.text();
+      const url = (message.location() || {}).url || '';
+      if (url.endsWith('/favicon.ico')) return; // 浏览器自发请求，与引擎无关
+      if (message.type() === 'error' || text.startsWith('Caught error')) errors.push(`[console] ${text}`);
+    });
     await page.goto(`${baseURL}/tests/engine-harness.html${original ? '?original' : ''}`);
     await page.waitForFunction(() => Boolean(window.harness), null, { timeout: 10000, polling: 100 });
     return { page, original, errors };
@@ -328,7 +345,7 @@ try {
         // effectType 表示这一步改用"逐帧扫描活怪物效果队列"的推进方式，并直接对账施加次数。
         // purchaseUpgrades 表示这一步先推进再驱动升级购买（U7：只有视图层会触发的路径）。
         const step = Array.isArray(rawStep) ? { turns: rawStep[0], check: rawStep[1] } : rawStep;
-        const { turns, check, effectType, purchaseUpgrades, activatePotions } = step;
+        const { turns, check, effectType, purchaseUpgrades, activatePotions, frames } = step;
         const results = await Promise.all(pages.map(async p => {
           await p.page.evaluate(ms => window.harness.setTime(ms), HARNESS_FIXED_NOW);
           // 重置后无队伍：走真实帧循环（守卫路径），而非裸推进
@@ -336,6 +353,8 @@ try {
           if (effectType !== undefined) return p.page.evaluate(a => window.harness.countEffectApplications(a.turns, a.effectType), { turns, effectType });
           if (purchaseUpgrades !== undefined) return p.page.evaluate(a => window.harness.purchaseUpgrades(a), { turns, limit: purchaseUpgrades });
           if (activatePotions !== undefined) return p.page.evaluate(a => window.harness.activatePotions(a), { turns, limit: activatePotions });
+          // frames：走真实帧循环（loop.tick 内含 view.render 的 try/catch），随后读画布不透明像素
+          if (frames !== undefined) return p.page.evaluate(n => ({ snapshot: window.harness.idle(n), ink: window.harness.canvasInk() }), frames);
           return { snapshot: await p.page.evaluate(turns => window.harness.advance(turns), turns) };
         }));
         const states = results.map(r => r.snapshot);
@@ -366,6 +385,14 @@ try {
           }
           assert.equal(counts[1], counts[0], `两端完成的购买次数不一致（原版 ${counts[0]} / 重构版 ${counts[1]}）`);
           console.log(`  · 两端各自完成升级购买 ${counts[0]} 次`);
+        }
+        if (frames !== undefined) {
+          const inks = results.map(r => r.ink);
+          for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {
+            assert.ok(inks[i].nonBackgroundInk > 0, `${label} 端经过 ${frames} 帧真实渲染后画布上没有任何精灵像素（不透明像素 ${inks[i].ink}，与背景同色说明只填了底色）`);
+          }
+          assert.equal(inks[1].pixelsHash, inks[0].pixelsHash, `两端渲染输出逐像素指纹不一致（原版 ${inks[0].pixelsHash} / 重构版 ${inks[1].pixelsHash}）`);
+          console.log(`  · 渲染后画布：非背景像素 两端各 ${inks[0].nonBackgroundInk}，逐像素指纹相同 = ${inks[0].pixelsHash}（画布数 ${inks[0].canvasCount}）`);
         }
         if (activatePotions !== undefined) {
           const attempts = results.map(r => r.attempted);
