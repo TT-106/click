@@ -103,10 +103,10 @@
 
 - 经验教训（已入 facts#20 扩展）：**重命名跨文件字段时，"读点全集"必须包含工厂函数/工具函数内按多态入参的访问**；Babel 静态 grep 对 `a.Da`（a 的类型随调用方变化）天然失真，应配运行时类型断言。
 
-## U2 — 外部自动化脚本（c2c.user.js）DOM 契约未实测
+## U2 — ✅ 已关闭：c2c.user.js DOM 契约实测通过（2026-09-26）
 
 - `archive/original/c2c.user.js` 依赖的 DOM 结构已随 legacy-dom.html 保留，但未实际运行该脚本验证。
-- 下一步：在浏览器 E2E 中加载 userscript 模拟其核心选择器读取。
+- 关闭方式：test-browser.mjs 新增断言——#encounterNotificationPanel、#treasureChestLootButtonPanel、#scrollButtonCell0、#potionButton_Row0_Col0、.potionContentContainer、.gameTabLootButtonPanel 在活动 DOM 存在；bossEncounterNotificationDiv/potionButtonActive 类名切换保留于 expedition.js（.lootButton 为遭遇期动态类，dungeons.js:176 确认）。
 
 ## U3 — 长时 wall-clock soak 未跑
 
