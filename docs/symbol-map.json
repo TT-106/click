@@ -7600,7 +7600,9 @@
     "Ec": "opened",
     "zc": "isDirectional",
     "Ac": "doorSprites",
-    "Wb": "targetDungeon"
+    "Wb": "targetDungeon",
+    "Oc": "isDisplayable",
+    "Rc": "attachUpgrade"
   },
   "gameFields": {
     "B": "tileSize",

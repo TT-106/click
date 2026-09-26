@@ -228,54 +228,6 @@
     ]
   },
   {
-    "name": "Oc",
-    "reads": 5,
-    "writes": 16,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:259",
-        "code": "Upgrade.prototype.Oc"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:306",
-        "code": "PurchaseItemUpgrade.prototype.Oc"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:370",
-        "code": "GlobalUpgrade.prototype.Oc"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\progression\\upgrades.js",
-      "src\\engine\\modules\\views\\upgrade-details.js"
-    ]
-  },
-  {
-    "name": "Qc",
-    "reads": 2,
-    "writes": 19,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:294",
-        "code": "Upgrade.prototype.Qc"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:324",
-        "code": "PurchaseItemUpgrade.prototype.Qc"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:376",
-        "code": "GlobalUpgrade.prototype.Qc"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\progression\\upgrades.js",
-      "src\\engine\\modules\\views\\upgrade-details.js"
-    ]
-  },
-  {
     "name": "Uc",
     "reads": 18,
     "writes": 3,
@@ -321,30 +273,6 @@
     "files": [
       "src\\engine\\modules\\views\\achievements.js",
       "src\\engine\\modules\\views\\character.js"
-    ]
-  },
-  {
-    "name": "Rc",
-    "reads": 4,
-    "writes": 17,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:187",
-        "code": "this.upgradeButton.Rc"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\upgrade-details.js:243",
-        "code": "UpgradeButtonView.prototype.Rc"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\upgrade-details.js:246",
-        "code": "this.Ag.Rc"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\views\\dungeons.js",
-      "src\\engine\\modules\\views\\upgrade-details.js"
     ]
   },
   {

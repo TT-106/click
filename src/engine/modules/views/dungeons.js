@@ -184,7 +184,7 @@ export function initializeViewsDungeons() {
     var b = !this.dungeon;
     this.dungeon = a;
     /** @type {{ct: (dungeon: unknown) => void}} */ (/** @type {unknown} */ (this.yr)).ct(this.dungeon);
-    this.upgradeButton.Rc(this.yr);
+    this.upgradeButton.attachUpgrade(this.yr);
     this.mw = this.pu = -1;
     this.Gu = this.Bk = this.Qv = "";
     if (b) {

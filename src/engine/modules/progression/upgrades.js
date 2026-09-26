@@ -17,7 +17,7 @@ import { purchaseDungeonFarm } from "../simulation/tick.js";
 import { updateScrollAccuracy } from "../characters/stats.js";
 import { applyAchievementReward, getAchievementRequirementLabel, getAchievementRewardLabel } from "./achievements.js";
 /** @typedef {{ canPurchaseNow: () => boolean, lastChangeFrame: number }} SortableUpgrade */
-/** @typedef {{ getCost: () => number, Oc: () => boolean, hu: () => boolean, uw: () => Spell, getTitle: () => string, vf: () => import("../combat/scrolls.js").Scroll, Wp: { He: () => boolean } | null }} UpgradeMethods */
+/** @typedef {{ getCost: () => number, isDisplayable: () => boolean, hu: () => boolean, uw: () => Spell, getTitle: () => string, vf: () => import("../combat/scrolls.js").Scroll, Wp: { He: () => boolean } | null }} UpgradeMethods */
 export var SKILL_UPGRADE_TYPE;
 export function Upgrade() {
   this.lastAvailabilityFrame = -100;
@@ -256,7 +256,7 @@ export function CollectFarmUpgrade() {
 export function initializeProgressionUpgrades() {
   SKILL_UPGRADE_TYPE = 5;
   Upgrade.prototype.sx = function () {};
-  Upgrade.prototype.Oc = function () {
+  Upgrade.prototype.isDisplayable = function () {
     return true;
   };
   Upgrade.prototype.canPurchaseNow = function () {
@@ -291,7 +291,7 @@ export function initializeProgressionUpgrades() {
     return null;
   };
   Upgrade.prototype.us = function () {};
-  Upgrade.prototype.Qc = function () {};
+  Upgrade.prototype.purchase = function () {};
   Upgrade.prototype.getDescription = function () {};
   Upgrade.prototype.Oz = function () {
     return null;
@@ -303,7 +303,7 @@ export function initializeProgressionUpgrades() {
     return false;
   };
   PurchaseItemUpgrade.prototype = new Upgrade();
-  PurchaseItemUpgrade.prototype.Oc = function () {
+  PurchaseItemUpgrade.prototype.isDisplayable = function () {
     return this.canPurchase || this.affordableSoon;
   };
   PurchaseItemUpgrade.prototype.canPurchaseNow = function () {
@@ -321,7 +321,7 @@ export function initializeProgressionUpgrades() {
   PurchaseItemUpgrade.prototype.getUpgradeType = function () {
     return 13;
   };
-  PurchaseItemUpgrade.prototype.Qc = function () {
+  PurchaseItemUpgrade.prototype.purchase = function () {
     if (this.castle) {
       recordGameEvent("Castle", "计划攻击:" + this.castle.castleName);
       this.castle.ye = true;
@@ -367,13 +367,13 @@ export function initializeProgressionUpgrades() {
   GlobalUpgrade.prototype.getUpgradeType = function () {
     return 1;
   };
-  GlobalUpgrade.prototype.Oc = function () {
+  GlobalUpgrade.prototype.isDisplayable = function () {
     return this.canPurchase || this.affordableSoon;
   };
   GlobalUpgrade.prototype.canPurchaseNow = function () {
     return this.canPurchase;
   };
-  GlobalUpgrade.prototype.Qc = function () {
+  GlobalUpgrade.prototype.purchase = function () {
     if (!(this.definition.rd > game.state.party.kills)) {
       spendKills(game.state.party, this.definition.rd);
       this.definition.purchasedLevels++;
@@ -396,7 +396,7 @@ export function initializeProgressionUpgrades() {
       this.canPurchase = this.definition.rd <= game.state.party.kills;
       this.affordableSoon = !this.canPurchase && (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).hu();
     }
-    var a = (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).Oc(),
+    var a = (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).isDisplayable(),
       b = this.$A !== this.definition.purchasedLevels || this.cachedCanPurchase !== this.canPurchase || this.Zj !== this.affordableSoon || this.$j !== a;
     this.$A = this.definition.purchasedLevels;
     this.cachedCanPurchase = this.canPurchase;
@@ -428,7 +428,7 @@ export function initializeProgressionUpgrades() {
   EquipBestItemUpgrade.prototype.getDescription = function () {
     return this.descriptionLabel;
   };
-  EquipBestItemUpgrade.prototype.Qc = function () {
+  EquipBestItemUpgrade.prototype.purchase = function () {
     var a = game.inventories,
       b;
     for (b = 0; b < game.state.adventurers.length; b++) {
@@ -436,7 +436,7 @@ export function initializeProgressionUpgrades() {
     }
     markUpgradeChanged(this);
   };
-  EquipBestItemUpgrade.prototype.Oc = function () {
+  EquipBestItemUpgrade.prototype.isDisplayable = function () {
     return this.vh;
   };
   EquipBestItemUpgrade.prototype.canPurchaseNow = function () {
@@ -487,14 +487,14 @@ export function initializeProgressionUpgrades() {
   EquipItemUpgrade.prototype.getDescription = function () {
     return this.descriptionLabel;
   };
-  EquipItemUpgrade.prototype.Qc = function () {
+  EquipItemUpgrade.prototype.purchase = function () {
     var a = this.item.nj;
     if (a) {
       a.Qk(this.item);
       markUpgradeChanged(this);
     }
   };
-  EquipItemUpgrade.prototype.Oc = function () {
+  EquipItemUpgrade.prototype.isDisplayable = function () {
     return this.vh;
   };
   EquipItemUpgrade.prototype.canPurchaseNow = function () {
@@ -529,7 +529,7 @@ export function initializeProgressionUpgrades() {
   LevelUpUpgrade.prototype.getDescription = function () {
     return this.descriptionLabel;
   };
-  LevelUpUpgrade.prototype.Qc = function () {
+  LevelUpUpgrade.prototype.purchase = function () {
     if (!(this.adventurerIndex >= game.state.adventurers.length)) {
       this.canPurchase = false;
       var a = game.state.adventurers[this.adventurerIndex],
@@ -581,7 +581,7 @@ export function initializeProgressionUpgrades() {
     a = b - a;
     return 300 >= a ? true : a <= 0.2 * b;
   };
-  LevelUpUpgrade.prototype.Oc = function () {
+  LevelUpUpgrade.prototype.isDisplayable = function () {
     return this.canPurchase || this.affordableSoon;
   };
   LevelUpUpgrade.prototype.getCost = function () {
@@ -635,7 +635,7 @@ export function initializeProgressionUpgrades() {
   UnlockMonsterLevelUpgrade.prototype.getDescription = function () {
     return "";
   };
-  UnlockMonsterLevelUpgrade.prototype.Qc = function () {
+  UnlockMonsterLevelUpgrade.prototype.purchase = function () {
     if (this.canPurchase) {
       spendKills(game.state.party, (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).getCost());
       var a = game.monsterCatalog;
@@ -645,7 +645,7 @@ export function initializeProgressionUpgrades() {
       recordGameEvent("Monster Level", "解锁等级" + this.qe);
     }
   };
-  UnlockMonsterLevelUpgrade.prototype.Oc = function () {
+  UnlockMonsterLevelUpgrade.prototype.isDisplayable = function () {
     return true;
   };
   UnlockMonsterLevelUpgrade.prototype.getCost = function () {
@@ -699,7 +699,7 @@ export function initializeProgressionUpgrades() {
   RetireMonsterLevelUpgrade.prototype.getDescription = function () {
     return "";
   };
-  RetireMonsterLevelUpgrade.prototype.Qc = function () {
+  RetireMonsterLevelUpgrade.prototype.purchase = function () {
     if (this.canPurchase) {
       spendKills(game.state.party, (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).getCost());
       var a = this.Yd,
@@ -723,7 +723,7 @@ export function initializeProgressionUpgrades() {
       recordGameEvent("Monster Level", "退休等级" + this.Yd);
     }
   };
-  RetireMonsterLevelUpgrade.prototype.Oc = function () {
+  RetireMonsterLevelUpgrade.prototype.isDisplayable = function () {
     return this.canPurchase || this.affordableSoon;
   };
   RetireMonsterLevelUpgrade.prototype.getCost = function () {
@@ -781,13 +781,13 @@ export function initializeProgressionUpgrades() {
   CharacterSkillUpgrade.prototype.getUpgradeType = function () {
     return SKILL_UPGRADE_TYPE;
   };
-  CharacterSkillUpgrade.prototype.Oc = function () {
+  CharacterSkillUpgrade.prototype.isDisplayable = function () {
     return true;
   };
   CharacterSkillUpgrade.prototype.canPurchaseNow = function () {
     return this.canPurchase;
   };
-  CharacterSkillUpgrade.prototype.Qc = function () {
+  CharacterSkillUpgrade.prototype.purchase = function () {
     if (!this.purchased) {
       if (!this.character) {
         console.log("error: adventurer not assigned to skill upgrade");
@@ -853,13 +853,13 @@ export function initializeProgressionUpgrades() {
   LearnSpellUpgrade.prototype.getUpgradeType = function () {
     return 6;
   };
-  LearnSpellUpgrade.prototype.Oc = function () {
+  LearnSpellUpgrade.prototype.isDisplayable = function () {
     return true;
   };
   LearnSpellUpgrade.prototype.canPurchaseNow = function () {
     return this.canPurchase;
   };
-  LearnSpellUpgrade.prototype.Qc = function () {
+  LearnSpellUpgrade.prototype.purchase = function () {
     if (!this.purchased) {
       if (this.character) {
         var a = this.character.initialSpellSkillPoint;
@@ -902,7 +902,7 @@ export function initializeProgressionUpgrades() {
   PurchaseDungeonUpgrade.prototype.ct = function (a) {
     this.dungeon = a;
   };
-  PurchaseDungeonUpgrade.prototype.Oc = function () {
+  PurchaseDungeonUpgrade.prototype.isDisplayable = function () {
     return this.canPurchase || this.affordableSoon;
   };
   PurchaseDungeonUpgrade.prototype.canPurchaseNow = function () {
@@ -931,7 +931,7 @@ export function initializeProgressionUpgrades() {
   PurchaseDungeonUpgrade.prototype.getCost = function () {
     return this.dungeon ? floorNumber(this.dungeon.farmCost * dungeonCostBonus.currentValue) : 0;
   };
-  PurchaseDungeonUpgrade.prototype.Qc = function () {
+  PurchaseDungeonUpgrade.prototype.purchase = function () {
     if (!(game.state.party.gold < (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).getCost())) {
       purchaseDungeonFarm(this.dungeon, (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).getCost());
       markUpgradeChanged(this);
@@ -941,7 +941,7 @@ export function initializeProgressionUpgrades() {
     var a = canFarmDungeon(this.dungeon);
     this.canPurchase = a && game.state.party.gold >= (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).getCost();
     this.affordableSoon = a && !this.canPurchase && 120 > (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).getCost() - game.state.party.gold;
-    a = (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).Oc();
+    a = (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).isDisplayable();
     var b = this.cachedCanPurchase !== this.canPurchase || this.Zj !== this.affordableSoon || this.$j !== a;
     this.cachedCanPurchase = this.canPurchase;
     this.Zj = this.affordableSoon;
@@ -952,7 +952,7 @@ export function initializeProgressionUpgrades() {
   PurchaseCastleUpgrade.prototype.Wo = function () {
     return this.dungeon;
   };
-  PurchaseCastleUpgrade.prototype.Oc = function () {
+  PurchaseCastleUpgrade.prototype.isDisplayable = function () {
     return this.canPurchase || this.affordableSoon;
   };
   PurchaseCastleUpgrade.prototype.canPurchaseNow = function () {
@@ -973,7 +973,7 @@ export function initializeProgressionUpgrades() {
   PurchaseCastleUpgrade.prototype.getCost = function () {
     return this.dungeon ? floorNumber(this.dungeon.farmCost * dungeonCostBonus.currentValue) : 0;
   };
-  PurchaseCastleUpgrade.prototype.Qc = function () {
+  PurchaseCastleUpgrade.prototype.purchase = function () {
     if (!(!this.dungeon || game.state.party.gold < (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).getCost())) {
       this.canPurchase = false;
       purchaseDungeonFarm(this.dungeon, (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).getCost());
@@ -993,7 +993,7 @@ export function initializeProgressionUpgrades() {
     } else {
       this.affordableSoon = this.canPurchase = false;
     }
-    var b = (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).Oc(),
+    var b = (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).isDisplayable(),
       c = this.dungeon != a || this.cachedCanPurchase != this.canPurchase || this.Zj != this.affordableSoon || this.$j != b;
     this.dungeon = a;
     this.cachedCanPurchase = this.canPurchase;
@@ -1002,7 +1002,7 @@ export function initializeProgressionUpgrades() {
     return c;
   };
   AutoPurchaseDungeonUpgrade.prototype = new Upgrade();
-  AutoPurchaseDungeonUpgrade.prototype.Oc = function () {
+  AutoPurchaseDungeonUpgrade.prototype.isDisplayable = function () {
     return this.canPurchase;
   };
   AutoPurchaseDungeonUpgrade.prototype.canPurchaseNow = function () {
@@ -1017,7 +1017,7 @@ export function initializeProgressionUpgrades() {
   AutoPurchaseDungeonUpgrade.prototype.getUpgradeType = function () {
     return 9;
   };
-  AutoPurchaseDungeonUpgrade.prototype.Qc = function () {
+  AutoPurchaseDungeonUpgrade.prototype.purchase = function () {
     recordGameEvent("Dungeon", "农场已收获");
     var a = game.dungeons.Sd;
     game.state.statisticsRecorder.recordFarmHarvest(a);
@@ -1058,13 +1058,13 @@ export function initializeProgressionUpgrades() {
   ScrollUpgrade.prototype.getUpgradeType = function () {
     return 12;
   };
-  ScrollUpgrade.prototype.Oc = function () {
+  ScrollUpgrade.prototype.isDisplayable = function () {
     return this.canPurchase || this.affordableSoon;
   };
   ScrollUpgrade.prototype.canPurchaseNow = function () {
     return this.canPurchase;
   };
-  ScrollUpgrade.prototype.Qc = function () {
+  ScrollUpgrade.prototype.purchase = function () {
     var a = (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).vf(),
       b = a.rn;
     if (!(game.state.party.gold < b)) {
@@ -1120,13 +1120,13 @@ export function initializeProgressionUpgrades() {
   ClaimAchievementUpgrade.prototype.getUpgradeType = function () {
     return 14;
   };
-  ClaimAchievementUpgrade.prototype.Oc = function () {
+  ClaimAchievementUpgrade.prototype.isDisplayable = function () {
     return this.canPurchase;
   };
   ClaimAchievementUpgrade.prototype.canPurchaseNow = function () {
     return this.canPurchase;
   };
-  ClaimAchievementUpgrade.prototype.Qc = function () {
+  ClaimAchievementUpgrade.prototype.purchase = function () {
     if (this.achievement) {
       applyAchievementReward(this.achievement);
       this.achievement = null;
@@ -1164,7 +1164,7 @@ export function initializeProgressionUpgrades() {
   AchievementUpgrade.prototype.canPurchaseNow = function () {
     return this.canPurchase;
   };
-  AchievementUpgrade.prototype.Qc = function () {
+  AchievementUpgrade.prototype.purchase = function () {
     applyAchievementReward(this.achievement);
     this.canPurchase = false;
     markUpgradeChanged(this);
@@ -1206,7 +1206,7 @@ export function initializeProgressionUpgrades() {
   AdventurePointUpgrade.prototype.canPurchaseNow = function () {
     return this.canPurchase;
   };
-  AdventurePointUpgrade.prototype.Qc = function () {
+  AdventurePointUpgrade.prototype.purchase = function () {
     if (!(this.purchased || this.kh.pointCost > game.state.ae.Dd)) {
       var a = this.kh.pointCost,
         b = game.state.ae;
@@ -1235,7 +1235,7 @@ export function initializeProgressionUpgrades() {
     return a;
   };
   CollectFarmUpgrade.prototype = new Upgrade();
-  CollectFarmUpgrade.prototype.Oc = function () {
+  CollectFarmUpgrade.prototype.isDisplayable = function () {
     return this.canPurchase;
   };
   CollectFarmUpgrade.prototype.canPurchaseNow = function () {
@@ -1250,7 +1250,7 @@ export function initializeProgressionUpgrades() {
   CollectFarmUpgrade.prototype.getUpgradeType = function () {
     return 10;
   };
-  CollectFarmUpgrade.prototype.Qc = function () {
+  CollectFarmUpgrade.prototype.purchase = function () {
     recordGameEvent("Shop", "Gold Collected");
     var a = game.shops.ni;
     addGold(a);

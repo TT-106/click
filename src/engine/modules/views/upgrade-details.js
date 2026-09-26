@@ -13,7 +13,7 @@ import { getMonsterTypesForLevel } from "../combat/encounters.js";
 import { getPartyMinLevel } from "../characters/party.js";
 import { statValue } from "../characters/stats.js";
 /** @typedef {{ createDomElements: () => void }} DomDetails */
-/** @typedef {{ reset: () => void, render: () => void, Rc: (upgrade: unknown) => void }} ActiveUpgradeButton */
+/** @typedef {{ reset: () => void, render: () => void, attachUpgrade: (upgrade: unknown) => void }} ActiveUpgradeButton */
 export function UpgradeButtonView(a, b, c, d) {
   this.elementId = a + "_" + c;
   this.visible = true;
@@ -29,7 +29,7 @@ export function mountUpgradeButton(a) {
   a.ti = a.Ro();
   a.buttonElement = createElement("div", b, a.elementId, a.ti);
   a.buttonElement.onmouseup = function () {
-    a.Qc();
+    a.onPurchaseClicked();
     return false;
   };
 }
@@ -240,19 +240,19 @@ export function getRarityClass(a) {
 }
 export function initializeViewsUpgradeDetails() {
   UpgradeButtonView.prototype = new View();
-  UpgradeButtonView.prototype.Rc = function (a) {
+  UpgradeButtonView.prototype.attachUpgrade = function (a) {
     this.upgrade = a;
     if (this.Ag) {
-      this.Ag.Rc(a);
+      this.Ag.attachUpgrade(a);
     }
-    if (!(this.GC || this.upgrade.Oc())) {
+    if (!(this.GC || this.upgrade.isDisplayable())) {
       if (this.buttonElement) {
         hideElement(this.buttonElement);
       }
     }
   };
   UpgradeButtonView.prototype.isVisible = function () {
-    return this.GC ? true : this.upgrade && this.upgrade.Oc();
+    return this.GC ? true : this.upgrade && this.upgrade.isDisplayable();
   };
   UpgradeButtonView.prototype.reset = function () {
     if (getElement(this.QA)) {
@@ -261,9 +261,9 @@ export function initializeViewsUpgradeDetails() {
       this.zo = this.Ag = null;
     }
   };
-  UpgradeButtonView.prototype.Qc = function () {
+  UpgradeButtonView.prototype.onPurchaseClicked = function () {
     if (this.upgrade.canPurchaseNow()) {
-      this.upgrade.Qc();
+      this.upgrade.purchase();
     }
   };
   UpgradeButtonView.prototype.update = function () {
@@ -303,7 +303,7 @@ export function initializeViewsUpgradeDetails() {
     this.cachedCostValue = -1;
     this.cachedTitleText = this.cachedDescriptionText = null;
   };
-  ItemPurchaseDetails.prototype.Rc = function (a) {
+  ItemPurchaseDetails.prototype.attachUpgrade = function (a) {
     this.upgrade = a;
   };
   ItemPurchaseDetails.prototype.te = function () {
@@ -384,7 +384,7 @@ export function initializeViewsUpgradeDetails() {
     this.Iu = null;
     this.Ju = -1;
   };
-  EquipmentDetails.prototype.Rc = function (a) {
+  EquipmentDetails.prototype.attachUpgrade = function (a) {
     this.upgrade = a;
   };
   EquipmentDetails.prototype.te = function () {
@@ -454,7 +454,7 @@ export function initializeViewsUpgradeDetails() {
   GlobalUpgradeDetails.prototype.reset = function () {
     this.cv = null;
   };
-  GlobalUpgradeDetails.prototype.Rc = function (a) {
+  GlobalUpgradeDetails.prototype.attachUpgrade = function (a) {
     this.upgrade = a;
   };
   GlobalUpgradeDetails.prototype.te = function () {
@@ -528,7 +528,7 @@ export function initializeViewsUpgradeDetails() {
   AutoDungeonDetails.prototype.reset = function () {
     this.cachedTitleText = this.cachedDescriptionText = "";
   };
-  AutoDungeonDetails.prototype.Rc = function (a) {
+  AutoDungeonDetails.prototype.attachUpgrade = function (a) {
     this.upgrade = a;
   };
   AutoDungeonDetails.prototype.te = function () {
@@ -583,7 +583,7 @@ export function initializeViewsUpgradeDetails() {
   EquipmentSetDetails.prototype.reset = function () {
     this.sr.length = 0;
   };
-  EquipmentSetDetails.prototype.Rc = function (a) {
+  EquipmentSetDetails.prototype.attachUpgrade = function (a) {
     this.upgrade = a;
   };
   EquipmentSetDetails.prototype.te = function () {
@@ -631,7 +631,7 @@ export function initializeViewsUpgradeDetails() {
   SkillUpgradeDetails.prototype.reset = function () {
     this.cachedTitleText = this.cachedDescriptionText = null;
   };
-  SkillUpgradeDetails.prototype.Rc = function (a) {
+  SkillUpgradeDetails.prototype.attachUpgrade = function (a) {
     this.upgrade = a;
   };
   SkillUpgradeDetails.prototype.te = function () {
@@ -686,7 +686,7 @@ export function initializeViewsUpgradeDetails() {
   SpellUpgradeDetails.prototype.reset = function () {
     this.Lv = null;
   };
-  SpellUpgradeDetails.prototype.Rc = function (a) {
+  SpellUpgradeDetails.prototype.attachUpgrade = function (a) {
     this.upgrade = a;
   };
   SpellUpgradeDetails.prototype.te = function () {
@@ -765,7 +765,7 @@ export function initializeViewsUpgradeDetails() {
     this.cachedCostValue = -1;
     this.cachedTitleText = this.cachedDescriptionText = null;
   };
-  MonsterLevelDetails.prototype.Rc = function (a) {
+  MonsterLevelDetails.prototype.attachUpgrade = function (a) {
     this.upgrade = a;
   };
   MonsterLevelDetails.prototype.te = function () {
@@ -846,7 +846,7 @@ export function initializeViewsUpgradeDetails() {
     this.cachedCostValue = -1;
     this.ui = null;
   };
-  DungeonPurchaseDetails.prototype.Rc = function (a) {
+  DungeonPurchaseDetails.prototype.attachUpgrade = function (a) {
     this.upgrade = a;
   };
   DungeonPurchaseDetails.prototype.te = function () {
@@ -914,7 +914,7 @@ export function initializeViewsUpgradeDetails() {
     this.cachedCostValue = -1;
     this.tm = null;
   };
-  ScrollUpgradeDetails.prototype.Rc = function (a) {
+  ScrollUpgradeDetails.prototype.attachUpgrade = function (a) {
     this.upgrade = a;
   };
   ScrollUpgradeDetails.prototype.te = function () {
@@ -990,7 +990,7 @@ export function initializeViewsUpgradeDetails() {
   CastlePurchaseDetails.prototype.reset = function () {
     this.Gk = -1;
   };
-  CastlePurchaseDetails.prototype.Rc = function (a) {
+  CastlePurchaseDetails.prototype.attachUpgrade = function (a) {
     this.upgrade = a;
   };
   CastlePurchaseDetails.prototype.te = function () {
@@ -1054,7 +1054,7 @@ export function initializeViewsUpgradeDetails() {
   FarmUpgradeDetails.prototype.reset = function () {
     this.Dk = -1;
   };
-  FarmUpgradeDetails.prototype.Rc = function (a) {
+  FarmUpgradeDetails.prototype.attachUpgrade = function (a) {
     this.upgrade = a;
   };
   FarmUpgradeDetails.prototype.te = function () {
@@ -1121,7 +1121,7 @@ export function initializeViewsUpgradeDetails() {
     this.vi = -1;
     this.cn = this.an = this.$m = this.bn = this.jr = this.hr = this.ir = this.gr = 0;
   };
-  CharacterLevelDetails.prototype.Rc = function (a) {
+  CharacterLevelDetails.prototype.attachUpgrade = function (a) {
     this.upgrade = a;
     this.cachedCostValue = -1;
     this.cachedTitleText = this.Bs = null;
@@ -1274,7 +1274,7 @@ export function initializeViewsUpgradeDetails() {
   AchievementClaimDetails.prototype.reset = function () {
     this.cachedTitleText = this.cachedDescriptionText = null;
   };
-  AchievementClaimDetails.prototype.Rc = function (a) {
+  AchievementClaimDetails.prototype.attachUpgrade = function (a) {
     this.upgrade = a;
   };
   AchievementClaimDetails.prototype.te = function () {
@@ -1316,7 +1316,7 @@ export function initializeViewsUpgradeDetails() {
   AchievementProgressDetails.prototype.reset = function () {
     this.cachedTitleText = this.cachedDescriptionText = null;
   };
-  AchievementProgressDetails.prototype.Rc = function (a) {
+  AchievementProgressDetails.prototype.attachUpgrade = function (a) {
     this.upgrade = a;
   };
   AchievementProgressDetails.prototype.te = function () {
@@ -1354,7 +1354,7 @@ export function initializeViewsUpgradeDetails() {
     this.cachedTitleText = this.cachedDescriptionText = null;
     this.cachedCostValue = -1;
   };
-  PointUpgradeDetails.prototype.Rc = function (a) {
+  PointUpgradeDetails.prototype.attachUpgrade = function (a) {
     this.upgrade = a;
   };
   PointUpgradeDetails.prototype.te = function () {
@@ -1402,7 +1402,7 @@ export function initializeViewsUpgradeDetails() {
     }
     var b = this.py.upgrades;
     for (a = 0; a < this.gj.length; a++) {
-      (/** @type {UpgradeButtonView & ActiveUpgradeButton} */ (/** @type {unknown} */ (this.gj[a]))).Rc(b[a]);
+      (/** @type {UpgradeButtonView & ActiveUpgradeButton} */ (/** @type {unknown} */ (this.gj[a]))).attachUpgrade(b[a]);
     }
     this.mj = -100;
   };
@@ -1413,7 +1413,7 @@ export function initializeViewsUpgradeDetails() {
       this.mj = a;
       var b = this.py.upgrades;
       for (a = 0; a < this.gj.length; a++) {
-        (/** @type {UpgradeButtonView & ActiveUpgradeButton} */ (/** @type {unknown} */ (this.gj[a]))).Rc(b[a]);
+        (/** @type {UpgradeButtonView & ActiveUpgradeButton} */ (/** @type {unknown} */ (this.gj[a]))).attachUpgrade(b[a]);
       }
     }
     for (a = 0; a < this.gj.length; a++) {

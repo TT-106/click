@@ -176,6 +176,18 @@ RunStatistics 的 `On/Lk/qn/Mj/wi/uk` → `turnCount/doorsOpened/roomsCleared/le
 
 回归：`check`（9 单测）/`typecheck`（0 错误）/`parity`（0/1/99/900 回合）/`test:scenarios`（30/30）/`test:e2e` 全绿；混淆属性清单自本轮会话开始（1,238 项，含 Potion 三元组与升级行四字段）降至 1,223 项，共 12 个字母在 `src` 内清零。
 
+## 第十一轮落地：升级族的三个虚方法（2026-09-26，全回归通过）
+
+| 原符号 | 新名 | 所有者 | 决定性证据 |
+|---|---|---|---|
+| `Oc` | `isDisplayable` | Upgrade 及 17 个子类 | 基类 `return true`，子类 `canPurchase \|\| affordableSoon`；`UpgradeButtonView.isVisible` 直接返回它，`attachUpgrade` 里为假时 `hideElement(buttonElement)` |
+| `Qc` | `purchase`（Upgrade 侧）/ `onPurchaseClicked`（按钮侧） | 双主，按所有者拆开 | `Upgrade.prototype.Qc` 基类空实现，子类里花钱/杀怪/加等级；`UpgradeButtonView.prototype.Qc` 只做 `if (this.upgrade.canPurchaseNow()) this.upgrade.Qc()`，且由 `buttonElement.onmouseup` 触发 |
+| `Rc` | `attachUpgrade` | UpgradeButtonView + 17 个 *Details 视图 | `this.upgrade = a;` 后转发给子视图 `this.Ag.Rc(a)`；`views/dungeons.js` 也在升级按钮上调用同一方法 |
+
+与 `Cb` 同样是双主字母：`Qc` 在 `progression/upgrades.js` 里是升级执行、在 `views/upgrade-details.js` 里是按钮点击处理，两处同名会误导，因此逐文件工具先统一改名为 `purchase`（21 处），再线级把按钮侧两处（`onmouseup` 调用点与 `UpgradeButtonView.prototype.purchase` 定义）改回 `onPurchaseClicked`。`Qc` 因此不写入 fields 段。
+
+同时补上 `test-browser.mjs` 的 c2c 外部 DOM 契约断言（U2 的真实落地）与 U7（UI 独占路径未进差分）记录；混淆属性清单 1,222 → 1,219。
+
 ## 重命名执行器 `scripts/rename-field.mjs`
 
 本批起改用手写守卫的执行器，用法 `node scripts/rename-field.mjs <old>=<new> <file...> --expect <total>`。写盘前强制四项校验：命中总数等于 `--expect`、行数不变、逐行缩进不变、字符串字面量多重集不变，任一失败整批不落盘。

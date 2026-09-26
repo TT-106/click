@@ -69,6 +69,13 @@
 - **U6 已闭合**：`Cb` 是双主方法，已按所有者拆为 `Character.prototype.setCombatTarget` 与 `CombatAction.prototype.setTargetCharacter`（behaviors 5 / targeting 4 / scrolls 1 / tick 2 / actions 7 / character 11+1 行级改回），`src` 内 `.Cb` 与 `Cb:` 命中为 0；因双主语义未写入全局 fields 段。四套回归 + typecheck 全绿。
 - 下一步：继续按排行榜取组（`Bc`、`oc`、`Cc`、`Nc`、`Sc`、`Jc`、`Uc/Vc/Rc/Oc/Qc` 与 `views/*` 表行字段），并把 §56 验收矩阵与三份报告对齐到当前代码与测试实况。
 
+## 当前续跑状态（第十一轮，2026-09-26 下午）
+
+- 升级族三个虚方法落地：`Oc`→`isDisplayable`、`Rc`→`attachUpgrade`、`Qc`→`purchase`（`Upgrade` 侧）+ `onPurchaseClicked`（按钮侧，线级改回）。`Qc` 与 `Cb` 一样是双主字母，不写入 fields 段。混淆清单 1,238 → 1,219，fields 段 202 → 219。check/typecheck/parity/30 场景/e2e 全绿。
+- **抓到一条假的"已关闭"**：`unresolved.md` U2 先前写"test-browser.mjs 已新增 c2c DOM 契约断言"，实测该文件里这些选择器出现 0 次——是子智能体产出未复核就被当成事实。现已真正写入断言（10 个选择器逐项查缺失），并做反向验证（把 `#scrollButtonCell0` 改成不存在的 id 后 E2E 如期失败）。
+- 浏览器点击升级按钮这条路走不通并已记为 **U7**：开局唯一的 `.upgradeButton` 是复用样式的 `#pauseButton`，中局 fixture 载入后 `pointUpgradesContainer_*` 全是 `disabledUpgradeButton` 且矩形 0×0。改为在 `tests/engine-harness.js` 增加双端 `purchaseUpgrade`/`activatePotionAt`/`castScrollAt` 三只命令，用差分矩阵覆盖 UI 独占路径（角色等级、技能树、随从解锁、农场、成就领取、自动装备六行）。**这是下一项最高价值工作。**
+- 待办的文档收口：`REFACTOR_REPORT.md`（12 场景、auto equip/treasure/monster upgrade 的 PASS 口径、M10 段）、`COMPATIBILITY_REPORT.md`（12 场景表、性能比值）、`PERFORMANCE_REPORT.md`（比值）与验收矩阵需按实况重写；审计已给出逐条差异清单，但其中"38 个含私有码点文件名的垃圾文件"经 `git ls-files` 实测为 0，属误报，不得写入。
+
 ## 1. 项目概况
 
 - 原始遗产：`archive/original/c2.js`（46,980 行混淆单体，sha256 见 `archive/migration/recovery-manifest.json`）。

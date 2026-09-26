@@ -33,9 +33,30 @@ try {
     const panelId={heroes:'characterTabContent0',monsters:'monstersTabContent',dungeons:'dungeonsTabContent',castles:'castlesTabContent',points:'pointsTabContent'}[name];
     assert.equal(await page.locator('#'+panelId).isVisible(),true,`${name} 面板未显示`);
   }
+  // 外部自动化脚本 archive/original/c2c.user.js 依赖的 DOM 契约（U2）：
+  // 它只按这些 id/class 观察与点击游戏，改名或改结构就会静默失效。
+  await page.locator('#main-nav [data-page="points"]').click();
+  const missing = await page.evaluate(()=>{
+    const want = {
+      '#encounterNotificationPanel':'遭遇面板',
+      '#treasureChestLootButtonPanel':'宝箱拾取面板',
+      '.gameTabLootButtonPanel':'标签页拾取按钮容器',
+      '#adventurerEffectIconA0':'1 号位效果图标',
+      '#adventurerEffectIconB0':'2 号位效果图标',
+      '#potionButton_Row0_Col0':'药水槽 0',
+      '.potionContentContainer':'药水槽容器',
+      '#scrollButtonCell0':'卷轴槽 0',
+      '#pointUpgradesContainer_0_0_0':'冒险点升级按钮',
+      '[id^="characterSkillsContainer0_0_0_"]':'技能升级按钮',
+    };
+    return Object.entries(want).filter(([sel])=>document.querySelectorAll(sel).length===0).map(([, label])=>label);
+  });
+  assert.deepEqual(missing, [], 'c2c.user.js 依赖的外部 DOM 契约出现缺失');
+
   await page.locator('#header-settings').click();
   await page.locator('[data-option="effects"]').uncheck();
   await page.locator('[data-option="offline"]').uncheck();
+  assert.equal((await snapshot()).options.effects,false);
   assert.equal((await snapshot()).options.effects,false);
   await page.locator('#settings-save').click();
   await page.locator('#open-saves').click();
@@ -72,5 +93,5 @@ try {
   await page.keyboard.press('Space');
   assert.equal((await snapshot()).paused,false,'空格没有恢复冒险');
   assert.deepEqual(errors,[],'存在浏览器异常');
-  console.log('✓ 新建队伍、自动战斗、暂停、五类面板、设置、导出/导入、错误存档、刷新恢复、键盘与三种视口');
+  console.log('✓ 新建队伍、自动战斗、暂停、五类面板、c2c 外部 DOM 契约、设置、导出/导入、错误存档、刷新恢复、键盘与三种视口');
 } finally { await browser.close(); }
