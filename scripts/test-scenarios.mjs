@@ -633,6 +633,17 @@ const scenarios = [
     ],
   },
   {
+    name: 'rendered-scene-narrow',
+    // Canvas 多视口：700px 窄视口下 1300 帧真实帧循环（含 view.render），
+    // 逐像素 FNV 指纹与落盘存档断言同 rendered-scene；画布分辨率随视口变化，
+    // 两端仍须逐像素一致。与 E2E 的 1440/1024/375 三档 DOM 检查互补。
+    make: () => base,
+    viewport: { width: 700, height: 900 },
+    steps: [
+      { frames: 1300 },
+    ],
+  },
+  {
     name: 'autosave-payload',
     // 自动保存计时分支 + 落盘字节比对：两端跑同样的真实帧循环，比较写进 localStorage 的原文。
     make: () => base,
@@ -719,6 +730,10 @@ try {
   for (const scenario of selected) {
     const saveText = encodeSave(scenario.make());
     try {
+      // 多视口支持：场景声明 viewport 时在两端同时切换（渲染分辨率随视口变化）
+      if (scenario.viewport) {
+        await Promise.all(pages.map(p => p.page.setViewportSize(scenario.viewport)));
+      }
       // 两端载入同一变异存档（harness.load 内部重置随机种子，保证相同随机流起点）
       const loaded = await Promise.all(pages.map(p => p.page.evaluate(text => window.harness.load(text), saveText)));
       assert.deepEqual(loaded, [true, true], '两端都必须成功载入');
@@ -796,8 +811,15 @@ try {
           // frames：走真实帧循环（loop.tick 内含 view.render 的 try/catch），随后读画布不透明像素
           if (frames !== undefined) return p.page.evaluate(n => {
             localStorage.removeItem('C2_V1_001'); // 抹掉载入时的写入，剩下的只能是自动保存
+            // 把"距上次保存"拨回 310s：自动保存只在 now - lastSavedAt > 300s 时触发，
+            // 而 lastSavedAt 可能被载入时写入钉在场景序-dependent 的累积时钟上，
+            // 导致 325s 的帧窗口是否跨过 300s 阈值取决于场景顺序。回拨后每次 frames
+            // 场景都确定性地覆盖自动保存分支（等价于"游戏已挂机 5 分钟未存盘"）。
+            window.harness.rewindAutosaveTimer();
             const snapshot = window.harness.idle(n);
-            return { snapshot, ink: window.harness.canvasInk(), savedAfter: localStorage.getItem('C2_V1_001') };
+            const savedAfter = localStorage.getItem('C2_V1_001');
+            const diag = savedAfter ? null : window.harness.autosaveDiagnostics();
+            return { snapshot, ink: window.harness.canvasInk(), savedAfter, diag };
           }, frames);
           return { snapshot: await p.page.evaluate(turns => window.harness.advance(turns), turns) };
         }));
@@ -893,7 +915,7 @@ try {
           // 压缩原文本身不做逐字节比对——gameTimestamp 取真实挂钟，两端写入时刻不同；
           // 自动保存的“触发时机”同样不可比（见 unresolved U8）。
           for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {
-            assert.ok(typeof results[i].savedAfter === 'string' && results[i].savedAfter.length > 0, `${label} 端跑过 ${frames} 帧（${frames * 250 / 1000}s 模拟时间）后自动保存没有写入 localStorage`);
+            assert.ok(typeof results[i].savedAfter === 'string' && results[i].savedAfter.length > 0, `${label} 端跑过 ${frames} 帧（${frames * 250 / 1000}s 模拟时间）后自动保存没有写入 localStorage；诊断 ${JSON.stringify(results[i].diag)}`);
           }
           const savedStates = results.map(r => JSON.parse(saveCodec.decompress(r.savedAfter)));
           for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {

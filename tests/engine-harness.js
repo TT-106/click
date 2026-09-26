@@ -113,6 +113,13 @@ window.harness = {
   load(text) { resetRandom(); const ok = load(text); resetRandom(); if (!ok) throw new Error('存档载入失败'); return true; },
   snapshot,
   offlineDuration() { return original ? game.jf : game.offlineDuration; },
+  clock() { return fixedNow; },
+  // frames 场景用：把"距上次保存"拨回 310s，使 325s 的帧窗口确定性跨过 300s 自动保存阈值
+  //（lastSavedAt 可能被载入写入钉在场景顺序相关的累积时钟上）。原版 qc 无此字段名，pg.qs 即上次保存时刻。
+  rewindAutosaveTimer() {
+    if (original) window.Game.pg.qs = fixedNow - 310000;
+    else game.saves.lastSavedAt = fixedNow - 310000;
+  },
   setTime(ms) {
     fixedNow = ms;
     // 时钟跳变后必须重置循环簿记，否则首帧帧差含历史偏移，
@@ -141,6 +148,14 @@ window.harness = {
   reset() { reset(); return snapshot(); },
   // 空转：经真实帧循环推进时间（无队伍时循环只待机）——用于重置后的守卫路径
   idle(count) { for (let i = 0; i < count; i++) { fixedNow += 250; loopTick(); } return snapshot(); },
+  // frames 场景诊断：自动保存未触发时输出保存管理器与时钟状态（仅诊断用，不入断言）
+  autosaveDiagnostics() {
+    // 原版保存管理器是 w.pg（qs=lastSavedAt、UC=interval），重构版是 game.saves
+    const saves = original ? window.Game.pg : game.saves;
+    const lastSavedAt = original ? saves.qs : saves.lastSavedAt;
+    const autoSaveInterval = original ? saves.UC : saves.autoSaveInterval;
+    return { lastSavedAt, fixedNow, autoSaveInterval, now: Date.now() };
+  },
   // U1 诊断：统一角色列表访问（原版 w.i.D / 重构 game.state.adventurers）
   characters() { return original ? window.Game.i.D : game.state.adventurers; },
   // U4 直接观察：逐帧扫描"活怪物"的瞬态效果队列，统计某类状态效果被施加的次数。
