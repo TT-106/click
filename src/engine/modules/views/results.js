@@ -112,7 +112,7 @@ export function appendRandomMonsterPortrait(a) {
 export function OfflineProgressView(a) {
   this.elementId = "offlineTabContent";
   this.tabState = a;
-  this.$l = this.pb = null;
+  this.$l = this.progressFillElement = null;
   this.gu = 500;
   this.Jh = -1;
   this.Mt = this.aj = this.$t = this.vm = this.Vm = this.Um = this.Tm = this.Qw = null;
@@ -128,7 +128,7 @@ export function mountOfflineProgress(a) {
   createElement("div", c, null, "offlineSubHeader").innerHTML = "正在清算你离开时发生了什么...";
   c = createElement("div", b, null, "offlineProgressBarContainer");
   c = createElement("div", c, null, "offlineProgressBar");
-  a.pb = createElement("div", c, null, "offlineProgressSlider");
+  a.progressFillElement = createElement("div", c, null, "offlineProgressSlider");
   c = createElement("div", b, null, "offlineProgressStatsContainer");
   a.fr(c);
   b = createElement("div", b, null, "offlineCancelButtonContainer");
@@ -191,7 +191,7 @@ export function initializeViewsResults() {
     a.selected = false;
     if (this.$l) {
       clearElementById(this.elementId);
-      this.Mt = this.aj = this.$t = this.vm = this.Vm = this.Um = this.Tm = this.Qw = this.pb = this.$l = null;
+      this.Mt = this.aj = this.$t = this.vm = this.Vm = this.Um = this.Tm = this.Qw = this.progressFillElement = this.$l = null;
     }
   };
   OfflineProgressView.prototype.reset = function () {
@@ -205,7 +205,7 @@ export function initializeViewsResults() {
       a = this.gu * a;
     if (this.Jh != a) {
       this.Jh = a;
-      this.pb.style.width = a + "px";
+      this.progressFillElement.style.width = a + "px";
     }
     var b = game.state.runStatistics,
       a = b.si - this.HA,

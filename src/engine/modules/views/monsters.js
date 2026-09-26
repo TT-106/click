@@ -24,7 +24,7 @@ export function MonsterLevelView() {
 export function MonsterRowView(a, b) {
   this.lh = a;
   this.Sb = b;
-  this.kd = this.pb = this.ng = this.xo = this.$n = this.Yn = this.vo = this.Ij = this.Mo = this.wq = this.yq = this.Es = null;
+  this.kd = this.progressFillElement = this.ng = this.xo = this.$n = this.Yn = this.vo = this.Ij = this.Mo = this.wq = this.yq = this.Es = null;
   this.Sv = this.$f = this.Jh = this.Uv = -1;
   this.dx = 80;
   this.Cp = null;
@@ -235,13 +235,13 @@ export function initializeViewsMonsters() {
     a.style.border = "1px solid #2c2c50";
     a.style.height = "15px";
     a.style.width = this.dx + "px";
-    this.pb = createElement("div", a, null, null);
-    this.pb.style.position = "absolute";
-    this.pb.style.top = "0";
-    this.pb.style.left = "0";
-    this.pb.style.backgroundColor = "#F00";
-    this.pb.style.height = "15px";
-    this.pb.style.width = "0px";
+    this.progressFillElement = createElement("div", a, null, null);
+    this.progressFillElement.style.position = "absolute";
+    this.progressFillElement.style.top = "0";
+    this.progressFillElement.style.left = "0";
+    this.progressFillElement.style.backgroundColor = "#F00";
+    this.progressFillElement.style.height = "15px";
+    this.progressFillElement.style.width = "0px";
     this.kd = createElement("div", a, null, null);
     this.kd.style.position = "absolute";
     this.kd.style.textAlign = "center";
@@ -282,7 +282,7 @@ export function initializeViewsMonsters() {
     }
     if (this.Jh !== d) {
       this.Jh = d;
-      this.pb.style.width = d + "px";
+      this.progressFillElement.style.width = d + "px";
       this.kd.innerHTML = a > b ? "最大" : formatAmount(a) + " / " + formatAmount(b);
     }
   };

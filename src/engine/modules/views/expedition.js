@@ -176,7 +176,7 @@ export function PotionButtonView(a, b) {
   this.TA = b;
   this.yo = this.sm = null;
   this.gu = 192;
-  this.Pp = this.Op = this.Tp = this.yj = this.Si = this.pb = this.km = null;
+  this.Pp = this.Op = this.Tp = this.yj = this.Si = this.progressFillElement = this.km = null;
   this.ak = false;
   this.Jh = -1;
   this.Sp = this.Bo = false;
@@ -199,7 +199,7 @@ export function mountPotionButton(a) {
     a.aw();
     return false;
   };
-  a.pb = createElement("div", a.km, null, "potionButtonProgressSlider");
+  a.progressFillElement = createElement("div", a.km, null, "potionButtonProgressSlider");
   a.ak = false;
   a.yj = createElement("div", a.km, null, "dropPotionButton");
   a.yj.title = "丢弃药剂";
@@ -662,7 +662,7 @@ export function initializeViewsExpedition() {
   PotionButtonView.prototype = new View();
   PotionButtonView.prototype.reset = function () {
     clearElementById(this.elementId);
-    this.Pp = this.Op = this.Tp = this.yj = this.Si = this.pb = this.km = this.yo = this.sm = this.hc = null;
+    this.Pp = this.Op = this.Tp = this.yj = this.Si = this.progressFillElement = this.km = this.yo = this.sm = this.hc = null;
     this.ak = this.Sp = false;
   };
   PotionButtonView.prototype.update = function () {
@@ -692,18 +692,18 @@ export function initializeViewsExpedition() {
       this.sm = this.hc;
       if (this.hc.active) {
         if (!this.ak) {
-          showElement(this.pb);
+          showElement(this.progressFillElement);
           this.ak = true;
         }
         a = Math.min(1, (game.state.turnNumber - this.hc.activationTurn) / (800 + potionDurationBonus.currentValue));
         a *= this.gu;
         if (this.Jh !== a) {
           this.Jh = a;
-          this.pb.style.width = a + "px";
+          this.progressFillElement.style.width = a + "px";
         }
       } else {
         if (this.ak) {
-          hideElement(this.pb);
+          hideElement(this.progressFillElement);
           this.ak = false;
         }
       }
@@ -722,7 +722,7 @@ export function initializeViewsExpedition() {
           this.yj.style.display = "none";
         }
         if (this.ak) {
-          hideElement(this.pb);
+          hideElement(this.progressFillElement);
           this.ak = false;
         }
         this.yo = "potionButtonDisabled";

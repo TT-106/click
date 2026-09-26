@@ -25,7 +25,7 @@ export function CastleTableView() {
 }
 export function CastleRowView(a) {
   this.lh = a;
-  this.kd = this.pb = this.ng = this.mf = this.xc = null;
+  this.kd = this.progressFillElement = this.ng = this.mf = this.xc = null;
   this.Us = 120;
   this.Rv = this.Cu = this.cachedDescriptionText = "";
   this.Kv = 0;
@@ -175,13 +175,13 @@ export function initializeViewsCastles() {
     a.style.border = "1px solid #2c2c50";
     a.style.height = "15px";
     a.style.width = this.Us + "px";
-    this.pb = createElement("div", a, null, null);
-    this.pb.style.position = "absolute";
-    this.pb.style.top = "0";
-    this.pb.style.left = "0";
-    this.pb.style.backgroundColor = "#F00";
-    this.pb.style.height = "15px";
-    this.pb.style.width = "0px";
+    this.progressFillElement = createElement("div", a, null, null);
+    this.progressFillElement.style.position = "absolute";
+    this.progressFillElement.style.top = "0";
+    this.progressFillElement.style.left = "0";
+    this.progressFillElement.style.backgroundColor = "#F00";
+    this.progressFillElement.style.height = "15px";
+    this.progressFillElement.style.width = "0px";
     this.kd = createElement("div", a, null, null);
     this.kd.style.position = "absolute";
     this.kd.style.textAlign = "center";
@@ -201,7 +201,7 @@ export function initializeViewsCastles() {
       a = getCastleStatusColor(this.xc);
       if (this.Cu != a) {
         this.Cu = a;
-        this.pb.style.backgroundColor = a;
+        this.progressFillElement.style.backgroundColor = a;
       }
       a = this.xc;
       a = a.$b ? "未解锁" : a.conquered ? "已征服" : canAttackCastle(a) ? game.monsterCatalog.fc >= a.requiredMonsterLevel ? "准备攻击" : "怪物等级" + a.requiredMonsterLevel : a.ye ? "计划攻击" : "地牢" + a.yk + " / " + a.dungeonList.length;
@@ -222,7 +222,7 @@ export function initializeViewsCastles() {
       }
       if (this.Kv != a) {
         this.Kv = a;
-        this.pb.style.width = a + "px";
+        this.progressFillElement.style.width = a + "px";
       }
     }
   };
