@@ -5,6 +5,7 @@
 
 ## 当前轮次状态（2026-09-26，M13 文档与验收收尾）
 
+- U45 成就列表/农场击杀池/城堡计数（2026-09-26，一笔提交，六门禁全绿，混淆清单 913 → 908）：Wj→permutation 重新落地（二分回退时曾复原）、ik→obtainedList、jj→achievementList（成就"已获得待领取"列表与全量定义列表）、Sd→pendingFarmKills（地牢注册表待收农场击杀池，CollectFarmUpgrade 收取后清零；**harness harvestFarmKills 的 Sd 引用同步为双端分支**，否则 farm 两场景即失败）、Uj→nextRequiredMonsterLevel（CastleRegistry 计数器：每征服一城 +1，决定新解锁城堡的 requiredMonsterLevel，game-save 持久化）。
 - U44 PathNode 字段簇收尾 + 事故复盘（2026-09-26，两笔提交，六门禁全绿，混淆清单 940 → 913）：
   1. **落地**：Ai/Bi 坐标转换对（Level pixelToTileColumn/Row vs Tile getTileColumn/Row，18 处）、PathNode/网格/开放集簇 96 处（Fl→grid、xk→costSoFar、Ko→heuristicScore、rl→parent、It→visited、Hs→neighbors、Ui→nodes、nx→pooledNodes、Ip/Sw→usedNodes/usedTiles、Bl/Cl→grid 侧 fromRoom/toRoom + hallway 侧 roomA/roomB）、questWg→pool、castle Bj→dungeonsConquered、zj→region、Sj→rank、kj→queue、Fj→list、Wj→permutation、mj→updateCounter、jk/Zj→cachedDescription、aj/ti/ui/cj/Si/vi 视图格。
   2. **事故复盘（重要）**：批内一次 `git checkout -- <文件>`（用于二分定位 rendered-scene 失败）把 upgrades.js 静默回退到 HEAD，丢掉了本批已落地的 zj(2)/jk(9)/Zj(9) 改名；Dungeon 侧 region 已改而 upgrades 侧仍读 a.zj → undefined → PurchaseCastleUpgrade.refreshAvailabilityState 抛错 → 大面积场景分叉。**教训：多批次并行探数时禁止对引擎文件做 git checkout；必须回退时用 git stash + 逐字段确认**。另 harness 的 Gh/Pi 两轮漏改均靠 playwright 捕获 PAGEERROR/调用栈定位（harness 模块作用域 game 不可见，调试须封装为 harness 方法）。
