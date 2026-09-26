@@ -88,7 +88,20 @@
 
 ## StatisticsRecorder 方法簇已落地（2026-09-26，29 方法，独立全回归）
 
-30 个混淆方法全部按第七批证据改为语义名（recordTurn/recordRoomCleared/recordDoorOpened/recordLevelCleared/recordDungeonCleared/recordCastleConquered/recordFarmPurchased/recordGoldFromItems/recordGoldFromMonsters/recordFarmHarvest/setFarmedKills/recordDirectKill/recordScrollKill/recordMinionKill/recordMinionSummoned/recordCharacterStunned/recordMeleeAttack/recordRangedAttack/recordSpellCast/recordPotionUsed/recordScrollUsed/recordPlayedMilliseconds/recordItemsSold/recordItemFound/recordTreasureChestLooted/recordWeaponRackLooted/recordBookcaseLooted/resetRunStatistics/setMinionKills）。方法名不进存档；entities.js 30 个存档键映射未动。16 文件同步。- 经验教训（已入 facts#20 扩展）：**重命名跨文件字段时，"读点全集"必须包含工厂函数/工具函数内按多态入参的访问**；Babel 静态 grep 对 `a.Da`（a 的类型随调用方变化）天然失真，应配运行时类型断言。
+30 个混淆方法全部按第七批证据改为语义名（recordTurn/recordRoomCleared/recordDoorOpened/recordLevelCleared/recordDungeonCleared/recordCastleConquered/recordFarmPurchased/recordGoldFromItems/recordGoldFromMonsters/recordFarmHarvest/setFarmedKills/recordDirectKill/recordScrollKill/recordMinionKill/recordMinionSummoned/recordCharacterStunned/recordMeleeAttack/recordRangedAttack/recordSpellCast/recordPotionUsed/recordScrollUsed/recordPlayedMilliseconds/recordItemsSold/recordItemFound/recordTreasureChestLooted/recordWeaponRackLooted/recordBookcaseLooted/resetRunStatistics/setMinionKills）。方法名不进存档；entities.js 30 个存档键映射未动。16 文件同步。## 第七批落地续（2026-09-26，每项独立全回归）
+
+| 字段 | 新名 | 对象 |
+|---|---|---|
+| TD/UD | tileColumn/tileRow | DungeonTile 瓦片坐标 |
+| VD/WD | pixelColumn/pixelRow | DungeonTile 像素坐标 |
+| Pq | tileEffect | DungeonTile 地面效果 |
+| Cj | hasSpawned | VisualEffect 已生成标志 |
+| jo | tileGrid | WorldBlock 瓦片网格 |
+| ln / Ln | pathDistanceToDestination / terrainMoveCost | WorldTile 寻路缓存 |
+| Wf / ge | targetCastle / activeCastle | Party 导航（纠错后语义：城堡非地牢） |
+| Ue / Lf | targetTreasureChest / targetShop | Party 导航 |
+
+- 经验教训（已入 facts#20 扩展）：**重命名跨文件字段时，"读点全集"必须包含工厂函数/工具函数内按多态入参的访问**；Babel 静态 grep 对 `a.Da`（a 的类型随调用方变化）天然失真，应配运行时类型断言。
 
 ## U2 — 外部自动化脚本（c2c.user.js）DOM 契约未实测
 

@@ -1941,32 +1941,6 @@
     ]
   },
   {
-    "name": "ge",
-    "reads": 11,
-    "writes": 7,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:229",
-        "code": "b.ge"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:1167",
-        "code": "game.state.party.ge"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:1169",
-        "code": "Se.ge"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js",
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\characters\\party.js",
-      "src\\engine\\modules\\runtime\\game.js"
-    ]
-  },
-  {
     "name": "Wd",
     "reads": 1,
     "writes": 17,
@@ -2783,32 +2757,6 @@
     ]
   },
   {
-    "name": "Ue",
-    "reads": 5,
-    "writes": 11,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:287",
-        "code": "a.Ue"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:64",
-        "code": "this.Ue"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:1053",
-        "code": "a.Ue"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js",
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\characters\\party.js",
-      "src\\engine\\modules\\runtime\\game.js"
-    ]
-  },
-  {
     "name": "Re",
     "reads": 12,
     "writes": 4,
@@ -2928,7 +2876,7 @@
       },
       {
         "loc": "src\\engine\\modules\\characters\\party.js:406",
-        "code": "this.Wf.ye"
+        "code": "this.targetCastle.ye"
       },
       {
         "loc": "src\\engine\\modules\\persistence\\game-save.js:172",
@@ -3463,32 +3411,6 @@
       "src\\engine\\modules\\combat\\actions.js",
       "src\\engine\\modules\\loot\\items.js",
       "src\\engine\\modules\\rendering\\scene.js"
-    ]
-  },
-  {
-    "name": "Lf",
-    "reads": 9,
-    "writes": 5,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:228",
-        "code": "b.Lf"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:1185",
-        "code": "game.state.party.Lf"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:1187",
-        "code": "Rp.Lf"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js",
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\characters\\party.js",
-      "src\\engine\\modules\\runtime\\game.js"
     ]
   },
   {
@@ -4125,30 +4047,6 @@
     "files": [
       "src\\engine\\modules\\characters\\minions.js",
       "src\\engine\\modules\\combat\\encounters.js",
-      "src\\engine\\modules\\runtime\\game.js"
-    ]
-  },
-  {
-    "name": "Wf",
-    "reads": 8,
-    "writes": 5,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\party.js:20",
-        "code": "this.Wf"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\party.js:342",
-        "code": "this.Wf"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\party.js:342",
-        "code": "this.Wf"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\characters\\party.js",
       "src\\engine\\modules\\runtime\\game.js"
     ]
   },
@@ -7394,7 +7292,7 @@
     "samples": [
       {
         "loc": "src\\engine\\modules\\characters\\party.js:403",
-        "code": "this.ge.Bj"
+        "code": "this.activeCastle.Bj"
       },
       {
         "loc": "src\\engine\\modules\\persistence\\game-save.js:170",
@@ -7460,32 +7358,6 @@
     "fileCount": 2,
     "files": [
       "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\simulation\\tick.js"
-    ]
-  },
-  {
-    "name": "Cj",
-    "reads": 7,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\actions.js:62",
-        "code": "c.Cj"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:715",
-        "code": "hb.Cj"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\sprites.js:87",
-        "code": "this.Cj"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\rendering\\sprites.js",
       "src\\engine\\modules\\simulation\\tick.js"
     ]
   },
@@ -10877,7 +10749,7 @@
       },
       {
         "loc": "src\\engine\\modules\\characters\\party.js:548",
-        "code": "this.Ue.Nn"
+        "code": "this.targetTreasureChest.Nn"
       },
       {
         "loc": "src\\engine\\modules\\loot\\treasure.js:32",
@@ -10891,31 +10763,6 @@
       "src\\engine\\modules\\loot\\treasure.js",
       "src\\engine\\modules\\persistence\\game-save.js",
       "src\\engine\\modules\\rendering\\scene.js"
-    ]
-  },
-  {
-    "name": "ln",
-    "reads": 3,
-    "writes": 4,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\movement.js:80",
-        "code": "f.ln"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\terrain.js:316",
-        "code": "this.ln"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\travel-costs.js:18",
-        "code": "u[s].ln"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\characters\\movement.js",
-      "src\\engine\\modules\\world\\terrain.js",
-      "src\\engine\\modules\\world\\travel-costs.js"
     ]
   },
   {
@@ -12507,7 +12354,7 @@
       },
       {
         "loc": "src\\engine\\modules\\characters\\party.js:491",
-        "code": "this.Lf.iq"
+        "code": "this.targetShop.iq"
       }
     ],
     "fileCount": 4,
@@ -12533,7 +12380,7 @@
       },
       {
         "loc": "src\\engine\\modules\\characters\\party.js:492",
-        "code": "this.Lf.jq"
+        "code": "this.targetShop.jq"
       }
     ],
     "fileCount": 4,
@@ -15211,54 +15058,6 @@
     ]
   },
   {
-    "name": "Ln",
-    "reads": 1,
-    "writes": 5,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\world\\terrain.js:199",
-        "code": "g.Ln"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\terrain.js:208",
-        "code": "g.Ln"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\terrain.js:222",
-        "code": "n.Ln"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\world\\terrain.js",
-      "src\\engine\\modules\\world\\travel-costs.js"
-    ]
-  },
-  {
-    "name": "jo",
-    "reads": 5,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\world\\terrain.js:319",
-        "code": "this.jo"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\terrain.js:348",
-        "code": "a.jo"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\terrain.js:365",
-        "code": "a.jo"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\world\\terrain.js",
-      "src\\engine\\modules\\world\\travel-costs.js"
-    ]
-  },
-  {
     "name": "wp",
     "reads": 4,
     "writes": 2,
@@ -16639,32 +16438,6 @@
     "fileCount": 3,
     "files": [
       "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\world\\generation.js",
-      "src\\engine\\modules\\world\\rooms.js"
-    ]
-  },
-  {
-    "name": "Pq",
-    "reads": 2,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:715",
-        "code": "ec.Pq"
-      },
-      {
-        "loc": "src\\engine\\modules\\simulation\\tick.js:414",
-        "code": "hb.Pq"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\generation.js:235",
-        "code": "f.Pq"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\simulation\\tick.js",
       "src\\engine\\modules\\world\\generation.js",
       "src\\engine\\modules\\world\\rooms.js"
     ]
@@ -30564,82 +30337,6 @@
     "fileCount": 1,
     "files": [
       "src\\engine\\modules\\world\\regions.js"
-    ]
-  },
-  {
-    "name": "TD",
-    "reads": 1,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\world\\rooms.js:11",
-        "code": "this.TD"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\rooms.js:542",
-        "code": "this.TD"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\world\\rooms.js"
-    ]
-  },
-  {
-    "name": "UD",
-    "reads": 1,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\world\\rooms.js:12",
-        "code": "this.UD"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\rooms.js:545",
-        "code": "this.UD"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\world\\rooms.js"
-    ]
-  },
-  {
-    "name": "VD",
-    "reads": 1,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\world\\rooms.js:13",
-        "code": "this.VD"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\rooms.js:548",
-        "code": "this.VD"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\world\\rooms.js"
-    ]
-  },
-  {
-    "name": "WD",
-    "reads": 1,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\world\\rooms.js:14",
-        "code": "this.WD"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\rooms.js:551",
-        "code": "this.WD"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\world\\rooms.js"
     ]
   },
   {
