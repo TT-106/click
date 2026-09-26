@@ -1,10 +1,11 @@
 # WORKSTATE — Clickpocalypse II 语义恢复与现代化工程
 
 > 本文件是长程自治任务的**唯一续跑入口**。上下文压缩或中断后，先读本文件 + `git log --oneline`，再继续。
-> 最后更新：2026-09-26（U20 装备查找与命名池落地后，混淆清单 1,078；验收矩阵 51 PASS / 0 PARTIAL、矩阵 59/59、soak 通过）
+> 最后更新：2026-09-26（U21 视图生命周期簇落地后，混淆清单 1,071；验收矩阵 51 PASS / 0 PARTIAL、矩阵 59/59、soak 通过）
 
 ## 当前轮次状态（2026-09-26，M13 文档与验收收尾）
 
+- U21 视图生命周期簇（2026-09-26，一笔提交，六门禁全绿，混淆清单 1,078 → 1,071）：**第七批取证第 3 组证据落地**——pf→createDomElements（表/画布视图 DOM 构建，19 处含 `{{pf: () => void}}` 内联类型标注计数）、so→createDomElements（ScrollBar/PotionBar）、qi→createRowCells（行视图单元格，14 处）、Ri→createHeaderRow（表头行，13 处）、Dp→tableElement、Tj→rowViews（MonsterLevelTabView 表状态）、Vw→cachedVisible（View 基类可见性缓存）。教训：内联 `/** @type {{pf: ...}} */` 标注中的 `pf:` 会被执行器 typedef 规则计数——--expect = 成员数 + 标注数，先小批探数再落盘（执行器事务性，错了不写）。
 - U20 装备查找与物品命名池（2026-09-26，一笔提交，六门禁全绿，混淆清单 1,082 → 1,078）：
   1. **ef→getSlotItem**（17 处，9 文件）：Equipment 原型 hw[slot] 查找 + Character 委托方法，消费方全部是 isBetterItem 换装比较；SlotEquipment 窄签名 typedef 早已记录该名。第 17 处为 character.js:29 typedef 注释内的 `ef:`。
   2. **物品命名池**（31 处，item-names.js 单文件）：Ye→prefixAdjectives（"…的"前缀池，Tk 选取）、hf→titlePool（"X之"题名池，Gm 选取）、ih→suffixNouns（"之X"后缀池，Fm 选取）；五个稀有度命名类（Common/Uncommon/Rare/Historic/Ancient）同构字段一次改名。
