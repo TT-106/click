@@ -225,8 +225,8 @@ export function initializeAiBehaviors() {
   BehaviorQueue.prototype.ou = function (a) {
     var b, c;
     b = game.state.party;
-    c = b.Lf;
-    var d = b.ge,
+    c = b.targetShop;
+    var d = b.activeCastle,
       f = b.Wb;
     if (c || f || d) {
       if (a === game.state.leader) {
@@ -284,7 +284,7 @@ export function initializeAiBehaviors() {
     a.rh = null;
     a.combatTarget = null;
     a.bj = null;
-    a.Ue = null;
+    a.targetTreasureChest = null;
     a.ld = null;
     a.Zh = null;
     a.hk = null;

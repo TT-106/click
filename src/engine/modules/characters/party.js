@@ -17,7 +17,7 @@ import { saveProgress } from "../persistence/game-save.js";
 export function PartyState() {
   this.gold = this.experiencePoints = this.kills = 0;
   this.zs = this.xs = -1;
-  this.ed = this.Bc = this.Cc = this.Ue = this.Wf = this.Lf = this.ge = this.Wb = null;
+  this.ed = this.Bc = this.Cc = this.targetTreasureChest = this.targetCastle = this.targetShop = this.activeCastle = this.Wb = null;
   this.Ks = false;
   this.gn = null;
   this.Mp = false;
@@ -201,10 +201,10 @@ export function findNextUnopenedDoor() {
 }
 export function initializeCharactersParty() {
   PartyState.prototype.hq = function (a) {
-    this.Ue = a;
+    this.targetTreasureChest = a;
   };
   PartyState.prototype.iw = function () {
-    this.Ue = this.ed = this.Bc = this.Cc = null;
+    this.targetTreasureChest = this.ed = this.Bc = this.Cc = null;
     if (game.currentDungeon) {
       game.currentDungeon.iw();
     } else if (game.currentCastle) {
@@ -339,10 +339,10 @@ export function initializeCharactersParty() {
     this.ed = a;
   };
   PartyState.prototype.ou = function () {
-    if (this.Wf && this.Wf.conquered) {
-      this.Wf = null;
+    if (this.targetCastle && this.targetCastle.conquered) {
+      this.targetCastle = null;
     }
-    if (!this.Wf) {
+    if (!this.targetCastle) {
       var a = game.castles,
         b = game.state.leader.position.worldPosition,
         c = null,
@@ -356,9 +356,9 @@ export function initializeCharactersParty() {
           d = g;
         }
       }
-      this.Wf = c;
+      this.targetCastle = c;
     }
-    if (this.Wf) {
+    if (this.targetCastle) {
       a = false;
       for (b = c = 0; b < game.state.adventurers.length; b++) {
         d = game.state.adventurers[b];
@@ -379,9 +379,9 @@ export function initializeCharactersParty() {
         c += d;
       }
       b = c;
-      if (this.Lf) {
+      if (this.targetShop) {
         if (0 === b) {
-          this.Lf = null;
+          this.targetShop = null;
         }
       } else if (0 < b) {
         a = game.shops;
@@ -393,18 +393,18 @@ export function initializeCharactersParty() {
             d = g;
           }
         }
-        this.Lf = c;
+        this.targetShop = c;
         a = true;
       }
-      if (this.Lf) {
-        this.ge = null;
+      if (this.targetShop) {
+        this.activeCastle = null;
         b = false;
-      } else if (b = false, this.ge) {
-        if (!this.ge.Bj) {
-          this.ge = null;
+      } else if (b = false, this.activeCastle) {
+        if (!this.activeCastle.Bj) {
+          this.activeCastle = null;
         }
-      } else if (this.Wf.ye && !this.Wf.conquered) {
-        this.ge = this.Wf;
+      } else if (this.targetCastle.ye && !this.targetCastle.conquered) {
+        this.activeCastle = this.targetCastle;
         b = true;
       } else {
         c = game.castles;
@@ -417,11 +417,11 @@ export function initializeCharactersParty() {
           }
         }
         if (c = f) {
-          this.Wf = this.ge = c;
+          this.targetCastle = this.activeCastle = c;
           b = true;
         }
       }
-      if (this.Lf || this.ge) {
+      if (this.targetShop || this.activeCastle) {
         this.Wb = null;
         f = false;
       } else {
@@ -439,7 +439,7 @@ export function initializeCharactersParty() {
           d = game.state.leader.position.worldPosition;
           f = null;
           g = 0;
-          var n = /** @type {any} */ (this.Wf.dungeonList),
+          var n = /** @type {any} */ (this.targetCastle.dungeonList),
             p;
           for (p = 0; p < n.length; p++) {
             if (h = n[p], !h.conquered && (l = distanceSquaredToPoint(d, h.dc(), h.ec()), !f || l < g)) {
@@ -487,12 +487,12 @@ export function initializeCharactersParty() {
         }
         f = c;
       }
-      if (this.Lf) {
-        c = this.Lf.iq;
-        d = this.Lf.jq;
-      } else if (this.ge) {
-        c = this.ge.dm;
-        d = this.ge.em;
+      if (this.targetShop) {
+        c = this.targetShop.iq;
+        d = this.targetShop.jq;
+      } else if (this.activeCastle) {
+        c = this.activeCastle.dm;
+        d = this.activeCastle.em;
       } else if (this.Wb) {
         c = this.Wb.bc();
         d = this.Wb.getWorldRow();
@@ -544,8 +544,8 @@ export function initializeCharactersParty() {
       this.Mp = false;
     }
     if (!isPartyTravelling(this)) {
-      if (this.Ue) {
-        this.Cc = this.Ue.Nn;
+      if (this.targetTreasureChest) {
+        this.Cc = this.targetTreasureChest.Nn;
         this.Bc = this.ed = null;
       } else if (!this.ed && (!this.Bc || this.Bc.isOpen)) {
         if (this.Cc) {

@@ -61,7 +61,7 @@ export function Character(a, b, c, d, f) {
   }
   this.actionType = IDLE_ACTION;
   this.isDead = false;
-  this.ld = this.Ue = this.bj = this.hk = this.Zh = this.rh = this.combatTarget = this.behaviors = null;
+  this.ld = this.targetTreasureChest = this.bj = this.hk = this.Zh = this.rh = this.combatTarget = this.behaviors = null;
   this.stats = new CharacterStats(this);
   this.au = -3 * getAttackCooldown(this.stats, true);
   this.summoner = null;
@@ -1050,8 +1050,8 @@ export function updateCharacter(a, b) {
           a.bj = null;
         }
       } else if (12 === a.actionType) {
-        if (a.Ue && !a.Ue.Kg) {
-          var Xd = a.Ue,
+        if (a.targetTreasureChest && !a.targetTreasureChest.Kg) {
+          var Xd = a.targetTreasureChest,
             Oc,
             Yd = Xd.Nn,
             Re = roomLeftPixels(Yd) + game.tileSize,
@@ -1138,7 +1138,7 @@ export function updateCharacter(a, b) {
               awardAdventurePoints(8);
           }
           recordGameEvent("Treasure Chest", "Looted");
-          a.Ue = null;
+          a.targetTreasureChest = null;
         }
       } else if (9 === a.actionType) {
         if (game.state.party.Wb) {
@@ -1147,7 +1147,7 @@ export function updateCharacter(a, b) {
             Ef.Cc = null;
             Ef.Bc = null;
             Ef.ed = null;
-            Ef.Ue = null;
+            Ef.targetTreasureChest = null;
             var ye = Ef.Wb;
             game.currentDungeon = ye;
             ye.currentLevelIndex = 0;
@@ -1164,17 +1164,17 @@ export function updateCharacter(a, b) {
           }
         }
       } else if (11 === a.actionType) {
-        if (game.state.party.ge) {
+        if (game.state.party.activeCastle) {
           var Se = game.state.party;
-          if (Se.ge) {
-            if (Se.ge.conquered) {
-              Se.ge = null;
+          if (Se.activeCastle) {
+            if (Se.activeCastle.conquered) {
+              Se.activeCastle = null;
             } else {
               Se.Cc = null;
               Se.Bc = null;
               Se.ed = null;
-              Se.Ue = null;
-              var xl = Se.ge;
+              Se.targetTreasureChest = null;
+              var xl = Se.activeCastle;
               game.currentCastle = xl;
               generateDungeonLevel(xl.er(), 11, false, true);
               game.worldActive = false;
@@ -1182,9 +1182,9 @@ export function updateCharacter(a, b) {
             }
           }
         }
-      } else if (10 === a.actionType && game.state.party.Lf) {
+      } else if (10 === a.actionType && game.state.party.targetShop) {
         var Rp = game.state.party;
-        if (Rp.Lf) {
+        if (Rp.targetShop) {
           var jj;
           for (jj = 0; jj < game.state.adventurers.length; jj++) {
             var yl = game.state.adventurers[jj],
@@ -1207,7 +1207,7 @@ export function updateCharacter(a, b) {
             }
           }
           recordGameEvent("Shop", "卖出所有道具");
-          Rp.Lf = null;
+          Rp.targetShop = null;
         }
       }
       a.actionType = IDLE_ACTION;
@@ -1237,7 +1237,7 @@ export function initializeCharactersCharacter() {
     this.combatTarget = a;
   };
   Character.prototype.hq = function (a) {
-    this.Ue = a;
+    this.targetTreasureChest = a;
   };
   Character.prototype.dr = function () {
     if (this.behaviors && !this.isDead) {
