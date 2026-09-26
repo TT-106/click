@@ -196,7 +196,7 @@ export function populateWorldBlock(a, b) {
       if (!c || c.$b) {
         h = a.ZD;
         g.Kn = null;
-        g.Ln = 1E5;
+        g.terrainMoveCost = 1E5;
       } else {
         l = g.LA + g.KA + g.yB + g.xB;
         h = shoreTileLookup[l];
@@ -205,7 +205,7 @@ export function populateWorldBlock(a, b) {
           console.log("no sprite found for key: [" + l + "]");
           h = shoreTileLookup.JD;
         }
-        g.Ln = "PPPP" === g.Kn || "OOOO" === g.Kn || "IIII" === g.Kn ? 1E5 : 0;
+        g.terrainMoveCost = "PPPP" === g.Kn || "OOOO" === g.Kn || "IIII" === g.Kn ? 1E5 : 0;
       }
       if (h = game.terrainSprites.getSprite(h)) {
         g.setBackgroundSprite(h);
@@ -219,7 +219,7 @@ export function populateWorldBlock(a, b) {
       for (d = 0; d < a.sc; d++) {
         n = getBlockTile(b, f, d);
         n.setDecorationSprite(null);
-        n.Ln = 1E5;
+        n.terrainMoveCost = 1E5;
       }
     }
   } else {
@@ -255,7 +255,7 @@ export function populateWorldBlock(a, b) {
             }
           }
           if (s) {
-            n.Ln += p;
+            n.terrainMoveCost += p;
             n.setDecorationSprite(s);
           } else {
             n.setDecorationSprite(null);
@@ -313,10 +313,10 @@ export function WorldTile(a, b) {
   this.Yf = this.Jn = null;
   this.Kn = "GGGG";
   this.xB = this.KA = this.yB = this.LA = OCEAN_TERRAIN_CODE;
-  this.Ln = this.ln = 0;
+  this.terrainMoveCost = this.pathDistanceToDestination = 0;
 }
 export function WorldBlock(a, b, c) {
-  this.jo = [];
+  this.tileGrid = [];
   this.Hd = a;
   this.Id = b;
   this.sc = WORLD_BLOCK_ROWS;
@@ -345,7 +345,7 @@ export function repositionWorldBlock(a, b, c, d) {
   a.Nw = a.xp * game.tileSize;
   if (d) {
     for (c = 0; c < a.rc; c++) {
-      for (d = a.jo[c], b = 0; b < a.sc; b++) {
+      for (d = a.tileGrid[c], b = 0; b < a.sc; b++) {
         var f = d[b],
           g = a.Qj + c,
           h = a.Rj + b;
@@ -362,7 +362,7 @@ export function worldBlockContains(a, b, c) {
   return b >= a.yp && b < a.Mw && c >= a.zp && c < a.Nw;
 }
 export function getBlockTile(a, b, c) {
-  return 0 > b || b >= a.rc || 0 > c || c >= a.sc ? null : a.jo[b][c];
+  return 0 > b || b >= a.rc || 0 > c || c >= a.sc ? null : a.tileGrid[b][c];
 }
 export function WorldMap() {
   this.wt = new WorldGenerator(WORLD_BLOCK_COLUMNS, WORLD_BLOCK_ROWS);
@@ -616,7 +616,7 @@ export function initializeWorldTerrain() {
       for (a = 0; a < this.sc; a++) {
         c.push(new WorldTile(d + b, f + a));
       }
-      this.jo.push(c);
+      this.tileGrid.push(c);
     }
   };
   WorldMap.prototype.getTileAtPixel = function (a, b) {

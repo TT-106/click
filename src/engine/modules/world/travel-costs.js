@@ -13,20 +13,20 @@ export function calculateWorldCosts(a, b, c) {
     h;
   for (h = 0; 3 > h; h++) {
     for (f = d[h], g = 0; 3 > g; g++) {
-      for (var l = f[g], n = a, p = 0, s = undefined, u = undefined; p < l.jo.length; p++) {
-        for (u = l.jo[p], s = 0; s < u.length; s++) {
-          u[s].ln = n;
+      for (var l = f[g], n = a, p = 0, s = undefined, u = undefined; p < l.tileGrid.length; p++) {
+        for (u = l.tileGrid[p], s = 0; s < u.length; s++) {
+          u[s].pathDistanceToDestination = n;
         }
       }
     }
   }
   if (c = game.world.getTileAtPixel(b, c)) {
-    for (b = [], c.ln = 0, b.push(c), c = [null, null, null, null]; 0 < b.length;) {
-      for (g = b.shift(), a = g.ln, d = c, f = g.bc(), g = g.getWorldRow(), d[0] = game.world.getTileAtPixel(f, g - 1), d[1] = game.world.getTileAtPixel(f - 1, g), d[2] = game.world.getTileAtPixel(f + 1, g), d[3] = game.world.getTileAtPixel(f, g + 1), g = 0; g < c.length; g++) {
+    for (b = [], c.pathDistanceToDestination = 0, b.push(c), c = [null, null, null, null]; 0 < b.length;) {
+      for (g = b.shift(), a = g.pathDistanceToDestination, d = c, f = g.bc(), g = g.getWorldRow(), d[0] = game.world.getTileAtPixel(f, g - 1), d[1] = game.world.getTileAtPixel(f - 1, g), d[2] = game.world.getTileAtPixel(f + 1, g), d[3] = game.world.getTileAtPixel(f, g + 1), g = 0; g < c.length; g++) {
         if (d = c[g]) {
-          f = a + d.Ln + 1;
-          if (f < d.ln) {
-            d.ln = f;
+          f = a + d.terrainMoveCost + 1;
+          if (f < d.pathDistanceToDestination) {
+            d.pathDistanceToDestination = f;
             b.push(d);
           }
         }

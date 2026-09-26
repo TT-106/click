@@ -77,7 +77,7 @@ export function findCheapestNeighbor(a, b) {
     p;
   for (n = -1; 1 >= n; n++) {
     for (p = -1; 1 >= p; p++) {
-      if ((0 !== n || 0 !== p) && (f = game.world.getTileAtPixel(c + n, d + p)) && f !== b && (g = f.ln, !l || h > g)) {
+      if ((0 !== n || 0 !== p) && (f = game.world.getTileAtPixel(c + n, d + p)) && f !== b && (g = f.pathDistanceToDestination, !l || h > g)) {
         l = f;
         h = g;
       }
