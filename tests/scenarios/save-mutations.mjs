@@ -49,6 +49,13 @@ export function withGold(save, gold) {
   return out;
 }
 
+/** 只抬高队伍可消费的击杀数，供怪物等级解锁的真实价格与前置检查使用。 */
+export function withKills(save, kills) {
+  const out = clone(save);
+  out.party.kills = kills;
+  return out;
+}
+
 export function withTurns(save, turnNumber) {
   const out = clone(save);
   out.turnNumber = turnNumber;

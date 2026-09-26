@@ -6,7 +6,7 @@ import { chromium } from 'playwright';
 import saveCodec from '../src/engine/save-codec.js';
 import {
   decodeFixture, encodeSave, summarize,
-  withPotions, withScrolls, withGold, withTurns, withElapsed, withOfflineProcessing,
+  withPotions, withScrolls, withGold, withKills, withTurns, withElapsed, withOfflineProcessing,
   withVictories, withClassSpell, withCastleVictory, withReclassedSpell, withEquippedItem, withResurrectionTrial, withSkillPoints, withExperience,
   HARNESS_FIXED_NOW,
 } from '../tests/scenarios/save-mutations.mjs';
@@ -39,6 +39,11 @@ const upgradedSomething = (s) => {
     note: '购买命中的升级族: ' + (families.join(' + ') || '无'),
   };
 };
+const monsterLevelWasUnlocked = (s) => ({
+  monsterUnlocked: (s.monsterTypes?.maxUnlockedLevel ?? 1) > (base.monsterTypes?.maxUnlockedLevel ?? 1)
+    && (s.monsterTypes?.monsterLevelStates?.length ?? 0) > BASELINE_MONSTER_LEVELS,
+  note: `怪物最高等级 ${s.monsterTypes?.maxUnlockedLevel}，等级表 ${s.monsterTypes?.monsterLevelStates?.length}，队伍最低等级 ${Math.min(...(s.adventurers ?? []).map(a => a.characteristicsComponent?.characterLevel ?? 1))}，可用击杀 ${s.party?.kills}`,
+});
 // U7：药水激活在视图之外没有入口，激活后存档里只有 statistics.potionsUsed 可证。
 const potionWasUsed = (s) => ({ potionUsed: (s.statistics?.potionsUsed ?? 0) > 0 });
 const scenarios = [
@@ -241,6 +246,16 @@ const scenarios = [
       { turns: 600, purchaseUpgrades: 60, check: upgradedSomething },
       { turns: 900, purchaseUpgrades: 60, check: upgradedSomething },
       { turns: 900 },
+    ],
+  },
+  {
+    name: 'monster-level-unlocked',
+    // UnlockMonsterLevelUpgrade 同时要求击杀余额与队伍最低等级；经验值用于先购买角色等级。
+    make: () => withKills(withExperience(withGold(base, 1000000), 500000), 1000000),
+    steps: [
+      { turns: 600, purchaseUpgrades: 60 },
+      { turns: 900, purchaseUpgrades: 60, check: monsterLevelWasUnlocked },
+      { turns: 900, check: monsterLevelWasUnlocked },
     ],
   },
   {
@@ -465,6 +480,7 @@ try {
             if (verdict.settingsPurchased !== undefined) assert.equal(verdict.settingsPurchased, true, `${label} 全局设置升级必须真实增长`);
             if (verdict.characterLeveled !== undefined) assert.equal(verdict.characterLeveled, true, `${label} 角色等级必须真实上升`);
             if (verdict.skillLearned !== undefined) assert.equal(verdict.skillLearned, true, `${label} 技能树布尔位必须真实解锁`);
+            if (verdict.monsterUnlocked !== undefined) assert.equal(verdict.monsterUnlocked, true, `${label} 怪物最高解锁等级和存档等级表长度必须真实增长；${verdict.note}`);
             if (verdict.potionUsed !== undefined) assert.equal(verdict.potionUsed, true, `${label} 必须真的激活至少一瓶药水（potionsUsed 增长）`);
             if (verdict.note && i === 0) console.log(`  · ${verdict.note}`);
             if (verdict.victory !== undefined) assert.equal(verdict.victory, true, `${label} 必须真的走完征服尾部并触发胜利`);
