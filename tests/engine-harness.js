@@ -277,6 +277,8 @@ window.harness = {
     for (const group of groups) {
       for (const upgrade of group) {
         if (purchased >= limit) break;
+        // 视图刷新路径先刷新可购状态再判断（type 13"攻击城堡"等只在刷新时计算 canPurchase）
+        if (original) upgrade.Cd(); else upgrade.refreshAvailabilityState();
         const ready = original ? upgrade.qc() : upgrade.canPurchaseNow();
         if (ready) {
           const type = original ? upgrade.Na() : upgrade.getUpgradeType();

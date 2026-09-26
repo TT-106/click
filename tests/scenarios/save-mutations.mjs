@@ -139,6 +139,29 @@ export function withCastleVictory(save) {
   return out;
 }
 
+/** 城堡进攻计划前置态：把唯一未锁城堡（100_100）变成"可进攻"——
+ *  地牢清空并标记 dungeonsConquered（载入时直接恢复为 Bj，使 canAttackCastle 成立），
+ *  未征服、未计划攻击、所需怪物等级清零。载入时 game-save 按 canAttackCastle 重建
+ *  进攻列表 Jg，type=13 的"攻击城堡"升级（原版 ms）即可经视图同路径购买。 */
+export function withAttackableCastle(save) {
+  const out = clone(save);
+  const unlocked = out.castleManager.castleStates.filter(c => !c.castleRegionLocked);
+  if (unlocked.length !== 1) throw new Error(`fixture 应恰好有一座未锁城堡，实际 ${unlocked.length}`);
+  const castle = unlocked[0];
+  for (const dungeon of out.dungeonManagerState.dungeonStates) {
+    if (dungeon.dungeonId === castle.castleId) {
+      dungeon.discovered = true;
+      dungeon.conquered = true;
+      dungeon.cleared = true;
+    }
+  }
+  castle.conquered = false;
+  castle.dungeonsConquered = true;
+  castle.attackScheduled = false;
+  castle.requiredMonsterLevel = 0;
+  return out;
+}
+
 /** 给存档中指定职业的角色装载一项已学法术；用于差分驱动具体法术分支。 */
 export function withClassSpell(save, characterClass, spellName) {
   const out = clone(save);

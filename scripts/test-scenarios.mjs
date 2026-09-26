@@ -7,7 +7,7 @@ import saveCodec from '../src/engine/save-codec.js';
 import {
   decodeFixture, encodeSave, summarize,
   withPotions, withScrolls, withGold, withKills, withPointPools, withFarmableDungeon, withTurns, withElapsed, withOfflineProcessing, withBackgroundProcessing,
-  withVictories, withClassSpell, withCastleVictory, withReclassedSpell, withEquippedItem, withResurrectionTrial, withSkillPoints, withExperience, withCharacterClass,
+  withVictories, withClassSpell, withCastleVictory, withReclassedSpell, withEquippedItem, withResurrectionTrial, withSkillPoints, withExperience, withCharacterClass, withAttackableCastle,
   HARNESS_FIXED_NOW,
 } from '../tests/scenarios/save-mutations.mjs';
 
@@ -106,6 +106,10 @@ const barbarianGrew = (s) => {
     spellsLearned: (adv.spells?.length ?? 0) > (bAdv.spells?.length ?? 0),
   };
 };
+const castleAttackPlanned = (s) => ({
+  attackPlanned: (s.castleManager?.castleStates ?? []).filter(c => c.attackScheduled || c.conquered).length
+    > (base.castleManager?.castleStates ?? []).filter(c => c.attackScheduled || c.conquered).length,
+});
 const achievementWasClaimed = (s) => ({
   achievementClaimed: (s.achievementManager?.achievements ?? []).filter(a => a.applied).length
     > (base.achievementManager?.achievements ?? []).filter(a => a.applied).length,
@@ -381,9 +385,10 @@ const scenarios = [
   },
   {
     name: 'combat-critical-hits',
-    // 玩家暴击闭环：注入经验与技能点，战士与游侠在 5 轮升级中解锁 7 个暴击几率技能（Fighter 4 档 + Ranger 3 档），
+    // 玩家暴击闭环：注入经验与技能点（60 点/人，四棵树 36 节点全竞争，20 点会被兄弟节点挤掉暴击节点），
+    // 战士与游侠在 5 轮升级中解锁 7 个暴击几率技能（Fighter 4 档 + Ranger 3 档），
     // 随后在 1000 回合实战中直接采样“暴击!”浮动文字（两端同为 6 次，无技能时为 0），验证跳过护甲伤害与 RNG 顺序一致。
-    make: () => withSkillPoints(withExperience(withGold(base, 1000000), 500000), 20),
+    make: () => withSkillPoints(withExperience(withGold(base, 1000000), 500000), 60),
     steps: [
       { turns: 300, purchaseUpgrades: 60 },
       { turns: 300, purchaseUpgrades: 60 },
@@ -439,6 +444,18 @@ const scenarios = [
       { turns: 300, purchaseUpgrades: 60 },
       { turns: 300, purchaseUpgrades: 60, check: barbarianGrew },
       { turns: 1000, check: barbarianGrew },
+    ],
+  },
+  {
+    name: 'castle-attack-planned',
+    // type=13"攻击城堡"（原版 ms）没有金币花费——购买即把城堡 attackScheduled 置 true，
+    // 门控是 maxUnlockedLevel >= requiredMonsterLevel 而非金币；验收矩阵"城堡"行的
+    // "购买/进攻花费"提法系旧账误记。场景把唯一未锁城堡摆成可进攻态（地牢清空），
+    // 经 quickUpgradeCollection 里 4 个 itemPurchaseUpgrades 槽驱动购买，随后自然推进。
+    make: () => withAttackableCastle(base),
+    steps: [
+      { turns: 0, purchaseUpgrades: 60, check: castleAttackPlanned },
+      { turns: 900, check: castleAttackPlanned },
     ],
   },
   {
@@ -924,6 +941,7 @@ try {
             if (verdict.classKept !== undefined) assert.equal(verdict.classKept, true, `${label} 改职业后的存档必须保持野蛮人（characterClass 1）`);
             if (verdict.skillsLearned !== undefined) assert.equal(verdict.skillsLearned, true, `${label} 野蛮人四棵技能树的解锁布尔位必须真实增长`);
             if (verdict.spellsLearned !== undefined) assert.equal(verdict.spellsLearned, true, `${label} 野蛮人必须经 LearnSpellUpgrade 真实学会职业法术`);
+            if (verdict.attackPlanned !== undefined) assert.equal(verdict.attackPlanned, true, `${label} 攻击城堡计划（type 13 → attackScheduled）必须真实发生`);
             if (verdict.achievementClaimed !== undefined) assert.equal(verdict.achievementClaimed, true, `${label} 成就奖励必须真实领取并标记 applied`);
             if (verdict.equipmentChanged !== undefined) assert.equal(verdict.equipmentChanged, true, `${label} 自动装备后装备槽必须真实变化`);
             if (verdict.itemEquipEvents !== undefined) assert.equal(verdict.itemEquipEvents, true, `${label} 装备物品事件计数必须真实增长`);

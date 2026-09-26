@@ -78,7 +78,7 @@ npm test && npm run check      # 一条命令测试
 
 Clickpocalypse II 的核心实现已从高混淆遗留代码中恢复出真实语义：关键玩法行为有 50 个差分场景 + 位级 RNG 单测 + 浏览器 E2E + 8h/24h 等价回合 soak 的自动化证据保护，存档/RNG/时间/离线/自动保存经兼容验证，业务逻辑已迁入带清晰边界的现代模块（77 个），旧文件不再是唯一真相来源。
 
-这些结论由运行与差分证明，不是主观判断；同样明确的是**尚未证明的部分**：附录 A 实际有 51 行（逐行统计），其中 45 行 PASS、6 行 PARTIAL、0 行未覆盖；缺口逐项写明，`docs/reverse-engineering/unresolved.md` 的 U5/U6/U7 是继续推进的入口。
+这些结论由运行与差分证明，不是主观判断；同样明确的是**尚未证明的部分**：附录 A 实际有 51 行（逐行统计），其中 47 行 PASS、4 行 PARTIAL、0 行未覆盖；缺口逐项写明，`docs/reverse-engineering/unresolved.md` 的 U5/U6/U7 是继续推进的入口。
 
 ---
 
@@ -90,7 +90,7 @@ Clickpocalypse II 的核心实现已从高混淆遗留代码中恢复出真实�
 |---|---|---|
 | Bootstrap 启动 | PASS | harness 两端 `ready()` 前置断言；E2E 载入 + 无 console/pageerror（渲染异常也纳入捕获） |
 | Party 创建 | PASS | E2E：推荐阵容→改名→开战，断言 4 名队员与姓名 |
-| 角色职业 | PARTIAL | 法术场景装载职业 3/4/6/7/8/9/10/11；0/1/2/5 未被装载，职业成长未跑 |
+| 角色职业 | PASS | 12 个正式职业全部装载：0/2/6/4（战士/游侠/牧师/火法师）即默认阵容，3/7/8/9/10/11 由法术差分场景经 withReclassedSpell 装载，1（野蛮人）由 `class-barbarian-growth` 装载——改为职业 1、补槽 21 职业匹配武器，驱动四棵职业专属技能树购买（含 LearnSpellUpgrade 学会 重锤/愤怒）与 1000 回合自然战斗，逐检查点完整存档相等，带"去掉改职业即失败"的反向探针；职业表不存在职业 5（另有 Monster/Scroll Character 两个特殊类型）；职业成长（applyLevelStats 的 statMultipliers 应用）受 statMultipliers 六键差分与等级曲线覆盖 |
 | 角色升级 | PASS | `upgrades-purchased` 给足经验值后驱动 `LevelUpUpgrade.purchase`；两端各自断言 `characteristicsComponent.characterLevel` 超过 fixture 基线，逐检查点完整存档相等 |
 | 角色技能/技能树 | PASS | `purchaseUpgrades` 遍历每名角色的四棵技能树；两端各自断言 `upgrades1..4` 已解锁布尔位总数超过 fixture 基线，法术学习 type=6 实际购买且 `spells` 数量增长，逐检查点完整存档相等；未逐项验证每种技能的战斗效果 |
 | 角色属性 | PASS | 六个分量 + 生命/精神/击杀在 52 场景每个检查点全量相等 |
@@ -117,7 +117,7 @@ Clickpocalypse II 的核心实现已从高混淆遗留代码中恢复出真实�
 | 财宝房 | PASS | 三条场景分别让角色搜索同房间的 type=1/2/3 目标物，各自断言三种统计增长；`ground-drops-collected` 在无已学法术的 fixture 上断言 9/10/11/12 四种常规拾取事件（金币/卷轴/药水/物品）均增长，两端完整存档相等 |
 | 地牢生成 | PASS | 楼层种子/房间可见性/走廊集合全量相等；生成侧 `widthInTiles/heightInTiles` 改名后回归通过 |
 | 地牢导航 | PASS | 门/走廊字段（`doorA/doorB/hallway/currentHallway/pathTiles/pixelColumn/pixelRow`）恢复语义后，开门数、走廊与房间位置逐检查点相等 |
-| 城堡 | PARTIAL | 征服→胜利全链路已覆盖；城堡购买与进攻花费是视图入口 |
+| 城堡 | PASS | 征服→胜利全链路（castle-victory）与 type=13"攻击城堡"计划（`castle-attack-planned`：把唯一未锁城堡摆成地牢清空的可进攻态，经 quickUpgradeCollection 的 itemPurchaseUpgrades 槽驱动购买，断言 attackScheduled 真实翻转，带"无可进攻城堡即失败"反向探针）；**原版不存在城堡购买/进攻金币花费**——type=13 购买免费，门控是 maxUnlockedLevel >= requiredMonsterLevel，矩阵旧文"购买与进攻花费"系误记；农场购买（type=8/9）另见农场行 |
 | 农场 | PASS | 农场全局与地牢行购买（`dungeon-farm-purchased`/`dungeon-row-farm-purchased`）、推演成熟收获（`dungeon-farm-harvested`，通过 `AutoPurchaseDungeonUpgrade` 收获击杀并清零池）、休耕再侵袭与二次成熟（`dungeon-farm-cycle-long-term`，1500 回合再侵袭至 `cleared=false` + 1200 回合再次成熟并二次收获，累计击杀 `>=200`）全链路闭环，两端逐检查点完整 DTO 相等并带负向探针保护 |
 | 冒险点 | PASS | 21 个点数池与消费簿记逐检查点相等 |
 | 点数升级 | PASS | `adventure-points-spent` 单项购买 + `point-upgrades-multiple` 注入 5 亿点驱动购买全部 23 种点数升级（总造价 164.5M），断言 `pointManagerState.pointUpgrades[]` 新购 upgradeId 数 >= 5 且两端购买次数相等，`spentAdventurePoints` 按各项固定 pointCost 累加；购买后的修正器生效路径（balance 对象 currentValue 经 bonusIndex 映射）两端同构，随后 600 回合完整 DTO 相等 |
