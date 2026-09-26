@@ -1005,17 +1005,17 @@ export function initializeAiBehaviors() {
         f = a.position;
       if (d && d != f.targetDoor) {
         var g = findRouteToDoor(a, d);
-        f.Ug = g;
+        f.routeQueue = g;
         f.movementTargetCleared = false;
       } else {
         if (b && b != f.targetRoom) {
           g = findRouteToRoom(a, b.leadsTo);
-          f.Ug = g;
+          f.routeQueue = g;
           f.movementTargetCleared = false;
         } else {
           if (c && c != f.destinationRoom) {
             g = findRouteToRoom(a, c);
-            f.Ug = g;
+            f.routeQueue = g;
             f.movementTargetCleared = false;
           }
         }
@@ -1444,7 +1444,7 @@ export function initializeAiBehaviors() {
     if (!b) {
       return false;
     }
-    var c = game.monsters.Og;
+    var c = game.monsters.defeatedMonsters;
     if (!c || 0 === c.length) {
       return false;
     }
@@ -1469,7 +1469,7 @@ export function initializeAiBehaviors() {
     return this.spell;
   };
   CompanionSpellBehavior.prototype.selectTarget = function (a) {
-    var b = game.monsters.Og;
+    var b = game.monsters.defeatedMonsters;
     if (0 === b.length) {
       return null;
     }
@@ -1573,7 +1573,7 @@ export function initializeAiBehaviors() {
       return 0;
     }
     var b = a.position;
-    if (b.Ug && 0 < b.Ug.length || b.targetDoor || b.targetRoom || b.destinationRoom) {
+    if (b.routeQueue && 0 < b.routeQueue.length || b.targetDoor || b.targetRoom || b.destinationRoom) {
       return 0;
     }
     a = b.room;

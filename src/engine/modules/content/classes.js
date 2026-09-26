@@ -82,16 +82,16 @@ export function initializeContentClasses() {
       maxSpiritMultiplier: 0.9
     },
     spellDefinitions: fighterSpellDefinitions,
-    Qg: function () {
+    buildSkillTree1: function () {
       return [new CharacterSkillUpgrade(improvedArmorFighter1Definition), new CharacterSkillUpgrade(ignoreDamageFighter1Definition), new CharacterSkillUpgrade(improvedArmorFighter2Definition), new CharacterSkillUpgrade(ignoreDamageFighter2Definition), new CharacterSkillUpgrade(criticalHitChanceFighter1Definition), new CharacterSkillUpgrade(improvedArmorFighter3Definition), new CharacterSkillUpgrade(ignoreDamageFighter3Definition), new LearnSpellUpgrade(tauntSpellDefinition), new CharacterSkillUpgrade(ignoreDamageFighter4Definition)];
     },
-    Rg: function () {
+    buildSkillTree2: function () {
       return [new CharacterSkillUpgrade(improvedDamageFighter1Definition), new CharacterSkillUpgrade(improvedHealthFighter1Definition), new CharacterSkillUpgrade(improvedDamageFighter2Definition), new CharacterSkillUpgrade(improvedHealthFighter2Definition), new CharacterSkillUpgrade(criticalHitChanceFighter2Definition), new CharacterSkillUpgrade(improvedDamageFighter3Definition), new CharacterSkillUpgrade(improvedHealthFighter3Definition), new CharacterSkillUpgrade(attacksPerTurnFighter3Definition), new CharacterSkillUpgrade(additionalAttackPercentFighter1Definition)];
     },
-    Sg: function () {
+    buildSkillTree3: function () {
       return [new CharacterSkillUpgrade(improvedDefenseRatingFighter1Definition), new CharacterSkillUpgrade(healthRegenerationFighter1Definition), new CharacterSkillUpgrade(improvedDefenseRatingFighter2Definition), new CharacterSkillUpgrade(healthRegenerationFighter2Definition), new CharacterSkillUpgrade(criticalHitChanceFighter3Definition), new CharacterSkillUpgrade(improvedDefenseRatingFighter3Definition), new CharacterSkillUpgrade(healthRegenerationFighter3Definition), new CharacterSkillUpgrade(attacksPerTurnFighter1Definition), new CharacterSkillUpgrade(additionalAttackPercentFighter2Definition)];
     },
-    Tg: function () {
+    buildSkillTree4: function () {
       return [new CharacterSkillUpgrade(improvedAttackRatingFighter1Definition), new CharacterSkillUpgrade(fasterAttacksFighter1Definition), new CharacterSkillUpgrade(improvedAttackRatingFighter2Definition), new CharacterSkillUpgrade(fasterAttacksFighter2Definition), new CharacterSkillUpgrade(criticalHitChanceFighter4Definition), new CharacterSkillUpgrade(improvedAttackRatingFighter3Definition), new CharacterSkillUpgrade(fasterAttacksFighter3Definition), new CharacterSkillUpgrade(attacksPerTurnFighter2Definition), new CharacterSkillUpgrade(additionalAttackPercentFighter3Definition)];
     },
     createBehaviors: function () {
@@ -135,16 +135,16 @@ export function initializeContentClasses() {
       maxSpiritMultiplier: 1.05
     },
     spellDefinitions: priestSpellDefinitions,
-    Qg: function () {
+    buildSkillTree1: function () {
       return [new LearnSpellUpgrade(healSpellDefinition), new CharacterSkillUpgrade(improvedArmorPriest1Definition), new LearnSpellUpgrade(armorSpellDefinition), new CharacterSkillUpgrade(improvedHealingSpellPriestDefinition), new CharacterSkillUpgrade(improvedArmorPriest2Definition), new CharacterSkillUpgrade(healthRegenerationPriest2Definition), new CharacterSkillUpgrade(improvedArmorPriest3Definition), new CharacterSkillUpgrade(improvedArmorSpellPriestDefinition), new CharacterSkillUpgrade(fasterAttacksPriest1Definition)];
     },
-    Rg: function () {
+    buildSkillTree2: function () {
       return [new CharacterSkillUpgrade(improvedHealthPriest1Definition), new CharacterSkillUpgrade(improvedDamagePriest1Definition), new LearnSpellUpgrade(damageSpellDefinition), new CharacterSkillUpgrade(improvedHealthPriest2Definition), new CharacterSkillUpgrade(improvedDamagePriest2Definition), new CharacterSkillUpgrade(ignoreDamagePriest1Definition), new CharacterSkillUpgrade(spiritRegenerationPriest2Definition), new CharacterSkillUpgrade(improvedDamagePriest3Definition), new CharacterSkillUpgrade(improvedDamageSpellPriestDefinition)];
     },
-    Sg: function () {
+    buildSkillTree3: function () {
       return [new CharacterSkillUpgrade(improvedSpiritPriest1Definition), new CharacterSkillUpgrade(improvedAttackRatingPriest1Definition), new LearnSpellUpgrade(attackRatingSpellDefinition), new CharacterSkillUpgrade(improvedSpiritPriest2Definition), new CharacterSkillUpgrade(improvedAttackRatingPriest2Definition), new CharacterSkillUpgrade(healthRegenerationPriest1Definition), new CharacterSkillUpgrade(improvedAttackRatingPriest3Definition), new CharacterSkillUpgrade(ignoreDamagePriest2Definition), new CharacterSkillUpgrade(improvedAttackRatingSpellPriestDefinition)];
     },
-    Tg: function () {
+    buildSkillTree4: function () {
       return [new CharacterSkillUpgrade(spellCostPriest1Definition), new CharacterSkillUpgrade(improvedDefenseRatingPriest1Definition), new LearnSpellUpgrade(defenseRatingSpellDefinition), new CharacterSkillUpgrade(spellCostPriest2Definition), new CharacterSkillUpgrade(improvedDefenseRatingPriest3Definition), new CharacterSkillUpgrade(spiritRegenerationPriest1Definition), new CharacterSkillUpgrade(improvedDefenseRatingPriest2Definition), new CharacterSkillUpgrade(improvedDefenseRatingSpellPriestDefinition), new LearnSpellUpgrade(reviveSpellDefinition)];
     },
     createBehaviors: function () {
@@ -185,16 +185,16 @@ export function initializeContentClasses() {
       maxSpiritMultiplier: 0.9
     },
     spellDefinitions: null,
-    Qg: function () {
+    buildSkillTree1: function () {
       return [new CharacterSkillUpgrade(improvedArmorRanger1Definition), new CharacterSkillUpgrade(ricochetCountRanger1Definition), new CharacterSkillUpgrade(improvedArmorRanger2Definition), new CharacterSkillUpgrade(ricochetPercentRanger1Definition), new CharacterSkillUpgrade(criticalHitChanceRanger1Definition), new CharacterSkillUpgrade(healthRegenerationRanger1Definition), new CharacterSkillUpgrade(improvedArmorRanger3Definition), new CharacterSkillUpgrade(fasterAttacksRanger2Definition)];
     },
-    Rg: function () {
+    buildSkillTree2: function () {
       return [new CharacterSkillUpgrade(improvedDamageRanger1Definition), new CharacterSkillUpgrade(criticalHitChanceRanger2Definition), new CharacterSkillUpgrade(ricochetCountRanger2Definition), new CharacterSkillUpgrade(improvedDamageRanger2Definition), new CharacterSkillUpgrade(ricochetPercentRanger2Definition), new CharacterSkillUpgrade(improvedHealthRanger1Definition), new CharacterSkillUpgrade(improvedDamageRanger3Definition), new CharacterSkillUpgrade(healthRegenerationRanger3Definition)];
     },
-    Sg: function () {
+    buildSkillTree3: function () {
       return [new CharacterSkillUpgrade(improvedDefenseRatingRanger1Definition), new CharacterSkillUpgrade(healthRegenerationRanger2Definition), new CharacterSkillUpgrade(improvedDefenseRatingRanger2Definition), new CharacterSkillUpgrade(ricochetCountRanger3Definition), new CharacterSkillUpgrade(criticalHitChanceRanger3Definition), new CharacterSkillUpgrade(ricochetPercentRanger3Definition), new CharacterSkillUpgrade(improvedDefenseRatingRanger3Definition), new CharacterSkillUpgrade(improvedHealthRanger3Definition)];
     },
-    Tg: function () {
+    buildSkillTree4: function () {
       return [new CharacterSkillUpgrade(improvedAttackRatingRanger1Definition), new CharacterSkillUpgrade(improvedHealthRanger2Definition), new CharacterSkillUpgrade(improvedAttackRatingRanger2Definition), new CharacterSkillUpgrade(fasterAttacksRanger1Definition), new CharacterSkillUpgrade(ricochetCountRanger4Definition), new CharacterSkillUpgrade(improvedAttackRatingRanger3Definition), new CharacterSkillUpgrade(ricochetPercentRanger4Definition), new CharacterSkillUpgrade(fasterAttacksRanger3Definition), new CharacterSkillUpgrade(criticalHitChanceRanger4Definition)];
     },
     createBehaviors: function () {
@@ -231,16 +231,16 @@ export function initializeContentClasses() {
     }],
     statMultipliers: casterStatMultipliers,
     spellDefinitions: fireSpellDefinitions,
-    Qg: function () {
+    buildSkillTree1: function () {
       return [new LearnSpellUpgrade(fireBlastSpellDefinition), new CharacterSkillUpgrade(improvedDamageMageFire1Definition), new CharacterSkillUpgrade(healthRegenerationMageFire2Definition), new CharacterSkillUpgrade(improvedDamageMageFire2Definition), new CharacterSkillUpgrade(improvedHealthMageFire2Definition), new CharacterSkillUpgrade(improvedDamageMageFire3Definition), new CharacterSkillUpgrade(improvedSpiritMageFire2Definition), new CharacterSkillUpgrade(fasterAttacksMageFire1Definition), new CharacterSkillUpgrade(spiritRegenerationMageFire2Definition)];
     },
-    Rg: function () {
+    buildSkillTree2: function () {
       return [new CharacterSkillUpgrade(improvedAttackRatingMageFire1Definition), new LearnSpellUpgrade(turnMonsterSpellDefinition), new CharacterSkillUpgrade(improvedAttackRatingMageFire2Definition), new CharacterSkillUpgrade(improvedTurnMonsters1Definition), new CharacterSkillUpgrade(improvedAttackRatingMageFire3Definition), new CharacterSkillUpgrade(improvedTurnMonsters2Definition), new CharacterSkillUpgrade(fasterAttacksMageFire2Definition), new CharacterSkillUpgrade(improvedTurnMonsters3Definition), new CharacterSkillUpgrade(spiritRegenerationMageFire1Definition)];
     },
-    Sg: function () {
+    buildSkillTree3: function () {
       return [new CharacterSkillUpgrade(improvedArmorMageFire1Definition), new CharacterSkillUpgrade(improvedHealthMageFire1Definition), new LearnSpellUpgrade(fireRainSpellDefinition), new CharacterSkillUpgrade(improvedArmorMageFire2Definition), new CharacterSkillUpgrade(healthRegenerationMageFire1Definition), new CharacterSkillUpgrade(improvedFireRainMageFire1Definition), new CharacterSkillUpgrade(improvedArmorMageFire3Definition), new CharacterSkillUpgrade(spellCostMageFire2Definition), new CharacterSkillUpgrade(improvedFireRainMageFire2Definition)];
     },
-    Tg: function () {
+    buildSkillTree4: function () {
       return [new CharacterSkillUpgrade(improvedDefenseRatingMageFire1Definition), new CharacterSkillUpgrade(improvedSpiritMageFire1Definition), new LearnSpellUpgrade(fireBallSpellDefinition), new CharacterSkillUpgrade(improvedDefenseRatingMageFire2Definition), new CharacterSkillUpgrade(improvedFireballMageFire1Definition), new CharacterSkillUpgrade(improvedDefenseRatingMageFire3Definition), new CharacterSkillUpgrade(improvedFireballMageFire2Definition), new CharacterSkillUpgrade(spellCostMageFire1Definition)];
     },
     createBehaviors: function () {
@@ -277,16 +277,16 @@ export function initializeContentClasses() {
     }],
     statMultipliers: guardianStatMultipliers,
     spellDefinitions: rogueSpellDefinitions,
-    Qg: function () {
+    buildSkillTree1: function () {
       return [new CharacterSkillUpgrade(improvedArmorRogue1Definition), new CharacterSkillUpgrade(improvedArmorRogue2Definition), new CharacterSkillUpgrade(spiritRegenerationRogue1Definition), new CharacterSkillUpgrade(improvedArmorRogue3Definition), new LearnSpellUpgrade(stealthSpellDefinition), new CharacterSkillUpgrade(spiritRegenerationRogue2Definition), new CharacterSkillUpgrade(attacksPerTurnRogue1Definition2), new CharacterSkillUpgrade(improvedSpiritRogue1Definition), new CharacterSkillUpgrade(additionalAttackPercentRogue2Definition)];
     },
-    Rg: function () {
+    buildSkillTree2: function () {
       return [new CharacterSkillUpgrade(improvedDamageRogue1Definition), new CharacterSkillUpgrade(improvedHealthRogue1Definition), new CharacterSkillUpgrade(criticalHitChanceRogue1Definition), new CharacterSkillUpgrade(improvedDamageRogue2Definition), new CharacterSkillUpgrade(improvedHealthRogue2Definition), new CharacterSkillUpgrade(criticalHitChanceRogue2Definition), new CharacterSkillUpgrade(improvedDamageRogue3Definition), new CharacterSkillUpgrade(improvedHealthRogue3Definition), new CharacterSkillUpgrade(criticalHitChanceRogue3Definition)];
     },
-    Sg: function () {
+    buildSkillTree3: function () {
       return [new CharacterSkillUpgrade(improvedDefenseRatingRogue1Definition), new CharacterSkillUpgrade(healthRegenerationRogue1Definition), new CharacterSkillUpgrade(improvedDefenseRatingRogue2Definition), new CharacterSkillUpgrade(healthRegenerationRogue2Definition), new CharacterSkillUpgrade(additionalAttackPercentRogue3Definition), new CharacterSkillUpgrade(improvedDefenseRatingRogue3Definition), new CharacterSkillUpgrade(healthRegenerationRogue3Definition), new CharacterSkillUpgrade(additionalAttackPercentRogue4Definition), new LearnSpellUpgrade(instantLootSpellDefinition)];
     },
-    Tg: function () {
+    buildSkillTree4: function () {
       return [new CharacterSkillUpgrade(improvedAttackRatingRogue1Definition), new CharacterSkillUpgrade(fasterAttacksRogue1Definition), new CharacterSkillUpgrade(attacksPerTurnRogue1Definition), new CharacterSkillUpgrade(improvedAttackRatingRogue2Definition), new CharacterSkillUpgrade(fasterAttacksRogue2Definition), new CharacterSkillUpgrade(additionalAttackPercentRogue1Definition), new CharacterSkillUpgrade(improvedAttackRatingRogue3Definition), new CharacterSkillUpgrade(fasterAttacksRogue3Definition), new LearnSpellUpgrade(detectTreasureChestSpellDefinition)];
     },
     createBehaviors: function () {
@@ -323,16 +323,16 @@ export function initializeContentClasses() {
     }],
     statMultipliers: guardianStatMultipliers,
     spellDefinitions: druidSpellDefinitions,
-    Qg: function () {
+    buildSkillTree1: function () {
       return [new LearnSpellUpgrade(summonWolfPackSpellDefinition), new CharacterSkillUpgrade(improvedDamageDruid1Definition), new CharacterSkillUpgrade(largerWolfPackDruid1Definition), new CharacterSkillUpgrade(improvedDamageDruid2Definition), new CharacterSkillUpgrade(fasterAttacksDruid1Definition), new CharacterSkillUpgrade(improvedDamageDruid3Definition), new CharacterSkillUpgrade(largerWolfPackDruid5Definition), new CharacterSkillUpgrade(fasterAttacksDruid2Definition), new LearnSpellUpgrade(minorHealSpellDefinition)];
     },
-    Rg: function () {
+    buildSkillTree2: function () {
       return [new CharacterSkillUpgrade(improvedAttackRatingDruid1Definition), new LearnSpellUpgrade(sleepSpellDefinition), new CharacterSkillUpgrade(improvedAttackRatingDruid2Definition), new CharacterSkillUpgrade(improvedSleepDruid1Definition), new CharacterSkillUpgrade(improvedAttackRatingDruid3Definition), new CharacterSkillUpgrade(improvedSleepDruid2Definition), new CharacterSkillUpgrade(spiritRegenerationDruid1Definition), new CharacterSkillUpgrade(spiritRegenerationDruid2Definition), new CharacterSkillUpgrade(improvedSleepDruid3Definition)];
     },
-    Sg: function () {
+    buildSkillTree3: function () {
       return [new CharacterSkillUpgrade(improvedArmorDruid1Definition), new CharacterSkillUpgrade(improvedHealthDruid1Definition), new CharacterSkillUpgrade(healthRegenerationDruid1Definition), new CharacterSkillUpgrade(largerWolfPackDruid3Definition), new CharacterSkillUpgrade(improvedArmorDruid2Definition), new CharacterSkillUpgrade(improvedHealthDruid2Definition), new CharacterSkillUpgrade(healthRegenerationDruid2Definition), new CharacterSkillUpgrade(largerWolfPackDruid2Definition), new CharacterSkillUpgrade(improvedArmorDruid3Definition)];
     },
-    Tg: function () {
+    buildSkillTree4: function () {
       return [new CharacterSkillUpgrade(improvedDefenseRatingDruid1Definition), new CharacterSkillUpgrade(improvedSpiritDruid1Definition), new CharacterSkillUpgrade(improvedDefenseRatingDruid2Definition), new CharacterSkillUpgrade(spellCostDruid1Definition), new CharacterSkillUpgrade(improvedSpiritDruid2Definition), new CharacterSkillUpgrade(improvedDefenseRatingDruid3Definition), new CharacterSkillUpgrade(largerWolfPackDruid4Definition), new CharacterSkillUpgrade(spellCostDruid2Definition), new LearnSpellUpgrade(summonDogSpellDefinition)];
     },
     createBehaviors: function () {
@@ -377,16 +377,16 @@ export function initializeContentClasses() {
       maxSpiritMultiplier: 1
     },
     spellDefinitions: barbarianSpellDefinitions,
-    Qg: function () {
+    buildSkillTree1: function () {
       return [new CharacterSkillUpgrade(improvedArmorBarbarian1Definition), new CharacterSkillUpgrade(ignoreDamageBarbarian1Definition), new LearnSpellUpgrade(sledgeHammerSpellDefinition), new CharacterSkillUpgrade(improvedArmorBarbarian2Definition), new CharacterSkillUpgrade(ignoreDamageBarbarian2Definition), new CharacterSkillUpgrade(improvedSledgeHammerBarbarian1Definition), new CharacterSkillUpgrade(improvedArmorBarbarian3Definition), new CharacterSkillUpgrade(ignoreDamageBarbarian3Definition), new CharacterSkillUpgrade(improvedSledgeHammerBarbarian2Definition)];
     },
-    Rg: function () {
+    buildSkillTree2: function () {
       return [new CharacterSkillUpgrade(improvedDamageBarbarian1Definition), new CharacterSkillUpgrade(improvedHealthBarbarian1Definition), new CharacterSkillUpgrade(improvedDamageBarbarian2Definition), new CharacterSkillUpgrade(criticalHitChanceBarbarian1Definition), new CharacterSkillUpgrade(improvedHealthBarbarian2Definition), new CharacterSkillUpgrade(improvedDamageBarbarian3Definition), new CharacterSkillUpgrade(improvedHealthBarbarian3Definition), new CharacterSkillUpgrade(criticalHitChanceBarbarian2Definition), new LearnSpellUpgrade(rageSpellDefinition)];
     },
-    Sg: function () {
+    buildSkillTree3: function () {
       return [new CharacterSkillUpgrade(improvedDefenseRatingBarbarian1Definition), new CharacterSkillUpgrade(healthRegenerationBarbarian1Definition), new CharacterSkillUpgrade(improvedDefenseRatingBarbarian2Definition), new CharacterSkillUpgrade(improvedSpiritBarbarian1Definition), new CharacterSkillUpgrade(healthRegenerationBarbarian2Definition), new CharacterSkillUpgrade(improvedDefenseRatingBarbarian3Definition), new CharacterSkillUpgrade(healthRegenerationBarbarian3Definition), new CharacterSkillUpgrade(improvedSpiritBarbarian2Definition), new CharacterSkillUpgrade(criticalHitChanceBarbarian3Definition)];
     },
-    Tg: function () {
+    buildSkillTree4: function () {
       return [new CharacterSkillUpgrade(improvedAttackRatingBarbarian1Definition), new CharacterSkillUpgrade(fasterAttacksBarbarian1Definition), new CharacterSkillUpgrade(spiritRegenerationBarbarian1Definition), new CharacterSkillUpgrade(improvedAttackRatingBarbarian2Definition), new CharacterSkillUpgrade(fasterAttacksBarbarian2Definition), new CharacterSkillUpgrade(improvedAttackRatingBarbarian3Definition), new CharacterSkillUpgrade(spiritRegenerationBarbarian2Definition), new CharacterSkillUpgrade(fasterAttacksBarbarian3Definition), new CharacterSkillUpgrade(criticalHitChanceBarbarian4Definition)];
     },
     createBehaviors: function () {
@@ -423,16 +423,16 @@ export function initializeContentClasses() {
     }],
     statMultipliers: casterStatMultipliers,
     spellDefinitions: electricSpellDefinitions,
-    Qg: function () {
+    buildSkillTree1: function () {
       return [new LearnSpellUpgrade(shockSpellDefinition), new CharacterSkillUpgrade(improvedDamageMageElectric1Definition), new CharacterSkillUpgrade(healthRegenerationMageElectric2Definition), new CharacterSkillUpgrade(improvedDamageMageElectric2Definition), new CharacterSkillUpgrade(improvedHealthMageElectric2Definition), new CharacterSkillUpgrade(improvedDamageMageElectric3Definition), new CharacterSkillUpgrade(improvedSpiritMageElectric2Definition), new CharacterSkillUpgrade(fasterAttacksMageElectric1Definition), new CharacterSkillUpgrade(spiritRegenerationMageElectric2Definition)];
     },
-    Rg: function () {
+    buildSkillTree2: function () {
       return [new CharacterSkillUpgrade(improvedAttackRatingMageElectric1Definition), new LearnSpellUpgrade(spiderWebSpellDefinition), new CharacterSkillUpgrade(improvedAttackRatingMageElectric2Definition), new CharacterSkillUpgrade(improvedSpiderWebMageElectric1Definition), new CharacterSkillUpgrade(improvedAttackRatingMageElectric3Definition), new CharacterSkillUpgrade(improvedSpiderWebMageElectric2Definition), new CharacterSkillUpgrade(fasterAttacksMageElectric2Definition), new CharacterSkillUpgrade(improvedSpiderWebMageElectric3Definition), new CharacterSkillUpgrade(spiritRegenerationMageElectric1Definition)];
     },
-    Sg: function () {
+    buildSkillTree3: function () {
       return [new CharacterSkillUpgrade(improvedArmorMageElectric1Definition), new CharacterSkillUpgrade(improvedHealthMageElectric1Definition), new LearnSpellUpgrade(lightningRainSpellDefinition), new CharacterSkillUpgrade(improvedArmorMageElectric2Definition), new CharacterSkillUpgrade(healthRegenerationMageElectric1Definition), new CharacterSkillUpgrade(improvedLightningRainMageElectric1Definition), new CharacterSkillUpgrade(improvedArmorMageElectric3Definition), new CharacterSkillUpgrade(spellCostMageElectric2Definition), new CharacterSkillUpgrade(improvedLightningRainMageElectric2Definition)];
     },
-    Tg: function () {
+    buildSkillTree4: function () {
       return [new CharacterSkillUpgrade(improvedDefenseRatingMageElectric1Definition), new CharacterSkillUpgrade(improvedSpiritMageElectric1Definition), new LearnSpellUpgrade(chainedLightningSpellDefinition), new CharacterSkillUpgrade(improvedDefenseRatingMageElectric2Definition), new CharacterSkillUpgrade(improvedChainLightningMageElectric1Definition), new CharacterSkillUpgrade(improvedDefenseRatingMageElectric3Definition), new CharacterSkillUpgrade(improvedChainLightningMageElectric2Definition), new CharacterSkillUpgrade(spellCostMageElectric1Definition), new CharacterSkillUpgrade(improvedChainLightningMageElectric3Definition)];
     },
     createBehaviors: function () {
@@ -476,16 +476,16 @@ export function initializeContentClasses() {
       maxSpiritMultiplier: 1
     },
     spellDefinitions: ninjaSpellDefinitions,
-    Qg: function () {
+    buildSkillTree1: function () {
       return [new CharacterSkillUpgrade(improvedArmorNinja1Definition), new CharacterSkillUpgrade(attacksPerTurnNinja1Definition), new LearnSpellUpgrade(swiftStrikeSpellDefinition), new CharacterSkillUpgrade(improvedArmorNinja2Definition), new CharacterSkillUpgrade(criticalHitChanceNinja4Definition), new CharacterSkillUpgrade(swiftStrikeUpgradeNinja1Definition), new CharacterSkillUpgrade(improvedArmorNinja3Definition), new CharacterSkillUpgrade(criticalHitChanceNinja5Definition), new CharacterSkillUpgrade(swiftStrikeUpgradeNinja2Definition)];
     },
-    Rg: function () {
+    buildSkillTree2: function () {
       return [new CharacterSkillUpgrade(improvedDamageNinja1Definition), new CharacterSkillUpgrade(improvedHealthNinja1Definition), new CharacterSkillUpgrade(criticalHitChanceNinja1Definition), new CharacterSkillUpgrade(improvedDamageNinja2Definition), new CharacterSkillUpgrade(improvedHealthNinja2Definition), new CharacterSkillUpgrade(criticalHitChanceNinja2Definition), new CharacterSkillUpgrade(improvedDamageNinja3Definition), new CharacterSkillUpgrade(improvedHealthNinja3Definition), new CharacterSkillUpgrade(criticalHitChanceNinja3Definition)];
     },
-    Sg: function () {
+    buildSkillTree3: function () {
       return [new CharacterSkillUpgrade(improvedDefenseRatingNinja1Definition), new CharacterSkillUpgrade(healthRegenerationNinja1Definition), new CharacterSkillUpgrade(attacksPerTurnNinja2Definition), new CharacterSkillUpgrade(improvedDefenseRatingNinja2Definition), new CharacterSkillUpgrade(healthRegenerationNinja2Definition), new CharacterSkillUpgrade(additionalAttackPercentNinja3Definition), new CharacterSkillUpgrade(improvedDefenseRatingNinja3Definition), new CharacterSkillUpgrade(healthRegenerationNinja3Definition), new CharacterSkillUpgrade(additionalAttackPercentNinja4Definition)];
     },
-    Tg: function () {
+    buildSkillTree4: function () {
       return [new CharacterSkillUpgrade(improvedAttackRatingNinja1Definition), new CharacterSkillUpgrade(fasterAttacksNinja1Definition), new CharacterSkillUpgrade(attacksPerTurnNinja3Definition), new CharacterSkillUpgrade(improvedAttackRatingNinja2Definition), new CharacterSkillUpgrade(fasterAttacksNinja2Definition), new CharacterSkillUpgrade(additionalAttackPercentNinja1Definition), new CharacterSkillUpgrade(improvedAttackRatingNinja3Definition), new CharacterSkillUpgrade(fasterAttacksNinja3Definition), new CharacterSkillUpgrade(additionalAttackPercentNinja2Definition)];
     },
     createBehaviors: function () {
@@ -522,16 +522,16 @@ export function initializeContentClasses() {
     }],
     statMultipliers: casterStatMultipliers,
     spellDefinitions: necromancerSpellDefinitions,
-    Qg: function () {
+    buildSkillTree1: function () {
       return [new LearnSpellUpgrade(hurtSpellDefinition), new CharacterSkillUpgrade(improvedDamageNecromancer1Definition), new CharacterSkillUpgrade(healthRegenerationNecromancer2Definition), new CharacterSkillUpgrade(improvedDamageNecromancer2Definition), new CharacterSkillUpgrade(improvedHealthNecromancer2Definition), new CharacterSkillUpgrade(improvedDamageNecromancer3Definition), new CharacterSkillUpgrade(improvedSpiritNecromancer2Definition), new CharacterSkillUpgrade(fasterAttacksNecromancer1Definition), new CharacterSkillUpgrade(spiritRegenerationNecromancer2Definition)];
     },
-    Rg: function () {
+    buildSkillTree2: function () {
       return [new CharacterSkillUpgrade(improvedAttackRatingNecromancer1Definition), new LearnSpellUpgrade(summonSkeletonArmySpellDefinition), new CharacterSkillUpgrade(spiritRegenerationNecromancer1Definition), new CharacterSkillUpgrade(improvedAttackRatingNecromancer2Definition), new CharacterSkillUpgrade(largerSkeletonArmyNecromancer2Definition), new CharacterSkillUpgrade(improvedHealthNecromancer3Definition), new CharacterSkillUpgrade(improvedAttackRatingNecromancer3Definition), new CharacterSkillUpgrade(fasterAttacksNecromancer2Definition), new CharacterSkillUpgrade(largerSkeletonArmyNecromancer3Definition)];
     },
-    Sg: function () {
+    buildSkillTree3: function () {
       return [new CharacterSkillUpgrade(improvedArmorNecromancer1Definition), new CharacterSkillUpgrade(improvedHealthNecromancer1Definition), new CharacterSkillUpgrade(improvedArmorNecromancer2Definition), new CharacterSkillUpgrade(largerSkeletonArmyNecromancer1Definition), new CharacterSkillUpgrade(healthRegenerationNecromancer1Definition), new CharacterSkillUpgrade(improvedArmorNecromancer3Definition), new CharacterSkillUpgrade(spellCostNecromancer2Definition), new LearnSpellUpgrade(summonPhantomSkullSpellDefinition)];
     },
-    Tg: function () {
+    buildSkillTree4: function () {
       return [new CharacterSkillUpgrade(improvedDefenseRatingNecromancer1Definition), new CharacterSkillUpgrade(improvedSpiritNecromancer1Definition), new LearnSpellUpgrade(greenDeathSpellDefinition), new CharacterSkillUpgrade(improvedDefenseRatingNecromancer2Definition), new CharacterSkillUpgrade(greenDeathRicochetCountNecromancer1Definition), new CharacterSkillUpgrade(spellCostNecromancer1Definition), new CharacterSkillUpgrade(greenDeathRicochetCountNecromancer2Definition), new CharacterSkillUpgrade(improvedDefenseRatingNecromancer3Definition), new CharacterSkillUpgrade(greenDeathRicochetCountNecromancer3Definition)];
     },
     createBehaviors: function () {
@@ -568,16 +568,16 @@ export function initializeContentClasses() {
     }],
     statMultipliers: casterStatMultipliers,
     spellDefinitions: chickenSpellDefinitions,
-    Qg: function () {
+    buildSkillTree1: function () {
       return [new LearnSpellUpgrade(summonChickensSpellDefinition), new CharacterSkillUpgrade(improvedArmorChickenKing1Definition), new CharacterSkillUpgrade(healthRegenerationChickenKing2Definition), new CharacterSkillUpgrade(improvedHealthChickenKing2Definition), new CharacterSkillUpgrade(improvedArmorChickenKing2Definition), new CharacterSkillUpgrade(largerFlockChickenKing1Definition), new CharacterSkillUpgrade(improvedSpiritChickenKing2Definition), new CharacterSkillUpgrade(improvedArmorChickenKing3Definition), new CharacterSkillUpgrade(rogueChanceChickenKingDefinition)];
     },
-    Rg: function () {
+    buildSkillTree2: function () {
       return [new CharacterSkillUpgrade(improvedDamageChickenKing1Definition), new CharacterSkillUpgrade(spiritRegenerationChickenKing1Definition), new CharacterSkillUpgrade(improvedDamageChickenKing2Definition), new CharacterSkillUpgrade(fasterAttacksChickenKing1Definition), new CharacterSkillUpgrade(improvedDamageChickenKing3Definition), new CharacterSkillUpgrade(largerFlockChickenKing3Definition), new CharacterSkillUpgrade(spiritRegenerationChickenKing2Definition), new LearnSpellUpgrade(summonGuardChickenSpellDefinition)];
     },
-    Sg: function () {
+    buildSkillTree3: function () {
       return [new CharacterSkillUpgrade(improvedAttackRatingChickenKing1Definition), new CharacterSkillUpgrade(improvedHealthChickenKing1Definition), new CharacterSkillUpgrade(largerFlockChickenKing4Definition), new CharacterSkillUpgrade(improvedAttackRatingChickenKing2Definition), new CharacterSkillUpgrade(healthRegenerationChickenKing1Definition), new CharacterSkillUpgrade(largerFlockChickenKing5Definition), new CharacterSkillUpgrade(improvedAttackRatingChickenKing3Definition), new CharacterSkillUpgrade(spellCostChickenKing2Definition), new CharacterSkillUpgrade(ninjaChanceChickenKingDefinition)];
     },
-    Tg: function () {
+    buildSkillTree4: function () {
       return [new CharacterSkillUpgrade(improvedDefenseRatingChickenKing1Definition), new CharacterSkillUpgrade(improvedSpiritChickenKing1Definition), new CharacterSkillUpgrade(largerFlockChickenKing6Definition), new CharacterSkillUpgrade(improvedDefenseRatingChickenKing2Definition), new CharacterSkillUpgrade(spellCostChickenKing1Definition), new CharacterSkillUpgrade(largerFlockChickenKing2Definition), new CharacterSkillUpgrade(improvedDefenseRatingChickenKing3Definition), new CharacterSkillUpgrade(fasterAttacksChickenKing2Definition), new CharacterSkillUpgrade(barbarianChanceChickenKingDefinition)];
     },
     createBehaviors: function () {

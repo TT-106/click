@@ -28,7 +28,7 @@ export function CharacterPosition(a, b) {
   this.Ul = new Vector2();
   this.Sn = this.Rn = 0;
   this.moveTargetPoint = new Vector2();
-  this.Ug = null;
+  this.routeQueue = null;
   this.movementTargetCleared = false;
   this.targetRoom = this.destinationRoom = this.targetDoor = null;
   this.floorPositionIndex = -1;
@@ -39,7 +39,7 @@ export function clearMovementTarget(a) {
   a.targetDoor = null;
   a.destinationRoom = null;
   a.targetRoom = null;
-  a.Ug = null;
+  a.routeQueue = null;
   a.floorPositionIndex = -1;
 }
 export function applySeparationForce(a, b, c, d) {
@@ -94,7 +94,7 @@ export function separateDungeonCharacters(a) {
     c,
     d = false,
     f = getMonsters(),
-    g = game.minions.eh,
+    g = game.minions.minionList,
     h;
   for (c = 0; c < game.state.adventurers.length; c++) {
     b = game.state.adventurers[c];

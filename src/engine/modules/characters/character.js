@@ -73,10 +73,10 @@ export function Character(a, b, c, d, f) {
   this.hasUnspentSkills = false;
   this.skillTree4 = this.skillTree3 = this.skillTree2 = this.skillTree1 = null;
   if (this.characterType === ADVENTURER_TYPE) {
-    b = this.classDefinition.Qg();
-    f = this.classDefinition.Rg();
-    d = this.classDefinition.Sg();
-    a = this.classDefinition.Tg();
+    b = this.classDefinition.buildSkillTree1();
+    f = this.classDefinition.buildSkillTree2();
+    d = this.classDefinition.buildSkillTree3();
+    a = this.classDefinition.buildSkillTree4();
     bindSkillTree(this, b);
     bindSkillTree(this, f);
     bindSkillTree(this, d);
@@ -258,8 +258,8 @@ export function updateCharacter(a, b) {
         var p = a.position,
           s;
         s = isAdventurerOrMinion(a) ? b * p.Jw * walkingSpeedBonus.currentValue * walkingSpeedModifier.currentValue : p.Jw * b;
-        if (null != p.Ug && 0 < p.Ug.length) {
-          var u = p.Ug[0];
+        if (null != p.routeQueue && 0 < p.routeQueue.length) {
+          var u = p.routeQueue[0];
           setVector(p.velocity, u.pixelColumn, u.pixelRow);
           subtractVector(p.velocity, p.levelPosition);
           if (vectorLength(p.velocity) <= s) {
@@ -304,7 +304,7 @@ export function updateCharacter(a, b) {
             }
             if (y) {
               setVector(p.levelPosition, u.pixelColumn | 0, u.pixelRow | 0);
-              var Q = p.Ug.shift();
+              var Q = p.routeQueue.shift();
               if (!Q.isOpen) {
                 a: {
                   var V = game.state.party;
@@ -342,7 +342,7 @@ export function updateCharacter(a, b) {
                 p.room = Q.leadsTo;
               }
               p.floorPositionIndex = -1;
-              if (0 === p.Ug.length) {
+              if (0 === p.routeQueue.length) {
                 if (!p.targetRoom) {
                   clearMovementTarget(p);
                 }
@@ -778,7 +778,7 @@ export function updateCharacter(a, b) {
                 var hc = a.stats,
                   re = hc.maxSummonedMinions,
                   of = countSummonedMinions(a),
-                  wd = game.monsters.Og,
+                  wd = game.monsters.defeatedMonsters,
                   rl = Math.max(0, re - of),
                   cj = Math.min(rl, wd.length),
                   Ah = 0,

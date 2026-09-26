@@ -388,7 +388,7 @@ export function initializeRenderingScene() {
         drawWorldTileRow(a, c++, b - 2, b + 5);
         drawWorldTileRow(a, c++, b - 1, b + 4);
         drawWorldTileRow(a, c, b, b + 3);
-        drawWorldCharacters(a, game.minions.eh);
+        drawWorldCharacters(a, game.minions.minionList);
         drawWorldCharacters(a, game.state.adventurers);
         if (game.options.showCombatText) {
           drawFloatingText(a);
@@ -579,7 +579,7 @@ export function initializeRenderingScene() {
             }
           }
         }
-        var bb = game.monsters.Og,
+        var bb = game.monsters.defeatedMonsters,
           za,
           nb,
           fb,
@@ -616,10 +616,10 @@ export function initializeRenderingScene() {
             a.spriteRenderer.dk(pb, Sb, Ma, zb, Hb, pb.spriteSheet.spriteSize, 0);
           }
         }
-        drawDungeonCharacters(a, game.minions.eh);
+        drawDungeonCharacters(a, game.minions.minionList);
         drawDungeonCharacters(a, game.state.adventurers);
         drawCharacterEffects(a, getMonsters());
-        drawCharacterEffects(a, game.minions.eh);
+        drawCharacterEffects(a, game.minions.minionList);
         drawCharacterEffects(a, game.state.adventurers);
         if (game.options.showSpellEffects) {
           var Ha = game.effects.Wg;
@@ -726,7 +726,7 @@ export function initializeRenderingScene() {
         a.spriteRenderer.hx();
         drawCharacterHighlights(a, getMonsters(), "red");
         if (!game.state.encounter.ym) {
-          drawCharacterHighlights(a, game.minions.eh, "#007FFF");
+          drawCharacterHighlights(a, game.minions.minionList, "#007FFF");
           drawCharacterHighlights(a, game.state.adventurers, "#8B008B");
         }
         if (game.options.showCombatText) {

@@ -19,7 +19,7 @@ export function UpgradeButtonView(a, b, c, d) {
   this.visible = true;
   this.QA = a;
   this.upgrade = b;
-  this.Ag = null;
+  this.activeDetails = null;
   this.GC = d;
   this.zo = this.buttonElement = null;
   this.ti = "";
@@ -242,8 +242,8 @@ export function initializeViewsUpgradeDetails() {
   UpgradeButtonView.prototype = new View();
   UpgradeButtonView.prototype.attachUpgrade = function (a) {
     this.upgrade = a;
-    if (this.Ag) {
-      this.Ag.attachUpgrade(a);
+    if (this.activeDetails) {
+      this.activeDetails.attachUpgrade(a);
     }
     if (!(this.GC || this.upgrade.isDisplayable())) {
       if (this.buttonElement) {
@@ -258,7 +258,7 @@ export function initializeViewsUpgradeDetails() {
     if (getElement(this.QA)) {
       this.buttonElement = null;
       mountUpgradeButton(this);
-      this.zo = this.Ag = null;
+      this.zo = this.activeDetails = null;
     }
   };
   UpgradeButtonView.prototype.onPurchaseClicked = function () {
@@ -274,19 +274,19 @@ export function initializeViewsUpgradeDetails() {
     }
     if (this.zo !== a) {
       this.zo = a;
-      if (this.Ag && this.zo !== this.Ag.getUpgradeType()) {
+      if (this.activeDetails && this.zo !== this.activeDetails.getUpgradeType()) {
         clearElement(this.buttonElement);
-        this.Ag = null;
+        this.activeDetails = null;
       }
-      if (!this.Ag) {
-        this.Ag = createUpgradeDetails(this, this.zo);
+      if (!this.activeDetails) {
+        this.activeDetails = createUpgradeDetails(this, this.zo);
       }
-      if (this.Ag) {
-        this.Ag.showDetails();
+      if (this.activeDetails) {
+        this.activeDetails.showDetails();
       }
     }
-    if (this.Ag) {
-      this.Ag.update();
+    if (this.activeDetails) {
+      this.activeDetails.update();
     }
     if (this.ti !== b) {
       this.ti = b;

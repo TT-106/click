@@ -159,9 +159,9 @@ export function applySpellEffect(a, b) {
     h = b.targetCharacter;
     f = game.monsters;
     if (h) {
-      h = f.Og.indexOf(h);
+      h = f.defeatedMonsters.indexOf(h);
       if (-1 < h) {
-        f.Og.splice(h, 1);
+        f.defeatedMonsters.splice(h, 1);
       }
     }
     summonSpellMinion(c, d, g);

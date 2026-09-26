@@ -28,7 +28,7 @@ export function DungeonLayoutGenerator(a, b, c, d, f) {
   this.DA = 8;
   this.roomList = [];
   this.hallwayList = [];
-  this.tf = this.entranceDoor = null;
+  this.exitDoor = this.entranceDoor = null;
   this.Xp = this.Zo = 0;
 }
 export function placeHorizontalStairs(a, b, c) {
@@ -123,7 +123,7 @@ export function CastleLayoutGenerator(a, b, c, d) {
   this.DA = 6;
   this.roomList = [];
   this.hallwayList = [];
-  this.tf = this.entranceDoor = null;
+  this.exitDoor = this.entranceDoor = null;
   this.Xp = this.Zo = 0;
 }
 export function appendDungeonRoom(a, b, c, d, f, g) {
@@ -143,7 +143,7 @@ export function DungeonLevel() {
   this.tileGrid = null;
   this.roomList = [];
   this.hallwayList = [];
-  this.tf = this.entranceDoor = null;
+  this.exitDoor = this.entranceDoor = null;
   this.sp = 0;
 }
 export function generateDungeonLevel(a, b, c, d) {
@@ -153,7 +153,7 @@ export function generateDungeonLevel(a, b, c, d) {
   f.roomList.length = 0;
   f.hallwayList.length = 0;
   f.entranceDoor = null;
-  f.tf = null;
+  f.exitDoor = null;
   if (f.tileGrid) {
     clearDungeonTiles(f);
   } else {
@@ -174,7 +174,7 @@ export function generateDungeonLevel(a, b, c, d) {
   f.roomList = c.roomList;
   f.hallwayList = c.hallwayList;
   f.entranceDoor = c.entranceDoor;
-  f.tf = c.tf;
+  f.exitDoor = c.exitDoor;
   c = getDungeonTheme(b);
   for (b = 0; b < f.roomList.length; b++) {
     f.roomList[b].xx(c, f.tileGrid);
@@ -253,7 +253,7 @@ export function initializeWorldGeneration() {
     this.Xp = this.Zo = 0;
     this.roomList.length = 0;
     this.hallwayList.length = 0;
-    this.tf = this.entranceDoor = null;
+    this.exitDoor = this.entranceDoor = null;
     a: {
       var a = this.Ow + randomIntFrom(this.seededRandom, this.xA - this.Ow),
         b,
@@ -340,8 +340,8 @@ export function initializeWorldGeneration() {
     }
     const secondEntrance = isLastLevel ? !this.Aj : this.Aj;
     this.entranceDoor = methods.to(a, !this.Aj);
-    this.tf = methods.to(b, secondEntrance);
-    return null != this.entranceDoor && null != this.tf;
+    this.exitDoor = methods.to(b, secondEntrance);
+    return null != this.entranceDoor && null != this.exitDoor;
   };
   DungeonLayoutGenerator.prototype.to = function (a, b) {
     var c;
@@ -427,7 +427,7 @@ export function initializeWorldGeneration() {
     this.Xp = this.Zo = 0;
     this.roomList.length = 0;
     this.hallwayList.length = 0;
-    this.tf = this.entranceDoor = null;
+    this.exitDoor = this.entranceDoor = null;
     appendDungeonRoom(this, 1, 1, 15, 15, 1);
     appendDungeonRoom(this, 51, 1, 15, 15, 1);
     appendDungeonRoom(this, 56, 31, 5, 5, 3);
@@ -461,7 +461,7 @@ export function initializeWorldGeneration() {
     const methods = /** @type {LayoutMethods} */ (/** @type {unknown} */ (this));
     var a = this.roomList[this.roomList.length - 1];
     this.entranceDoor = methods.to(this.roomList[0], false);
-    this.tf = methods.to(a, false);
+    this.exitDoor = methods.to(a, false);
   };
   CastleLayoutGenerator.prototype.to = function (a, b) {
     const methods = /** @type {LayoutMethods} */ (/** @type {unknown} */ (this));

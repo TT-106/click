@@ -162,7 +162,7 @@ window.harness = {
   // 队列不入存档，因此这是唯一能在两端各自计数再对账的入口；扫描只读数组，不消耗随机数。
   // 原版：w.Gf.Og 列表、角色效果容器 Ja.of、效果类型字段 X；重构版对应 effects.activeEffects / statusEffectTypeId（of 已改名 activeEffects）。
   countEffectApplications(turns, typeId) {
-    const monsterList = () => (original ? window.Game.Gf.Og : game.monsters.Og);
+    const monsterList = () => (original ? window.Game.Gf.Og : game.monsters.defeatedMonsters);
     const effectList = m => {
       const holder = original ? m.Ja : m.effects;
       return holder && (original ? holder.of : holder.activeEffects);
@@ -412,7 +412,7 @@ window.harness = {
     let attempts = 0;
     for (let i = 0; i < maxTurns; i++) {
       advance();
-      if ((original ? window.Game.Gf.Og : game.monsters.Og).length === 0) continue;
+      if ((original ? window.Game.Gf.Og : game.monsters.defeatedMonsters).length === 0) continue;
       attempts++;
       if (original) window.Hq(scroll, false); else castScroll(scroll, false);
       if (snapshot().statistics.scrollsUsed > before) break;

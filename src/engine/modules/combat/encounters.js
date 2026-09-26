@@ -248,7 +248,7 @@ export function getMonsterTypesForLevel(a, b) {
 }
 export function MonsterRegistry() {
   this.Pi = [];
-  this.Og = [];
+  this.defeatedMonsters = [];
   this.aE = 50;
 }
 export function getMonsters() {
@@ -259,8 +259,8 @@ export function clearMonsters() {
   if (0 != a.Pi.length) {
     a.Pi.length = 0;
   }
-  if (0 != a.Og.length) {
-    a.Og.length = 0;
+  if (0 != a.defeatedMonsters.length) {
+    a.defeatedMonsters.length = 0;
   }
 }
 export function initializeCombatEncounters() {
@@ -310,8 +310,8 @@ export function initializeCombatEncounters() {
       if (-1 < b) {
         this.Pi.splice(b, 1);
       }
-      for (this.Og.push(a); this.Og.length > this.aE;) {
-        this.Og.shift();
+      for (this.defeatedMonsters.push(a); this.defeatedMonsters.length > this.aE;) {
+        this.defeatedMonsters.shift();
       }
     }
   };

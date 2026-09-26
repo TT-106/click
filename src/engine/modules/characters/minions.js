@@ -3,20 +3,20 @@
  */
 import { game } from "../runtime/game.js";
 export function MinionRegistry() {
-  this.eh = [];
+  this.minionList = [];
 }
 export function clearMinions() {
   var a = game.minions;
-  if (0 < a.eh.length) {
-    a.eh.length = 0;
+  if (0 < a.minionList.length) {
+    a.minionList.length = 0;
   }
 }
 export function initializeCharactersMinions() {
   MinionRegistry.prototype.Lp = function (a) {
     if (a) {
-      var b = this.eh.indexOf(a);
+      var b = this.minionList.indexOf(a);
       if (-1 < b) {
-        this.eh.splice(b, 1);
+        this.minionList.splice(b, 1);
       }
       b = game.allies;
       a = (/** @type {any} */ (b)).allies.indexOf(a);
@@ -26,7 +26,7 @@ export function initializeCharactersMinions() {
     }
   };
   MinionRegistry.prototype.Tt = function (a) {
-    this.eh.push(a);
+    this.minionList.push(a);
     game.allies.Tt(a);
   };
 }

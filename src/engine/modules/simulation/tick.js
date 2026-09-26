@@ -49,7 +49,7 @@ export function advanceSimulation(a) {
         }
       }
     }
-    var p = game.minions.eh,
+    var p = game.minions.minionList,
       s,
       u,
       y,

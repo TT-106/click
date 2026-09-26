@@ -559,7 +559,7 @@ export function initializeCharactersParty() {
           }
         }
         (/** @type {any} */ (this)).et(findNextUnopenedDoor());
-        this.destinationRoom = this.targetDoor ? this.targetDoor ? this.targetDoor.leadsTo : null : (this.targetRoom = game.level.tf) ? this.targetRoom.leadsTo : null;
+        this.destinationRoom = this.targetDoor ? this.targetDoor ? this.targetDoor.leadsTo : null : (this.targetRoom = game.level.exitDoor) ? this.targetRoom.leadsTo : null;
       }
     }
   };
