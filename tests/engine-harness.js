@@ -171,24 +171,75 @@ window.harness = {
     }
     return { applications, snapshot: snapshot() };
   },
-  // 采样浮动战斗文字（用于暴击、治疗、免疫等瞬时视觉的直接计数对账）。
-  countFloatingText({ turns = 0, text = '暴击!' } = {}) {
+  // 采样浮动战斗文字（用于暴击、首领击杀、伤害数字、治疗、免疫等瞬时视觉的直接计数对账）。
+  countFloatingText({ turns = 0, text, pattern } = {}) {
     const list = () => (original ? window.Game.pc.al : game.floatingText.al);
     let count = 0;
+    let sum = 0;
     const seen = new Set();
+    const texts = [];
+    const matcher = text !== undefined
+      ? (t => t === text)
+      : pattern ? (t => new RegExp(pattern).test(t)) : (() => true);
     for (let i = 0; i < turns; i++) {
       advance();
       const current = list();
       if (Array.isArray(current)) {
         for (const item of current) {
-          if (item.text === text && !seen.has(item)) {
+          if (matcher(item.text) && !seen.has(item)) {
             seen.add(item);
             count++;
+            texts.push(item.text);
+            if (typeof item.text === 'string' && /^[+-]?\d+$/.test(item.text)) {
+              sum += parseInt(item.text, 10);
+            }
           }
         }
       }
     }
-    return { count, snapshot: snapshot() };
+    return { count, sum, texts, snapshot: snapshot() };
+  },
+  // 采样首领遭遇（用于首领遭遇进入、首领怪物存活、首领击杀文字与遭遇命名的直接对账）。
+  trackBossEncounter({ turns = 0 } = {}) {
+    const isOriginal = original;
+    const getEncounter = () => (isOriginal ? window.Game.i.Xg : game.state.encounter);
+    const getMonsters = () => (isOriginal ? window.Game.Gf.Pi : game.monsters.Pi);
+    const getFloating = () => (isOriginal ? window.Game.pc.al : game.floatingText.al);
+    let bossEncounterTurns = 0;
+    let bossSeenTurns = 0;
+    let bossKills = 0;
+    const bossNames = [];
+    const seenKillTexts = new Set();
+    for (let i = 0; i < turns; i++) {
+      advance();
+      const enc = getEncounter();
+      if (enc && enc.du) {
+        bossEncounterTurns++;
+        if (enc.fw && !bossNames.includes(enc.fw)) bossNames.push(enc.fw);
+      }
+      const monsters = getMonsters();
+      if (Array.isArray(monsters)) {
+        if (monsters.some(m => (isOriginal ? m.zb === 4 : m.characterType === 4))) {
+          bossSeenTurns++;
+        }
+      }
+      const floats = getFloating();
+      if (Array.isArray(floats)) {
+        for (const item of floats) {
+          if (item.text === '击杀首领!' && !seenKillTexts.has(item)) {
+            seenKillTexts.add(item);
+            bossKills++;
+          }
+        }
+      }
+    }
+    return {
+      bossEncounterTurns,
+      bossSeenTurns,
+      bossKills,
+      bossNames,
+      snapshot: snapshot(),
+    };
   },
   // U7：驱动"升级购买"这条只有视图层会触发的路径。视图里按钮的处理就是
   // `if (upgrade.canPurchaseNow()) upgrade.purchase()`，这里按同一条判断驱动引擎侧对象。

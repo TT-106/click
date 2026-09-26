@@ -93,7 +93,7 @@ Clickpocalypse II 的核心实现已从高混淆遗留代码中恢复出真实�
 | 角色职业 | PARTIAL | 法术场景装载职业 3/4/6/7/8/9/10/11；0/1/2/5 未被装载，职业成长未跑 |
 | 角色升级 | PASS | `upgrades-purchased` 给足经验值后驱动 `LevelUpUpgrade.purchase`；两端各自断言 `characteristicsComponent.characterLevel` 超过 fixture 基线，逐检查点完整存档相等 |
 | 角色技能/技能树 | PASS | `purchaseUpgrades` 遍历每名角色的四棵技能树；两端各自断言 `upgrades1..4` 已解锁布尔位总数超过 fixture 基线，法术学习 type=6 实际购买且 `spells` 数量增长，逐检查点完整存档相等；未逐项验证每种技能的战斗效果 |
-| 角色属性 | PASS | 六个分量 + 生命/精神/击杀在 50 场景每个检查点全量相等 |
+| 角色属性 | PASS | 六个分量 + 生命/精神/击杀在 51 场景每个检查点全量相等 |
 | 背包 | PASS | 物品计数/容量在差分中相等（itemsFound 真实增长） |
 | 装备 | PARTIAL | 载入与生成之外，`auto-equipped` 已让装备槽与装备事件点数变化；手动逐件装备/卸下仍缺专项断言 |
 | 自动装备 | PASS | `auto-equipped` 两端调用 type=4 的 `EquipBestItemUpgrade`，各自断言装备槽变化与 itemEquipped 点数事件计数增长，逐检查点完整存档相等 |
@@ -104,11 +104,11 @@ Clickpocalypse II 的核心实现已从高混淆遗留代码中恢复出真实�
 | 眩晕/状态效果 | PASS | `isStunned/isStealthed/isConverted` 语义已落地；type 13/14/0 直接计数两端同值，`characterStunnedCount` 增长断言 |
 | 技能效果层 | PARTIAL | 首领/守卫技能效果表被跑过，玩家技能习得路径已驱动；各技能的战斗效果尚无专项断言 |
 | 法术 | PASS | 16 个 `spellCategoryId` 每条一个差分场景，两端各自断言施法计数增长 |
-| 伤害数字 | PARTIAL | 真实帧渲染后逐像素指纹两端相同（含飘字绘制），但未单独断言飘字池内容 |
+| 伤害数字 | PASS | 500 回合实战逐帧直接采样浮动文字层，正则匹配负数伤害文本数量（57 次）与累计总伤害（-616 点），两端完全一致，带反向探针验证 |
 | 法术特效 | PARTIAL | 同上：绘制进帧指纹，特效池本身不入存档 |
 | 普通遭遇 | PASS | 全场景都会进入遭遇；遭遇点数事件在存档中等值增长 |
 | 困难遭遇 | PARTIAL | 引擎内不存在该概念（c2.js/src 全文 0 命中）；按外部机器人定义"有队友昏迷"由眩晕计数覆盖 |
-| 首领遭遇 | PARTIAL | `randomBossEncounter` 药水被真实激活并产出昏迷；未直接断言首领生成 |
+| 首领遭遇 | PASS | castle-victory 用 trackBossEncounter 逐帧扫描 encounter.du（首领遭遇状态）、characterType === 4（首领存活）、"击杀首领!" 浮动文字三重直接因果指标，两端全等（首领战 7611 回合、首领存活 2898 回合、击杀 1 次、名称一致），带双向对抗性探针验证 |
 | 掉落 | PASS | 物品/卷轴/药水/金币四类掉落路径均在长程差分中发生且相等；`claimedBy` 认领语义已恢复 |
 | 金币 | PASS | 队伍金币与累计金币在 DTO 中相等，金币涌入场景断言真实增长 |
 | 物品 | PASS | 稀有度计数增长且两端相等；远古档位在 fixture 场景内未出现 |

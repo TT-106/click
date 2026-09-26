@@ -5,6 +5,12 @@
 
 ## 当前轮次状态（2026-09-26，M13 文档与验收收尾）
 
+- U8 伤害数字与首领遭遇直接观察双项闭环（2026-09-26，工作树中待本批提交）：
+  1. harness countFloatingText 扩展 pattern 正则匹配、sum 数值求和与 texts 列表收集；trackBossEncounter 逐帧扫描 encounter.du（首领遭遇状态）、characterType === 4（原版 zb === 4，首领怪物存活）、"击杀首领!" 浮动文字与 enc.fw 首领命名，返回四维指标。
+  2. 新增 combat-damage-numbers 场景（第 51 个）：500 回合实战，正则 ^-[0-9]+$ 匹配伤害飘字，两端数量（57 次）与累计总伤害（-616 点）完全一致，带反向探针（sums > 0 或破坏正则即刻失败）。
+  3. castle-victory 场景改为单步 15000 回合 + trackBoss: true，直接断言首领遭遇进入（7611 回合）、首领存活（2898 回合）、击杀首领（1 次）、首领命名四维指标两端全等，双向对抗探针（kills > 1 与 seens === 0）验证。
+  4. 附录 A 验收矩阵：伤害数字、首领遭遇两行从 PARTIAL 升级为 PASS，当前矩阵 39 PASS / 12 PARTIAL / 0 未覆盖；场景数 50 → 51。facts.md 新增 Fact 40（伤害飘字池机制与全数对账）、Fact 41（首领遭遇生成与击杀完整因果链；三类状态均不入存档 DTO，属存档差分盲区，只有逐帧直接观察才能闭环）。
+
 - U7 怪物等级退休与暴击系统直接观察双项闭环（2026-09-26）：
   1. 新增 `monster-level-retired` 场景：在队伍升至 3+ 级并解锁怪物等级 2 与 3 的前提下，驱动购买 `RetireMonsterLevelUpgrade`（type=11），断言最低等级 `minUnlockedLevel` 从 1 升至 2，首个有效怪物等级抬高至 2（等级 1 排除），两端 5 步递进与完整 DTO 完全相等，带反向破坏探针验证。
   2. 新增 `combat-critical-hits` 场景：注入技能点与经验，驱动战士 4 档（`criticalHitChanceFighter1..4`）与游侠 3 档（`criticalHitChanceRanger1..3`）共 7 档暴击几率技能点亮，随后 1000 回合实战通过 harness `countFloatingText` 在两端活动浮动文字层（原版 `Game.pc.al` / 重构版 `game.floatingText.al`）采样黄色 `"暴击!"` 次数，两端触发次数精确全等（各 11 次，无技能时为 0），验证跳过护甲扣除与 RNG 顺序一致，1000 回合后两端完整 DTO 完全相等，带非暴击文字负向探针验证。

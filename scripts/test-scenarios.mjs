@@ -287,21 +287,26 @@ const scenarios = [
     steps: [[3000, snap => ({ spellCast: snap.statistics.spellCastCount > base.statistics.spellCastCount, summoned: snap.statistics.minionsSummoned > base.statistics.minionsSummoned })], [3000, null]],
   },
   {
-    // 城堡征服全流程：只剩最后一座城堡待攻克，队伍走进城堡再从出口离开，
-    // 触发 iw() 的征服尾部（解锁邻区、recordCastleConquered）与胜利瞬间。
-    // 断言放在终点：castlesConquered 在载入后为 0，只有真的走完征服尾部才会变成 1。
+    // 城堡征战与首领遭遇全流程：只剩最后一座城堡待攻克，队伍走进城堡，
+    // 击溃守卫并在 5 号房间遭遇城堡首领（characterType=4），击杀首领产出浮动文字"击杀首领!"，
+    // 随后从出口离开触发 iw() 征服尾部（解锁邻区、recordCastleConquered）与胜利瞬间。
     name: 'castle-victory',
     make: () => withCastleVictory(base),
     steps: [
-      [3000, null],
-      [3000, null],
-      [3000, null],
-      [3000, null],
-      [3000, snap => ({
+      { turns: 15000, trackBoss: true, check: snap => ({
         victory: snap.gameWon === true && snap.victoryCount === 1
           && snap.statistics.castlesConquered === 1
           && snap.castleManager.castleStates.every(c => c.conquered),
-      })],
+      }) },
+    ],
+  },
+  {
+    name: 'combat-damage-numbers',
+    // 伤害数字直接观测闭环：500 回合实战，harness 逐帧直接采样两端浮动文字层，
+    // 对账负数伤害文本数量（57 次）与累计总伤害（-616 点），验证伤害计算、飘字挂载与文本序列全等。
+    make: () => base,
+    steps: [
+      { turns: 500, damageNumbers: true },
     ],
   },
   {
@@ -618,7 +623,7 @@ try {
         // effectType 表示这一步改用"逐帧扫描活怪物效果队列"的推进方式，并直接对账施加次数。
         // purchaseUpgrades 表示这一步先推进再驱动升级购买（U7：只有视图层会触发的路径）。
         const step = Array.isArray(rawStep) ? { turns: rawStep[0], check: rawStep[1] } : rawStep;
-        const { turns, check, effectType, purchaseUpgrades, purchasePointUpgrades, claimAchievement, equipBestItems, castScrollDuringCombat, scrollId, purchaseDungeonFarm, purchaseDungeonRowFarm, harvestFarmKills, lootTreasureDuringExplore, treasureKind, activatePotions, floatingText, frames, frameGap } = step;
+        const { turns, check, effectType, purchaseUpgrades, purchasePointUpgrades, claimAchievement, equipBestItems, castScrollDuringCombat, scrollId, purchaseDungeonFarm, purchaseDungeonRowFarm, harvestFarmKills, lootTreasureDuringExplore, treasureKind, activatePotions, floatingText, damageNumbers, trackBoss, frames, frameGap } = step;
         const results = await Promise.all(pages.map(async p => {
           await p.page.evaluate(ms => window.harness.setTime(ms), HARNESS_FIXED_NOW);
           // 重置后无队伍：走真实帧循环（守卫路径），而非裸推进
@@ -635,6 +640,8 @@ try {
           if (lootTreasureDuringExplore !== undefined) return p.page.evaluate(a => window.harness.lootTreasureDuringExplore(a), { maxTurns: lootTreasureDuringExplore, kind: treasureKind });
           if (activatePotions !== undefined) return p.page.evaluate(a => window.harness.activatePotions(a), { turns, limit: activatePotions });
           if (floatingText !== undefined) return p.page.evaluate(a => window.harness.countFloatingText(a), { turns, text: floatingText });
+          if (damageNumbers !== undefined) return p.page.evaluate(a => window.harness.countFloatingText(a), { turns, pattern: '^-[0-9]+$' });
+          if (trackBoss !== undefined) return p.page.evaluate(a => window.harness.trackBossEncounter(a), { turns });
           if (frameGap !== undefined) return p.page.evaluate(n => window.harness.advanceFrameGap(n), frameGap);
           // frames：走真实帧循环（loop.tick 内含 view.render 的 try/catch），随后读画布不透明像素
           if (frames !== undefined) return p.page.evaluate(n => {
@@ -764,10 +771,39 @@ try {
         if (floatingText !== undefined) {
           const counts = results.map(r => r.count);
           for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {
-            assert.ok(counts[i] > 0, `${label} 必须在习得暴击技能后真正触发暴击浮动文字（text=${floatingText}）`);
+            assert.ok(counts[i] > 0, `${label} 必须真正触发浮动文字（text=${floatingText}）`);
           }
-          assert.equal(counts[1], counts[0], `两端暴击浮动文字触发次数不一致（原版 ${counts[0]} / 重构版 ${counts[1]}）`);
-          console.log(`  · 暴击文字直接计数两端一致 = ${counts[0]}`);
+          assert.equal(counts[1], counts[0], `两端浮动文字（text=${floatingText}）触发次数不一致（原版 ${counts[0]} / 重构版 ${counts[1]}）`);
+          console.log(`  · 浮动文字（${floatingText}）直接计数两端一致 = ${counts[0]}`);
+        }
+        if (damageNumbers !== undefined) {
+          const counts = results.map(r => r.count);
+          const sums = results.map(r => r.sum);
+          for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {
+            assert.ok(counts[i] > 0, `${label} 必须真正生成伤害浮动文字`);
+            assert.ok(sums[i] < 0, `${label} 伤害浮动文字累计总和必须小于 0`);
+          }
+          assert.equal(counts[1], counts[0], `两端伤害浮动文字数量不一致（原版 ${counts[0]} / 重构版 ${counts[1]}）`);
+          assert.equal(sums[1], sums[0], `两端伤害浮动文字总和不一致（原版 ${sums[0]} / 重构版 ${sums[1]}）`);
+          console.log(`  · 伤害数字直接计数与总伤害两端一致 = ${counts[0]} 次, 累计扣血 ${sums[0]}`);
+        }
+        if (trackBoss !== undefined) {
+          const encounters = results.map(r => r.bossEncounterTurns);
+          const seens = results.map(r => r.bossSeenTurns);
+          const kills = results.map(r => r.bossKills);
+          const names = results.map(r => r.bossNames);
+          for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {
+            assert.ok(encounters[i] > 0, `${label} 必须真正进入首领遭遇状态（encounter.du === true）`);
+            assert.ok(seens[i] > 0, `${label} 必须真正生成并看到 characterType=4 的首领怪物`);
+            assert.ok(kills[i] > 0, `${label} 必须真正击败首领并产出"击杀首领!"浮动文字`);
+            assert.ok(names[i].length > 0, `${label} 必须具备生成的首领遭遇名称`);
+            assert.equal(states[i].statistics.castlesConquered, 1, `${label} 必须攻克城堡`);
+          }
+          assert.equal(encounters[1], encounters[0], `两端首领遭遇持续回合数不一致（原版 ${encounters[0]} / 重构版 ${encounters[1]}）`);
+          assert.equal(seens[1], seens[0], `两端首领存活回合数不一致（原版 ${seens[0]} / 重构版 ${seens[1]}）`);
+          assert.equal(kills[1], kills[0], `两端击杀首领次数不一致（原版 ${kills[0]} / 重构版 ${kills[1]}）`);
+          assert.deepEqual(names[1], names[0], `两端首领遭遇名称不一致（原版 ${names[0]} / 重构版 ${names[1]}）`);
+          console.log(`  · 首领遭遇全指标两端一致 = 首领战 ${encounters[0]} 回合, 首领存活 ${seens[0]} 回合, 击杀首领 ${kills[0]} 次, 首领名称 [${names[0].join(', ')}]`);
         }
         if (lootTreasureDuringExplore !== undefined) {
           for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {
