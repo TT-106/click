@@ -5,6 +5,11 @@
 
 ## 当前轮次状态（2026-09-26，M13 文档与验收收尾）
 
+- U10 点数升级全覆盖与胜利面板直接观察（2026-09-26，提交 1bc1304）：
+  1. 新增 point-upgrades-multiple 场景（矩阵第 52 个）：注入 5 亿冒险点（23 项总造价 164.5M），purchasePointUpgrades 驱动购买全部点数升级；断言 pointManagerState.pointUpgrades[] 新购 upgradeId 数 >= 5、两端购买次数相等、spentAdventurePoints 按各项固定 pointCost 累加，随后 600 回合完整 DTO 相等。注意：点数升级购买记录在 pointManagerState.pointUpgrades[].upgradePurchased，不在 settings.upgrades（后者是全局升级级数表）——检查助手首版读错位置已修正。
+  2. castle-victory 增加胜利面板直接观察步：harness observeVictoryPanel() 经 idle() 真帧渲染后读 gameOverTabContent 的 computed display 与 innerText——两端面板可见且文本一致（279 字符）。GameOverView.onGameWon 启用+选中 TabState 的链路由 party.js:274 征服尾部触发。
+  3. 附录 A：点数升级、游戏结束/终局两行 PARTIAL → PASS，当前 44 PASS / 8 PARTIAL / 0 未覆盖。剩余 PARTIAL：角色职业 0/1/2/5 未装载、技能效果层、法术特效、城堡购买花费、成就其余奖励、装备手动穿卸、Canvas 多视口。
+
 - U9 验收矩阵三行升级（2026-09-26，提交 70b460d）：
   1. 困难遭遇 → PASS：引擎内概念不存在（c2.js/src 全文 0 命中复核）；概念源自 c2c.user.js:29-31 自有定义"一名及以上队友昏迷"，其直接信号（眩晕 type=13/14 计数、characterStunnedCount）已由眩晕行与 fireball-blast-stun 直接观察覆盖，无引擎行为可分叉。
   2. UI 标签页 → PASS：E2E 扩展角色分页 1-3（推荐阵容 4 人，Char4 需 5 人队）与经设置页的 infoTabContent 断言；14 个静态 TabState 逐一对账，游戏结束/离线为状态门控面板（门控状态由引擎差分行断言）。
