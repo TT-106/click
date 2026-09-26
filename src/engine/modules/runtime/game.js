@@ -61,9 +61,9 @@ export function initializeRuntimeGame() {
     regions: new function () {
       var a = WORLD_ORIGIN_COLUMN,
         b = WORLD_ORIGIN_ROW;
-      this.Eh = 16;
-      this.Rh = a;
-      this.Sh = b;
+      this.regionGridSpan = 16;
+      this.regionGridOriginColumn = a;
+      this.regionGridOriginRow = b;
       this.sk = {};
       this.Mr = [];
     }(),

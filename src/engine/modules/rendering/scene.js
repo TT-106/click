@@ -183,8 +183,8 @@ export function drawEntityHighlight(a, b, c, d) {
   b = b.ck;
   var f, g;
   g = game.regions;
-  var h = g.Rh,
-    l = g.Sh,
+  var h = g.regionGridOriginColumn,
+    l = g.regionGridOriginRow,
     n;
   for (g = 0; g < b.length; g++) {
     f = b[g];
@@ -396,10 +396,10 @@ export function initializeRenderingScene() {
         a.spriteRenderer.hx();
         if (game.options.showMapOverlay) {
           var d = game.regions,
-            f = d.Rh,
-            g = d.Sh,
-            h = 120 / (d.Rh + d.Eh - f) | 0,
-            l = 120 / (d.Sh + d.Eh - g) | 0;
+            f = d.regionGridOriginColumn,
+            g = d.regionGridOriginRow,
+            h = 120 / (d.regionGridOriginColumn + d.regionGridSpan - f) | 0,
+            l = 120 / (d.regionGridOriginRow + d.regionGridSpan - g) | 0;
           a.context.save();
           a.context.translate(650, 280);
           a.context.rotate(Math.PI / 4);

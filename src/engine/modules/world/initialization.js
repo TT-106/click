@@ -12,7 +12,7 @@ export function initializeRegionsAndCastles() {
   var eb = game.regions;
   eb.sk = {};
   eb.Mr.length = 0;
-  var Gb = eb.Eh,
+  var Gb = eb.regionGridSpan,
     Da,
     ub,
     mb,
@@ -20,10 +20,10 @@ export function initializeRegionsAndCastles() {
     La,
     wa,
     Fa;
-  Ea = eb.Rh;
+  Ea = eb.regionGridOriginColumn;
   for (Da = 0; Da < Gb; Da++, Ea++) {
     mb = [];
-    La = eb.Sh;
+    La = eb.regionGridOriginRow;
     for (ub = 0; ub < Gb; ub++, La++) {
       wa = Ea + "_" + La;
       Fa = new WorldRegion(wa, Ea, La);
@@ -51,7 +51,7 @@ export function initializeRegionsAndCastles() {
     mc = WORLD_BLOCK_ROWS / 2 | 0,
     vb = {},
     Sb = 0,
-    Ma = game.regions.Eh,
+    Ma = game.regions.regionGridSpan,
     zb = Ma * Ma,
     Hb,
     ac,

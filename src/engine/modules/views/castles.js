@@ -62,8 +62,8 @@ export function initializeViewsCastles() {
       a = game.regions;
       var b,
         c,
-        d = a.Rh + a.Eh - a.Rh,
-        f = a.Sh + a.Eh - a.Sh,
+        d = a.regionGridOriginColumn + a.regionGridSpan - a.regionGridOriginColumn,
+        f = a.regionGridOriginRow + a.regionGridSpan - a.regionGridOriginRow,
         g,
         h;
       for (c = 0; c < f; c++) {
@@ -83,10 +83,10 @@ export function initializeViewsCastles() {
     var containerId = this.elementId;
     clearElementById(containerId);
     var b = game.regions,
-      c = b.Rh,
-      d = b.Sh,
-      f = b.Rh + b.Eh,
-      g = b.Sh + b.Eh,
+      c = b.regionGridOriginColumn,
+      d = b.regionGridOriginRow,
+      f = b.regionGridOriginColumn + b.regionGridSpan,
+      g = b.regionGridOriginRow + b.regionGridSpan,
       h;
     this.ws = createElement("table", getElement(containerId), null, null);
     var a = f - c,

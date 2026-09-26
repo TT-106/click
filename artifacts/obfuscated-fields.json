@@ -49,111 +49,6 @@
     ]
   },
   {
-    "name": "Th",
-    "reads": 1,
-    "writes": 10,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\content\\dungeon-themes.js:37",
-        "code": "Th: [{\n  Oo: [],\n  JC: [\"L3_WallDeco23.PNG\", \"L3_WallDeco49.PNG\"],\n  KC: [\"L3_WallDeco24.PNG\", \"L3_WallDeco50.PNG\"]\n}]"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\dungeon-themes.js:74",
-        "code": "Th: []"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\dungeon-themes.js:107",
-        "code": "Th: []"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\content\\dungeon-themes.js",
-      "src\\engine\\modules\\world\\rooms.js"
-    ]
-  },
-  {
-    "name": "Rh",
-    "reads": 10,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:186",
-        "code": "g.Rh"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:399",
-        "code": "d.Rh"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:401",
-        "code": "d.Rh"
-      }
-    ],
-    "fileCount": 5,
-    "files": [
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\runtime\\game.js",
-      "src\\engine\\modules\\views\\castles.js",
-      "src\\engine\\modules\\world\\initialization.js",
-      "src\\engine\\modules\\world\\regions.js"
-    ]
-  },
-  {
-    "name": "Sh",
-    "reads": 10,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:187",
-        "code": "g.Sh"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:400",
-        "code": "d.Sh"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:402",
-        "code": "d.Sh"
-      }
-    ],
-    "fileCount": 5,
-    "files": [
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\runtime\\game.js",
-      "src\\engine\\modules\\views\\castles.js",
-      "src\\engine\\modules\\world\\initialization.js",
-      "src\\engine\\modules\\world\\regions.js"
-    ]
-  },
-  {
-    "name": "Eh",
-    "reads": 10,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:401",
-        "code": "d.Eh"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:402",
-        "code": "d.Eh"
-      },
-      {
-        "loc": "src\\engine\\modules\\runtime\\game.js:64",
-        "code": "this.Eh"
-      }
-    ],
-    "fileCount": 5,
-    "files": [
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\runtime\\game.js",
-      "src\\engine\\modules\\views\\castles.js",
-      "src\\engine\\modules\\world\\initialization.js",
-      "src\\engine\\modules\\world\\regions.js"
-    ]
-  },
-  {
     "name": "Yh",
     "reads": 7,
     "writes": 4,
@@ -6205,30 +6100,6 @@
     "fileCount": 1,
     "files": [
       "src\\engine\\modules\\combat\\scrolls.js"
-    ]
-  },
-  {
-    "name": "Oo",
-    "reads": 4,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\content\\dungeon-themes.js:38",
-        "code": "Oo: []"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\dungeon-themes.js:207",
-        "code": "Oo: [\"L2_IceFloorDeco1.PNG\", \"L2_IceFloorDeco3.PNG\", \"L2_IceFloorDeco2.PNG\"]"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\rooms.js:156",
-        "code": "p.Oo"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\content\\dungeon-themes.js",
-      "src\\engine\\modules\\world\\rooms.js"
     ]
   },
   {
@@ -16701,54 +16572,6 @@
     "fileCount": 1,
     "files": [
       "src\\engine\\modules\\combat\\scrolls.js"
-    ]
-  },
-  {
-    "name": "JC",
-    "reads": 1,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\content\\dungeon-themes.js:39",
-        "code": "JC: [\"L3_WallDeco23.PNG\", \"L3_WallDeco49.PNG\"]"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\dungeon-themes.js:208",
-        "code": "JC: []"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\rooms.js:171",
-        "code": "p.JC"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\content\\dungeon-themes.js",
-      "src\\engine\\modules\\world\\rooms.js"
-    ]
-  },
-  {
-    "name": "KC",
-    "reads": 1,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\content\\dungeon-themes.js:40",
-        "code": "KC: [\"L3_WallDeco24.PNG\", \"L3_WallDeco50.PNG\"]"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\dungeon-themes.js:209",
-        "code": "KC: []"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\rooms.js:174",
-        "code": "p.KC"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\content\\dungeon-themes.js",
-      "src\\engine\\modules\\world\\rooms.js"
     ]
   },
   {

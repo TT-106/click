@@ -34,10 +34,10 @@ export function initializeContentDungeonThemes() {
       wallE: "L2_WallBrickE.PNG",
       wallS: "L2_WallBrickS.PNG"
     },
-    Th: [{
-      Oo: [],
-      JC: ["L3_WallDeco23.PNG", "L3_WallDeco49.PNG"],
-      KC: ["L3_WallDeco24.PNG", "L3_WallDeco50.PNG"]
+    decorationSets: [{
+      floorDecorations: [],
+      horizontalWallDecorations: ["L3_WallDeco23.PNG", "L3_WallDeco49.PNG"],
+      verticalWallDecorations: ["L3_WallDeco24.PNG", "L3_WallDeco50.PNG"]
     }]
   };
   caveTheme = {
@@ -71,7 +71,7 @@ export function initializeContentDungeonThemes() {
       wallE: "L2_WallDarkBrickE.PNG",
       wallS: "L2_WallDarkBrickS.PNG"
     },
-    Th: []
+    decorationSets: []
   };
   towerTheme = {
     floor: "L1_Terrain013.PNG",
@@ -104,7 +104,7 @@ export function initializeContentDungeonThemes() {
       wallE: "L2_WallCaveE.PNG",
       wallS: "L2_WallCaveS.PNG"
     },
-    Th: []
+    decorationSets: []
   };
   castleTheme = {
     floor: "L1_FloorPattern.PNG",
@@ -137,7 +137,7 @@ export function initializeContentDungeonThemes() {
       wallE: "L2_WallBoneE.PNG",
       wallS: "L2_WallBoneS.PNG"
     },
-    Th: []
+    decorationSets: []
   };
   dungeonTheme = {
     floor: "L1_Terrain049.PNG",
@@ -170,7 +170,7 @@ export function initializeContentDungeonThemes() {
       wallE: "L2_WallDarkStoneE.PNG",
       wallS: "L2_WallDarkStoneS.PNG"
     },
-    Th: []
+    decorationSets: []
   };
   iceDungeonTheme = {
     floor: "L1_Terrain004.PNG",
@@ -203,10 +203,10 @@ export function initializeContentDungeonThemes() {
       wallE: "L2_WallIceE.PNG",
       wallS: "L2_WallIceS.PNG"
     },
-    Th: [{
-      Oo: ["L2_IceFloorDeco1.PNG", "L2_IceFloorDeco3.PNG", "L2_IceFloorDeco2.PNG"],
-      JC: [],
-      KC: []
+    decorationSets: [{
+      floorDecorations: ["L2_IceFloorDeco1.PNG", "L2_IceFloorDeco3.PNG", "L2_IceFloorDeco2.PNG"],
+      horizontalWallDecorations: [],
+      verticalWallDecorations: []
     }]
   };
   ironMineTheme = {
@@ -240,7 +240,7 @@ export function initializeContentDungeonThemes() {
       wallE: "L2_WallIronE.PNG",
       wallS: "L2_WallIronS.PNG"
     },
-    Th: []
+    decorationSets: []
   };
   stoneDungeonTheme = {
     floor: "L1_Terrain049.PNG",
@@ -273,7 +273,7 @@ export function initializeContentDungeonThemes() {
       wallE: "L2_WallMineE.PNG",
       wallS: "L2_WallMineS.PNG"
     },
-    Th: []
+    decorationSets: []
   };
   chamberTheme = {
     floor: "L1_Terrain010.PNG",
@@ -306,7 +306,7 @@ export function initializeContentDungeonThemes() {
       wallE: "L2_WallStoneE.PNG",
       wallS: "L2_WallStoneS.PNG"
     },
-    Th: []
+    decorationSets: []
   };
   woodenMineTheme = {
     floor: "L1_Terrain011.PNG",
@@ -339,6 +339,6 @@ export function initializeContentDungeonThemes() {
       wallE: "L2_WallWoodE.PNG",
       wallS: "L2_WallWoodS.PNG"
     },
-    Th: []
+    decorationSets: []
   };
 }

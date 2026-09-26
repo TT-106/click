@@ -149,14 +149,14 @@ export function revealRoom(a) {
         }
       }
     }
-    p = a.theme.Th;
+    p = a.theme.decorationSets;
     h = a.tileGrid;
     b = game.decorations;
     if (!(!p || 0 === p.length || 0.2 > b.seededRandom.random() || !(p = 1 === p.length ? p[0] : randomIntFrom(b.seededRandom, p.length)))) {
-      if (p.Oo && 0 < p.Oo.length) {
+      if (p.floorDecorations && 0 < p.floorDecorations.length) {
         if (g = a.tileColumn, d = a.tileRow, f = d + a.heightInTiles - 1, g = g + 1 + randomIntFrom(b.seededRandom, g + a.widthInTiles - 1 - g - 2), d = d + 1 + randomIntFrom(b.seededRandom, f - d - 2), setVector(b.spawnPointScratch, g, d), f = b.spawnPointScratch, d = h[f.x][f.y], d) {
           if (!d.decorationSprite) {
-            if (f = p.Oo[randomIntFrom(b.seededRandom, p.Oo.length)]) {
+            if (f = p.floorDecorations[randomIntFrom(b.seededRandom, p.floorDecorations.length)]) {
               d.setDecorationSprite(game.terrainSprites.getSprite(f));
             } else {
               console.log("failed to select floor sprite.");
@@ -168,10 +168,10 @@ export function revealRoom(a) {
       }
       if (0.5 > b.seededRandom.random()) {
         d = b.Xw(a);
-        p = p.JC;
+        p = p.horizontalWallDecorations;
       } else {
         d = b.Zw(a);
-        p = p.KC;
+        p = p.verticalWallDecorations;
       }
       if (d && p && 0 !== p.length && canPlaceRoomObject(a, d)) {
         if (h = h[d.x][d.y], h) {

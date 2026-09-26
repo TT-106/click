@@ -100,12 +100,12 @@ export function refreshCastleConquest(a) {
   }
 }
 export function RegionLayout() {
-  this.BA = game.regions.Rh;
-  this.EA = game.regions.Sh;
+  this.BA = game.regions.regionGridOriginColumn;
+  this.EA = game.regions.regionGridOriginRow;
   var a = game.regions;
-  this.$D = a.Rh + a.Eh;
+  this.$D = a.regionGridOriginColumn + a.regionGridSpan;
   a = game.regions;
-  this.bE = a.Sh + a.Eh;
+  this.bE = a.regionGridOriginRow + a.regionGridSpan;
 }
 export function getWestRegion(a, b, c, d) {
   return b - 1 >= a.BA && (a = b - 1 + "_" + c, !d[a]) ? game.regions.sk[a] : null;
