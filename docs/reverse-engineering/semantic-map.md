@@ -84,6 +84,8 @@
 
 `mc` → `descriptionText`：23 条冒险点升级定义的说明文字；`AdventurePointUpgrade.getDescription()` 读取该字段。定义键与消费点同批更新，无存档映射。
 
+`Zb` → `character`：CharacterSkillUpgrade 与 LearnSpellUpgrade 持有的目标 Character，赋值、清空、购买和可购买性判断共 24 个所有者引用同批更新；存档通过既有升级状态映射，不直接保存该运行时引用。
+
 ## 待取证残留（约 1,300 处访问）
 
 高频：`Y/Z/aa/ca/ea/ga/fa/ka/na` 等长尾——工作清单 `artifacts/obfuscated-fields.json`（按频次排序，含样例代码）。取证方法与产出格式见 WORKSTATE.md 第 6 节。

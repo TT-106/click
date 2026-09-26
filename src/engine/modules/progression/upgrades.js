@@ -167,12 +167,12 @@ export function RetireMonsterLevelUpgrade() {
 }
 export function CharacterSkillUpgrade(a) {
   this.it = a;
-  this.Zb = null;
+  this.character = null;
   this.Hc = this.canPurchase = false;
 }
 export function LearnSpellUpgrade(a) {
   this.oq = a;
-  this.Zb = null;
+  this.character = null;
   this.Hc = this.canPurchase = false;
   this.zd = null;
 }
@@ -750,7 +750,7 @@ export function initializeProgressionUpgrades() {
   };
   CharacterSkillUpgrade.prototype = new Upgrade();
   CharacterSkillUpgrade.prototype.sx = function (a) {
-    this.Zb = a;
+    this.character = a;
   };
   CharacterSkillUpgrade.prototype.Jr = function () {
     return this.it;
@@ -762,11 +762,11 @@ export function initializeProgressionUpgrades() {
     this.Hc = a;
   };
   CharacterSkillUpgrade.prototype.og = function () {
-    this.Zb = null;
+    this.character = null;
     this.Hc = false;
   };
   CharacterSkillUpgrade.prototype.Vo = function () {
-    return this.Zb;
+    return this.character;
   };
   CharacterSkillUpgrade.prototype.getTitle = function () {
     return this.it.title;
@@ -788,33 +788,33 @@ export function initializeProgressionUpgrades() {
   };
   CharacterSkillUpgrade.prototype.Qc = function () {
     if (!this.Hc) {
-      if (!this.Zb) {
+      if (!this.character) {
         console.log("error: adventurer not assigned to skill upgrade");
-      } else if (!(1 > this.Zb.skillPoints)) {
+      } else if (!(1 > this.character.skillPoints)) {
         this.Hc = true;
-        var a = this.Zb;
+        var a = this.character;
         a.skillPoints--;
         if (0 > a.skillPoints) {
           a.skillPoints = 0;
         }
         a.hasUnspentSkills = hasUnspentSkills(a);
-        recalculateCharacterSkills(this.Zb);
+        recalculateCharacterSkills(this.character);
         markUpgradeChanged(this);
-        recordGameEvent("Skill", this.Zb.classDefinition.className + " " + this.it.title);
+        recordGameEvent("Skill", this.character.classDefinition.className + " " + this.it.title);
       }
     }
   };
   CharacterSkillUpgrade.prototype.Cd = function () {
-    if (this.Zb) {
+    if (this.character) {
       var a = this.canPurchase;
-      this.canPurchase = !this.Hc && (!this.Wp || this.Wp.He()) && 0 < this.Zb.skillPoints;
+      this.canPurchase = !this.Hc && (!this.Wp || this.Wp.He()) && 0 < this.character.skillPoints;
       return a !== this.canPurchase;
     }
     console.log("error: adventurer not assigned to skill upgrade");
   };
   LearnSpellUpgrade.prototype = new Upgrade();
   LearnSpellUpgrade.prototype.sx = function (a) {
-    this.Zb = a;
+    this.character = a;
   };
   LearnSpellUpgrade.prototype.Jr = function () {
     return this.oq;
@@ -826,7 +826,7 @@ export function initializeProgressionUpgrades() {
     this.Hc = a;
   };
   LearnSpellUpgrade.prototype.og = function () {
-    this.Zb = null;
+    this.character = null;
     this.Hc = false;
     this.zd = null;
   };
@@ -837,7 +837,7 @@ export function initializeProgressionUpgrades() {
     return this.zd;
   };
   LearnSpellUpgrade.prototype.Vo = function () {
-    return this.Zb;
+    return this.character;
   };
   LearnSpellUpgrade.prototype.getTitle = function () {
     return this.oq.spellDefinition.name;
@@ -859,11 +859,11 @@ export function initializeProgressionUpgrades() {
   };
   LearnSpellUpgrade.prototype.Qc = function () {
     if (!this.Hc) {
-      if (this.Zb) {
-        var a = this.Zb.initialSpellSkillPoint;
-        if (!(1 > this.Zb.skillPoints && 1 > a)) {
+      if (this.character) {
+        var a = this.character.initialSpellSkillPoint;
+        if (!(1 > this.character.skillPoints && 1 > a)) {
           this.Hc = true;
-          a = this.Zb;
+          a = this.character;
           if (0 < a.initialSpellSkillPoint) {
             a.initialSpellSkillPoint = 0;
           } else {
@@ -873,9 +873,9 @@ export function initializeProgressionUpgrades() {
             }
           }
           a.hasUnspentSkills = hasUnspentSkills(a);
-          learnSpell(this.Zb, this.uw());
+          learnSpell(this.character, this.uw());
           markUpgradeChanged(this);
-          recordGameEvent("Spell", this.Zb.classDefinition.className + " " + this.oq.spellDefinition.name);
+          recordGameEvent("Spell", this.character.classDefinition.className + " " + this.oq.spellDefinition.name);
         }
       } else {
         console.log("error: adventurer not assigned to spell upgrade");
@@ -883,10 +883,10 @@ export function initializeProgressionUpgrades() {
     }
   };
   LearnSpellUpgrade.prototype.Cd = function () {
-    if (this.Zb) {
+    if (this.character) {
       var a = this.canPurchase,
-        b = this.Zb.skillPoints,
-        c = this.Zb.initialSpellSkillPoint;
+        b = this.character.skillPoints,
+        c = this.character.initialSpellSkillPoint;
       this.canPurchase = !this.Hc && (!this.Wp || this.Wp.He()) && (0 < b || c);
       return a !== this.canPurchase;
     }
