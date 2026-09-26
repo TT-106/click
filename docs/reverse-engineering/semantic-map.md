@@ -114,7 +114,7 @@ RunStatistics 的 `On/Lk/qn/Mj/wi/uk` → `turnCount/doorsOpened/roomsCleared/le
 
 `Spell.td`（仍未改名）决定效果在动作的哪一刻施加：`combat/actions.js:62-70` 在 `impactEffect` 首次生成（`hasSpawned` 为假）时，若 `actionDefinition.td` 为真立即调用 `applySpellEffect`；`actions.js:116` 在动作收尾（命中特效播放完毕 `bl()`）时对 `td` 为假的定义补调同一函数。`content/spells.js` 的 15 处 `td` 中，14 处为 `true`，唯一 `td: false` 是忍者怪"快速打击"（cat=12），它同时在 `actions.js:91` 的伤害分支里走 `applyActionDamage`。
 
-`applySpellEffect`（`actions.js:118`）按 `spellCategoryId` 分发：cat 2/3 用 `statusEffectDefinitions[statusEffectTypeId]` 构造 StatusEffect 并 `effects.of.push`，禁用类效果再置 `effects.Kd = true`（`actions.js:121-153`）；cat 9/10 走 `summonSpellMinion`；cat 11 先把目标从 `game.monsters.Og` 移除再召唤；cat 17 按召唤者概率产出小鸡。进入该函数的既有三条路径：职业主动施法、卷轴施放（`combat/scrolls.js:149-160` 把 `Spell` 挂到 `scrollCaster.ld` 并置 `actionType = CAST_ACTION_TYPE`）、怪物 AI 施法（`ai/targeting.js:299-419` 的 `spellDefinition`）。`blastStunSpell`（cat=2、statusEffectTypeId=14）不属这三条，它由 `simulation/tick.js:346-348` 懒创建为二段打击动作的 `actionDefinition`，仍落在 cat 2/3 分支。怪物效果队列不入存档，因此"type 14 被施加了几次"的直接计数仍缺。
+`applySpellEffect`（`actions.js:118`）按 `spellCategoryId` 分发：cat 2/3 用 `statusEffectDefinitions[statusEffectTypeId]` 构造 StatusEffect 并 `effects.of.push`，禁用类效果再置 `effects.Kd = true`（`actions.js:121-153`）；cat 9/10 走 `summonSpellMinion`；cat 11 先把目标从 `game.monsters.Og` 移除再召唤；cat 17 按召唤者概率产出小鸡。进入该函数的既有三条路径：职业主动施法、卷轴施放（`combat/scrolls.js:149-160` 把 `Spell` 挂到 `scrollCaster.ld` 并置 `actionType = CAST_ACTION_TYPE`）、怪物 AI 施法（`ai/targeting.js:299-419` 的 `spellDefinition`）。`blastStunSpell`（cat=2、statusEffectTypeId=14）不属这三条，它由 `simulation/tick.js:346-348` 懒创建为二段打击动作的 `actionDefinition`，仍落在 cat 2/3 分支。怪物效果队列不入存档，所以"某类效果被施加了几次"只能靠下一节的只读逐帧扫描观察。
 
 ## 怪物效果队列的两端符号对照（2026-09-26，Blast Stun 直接计数）
 
@@ -129,6 +129,8 @@ RunStatistics 的 `On/Lk/qn/Mj/wi/uk` → `turnCount/doorsOpened/roomsCleared/le
 | `b.Da.Ja.of.push(d)` | `targetCharacter.effects.of.push(d)` | 写入角色的效果数组 |
 | `w.i.$a` | `game.state.turnNumber` | 当前回合 |
 | `b.Ib` | `actionDefinition` | 动作携带的法术定义 |
+| `function rw(a,b,c)` | `summonSpellMinion` | 按 `kv[a.ta]` → `minionsBySpell[a.name]` 反查随从模板，找不到时打印 `Failed to find minion for summon spell.` |
+| `function sw(a,b,c)` | `spawnMinion` | 模板命中后真正生成随从 |
 
 这条对照是 `tests/engine-harness.js` 里 `countEffectApplications(turns, typeId)` 的依据：两端用同一套扫描逻辑、各自的名字表，逐帧统计"某类效果新落到某只活怪物身上"的次数。引擎效果队列不入存档，因此这类只读扫描是唯一能把瞬态行为变成可对比数字的入口。
 
