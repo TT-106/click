@@ -32,7 +32,7 @@ export function DungeonLayoutGenerator(a, b, c, d, f) {
   this.Xp = this.Zo = 0;
 }
 export function placeHorizontalStairs(a, b, c) {
-  var d = b.Nc,
+  var d = b.doorList,
     f = 0,
     g,
     h,
@@ -53,7 +53,7 @@ export function placeHorizontalStairs(a, b, c) {
   return a;
 }
 export function placeVerticalStairs(a, b, c) {
-  var d = b.Nc,
+  var d = b.doorList,
     f = 0,
     g,
     h = b.tileColumn - 1,
@@ -466,7 +466,7 @@ export function initializeWorldGeneration() {
   CastleLayoutGenerator.prototype.to = function (a, b) {
     const methods = /** @type {LayoutMethods} */ (/** @type {unknown} */ (this));
     var c = new DungeonStairs(a),
-      d = a.Nc,
+      d = a.doorList,
       f,
       g;
     if (0.5 > Math.random()) {

@@ -30,14 +30,14 @@ export function CharacterPosition(a, b) {
   this.moveTargetPoint = new Vector2();
   this.Ug = null;
   this.movementTargetCleared = false;
-  this.ed = this.Cc = this.Bc = null;
+  this.ed = this.destinationRoom = this.targetDoor = null;
   this.fg = -1;
   this.Hh = this.aB = this.qj = null;
 }
 export function clearMovementTarget(a) {
   a.movementTargetCleared = true;
-  a.Bc = null;
-  a.Cc = null;
+  a.targetDoor = null;
+  a.destinationRoom = null;
   a.ed = null;
   a.Ug = null;
   a.fg = -1;
@@ -216,7 +216,7 @@ export function initializeCharactersMovement() {
     return this.levelPosition.y;
   };
   CharacterPosition.prototype.et = function (a) {
-    this.Bc = a;
+    this.targetDoor = a;
   };
   CharacterPosition.prototype.rB = function (a) {
     this.ed = a;

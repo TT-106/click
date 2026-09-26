@@ -24,7 +24,7 @@ import { BASE_POTION_CAPACITY, doubleExperienceModifier, doubleGoldDropsModifier
 import { clampPointToRoom, roomBottomPixels, roomLeftPixels, roomRightPixels, roomTopPixels, setTileEffect } from "../world/rooms.js";
 import { MELEE_ATTACK_RANGE, RANGED_ATTACK_RANGE } from "../content/classes.js";
 export function CombatAction() {
-  this.Jc = 0;
+  this.remainingDamage = 0;
   this.yd = this.Vn = this.Rd = false;
   this.impactEffect = this.projectileEffect = this.attacker = this.targetCharacter = this.actionDefinition = null;
   this.ut = this.Xs = false;
@@ -68,8 +68,8 @@ export function advanceCombatAction(a, b) {
     if (d && d.td) {
       applySpellEffect(a, b);
     }
-    if (0 < b.Jc) {
-      showDamageText(b.targetCharacter, b.Jc);
+    if (0 < b.remainingDamage) {
+      showDamageText(b.targetCharacter, b.remainingDamage);
     }
     if (b.Xs) {
       if (d = createChainAction(b)) {
@@ -108,7 +108,7 @@ export function advanceCombatAction(a, b) {
         }
       }
     } else {
-      if (0 < b.Jc) {
+      if (0 < b.remainingDamage) {
         applyActionDamage(b);
       }
     }
@@ -302,12 +302,12 @@ export function summonSpellMinion(a, b, c) {
 export function applyActionDamage(a) {
   var b = a.targetCharacter,
     c = b.stats,
-    d = a.Jc;
+    d = a.remainingDamage;
   if (0 !== d) {
     var f = 1 + randomInt(d - 1);
     if (0 !== f) {
       d = Math.max(0, d - f);
-      a.Jc = d;
+      a.remainingDamage = d;
       c.health -= floorNumber(f);
       if (0 > c.health) {
         c.health = 0;
@@ -441,7 +441,7 @@ export function createAttackAction(a, b, c) {
   if (12 == a.characterClass) {
     c = b.position.levelPosition;
     a = calculateAttackDamage(a, b);
-    d.Jc = a;
+    d.remainingDamage = a;
     d.Rd = 0 === a;
     d.yd = false;
     a = new VisualEffect("Red Splat", c, c, false, 1);
@@ -452,7 +452,7 @@ export function createAttackAction(a, b, c) {
     b = a.equipment ? a.equipment.Ey : null;
     var h = a.So(),
       h = h ? h.Rm : null;
-    d.Jc = g;
+    d.remainingDamage = g;
     d.Rd = 0 === g;
     d.yd = true;
     g = "Red Splat";
@@ -478,7 +478,7 @@ export function createAttackAction(a, b, c) {
     f = calculateAttackDamage(a, b);
     b = (a = a.So()) ? a.Rm : null;
     a = null;
-    d.Jc = f;
+    d.remainingDamage = f;
     d.Rd = 0 === f;
     d.yd = false;
     if (b && (f = b.ms)) {
@@ -496,7 +496,7 @@ export function createSpellAction(a) {
   if (!b || b.isDead) {
     return null;
   }
-  var c = a.ld;
+  var c = a.spellToCast;
   if (!c) {
     return null;
   }
@@ -521,12 +521,12 @@ export function createSpellAction(a) {
   if (4 === c) {
     b = calculateAttackDamage(a, b);
     d.Rd = 0 === b;
-    d.Jc = b;
+    d.remainingDamage = b;
   } else {
     if (13 === c) {
       b = Math.max(1, calculateAttackDamage(a, b));
       d.Rd = false;
-      d.Jc = b;
+      d.remainingDamage = b;
     }
   }
   a = a.stats;
@@ -637,7 +637,7 @@ export function createChainAction(a) {
   h.projectileEffect = f;
   h.yd = true;
   d = calculateAttackDamage(a.attacker, d);
-  h.Jc = d;
+  h.remainingDamage = d;
   h.Rd = 0 === d;
   h.actionDefinition = a.actionDefinition;
   h.Ys = b + 1;
@@ -697,7 +697,7 @@ export function createReturningAction(a) {
     c = g.position.levelPosition;
   (/** @type {TargetedCombatAction} */ (f)).setTargetCharacter(g);
   g = calculateSpellDamage(a.attacker, g);
-  f.Jc = g;
+  f.remainingDamage = g;
   f.Rd = 0 === g;
   if (h) {
     g = new VisualEffect(h.impactEffectName, b, c, true, 1);

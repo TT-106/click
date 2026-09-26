@@ -157,9 +157,9 @@ DA = randomizeItemLevel(wl.stats.characterLevel, CA),
 | 0 | 1.00 | 1.00 | 0.15 | 0.85 | 0.00 |
 | 10 | 0.90 | 1.00 | 0.15 | 0.85 | 0.00 |
 | 20 | 0.80 | 0.90 | 0.15 | 0.765 | 0.085 |
-| 30 | 0.70 | 0.80 | 0.15 | 0.72 | 0.13 |
+| 30 | 0.70 | 0.80 | 0.15 | 0.68 | 0.17 |
 
-`[疑似遗留怪癖]` 标题为"道具等级加成/更高等级道具掉落几率(+3%)"的升级，**实际把 +1 级的概率从 85% 压低到 72%**。同一 `(100 - v)/100` 惯用法在稀有度处是正确的归一化除数（I-2），在等级处被当成加法概率使用。数值按原样记录。
+`[疑似遗留怪癖]` 标题为"道具等级加成/更高等级道具掉落几率(+3%)"的升级，**实际把 +1 级的概率从 85% 压低到 68%**。同一 `(100 - v)/100` 惯用法在稀有度处是正确的归一化除数（I-2），在等级处被当成加法概率使用。数值按原样记录。
 
 - 等级基准 `a`：普通掉落用**被杀怪物的等级**（`items.js:278` 的 `f` ← `simulation/characters.js:321` 传入的 `d = b.stats.characterLevel`，见 `simulation/characters.js:275-276`）；宝箱与首领爆发用**随机冒险者等级**（`characters/character.js:1104` 的 `wl.stats.characterLevel`、`combat/actions.js:389` 的 `b.stats.characterLevel`）。
 - 新建队伍初始装备**不掷等级/稀有度**：`generateItem(game.itemGenerator, l[s], g, 1, 0)` 固定等级 1、稀有度 0（`views/party-creation.js:72`）。
@@ -521,7 +521,7 @@ if (!getRoomTreasure(b, a)) {
 
 - 门前置：房内已无怪物且房门数 `<2` → 不放宝箱。
 - 概率门：`treasureChance` 基础 5 / +2 / 上限 20（`balance.js:429-441`）；连续比较 `Math.random() > v/100` → P = v/100。
-- `room.Yp === 3`（财宝房）跳过前置与概率门，必定放箱。财宝房由 `randomTreasureRoom` 药水在揭示房间时以 25% 概率就地改写房型：`world/rooms.js:56-59`。财宝房内每个内圈格子 80% 概率生成 `2 · rollGoldDrop()` 的金堆：`world/rooms.js:190-201`。
+- `room.Yp === 3`（财宝房）跳过前置与概率门，必定放箱。财宝房由 `randomTreasureRoom` 药水在揭示房间时以 25% 概率就地改写房型：`world/rooms.js:57-58`。财宝房内每个内圈格子 80% 概率生成 `2 · rollGoldDrop()` 的金堆：`world/rooms.js:190-201`。
 - 开箱产出（`characters/character.js:1080-1126`）由 `Mf` 分类：`1`=财宝箱（金 10+U[0,9] 份 + 道具 7+U[0,7] + 卷轴 2+U[0,4] + 药水 U[0,1]）、`2`=武器架（道具 + 卷轴）、`3`=书架（仅卷轴）。道具用等级/品质加成 `CHEST_ITEM_LEVEL_BONUS=10`、`CHEST_ITEM_QUALITY_BONUS=15`（`balance.js:293-294`），见 I-2、I-4。`Mf` 与 `ve` 表条目的对应见 `runtime/game.js:219-348`。
 
 ### I-20 卷轴掉落的取样池
@@ -712,8 +712,8 @@ return {
 
 | # | 位置 | 现象 |
 |---|---|---|
-| 1 | `items.js:278` + `balance.js:444-445` | "道具等级加成"升级把 +1 级概率由 85% 压到 72%（I-4） |
-| 2 | `characters.js:298-325`（`simulation/characters.js`） | 金/卷轴/道具门为 `(v+1)/100`，文案为 `v%`；药剂门为 `v/100`（I-17） |
+| 1 | `items.js:278` + `balance.js:444-445` | "道具等级加成"升级把 +1 级概率由 85% 压到 68%（I-4） |
+| 2 | `simulation/characters.js:298-325` | 金/卷轴/道具门为 `(v+1)/100`，文案为 `v%`；药剂门为 `v/100`（I-17） |
 | 3 | `items.js:169` | `zf` 在 `itemGoldModifier=1.2` 激活期可为小数，无取整（I-13） |
 | 4 | `movement.js:202-204` | `Equipment.Qk` 读不存在的 `item.statType` → `fz`/`So()` 恒 null → 武器元素特效贴图分支死代码（I-12） |
 | 5 | `inventory.js:56` vs `:79` | 背包排序/淘汰用 `zf`，替换门槛用 `itemValue`，口径不一致（I-23） |

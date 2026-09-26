@@ -425,8 +425,8 @@ export function initializeRuntimeGame() {
       a.targetShop = null;
       a.targetCastle = null;
       a.targetTreasureChest = null;
-      a.Cc = null;
-      a.Bc = null;
+      a.destinationRoom = null;
+      a.targetDoor = null;
       a.ed = null;
       a.Ks = false;
       a.gn = null;
@@ -459,7 +459,7 @@ export function initializeRuntimeGame() {
       clearMonsters();
       clearMinions();
       for (var b, a = /** @type {any} */ (0); a < game.state.adventurers.length; a++) {
-        if (b = game.state.adventurers[a], b.summonedMinions = null, b.companion = null, b.combatTarget = null, b.rh = null, b.Zh = null, b.hk = null, b.bj = null, b.targetTreasureChest = null, b.ld = null, b.au = -3 * getAttackCooldown(b.stats, true), b.spells && 0 < b.spells.length) {
+        if (b = game.state.adventurers[a], b.summonedMinions = null, b.companion = null, b.combatTarget = null, b.rh = null, b.Zh = null, b.hk = null, b.bj = null, b.targetTreasureChest = null, b.spellToCast = null, b.au = -3 * getAttackCooldown(b.stats, true), b.spells && 0 < b.spells.length) {
           for (var c = 0; c < b.spells.length; c++) {
             resetSpellCooldown(b.spells[c]);
           }

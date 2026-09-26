@@ -333,7 +333,7 @@ export function advanceSimulation(a) {
                     Wa.impactEffect = cc;
                     pb = Math.max(1, calculateAttackDamage(zb, Ma));
                     Wa.Rd = false;
-                    Wa.Jc = pb;
+                    Wa.remainingDamage = pb;
                     enqueueCombatAction(game.combatQueue, Wa);
                   }
                   var Qa = Sb,

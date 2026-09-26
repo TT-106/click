@@ -56,7 +56,7 @@ scaleByLevel(x, curve, mult) = floor( mult · (curve.base + curve.coefficient ·
 | `scrollPriceCurve` | 1.4 | 250 | 1.018 | 100 | 卷轴解锁/升级价 |
 | `globalUpgradePriceCurve` | 1.02 | 50 | 1.01 | 100 | 全局升级价（杀戮支付） |
 
-`monster*Curve` 的名字与它最终喂给哪个属性**是错位的**（`damage ← monsterHealthCurve`、`maxHealth ← monsterDamageCurve`），见 §6.4。曲线字段名含义未在代码内命名，上表"用途"列由赋值点反推，置信度高。
+`monster*Curve` 的名字与它最终喂给哪个属性**是错位的**（`damage ← monsterHealthCurve`、`maxHealth ← monsterDamageCurve`），见 §7。曲线字段名含义未在代码内命名，上表"用途"列由赋值点反推，置信度高。
 
 ---
 
@@ -107,11 +107,11 @@ Sa.spellSpiritCost = Kh;
 XP(当前等级 L 升到 L+1) = floor( 100 + 500·(L−1)^2.1·1.005^(L−1) )
 ```
 
-| L | 1 | 2 | 5 | 10 | 25 | 50 | 100 |
-|---|---|---|---|---|---|---|---|
-| 需要 XP | 100 | 602 | 6818 | 52868 | 470035 | 2262236 | 12712982 |
+| L | 1 | 2 | 3 | 5 | 10 | 25 | 50 | 100 |
+|---|---|---|---|---|---|---|---|---|---|
+| 需要 XP | 100 | 602 | 2265 | 9474 | 52868 | 446165 | 2262236 | 12712982 |
 
-（L=5 值经同一公式实算；表内其余为 `node` 实算 `scaleByLevel`。）
+（整表为按 §0 求值器实算，非引用外部资料。）
 
 - **钳制**：仅 §0 的 `Math.max(0, L−1)` 下钳；**无上限钳制**，全库不存在最高等级常量（`characterLevel` 的全部赋值点：`stats.js:20`、`encounters.js:66,127`、`game-save.js:510`、`upgrades.js:549,554,567`、`simulation/characters.js:78,111,151`、`views/party-creation.js:60`）。
 
@@ -184,7 +184,7 @@ awardAdventurePoints(22);
 addExperience(f.No * doubleExperienceModifier.currentValue);
 ```
 
-`No` = 该怪物种类的"每杀经验"，来自 `monsterArmorCurve`，随"怪物等级 + 阶位"缩放（§6.4）。`doubleExperienceModifier` 由"双倍经验"药水激活（1 → 2，`balance.js:203-207`）。
+`No` = 该怪物种类的"每杀经验"，来自 `monsterArmorCurve`，随"怪物等级 + 阶位"缩放（§7）。`doubleExperienceModifier` 由"双倍经验"药水激活（1 → 2，`balance.js:203-207`）。
 
 ---
 
@@ -798,9 +798,9 @@ l = Math.min(40, game.state.victoryCount); if (0 < l) { p.skillPoints = l; … }
 
 `[疑似遗留怪癖]` 背包容量在 `Inventory` **构造时**快照，之后 `victoryCount` 变化不回填旧实例；而"继续"路径根本不重建 `Inventory`。三处加成的上限互不一致（10 / 40 / 无上限）。
 
-### 6.4 怪物侧成长（等级 × 阶位）
+## 7. 怪物侧成长（等级 × 阶位）
 
-`src/engine/modules/combat/encounters.js:200-211`
+`src/engine/modules/combat/encounters.js:200-212`
 
 ```js
 export function advanceMonsterTypeRank(a) {
@@ -821,7 +821,6 @@ export function advanceMonsterTypeRank(a) {
 `src/engine/modules/combat/encounters.js:192-199`
 
 ```js
-export function recordMonsterTypeRank = …   // 实为 recordMonsterTypeKill
 export function recordMonsterTypeKill(a) {
   a.xq++;
   a.ml++;
@@ -832,7 +831,7 @@ export function recordMonsterTypeKill(a) {
 }
 ```
 
-- 曲线输入 `b = 10·(怪物等级 − 1) + 阶位`，阶位 `Sj ∈ [1,5]`，`MONSTER_RANK_KILL_STEP = 20`（`balance.js:117`）→ 升阶所需击杀数**累进**：`ek = 20·(Sj−1)`（构造时 `Sj` 从 0 → 1、`ek` 从 0 → 20，`encounters.js:189-190`），即第 2 阶再需 40、第 3 阶 60…；`xq` = 该怪类历史总杀（存档字段 `kills`）。
+- 曲线输入 `b = 10·(怪物等级 − 1) + 阶位`，阶位 `Sj ∈ [1,5]`，`MONSTER_RANK_KILL_STEP = 20`（`balance.js:117`）。`Sj` 与 `ek` 同步增长（构造即 `advanceMonsterTypeRank`：`Sj 0→1`、`ek 0→20`，`encounters.js:189-190`），故**处于阶位 `Sj` 时升下一阶还需 `20·Sj` 次**（20 → 40 → 60 → 80 → 100，累进而非固定步长），`ml` 是"自上次升阶以来"的余数计数器（升阶时 `ml -= ek` 保留余数）。`Sj = 5` 后不再推进但 `ml/xq` 继续累加。`xq` = 该怪类历史总杀（存档字段 `kills`，`entities.js:189-195`）。
 - `No`（`monsterArmorCurve`，power 1.24 / growth 1.0002）是**每杀经验**（§P-3），其增长明显慢于战斗属性曲线 —— 含义未在代码内命名，由 `addExperience(f.No × …)` 唯一读者反推，置信高。
 - 曲线→属性映射错位（`encounters.js:76-83`）：`damage ← Gp(monsterHealthCurve)`、`armor ← Ep(monsterSpiritCurve)`、`attackRating ← Fp(monsterAttackCurve)`、`defenceRating ← Hp(monsterDefenceCurve)`、`maxHealth ← $o(monsterDamageCurve)`。`[疑似遗留怪癖]` 伤害与生命取了对方名字的曲线；数值按原样记录。
 - 脆弱怪物药水把 5 条 levelValue 统一乘 0.7（`encounters.js:69-75`）。
@@ -841,9 +840,9 @@ export function recordMonsterTypeKill(a) {
 
 ---
 
-## 7. 离线收益
+## 8. 离线收益
 
-### 7.1 时长来源与上限
+### 8.1 时长来源与上限
 
 `src/engine/modules/runtime/game.js:498-503`（读档末尾）
 
@@ -876,7 +875,7 @@ offlineTimeBonus ∈ {0, 7.2e6, 1.44e7}                       // 两条点升级
 => 上限 12h / 14h / 16h
 ```
 
-### 7.2 时长 → 回合
+### 8.2 时长 → 回合
 
 `src/engine/modules/simulation/loop.js:20-31, 42-51`
 
@@ -914,7 +913,7 @@ if (15 <= b.Jo) {
 
 （在线分支是 `advanceSimulation(帧差 / frameDuration)`，`loop.js:53-56`；15 个模拟单位 ≈ 15 × 16.67ms ≈ 250ms，与 `turnDuration` 一致。）
 
-### 7.3 回合 → 各子系统
+### 8.3 回合 → 各子系统
 
 `advanceSimulation` 内的回合分频（`tick.js`），周期来自 `CharacterLifecycle` 构造（`runtime/game.js:36-43`）：
 
@@ -929,7 +928,7 @@ if (15 <= b.Jo) {
 
 因此离线的经济效果与在线同速：杀怪 → `addKills/addExperience/掉落/awardAdventurePoints(1)`；卖装/装备不在离线发生（无玩家点击）。
 
-### 7.4 三条边界事实
+### 8.4 三条边界事实
 
 1. `[疑似遗留怪癖]` **12h 上限只在读档路径生效**。后台标签页路径直接 `game.offlineDuration += a`（`loop.js:42`），不经 `beginOfflineProgress`，因此长挂页可超过上限；上限要等下次读档才被 `Math.min` 应用。
 2. 离线期间**不刷新升级可购状态**（`tick.js:515` 的 `if (!game.processingOffline)` 包住整段 `refreshUpgradeCollection`），也不自动存档（`loop.js:87-92`）；两者都在结算完成后的第一个正常帧补齐。
@@ -937,12 +936,12 @@ if (15 <= b.Jo) {
 
 ---
 
-## 8. `[疑似遗留怪癖]` 汇总
+## 9. `[疑似遗留怪癖]` 汇总
 
 | # | 位置 | 现象 |
 |---|---|---|
 | 1 | `simulation/characters.js:169-184` | `armor/attackRating/defenceRating/damage` 四条 `levelValue` 同用 `armorCurve`；`damageCurve` 只喂 `spellSpiritCost`（§P-1） |
-| 2 | `encounters.js:76-83, 205-210` | 怪物"伤害/生命"取了对方名字的曲线；`No`（经验）取自名为 `monsterArmorCurve` 的曲线（§6.4） |
+| 2 | `encounters.js:76-83, 205-210` | 怪物"伤害/生命"取了对方名字的曲线；`No`（经验）取自名为 `monsterArmorCurve` 的曲线（§7） |
 | 3 | `points.js:134-149` | `bookcasePointEvent`/`weaponRackPointEvent` 变量名与自身文案互换（纯命名） |
 | 4 | `points.js:246-268` | 点事件 ID 无 20；`pointEventsById[20]` 为空，发放只打日志 |
 | 5 | `points.js:26-46` + `:57-73` | 成就加成对历史事件次数**追溯生效**，"先杀后领"回补全部差额（§2.2/§2.3） |

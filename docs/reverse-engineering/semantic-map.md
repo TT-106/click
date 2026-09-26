@@ -220,6 +220,19 @@ RunStatistics 的 `On/Lk/qn/Mj/wi/uk` → `turnCount/doorsOpened/roomsCleared/le
 
 回归：check/typecheck/parity/34 场景/e2e 全绿；混淆清单 1,202 → 1,199。
 
+## 第十四轮落地：门/目的地/施法目标/伤害余量（2026-09-26，六个字母）
+
+| 原字段 | 新名 | 所有者 | 决定性证据 |
+|---|---|---|---|
+| `Bc` | `targetDoor` | PartyState 与 CharacterPosition（双主同义） | `setTargetDoor(findNextUnopenedDoor())`，读取侧 `!targetDoor \|\| targetDoor.isOpen` |
+| `Cc` | `destinationRoom` | 同上双主同义 | `hasForcedDestination` 比较 `position.destinationRoom === party.destinationRoom`，`setPartyDestination` 两处同写 |
+| `Sc` | `spell` | Self/Area/Companion 三个法术行为类 | `notifySpellLearned(a){ if (!(this.spell \|\| 9 !== a.spellCategoryId)) this.spell = a; }`，兄弟字段 `un`/`Vi` 同角色留后 |
+| `Nc` | `doorList` | DungeonRoom | `room.doorList.push(new DungeonDoor(...))` 两侧对称入列；命名对齐已落地的 `roomList`/`dungeonList` |
+| `ld` | `spellToCast` | Character | 写入侧全带 `Spell` 实例（含 `scrollCaster.spellToCast = ...`），读取侧取 `spellCategoryId`/`statusEffectTypeId`；**未用 `spellDefinition`**，该名已被定义表占用 |
+| `Jc` | `remainingDamage` | CombatAction | `applyActionDamage` 把它按随机切片递减：`f = 1 + randomInt(d - 1); a.remainingDamage = d - f` |
+
+回归：check/typecheck/parity/34 场景/e2e 全绿；混淆清单 1,199 → 1,193。
+
 ## 重命名执行器 `scripts/rename-field.mjs`
 
 本批起改用手写守卫的执行器，用法 `node scripts/rename-field.mjs <old>=<new> <file...> --expect <total>`。写盘前强制四项校验：命中总数等于 `--expect`、行数不变、逐行缩进不变、字符串字面量多重集不变，任一失败整批不落盘。

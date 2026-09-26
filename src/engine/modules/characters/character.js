@@ -62,7 +62,7 @@ export function Character(a, b, c, d, f) {
   }
   this.actionType = IDLE_ACTION;
   this.isDead = false;
-  this.ld = this.targetTreasureChest = this.bj = this.hk = this.Zh = this.rh = this.combatTarget = this.behaviors = null;
+  this.spellToCast = this.targetTreasureChest = this.bj = this.hk = this.Zh = this.rh = this.combatTarget = this.behaviors = null;
   this.stats = new CharacterStats(this);
   this.au = -3 * getAttackCooldown(this.stats, true);
   this.summoner = null;
@@ -323,13 +323,13 @@ export function updateCharacter(a, b) {
                       var K = getOppositeDoor(na, Q);
                       if (!K.isOpen) {
                         V.et(K);
-                        V.Cc = K.$d;
+                        V.destinationRoom = K.$d;
                         break a;
                       }
                     }
-                    if (Q === V.Bc) {
-                      V.Cc = V.Bc.$d;
-                      V.Bc = null;
+                    if (Q === V.targetDoor) {
+                      V.destinationRoom = V.targetDoor.$d;
+                      V.targetDoor = null;
                     }
                   }
                 }
@@ -466,12 +466,12 @@ export function updateCharacter(a, b) {
           }
         }
       } else if (a.actionType === CAST_ACTION_TYPE) {
-        if (a.ld) {
-          var pa = a.ld.spellCategoryId,
-            T = a.ld.statusEffectTypeId;
+        if (a.spellToCast) {
+          var pa = a.spellToCast.spellCategoryId,
+            T = a.spellToCast.statusEffectTypeId;
           if (2 !== pa || 4 !== T && 1 !== T && 0 !== T) {
             if (3 === pa) {
-              var X = a.ld;
+              var X = a.spellToCast;
               if (X) {
                 var Ca,
                   qa,
@@ -506,7 +506,7 @@ export function updateCharacter(a, b) {
                 spendSpirit(wa, Fa);
               }
             } else if (5 === pa) {
-              var ha = a.ld;
+              var ha = a.spellToCast;
               if (ha) {
                 var ja = a.combatTarget;
                 if (ja && !ja.isDead) {
@@ -538,7 +538,7 @@ export function updateCharacter(a, b) {
                     zb = mc;
                     Ma = Math.max(1, calculateAttackDamage(a, ja));
                     Va.Rd = 0 === Ma;
-                    Va.Jc = Ma;
+                    Va.remainingDamage = Ma;
                     enqueueCombatAction(game.combatQueue, Va);
                     var ac = RANGED_ATTACK_RANGE,
                       ob = getFriendlyTargets(ja);
@@ -579,7 +579,7 @@ export function updateCharacter(a, b) {
                 }
               }
             } else if (6 === pa) {
-              var cc = a.ld;
+              var cc = a.spellToCast;
               if (cc) {
                 var Qa = a.combatTarget;
                 if (Qa && !Qa.isDead) {
@@ -607,7 +607,7 @@ export function updateCharacter(a, b) {
                       }
                       Ja = statValue(a.stats.damage);
                       sa.Rd = false;
-                      sa.Jc = Ja;
+                      sa.remainingDamage = Ja;
                       Db = new VisualEffect(Fc, Cb, Ra, false, TARGETED_EFFECT);
                       Db.ud = a;
                       Db.ew = kb;
@@ -648,7 +648,7 @@ export function updateCharacter(a, b) {
             } else if (8 === pa) {
               var xb = a.combatTarget;
               if (xb && !xb.isDead) {
-                var Na = a.ld;
+                var Na = a.spellToCast;
                 if (Na) {
                   var Ya = new CombatAction();
                   Ya.attacker = a;
@@ -667,7 +667,7 @@ export function updateCharacter(a, b) {
                   if (Td) {
                     var oe = statValue(a.stats.damage);
                     Ya.Rd = false;
-                    Ya.Jc = oe;
+                    Ya.remainingDamage = oe;
                     var Y = new VisualEffect(Td, me, tc, false, TARGETED_EFFECT),
                       nf = xb.position.room;
                     Y.ud = a;
@@ -736,7 +736,7 @@ export function updateCharacter(a, b) {
                 }
               }
             } else if (10 === pa || 17 === pa) {
-              if (a.ld) {
+              if (a.spellToCast) {
                 var vd = a.stats,
                   qe = vd.maxSummonedMinions,
                   gc = countSummonedMinions(a),
@@ -745,12 +745,12 @@ export function updateCharacter(a, b) {
                   var $c;
                   for ($c = 0; $c < vc; $c++) {
                     var Gc = a,
-                      ad = Gc.ld,
+                      ad = Gc.spellToCast,
                       Vb = new CombatAction();
                     Vb.attacker = Gc;
                     (/** @type {TargetedCombatAction} */ (Vb)).setTargetCharacter(Gc);
                     Vb.Rd = false;
-                    Vb.Jc = 0;
+                    Vb.remainingDamage = 0;
                     Vb.actionDefinition = ad;
                     Vb.yd = false;
                     var Tc = Gc.position.levelPosition,
@@ -774,7 +774,7 @@ export function updateCharacter(a, b) {
                 }
               }
             } else if (11 === pa) {
-              if (a.ld) {
+              if (a.spellToCast) {
                 var hc = a.stats,
                   re = hc.maxSummonedMinions,
                   of = countSummonedMinions(a),
@@ -790,12 +790,12 @@ export function updateCharacter(a, b) {
                     if (Bh = wd[Me], Bh.position.room === dj) {
                       var Ne = a,
                         Oe = Bh,
-                        fg = Ne.ld,
+                        fg = Ne.spellToCast,
                         ld = new CombatAction();
                       ld.attacker = Ne;
                       (/** @type {TargetedCombatAction} */ (ld)).setTargetCharacter(Oe);
                       ld.Rd = false;
-                      ld.Jc = 0;
+                      ld.remainingDamage = 0;
                       ld.actionDefinition = fg;
                       ld.yd = true;
                       var pf = Ne.position.levelPosition,
@@ -821,13 +821,13 @@ export function updateCharacter(a, b) {
                 }
               }
             } else if (9 === pa) {
-              var se = a.ld;
+              var se = a.spellToCast;
               if (se) {
                 var Md = new CombatAction();
                 Md.attacker = a;
                 (/** @type {TargetedCombatAction} */ (Md)).setTargetCharacter(a);
                 Md.Rd = false;
-                Md.Jc = 0;
+                Md.remainingDamage = 0;
                 Md.actionDefinition = se;
                 Md.yd = false;
                 var tf = a.position.levelPosition,
@@ -865,7 +865,7 @@ export function updateCharacter(a, b) {
                   bd.pl = null;
                 }
                 var Gh = calculateSpellDamage(a, bd.targetCharacter);
-                bd.Jc = Gh;
+                bd.remainingDamage = Gh;
                 bd.Rd = 0 === Gh;
                 var Hh = bd.projectileEffect;
                 if (Hh) {
@@ -886,7 +886,7 @@ export function updateCharacter(a, b) {
             }
           } else {
             a: {
-              var vf = a.ld;
+              var vf = a.spellToCast;
               if (vf) {
                 var wf = a.combatTarget;
                 if (!wf || wf.isDead) {
@@ -1145,8 +1145,8 @@ export function updateCharacter(a, b) {
         if (game.state.party.targetDungeon) {
           var Ef = game.state.party;
           if (Ef.targetDungeon && !Ef.targetDungeon.isFarm) {
-            Ef.Cc = null;
-            Ef.Bc = null;
+            Ef.destinationRoom = null;
+            Ef.targetDoor = null;
             Ef.ed = null;
             Ef.targetTreasureChest = null;
             var ye = Ef.targetDungeon;
@@ -1171,8 +1171,8 @@ export function updateCharacter(a, b) {
             if (Se.activeCastle.conquered) {
               Se.activeCastle = null;
             } else {
-              Se.Cc = null;
-              Se.Bc = null;
+              Se.destinationRoom = null;
+              Se.targetDoor = null;
               Se.ed = null;
               Se.targetTreasureChest = null;
               var xl = Se.activeCastle;

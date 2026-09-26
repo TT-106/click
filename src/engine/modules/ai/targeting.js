@@ -147,7 +147,7 @@ export function findRouteToDoor(a, b) {
   var d = a.position.room,
     f = [];
   if (d) {
-    var g = d.Nc,
+    var g = d.doorList,
       h;
     for (h = 0; h < g.length; h++) {
       if (d = searchDoorRoute(c, b, g[h], f, true)) {
@@ -170,7 +170,7 @@ export function findRouteToRoom(a, b) {
     return null;
   }
   if (d) {
-    var g = d.Nc,
+    var g = d.doorList,
       h;
     for (h = 0; h < g.length; h++) {
       if (d = searchRoomRoute(c, b, g[h], f, true)) {
@@ -200,7 +200,7 @@ export function searchDoorRoute(a, b, c, d, f) {
     }
   } else {
     var h = c.$d;
-    f = h.Nc;
+    f = h.doorList;
     if (!h.Xi) {
       return null;
     }
@@ -230,7 +230,7 @@ export function searchRoomRoute(a, b, c, d, f) {
     }
   } else {
     var h = c.$d;
-    f = h.Nc;
+    f = h.doorList;
     if (!h.Xi) {
       return null;
     }

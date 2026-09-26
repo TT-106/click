@@ -161,8 +161,8 @@ export function findHallwayPath(a, b, c) {
     g = new DungeonDoor(b);
     h = new DungeonDoor(c);
     l = new DungeonHallway(b, g, c, h);
-    b.Nc.push(g);
-    c.Nc.push(h);
+    b.doorList.push(g);
+    c.doorList.push(h);
     g.hallway = l;
     h.hallway = l;
     for (f = 0; f < a.length; f++) {

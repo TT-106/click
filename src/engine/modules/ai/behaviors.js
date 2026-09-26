@@ -136,7 +136,7 @@ export function WaitBehavior() {
 }
 export function hasForcedDestination(a) {
   var b;
-  return (b = game.state.party.gn) ? a.position.Cc === b ? false : true : false;
+  return (b = game.state.party.gn) ? a.position.destinationRoom === b ? false : true : false;
 }
 export function LootChestBehavior(a) {
   this.Wm = null;
@@ -187,18 +187,18 @@ export function ChangeFloorBehavior() {
   this.treasureChest = null;
 }
 export function SelfSpellBehavior(a) {
-  this.Sc = null;
+  this.spell = null;
   this.priorityWeight = a;
   this.actionRange = 10;
 }
 export function AreaSpellBehavior(a, b, c) {
-  this.Sc = null;
+  this.spell = null;
   this.KE = c;
   this.priorityWeight = b;
   this.actionRange = a;
 }
 export function CompanionSpellBehavior(a, b) {
-  this.Sc = null;
+  this.spell = null;
   this.priorityWeight = b;
   this.actionRange = a;
 }
@@ -288,7 +288,7 @@ export function initializeAiBehaviors() {
     a.combatTarget = null;
     a.bj = null;
     a.targetTreasureChest = null;
-    a.ld = null;
+    a.spellToCast = null;
     a.Zh = null;
     a.hk = null;
     var b,
@@ -344,7 +344,7 @@ export function initializeAiBehaviors() {
         }
         markAttackTurn(a);
         this.un.lastCastTurn = game.state.turnNumber;
-        a.ld = this.un;
+        a.spellToCast = this.un;
         a.actionType = CAST_ACTION_TYPE;
         (/** @type {DungeonBehaviorMethods} */ (/** @type {unknown} */ (this))).Kp(a);
       } else {
@@ -776,7 +776,7 @@ export function initializeAiBehaviors() {
         if (canAttack(a)) {
           markAttackTurn(a);
           this.Vi.lastCastTurn = game.state.turnNumber;
-          a.ld = this.Vi;
+          a.spellToCast = this.Vi;
           a.actionType = CAST_ACTION_TYPE;
           clearMovementTarget(a.position);
           var b = a.position.room;
@@ -999,11 +999,11 @@ export function initializeAiBehaviors() {
   WaitBehavior.prototype.od = function (a) {
     if (!isPartyTravelling(game.state.party) || !hasForcedDestination(a)) {
       var b = game.state.party,
-        c = b.Cc,
-        d = b.Bc,
+        c = b.destinationRoom,
+        d = b.targetDoor,
         b = b.ed,
         f = a.position;
-      if (d && d != f.Bc) {
+      if (d && d != f.targetDoor) {
         var g = findRouteToDoor(a, d);
         f.Ug = g;
         f.movementTargetCleared = false;
@@ -1013,7 +1013,7 @@ export function initializeAiBehaviors() {
           f.Ug = g;
           f.movementTargetCleared = false;
         } else {
-          if (c && c != f.Cc) {
+          if (c && c != f.destinationRoom) {
             g = findRouteToRoom(a, c);
             f.Ug = g;
             f.movementTargetCleared = false;
@@ -1021,7 +1021,7 @@ export function initializeAiBehaviors() {
         }
       }
       f.et(d);
-      f.Cc = c;
+      f.destinationRoom = c;
       f.rB(b);
       if (d) {
         setVector(f.moveTargetPoint, d.pixelColumn, d.pixelRow);
@@ -1380,39 +1380,39 @@ export function initializeAiBehaviors() {
   };
   SelfSpellBehavior.prototype = new ExploreDungeonBehavior();
   SelfSpellBehavior.prototype.resetBehaviorState = function () {
-    this.Sc = null;
+    this.spell = null;
   };
   SelfSpellBehavior.prototype.notifySpellLearned = function (a) {
-    if (!(this.Sc || 9 !== a.spellCategoryId)) {
-      this.Sc = a;
+    if (!(this.spell || 9 !== a.spellCategoryId)) {
+      this.spell = a;
     }
   };
   SelfSpellBehavior.prototype.Kp = function (a) {
     showFloatingText(game.floatingText, a, "Protect me", "white");
   };
   SelfSpellBehavior.prototype.Wd = function (a) {
-    return this.Sc && isSpellReady(this.Sc) && !a.companion ? true : false;
+    return this.spell && isSpellReady(this.spell) && !a.companion ? true : false;
   };
   SelfSpellBehavior.prototype.Jd = function () {
     return (/** @type {PrioritizedBehavior} */ (/** @type {unknown} */ (this))).getPriority();
   };
   SelfSpellBehavior.prototype.Md = function () {
-    return this.Sc;
+    return this.spell;
   };
   SelfSpellBehavior.prototype.Td = function (a) {
     return a;
   };
   AreaSpellBehavior.prototype = new ExploreDungeonBehavior();
   AreaSpellBehavior.prototype.resetBehaviorState = function () {
-    this.Sc = null;
+    this.spell = null;
   };
   AreaSpellBehavior.prototype.notifySpellLearned = function (a) {
-    if (!(this.Sc || a.spellCategoryId !== this.KE)) {
-      this.Sc = a;
+    if (!(this.spell || a.spellCategoryId !== this.KE)) {
+      this.spell = a;
     }
   };
   AreaSpellBehavior.prototype.Wd = function (a) {
-    if (!this.Sc || !isSpellReady(this.Sc)) {
+    if (!this.spell || !isSpellReady(this.spell)) {
       return false;
     }
     var b = a.stats.maxSummonedMinions;
@@ -1422,22 +1422,22 @@ export function initializeAiBehaviors() {
     return (/** @type {PrioritizedBehavior} */ (/** @type {unknown} */ (this))).getPriority();
   };
   AreaSpellBehavior.prototype.Md = function () {
-    return this.Sc;
+    return this.spell;
   };
   AreaSpellBehavior.prototype.Td = function (a) {
     return a;
   };
   CompanionSpellBehavior.prototype = new ExploreDungeonBehavior();
   CompanionSpellBehavior.prototype.resetBehaviorState = function () {
-    this.Sc = null;
+    this.spell = null;
   };
   CompanionSpellBehavior.prototype.notifySpellLearned = function (a) {
-    if (!(this.Sc || 11 !== a.spellCategoryId)) {
-      this.Sc = a;
+    if (!(this.spell || 11 !== a.spellCategoryId)) {
+      this.spell = a;
     }
   };
   CompanionSpellBehavior.prototype.Wd = function (a) {
-    if (!this.Sc || !isSpellReady(this.Sc)) {
+    if (!this.spell || !isSpellReady(this.spell)) {
       return false;
     }
     var b = a.position.room;
@@ -1466,7 +1466,7 @@ export function initializeAiBehaviors() {
     return (/** @type {PrioritizedBehavior} */ (/** @type {unknown} */ (this))).getPriority();
   };
   CompanionSpellBehavior.prototype.Md = function () {
-    return this.Sc;
+    return this.spell;
   };
   CompanionSpellBehavior.prototype.Td = function (a) {
     var b = game.monsters.Og;
@@ -1573,7 +1573,7 @@ export function initializeAiBehaviors() {
       return 0;
     }
     var b = a.position;
-    if (b.Ug && 0 < b.Ug.length || b.Bc || b.ed || b.Cc) {
+    if (b.Ug && 0 < b.Ug.length || b.targetDoor || b.ed || b.destinationRoom) {
       return 0;
     }
     a = b.room;

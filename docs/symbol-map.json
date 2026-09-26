@@ -7622,7 +7622,13 @@
     "sc": "heightInTiles",
     "hd": "minUnlockedLevel",
     "ae": "adventurePoints",
-    "kd": "progressTextElement"
+    "kd": "progressTextElement",
+    "Bc": "targetDoor",
+    "Cc": "destinationRoom",
+    "Sc": "spell",
+    "Nc": "doorList",
+    "ld": "spellToCast",
+    "Jc": "remainingDamage"
   },
   "gameFields": {
     "B": "tileSize",

@@ -28,7 +28,7 @@ export function DungeonRoom(a, b, c, d, f) {
   this.heightInTiles = d;
   this.Yp = f;
   this.ro = [];
-  this.Nc = [];
+  this.doorList = [];
   this.tileGrid = this.theme = this.stairs = null;
   this.Xi = false;
 }
@@ -61,7 +61,7 @@ export function revealRoom(a) {
       d = c + a.widthInTiles,
       f = a.tileRow,
       g = f + a.heightInTiles,
-      b = a.Nc,
+      b = a.doorList,
       h,
       l,
       n,
@@ -228,12 +228,12 @@ export function clampPointToRoom(a, b, c) {
   }
 }
 export function isPointNearDoor(a, b) {
-  if (!a.Nc) {
+  if (!a.doorList) {
     return false;
   }
   var c;
-  for (c = 0; c < a.Nc.length; c++) {
-    if (distanceToPoint(b, a.Nc[c].pixelColumn, a.Nc[c].pixelRow) < game.tileSize) {
+  for (c = 0; c < a.doorList.length; c++) {
+    if (distanceToPoint(b, a.doorList[c].pixelColumn, a.doorList[c].pixelRow) < game.tileSize) {
       return true;
     }
   }
@@ -243,8 +243,8 @@ export function canPlaceRoomObject(a, b) {
   var c = b.x,
     d = b.y,
     f;
-  for (f = 0; f < a.Nc.length; f++) {
-    if (c === a.Nc[f].wj && d === a.Nc[f].xj) {
+  for (f = 0; f < a.doorList.length; f++) {
+    if (c === a.doorList[f].wj && d === a.doorList[f].xj) {
       return false;
     }
   }

@@ -80,6 +80,7 @@
 - 矩阵 30 → 34 场景（升级购买、药水激活、渲染帧、自动落盘），harness 加了持久化端口注入与每端独立浏览器上下文。
 - 文档补齐：新增 `docs/rendering.md`（两套渲染策略、命令池倒序提交、等距焦点排序、每场景 36 行菱形窗，全部带 file:line）与 `docs/performance-after.md`（真实页面帧时间：均值 4.17ms、P99 5.2ms、最差 8.3ms、0 帧 >50ms、0 条被吞渲染异常；口径限制：headless 无 vsync，且没有原版页面基线，故不宣称帧时间持平）。工具 `scripts/measure-frames.mjs` + `npm run perf:frames`。
 - `upgrades-purchased` 扩到 limit 60 + `withExperience()` 后，命中族从"仅全局升级"扩到"全局升级 + 角色升级"，验收矩阵"角色升级"由未覆盖转 PASS；技能升级仍不在覆盖内（`CharacterSkillUpgrade` 不在 `upgradeCollections`，而在每个角色的 `skillTree1..4`）。
+- 第十四~十五轮改名再清 9 个字母（`hd/ae/kd` 与 `Bc/Cc/Sc/Nc/ld/Jc`），混淆清单 1,202 → 1,193，fields 段 236 → 245；全部四套回归绿。`oc`（同文件双主）与 `$c/zd/wd/od/Uc/Vc/ed/` 等仍未取证或未落地。
 - 待办的文档收口：`REFACTOR_REPORT.md`（12 场景、auto equip/treasure/monster upgrade 的 PASS 口径、M10 段）、`COMPATIBILITY_REPORT.md`（12 场景表、性能比值）、`PERFORMANCE_REPORT.md`（比值）与验收矩阵需按实况重写；审计已给出逐条差异清单，但其中"38 个含私有码点文件名的垃圾文件"经 `git ls-files` 实测为 0，属误报，不得写入。
 
 ## 1. 项目概况

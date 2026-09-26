@@ -16,7 +16,7 @@ import { saveProgress } from "../persistence/game-save.js";
 export function PartyState() {
   this.gold = this.experiencePoints = this.kills = 0;
   this.zs = this.xs = -1;
-  this.ed = this.Bc = this.Cc = this.targetTreasureChest = this.targetCastle = this.targetShop = this.activeCastle = this.targetDungeon = null;
+  this.ed = this.targetDoor = this.destinationRoom = this.targetTreasureChest = this.targetCastle = this.targetShop = this.activeCastle = this.targetDungeon = null;
   this.Ks = false;
   this.gn = null;
   this.Mp = false;
@@ -32,9 +32,9 @@ export function forcePartyDestination(a) {
 export function setPartyDestination(a, b) {
   a.gn = b;
   if (a.gn) {
-    a.Cc = a.gn;
+    a.destinationRoom = a.gn;
     a.ed = null;
-    a.Bc = null;
+    a.targetDoor = null;
   }
 }
 export function isPartyTravelling(a) {
@@ -126,7 +126,7 @@ export function findNextUnopenedDoor() {
     }
   }
   if (d = a.position.room) {
-    b = d.Nc;
+    b = d.doorList;
     for (c = 0; c < b.length; c++) {
       d = b[c];
       if (!d.isOpen) {
@@ -148,7 +148,7 @@ export function findNextUnopenedDoor() {
   }
   for (a = 0; a < l.length; a++) {
     if (d = l[a], d.Xi) {
-      for (b = d.Nc, c = 0; c < b.length; c++) {
+      for (b = d.doorList, c = 0; c < b.length; c++) {
         d = b[c];
         if (!d.isOpen) {
           if (g) {
@@ -203,7 +203,7 @@ export function initializeCharactersParty() {
     this.targetTreasureChest = a;
   };
   PartyState.prototype.iw = function () {
-    this.targetTreasureChest = this.ed = this.Bc = this.Cc = null;
+    this.targetTreasureChest = this.ed = this.targetDoor = this.destinationRoom = null;
     if (game.currentDungeon) {
       game.currentDungeon.iw();
     } else if (game.currentCastle) {
@@ -332,7 +332,7 @@ export function initializeCharactersParty() {
     }
   };
   PartyState.prototype.et = function (a) {
-    this.Bc = a;
+    this.targetDoor = a;
   };
   PartyState.prototype.rB = function (a) {
     this.ed = a;
@@ -544,22 +544,22 @@ export function initializeCharactersParty() {
     }
     if (!isPartyTravelling(this)) {
       if (this.targetTreasureChest) {
-        this.Cc = this.targetTreasureChest.Nn;
-        this.Bc = this.ed = null;
-      } else if (!this.ed && (!this.Bc || this.Bc.isOpen)) {
-        if (this.Cc) {
-          if (a = this.Cc.Xi) {
+        this.destinationRoom = this.targetTreasureChest.Nn;
+        this.targetDoor = this.ed = null;
+      } else if (!this.ed && (!this.targetDoor || this.targetDoor.isOpen)) {
+        if (this.destinationRoom) {
+          if (a = this.destinationRoom.Xi) {
             a = getMonsters();
-            a = 0 === a.length ? true : this.Cc !== a[0].position.room;
+            a = 0 === a.length ? true : this.destinationRoom !== a[0].position.room;
           }
           if (a) {
-            this.Cc = null;
+            this.destinationRoom = null;
           } else {
             return;
           }
         }
         (/** @type {any} */ (this)).et(findNextUnopenedDoor());
-        this.Cc = this.Bc ? this.Bc ? this.Bc.$d : null : (this.ed = game.level.tf) ? this.ed.$d : null;
+        this.destinationRoom = this.targetDoor ? this.targetDoor ? this.targetDoor.$d : null : (this.ed = game.level.tf) ? this.ed.$d : null;
       }
     }
   };

@@ -55,7 +55,7 @@ export function spawnRoomTreasure(a) {
     c = 0 < getMonsters().length;
   if (!getRoomTreasure(b, a)) {
     if (3 != a.Yp) {
-      if (!c && 2 > a.Nc.length) {
+      if (!c && 2 > a.doorList.length) {
         return;
       }
       c = globalUpgradeDefinitions.treasureChance.currentValue / 100;

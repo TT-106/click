@@ -150,7 +150,7 @@ export function castScroll(a, b) {
       d.room = c.position.room;
       game.state.scrollCaster.setCombatTarget(c);
       if (a.mB) {
-        game.state.scrollCaster.ld = a.mB;
+        game.state.scrollCaster.spellToCast = a.mB;
         game.state.scrollCaster.actionType = CAST_ACTION_TYPE;
       } else {
         game.state.scrollCaster.actionType = MELEE_ACTION_TYPE;
