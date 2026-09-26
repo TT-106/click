@@ -5,6 +5,10 @@
 
 ## 当前轮次状态（2026-09-26，M13 文档与验收收尾）
 
+- U7 卷轴全类施放与后台行为关闭态双项闭环：
+  1. `scroll-cast-in-combat` 场景扩充至全部 6 种卷轴（休克 `shockScroll`、蛛网 `spiderWebScroll`、箭矢 `arrowScroll`、火雨 `fireRainScroll`、闪电 `chainedLightningScroll`、火球 `fireBallScroll`），在战斗中有活怪物时分 6 步逐一施放，验证无对应法术的箭矢回退至普通攻击与其余 5 类法术绑定施放，两端断言各卷轴 ID、施放计数与随后 900 回合全量 DTO 相等；
+  2. 新增 `background-progress-disabled` 场景，载入 `inactiveTabProcessingEnabled: false` 存档，注入 5000ms 帧间隙（`advanceFrameGap: 5000`），实测两端 `turnDelta === 1` 且严格未进入离线追赶模式，与开启态下 `turnDelta === 20`（5000ms/250ms）形成严密因果对照与反向探针保护。
+  差分矩阵扩充至 48/48 全绿，附录 A 验收矩阵中“卷轴”与“后台行为”两行从 PARTIAL 升级为 PASS，当前矩阵状态更新为 35 PASS / 16 PARTIAL / 0 未覆盖。未修改游戏数值、RNG、存档键或混淆清单。
 - U7 农场收获与长期收益差分闭环：新增 `dungeon-farm-harvested` 与 `dungeon-farm-cycle-long-term` 两个场景，紧接在 `ground-drops-collected` 之后。验证从农场建立（type=8）、推演成熟（1200 回合）、通过 `AutoPurchaseDungeonUpgrade`（type=9）触发收获并清空待收获池 `w.Aa.Sd`/`game.dungeons.Sd`、累加统计 `farmedKills`；长期跨越推演 1500 回合休耕再侵袭（`cleared=false`）并再次成熟（1200 回合）二次收获。两端直接断言 `harvested > 0`、`killsHarvested > 0`、`farmHarvested: true`、`farmedKillsCleared: true`、`farmCycleHarvestCount: >= 200`、`farmCleared: true` 及逐检查点完整 DTO 相等。经对抗性反向探针验证（跳过收获或提前收获必败）。差分场景总数扩充至 47/47，验收矩阵 51 行中农场行从 PARTIAL 调为 PASS，当前矩阵状态更新为 33 PASS / 18 PARTIAL / 0 未覆盖。未修改游戏数值、RNG、存档键或混淆清单。
 - U7 地面掉落四型：`ground-drops-collected` 从 fixture（四人 `spells=[]`，无“立即搜索”旁路）自然推进 9,000 回合，两端分别断言点数事件 9/10/11/12 的 count 增长，对应金币/卷轴/药水/物品常规拾取；逐检查点完整 DTO 相等。矩阵 45/45，验收矩阵 51 行调整为 32 PASS / 19 PARTIAL / 0 未覆盖，财宝房行从 PARTIAL 调为 PASS；逐件认领瞬时态仍非直接观察。引擎、数值、存档键、RNG 未改。
 - U7 财宝房三型补齐：原 `treasure-chest-looted` 驱动器增 `kind=1/2/3` 筛选，新增 `weapon-rack-looted` 与 `bookcase-looted`；固定随机流自然生成三型目标物，角色同房间按按钮路径选择并搜索，两端分别断言 `treasureChestsLooted`/`weaponRacksLooted`/`bookcasesLooted` 增长且随后 900 回合完整 DTO 相等。禁用目标设置时书架场景按预期失败。矩阵 44/44；财宝房行仍 PARTIAL，缺地面掉落逐项拾取。引擎、数值、存档键、RNG 未改。

@@ -128,6 +128,13 @@ window.harness = {
     while (isOffline() && ticks < maxTicks) { fixedNow += 2000; loopTick(); ticks++; }
     return snapshot();
   },
+  advanceFrameGap(gapMs = 5000) {
+    const beforeTurn = snapshot().turnNumber;
+    fixedNow += gapMs;
+    loopTick();
+    const snap = snapshot();
+    return { gapMs, turnDelta: snap.turnNumber - beforeTurn, snapshot: snap };
+  },
   // 胜利重置（保留统计，开启新一轮）
   restart() { restart(); return snapshot(); },
   // 完全重置（回到开局）
@@ -251,9 +258,11 @@ window.harness = {
     }
     return { equipped, snapshot: snapshot() };
   },
-  castScrollDuringCombat({ maxTurns = 3000 } = {}) {
-    const scroll = (original ? window.Game.nh.at.find(s => !s.Qe && s.mh > 0) : game.scrolls.at.find(s => !s.locked && s.quantity > 0));
-    if (!scroll) throw new Error('没有已解锁且有库存的卷轴');
+  castScrollDuringCombat({ maxTurns = 3000, scrollId } = {}) {
+    const scroll = (original
+      ? window.Game.nh.at.find(s => !s.Qe && s.mh > 0 && (!scrollId || s.qg === scrollId))
+      : game.scrolls.at.find(s => !s.locked && s.quantity > 0 && (!scrollId || s.scrollId === scrollId)));
+    if (!scroll) throw new Error(`没有已解锁且有库存的卷轴 (${scrollId || 'any'})`);
     const before = snapshot().statistics.scrollsUsed;
     let attempts = 0;
     for (let i = 0; i < maxTurns; i++) {
@@ -263,7 +272,8 @@ window.harness = {
       if (original) window.Hq(scroll, false); else castScroll(scroll, false);
       if (snapshot().statistics.scrollsUsed > before) break;
     }
-    return { attempts, cast: snapshot().statistics.scrollsUsed - before, snapshot: snapshot() };
+    const currentId = original ? scroll.qg : scroll.scrollId;
+    return { attempts, cast: snapshot().statistics.scrollsUsed - before, scrollId: currentId, snapshot: snapshot() };
   },
   purchaseDungeonFarm({ turns = 0 } = {}) {
     for (let i = 0; i < turns; i++) advance();

@@ -105,6 +105,12 @@ export function withOfflineProcessing(save, enabled) {
   return out;
 }
 
+export function withBackgroundProcessing(save, enabled) {
+  const out = clone(save);
+  out.gameOptions.inactiveTabProcessingEnabled = enabled;
+  return out;
+}
+
 /** 胜利次数（veteran 运：解锁按胜利数门槛的职业内容）。 */
 export function withVictories(save, count) {
   const out = clone(save);

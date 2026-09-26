@@ -6,7 +6,7 @@ import { chromium } from 'playwright';
 import saveCodec from '../src/engine/save-codec.js';
 import {
   decodeFixture, encodeSave, summarize,
-  withPotions, withScrolls, withGold, withKills, withPointPools, withFarmableDungeon, withTurns, withElapsed, withOfflineProcessing,
+  withPotions, withScrolls, withGold, withKills, withPointPools, withFarmableDungeon, withTurns, withElapsed, withOfflineProcessing, withBackgroundProcessing,
   withVictories, withClassSpell, withCastleVictory, withReclassedSpell, withEquippedItem, withResurrectionTrial, withSkillPoints, withExperience,
   HARNESS_FIXED_NOW,
 } from '../tests/scenarios/save-mutations.mjs';
@@ -90,6 +90,9 @@ const groundDropsWereCollected = (s) => ({
 });
 // U7：药水激活在视图之外没有入口，激活后存档里只有 statistics.potionsUsed 可证。
 const potionWasUsed = (s) => ({ potionUsed: (s.statistics?.potionsUsed ?? 0) > 0 });
+const backgroundProgressWasDisabled = (s) => ({
+  backgroundProgressDisabled: s.gameOptions?.inactiveTabProcessingEnabled === false,
+});
 const scenarios = [
   {
     name: 'rendered-scene',
@@ -331,10 +334,22 @@ const scenarios = [
   },
   {
     name: 'scroll-cast-in-combat',
-    // 只在活怪物存在时尝试施放，直到两端各自观察到卷轴使用统计增长。
-    make: () => withScrolls(base, [{ scrollId: 'shockScroll', count: 23 }]),
+    // 全 6 类卷轴（休克、蛛网、箭矢、火雨、闪电、火球）：活怪物存在时逐一施放，断言使用统计真实增长与两端状态等价
+    make: () => withScrolls(base, [
+      { scrollId: 'shockScroll', count: 10 },
+      { scrollId: 'spiderWebScroll', count: 10 },
+      { scrollId: 'arrowScroll', count: 10 },
+      { scrollId: 'fireRainScroll', count: 10 },
+      { scrollId: 'chainedLightningScroll', count: 10 },
+      { scrollId: 'fireBallScroll', count: 10 },
+    ]),
     steps: [
-      { castScrollDuringCombat: 3000, check: scrollWasCast },
+      { castScrollDuringCombat: 3000, scrollId: 'shockScroll', check: scrollWasCast },
+      { castScrollDuringCombat: 3000, scrollId: 'spiderWebScroll', check: scrollWasCast },
+      { castScrollDuringCombat: 3000, scrollId: 'arrowScroll', check: scrollWasCast },
+      { castScrollDuringCombat: 3000, scrollId: 'fireRainScroll', check: scrollWasCast },
+      { castScrollDuringCombat: 3000, scrollId: 'chainedLightningScroll', check: scrollWasCast },
+      { castScrollDuringCombat: 3000, scrollId: 'fireBallScroll', check: scrollWasCast },
       { turns: 900, check: scrollWasCast },
     ],
   },
@@ -428,6 +443,16 @@ const scenarios = [
     steps: [
       { turns: 300, activatePotions: 3, check: potionWasUsed },
       [600, null],
+    ],
+  },
+  {
+    name: 'background-progress-disabled',
+    // allowBackgroundProgress（inactiveTabProcessingEnabled）为假时，
+    // 标签页切出后即使时钟发生 >1000ms 大间隙（frameGap=5000ms），两端也严格不进入离线追赶
+    make: () => withBackgroundProcessing(base, false),
+    steps: [
+      { frameGap: 5000, check: backgroundProgressWasDisabled },
+      { turns: 300, check: backgroundProgressWasDisabled },
     ],
   },
   {
@@ -541,7 +566,7 @@ try {
         // effectType 表示这一步改用"逐帧扫描活怪物效果队列"的推进方式，并直接对账施加次数。
         // purchaseUpgrades 表示这一步先推进再驱动升级购买（U7：只有视图层会触发的路径）。
         const step = Array.isArray(rawStep) ? { turns: rawStep[0], check: rawStep[1] } : rawStep;
-        const { turns, check, effectType, purchaseUpgrades, purchasePointUpgrades, claimAchievement, equipBestItems, castScrollDuringCombat, purchaseDungeonFarm, purchaseDungeonRowFarm, harvestFarmKills, lootTreasureDuringExplore, treasureKind, activatePotions, frames } = step;
+        const { turns, check, effectType, purchaseUpgrades, purchasePointUpgrades, claimAchievement, equipBestItems, castScrollDuringCombat, scrollId, purchaseDungeonFarm, purchaseDungeonRowFarm, harvestFarmKills, lootTreasureDuringExplore, treasureKind, activatePotions, frames, frameGap } = step;
         const results = await Promise.all(pages.map(async p => {
           await p.page.evaluate(ms => window.harness.setTime(ms), HARNESS_FIXED_NOW);
           // 重置后无队伍：走真实帧循环（守卫路径），而非裸推进
@@ -551,12 +576,13 @@ try {
           if (purchasePointUpgrades !== undefined) return p.page.evaluate(a => window.harness.purchasePointUpgrades(a), { turns, limit: purchasePointUpgrades });
           if (claimAchievement) return p.page.evaluate(a => window.harness.claimAchievement(a), { turns });
           if (equipBestItems) return p.page.evaluate(a => window.harness.equipBestItems(a), { turns });
-          if (castScrollDuringCombat !== undefined) return p.page.evaluate(a => window.harness.castScrollDuringCombat(a), { maxTurns: castScrollDuringCombat });
+          if (castScrollDuringCombat !== undefined) return p.page.evaluate(a => window.harness.castScrollDuringCombat(a), { maxTurns: castScrollDuringCombat, scrollId });
           if (purchaseDungeonFarm) return p.page.evaluate(a => window.harness.purchaseDungeonFarm(a), { turns });
           if (purchaseDungeonRowFarm) return p.page.evaluate(a => window.harness.purchaseDungeonRowFarm(a), { turns });
           if (harvestFarmKills) return p.page.evaluate(a => window.harness.harvestFarmKills(a), { turns });
           if (lootTreasureDuringExplore !== undefined) return p.page.evaluate(a => window.harness.lootTreasureDuringExplore(a), { maxTurns: lootTreasureDuringExplore, kind: treasureKind });
           if (activatePotions !== undefined) return p.page.evaluate(a => window.harness.activatePotions(a), { turns, limit: activatePotions });
+          if (frameGap !== undefined) return p.page.evaluate(n => window.harness.advanceFrameGap(n), frameGap);
           // frames：走真实帧循环（loop.tick 内含 view.render 的 try/catch），随后读画布不透明像素
           if (frames !== undefined) return p.page.evaluate(n => {
             localStorage.removeItem('C2_V1_001'); // 抹掉载入时的写入，剩下的只能是自动保存
@@ -624,6 +650,13 @@ try {
             assert.ok(results[i].attempts > 0 && results[i].cast > 0, `${label} 端必须在有怪物时真的施放卷轴`);
           }
           assert.equal(results[1].cast, results[0].cast, '两端卷轴施放次数不同');
+          assert.equal(results[1].scrollId, results[0].scrollId, '两端施放的卷轴 ID 不同');
+        }
+        if (frameGap !== undefined) {
+          for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {
+            assert.equal(results[i].turnDelta, 1, `${label} 在 allowBackgroundProgress 关闭时即使帧差 5000ms 也只能推进 1 回合`);
+          }
+          assert.equal(results[1].turnDelta, results[0].turnDelta, '两端后台时钟跳变后的推进回合数不同');
         }
         if (purchaseDungeonFarm || purchaseDungeonRowFarm) {
           for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {
@@ -702,6 +735,7 @@ try {
             if (verdict.equipmentChanged !== undefined) assert.equal(verdict.equipmentChanged, true, `${label} 自动装备后装备槽必须真实变化`);
             if (verdict.itemEquipEvents !== undefined) assert.equal(verdict.itemEquipEvents, true, `${label} 装备物品事件计数必须真实增长`);
             if (verdict.scrollCast !== undefined) assert.equal(verdict.scrollCast, true, `${label} 卷轴使用统计必须真实增长`);
+            if (verdict.backgroundProgressDisabled !== undefined) assert.equal(verdict.backgroundProgressDisabled, true, `${label} 选项 inactiveTabProcessingEnabled 必须为 false 且保存进存档`);
             if (verdict.farmPurchased !== undefined) assert.equal(verdict.farmPurchased, true, `${label} 农场实体与购买统计必须真实增长`);
             if (verdict.farmHarvested !== undefined) assert.equal(verdict.farmHarvested, true, `${label} 农场收获击杀统计（farmedKills）必须真实增长且大于 0`);
             if (verdict.farmedKillsCleared !== undefined) assert.equal(verdict.farmedKillsCleared, true, `${label} 农场收获后待收获击杀池必须已被清零`);
