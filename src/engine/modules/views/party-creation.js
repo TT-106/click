@@ -51,7 +51,7 @@ export function mountPartyCreation(a) {
         var l = f.spriteName;
         g = new Character(g, ADVENTURER_TYPE, f.characterClass, f, new Inventory());
         var n = g.stats;
-        g.ee = game.monsterSprites.getSprite(l);
+        g.sprite = game.monsterSprites.getSprite(l);
         l = createBehaviorQueue(f.createBehaviors());
         g.behaviors = l;
         n.baseAttackCooldown = 12;

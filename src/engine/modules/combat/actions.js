@@ -402,7 +402,7 @@ export function resolveCharacterDefeat(a, b) {
       }
       b.isDead = true;
       d = updateWorldTravel();
-      b.ee = d;
+      b.sprite = d;
       game.monsters.ol(b);
       game.state.encounter.ol();
       recordGameEvent("Boss Defeated", "等级:" + b.stats.characterLevel);

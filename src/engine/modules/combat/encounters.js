@@ -56,7 +56,7 @@ export function populateEncounter(a) {
               l = d,
               n = new Character("Monster", MONSTER_TYPE, 12, monsterClass, null),
               p = n.stats;
-            n.ee = l.ll;
+            n.sprite = l.ll;
             n.gq(l);
             p.characterLevel = l.xd;
             n.behaviors = new AttackBehavior(h, MELEE_ATTACK_RANGE);
@@ -116,7 +116,7 @@ export function spawnDungeonBoss(a, b) {
     f = new Character(bossClass.defaultName, 4, bossClass.characterClass, bossClass, null),
     l = f.stats;
   f.gq(h);
-  f.ee = h.ll;
+  f.sprite = h.ll;
   h = createBehaviorQueue(bossClass.createBehaviors());
   f.behaviors = h;
   initializeCharacterSkills(f, c);

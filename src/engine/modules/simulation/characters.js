@@ -53,7 +53,7 @@ export function refreshUnspentSkillFlags() {
 export function spawnMinion(a, b, c) {
   var d = new Character(a.defaultName, 1, a.characterClass, a, null),
     f = d.stats;
-  d.ee = game.monsterSprites.getSprite(a.spriteName);
+  d.sprite = game.monsterSprites.getSprite(a.spriteName);
   var g = createBehaviorQueue(a.createBehaviors());
   d.behaviors = g;
   g = d.position;
@@ -105,7 +105,7 @@ export function createCastleGuardian(a, b, c) {
     f = new Character(a.defaultName, 3, a.characterClass, a, null),
     g = f.stats;
   f.gq(d);
-  f.ee = d.ll;
+  f.sprite = d.ll;
   d = createBehaviorQueue(a.createBehaviors());
   f.behaviors = d;
   initializeCharacterSkills(f, b);
@@ -326,7 +326,7 @@ export function initializeSimulationCharacters() {
       }
       b.isDead = true;
       c = updateWorldTravel();
-      b.ee = c;
+      b.sprite = c;
       game.monsters.ol(b);
       game.state.encounter.ol();
       awardAdventurePoints(1);

@@ -14,20 +14,20 @@ import { getMonsters } from "../combat/encounters.js";
 import { TARGETED_EFFECT } from "./sprites.js";
 import { createElement, getElement } from "../views/dom.js";
 export function RenderCommand() {
-  this.nd = this.ee = null;
+  this.nd = this.sprite = null;
   this.vr = this.ur = this.oc = 0;
   this.pt = false;
   this.alpha = this.am = this.$q = this.Zq = 0;
 }
 export function resetRenderCommand(a) {
   a.pt = false;
-  a.ee = null;
+  a.sprite = null;
   a.nd = null;
   a.ur = 1E5;
   a.vr = 0;
 }
 export function setSpriteRenderCommand(a, b, c, d, f, g, h) {
-  a.ee = b;
+  a.sprite = b;
   a.ur = c;
   a.Zq = d;
   a.$q = f;
@@ -238,9 +238,9 @@ export function initializeRenderingScene() {
         a.globalAlpha = 0.4;
       }
       var b;
-      if (this.ee) {
-        b = this.ee.Ad.spriteSize;
-        a.drawImage(this.ee.Hj(), this.ee.sourceX, this.ee.sourceY, b, b, this.Zq, this.$q, this.am, this.am);
+      if (this.sprite) {
+        b = this.sprite.Ad.spriteSize;
+        a.drawImage(this.sprite.Hj(), this.sprite.sourceX, this.sprite.sourceY, b, b, this.Zq, this.$q, this.am, this.am);
       } else if (this.nd) {
         var c = this.nd.frames[this.oc];
         b = this.nd.Ad.spriteSize;
