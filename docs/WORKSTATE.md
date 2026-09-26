@@ -1,9 +1,19 @@
 # WORKSTATE — Clickpocalypse II 语义恢复与现代化工程
 
 > 本文件是长程自治任务的**唯一续跑入口**。上下文压缩或中断后，先读本文件 + `git log --oneline`，再继续。
-> 最后更新：2026-09-26（装备手动穿卸闭环、矩阵 53/53 后；下文较早批次的快照保留为历史记录）
+> 最后更新：2026-09-26（验收矩阵全闭环 51 PASS / 0 PARTIAL、矩阵 59/59、U3 soak 复跑通过后；下文较早批次的快照保留为历史记录）
 
 ## 当前轮次状态（2026-09-26，M13 文档与验收收尾）
+
+- U13 验收矩阵全闭环（2026-09-26，提交 9973320 / 2d5ea8e 系列 / e1b8f8b / 多项提交 / f9af2a2 / 2e74c7d）：**附录 A 51 行全部 PASS，0 PARTIAL / 0 未覆盖**，差分矩阵扩至 **59/59**，U3 soak 在新 HEAD 复跑通过（8h/24h 完整存档一致，GC 后堆原版 6,278,324/6,296,272 vs 重构版 7,094,344/7,111,312 bytes，增量 16k/17k）。本批闭环的七行：
+  1. **角色职业**：`class-barbarian-growth`（withCharacterClass 新变异器 + 槽 21 职业匹配锤武器 itemTypeId=hash("锤"+sprite)），四棵野蛮人技能树 + LearnSpellUpgrade；职业 5 不存在（12 正式职业 + 2 特殊类型），0/2/4/6 默认阵容、3/7/8/9/10/11 法术场景已覆盖，反向探针验证。
+  2. **城堡**：`castle-attack-planned`（withAttackableCastle：唯一未锁城堡地牢清空 → canAttackCastle 成立 → 载入重建 Jg），type=13 购买免费、门控 maxUnlockedLevel≥requiredMonsterLevel——**旧矩阵"城堡购买/进攻花费"系误记，原版无此花费**；harness purchaseUpgrades 驱动器补上与视图同路径的 refreshAvailabilityState 前置刷新。
+  3. **成就**：`achievement-rewards-multiple`（withClaimableAchievements 8 项可领取，4 槽队列多轮领取 limit=8），applied ≥3 增长 + pointsByType[1].points = reward×count 抬升；全部 328 项成就共用 increasePointEventReward 单一机制。
+  4. **技能效果层**：`skill-combat-effects`（战士 statType 18/19 多重攻击 → performMultiAttack；游侠 23/24 跳弹 → createChainAction Xs 链），1500 回合伤害飘字 149 次/-52345 两端一致。
+  5. **法术特效**：`spell-visual-effects` 直接对账特效池（存档盲区）：harness countVisualEffects 逐帧采样原版 Game.df.Wg（名字段 **ca**）vs 重构版 game.effects.Wg（impactEffectName），火球术 3000+1000 回合 719 特效/3 种/顺序全一致。
+  6. **Canvas**：`rendered-scene-narrow` 700×900 视口 1300 帧逐像素指纹；frames 场景加 rewindAutosaveTimer（310s 回拨）修复**自动保存分支依赖场景顺序的测试设计缺陷**（载入写入把 lastSavedAt 钉在累积时钟上，300s 窗口顺序不可达）。
+  7. **ground-drops 之外的两个 flake 修复**：bookcase-looted 探索窗口 30000→60000（跨场景随机流漂移同型）；combat-critical-hits 技能点 20→60（刷新驱动器后树内兄弟节点竞争挤掉暴击节点）。
+  工程教训：String.replace 字符串替换会把 `$'` 展开为"匹配后全部尾部"——曾把 test-scenarios.mjs 断言块复制成双份；**必须用函数替换** `s.replace(a, () => b)`；git checkout 恢复 CRLF 后锚点 `\n` 失配，需先归一化。page.evaluate 的函数运行在页面上下文，闭包里的模块级 `game` 不可见（诊断/操作必须封装为 harness 方法）。
 
 - U12 第七批长尾字母重命名落地（2026-09-26，三组提交 656a95f / d3a2fb9 / c2c7f74，每组独立六门禁全绿）：
   1. 组 1（战斗）：yd→hasProjectilePhase、ud→boundCharacter（**甄别纠错：取证建议 attacker 只覆盖投射物一半产生点，昏迷特效路径 ud=受击者，改用绑定角色语义**）、td→applyEffectOnImpact（cat=12 快速打击唯一 false，红线未"修正"）、vd→animationName。
