@@ -23,6 +23,7 @@
 - M10 `simulation/tick.js` 摘除忽略标记后零错误；`characters/party.js` 将 `targetCastle.dungeonList` 从复用的数值局部变量 `n` 拆为 `castleDungeons` 后零错误。两文件同批四套回归全绿，剩余 15 个。
 - M10 `persistence/game-save.js` 已摘除 `@ts-nocheck`：七个重复索引声明合并，CharacterStats 后挂载的 `setMinionKills` 在调用点标注签名；四套回归全绿，存档 JSON 键无改动。剩余 14 个。
 - U4 的 12h 离线上限截断差分已补：`offline-13h-capped` 在两端载入后直接断言待结算时长 12h，再比较离线结算完整状态和后续 200 回合。场景总数 13，四套回归全绿；U4 仍缺胜利瞬间和部分法术分支。
+- U4 增加 `fireball-blast-stun`：class 4 法师唯一已学法术为火球，断言两端实际施法并推进 6000 回合完整差分。场景总数 14，四套回归全绿；Blast Stun 入队未独立观测，不能据此关闭全部法术分支缺口。
 - 本节优先于下方旧快照中的“当前工作树干净”“M10 未开始”“9 场景”等过时文字；提交与实际状态以 `git status`、`git log` 为准。
 
 ## 1. 项目概况

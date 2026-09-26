@@ -75,6 +75,15 @@ export function withVictories(save, count) {
   return out;
 }
 
+/** 给存档中指定职业的角色装载一项已学法术；用于差分驱动具体法术分支。 */
+export function withClassSpell(save, characterClass, spellName) {
+  const out = clone(save);
+  const character = out.adventurers.find(a => a.characterClass === characterClass);
+  if (!character) throw new Error(`fixture 缺少职业 ${characterClass}`);
+  character.spells = [{ spellName }];
+  return out;
+}
+
 /** 收集快照中与玩法相关的可观察量，用于"断言场景确实产生了变化"。 */
 export function summarize(snapshot) {
   return {

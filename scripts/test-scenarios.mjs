@@ -6,7 +6,7 @@ import { chromium } from 'playwright';
 import {
   decodeFixture, encodeSave, summarize,
   withPotions, withScrolls, withGold, withTurns, withElapsed, withOfflineProcessing,
-  withVictories,
+  withVictories, withClassSpell,
   HARNESS_FIXED_NOW,
 } from '../tests/scenarios/save-mutations.mjs';
 
@@ -65,6 +65,11 @@ const scenarios = [
       { scrollId: 'fireBallScroll', count: 20 },
     ]),
     steps: [[600, null], [600, null]],
+  },
+  {
+    name: 'fireball-blast-stun',
+    make: () => withClassSpell(base, 4, '火球'),
+    steps: [[3000, snap => ({ spellCast: snap.statistics.spellCastCount > base.statistics.spellCastCount })], [3000, null]],
   },
   {
     name: 'gold-windfall',
@@ -192,6 +197,7 @@ try {
             const verdict = check(states[i]);
             if (verdict.changed !== undefined) assert.equal(verdict.changed, true, `${label} 离线后金币应增长`);
             if (verdict.unchanged !== undefined) assert.equal(verdict.unchanged, true, `${label} 关闭离线后金币不应变化`);
+            if (verdict.spellCast !== undefined) assert.equal(verdict.spellCast, true, `${label} 火球场景必须实际施法`);
           }
         }
         previous = states;
