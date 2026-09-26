@@ -163,11 +163,11 @@ export function WorldGenerator(a, b) {
   this.tE = this.ZD = "L1_Terrain015.PNG";
 }
 export function populateWorldBlock(a, b) {
-  var c = findCastleByRegion(b.Hd + "_" + b.Id),
+  var c = findCastleByRegion(b.regionColumn + "_" + b.regionRow),
     d,
     f,
-    g = b.Hd * a.widthInTiles,
-    h = b.Id * a.heightInTiles;
+    g = b.regionColumn * a.widthInTiles,
+    h = b.regionRow * a.heightInTiles;
   for (f = 0; f <= a.widthInTiles; f++) {
     for (d = 0; d <= a.heightInTiles; d++) {
       var l = b,
@@ -212,8 +212,8 @@ export function populateWorldBlock(a, b) {
       }
     }
   }
-  g = b.Hd * a.widthInTiles;
-  h = b.Id * a.heightInTiles;
+  g = b.regionColumn * a.widthInTiles;
+  h = b.regionRow * a.heightInTiles;
   if (!c || c.regionLocked) {
     for (f = 0; f < a.widthInTiles; f++) {
       for (d = 0; d < a.heightInTiles; d++) {
@@ -267,7 +267,7 @@ export function populateWorldBlock(a, b) {
     }
   }
   var entranceTile, castleTile;
-  if (c && !c.regionLocked && ((d = (d = game.dungeons.Do[b.Hd + "_" + b.Id]) ? d : null) ? (f = d.getWorldColumn(), g = d.getWorldRow(), (entranceTile = game.world.getTileAtPixel(f, g)) ? entranceTile.setDecorationSprite(game.terrainSprites.getSprite(d.Fo)) : (console.log("no tile for: col=" + f + " row=" + g), d = null)) : d = null, d && ((f = game.farms.jw[d.dungeonId]) && (f = game.world.getTileAtPixel(f.kw, f.lw)) && f.setDecorationSprite(game.terrainSprites.getSprite(game.farms.Gz)), a.Ut(d)), f = findCastle(b.Hd + "_" + b.Id))) {
+  if (c && !c.regionLocked && ((d = (d = game.dungeons.Do[b.regionColumn + "_" + b.regionRow]) ? d : null) ? (f = d.getWorldColumn(), g = d.getWorldRow(), (entranceTile = game.world.getTileAtPixel(f, g)) ? entranceTile.setDecorationSprite(game.terrainSprites.getSprite(d.Fo)) : (console.log("no tile for: col=" + f + " row=" + g), d = null)) : d = null, d && ((f = game.farms.jw[d.dungeonId]) && (f = game.world.getTileAtPixel(f.kw, f.lw)) && f.setDecorationSprite(game.terrainSprites.getSprite(game.farms.Gz)), a.Ut(d)), f = findCastle(b.regionColumn + "_" + b.regionRow))) {
     d = f.dm;
     f = f.em;
     if (castleTile = game.world.getTileAtPixel(d, f)) {
@@ -277,9 +277,9 @@ export function populateWorldBlock(a, b) {
     }
   }
   f = game.terrainSprites.getSprite(a.tE);
-  var northCastle = findCastleByRegion(b.Hd + "_" + (b.Id - 1));
-  var westCastle = findCastleByRegion(b.Hd - 1 + "_" + b.Id);
-  var nwCastle = findCastleByRegion(b.Hd - 1 + "_" + (b.Id - 1));
+  var northCastle = findCastleByRegion(b.regionColumn + "_" + (b.regionRow - 1));
+  var westCastle = findCastleByRegion(b.regionColumn - 1 + "_" + b.regionRow);
+  var nwCastle = findCastleByRegion(b.regionColumn - 1 + "_" + (b.regionRow - 1));
   if (c != northCastle) {
     for (n = 0; n < a.widthInTiles; n++) {
       d = getBlockTile(b, n, 0);
@@ -318,8 +318,8 @@ export function WorldTile(a, b) {
 }
 export function WorldBlock(a, b, c) {
   this.tileGrid = [];
-  this.Hd = a;
-  this.Id = b;
+  this.regionColumn = a;
+  this.regionRow = b;
   this.heightInTiles = WORLD_BLOCK_ROWS;
   this.widthInTiles = WORLD_BLOCK_COLUMNS;
   this.Qj = a * this.widthInTiles;
@@ -334,8 +334,8 @@ export function WorldBlock(a, b, c) {
   (/** @type {WorldBlock & {Aw: () => void}} */ (/** @type {unknown} */ (this))).Aw();
 }
 export function repositionWorldBlock(a, b, c, d) {
-  a.Hd = b;
-  a.Id = c;
+  a.regionColumn = b;
+  a.regionRow = c;
   a.Qj = b * a.widthInTiles;
   a.Rj = c * a.heightInTiles;
   a.wp = a.Qj + a.widthInTiles;
@@ -610,8 +610,8 @@ export function initializeWorldTerrain() {
     var a,
       b,
       c,
-      d = this.Hd * this.widthInTiles,
-      f = this.Id * this.heightInTiles;
+      d = this.regionColumn * this.widthInTiles,
+      f = this.regionRow * this.heightInTiles;
     for (b = 0; b < this.widthInTiles; b++) {
       c = [];
       for (a = 0; a < this.heightInTiles; a++) {

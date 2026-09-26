@@ -56,8 +56,8 @@ export function getDungeonNoun(a, b) {
 }
 export function WorldRegion(a, b, c) {
   this.io = a;
-  this.Hd = b;
-  this.Id = c;
+  this.regionColumn = b;
+  this.regionRow = c;
   this.cu = null;
 }
 export function Castle(a, b, c, d, f, g) {
@@ -120,8 +120,8 @@ export function getSouthRegion(a, b, c, d) {
   return c + 1 < a.bE && (a = b + "_" + (c + 1), !d[a]) ? game.regions.sk[a] : null;
 }
 export function chooseAdjacentRegion(a, b, c, d) {
-  var f = b.Hd;
-  b = b.Id;
+  var f = b.regionColumn;
+  b = b.regionRow;
   if (0.5 > d.random()) {
     if (0.5 > d.random()) {
       if ((d = getWestRegion(a, f, b, c)) || (d = getEastRegion(a, f, b, c)) || (d = getSouthRegion(a, f, b, c))) {
@@ -169,7 +169,7 @@ export function resetCastles() {
 export function unlockStartingRegion() {
   /** @type {any} */
   var a = game.world.worldBlocks[1][1];
-  a = a.Hd + "_" + a.Id;
+  a = a.regionColumn + "_" + a.regionRow;
   var b = findCastleByRegion(a);
   if (b) {
     b.regionLocked = false;

@@ -110,85 +110,6 @@
     ]
   },
   {
-    "name": "gd",
-    "reads": 14,
-    "writes": 4,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\party.js:118",
-        "code": "game.level.gd"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:254",
-        "code": "game.level.gd"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:433",
-        "code": "Ne.gd"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\characters\\party.js",
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\world\\generation.js"
-    ]
-  },
-  {
-    "name": "Hd",
-    "reads": 15,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\party.js:233",
-        "code": "f.Hd"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:191",
-        "code": "f.Hd"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:453",
-        "code": "y.Hd"
-      }
-    ],
-    "fileCount": 5,
-    "files": [
-      "src\\engine\\modules\\characters\\party.js",
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\world\\initialization.js",
-      "src\\engine\\modules\\world\\regions.js",
-      "src\\engine\\modules\\world\\terrain.js"
-    ]
-  },
-  {
-    "name": "Id",
-    "reads": 15,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\party.js:234",
-        "code": "f.Id"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:192",
-        "code": "f.Id"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:454",
-        "code": "y.Id"
-      }
-    ],
-    "fileCount": 5,
-    "files": [
-      "src\\engine\\modules\\characters\\party.js",
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\world\\initialization.js",
-      "src\\engine\\modules\\world\\regions.js",
-      "src\\engine\\modules\\world\\terrain.js"
-    ]
-  },
-  {
     "name": "fe",
     "reads": 1,
     "writes": 17,
@@ -19370,7 +19291,7 @@
       },
       {
         "loc": "src\\engine\\modules\\world\\generation.js:183",
-        "code": "f.gd[b].xx"
+        "code": "f.hallwayList[b].xx"
       },
       {
         "loc": "src\\engine\\modules\\world\\rooms.js:562",

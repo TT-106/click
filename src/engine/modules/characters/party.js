@@ -115,7 +115,7 @@ export function findNextUnopenedDoor() {
     g = null,
     h = a.position.levelPosition,
     l = game.level.roomList,
-    n = game.level.gd,
+    n = game.level.hallwayList,
     p = 1E5;
   if (b = a.position.currentHallway) {
     if (!b.doorA.isOpen) {
@@ -230,8 +230,8 @@ export function initializeCharactersParty() {
       var g;
       for (d = 0; d < a.ck.length; d++) {
         f = a.ck[d];
-        c = f.Hd;
-        f = f.Id;
+        c = f.regionColumn;
+        f = f.regionRow;
         if ((g = findCastleByRegion(c - 1 + "_" + f)) && g !== a && g.regionLocked && 0 > b.indexOf(g)) {
           b.push(g);
         }

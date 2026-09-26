@@ -153,7 +153,7 @@ export function initializeRegionsAndCastles() {
     Na = [];
   for (ka = 0; ka < dc.length; ka++) {
     for (Ka = dc[ka], Xa = Ka.ck, sc = Ka.dm, Aa = Ka.em, Eb = 0; Eb < Xa.length; Eb++) {
-      if (db = Xa[Eb].Hd, Mc = Xa[Eb].Id, !(0.7 < (/** @type {any} */ (gb)).random())) {
+      if (db = Xa[Eb].regionColumn, Mc = Xa[Eb].regionRow, !(0.7 < (/** @type {any} */ (gb)).random())) {
         ec = 1 + db * WORLD_BLOCK_COLUMNS + randomIntFrom(gb, WORLD_BLOCK_COLUMNS - 1);
         for (Ub = 1 + Mc * WORLD_BLOCK_ROWS + randomIntFrom(gb, WORLD_BLOCK_ROWS - 1); ec === sc && Ub === Aa;) {
           ec = 1 + db * WORLD_BLOCK_COLUMNS + randomIntFrom(gb, WORLD_BLOCK_COLUMNS - 1);

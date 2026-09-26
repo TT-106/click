@@ -27,7 +27,7 @@ export function DungeonLayoutGenerator(a, b, c, d, f) {
   this.wA = 15;
   this.DA = 8;
   this.roomList = [];
-  this.gd = [];
+  this.hallwayList = [];
   this.tf = this.Ce = null;
   this.Xp = this.Zo = 0;
 }
@@ -122,7 +122,7 @@ export function CastleLayoutGenerator(a, b, c, d) {
   this.wA = 18;
   this.DA = 6;
   this.roomList = [];
-  this.gd = [];
+  this.hallwayList = [];
   this.tf = this.Ce = null;
   this.Xp = this.Zo = 0;
 }
@@ -142,7 +142,7 @@ export function DungeonLevel() {
   this.widthInTiles = this.heightInTiles = 120;
   this.tileGrid = null;
   this.roomList = [];
-  this.gd = [];
+  this.hallwayList = [];
   this.tf = this.Ce = null;
   this.sp = 0;
 }
@@ -151,7 +151,7 @@ export function generateDungeonLevel(a, b, c, d) {
   f.sp = a;
   var seededRandom = new SeededRandom(a);
   f.roomList.length = 0;
-  f.gd.length = 0;
+  f.hallwayList.length = 0;
   f.Ce = null;
   f.tf = null;
   if (f.tileGrid) {
@@ -172,15 +172,15 @@ export function generateDungeonLevel(a, b, c, d) {
     }
   }
   f.roomList = c.roomList;
-  f.gd = c.gd;
+  f.hallwayList = c.hallwayList;
   f.Ce = c.Ce;
   f.tf = c.tf;
   c = getDungeonTheme(b);
   for (b = 0; b < f.roomList.length; b++) {
     f.roomList[b].xx(c, f.tileGrid);
   }
-  for (b = 0; b < f.gd.length; b++) {
-    f.gd[b].xx(c, f.tileGrid);
+  for (b = 0; b < f.hallwayList.length; b++) {
+    f.hallwayList[b].xx(c, f.tileGrid);
   }
   clearItemDrops();
   b = game.goldDrops;
@@ -252,7 +252,7 @@ export function initializeWorldGeneration() {
     const methods = /** @type {LayoutMethods} */ (/** @type {unknown} */ (this));
     this.Xp = this.Zo = 0;
     this.roomList.length = 0;
-    this.gd.length = 0;
+    this.hallwayList.length = 0;
     this.tf = this.Ce = null;
     a: {
       var a = this.Ow + randomIntFrom(this.seededRandom, this.xA - this.Ow),
@@ -317,7 +317,7 @@ export function initializeWorldGeneration() {
       }
       g = this.Zo++;
       f.hallwayId = g;
-      this.gd.push(f);
+      this.hallwayList.push(f);
       f.Bq(this.tileGrid);
       c.ro.push(b);
       b.ro.push(c);
@@ -426,7 +426,7 @@ export function initializeWorldGeneration() {
     const methods = /** @type {LayoutMethods} */ (/** @type {unknown} */ (this));
     this.Xp = this.Zo = 0;
     this.roomList.length = 0;
-    this.gd.length = 0;
+    this.hallwayList.length = 0;
     this.tf = this.Ce = null;
     appendDungeonRoom(this, 1, 1, 15, 15, 1);
     appendDungeonRoom(this, 51, 1, 15, 15, 1);
@@ -448,7 +448,7 @@ export function initializeWorldGeneration() {
       if (b = this.roomList[a - 1], c = this.roomList[a], d = findHallwayPath(f, b, c)) {
         var g = this.Zo++;
         d.hallwayId = g;
-        this.gd.push(d);
+        this.hallwayList.push(d);
         d.Bq(this.tileGrid);
         c.ro.push(b);
         b.ro.push(c);

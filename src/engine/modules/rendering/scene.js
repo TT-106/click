@@ -188,8 +188,8 @@ export function drawEntityHighlight(a, b, c, d) {
     n;
   for (g = 0; g < b.length; g++) {
     f = b[g];
-    n = c * (f.Hd - h);
-    f = d * (f.Id - l);
+    n = c * (f.regionColumn - h);
+    f = d * (f.regionRow - l);
     a.context.fillRect(n, f, c, d);
   }
 }
@@ -450,8 +450,8 @@ export function initializeRenderingScene() {
             }
           }
           var y = game.world.worldBlocks[1][1],
-            A = h * (y.Hd - f),
-            C = l * (y.Id - g);
+            A = h * (y.regionColumn - f),
+            C = l * (y.regionRow - g);
           a.context.fillStyle = "blue";
           a.context.fillRect(A + 2, C + 2, 4, 4);
           a.context.restore();

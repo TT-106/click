@@ -251,7 +251,7 @@ export function restoreGameState(a, b) {
             jb.Ki = ac;
             jb.Li = ob;
             var Ab,
-              Bb = game.level.gd;
+              Bb = game.level.hallwayList;
             if (Bb.length !== Ha.length) {
               console.log("hallway array length mismatch. state=" + Ha.length + " hallways=" + Bb.length);
             } else {
@@ -430,9 +430,9 @@ export function restoreGameState(a, b) {
               if (-1 < dj) {
                 var Me;
                 b: {
-                  for (var Ne = game.level, Oe = 0; Oe < Ne.gd.length; Oe++) {
-                    if (Ne.gd[Oe].hallwayId === dj) {
-                      Me = Ne.gd[Oe];
+                  for (var Ne = game.level, Oe = 0; Oe < Ne.hallwayList.length; Oe++) {
+                    if (Ne.hallwayList[Oe].hallwayId === dj) {
+                      Me = Ne.hallwayList[Oe];
                       break b;
                     }
                   }
@@ -817,7 +817,7 @@ export function createSaveState(a) {
       for (mb = 0; mb < Da.length; mb++) {
         ub.push(Da[mb].Xi);
       }
-      var Ea = qa.gd,
+      var Ea = qa.hallwayList,
         La = [],
         wa;
       for (wa = 0; wa < Ea.length; wa++) {
