@@ -1,4 +1,3 @@
-// @ts-nocheck -- M10 渐进类型化：JSDoc 覆盖后摘除（见 docs/WORKSTATE.md）
 /** 城堡地图、列表与状态。
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
@@ -29,7 +28,7 @@ export function CastleRowView(a) {
   this.Us = 120;
   this.Rv = this.Cu = this.cachedDescriptionText = "";
   this.Kv = 0;
-  this.qi();
+  /** @type {{qi: () => void}} */ (/** @type {unknown} */ (this)).qi();
 }
 export function setCastleRowModel(a, b) {
   a.xc = b;
@@ -54,7 +53,7 @@ export function initializeViewsCastles() {
   };
   CastleMapView.prototype.update = function () {
     if (!this.ws) {
-      this.pf();
+      /** @type {{pf: () => void}} */ (/** @type {unknown} */ (this)).pf();
     }
     var a;
     a = game.castles.cm;
@@ -81,16 +80,19 @@ export function initializeViewsCastles() {
     }
   };
   CastleMapView.prototype.pf = function () {
-    var a = this.elementId;
-    clearElementById(a);
+    var containerId = this.elementId;
+    clearElementById(containerId);
     var b = game.regions,
       c = b.Rh,
       d = b.Sh,
       f = b.Rh + b.Eh,
       g = b.Sh + b.Eh,
       h;
-    this.ws = createElement("table", getElement(a), null, null);
-    for (var a = f - c, d = g - d, l, g = 0; g < a; g++) {
+    this.ws = createElement("table", getElement(containerId), null, null);
+    var a = f - c,
+      l;
+    d = g - d;
+    for (g = 0; g < a; g++) {
       this.vs.push([]);
     }
     for (c = 0; c < d; c++) {
@@ -121,11 +123,11 @@ export function initializeViewsCastles() {
   };
   CastleTableView.prototype.update = function () {
     if (!this.$e) {
-      this.pf();
+      /** @type {{pf: () => void}} */ (/** @type {unknown} */ (this)).pf();
     }
     var a = game.castles.pd;
     if (a.length !== this.nf.length) {
-      this.mk(a.length);
+      /** @type {{mk: (count: number) => void}} */ (/** @type {unknown} */ (this)).mk(a.length);
     }
     var b;
     for (b = 0; b < this.nf.length; b++) {
@@ -150,11 +152,11 @@ export function initializeViewsCastles() {
     var b = game.castles.pd,
       c;
     this.$e = createElement("table", getElement(a), null, "monsterTable");
-    this.Ri(this.$e.insertRow(0));
+    /** @type {{Ri: (row: HTMLTableRowElement) => void}} */ (/** @type {unknown} */ (this)).Ri(this.$e.insertRow(0));
     for (c = 0; c < b.length; c++) {
-      a = new CastleRowView(this.$e.insertRow(c + 1));
-      setCastleRowModel(a, b[c]);
-      this.nf.push(a);
+      var rowView = new CastleRowView(this.$e.insertRow(c + 1));
+      setCastleRowModel(rowView, b[c]);
+      this.nf.push(rowView);
     }
   };
   CastleTableView.prototype.Ri = function (a) {
@@ -215,10 +217,10 @@ export function initializeViewsCastles() {
       } else if (a.conquered || canAttackCastle(a) || a.ye || a.Bj) {
         a = this.Us;
       } else {
-        var a = this.xc.yk,
-          b = this.xc.dungeonList,
-          a = 0 === b.length ? 1 : Math.min(1, a / b.length),
-          a = this.Us * a | 0;
+        a = this.xc.yk;
+        var b = this.xc.dungeonList;
+        a = 0 === b.length ? 1 : Math.min(1, a / b.length);
+        a = this.Us * a | 0;
       }
       if (this.Kv != a) {
         this.Kv = a;
