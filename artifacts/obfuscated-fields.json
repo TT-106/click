@@ -190,62 +190,6 @@
     ]
   },
   {
-    "name": "Ai",
-    "reads": 8,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:618",
-        "code": "game.level.Ai"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:680",
-        "code": "game.level.Ai"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:460",
-        "code": "game.level.Ai"
-      }
-    ],
-    "fileCount": 6,
-    "files": [
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\simulation\\tick.js",
-      "src\\engine\\modules\\world\\generation.js",
-      "src\\engine\\modules\\world\\pathfinding.js",
-      "src\\engine\\modules\\world\\rooms.js"
-    ]
-  },
-  {
-    "name": "Bi",
-    "reads": 8,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:619",
-        "code": "game.level.Bi"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:681",
-        "code": "game.level.Bi"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:461",
-        "code": "game.level.Bi"
-      }
-    ],
-    "fileCount": 6,
-    "files": [
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\simulation\\tick.js",
-      "src\\engine\\modules\\world\\generation.js",
-      "src\\engine\\modules\\world\\pathfinding.js",
-      "src\\engine\\modules\\world\\rooms.js"
-    ]
-  },
-  {
     "name": "xi",
     "reads": 9,
     "writes": 1,

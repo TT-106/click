@@ -14,7 +14,7 @@ export function PathfindingGrid(a, b, c) {
   this.Cl = this.Bl = null;
 }
 export function getPathNode(a, b) {
-  var c = "" + (b.Ai() * a.Nj + b.Bi()),
+  var c = "" + (b.getTileColumn() * a.Nj + b.getTileRow()),
     d = a.Sw.indexOf(c);
   if (-1 < d) {
     d = a.Ip[d];
@@ -29,7 +29,7 @@ export function getPathNode(a, b) {
       f.rl = null;
       f.It = false;
       f.closed = false;
-      setVector(f.position, b.Ai(), b.Bi());
+      setVector(f.position, b.getTileColumn(), b.getTileRow());
       f.Hs.length = 0;
     } else {
       d = new PathNode(a, b);
@@ -56,7 +56,7 @@ export function PathNode(a, b) {
   this.rl = null;
   this.closed = this.It = false;
   this.position = new Vector2();
-  setVector(this.position, b.Ai(), b.Bi());
+  setVector(this.position, b.getTileColumn(), b.getTileRow());
   this.Hs = [];
 }
 export function reconstructPath(a) {
@@ -113,8 +113,8 @@ export function findHallwayPath(a, b, c) {
         l = h.Fl;
         n = h.ss;
         p = h.Hs;
-        s = n.Ai();
-        n = n.Bi();
+        s = n.getTileColumn();
+        n = n.getTileRow();
         var u = !(roomContainsTile(l.Bl, s, n) || roomContainsTile(l.Cl, s, n)) && (isRoomBorder(l.Bl, s, n) || isRoomBorder(l.Cl, s, n));
         if (isHallwayWalkable(l, s, n - 1, u, 0)) {
           p.push(getPathNode(l, l.tileGrid[s][n - 1]));

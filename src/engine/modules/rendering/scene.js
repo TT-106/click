@@ -457,8 +457,8 @@ export function initializeRenderingScene() {
           a.context.restore();
         }
       } else {
-        var v = game.level.Ai(game.level.Ki),
-          D = game.level.Bi(game.level.Li) - 18;
+        var v = game.level.pixelToTileColumn(game.level.Ki),
+          D = game.level.pixelToTileRow(game.level.Li) - 18;
         drawDungeonTileRow(a, D++, v - 5, v - 3);
         drawDungeonTileRow(a, D++, v - 6, v - 2);
         drawDungeonTileRow(a, D++, v - 7, v - 1);

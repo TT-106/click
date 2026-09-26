@@ -525,10 +525,10 @@ export function initializeWorldGeneration() {
   DungeonLevel.prototype.getTileAt = function (a, b) {
     return 0 > a || a >= this.widthInTiles || 0 > b || b >= this.heightInTiles ? null : this.tileGrid[a][b];
   };
-  DungeonLevel.prototype.Ai = function (a) {
+  DungeonLevel.prototype.pixelToTileColumn = function (a) {
     return a / game.tileSize | 0;
   };
-  DungeonLevel.prototype.Bi = function (a) {
+  DungeonLevel.prototype.pixelToTileRow = function (a) {
     return a / game.tileSize | 0;
   };
 }

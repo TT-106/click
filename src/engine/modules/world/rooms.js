@@ -537,10 +537,10 @@ export function paintHallwayTile(a, b, c, d) {
   }
 }
 export function initializeWorldRooms() {
-  DungeonTile.prototype.Ai = function () {
+  DungeonTile.prototype.getTileColumn = function () {
     return this.tileColumn;
   };
-  DungeonTile.prototype.Bi = function () {
+  DungeonTile.prototype.getTileRow = function () {
     return this.tileRow;
   };
   DungeonTile.prototype.getPixelX = function () {

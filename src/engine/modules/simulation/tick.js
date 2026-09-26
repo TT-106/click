@@ -410,7 +410,7 @@ export function advanceSimulation(a) {
       db,
       Mc = 1 === Ga.characterType ? Ga.summoner.stats : Ga.stats;
     for (db = 0; db < gb.length; db++) {
-      if (rb = gb[db], !rb.isDead && (dc = rb.position.levelPosition, Ka = game.level.Ai(dc.x), Xa = game.level.Bi(dc.y), (hb = game.level.getTileAt(Ka, Xa)) && (lb = hb.tileEffect) && lb.hasSpawned)) {
+      if (rb = gb[db], !rb.isDead && (dc = rb.position.levelPosition, Ka = game.level.pixelToTileColumn(dc.x), Xa = game.level.pixelToTileRow(dc.y), (hb = game.level.getTileAt(Ka, Xa)) && (lb = hb.tileEffect) && lb.hasSpawned)) {
         if (lb.isFinished()) {
           setTileEffect(hb, null);
         } else if (lb.bx !== lb.frameIndex && (sc = hb.remainingEffectDamage, 0 !== sc && (Aa = randomInt(sc + 1), 0 !== Aa))) {
