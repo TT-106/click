@@ -222,7 +222,7 @@ export function initializeWorldDungeons() {
       this.clearedTurn = game.state.turnNumber;
       game.dungeons.Is(this);
       this.zj.Is();
-      game.state.statisticsRecorder.Vr();
+      game.state.statisticsRecorder.recordDungeonCleared();
       awardAdventurePoints(POINT_EVENT_DUNGEON_CLEARED);
       recordGameEvent("Dungeon", "Dungeon Cleared");
       var a,
@@ -240,7 +240,7 @@ export function initializeWorldDungeons() {
       clearItemDrops();
     }
   };
-  DungeonRegistry.prototype.dt = function (a) {
+  DungeonRegistry.prototype.setFarmedKills = function (a) {
     this.Sd = a;
   };
   DungeonRegistry.prototype.Is = function (a) {

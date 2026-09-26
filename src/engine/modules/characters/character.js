@@ -309,7 +309,7 @@ export function updateCharacter(a, b) {
                   var V = game.state.party;
                   if (!Q.isOpen) {
                     Q.isOpen = true;
-                    game.state.statisticsRecorder.Ur();
+                    game.state.statisticsRecorder.recordDoorOpened();
                     awardAdventurePoints(2);
                     if (!Q.$d.Xi) {
                       populateEncounter(Q.$d);
@@ -447,7 +447,7 @@ export function updateCharacter(a, b) {
             }
           }
           if (isAdventurerOrMinion(a)) {
-            game.state.statisticsRecorder.as();
+            game.state.statisticsRecorder.recordMeleeAttack();
           }
         }
       } else if (a.actionType === MELEE_ACTION_TYPE) {
@@ -461,7 +461,7 @@ export function updateCharacter(a, b) {
             }
           }
           if (isAdventurerOrMinion(a)) {
-            game.state.statisticsRecorder.ds();
+            game.state.statisticsRecorder.recordRangedAttack();
           }
         }
       } else if (a.actionType === CAST_ACTION_TYPE) {
@@ -988,7 +988,7 @@ export function updateCharacter(a, b) {
             }
           }
           if (isAdventurerOrMinion(a)) {
-            game.state.statisticsRecorder.gs();
+            game.state.statisticsRecorder.recordSpellCast();
           }
         }
       } else if (5 === a.actionType) {
@@ -999,7 +999,7 @@ export function updateCharacter(a, b) {
             showFloatingText(gj, a, Pe + "黄金", "yellow");
           }
           addGold(a.rh.Xl);
-          game.state.statisticsRecorder.dp(a.rh.Xl);
+          game.state.statisticsRecorder.recordGoldFromMonsters(a.rh.Xl);
           a.rh.oh(true);
           removeGoldDrop(a.rh);
           a.rh = null;
@@ -1030,7 +1030,7 @@ export function updateCharacter(a, b) {
           var Qe = a.bj.getItem(),
             Cf = Qe.uf();
           addInventoryItem(Qe.nj.inventory, Qe);
-          game.state.statisticsRecorder.ep(Qe);
+          game.state.statisticsRecorder.recordItemFound(Qe);
           awardAdventurePoints(12);
           if (0 != Cf) {
             switch (Cf) {
@@ -1126,15 +1126,15 @@ export function updateCharacter(a, b) {
           showFloatingText(game.floatingText, a, "搜索!!!", "#FFF");
           switch (Ad) {
             case 1:
-              game.state.statisticsRecorder.hs();
+              game.state.statisticsRecorder.recordTreasureChestLooted();
               awardAdventurePoints(6);
               break;
             case 2:
-              game.state.statisticsRecorder.js();
+              game.state.statisticsRecorder.recordWeaponRackLooted();
               awardAdventurePoints(7);
               break;
             case 3:
-              game.state.statisticsRecorder.Rr();
+              game.state.statisticsRecorder.recordBookcaseLooted();
               awardAdventurePoints(8);
           }
           recordGameEvent("Treasure Chest", "Looted");
@@ -1200,7 +1200,7 @@ export function updateCharacter(a, b) {
                   removeInventoryItemAt(Sp, Ph);
                 }
               }
-              game.state.statisticsRecorder.Zr(Tp);
+              game.state.statisticsRecorder.recordItemsSold(Tp);
               showFloatingText(game.floatingText, yl, "黄金!", "yellow");
               var Vp = game.shops;
               Vp.ni += floorNumber(Al);

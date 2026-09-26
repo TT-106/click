@@ -298,8 +298,8 @@ export function restoreStatistics(a, b, c) {
   b.Wk = A ? A : 0;
   b.si = C ? C : 0;
   b.Dl = v ? v : 0;
-  b.wx(D ? D : 0);
-  b.dt(N ? N : 0);
+  b.setMinionKills(D ? D : 0);
+  b.setFarmedKills(N ? N : 0);
   b.oj = I ? I : 0;
   b.hl = x ? x : 0;
   b.wl = z ? z : 0;

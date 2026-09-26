@@ -1017,9 +1017,9 @@ export function initializeProgressionUpgrades() {
   AutoPurchaseDungeonUpgrade.prototype.Qc = function () {
     recordGameEvent("Dungeon", "农场已收获");
     var a = game.dungeons.Sd;
-    game.state.statisticsRecorder.Wr(a);
+    game.state.statisticsRecorder.recordFarmHarvest(a);
     addKills(a);
-    game.dungeons.dt(0);
+    game.dungeons.setFarmedKills(0);
     this.canPurchase = false;
     markUpgradeChanged(this);
   };
@@ -1251,7 +1251,7 @@ export function initializeProgressionUpgrades() {
     recordGameEvent("Shop", "Gold Collected");
     var a = game.shops.ni;
     addGold(a);
-    game.state.statisticsRecorder.Yr(a);
+    game.state.statisticsRecorder.recordGoldFromItems(a);
     game.shops.ni = 0;
     this.canPurchase = false;
     markUpgradeChanged(this);

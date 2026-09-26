@@ -132,7 +132,7 @@ export function restoreGameState(a, b) {
               sortDungeons(ea, ea.bk);
             }
           }
-          game.dungeons.dt(D ? D : 0);
+          game.dungeons.setFarmedKills(D ? D : 0);
           game.dungeons.Mk = N ? N : 0;
           var va = d.currentDungeon;
           if (va) {
@@ -516,7 +516,7 @@ export function restoreGameState(a, b) {
               Sa.health = floorNumber(Fh ? Fh : Sa.health);
               Sa.spirit = Gh ? Gh : Sa.spirit;
               Sa.kills = Hh ? Hh : Sa.kills;
-              Sa.wx(xf ? xf : Sa.minionKills);
+              Sa.setMinionKills(xf ? xf : Sa.minionKills);
               Sa.stunCount = Ud ? Ud : Sa.stunCount;
               Sa.damageGiven = yf ? yf : Sa.damageGiven;
               Sa.damageReceived = xd ? xd : Sa.damageReceived;

@@ -24,82 +24,82 @@ export function bindStatistics() {
   a.lifetimeStatistics = b;
 }
 export function initializeProgressionStatistics() {
-  RunStatistics.prototype.jx = function () {
+  RunStatistics.prototype.resetRunStatistics = function () {
     this.tk = this.Sl = this.Nl = this.nk = this.Zk = this.xl = this.Ol = this.Gi = this.Ph = this.kl = this.Xj = this.El = this.ul = this.Gl = this.wl = this.hl = this.oj = this.Sd = this.minionKills = this.Dl = this.si = this.Wk = this.Xk = this.Rk = this.uk = this.wi = this.Mj = this.qn = this.Lk = this.On = 0;
   };
-  RunStatistics.prototype.is = function () {
+  RunStatistics.prototype.recordTurn = function () {
     this.On++;
   };
-  RunStatistics.prototype.es = function () {
+  RunStatistics.prototype.recordRoomCleared = function () {
     this.qn++;
   };
-  RunStatistics.prototype.Ur = function () {
+  RunStatistics.prototype.recordDoorOpened = function () {
     this.Lk++;
   };
   RunStatistics.prototype.$r = function () {
     this.Mj++;
   };
-  RunStatistics.prototype.Vr = function () {
+  RunStatistics.prototype.recordDungeonCleared = function () {
     this.wi++;
   };
-  RunStatistics.prototype.Sr = function () {
+  RunStatistics.prototype.recordCastleConquered = function () {
     this.uk++;
   };
-  RunStatistics.prototype.Xr = function () {
+  RunStatistics.prototype.recordFarmPurchased = function () {
     this.Rk++;
   };
-  RunStatistics.prototype.Yr = function (a) {
+  RunStatistics.prototype.recordGoldFromItems = function (a) {
     this.Wk += a;
   };
-  RunStatistics.prototype.dp = function (a) {
+  RunStatistics.prototype.recordGoldFromMonsters = function (a) {
     this.Xk += a;
   };
-  RunStatistics.prototype.Wr = function (a) {
+  RunStatistics.prototype.recordFarmHarvest = function (a) {
     this.Sd += a;
   };
-  RunStatistics.prototype.dt = function (a) {
+  RunStatistics.prototype.setFarmedKills = function (a) {
     this.Sd = a;
   };
-  RunStatistics.prototype.cp = function () {
+  RunStatistics.prototype.recordDirectKill = function () {
     this.si++;
   };
-  RunStatistics.prototype.gp = function () {
+  RunStatistics.prototype.recordScrollKill = function () {
     this.Dl++;
   };
   RunStatistics.prototype.$k = function () {
     this.minionKills++;
   };
-  RunStatistics.prototype.wx = function (a) {
+  RunStatistics.prototype.setMinionKills = function (a) {
     this.minionKills = a;
   };
-  RunStatistics.prototype.bs = function () {
+  RunStatistics.prototype.recordMinionSummoned = function () {
     this.kl++;
   };
-  RunStatistics.prototype.Tr = function () {
+  RunStatistics.prototype.recordCharacterStunned = function () {
     this.oj++;
   };
-  RunStatistics.prototype.as = function () {
+  RunStatistics.prototype.recordMeleeAttack = function () {
     this.hl++;
   };
-  RunStatistics.prototype.ds = function () {
+  RunStatistics.prototype.recordRangedAttack = function () {
     this.wl++;
   };
-  RunStatistics.prototype.gs = function () {
+  RunStatistics.prototype.recordSpellCast = function () {
     this.Gl++;
   };
-  RunStatistics.prototype.cs = function () {
+  RunStatistics.prototype.recordPotionUsed = function () {
     this.ul++;
   };
-  RunStatistics.prototype.fs = function () {
+  RunStatistics.prototype.recordScrollUsed = function () {
     this.El++;
   };
-  RunStatistics.prototype.fp = function (a) {
+  RunStatistics.prototype.recordPlayedMilliseconds = function (a) {
     this.Xj += a;
   };
-  RunStatistics.prototype.Zr = function (a) {
+  RunStatistics.prototype.recordItemsSold = function (a) {
     this.Ph += a;
   };
-  RunStatistics.prototype.ep = function (a) {
+  RunStatistics.prototype.recordItemFound = function (a) {
     this.Gi++;
     switch (a.uf()) {
       case 1:
@@ -115,121 +115,121 @@ export function initializeProgressionStatistics() {
         this.nk++;
     }
   };
-  RunStatistics.prototype.hs = function () {
+  RunStatistics.prototype.recordTreasureChestLooted = function () {
     this.Nl++;
   };
-  RunStatistics.prototype.js = function () {
+  RunStatistics.prototype.recordWeaponRackLooted = function () {
     this.Sl++;
   };
-  RunStatistics.prototype.Rr = function () {
+  RunStatistics.prototype.recordBookcaseLooted = function () {
     this.tk++;
   };
   LifetimeStatistics.prototype = new RunStatistics();
-  LifetimeStatistics.prototype.jx = function () {
+  LifetimeStatistics.prototype.resetRunStatistics = function () {
     console.log("Reset invoked on total statistics. Not resetting anything.");
   };
-  StatisticsRecorder.prototype.is = function () {
-    this.statisticsRecorder.is();
-    this.lifetimeStatistics.is();
+  StatisticsRecorder.prototype.recordTurn = function () {
+    this.statisticsRecorder.recordTurn();
+    this.lifetimeStatistics.recordTurn();
   };
-  StatisticsRecorder.prototype.Ur = function () {
-    this.statisticsRecorder.Ur();
-    this.lifetimeStatistics.Ur();
+  StatisticsRecorder.prototype.recordDoorOpened = function () {
+    this.statisticsRecorder.recordDoorOpened();
+    this.lifetimeStatistics.recordDoorOpened();
   };
-  StatisticsRecorder.prototype.es = function () {
-    this.statisticsRecorder.es();
-    this.lifetimeStatistics.es();
+  StatisticsRecorder.prototype.recordRoomCleared = function () {
+    this.statisticsRecorder.recordRoomCleared();
+    this.lifetimeStatistics.recordRoomCleared();
   };
   StatisticsRecorder.prototype.$r = function () {
     this.statisticsRecorder.$r();
     this.lifetimeStatistics.$r();
   };
-  StatisticsRecorder.prototype.Vr = function () {
-    this.statisticsRecorder.Vr();
-    this.lifetimeStatistics.Vr();
+  StatisticsRecorder.prototype.recordDungeonCleared = function () {
+    this.statisticsRecorder.recordDungeonCleared();
+    this.lifetimeStatistics.recordDungeonCleared();
   };
-  StatisticsRecorder.prototype.Sr = function () {
-    this.statisticsRecorder.Sr();
-    this.lifetimeStatistics.Sr();
+  StatisticsRecorder.prototype.recordCastleConquered = function () {
+    this.statisticsRecorder.recordCastleConquered();
+    this.lifetimeStatistics.recordCastleConquered();
   };
-  StatisticsRecorder.prototype.Yr = function (a) {
-    this.statisticsRecorder.Yr(a);
-    this.lifetimeStatistics.Yr(a);
+  StatisticsRecorder.prototype.recordGoldFromItems = function (a) {
+    this.statisticsRecorder.recordGoldFromItems(a);
+    this.lifetimeStatistics.recordGoldFromItems(a);
   };
-  StatisticsRecorder.prototype.dp = function (a) {
-    this.statisticsRecorder.dp(a);
-    this.lifetimeStatistics.dp(a);
+  StatisticsRecorder.prototype.recordGoldFromMonsters = function (a) {
+    this.statisticsRecorder.recordGoldFromMonsters(a);
+    this.lifetimeStatistics.recordGoldFromMonsters(a);
   };
-  StatisticsRecorder.prototype.Wr = function (a) {
-    this.statisticsRecorder.Wr(a);
-    this.lifetimeStatistics.Wr(a);
+  StatisticsRecorder.prototype.recordFarmHarvest = function (a) {
+    this.statisticsRecorder.recordFarmHarvest(a);
+    this.lifetimeStatistics.recordFarmHarvest(a);
   };
-  StatisticsRecorder.prototype.cp = function () {
-    this.statisticsRecorder.cp();
-    this.lifetimeStatistics.cp();
+  StatisticsRecorder.prototype.recordDirectKill = function () {
+    this.statisticsRecorder.recordDirectKill();
+    this.lifetimeStatistics.recordDirectKill();
   };
-  StatisticsRecorder.prototype.gp = function () {
-    this.statisticsRecorder.gp();
-    this.lifetimeStatistics.gp();
+  StatisticsRecorder.prototype.recordScrollKill = function () {
+    this.statisticsRecorder.recordScrollKill();
+    this.lifetimeStatistics.recordScrollKill();
   };
   StatisticsRecorder.prototype.$k = function () {
     this.statisticsRecorder.$k();
     this.lifetimeStatistics.$k();
   };
-  StatisticsRecorder.prototype.bs = function () {
-    this.statisticsRecorder.bs();
-    this.lifetimeStatistics.bs();
+  StatisticsRecorder.prototype.recordMinionSummoned = function () {
+    this.statisticsRecorder.recordMinionSummoned();
+    this.lifetimeStatistics.recordMinionSummoned();
   };
-  StatisticsRecorder.prototype.Tr = function () {
-    this.statisticsRecorder.Tr();
-    this.lifetimeStatistics.Tr();
+  StatisticsRecorder.prototype.recordCharacterStunned = function () {
+    this.statisticsRecorder.recordCharacterStunned();
+    this.lifetimeStatistics.recordCharacterStunned();
   };
-  StatisticsRecorder.prototype.as = function () {
-    this.statisticsRecorder.as();
-    this.lifetimeStatistics.as();
+  StatisticsRecorder.prototype.recordMeleeAttack = function () {
+    this.statisticsRecorder.recordMeleeAttack();
+    this.lifetimeStatistics.recordMeleeAttack();
   };
-  StatisticsRecorder.prototype.ds = function () {
-    this.statisticsRecorder.ds();
-    this.lifetimeStatistics.ds();
+  StatisticsRecorder.prototype.recordRangedAttack = function () {
+    this.statisticsRecorder.recordRangedAttack();
+    this.lifetimeStatistics.recordRangedAttack();
   };
-  StatisticsRecorder.prototype.gs = function () {
-    this.statisticsRecorder.gs();
-    this.lifetimeStatistics.gs();
+  StatisticsRecorder.prototype.recordSpellCast = function () {
+    this.statisticsRecorder.recordSpellCast();
+    this.lifetimeStatistics.recordSpellCast();
   };
-  StatisticsRecorder.prototype.cs = function () {
-    this.statisticsRecorder.cs();
-    this.lifetimeStatistics.cs();
+  StatisticsRecorder.prototype.recordPotionUsed = function () {
+    this.statisticsRecorder.recordPotionUsed();
+    this.lifetimeStatistics.recordPotionUsed();
   };
-  StatisticsRecorder.prototype.fs = function () {
-    this.statisticsRecorder.fs();
-    this.lifetimeStatistics.fs();
+  StatisticsRecorder.prototype.recordScrollUsed = function () {
+    this.statisticsRecorder.recordScrollUsed();
+    this.lifetimeStatistics.recordScrollUsed();
   };
-  StatisticsRecorder.prototype.Xr = function () {
-    this.statisticsRecorder.Xr();
-    this.lifetimeStatistics.Xr();
+  StatisticsRecorder.prototype.recordFarmPurchased = function () {
+    this.statisticsRecorder.recordFarmPurchased();
+    this.lifetimeStatistics.recordFarmPurchased();
   };
-  StatisticsRecorder.prototype.fp = function (a) {
-    this.statisticsRecorder.fp(a);
-    this.lifetimeStatistics.fp(a);
+  StatisticsRecorder.prototype.recordPlayedMilliseconds = function (a) {
+    this.statisticsRecorder.recordPlayedMilliseconds(a);
+    this.lifetimeStatistics.recordPlayedMilliseconds(a);
   };
-  StatisticsRecorder.prototype.Zr = function (a) {
-    this.statisticsRecorder.Zr(a);
-    this.lifetimeStatistics.Zr(a);
+  StatisticsRecorder.prototype.recordItemsSold = function (a) {
+    this.statisticsRecorder.recordItemsSold(a);
+    this.lifetimeStatistics.recordItemsSold(a);
   };
-  StatisticsRecorder.prototype.ep = function (a) {
-    this.statisticsRecorder.ep(a);
-    this.lifetimeStatistics.ep(a);
+  StatisticsRecorder.prototype.recordItemFound = function (a) {
+    this.statisticsRecorder.recordItemFound(a);
+    this.lifetimeStatistics.recordItemFound(a);
   };
-  StatisticsRecorder.prototype.hs = function () {
-    this.statisticsRecorder.hs();
-    this.lifetimeStatistics.hs();
+  StatisticsRecorder.prototype.recordTreasureChestLooted = function () {
+    this.statisticsRecorder.recordTreasureChestLooted();
+    this.lifetimeStatistics.recordTreasureChestLooted();
   };
-  StatisticsRecorder.prototype.js = function () {
-    this.statisticsRecorder.js();
-    this.lifetimeStatistics.js();
+  StatisticsRecorder.prototype.recordWeaponRackLooted = function () {
+    this.statisticsRecorder.recordWeaponRackLooted();
+    this.lifetimeStatistics.recordWeaponRackLooted();
   };
-  StatisticsRecorder.prototype.Rr = function () {
-    this.statisticsRecorder.Rr();
-    this.lifetimeStatistics.Rr();
+  StatisticsRecorder.prototype.recordBookcaseLooted = function () {
+    this.statisticsRecorder.recordBookcaseLooted();
+    this.lifetimeStatistics.recordBookcaseLooted();
   };
 }

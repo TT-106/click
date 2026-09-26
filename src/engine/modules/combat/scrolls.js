@@ -158,7 +158,7 @@ export function castScroll(a, b) {
       c = new VisualEffect("Red Damage", d.levelPosition, d.levelPosition, false, 1);
       addVisualEffect(game.effects, c);
       updateCharacter(game.state.scrollCaster, 1);
-      game.state.statisticsRecorder.fs();
+      game.state.statisticsRecorder.recordScrollUsed();
       if (!b) {
         a.quantity--;
         if (0 > a.quantity) {

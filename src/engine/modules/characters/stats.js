@@ -93,7 +93,7 @@ export function resetSkillStatBonuses(a) {
   a.maxSummonedMinions = DEFAULT_MINION_LIMIT;
 }
 export function initializeCharactersStats() {
-  CharacterStats.prototype.wx = function (a) {
+  CharacterStats.prototype.setMinionKills = function (a) {
     this.minionKills = a;
   };
   CharacterStats.prototype.$k = function () {

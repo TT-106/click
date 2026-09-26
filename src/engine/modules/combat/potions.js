@@ -243,7 +243,7 @@ export function initializeCombatPotions() {
       if (this.mg) {
         this.mg.currentValue = this.mg.activeValue;
       }
-      game.state.statisticsRecorder.cs();
+      game.state.statisticsRecorder.recordPotionUsed();
     }
   };
   PotionDrop.prototype.oh = function (a) {

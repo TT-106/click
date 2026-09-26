@@ -375,7 +375,7 @@ export function initializeRuntimeGame() {
         resetAdventurePoints();
         resetAchievements();
       }
-      game.state.runStatistics.jx();
+      game.state.runStatistics.resetRunStatistics();
       game.paused = false;
       game.worldActive = true;
       game.world = new WorldMap();
@@ -436,7 +436,7 @@ export function initializeRuntimeGame() {
       a.Nm = 0;
       a.Om = 0;
       game.gameWon = false;
-      game.state.runStatistics.jx();
+      game.state.runStatistics.resetRunStatistics();
       game.paused = false;
       game.worldActive = true;
       game.world = new WorldMap();
