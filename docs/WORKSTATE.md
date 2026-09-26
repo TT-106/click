@@ -5,6 +5,7 @@
 
 ## 当前轮次状态（2026-09-26，M13 文档与验收收尾）
 
+- U7 补实 `LearnSpellUpgrade`：`purchaseUpgrades` 返回购买类型分布，`upgrades-purchased` 两端各自断言 type=6 确有购买且次数相等、存档 `spells` 总数超过 fixture。独立运行两阶段各 2+1 次 type=6；暂时跳过该类型时场景按预期失败。check/typecheck/parity/42 场景/e2e 全绿；仅 harness/断言和文档变化，引擎、数值、存档键、RNG、混淆清单均未改。
 - 文档一致性复核：当前代码重跑 `npm run perf`（回合 0.0824/0.0764ms、序列化 0.114/0.080ms、导入 22.4/30.0ms、离线 199.8/251.7ms；顺序重构/原版）与 `npm run perf:frames`（远征/点数面板各 599 次 rAF 间隔，P95 4.5/4.8ms、>50ms 0、渲染异常 0）。据实更新 `PERFORMANCE_REPORT.md`、`COMPATIBILITY_REPORT.md`、`docs/performance-{baseline,after}.md`，不再把单次倍数称性能持平或把 rAF 间隔当纯绘制时间。`MIGRATION_MAP.md` 的 30s 自动保存、9 场景、M10 未开始等旧结论也已纠为 300s、42 场景和已纳入 typecheck；本批仅文档，无引擎修改。
 - M12 第十九轮：AchievementListView、PointUpgradeListView、SkillsTabView 的 `Uc/Vc` 分别保存表格第 0/1 列按钮，`firstColumnButtons`/`secondColumnButtons` 两文件共 42 处守卫重命名；角色技能第二列 DOM E2E + 故意无效列号反向验证通过。起始存档无冒险点第二列实例，该过强探针已撤。check/typecheck/parity/42 场景/e2e 全绿，`analyze-fields` 1,173 → 1,171，fields 段 265 → 267；数值/RNG/存档键无改动。
 - M12 第十八轮：`oc` 在 `AnimationFrame`/`VisualEffect`/`RenderCommand`/`SpellUpgradeDetails` 四类上同为帧索引。原版 `Qb` 的 `b++ → Rb.oc` 构造链补足此前 MEDIUM 证据，另三类都直接递增或索引帧数组；五文件 22 处守卫重命名为 `frameIndex`，`src` 残留 0。check/typecheck/parity/42 场景/e2e 全绿（含逐像素帧指纹）；`analyze-fields` 1,174 → 1,173，fields 段 264 → 265。数值/RNG/存档键无改动。

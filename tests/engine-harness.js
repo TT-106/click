@@ -185,17 +185,20 @@ window.harness = {
       for (const tree of trees) if (tree) groups.push(...(original ? tree.HC : tree.upgradeRows));
     }
     let purchased = 0;
+    const purchasedByType = {};
     for (const group of groups) {
       for (const upgrade of group) {
         if (purchased >= limit) break;
         const ready = original ? upgrade.qc() : upgrade.canPurchaseNow();
         if (ready) {
+          const type = original ? upgrade.Na() : upgrade.getUpgradeType();
           if (original) upgrade.Qc(); else upgrade.purchase();
           purchased++;
+          purchasedByType[type] = (purchasedByType[type] ?? 0) + 1;
         }
       }
     }
-    return { purchased, snapshot: snapshot() };
+    return { purchased, purchasedByType, snapshot: snapshot() };
   },
   // 冒险点升级不在 upgradeCollections 内，而在 PartyState 的点数管理器中。
   purchasePointUpgrades({ turns = 0, limit = 1 } = {}) {

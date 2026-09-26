@@ -70,3 +70,5 @@
 32. `oc` 的四种运行时所有者都表示动画帧数组索引：原版 `c2.js:7109-7129` 用递增 `b++` 构造 `AnimationFrame.oc`；`c2.js:24844` 用 `RenderCommand.oc` 读取数组；`c2.js:7235-7240` 让 `VisualEffect.oc` 逐帧递增并按帧数回绕；`c2.js:24158` 用 `SpellUpgradeDetails.oc` 索引预览帧。原先把未读的 `AnimationFrame.oc` 列为 MEDIUM 的旧结论已由构造链补足。五文件 22 处统一为 `frameIndex`，`src` 残留 0，逐像素渲染场景及完整差分均通过。
 
 33. `Uc/Vc` 在 AchievementListView、PointUpgradeListView、SkillsTabView 的同构表格里分别保存第 0/1 列创建的 `UpgradeButtonView`，之后各自 reset/render。两字段共 42 处改为 `firstColumnButtons`/`secondColumnButtons`；浏览器端角色技能第二列容器存在，改成不存在列号的探针会使 E2E 失败。起始存档没有冒险点列表第二列实例，不能用该列是否存在判断视图有无回归。
+
+34. `upgrades-purchased` 先前虽遍历四棵角色技能树，却没有单独证明 `LearnSpellUpgrade` 被购买。harness 现记录每次购买的 `getUpgradeType`（原版 `Na()`）；独立运行两端在两阶段各有 type=6 的 2+1 次购买，存档 `adventurers[].spells` 总数超过 fixture 基线，逐检查点完整 DTO 相等。暂时跳过 type=6 购买后场景按预期失败；这证明法术学习入口，而非逐一证明所学法术的战斗效果。

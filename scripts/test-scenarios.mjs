@@ -23,6 +23,7 @@ const BASELINE_SKILLS = (base.adventurers ?? []).map((a) =>
   ['upgrades1', 'upgrades2', 'upgrades3', 'upgrades4'].reduce((n, k) => n + Object.values(a[k] ?? {}).filter(Boolean).length, 0));
 const BASELINE_SKILL_TOTAL = BASELINE_SKILLS.reduce((n, v) => n + v, 0);
 const BASELINE_SETTINGS_TOTAL = Object.values(base.settings?.upgrades ?? {}).reduce((n, v) => n + v, 0);
+const BASELINE_SPELL_TOTAL = (base.adventurers ?? []).reduce((n, a) => n + (a.spells?.length ?? 0), 0);
 const upgradedSomething = (s) => {
   const families = [];
   if (Object.values(s.settings?.upgrades ?? {}).reduce((n, v) => n + v, 0) > BASELINE_SETTINGS_TOTAL) families.push('settings');
@@ -31,11 +32,13 @@ const upgradedSomething = (s) => {
   if ((s.monsterTypes?.monsterLevelStates?.length ?? 0) > BASELINE_MONSTER_LEVELS) families.push('monsterLevels');
   if ((s.adventurers ?? []).some(a => (a.characteristicsComponent?.characterLevel ?? 1) > BASELINE_MAX_LEVEL)) families.push('characterLevels');
   if ((s.adventurers ?? []).reduce((n, a, i) => n + ['upgrades1','upgrades2','upgrades3','upgrades4'].reduce((m, k) => m + Object.values(a[k] ?? {}).filter(Boolean).length, 0), 0) > BASELINE_SKILL_TOTAL) families.push('skillTrees');
+  if ((s.adventurers ?? []).reduce((n, a) => n + (a.spells?.length ?? 0), 0) > BASELINE_SPELL_TOTAL) families.push('spells');
   return {
     upgraded: families.length > 0,
     settingsPurchased: families.includes('settings'),
     characterLeveled: families.includes('characterLevels'),
     skillLearned: families.includes('skillTrees'),
+    spellLearned: families.includes('spells'),
     note: '购买命中的升级族: ' + (families.join(' + ') || '无'),
   };
 };
@@ -519,7 +522,14 @@ try {
             assert.ok(counts[i] > 0, `${label} 端必须真的完成至少一次升级购买`);
           }
           assert.equal(counts[1], counts[0], `两端完成的购买次数不一致（原版 ${counts[0]} / 重构版 ${counts[1]}）`);
+          if (scenario.name === 'upgrades-purchased') {
+            for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {
+              assert.ok((results[i].purchasedByType[6] ?? 0) > 0, `${label} 端必须真的购买 LearnSpellUpgrade（type=6）`);
+            }
+            assert.equal(results[1].purchasedByType[6], results[0].purchasedByType[6], '两端购买法术升级次数不同');
+          }
           console.log(`  · 两端各自完成升级购买 ${counts[0]} 次`);
+          if (process.env.SCENARIO_VERBOSE) console.log(`  · 购买类型 ${JSON.stringify(results[0].purchasedByType)} / ${JSON.stringify(results[1].purchasedByType)}`);
         }
         if (purchasePointUpgrades !== undefined) {
           for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {
@@ -607,6 +617,7 @@ try {
             if (verdict.settingsPurchased !== undefined) assert.equal(verdict.settingsPurchased, true, `${label} 全局设置升级必须真实增长`);
             if (verdict.characterLeveled !== undefined) assert.equal(verdict.characterLeveled, true, `${label} 角色等级必须真实上升`);
             if (verdict.skillLearned !== undefined) assert.equal(verdict.skillLearned, true, `${label} 技能树布尔位必须真实解锁`);
+            if (verdict.spellLearned !== undefined) assert.equal(verdict.spellLearned, true, `${label} 已学法术必须真实增加`);
             if (verdict.monsterUnlocked !== undefined) assert.equal(verdict.monsterUnlocked, true, `${label} 怪物最高解锁等级和存档等级表长度必须真实增长；${verdict.note}`);
             if (verdict.pointUpgradePurchased !== undefined) assert.equal(verdict.pointUpgradePurchased, true, `${label} 冒险点必须真实支出且升级状态必须变为已购买`);
             if (verdict.achievementClaimed !== undefined) assert.equal(verdict.achievementClaimed, true, `${label} 成就奖励必须真实领取并标记 applied`);

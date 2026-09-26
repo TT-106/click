@@ -28,7 +28,7 @@
 | 卷轴 | scrolls-stocked、**scroll-cast-in-combat** | 库存/数量/解锁相等；第二条在活怪物存在时施放休克卷轴，两端各自断言 `scrollsUsed` 增长后比较完整存档；其他卷轴类型未逐一施放 |
 | 法术 | fireball-blast-stun、spell-status-transform、spell-buff-armor、spell-summon-ghost-skeleton、spell-summon-skeleton-army、spell-sleep、spell-heal、spell-area-bounce、spell-chain-lightning、spell-rain-damage、spell-bouncing-projectile、spell-chicken-swarm、spell-deferred-strike、spell-instant-search、spell-find-chest、spell-resurrect | 16 个 `spellCategoryId` 每条一个场景；cat=2 的 type 0/4/14 与 cat=17 另有直接计数/随从数对账；其余为"唯一注入法术 + 两端各自施法计数增长" |
 | 战斗与终局 | castle-victory | 两端各自断言 `gameWon`/`victoryCount=1`/`castlesConquered=1`/全城堡征服 |
-| 视图独占路径 | **upgrades-purchased** | 独立运行时两端各完成 28+24 次购买；逐检查点分别断言 `settings.upgrades`、角色等级、`upgrades1..4` 解锁位超过 fixture 基线，并比较完整存档 |
+| 视图独占路径 | **upgrades-purchased** | 独立运行时两端各完成 28+24 次购买，其中 type=6 法术学习为 2+1 次；逐检查点分别断言 `settings.upgrades`、角色等级、`upgrades1..4` 解锁位与 `spells` 数量超过 fixture 基线，并比较完整存档 |
 | 怪物等级解锁 | **monster-level-unlocked** | 提供击杀余额与经验值，先把队伍升至解锁门槛，再购买怪物等级；两端各自断言 `maxUnlockedLevel` 与 `monsterLevelStates` 长度从 1 增至 2，逐检查点完整存档相等 |
 | 冒险点消费 | **adventure-points-spent** | 按事件次数构造足额点数，刷新可购状态后两端各自购买一项点数升级；断言 `spentAdventurePoints` 增长与 `upgradePurchased` 置位，逐检查点完整存档相等 |
 | 成就领取 | **achievement-claimed** | 真实 fixture 已有一项 `obtained=true/applied=false`；两端刷新可领取升级并各领一次，断言 `applied` 增长，逐检查点完整存档相等 |
