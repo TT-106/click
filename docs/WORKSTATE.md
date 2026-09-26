@@ -19,6 +19,7 @@
 - M10 首个重文件 `views/castles.js` 已摘除 `@ts-nocheck`：原型后挂载方法在五个调用点作窄签名标注，混用的局部变量拆开；tsc 与四套回归全绿。其余重文件继续逐个纳入。
 - M10 `views/achievements.js` 也已摘除 `@ts-nocheck`：六处后挂载方法调用作窄签名标注，行索引和表行、容器和升级数组拆开；tsc 与四套回归全绿。剩余 `@ts-nocheck` 文件 19 个（以实时 `rg` 为准）。
 - M10 `views/dungeons.js` 已摘除 `@ts-nocheck`：表容器与表行变量拆开，后挂载的 `qi/Ro/ct/pf/mk/Ri` 在调用处限定签名；tsc 与四套回归全绿。剩余 18 个。
+- M10 `runtime/game.js` 摘除 `@ts-nocheck` 后直接零类型错误，四套回归全绿。剩余 17 个。
 - 本节优先于下方旧快照中的“当前工作树干净”“M10 未开始”“9 场景”等过时文字；提交与实际状态以 `git status`、`git log` 为准。
 
 ## 1. 项目概况
