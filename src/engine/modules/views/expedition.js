@@ -125,7 +125,7 @@ export function scrollButtonsChanged(a) {
 export function ScrollButtonView(a, b, c, d) {
   this.elementId = a;
   this.visible = true;
-  this.Vh = this.Cx = this.mx = this.$p = this.tm = this.scroll = null;
+  this.itemImage = this.Cx = this.mx = this.$p = this.tm = this.scroll = null;
   this.aq = false;
   this.Gv = !this.aq;
   this.rz = -1;
@@ -153,9 +153,9 @@ export function mountScrollButton(a) {
   a.Cx = b.insertCell(0);
   a.mx.style.textAlign = "left";
   a.Cx.style.textAlign = "left";
-  a.Vh = createElement("img", d, null, "itemImage");
-  a.Vh.style.height = "30px";
-  a.Vh.src = "images/Transparent.gif";
+  a.itemImage = createElement("img", d, null, "itemImage");
+  a.itemImage.style.height = "30px";
+  a.itemImage.src = "images/Transparent.gif";
   a.$p.onmouseup = function () {
     getScrollButtonClass(a);
     return false;
@@ -587,7 +587,7 @@ export function initializeViewsExpedition() {
     var a = false;
     if (this.scroll != this.tm && (this.tm = this.scroll, a = true, this.scroll)) {
       var b = this.scroll.spriteName;
-      this.Vh.style.background = "url('spritesheet/items.png') -" + b.sourceX + "px -" + b.sourceY + "px";
+      this.itemImage.style.background = "url('spritesheet/items.png') -" + b.sourceX + "px -" + b.sourceY + "px";
     }
     b = this.scroll.label;
     if (this.yz !== b) {

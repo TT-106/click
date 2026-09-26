@@ -383,7 +383,7 @@ export function advanceSimulation(a) {
       if (Ra) {
         var Ja = kb.actionDefinition;
         if (Ja && 12 === Ja.spellCategoryId) {
-          var Db = Ra.wm;
+          var Db = Ra.currentPosition;
           setVector(kb.attacker.position.levelPosition, Db.x, Db.y);
         }
       }
@@ -445,19 +445,19 @@ export function advanceSimulation(a) {
     ka.hasSpawned = true;
     if (1 === ka.Io) {
       if (ka.projectileEffect && !ka.Pk) {
-        assignVector(directionScratchVector, ka.xi);
-        subtractVector(directionScratchVector, ka.wm);
+        assignVector(directionScratchVector, ka.targetPosition);
+        subtractVector(directionScratchVector, ka.currentPosition);
         var xb = vectorLength(directionScratchVector),
           Na = undefined,
           Na = /** @type {any} */ (ka.boundCharacter === game.state.scrollCaster ? 11 * Eb : ka.isReturning ? 5 * Eb : 7 * Eb);
         if (xb <= Na) {
-          assignVector(ka.wm, ka.xi);
+          assignVector(ka.currentPosition, ka.targetPosition);
           ka.Pk = true;
           ka.finished = true;
         } else {
           normalizeVector(directionScratchVector);
           multiplyVector(directionScratchVector, Na);
-          addVector(ka.wm, directionScratchVector);
+          addVector(ka.currentPosition, directionScratchVector);
         }
       }
       if (ka.animation.isDirectional) {

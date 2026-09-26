@@ -68,7 +68,7 @@ export function DungeonRowView(a, b) {
   this.yr = new PurchaseDungeonUpgrade(this.dungeon);
   this.px = this.Gx = this.labelCell = this.labelCell = this.wr = this.Co = null;
   this.pB = "secureCell_" + b + "_" + this.rowElement.rowIndex;
-  this.upgradeButton = this.cj = this.ai = this.progressFillElement = this.progressCell = this.Ix = null;
+  this.upgradeButton = this.cj = this.progressTextElement = this.progressFillElement = this.progressCell = this.Ix = null;
   this.Gu = this.Bk = this.Qv = "";
   this.mw = this.pu = -1;
   this.Bt = false;
@@ -227,14 +227,14 @@ export function initializeViewsDungeons() {
     this.progressFillElement.style.backgroundColor = "#F00";
     this.progressFillElement.style.height = "15px";
     this.progressFillElement.style.width = "0px";
-    this.ai = createElement("div", this.cj, null, null);
-    this.ai.style.position = "absolute";
-    this.ai.style.textAlign = "center";
-    this.ai.style.top = "0";
-    this.ai.style.left = "0";
-    this.ai.style.height = "15px";
-    this.ai.style.width = "100%";
-    this.ai.style.zIndex = "10";
+    this.progressTextElement = createElement("div", this.cj, null, null);
+    this.progressTextElement.style.position = "absolute";
+    this.progressTextElement.style.textAlign = "center";
+    this.progressTextElement.style.top = "0";
+    this.progressTextElement.style.left = "0";
+    this.progressTextElement.style.height = "15px";
+    this.progressTextElement.style.width = "100%";
+    this.progressTextElement.style.zIndex = "10";
     this.Bt = true;
   };
   DungeonRowView.prototype.render = function () {
@@ -285,7 +285,7 @@ export function initializeViewsDungeons() {
             b = h / 100 * this.Ct | 0;
             this.progressFillElement.style.width = b + "px";
             this.progressFillElement.style.backgroundColor = "#F00";
-            this.ai.innerHTML = "地牢再次受到侵袭 " + h + "%";
+            this.progressTextElement.innerHTML = "地牢再次受到侵袭 " + h + "%";
           }
         } else {
           if (this.mw !== l) {
@@ -293,7 +293,7 @@ export function initializeViewsDungeons() {
             b = l / 100 * this.Ct | 0;
             this.progressFillElement.style.width = b + "px";
             this.progressFillElement.style.backgroundColor = "#080";
-            this.ai.innerHTML = "收获地牢 " + l + "%";
+            this.progressTextElement.innerHTML = "收获地牢 " + l + "%";
           }
         }
       }

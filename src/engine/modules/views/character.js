@@ -17,7 +17,7 @@ export function ItemRowBase() {}
 export function InventoryItemView(a, b) {
   this.rowElement = a;
   this.adventurerIndex = b;
-  this.Ej = this.Cr = this.goldCell = this.Oh = this.levelCell = this.rarityCell = this.Fi = this.Ei = this.item = null;
+  this.Ej = this.Cr = this.goldCell = this.valueCell = this.levelCell = this.rarityCell = this.Fi = this.Ei = this.item = null;
   (/** @type {InventoryItemView & { createRowCells: () => void }} */ (/** @type {unknown} */ (this))).createRowCells();
 }
 export function InventoryTableView(a, b) {
@@ -30,7 +30,7 @@ export function InventoryTableView(a, b) {
 export function EquipmentItemRowView(a, b) {
   this.rowElement = a;
   this.adventurerIndex = b;
-  this.Cr = this.goldCell = this.Oh = this.levelCell = this.rarityCell = this.Fi = this.Ei = this.item = null;
+  this.Cr = this.goldCell = this.valueCell = this.levelCell = this.rarityCell = this.Fi = this.Ei = this.item = null;
   (/** @type {EquipmentItemRowView & { createRowCells: () => void }} */ (/** @type {unknown} */ (this))).createRowCells();
 }
 export function EquipmentTableView(a, b) {
@@ -184,10 +184,10 @@ export function initializeViewsCharacter() {
       this.rarityCell.innerHTML = getItemRarityLabel(this.item);
       this.levelCell.innerHTML = this.item.itemLevel + "";
       this.goldCell.innerHTML = formatAmount(this.item.itemGold);
-      this.Oh.innerHTML = formatAmount(this.item.itemValue) + " " + getItemStatLabel(this.item);
+      this.valueCell.innerHTML = formatAmount(this.item.itemValue) + " " + getItemStatLabel(this.item);
       var c = game.state.adventurers[this.adventurerIndex],
         b = c.getSlotItem(a.slot);
-      this.Oh.className = b ? this.item.itemValue > b.itemValue ? "itemValueBetter" : this.item.itemValue < b.itemValue ? "itemValueWorse" : "" : "itemValueBetter";
+      this.valueCell.className = b ? this.item.itemValue > b.itemValue ? "itemValueBetter" : this.item.itemValue < b.itemValue ? "itemValueWorse" : "" : "itemValueBetter";
       this.goldCell.className = b ? a.itemGold > b.itemGold ? "itemValueBetter" : a.itemGold < b.itemGold ? "itemValueWorse" : "" : "itemValueBetter";
       this.rarityCell.className = getRarityClass(this.item.getRarity());
       if (!b || this.item.itemValue > b.itemValue) {
@@ -204,7 +204,7 @@ export function initializeViewsCharacter() {
       this.Fi.innerHTML = "";
       this.rarityCell.innerHTML = "";
       this.levelCell.innerHTML = "";
-      this.Oh.innerHTML = "";
+      this.valueCell.innerHTML = "";
       this.goldCell.className = "";
       this.Ej.style.display = "none";
       this.Ej.onclick = null;
@@ -228,8 +228,8 @@ export function initializeViewsCharacter() {
     this.levelCell.style.textAlign = "right";
     this.levelCell.style.paddingRight = "5px";
     this.levelCell.style.width = "60px";
-    this.Oh = a.insertCell(4);
-    this.Oh.style.width = "120px";
+    this.valueCell = a.insertCell(4);
+    this.valueCell.style.width = "120px";
     this.goldCell = a.insertCell(5);
     this.goldCell.style.textAlign = "right";
     this.goldCell.style.paddingRight = "5px";
@@ -314,7 +314,7 @@ export function initializeViewsCharacter() {
       this.Fi.innerHTML = getHighlightedItemName(this.item);
       this.rarityCell.innerHTML = getItemRarityLabel(this.item);
       this.levelCell.innerHTML = this.item.itemLevel + "";
-      this.Oh.innerHTML = formatAmount(this.item.itemValue) + " " + getItemStatLabel(this.item);
+      this.valueCell.innerHTML = formatAmount(this.item.itemValue) + " " + getItemStatLabel(this.item);
       this.goldCell.innerHTML = formatAmount(this.item.itemGold);
       this.rarityCell.className = getRarityClass(this.item.getRarity());
     } else {
@@ -322,7 +322,7 @@ export function initializeViewsCharacter() {
       this.Fi.innerHTML = "";
       this.rarityCell.innerHTML = "";
       this.levelCell.innerHTML = "";
-      this.Oh.innerHTML = "";
+      this.valueCell.innerHTML = "";
       this.goldCell.innerHTML = "";
       this.rarityCell.className = "";
     }
@@ -344,8 +344,8 @@ export function initializeViewsCharacter() {
     this.levelCell.style.textAlign = "right";
     this.levelCell.style.paddingRight = "5px";
     this.levelCell.style.width = "70px";
-    this.Oh = a.insertCell(4);
-    this.Oh.style.width = "120px";
+    this.valueCell = a.insertCell(4);
+    this.valueCell.style.width = "120px";
     this.goldCell = a.insertCell(5);
     this.goldCell.style.textAlign = "right";
     this.goldCell.style.paddingRight = "5px";

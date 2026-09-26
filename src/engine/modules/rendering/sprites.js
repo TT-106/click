@@ -80,8 +80,8 @@ export function VisualEffect(a, b, c, d, f) {
     }
   }
   this.iD = b;
-  this.wm = f;
-  this.xi = c;
+  this.currentPosition = f;
+  this.targetPosition = c;
   this.Pk = false;
   this.projectileEffect = d;
   this.finished = this.hasSpawned = this.isReturning = false;
@@ -99,8 +99,8 @@ export function VisualEffect(a, b, c, d, f) {
   this.uA = false;
 }
 export function getEffectDirection(a) {
-  assignVector(directionScratchVector, a.xi);
-  subtractVector(directionScratchVector, a.wm);
+  assignVector(directionScratchVector, a.targetPosition);
+  subtractVector(directionScratchVector, a.currentPosition);
   normalizeVector(directionScratchVector);
   a = directionScratchVector.x;
   var b = directionScratchVector.y,

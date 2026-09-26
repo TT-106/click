@@ -639,7 +639,7 @@ export function initializeRenderingScene() {
             for (jb = 0; jb < Ha.length; jb++) {
               if (Wa = Ha[jb], cc = Wa.Io, 1 === cc) {
                 Ab = Wa.getAnimation();
-                Bb = Wa.wm;
+                Bb = Wa.currentPosition;
                 bc = Wa.frameIndex;
                 qb = Bb.x;
                 wb = Bb.y;
@@ -666,7 +666,7 @@ export function initializeRenderingScene() {
                 gb = Ja.y;
                 rb = projectDungeonX(Db, gb) + game.tileSize;
                 dc = projectDungeonY(Db, gb) + game.tileSize;
-                qc = Tb.xi;
+                qc = Tb.targetPosition;
                 Fc = qc.x;
                 Cb = qc.y;
                 kb = projectDungeonX(Fc, Cb) + game.tileSize;

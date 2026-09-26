@@ -8,7 +8,7 @@ export function GameView() {
   this.elementId = "gameContainer";
   this.visible = true;
   this.um = [0, 0, 0, 0, 0];
-  this.Gh = [];
+  this.tabStates = [];
   this.panels = [];
   this.tabBar = null;
 }
@@ -130,11 +130,11 @@ export function initializeViewsNavigation() {
         this.um[a] = c;
         b = b.classDefinition.shortName;
         if (0 < c) {
-          this.Gh[a].label = b + " " + c;
-          this.Gh[a].highlighted = true;
+          this.tabStates[a].label = b + " " + c;
+          this.tabStates[a].highlighted = true;
         } else {
-          this.Gh[a].label = b;
-          this.Gh[a].highlighted = false;
+          this.tabStates[a].label = b;
+          this.tabStates[a].highlighted = false;
         }
       }
     }

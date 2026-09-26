@@ -84,7 +84,7 @@ export function GuardRangedBehavior(a, b, c) {
 }
 export function TargetSpellBehavior(a, b) {
   this.priorityWeight = b;
-  this.targetCharacter = this.Vi = null;
+  this.targetCharacter = this.learnedSpell = null;
   this.targetDistance = 0;
   this.actionRange = a;
 }
@@ -154,35 +154,35 @@ export function LootPotionBehavior(a) {
   this.actionRange = 10;
 }
 export function UseShopBehavior(a, b) {
-  this.Mi = game.tileSize + 5;
+  this.pickupRadius = game.tileSize + 5;
   this.priorityWeight = a;
   this.il = b;
   this.goldDrop = null;
   this.Wy = 0;
 }
 export function EnterDungeonBehavior(a, b) {
-  this.Mi = game.tileSize + 5;
+  this.pickupRadius = game.tileSize + 5;
   this.priorityWeight = a;
   this.il = b;
   this.scrollDrop = null;
   this.Zy = 0;
 }
 export function EnterCastleBehavior(a, b) {
-  this.Mi = game.tileSize + 5;
+  this.pickupRadius = game.tileSize + 5;
   this.priorityWeight = a;
   this.il = b;
   this.potionDrop = null;
   this.Yy = 0;
 }
 export function TravelWorldBehavior(a, b) {
-  this.Mi = game.tileSize + 5;
+  this.pickupRadius = game.tileSize + 5;
   this.priorityWeight = a;
   this.il = b;
   this.itemDrop = null;
   this.Xy = 0;
 }
 export function ChangeFloorBehavior() {
-  this.Mi = game.tileSize + 1;
+  this.pickupRadius = game.tileSize + 1;
   this.priorityWeight = 90;
   this.treasureChest = null;
 }
@@ -286,11 +286,11 @@ export function initializeAiBehaviors() {
     a.actionType = IDLE_ACTION;
     a.targetGoldDrop = null;
     a.combatTarget = null;
-    a.bj = null;
+    a.targetItemDrop = null;
     a.targetTreasureChest = null;
     a.spellToCast = null;
     a.targetScrollDrop = null;
-    a.hk = null;
+    a.targetPotionDrop = null;
     var b,
       c = 0,
       d,
@@ -760,23 +760,23 @@ export function initializeAiBehaviors() {
     return (/** @type {RangedAttackBehavior & RangedBehaviorMethods} */ (/** @type {unknown} */ (this.Vq))).getPriority();
   };
   TargetSpellBehavior.prototype.resetBehaviorState = function () {
-    this.Vi = null;
+    this.learnedSpell = null;
   };
   TargetSpellBehavior.prototype.getPriority = function () {
     return this.priorityWeight;
   };
   TargetSpellBehavior.prototype.notifySpellLearned = function (a) {
-    if (!(this.Vi || 6 !== a.spellCategoryId)) {
-      this.Vi = a;
+    if (!(this.learnedSpell || 6 !== a.spellCategoryId)) {
+      this.learnedSpell = a;
     }
   };
   TargetSpellBehavior.prototype.execute = function (a) {
-    if (this.Vi && canAttack(a) && isSpellReady(this.Vi)) {
+    if (this.learnedSpell && canAttack(a) && isSpellReady(this.learnedSpell)) {
       if (a.setCombatTarget(this.targetCharacter), this.targetDistance <= this.actionRange) {
         if (canAttack(a)) {
           markAttackTurn(a);
-          this.Vi.lastCastTurn = game.state.turnNumber;
-          a.spellToCast = this.Vi;
+          this.learnedSpell.lastCastTurn = game.state.turnNumber;
+          a.spellToCast = this.learnedSpell;
           a.actionType = CAST_ACTION_TYPE;
           clearMovementTarget(a.position);
           var b = a.position.room;
@@ -791,7 +791,7 @@ export function initializeAiBehaviors() {
     }
   };
   TargetSpellBehavior.prototype.getBehaviorScore = function (a) {
-    if (!this.Vi || !isSpellReady(this.Vi) || !a.position.room) {
+    if (!this.learnedSpell || !isSpellReady(this.learnedSpell) || !a.position.room) {
       return 0;
     }
     if (!freeSpellsModifier.currentValue) {
@@ -1105,7 +1105,7 @@ export function initializeAiBehaviors() {
         this.goldDrop = null;
       } else if (this.goldDrop.claimedBy == a) {
         a.targetGoldDrop = this.goldDrop;
-        if (distanceToPoint(a.position.levelPosition, this.goldDrop.Xo, this.goldDrop.Yo) < this.Mi) {
+        if (distanceToPoint(a.position.levelPosition, this.goldDrop.Xo, this.goldDrop.Yo) < this.pickupRadius) {
           a.actionType = 5;
         } else {
           setVector(a.position.moveTargetPoint, this.goldDrop.Xo, this.goldDrop.Yo);
@@ -1168,7 +1168,7 @@ export function initializeAiBehaviors() {
         this.scrollDrop = null;
       } else if (this.scrollDrop.claimedBy == a) {
         a.targetScrollDrop = this.scrollDrop;
-        if (distanceToPoint(a.position.levelPosition, this.scrollDrop.bq, this.scrollDrop.cq) < this.Mi) {
+        if (distanceToPoint(a.position.levelPosition, this.scrollDrop.bq, this.scrollDrop.cq) < this.pickupRadius) {
           a.actionType = 7;
         } else {
           setVector(a.position.moveTargetPoint, this.scrollDrop.bq, this.scrollDrop.cq);
@@ -1230,8 +1230,8 @@ export function initializeAiBehaviors() {
       if (this.potionDrop.collected) {
         this.potionDrop = null;
       } else if (this.potionDrop.claimedBy == a) {
-        a.hk = this.potionDrop;
-        if (distanceToPoint(a.position.levelPosition, this.potionDrop.Qp, this.potionDrop.Rp) < this.Mi) {
+        a.targetPotionDrop = this.potionDrop;
+        if (distanceToPoint(a.position.levelPosition, this.potionDrop.Qp, this.potionDrop.Rp) < this.pickupRadius) {
           a.actionType = 8;
         } else {
           setVector(a.position.moveTargetPoint, this.potionDrop.Qp, this.potionDrop.Rp);
@@ -1293,8 +1293,8 @@ export function initializeAiBehaviors() {
       if (this.itemDrop.collected) {
         this.itemDrop = null;
       } else if (this.itemDrop.claimedBy == a) {
-        a.bj = this.itemDrop;
-        if (distanceToPoint(a.position.levelPosition, this.itemDrop.mp, this.itemDrop.np) < this.Mi) {
+        a.targetItemDrop = this.itemDrop;
+        if (distanceToPoint(a.position.levelPosition, this.itemDrop.mp, this.itemDrop.np) < this.pickupRadius) {
           a.actionType = 6;
         } else {
           setVector(a.position.moveTargetPoint, this.itemDrop.mp, this.itemDrop.np);
@@ -1354,7 +1354,7 @@ export function initializeAiBehaviors() {
   ChangeFloorBehavior.prototype.execute = function (a) {
     if (this.treasureChest && !this.treasureChest.opened) {
       a.setTargetTreasureChest(this.treasureChest);
-      if (distanceToPoint(a.position.levelPosition, this.treasureChest.levelX, this.treasureChest.levelY) < this.Mi) {
+      if (distanceToPoint(a.position.levelPosition, this.treasureChest.levelX, this.treasureChest.levelY) < this.pickupRadius) {
         a.actionType = 12;
       } else {
         setVector(a.position.moveTargetPoint, this.treasureChest.levelX, this.treasureChest.levelY);

@@ -50,7 +50,7 @@ function makePair() {
   const refa = new SpriteSheet('refa.png', 32, []);
   const entry = { sourceX: 7, sourceY: 9, spriteSize: 32 };
   orig.Yh['Known.PNG'] = entry;
-  refa.Yh['Known.PNG'] = entry;
+  refa.animationMap['Known.PNG'] = entry;
   return [orig, refa];
 }
 

@@ -62,7 +62,7 @@ export function Character(a, b, c, d, f) {
   }
   this.actionType = IDLE_ACTION;
   this.isDead = false;
-  this.spellToCast = this.targetTreasureChest = this.bj = this.hk = this.targetScrollDrop = this.targetGoldDrop = this.combatTarget = this.behaviors = null;
+  this.spellToCast = this.targetTreasureChest = this.targetItemDrop = this.targetPotionDrop = this.targetScrollDrop = this.targetGoldDrop = this.combatTarget = this.behaviors = null;
   this.stats = new CharacterStats(this);
   this.au = -3 * getAttackCooldown(this.stats, true);
   this.summoner = null;
@@ -1016,19 +1016,19 @@ export function updateCharacter(a, b) {
           awardAdventurePoints(10);
         }
       } else if (8 === a.actionType) {
-        if (a.hk && !a.hk.collected) {
+        if (a.targetPotionDrop && !a.targetPotionDrop.collected) {
           showFloatingText(game.floatingText, a, "药剂!", "white");
-          a.hk.setCollected(true);
-          removePotionDrop(a.hk);
-          addPotion(a.hk.potion);
+          a.targetPotionDrop.setCollected(true);
+          removePotionDrop(a.targetPotionDrop);
+          addPotion(a.targetPotionDrop.potion);
           a.targetScrollDrop = null;
           awardAdventurePoints(11);
         }
       } else if (6 === a.actionType) {
-        if (a.bj && !a.bj.collected) {
-          a.bj.setCollected(true);
-          removeItemDrop(a.bj);
-          var Qe = a.bj.getItem(),
+        if (a.targetItemDrop && !a.targetItemDrop.collected) {
+          a.targetItemDrop.setCollected(true);
+          removeItemDrop(a.targetItemDrop);
+          var Qe = a.targetItemDrop.getItem(),
             Cf = Qe.getRarity();
           addInventoryItem(Qe.nj.inventory, Qe);
           game.state.statisticsRecorder.recordItemFound(Qe);
@@ -1048,7 +1048,7 @@ export function updateCharacter(a, b) {
                 awardAdventurePoints(16);
             }
           }
-          a.bj = null;
+          a.targetItemDrop = null;
         }
       } else if (12 === a.actionType) {
         if (a.targetTreasureChest && !a.targetTreasureChest.opened) {

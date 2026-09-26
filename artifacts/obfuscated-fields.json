@@ -1,99 +1,5 @@
 [
   {
-    "name": "Gh",
-    "reads": 10,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\simulation\\loop.js:127",
-        "code": "gameView.Gh"
-      },
-      {
-        "loc": "src\\engine\\modules\\simulation\\loop.js:128",
-        "code": "gameView.Gh"
-      },
-      {
-        "loc": "src\\engine\\modules\\simulation\\loop.js:129",
-        "code": "gameView.Gh"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\simulation\\loop.js",
-      "src\\engine\\modules\\views\\navigation.js"
-    ]
-  },
-  {
-    "name": "Oh",
-    "reads": 7,
-    "writes": 4,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\character.js:20",
-        "code": "this.Oh"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\character.js:33",
-        "code": "this.Oh"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\character.js:187",
-        "code": "this.Oh"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\character.js"
-    ]
-  },
-  {
-    "name": "ai",
-    "reads": 9,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:71",
-        "code": "this.ai"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:230",
-        "code": "this.ai"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:231",
-        "code": "this.ai"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\dungeons.js"
-    ]
-  },
-  {
-    "name": "Vh",
-    "reads": 7,
-    "writes": 4,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\expedition.js:128",
-        "code": "this.Vh"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\expedition.js:156",
-        "code": "a.Vh"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\expedition.js:157",
-        "code": "a.Vh"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\views\\expedition.js",
-      "src\\engine\\modules\\views\\upgrade-details.js"
-    ]
-  },
-  {
     "name": "Jh",
     "reads": 3,
     "writes": 8,
@@ -116,103 +22,6 @@
       "src\\engine\\modules\\views\\expedition.js",
       "src\\engine\\modules\\views\\monsters.js",
       "src\\engine\\modules\\views\\results.js"
-    ]
-  },
-  {
-    "name": "Vi",
-    "reads": 7,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:87",
-        "code": "this.Vi"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:763",
-        "code": "this.Vi"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:769",
-        "code": "this.Vi"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js"
-    ]
-  },
-  {
-    "name": "Mi",
-    "reads": 5,
-    "writes": 5,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:157",
-        "code": "this.Mi"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:164",
-        "code": "this.Mi"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:171",
-        "code": "this.Mi"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js"
-    ]
-  },
-  {
-    "name": "bj",
-    "reads": 5,
-    "writes": 5,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:289",
-        "code": "a.bj"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1296",
-        "code": "a.bj"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:65",
-        "code": "this.bj"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js",
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\runtime\\game.js"
-    ]
-  },
-  {
-    "name": "xi",
-    "reads": 9,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\actions.js:155",
-        "code": "b.impactEffect.xi"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\actions.js:158",
-        "code": "b.impactEffect.xi"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\actions.js:170",
-        "code": "b.impactEffect.xi"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\rendering\\sprites.js",
-      "src\\engine\\modules\\simulation\\tick.js"
     ]
   },
   {
@@ -761,31 +570,6 @@
     "fileCount": 1,
     "files": [
       "src\\engine\\modules\\views\\upgrade-details.js"
-    ]
-  },
-  {
-    "name": "hk",
-    "reads": 5,
-    "writes": 4,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:293",
-        "code": "a.hk"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1233",
-        "code": "a.hk"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:65",
-        "code": "this.hk"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js",
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\runtime\\game.js"
     ]
   },
   {
@@ -4045,31 +3829,6 @@
     ]
   },
   {
-    "name": "wm",
-    "reads": 6,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:642",
-        "code": "Wa.wm"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\sprites.js:83",
-        "code": "this.wm"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\sprites.js:103",
-        "code": "a.wm"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\rendering\\sprites.js",
-      "src\\engine\\modules\\simulation\\tick.js"
-    ]
-  },
-  {
     "name": "cm",
     "reads": 1,
     "writes": 6,
@@ -7012,6 +6771,29 @@
       {
         "loc": "src\\engine\\modules\\views\\upgrade-details.js:982",
         "code": "this.dq"
+      }
+    ],
+    "fileCount": 1,
+    "files": [
+      "src\\engine\\modules\\views\\upgrade-details.js"
+    ]
+  },
+  {
+    "name": "Vh",
+    "reads": 4,
+    "writes": 2,
+    "samples": [
+      {
+        "loc": "src\\engine\\modules\\views\\upgrade-details.js:165",
+        "code": "this.Vh"
+      },
+      {
+        "loc": "src\\engine\\modules\\views\\upgrade-details.js:940",
+        "code": "this.Vh"
+      },
+      {
+        "loc": "src\\engine\\modules\\views\\upgrade-details.js:961",
+        "code": "this.Vh"
       }
     ],
     "fileCount": 1,

@@ -124,12 +124,12 @@ export function initializeSimulationLoop() {
           pointsTab = new TabState("点数", true),
           offlineTab = new TabState("离线", false),
           informationTab = new TabState("信息", true);
-        gameView.Gh.length = 0;
-        gameView.Gh.push(character0Tab);
-        gameView.Gh.push(character1Tab);
-        gameView.Gh.push(character2Tab);
-        gameView.Gh.push(character3Tab);
-        gameView.Gh.push(character4Tab);
+        gameView.tabStates.length = 0;
+        gameView.tabStates.push(character0Tab);
+        gameView.tabStates.push(character1Tab);
+        gameView.tabStates.push(character2Tab);
+        gameView.tabStates.push(character3Tab);
+        gameView.tabStates.push(character4Tab);
         if (game.partyCreated) {
           if (game.gameWon) {
             gameOverTab.selected = true;

@@ -152,10 +152,10 @@ export function applySpellEffect(a, b) {
       }
     }
   } else if (10 === d || 9 === d) {
-    summonSpellMinion(c, b.attacker, b.impactEffect.xi);
+    summonSpellMinion(c, b.attacker, b.impactEffect.targetPosition);
   } else if (11 === d) {
     d = b.attacker;
-    g = b.impactEffect.xi;
+    g = b.impactEffect.targetPosition;
     h = b.targetCharacter;
     f = game.monsters;
     if (h) {
@@ -167,7 +167,7 @@ export function applySpellEffect(a, b) {
     summonSpellMinion(c, d, g);
   } else if (17 === d) {
     c = b.attacker;
-    d = b.impactEffect.xi;
+    d = b.impactEffect.targetPosition;
     var chickenStats = c.stats;
     g = chickenStats.ku;
     f = chickenStats.lu;
@@ -627,7 +627,7 @@ export function createChainAction(a) {
     return null;
   }
   var h = new CombatAction(),
-    l = g.xi,
+    l = g.targetPosition,
     n = d.position.levelPosition;
   h.attacker = a.attacker;
   (/** @type {TargetedCombatAction} */ (h)).setTargetCharacter(d);
@@ -693,7 +693,7 @@ export function createReturningAction(a) {
   f.chainCount = c;
   f.pl = a.pl;
   var h = a.projectileEffect,
-    b = d.xi,
+    b = d.targetPosition,
     c = g.position.levelPosition;
   (/** @type {TargetedCombatAction} */ (f)).setTargetCharacter(g);
   g = calculateSpellDamage(a.attacker, g);
