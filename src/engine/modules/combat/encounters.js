@@ -1,4 +1,3 @@
-// @ts-nocheck -- M10 渐进类型化：JSDoc 覆盖后摘除（见 docs/WORKSTATE.md）
 /** 遭遇战、怪物种类、敌我集合与首领生成。
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
@@ -17,6 +16,8 @@ import { getPartyMaxLevel } from "../characters/party.js";
 import { bossClass, bossSpriteDefinitions, castleGuardianDefinitions } from "../content/guardians.js";
 import { applyLevelStats, createBehaviorQueue, createCastleGuardian, initializeCharacterSkills } from "../simulation/characters.js";
 import { applyBonusList } from "./skill-effects.js";
+/** @typedef {Character & { gq: (monsterType: MonsterType) => void }} TypedMonster */
+/** @typedef {MonsterNameGenerator & { mn: (words: string[]) => string }} NamedMonsterGenerator */
 export function EncounterState() {
   this.Ar = 0;
   this.fw = "";
@@ -45,58 +46,62 @@ export function populateEncounter(a) {
       if (bossEncounterModifier.currentValue && 0.2 > Math.random()) {
         spawnDungeonBoss(b, a);
       } else {
-        var c = globalUpgradeDefinitions.minMonsters.currentValue,
-          d = Math.max(globalUpgradeDefinitions.maxMonsters.currentValue, c),
-          c = c + randomInt(d - c),
-          c = c + extraMonstersModifier.currentValue;
-        if (0 < c) {
-          for (var d = game.monsterCatalog, f = d.hd + randomInt(1 + d.maxUnlockedLevel - d.hd), d = getMonsterTypesForLevel(d, f), d = d[randomInt(d.length)], f = d.xd, b = b.dn.Vk(d.nE) + " (等级." + f + ")", f = 0; f < c; f++) {
-            var g = game.monsters,
-              h = a,
-              l = d,
-              n = new Character("Monster", MONSTER_TYPE, 12, monsterClass, null),
-              p = n.stats;
-            n.sprite = l.ll;
-            n.gq(l);
-            p.characterLevel = l.xd;
-            n.behaviors = new AttackBehavior(h, MELEE_ATTACK_RANGE);
-            n.position.room = h;
+        var minMonsters = globalUpgradeDefinitions.minMonsters.currentValue,
+          maxMonsters = Math.max(globalUpgradeDefinitions.maxMonsters.currentValue, minMonsters),
+          monsterCount = minMonsters + randomInt(maxMonsters - minMonsters);
+        monsterCount += extraMonstersModifier.currentValue;
+        if (0 < monsterCount) {
+          var catalog = game.monsterCatalog,
+            monsterLevel = catalog.hd + randomInt(1 + catalog.maxUnlockedLevel - catalog.hd),
+            monsterTypes = getMonsterTypesForLevel(catalog, monsterLevel),
+            monsterType = monsterTypes[randomInt(monsterTypes.length)],
+            encounterName = b.dn.Vk(monsterType.nE) + " (等级." + monsterType.xd + ")";
+          for (var monsterIndex = 0; monsterIndex < monsterCount; monsterIndex++) {
+            var registry = game.monsters,
+              room = a,
+              monster = new Character("Monster", MONSTER_TYPE, 12, monsterClass, null),
+              stats = monster.stats;
+            monster.sprite = monsterType.ll;
+            (/** @type {TypedMonster} */ (monster)).gq(monsterType);
+            stats.characterLevel = monsterType.xd;
+            monster.behaviors = new AttackBehavior(room, MELEE_ATTACK_RANGE);
+            monster.position.room = room;
             if (frailMonstersModifier.currentValue) {
-              p.damage.levelValue = floorNumber(0.7 * l.Gp);
-              p.armor.levelValue = floorNumber(0.7 * l.Ep);
-              p.attackRating.levelValue = floorNumber(0.7 * l.Fp);
-              p.defenceRating.levelValue = floorNumber(0.7 * l.Hp);
-              p.maxHealth.levelValue = floorNumber(0.7 * l.$o);
-              p.health = floorNumber(floorNumber(0.7 * statValue(p.maxHealth)));
+              stats.damage.levelValue = floorNumber(0.7 * monsterType.Gp);
+              stats.armor.levelValue = floorNumber(0.7 * monsterType.Ep);
+              stats.attackRating.levelValue = floorNumber(0.7 * monsterType.Fp);
+              stats.defenceRating.levelValue = floorNumber(0.7 * monsterType.Hp);
+              stats.maxHealth.levelValue = floorNumber(0.7 * monsterType.$o);
+              stats.health = floorNumber(floorNumber(0.7 * statValue(stats.maxHealth)));
             } else {
-              p.damage.levelValue = l.Gp;
-              p.armor.levelValue = l.Ep;
-              p.attackRating.levelValue = l.Fp;
-              p.defenceRating.levelValue = l.Hp;
-              p.maxHealth.levelValue = l.$o;
-              p.health = floorNumber(statValue(p.maxHealth));
+              stats.damage.levelValue = monsterType.Gp;
+              stats.armor.levelValue = monsterType.Ep;
+              stats.attackRating.levelValue = monsterType.Fp;
+              stats.defenceRating.levelValue = monsterType.Hp;
+              stats.maxHealth.levelValue = monsterType.$o;
+              stats.health = floorNumber(statValue(stats.maxHealth));
             }
-            var s = roomLeftPixels(h) + game.tileSize,
-              l = roomTopPixels(h) + game.tileSize,
-              p = roomBottomPixels(h) - game.tileSize,
-              h = s + randomInt(roomRightPixels(h) - game.tileSize - s),
-              l = l + randomInt(p - l);
-            setVector(n.position.levelPosition, h, l);
-            g.Pi.push(n);
+            var left = roomLeftPixels(room) + game.tileSize,
+              top = roomTopPixels(room) + game.tileSize,
+              bottom = roomBottomPixels(room) - game.tileSize,
+              spawnX = left + randomInt(roomRightPixels(room) - game.tileSize - left),
+              spawnY = top + randomInt(bottom - top);
+            setVector(monster.position.levelPosition, spawnX, spawnY);
+            registry.Pi.push(monster);
           }
-          beginEncounter(b, false);
+          beginEncounter(encounterName, false);
         }
       }
     } else {
       if (1 === c) {
-        c = Math.max(globalUpgradeDefinitions.maxMonsters.baseValue, globalUpgradeDefinitions.minMonsters.currentValue);
-        d = Math.max(globalUpgradeDefinitions.maxMonsters.currentValue, c);
-        d = c + randomInt(d - c);
-        c = game.monsterCatalog.maxUnlockedLevel;
-        d += extraMonstersModifier.currentValue;
-        spawnCastleGuardians(d, a);
+        var castleMinMonsters = Math.max(globalUpgradeDefinitions.maxMonsters.baseValue, globalUpgradeDefinitions.minMonsters.currentValue);
+        var castleMaxMonsters = Math.max(globalUpgradeDefinitions.maxMonsters.currentValue, castleMinMonsters);
+        var castleMonsterCount = castleMinMonsters + randomInt(castleMaxMonsters - castleMinMonsters);
+        var castleLevel = game.monsterCatalog.maxUnlockedLevel;
+        castleMonsterCount += extraMonstersModifier.currentValue;
+        spawnCastleGuardians(castleMonsterCount, a);
         a = game.currentCastle ? generateMonsterName(b.dn, game.currentCastle.castleName) : generateMonsterName(b.dn, "Unknown Castle");
-        beginEncounter(a + " (等级." + c + ")", false);
+        beginEncounter(a + " (等级." + castleLevel + ")", false);
       } else {
         if (2 === c) {
           spawnDungeonBoss(b, a);
@@ -109,38 +114,37 @@ export function spawnDungeonBoss(a, b) {
   var c = getPartyMaxLevel(game.state.party),
     d;
   d = game.currentCastle ? generateBossName(a.dn, game.currentCastle.castleName) : game.currentDungeon ? generateBossName(a.dn, game.currentDungeon.dungeonName) : generateBossName(a.dn, "Unknown Castle");
-  var f = bossSpriteDefinitions[randomInt(bossSpriteDefinitions.length)];
+  var spriteDefinition = bossSpriteDefinitions[randomInt(bossSpriteDefinitions.length)];
   d = d + " (等级." + c + ")";
   var g = game.monsters,
-    h = new MonsterType(bossClass.className, f.spriteName, c),
-    f = new Character(bossClass.defaultName, 4, bossClass.characterClass, bossClass, null),
-    l = f.stats;
-  f.gq(h);
-  f.sprite = h.ll;
-  h = createBehaviorQueue(bossClass.createBehaviors());
-  f.behaviors = h;
-  initializeCharacterSkills(f, c);
+    bossType = new MonsterType(bossClass.className, spriteDefinition.spriteName, c),
+    boss = new Character(bossClass.defaultName, 4, bossClass.characterClass, bossClass, null),
+    l = boss.stats;
+  (/** @type {TypedMonster} */ (boss)).gq(bossType);
+  boss.sprite = bossType.ll;
+  boss.behaviors = createBehaviorQueue(bossClass.createBehaviors());
+  initializeCharacterSkills(boss, c);
   l.characterLevel = c;
   applyLevelStats(l, c, bossClass.statMultipliers);
   if (bossClass.eu) {
     for (c = 0; c < bossClass.eu.length; c++) {
-      learnSpell(f, new Spell(bossClass.eu[c]));
+      learnSpell(boss, new Spell(bossClass.eu[c]));
     }
   }
-  c = f.position;
+  c = boss.position;
   c.room = b;
   c.cd = null;
-  var n = roomLeftPixels(b) + game.tileSize,
-    l = roomTopPixels(b) + game.tileSize,
-    h = roomBottomPixels(b) - game.tileSize,
-    n = n + randomInt(roomRightPixels(b) - game.tileSize - n),
-    l = l + randomInt(h - l);
-  setVector(c.levelPosition, n, l);
-  applyBonusList(f, bossClass.WC);
-  g.Pi.push(f);
+  var left = roomLeftPixels(b) + game.tileSize,
+    top = roomTopPixels(b) + game.tileSize,
+    bottom = roomBottomPixels(b) - game.tileSize,
+    spawnX = left + randomInt(roomRightPixels(b) - game.tileSize - left),
+    spawnY = top + randomInt(bottom - top);
+  setVector(c.levelPosition, spawnX, spawnY);
+  applyBonusList(boss, bossClass.WC);
+  g.Pi.push(boss);
   g = Math.max(globalUpgradeDefinitions.maxMonsters.baseValue, globalUpgradeDefinitions.minMonsters.currentValue);
-  f = Math.max(globalUpgradeDefinitions.maxMonsters.currentValue, g);
-  g += randomInt(f - g);
+  var maxCount = Math.max(globalUpgradeDefinitions.maxMonsters.currentValue, g);
+  g += randomInt(maxCount - g);
   g += extraMonstersModifier.currentValue;
   spawnCastleGuardians(g, b);
   beginEncounter(d, true);
@@ -228,16 +232,17 @@ export function getMonsterTypesForLevel(a, b) {
   var c = b + "",
     d = a.en[c];
   if (!d) {
-    for (var d = [], f = [], g, h = 0; 20 > d.length;) {
+    for (var generatedTypes = [], f = [], g, h = 0; 20 > generatedTypes.length;) {
       g = a.n[randomInt(a.n.length)];
       if (!(-1 < f.indexOf(g))) {
         f.push(g);
-        d.push(new MonsterType(g.name, g.spriteName, b));
+        generatedTypes.push(new MonsterType(g.name, g.spriteName, b));
         h++;
       }
     }
-    d.sort(a.HE);
-    a.en[c] = d;
+    generatedTypes.sort(a.HE);
+    a.en[c] = generatedTypes;
+    d = generatedTypes;
   }
   return d;
 }
@@ -296,7 +301,8 @@ export function initializeCombatEncounters() {
     return a[randomInt(a.length)];
   };
   MonsterNameGenerator.prototype.Vk = function (a) {
-    return 0.5 > Math.random() ? this.mn(this.Pw) + "" + a : this.mn(this.oD) + "" + this.mn(this.mE) + "的" + a;
+    var nameGenerator = /** @type {NamedMonsterGenerator} */ (/** @type {unknown} */ (this));
+    return 0.5 > Math.random() ? nameGenerator.mn(this.Pw) + "" + a : nameGenerator.mn(this.oD) + "" + nameGenerator.mn(this.mE) + "的" + a;
   };
   MonsterRegistry.prototype.ol = function (a) {
     if (a) {
