@@ -64,7 +64,7 @@ export function mountPartyCreation(a) {
           p.skillPoints = l;
           p.hasUnspentSkills = hasUnspentSkills(p);
         }
-        if (f.fe) {
+        if (f.startsWithSpell) {
           g.initialSpellSkillPoint = 1;
         }
         refreshPartyLevels();

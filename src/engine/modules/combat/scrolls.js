@@ -36,7 +36,7 @@ export function Scroll(a, b) {
   this.eq = b;
   this.scrollId = a.scrollId;
   this.Wh = game.itemSprites.getSprite(a.Wh);
-  this.ke = a.rg;
+  this.baseName = a.baseName;
   this.sg = a.sg;
   this.Yi = a.Yi;
   this.Qh = a.Qh;
@@ -45,7 +45,7 @@ export function Scroll(a, b) {
   this.locked = true;
   this.quantity = this.upgradeCount = 0;
   this.rn = getScrollUpgradeCost(this);
-  this.rg = getScrollLabel(this);
+  this.label = getScrollLabel(this);
   this.lx = getNextScrollLabel(this);
 }
 export function getScrollSprite(a) {
@@ -67,42 +67,42 @@ export function getScrollLabel(a) {
   }
   switch (a.upgradeCount) {
     case 1:
-      return a.ke + " II";
+      return a.baseName + " II";
     case 2:
-      return a.ke + " III";
+      return a.baseName + " III";
     case 3:
-      return a.ke + " IV";
+      return a.baseName + " IV";
     case 4:
-      return a.ke + " V";
+      return a.baseName + " V";
     case 5:
-      return a.ke + " VI";
+      return a.baseName + " VI";
     case 6:
-      return a.ke + " VII";
+      return a.baseName + " VII";
     case 7:
-      return a.ke + " VIII";
+      return a.baseName + " VIII";
   }
-  return a.ke;
+  return a.baseName;
 }
 export function getNextScrollLabel(a) {
   if (!a.locked) {
     switch (a.upgradeCount) {
       case 0:
-        return a.ke + " II";
+        return a.baseName + " II";
       case 1:
-        return a.ke + " III";
+        return a.baseName + " III";
       case 2:
-        return a.ke + " IV";
+        return a.baseName + " IV";
       case 3:
-        return a.ke + " V";
+        return a.baseName + " V";
       case 4:
-        return a.ke + " VI";
+        return a.baseName + " VI";
       case 5:
-        return a.ke + " VII";
+        return a.baseName + " VII";
       case 6:
-        return a.ke + " VIII";
+        return a.baseName + " VIII";
     }
   }
-  return a.ke;
+  return a.baseName;
 }
 export function castScroll(a, b) {
   if (!a.locked && (0 < a.quantity || b)) {
@@ -233,7 +233,7 @@ export function initializeCombatScrolls() {
       }
       updateScrollAccuracy();
     }
-    this.rg = getScrollLabel(this);
+    this.label = getScrollLabel(this);
     this.lx = getNextScrollLabel(this);
     this.rn = getScrollUpgradeCost(this);
   };
@@ -261,7 +261,7 @@ export function initializeCombatScrolls() {
   };
   scrollDefinitions = [{
     scrollId: "shockScroll",
-    rg: "休克",
+    baseName: "休克",
     Wh: "Scroll0028.PNG",
     spellDefinition: electricSpellDefinitions.sB,
     sg: 0,
@@ -269,7 +269,7 @@ export function initializeCombatScrolls() {
     Qh: 0
   }, {
     scrollId: "spiderWebScroll",
-    rg: "蛛网",
+    baseName: "蛛网",
     Wh: "Scroll0054.PNG",
     spellDefinition: electricSpellDefinitions.CB,
     sg: 3,
@@ -281,7 +281,7 @@ export function initializeCombatScrolls() {
     }
   }, {
     scrollId: "arrowScroll",
-    rg: "箭矢",
+    baseName: "箭矢",
     Wh: "Scroll0012.PNG",
     spellDefinition: null,
     sg: 6,
@@ -293,7 +293,7 @@ export function initializeCombatScrolls() {
     }
   }, {
     scrollId: "fireRainScroll",
-    rg: "火雨",
+    baseName: "火雨",
     Wh: "Scroll0022.PNG",
     spellDefinition: fireSpellDefinitions.Lz,
     sg: 9,
@@ -305,7 +305,7 @@ export function initializeCombatScrolls() {
     }
   }, {
     scrollId: "chainedLightningScroll",
-    rg: "闪电",
+    baseName: "闪电",
     Wh: "Scroll0034.PNG",
     spellDefinition: electricSpellDefinitions.br,
     sg: 12,
@@ -317,7 +317,7 @@ export function initializeCombatScrolls() {
     }
   }, {
     scrollId: "fireBallScroll",
-    rg: "火球",
+    baseName: "火球",
     Wh: "Scroll0097.PNG",
     spellDefinition: fireSpellDefinitions.Kz,
     sg: 15,

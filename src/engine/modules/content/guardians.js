@@ -14,7 +14,7 @@ export function initializeContentGuardians() {
     spriteName: "HumanFighter33.PNG",
     defaultName: "Zog",
     descriptionText: "",
-    fe: false,
+    startsWithSpell: false,
     slotStatBonusList: [{
       slot: "230",
       statType: 1
@@ -48,7 +48,7 @@ export function initializeContentGuardians() {
     spriteName: "HumanMage11.PNG",
     defaultName: "Zar",
     descriptionText: "",
-    fe: false,
+    startsWithSpell: false,
     slotStatBonusList: [{
       slot: "26",
       statType: 1
@@ -85,7 +85,7 @@ export function initializeContentGuardians() {
     spriteName: "HB_Elvenarcher1.PNG",
     defaultName: "Seth",
     descriptionText: "",
-    fe: false,
+    startsWithSpell: false,
     slotStatBonusList: [{
       slot: "60",
       statType: 1
@@ -123,7 +123,7 @@ export function initializeContentGuardians() {
     spriteName: "Ninja.PNG",
     defaultName: "N",
     descriptionText: "",
-    fe: false,
+    startsWithSpell: false,
     slotStatBonusList: [{
       slot: "29",
       statType: 3
@@ -294,7 +294,7 @@ export function initializeContentGuardians() {
     Ws: false,
     defaultName: "Boss",
     descriptionText: "",
-    fe: false,
+    startsWithSpell: false,
     slotStatBonusList: [{
       slot: "230",
       statType: 1

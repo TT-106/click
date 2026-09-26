@@ -1,30 +1,5 @@
 [
   {
-    "name": "fe",
-    "reads": 1,
-    "writes": 17,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\content\\classes.js:56",
-        "code": "fe: false"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\classes.js:109",
-        "code": "fe: false"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\classes.js:162",
-        "code": "fe: false"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\content\\classes.js",
-      "src\\engine\\modules\\content\\guardians.js",
-      "src\\engine\\modules\\views\\party-creation.js"
-    ]
-  },
-  {
     "name": "be",
     "reads": 16,
     "writes": 2,
@@ -68,29 +43,6 @@
     "fileCount": 1,
     "files": [
       "src\\engine\\modules\\views\\upgrade-details.js"
-    ]
-  },
-  {
-    "name": "ke",
-    "reads": 16,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\scrolls.js:39",
-        "code": "this.ke"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\scrolls.js:70",
-        "code": "a.ke"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\scrolls.js:72",
-        "code": "a.ke"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\combat\\scrolls.js"
     ]
   },
   {
@@ -935,31 +887,6 @@
     "fileCount": 1,
     "files": [
       "src\\engine\\modules\\combat\\potions.js"
-    ]
-  },
-  {
-    "name": "rg",
-    "reads": 4,
-    "writes": 9,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\scrolls.js:39",
-        "code": "a.rg"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\scrolls.js:48",
-        "code": "this.rg"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\scrolls.js:236",
-        "code": "this.rg"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\combat\\scrolls.js",
-      "src\\engine\\modules\\progression\\upgrades.js",
-      "src\\engine\\modules\\views\\expedition.js"
     ]
   },
   {

@@ -1073,7 +1073,7 @@ export function initializeProgressionUpgrades() {
         if (a.locked) {
           a.locked = false;
           registerUnlockedScroll(game.scrolls, a);
-          recordGameEvent("Scroll Unlock", a.rg);
+          recordGameEvent("Scroll Unlock", a.label);
         } else {
           if (a.upgradeCount >= a.Qh) {
             break a;
@@ -1083,9 +1083,9 @@ export function initializeProgressionUpgrades() {
             applyStatBonus(game.state.scrollCaster, a.tn.statType, a.tn.statBonusValue);
             updateScrollAccuracy();
           }
-          recordGameEvent("Scroll Upgrade", a.rg + " (数量=" + a.upgradeCount + ")");
+          recordGameEvent("Scroll Upgrade", a.label + " (数量=" + a.upgradeCount + ")");
         }
-        a.rg = getScrollLabel(a);
+        a.label = getScrollLabel(a);
         a.lx = getNextScrollLabel(a);
         a.rn = getScrollUpgradeCost(a);
       }

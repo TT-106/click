@@ -589,7 +589,7 @@ export function initializeViewsExpedition() {
       var b = this.scroll.Wh;
       this.Vh.style.background = "url('spritesheet/items.png') -" + b.sourceX + "px -" + b.sourceY + "px";
     }
-    b = this.scroll.rg;
+    b = this.scroll.label;
     if (this.yz !== b) {
       this.yz = b;
       this.mx.innerHTML = b;
