@@ -179,7 +179,7 @@ export function ScrollDrop(a, b, c, d) {
   this.bq = b;
   this.cq = c;
   this.BE = d;
-  this.gc = false;
+  this.collected = false;
   this.Zc = null;
   this.ph = 0;
 }
@@ -241,7 +241,7 @@ export function initializeCombatScrolls() {
     return this.scroll;
   };
   ScrollDrop.prototype.oh = function (a) {
-    this.gc = a;
+    this.collected = a;
   };
   ScrollDrop.prototype.Re = function (a) {
     this.Zc = a;

@@ -181,7 +181,7 @@ export function TravelWorldBehavior(a, b) {
 export function ChangeFloorBehavior() {
   this.Mi = game.tileSize + 1;
   this.priorityWeight = 90;
-  this.lc = null;
+  this.treasureChest = null;
 }
 export function SelfSpellBehavior(a) {
   this.Sc = null;
@@ -1098,7 +1098,7 @@ export function initializeAiBehaviors() {
   UseShopBehavior.prototype.notifySpellLearned = function () {};
   UseShopBehavior.prototype.od = function (a) {
     if (this.qd) {
-      if (this.qd.gc) {
+      if (this.qd.collected) {
         this.qd = null;
       } else if (this.qd.Zc == a) {
         a.rh = this.qd;
@@ -1136,7 +1136,7 @@ export function initializeAiBehaviors() {
     if (l) {
       for (d = 0; d < b.length; d++) {
         c = b[d];
-        if (!(c.gc || c.vD !== l)) {
+        if (!(c.collected || c.vD !== l)) {
           h = distanceSquaredToPoint(f, c.Xo, c.Yo);
           if (!(c.Zc && h > c.Ud() || !(0 > n || h < n))) {
             g = c;
@@ -1161,7 +1161,7 @@ export function initializeAiBehaviors() {
   EnterDungeonBehavior.prototype.notifySpellLearned = function () {};
   EnterDungeonBehavior.prototype.od = function (a) {
     if (this.bd) {
-      if (this.bd.gc) {
+      if (this.bd.collected) {
         this.bd = null;
       } else if (this.bd.Zc == a) {
         a.Zh = this.bd;
@@ -1199,7 +1199,7 @@ export function initializeAiBehaviors() {
     if (l) {
       for (d = 0; d < b.length; d++) {
         c = b[d];
-        if (!(c.gc || c.BE !== l)) {
+        if (!(c.collected || c.BE !== l)) {
           h = distanceSquaredToPoint(f, c.bq, c.cq);
           if (!(c.Zc && h > c.Ud() || !(0 > n || h < n))) {
             g = c;
@@ -1224,7 +1224,7 @@ export function initializeAiBehaviors() {
   EnterCastleBehavior.prototype.notifySpellLearned = function () {};
   EnterCastleBehavior.prototype.od = function (a) {
     if (this.ad) {
-      if (this.ad.gc) {
+      if (this.ad.collected) {
         this.ad = null;
       } else if (this.ad.Zc == a) {
         a.hk = this.ad;
@@ -1262,7 +1262,7 @@ export function initializeAiBehaviors() {
     if (l) {
       for (d = 0; d < b.length; d++) {
         c = b[d];
-        if (!(c.gc || c.oE !== l)) {
+        if (!(c.collected || c.oE !== l)) {
           h = distanceSquaredToPoint(f, c.Qp, c.Rp);
           if (!(c.Zc && h > c.Ud() || !(0 > n || h < n))) {
             g = c;
@@ -1287,7 +1287,7 @@ export function initializeAiBehaviors() {
   TravelWorldBehavior.prototype.notifySpellLearned = function () {};
   TravelWorldBehavior.prototype.od = function (a) {
     if (this.$c) {
-      if (this.$c.gc) {
+      if (this.$c.collected) {
         this.$c = null;
       } else if (this.$c.Zc == a) {
         a.bj = this.$c;
@@ -1325,7 +1325,7 @@ export function initializeAiBehaviors() {
     if (l) {
       for (d = 0; d < b.length; d++) {
         c = b[d];
-        if (!(c.gc || c.PD !== l)) {
+        if (!(c.collected || c.PD !== l)) {
           h = distanceSquaredToPoint(f, c.mp, c.np);
           if (!(c.Zc && h > c.Ud() || !(0 > n || h < n))) {
             g = c;
@@ -1345,16 +1345,16 @@ export function initializeAiBehaviors() {
     return this.priorityWeight;
   };
   ChangeFloorBehavior.prototype.resetBehaviorState = function () {
-    this.lc = null;
+    this.treasureChest = null;
   };
   ChangeFloorBehavior.prototype.notifySpellLearned = function () {};
   ChangeFloorBehavior.prototype.od = function (a) {
-    if (this.lc && !this.lc.Kg) {
-      a.hq(this.lc);
-      if (distanceToPoint(a.position.levelPosition, this.lc.zq, this.lc.Aq) < this.Mi) {
+    if (this.treasureChest && !this.treasureChest.Kg) {
+      a.hq(this.treasureChest);
+      if (distanceToPoint(a.position.levelPosition, this.treasureChest.zq, this.treasureChest.Aq) < this.Mi) {
         a.actionType = 12;
       } else {
-        setVector(a.position.moveTargetPoint, this.lc.zq, this.lc.Aq);
+        setVector(a.position.moveTargetPoint, this.treasureChest.zq, this.treasureChest.Aq);
         a.actionType = 1;
       }
       clearMovementTarget(a.position);
@@ -1369,8 +1369,8 @@ export function initializeAiBehaviors() {
     if (!b) {
       return 0;
     }
-    this.lc = getRoomTreasure(game.treasure, b);
-    return !this.lc || this.lc.Kg || !this.lc.el || hasOpponentsInRoom(a, b) ? 0 : this.priorityWeight;
+    this.treasureChest = getRoomTreasure(game.treasure, b);
+    return !this.treasureChest || this.treasureChest.Kg || !this.treasureChest.el || hasOpponentsInRoom(a, b) ? 0 : this.priorityWeight;
   };
   ChangeFloorBehavior.prototype.getPriority = function () {
     return this.priorityWeight;

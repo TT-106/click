@@ -11,7 +11,7 @@ export function GoldDrop(a, b, c, d) {
   this.Xo = b;
   this.Yo = c;
   this.vD = d;
-  this.gc = false;
+  this.collected = false;
   this.Zc = null;
   this.ph = 0;
 }
@@ -98,7 +98,7 @@ export function getRoomTreasure(a, b) {
 }
 export function initializeLootTreasure() {
   GoldDrop.prototype.oh = function (a) {
-    this.gc = a;
+    this.collected = a;
   };
   GoldDrop.prototype.Re = function (a) {
     this.Zc = a;

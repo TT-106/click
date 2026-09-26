@@ -992,7 +992,7 @@ export function updateCharacter(a, b) {
           }
         }
       } else if (5 === a.actionType) {
-        if (a.rh && !a.rh.gc) {
+        if (a.rh && !a.rh.collected) {
           var Pe = a.rh.Xl,
             gj = game.floatingText;
           if (0 < Pe) {
@@ -1006,7 +1006,7 @@ export function updateCharacter(a, b) {
           awardAdventurePoints(9);
         }
       } else if (7 === a.actionType) {
-        if (a.Zh && !a.Zh.gc) {
+        if (a.Zh && !a.Zh.collected) {
           showFloatingText(game.floatingText, a, "卷轴!", "white");
           addScrollCharge(a.Zh.vf());
           a.Zh.oh(true);
@@ -1015,16 +1015,16 @@ export function updateCharacter(a, b) {
           awardAdventurePoints(10);
         }
       } else if (8 === a.actionType) {
-        if (a.hk && !a.hk.gc) {
+        if (a.hk && !a.hk.collected) {
           showFloatingText(game.floatingText, a, "药剂!", "white");
           a.hk.oh(true);
           removePotionDrop(a.hk);
-          addPotion(a.hk.hc);
+          addPotion(a.hk.potion);
           a.Zh = null;
           awardAdventurePoints(11);
         }
       } else if (6 === a.actionType) {
-        if (a.bj && !a.bj.gc) {
+        if (a.bj && !a.bj.collected) {
           a.bj.oh(true);
           removeItemDrop(a.bj);
           var Qe = a.bj.getItem(),

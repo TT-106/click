@@ -77,11 +77,11 @@ export function isPotionModifierActive(a) {
   return a.mg && a.mg.currentValue === a.mg.activeValue;
 }
 export function PotionDrop(a, b, c, d) {
-  this.hc = a;
+  this.potion = a;
   this.Qp = b;
   this.Rp = c;
   this.oE = d;
-  this.gc = false;
+  this.collected = false;
   this.Zc = null;
   this.ph = 0;
 }
@@ -247,7 +247,7 @@ export function initializeCombatPotions() {
     }
   };
   PotionDrop.prototype.oh = function (a) {
-    this.gc = a;
+    this.collected = a;
   };
   PotionDrop.prototype.Re = function (a) {
     this.Zc = a;

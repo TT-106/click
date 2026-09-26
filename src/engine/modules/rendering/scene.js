@@ -540,7 +540,7 @@ export function initializeRenderingScene() {
           Fb = va.Rp;
           pa = projectWorldX(yb, Fb);
           T = projectWorldY(yb, Fb);
-          a.If(va.hc.jc, pa, T);
+          a.If(va.potion.jc, pa, T);
         }
         var Ca = game.itemDrops.yf,
           qa,

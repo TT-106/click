@@ -194,7 +194,7 @@ export function applySpellEffect(a, b) {
     g = game.goldDrops.pe;
     for (c = g.length - 1; 0 <= c; c--) {
       f = g[c];
-      if (!f.gc) {
+      if (!f.collected) {
         h = new Vector2();
         setVector(h, f.Xo, f.Yo);
         h = new VisualEffect("Gold Sparkles", d, h, false, 1);
@@ -209,7 +209,7 @@ export function applySpellEffect(a, b) {
     d = b.attacker.position.levelPosition;
     g = game.itemDrops.yf;
     for (c = g.length - 1; 0 <= c; c--) {
-      if (h = g[c], !h.gc) {
+      if (h = g[c], !h.collected) {
         f = new Vector2();
         setVector(f, h.mp, h.np);
         f = new VisualEffect("Blue Sparkles", d, f, false, 1);
@@ -253,7 +253,7 @@ export function applySpellEffect(a, b) {
     g = game.scrollDrops.kf;
     for (c = g.length - 1; 0 <= c; c--) {
       f = g[c];
-      if (!f.gc) {
+      if (!f.collected) {
         h = new Vector2();
         setVector(h, f.bq, f.cq);
         h = new VisualEffect("Pink Sparkles", d, h, false, 1);
@@ -268,14 +268,14 @@ export function applySpellEffect(a, b) {
     g = game.potionDrops.Hf;
     for (c = g.length - 1; 0 <= c; c--) {
       f = g[c];
-      if (!f.gc) {
+      if (!f.collected) {
         h = new Vector2();
         setVector(h, f.Qp, f.Rp);
         h = new VisualEffect("Green Sparkles", d, h, false, 1);
         addVisualEffect(game.effects, h);
         f.oh(true);
         removePotionDrop(f);
-        addPotion(f.hc);
+        addPotion(f.potion);
         awardAdventurePoints(11);
       }
     }

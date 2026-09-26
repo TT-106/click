@@ -14,7 +14,7 @@ export function TreasureLootView() {
   this.elementId = "treasureChestLootButtonPanel";
   this.visible = false;
   this.ti = "";
-  this.om = this.Ml = this.po = this.lc = this.button = null;
+  this.om = this.Ml = this.po = this.treasureChest = this.button = null;
 }
 export function mountTreasureLoot(a) {
   var b = getElement(a.elementId);
@@ -23,8 +23,8 @@ export function mountTreasureLoot(a) {
     a.ti = a.Ro();
     a.button = createElement("div", b, a.elementId, a.ti);
     a.button.onmouseup = function () {
-      if (a.lc && !a.lc.Kg) {
-        var b = a.lc;
+      if (a.treasureChest && !a.treasureChest.Kg) {
+        var b = a.treasureChest;
         b.el = true;
         game.state.party.hq(b);
       }
@@ -146,7 +146,7 @@ export function initializeViewsDungeons() {
     return a && !a.Kg;
   };
   TreasureLootView.prototype.reset = function () {
-    this.lc = null;
+    this.treasureChest = null;
     mountTreasureLoot(this);
   };
   TreasureLootView.prototype.update = function () {
@@ -154,8 +154,8 @@ export function initializeViewsDungeons() {
       mountTreasureLoot(this);
     }
     var a = getVisibleTreasure();
-    if (a != this.lc && (this.lc = a)) {
-      var b = this.lc.Mf;
+    if (a != this.treasureChest && (this.treasureChest = a)) {
+      var b = this.treasureChest.Mf;
       this.Ml.innerHTML = 1 === b ? "搜索财宝箱!" : 2 === b ? "搜索武器架!" : 3 === b ? "搜索书架!" : "搜索事物!";
       this.om.innerHTML = "在房间内点击.";
       if (a) {
@@ -173,7 +173,7 @@ export function initializeViewsDungeons() {
     }
   };
   TreasureLootView.prototype.Ro = function () {
-    return !this.lc || this.lc.Kg || this.lc.el ? "lootButtonDisabled centeredElement" : "lootButton centeredElement";
+    return !this.treasureChest || this.treasureChest.Kg || this.treasureChest.el ? "lootButtonDisabled centeredElement" : "lootButton centeredElement";
   };
   DungeonRowView.prototype.reset = function () {
     this.ui = null;

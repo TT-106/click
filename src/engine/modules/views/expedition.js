@@ -172,7 +172,7 @@ export function ScrollBarView() {
 export function PotionButtonView(a, b) {
   this.elementId = a;
   this.visible = true;
-  this.hc = null;
+  this.potion = null;
   this.TA = b;
   this.yo = this.sm = null;
   this.gu = 192;
@@ -662,7 +662,7 @@ export function initializeViewsExpedition() {
   PotionButtonView.prototype = new View();
   PotionButtonView.prototype.reset = function () {
     clearElementById(this.elementId);
-    this.Pp = this.Op = this.Tp = this.yj = this.Si = this.progressFillElement = this.km = this.yo = this.sm = this.hc = null;
+    this.Pp = this.Op = this.Tp = this.yj = this.Si = this.progressFillElement = this.km = this.yo = this.sm = this.potion = null;
     this.ak = this.Sp = false;
   };
   PotionButtonView.prototype.update = function () {
@@ -673,29 +673,29 @@ export function initializeViewsExpedition() {
       this.Sp = false;
       this.Si.className = "potionButtonDisabled";
     }
-    if (this.hc) {
+    if (this.potion) {
       if (!this.sm) {
         showElement(this.Si);
       }
       var a;
-      a = (a = this.hc) ? !a.active && isPotionModifierActive(a) ? "potionButtonDisabled" : a.active ? "potionButtonActive" : "potionButton" : "potionButtonDisabled";
+      a = (a = this.potion) ? !a.active && isPotionModifierActive(a) ? "potionButtonDisabled" : a.active ? "potionButtonActive" : "potionButton" : "potionButtonDisabled";
       if (this.yo != a) {
         this.yo = a;
         this.Si.className = a;
       }
-      if (this.hc != this.sm) {
-        this.Tp.innerHTML = this.hc.uc;
-        this.Op.innerHTML = this.hc.tc;
-        a = this.hc.jc;
+      if (this.potion != this.sm) {
+        this.Tp.innerHTML = this.potion.uc;
+        this.Op.innerHTML = this.potion.tc;
+        a = this.potion.jc;
         this.Pp.style.background = "url('spritesheet/items.png') -" + a.sourceX + "px -" + a.sourceY + "px";
       }
-      this.sm = this.hc;
-      if (this.hc.active) {
+      this.sm = this.potion;
+      if (this.potion.active) {
         if (!this.ak) {
           showElement(this.progressFillElement);
           this.ak = true;
         }
-        a = Math.min(1, (game.state.turnNumber - this.hc.activationTurn) / (800 + potionDurationBonus.currentValue));
+        a = Math.min(1, (game.state.turnNumber - this.potion.activationTurn) / (800 + potionDurationBonus.currentValue));
         a *= this.gu;
         if (this.Jh !== a) {
           this.Jh = a;
@@ -731,16 +731,16 @@ export function initializeViewsExpedition() {
     }
   };
   PotionButtonView.prototype.aw = function () {
-    if (this.hc) {
-      if (!(this.hc.active || !this.hc.active && isPotionModifierActive(this.hc))) {
-        this.hc.aw();
+    if (this.potion) {
+      if (!(this.potion.active || !this.potion.active && isPotionModifierActive(this.potion))) {
+        this.potion.aw();
       }
     }
   };
   PotionButtonView.prototype.bw = function () {
-    if (this.hc) {
-      game.potions.bw(this.hc);
-      this.hc = null;
+    if (this.potion) {
+      game.potions.bw(this.potion);
+      this.potion = null;
     }
   };
   PotionBarView.prototype = new View();
@@ -761,7 +761,7 @@ export function initializeViewsExpedition() {
     for (a = 0; a < this.Ms.length; a++) {
       d = a < b.length ? b[a] : null;
       c = this.Ms[a];
-      c.hc = d;
+      c.potion = d;
       c.render();
     }
   };

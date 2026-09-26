@@ -11,7 +11,7 @@ export function ItemDrop(a, b, c, d) {
   this.mp = b;
   this.np = c;
   this.PD = d;
-  this.gc = false;
+  this.collected = false;
   this.Zc = null;
   this.ph = 0;
 }
@@ -292,7 +292,7 @@ export function initializeLootItems() {
     return this.item;
   };
   ItemDrop.prototype.oh = function (a) {
-    this.gc = a;
+    this.collected = a;
   };
   ItemDrop.prototype.Re = function (a) {
     this.Zc = a;
