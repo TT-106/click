@@ -55,12 +55,11 @@
 ## 6. 未覆盖区域（如实陈述）— UNRESOLVED
 
 以下法术分支仍未进入差分场景：
-- cat=12（忍者 快速打击）、cat=14（盗贼 立即搜索）、cat=15（盗贼 发现财宝箱）：驱动这三条的职业在远程攻击分支上会命中原版自带的空武器解引用（`Aw`/`getProjectileAnimation` 对 `equipment.Ey` 无空值保护），两端在同一处抛出同一 `TypeError`，因此场景无法推进到完整存档比较；按"不改写原始机制"的红线保留原样。
-- cat=16（牧师 复活）：分支要求场上已有昏迷的冒险者，fixture 队伍在 3000 回合内无人倒地，两端一致地未施法。
+- cat=16（牧师 复活）：分支要求场上已有昏迷的冒险者；把其他队员的存档生命压到 1 再跑 6000 回合，两端 `characterStunnedCount` 与 `spellCastCount` 仍恒为 0（两端逐检查点完整存档一致），当前 fixture 造不出该前置状态。
 
-已转入差分覆盖（2026-09-26）：城堡攻防战全程与胜利瞬间（`castle-victory`，两端各自断言 gameWon/victoryCount/castlesConquered 后比较完整存档）、12h 离线截断（`offline-13h-capped`）、火球与两条控制/增益法术分支、召唤族两条分支（cat=9/11，两端各自断言 `minionsSummoned` 增长）、睡眠（cat=2、type=0），以及 Blast Stun 的直接执行计数——harness 逐帧扫描两端活怪物效果队列，`fireball-blast-stun` 实测原版与重构版各 31 次 type=14 施加，数值相等。同批次再补 6 条：cat=1 治疗、cat=4 火环、cat=5 连锁闪电、cat=6 闪电雨、cat=13 绿色死亡、cat=17 召唤鸡群（含 `Math.random` 概率模板分支）。
+已转入差分覆盖（2026-09-26）：城堡攻防战全程与胜利瞬间（`castle-victory`，两端各自断言 gameWon/victoryCount/castlesConquered 后比较完整存档）、12h 离线截断（`offline-13h-capped`）、火球与两条控制/增益法术分支、召唤族两条分支（cat=9/11，两端各自断言 `minionsSummoned` 增长）、睡眠（cat=2、type=0），以及 Blast Stun 的直接执行计数——harness 逐帧扫描两端活怪物效果队列，`fireball-blast-stun` 实测原版与重构版各 31 次 type=14 施加，数值相等。同批次再补 9 条：cat=1 治疗、cat=4 火环、cat=5 连锁闪电、cat=6 闪电雨、cat=13 绿色死亡、cat=17 召唤鸡群（含 `Math.random` 概率模板分支），以及需要注入投射武器的 cat=12 快速打击（唯一 `td: false`）、cat=14 立即搜索、cat=15 发现财宝箱——后三条在注入前会命中原版自带的空武器解引用（`Aw`/`getProjectileAnimation` 对 `equipment.Ey` 无空值保护，两端同点同错，栈逐帧同构），属忠实保留而非重构差异，因此未改动引擎，只在存档里补回真实武器类型（盗贼槽 61、忍者槽 62）。
 
-后续扩展路径：在 `tests/scenarios/save-mutations.mjs` 增加对应变异器，即可纳入 `test:scenarios` 矩阵（当前 26 个场景）。
+后续扩展路径：在 `tests/scenarios/save-mutations.mjs` 增加对应变异器，即可纳入 `test:scenarios` 矩阵（当前 29 个场景）。
 
 ## 7. 性能兼容 — VERIFIED
 
