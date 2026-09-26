@@ -1,4 +1,3 @@
-// @ts-nocheck -- M10 渐进类型化：JSDoc 覆盖后摘除（见 docs/WORKSTATE.md）
 /** 世界地形定义、噪声生成与滚动区块。
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
@@ -14,7 +13,7 @@ export function FractalNoise(a, b, c, d, f) {
   h = new SeededRandom(a);
   l = [];
   for (a = 0; 256 > a; a++) {
-    l[a] = Math.floor(256 * h.random());
+    l[a] = Math.floor(256 * (/** @type {{random: () => number}} */ (/** @type {unknown} */ (h))).random());
   }
   g.Wj = [];
   for (a = 0; 512 > a; a++) {
@@ -38,31 +37,32 @@ export function sampleNoise(a, b, c) {
       s = undefined,
       u = undefined,
       y = undefined,
-      A = y = undefined,
+      A = undefined,
       C = undefined,
       v = undefined,
-      D = s = u = y = u = undefined,
-      N = u = undefined,
-      I = v = y = undefined,
-      x = undefined,
-      N = D = x = I = C = A = undefined,
-      y = 0.5 * (n + p) * (l.HB - 1),
-      A = Math.floor(n + y),
-      C = Math.floor(p + y),
-      v = (3 - l.HB) / 6,
-      u = (A + C) * v,
-      y = A - u,
-      u = C - u,
-      s = n - y,
-      D = p - u,
-      p = n = undefined;
+      D = undefined,
+      N = undefined,
+      I = undefined,
+      x = undefined;
+    y = 0.5 * (n + p) * (l.HB - 1);
+    A = Math.floor(n + y);
+    C = Math.floor(p + y);
+    v = (3 - l.HB) / 6;
+    u = (A + C) * v;
+    y = A - u;
+    u = C - u;
+    s = n - y;
+    D = p - u;
+    var e = undefined, o = undefined;
     if (s > D) {
-      n = 1;
-      p = 0;
+      e = 1;
+      o = 0;
     } else {
-      n = 0;
-      p = 1;
+      e = 0;
+      o = 1;
     }
+    n = e;
+    p = o;
     u = s - n + v;
     N = D - p + v;
     y = s - 1 + 2 * v;
@@ -191,24 +191,24 @@ export function populateWorldBlock(a, b) {
   }
   for (f = 0; f < a.rc; f++) {
     for (d = 0; d < a.sc; d++) {
-      g = getBlockTile(b, f, d);
-      h = undefined;
+      var shoreTile = getBlockTile(b, f, d);
+      var shoreSpriteName = undefined;
       if (!c || c.regionLocked) {
-        h = a.ZD;
-        g.Kn = null;
-        g.terrainMoveCost = 1E5;
+        shoreSpriteName = a.ZD;
+        shoreTile.Kn = null;
+        shoreTile.terrainMoveCost = 1E5;
       } else {
-        l = g.LA + g.KA + g.yB + g.xB;
-        h = shoreTileLookup[l];
-        g.Kn = l;
-        if (!h) {
+        l = shoreTile.LA + shoreTile.KA + shoreTile.yB + shoreTile.xB;
+        shoreSpriteName = shoreTileLookup[l];
+        shoreTile.Kn = l;
+        if (!shoreSpriteName) {
           console.log("no sprite found for key: [" + l + "]");
-          h = shoreTileLookup.JD;
+          shoreSpriteName = shoreTileLookup.JD;
         }
-        g.terrainMoveCost = "PPPP" === g.Kn || "OOOO" === g.Kn || "IIII" === g.Kn ? 1E5 : 0;
+        shoreTile.terrainMoveCost = "PPPP" === shoreTile.Kn || "OOOO" === shoreTile.Kn || "IIII" === shoreTile.Kn ? 1E5 : 0;
       }
-      if (h = game.terrainSprites.getSprite(h)) {
-        g.setBackgroundSprite(h);
+      if (shoreSpriteName = game.terrainSprites.getSprite(shoreSpriteName)) {
+        shoreTile.setBackgroundSprite(shoreSpriteName);
       }
     }
   }
@@ -217,16 +217,16 @@ export function populateWorldBlock(a, b) {
   if (!c || c.regionLocked) {
     for (f = 0; f < a.rc; f++) {
       for (d = 0; d < a.sc; d++) {
-        n = getBlockTile(b, f, d);
-        n.setDecorationSprite(null);
-        n.terrainMoveCost = 1E5;
+        var lockedTile = getBlockTile(b, f, d);
+        lockedTile.setDecorationSprite(null);
+        lockedTile.terrainMoveCost = 1E5;
       }
     }
   } else {
     for (f = 0; f < a.rc; f++) {
       for (d = 0; d < a.sc; d++) {
-        n = getBlockTile(b, f, d);
-        if (l = n.Kn) {
+        var decoTile = getBlockTile(b, f, d);
+        if (l = decoTile.Kn) {
           s = null;
           p = 0;
           if ("GGGG" === l) {
@@ -255,45 +255,46 @@ export function populateWorldBlock(a, b) {
             }
           }
           if (s) {
-            n.terrainMoveCost += p;
-            n.setDecorationSprite(s);
+            decoTile.terrainMoveCost += p;
+            decoTile.setDecorationSprite(s);
           } else {
-            n.setDecorationSprite(null);
+            decoTile.setDecorationSprite(null);
           }
         } else {
-          n.setDecorationSprite(null);
+          decoTile.setDecorationSprite(null);
         }
       }
     }
   }
-  if (c && !c.regionLocked && ((d = (d = game.dungeons.Do[b.Hd + "_" + b.Id]) ? d : null) ? (f = d.getWorldColumn(), g = d.getWorldRow(), (h = game.world.getTileAtPixel(f, g)) ? h.setDecorationSprite(game.terrainSprites.getSprite(d.Fo)) : (console.log("no tile for: col=" + f + " row=" + g), d = null)) : d = null, d && ((f = game.farms.jw[d.dungeonId]) && (f = game.world.getTileAtPixel(f.kw, f.lw)) && f.setDecorationSprite(game.terrainSprites.getSprite(game.farms.Gz)), a.Ut(d)), f = findCastle(b.Hd + "_" + b.Id))) {
+  var entranceTile, castleTile;
+  if (c && !c.regionLocked && ((d = (d = game.dungeons.Do[b.Hd + "_" + b.Id]) ? d : null) ? (f = d.getWorldColumn(), g = d.getWorldRow(), (entranceTile = game.world.getTileAtPixel(f, g)) ? entranceTile.setDecorationSprite(game.terrainSprites.getSprite(d.Fo)) : (console.log("no tile for: col=" + f + " row=" + g), d = null)) : d = null, d && ((f = game.farms.jw[d.dungeonId]) && (f = game.world.getTileAtPixel(f.kw, f.lw)) && f.setDecorationSprite(game.terrainSprites.getSprite(game.farms.Gz)), a.Ut(d)), f = findCastle(b.Hd + "_" + b.Id))) {
     d = f.dm;
     f = f.em;
-    if (g = game.world.getTileAtPixel(d, f)) {
-      g.setDecorationSprite(game.terrainSprites.getSprite(game.castles.Ny));
+    if (castleTile = game.world.getTileAtPixel(d, f)) {
+      castleTile.setDecorationSprite(game.terrainSprites.getSprite(game.castles.Ny));
     } else {
       console.log("no tile for: col=" + d + " row=" + f);
     }
   }
   f = game.terrainSprites.getSprite(a.tE);
-  g = findCastleByRegion(b.Hd + "_" + (b.Id - 1));
-  h = findCastleByRegion(b.Hd - 1 + "_" + b.Id);
-  l = findCastleByRegion(b.Hd - 1 + "_" + (b.Id - 1));
-  if (c != g) {
+  var northCastle = findCastleByRegion(b.Hd + "_" + (b.Id - 1));
+  var westCastle = findCastleByRegion(b.Hd - 1 + "_" + b.Id);
+  var nwCastle = findCastleByRegion(b.Hd - 1 + "_" + (b.Id - 1));
+  if (c != northCastle) {
     for (n = 0; n < a.rc; n++) {
       d = getBlockTile(b, n, 0);
       d.setBackgroundSprite(f);
       d.setDecorationSprite(null);
     }
   }
-  if (c != h) {
+  if (c != westCastle) {
     for (n = 0; n < a.sc; n++) {
       d = getBlockTile(b, 0, n);
       d.setBackgroundSprite(f);
       d.setDecorationSprite(null);
     }
   }
-  if (c === g && c === h && c != l) {
+  if (c === northCastle && c === westCastle && c != nwCastle) {
     d = getBlockTile(b, 0, 0);
     d.setBackgroundSprite(f);
     d.setDecorationSprite(null);
@@ -330,7 +331,7 @@ export function WorldBlock(a, b, c) {
   this.zp = this.Rj * game.tileSize;
   this.Nw = this.xp * game.tileSize;
   this.wt = c;
-  this.Aw();
+  (/** @type {WorldBlock & {Aw: () => void}} */ (/** @type {unknown} */ (this))).Aw();
 }
 export function repositionWorldBlock(a, b, c, d) {
   a.Hd = b;
@@ -625,8 +626,8 @@ export function initializeWorldTerrain() {
     if (0 > c || 3 <= c || 0 > d || 3 <= d) {
       return null;
     }
-    c = this.worldBlocks[c][d];
-    return getBlockTile(c, a - (c.yp / game.tileSize | 0), b - (c.zp / game.tileSize | 0));
+    var block = this.worldBlocks[c][d];
+    return getBlockTile(block, a - (block.yp / game.tileSize | 0), b - (block.zp / game.tileSize | 0));
   };
   WorldMap.prototype.pixelToTileColumn = function (a) {
     return a / game.tileSize | 0;
@@ -635,10 +636,12 @@ export function initializeWorldTerrain() {
     return a / game.tileSize | 0;
   };
   WorldMap.prototype.vw = function (a) {
-    return this.pixelToTileColumn(a) / WORLD_BLOCK_COLUMNS | 0;
+    var map = /** @type {WorldMap & {pixelToTileColumn: (a: number) => number}} */ (/** @type {unknown} */ (this));
+    return map.pixelToTileColumn(a) / WORLD_BLOCK_COLUMNS | 0;
   };
   WorldMap.prototype.ww = function (a) {
-    return this.pixelToTileRow(a) / WORLD_BLOCK_ROWS | 0;
+    var map = /** @type {WorldMap & {pixelToTileRow: (a: number) => number}} */ (/** @type {unknown} */ (this));
+    return map.pixelToTileRow(a) / WORLD_BLOCK_ROWS | 0;
   };
   WorldMap.prototype.tileToPixelX = function (a) {
     return a * game.tileSize | 0;
