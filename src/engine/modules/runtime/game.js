@@ -153,15 +153,15 @@ export function initializeRuntimeGame() {
       leader: null,
       scrollCaster: null,
       adventurePoints: new function () {
-        this.An = this.Dd = 0;
-        this.Qi = {};
-        this.pj = {};
+        this.spentPoints = this.availablePoints = 0;
+        this.pointsByEventType = {};
+        this.countsByEventType = {};
         var a,
           b = [];
         for (a = 0; a < pointUpgradeDefinitions.length; a++) {
           b.push(new AdventurePointUpgrade(pointUpgradeDefinitions[a]));
         }
-        this.tl = b;
+        this.pointUpgrades = b;
       }(),
       achievements: new function () {
         this.jj = [];

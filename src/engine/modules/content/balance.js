@@ -445,25 +445,25 @@ export function initializeContentBalance() {
   LOWER_ITEM_LEVEL_CHANCE = 0.15;
   itemRarityProbabilities = [0.8, 0.16, 0.036, 0.0036, 4E-4];
   itemRarityTiers = [{
-    Vp: 0,
-    pp: 1,
-    jp: 0.2
+    tierId: 0,
+    statMultiplier: 1,
+    elementalEffectChance: 0.2
   }, {
-    Vp: 1,
-    pp: 1.2,
-    jp: 0.5
+    tierId: 1,
+    statMultiplier: 1.2,
+    elementalEffectChance: 0.5
   }, {
-    Vp: 2,
-    pp: 1.35,
-    jp: 0.75
+    tierId: 2,
+    statMultiplier: 1.35,
+    elementalEffectChance: 0.75
   }, {
-    Vp: 3,
-    pp: 1.5,
-    jp: 0.9
+    tierId: 3,
+    statMultiplier: 1.5,
+    elementalEffectChance: 0.9
   }, {
-    Vp: 4,
-    pp: 1.65,
-    jp: 0.99
+    tierId: 4,
+    statMultiplier: 1.65,
+    elementalEffectChance: 0.99
   }];
   EFFECT_FRAME_DURATION_MS = 170;
   PROJECTILE_FRAME_DURATION_MS = 60;

@@ -246,6 +246,25 @@ RunStatistics 的 `On/Lk/qn/Mj/wi/uk` → `turnCount/doorsOpened/roomsCleared/le
 
 回归：check/typecheck/parity/34 场景/e2e 全绿；混淆清单 1,193 → 1,189。
 
+## 第十六轮落地：物品字段与冒险点管理器（2026-09-26，十四个字母）
+
+命名直接对齐存档 DTO 键（`restoreItem` 的入参就是 `itemName/itemRarity/itemLevel/itemGold/itemValue/itemCharacteristic/itemEffect`），运行时字段与存档键从此同词：
+
+| 原 | 新 | 原 | 新 |
+|---|---|---|---|
+| `op` | `itemType` | `Dd` | `availablePoints` |
+| `Ew` | `itemName` | `An` | `spentPoints` |
+| `kA` | `itemRarity` | `Qi` | `pointsByEventType` |
+| `ns` | `itemLevel` | `pj` | `countsByEventType` |
+| `zf` | `itemGold` | `tl` | `pointUpgrades` |
+| `Rm` | `itemEffect` | `Vp`/`pp`/`jp` | `tierId`/`statMultiplier`/`elementalEffectChance` |
+
+**本轮真实踩坑（第二次同类，且更凶）**：稀有度表的 `Vp/pp/jp` 是 `content/balance.js` 里的对象字面量键，而读取端只出现在 `loot/items.js`。第一次改名只喂了读取端所在文件，键留在原处 → `h.statMultiplier` 取到 undefined → 物品属性变 NaN → 99 回合后 `characterHealth` 109 变 99，parity 与 32 个场景同时爆红。差分按设计拦住了它，也证明"数据表键与读取端分文件"是本类改名最难自查的形状。
+
+工具因此新增写盘后全库回扫：任何未被本次文件表覆盖的同名残留（数据表键或他类字段）当场列出，不再依赖回归测试兜底。
+
+回归：check/typecheck/parity（0/1/99/900）/34 场景/e2e 全绿；混淆清单 1,189 → 1,175，fields 段 249 → 263。三份公式文档中被点名的 35 处成员与 12 处裸字段名同步更新。
+
 ## 重命名执行器 `scripts/rename-field.mjs`
 
 本批起改用手写守卫的执行器，用法 `node scripts/rename-field.mjs <old>=<new> <file...> --expect <total>`。写盘前强制四项校验：命中总数等于 `--expect`、行数不变、逐行缩进不变、字符串字面量多重集不变，任一失败整批不落盘。

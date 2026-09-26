@@ -5,6 +5,7 @@
 > 事实来源：`src/engine/modules/**` 当前实现。每条公式给出 `file:line` 与原文 JS 片段。
 > 与 `archive/original/c2.js` 的等价性由 34 场景差分矩阵保证，因此本文描述的是**权威行为**。
 > 凡看起来像 bug 的地方一律按原样记录并标 `[疑似遗留怪癖]`；本文不提出修正。
+> **引用体例**：JS 片段为源码原文，但为控制篇幅做了两种压缩——(a) `…` 表示省略的行；(b) 少数多行嵌套被并为单行（token 序列不变）。凡 token 序列与源码不一致之处均为笔误，欢迎按 `file:line` 复核后修正。
 
 ---
 
@@ -110,7 +111,7 @@ XP(当前等级 L 升到 L+1) = floor( 100 + 500·(L−1)^2.1·1.005^(L−1) )
 ```
 
 | L | 1 | 2 | 3 | 5 | 10 | 25 | 50 | 100 |
-|---|---|---|---|---|---|---|---|---|---|
+|---|---|---|---|---|---|---|---|---|
 | 需要 XP | 100 | 602 | 2265 | 9474 | 52868 | 446165 | 2262236 | 12712982 |
 
 （整表为按 §0 求值器实算，非引用外部资料。）
@@ -230,7 +231,7 @@ killPointEvent = {
 | 8 | 50 | 搜索一个书架 | 19 | 2000 | 征服一座城堡 |
 | 9 | 1 | 找到黄金 | 21 | 10 | 装备一件道具 |
 | 10 | 2 | 找到一个卷轴 | 22 | 400 | 角色升一级 |
-| 11 | 15 | 找到一瓶药剂 | | | | |
+| 11 | 15 | 找到一瓶药剂 | | | |
 
 `[疑似遗留怪癖]` 两条变量的名字与其 `fullEventLabel` 互换：`bookcasePointEvent`(id 7) 的文案是"搜索一个武器架"、`weaponRackPointEvent`(id 8) 的文案是"搜索一个书架"（`progression/points.js:134-149`）。**纯命名问题，数值无影响**（id 7 与 `recordWeaponRackLooted` 同批发放、id 8 与 `recordBookcaseLooted` 同批发放，`characters/character.js:1133-1140`）。同样 `spellPointEvent`(id 2) 的文案是"打开一扇门"，实际也只在开门时发放（`characters/character.js:314`）。
 
@@ -244,22 +245,28 @@ export function awardAdventurePoints(a) {
     c = pointEventsById[a];
   if (c) {
     c = c.currentPointReward;
-    b.Dd += c;
-    var d = b.Qi[a]; if (!d) { d = 0 }
-    var f = b.pj[a]; if (!f) { f = 0 }
+    b.availablePoints += c;
+    var d = b.pointsByEventType[a];
+    if (!d) {
+      d = 0;
+    }
+    var f = b.countsByEventType[a];
+    if (!f) {
+      f = 0;
+    }
     f++;
-    b.Qi[a] = d + c;
-    b.pj[a] = f;
+    b.pointsByEventType[a] = d + c;
+    b.countsByEventType[a] = f;
   }
 ```
 
 `game.state.adventurePoints` 三个 map 的语义（由 `persistence/game-save.js:563-609`、`:960-992` 的读写对反推，置信度高）：
 
-- `adventurePoints.Dd` = 可用点数（`spentAdventurePoints` 之外的余额）
-- `adventurePoints.Qi[type]` = 该事件累计产点
-- `adventurePoints.pj[type]` = 该事件**发生次数**
-- `adventurePoints.An` = 已花费点数
-- `adventurePoints.tl` = 23 条点升级（`pointUpgradeDefinitions`）
+- `adventurePoints.availablePoints` = 可用点数（`spentAdventurePoints` 之外的余额）
+- `adventurePoints.pointsByEventType[type]` = 该事件累计产点
+- `adventurePoints.countsByEventType[type]` = 该事件**发生次数**
+- `adventurePoints.spentPoints` = 已花费点数
+- `adventurePoints.pointUpgrades` = 23 条点升级（`pointUpgradeDefinitions`）
 
 `[关键行为]` 发放是**追溯生效**的：`awardAdventurePoints` 只加当前 `currentPointReward`，但任何成就应用会调用 `recalculateAdventurePoints` 用 `次数 × 新单价` **重建**每池点数（§2.3）。因此先杀 100 万怪、后领"杀怪 +1 点"的成就会立即回补 100 万点。
 
@@ -298,19 +305,19 @@ export function increasePointEventReward(a, b) {
   }
 export function recalculateAdventurePoints(a) {
   var b, c, d, f;
-  for (b = a.Dd = 0; b < pointEventDefinitions.length; b++) {
+  for (b = a.availablePoints = 0; b < pointEventDefinitions.length; b++) {
     f = pointEventDefinitions[b].pointEventTypeId;
     c = pointEventDefinitions[b].currentPointReward;
-    if (!(d = a.pj[f])) {
+    if (!(d = a.countsByEventType[f])) {
       d = 0;
     }
     c *= d;
-    a.Qi[f] = c;
-    a.Dd += c;
+    a.pointsByEventType[f] = c;
+    a.availablePoints += c;
   }
-  a.Dd -= a.An;
-  if (0 > a.Dd) {
-    a.Dd = 0;
+  a.availablePoints -= a.spentPoints;
+  if (0 > a.availablePoints) {
+    a.availablePoints = 0;
   }
 }
 ```
@@ -320,8 +327,8 @@ export function recalculateAdventurePoints(a) {
 Dd = clamp( Σ Qi[id] − An , 0 , +∞ )
 ```
 
-- 遍历的是 `pointEventDefinitions`（**数组顺序**，21 项），不是 `pointEventsById` 的键序；两者结果集相同，但 `Qi` 的键写入顺序按此数组。
-- `An`（已花费）在重建后被减回并钳非负 —— 因此"次数 × 单价"必须始终 ≥ 已花费，否则出现"花费被部分抹掉"的表现；代码不阻止该情况，只钳 `Dd ≥ 0`。
+- 遍历的是 `pointEventDefinitions`（**数组顺序**，21 项），不是 `pointEventsById` 的键序；两者结果集相同，但 `pointsByEventType` 的键写入顺序按此数组。
+- `spentPoints`（已花费）在重建后被减回并钳非负 —— 因此"次数 × 单价"必须始终 ≥ 已花费，否则出现"花费被部分抹掉"的表现；代码不阻止该情况，只钳 `Dd ≥ 0`。
 - 该函数是**唯一**让 `currentPointReward` 变化影响历史事件的路径。
 
 ### 2.4 重置
@@ -329,14 +336,14 @@ Dd = clamp( Σ Qi[id] − An , 0 , +∞ )
 `src/engine/modules/progression/points.js:6-25`
 
 ```js
-a.Dd = 0; a.An = 0; a.Qi = {}; a.pj = {};
+a.availablePoints = 0; a.spentPoints = 0; a.pointsByEventType = {}; a.countsByEventType = {};
 for (b = 0; b < pointEventDefinitions.length; b++) {
   c = pointEventDefinitions[b];
   c.currentPointReward = c.basePointReward;   // 丢弃全部成就加成
-  a.Qi[c.pointEventTypeId] = 0;
-  a.pj[c.pointEventTypeId] = 0;
+  a.pointsByEventType[c.pointEventTypeId] = 0;
+  a.countsByEventType[c.pointEventTypeId] = 0;
 }
-for (b = 0; b < a.tl.length; b++) { a.tl[b].og(); }   // 点升级全部退回
+for (b = 0; b < a.pointUpgrades.length; b++) { a.pointUpgrades[b].og(); }   // 点升级全部退回
 ```
 
 `[关键]` 加成被丢掉的补偿路径是**读档回放**：`persistence/game-save.js:635-656` 在恢复完 `obtained/applied` 后，对每条"已取得且已应用"的成就重放 `increasePointEventReward(wc.pointEventTypeId, wc.Vt)`。因此 `currentPointReward` 不进存档，靠回放重建（另见 `docs/reverse-engineering/unresolved.md` 第八批 `Fb→currentPointReward` 条目）。
@@ -347,15 +354,17 @@ for (b = 0; b < a.tl.length; b++) { a.tl[b].og(); }   // 点升级全部退回
 
 ```js
 AdventurePointUpgrade.prototype.purchase = function () {
-  if (!(this.purchased || this.kh.pointCost > game.state.adventurePoints.Dd)) {
+  if (!(this.purchased || this.kh.pointCost > game.state.adventurePoints.availablePoints)) {
     var a = this.kh.pointCost,
       b = game.state.adventurePoints;
-    b.An += a;
-    b.Dd -= a;
-    if (0 > b.Dd) { b.Dd = 0; }
+    b.spentPoints += a;
+    b.availablePoints -= a;
+    if (0 > b.availablePoints) { b.availablePoints = 0; }
     this.purchased = true;
     applyPointUpgrade(this);
 ```
+
+`applyPointUpgrade` / `getPointUpgradeModifier`（`progression/upgrades.js:217-252`）：
 
 ```js
 export function applyPointUpgrade(a) {
@@ -687,8 +696,8 @@ LifetimeStatistics.prototype.resetRunStatistics = function () {
 `src/engine/modules/persistence/entities.js:283-319`
 
 ```js
-ia = a.weaponRacksLooted;
-ea = a.weaponsRacksLooted;          // 旧档重复键
+ia = a.weaponRacksLooted,
+    ea = a.weaponsRacksLooted;          // 旧档重复键
 …
 if (!u) { u = game.dungeons.dg.length; }        // farmsPurchased 缺失时用"当前农场数"补齐
 b.playedMillis = c ? Math.max(0, d ? d : f) : Math.max(0, f ? f : 0);   // c=lifetime → 优先 totalPlayedMillis
@@ -711,12 +720,42 @@ if (0 === c) {
   game.gameWon = true;
   game.finishOfflineProgress();
   saveProgress(game.saves);
-  …
+  game.view.onGameWon();
+  a = game.state.victoryStatistics;
   b = game.state.adventurers.length;
-  if (4 > b) { if (1 === b) { a.hn += 1; … a.lq[class] += 1 } else if (2 === b) a.jn += 1; else if (3 === b) a.kn += 1 }
-  for (c = 0; c < b; c++) { a.qo[class] += 1 }
-  c = a.nm; if (0 < c) { if (c > a.Xm) a.Xm = c; a.mm = c }
-  if (4 <= b) { …全同职业 → a.vn += 1 }
+  if (4 > b) {
+    if (1 === b) {
+      a.hn += 1;
+      …
+      a.lq[c] = d + 1;          // d = 该职业原有单人胜利数
+  …
+  for (c = 0; c < b; c++) {
+    d = game.state.adventurers[c].characterClass;
+    if (!(f = a.qo[d])) {
+      f = 0;
+    }
+    a.qo[d] = f + 1;
+  }
+  c = a.nm;
+  if (0 < c) {
+    if (c > a.Xm) {
+      a.Xm = c;
+    }
+    a.mm = c;
+  }
+  if (4 <= b) {
+    d = true;
+    f = game.state.adventurers[0].characterClass;
+    for (c = 1; c < b; c++) {
+      if (f != game.state.adventurers[c].characterClass) {
+        d = false;
+        break;
+      }
+    }
+    if (d) {
+      a.vn += 1;
+    }
+  }
 ```
 
 - 计数写入瞬间**先于** `nm` 自增（`nm++` 在玩家点"继续"时执行，`views/results.js:61`），所以 `Xm` 记的是"上一次链的长度"。
@@ -849,7 +888,7 @@ export function recordMonsterTypeKill(a) {
 ```
 
 - 曲线输入 `b = 10·(怪物等级 − 1) + 阶位`，阶位 `Sj ∈ [1,5]`，`MONSTER_RANK_KILL_STEP = 20`（`content/balance.js:117`）。`Sj` 与 `ek` 同步增长（构造即 `advanceMonsterTypeRank`：`Sj 0→1`、`ek 0→20`，`combat/encounters.js:189-190`），故**处于阶位 `Sj` 时升下一阶还需 `20·Sj` 次**（20 → 40 → 60 → 80 → 100，累进而非固定步长），`ml` 是"自上次升阶以来"的余数计数器（升阶时 `ml -= ek` 保留余数）。`Sj = 5` 后不再推进但 `ml/xq` 继续累加。`xq` = 该怪类历史总杀（存档字段 `kills`，`persistence/entities.js:189-195`）。
-- `No`（`monsterArmorCurve`，power 1.24 / growth 1.0002）是**每杀经验**（§P-3），其增长明显慢于战斗属性曲线 —— 含义未在代码内命名，由 ``simulation/characters.js:290` / `combat/actions.js:364` 的 `addExperience(f.No × doubleExperienceModifier.currentValue)`（`simulation/characters.js:290` 用 `f.No`；`combat/actions.js:364` 同一式但变量名为 `d.No`）` 唯一读者反推，置信高。
+- `No`（`monsterArmorCurve`，power 1.24 / growth 1.0002）是**每杀经验**（§P-3），其增长明显慢于战斗属性曲线。含义未在代码内命名，由唯一读者 `addExperience(….No × doubleExperienceModifier.currentValue)`（`simulation/characters.js:290` 变量名 `f.No`、`combat/actions.js:364` 变量名 `d.No`）反推，置信高。
 - 曲线→属性映射错位（`combat/encounters.js:76-83`）：`damage ← Gp(monsterHealthCurve)`、`armor ← Ep(monsterSpiritCurve)`、`attackRating ← Fp(monsterAttackCurve)`、`defenceRating ← Hp(monsterDefenceCurve)`、`maxHealth ← $o(monsterDamageCurve)`。`[疑似遗留怪癖]` 伤害与生命取了对方名字的曲线；数值按原样记录。
 - 脆弱怪物药水把 5 条 levelValue 统一乘 0.7（`combat/encounters.js:69-75`）。
 - 遭遇规模：`minMonsters + randomInt(max(min, maxMonsters) − minMonsters) + extraMonstersModifier`（`combat/encounters.js:49-52`，首领房另有 `maxMonsters.baseValue` 作下限，`combat/encounters.js:145-148`）。

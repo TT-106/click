@@ -310,7 +310,7 @@ export function advanceSimulation(a) {
                   wb = Ib.impactEffectName;
                 } else {
                   var Ec = zb.So(),
-                    bc = Ec ? Ec.Rm : null,
+                    bc = Ec ? Ec.itemEffect : null,
                     wb = bc ? bc.ms : null;
                 }
                 if (!wb) {

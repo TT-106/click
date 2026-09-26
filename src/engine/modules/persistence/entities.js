@@ -5,20 +5,20 @@ import { Item, ItemEffect } from "../loot/items.js";
 import { game } from "../runtime/game.js";
 import { MonsterType, advanceMonsterTypeRank } from "../combat/encounters.js";
 export function serializeItem(a) {
-  var b = a.op.RD,
+  var b = a.itemType.RD,
     c = a.slot,
     d = a.characterClass,
-    f = a.Ew,
+    f = a.itemName,
     g = a.uf(),
-    h = a.Rm;
+    h = a.itemEffect;
   return {
     itemTypeId: b,
     itemSlot: c,
     characterClass: d,
     itemName: f,
     itemRarity: g,
-    itemLevel: a.ns,
-    itemGold: a.zf,
+    itemLevel: a.itemLevel,
+    itemGold: a.itemGold,
     itemValue: a.itemValue,
     itemCharacteristic: a.characteristic,
     itemEffect: h ? {

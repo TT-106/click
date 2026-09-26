@@ -75,3 +75,23 @@ for (const { file, next, hits } of staged) {
   console.log(`${file}: ${hits} 处  ${oldName} -> ${newName}`);
 }
 console.log(`合计 ${totalHits} 处已写入。`);
+
+// 事后全库回扫：同名字段若还有残留在别处（尤其是另一文件里的数据表字面量键），
+// 读取端就会拿到 undefined。本轮这类事故真实发生过（rarity 表的键在 balance.js，
+// 读取端在 items.js），差分流水在 99 回合后才发现，故在此当场报出。
+const leftoverRe = new RegExp('(^|[ \\t])' + escaped + ':|\\\\.' + escaped + '\\\\b');
+const stagedFiles = new Set(staged.map((s) => s.file.split(path.sep).join('/')));
+const leftovers = [];
+(function scan(dir) {
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) { scan(full); continue; }
+    if (!full.endsWith('.js') || stagedFiles.has(full.split(path.sep).join('/'))) continue;
+    const lines = fs.readFileSync(full, 'utf8').split('\n');
+    lines.forEach((line, i) => { if (leftoverRe.test(line)) leftovers.push(`${full}:${i + 1}: ${line.trim().slice(0, 90)}`); });
+  }
+})('src');
+if (leftovers.length) {
+  console.log(`\n!! 残留 ${oldName}（不在本次文件表内，可能是另一文件里的数据表键或同名他类字段）：`);
+  console.log(leftovers.slice(0, 12).join('\n'));
+}

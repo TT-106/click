@@ -565,7 +565,7 @@ export function restoreGameState(a, b) {
             var ve = Uc.spentAdventurePoints,
               zf = Uc.pointsByType,
               we = Uc.pointUpgrades;
-            game.state.adventurePoints.An = ve ? ve : 0;
+            game.state.adventurePoints.spentPoints = ve ? ve : 0;
             if (zf && 0 !== zf.length) {
               var xe;
               for (xe = 0; xe < zf.length; xe++) {
@@ -575,8 +575,8 @@ export function restoreGameState(a, b) {
                     lg = Wd.points,
                     mg = Wd.count;
                   if (yd) {
-                    game.state.adventurePoints.Qi[yd] = lg ? lg : 0;
-                    game.state.adventurePoints.pj[yd] = mg ? mg : 0;
+                    game.state.adventurePoints.pointsByEventType[yd] = lg ? lg : 0;
+                    game.state.adventurePoints.countsByEventType[yd] = mg ? mg : 0;
                   }
                 }
               }
@@ -591,9 +591,9 @@ export function restoreGameState(a, b) {
                     var ul = !!ng.upgradePurchased,
                       Bf = undefined;
                     b: {
-                      for (var Mh = game.state.adventurePoints, Pe = 0; Pe < Mh.tl.length; Pe++) {
-                        if (Mh.tl[Pe].kh.upgradeId === Lh) {
-                          Bf = Mh.tl[Pe];
+                      for (var Mh = game.state.adventurePoints, Pe = 0; Pe < Mh.pointUpgrades.length; Pe++) {
+                        if (Mh.pointUpgrades[Pe].kh.upgradeId === Lh) {
+                          Bf = Mh.pointUpgrades[Pe];
                           break b;
                         }
                       }
@@ -956,7 +956,7 @@ export function createSaveState(a) {
     var Db = {
         upgrades: Ja
       },
-      gb = game.state.adventurePoints.An,
+      gb = game.state.adventurePoints.spentPoints,
       rb = game.state.adventurePoints,
       dc = [],
       Ka,
@@ -965,8 +965,8 @@ export function createSaveState(a) {
       lb;
     for (lb = 0; lb < pointEventDefinitions.length; lb++) {
       Ka = pointEventDefinitions[lb].pointEventTypeId;
-      Xa = rb.Qi[Ka];
-      hb = rb.pj[Ka];
+      Xa = rb.pointsByEventType[Ka];
+      hb = rb.countsByEventType[Ka];
       dc.push({
         pointEventType: Ka,
         points: Xa,
@@ -974,7 +974,7 @@ export function createSaveState(a) {
       });
     }
     var rc = [],
-      sc = game.state.adventurePoints.tl,
+      sc = game.state.adventurePoints.pointUpgrades,
       Aa;
     for (Aa = 0; Aa < sc.length; Aa++) {
       var db = sc[Aa];

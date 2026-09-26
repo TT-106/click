@@ -7632,7 +7632,21 @@
     "zd": "spell",
     "wd": "getBehaviorScore",
     "od": "execute",
-    "$c": "itemDrop"
+    "$c": "itemDrop",
+    "op": "itemType",
+    "Ew": "itemName",
+    "kA": "itemRarity",
+    "ns": "itemLevel",
+    "zf": "itemGold",
+    "Rm": "itemEffect",
+    "Vp": "tierId",
+    "pp": "statMultiplier",
+    "jp": "elementalEffectChance",
+    "Dd": "availablePoints",
+    "An": "spentPoints",
+    "Qi": "pointsByEventType",
+    "pj": "countsByEventType",
+    "tl": "pointUpgrades"
   },
   "gameFields": {
     "B": "tileSize",

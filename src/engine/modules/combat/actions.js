@@ -451,7 +451,7 @@ export function createAttackAction(a, b, c) {
       g = calculateAttackDamage(a, b);
     b = a.equipment ? a.equipment.Ey : null;
     var h = a.So(),
-      h = h ? h.Rm : null;
+      h = h ? h.itemEffect : null;
     d.remainingDamage = g;
     d.Rd = 0 === g;
     d.yd = true;
@@ -476,7 +476,7 @@ export function createAttackAction(a, b, c) {
   } else {
     c = b.position.levelPosition;
     f = calculateAttackDamage(a, b);
-    b = (a = a.So()) ? a.Rm : null;
+    b = (a = a.So()) ? a.itemEffect : null;
     a = null;
     d.remainingDamage = f;
     d.Rd = 0 === f;

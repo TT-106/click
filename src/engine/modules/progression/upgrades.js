@@ -507,7 +507,7 @@ export function initializeProgressionUpgrades() {
     if (a.length <= this.vp && a.length > this.hA) {
       this.item = a[this.hA];
       if (c != this.item) {
-        this.descriptionLabel = "Equip " + this.item.Ew;
+        this.descriptionLabel = "Equip " + this.item.itemName;
       }
       this.vh = true;
     } else {
@@ -1207,13 +1207,13 @@ export function initializeProgressionUpgrades() {
     return this.canPurchase;
   };
   AdventurePointUpgrade.prototype.purchase = function () {
-    if (!(this.purchased || this.kh.pointCost > game.state.adventurePoints.Dd)) {
+    if (!(this.purchased || this.kh.pointCost > game.state.adventurePoints.availablePoints)) {
       var a = this.kh.pointCost,
         b = game.state.adventurePoints;
-      b.An += a;
-      b.Dd -= a;
-      if (0 > b.Dd) {
-        b.Dd = 0;
+      b.spentPoints += a;
+      b.availablePoints -= a;
+      if (0 > b.availablePoints) {
+        b.availablePoints = 0;
       }
       this.purchased = true;
       this.canPurchase = false;
@@ -1229,7 +1229,7 @@ export function initializeProgressionUpgrades() {
     return this.kh.descriptionText;
   };
   AdventurePointUpgrade.prototype.Cd = function () {
-    this.canPurchase = !this.purchased && this.kh.pointCost <= game.state.adventurePoints.Dd;
+    this.canPurchase = !this.purchased && this.kh.pointCost <= game.state.adventurePoints.availablePoints;
     var a = this.cachedCanPurchase !== this.canPurchase;
     this.cachedCanPurchase = this.canPurchase;
     return a;

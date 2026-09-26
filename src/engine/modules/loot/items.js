@@ -59,16 +59,16 @@ export function ItemType(a, b, c, d, f, g, h, l, n) {
   this.isProjectileItem = l;
 }
 export function Item(a, b, c, d, f, g, h, l, n, p) {
-  this.op = a;
+  this.itemType = a;
   this.slot = b;
   this.characterClass = c;
-  this.Ew = d;
-  this.kA = g;
-  this.ns = f;
-  this.zf = h;
+  this.itemName = d;
+  this.itemRarity = g;
+  this.itemLevel = f;
+  this.itemGold = h;
   this.itemValue = l;
   this.characteristic = n;
-  this.Rm = p;
+  this.itemEffect = p;
   this.nj = null;
 }
 export function isBetterItem(a, b) {
@@ -87,8 +87,8 @@ export function getItemStatLabel(a) {
     case 6:
       return "最大法力";
     case 1:
-      if (a.Rm) {
-        switch (a.Rm.Dw) {
+      if (a.itemEffect) {
+        switch (a.itemEffect.Dw) {
           case FIRE_ITEM_EFFECT:
             return "火焰伤害";
           case ICE_ITEM_EFFECT:
@@ -110,7 +110,7 @@ export function getItemStatLabel(a) {
   }
 }
 export function getItemRarityLabel(a) {
-  switch (a.kA) {
+  switch (a.itemRarity) {
     case 0:
       return "普通";
     case 1:
@@ -126,8 +126,8 @@ export function getItemRarityLabel(a) {
   }
 }
 export function getHighlightedItemName(a) {
-  var b = a.op.baseName;
-  a = a.Ew;
+  var b = a.itemType.baseName;
+  a = a.itemName;
   var c = a.indexOf(b);
   return -1 === c ? a : a.substring(0, c) + '<span style="color:#FAF;">' + b + "</span>" + a.substring(c + b.length);
 }
@@ -155,7 +155,7 @@ export function generateItem(a, b, c, d, f) {
   a: {
     var l, n;
     for (l = 0; l < itemRarityTiers.length; l++) {
-      if (n = itemRarityTiers[l], n.Vp === f) {
+      if (n = itemRarityTiers[l], n.tierId === f) {
         h = n;
         break a;
       }
@@ -164,10 +164,10 @@ export function generateItem(a, b, c, d, f) {
   }
   var p = null;
   l = c.KD[b];
-  var s = getClassStatMultiplier(c, l) * h.pp;
+  var s = getClassStatMultiplier(c, l) * h.statMultiplier;
   n = randomizeScaledValue(d, itemStatCurve, s);
   s = randomizeScaledValue(d, itemGoldCurve, s) * itemGoldModifier.currentValue;
-  if (1 === l && Math.random() < h.jp) {
+  if (1 === l && Math.random() < h.elementalEffectChance) {
     p = a.ND;
     h = Math.random();
     h = 0.2 > h ? FIRE_ITEM_EFFECT : 0.4 > h ? ICE_ITEM_EFFECT : 0.6 > h ? SHOCK_ITEM_EFFECT : 0.7 > h ? SONIC_ITEM_EFFECT : POISON_ITEM_EFFECT;
@@ -318,16 +318,16 @@ export function initializeLootItems() {
     return this.isProjectileItem;
   };
   Item.prototype.Uk = function () {
-    return this.op.Uk();
+    return this.itemType.Uk();
   };
   Item.prototype.sw = function () {
-    return this.op.sw();
+    return this.itemType.sw();
   };
   Item.prototype.uf = function () {
-    return this.kA;
+    return this.itemRarity;
   };
   Item.prototype.Cw = function () {
-    return this.op.Cw();
+    return this.itemType.Cw();
   };
   ItemGenerator.prototype.uf = function (a) {
     var b = 0,

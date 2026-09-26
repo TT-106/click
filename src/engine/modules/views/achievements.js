@@ -205,9 +205,9 @@ export function initializeViewsAchievements() {
     for (a = 0; a < pointEventDefinitions.length; a++) {
       b = pointEventDefinitions[a].pointEventTypeId;
       c = this.Ao[b];
-      d = n.Qi[b];
+      d = n.pointsByEventType[b];
       f = this.Ao[b];
-      g = n.pj[b];
+      g = n.countsByEventType[b];
       h = this.Dv[b];
       l = pointEventDefinitions[a].currentPointReward;
       if (c != d) {
@@ -286,7 +286,7 @@ export function initializeViewsAchievements() {
     }
   };
   PointUpgradeListView.prototype.Zn = function () {
-    var a = game.state.adventurePoints.tl,
+    var a = game.state.adventurePoints.pointUpgrades,
       b = [],
       c = [],
       d;

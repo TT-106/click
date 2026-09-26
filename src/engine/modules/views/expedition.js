@@ -572,7 +572,7 @@ export function initializeViewsExpedition() {
     if (!this.Np) {
       mountAdventurePoints(this);
     }
-    var a = game.state.adventurePoints.Dd;
+    var a = game.state.adventurePoints.availablePoints;
     if (a !== this.qz) {
       this.qz = a;
       this.Np.innerHTML = formatGroupedAmount(a);

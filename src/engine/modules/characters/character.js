@@ -1195,7 +1195,7 @@ export function updateCharacter(a, b) {
               for (var kj = undefined, Tp = 0, Up = undefined, Al = 0, LA = 0.1 + equipmentQualityBonus.currentValue, Ph = zl.length - 1; 0 <= Ph; Ph--) {
                 kj = zl[Ph];
                 if ((Up = yl.ef(kj.slot)) && !isBetterItem(kj, Up)) {
-                  Al += kj.zf * LA;
+                  Al += kj.itemGold * LA;
                   Tp++;
                   awardAdventurePoints(17);
                   removeInventoryItemAt(Sp, Ph);

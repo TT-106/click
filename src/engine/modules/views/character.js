@@ -182,13 +182,13 @@ export function initializeViewsCharacter() {
       this.Ei.style.background = "url('spritesheet/items.png') -" + b.sourceX + "px -" + b.sourceY + "px";
       this.Fi.innerHTML = getHighlightedItemName(this.item);
       this.Ie.innerHTML = getItemRarityLabel(this.item);
-      this.Af.innerHTML = this.item.ns + "";
-      this.gf.innerHTML = formatAmount(this.item.zf);
+      this.Af.innerHTML = this.item.itemLevel + "";
+      this.gf.innerHTML = formatAmount(this.item.itemGold);
       this.Oh.innerHTML = formatAmount(this.item.itemValue) + " " + getItemStatLabel(this.item);
       var c = game.state.adventurers[this.adventurerIndex],
         b = c.ef(a.slot);
       this.Oh.className = b ? this.item.itemValue > b.itemValue ? "itemValueBetter" : this.item.itemValue < b.itemValue ? "itemValueWorse" : "" : "itemValueBetter";
-      this.gf.className = b ? a.zf > b.zf ? "itemValueBetter" : a.zf < b.zf ? "itemValueWorse" : "" : "itemValueBetter";
+      this.gf.className = b ? a.itemGold > b.itemGold ? "itemValueBetter" : a.itemGold < b.itemGold ? "itemValueWorse" : "" : "itemValueBetter";
       this.Ie.className = getRarityClass(this.item.uf());
       if (!b || this.item.itemValue > b.itemValue) {
         this.Ej.style.display = "block";
@@ -313,9 +313,9 @@ export function initializeViewsCharacter() {
       this.Ei.style.background = "url('spritesheet/items.png') -" + a.sourceX + "px -" + a.sourceY + "px";
       this.Fi.innerHTML = getHighlightedItemName(this.item);
       this.Ie.innerHTML = getItemRarityLabel(this.item);
-      this.Af.innerHTML = this.item.ns + "";
+      this.Af.innerHTML = this.item.itemLevel + "";
       this.Oh.innerHTML = formatAmount(this.item.itemValue) + " " + getItemStatLabel(this.item);
-      this.gf.innerHTML = formatAmount(this.item.zf);
+      this.gf.innerHTML = formatAmount(this.item.itemGold);
       this.Ie.className = getRarityClass(this.item.uf());
     } else {
       this.Ei.style.background = "";

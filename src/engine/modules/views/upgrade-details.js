@@ -477,7 +477,7 @@ export function initializeViewsUpgradeDetails() {
       this.Fw.className = getRarityClass(a.uf());
       this.Fw.innerHTML = " (" + getItemRarityLabel(a) + ")";
       this.Qm.style.background = "url('spritesheet/monsters.png') -" + (c.sourceX + 10) + "px -" + (c.sourceY + 12) + "px";
-      this.iA.innerHTML = "等级" + a.ns;
+      this.iA.innerHTML = "等级" + a.itemLevel;
       b = (b = a.nj.ef(a.slot)) ? a.itemValue - b.itemValue : a.itemValue;
       this.ks.innerHTML = 0 < b ? "+" + formatAmount(b) + " " + getItemStatLabel(a) : formatAmount(b) + " " + getItemStatLabel(a);
     }

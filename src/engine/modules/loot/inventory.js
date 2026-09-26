@@ -25,11 +25,11 @@ export function addInventoryItem(a, b) {
       g = a.items[c];
       if (0 > d) {
         d = 0;
-        f = g.zf;
+        f = g.itemGold;
       } else {
-        if (f > g.zf) {
+        if (f > g.itemGold) {
           d = c;
-          f = g.zf;
+          f = g.itemGold;
         }
       }
     }
@@ -53,7 +53,7 @@ export function removeInventoryItemAt(a, b) {
 export function InventoryRegistry() {
   this.Fj = [];
   this.IE = function (a, b) {
-    return b.zf - a.zf;
+    return b.itemGold - a.itemGold;
   };
 }
 export function sortInventory(a, b) {
