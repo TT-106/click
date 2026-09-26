@@ -90,14 +90,14 @@ export function EquipmentDetails(a, b) {
 export function GlobalUpgradeDetails(a, b) {
   this.upgrade = a;
   this.contentContainer = b;
-  this.ks = this.iA = this.Fw = this.jA = this.Qm = this.kp = this.Bf = null;
+  this.ks = this.iA = this.Fw = this.jA = this.Qm = this.kp = this.tableElement = null;
   this.shown = false;
   this.cv = null;
 }
 export function AutoDungeonDetails(a, b) {
   this.upgrade = a;
   this.contentContainer = b;
-  this.mf = this.titleElement = this.mo = this.tableElement = null;
+  this.labelCell = this.titleElement = this.mo = this.tableElement = null;
   this.shown = false;
   this.cachedTitleText = this.oz = this.cachedDescriptionText = "";
 }
@@ -107,12 +107,12 @@ export function EquipmentSetDetails(a, b) {
   this.IA = [];
   this.JA = [];
   this.Rw = [];
-  this.Bf = null;
+  this.tableElement = null;
   this.shown = false;
   this.sr = [];
 }
 export function appendEquipmentRow(a, b) {
-  var c = a.Bf.insertRow(b),
+  var c = a.tableElement.insertRow(b),
     d = c.insertCell(0);
   d.style.width = "30px";
   d.style.height = "30px";
@@ -458,11 +458,11 @@ export function initializeViewsUpgradeDetails() {
     this.upgrade = a;
   };
   GlobalUpgradeDetails.prototype.showDetails = function () {
-    if (!this.Bf) {
+    if (!this.tableElement) {
       (/** @type {DomDetails} */ (/** @type {unknown} */ (this))).createDomElements();
     }
     if (!this.shown) {
-      showElement(this.Bf);
+      showElement(this.tableElement);
       this.shown = true;
     }
   };
@@ -483,10 +483,10 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   GlobalUpgradeDetails.prototype.createDomElements = function () {
-    this.Bf = createElement("table", this.contentContainer, null, null);
-    this.Bf.style.width = "100%";
-    var a = this.Bf.insertRow(0),
-      b = this.Bf.insertRow(1),
+    this.tableElement = createElement("table", this.contentContainer, null, null);
+    this.tableElement.style.width = "100%";
+    var a = this.tableElement.insertRow(0),
+      b = this.tableElement.insertRow(1),
       c = a.insertCell(0);
     c.style.width = "30px";
     c.style.height = "30px";
@@ -549,7 +549,7 @@ export function initializeViewsUpgradeDetails() {
     }
     if (this.cachedDescriptionText != a) {
       this.cachedDescriptionText = a;
-      this.mf.innerHTML = a;
+      this.labelCell.innerHTML = a;
     }
   };
   AutoDungeonDetails.prototype.createDomElements = function () {
@@ -572,10 +572,10 @@ export function initializeViewsUpgradeDetails() {
     a.style.textAlign = "left";
     this.titleElement = createElement("span", a, null, null);
     this.titleElement.innerHTML = this.upgrade.getTitle();
-    this.mf = b.insertCell(0);
-    this.mf.colSpan = 2;
-    this.mf.style.width = "200px";
-    this.mf.style.textAlign = "left";
+    this.labelCell = b.insertCell(0);
+    this.labelCell.colSpan = 2;
+    this.labelCell.style.width = "200px";
+    this.labelCell.style.textAlign = "left";
   };
   EquipmentSetDetails.prototype.getUpgradeType = function () {
     return 4;
@@ -587,11 +587,11 @@ export function initializeViewsUpgradeDetails() {
     this.upgrade = a;
   };
   EquipmentSetDetails.prototype.showDetails = function () {
-    if (!this.Bf) {
+    if (!this.tableElement) {
       (/** @type {DomDetails} */ (/** @type {unknown} */ (this))).createDomElements();
     }
     if (!this.shown) {
-      showElement(this.Bf);
+      showElement(this.tableElement);
       this.shown = true;
     }
   };
@@ -613,9 +613,9 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   EquipmentSetDetails.prototype.createDomElements = function () {
-    this.Bf = createElement("table", this.contentContainer, null, null);
-    this.Bf.style.width = "100%";
-    var a = this.Bf.insertRow(0).insertCell(0);
+    this.tableElement = createElement("table", this.contentContainer, null, null);
+    this.tableElement.style.width = "100%";
+    var a = this.tableElement.insertRow(0).insertCell(0);
     a.colSpan = 2;
     a.style.textAlign = "left";
     a.innerHTML = "装备所有道具升级";

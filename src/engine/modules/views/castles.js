@@ -20,11 +20,11 @@ export function CastleTableView() {
   this.elementId = "castleTableContainer";
   this.visible = true;
   this.tableElement = null;
-  this.nf = [];
+  this.rowViews = [];
 }
 export function CastleRowView(a) {
   this.lh = a;
-  this.progressTextElement = this.progressFillElement = this.ng = this.mf = this.castle = null;
+  this.progressTextElement = this.progressFillElement = this.ng = this.nameCell = this.castle = null;
   this.Us = 120;
   this.Rv = this.Cu = this.cachedDescriptionText = "";
   this.Kv = 0;
@@ -117,7 +117,7 @@ export function initializeViewsCastles() {
   };
   CastleTableView.prototype = new View();
   CastleTableView.prototype.reset = function () {
-    this.nf.length = 0;
+    this.rowViews.length = 0;
     clearElementById(this.elementId);
     this.tableElement = null;
   };
@@ -126,24 +126,24 @@ export function initializeViewsCastles() {
       /** @type {{createDomElements: () => void}} */ (/** @type {unknown} */ (this)).createDomElements();
     }
     var a = game.castles.castleList;
-    if (a.length !== this.nf.length) {
+    if (a.length !== this.rowViews.length) {
       /** @type {{mk: (count: number) => void}} */ (/** @type {unknown} */ (this)).mk(a.length);
     }
     var b;
-    for (b = 0; b < this.nf.length; b++) {
-      if (this.nf[b].castle !== a[b]) {
-        setCastleRowModel(this.nf[b], a[b]);
+    for (b = 0; b < this.rowViews.length; b++) {
+      if (this.rowViews[b].castle !== a[b]) {
+        setCastleRowModel(this.rowViews[b], a[b]);
       }
-      this.nf[b].render();
+      this.rowViews[b].render();
     }
   };
   CastleTableView.prototype.mk = function (a) {
-    for (; this.nf.length > a;) {
+    for (; this.rowViews.length > a;) {
       this.tableElement.deleteRow(-1);
-      this.nf.splice(this.nf.length - 1, 1);
+      this.rowViews.splice(this.rowViews.length - 1, 1);
     }
-    for (; this.nf.length < a;) {
-      this.nf.push(new CastleRowView(this.tableElement.insertRow(this.nf.length + 1)));
+    for (; this.rowViews.length < a;) {
+      this.rowViews.push(new CastleRowView(this.tableElement.insertRow(this.rowViews.length + 1)));
     }
   };
   CastleTableView.prototype.createDomElements = function () {
@@ -156,7 +156,7 @@ export function initializeViewsCastles() {
     for (c = 0; c < b.length; c++) {
       var rowView = new CastleRowView(this.tableElement.insertRow(c + 1));
       setCastleRowModel(rowView, b[c]);
-      this.nf.push(rowView);
+      this.rowViews.push(rowView);
     }
   };
   CastleTableView.prototype.createHeaderRow = function (a) {
@@ -166,8 +166,8 @@ export function initializeViewsCastles() {
   CastleRowView.prototype.reset = function () {};
   CastleRowView.prototype.createRowCells = function () {
     var a = this.lh;
-    this.mf = a.insertCell(0);
-    this.mf.style.width = "240px";
+    this.nameCell = a.insertCell(0);
+    this.nameCell.style.width = "240px";
     this.ng = a.insertCell(1);
     this.ng.style.width = this.Us + "px";
     this.ng.style.paddingLeft = "5px";
@@ -198,7 +198,7 @@ export function initializeViewsCastles() {
       var a = this.castle.castleName;
       if (this.cachedDescriptionText !== a) {
         this.cachedDescriptionText = a;
-        this.mf.innerHTML = a;
+        this.nameCell.innerHTML = a;
       }
       a = getCastleStatusColor(this.castle);
       if (this.Cu != a) {

@@ -66,7 +66,7 @@ export function DungeonRowView(a, b) {
   this.lh = a;
   this.ui = this.dungeon = null;
   this.yr = new PurchaseDungeonUpgrade(this.dungeon);
-  this.px = this.Gx = this.mf = this.Vg = this.wr = this.Co = null;
+  this.px = this.Gx = this.labelCell = this.Vg = this.wr = this.Co = null;
   this.pB = "secureCell_" + b + "_" + this.lh.rowIndex;
   this.upgradeButton = this.cj = this.ai = this.sh = this.ng = this.Ix = null;
   this.Gu = this.Bk = this.Qv = "";
@@ -80,7 +80,7 @@ export function DungeonListView(a, b, c) {
   this.tabState = a;
   this.dw = b;
   this.tableElement = null;
-  this.rf = [];
+  this.rowViews = [];
 }
 export function getDungeonList(a) {
   switch (a.dw) {
@@ -205,8 +205,8 @@ export function initializeViewsDungeons() {
     }
     this.Vg = a.insertCell(1);
     this.Vg.style.width = "200px";
-    this.mf = a.insertCell(2);
-    this.mf.style.width = "200px";
+    this.labelCell = a.insertCell(2);
+    this.labelCell.style.width = "200px";
     this.Gx = a.insertCell(3);
     this.Gx.style.width = "90px";
     this.px = a.insertCell(4);
@@ -265,7 +265,7 @@ export function initializeViewsDungeons() {
       }
       if (this.Gu !== d) {
         this.Gu = d;
-        this.mf.innerHTML = d;
+        this.labelCell.innerHTML = d;
       }
       if (this.Qv !== g) {
         this.Qv = g;
@@ -305,7 +305,7 @@ export function initializeViewsDungeons() {
   };
   DungeonListView.prototype = new TabView();
   DungeonListView.prototype.reset = function () {
-    this.rf.length = 0;
+    this.rowViews.length = 0;
     clearElementById(this.elementId);
     this.tableElement = null;
   };
@@ -314,24 +314,24 @@ export function initializeViewsDungeons() {
       /** @type {{createDomElements: () => void}} */ (/** @type {unknown} */ (this)).createDomElements();
     }
     var a = getDungeonList(this);
-    if (a.length !== this.rf.length) {
+    if (a.length !== this.rowViews.length) {
       /** @type {{mk: (count: number) => void}} */ (/** @type {unknown} */ (this)).mk(a.length);
     }
     var b;
-    for (b = 0; b < this.rf.length; b++) {
-      if (this.rf[b].dungeon !== a[b]) {
-        this.rf[b].ct(a[b]);
+    for (b = 0; b < this.rowViews.length; b++) {
+      if (this.rowViews[b].dungeon !== a[b]) {
+        this.rowViews[b].ct(a[b]);
       }
-      this.rf[b].render();
+      this.rowViews[b].render();
     }
   };
   DungeonListView.prototype.mk = function (a) {
-    for (; this.rf.length > a;) {
+    for (; this.rowViews.length > a;) {
       this.tableElement.deleteRow(-1);
-      this.rf.splice(this.rf.length - 1, 1);
+      this.rowViews.splice(this.rowViews.length - 1, 1);
     }
-    for (; this.rf.length < a;) {
-      this.rf.push(new DungeonRowView(this.tableElement.insertRow(this.rf.length + 1), this.dw));
+    for (; this.rowViews.length < a;) {
+      this.rowViews.push(new DungeonRowView(this.tableElement.insertRow(this.rowViews.length + 1), this.dw));
     }
   };
   DungeonListView.prototype.createDomElements = function () {
@@ -344,7 +344,7 @@ export function initializeViewsDungeons() {
     for (c = 0; c < b.length; c++) {
       a = new DungeonRowView(this.tableElement.insertRow(c + 1), this.dw);
       a.ct(b[c]);
-      this.rf.push(a);
+      this.rowViews.push(a);
     }
   };
   DungeonListView.prototype.createHeaderRow = function (a) {

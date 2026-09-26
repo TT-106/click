@@ -17,7 +17,7 @@ export function ItemRowBase() {}
 export function InventoryItemView(a, b) {
   this.lh = a;
   this.adventurerIndex = b;
-  this.Ej = this.Cr = this.goldCell = this.Oh = this.Af = this.rarityCell = this.Fi = this.Ei = this.item = null;
+  this.Ej = this.Cr = this.goldCell = this.Oh = this.levelCell = this.rarityCell = this.Fi = this.Ei = this.item = null;
   (/** @type {InventoryItemView & { createRowCells: () => void }} */ (/** @type {unknown} */ (this))).createRowCells();
 }
 export function InventoryTableView(a, b) {
@@ -30,7 +30,7 @@ export function InventoryTableView(a, b) {
 export function EquipmentItemRowView(a, b) {
   this.lh = a;
   this.adventurerIndex = b;
-  this.Cr = this.goldCell = this.Oh = this.Af = this.rarityCell = this.Fi = this.Ei = this.item = null;
+  this.Cr = this.goldCell = this.Oh = this.levelCell = this.rarityCell = this.Fi = this.Ei = this.item = null;
   (/** @type {EquipmentItemRowView & { createRowCells: () => void }} */ (/** @type {unknown} */ (this))).createRowCells();
 }
 export function EquipmentTableView(a, b) {
@@ -38,7 +38,7 @@ export function EquipmentTableView(a, b) {
   this.visible = true;
   this.adventurerIndex = b;
   this.zm = null;
-  this.sf = [];
+  this.rowViews = [];
 }
 export function EquipAllView(a) {
   this.elementId = "equipAllButtonContainer" + a;
@@ -182,7 +182,7 @@ export function initializeViewsCharacter() {
       this.Ei.style.background = "url('spritesheet/items.png') -" + b.sourceX + "px -" + b.sourceY + "px";
       this.Fi.innerHTML = getHighlightedItemName(this.item);
       this.rarityCell.innerHTML = getItemRarityLabel(this.item);
-      this.Af.innerHTML = this.item.itemLevel + "";
+      this.levelCell.innerHTML = this.item.itemLevel + "";
       this.goldCell.innerHTML = formatAmount(this.item.itemGold);
       this.Oh.innerHTML = formatAmount(this.item.itemValue) + " " + getItemStatLabel(this.item);
       var c = game.state.adventurers[this.adventurerIndex],
@@ -203,7 +203,7 @@ export function initializeViewsCharacter() {
       this.Ei.style.background = "";
       this.Fi.innerHTML = "";
       this.rarityCell.innerHTML = "";
-      this.Af.innerHTML = "";
+      this.levelCell.innerHTML = "";
       this.Oh.innerHTML = "";
       this.goldCell.className = "";
       this.Ej.style.display = "none";
@@ -224,10 +224,10 @@ export function initializeViewsCharacter() {
     this.rarityCell = a.insertCell(2);
     this.rarityCell.style.width = "110px";
     this.rarityCell.style.textAlign = "center";
-    this.Af = a.insertCell(3);
-    this.Af.style.textAlign = "right";
-    this.Af.style.paddingRight = "5px";
-    this.Af.style.width = "60px";
+    this.levelCell = a.insertCell(3);
+    this.levelCell.style.textAlign = "right";
+    this.levelCell.style.paddingRight = "5px";
+    this.levelCell.style.width = "60px";
     this.Oh = a.insertCell(4);
     this.Oh.style.width = "120px";
     this.goldCell = a.insertCell(5);
@@ -313,7 +313,7 @@ export function initializeViewsCharacter() {
       this.Ei.style.background = "url('spritesheet/items.png') -" + a.sourceX + "px -" + a.sourceY + "px";
       this.Fi.innerHTML = getHighlightedItemName(this.item);
       this.rarityCell.innerHTML = getItemRarityLabel(this.item);
-      this.Af.innerHTML = this.item.itemLevel + "";
+      this.levelCell.innerHTML = this.item.itemLevel + "";
       this.Oh.innerHTML = formatAmount(this.item.itemValue) + " " + getItemStatLabel(this.item);
       this.goldCell.innerHTML = formatAmount(this.item.itemGold);
       this.rarityCell.className = getRarityClass(this.item.getRarity());
@@ -321,7 +321,7 @@ export function initializeViewsCharacter() {
       this.Ei.style.background = "";
       this.Fi.innerHTML = "";
       this.rarityCell.innerHTML = "";
-      this.Af.innerHTML = "";
+      this.levelCell.innerHTML = "";
       this.Oh.innerHTML = "";
       this.goldCell.innerHTML = "";
       this.rarityCell.className = "";
@@ -340,10 +340,10 @@ export function initializeViewsCharacter() {
     this.rarityCell = a.insertCell(2);
     this.rarityCell.style.width = "110px";
     this.rarityCell.style.textAlign = "center";
-    this.Af = a.insertCell(3);
-    this.Af.style.textAlign = "right";
-    this.Af.style.paddingRight = "5px";
-    this.Af.style.width = "70px";
+    this.levelCell = a.insertCell(3);
+    this.levelCell.style.textAlign = "right";
+    this.levelCell.style.paddingRight = "5px";
+    this.levelCell.style.width = "70px";
     this.Oh = a.insertCell(4);
     this.Oh.style.width = "120px";
     this.goldCell = a.insertCell(5);
@@ -354,10 +354,10 @@ export function initializeViewsCharacter() {
   EquipmentTableView.prototype = new View();
   EquipmentTableView.prototype.reset = function () {
     var a;
-    for (a = 0; a < this.sf.length; a++) {
-      this.sf[a].reset();
+    for (a = 0; a < this.rowViews.length; a++) {
+      this.rowViews[a].reset();
     }
-    this.sf.length = 0;
+    this.rowViews.length = 0;
     clearElementById(this.elementId);
     this.zm = null;
   };
@@ -368,25 +368,25 @@ export function initializeViewsCharacter() {
       }
       var a = game.state.adventurers[this.adventurerIndex],
         b = a.slotList;
-      if (b.length !== this.sf.length) {
+      if (b.length !== this.rowViews.length) {
         (/** @type {EquipmentTableView & TableLifecycle} */ (/** @type {unknown} */ (this))).mk(b.length);
       }
       var c, d;
-      for (c = 0; c < this.sf.length; c++) {
+      for (c = 0; c < this.rowViews.length; c++) {
         d = a.getSlotItem(b[c]);
-        if (d !== this.sf[c].item) {
-          this.sf[c].ux(d);
+        if (d !== this.rowViews[c].item) {
+          this.rowViews[c].ux(d);
         }
       }
     }
   };
   EquipmentTableView.prototype.mk = function (a) {
-    for (; this.sf.length > a;) {
+    for (; this.rowViews.length > a;) {
       this.zm.deleteRow(-1);
-      this.sf.splice(this.sf.length - 1, 1);
+      this.rowViews.splice(this.rowViews.length - 1, 1);
     }
-    for (; this.sf.length < a;) {
-      this.sf.push(new EquipmentItemRowView(this.zm.insertRow(this.sf.length + 1), this.adventurerIndex));
+    for (; this.rowViews.length < a;) {
+      this.rowViews.push(new EquipmentItemRowView(this.zm.insertRow(this.rowViews.length + 1), this.adventurerIndex));
     }
   };
   EquipmentTableView.prototype.createDomElements = function () {
