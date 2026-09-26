@@ -48,6 +48,10 @@ const pointUpgradeWasPurchased = (s) => ({
   pointUpgradePurchased: (s.pointManagerState?.spentAdventurePoints ?? 0) > (base.pointManagerState?.spentAdventurePoints ?? 0)
     && (s.pointManagerState?.pointUpgrades ?? []).some(u => u.upgradePurchased),
 });
+const achievementWasClaimed = (s) => ({
+  achievementClaimed: (s.achievementManager?.achievements ?? []).filter(a => a.applied).length
+    > (base.achievementManager?.achievements ?? []).filter(a => a.applied).length,
+});
 // U7：药水激活在视图之外没有入口，激活后存档里只有 statistics.potionsUsed 可证。
 const potionWasUsed = (s) => ({ potionUsed: (s.statistics?.potionsUsed ?? 0) > 0 });
 const scenarios = [
@@ -272,6 +276,15 @@ const scenarios = [
     ],
   },
   {
+    name: 'achievement-claimed',
+    // 原版 fixture 已有 monsterKills100 obtained=true/applied=false，无需制造不可能的成就状态。
+    make: () => base,
+    steps: [
+      { turns: 600, claimAchievement: true, check: achievementWasClaimed },
+      { turns: 600, check: achievementWasClaimed },
+    ],
+  },
+  {
     name: 'autosave-payload',
     // 自动保存计时分支 + 落盘字节比对：两端跑同样的真实帧循环，比较写进 localStorage 的原文。
     make: () => base,
@@ -399,7 +412,7 @@ try {
         // effectType 表示这一步改用"逐帧扫描活怪物效果队列"的推进方式，并直接对账施加次数。
         // purchaseUpgrades 表示这一步先推进再驱动升级购买（U7：只有视图层会触发的路径）。
         const step = Array.isArray(rawStep) ? { turns: rawStep[0], check: rawStep[1] } : rawStep;
-        const { turns, check, effectType, purchaseUpgrades, purchasePointUpgrades, activatePotions, frames } = step;
+        const { turns, check, effectType, purchaseUpgrades, purchasePointUpgrades, claimAchievement, activatePotions, frames } = step;
         const results = await Promise.all(pages.map(async p => {
           await p.page.evaluate(ms => window.harness.setTime(ms), HARNESS_FIXED_NOW);
           // 重置后无队伍：走真实帧循环（守卫路径），而非裸推进
@@ -407,6 +420,7 @@ try {
           if (effectType !== undefined) return p.page.evaluate(a => window.harness.countEffectApplications(a.turns, a.effectType), { turns, effectType });
           if (purchaseUpgrades !== undefined) return p.page.evaluate(a => window.harness.purchaseUpgrades(a), { turns, limit: purchaseUpgrades });
           if (purchasePointUpgrades !== undefined) return p.page.evaluate(a => window.harness.purchasePointUpgrades(a), { turns, limit: purchasePointUpgrades });
+          if (claimAchievement) return p.page.evaluate(a => window.harness.claimAchievement(a), { turns });
           if (activatePotions !== undefined) return p.page.evaluate(a => window.harness.activatePotions(a), { turns, limit: activatePotions });
           // frames：走真实帧循环（loop.tick 内含 view.render 的 try/catch），随后读画布不透明像素
           if (frames !== undefined) return p.page.evaluate(n => {
@@ -450,6 +464,12 @@ try {
             assert.ok(results[i].purchased > 0, `${label} 端必须真的完成冒险点升级购买（ready=${results[i].readyCount}, balance=${results[i].availablePoints}）`);
           }
           assert.equal(results[1].purchased, results[0].purchased, '两端冒险点升级购买次数不同');
+        }
+        if (claimAchievement) {
+          for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {
+            assert.ok(results[i].claimed > 0, `${label} 端必须真的领取至少一项成就`);
+          }
+          assert.equal(results[1].claimed, results[0].claimed, '两端领取的成就数不同');
         }
         if (frames !== undefined) {
           const inks = results.map(r => r.ink);
@@ -502,6 +522,7 @@ try {
             if (verdict.skillLearned !== undefined) assert.equal(verdict.skillLearned, true, `${label} 技能树布尔位必须真实解锁`);
             if (verdict.monsterUnlocked !== undefined) assert.equal(verdict.monsterUnlocked, true, `${label} 怪物最高解锁等级和存档等级表长度必须真实增长；${verdict.note}`);
             if (verdict.pointUpgradePurchased !== undefined) assert.equal(verdict.pointUpgradePurchased, true, `${label} 冒险点必须真实支出且升级状态必须变为已购买`);
+            if (verdict.achievementClaimed !== undefined) assert.equal(verdict.achievementClaimed, true, `${label} 成就奖励必须真实领取并标记 applied`);
             if (verdict.potionUsed !== undefined) assert.equal(verdict.potionUsed, true, `${label} 必须真的激活至少一瓶药水（potionsUsed 增长）`);
             if (verdict.note && i === 0) console.log(`  · ${verdict.note}`);
             if (verdict.victory !== undefined) assert.equal(verdict.victory, true, `${label} 必须真的走完征服尾部并触发胜利`);

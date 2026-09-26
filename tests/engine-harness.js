@@ -214,6 +214,22 @@ window.harness = {
     }
     return { purchased, readyCount, availablePoints: original ? window.Game.i.ae.Dd : game.state.adventurePoints.availablePoints, snapshot: snapshot() };
   },
+  claimAchievement({ turns = 0 } = {}) {
+    for (let i = 0; i < turns; i++) advance();
+    const collections = original ? window.Nx : upgradeCollections;
+    const rows = collections.flatMap(collection => original ? collection.HC : collection.upgradeRows).flat();
+    let claimed = 0;
+    for (const upgrade of rows) {
+      if ((original ? upgrade.Na() : upgrade.getUpgradeType()) !== 14) continue;
+      upgrade.Cd(); // 与升级面板刷新可购状态相同
+      if (original ? upgrade.qc() : upgrade.canPurchaseNow()) {
+        if (original) upgrade.Qc(); else upgrade.purchase();
+        claimed++;
+        break;
+      }
+    }
+    return { claimed, snapshot: snapshot() };
+  },
   // U7：药水激活也没有非视图入口（Potion.aw 只由药水按钮调用），激活会在存档里
   // 记 statistics.potionsUsed，因此两端各自断言计数增长，再照常做完整存档差分。
   // aw / 库存数组字段 re 两端同名（尚未重命名），只有 Game 上的容器字段不同名。

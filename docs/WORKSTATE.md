@@ -5,6 +5,7 @@
 
 ## 当前轮次状态（2026-09-26，M13 文档与验收收尾）
 
+- U7 新增 `achievement-claimed`：fixture 已有 `monsterKills100` 达成未领取；两端按 type=14 的 `ClaimAchievementUpgrade` 入口刷新 `Cd()` 并各执行一次购买，断言 `applied` 计数增长及完整 DTO 相等。全量矩阵 37/37；其余成就奖励效果保持 PARTIAL。另查明 `farmAndDungeonUpgrades` 只负责收获和收金币，真正农场购买在城堡升级列表与地牢行视图；证据见 facts#29。引擎与存档键未改，混淆清单 1,175，fields 段 263。
 - U7 再新增 `adventure-points-spent`：存档点数池用 type=1 击杀事件 count=1,000,000 生成足额余额；原版/重构版均按视图刷新路径先 `Cd()` 后检查 `qc()`/`canPurchaseNow()` 并购买。两端分别断言 `spentAdventurePoints` 增长、点数升级已购位变 true，逐检查点完整 DTO 相等；矩阵 36/36。此为合成前置状态，仅证明一项点数升级的购买/存档路径，其他点数升级效果仍 PARTIAL。引擎、数值、存档键、RNG 未改；混淆清单 1,175，fields 段 263。
 - U7 新增 `monster-level-unlocked`：`withKills` 仅调高共享存档里的可消费击杀数；角色先通过既有购买入口升至最低等级门槛，下一检查点才购得怪物等级。两端各自断言 `maxUnlockedLevel` 和 `monsterLevelStates` 从 1 增至 2，逐检查点完整 DTO 相等；完整矩阵 35/35。怪物等级退休未覆盖，矩阵该行保持 PARTIAL。引擎源码、数值、存档键、RNG 无改动；混淆清单 1,175，fields 段 263。
 - `upgrades-purchased` 已把 settings、characterLevels、skillTrees 三个升级族从日志观察提升为两端各自的必达断言：比较 fixture 基线上的设置等级总和、角色等级及四棵技能树解锁位总数；独立运行时两端各完成 28+24 次购买，三个断言均通过，逐检查点完整存档相等。未改引擎、数值、RNG、存档键，也未做字段重命名；混淆清单维持 1,175，fields 段维持 263。

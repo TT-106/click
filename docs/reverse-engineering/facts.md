@@ -36,7 +36,7 @@
 
 17. 原版全局：`window.Game`（=w）、`Game.Hr`=GameLoop（sB 实例）、`Game.Hr.Hr()`=帧 tick、`window.lB()`=序列化、`window.pB(15)`=单回合步进、`game.hE(text)`=导入存档、`game.Em`=initialized、`game.ig`=processingOffline、`game.jf/Vj`=offlineDuration/offlineProcessed。
 18. 重构版入口：`src/engine/adapter.js`（唯一产品入口，命令校验 + 只读快照）；内部接口 `src/engine/internal-api.js`。
-19. 存档兼容契约：`tests/fixtures/original.c2save` + parity（0/1/99/900 回合）+ 场景矩阵（34 场景）+ codec 单测 + `autosave-payload` 场景（比对真正落盘的原文）。
+19. 存档兼容契约：`tests/fixtures/original.c2save` + parity（0/1/99/900 回合）+ 场景矩阵（当前 37 场景）+ codec 单测 + `autosave-payload` 场景（比对真正落盘的原文）。
 
 ## 已修复的回归（方法论证据）
 
@@ -58,3 +58,7 @@
 26. `Equipment.Qk`（重构版 `movement.js:195-205`）的判断条件曾写成 `1 === a.statType`，而原版是 `1 === a.s`（`c2.js:21419`），Item 上从未有 `statType` 字段——恢复时把 Item 的 `s` 在构造点映射成 `characteristic`、在这个判断点映射成了 `statType`，于是分支恒假、`fz`（携带武器特效的伤害装备）永不记录，攻击时的武器特效视觉静默消失。已按 `c2.js:21419` 改回 `1 === a.characteristic`。
 27. **该缺陷是差分看不见的**：`fz` 只影响 `VisualEffect` 瞬时视觉，不入存档，34 场景与 parity 全程绿。它是公式文档逐行核对时被发现的（子智能体报告"读了一个不存在的字段"），不是测试发现的。
 28. `scripts/find-dead-reads.mjs`（`npm run audit:dead-reads`）能抓的是"全库任何地方都没写过的属性名"；它抓不到 #26 这类错映射，因为 `statType` 作为**别的类**（卷轴定义）的字段确实存在。当前全库 12,904 个读取点里剩 10 个未定义名，逐个查明为宿主 API（`event.key`/`MediaQueryList.matches`/`keyCode`）、JSDoc 里的 `import(...).Character` 与两个**原版就有的遗留存档键回退**（`entities.js:254 a.totalPlayedMillis`、`:284 a.weaponsRacksLooted`，原版同一位置同样只读不写：`c2.js:28681/28711`）。也就是说：本工具是粗筛，不是类型检查，语义正确性仍要靠逐行对照源码。
+
+## UI 独占入口的取证纠错（2026-09-26）
+
+29. `farmAndDungeonUpgrades` 的名称会误导测试设计：`content/balance.js:497` 的两个实例是 `AutoPurchaseDungeonUpgrade`（`upgrades.js:1020-1028` 记录农场收获并增加击杀）和 `CollectFarmUpgrade`（`:1253-1260` 收集商店金币），**都不是购买农场**。购买入口是 `PurchaseCastleUpgrade`（`balance.js:494`）与 `views/dungeons.js:68` 直接持有的 `PurchaseDungeonUpgrade`；原版分别在 `c2.js:23399/27759` 构造对应对象。`PurchaseDungeonUpgrade` 虽不在全局升级集合，仍被地牢行视图使用，不能据全局 import 图误判为死实现。
