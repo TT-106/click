@@ -1,10 +1,11 @@
 # WORKSTATE — Clickpocalypse II 语义恢复与现代化工程
 
 > 本文件是长程自治任务的**唯一续跑入口**。上下文压缩或中断后，先读本文件 + `git log --oneline`，再继续。
-> 最后更新：2026-09-26（U31 掉落/视图缓存/财宝定义字段落地后，混淆清单 1,004；验收矩阵 51 PASS / 0 PARTIAL、矩阵 59/59、soak 通过）
+> 最后更新：2026-09-26（U32 升级造价/状态与目标引用字段落地后，混淆清单 998；验收矩阵 51 PASS / 0 PARTIAL、矩阵 59/59、soak 通过）
 
 ## 当前轮次状态（2026-09-26，M13 文档与验收收尾）
 
+- U32 升级造价/状态与目标引用字段（2026-09-26，一笔提交，六门禁全绿，混淆清单 1,004 → 998，**已跌破一千**）：ah→baseCost、Pg→costPerLevel（全局升级造价曲线 cost=scaleByLevel(baseCost+purchasedLevels*costPerLevel,...)，各 12 处）、kh→definition（AdventurePointUpgrade 的点数升级定义，含 upgradeId/pointCost/bonusIndex/title，14 处）、vh→hasCandidate（EquipBestItem/EquipItem 升级"存在候选"标志驱动 isDisplayable/canPurchaseNow——两属主语义同为"有候选"故统一命名，12 处）、Zh→targetScrollDrop（角色正在拾取的卷轴掉落引用，game.js 重置点由残留扫描补齐，11 处）、Dh→scheduledCastles（CastleRegistry 计划进攻列表，与 attackableCastles 成对，11 处）。
 - U31 掉落/视图缓存/财宝定义字段（2026-09-26，一笔提交，六门禁全绿，混淆清单 1,012 → 1,004）：oh→setCollected（五类掉落物的 collected setter）、rh→targetGoldDrop（角色正在拾取的金币掉落引用；runtime/game.js 重置点由残留扫描抓出）、$f→cachedLevel（怪物/远征/角色三个视图的变更检测缓存）、zg→levelTables（MonsterLevelTabView 按等级挂载的表）、yh→spawnPointScratch（TreasureRegistry/DungeonDecorationGenerator/rooms.js 三处同名的可复用刷怪点向量）、xh/hh→westWallVariants/standardVariants（财宝贴纸变体组，按 westWall 标志选择）、jh→flushPlacement（定义旗标：贴齐放置 vs 向房间内偏移一格；scene.js 读取点一并计入）。
 - U30 动画查找/城堡/进度字段（2026-09-26，一笔提交，六门禁全绿，混淆清单 1,016 → 1,012）：Zg→getAnimation（AnimationSheet 名称查找 + AnimationCatalog 委托 + VisualEffect 自访问器，12 处 5 文件）、ng→progressCell（Castle/Monster 行视图进度单元格；dungeons.js 一处死初始化顺带清除，1 处）、Jg→attackableCastles（CastleRegistry 可进攻列表，与地牢 attackable 成对；runtime/game.js 构造与 initialization 重置由残留扫描抓出补齐）、uh→settingsId（财宝目标定义 id，DTO 键 settingsId 同名，12 处）。
 - U29 技能树/怪物/随从/布局/详情字段（2026-09-26，一笔提交，六门禁全绿，混淆清单 1,025 → 1,016）：Qg/Rg/Sg/Tg→buildSkillTree1..4（职业定义的四棵技能树构建器，11 个职业字面量 + Character 初始化单点消费）、Og→defeatedMonsters（MonsterRegistry 战败怪物环形缓冲，上限 50——**注意并非"活怪物列表"**，harness 两处 monsterList 分支已同步；首次 replace 只替换首个匹配导致 veteran-run 分叉，改用 split/join 全量替换）、eh→minionList（MinionRegistry 列表）、Ug→routeQueue（CharacterPosition 移动路由队列：findRouteToDoor/findRouteToRoom 结果，到门即 shift）、tf→exitDoor（布局出口门，与 entranceDoor 成对：roomList[0] 为入口、末房间为出口）、Ag→activeDetails（升级详情当前显示的子视图）。
