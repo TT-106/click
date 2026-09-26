@@ -75,7 +75,7 @@ export function ItemPurchaseDetails(a, b) {
   this.contentContainer = b;
   this.Ii = this.Ji = this.Hi = this.rp = this.Lj = null;
   this.shown = false;
-  this.Lb = -1;
+  this.cachedCostValue = -1;
   this.cachedTitleText = this.cachedDescriptionText = null;
 }
 export function EquipmentDetails(a, b) {
@@ -148,7 +148,7 @@ export function MonsterLevelDetails(a, b) {
   this.contentContainer = b;
   this.ej = this.fj = this.dj = this.Dq = this.kk = null;
   this.shown = false;
-  this.Lb = -1;
+  this.cachedCostValue = -1;
   this.cachedTitleText = this.cachedDescriptionText = null;
 }
 export function DungeonPurchaseDetails(a, b) {
@@ -156,7 +156,7 @@ export function DungeonPurchaseDetails(a, b) {
   this.contentContainer = b;
   this.ui = this.Vg = this.we = this.Nd = this.bf = this.Cq = null;
   this.shown = false;
-  this.Lb = -1;
+  this.cachedCostValue = -1;
 }
 export function ScrollUpgradeDetails(a, b) {
   this.upgrade = a;
@@ -164,7 +164,7 @@ export function ScrollUpgradeDetails(a, b) {
   this.tm = this.dq = this.we = this.Vh = this.sn = this.Cq = null;
   this.shown = false;
   this.Az = null;
-  this.Lb = -1;
+  this.cachedCostValue = -1;
 }
 export function CastlePurchaseDetails(a, b) {
   this.upgrade = a;
@@ -186,7 +186,7 @@ export function CharacterLevelDetails(a, b) {
   this.jr = this.hr = this.gr = this.ir = this.cn = this.an = this.$m = this.bn = 0;
   this.lr = this.Sq = this.Rq = this.kr = this.descriptionElement = this.titleElement = this.pi = this.Zm = this.table = null;
   this.shown = false;
-  this.Lb = -1;
+  this.cachedCostValue = -1;
   this.cachedTitleText = this.Bs = null;
   this.vi = -1;
 }
@@ -210,7 +210,7 @@ export function PointUpgradeDetails(a, b) {
   this.pi = this.descriptionElement = this.titleElement = null;
   this.shown = false;
   this.cachedTitleText = this.cachedDescriptionText = null;
-  this.Lb = -1;
+  this.cachedCostValue = -1;
 }
 export function UpgradeListView(a, b, c) {
   this.elementId = a;
@@ -298,7 +298,7 @@ export function initializeViewsUpgradeDetails() {
     return 1;
   };
   ItemPurchaseDetails.prototype.reset = function () {
-    this.Lb = -1;
+    this.cachedCostValue = -1;
     this.cachedTitleText = this.cachedDescriptionText = null;
   };
   ItemPurchaseDetails.prototype.Rc = function (a) {
@@ -318,8 +318,8 @@ export function initializeViewsUpgradeDetails() {
     var a = this.upgrade.getCost(),
       b = this.upgrade.getTitle(),
       c = this.upgrade.getDescription();
-    if (this.Lb !== a) {
-      this.Lb = a;
+    if (this.cachedCostValue !== a) {
+      this.cachedCostValue = a;
       this.Hi.innerHTML = formatAmount(a);
     }
     if (this.cachedTitleText !== b) {
@@ -760,7 +760,7 @@ export function initializeViewsUpgradeDetails() {
     return 7;
   };
   MonsterLevelDetails.prototype.reset = function () {
-    this.Lb = -1;
+    this.cachedCostValue = -1;
     this.cachedTitleText = this.cachedDescriptionText = null;
   };
   MonsterLevelDetails.prototype.Rc = function (a) {
@@ -780,8 +780,8 @@ export function initializeViewsUpgradeDetails() {
     var a = this.upgrade.getCost(),
       b = this.upgrade.getTitle(),
       c = this.upgrade.getDescription();
-    if (this.Lb !== a) {
-      this.Lb = a;
+    if (this.cachedCostValue !== a) {
+      this.cachedCostValue = a;
       this.dj.innerHTML = formatAmount(a);
     }
     if (this.cachedTitleText !== b) {
@@ -841,7 +841,7 @@ export function initializeViewsUpgradeDetails() {
     return 8;
   };
   DungeonPurchaseDetails.prototype.reset = function () {
-    this.Lb = -1;
+    this.cachedCostValue = -1;
     this.ui = null;
   };
   DungeonPurchaseDetails.prototype.Rc = function (a) {
@@ -859,8 +859,8 @@ export function initializeViewsUpgradeDetails() {
   DungeonPurchaseDetails.prototype.update = function () {
     var a = this.upgrade.getCost(),
       b = this.upgrade.Wo();
-    if (this.Lb !== a) {
-      this.Lb = a;
+    if (this.cachedCostValue !== a) {
+      this.cachedCostValue = a;
       this.Cq.innerHTML = formatAmount(a);
     }
     if (this.ui !== b && (this.ui = b)) {
@@ -909,7 +909,7 @@ export function initializeViewsUpgradeDetails() {
     return 12;
   };
   ScrollUpgradeDetails.prototype.reset = function () {
-    this.Lb = -1;
+    this.cachedCostValue = -1;
     this.tm = null;
   };
   ScrollUpgradeDetails.prototype.Rc = function (a) {
@@ -929,8 +929,8 @@ export function initializeViewsUpgradeDetails() {
       b = this.upgrade.Pz(),
       c = this.upgrade.getTitle(),
       d = this.upgrade.getDescription();
-    if (this.Lb !== a) {
-      this.Lb = a;
+    if (this.cachedCostValue !== a) {
+      this.cachedCostValue = a;
       this.Cq.innerHTML = formatAmount(a);
     }
     if (this.tm !== b && (this.tm = b)) {
@@ -1114,14 +1114,14 @@ export function initializeViewsUpgradeDetails() {
     return 11;
   };
   CharacterLevelDetails.prototype.reset = function () {
-    this.Lb = -1;
+    this.cachedCostValue = -1;
     this.cachedTitleText = this.Bs = null;
     this.vi = -1;
     this.cn = this.an = this.$m = this.bn = this.jr = this.hr = this.ir = this.gr = 0;
   };
   CharacterLevelDetails.prototype.Rc = function (a) {
     this.upgrade = a;
-    this.Lb = -1;
+    this.cachedCostValue = -1;
     this.cachedTitleText = this.Bs = null;
     this.vi = -1;
     this.cn = this.an = this.$m = this.bn = this.jr = this.hr = this.ir = this.gr = 0;
@@ -1139,8 +1139,8 @@ export function initializeViewsUpgradeDetails() {
     var a = this.upgrade.getCost(),
       b = this.upgrade.getTitle(),
       c = this.upgrade.Kr();
-    if (this.Lb != a) {
-      this.Lb = a;
+    if (this.cachedCostValue != a) {
+      this.cachedCostValue = a;
       this.pi.innerHTML = formatAmount(a);
     }
     if (this.cachedTitleText != b) {
@@ -1350,7 +1350,7 @@ export function initializeViewsUpgradeDetails() {
   };
   PointUpgradeDetails.prototype.reset = function () {
     this.cachedTitleText = this.cachedDescriptionText = null;
-    this.Lb = -1;
+    this.cachedCostValue = -1;
   };
   PointUpgradeDetails.prototype.Rc = function (a) {
     this.upgrade = a;
@@ -1378,8 +1378,8 @@ export function initializeViewsUpgradeDetails() {
       this.cachedDescriptionText = b;
       this.descriptionElement.innerHTML = b;
     }
-    if (this.Lb != c) {
-      this.Lb = c;
+    if (this.cachedCostValue != c) {
+      this.cachedCostValue = c;
       this.pi.innerHTML = formatGroupedAmount(c) + " AP";
     }
   };

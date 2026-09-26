@@ -231,7 +231,7 @@ export function clearDungeonTiles(a) {
       f.Jn = null;
       f.Yf = null;
       f.bt = null;
-      f.Rb = EMPTY_TILE;
+      f.floorType = EMPTY_TILE;
       f.tileEffect = null;
       f.li = 0;
     }

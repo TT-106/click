@@ -13,7 +13,7 @@ export function DungeonTile(a, b, c, d) {
   this.pixelColumn = c;
   this.pixelRow = d;
   this.bt = this.Yf = this.Jn = null;
-  this.Rb = EMPTY_TILE;
+  this.floorType = EMPTY_TILE;
   this.tileEffect = null;
   this.li = 0;
 }
@@ -530,7 +530,7 @@ export function revealHallway(a, b) {
   }
 }
 export function paintHallwayTile(a, b, c, d) {
-  if (1 !== a.Rb) {
+  if (1 !== a.floorType) {
     a.setBackgroundSprite(b);
     if (!(!d && a.Yf)) {
       a.setDecorationSprite(c);
@@ -587,21 +587,21 @@ export function initializeWorldRooms() {
     var b, c;
     c = this.tileRow - 1;
     for (b = this.tileColumn - 1; b < this.tileColumn + this.widthInTiles + 1; b++) {
-      a[b][c].Rb = 2;
+      a[b][c].floorType = 2;
     }
     c = this.tileRow + this.heightInTiles;
     for (b = this.tileColumn - 1; b < this.tileColumn + this.widthInTiles + 1; b++) {
-      a[b][c].Rb = 2;
+      a[b][c].floorType = 2;
     }
     b = this.tileColumn - 1;
     b = a[b];
     for (c = this.tileRow - 1; c < this.tileRow + this.heightInTiles + 1; c++) {
-      b[c].Rb = 2;
+      b[c].floorType = 2;
     }
     b = this.tileColumn + this.widthInTiles;
     b = a[b];
     for (c = this.tileRow - 1; c < this.tileRow + this.heightInTiles + 1; c++) {
-      b[c].Rb = 2;
+      b[c].floorType = 2;
     }
   };
   DungeonRoom.prototype.Lw = function (a) {
@@ -612,7 +612,7 @@ export function initializeWorldRooms() {
       g;
     for (c = this.tileColumn; c < d; c++) {
       for (b = a[c], g = this.tileRow; g < f; g++) {
-        b[g].Rb = 1;
+        b[g].floorType = 1;
       }
     }
   };
@@ -634,15 +634,15 @@ export function initializeWorldRooms() {
       var f = a[d - 1],
         g = a[d],
         d = a[d + 1];
-      f[b - 1].Rb = 2;
-      f[b].Rb = 2;
-      f[b + 1].Rb = 2;
-      g[b - 1].Rb = 2;
-      g[b].Rb = 2;
-      g[b + 1].Rb = 2;
-      d[b - 1].Rb = 2;
-      d[b].Rb = 2;
-      d[b + 1].Rb = 2;
+      f[b - 1].floorType = 2;
+      f[b].floorType = 2;
+      f[b + 1].floorType = 2;
+      g[b - 1].floorType = 2;
+      g[b].floorType = 2;
+      g[b + 1].floorType = 2;
+      d[b - 1].floorType = 2;
+      d[b].floorType = 2;
+      d[b + 1].floorType = 2;
     }
     this.Lw(a);
   };
@@ -650,9 +650,9 @@ export function initializeWorldRooms() {
     var b, c;
     for (c = 0; c < this.Sk.length; c++) {
       b = this.Sk[c];
-      a[b.x][b.y].Rb = 1;
+      a[b.x][b.y].floorType = 1;
     }
-    a[this.af.wj][this.af.xj].Rb = 3;
-    a[this.Be.wj][this.Be.xj].Rb = 3;
+    a[this.af.wj][this.af.xj].floorType = 3;
+    a[this.Be.wj][this.Be.xj].floorType = 3;
   };
 }

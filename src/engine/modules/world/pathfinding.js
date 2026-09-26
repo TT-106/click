@@ -40,7 +40,7 @@ export function getPathNode(a, b) {
   return d;
 }
 export function isHallwayWalkable(a, b, c, d, f) {
-  return 0 > b - 1 || 0 > c - 1 || b + 1 >= a.fl || c + 1 >= a.Nj ? false : roomContainsTile(a.Bl, b, c) ? !isNearRoomCorner(b, c, a.Bl) : roomContainsTile(a.Cl, b, c) ? !isNearRoomCorner(b, c, a.Cl) : isRoomBorder(a.Bl, b, c) || isRoomBorder(a.Cl, b, c) ? !d : 0 === f || 2 === f ? a.tileGrid[b - 1][c].Rb === EMPTY_TILE && a.tileGrid[b + 1][c].Rb === EMPTY_TILE : a.tileGrid[b][c - 1].Rb === EMPTY_TILE && a.tileGrid[b][c + 1].Rb === EMPTY_TILE;
+  return 0 > b - 1 || 0 > c - 1 || b + 1 >= a.fl || c + 1 >= a.Nj ? false : roomContainsTile(a.Bl, b, c) ? !isNearRoomCorner(b, c, a.Bl) : roomContainsTile(a.Cl, b, c) ? !isNearRoomCorner(b, c, a.Cl) : isRoomBorder(a.Bl, b, c) || isRoomBorder(a.Cl, b, c) ? !d : 0 === f || 2 === f ? a.tileGrid[b - 1][c].floorType === EMPTY_TILE && a.tileGrid[b + 1][c].floorType === EMPTY_TILE : a.tileGrid[b][c - 1].floorType === EMPTY_TILE && a.tileGrid[b][c + 1].floorType === EMPTY_TILE;
 }
 export function isNearRoomCorner(a, b, c) {
   var d = c.tileColumn,

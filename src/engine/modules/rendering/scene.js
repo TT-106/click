@@ -102,7 +102,7 @@ export function drawDungeonTileRow(a, b, c, d) {
   for (; c < d; c++) {
     var f = a,
       g = game.level.getTileAt(c, b);
-    if (g && g.Rb !== EMPTY_TILE) {
+    if (g && g.floorType !== EMPTY_TILE) {
       var h;
       h = game.camera;
       h = game.viewportHalfWidth + (c - h.vk - (b - h.wk)) * game.tileSize - h.zt;
