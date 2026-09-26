@@ -74,7 +74,7 @@ export function createUpgradeDetails(a, b) {
 export function ItemPurchaseDetails(a, b) {
   this.upgrade = a;
   this.contentContainer = b;
-  this.descriptionLabel = this.titleLabel = this.costElement = this.rp = this.Lj = null;
+  this.descriptionLabel = this.titleLabel = this.costElement = this.rp = this.detailsContainer = null;
   this.shown = false;
   this.cachedCostValue = -1;
   this.cachedTitleText = this.cachedDescriptionText = null;
@@ -147,7 +147,7 @@ export function SpellUpgradeDetails(a, b) {
 export function MonsterLevelDetails(a, b) {
   this.upgrade = a;
   this.contentContainer = b;
-  this.descriptionLabel = this.titleLabel = this.costLabel = this.Dq = this.kk = null;
+  this.descriptionLabel = this.titleLabel = this.costLabel = this.Dq = this.tableContainer = null;
   this.shown = false;
   this.cachedCostValue = -1;
   this.cachedTitleText = this.cachedDescriptionText = null;
@@ -307,11 +307,11 @@ export function initializeViewsUpgradeDetails() {
     this.upgrade = a;
   };
   ItemPurchaseDetails.prototype.showDetails = function () {
-    if (!this.Lj) {
+    if (!this.detailsContainer) {
       (/** @type {DomDetails} */ (/** @type {unknown} */ (this))).createDomElements();
     }
     if (!this.shown) {
-      showElement(this.Lj);
+      showElement(this.detailsContainer);
       showElement(this.rp);
       this.shown = true;
     }
@@ -334,13 +334,13 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   ItemPurchaseDetails.prototype.createDomElements = function () {
-    this.Lj = createElement("div", this.contentContainer, null, null);
-    this.Lj.style.position = "relative";
-    this.Lj.style.height = "30px";
+    this.detailsContainer = createElement("div", this.contentContainer, null, null);
+    this.detailsContainer.style.position = "relative";
+    this.detailsContainer.style.height = "30px";
     this.rp = createElement("div", this.contentContainer, null, null);
     this.rp.style.position = "relative";
     this.rp.style.height = "30px";
-    var a = createElement("div", this.Lj, null, null);
+    var a = createElement("div", this.detailsContainer, null, null);
     a.style.position = "absolute";
     a.style.right = "3px";
     a.style.top = "0";
@@ -352,7 +352,7 @@ export function initializeViewsUpgradeDetails() {
     a.src = "images/Transparent.gif";
     a.style.width = "100%";
     a.style.height = "15px";
-    this.costElement = createElement("div", this.Lj, null, null);
+    this.costElement = createElement("div", this.detailsContainer, null, null);
     this.costElement.style.position = "absolute";
     this.costElement.style.right = "36px";
     this.costElement.style.top = "0";
@@ -360,7 +360,7 @@ export function initializeViewsUpgradeDetails() {
     this.costElement.style.height = "25px";
     this.costElement.style.paddingTop = "5px";
     this.costElement.style.textAlign = "right";
-    this.titleLabel = createElement("div", this.Lj, null, null);
+    this.titleLabel = createElement("div", this.detailsContainer, null, null);
     this.titleLabel.style.position = "absolute";
     this.titleLabel.style.right = "82px";
     this.titleLabel.style.top = "0";
@@ -769,11 +769,11 @@ export function initializeViewsUpgradeDetails() {
     this.upgrade = a;
   };
   MonsterLevelDetails.prototype.showDetails = function () {
-    if (!this.kk) {
+    if (!this.tableContainer) {
       (/** @type {DomDetails} */ (/** @type {unknown} */ (this))).createDomElements();
     }
     if (!this.shown) {
-      showElement(this.kk);
+      showElement(this.tableContainer);
       showElement(this.Dq);
       this.shown = true;
     }
@@ -796,13 +796,13 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   MonsterLevelDetails.prototype.createDomElements = function () {
-    this.kk = createElement("div", this.contentContainer, null, null);
-    this.kk.style.position = "relative";
-    this.kk.style.height = "30px";
+    this.tableContainer = createElement("div", this.contentContainer, null, null);
+    this.tableContainer.style.position = "relative";
+    this.tableContainer.style.height = "30px";
     this.Dq = createElement("div", this.contentContainer, null, null);
     this.Dq.style.position = "relative";
     this.Dq.style.height = "30px";
-    var a = createElement("div", this.kk, null, null);
+    var a = createElement("div", this.tableContainer, null, null);
     a.style.position = "absolute";
     a.style.right = "3px";
     a.style.top = "0";
@@ -814,7 +814,7 @@ export function initializeViewsUpgradeDetails() {
     a.src = "images/Transparent.gif";
     a.style.width = "100%";
     a.style.height = "15px";
-    this.costLabel = createElement("div", this.kk, null, null);
+    this.costLabel = createElement("div", this.tableContainer, null, null);
     this.costLabel.style.position = "absolute";
     this.costLabel.style.right = "36px";
     this.costLabel.style.top = "0";
@@ -822,7 +822,7 @@ export function initializeViewsUpgradeDetails() {
     this.costLabel.style.height = "25px";
     this.costLabel.style.paddingTop = "5px";
     this.costLabel.style.textAlign = "right";
-    this.titleLabel = createElement("div", this.kk, null, null);
+    this.titleLabel = createElement("div", this.tableContainer, null, null);
     this.titleLabel.style.position = "absolute";
     this.titleLabel.style.right = "82px";
     this.titleLabel.style.top = "0";

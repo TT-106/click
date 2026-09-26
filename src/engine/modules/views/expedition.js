@@ -31,14 +31,14 @@ export function AdventurerSummaryView(a) {
   this.By = "adventurerLevelClass" + a;
   this.Dy = "adventurerSpiritPowerSlider" + a;
   this.Cy = "adventurerSpiritPower" + a;
-  this.nn = this.Ak = this.pk = this.ok = this.zk = null;
+  this.nn = this.Ak = this.pk = this.potionButton = this.zk = null;
   this.uv = this.sv = this.rv = this.tv = this.cachedLevel = this.rr = this.pr = this.or = this.qr = this.mv = this.Jk = this.kv = this.av = -1;
   this.qm = [null, null, null, null, null, null];
-  this.lk = [null, null, null, null, null, null];
+  this.potionSlots = [null, null, null, null, null, null];
   this.Dm = [0, 0, 0, 0, 0, 0];
   this.qw = 8;
   this.frameAge = 0;
-  this.vj = -1;
+  this.selectedPotionSlot = -1;
   this.Oq = false;
 }
 export function colorComparedStats(a, b, c, d, f, g) {
@@ -68,7 +68,7 @@ export function EncounterNotificationView() {
   this.elementId = "encounterNotificationPanel";
   this.visible = false;
   this.nl = null;
-  this.bA = this.xz = this.vj = -1;
+  this.bA = this.xz = this.selectedPotionSlot = -1;
   this.Bz = false;
 }
 export function CurrencyView() {
@@ -176,8 +176,8 @@ export function PotionButtonView(a, b) {
   this.TA = b;
   this.yo = this.sm = null;
   this.gu = 192;
-  this.Pp = this.Op = this.Tp = this.yj = this.tableElement = this.progressFillElement = this.km = null;
-  this.ak = false;
+  this.Pp = this.Op = this.Tp = this.dropPotionButton = this.tableElement = this.progressFillElement = this.km = null;
+  this.dropButtonVisible = false;
   this.cachedFillWidth = -1;
   this.Sp = this.Bo = false;
 }
@@ -200,13 +200,13 @@ export function mountPotionButton(a) {
     return false;
   };
   a.progressFillElement = createElement("div", a.km, null, "potionButtonProgressSlider");
-  a.ak = false;
-  a.yj = createElement("div", a.km, null, "dropPotionButton");
-  a.yj.title = "丢弃药剂";
-  a.yj.innerHTML = "X";
-  a.yj.style.display = "none";
+  a.dropButtonVisible = false;
+  a.dropPotionButton = createElement("div", a.km, null, "dropPotionButton");
+  a.dropPotionButton.title = "丢弃药剂";
+  a.dropPotionButton.innerHTML = "X";
+  a.dropPotionButton.style.display = "none";
   a.Bo = false;
-  a.yj.onmouseup = function () {
+  a.dropPotionButton.onmouseup = function () {
     a.bw();
     return false;
   };
@@ -251,11 +251,11 @@ export function initializeViewsExpedition() {
         this.nn = createElement("div", getElement(this.elementId), null, "gameTabBlankAdventurerInfo");
       }
     } else {
-      this.vj = this.rr = this.pr = this.or = this.qr = this.mv = this.Jk = this.kv = this.av = this.cachedLevel = -1;
+      this.selectedPotionSlot = this.rr = this.pr = this.or = this.qr = this.mv = this.Jk = this.kv = this.av = this.cachedLevel = -1;
       var a;
       for (a = 0; a < this.qm.length; a++) {
         this.qm[a] = null;
-        this.lk[a] = null;
+        this.potionSlots[a] = null;
         this.Dm[a] = 0;
       }
       this.Nq = createElement("table", getElement(this.elementId), null, "adventurerInfoTable");
@@ -334,11 +334,11 @@ export function initializeViewsExpedition() {
       c.id = this.Jq;
       c.className = "gameTabAdventurerInfoHpAc";
       c.title = "护甲:降低受到的伤害";
-      this.ok = a.insertCell(4);
-      this.ok.style.width = "30px";
-      this.ok.style.textAlign = "left";
-      this.ok.title = "护甲:降低受到的伤害";
-      this.ok.innerHTML = "护甲";
+      this.potionButton = a.insertCell(4);
+      this.potionButton.style.width = "30px";
+      this.potionButton.style.textAlign = "left";
+      this.potionButton.title = "护甲:降低受到的伤害";
+      this.potionButton.innerHTML = "护甲";
       c = a.insertCell(5);
       c.id = this.Mq;
       c.className = "gameTabAdventurerInfoHpAc";
@@ -407,19 +407,19 @@ export function initializeViewsExpedition() {
           this.frameAge = 0;
           f = true;
         }
-        for (a = 0; a < this.lk.length; a++) {
-          this.lk[a] = null;
+        for (a = 0; a < this.potionSlots.length; a++) {
+          this.potionSlots[a] = null;
         }
         for (a = d = 0; a < c.length; a++) {
           g = c[a].statusEffectTypeId;
-          b = this.lk.indexOf(g);
-          if (0 > b && d < this.lk.length) {
-            this.lk[d] = g;
+          b = this.potionSlots.indexOf(g);
+          if (0 > b && d < this.potionSlots.length) {
+            this.potionSlots[d] = g;
             d++;
           }
         }
         for (a = 0; a < this.qm.length; a++) {
-          if (g = a < this.lk.length ? this.lk[a] : null, c = this.qm[a], g) {
+          if (g = a < this.potionSlots.length ? this.potionSlots[a] : null, c = this.qm[a], g) {
             if (c && c === g) {
               if (f) {
                 g = statusEffectDefinitions[c];
@@ -455,16 +455,16 @@ export function initializeViewsExpedition() {
         }
         a = getMonsters();
         if (0 === a.length) {
-          if (-1 < this.vj) {
+          if (-1 < this.selectedPotionSlot) {
             getElement(this.Lq).style.color = "#FFF";
             getElement(this.Jq).style.color = "#FFF";
             getElement(this.Kq).style.color = "#FFF";
             getElement(this.Mq).style.color = "#FFF";
             this.zk.style.color = "#FFF";
-            this.ok.style.color = "#FFF";
+            this.potionButton.style.color = "#FFF";
             this.pk.style.color = "#FFF";
             this.Ak.style.color = "#FFF";
-            this.uv = this.sv = this.tv = this.rv = this.vj = -1;
+            this.uv = this.sv = this.tv = this.rv = this.selectedPotionSlot = -1;
           }
         } else {
           c = a[0].stats;
@@ -472,9 +472,9 @@ export function initializeViewsExpedition() {
           f = statValue(c.armor);
           g = statValue(c.attackRating);
           c = statValue(c.defenceRating);
-          this.vj = game.state.encounter.Ar;
+          this.selectedPotionSlot = game.state.encounter.Ar;
           colorComparedStats(this.Lq, h, f, this.qr, this.rv, this.zk);
-          colorComparedStats(this.Jq, l, a, this.or, this.tv, this.ok);
+          colorComparedStats(this.Jq, l, a, this.or, this.tv, this.potionButton);
           colorComparedStats(this.Kq, n, c, this.pr, this.uv, this.pk);
           colorComparedStats(this.Mq, p, g, this.rr, this.sv, this.Ak);
           this.rv = f;
@@ -528,11 +528,11 @@ export function initializeViewsExpedition() {
   EncounterNotificationView.prototype.update = function () {
     var a = game.state.encounter.Ar,
       b = getMonsters().length;
-    if (this.vj !== a || this.xz != b) {
-      if (this.vj !== a) {
+    if (this.selectedPotionSlot !== a || this.xz != b) {
+      if (this.selectedPotionSlot !== a) {
         this.bA = b;
       }
-      this.vj = a;
+      this.selectedPotionSlot = a;
       this.xz = b;
       var c;
       c = game.state.encounter.fw;
@@ -662,8 +662,8 @@ export function initializeViewsExpedition() {
   PotionButtonView.prototype = new View();
   PotionButtonView.prototype.reset = function () {
     clearElementById(this.elementId);
-    this.Pp = this.Op = this.Tp = this.yj = this.tableElement = this.progressFillElement = this.km = this.yo = this.sm = this.potion = null;
-    this.ak = this.Sp = false;
+    this.Pp = this.Op = this.Tp = this.dropPotionButton = this.tableElement = this.progressFillElement = this.km = this.yo = this.sm = this.potion = null;
+    this.dropButtonVisible = this.Sp = false;
   };
   PotionButtonView.prototype.update = function () {
     if (!this.tableElement) {
@@ -691,9 +691,9 @@ export function initializeViewsExpedition() {
       }
       this.sm = this.potion;
       if (this.potion.active) {
-        if (!this.ak) {
+        if (!this.dropButtonVisible) {
           showElement(this.progressFillElement);
-          this.ak = true;
+          this.dropButtonVisible = true;
         }
         a = Math.min(1, (game.state.turnNumber - this.potion.activationTurn) / (800 + potionDurationBonus.currentValue));
         a *= this.gu;
@@ -702,14 +702,14 @@ export function initializeViewsExpedition() {
           this.progressFillElement.style.width = a + "px";
         }
       } else {
-        if (this.ak) {
+        if (this.dropButtonVisible) {
           hideElement(this.progressFillElement);
-          this.ak = false;
+          this.dropButtonVisible = false;
         }
       }
       if (!this.Bo) {
         this.Bo = true;
-        this.yj.style.display = "block";
+        this.dropPotionButton.style.display = "block";
       }
     } else {
       if (this.sm) {
@@ -719,11 +719,11 @@ export function initializeViewsExpedition() {
         this.Pp.style.background = "";
         if (this.Bo) {
           this.Bo = false;
-          this.yj.style.display = "none";
+          this.dropPotionButton.style.display = "none";
         }
-        if (this.ak) {
+        if (this.dropButtonVisible) {
           hideElement(this.progressFillElement);
-          this.ak = false;
+          this.dropButtonVisible = false;
         }
         this.yo = "potionButtonDisabled";
         this.tableElement.className = this.yo;

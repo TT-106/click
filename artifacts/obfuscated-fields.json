@@ -1,28 +1,5 @@
 [
   {
-    "name": "$j",
-    "reads": 3,
-    "writes": 6,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:128",
-        "code": "this.$j"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:182",
-        "code": "this.$j"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:187",
-        "code": "this.$j"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\progression\\upgrades.js"
-    ]
-  },
-  {
     "name": "dk",
     "reads": 7,
     "writes": 2,
@@ -67,238 +44,6 @@
     "files": [
       "src\\engine\\modules\\rendering\\scene.js",
       "src\\engine\\modules\\rendering\\sprites.js"
-    ]
-  },
-  {
-    "name": "Ej",
-    "reads": 7,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\character.js:20",
-        "code": "this.Ej"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\character.js:194",
-        "code": "this.Ej"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\character.js:195",
-        "code": "this.Ej"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\character.js"
-    ]
-  },
-  {
-    "name": "Jj",
-    "reads": 5,
-    "writes": 4,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\character.js:27",
-        "code": "this.Jj"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\character.js:62",
-        "code": "this.Jj"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\character.js:65",
-        "code": "this.Jj"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\character.js"
-    ]
-  },
-  {
-    "name": "Ij",
-    "reads": 5,
-    "writes": 4,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\character.js:88",
-        "code": "this.Ij"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\character.js:460",
-        "code": "this.Ij"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\character.js:500",
-        "code": "this.Ij"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\views\\character.js",
-      "src\\engine\\modules\\views\\monsters.js"
-    ]
-  },
-  {
-    "name": "ok",
-    "reads": 7,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\expedition.js:34",
-        "code": "this.ok"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\expedition.js:337",
-        "code": "this.ok"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\expedition.js:338",
-        "code": "this.ok"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\views\\expedition.js",
-      "src\\ui\\load-panels.js"
-    ]
-  },
-  {
-    "name": "lk",
-    "reads": 8,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\expedition.js:37",
-        "code": "this.lk"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\expedition.js:258",
-        "code": "this.lk"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\expedition.js:410",
-        "code": "this.lk"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\expedition.js"
-    ]
-  },
-  {
-    "name": "vj",
-    "reads": 3,
-    "writes": 6,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\expedition.js:41",
-        "code": "this.vj"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\expedition.js:71",
-        "code": "this.vj"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\expedition.js:254",
-        "code": "this.vj"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\expedition.js"
-    ]
-  },
-  {
-    "name": "yj",
-    "reads": 6,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\expedition.js:179",
-        "code": "this.yj"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\expedition.js:204",
-        "code": "a.yj"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\expedition.js:205",
-        "code": "a.yj"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\expedition.js"
-    ]
-  },
-  {
-    "name": "ak",
-    "reads": 3,
-    "writes": 6,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\expedition.js:180",
-        "code": "this.ak"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\expedition.js:203",
-        "code": "a.ak"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\expedition.js:666",
-        "code": "this.ak"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\expedition.js"
-    ]
-  },
-  {
-    "name": "Lj",
-    "reads": 7,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\upgrade-details.js:77",
-        "code": "this.Lj"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\upgrade-details.js:310",
-        "code": "this.Lj"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\upgrade-details.js:314",
-        "code": "this.Lj"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\upgrade-details.js"
-    ]
-  },
-  {
-    "name": "kk",
-    "reads": 7,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\upgrade-details.js:150",
-        "code": "this.kk"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\upgrade-details.js:772",
-        "code": "this.kk"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\upgrade-details.js:776",
-        "code": "this.kk"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\upgrade-details.js"
     ]
   },
   {
@@ -20994,6 +20739,21 @@
     "fileCount": 1,
     "files": [
       "src\\engine\\modules\\views\\castles.js"
+    ]
+  },
+  {
+    "name": "ok",
+    "reads": 1,
+    "writes": 0,
+    "samples": [
+      {
+        "loc": "src\\ui\\load-panels.js:4",
+        "code": "response.ok"
+      }
+    ],
+    "fileCount": 1,
+    "files": [
+      "src\\ui\\load-panels.js"
     ]
   }
 ]

@@ -125,7 +125,7 @@ export function GlobalUpgrade(a) {
   this.definition = a;
   this.canPurchase = this.affordableSoon = false;
   this.$A = -1;
-  this.cachedDescription = this.cachedCanPurchase = this.$j = false;
+  this.cachedDescription = this.cachedCanPurchase = this.cachedAffordableSoon = false;
   recalculateGlobalUpgrade(this);
 }
 export function recalculateGlobalUpgrade(a) {
@@ -179,12 +179,12 @@ export function LearnSpellUpgrade(a) {
 }
 export function PurchaseDungeonUpgrade(a) {
   this.dungeon = a;
-  this.cachedDescription = this.cachedCanPurchase = this.$j = this.canPurchase = this.affordableSoon = false;
+  this.cachedDescription = this.cachedCanPurchase = this.cachedAffordableSoon = this.canPurchase = this.affordableSoon = false;
 }
 export function PurchaseCastleUpgrade(a) {
   this.Ez = a;
   this.dungeon = null;
-  this.cachedDescription = this.cachedCanPurchase = this.$j = this.canPurchase = this.affordableSoon = false;
+  this.cachedDescription = this.cachedCanPurchase = this.cachedAffordableSoon = this.canPurchase = this.affordableSoon = false;
 }
 export function AutoPurchaseDungeonUpgrade() {
   this.cachedCanPurchase = this.canPurchase = false;
@@ -397,11 +397,11 @@ export function initializeProgressionUpgrades() {
       this.affordableSoon = !this.canPurchase && (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).isNearlyAffordable();
     }
     var a = (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).isDisplayable(),
-      b = this.$A !== this.definition.purchasedLevels || this.cachedCanPurchase !== this.canPurchase || this.cachedDescription !== this.affordableSoon || this.$j !== a;
+      b = this.$A !== this.definition.purchasedLevels || this.cachedCanPurchase !== this.canPurchase || this.cachedDescription !== this.affordableSoon || this.cachedAffordableSoon !== a;
     this.$A = this.definition.purchasedLevels;
     this.cachedCanPurchase = this.canPurchase;
     this.cachedDescription = this.affordableSoon;
-    this.$j = a;
+    this.cachedAffordableSoon = a;
     return b;
   };
   GlobalUpgrade.prototype.isNearlyAffordable = function () {
@@ -942,10 +942,10 @@ export function initializeProgressionUpgrades() {
     this.canPurchase = a && game.state.party.gold >= (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).getCost();
     this.affordableSoon = a && !this.canPurchase && 120 > (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).getCost() - game.state.party.gold;
     a = (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).isDisplayable();
-    var b = this.cachedCanPurchase !== this.canPurchase || this.cachedDescription !== this.affordableSoon || this.$j !== a;
+    var b = this.cachedCanPurchase !== this.canPurchase || this.cachedDescription !== this.affordableSoon || this.cachedAffordableSoon !== a;
     this.cachedCanPurchase = this.canPurchase;
     this.cachedDescription = this.affordableSoon;
-    this.$j = a;
+    this.cachedAffordableSoon = a;
     return b;
   };
   PurchaseCastleUpgrade.prototype = new Upgrade();
@@ -994,11 +994,11 @@ export function initializeProgressionUpgrades() {
       this.affordableSoon = this.canPurchase = false;
     }
     var b = (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).isDisplayable(),
-      c = this.dungeon != a || this.cachedCanPurchase != this.canPurchase || this.cachedDescription != this.affordableSoon || this.$j != b;
+      c = this.dungeon != a || this.cachedCanPurchase != this.canPurchase || this.cachedDescription != this.affordableSoon || this.cachedAffordableSoon != b;
     this.dungeon = a;
     this.cachedCanPurchase = this.canPurchase;
     this.cachedDescription = this.affordableSoon;
-    this.$j = b;
+    this.cachedAffordableSoon = b;
     return c;
   };
   AutoPurchaseDungeonUpgrade.prototype = new Upgrade();

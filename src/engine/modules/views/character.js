@@ -17,14 +17,14 @@ export function ItemRowBase() {}
 export function InventoryItemView(a, b) {
   this.rowElement = a;
   this.adventurerIndex = b;
-  this.Ej = this.Cr = this.goldCell = this.valueCell = this.levelCell = this.rarityCell = this.nameLabel = this.descriptionLabel = this.item = null;
+  this.equipButtonDiv = this.Cr = this.goldCell = this.valueCell = this.levelCell = this.rarityCell = this.nameLabel = this.descriptionLabel = this.item = null;
   (/** @type {InventoryItemView & { createRowCells: () => void }} */ (/** @type {unknown} */ (this))).createRowCells();
 }
 export function InventoryTableView(a, b) {
   this.elementId = a;
   this.visible = true;
   this.adventurerIndex = b;
-  this.Jj = null;
+  this.inventoryTable = null;
   this.rowViews = [];
 }
 export function EquipmentItemRowView(a, b) {
@@ -59,10 +59,10 @@ export function InventoryTabView(a, b, c) {
   this.QD = "itemTableAdventurer" + c;
   this.mD = "adventurerEquippedItems" + c;
   this.nD = new EquipmentTableView(this.mD, c);
-  this.Jj = new InventoryTableView(this.QD, c);
+  this.inventoryTable = new InventoryTableView(this.QD, c);
   addChildView(this, this.nD);
   addChildView(this, new EquipAllView(c));
-  addChildView(this, this.Jj);
+  addChildView(this, this.inventoryTable);
 }
 export function CharacterTabsView(a, b) {
   this.elementId = a;
@@ -85,7 +85,7 @@ export function CharacterSummaryView(a, b) {
   this.elementId = a;
   this.visible = true;
   this.adventurerIndex = b;
-  this.dD = this.xy = this.Jy = this.AB = this.hz = this.gz = this.ez = this.stunCountCell = this.Ap = this.pA = this.EB = this.Wz = this.bz = this.DB = this.Ij = this.rA = this.tableElement = null;
+  this.dD = this.xy = this.Jy = this.AB = this.hz = this.gz = this.ez = this.stunCountCell = this.Ap = this.pA = this.EB = this.Wz = this.bz = this.DB = this.spiritCell = this.rA = this.tableElement = null;
   this.zu = this.iv = this.Mu = this.Ov = this.Pu = this.Ou = this.Nu = this.Kk = this.Ik = this.Gk = this.Pv = this.$u = this.Lu = this.Jk = this.Zu = this.cachedLevel = -1;
 }
 export function StatBreakdownView(a, b, c, d) {
@@ -191,13 +191,13 @@ export function initializeViewsCharacter() {
       this.goldCell.className = b ? a.itemGold > b.itemGold ? "itemValueBetter" : a.itemGold < b.itemGold ? "itemValueWorse" : "" : "itemValueBetter";
       this.rarityCell.className = getRarityClass(this.item.getRarity());
       if (!b || this.item.itemValue > b.itemValue) {
-        this.Ej.style.display = "block";
-        this.Ej.onclick = function () {
+        this.equipButtonDiv.style.display = "block";
+        this.equipButtonDiv.onclick = function () {
           c.Qk(a);
           return false;
         };
       } else {
-        this.Ej.style.display = "none";
+        this.equipButtonDiv.style.display = "none";
       }
     } else {
       this.descriptionLabel.style.background = "";
@@ -206,8 +206,8 @@ export function initializeViewsCharacter() {
       this.levelCell.innerHTML = "";
       this.valueCell.innerHTML = "";
       this.goldCell.className = "";
-      this.Ej.style.display = "none";
-      this.Ej.onclick = null;
+      this.equipButtonDiv.style.display = "none";
+      this.equipButtonDiv.onclick = null;
       this.rarityCell.className = "";
     }
   };
@@ -236,19 +236,19 @@ export function initializeViewsCharacter() {
     this.goldCell.style.width = "70px";
     this.Cr = a.insertCell(6);
     this.Cr.style.width = "100px";
-    this.Ej = createElement("div", this.Cr, null, "equipButtonDiv");
-    this.Ej.innerHTML = "装备";
-    this.Ej.style.display = "none";
+    this.equipButtonDiv = createElement("div", this.Cr, null, "equipButtonDiv");
+    this.equipButtonDiv.innerHTML = "装备";
+    this.equipButtonDiv.style.display = "none";
   };
   InventoryTableView.prototype = new View();
   InventoryTableView.prototype.reset = function () {
     this.rowViews.length = 0;
     clearElementById(this.elementId);
-    this.Jj = null;
+    this.inventoryTable = null;
   };
   InventoryTableView.prototype.update = function () {
     if (!(0 > this.adventurerIndex || this.adventurerIndex >= game.state.adventurers.length)) {
-      if (!this.Jj) {
+      if (!this.inventoryTable) {
         (/** @type {InventoryTableView & TableLifecycle} */ (/** @type {unknown} */ (this))).createDomElements();
       }
       var a = game.state.adventurers[this.adventurerIndex].inventory.items;
@@ -265,18 +265,18 @@ export function initializeViewsCharacter() {
   };
   InventoryTableView.prototype.mk = function (a) {
     for (; this.rowViews.length > a;) {
-      this.Jj.deleteRow(-1);
+      this.inventoryTable.deleteRow(-1);
       this.rowViews.splice(this.rowViews.length - 1, 1);
     }
     for (; this.rowViews.length < a;) {
-      this.rowViews.push(new InventoryItemView(this.Jj.insertRow(this.rowViews.length + 1), this.adventurerIndex));
+      this.rowViews.push(new InventoryItemView(this.inventoryTable.insertRow(this.rowViews.length + 1), this.adventurerIndex));
     }
   };
   InventoryTableView.prototype.createDomElements = function () {
     var a = this.elementId;
     clearElementById(a);
-    this.Jj = createElement("table", getElement(a), null, "monsterTable");
-    (/** @type {InventoryTableView & TableLifecycle} */ (/** @type {unknown} */ (this))).createHeaderRow(this.Jj.insertRow(0));
+    this.inventoryTable = createElement("table", getElement(a), null, "monsterTable");
+    (/** @type {InventoryTableView & TableLifecycle} */ (/** @type {unknown} */ (this))).createHeaderRow(this.inventoryTable.insertRow(0));
   };
   InventoryTableView.prototype.createHeaderRow = function (a) {
     var b = appendHeaderCell(a);
@@ -457,7 +457,7 @@ export function initializeViewsCharacter() {
     var a = 0;
     this.tableElement = createElement("table", getElement(this.elementId), null, "characteristicsTable");
     this.rA = appendAttributeRow(this.tableElement, "等级:", a++);
-    this.Ij = appendAttributeRow(this.tableElement, "生命:", a++);
+    this.spiritCell = appendAttributeRow(this.tableElement, "生命:", a++);
     this.DB = appendAttributeRow(this.tableElement, "法力:", a++);
     this.Wz = appendAttributeRow(this.tableElement, "生命回复:", a++);
     this.EB = appendAttributeRow(this.tableElement, "法力回复:", a++);
@@ -497,7 +497,7 @@ export function initializeViewsCharacter() {
     }
     if (this.Zu !== c) {
       this.Zu = c;
-      this.Ij.innerHTML = formatAmount(c);
+      this.spiritCell.innerHTML = formatAmount(c);
     }
     if (this.Jk !== d) {
       this.Jk = d;

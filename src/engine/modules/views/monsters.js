@@ -23,7 +23,7 @@ export function MonsterLevelView() {
 export function MonsterRowView(a, b) {
   this.rowElement = a;
   this.monsterType = b;
-  this.progressTextElement = this.progressFillElement = this.progressCell = this.xo = this.$n = this.Yn = this.vo = this.Ij = this.Mo = this.wq = this.yq = this.Es = null;
+  this.progressTextElement = this.progressFillElement = this.progressCell = this.xo = this.$n = this.Yn = this.vo = this.killCell = this.Mo = this.wq = this.yq = this.Es = null;
   this.Sv = this.cachedLevel = this.cachedFillWidth = this.Uv = -1;
   this.dx = 80;
   this.Cp = null;
@@ -197,10 +197,10 @@ export function initializeViewsMonsters() {
     this.Mo.style.width = "80px";
     this.Mo.style.textAlign = "right";
     this.Mo.style.paddingRight = "5px";
-    this.Ij = a.insertCell(3);
-    this.Ij.style.width = "80px";
-    this.Ij.style.textAlign = "right";
-    this.Ij.style.paddingRight = "5px";
+    this.killCell = a.insertCell(3);
+    this.killCell.style.width = "80px";
+    this.killCell.style.textAlign = "right";
+    this.killCell.style.paddingRight = "5px";
     this.vo = a.insertCell(4);
     this.vo.style.width = "80px";
     this.vo.style.textAlign = "right";
@@ -261,7 +261,7 @@ export function initializeViewsMonsters() {
       d = this.dx * d | 0;
     if (this.cachedLevel != this.monsterType.level || this.Sv != this.monsterType.rank) {
       this.Mo.innerHTML = formatAmount(this.monsterType.No);
-      this.Ij.innerHTML = formatAmount(this.monsterType.$o);
+      this.killCell.innerHTML = formatAmount(this.monsterType.$o);
       this.vo.innerHTML = formatAmount(this.monsterType.Gp);
       this.Yn.innerHTML = formatAmount(this.monsterType.Ep);
       this.$n.innerHTML = formatAmount(this.monsterType.Fp);
