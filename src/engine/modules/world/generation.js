@@ -517,7 +517,7 @@ export function initializeWorldGeneration() {
       this.tileGrid.push(c);
     }
   };
-  DungeonLevel.prototype.hb = function (a, b) {
+  DungeonLevel.prototype.getTileAt = function (a, b) {
     return 0 > a || a >= this.rc || 0 > b || b >= this.sc ? null : this.tileGrid[a][b];
   };
   DungeonLevel.prototype.Ai = function (a) {

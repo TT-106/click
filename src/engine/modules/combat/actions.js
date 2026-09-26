@@ -549,7 +549,7 @@ export function randomPointInRoom(a, b) {
   return c;
 }
 export function applyAreaTileEffect(a, b, c, d, f, g, h) {
-  if (a >= c && a <= d && b >= f && b <= g && (a = game.level.hb(a, b))) {
+  if (a >= c && a <= d && b >= f && b <= g && (a = game.level.getTileAt(a, b))) {
     setTileEffect(a, h);
   }
 }

@@ -500,7 +500,7 @@ export function initializeCharactersParty() {
         return;
       }
       if (a || f || b) {
-        if (game.world.hb(c, d)) {
+        if (game.world.getTileAtPixel(c, d)) {
           calculateWorldCosts(this.Ht, c, d);
           this.hp = false;
         } else {
@@ -517,7 +517,7 @@ export function initializeCharactersParty() {
           a = 8 > Math.sqrt(a * a + b * b);
         }
         if (a) {
-          if (game.world.hb(c, d)) {
+          if (game.world.getTileAtPixel(c, d)) {
             calculateWorldCosts(this.Ht, c, d);
             this.hp = false;
           } else {

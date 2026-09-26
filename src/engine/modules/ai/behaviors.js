@@ -231,9 +231,9 @@ export function initializeAiBehaviors() {
     if (c || f || d) {
       if (a === game.state.leader) {
         if (c) {
-          if (b = c.iq, c = c.jq, d = game.world.hb(b, c)) {
+          if (b = c.iq, c = c.jq, d = game.world.getTileAtPixel(b, c)) {
             b = a.position;
-            if (game.world.hb(game.world.bc(b.dc()), game.world.cc(b.ec())) === d) {
+            if (game.world.getTileAtPixel(game.world.bc(b.dc()), game.world.cc(b.ec())) === d) {
               a.actionType = 10;
             } else {
               setWorldDestination(b, d.bc(), d.cc());
@@ -242,9 +242,9 @@ export function initializeAiBehaviors() {
             return;
           }
         } else if (d) {
-          if (b = d.dm, c = d.em, d = game.world.hb(b, c)) {
+          if (b = d.dm, c = d.em, d = game.world.getTileAtPixel(b, c)) {
             b = a.position;
-            if (game.world.hb(game.world.bc(b.dc()), game.world.cc(b.ec())) === d) {
+            if (game.world.getTileAtPixel(game.world.bc(b.dc()), game.world.cc(b.ec())) === d) {
               a.actionType = 11;
             } else {
               setWorldDestination(b, d.bc(), d.cc());
@@ -252,9 +252,9 @@ export function initializeAiBehaviors() {
             }
             return;
           }
-        } else if (b = f.bc(), c = f.cc(), d = game.world.hb(b, c)) {
+        } else if (b = f.bc(), c = f.cc(), d = game.world.getTileAtPixel(b, c)) {
           b = a.position;
-          if (game.world.hb(game.world.bc(b.dc()), game.world.cc(b.ec())) === d) {
+          if (game.world.getTileAtPixel(game.world.bc(b.dc()), game.world.cc(b.ec())) === d) {
             a.actionType = 9;
           } else {
             setWorldDestination(b, d.bc(), d.cc());

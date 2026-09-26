@@ -201,13 +201,13 @@ export function updateCharacter(a, b) {
             } else {
               if (!c.Hh || !c.qj || c.qj.bc() !== f || c.qj.cc() !== g) {
                 c.aB = c.qj;
-                c.qj = game.world.hb(f, g);
+                c.qj = game.world.getTileAtPixel(f, g);
                 if (!c.qj) {
                   console.log("no current world tile!");
                   break a;
                 }
                 if (1 >= Math.abs(f - c.Rn) && 1 >= Math.abs(g - c.Sn)) {
-                  c.Hh = game.world.hb(c.Rn, c.Sn);
+                  c.Hh = game.world.getTileAtPixel(c.Rn, c.Sn);
                 } else {
                   c.Hh = findCheapestNeighbor(c.qj, c.aB);
                   if (c.Hh && c.Hh.bc() !== c.Rn && c.Hh.cc() !== c.Sn) {
@@ -358,12 +358,12 @@ export function updateCharacter(a, b) {
             if (S) {
               if (p.fg < H.length - 1) {
                 W = H[p.fg + 1];
-                da = game.level.hb(W.x, W.y);
+                da = game.level.getTileAt(W.x, W.y);
               }
             } else {
               if (0 < p.fg) {
                 W = H[p.fg - 1];
-                da = game.level.hb(W.x, W.y);
+                da = game.level.getTileAt(W.x, W.y);
               }
             }
             if (da) {
@@ -629,7 +629,7 @@ export function updateCharacter(a, b) {
                         sb = Math.min(sc, Ka + nc);
                       for (Aa = Mc; Aa <= ec; Aa++) {
                         for (db = Ub; db <= sb; db++) {
-                          if ((Xa = game.level.hb(Aa, db)) && 0.5 > Math.random()) {
+                          if ((Xa = game.level.getTileAt(Aa, db)) && 0.5 > Math.random()) {
                             setTileEffect(Xa, Db);
                           }
                         }

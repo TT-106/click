@@ -266,10 +266,10 @@ export function populateWorldBlock(a, b) {
       }
     }
   }
-  if (c && !c.$b && ((d = (d = game.dungeons.Do[b.Hd + "_" + b.Id]) ? d : null) ? (f = d.bc(), g = d.cc(), (h = game.world.hb(f, g)) ? h.setDecorationSprite(game.terrainSprites.getSprite(d.Fo)) : (console.log("no tile for: col=" + f + " row=" + g), d = null)) : d = null, d && ((f = game.farms.jw[d.dungeonId]) && (f = game.world.hb(f.kw, f.lw)) && f.setDecorationSprite(game.terrainSprites.getSprite(game.farms.Gz)), a.Ut(d)), f = findCastle(b.Hd + "_" + b.Id))) {
+  if (c && !c.$b && ((d = (d = game.dungeons.Do[b.Hd + "_" + b.Id]) ? d : null) ? (f = d.bc(), g = d.cc(), (h = game.world.getTileAtPixel(f, g)) ? h.setDecorationSprite(game.terrainSprites.getSprite(d.Fo)) : (console.log("no tile for: col=" + f + " row=" + g), d = null)) : d = null, d && ((f = game.farms.jw[d.dungeonId]) && (f = game.world.getTileAtPixel(f.kw, f.lw)) && f.setDecorationSprite(game.terrainSprites.getSprite(game.farms.Gz)), a.Ut(d)), f = findCastle(b.Hd + "_" + b.Id))) {
     d = f.dm;
     f = f.em;
-    if (g = game.world.hb(d, f)) {
+    if (g = game.world.getTileAtPixel(d, f)) {
       g.setDecorationSprite(game.terrainSprites.getSprite(game.castles.Ny));
     } else {
       console.log("no tile for: col=" + d + " row=" + f);
@@ -574,7 +574,7 @@ export function initializeWorldTerrain() {
   WorldGenerator.prototype.Ut = function (a) {
     var b;
     if (b = game.shops.zx[a.dungeonId]) {
-      if (a = game.world.hb(b.iq, b.jq)) {
+      if (a = game.world.getTileAtPixel(b.iq, b.jq)) {
         b = game.terrainSprites.getSprite(randomShopSprite(game.shops));
         a.setDecorationSprite(b);
       }
@@ -619,7 +619,7 @@ export function initializeWorldTerrain() {
       this.jo.push(c);
     }
   };
-  WorldMap.prototype.hb = function (a, b) {
+  WorldMap.prototype.getTileAtPixel = function (a, b) {
     var c = (a / WORLD_BLOCK_COLUMNS | 0) - this.blockOriginColumn,
       d = (b / WORLD_BLOCK_ROWS | 0) - this.blockOriginRow;
     if (0 > c || 3 <= c || 0 > d || 3 <= d) {

@@ -82,7 +82,7 @@ export function SceneRenderer(a) {
 export function drawWorldTileRow(a, b, c, d) {
   for (; c < d; c++) {
     var f = a,
-      g = game.world.hb(c, b);
+      g = game.world.getTileAtPixel(c, b);
     if (g) {
       var h;
       h = game.camera;
@@ -101,7 +101,7 @@ export function drawWorldTileRow(a, b, c, d) {
 export function drawDungeonTileRow(a, b, c, d) {
   for (; c < d; c++) {
     var f = a,
-      g = game.level.hb(c, b);
+      g = game.level.getTileAt(c, b);
     if (g && g.Rb !== EMPTY_TILE) {
       var h;
       h = game.camera;
@@ -712,7 +712,7 @@ export function initializeRenderingScene() {
                 Na;
               for (xb = sc; xb <= db; xb++) {
                 for (Na = Aa; Na <= Mc; Na++) {
-                  if ((ec = game.level.hb(xb, Na)) && (hb = ec.Pq) && hb.Cj && !hb.bl()) {
+                  if ((ec = game.level.getTileAt(xb, Na)) && (hb = ec.Pq) && hb.Cj && !hb.bl()) {
                     lb = hb.Zg();
                     rc = hb.oc;
                     Ub = ec.Ob();
