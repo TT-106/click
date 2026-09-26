@@ -311,7 +311,7 @@ export function WorldTile(a, b) {
   this.worldRow = b;
   this.NC = a * game.tileSize;
   this.OC = b * game.tileSize;
-  this.decorationSprite = this.Jn = null;
+  this.decorationSprite = this.backgroundSprite = null;
   this.Kn = "GGGG";
   this.xB = this.KA = this.yB = this.LA = OCEAN_TERRAIN_CODE;
   this.terrainMoveCost = this.pathDistanceToDestination = 0;
@@ -601,7 +601,7 @@ export function initializeWorldTerrain() {
     return this.worldRow;
   };
   WorldTile.prototype.setBackgroundSprite = function (a) {
-    this.Jn = a;
+    this.backgroundSprite = a;
   };
   WorldTile.prototype.setDecorationSprite = function (a) {
     this.decorationSprite = a;

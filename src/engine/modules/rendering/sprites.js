@@ -84,7 +84,7 @@ export function VisualEffect(a, b, c, d, f) {
   this.xi = c;
   this.Pk = false;
   this.projectileEffect = d;
-  this.finished = this.hasSpawned = this.Gs = false;
+  this.finished = this.hasSpawned = this.isReturning = false;
   this.animation = a ? game.animations.Zg(a) : null;
   if (a && !this.animation) {
     console.log("Failed to find animated sprite: " + a);

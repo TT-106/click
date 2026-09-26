@@ -11,7 +11,7 @@ export function DungeonTile(a, b, c, d) {
   this.tileRow = b;
   this.pixelColumn = c;
   this.pixelRow = d;
-  this.bt = this.decorationSprite = this.Jn = null;
+  this.bt = this.decorationSprite = this.backgroundSprite = null;
   this.floorType = EMPTY_TILE;
   this.tileEffect = null;
   this.li = 0;
@@ -550,7 +550,7 @@ export function initializeWorldRooms() {
     return this.pixelRow;
   };
   DungeonTile.prototype.setBackgroundSprite = function (a) {
-    this.Jn = a;
+    this.backgroundSprite = a;
   };
   DungeonTile.prototype.setDecorationSprite = function (a) {
     this.decorationSprite = a;

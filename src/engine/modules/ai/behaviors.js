@@ -52,7 +52,7 @@ export function RangedAttackBehavior(a, b, c) {
 export function MeleeAttackBehavior(a, b, c, d) {
   this.priorityWeight = b;
   this.targetCharacter = null;
-  this.Ng = 0;
+  this.targetDistance = 0;
   this.actionRange = a;
   this.qk = c;
   this.YD = d;
@@ -65,7 +65,7 @@ export function LootGoldBehavior(a) {
 export function OpportunisticAttackBehavior(a) {
   this.priorityWeight = a;
   this.targetCharacter = null;
-  this.Ng = 0;
+  this.targetDistance = 0;
   this.actionRange = RANGED_ATTACK_RANGE;
   this.qk = MELEE_ACTION_TYPE;
 }
@@ -85,7 +85,7 @@ export function GuardRangedBehavior(a, b, c) {
 export function TargetSpellBehavior(a, b) {
   this.priorityWeight = b;
   this.targetCharacter = this.Vi = null;
-  this.Ng = 0;
+  this.targetDistance = 0;
   this.actionRange = a;
 }
 export function HealBehavior(a, b) {
@@ -209,7 +209,7 @@ export function CooldownBehavior(a, b) {
 export function SpecialAttackBehavior(a, b, c, d) {
   this.priorityWeight = c;
   this.targetCharacter = null;
-  this.Ng = 0;
+  this.targetDistance = 0;
   this.actionRange = a;
   this.Uw = b;
   this.qk = d;
@@ -546,7 +546,7 @@ export function initializeAiBehaviors() {
   MeleeAttackBehavior.prototype.execute = function (a) {
     if (this.targetCharacter && !this.targetCharacter.isDead) {
       a.setCombatTarget(this.targetCharacter);
-      if (this.Ng <= this.actionRange) {
+      if (this.targetDistance <= this.actionRange) {
         if (!canAttack(a)) {
           return;
         }
@@ -571,7 +571,7 @@ export function initializeAiBehaviors() {
     if (!this.targetCharacter) {
       return 0;
     }
-    this.Ng = a.position.levelPosition.distanceTo(this.targetCharacter.position.levelPosition);
+    this.targetDistance = a.position.levelPosition.distanceTo(this.targetCharacter.position.levelPosition);
     return this.priorityWeight;
   };
   MeleeAttackBehavior.prototype.getPriority = function () {
@@ -633,13 +633,13 @@ export function initializeAiBehaviors() {
   };
   OpportunisticAttackBehavior.prototype.resetBehaviorState = function () {
     this.targetCharacter = null;
-    this.Ng = 0;
+    this.targetDistance = 0;
   };
   OpportunisticAttackBehavior.prototype.notifySpellLearned = function () {};
   OpportunisticAttackBehavior.prototype.execute = function (a) {
     if (this.targetCharacter && !this.targetCharacter.isDead) {
       a.setCombatTarget(this.targetCharacter);
-      if (this.Ng <= this.actionRange) {
+      if (this.targetDistance <= this.actionRange) {
         if (!canAttack(a)) {
           return;
         }
@@ -668,7 +668,7 @@ export function initializeAiBehaviors() {
       this.actionRange = RANGED_ATTACK_RANGE;
       this.qk = MELEE_ACTION_TYPE;
     }
-    this.Ng = a.position.levelPosition.distanceTo(this.targetCharacter.position.levelPosition);
+    this.targetDistance = a.position.levelPosition.distanceTo(this.targetCharacter.position.levelPosition);
     return this.priorityWeight;
   };
   OpportunisticAttackBehavior.prototype.getPriority = function () {
@@ -772,7 +772,7 @@ export function initializeAiBehaviors() {
   };
   TargetSpellBehavior.prototype.execute = function (a) {
     if (this.Vi && canAttack(a) && isSpellReady(this.Vi)) {
-      if (a.setCombatTarget(this.targetCharacter), this.Ng <= this.actionRange) {
+      if (a.setCombatTarget(this.targetCharacter), this.targetDistance <= this.actionRange) {
         if (canAttack(a)) {
           markAttackTurn(a);
           this.Vi.lastCastTurn = game.state.turnNumber;
@@ -1513,7 +1513,7 @@ export function initializeAiBehaviors() {
   SpecialAttackBehavior.prototype.execute = function (a) {
     if (this.targetCharacter && !this.targetCharacter.isDead) {
       a.setCombatTarget(this.targetCharacter);
-      if (this.Ng <= this.actionRange) {
+      if (this.targetDistance <= this.actionRange) {
         if (!canAttack(a)) {
           return;
         }
@@ -1548,7 +1548,7 @@ export function initializeAiBehaviors() {
     if (c.levelPosition.distanceTo(b) > this.Uw) {
       return 0;
     }
-    this.Ng = a.levelPosition.distanceTo(b);
+    this.targetDistance = a.levelPosition.distanceTo(b);
     return this.priorityWeight;
   };
   SpecialAttackBehavior.prototype.getPriority = function () {

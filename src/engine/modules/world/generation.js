@@ -228,7 +228,7 @@ export function clearDungeonTiles(a) {
   for (c = 0; c < a.widthInTiles; c++) {
     for (d = a.tileGrid[c], b = 0; b < a.heightInTiles; b++) {
       var f = d[b];
-      f.Jn = null;
+      f.backgroundSprite = null;
       f.decorationSprite = null;
       f.bt = null;
       f.floorType = EMPTY_TILE;

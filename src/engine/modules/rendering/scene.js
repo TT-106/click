@@ -89,7 +89,7 @@ export function drawWorldTileRow(a, b, c, d) {
       var l;
       l = game.camera;
       l = game.viewportHalfHeight + (c - l.vk + (b - l.wk)) * game.halfTileSize - l.At;
-      f.drawSprite(g.Jn, h, l);
+      f.drawSprite(g.backgroundSprite, h, l);
       var n = g.decorationSprite;
       if (n) {
         f.spriteRenderer.dk(n, g.getPixelX(), g.getPixelY(), h, l, n.spriteSheet.spriteSize, 0);
@@ -108,7 +108,7 @@ export function drawDungeonTileRow(a, b, c, d) {
       var l;
       l = game.camera;
       l = game.viewportHalfHeight + (c - l.vk + (b - l.wk)) * game.halfTileSize - l.At;
-      f.drawSprite(g.Jn, h, l);
+      f.drawSprite(g.backgroundSprite, h, l);
       var n = g.decorationSprite;
       if (n) {
         f.spriteRenderer.dk(n, g.getPixelX(), g.getPixelY(), h, l, n.spriteSheet.spriteSize, 0);

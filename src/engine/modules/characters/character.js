@@ -869,7 +869,7 @@ export function updateCharacter(a, b) {
                 bd.noDamage = 0 === Gh;
                 var Hh = bd.projectileEffect;
                 if (Hh) {
-                  Hh.Gs = true;
+                  Hh.isReturning = true;
                 }
               }
             } else if (13 === pa) {

@@ -96,29 +96,6 @@
     ]
   },
   {
-    "name": "Ng",
-    "reads": 4,
-    "writes": 8,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:55",
-        "code": "this.Ng"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:68",
-        "code": "this.Ng"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:88",
-        "code": "this.Ng"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js"
-    ]
-  },
-  {
     "name": "rh",
     "reads": 7,
     "writes": 5,
@@ -5790,32 +5767,6 @@
     ]
   },
   {
-    "name": "Jn",
-    "reads": 2,
-    "writes": 5,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:92",
-        "code": "g.Jn"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:111",
-        "code": "g.Jn"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\generation.js:231",
-        "code": "f.Jn"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\world\\generation.js",
-      "src\\engine\\modules\\world\\rooms.js",
-      "src\\engine\\modules\\world\\terrain.js"
-    ]
-  },
-  {
     "name": "wm",
     "reads": 6,
     "writes": 1,
@@ -9268,32 +9219,6 @@
     "files": [
       "src\\engine\\modules\\characters\\character.js",
       "src\\engine\\modules\\combat\\actions.js"
-    ]
-  },
-  {
-    "name": "Gs",
-    "reads": 1,
-    "writes": 4,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:872",
-        "code": "Hh.Gs"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\actions.js:668",
-        "code": "c.Gs"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\actions.js:704",
-        "code": "g.Gs"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\rendering\\sprites.js",
-      "src\\engine\\modules\\simulation\\tick.js"
     ]
   },
   {

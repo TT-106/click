@@ -449,7 +449,7 @@ export function advanceSimulation(a) {
         subtractVector(directionScratchVector, ka.wm);
         var xb = vectorLength(directionScratchVector),
           Na = undefined,
-          Na = /** @type {any} */ (ka.boundCharacter === game.state.scrollCaster ? 11 * Eb : ka.Gs ? 5 * Eb : 7 * Eb);
+          Na = /** @type {any} */ (ka.boundCharacter === game.state.scrollCaster ? 11 * Eb : ka.isReturning ? 5 * Eb : 7 * Eb);
         if (xb <= Na) {
           assignVector(ka.wm, ka.xi);
           ka.Pk = true;

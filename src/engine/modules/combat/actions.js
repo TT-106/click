@@ -665,7 +665,7 @@ export function createReturningAction(a) {
     f.noDamage = false;
     if (c) {
       c = new VisualEffect(c.impactEffectName, d, g, true, 1);
-      c.Gs = true;
+      c.isReturning = true;
       c.boundCharacter = a.attacker;
       f.projectileEffect = c;
     }
@@ -701,7 +701,7 @@ export function createReturningAction(a) {
   f.noDamage = 0 === g;
   if (h) {
     g = new VisualEffect(h.impactEffectName, b, c, true, 1);
-    g.Gs = true;
+    g.isReturning = true;
     g.boundCharacter = a.attacker;
     f.projectileEffect = g;
   }
