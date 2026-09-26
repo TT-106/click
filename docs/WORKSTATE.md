@@ -5,6 +5,7 @@
 
 ## 当前轮次状态（2026-09-26，M13 文档与验收收尾）
 
+- U47 渲染后端/门/地块原点字段（2026-09-26，一笔提交，六门禁全绿，混淆清单 898 → 885）：**勘误+补齐**——U46 曾称渲染后端方法已改名但实际未落盘，本批真正落地：hB→setContext、dk→drawSpriteDepth、gx→drawSpriteDepthRaised、fB→drawAnimation、fx→drawAnimationRaised、hx→sortCommands（Depth/Immediate 双后端）；Hj→getSheetImage（Sprite/SpriteAnimation/AnimationSheet 委托取贴纸表 Image）；门 wj/xj→tileColumn/tileRow（含 pathfinding 放门逻辑与 generation 邻接判断）；WorldBlock Qj/Rj→tileOriginColumn/tileOriginRow（wp/xp/yp 边界由此派生）；tj→mountainDesertDecorationBiome。
 - U46 渲染后端与药水条视图（2026-09-26，一笔提交，六门禁全绿，混淆清单 908 → 898）：渲染后端方法对（DepthSorted/ImmediateRenderer，经 SceneRenderer 调用）——dk→drawSprite、gx→drawSpriteRaised（vr=0.1 抬升）、fB→drawAnimation、fx→drawAnimationRaised、hx→sortCommands、hB→setContext；$j→cachedAffordableSoon（GlobalUpgrade 显示变更缓存）；角色/怪物/远征/详情视图格——Ej→equipButtonDiv、Jj→inventoryTable、Ij→spiritCell（角色法力格）/killCell（怪物行击杀格）、ok→potionButton、lk→potionSlots、vj→selectedPotionSlot、yj→dropPotionButton、ak→dropButtonVisible、Lj→detailsContainer、kk→tableContainer。
 - U45 成就列表/农场击杀池/城堡计数（2026-09-26，一笔提交，六门禁全绿，混淆清单 913 → 908）：Wj→permutation 重新落地（二分回退时曾复原）、ik→obtainedList、jj→achievementList（成就"已获得待领取"列表与全量定义列表）、Sd→pendingFarmKills（地牢注册表待收农场击杀池，CollectFarmUpgrade 收取后清零；**harness harvestFarmKills 的 Sd 引用同步为双端分支**，否则 farm 两场景即失败）、Uj→nextRequiredMonsterLevel（CastleRegistry 计数器：每征服一城 +1，决定新解锁城堡的 requiredMonsterLevel，game-save 持久化）。
 - U44 PathNode 字段簇收尾 + 事故复盘（2026-09-26，两笔提交，六门禁全绿，混淆清单 940 → 913）：
