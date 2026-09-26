@@ -35,6 +35,7 @@
 - M10 `views/upgrade-details.js` 已摘除 `@ts-nocheck`：16 个后挂载 DOM 创建方法和升级按钮生命周期在调用点限定签名，三个动态缓存字段在构造时初始化，角色索引与标题变量分开；四套回归全绿。剩余 6 个忽略文件。
 - M10 `progression/upgrades.js` 已摘除 `@ts-nocheck`：升级排序的布尔状态与升级对象、装备扫描索引与可装备状态分开；后挂载价格、可见性、法术和卷轴方法按调用点限定签名。四套回归全绿，剩余 5 个忽略文件。
 - M10 `ai/behaviors.js` 已摘除 `@ts-nocheck`：行为队列、优先级和地牢探索的后挂载方法限定签名，法力消耗与房间边界变量分开；四套回归及 8h/24h soak 全绿。剩余 4 个忽略文件。
+- M10 `simulation/loop.js` 已摘除 `@ts-nocheck`：`tick()` 初始化分支的复用 `var`（视图/14 个 TabState/15 个 View）全部拆为具名变量，创建与注册顺序不变；存档读取回退逻辑保留，PersistencePort 在 `storage-port.js` JSDoc 补充可选 `onLoadError`。tsc 错误清零，四套回归及 8h/24h soak（完整存档两端一致，0 pageerror）全绿。剩余 3 个忽略文件（character.js / information.js / terrain.js）。
 - 本节优先于下方旧快照中的“当前工作树干净”“M10 未开始”“9 场景”等过时文字；提交与实际状态以 `git status`、`git log` 为准。
 
 ## 1. 项目概况
