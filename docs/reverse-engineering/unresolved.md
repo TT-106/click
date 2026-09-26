@@ -67,6 +67,9 @@
 | Qb | moveTargetPoint | CharacterPosition 移动目的地（约 25 处） |
 | Mb | isOpen | DungeonDoor（存档键 doorAOpen/doorBOpen 字面量未动，读写映射行已随字段同步） |
 
+| Ob / Pb | getLevelPositionX/getLevelPositionY（CharacterPosition）；getPixelX/getPixelY（DungeonTile） | 按接收者坐标域拆分；entities.js:80-81 levelX/levelY 映射随字段同步；character.js:370/377 的 da 为 DungeonTile（getTileAt 返回），修正为 getPixel* |
+| Sb | monsterType | Character（怪物实例的类型引用）与 MonsterRowView（两所有者同名同义） |
+
 - 经验教训（已入 facts#20 扩展）：**重命名跨文件字段时，"读点全集"必须包含工厂函数/工具函数内按多态入参的访问**；Babel 静态 grep 对 `a.Da`（a 的类型随调用方变化）天然失真，应配运行时类型断言。
 
 ## U2 — 外部自动化脚本（c2c.user.js）DOM 契约未实测
