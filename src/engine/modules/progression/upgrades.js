@@ -1223,7 +1223,7 @@ export function initializeProgressionUpgrades() {
     return this.kh.pointCost;
   };
   AdventurePointUpgrade.prototype.getDescription = function () {
-    return this.kh.mc;
+    return this.kh.descriptionText;
   };
   AdventurePointUpgrade.prototype.Cd = function () {
     this.canPurchase = !this.Hc && this.kh.pointCost <= game.state.ae.Dd;

@@ -269,139 +269,139 @@ export function initializeProgressionPoints() {
   pointUpgradeDefinitions = [{
     upgradeId: "moreScrollsInStack",
     title: "更多卷轴",
-    mc: "最大卷轴+10",
+    descriptionText: "最大卷轴+10",
     pointCost: 5E5,
     bonusIndex: 1
   }, {
     upgradeId: "cheaperFarms",
     title: "便宜农场",
-    mc: "10%农场折扣",
+    descriptionText: "10%农场折扣",
     pointCost: 1E6,
     bonusIndex: 5
   }, {
     upgradeId: "extraPotionSlot1",
     title: "额外药剂槽",
-    mc: "多一瓶药剂",
+    descriptionText: "多一瓶药剂",
     pointCost: 25E5,
     bonusIndex: 3
   }, {
     upgradeId: "extraPotionSlot2",
     title: "额外药剂槽",
-    mc: "多一瓶药剂",
+    descriptionText: "多一瓶药剂",
     pointCost: 25E5,
     bonusIndex: 3
   }, {
     upgradeId: "walkingSpeedBoost1",
     title: "行走速度提升",
-    mc: "行走速度提高10%",
+    descriptionText: "行走速度提高10%",
     pointCost: 4E6,
     bonusIndex: 2
   }, {
     upgradeId: "walkingSpeedBoost2",
     title: "行走速度提升",
-    mc: "行走速度提高10%",
+    descriptionText: "行走速度提高10%",
     pointCost: 4E6,
     bonusIndex: 2
   }, {
     upgradeId: "offlineTimeBonus1",
     title: "离线时间加成功",
-    mc: "+2小时",
+    descriptionText: "+2小时",
     pointCost: 5E6,
     bonusIndex: 9
   }, {
     upgradeId: "offlineTimeBonus2",
     title: "离线时间加成功",
-    mc: "+2小时",
+    descriptionText: "+2小时",
     pointCost: 5E6,
     bonusIndex: 9
   }, {
     upgradeId: "cheaperMonsterLevels",
     title: "便宜怪物等级",
-    mc: "10%等级折扣",
+    descriptionText: "10%等级折扣",
     pointCost: 6E6,
     bonusIndex: 6
   }, {
     upgradeId: "cheaperMonsterLevels2",
     title: "便宜怪物等级",
-    mc: "10%等级折扣",
+    descriptionText: "10%等级折扣",
     pointCost: 6E6,
     bonusIndex: 6
   }, {
     upgradeId: "itemSales1",
     title: "道具卖价提高",
-    mc: "商店回收价提高10%",
+    descriptionText: "商店回收价提高10%",
     pointCost: 8E6,
     bonusIndex: 10
   }, {
     upgradeId: "itemSales2",
     title: "道具卖价提高",
-    mc: "商店回收价提高10%",
+    descriptionText: "商店回收价提高10%",
     pointCost: 8E6,
     bonusIndex: 10
   }, {
     upgradeId: "moreFarmKills1",
     title: "每次收获更多杀戮",
-    mc: "收获杀戮+20",
+    descriptionText: "收获杀戮+20",
     pointCost: 7E6,
     bonusIndex: 8
   }, {
     upgradeId: "moreFarmKills2",
     title: "每次收获更多杀戮",
-    mc: "收获杀戮+20",
+    descriptionText: "收获杀戮+20",
     pointCost: 7E6,
     bonusIndex: 8
   }, {
     upgradeId: "potionTurnDuration1",
     title: "药剂持续",
-    mc: "持续时间延长15%",
+    descriptionText: "持续时间延长15%",
     pointCost: 8E6,
     bonusIndex: 7
   }, {
     upgradeId: "potionTurnDuration",
     title: "药剂持续",
-    mc: "持续时间延长15%",
+    descriptionText: "持续时间延长15%",
     pointCost: 8E6,
     bonusIndex: 7
   }, {
     upgradeId: "extraCharacterSlot",
     title: "第5个角色栏",
-    mc: "更多杀戮",
+    descriptionText: "更多杀戮",
     pointCost: 1E7,
     bonusIndex: 4
   }, {
     upgradeId: "coolDownTurn1",
     title: "永久快速攻击",
-    mc: "攻击冷却回合-1",
+    descriptionText: "攻击冷却回合-1",
     pointCost: 11E6,
     bonusIndex: 11
   }, {
     upgradeId: "coolDownTurn2",
     title: "永久快速攻击",
-    mc: "攻击冷却回合-1",
+    descriptionText: "攻击冷却回合-1",
     pointCost: 11E6,
     bonusIndex: 11
   }, {
     upgradeId: "healthRegeneration1",
     title: "快速治愈",
-    mc: "队伍回复+1%",
+    descriptionText: "队伍回复+1%",
     pointCost: 12E6,
     bonusIndex: 12
   }, {
     upgradeId: "healthRegeneration2",
     title: "快速治愈",
-    mc: "队伍回复+1%",
+    descriptionText: "队伍回复+1%",
     pointCost: 12E6,
     bonusIndex: 12
   }, {
     upgradeId: "spiritRegeneration1",
     title: "法力回复",
-    mc: "队伍回复+1%",
+    descriptionText: "队伍回复+1%",
     pointCost: 13E6,
     bonusIndex: 13
   }, {
     upgradeId: "spiritRegeneration2",
     title: "法力回复",
-    mc: "队伍回复+1%",
+    descriptionText: "队伍回复+1%",
     pointCost: 13E6,
     bonusIndex: 13
   }];

@@ -10,6 +10,7 @@
 - 方法身份映射已记入 `docs/reverse-engineering/semantic-map.md`。接下来按第八批队列独立切片推进 `jc`、`kc`、`mc`、`Zb`；再做 StatisticsRecorder、M10、U3/U4。每个代码切片仍需四套全绿。
 - `jc` → `potionSprite` 已独立完成：药水定义 PNG 名、Potion 构造转换、渲染和按钮读取点同步；四套验证全绿。接下来是 `kc` → `spellDefinitions`。
 - `kc` → `spellDefinitions` 已独立完成：职业定义字面量与 game-save.js 载入反查同步；四套验证全绿。接下来是 `mc` → `descriptionText`。
+- `mc` → `descriptionText` 已独立完成：23 个冒险点定义键与 getDescription 读取同步；四套验证全绿。接下来是 `Zb` → `character`。
 - 本节优先于下方旧快照中的“当前工作树干净”“M10 未开始”“9 场景”等过时文字；提交与实际状态以 `git status`、`git log` 为准。
 
 ## 1. 项目概况

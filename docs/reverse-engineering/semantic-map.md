@@ -82,6 +82,8 @@
 
 `kc` → `spellDefinitions`：职业定义保存“法术键 → 定义记录”的对象或 null；存档载入时 `game-save.js` 遍历此对象，按法术名称反查定义。classes/guardians/minions 的字面量键与载入读取同批更新，存档 `spellName` 键不变。
 
+`mc` → `descriptionText`：23 条冒险点升级定义的说明文字；`AdventurePointUpgrade.getDescription()` 读取该字段。定义键与消费点同批更新，无存档映射。
+
 ## 待取证残留（约 1,300 处访问）
 
 高频：`Y/Z/aa/ca/ea/ga/fa/ka/na` 等长尾——工作清单 `artifacts/obfuscated-fields.json`（按频次排序，含样例代码）。取证方法与产出格式见 WORKSTATE.md 第 6 节。
