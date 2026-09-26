@@ -1,9 +1,15 @@
 # WORKSTATE — Clickpocalypse II 语义恢复与现代化工程
 
 > 本文件是长程自治任务的**唯一续跑入口**。上下文压缩或中断后，先读本文件 + `git log --oneline`，再继续。
-> 最后更新：2026-09-26（验收矩阵全闭环 51 PASS / 0 PARTIAL、矩阵 59/59、U3 soak 复跑通过后；下文较早批次的快照保留为历史记录）
+> 最后更新：2026-09-26（U15 行为/门/关卡字段重命名后，混淆清单 1,128；验收矩阵 51 PASS / 0 PARTIAL、矩阵 59/59、soak 通过）
 
 ## 当前轮次状态（2026-09-26，M13 文档与验收收尾）
+
+- U15 后续重命名批次（2026-09-26，四笔独立提交，每组六门禁全绿，混淆清单 1,138 → 1,128）：
+  1. **行为方法簇**（82 处，behaviors.js 单文件 + DungeonBehaviorMethods typedef 同步）：Td→selectTarget、Md→getActionTarget（返回法术或掉落物，存入 un→actionTarget）、Jd→getFinalScore、un→actionTarget、Kp→performOnArrival；执行器对 typedef 注释内的 `Kp:` 也计数（19 而非 18），--expect 按此调整。附带 Dt→targetByRoomId（财宝索引，5 处）。
+  2. **门/楼梯引用**：$d→leadsTo（DungeonDoor/DungeonStairs 指向的房间，18 处，六文件）。
+  3. **关卡/世界字段**（54 处）：gd→hallwayList（Level 走廊表，与 roomList 成对，元素带 hallwayId）、Hd/Id→regionColumn/regionRow（"col_row" 即区域键，与城堡/地牢 id 同源）。
+  混淆清单 1,171 → 1,128（本会话累计）。**工程教训（新）**：String.replace 字符串替换把 `$'` 展开为"匹配后全部尾部"曾复制断言块——必须用 `s.replace(a, () => b)` 函数替换；git checkout 恢复 CRLF 后 `\n` 锚点失配需先归一化；page.evaluate 函数运行于页面上下文，模块级 `game` 闭包不可见（须封装为 harness 方法）。
 
 - U14 三个语义簇重命名（2026-09-26，三笔独立提交，每组六门禁全绿，混淆清单 1,158 → 1,138）：
   1. **成就状态簇**（47 处）：We→obtained、Of→applied（与存档 DTO 键同名镜像，game-save 读写两端同 commit）、Ze→claimQueue（tick 解锁入队/领取出队/4 个领取槽索引）、Vt→pointRewardBonus（increasePointEventReward 输入）。
