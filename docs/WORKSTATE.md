@@ -37,6 +37,7 @@
 - M10 `ai/behaviors.js` 已摘除 `@ts-nocheck`：行为队列、优先级和地牢探索的后挂载方法限定签名，法力消耗与房间边界变量分开；四套回归及 8h/24h soak 全绿。剩余 4 个忽略文件。
 - M10 `simulation/loop.js` 已摘除 `@ts-nocheck`：`tick()` 初始化分支的复用 `var`（视图/14 个 TabState/15 个 View）全部拆为具名变量，创建与注册顺序不变；存档读取回退逻辑保留，PersistencePort 在 `storage-port.js` JSDoc 补充可选 `onLoadError`。tsc 错误清零，四套回归及 8h/24h soak（完整存档两端一致，0 pageerror）全绿。剩余 3 个忽略文件（character.js / information.js / terrain.js）。
 - M10 `world/terrain.js` 已摘除 `@ts-nocheck`：`sampleNoise` 的重复 `var` 声明拆为逐条赋值并把菱形分支的 `n/p` 拆成 `e/o`，`populateWorldBlock` 中被复用为 tile 的 `g/n/h` 拆成 `shoreTile`/`lockedTile`/`decoTile`/`entranceTile`/`castleTile` 等具名变量，相邻区块比较的 `g/h/l` 拆为 `northCastle`/`westCastle`/`nwCastle`；`getTileAtPixel` 的 `c` 拆出 `block`；后挂载的 `random`/`Aw`/`pixelToTileColumn`/`pixelToTileRow` 在调用点作窄签名标注。数值、噪声调用与区块生成顺序未改。tsc 全仓库清零，四套回归及 8h/24h soak 全绿（完整存档两端一致）。剩余 2 个忽略文件。
+- M10 `characters/character.js` 已摘除 `@ts-nocheck`：新增 `TargetedCombatAction`/`SlotEquipment` 两个窄签名 typedef，8 个后挂载 `CombatAction.Cb` 调用点和 `equipment.ef`/`equipment.So` 按其标注；两处同一 `var` 列表内先 `undefined` 后被循环初值立即覆盖的重复声明（`jb`、`Ph`）去掉冗余的首次赋值。战斗数值、随机调用与目标选择顺序未改。tsc 清零，四套回归与 8h/24h soak 全绿。剩余 1 个忽略文件。
 - 本节优先于下方旧快照中的“当前工作树干净”“M10 未开始”“9 场景”等过时文字；提交与实际状态以 `git status`、`git log` 为准。
 
 ## 1. 项目概况

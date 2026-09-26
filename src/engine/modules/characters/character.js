@@ -1,4 +1,3 @@
-// @ts-nocheck -- M10 渐进类型化：JSDoc 覆盖后摘除（见 docs/WORKSTATE.md）
 /** 角色实体、技能、装备和帧更新。
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
@@ -26,6 +25,8 @@ import { ItemDrop, generateItem, isBetterItem, randomizeItemLevel, removeItemDro
 import { tickCharacterTurn } from "../simulation/characters.js";
 import { generateDungeonLevel } from "../world/generation.js";
 import { discoverDungeon } from "../world/dungeons.js";
+/** CombatAction.Cb 由 combat/actions.js 后挂到原型，调用点窄签名。 @typedef {CombatAction & { Cb: (target: unknown) => void }} TargetedCombatAction */
+/** Equipment.ef/So 由 characters/movement.js 后挂到原型，调用点窄签名。 @typedef {Equipment & { ef: (slot: unknown) => unknown, So: () => unknown }} SlotEquipment */
 export function Character(a, b, c, d, f) {
   this.adventurerName = a;
   this.characterType = b;
@@ -485,7 +486,7 @@ export function updateCharacter(a, b) {
                   qa = Ea[Ca];
                   ta = new CombatAction();
                   ta.attacker = a;
-                  ta.Cb(qa);
+                  (/** @type {TargetedCombatAction} */ (ta)).Cb(qa);
                   ta.actionDefinition = X;
                   ta.yd = true;
                   eb = qa.position.levelPosition;
@@ -525,7 +526,7 @@ export function updateCharacter(a, b) {
                   for (Ua = 0; Ua < Ga && ja; Ua++) {
                     Va = new CombatAction();
                     Va.attacker = a;
-                    Va.Cb(ja);
+                    (/** @type {TargetedCombatAction} */ (Va)).Cb(ja);
                     Va.actionDefinition = ha;
                     Va.yd = true;
                     mc = ja.position.levelPosition;
@@ -546,7 +547,7 @@ export function updateCharacter(a, b) {
                     } else {
                       var pb = ja.position.room;
                       if (pb) {
-                        for (var Ha = undefined, jb = undefined, Ab = ja.position.levelPosition, Bb = null, qb = null, wb = undefined, Ib = undefined, Ec = -1, jb = 0; jb < ob.length; jb++) {
+                        for (var Ha = undefined, Ab = ja.position.levelPosition, Bb = null, qb = null, wb = undefined, Ib = undefined, Ec = -1, jb = 0; jb < ob.length; jb++) {
                           Ha = ob[jb];
                           if (!(Ha === ja || Ha === za || Ha === nb || Ha === fb || Ha === cb || Ha.isDead || Ha.position.room !== pb)) {
                             wb = Ab.distanceTo(Ha.position.levelPosition);
@@ -596,7 +597,7 @@ export function updateCharacter(a, b) {
                     if (Fc) {
                       sa = new CombatAction();
                       sa.attacker = a;
-                      sa.Cb(Qa);
+                      (/** @type {TargetedCombatAction} */ (sa)).Cb(Qa);
                       sa.actionDefinition = cc;
                       sa.yd = true;
                       if (qc) {
@@ -651,7 +652,7 @@ export function updateCharacter(a, b) {
                 if (Na) {
                   var Ya = new CombatAction();
                   Ya.attacker = a;
-                  Ya.Cb(xb);
+                  (/** @type {TargetedCombatAction} */ (Ya)).Cb(xb);
                   var tc = xb.position.levelPosition,
                     me = a.position.levelPosition;
                   Ya.actionDefinition = Na;
@@ -747,7 +748,7 @@ export function updateCharacter(a, b) {
                       ad = Gc.ld,
                       Vb = new CombatAction();
                     Vb.attacker = Gc;
-                    Vb.Cb(Gc);
+                    (/** @type {TargetedCombatAction} */ (Vb)).Cb(Gc);
                     Vb.Rd = false;
                     Vb.Jc = 0;
                     Vb.actionDefinition = ad;
@@ -792,7 +793,7 @@ export function updateCharacter(a, b) {
                         fg = Ne.ld,
                         ld = new CombatAction();
                       ld.attacker = Ne;
-                      ld.Cb(Oe);
+                      (/** @type {TargetedCombatAction} */ (ld)).Cb(Oe);
                       ld.Rd = false;
                       ld.Jc = 0;
                       ld.actionDefinition = fg;
@@ -824,7 +825,7 @@ export function updateCharacter(a, b) {
               if (se) {
                 var Md = new CombatAction();
                 Md.attacker = a;
-                Md.Cb(a);
+                (/** @type {TargetedCombatAction} */ (Md)).Cb(a);
                 Md.Rd = false;
                 Md.Jc = 0;
                 Md.actionDefinition = se;
@@ -962,7 +963,7 @@ export function updateCharacter(a, b) {
                     if (Wd = Ud[xe], 4 !== Wd.characterType || 1 !== te && 0 !== te) {
                       yd = new CombatAction();
                       yd.attacker = a;
-                      yd.Cb(Wd);
+                      (/** @type {TargetedCombatAction} */ (yd)).Cb(Wd);
                       yd.actionDefinition = vf;
                       yd.yd = true;
                       lg = Wd.position.levelPosition;
@@ -1191,7 +1192,7 @@ export function updateCharacter(a, b) {
               Sp = yl.inventory,
               zl = Sp.items;
             if (0 !== zl.length) {
-              for (var Ph = undefined, kj = undefined, Tp = 0, Up = undefined, Al = 0, LA = 0.1 + equipmentQualityBonus.currentValue, Ph = zl.length - 1; 0 <= Ph; Ph--) {
+              for (var kj = undefined, Tp = 0, Up = undefined, Al = 0, LA = 0.1 + equipmentQualityBonus.currentValue, Ph = zl.length - 1; 0 <= Ph; Ph--) {
                 kj = zl[Ph];
                 if ((Up = yl.ef(kj.slot)) && !isBetterItem(kj, Up)) {
                   Al += kj.zf * LA;
@@ -1216,10 +1217,10 @@ export function updateCharacter(a, b) {
 }
 export function initializeCharactersCharacter() {
   Character.prototype.ef = function (a) {
-    return this.equipment ? this.equipment.ef(a) : null;
+    return this.equipment ? (/** @type {SlotEquipment} */ (this.equipment)).ef(a) : null;
   };
   Character.prototype.So = function () {
-    return this.equipment ? this.equipment.So() : null;
+    return this.equipment ? (/** @type {SlotEquipment} */ (this.equipment)).So() : null;
   };
   Character.prototype.Qk = function (a) {
     equipItem(this, a);
