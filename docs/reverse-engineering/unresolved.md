@@ -134,7 +134,7 @@ Xf/Qf/Rf/Zf/Cf/Ef → damageMultiplier/armorMultiplier/attackRatingMultiplier/de
 
 ## U3 — ✅ 8h/24h 等价回合 soak 已跑（2026-09-26）
 
-- `npm run test:soak` 在同一固定存档/随机流下分别推进 115,200 与 345,600 回合（250ms/回合），两个检查点的原版/重构版完整存档相等，浏览器无 pageerror。经 Chrome CDP 主动 GC 后采样 `JSHeapUsedSize`；最近一次（HEAD 1811296，26 场景矩阵之后）原版 8h/24h 为 6,273,364 / 6,291,572 bytes，重构版为 7,071,688 / 7,088,852 bytes，增量分别为 18,208 / 17,164 bytes。连续五次运行通过；短期稳定不能证明不存在所有内存泄漏。可复核产出位于 `output/soak/last-run.json`。
+- `npm run test:soak` 在同一固定存档/随机流下分别推进 115,200 与 345,600 回合（250ms/回合），两个检查点的原版/重构版完整存档相等，浏览器无 pageerror。经 Chrome CDP 主动 GC 后采样 `JSHeapUsedSize`；最近一次（HEAD 1474019，30 场景矩阵、引擎代码同 1811296）原版 8h/24h 为 6,269,880 / 6,287,652 bytes，重构版为 7,071,028 / 7,088,200 bytes，增量分别为 17,772 / 17,172 bytes。连续六次运行通过；短期稳定不能证明不存在所有内存泄漏。可复核产出位于 `output/soak/last-run.json`。
 
 ## U4 — 差分覆盖缺口（2026-09-26 更新）
 
