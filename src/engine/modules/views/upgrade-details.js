@@ -474,7 +474,7 @@ export function initializeViewsUpgradeDetails() {
         c = a.nj.getSprite();
       this.kp.style.background = "url('spritesheet/items.png') -" + b.sourceX + "px -" + b.sourceY + "px";
       this.jA.innerHTML = getHighlightedItemName(a);
-      this.Fw.className = getRarityClass(a.uf());
+      this.Fw.className = getRarityClass(a.getRarity());
       this.Fw.innerHTML = " (" + getItemRarityLabel(a) + ")";
       this.Qm.style.background = "url('spritesheet/monsters.png') -" + (c.sourceX + 10) + "px -" + (c.sourceY + 12) + "px";
       this.iA.innerHTML = "等级" + a.itemLevel;
@@ -607,7 +607,7 @@ export function initializeViewsUpgradeDetails() {
         d = c.Uk();
         this.IA[b].style.background = "url('spritesheet/items.png') -" + d.sourceX + "px -" + d.sourceY + "px";
         this.JA[b].innerHTML = getHighlightedItemName(c);
-        this.Rw[b].className = getRarityClass(c.uf());
+        this.Rw[b].className = getRarityClass(c.getRarity());
         this.Rw[b].innerHTML = " (" + getItemRarityLabel(c) + ")";
       }
     }

@@ -20,7 +20,7 @@ export function isDisablingEffect(a) {
 export function CharacterEffects(a) {
   this.no = a;
   this.isStunned = this.isStealthed = this.isConverted = this.Vs = this.Gn = this.isDisabled = false;
-  this.of = [];
+  this.activeEffects = [];
 }
 export function updateCharacterEffects(a, b) {
   var c,
@@ -43,8 +43,8 @@ export function updateCharacterEffects(a, b) {
   s.spellBonusPercent = 0;
   p.spellBonusPercent = 0;
   u.spellBonusPercent = 0;
-  for (c = y.spellBonusPercent = 0; c < a.of.length; c++) {
-    h = f = a.of[c];
+  for (c = y.spellBonusPercent = 0; c < a.activeEffects.length; c++) {
+    h = f = a.activeEffects[c];
     h.bg = d - h.startTurn >= h.durationTurns;
     if (h.bg) {
       g = true;
@@ -98,9 +98,9 @@ export function updateCharacterEffects(a, b) {
     }
   }
   if (g) {
-    for (c = a.of.length - 1; 0 <= c; c--) {
-      if (a.of[c].bl()) {
-        a.of.splice(c, 1);
+    for (c = a.activeEffects.length - 1; 0 <= c; c--) {
+      if (a.activeEffects[c].bl()) {
+        a.activeEffects.splice(c, 1);
       }
     }
   }
@@ -110,12 +110,12 @@ export function updateCharacterEffects(a, b) {
   }
 }
 export function removeStunEffects(a) {
-  if (0 < a.of.length) {
+  if (0 < a.activeEffects.length) {
     var b, c;
-    for (b = a.of.length - 1; 0 <= b; b--) {
-      c = a.of[b];
+    for (b = a.activeEffects.length - 1; 0 <= b; b--) {
+      c = a.activeEffects[b];
       if (13 === c.statusEffectTypeId) {
-        a.of.splice(b, 1);
+        a.activeEffects.splice(b, 1);
       }
     }
   }

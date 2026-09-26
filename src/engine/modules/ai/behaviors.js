@@ -145,7 +145,7 @@ export function LootChestBehavior(a) {
   this.actionRange = 10;
 }
 export function hasPendingLoot() {
-  return 0 < game.goldDrops.drops.length || 0 < game.itemDrops.yf.length || 0 < game.scrollDrops.kf.length;
+  return 0 < game.goldDrops.drops.length || 0 < game.itemDrops.drops.length || 0 < game.scrollDrops.drops.length;
 }
 export function LootPotionBehavior(a) {
   this.pm = null;
@@ -1191,7 +1191,7 @@ export function initializeAiBehaviors() {
       this.scrollDrop.setClaimedBy(null);
       this.scrollDrop.setClaimDistance(0);
     }
-    var b = game.scrollDrops.kf,
+    var b = game.scrollDrops.drops,
       c,
       d,
       f = a.position.levelPosition,
@@ -1254,7 +1254,7 @@ export function initializeAiBehaviors() {
       this.potionDrop.setClaimedBy(null);
       this.potionDrop.setClaimDistance(0);
     }
-    var b = game.potionDrops.Hf,
+    var b = game.potionDrops.drops,
       c,
       d,
       f = a.position.levelPosition,
@@ -1317,7 +1317,7 @@ export function initializeAiBehaviors() {
       this.itemDrop.setClaimedBy(null);
       this.itemDrop.setClaimDistance(0);
     }
-    var b = game.itemDrops.yf,
+    var b = game.itemDrops.drops,
       c,
       d,
       f = a.position.levelPosition,

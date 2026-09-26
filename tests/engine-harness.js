@@ -160,12 +160,12 @@ window.harness = {
   characters() { return original ? window.Game.i.D : game.state.adventurers; },
   // U4 直接观察：逐帧扫描"活怪物"的瞬态效果队列，统计某类状态效果被施加的次数。
   // 队列不入存档，因此这是唯一能在两端各自计数再对账的入口；扫描只读数组，不消耗随机数。
-  // 原版：w.Gf.Og 列表、角色效果容器 Ja.of、效果类型字段 X；重构版对应 effects.of / statusEffectTypeId。
+  // 原版：w.Gf.Og 列表、角色效果容器 Ja.of、效果类型字段 X；重构版对应 effects.activeEffects / statusEffectTypeId（of 已改名 activeEffects）。
   countEffectApplications(turns, typeId) {
     const monsterList = () => (original ? window.Game.Gf.Og : game.monsters.Og);
     const effectList = m => {
       const holder = original ? m.Ja : m.effects;
-      return holder && holder.of;
+      return holder && (original ? holder.of : holder.activeEffects);
     };
     const effectType = original ? (e => e.X) : (e => e.statusEffectTypeId);
     let applications = 0;

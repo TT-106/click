@@ -1,34 +1,5 @@
 [
   {
-    "name": "kf",
-    "reads": 14,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:148",
-        "code": "game.scrollDrops.kf"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1194",
-        "code": "game.scrollDrops.kf"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:1116",
-        "code": "game.scrollDrops.kf"
-      }
-    ],
-    "fileCount": 7,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js",
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\combat\\scrolls.js",
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\simulation\\characters.js",
-      "src\\engine\\modules\\world\\generation.js"
-    ]
-  },
-  {
     "name": "ef",
     "reads": 13,
     "writes": 2,
@@ -174,118 +145,6 @@
     "files": [
       "src\\engine\\modules\\views\\dungeons.js",
       "src\\engine\\modules\\views\\upgrade-details.js"
-    ]
-  },
-  {
-    "name": "yf",
-    "reads": 13,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:148",
-        "code": "game.itemDrops.yf"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1320",
-        "code": "game.itemDrops.yf"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:1106",
-        "code": "ij.yf"
-      }
-    ],
-    "fileCount": 5,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js",
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\loot\\items.js",
-      "src\\engine\\modules\\rendering\\scene.js"
-    ]
-  },
-  {
-    "name": "Hf",
-    "reads": 13,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1257",
-        "code": "game.potionDrops.Hf"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:1124",
-        "code": "game.potionDrops.Hf"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\actions.js:269",
-        "code": "game.potionDrops.Hf"
-      }
-    ],
-    "fileCount": 7,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js",
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\combat\\potions.js",
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\simulation\\characters.js",
-      "src\\engine\\modules\\world\\generation.js"
-    ]
-  },
-  {
-    "name": "uf",
-    "reads": 12,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:1032",
-        "code": "Qe.uf"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:1102",
-        "code": "Op.uf"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\actions.js:235",
-        "code": "f.uf"
-      }
-    ],
-    "fileCount": 8,
-    "files": [
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\loot\\items.js",
-      "src\\engine\\modules\\persistence\\entities.js",
-      "src\\engine\\modules\\progression\\statistics.js",
-      "src\\engine\\modules\\simulation\\characters.js",
-      "src\\engine\\modules\\views\\character.js",
-      "src\\engine\\modules\\views\\upgrade-details.js"
-    ]
-  },
-  {
-    "name": "of",
-    "reads": 13,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\effects.js:23",
-        "code": "this.of"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\effects.js:46",
-        "code": "a.of"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\effects.js:47",
-        "code": "a.of"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\characters\\effects.js",
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\views\\expedition.js"
     ]
   },
   {
@@ -4563,7 +4422,7 @@
     "samples": [
       {
         "loc": "src\\engine\\modules\\characters\\effects.js:102",
-        "code": "a.of[c].bl"
+        "code": "a.activeEffects[c].bl"
       },
       {
         "loc": "src\\engine\\modules\\characters\\effects.js:140",

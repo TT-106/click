@@ -9,7 +9,7 @@ export function serializeItem(a) {
     c = a.slot,
     d = a.characterClass,
     f = a.itemName,
-    g = a.uf(),
+    g = a.getRarity(),
     h = a.itemEffect;
   return {
     itemTypeId: b,

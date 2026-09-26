@@ -122,7 +122,7 @@ export function getItemRarityLabel(a) {
     case 4:
       return "远古";
     default:
-      return "BUG FOUND: " + a.uf();
+      return "BUG FOUND: " + a.getRarity();
   }
 }
 export function getHighlightedItemName(a) {
@@ -260,12 +260,12 @@ export function registerItemType(a, b, c) {
   }
 }
 export function ItemDropRegistry() {
-  this.yf = [];
+  this.drops = [];
 }
 export function clearItemDrops() {
   var a = game.itemDrops;
-  if (0 < a.yf.length) {
-    a.yf.length = 0;
+  if (0 < a.drops.length) {
+    a.drops.length = 0;
   }
 }
 export function spawnItemDrop(a, b, c, d, f) {
@@ -274,17 +274,17 @@ export function spawnItemDrop(a, b, c, d, f) {
   var h = game.state.adventurers[randomInt(game.state.adventurers.length)],
     l = h.slotList,
     l = l[randomInt(l.length)],
-    n = g.uf((100 - globalUpgradeDefinitions.itemQualityChance.currentValue) / 100);
+    n = g.rollRarity((100 - globalUpgradeDefinitions.itemQualityChance.currentValue) / 100);
   f = randomizeItemLevel(f, (100 - globalUpgradeDefinitions.higherLevelItemChance.currentValue) / 100);
   if (g = generateItem(g, l, h, f, n)) {
-    a.yf.push(new ItemDrop(g, b, c, d));
+    a.drops.push(new ItemDrop(g, b, c, d));
   }
 }
 export function removeItemDrop(a) {
   var b = game.itemDrops;
-  a = b.yf.indexOf(a);
+  a = b.drops.indexOf(a);
   if (-1 < a) {
-    b.yf.splice(a, 1);
+    b.drops.splice(a, 1);
   }
 }
 export function initializeLootItems() {
@@ -323,13 +323,13 @@ export function initializeLootItems() {
   Item.prototype.sw = function () {
     return this.itemType.sw();
   };
-  Item.prototype.uf = function () {
+  Item.prototype.getRarity = function () {
     return this.itemRarity;
   };
   Item.prototype.Cw = function () {
     return this.itemType.Cw();
   };
-  ItemGenerator.prototype.uf = function (a) {
+  ItemGenerator.prototype.rollRarity = function (a) {
     var b = 0,
       c = Math.random() * a;
     for (a = itemRarityProbabilities.length - 1; 0 <= a; a--) {
@@ -343,9 +343,9 @@ export function initializeLootItems() {
   };
   ItemDropRegistry.prototype.zl = function () {
     var a;
-    for (a = 0; a < this.yf.length; a++) {
-      this.yf[a].setClaimedBy(null);
-      this.yf[a].setClaimDistance(0);
+    for (a = 0; a < this.drops.length; a++) {
+      this.drops[a].setClaimedBy(null);
+      this.drops[a].setClaimDistance(0);
     }
   };
 }

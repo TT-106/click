@@ -86,13 +86,13 @@ export function PotionDrop(a, b, c, d) {
   this.claimDistance = 0;
 }
 export function PotionDropRegistry() {
-  this.Hf = [];
+  this.drops = [];
 }
 export function removePotionDrop(a) {
   var b = game.potionDrops;
-  a = b.Hf.indexOf(a);
+  a = b.drops.indexOf(a);
   if (-1 < a) {
-    b.Hf.splice(a, 1);
+    b.drops.splice(a, 1);
   }
 }
 export function PotionInventory() {
@@ -260,9 +260,9 @@ export function initializeCombatPotions() {
   };
   PotionDropRegistry.prototype.zl = function () {
     var a;
-    for (a = 0; a < this.Hf.length; a++) {
-      this.Hf[a].setClaimedBy(null);
-      this.Hf[a].setClaimDistance(0);
+    for (a = 0; a < this.drops.length; a++) {
+      this.drops[a].setClaimedBy(null);
+      this.drops[a].setClaimDistance(0);
     }
   };
   PotionInventory.prototype.bw = function (a) {

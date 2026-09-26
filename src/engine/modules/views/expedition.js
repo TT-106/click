@@ -400,7 +400,7 @@ export function initializeViewsExpedition() {
         if (this.rr !== p) {
           setElementHtml(this.Mq, formatAmount(p));
         }
-        c = a.effects.of;
+        c = a.effects.activeEffects;
         f = false;
         this.frameAge++;
         if (this.frameAge >= this.qw) {

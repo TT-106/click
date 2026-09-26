@@ -189,7 +189,7 @@ export function initializeViewsCharacter() {
         b = c.ef(a.slot);
       this.Oh.className = b ? this.item.itemValue > b.itemValue ? "itemValueBetter" : this.item.itemValue < b.itemValue ? "itemValueWorse" : "" : "itemValueBetter";
       this.gf.className = b ? a.itemGold > b.itemGold ? "itemValueBetter" : a.itemGold < b.itemGold ? "itemValueWorse" : "" : "itemValueBetter";
-      this.rarityCell.className = getRarityClass(this.item.uf());
+      this.rarityCell.className = getRarityClass(this.item.getRarity());
       if (!b || this.item.itemValue > b.itemValue) {
         this.Ej.style.display = "block";
         this.Ej.onclick = function () {
@@ -316,7 +316,7 @@ export function initializeViewsCharacter() {
       this.Af.innerHTML = this.item.itemLevel + "";
       this.Oh.innerHTML = formatAmount(this.item.itemValue) + " " + getItemStatLabel(this.item);
       this.gf.innerHTML = formatAmount(this.item.itemGold);
-      this.rarityCell.className = getRarityClass(this.item.uf());
+      this.rarityCell.className = getRarityClass(this.item.getRarity());
     } else {
       this.Ei.style.background = "";
       this.Fi.innerHTML = "";

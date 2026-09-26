@@ -136,7 +136,7 @@ export function initializeCharacterSkills(a, b) {
       var g = a,
         h = b,
         l = game.itemGenerator,
-        n = l.uf((100 - globalUpgradeDefinitions.itemQualityChance.currentValue) / 100);
+        n = l.rollRarity((100 - globalUpgradeDefinitions.itemQualityChance.currentValue) / 100);
       if (d = generateItem(l, d, g, h, n)) {
         a.Qk(d);
       }
@@ -310,12 +310,12 @@ export function initializeSimulationCharacters() {
         const scrolls = game.scrolls.Pl;
         const scroll = scrolls[randomInt(scrolls.length)];
         const scrollDrop = new ScrollDrop(scroll, updateCharacterFrames(c.getLevelPositionX(), g, h), updateCharacterFrames(c.getLevelPositionY(), l, n), f);
-        game.scrollDrops.kf.push(scrollDrop);
+        game.scrollDrops.drops.push(scrollDrop);
       }
       if (100 * Math.random() <= globalUpgradeDefinitions.Ns.currentValue) {
         const potion = new Potion(potionDefinitions[randomInt(potionDefinitions.length)]);
         const potionDrop = new PotionDrop(potion, updateCharacterFrames(c.getLevelPositionX(), g, h), updateCharacterFrames(c.getLevelPositionY(), l, n), f);
-        game.potionDrops.Hf.push(potionDrop);
+        game.potionDrops.drops.push(potionDrop);
       }
       if (randomInt(100) <= globalUpgradeDefinitions.itemDropChance.currentValue || guaranteedItemDropsModifier.currentValue) {
         spawnItemDrop(game.itemDrops, updateCharacterFrames(c.getLevelPositionX(), g, h), updateCharacterFrames(c.getLevelPositionY(), l, n), f, d);

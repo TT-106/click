@@ -188,12 +188,12 @@ export function generateDungeonLevel(a, b, c, d) {
     b.drops.length = 0;
   }
   b = game.scrollDrops;
-  if (0 < b.kf.length) {
-    b.kf.length = 0;
+  if (0 < b.drops.length) {
+    b.drops.length = 0;
   }
   b = game.potionDrops;
-  if (0 < b.Hf.length) {
-    b.Hf.length = 0;
+  if (0 < b.drops.length) {
+    b.drops.length = 0;
   }
   b = game.treasure;
   if (0 < b.targets.length) {

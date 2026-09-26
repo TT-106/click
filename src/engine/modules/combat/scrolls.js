@@ -184,13 +184,13 @@ export function ScrollDrop(a, b, c, d) {
   this.claimDistance = 0;
 }
 export function ScrollDropRegistry() {
-  this.kf = [];
+  this.drops = [];
 }
 export function removeScrollDrop(a) {
   var b = game.scrollDrops;
-  a = b.kf.indexOf(a);
+  a = b.drops.indexOf(a);
   if (-1 < a) {
-    b.kf.splice(a, 1);
+    b.drops.splice(a, 1);
   }
 }
 export function ScrollInventory() {
@@ -254,9 +254,9 @@ export function initializeCombatScrolls() {
   };
   ScrollDropRegistry.prototype.zl = function () {
     var a;
-    for (a = 0; a < this.kf.length; a++) {
-      this.kf[a].setClaimedBy(null);
-      this.kf[a].setClaimDistance(0);
+    for (a = 0; a < this.drops.length; a++) {
+      this.drops[a].setClaimedBy(null);
+      this.drops[a].setClaimDistance(0);
     }
   };
   scrollDefinitions = [{

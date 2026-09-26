@@ -101,7 +101,7 @@ export function initializeProgressionStatistics() {
   };
   RunStatistics.prototype.recordItemFound = function (a) {
     this.itemsFound++;
-    switch (a.uf()) {
+    switch (a.getRarity()) {
       case 1:
         this.uncommonItemsFound++;
         break;

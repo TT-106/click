@@ -1029,7 +1029,7 @@ export function updateCharacter(a, b) {
           a.bj.oh(true);
           removeItemDrop(a.bj);
           var Qe = a.bj.getItem(),
-            Cf = Qe.uf();
+            Cf = Qe.getRarity();
           addInventoryItem(Qe.nj.inventory, Qe);
           game.state.statisticsRecorder.recordItemFound(Qe);
           awardAdventurePoints(12);
@@ -1099,11 +1099,11 @@ export function updateCharacter(a, b) {
                 Pp = wl.slotList,
                 xA = Pp[randomInt(Pp.length)],
                 zA = (100 - Math.min(90, globalUpgradeDefinitions.itemQualityChance.currentValue + CHEST_ITEM_QUALITY_BONUS)) / 100,
-                AA = Op.uf(zA),
+                AA = Op.rollRarity(zA),
                 CA = (100 - Math.min(90, globalUpgradeDefinitions.higherLevelItemChance.currentValue + CHEST_ITEM_LEVEL_BONUS)) / 100,
                 DA = randomizeItemLevel(wl.stats.characterLevel, CA);
               if (Np = generateItem(Op, xA, wl, DA, AA)) {
-                ij.yf.push(new ItemDrop(Np, Df, Oh, wA));
+                ij.drops.push(new ItemDrop(Np, Df, Oh, wA));
               }
             }
           }
@@ -1113,7 +1113,7 @@ export function updateCharacter(a, b) {
               var Qp = game.scrolls.Pl,
                 FA = Qp[randomInt(Qp.length)],
                 GA = new ScrollDrop(FA, tickCharacterTurn(wc, Re, Zd), tickCharacterTurn(zd, Vc, Od), Yd);
-              game.scrollDrops.kf.push(GA);
+              game.scrollDrops.drops.push(GA);
             }
           }
           if (1 === Ad) {
@@ -1121,7 +1121,7 @@ export function updateCharacter(a, b) {
             for (Oc = 0; Oc < HA && game.potions.potionList.length < BASE_POTION_CAPACITY + potionCapacityBonus.currentValue; Oc++) {
               var IA = new Potion(potionDefinitions[randomInt(potionDefinitions.length)]),
                 JA = new PotionDrop(IA, tickCharacterTurn(wc, Re, Zd), tickCharacterTurn(zd, Vc, Od), Yd);
-              game.potionDrops.Hf.push(JA);
+              game.potionDrops.drops.push(JA);
             }
           }
           showFloatingText(game.floatingText, a, "搜索!!!", "#FFF");

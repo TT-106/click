@@ -152,7 +152,7 @@ export function drawCharacterEffects(a, b) {
   var c, d, f, g, h, l, n, p, s, u, y;
   for (c = 0; c < b.length; c++) {
     if (f = b[c], !f.isDead) {
-      for (y = false, p = f.effects.of, d = 0; d < p.length; d++) {
+      for (y = false, p = f.effects.activeEffects, d = 0; d < p.length; d++) {
         if (s = p[d], s.hasAnimation && (s = s.animation)) {
           u = p[d].overlayFrameIndex;
           if (!y) {
@@ -511,7 +511,7 @@ export function initializeRenderingScene() {
             V = game.goldDrops;
           a.If(100 > Q ? V.Sz : 1E3 > Q ? V.xw : V.wD, O, J);
         }
-        var na = game.scrollDrops.kf,
+        var na = game.scrollDrops.drops,
           K,
           H,
           S,
@@ -526,7 +526,7 @@ export function initializeRenderingScene() {
           W = projectWorldY(H, S);
           a.If(getScrollSprite(K.getScroll()), da, W);
         }
-        var ea = game.potionDrops.Hf,
+        var ea = game.potionDrops.drops,
           va,
           yb,
           Fb,
@@ -541,7 +541,7 @@ export function initializeRenderingScene() {
           T = projectWorldY(yb, Fb);
           a.If(va.potion.potionSprite, pa, T);
         }
-        var Ca = game.itemDrops.yf,
+        var Ca = game.itemDrops.drops,
           qa,
           ta,
           eb,

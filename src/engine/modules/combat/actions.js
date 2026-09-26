@@ -146,7 +146,7 @@ export function applySpellEffect(a, b) {
     }
     c = b.targetCharacter.effects;
     if (d) {
-      c.of.push(d);
+      c.activeEffects.push(d);
       if (isDisablingEffect(d)) {
         c.isDisabled = true;
       }
@@ -207,7 +207,7 @@ export function applySpellEffect(a, b) {
       }
     }
     d = b.attacker.position.levelPosition;
-    g = game.itemDrops.yf;
+    g = game.itemDrops.drops;
     for (c = g.length - 1; 0 <= c; c--) {
       var itemDrop = g[c];
       if (!itemDrop.collected) {
@@ -232,7 +232,7 @@ export function applySpellEffect(a, b) {
         game.state.statisticsRecorder.recordItemFound(f);
         addInventoryItem(itemOwner.inventory, f);
         awardAdventurePoints(12);
-        f = f.uf();
+        f = f.getRarity();
         if (0 != f) {
           switch (f) {
             case 1:
@@ -251,7 +251,7 @@ export function applySpellEffect(a, b) {
       }
     }
     d = b.attacker.position.levelPosition;
-    g = game.scrollDrops.kf;
+    g = game.scrollDrops.drops;
     for (c = g.length - 1; 0 <= c; c--) {
       f = g[c];
       if (!f.collected) {
@@ -266,7 +266,7 @@ export function applySpellEffect(a, b) {
       }
     }
     d = b.attacker.position.levelPosition;
-    g = game.potionDrops.Hf;
+    g = game.potionDrops.drops;
     for (c = g.length - 1; 0 <= c; c--) {
       f = g[c];
       if (!f.collected) {
@@ -334,7 +334,7 @@ export function resolveCharacterDefeat(a, b) {
       b.stats.stunCount++;
       var f = b.effects;
       if (stunEffect) {
-        f.of.push(stunEffect);
+        f.activeEffects.push(stunEffect);
         if (isDisablingEffect(stunEffect)) {
           f.isDisabled = true;
         }
@@ -393,13 +393,13 @@ export function resolveCharacterDefeat(a, b) {
         u = game.scrolls.Pl;
         u = u[randomInt(u.length)];
         u = new ScrollDrop(u, tickCharacterTurn(n, c, f), tickCharacterTurn(p, h, l), d);
-        game.scrollDrops.kf.push(u);
+        game.scrollDrops.drops.push(u);
       }
       s = 0 + randomInt(2);
       for (g = 0; g < s && game.potions.potionList.length < BASE_POTION_CAPACITY + potionCapacityBonus.currentValue; g++) {
         u = new Potion(potionDefinitions[randomInt(potionDefinitions.length)]);
         u = new PotionDrop(u, tickCharacterTurn(n, c, f), tickCharacterTurn(p, h, l), d);
-        game.potionDrops.Hf.push(u);
+        game.potionDrops.drops.push(u);
       }
       b.isDead = true;
       d = updateWorldTravel();
