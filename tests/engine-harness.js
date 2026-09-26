@@ -293,19 +293,21 @@ window.harness = {
     }
     return { purchased: Number(purchased), snapshot: snapshot() };
   },
-  lootTreasureDuringExplore({ maxTurns = 15000 } = {}) {
+  lootTreasureDuringExplore({ maxTurns = 15000, kind = 1 } = {}) {
     const registry = original ? window.Game.th : game.treasure;
     const party = original ? window.Game.i.da : game.state.party;
     const adventurers = original ? window.Game.i.D : game.state.adventurers;
-    const before = snapshot().statistics.treasureChestsLooted;
+    const statKey = { 1: 'treasureChestsLooted', 2: 'weaponRacksLooted', 3: 'bookcasesLooted' }[kind];
+    if (!statKey) throw new Error(`不支持的宝物类型: ${kind}`);
+    const before = snapshot().statistics[statKey];
     let selected = 0;
     let spawned = 0;
     for (let i = 0; i < maxTurns; i++) {
       advance();
       spawned = Math.max(spawned, registry.Mn.length);
-      if (snapshot().statistics.treasureChestsLooted > before) break;
-      // 与宝箱按钮相同：只选择已进入角色所在房间、尚未打开的宝箱。
-      const chest = registry.Mn.find(chest => !chest.Kg && adventurers.some(a =>
+      if (i % 10 === 0 && snapshot().statistics[statKey] > before) break;
+      // 与财宝房按钮相同：只选择角色所在房间、尚未搜索的目标物。
+      const chest = registry.Mn.find(chest => !chest.Kg && chest.Mf === kind && adventurers.some(a =>
         (original ? a.p.w : a.position.room) === chest.Nn));
       if (chest && !chest.el) {
         chest.el = true;
@@ -313,7 +315,7 @@ window.harness = {
         selected++;
       }
     }
-    return { selected, spawned, looted: snapshot().statistics.treasureChestsLooted - before, snapshot: snapshot() };
+    return { selected, spawned, looted: snapshot().statistics[statKey] - before, snapshot: snapshot() };
   },
   // U7：药水激活也没有非视图入口（Potion.aw 只由药水按钮调用），激活会在存档里
   // 记 statistics.potionsUsed，因此两端各自断言计数增长，再照常做完整存档差分。

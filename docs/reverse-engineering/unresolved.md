@@ -169,7 +169,7 @@ Xf/Qf/Rf/Zf/Cf/Ef → damageMultiplier/armorMultiplier/attackRatingMultiplier/de
 ## U7 — UI 独占路径的剩余差分缺口：升级长尾、农场收获、拾取类型
 
 - 现象：这批行为只能从视图层入口进入，30 场景矩阵因此完全没跑到它们，实测特征是中局存档里 `statistics.upgradePurchased=0`、`pointManagerState.spentAdventurePoints=0`、`farms=[]`、`achievements.applied=0`、`treasureChestsLooted=0`、冒险者 `characterLevel` 恒为 1、`skillPoints` 恒为 0（`output/parity/*.json` 与 `output/scenarios/*-original.json` 各检查点相同）。
-- 当前增量（42 场景）：`treasure-chest-looted` 在正常探索生成宝箱后，仅对角色所在房间执行与按钮同构的 `chest.el=true` / `party.hq(chest)`，由角色的 actionType=12 分支完成搜索；两端各自断言 `treasureChestsLooted` 增长，完整 DTO 逐检查点相等。禁用设置目标的反向验证在原版侧报“必须选择宝箱”，说明场景不是靠自然推进空过。宝箱之外的武器架、书架、地面掉落逐项拾取仍未专项覆盖。
+- 当前增量（44 场景）：`treasure-chest-looted`、`weapon-rack-looted`、`bookcase-looted` 在正常探索生成目标物后，仅对角色所在房间执行与按钮同构的 `chest.el=true` / `party.hq(chest)`，由角色的 actionType=12 分支完成搜索；两端各自断言 type=1/2/3 对应的三种统计分别增长，完整 DTO 逐检查点相等。禁用目标设置的反向验证在原版侧失败，说明场景不是靠自然推进空过。地面掉落逐项拾取仍未专项覆盖。
 - 入口清单：`views/upgrade-details.js` 的 `onPurchaseClicked → Upgrade.purchase`（升级族 19 个实现）、`views/character.js` 的自动装备、`potions.js` 的 `aw()` 激活、`scrolls.js` 的 `castScroll()`、`combat/actions.js` 与 `characters/character.js` 里的掉落物 `claimedBy`/拾取分支。
 - 为什么浏览器 E2E 不是答案：本次尝试过在 `test-browser.mjs` 里点真按钮，但两点不成立——开局存档无可购项（唯一 `.upgradeButton` 是复用样式的 `#pauseButton`），中局 fixture 载入后 `pointUpgradesContainer_*` 全部为 `disabledUpgradeButton` 且矩形 0×0，Playwright 等不到可见元素。视图层点击既脆弱又不能与原版对照（原版那一侧没有新 UI 壳）。
 - 已落地（2026-09-26，第 31/32 个场景）：`tests/engine-harness.js` 新增 `purchaseUpgrades({turns,limit})` 与 `activatePotions({turns,limit})`，各自按本侧符号驱动同一入口（原版 `Nx`/`HC`/`qc()`/`Qc()`；重构版 `upgradeCollections`/`upgradeRows`/`canPurchaseNow()`/`purchase()`。药水侧容器原版 `Game.Yj`、重构 `game.potions`，数组字段 `re` 与方法 `aw()` 两端同名，同一行代码即可驱动两侧）。
