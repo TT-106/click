@@ -1,10 +1,11 @@
 # WORKSTATE — Clickpocalypse II 语义恢复与现代化工程
 
 > 本文件是长程自治任务的**唯一续跑入口**。上下文压缩或中断后，先读本文件 + `git log --oneline`，再继续。
-> 最后更新：2026-09-26（U39 视图/行为/掉落引用字段落地后，混淆清单 950；验收矩阵 51 PASS / 0 PARTIAL、矩阵 59/59、soak 通过）
+> 最后更新：2026-09-26（U40 怪物列表/卷轴容量/关卡中心字段落地后，混淆清单 946；验收矩阵 51 PASS / 0 PARTIAL、矩阵 59/59、soak 通过）
 
 ## 当前轮次状态（2026-09-26，M13 文档与验收收尾）
 
+- U40 怪物列表/卷轴容量/关卡中心（2026-09-26，一笔提交，六门禁全绿，混淆清单 950 → 946）：Pi→activeMonsters（MonsterRegistry 活怪物列表，getMonsters() 返回值）、Yi→capacityIncrement（卷轴每次升级的容量增量，造价=(upgradeCount+1)*capacityIncrement；spells.js 定义字面量一并计入）、Ki/Li→centerX/centerY（DungeonLevel 像素中心，等距投影 projectDungeonX/Y 的原点偏移；game-save 持久化）。**教训强化**：Pi 改名后 harness 有两处独立扫描器（countEffectApplications 与 trackBossEncounter）各持一份 getMonsters——逐扫描器 grep 而非只改第一处；castle-victory 的首领观察失败即由此暴露。
 - U39 视图/行为/掉落引用字段（2026-09-26，一笔提交，六门禁全绿，混淆清单 959 → 950）：ai→progressTextElement（地牢行进度文字 div，11 处）、Vh→itemImage（远征物品贴图 img）、Jh→selectedPotionIndex（药剂按钮选中缓存）、Vi→learnedSpell（TargetSpellBehavior 缓存的 6 类目标法术，10 处）、Mi→pickupRadius（拾取距离阈值，10 处）、xi/wm→targetPosition/currentPosition（VisualEffect 飞行起止向量，17 处）、bj/hk→targetItemDrop/targetPotionDrop（角色掉落目标引用，runtime/game.js 重置点一并补齐）。**重要教训**：Gh 改名只覆盖了 loop.js 的使用点而漏了 views/navigation.js 的声明处——页面直接无法就绪（harness 超时）； Rename 后必须确认"声明处+全部使用处"同批，本次靠 playwright 捕获 PAGEERROR 定位。单测 sprite-lookup：archive 原版代码不可改（保留 Yh），重构侧用 animationMap，测试双端分支各写各的。
 - U38 A* 寻路字段簇（2026-09-26，一笔提交，六门禁全绿，混淆清单 970 → 959）：pathfinding.js 单文件 96 处整批语义化——Fl→grid（寻路器与节点双引用）、xk→costSoFar、Ko→heuristicScore（开放集按两者之和排序）、rl→parent（reconstructPath 回溯链）、It→visited、Hs→neighbors（房间墙邻接表）、Ui→nodes（PathOpenSet 有序数组）、nx→pooledNodes（节点池）、Ip/Sw→usedNodes/usedTiles（单次搜索簿记，结束后归还池）、Bl/Cl→grid 侧 fromRoom/toRoom + DungeonHallway 侧 roomA/roomB（写只字段，与 doorA/doorB 成对）。
 - U37 Ai/Bi 坐标转换对拆名（2026-09-26，一笔提交，六门禁全绿，混淆清单 972 → 970）：DungeonLevel.Ai/Bi(pixel)→pixelToTileColumn/pixelToTileRow（像素→瓦片列/行转换）；DungeonTile.Ai()/Bi()→getTileColumn()/getTileRow()（A* 寻路节点键与邻居计分的列/行访问器）。消费方按文件天然分离：game.level.X(pixel) 在 character/scene/tick，tile.X() 在 pathfinding——上轮延后的成对甄别就此闭环，全库 .Ai/.Bi 残留 0。
