@@ -108,6 +108,10 @@
 3. **视图缓存簇兄弟位**：Lb→cachedCostValue 与已落地 cachedTitleText/cachedDescriptionText 同模式（upgrade-details.js:317-324 reset 置 -1）。
 4. **红线**： 存档键 castleRegionLocked 两端同 commit（隐藏消费：terrain.js:306 地表分支、party.js:236-250 解锁链、regions.js:162 重锁）；fc 存档映射 entities.js:325/game-save.js:946 两端同步，兄弟 hd 勿混改；jc 一名两形态（定义字面量为 PNG 字符串，Potion 实例为 Sprite 对象，potions.js:9 桥接）只改一侧必须同步桥；bc/ac 是方法建议按所有者拆名；kc 是键→定义记录勿标 Array；analyze-fields.mjs 落地后重跑刷新清单。
 
+## statMultipliers 六键已落地（2026-09-26，原子式）
+
+Xf/Qf/Rf/Zf/Cf/Ef → damageMultiplier/armorMultiplier/attackRatingMultiplier/defenceRatingMultiplier/maxHealthMultiplier/maxSpiritMultiplier。classes/guardians/minions 三文件字面量 + 全部消费点一次全改，独立全回归（check + parity + 12 场景 + E2E）通过。
+
 - 经验教训（已入 facts#20 扩展）：**重命名跨文件字段时，"读点全集"必须包含工厂函数/工具函数内按多态入参的访问**；Babel 静态 grep 对 `a.Da`（a 的类型随调用方变化）天然失真，应配运行时类型断言。
 
 ## U2 — ✅ 已关闭：c2c.user.js DOM 契约实测通过（2026-09-26）
