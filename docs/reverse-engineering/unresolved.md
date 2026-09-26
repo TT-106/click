@@ -86,7 +86,9 @@
 5. **两个关键纠错**：① MELEE_ACTION_TYPE=3 是误名（as 在 actionType===2 触发记为 melee——存档键语义以存档为准，落地 as/ds 改名时勿顺手纠正，常量改名另列任务）；② Wf≠targetDungeon（按旧线索落地会立即崩溃）。
 6. **红线**：计数字段改名须同步 entities.js:219-251（写）/253+（读）30 键；LifetimeStatistics 原型链依赖 RunStatistics（statistics.js:127），改方法名时分发表与两 switch 是隐藏消费全集；views/information.js:163+ 直接读 run vs lifetime 计数器字段。
 
-- 经验教训（已入 facts#20 扩展）：**重命名跨文件字段时，"读点全集"必须包含工厂函数/工具函数内按多态入参的访问**；Babel 静态 grep 对 `a.Da`（a 的类型随调用方变化）天然失真，应配运行时类型断言。
+## StatisticsRecorder 方法簇已落地（2026-09-26，29 方法，独立全回归）
+
+30 个混淆方法全部按第七批证据改为语义名（recordTurn/recordRoomCleared/recordDoorOpened/recordLevelCleared/recordDungeonCleared/recordCastleConquered/recordFarmPurchased/recordGoldFromItems/recordGoldFromMonsters/recordFarmHarvest/setFarmedKills/recordDirectKill/recordScrollKill/recordMinionKill/recordMinionSummoned/recordCharacterStunned/recordMeleeAttack/recordRangedAttack/recordSpellCast/recordPotionUsed/recordScrollUsed/recordPlayedMilliseconds/recordItemsSold/recordItemFound/recordTreasureChestLooted/recordWeaponRackLooted/recordBookcaseLooted/resetRunStatistics/setMinionKills）。方法名不进存档；entities.js 30 个存档键映射未动。16 文件同步。- 经验教训（已入 facts#20 扩展）：**重命名跨文件字段时，"读点全集"必须包含工厂函数/工具函数内按多态入参的访问**；Babel 静态 grep 对 `a.Da`（a 的类型随调用方变化）天然失真，应配运行时类型断言。
 
 ## U2 — 外部自动化脚本（c2c.user.js）DOM 契约未实测
 

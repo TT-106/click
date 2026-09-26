@@ -12060,15 +12060,15 @@
     "writes": 3,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\results.js:115",
+        "loc": "src\\engine\\modules\\views\\results.js:114",
         "code": "this.$l"
       },
       {
-        "loc": "src\\engine\\modules\\views\\results.js:135",
+        "loc": "src\\engine\\modules\\views\\results.js:134",
         "code": "a.$l"
       },
       {
-        "loc": "src\\engine\\modules\\views\\results.js:136",
+        "loc": "src\\engine\\modules\\views\\results.js:135",
         "code": "a.$l"
       }
     ],
@@ -12959,56 +12959,6 @@
     ]
   },
   {
-    "name": "dp",
-    "reads": 4,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:1002",
-        "code": "game.state.statisticsRecorder.dp"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\actions.js:203",
-        "code": "game.state.statisticsRecorder.dp"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:54",
-        "code": "RunStatistics.prototype.dp"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\progression\\statistics.js"
-    ]
-  },
-  {
-    "name": "ep",
-    "reads": 4,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:1033",
-        "code": "game.state.statisticsRecorder.ep"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\actions.js:231",
-        "code": "game.state.statisticsRecorder.ep"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:102",
-        "code": "RunStatistics.prototype.ep"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\progression\\statistics.js"
-    ]
-  },
-  {
     "name": "So",
     "reads": 4,
     "writes": 2,
@@ -13365,56 +13315,6 @@
       "src\\engine\\modules\\rendering\\sprites.js",
       "src\\engine\\modules\\views\\expedition.js",
       "src\\engine\\modules\\views\\upgrade-details.js"
-    ]
-  },
-  {
-    "name": "cp",
-    "reads": 4,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\actions.js:355",
-        "code": "game.state.statisticsRecorder.cp"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:63",
-        "code": "RunStatistics.prototype.cp"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:167",
-        "code": "StatisticsRecorder.prototype.cp"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\progression\\statistics.js",
-      "src\\engine\\modules\\simulation\\characters.js"
-    ]
-  },
-  {
-    "name": "gp",
-    "reads": 4,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\actions.js:357",
-        "code": "game.state.statisticsRecorder.gp"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:66",
-        "code": "RunStatistics.prototype.gp"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:171",
-        "code": "StatisticsRecorder.prototype.gp"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\progression\\statistics.js",
-      "src\\engine\\modules\\simulation\\characters.js"
     ]
   },
   {
@@ -14004,30 +13904,6 @@
     "files": [
       "src\\engine\\modules\\persistence\\game-save.js",
       "src\\engine\\modules\\world\\generation.js"
-    ]
-  },
-  {
-    "name": "fp",
-    "reads": 4,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:96",
-        "code": "RunStatistics.prototype.fp"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:211",
-        "code": "StatisticsRecorder.prototype.fp"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:212",
-        "code": "this.statisticsRecorder.fp"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\progression\\statistics.js",
-      "src\\engine\\modules\\simulation\\loop.js"
     ]
   },
   {
@@ -15578,78 +15454,6 @@
     ]
   },
   {
-    "name": "Ur",
-    "reads": 3,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:312",
-        "code": "game.state.statisticsRecorder.Ur"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:36",
-        "code": "RunStatistics.prototype.Ur"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:135",
-        "code": "StatisticsRecorder.prototype.Ur"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\progression\\statistics.js"
-    ]
-  },
-  {
-    "name": "as",
-    "reads": 3,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:450",
-        "code": "game.state.statisticsRecorder.as"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:81",
-        "code": "RunStatistics.prototype.as"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:187",
-        "code": "StatisticsRecorder.prototype.as"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\progression\\statistics.js"
-    ]
-  },
-  {
-    "name": "ds",
-    "reads": 3,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:464",
-        "code": "game.state.statisticsRecorder.ds"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:84",
-        "code": "RunStatistics.prototype.ds"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:191",
-        "code": "StatisticsRecorder.prototype.ds"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\progression\\statistics.js"
-    ]
-  },
-  {
     "name": "ho",
     "reads": 2,
     "writes": 3,
@@ -15750,102 +15554,6 @@
     ]
   },
   {
-    "name": "gs",
-    "reads": 3,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:991",
-        "code": "game.state.statisticsRecorder.gs"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:87",
-        "code": "RunStatistics.prototype.gs"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:195",
-        "code": "StatisticsRecorder.prototype.gs"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\progression\\statistics.js"
-    ]
-  },
-  {
-    "name": "hs",
-    "reads": 3,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:1129",
-        "code": "game.state.statisticsRecorder.hs"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:118",
-        "code": "RunStatistics.prototype.hs"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:223",
-        "code": "StatisticsRecorder.prototype.hs"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\progression\\statistics.js"
-    ]
-  },
-  {
-    "name": "js",
-    "reads": 3,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:1133",
-        "code": "game.state.statisticsRecorder.js"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:121",
-        "code": "RunStatistics.prototype.js"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:227",
-        "code": "StatisticsRecorder.prototype.js"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\progression\\statistics.js"
-    ]
-  },
-  {
-    "name": "Rr",
-    "reads": 3,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:1137",
-        "code": "game.state.statisticsRecorder.Rr"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:124",
-        "code": "RunStatistics.prototype.Rr"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:231",
-        "code": "StatisticsRecorder.prototype.Rr"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\progression\\statistics.js"
-    ]
-  },
-  {
     "name": "er",
     "reads": 3,
     "writes": 2,
@@ -15868,30 +15576,6 @@
       "src\\engine\\modules\\characters\\character.js",
       "src\\engine\\modules\\world\\dungeons.js",
       "src\\engine\\modules\\world\\regions.js"
-    ]
-  },
-  {
-    "name": "Zr",
-    "reads": 3,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:1203",
-        "code": "game.state.statisticsRecorder.Zr"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:99",
-        "code": "RunStatistics.prototype.Zr"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:215",
-        "code": "StatisticsRecorder.prototype.Zr"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\progression\\statistics.js"
     ]
   },
   {
@@ -15986,30 +15670,6 @@
     "fileCount": 1,
     "files": [
       "src\\engine\\modules\\characters\\party.js"
-    ]
-  },
-  {
-    "name": "Sr",
-    "reads": 3,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\party.js:255",
-        "code": "game.state.statisticsRecorder.Sr"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:45",
-        "code": "RunStatistics.prototype.Sr"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:151",
-        "code": "StatisticsRecorder.prototype.Sr"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\characters\\party.js",
-      "src\\engine\\modules\\progression\\statistics.js"
     ]
   },
   {
@@ -16110,30 +15770,6 @@
     ]
   },
   {
-    "name": "Tr",
-    "reads": 3,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\actions.js:328",
-        "code": "game.state.statisticsRecorder.Tr"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:78",
-        "code": "RunStatistics.prototype.Tr"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:183",
-        "code": "StatisticsRecorder.prototype.Tr"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\progression\\statistics.js"
-    ]
-  },
-  {
     "name": "ms",
     "reads": 4,
     "writes": 1,
@@ -16205,78 +15841,6 @@
     "files": [
       "src\\engine\\modules\\combat\\encounters.js",
       "src\\engine\\modules\\runtime\\game.js"
-    ]
-  },
-  {
-    "name": "es",
-    "reads": 3,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\encounters.js:265",
-        "code": "game.state.statisticsRecorder.es"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:33",
-        "code": "RunStatistics.prototype.es"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:139",
-        "code": "StatisticsRecorder.prototype.es"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\combat\\encounters.js",
-      "src\\engine\\modules\\progression\\statistics.js"
-    ]
-  },
-  {
-    "name": "cs",
-    "reads": 3,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\potions.js:246",
-        "code": "game.state.statisticsRecorder.cs"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:90",
-        "code": "RunStatistics.prototype.cs"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:199",
-        "code": "StatisticsRecorder.prototype.cs"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\combat\\potions.js",
-      "src\\engine\\modules\\progression\\statistics.js"
-    ]
-  },
-  {
-    "name": "fs",
-    "reads": 3,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\scrolls.js:161",
-        "code": "game.state.statisticsRecorder.fs"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:93",
-        "code": "RunStatistics.prototype.fs"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:203",
-        "code": "StatisticsRecorder.prototype.fs"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\combat\\scrolls.js",
-      "src\\engine\\modules\\progression\\statistics.js"
     ]
   },
   {
@@ -16675,33 +16239,6 @@
     ]
   },
   {
-    "name": "dt",
-    "reads": 3,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\persistence\\entities.js:302",
-        "code": "b.dt"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:135",
-        "code": "game.dungeons.dt"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:60",
-        "code": "RunStatistics.prototype.dt"
-      }
-    ],
-    "fileCount": 5,
-    "files": [
-      "src\\engine\\modules\\persistence\\entities.js",
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\progression\\statistics.js",
-      "src\\engine\\modules\\progression\\upgrades.js",
-      "src\\engine\\modules\\world\\dungeons.js"
-    ]
-  },
-  {
     "name": "lt",
     "reads": 2,
     "writes": 3,
@@ -16751,30 +16288,6 @@
     ]
   },
   {
-    "name": "is",
-    "reads": 3,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:30",
-        "code": "RunStatistics.prototype.is"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:131",
-        "code": "StatisticsRecorder.prototype.is"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:132",
-        "code": "this.statisticsRecorder.is"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\progression\\statistics.js",
-      "src\\engine\\modules\\simulation\\tick.js"
-    ]
-  },
-  {
     "name": "$r",
     "reads": 3,
     "writes": 2,
@@ -16796,126 +16309,6 @@
     "files": [
       "src\\engine\\modules\\progression\\statistics.js",
       "src\\engine\\modules\\world\\dungeons.js"
-    ]
-  },
-  {
-    "name": "Vr",
-    "reads": 3,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:42",
-        "code": "RunStatistics.prototype.Vr"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:147",
-        "code": "StatisticsRecorder.prototype.Vr"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:148",
-        "code": "this.statisticsRecorder.Vr"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\progression\\statistics.js",
-      "src\\engine\\modules\\world\\dungeons.js"
-    ]
-  },
-  {
-    "name": "Xr",
-    "reads": 3,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:48",
-        "code": "RunStatistics.prototype.Xr"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:207",
-        "code": "StatisticsRecorder.prototype.Xr"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:208",
-        "code": "this.statisticsRecorder.Xr"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\progression\\statistics.js",
-      "src\\engine\\modules\\simulation\\tick.js"
-    ]
-  },
-  {
-    "name": "Yr",
-    "reads": 3,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:51",
-        "code": "RunStatistics.prototype.Yr"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:155",
-        "code": "StatisticsRecorder.prototype.Yr"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:156",
-        "code": "this.statisticsRecorder.Yr"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\progression\\statistics.js",
-      "src\\engine\\modules\\progression\\upgrades.js"
-    ]
-  },
-  {
-    "name": "Wr",
-    "reads": 3,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:57",
-        "code": "RunStatistics.prototype.Wr"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:163",
-        "code": "StatisticsRecorder.prototype.Wr"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:164",
-        "code": "this.statisticsRecorder.Wr"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\progression\\statistics.js",
-      "src\\engine\\modules\\progression\\upgrades.js"
-    ]
-  },
-  {
-    "name": "bs",
-    "reads": 3,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:75",
-        "code": "RunStatistics.prototype.bs"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:179",
-        "code": "StatisticsRecorder.prototype.bs"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:180",
-        "code": "this.statisticsRecorder.bs"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\progression\\statistics.js",
-      "src\\engine\\modules\\simulation\\characters.js"
     ]
   },
   {
@@ -19357,32 +18750,6 @@
     ]
   },
   {
-    "name": "wx",
-    "reads": 2,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\stats.js:96",
-        "code": "CharacterStats.prototype.wx"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\entities.js:301",
-        "code": "b.wx"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:519",
-        "code": "Sa.wx"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\characters\\stats.js",
-      "src\\engine\\modules\\persistence\\entities.js",
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\progression\\statistics.js"
-    ]
-  },
-  {
     "name": "bx",
     "reads": 2,
     "writes": 2,
@@ -19986,30 +19353,6 @@
     "fileCount": 1,
     "files": [
       "src\\engine\\modules\\progression\\achievements.js"
-    ]
-  },
-  {
-    "name": "jx",
-    "reads": 2,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:27",
-        "code": "RunStatistics.prototype.jx"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:128",
-        "code": "LifetimeStatistics.prototype.jx"
-      },
-      {
-        "loc": "src\\engine\\modules\\runtime\\game.js:378",
-        "code": "game.state.runStatistics.jx"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\progression\\statistics.js",
-      "src\\engine\\modules\\runtime\\game.js"
     ]
   },
   {
@@ -21983,7 +21326,7 @@
         "code": "this.gu"
       },
       {
-        "loc": "src\\engine\\modules\\views\\results.js:116",
+        "loc": "src\\engine\\modules\\views\\results.js:115",
         "code": "this.gu"
       }
     ],
@@ -23793,15 +23136,15 @@
     "writes": 3,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\results.js:118",
+        "loc": "src\\engine\\modules\\views\\results.js:117",
         "code": "this.Mt"
       },
       {
-        "loc": "src\\engine\\modules\\views\\results.js:194",
+        "loc": "src\\engine\\modules\\views\\results.js:193",
         "code": "this.Mt"
       },
       {
-        "loc": "src\\engine\\modules\\views\\results.js:249",
+        "loc": "src\\engine\\modules\\views\\results.js:248",
         "code": "this.Mt"
       }
     ],
@@ -23816,15 +23159,15 @@
     "writes": 3,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\results.js:118",
+        "loc": "src\\engine\\modules\\views\\results.js:117",
         "code": "this.$t"
       },
       {
-        "loc": "src\\engine\\modules\\views\\results.js:194",
+        "loc": "src\\engine\\modules\\views\\results.js:193",
         "code": "this.$t"
       },
       {
-        "loc": "src\\engine\\modules\\views\\results.js:241",
+        "loc": "src\\engine\\modules\\views\\results.js:240",
         "code": "this.$t"
       }
     ],
@@ -23839,15 +23182,15 @@
     "writes": 3,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\results.js:118",
+        "loc": "src\\engine\\modules\\views\\results.js:117",
         "code": "this.Qw"
       },
       {
-        "loc": "src\\engine\\modules\\views\\results.js:194",
+        "loc": "src\\engine\\modules\\views\\results.js:193",
         "code": "this.Qw"
       },
       {
-        "loc": "src\\engine\\modules\\views\\results.js:221",
+        "loc": "src\\engine\\modules\\views\\results.js:220",
         "code": "this.Qw"
       }
     ],
@@ -23862,15 +23205,15 @@
     "writes": 3,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\results.js:119",
+        "loc": "src\\engine\\modules\\views\\results.js:118",
         "code": "this.yu"
       },
       {
-        "loc": "src\\engine\\modules\\views\\results.js:186",
+        "loc": "src\\engine\\modules\\views\\results.js:185",
         "code": "this.yu"
       },
       {
-        "loc": "src\\engine\\modules\\views\\results.js:247",
+        "loc": "src\\engine\\modules\\views\\results.js:246",
         "code": "this.yu"
       }
     ],
@@ -23885,15 +23228,15 @@
     "writes": 3,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\results.js:119",
+        "loc": "src\\engine\\modules\\views\\results.js:118",
         "code": "this.Bu"
       },
       {
-        "loc": "src\\engine\\modules\\views\\results.js:186",
+        "loc": "src\\engine\\modules\\views\\results.js:185",
         "code": "this.Bu"
       },
       {
-        "loc": "src\\engine\\modules\\views\\results.js:239",
+        "loc": "src\\engine\\modules\\views\\results.js:238",
         "code": "this.Bu"
       }
     ],
@@ -23908,15 +23251,15 @@
     "writes": 3,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\results.js:119",
+        "loc": "src\\engine\\modules\\views\\results.js:118",
         "code": "this.vv"
       },
       {
-        "loc": "src\\engine\\modules\\views\\results.js:186",
+        "loc": "src\\engine\\modules\\views\\results.js:185",
         "code": "this.vv"
       },
       {
-        "loc": "src\\engine\\modules\\views\\results.js:219",
+        "loc": "src\\engine\\modules\\views\\results.js:218",
         "code": "this.vv"
       }
     ],
@@ -26043,7 +25386,7 @@
         "code": "c.a"
       },
       {
-        "loc": "src\\engine\\modules\\views\\results.js:105",
+        "loc": "src\\engine\\modules\\views\\results.js:104",
         "code": "b.a"
       }
     ],
@@ -28593,15 +27936,15 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\results.js:119",
+        "loc": "src\\engine\\modules\\views\\results.js:118",
         "code": "this.wy"
       },
       {
-        "loc": "src\\engine\\modules\\views\\results.js:185",
+        "loc": "src\\engine\\modules\\views\\results.js:184",
         "code": "this.wy"
       },
       {
-        "loc": "src\\engine\\modules\\views\\results.js:218",
+        "loc": "src\\engine\\modules\\views\\results.js:217",
         "code": "this.wy"
       }
     ],
@@ -28616,15 +27959,15 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\results.js:119",
+        "loc": "src\\engine\\modules\\views\\results.js:118",
         "code": "this.JB"
       },
       {
-        "loc": "src\\engine\\modules\\views\\results.js:184",
+        "loc": "src\\engine\\modules\\views\\results.js:183",
         "code": "this.JB"
       },
       {
-        "loc": "src\\engine\\modules\\views\\results.js:217",
+        "loc": "src\\engine\\modules\\views\\results.js:216",
         "code": "this.JB"
       }
     ],
@@ -28639,15 +27982,15 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\results.js:119",
+        "loc": "src\\engine\\modules\\views\\results.js:118",
         "code": "this.Iy"
       },
       {
-        "loc": "src\\engine\\modules\\views\\results.js:183",
+        "loc": "src\\engine\\modules\\views\\results.js:182",
         "code": "this.Iy"
       },
       {
-        "loc": "src\\engine\\modules\\views\\results.js:216",
+        "loc": "src\\engine\\modules\\views\\results.js:215",
         "code": "this.Iy"
       }
     ],
@@ -28662,15 +28005,15 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\results.js:119",
+        "loc": "src\\engine\\modules\\views\\results.js:118",
         "code": "this.Fz"
       },
       {
-        "loc": "src\\engine\\modules\\views\\results.js:182",
+        "loc": "src\\engine\\modules\\views\\results.js:181",
         "code": "this.Fz"
       },
       {
-        "loc": "src\\engine\\modules\\views\\results.js:215",
+        "loc": "src\\engine\\modules\\views\\results.js:214",
         "code": "this.Fz"
       }
     ],
@@ -28685,15 +28028,15 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\results.js:119",
+        "loc": "src\\engine\\modules\\views\\results.js:118",
         "code": "this.sA"
       },
       {
-        "loc": "src\\engine\\modules\\views\\results.js:181",
+        "loc": "src\\engine\\modules\\views\\results.js:180",
         "code": "this.sA"
       },
       {
-        "loc": "src\\engine\\modules\\views\\results.js:214",
+        "loc": "src\\engine\\modules\\views\\results.js:213",
         "code": "this.sA"
       }
     ],
@@ -28708,15 +28051,15 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\results.js:119",
+        "loc": "src\\engine\\modules\\views\\results.js:118",
         "code": "this.nA"
       },
       {
-        "loc": "src\\engine\\modules\\views\\results.js:180",
+        "loc": "src\\engine\\modules\\views\\results.js:179",
         "code": "this.nA"
       },
       {
-        "loc": "src\\engine\\modules\\views\\results.js:213",
+        "loc": "src\\engine\\modules\\views\\results.js:212",
         "code": "this.nA"
       }
     ],
@@ -28731,15 +28074,15 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\results.js:119",
+        "loc": "src\\engine\\modules\\views\\results.js:118",
         "code": "this.mA"
       },
       {
-        "loc": "src\\engine\\modules\\views\\results.js:179",
+        "loc": "src\\engine\\modules\\views\\results.js:178",
         "code": "this.mA"
       },
       {
-        "loc": "src\\engine\\modules\\views\\results.js:212",
+        "loc": "src\\engine\\modules\\views\\results.js:211",
         "code": "this.mA"
       }
     ],
@@ -28754,15 +28097,15 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\results.js:119",
+        "loc": "src\\engine\\modules\\views\\results.js:118",
         "code": "this.HA"
       },
       {
-        "loc": "src\\engine\\modules\\views\\results.js:178",
+        "loc": "src\\engine\\modules\\views\\results.js:177",
         "code": "this.HA"
       },
       {
-        "loc": "src\\engine\\modules\\views\\results.js:211",
+        "loc": "src\\engine\\modules\\views\\results.js:210",
         "code": "this.HA"
       }
     ],
