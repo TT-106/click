@@ -18,7 +18,7 @@
 
 ## 2. 行为兼容（原版 vs 重构差分）— VERIFIED（覆盖范围内）
 
-`scripts/test-scenarios.mjs` 的 **35 个场景**全部通过（同一变异存档 + 固定 LCG 随机流 + 固定时钟，双端逐字段比较完整存档 DTO；矩阵可用 `SCENARIO_FILTER=a,b` 单跑）：
+`scripts/test-scenarios.mjs` 的 **36 个场景**全部通过（同一变异存档 + 固定 LCG 随机流 + 固定时钟，双端逐字段比较完整存档 DTO；矩阵可用 `SCENARIO_FILTER=a,b` 单跑）：
 
 | 组 | 场景 | 除全状态相等外的专项断言 |
 |---|---|---|
@@ -30,6 +30,7 @@
 | 战斗与终局 | castle-victory | 两端各自断言 `gameWon`/`victoryCount=1`/`castlesConquered=1`/全城堡征服 |
 | 视图独占路径 | **upgrades-purchased** | 独立运行时两端各完成 28+24 次购买；逐检查点分别断言 `settings.upgrades`、角色等级、`upgrades1..4` 解锁位超过 fixture 基线，并比较完整存档 |
 | 怪物等级解锁 | **monster-level-unlocked** | 提供击杀余额与经验值，先把队伍升至解锁门槛，再购买怪物等级；两端各自断言 `maxUnlockedLevel` 与 `monsterLevelStates` 长度从 1 增至 2，逐检查点完整存档相等 |
+| 冒险点消费 | **adventure-points-spent** | 按事件次数构造足额点数，刷新可购状态后两端各自购买一项点数升级；断言 `spentAdventurePoints` 增长与 `upgradePurchased` 置位，逐检查点完整存档相等 |
 | 经济与成长 | gold-windfall、veteran-run、prestige-restart、full-reset | 重置后状态相等 + 空转相等 |
 | 渲染与落盘 | **rendered-scene、autosave-payload** | 1,300 真实帧后主画布逐像素 FNV-1a 指纹两端相同；清空 localStorage 后两端都必须写入且解码内容一致（守住原版 3E5 自动保存间隔） |
 
@@ -61,7 +62,7 @@
 
 已转入差分覆盖（2026-09-26）：城堡攻防战全程与胜利瞬间（`castle-victory`，两端各自断言 gameWon/victoryCount/castlesConquered 后比较完整存档）、12h 离线截断（`offline-13h-capped`）、火球与两条控制/增益法术分支、召唤族两条分支（cat=9/11，两端各自断言 `minionsSummoned` 增长）、睡眠（cat=2、type=0），以及 Blast Stun 的直接执行计数——harness 逐帧扫描两端活怪物效果队列，`fireball-blast-stun` 实测原版与重构版各 31 次 type=14 施加，数值相等。同批次再补 10 条：cat=1 治疗、cat=4 火环、cat=5 连锁闪电、cat=6 闪电雨、cat=13 绿色死亡、cat=17 召唤鸡群（含 `Math.random` 概率模板分支），需要注入投射武器的 cat=12 快速打击（唯一 `td: false`）、cat=14 立即搜索、cat=15 发现财宝箱——后三条在注入前会命中原版自带的空武器解引用（`Aw`/`getProjectileAnimation` 对 `equipment.Ey` 无空值保护，两端同点同错，栈逐帧同构），属忠实保留而非重构差异，因此未改动引擎，只在存档里补回真实武器类型（盗贼槽 61、忍者槽 62）；以及 cat=16 复活（`withResurrectionTrial()` 激活 `randomBossEncounter` 药水并把三名队友压到 1 级 1 血，两端实测 `characterStunnedCount` 同为 22，真正打出"已有昏迷队友"的前置）。
 
-后续扩展路径：在 `tests/scenarios/save-mutations.mjs` 增加对应变异器，即可纳入 `test:scenarios` 矩阵（当前 35 个场景）。
+后续扩展路径：在 `tests/scenarios/save-mutations.mjs` 增加对应变异器，即可纳入 `test:scenarios` 矩阵（当前 36 个场景）。
 
 ## 7. 性能兼容 — PARTIALLY VERIFIED
 

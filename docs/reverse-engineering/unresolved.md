@@ -175,7 +175,7 @@ Xf/Qf/Rf/Zf/Cf/Ef → damageMultiplier/armorMultiplier/attackRatingMultiplier/de
   - `upgrades-purchased`：百万金币 + 每人 5 技能点，两端各完成 8 次购买，推进 600 回合后再各买 2 次（前一批解锁了后续项），每个检查点完整存档相等；存档侧确证命中的升级族是 `settings.upgrades`（全局升级表）。
   - `potions-activated`：三瓶未激活药水入库，驱动 `Potion.aw()` 之后 `statistics.potionsUsed` 两端各自增长，随后完整存档相等——旧场景 `potions-inactive-auto` 里 `active` 恒为 false 的空白由此补上。
 - 仍开放（如实陈述）：
-  - 升级族覆盖仍不完整：`upgrades-purchased` 现已遍历每名角色四棵技能树；独立运行两端各完成 28+24 次购买，逐检查点分别断言全局设置升级、角色等级、`upgrades1..4` 解锁位均超过 fixture 基线，完整存档相等。`monster-level-unlocked` 再用击杀余额和角色等级前置驱动 `UnlockMonsterLevelUpgrade`，两端 `maxUnlockedLevel` 与 `monsterLevelStates` 长度从 1 增至 2 且完整存档相等。`LearnSpellUpgrade`、`AdventurePointUpgrade`（`spentAdventurePoints` 仍为 0）、农场/地牢购买、`EquipBestItemUpgrade`、`ClaimAchievementUpgrade` 仍未被专项驱动。它们需先补对应前置的变异器（成就达成、地牢解锁、对应点类型的冒险点、可替换装备）。
+  - 升级族覆盖仍不完整：`upgrades-purchased` 已遍历角色四棵技能树并断言全局设置、角色等级、技能解锁；`monster-level-unlocked` 用击杀余额和等级前置驱动解锁，两端怪物等级表从 1 增至 2。`adventure-points-spent` 构造真实事件计数、经载入重算余额，并按原版面板流程调用 `Cd()` 刷新可购状态后两端各购买一项点数升级；`spentAdventurePoints` 与 `upgradePurchased` 均变化且完整存档相等。`LearnSpellUpgrade`、其余点数升级、农场/地牢购买、`EquipBestItemUpgrade`、`ClaimAchievementUpgrade` 仍未被专项驱动。它们需先补对应前置的变异器（成就达成、地牢解锁、可替换装备）。
   - `castScroll()` 未驱动：它要求当前房间有可打目标（`getOpponents` 非空），需要在遭遇进行中精确触发。
   - DOM 路线已实测不可行并排除：7 个升级 `canPurchase` 为真时，渲染出的 558 个按钮仍全部是 `disabledUpgradeButton`（哪一行拿到 `.upgradeButton` 类取决于排序后的可见槽位），且原版一侧没有新 UI 壳可点。
 

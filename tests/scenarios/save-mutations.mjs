@@ -56,6 +56,18 @@ export function withKills(save, kills) {
   return out;
 }
 
+/** 调整已发生的冒险点事件；载入时会由 count × 事件奖励重新计算余额。 */
+export function withPointPools(save, overrides) {
+  const out = clone(save);
+  for (const [typeId, { points, count }] of Object.entries(overrides)) {
+    const row = out.pointManagerState.pointsByType.find(p => p.pointEventType === Number(typeId));
+    if (!row) throw new Error(`冒险点事件类型不存在: ${typeId}`);
+    row.points = points;
+    row.count = count;
+  }
+  return out;
+}
+
 export function withTurns(save, turnNumber) {
   const out = clone(save);
   out.turnNumber = turnNumber;

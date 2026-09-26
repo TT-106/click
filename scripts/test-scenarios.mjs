@@ -6,7 +6,7 @@ import { chromium } from 'playwright';
 import saveCodec from '../src/engine/save-codec.js';
 import {
   decodeFixture, encodeSave, summarize,
-  withPotions, withScrolls, withGold, withKills, withTurns, withElapsed, withOfflineProcessing,
+  withPotions, withScrolls, withGold, withKills, withPointPools, withTurns, withElapsed, withOfflineProcessing,
   withVictories, withClassSpell, withCastleVictory, withReclassedSpell, withEquippedItem, withResurrectionTrial, withSkillPoints, withExperience,
   HARNESS_FIXED_NOW,
 } from '../tests/scenarios/save-mutations.mjs';
@@ -43,6 +43,10 @@ const monsterLevelWasUnlocked = (s) => ({
   monsterUnlocked: (s.monsterTypes?.maxUnlockedLevel ?? 1) > (base.monsterTypes?.maxUnlockedLevel ?? 1)
     && (s.monsterTypes?.monsterLevelStates?.length ?? 0) > BASELINE_MONSTER_LEVELS,
   note: `怪物最高等级 ${s.monsterTypes?.maxUnlockedLevel}，等级表 ${s.monsterTypes?.monsterLevelStates?.length}，队伍最低等级 ${Math.min(...(s.adventurers ?? []).map(a => a.characteristicsComponent?.characterLevel ?? 1))}，可用击杀 ${s.party?.kills}`,
+});
+const pointUpgradeWasPurchased = (s) => ({
+  pointUpgradePurchased: (s.pointManagerState?.spentAdventurePoints ?? 0) > (base.pointManagerState?.spentAdventurePoints ?? 0)
+    && (s.pointManagerState?.pointUpgrades ?? []).some(u => u.upgradePurchased),
 });
 // U7：药水激活在视图之外没有入口，激活后存档里只有 statistics.potionsUsed 可证。
 const potionWasUsed = (s) => ({ potionUsed: (s.statistics?.potionsUsed ?? 0) > 0 });
@@ -259,6 +263,15 @@ const scenarios = [
     ],
   },
   {
+    name: 'adventure-points-spent',
+    // 击杀事件每次给 1 点；载入时按 count 重算余额，不直接篡改运行时可用点数。
+    make: () => withPointPools(base, { 1: { points: 1000000, count: 1000000 } }),
+    steps: [
+      { turns: 600, purchasePointUpgrades: 1, check: pointUpgradeWasPurchased },
+      { turns: 600, check: pointUpgradeWasPurchased },
+    ],
+  },
+  {
     name: 'autosave-payload',
     // 自动保存计时分支 + 落盘字节比对：两端跑同样的真实帧循环，比较写进 localStorage 的原文。
     make: () => base,
@@ -382,17 +395,18 @@ try {
 
       let previous = await Promise.all(pages.map(p => p.page.evaluate(() => window.harness.snapshot())));
       for (const rawStep of scenario.steps) {
-        // 步骤可以是 [turns, check] 或 { turns, check, effectType, purchaseUpgrades, activatePotions }
+        // 步骤可以是 [turns, check] 或 { turns, check, effectType, purchaseUpgrades, purchasePointUpgrades, activatePotions }
         // effectType 表示这一步改用"逐帧扫描活怪物效果队列"的推进方式，并直接对账施加次数。
         // purchaseUpgrades 表示这一步先推进再驱动升级购买（U7：只有视图层会触发的路径）。
         const step = Array.isArray(rawStep) ? { turns: rawStep[0], check: rawStep[1] } : rawStep;
-        const { turns, check, effectType, purchaseUpgrades, activatePotions, frames } = step;
+        const { turns, check, effectType, purchaseUpgrades, purchasePointUpgrades, activatePotions, frames } = step;
         const results = await Promise.all(pages.map(async p => {
           await p.page.evaluate(ms => window.harness.setTime(ms), HARNESS_FIXED_NOW);
           // 重置后无队伍：走真实帧循环（守卫路径），而非裸推进
           if (scenario.restart || scenario.reset) return { snapshot: await p.page.evaluate(n => window.harness.idle(n), turns) };
           if (effectType !== undefined) return p.page.evaluate(a => window.harness.countEffectApplications(a.turns, a.effectType), { turns, effectType });
           if (purchaseUpgrades !== undefined) return p.page.evaluate(a => window.harness.purchaseUpgrades(a), { turns, limit: purchaseUpgrades });
+          if (purchasePointUpgrades !== undefined) return p.page.evaluate(a => window.harness.purchasePointUpgrades(a), { turns, limit: purchasePointUpgrades });
           if (activatePotions !== undefined) return p.page.evaluate(a => window.harness.activatePotions(a), { turns, limit: activatePotions });
           // frames：走真实帧循环（loop.tick 内含 view.render 的 try/catch），随后读画布不透明像素
           if (frames !== undefined) return p.page.evaluate(n => {
@@ -430,6 +444,12 @@ try {
           }
           assert.equal(counts[1], counts[0], `两端完成的购买次数不一致（原版 ${counts[0]} / 重构版 ${counts[1]}）`);
           console.log(`  · 两端各自完成升级购买 ${counts[0]} 次`);
+        }
+        if (purchasePointUpgrades !== undefined) {
+          for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {
+            assert.ok(results[i].purchased > 0, `${label} 端必须真的完成冒险点升级购买（ready=${results[i].readyCount}, balance=${results[i].availablePoints}）`);
+          }
+          assert.equal(results[1].purchased, results[0].purchased, '两端冒险点升级购买次数不同');
         }
         if (frames !== undefined) {
           const inks = results.map(r => r.ink);
@@ -481,6 +501,7 @@ try {
             if (verdict.characterLeveled !== undefined) assert.equal(verdict.characterLeveled, true, `${label} 角色等级必须真实上升`);
             if (verdict.skillLearned !== undefined) assert.equal(verdict.skillLearned, true, `${label} 技能树布尔位必须真实解锁`);
             if (verdict.monsterUnlocked !== undefined) assert.equal(verdict.monsterUnlocked, true, `${label} 怪物最高解锁等级和存档等级表长度必须真实增长；${verdict.note}`);
+            if (verdict.pointUpgradePurchased !== undefined) assert.equal(verdict.pointUpgradePurchased, true, `${label} 冒险点必须真实支出且升级状态必须变为已购买`);
             if (verdict.potionUsed !== undefined) assert.equal(verdict.potionUsed, true, `${label} 必须真的激活至少一瓶药水（potionsUsed 增长）`);
             if (verdict.note && i === 0) console.log(`  · ${verdict.note}`);
             if (verdict.victory !== undefined) assert.equal(verdict.victory, true, `${label} 必须真的走完征服尾部并触发胜利`);
