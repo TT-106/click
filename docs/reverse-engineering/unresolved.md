@@ -132,9 +132,9 @@ Xf/Qf/Rf/Zf/Cf/Ef → damageMultiplier/armorMultiplier/attackRatingMultiplier/de
 - `archive/original/c2c.user.js` 依赖的 DOM 结构已随 legacy-dom.html 保留，但未实际运行该脚本验证。
 - 关闭方式：test-browser.mjs 新增断言——#encounterNotificationPanel、#treasureChestLootButtonPanel、#scrollButtonCell0、#potionButton_Row0_Col0、.potionContentContainer、.gameTabLootButtonPanel 在活动 DOM 存在；bossEncounterNotificationDiv/potionButtonActive 类名切换保留于 expedition.js（.lootButton 为遭遇期动态类，dungeons.js:176 确认）。
 
-## U3 — 长时 wall-clock soak 未跑
+## U3 — ✅ 8h/24h 等价回合 soak 已跑（2026-09-26）
 
-- 8h/24h 加速等价场景 + 内存采样。差分 harness 已具备能力，待加 performance.memory 采样。
+- `npm run test:soak` 在同一固定存档/随机流下分别推进 115,200 与 345,600 回合（250ms/回合），两个检查点的原版/重构版完整存档相等，浏览器无 pageerror。经 Chrome CDP 主动 GC 后采样 `JSHeapUsedSize`；最近一次原版 8h/24h 为 6,269,972 / 6,287,016 bytes，重构版为 7,062,524 / 7,079,636 bytes，增量分别为 17,044 / 17,112 bytes。连续两次运行通过；短期稳定不能证明不存在所有内存泄漏。可复核产出位于 `output/soak/last-run.json`。
 
 ## U4 — 差分覆盖缺口
 

@@ -102,6 +102,7 @@ window.harness = {
     syncLoopClock();
   },
   advance(turns) { for (let i = 0; i < turns; i++) advance(); return snapshot(); },
+  advanceRaw(turns) { for (let i = 0; i < turns; i++) advance(); },
   // 离线结算由帧循环驱动（两端 tick 内 1E3 < 帧差 才进入离线分支）：
   // 时间每次前移 2 秒并执行一帧，直到离线处理结束（上限 2000 帧）。
   advanceOffline(maxTicks = 2000) {
