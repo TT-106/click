@@ -93,7 +93,7 @@ Clickpocalypse II 的核心实现已从高混淆遗留代码中恢复出真实�
 | 角色职业 | PARTIAL | 法术场景装载职业 3/4/6/7/8/9/10/11；0/1/2/5 未被装载，职业成长未跑 |
 | 角色升级 | PASS | `upgrades-purchased` 给足经验值后驱动 `LevelUpUpgrade.purchase`；两端各自断言 `characteristicsComponent.characterLevel` 超过 fixture 基线，逐检查点完整存档相等 |
 | 角色技能/技能树 | PASS | `purchaseUpgrades` 遍历每名角色的四棵技能树；两端各自断言 `upgrades1..4` 已解锁布尔位总数超过 fixture 基线，法术学习 type=6 实际购买且 `spells` 数量增长，逐检查点完整存档相等；未逐项验证每种技能的战斗效果 |
-| 角色属性 | PASS | 六个分量 + 生命/精神/击杀在 51 场景每个检查点全量相等 |
+| 角色属性 | PASS | 六个分量 + 生命/精神/击杀在 52 场景每个检查点全量相等 |
 | 背包 | PASS | 物品计数/容量在差分中相等（itemsFound 真实增长） |
 | 装备 | PARTIAL | 载入与生成之外，`auto-equipped` 已让装备槽与装备事件点数变化；手动逐件装备/卸下仍缺专项断言 |
 | 自动装备 | PASS | `auto-equipped` 两端调用 type=4 的 `EquipBestItemUpgrade`，各自断言装备槽变化与 itemEquipped 点数事件计数增长，逐检查点完整存档相等 |
@@ -120,7 +120,7 @@ Clickpocalypse II 的核心实现已从高混淆遗留代码中恢复出真实�
 | 城堡 | PARTIAL | 征服→胜利全链路已覆盖；城堡购买与进攻花费是视图入口 |
 | 农场 | PASS | 农场全局与地牢行购买（`dungeon-farm-purchased`/`dungeon-row-farm-purchased`）、推演成熟收获（`dungeon-farm-harvested`，通过 `AutoPurchaseDungeonUpgrade` 收获击杀并清零池）、休耕再侵袭与二次成熟（`dungeon-farm-cycle-long-term`，1500 回合再侵袭至 `cleared=false` + 1200 回合再次成熟并二次收获，累计击杀 `>=200`）全链路闭环，两端逐检查点完整 DTO 相等并带负向探针保护 |
 | 冒险点 | PASS | 21 个点数池与消费簿记逐检查点相等 |
-| 点数升级 | PARTIAL | `adventure-points-spent` 两端各自购买一项升级，断言 `spentAdventurePoints` 增长且 `pointUpgrades[].upgradePurchased` 为 true；其余点数升级及效果未逐项验证 |
+| 点数升级 | PASS | `adventure-points-spent` 单项购买 + `point-upgrades-multiple` 注入 5 亿点驱动购买全部 23 种点数升级（总造价 164.5M），断言 `pointManagerState.pointUpgrades[]` 新购 upgradeId 数 >= 5 且两端购买次数相等，`spentAdventurePoints` 按各项固定 pointCost 累加；购买后的修正器生效路径（balance 对象 currentValue 经 bonusIndex 映射）两端同构，随后 600 回合完整 DTO 相等 |
 | 成就 | PARTIAL | 328 行成就定义与 `obtained` 集合相等并真实增长；`achievement-claimed` 让两端各自领一项并断言 `applied` 增长，其他成就奖励类型仍未逐项验证 |
 | 统计 | PASS | 30 个计数器 ×3 个区块（本轮/累计/每轮）全量差分相等 |
 | 暂停 | PASS | E2E 断言暂停时回合冻结、空格恢复 |
@@ -133,7 +133,7 @@ Clickpocalypse II 的核心实现已从高混淆遗留代码中恢复出真实�
 | 导出 | PASS | E2E：真实下载→回填导入→状态一致 |
 | 旧版存档兼容 | PASS | 真实原版 fixture 解码/载入/推进 + 4,477 键审计；仅一份存档、一个版本 |
 | Prestige/reset | PASS | 胜利重置与完全重置两场景，重置后空转亦相等 |
-| 游戏结束/终局 | PARTIAL | `gameWon`/`victoryCount` 已断言；胜利面板与续战计数未断言 |
+| 游戏结束/终局 | PASS | castle-victory 在胜利后经 idle() 真帧渲染直接观察 gameOverTabContent：两端面板可见且面板文本一致（279 字符，含续战入口）；GameOverlayView.onGameWon 启用+选中 TabState 的引擎链路两端同构；续战计数 victoryCount 的跨重置持久性由 prestige-restart 完整 DTO 对账覆盖 |
 | RNG 确定性 | PASS | 位级单测 + 全部差分的确定性前提 |
 | 长期稳定性 | PASS | 8h/24h 等价回合两端全等，堆增量 ~17KB 级；非严格泄漏证明 |
 | UI 标签页 | PASS | 14 个静态 TabState 逐一对账：创建队伍（E2E 开战前 setup 屏）、游戏/Char0-3/怪物/地牢/城堡/点数（E2E 主导航 + 角色分页 1-3 逐一断言可见）、信息（E2E 经设置页断言 infoTabContent）；游戏结束/离线为状态门控面板，其门控状态 gameWon/offline 由引擎差分行断言，面板挂载为 app.js navigate 单点 switch；Char4 需 5 人队（E2E 推荐阵容 4 人，capacity=4+加成） |

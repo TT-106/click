@@ -241,6 +241,17 @@ window.harness = {
       snapshot: snapshot(),
     };
   },
+  // 直接观察胜利终局面板：GameOverView.onGameWon 启用并选中 gameOverTabContent 的 TabState，
+  // 帧渲染后该面板在 legacy DOM 中 display !== none。返回可见性与面板文本（两端内容一致性对账）。
+  observeVictoryPanel() {
+    const el = document.getElementById('gameOverTabContent');
+    const style = el ? window.getComputedStyle(el) : null;
+    return {
+      gameOverVisible: !!el && !!style && style.display !== 'none',
+      gameOverText: el ? (el.innerText || '').slice(0, 400) : '',
+      runNumber: snapshot().victoryCount,
+    };
+  },
   // U7：驱动"升级购买"这条只有视图层会触发的路径。视图里按钮的处理就是
   // `if (upgrade.canPurchaseNow()) upgrade.purchase()`，这里按同一条判断驱动引擎侧对象。
   // 不走 DOM：可购行是否渲染成 .upgradeButton 取决于排序后的可见槽位——实测 7 个 canPurchase

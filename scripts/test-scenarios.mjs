@@ -76,6 +76,14 @@ const pointUpgradeWasPurchased = (s) => ({
   pointUpgradePurchased: (s.pointManagerState?.spentAdventurePoints ?? 0) > (base.pointManagerState?.spentAdventurePoints ?? 0)
     && (s.pointManagerState?.pointUpgrades ?? []).some(u => u.upgradePurchased),
 });
+const multiplePointUpgradesPurchased = (s) => {
+  const basePurchased = new Set((base.pointManagerState?.pointUpgrades ?? []).filter(u => u.upgradePurchased).map(u => u.upgradeId));
+  const newly = (s.pointManagerState?.pointUpgrades ?? []).filter(u => u.upgradePurchased && !basePurchased.has(u.upgradeId));
+  return {
+    distinctPointUpgradesBought: newly.length,
+    pointsSpent: (s.pointManagerState?.spentAdventurePoints ?? 0) - (base.pointManagerState?.spentAdventurePoints ?? 0),
+  };
+};
 const achievementWasClaimed = (s) => ({
   achievementClaimed: (s.achievementManager?.achievements ?? []).filter(a => a.applied).length
     > (base.achievementManager?.achievements ?? []).filter(a => a.applied).length,
@@ -298,6 +306,7 @@ const scenarios = [
           && snap.statistics.castlesConquered === 1
           && snap.castleManager.castleStates.every(c => c.conquered),
       }) },
+        { turns: 30, victoryPanel: 30 },
     ],
   },
   {
@@ -369,6 +378,16 @@ const scenarios = [
     steps: [
       { turns: 600, purchasePointUpgrades: 1, check: pointUpgradeWasPurchased },
       { turns: 600, check: pointUpgradeWasPurchased },
+    ],
+  },
+  {
+    name: 'point-upgrades-multiple',
+    // 一次性注入 5 亿冒险点（23 项总造价 164.5M），驱动购买全部 23 种点数升级，
+    // 断言 settings.upgrades 中不同 upgradeId 的 purchasedLevels 超基线数量 >= 5 且两端相等。
+    make: () => withPointPools(base, { 1: { points: 500000000, count: 500000000 } }),
+    steps: [
+      { turns: 600, purchasePointUpgrades: 23, check: multiplePointUpgradesPurchased },
+      { turns: 600, check: multiplePointUpgradesPurchased },
     ],
   },
   {
@@ -625,7 +644,7 @@ try {
         // effectType 表示这一步改用"逐帧扫描活怪物效果队列"的推进方式，并直接对账施加次数。
         // purchaseUpgrades 表示这一步先推进再驱动升级购买（U7：只有视图层会触发的路径）。
         const step = Array.isArray(rawStep) ? { turns: rawStep[0], check: rawStep[1] } : rawStep;
-        const { turns, check, effectType, purchaseUpgrades, purchasePointUpgrades, claimAchievement, equipBestItems, castScrollDuringCombat, scrollId, purchaseDungeonFarm, purchaseDungeonRowFarm, harvestFarmKills, lootTreasureDuringExplore, treasureKind, activatePotions, floatingText, damageNumbers, trackBoss, frames, frameGap } = step;
+        const { turns, check, effectType, purchaseUpgrades, purchasePointUpgrades, claimAchievement, equipBestItems, castScrollDuringCombat, scrollId, purchaseDungeonFarm, purchaseDungeonRowFarm, harvestFarmKills, lootTreasureDuringExplore, treasureKind, activatePotions, floatingText, damageNumbers, trackBoss, frames, frameGap, victoryPanel } = step;
         const results = await Promise.all(pages.map(async p => {
           await p.page.evaluate(ms => window.harness.setTime(ms), HARNESS_FIXED_NOW);
           // 重置后无队伍：走真实帧循环（守卫路径），而非裸推进
@@ -644,6 +663,7 @@ try {
           if (floatingText !== undefined) return p.page.evaluate(a => window.harness.countFloatingText(a), { turns, text: floatingText });
           if (damageNumbers !== undefined) return p.page.evaluate(a => window.harness.countFloatingText(a), { turns, pattern: '^-[0-9]+$' });
           if (trackBoss !== undefined) return p.page.evaluate(a => window.harness.trackBossEncounter(a), { turns });
+          if (victoryPanel !== undefined) return p.page.evaluate(n => { window.harness.idle(n); return window.harness.observeVictoryPanel(); }, victoryPanel);
           if (frameGap !== undefined) return p.page.evaluate(n => window.harness.advanceFrameGap(n), frameGap);
           // frames：走真实帧循环（loop.tick 内含 view.render 的 try/catch），随后读画布不透明像素
           if (frames !== undefined) return p.page.evaluate(n => {
@@ -807,6 +827,16 @@ try {
           assert.deepEqual(names[1], names[0], `两端首领遭遇名称不一致（原版 ${names[0]} / 重构版 ${names[1]}）`);
           console.log(`  · 首领遭遇全指标两端一致 = 首领战 ${encounters[0]} 回合, 首领存活 ${seens[0]} 回合, 击杀首领 ${kills[0]} 次, 首领名称 [${names[0].join(', ')}]`);
         }
+        if (victoryPanel !== undefined) {
+          const panels = results.map(r => r.gameOverVisible);
+          const texts = results.map(r => r.gameOverText);
+          for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {
+            assert.ok(panels[i], '' + label + ' 胜利后必须直接观察到 gameOverTabContent 面板可见（帧渲染后 DOM display !== none）');
+            assert.ok(texts[i].length > 0, '' + label + ' 胜利面板必须有实际内容');
+          }
+          assert.equal(texts[1], texts[0], '两端胜利面板文本不一致');
+          console.log('  · 胜利终局面板两端可见且文本一致（' + texts[0].length + ' 字符）');
+        }
         if (lootTreasureDuringExplore !== undefined) {
           for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {
             assert.ok(results[i].selected > 0, `${label} 端必须选择角色所在房间的财宝房目标物；最多曾生成 ${results[i].spawned} 个`);
@@ -833,6 +863,7 @@ try {
             if (verdict.minLevelRetired !== undefined) assert.equal(verdict.minLevelRetired, true, `${label} 怪物最低解锁等级（minUnlockedLevel）必须真实增长（退休）；${verdict.note}`);
             if (verdict.retiredLevelExcluded !== undefined) assert.equal(verdict.retiredLevelExcluded, true, `${label} 首个有效怪物等级必须大于 1（等级 1 已退休排除）；${verdict.note}`);
             if (verdict.pointUpgradePurchased !== undefined) assert.equal(verdict.pointUpgradePurchased, true, `${label} 冒险点必须真实支出且升级状态必须变为已购买`);
+            if (verdict.distinctPointUpgradesBought !== undefined) assert.ok(verdict.distinctPointUpgradesBought >= 5, `${label} 必须购买至少 5 种不同点数升级（实际 ${verdict.distinctPointUpgradesBought}）`);
             if (verdict.achievementClaimed !== undefined) assert.equal(verdict.achievementClaimed, true, `${label} 成就奖励必须真实领取并标记 applied`);
             if (verdict.equipmentChanged !== undefined) assert.equal(verdict.equipmentChanged, true, `${label} 自动装备后装备槽必须真实变化`);
             if (verdict.itemEquipEvents !== undefined) assert.equal(verdict.itemEquipEvents, true, `${label} 装备物品事件计数必须真实增长`);
