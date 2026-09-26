@@ -57,7 +57,7 @@ export function spawnMinion(a, b, c) {
   d.behaviors = behaviorQueue;
   var position = d.position;
   position.room = b.position.room;
-  position.cd = b.position.cd;
+  position.currentHallway = b.position.currentHallway;
   setVector(position.levelPosition, c.x, c.y);
   var h = b.position.worldPosition;
   c = h.x + floorNumber(-10 + 20 * Math.random());
@@ -117,7 +117,7 @@ export function createCastleGuardian(a, b, c) {
   }
   b = f.position;
   b.room = c;
-  b.cd = null;
+  b.currentHallway = null;
   var h = roomLeftPixels(c) + game.tileSize,
     top = roomTopPixels(c) + game.tileSize,
     bottom = roomBottomPixels(c) - game.tileSize;

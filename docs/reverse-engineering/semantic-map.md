@@ -188,6 +188,28 @@ RunStatistics 的 `On/Lk/qn/Mj/wi/uk` → `turnCount/doorsOpened/roomsCleared/le
 
 同时补上 `test-browser.mjs` 的 c2c 外部 DOM 契约断言（U2 的真实落地）与 U7（UI 独占路径未进差分）记录；混淆属性清单 1,222 → 1,219。
 
+## 第十二轮落地：状态效果位、掉落物认领与地牢几何（2026-09-26，十五个字母，全回归通过）
+
+| 原字段 | 新名 | 所有者 | 决定性证据 | 存档参与 |
+|---|---|---|---|---|
+| `Kf` | `isStunned` | CharacterEffects | `actions.js` 击倒分支里 `recordCharacterStunned()` 与 `new StatusEffect(13,…)` 同处置位，与 `removeStunEffects` 成对清除 | 否（效果队列不入档） |
+| `wg` | `isStealthed` | CharacterEffects | 技能效果 type 11 定义 `cf:"潜行模式"`；渲染侧按它把角色画成半透明；`respondToTaunt` 里潜行会清空战斗目标 | 否 |
+| `bi` | `isConverted` | CharacterEffects | type 4 定义 `cf:"转变"`；`getOpponents` 的敌我判定在该位为真时整体翻转 | 否 |
+| `Zc` | `claimedBy` | 四个掉落类（Item/Gold/Potion/Scroll Drop） | 四类同构 `Re(a){this.Zc=a}`；行为侧 `this.goldDrop.claimedBy === a` 判"这是我的"，释放时 `Re(null)` | 否 |
+| `qd`/`bd`/`ad` | `goldDrop`/`scrollDrop`/`potionDrop` | 各行为类 | 分别扫描 `game.goldDrops.pe` / `scrollDrops.kf` / `potionDrops.Hf`，与已语义化的 `ChangeFloorBehavior.treasureChest` 同构 | 否 |
+| `Sk` | `pathTiles` | DungeonHallway | A* 结果 `l.pathTiles.push(d)` 逐个写入，角色按 `H[p.fg+1]` 沿线走 | 索引 `fg` 入档为 `floorPositionIndex`，未动 |
+| `af`/`Be` | `doorA`/`doorB` | DungeonHallway | 存档行 `doorAOpen: Fa.doorA.isOpen, doorBOpen: Fa.doorB.isOpen` —— 键名本身即证据，两行必须同批改 | 键 `doorAOpen/doorBOpen` 不变 |
+| `Yk` | `hallway` | DungeonDoor | `g.hallway = l; h.hallway = l;` 里 `l` 是 `new DungeonHallway(...)`；`getOppositeDoor(c.hallway, c)` | 否 |
+| `cd` | `currentHallway` | CharacterPosition | 与已语义化的 `position.room` 成对：`p.currentHallway = Q.hallway` / `= null`；存档 `hallwayId: n ? n.hallwayId : -1` | 键 `hallwayId` 不变（entities.js:78 ↔ game-save.js:441 同批） |
+| `Wc` | `separationDelta` | CharacterPosition | `separateDungeonCharacters` 里 `copyVector→subtractVector→normalizeVector→addVector` 的临时差值向量 | 否 |
+| `me`/`ne` | `pixelColumn`/`pixelRow` | DungeonDoor | `p.wj = s; p.xj = n; p.me = s * game.tileSize; p.ne = n * game.tileSize;` —— 与 DungeonTile 已有的 tile/pixel 四件套同构 | 否 |
+
+刻意未做：`oc` 在同文件里有两个所有者（VisualEffect/RenderCommand 的播放游标 + 从未被读取的 AnimationFrame 写入位），后者证据只到 MEDIUM，不与其共用 `frameIndex`；`$c` 待与方法族一批处理。
+
+`rc`/`sc`（三个所有者同为"以瓦片计的列/行数"，`terrain.js:323` `sc = WORLD_BLOCK_ROWS; rc = WORLD_BLOCK_COLUMNS` 定死方向）已落为 `widthInTiles`/`heightInTiles`，只喂 generation.js 与 terrain.js 两个文件——scene.js / tick.js / initialization.js 里 `rc,`/`sc,` 是 `var` 声明简写，工具的简写规则会误伤，故不入文件表。
+
+回归：check（9 单测 + 109 文件语法）/typecheck 0 错误/parity 四档/34 场景/e2e 全绿；混淆属性清单 1,219 → 1,202（本批十七个字母全部清零），fields 段 219 → 236。
+
 ## 重命名执行器 `scripts/rename-field.mjs`
 
 本批起改用手写守卫的执行器，用法 `node scripts/rename-field.mjs <old>=<new> <file...> --expect <total>`。写盘前强制四项校验：命中总数等于 `--expect`、行数不变、逐行缩进不变、字符串字面量多重集不变，任一失败整批不落盘。

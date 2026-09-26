@@ -233,7 +233,7 @@ export function initializeWorldDungeons() {
         d = c[a];
         b = d.position;
         clearMovementTarget(b);
-        b.cd = null;
+        b.currentHallway = null;
         b.room = null;
         d.actionType = IDLE_ACTION;
       }

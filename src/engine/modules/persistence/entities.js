@@ -75,7 +75,7 @@ export function serializeCharacter(a) {
   var h;
   h = a.position;
   var l = h.room,
-    n = h.cd;
+    n = h.currentHallway;
   h = {
     levelX: h.getLevelPositionX(),
     levelY: h.getLevelPositionY(),

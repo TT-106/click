@@ -261,8 +261,8 @@ export function restoreGameState(a, b) {
                   Ib = wb.doorAOpen,
                   Ec = wb.doorBOpen;
                 revealHallway(qb, wb.visible);
-                qb.af.isOpen = Ib;
-                qb.Be.isOpen = Ec;
+                qb.doorA.isOpen = Ib;
+                qb.doorB.isOpen = Ec;
               }
             }
             var bc,
@@ -438,7 +438,7 @@ export function restoreGameState(a, b) {
                   }
                   Me = null;
                 }
-                wd.cd = Me;
+                wd.currentHallway = Me;
                 wd.fg = Bh;
               }
               var fg = hc,
@@ -824,8 +824,8 @@ export function createSaveState(a) {
         var Fa = Ea[wa];
         La.push({
           visible: Fa.Km,
-          doorAOpen: Fa.af.isOpen,
-          doorBOpen: Fa.Be.isOpen
+          doorAOpen: Fa.doorA.isOpen,
+          doorBOpen: Fa.doorB.isOpen
         });
       }
       Ca = {

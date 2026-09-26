@@ -1,53 +1,5 @@
 [
   {
-    "name": "rc",
-    "reads": 20,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\world\\generation.js:142",
-        "code": "this.rc"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\generation.js:163",
-        "code": "f.rc"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\generation.js:166",
-        "code": "f.rc"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\world\\generation.js",
-      "src\\engine\\modules\\world\\terrain.js"
-    ]
-  },
-  {
-    "name": "sc",
-    "reads": 20,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\world\\generation.js:142",
-        "code": "this.sc"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\generation.js:163",
-        "code": "f.sc"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\generation.js:166",
-        "code": "f.sc"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\world\\generation.js",
-      "src\\engine\\modules\\world\\terrain.js"
-    ]
-  },
-  {
     "name": "Bc",
     "reads": 10,
     "writes": 12,
@@ -205,29 +157,6 @@
     ]
   },
   {
-    "name": "Wc",
-    "reads": 20,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\movement.js:22",
-        "code": "this.Wc"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\movement.js:108",
-        "code": "a.Wc"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\movement.js:110",
-        "code": "a.Wc"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\characters\\movement.js"
-    ]
-  },
-  {
     "name": "Uc",
     "reads": 18,
     "writes": 3,
@@ -300,65 +229,6 @@
       "src\\engine\\modules\\combat\\actions.js",
       "src\\engine\\modules\\combat\\scrolls.js",
       "src\\engine\\modules\\runtime\\game.js"
-    ]
-  },
-  {
-    "name": "Zc",
-    "reads": 12,
-    "writes": 8,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1106",
-        "code": "this.qd.Zc"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1127",
-        "code": "this.qd.Zc"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1144",
-        "code": "c.Zc"
-      }
-    ],
-    "fileCount": 5,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js",
-      "src\\engine\\modules\\combat\\potions.js",
-      "src\\engine\\modules\\combat\\scrolls.js",
-      "src\\engine\\modules\\loot\\items.js",
-      "src\\engine\\modules\\loot\\treasure.js"
-    ]
-  },
-  {
-    "name": "cd",
-    "reads": 10,
-    "writes": 10,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\targeting.js:157",
-        "code": "a.position.cd"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\targeting.js:180",
-        "code": "a.position.cd"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:274",
-        "code": "D.cd"
-      }
-    ],
-    "fileCount": 10,
-    "files": [
-      "src\\engine\\modules\\ai\\targeting.js",
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\characters\\movement.js",
-      "src\\engine\\modules\\characters\\party.js",
-      "src\\engine\\modules\\combat\\encounters.js",
-      "src\\engine\\modules\\persistence\\entities.js",
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\simulation\\characters.js",
-      "src\\engine\\modules\\world\\dungeons.js",
-      "src\\engine\\modules\\world\\generation.js"
     ]
   },
   {
@@ -464,75 +334,6 @@
     "files": [
       "src\\engine\\modules\\ai\\behaviors.js",
       "src\\engine\\modules\\progression\\upgrades.js"
-    ]
-  },
-  {
-    "name": "qd",
-    "reads": 15,
-    "writes": 4,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:160",
-        "code": "this.qd"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1099",
-        "code": "this.qd"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1103",
-        "code": "this.qd"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js"
-    ]
-  },
-  {
-    "name": "bd",
-    "reads": 15,
-    "writes": 4,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:167",
-        "code": "this.bd"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1162",
-        "code": "this.bd"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1166",
-        "code": "this.bd"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js"
-    ]
-  },
-  {
-    "name": "ad",
-    "reads": 15,
-    "writes": 4,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:174",
-        "code": "this.ad"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1225",
-        "code": "this.ad"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1229",
-        "code": "this.ad"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js"
     ]
   },
   {
@@ -1478,60 +1279,6 @@
     ]
   },
   {
-    "name": "me",
-    "reads": 14,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1027",
-        "code": "d.me"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:263",
-        "code": "u.me"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:306",
-        "code": "u.me"
-      }
-    ],
-    "fileCount": 5,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js",
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\characters\\party.js",
-      "src\\engine\\modules\\world\\pathfinding.js",
-      "src\\engine\\modules\\world\\rooms.js"
-    ]
-  },
-  {
-    "name": "ne",
-    "reads": 14,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1027",
-        "code": "d.ne"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:263",
-        "code": "u.ne"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:306",
-        "code": "u.ne"
-      }
-    ],
-    "fileCount": 5,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js",
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\characters\\party.js",
-      "src\\engine\\modules\\world\\pathfinding.js",
-      "src\\engine\\modules\\world\\rooms.js"
-    ]
-  },
-  {
     "name": "re",
     "reads": 16,
     "writes": 1,
@@ -1706,15 +1453,15 @@
     "samples": [
       {
         "loc": "src\\engine\\modules\\ai\\behaviors.js:1128",
-        "code": "this.qd.Re"
+        "code": "this.goldDrop.Re"
       },
       {
         "loc": "src\\engine\\modules\\ai\\behaviors.js:1151",
-        "code": "this.qd.Re"
+        "code": "this.goldDrop.Re"
       },
       {
         "loc": "src\\engine\\modules\\ai\\behaviors.js:1191",
-        "code": "this.bd.Re"
+        "code": "this.scrollDrop.Re"
       }
     ],
     "fileCount": 5,
@@ -1733,15 +1480,15 @@
     "samples": [
       {
         "loc": "src\\engine\\modules\\ai\\behaviors.js:1129",
-        "code": "this.qd.Se"
+        "code": "this.goldDrop.Se"
       },
       {
         "loc": "src\\engine\\modules\\ai\\behaviors.js:1152",
-        "code": "this.qd.Se"
+        "code": "this.goldDrop.Se"
       },
       {
         "loc": "src\\engine\\modules\\ai\\behaviors.js:1192",
-        "code": "this.bd.Se"
+        "code": "this.scrollDrop.Se"
       }
     ],
     "fileCount": 5,
@@ -1751,33 +1498,6 @@
       "src\\engine\\modules\\combat\\scrolls.js",
       "src\\engine\\modules\\loot\\items.js",
       "src\\engine\\modules\\loot\\treasure.js"
-    ]
-  },
-  {
-    "name": "Be",
-    "reads": 15,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\targeting.js:157",
-        "code": "g.Be"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\targeting.js:180",
-        "code": "g.Be"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:353",
-        "code": "p.cd.Be"
-      }
-    ],
-    "fileCount": 5,
-    "files": [
-      "src\\engine\\modules\\ai\\targeting.js",
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\characters\\party.js",
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\world\\rooms.js"
     ]
   },
   {
@@ -2013,32 +1733,6 @@
       "src\\engine\\modules\\rendering\\scene.js",
       "src\\engine\\modules\\simulation\\characters.js",
       "src\\engine\\modules\\world\\generation.js"
-    ]
-  },
-  {
-    "name": "af",
-    "reads": 14,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\targeting.js:157",
-        "code": "g.af"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\targeting.js:180",
-        "code": "g.af"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\party.js:121",
-        "code": "b.af"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\ai\\targeting.js",
-      "src\\engine\\modules\\characters\\party.js",
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\world\\rooms.js"
     ]
   },
   {
@@ -2323,34 +2017,6 @@
       "src\\engine\\modules\\combat\\actions.js",
       "src\\engine\\modules\\loot\\items.js",
       "src\\engine\\modules\\rendering\\scene.js"
-    ]
-  },
-  {
-    "name": "Kf",
-    "reads": 7,
-    "writes": 7,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:970",
-        "code": "d.effects.Kf"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\targeting.js:258",
-        "code": "c.effects.Kf"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\effects.js:22",
-        "code": "this.Kf"
-      }
-    ],
-    "fileCount": 6,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js",
-      "src\\engine\\modules\\ai\\targeting.js",
-      "src\\engine\\modules\\characters\\effects.js",
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\combat\\encounters.js",
-      "src\\engine\\modules\\rendering\\sprites.js"
     ]
   },
   {
@@ -2777,34 +2443,6 @@
     "fileCount": 1,
     "files": [
       "src\\engine\\modules\\world\\terrain.js"
-    ]
-  },
-  {
-    "name": "wg",
-    "reads": 10,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:664",
-        "code": "a.effects.wg"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:697",
-        "code": "a.effects.wg"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:757",
-        "code": "a.effects.wg"
-      }
-    ],
-    "fileCount": 6,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js",
-      "src\\engine\\modules\\ai\\targeting.js",
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\characters\\effects.js",
-      "src\\engine\\modules\\combat\\scrolls.js",
-      "src\\engine\\modules\\rendering\\scene.js"
     ]
   },
   {
@@ -4206,34 +3844,6 @@
       "src\\engine\\modules\\ai\\behaviors.js",
       "src\\engine\\modules\\characters\\character.js",
       "src\\engine\\modules\\runtime\\game.js"
-    ]
-  },
-  {
-    "name": "bi",
-    "reads": 8,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:469",
-        "code": "this.targetCharacter.effects.bi"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:496",
-        "code": "n.effects.bi"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\targeting.js:68",
-        "code": "l.bi"
-      }
-    ],
-    "fileCount": 6,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js",
-      "src\\engine\\modules\\ai\\targeting.js",
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\characters\\effects.js",
-      "src\\engine\\modules\\combat\\encounters.js",
-      "src\\engine\\modules\\combat\\scrolls.js"
     ]
   },
   {
@@ -6925,32 +6535,6 @@
     ]
   },
   {
-    "name": "Yk",
-    "reads": 5,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\targeting.js:198",
-        "code": "c.Yk"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\targeting.js:228",
-        "code": "c.Yk"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:289",
-        "code": "u.Yk"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\ai\\targeting.js",
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\world\\pathfinding.js",
-      "src\\engine\\modules\\world\\rooms.js"
-    ]
-  },
-  {
     "name": "Qk",
     "reads": 6,
     "writes": 2,
@@ -7025,31 +6609,6 @@
     "files": [
       "src\\engine\\modules\\characters\\character.js",
       "src\\engine\\modules\\characters\\movement.js"
-    ]
-  },
-  {
-    "name": "Sk",
-    "reads": 7,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:352",
-        "code": "p.cd.Sk"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\pathfinding.js:194",
-        "code": "l.Sk"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\rooms.js:277",
-        "code": "this.Sk"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\world\\pathfinding.js",
-      "src\\engine\\modules\\world\\rooms.js"
     ]
   },
   {
@@ -8847,7 +8406,7 @@
     "samples": [
       {
         "loc": "src\\engine\\modules\\characters\\character.js:289",
-        "code": "u.Yk.Km"
+        "code": "u.hallway.Km"
       },
       {
         "loc": "src\\engine\\modules\\characters\\character.js:321",
@@ -10527,11 +10086,11 @@
     "samples": [
       {
         "loc": "src\\engine\\modules\\ai\\behaviors.js:1108",
-        "code": "this.qd.Xo"
+        "code": "this.goldDrop.Xo"
       },
       {
         "loc": "src\\engine\\modules\\ai\\behaviors.js:1111",
-        "code": "this.qd.Xo"
+        "code": "this.goldDrop.Xo"
       },
       {
         "loc": "src\\engine\\modules\\ai\\behaviors.js:1143",
@@ -10553,11 +10112,11 @@
     "samples": [
       {
         "loc": "src\\engine\\modules\\ai\\behaviors.js:1108",
-        "code": "this.qd.Yo"
+        "code": "this.goldDrop.Yo"
       },
       {
         "loc": "src\\engine\\modules\\ai\\behaviors.js:1111",
-        "code": "this.qd.Yo"
+        "code": "this.goldDrop.Yo"
       },
       {
         "loc": "src\\engine\\modules\\ai\\behaviors.js:1143",
@@ -10579,11 +10138,11 @@
     "samples": [
       {
         "loc": "src\\engine\\modules\\ai\\behaviors.js:1171",
-        "code": "this.bd.bq"
+        "code": "this.scrollDrop.bq"
       },
       {
         "loc": "src\\engine\\modules\\ai\\behaviors.js:1174",
-        "code": "this.bd.bq"
+        "code": "this.scrollDrop.bq"
       },
       {
         "loc": "src\\engine\\modules\\ai\\behaviors.js:1206",
@@ -10605,11 +10164,11 @@
     "samples": [
       {
         "loc": "src\\engine\\modules\\ai\\behaviors.js:1171",
-        "code": "this.bd.cq"
+        "code": "this.scrollDrop.cq"
       },
       {
         "loc": "src\\engine\\modules\\ai\\behaviors.js:1174",
-        "code": "this.bd.cq"
+        "code": "this.scrollDrop.cq"
       },
       {
         "loc": "src\\engine\\modules\\ai\\behaviors.js:1206",
@@ -10631,11 +10190,11 @@
     "samples": [
       {
         "loc": "src\\engine\\modules\\ai\\behaviors.js:1234",
-        "code": "this.ad.Qp"
+        "code": "this.potionDrop.Qp"
       },
       {
         "loc": "src\\engine\\modules\\ai\\behaviors.js:1237",
-        "code": "this.ad.Qp"
+        "code": "this.potionDrop.Qp"
       },
       {
         "loc": "src\\engine\\modules\\ai\\behaviors.js:1269",
@@ -10657,11 +10216,11 @@
     "samples": [
       {
         "loc": "src\\engine\\modules\\ai\\behaviors.js:1234",
-        "code": "this.ad.Rp"
+        "code": "this.potionDrop.Rp"
       },
       {
         "loc": "src\\engine\\modules\\ai\\behaviors.js:1237",
-        "code": "this.ad.Rp"
+        "code": "this.potionDrop.Rp"
       },
       {
         "loc": "src\\engine\\modules\\ai\\behaviors.js:1269",

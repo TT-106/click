@@ -42,7 +42,7 @@ export function findNearestOpponent(a) {
     l,
     n = -1;
   for (f = 0; f < b.length; f++) {
-    if (!(d = b[f], a === d || d.isDead || d.position.room != c || (l = d.effects, l.wg || d.characterType === ADVENTURER_TYPE && l.Kd || (l = g.Ud(d.position.levelPosition), !(0 > n || l < n))))) {
+    if (!(d = b[f], a === d || d.isDead || d.position.room != c || (l = d.effects, l.isStealthed || d.characterType === ADVENTURER_TYPE && l.Kd || (l = g.Ud(d.position.levelPosition), !(0 > n || l < n))))) {
       h = d;
       n = l;
     }
@@ -65,7 +65,7 @@ export function findNearestVisibleOpponent(a) {
     l,
     n = -1;
   for (f = 0; f < c.length; f++) {
-    if (!(d = c[f], a === d || d.isDead || d.position.room != b || (l = d.effects, l.wg || l.Kd || l.bi || (l = g.Ud(d.position.levelPosition), !(0 > n || l < n))))) {
+    if (!(d = c[f], a === d || d.isDead || d.position.room != b || (l = d.effects, l.isStealthed || l.Kd || l.isConverted || (l = g.Ud(d.position.levelPosition), !(0 > n || l < n))))) {
       h = d;
       n = l;
     }
@@ -91,7 +91,7 @@ export function findChainTarget(a) {
         l,
         n = -1;
       for (f = 0; f < b.length; f++) {
-        if (!(d = b[f], a === d || d.isDead || d.position.room != c || (l = d.effects, l.wg || l.Kd || l.bi || (l = g.Ud(d.position.levelPosition), !(0 > n || l < n))))) {
+        if (!(d = b[f], a === d || d.isDead || d.position.room != c || (l = d.effects, l.isStealthed || l.Kd || l.isConverted || (l = g.Ud(d.position.levelPosition), !(0 > n || l < n))))) {
           h = d;
           n = l;
         }
@@ -154,7 +154,7 @@ export function findRouteToDoor(a, b) {
         return d;
       }
     }
-  } else if (g = a.position.cd, (d = searchDoorRoute(c, b, g.af, f, false)) || (d = searchDoorRoute(c, b, g.Be, f, false))) {
+  } else if (g = a.position.currentHallway, (d = searchDoorRoute(c, b, g.doorA, f, false)) || (d = searchDoorRoute(c, b, g.doorB, f, false))) {
     return d;
   }
   return null;
@@ -177,7 +177,7 @@ export function findRouteToRoom(a, b) {
         return d;
       }
     }
-  } else if (g = a.position.cd, (d = searchRoomRoute(c, b, g.af, f, false)) || (d = searchRoomRoute(c, b, g.Be, f, false))) {
+  } else if (g = a.position.currentHallway, (d = searchRoomRoute(c, b, g.doorA, f, false)) || (d = searchRoomRoute(c, b, g.doorB, f, false))) {
     return d;
   }
   return null;
@@ -195,7 +195,7 @@ export function searchDoorRoute(a, b, c, d, f) {
   }
   d.push(c);
   if (f) {
-    if (f = getOppositeDoor(c.Yk, c), g = searchDoorRoute(a, b, f, d, false)) {
+    if (f = getOppositeDoor(c.hallway, c), g = searchDoorRoute(a, b, f, d, false)) {
       return g.unshift(c), g;
     }
   } else {
@@ -225,7 +225,7 @@ export function searchRoomRoute(a, b, c, d, f) {
   }
   d.push(c);
   if (f) {
-    if (f = getOppositeDoor(c.Yk, c), g = searchRoomRoute(a, b, f, d, false)) {
+    if (f = getOppositeDoor(c.hallway, c), g = searchRoomRoute(a, b, f, d, false)) {
       return g.unshift(c), g;
     }
   } else {
@@ -255,11 +255,11 @@ export function respondToTaunt(a, b) {
     c = null;
     b.setCombatTarget(null);
   }
-  if (c && c.effects.Kf) {
+  if (c && c.effects.isStunned) {
     c = null;
     b.setCombatTarget(null);
   }
-  if (c && c.effects.wg) {
+  if (c && c.effects.isStealthed) {
     c = null;
     b.setCombatTarget(null);
   }

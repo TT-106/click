@@ -117,12 +117,12 @@ export function findNextUnopenedDoor() {
     l = game.level.roomList,
     n = game.level.gd,
     p = 1E5;
-  if (b = a.position.cd) {
-    if (!b.af.isOpen) {
-      return b.af;
+  if (b = a.position.currentHallway) {
+    if (!b.doorA.isOpen) {
+      return b.doorA;
     }
-    if (!b.Be.isOpen) {
-      return b.Be;
+    if (!b.doorB.isOpen) {
+      return b.doorB;
     }
   }
   if (d = a.position.room) {
@@ -131,14 +131,14 @@ export function findNextUnopenedDoor() {
       d = b[c];
       if (!d.isOpen) {
         if (g) {
-          f = distanceSquaredToPoint(h, d.me, d.ne);
+          f = distanceSquaredToPoint(h, d.pixelColumn, d.pixelRow);
           if (f < p) {
             g = d;
             p = f;
           }
         } else {
           g = d;
-          p = distanceSquaredToPoint(h, d.me, d.ne);
+          p = distanceSquaredToPoint(h, d.pixelColumn, d.pixelRow);
         }
       }
     }
@@ -152,14 +152,14 @@ export function findNextUnopenedDoor() {
         d = b[c];
         if (!d.isOpen) {
           if (g) {
-            f = distanceSquaredToPoint(h, d.me, d.ne);
+            f = distanceSquaredToPoint(h, d.pixelColumn, d.pixelRow);
             if (f < p) {
               g = d;
               p = f;
             }
           } else {
             g = d;
-            p = distanceSquaredToPoint(h, d.me, d.ne);
+            p = distanceSquaredToPoint(h, d.pixelColumn, d.pixelRow);
           }
         }
       }
@@ -168,30 +168,30 @@ export function findNextUnopenedDoor() {
   for (a = 0; a < n.length; a++) {
     b = n[a];
     if (b.Km) {
-      d = b.af;
+      d = b.doorA;
       if (!d.isOpen) {
         if (g) {
-          f = distanceSquaredToPoint(h, d.me, d.ne);
+          f = distanceSquaredToPoint(h, d.pixelColumn, d.pixelRow);
           if (f < p) {
             g = d;
             p = f;
           }
         } else {
           g = d;
-          p = distanceSquaredToPoint(h, d.me, d.ne);
+          p = distanceSquaredToPoint(h, d.pixelColumn, d.pixelRow);
         }
       }
-      d = b.Be;
+      d = b.doorB;
       if (!d.isOpen) {
         if (g) {
-          f = distanceSquaredToPoint(h, d.me, d.ne);
+          f = distanceSquaredToPoint(h, d.pixelColumn, d.pixelRow);
           if (f < p) {
             g = d;
             p = f;
           }
         } else {
           g = d;
-          p = distanceSquaredToPoint(h, d.me, d.ne);
+          p = distanceSquaredToPoint(h, d.pixelColumn, d.pixelRow);
         }
       }
     }
@@ -218,7 +218,7 @@ export function initializeCharactersParty() {
         d = c[f];
         b = d.position;
         clearMovementTarget(b);
-        b.cd = null;
+        b.currentHallway = null;
         b.room = null;
         d.actionType = IDLE_ACTION;
       }

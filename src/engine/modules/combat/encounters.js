@@ -133,7 +133,7 @@ export function spawnDungeonBoss(a, b) {
   }
   c = boss.position;
   c.room = b;
-  c.cd = null;
+  c.currentHallway = null;
   var left = roomLeftPixels(b) + game.tileSize,
     top = roomTopPixels(b) + game.tileSize,
     bottom = roomBottomPixels(b) - game.tileSize,
@@ -174,7 +174,7 @@ export function getAllies() {
 }
 export function getOpponents(a) {
   var b = game.allies;
-  return a.effects.bi ? isHostile(a) ? getMonsters() : b.Pf : isHostile(a) ? b.Pf : getMonsters();
+  return a.effects.isConverted ? isHostile(a) ? getMonsters() : b.Pf : isHostile(a) ? b.Pf : getMonsters();
 }
 export function getFriendlyTargets(a) {
   var b = game.allies;
@@ -273,8 +273,8 @@ export function initializeCombatEncounters() {
       var a, b;
       for (a = 0; a < game.state.adventurers.length; a++) {
         b = game.state.adventurers[a].effects;
-        if (b.Kf) {
-          b.Kf = false;
+        if (b.isStunned) {
+          b.isStunned = false;
           removeStunEffects(b);
         }
       }

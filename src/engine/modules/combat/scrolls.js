@@ -121,7 +121,7 @@ export function castScroll(a, b) {
           p,
           s = -1;
         for (h = 0; h < d.length; h++) {
-          if (!(g = d[h], c === g || g.isDead || g.position.room !== f || (p = g.effects, p.wg || p.Kd || p.bi || -1 < a.eq.yl.indexOf(g) || (p = l.Ud(g.position.levelPosition), !(0 > s || p < s))))) {
+          if (!(g = d[h], c === g || g.isDead || g.position.room !== f || (p = g.effects, p.isStealthed || p.Kd || p.isConverted || -1 < a.eq.yl.indexOf(g) || (p = l.Ud(g.position.levelPosition), !(0 > s || p < s))))) {
             n = g;
             s = p;
           }
@@ -180,7 +180,7 @@ export function ScrollDrop(a, b, c, d) {
   this.cq = c;
   this.BE = d;
   this.collected = false;
-  this.Zc = null;
+  this.claimedBy = null;
   this.ph = 0;
 }
 export function ScrollDropRegistry() {
@@ -244,7 +244,7 @@ export function initializeCombatScrolls() {
     this.collected = a;
   };
   ScrollDrop.prototype.Re = function (a) {
-    this.Zc = a;
+    this.claimedBy = a;
   };
   ScrollDrop.prototype.Ud = function () {
     return this.ph;

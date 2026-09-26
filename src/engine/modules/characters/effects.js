@@ -19,7 +19,7 @@ export function isDisablingEffect(a) {
 }
 export function CharacterEffects(a) {
   this.no = a;
-  this.Kf = this.wg = this.bi = this.Vs = this.Gn = this.Kd = false;
+  this.isStunned = this.isStealthed = this.isConverted = this.Vs = this.Gn = this.Kd = false;
   this.of = [];
 }
 export function updateCharacterEffects(a, b) {
@@ -28,13 +28,13 @@ export function updateCharacterEffects(a, b) {
     f,
     g = false,
     h,
-    l = a.Kf;
+    l = a.isStunned;
   a.Kd = false;
   a.Gn = false;
   a.Vs = false;
-  a.bi = false;
-  a.wg = false;
-  a.Kf = false;
+  a.isConverted = false;
+  a.isStealthed = false;
+  a.isStunned = false;
   var n = a.no.stats,
     p = n.damage,
     s = n.armor,
@@ -70,7 +70,7 @@ export function updateCharacterEffects(a, b) {
                 addSpellStatBonus(y, f.Ok);
               } else {
                 if (11 === h) {
-                  a.wg = true;
+                  a.isStealthed = true;
                   addSpellStatBonus(u, f.Ok);
                 } else {
                   if (12 === h) {
@@ -78,13 +78,13 @@ export function updateCharacterEffects(a, b) {
                     addSpellStatBonus(p, f.Ok);
                   } else {
                     if (4 === h) {
-                      a.bi = true;
+                      a.isConverted = true;
                     } else {
                       if (13 === h) {
-                        a.Kf = true;
+                        a.isStunned = true;
                       } else {
                         if (14 === h) {
-                          a.Kf = true;
+                          a.isStunned = true;
                         }
                       }
                     }
@@ -104,7 +104,7 @@ export function updateCharacterEffects(a, b) {
       }
     }
   }
-  if (b && l && !a.Kf) {
+  if (b && l && !a.isStunned) {
     n.health = floorNumber(statValue(n.maxHealth));
     n.spirit = statValue(n.maxSpirit);
   }
@@ -128,7 +128,7 @@ export function hasStatusEffect(a, b) {
     case 0:
       return a.Kd;
     case 4:
-      return a.bi;
+      return a.isConverted;
     case 10:
       return a.Gn;
     case 12:

@@ -233,7 +233,7 @@ export function isPointNearDoor(a, b) {
   }
   var c;
   for (c = 0; c < a.Nc.length; c++) {
-    if (distanceToPoint(b, a.Nc[c].me, a.Nc[c].ne) < game.tileSize) {
+    if (distanceToPoint(b, a.Nc[c].pixelColumn, a.Nc[c].pixelRow) < game.tileSize) {
       return true;
     }
   }
@@ -251,11 +251,11 @@ export function canPlaceRoomObject(a, b) {
   return a.stairs && c === a.stairs.Ex && d === a.stairs.Fx ? false : true;
 }
 export function DungeonDoor(a) {
-  this.ne = this.me = this.xj = this.wj = 0;
+  this.pixelRow = this.pixelColumn = this.xj = this.wj = 0;
   this.isOpen = false;
   this.Ho = true;
   this.$d = a;
-  this.Yk = null;
+  this.hallway = null;
 }
 export function DungeonStairs(a) {
   this.$d = a;
@@ -271,19 +271,19 @@ export function positionStairs(a, b, c) {
 export function DungeonHallway(a, b, c, d) {
   this.hallwayId = 0;
   this.Bl = a;
-  this.af = b;
+  this.doorA = b;
   this.Cl = c;
-  this.Be = d;
-  this.Sk = [];
+  this.doorB = d;
+  this.pathTiles = [];
   this.tileGrid = this.theme = null;
   this.Km = false;
 }
 export function getOppositeDoor(a, b) {
-  if (b === a.af) {
-    return a.Be;
+  if (b === a.doorA) {
+    return a.doorB;
   }
-  if (b === a.Be) {
-    return a.af;
+  if (b === a.doorB) {
+    return a.doorA;
   }
   console.log("failed to find opposite door in hallway");
   return null;
@@ -292,7 +292,7 @@ export function revealHallway(a, b) {
   var shouldReveal = b && !a.Km;
   a.Km = b;
   if (shouldReveal) {
-    var c = a.Sk,
+    var c = a.pathTiles,
       d,
       f,
       g,
@@ -331,14 +331,14 @@ export function revealHallway(a, b) {
       if (!N) {
         f = a.tileGrid[x][z];
         f.setBackgroundSprite(h);
-        if (a.af.Ho) {
-          if (a.af.isOpen) {
+        if (a.doorA.Ho) {
+          if (a.doorA.isOpen) {
             f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.doorSprites.kg));
           } else {
             f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.doorSprites.Vf));
           }
         } else {
-          if (a.af.isOpen) {
+          if (a.doorA.isOpen) {
             f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.doorSprites.jg));
           } else {
             f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.doorSprites.Uf));
@@ -387,14 +387,14 @@ export function revealHallway(a, b) {
       if (!I) {
         f = a.tileGrid[x][z];
         f.setBackgroundSprite(h);
-        if (a.Be.Ho) {
-          if (a.Be.isOpen) {
+        if (a.doorB.Ho) {
+          if (a.doorB.isOpen) {
             f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.doorSprites.kg));
           } else {
             f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.doorSprites.Vf));
           }
         } else {
-          if (a.Be.isOpen) {
+          if (a.doorB.isOpen) {
             f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.doorSprites.jg));
           } else {
             f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.doorSprites.Uf));
@@ -626,8 +626,8 @@ export function initializeWorldRooms() {
   };
   DungeonHallway.prototype.Bq = function (a) {
     var b, c;
-    for (c = 0; c < this.Sk.length; c++) {
-      b = this.Sk[c];
+    for (c = 0; c < this.pathTiles.length; c++) {
+      b = this.pathTiles[c];
       var d = b.x;
       b = b.y;
       var f = a[d - 1],
@@ -647,11 +647,11 @@ export function initializeWorldRooms() {
   };
   DungeonHallway.prototype.Lw = function (a) {
     var b, c;
-    for (c = 0; c < this.Sk.length; c++) {
-      b = this.Sk[c];
+    for (c = 0; c < this.pathTiles.length; c++) {
+      b = this.pathTiles[c];
       a[b.x][b.y].floorType = 1;
     }
-    a[this.af.wj][this.af.xj].floorType = 3;
-    a[this.Be.wj][this.Be.xj].floorType = 3;
+    a[this.doorA.wj][this.doorA.xj].floorType = 3;
+    a[this.doorB.wj][this.doorB.xj].floorType = 3;
   };
 }

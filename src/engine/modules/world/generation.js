@@ -139,7 +139,7 @@ export function DungeonDecorationGenerator() {
 }
 export function DungeonLevel() {
   this.Li = this.Ki = 0;
-  this.rc = this.sc = 120;
+  this.widthInTiles = this.heightInTiles = 120;
   this.tileGrid = null;
   this.roomList = [];
   this.gd = [];
@@ -160,10 +160,10 @@ export function generateDungeonLevel(a, b, c, d) {
     f.Aw();
   }
   if (11 === b) {
-    c = new CastleLayoutGenerator(f.rc, f.sc, f.tileGrid, seededRandom);
+    c = new CastleLayoutGenerator(f.widthInTiles, f.heightInTiles, f.tileGrid, seededRandom);
     c.rw();
   } else {
-    for (a = 0, c = new DungeonLayoutGenerator(f.rc, f.sc, f.tileGrid, seededRandom, c); !c.rw();) {
+    for (a = 0, c = new DungeonLayoutGenerator(f.widthInTiles, f.heightInTiles, f.tileGrid, seededRandom, c); !c.rw();) {
       console.log("Level generation failed for seed: " + f.sp + " attempt: " + a);
       a++;
       f.sp++;
@@ -212,7 +212,7 @@ export function generateDungeonLevel(a, b, c, d) {
       var ally = c[b],
         h = d;
       a = ally.position;
-      a.cd = null;
+      a.currentHallway = null;
       a.room = h;
       ally.actionType = IDLE_ACTION;
       clearMovementTarget(a);
@@ -225,8 +225,8 @@ export function generateDungeonLevel(a, b, c, d) {
 }
 export function clearDungeonTiles(a) {
   var b, c, d;
-  for (c = 0; c < a.rc; c++) {
-    for (d = a.tileGrid[c], b = 0; b < a.sc; b++) {
+  for (c = 0; c < a.widthInTiles; c++) {
+    for (d = a.tileGrid[c], b = 0; b < a.heightInTiles; b++) {
       var f = d[b];
       f.Jn = null;
       f.Yf = null;
@@ -512,10 +512,10 @@ export function initializeWorldGeneration() {
   DungeonLevel.prototype.Aw = function () {
     var a, b, c, d, f;
     this.tileGrid = [];
-    for (b = 0; b < this.rc; b++) {
+    for (b = 0; b < this.widthInTiles; b++) {
       c = [];
       d = b * game.tileSize;
-      for (a = 0; a < this.sc; a++) {
+      for (a = 0; a < this.heightInTiles; a++) {
         f = a * game.tileSize;
         c.push(new DungeonTile(b, a, d, f));
       }
@@ -523,7 +523,7 @@ export function initializeWorldGeneration() {
     }
   };
   DungeonLevel.prototype.getTileAt = function (a, b) {
-    return 0 > a || a >= this.rc || 0 > b || b >= this.sc ? null : this.tileGrid[a][b];
+    return 0 > a || a >= this.widthInTiles || 0 > b || b >= this.heightInTiles ? null : this.tileGrid[a][b];
   };
   DungeonLevel.prototype.Ai = function (a) {
     return a / game.tileSize | 0;

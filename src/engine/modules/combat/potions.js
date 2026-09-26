@@ -82,7 +82,7 @@ export function PotionDrop(a, b, c, d) {
   this.Rp = c;
   this.oE = d;
   this.collected = false;
-  this.Zc = null;
+  this.claimedBy = null;
   this.ph = 0;
 }
 export function PotionDropRegistry() {
@@ -250,7 +250,7 @@ export function initializeCombatPotions() {
     this.collected = a;
   };
   PotionDrop.prototype.Re = function (a) {
-    this.Zc = a;
+    this.claimedBy = a;
   };
   PotionDrop.prototype.Ud = function () {
     return this.ph;

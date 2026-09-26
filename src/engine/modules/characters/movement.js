@@ -19,12 +19,12 @@ export function CharacterPosition(a, b) {
   this.Gd = null;
   this.lj = new Vector2();
   this.Tl = new Vector2();
-  this.Wc = new Vector2();
+  this.separationDelta = new Vector2();
   this.Jw = b;
   this.MC = a;
   this.levelPosition = new Vector2();
   this.worldPosition = new Vector2();
-  this.room = this.cd = null;
+  this.room = this.currentHallway = null;
   this.Ul = new Vector2();
   this.Sn = this.Rn = 0;
   this.moveTargetPoint = new Vector2();
@@ -105,13 +105,13 @@ export function separateDungeonCharacters(a) {
     h = a.levelPosition.distanceTo(b.levelPosition);
     if (40 > h) {
       if (0 === h) {
-        setVector(a.Wc, Math.random(), Math.random());
+        setVector(a.separationDelta, Math.random(), Math.random());
       } else {
-        copyVector(a.Wc, a.levelPosition);
-        subtractVector(a.Wc, b.levelPosition);
+        copyVector(a.separationDelta, a.levelPosition);
+        subtractVector(a.separationDelta, b.levelPosition);
       }
-      normalizeVector(a.Wc);
-      addVector(a.lj, a.Wc);
+      normalizeVector(a.separationDelta);
+      addVector(a.lj, a.separationDelta);
       d = true;
     }
   }
@@ -122,13 +122,13 @@ export function separateDungeonCharacters(a) {
       h = a.levelPosition.distanceTo(b.levelPosition);
       if (50 > h) {
         if (0 === h) {
-          setVector(a.Wc, Math.random(), Math.random());
+          setVector(a.separationDelta, Math.random(), Math.random());
         } else {
-          copyVector(a.Wc, a.levelPosition);
-          subtractVector(a.Wc, b.levelPosition);
+          copyVector(a.separationDelta, a.levelPosition);
+          subtractVector(a.separationDelta, b.levelPosition);
         }
-        normalizeVector(a.Wc);
-        addVector(a.lj, a.Wc);
+        normalizeVector(a.separationDelta);
+        addVector(a.lj, a.separationDelta);
         d = true;
       }
     }
@@ -140,13 +140,13 @@ export function separateDungeonCharacters(a) {
       h = a.levelPosition.distanceTo(b.levelPosition);
       if (50 > h) {
         if (0 === h) {
-          setVector(a.Wc, Math.random(), Math.random());
+          setVector(a.separationDelta, Math.random(), Math.random());
         } else {
-          copyVector(a.Wc, a.levelPosition);
-          subtractVector(a.Wc, b.levelPosition);
+          copyVector(a.separationDelta, a.levelPosition);
+          subtractVector(a.separationDelta, b.levelPosition);
         }
-        normalizeVector(a.Wc);
-        addVector(a.lj, a.Wc);
+        normalizeVector(a.separationDelta);
+        addVector(a.lj, a.separationDelta);
         d = true;
       }
     }
@@ -171,13 +171,13 @@ export function separateWorldCharacters(a) {
       g = a.worldPosition.distanceTo(b.worldPosition);
       if (40 > g) {
         if (0 === g) {
-          setVector(a.Wc, Math.random(), Math.random());
+          setVector(a.separationDelta, Math.random(), Math.random());
         } else {
-          copyVector(a.Wc, a.worldPosition);
-          subtractVector(a.Wc, b.worldPosition);
+          copyVector(a.separationDelta, a.worldPosition);
+          subtractVector(a.separationDelta, b.worldPosition);
         }
-        normalizeVector(a.Wc);
-        addVector(a.Tl, a.Wc);
+        normalizeVector(a.separationDelta);
+        addVector(a.Tl, a.separationDelta);
         d = true;
       }
     }

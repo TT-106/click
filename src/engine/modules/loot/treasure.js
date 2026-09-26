@@ -12,7 +12,7 @@ export function GoldDrop(a, b, c, d) {
   this.Yo = c;
   this.vD = d;
   this.collected = false;
-  this.Zc = null;
+  this.claimedBy = null;
   this.ph = 0;
 }
 export function GoldDropRegistry() {
@@ -101,7 +101,7 @@ export function initializeLootTreasure() {
     this.collected = a;
   };
   GoldDrop.prototype.Re = function (a) {
-    this.Zc = a;
+    this.claimedBy = a;
   };
   GoldDrop.prototype.Ud = function () {
     return this.ph;

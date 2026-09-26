@@ -286,7 +286,7 @@ export function applySpellEffect(a, b) {
     } else {
       if (16 === d && (c = b.targetCharacter)) {
         c = c.effects;
-        c.Kf = false;
+        c.isStunned = false;
         removeStunEffects(c);
       }
     }
@@ -325,9 +325,9 @@ export function applyActionDamage(a) {
 }
 export function resolveCharacterDefeat(a, b) {
   if (b.characterType === ADVENTURER_TYPE) {
-    if (!b.effects.Kf) {
+    if (!b.effects.isStunned) {
       game.state.statisticsRecorder.recordCharacterStunned();
-      b.effects.Kf = true;
+      b.effects.isStunned = true;
       var c = b.position.levelPosition,
         stunEffect = new StatusEffect(13, game.state.turnNumber, stunEffectDefinition.Qd, game.animations.Zg(stunEffectDefinition.vd), stunEffectDefinition.Od, stunEffectDefinition.Pd, 0);
       c = new VisualEffect(stunEffectDefinition.vd, c, c, false, 1);

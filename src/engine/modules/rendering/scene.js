@@ -143,7 +143,7 @@ export function drawDungeonCharacters(a, b) {
     f = c.position.getLevelPositionY();
     g = projectDungeonX(d, f);
     h = projectDungeonY(d, f);
-    l = c.effects.wg;
+    l = c.effects.isStealthed;
     c = c.getSprite();
     a.se.dk(c, d, f, g, h, c.Ad.spriteSize, l ? 0.4 : 0);
   }

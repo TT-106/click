@@ -163,8 +163,8 @@ export function findHallwayPath(a, b, c) {
     l = new DungeonHallway(b, g, c, h);
     b.Nc.push(g);
     c.Nc.push(h);
-    g.Yk = l;
-    h.Yk = l;
+    g.hallway = l;
+    h.hallway = l;
     for (f = 0; f < a.length; f++) {
       if (d = a[f], !roomContainsTile(b, d.x, d.y) && !roomContainsTile(c, d.x, d.y)) {
         if (roomContainsTile(c, d.x, d.y)) {
@@ -176,8 +176,8 @@ export function findHallwayPath(a, b, c) {
           n = d.y;
           p.wj = s;
           p.xj = n;
-          p.me = s * game.tileSize;
-          p.ne = n * game.tileSize;
+          p.pixelColumn = s * game.tileSize;
+          p.pixelRow = n * game.tileSize;
           g.Ho = d.x != a[f + 1].x;
         } else {
           if (isRoomBorder(c, d.x, d.y)) {
@@ -186,12 +186,12 @@ export function findHallwayPath(a, b, c) {
             n = d.y;
             p.wj = s;
             p.xj = n;
-            p.me = s * game.tileSize;
-            p.ne = n * game.tileSize;
+            p.pixelColumn = s * game.tileSize;
+            p.pixelRow = n * game.tileSize;
             h.Ho = d.x != a[f - 1].x;
           }
         }
-        l.Sk.push(d);
+        l.pathTiles.push(d);
       }
     }
     b = l;

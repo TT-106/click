@@ -260,7 +260,7 @@ export function updateCharacter(a, b) {
         s = isAdventurerOrMinion(a) ? b * p.Jw * walkingSpeedBonus.currentValue * walkingSpeedModifier.currentValue : p.Jw * b;
         if (null != p.Ug && 0 < p.Ug.length) {
           var u = p.Ug[0];
-          setVector(p.velocity, u.me, u.ne);
+          setVector(p.velocity, u.pixelColumn, u.pixelRow);
           subtractVector(p.velocity, p.levelPosition);
           if (vectorLength(p.velocity) <= s) {
             var y;
@@ -271,9 +271,9 @@ export function updateCharacter(a, b) {
                   v = getAllies(),
                   D = v[0].position,
                   N = D.room,
-                  I = D.cd;
+                  I = D.currentHallway;
                 for (C = 1; C < v.length; C++) {
-                  if (D = v[C].position, D.cd != I || D.room != N) {
+                  if (D = v[C].position, D.currentHallway != I || D.room != N) {
                     A = false;
                     break a;
                   }
@@ -286,7 +286,7 @@ export function updateCharacter(a, b) {
                   var z,
                     O = getAllies(),
                     J,
-                    la = u.Yk.Km;
+                    la = u.hallway.Km;
                   for (z = 0; z < O.length; z++) {
                     if (O[z].effects.Kd) {
                       x = false;
@@ -303,7 +303,7 @@ export function updateCharacter(a, b) {
               y = x;
             }
             if (y) {
-              setVector(p.levelPosition, u.me | 0, u.ne | 0);
+              setVector(p.levelPosition, u.pixelColumn | 0, u.pixelRow | 0);
               var Q = p.Ug.shift();
               if (!Q.isOpen) {
                 a: {
@@ -317,7 +317,7 @@ export function updateCharacter(a, b) {
                       revealRoom(Q.$d);
                       spawnRoomTreasure(Q.$d);
                     }
-                    var na = Q.Yk;
+                    var na = Q.hallway;
                     if (!na.Km) {
                       revealHallway(na, true);
                       var K = getOppositeDoor(na, Q);
@@ -335,10 +335,10 @@ export function updateCharacter(a, b) {
                 }
               }
               if (p.room) {
-                p.cd = Q.Yk;
+                p.currentHallway = Q.hallway;
                 p.room = null;
               } else {
-                p.cd = null;
+                p.currentHallway = null;
                 p.room = Q.$d;
               }
               p.fg = -1;
@@ -348,9 +348,9 @@ export function updateCharacter(a, b) {
                 }
               }
             }
-          } else if (p.cd) {
-            var H = p.cd.Sk,
-              S = u === p.cd.Be;
+          } else if (p.currentHallway) {
+            var H = p.currentHallway.pathTiles,
+              S = u === p.currentHallway.doorB;
             if (-1 === p.fg) {
               p.fg = S ? 0 : H.length - 1;
             }
@@ -370,14 +370,14 @@ export function updateCharacter(a, b) {
             if (da) {
               setVector(p.velocity, da.getPixelX(), da.getPixelY());
             } else {
-              setVector(p.velocity, u.me, u.ne);
+              setVector(p.velocity, u.pixelColumn, u.pixelRow);
             }
             subtractVector(p.velocity, p.levelPosition);
             if (vectorLength(p.velocity) <= s) {
               if (da) {
                 setVector(p.levelPosition, da.getPixelX() | 0, da.getPixelY() | 0);
               } else {
-                setVector(p.levelPosition, u.me | 0, u.ne | 0);
+                setVector(p.levelPosition, u.pixelColumn | 0, u.pixelRow | 0);
               }
               if (S) {
                 p.fg++;
@@ -553,7 +553,7 @@ export function updateCharacter(a, b) {
                             wb = Ab.distanceTo(Ha.position.levelPosition);
                             if (wb <= ac && (0 > Ec || wb < Ec)) {
                               Ib = Ha.effects;
-                              if (Ib.wg || Ib.Kd || Ib.bi) {
+                              if (Ib.isStealthed || Ib.Kd || Ib.isConverted) {
                                 qb = Ha;
                               } else {
                                 Bb = Ha;

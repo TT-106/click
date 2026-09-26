@@ -12,7 +12,7 @@ export function ItemDrop(a, b, c, d) {
   this.np = c;
   this.PD = d;
   this.collected = false;
-  this.Zc = null;
+  this.claimedBy = null;
   this.ph = 0;
 }
 export function ItemEffect(a, b, c, d) {
@@ -295,7 +295,7 @@ export function initializeLootItems() {
     this.collected = a;
   };
   ItemDrop.prototype.Re = function (a) {
-    this.Zc = a;
+    this.claimedBy = a;
   };
   ItemDrop.prototype.Ud = function () {
     return this.ph;

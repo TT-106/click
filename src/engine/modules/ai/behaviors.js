@@ -157,21 +157,21 @@ export function UseShopBehavior(a, b) {
   this.Mi = game.tileSize + 5;
   this.priorityWeight = a;
   this.il = b;
-  this.qd = null;
+  this.goldDrop = null;
   this.Wy = 0;
 }
 export function EnterDungeonBehavior(a, b) {
   this.Mi = game.tileSize + 5;
   this.priorityWeight = a;
   this.il = b;
-  this.bd = null;
+  this.scrollDrop = null;
   this.Zy = 0;
 }
 export function EnterCastleBehavior(a, b) {
   this.Mi = game.tileSize + 5;
   this.priorityWeight = a;
   this.il = b;
-  this.ad = null;
+  this.potionDrop = null;
   this.Yy = 0;
 }
 export function TravelWorldBehavior(a, b) {
@@ -466,7 +466,7 @@ export function initializeAiBehaviors() {
     } else {
       this.co = 0;
     }
-    if (this.targetCharacter && !(this.targetCharacter.isDead || this.targetCharacter.effects.Kd || this.targetCharacter.effects.bi) && (/** @type {MovingBehavior} */ (/** @type {unknown} */ (this))).vx(a)) {
+    if (this.targetCharacter && !(this.targetCharacter.isDead || this.targetCharacter.effects.Kd || this.targetCharacter.effects.isConverted) && (/** @type {MovingBehavior} */ (/** @type {unknown} */ (this))).vx(a)) {
       this.ax = game.state.turnNumber;
       var b = a.position.room;
       if (b && isAdventurerOrMinion(a)) {
@@ -493,7 +493,7 @@ export function initializeAiBehaviors() {
     setVector(this.Jl, 0, 0);
     for (s = 0; s < a.length; s++) {
       n = a[s];
-      if (!(n.isDead || n.effects.Kd || n.effects.bi || n.position.room != d)) {
+      if (!(n.isDead || n.effects.Kd || n.effects.isConverted || n.position.room != d)) {
         p = n.position.levelPosition;
         n = c.distanceTo(p);
         if (!(n > this.CA)) {
@@ -661,7 +661,7 @@ export function initializeAiBehaviors() {
     if (!this.targetCharacter) {
       return 0;
     }
-    if (a.effects.wg) {
+    if (a.effects.isStealthed) {
       this.actionRange = MELEE_ATTACK_RANGE;
       this.qk = 2;
     } else {
@@ -694,7 +694,7 @@ export function initializeAiBehaviors() {
     return this.Dn;
   };
   LootItemBehavior.prototype.Td = function (a) {
-    return a.effects.wg || !hasOpponentsInRoom(a, a.position.room) ? null : a;
+    return a.effects.isStealthed || !hasOpponentsInRoom(a, a.position.room) ? null : a;
   };
   LootScrollBehavior.prototype = new ExploreDungeonBehavior();
   LootScrollBehavior.prototype.resetBehaviorState = function () {
@@ -754,7 +754,7 @@ export function initializeAiBehaviors() {
     (/** @type {RangedAttackBehavior & RangedBehaviorMethods} */ (/** @type {unknown} */ (this.Vq))).od(a);
   };
   GuardRangedBehavior.prototype.wd = function (a) {
-    return a.effects.wg ? 0 : (/** @type {RangedAttackBehavior & RangedBehaviorMethods} */ (/** @type {unknown} */ (this.Vq))).wd(a);
+    return a.effects.isStealthed ? 0 : (/** @type {RangedAttackBehavior & RangedBehaviorMethods} */ (/** @type {unknown} */ (this.Vq))).wd(a);
   };
   GuardRangedBehavior.prototype.getPriority = function () {
     return (/** @type {RangedAttackBehavior & RangedBehaviorMethods} */ (/** @type {unknown} */ (this.Vq))).getPriority();
@@ -967,7 +967,7 @@ export function initializeAiBehaviors() {
       c = game.state.adventurers,
       d;
     for (b = 0; b < c.length; b++) {
-      if (d = c[b], d !== a && d.effects.Kf) {
+      if (d = c[b], d !== a && d.effects.isStunned) {
         return d;
       }
     }
@@ -1024,7 +1024,7 @@ export function initializeAiBehaviors() {
       f.Cc = c;
       f.rB(b);
       if (d) {
-        setVector(f.moveTargetPoint, d.me, d.ne);
+        setVector(f.moveTargetPoint, d.pixelColumn, d.pixelRow);
         a.actionType = 1;
       } else {
         if (b) {
@@ -1096,19 +1096,19 @@ export function initializeAiBehaviors() {
     return a;
   };
   UseShopBehavior.prototype.resetBehaviorState = function () {
-    this.qd = null;
+    this.goldDrop = null;
   };
   UseShopBehavior.prototype.notifySpellLearned = function () {};
   UseShopBehavior.prototype.od = function (a) {
-    if (this.qd) {
-      if (this.qd.collected) {
-        this.qd = null;
-      } else if (this.qd.Zc == a) {
-        a.rh = this.qd;
-        if (distanceToPoint(a.position.levelPosition, this.qd.Xo, this.qd.Yo) < this.Mi) {
+    if (this.goldDrop) {
+      if (this.goldDrop.collected) {
+        this.goldDrop = null;
+      } else if (this.goldDrop.claimedBy == a) {
+        a.rh = this.goldDrop;
+        if (distanceToPoint(a.position.levelPosition, this.goldDrop.Xo, this.goldDrop.Yo) < this.Mi) {
           a.actionType = 5;
         } else {
-          setVector(a.position.moveTargetPoint, this.qd.Xo, this.qd.Yo);
+          setVector(a.position.moveTargetPoint, this.goldDrop.Xo, this.goldDrop.Yo);
           a.actionType = 1;
         }
         clearMovementTarget(a.position);
@@ -1124,9 +1124,9 @@ export function initializeAiBehaviors() {
     if (!b || hasOpponentsInRoom(a, b)) {
       return 0;
     }
-    if (this.qd && this.qd.Zc === a) {
-      this.qd.Re(null);
-      this.qd.Se(0);
+    if (this.goldDrop && this.goldDrop.claimedBy === a) {
+      this.goldDrop.Re(null);
+      this.goldDrop.Se(0);
     }
     var b = game.goldDrops.pe,
       c,
@@ -1141,37 +1141,37 @@ export function initializeAiBehaviors() {
         c = b[d];
         if (!(c.collected || c.vD !== l)) {
           h = distanceSquaredToPoint(f, c.Xo, c.Yo);
-          if (!(c.Zc && h > c.Ud() || !(0 > n || h < n))) {
+          if (!(c.claimedBy && h > c.Ud() || !(0 > n || h < n))) {
             g = c;
             n = h;
           }
         }
       }
-      if (this.qd = g) {
-        this.qd.Re(a);
-        this.qd.Se(n);
+      if (this.goldDrop = g) {
+        this.goldDrop.Re(a);
+        this.goldDrop.Se(n);
         this.Wy = Math.sqrt(n);
       }
     }
-    return this.qd ? approachValue(this.priorityWeight, this.il, this.Wy) : 0;
+    return this.goldDrop ? approachValue(this.priorityWeight, this.il, this.Wy) : 0;
   };
   UseShopBehavior.prototype.getPriority = function () {
     return this.priorityWeight;
   };
   EnterDungeonBehavior.prototype.resetBehaviorState = function () {
-    this.bd = null;
+    this.scrollDrop = null;
   };
   EnterDungeonBehavior.prototype.notifySpellLearned = function () {};
   EnterDungeonBehavior.prototype.od = function (a) {
-    if (this.bd) {
-      if (this.bd.collected) {
-        this.bd = null;
-      } else if (this.bd.Zc == a) {
-        a.Zh = this.bd;
-        if (distanceToPoint(a.position.levelPosition, this.bd.bq, this.bd.cq) < this.Mi) {
+    if (this.scrollDrop) {
+      if (this.scrollDrop.collected) {
+        this.scrollDrop = null;
+      } else if (this.scrollDrop.claimedBy == a) {
+        a.Zh = this.scrollDrop;
+        if (distanceToPoint(a.position.levelPosition, this.scrollDrop.bq, this.scrollDrop.cq) < this.Mi) {
           a.actionType = 7;
         } else {
-          setVector(a.position.moveTargetPoint, this.bd.bq, this.bd.cq);
+          setVector(a.position.moveTargetPoint, this.scrollDrop.bq, this.scrollDrop.cq);
           a.actionType = 1;
         }
         clearMovementTarget(a.position);
@@ -1187,9 +1187,9 @@ export function initializeAiBehaviors() {
     if (!b || hasOpponentsInRoom(a, b)) {
       return 0;
     }
-    if (this.bd && this.bd.Zc === a) {
-      this.bd.Re(null);
-      this.bd.Se(0);
+    if (this.scrollDrop && this.scrollDrop.claimedBy === a) {
+      this.scrollDrop.Re(null);
+      this.scrollDrop.Se(0);
     }
     var b = game.scrollDrops.kf,
       c,
@@ -1204,37 +1204,37 @@ export function initializeAiBehaviors() {
         c = b[d];
         if (!(c.collected || c.BE !== l)) {
           h = distanceSquaredToPoint(f, c.bq, c.cq);
-          if (!(c.Zc && h > c.Ud() || !(0 > n || h < n))) {
+          if (!(c.claimedBy && h > c.Ud() || !(0 > n || h < n))) {
             g = c;
             n = h;
           }
         }
       }
-      if (this.bd = g) {
-        this.bd.Re(a);
-        this.bd.Se(n);
+      if (this.scrollDrop = g) {
+        this.scrollDrop.Re(a);
+        this.scrollDrop.Se(n);
         this.Zy = Math.sqrt(n);
       }
     }
-    return this.bd ? approachValue(this.priorityWeight, this.il, this.Zy) : 0;
+    return this.scrollDrop ? approachValue(this.priorityWeight, this.il, this.Zy) : 0;
   };
   EnterDungeonBehavior.prototype.getPriority = function () {
     return this.priorityWeight;
   };
   EnterCastleBehavior.prototype.resetBehaviorState = function () {
-    this.ad = null;
+    this.potionDrop = null;
   };
   EnterCastleBehavior.prototype.notifySpellLearned = function () {};
   EnterCastleBehavior.prototype.od = function (a) {
-    if (this.ad) {
-      if (this.ad.collected) {
-        this.ad = null;
-      } else if (this.ad.Zc == a) {
-        a.hk = this.ad;
-        if (distanceToPoint(a.position.levelPosition, this.ad.Qp, this.ad.Rp) < this.Mi) {
+    if (this.potionDrop) {
+      if (this.potionDrop.collected) {
+        this.potionDrop = null;
+      } else if (this.potionDrop.claimedBy == a) {
+        a.hk = this.potionDrop;
+        if (distanceToPoint(a.position.levelPosition, this.potionDrop.Qp, this.potionDrop.Rp) < this.Mi) {
           a.actionType = 8;
         } else {
-          setVector(a.position.moveTargetPoint, this.ad.Qp, this.ad.Rp);
+          setVector(a.position.moveTargetPoint, this.potionDrop.Qp, this.potionDrop.Rp);
           a.actionType = 1;
         }
         clearMovementTarget(a.position);
@@ -1250,9 +1250,9 @@ export function initializeAiBehaviors() {
     if (!b || hasOpponentsInRoom(a, b)) {
       return 0;
     }
-    if (this.ad && this.ad.Zc === a) {
-      this.ad.Re(null);
-      this.ad.Se(0);
+    if (this.potionDrop && this.potionDrop.claimedBy === a) {
+      this.potionDrop.Re(null);
+      this.potionDrop.Se(0);
     }
     var b = game.potionDrops.Hf,
       c,
@@ -1267,19 +1267,19 @@ export function initializeAiBehaviors() {
         c = b[d];
         if (!(c.collected || c.oE !== l)) {
           h = distanceSquaredToPoint(f, c.Qp, c.Rp);
-          if (!(c.Zc && h > c.Ud() || !(0 > n || h < n))) {
+          if (!(c.claimedBy && h > c.Ud() || !(0 > n || h < n))) {
             g = c;
             n = h;
           }
         }
       }
-      if (this.ad = g) {
-        this.ad.Re(a);
-        this.ad.Se(n);
+      if (this.potionDrop = g) {
+        this.potionDrop.Re(a);
+        this.potionDrop.Se(n);
         this.Yy = Math.sqrt(n);
       }
     }
-    return this.ad ? approachValue(this.priorityWeight, this.il, this.Yy) : 0;
+    return this.potionDrop ? approachValue(this.priorityWeight, this.il, this.Yy) : 0;
   };
   EnterCastleBehavior.prototype.getPriority = function () {
     return this.priorityWeight;
@@ -1292,7 +1292,7 @@ export function initializeAiBehaviors() {
     if (this.$c) {
       if (this.$c.collected) {
         this.$c = null;
-      } else if (this.$c.Zc == a) {
+      } else if (this.$c.claimedBy == a) {
         a.bj = this.$c;
         if (distanceToPoint(a.position.levelPosition, this.$c.mp, this.$c.np) < this.Mi) {
           a.actionType = 6;
@@ -1313,7 +1313,7 @@ export function initializeAiBehaviors() {
     if (!b || hasOpponentsInRoom(a, b)) {
       return 0;
     }
-    if (this.$c && this.$c.Zc === a) {
+    if (this.$c && this.$c.claimedBy === a) {
       this.$c.Re(null);
       this.$c.Se(0);
     }
@@ -1330,7 +1330,7 @@ export function initializeAiBehaviors() {
         c = b[d];
         if (!(c.collected || c.PD !== l)) {
           h = distanceSquaredToPoint(f, c.mp, c.np);
-          if (!(c.Zc && h > c.Ud() || !(0 > n || h < n))) {
+          if (!(c.claimedBy && h > c.Ud() || !(0 > n || h < n))) {
             g = c;
             n = h;
           }

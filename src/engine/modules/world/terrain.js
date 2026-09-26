@@ -158,18 +158,18 @@ export function WorldGenerator(a, b) {
   addDecorationTileSet(this.tj, L2_MountainDesert04Sprite);
   addDecorationTileSet(this.tj, L2_MountainDesert05Sprite);
   addDecorationTileSet(this.tj, L2_MountainDesert06Sprite);
-  this.rc = a;
-  this.sc = b;
+  this.widthInTiles = a;
+  this.heightInTiles = b;
   this.tE = this.ZD = "L1_Terrain015.PNG";
 }
 export function populateWorldBlock(a, b) {
   var c = findCastleByRegion(b.Hd + "_" + b.Id),
     d,
     f,
-    g = b.Hd * a.rc,
-    h = b.Id * a.sc;
-  for (f = 0; f <= a.rc; f++) {
-    for (d = 0; d <= a.sc; d++) {
+    g = b.Hd * a.widthInTiles,
+    h = b.Id * a.heightInTiles;
+  for (f = 0; f <= a.widthInTiles; f++) {
+    for (d = 0; d <= a.heightInTiles; d++) {
       var l = b,
         n = f,
         p = d,
@@ -189,8 +189,8 @@ export function populateWorldBlock(a, b) {
       }
     }
   }
-  for (f = 0; f < a.rc; f++) {
-    for (d = 0; d < a.sc; d++) {
+  for (f = 0; f < a.widthInTiles; f++) {
+    for (d = 0; d < a.heightInTiles; d++) {
       var shoreTile = getBlockTile(b, f, d);
       var shoreSpriteName = undefined;
       if (!c || c.regionLocked) {
@@ -212,19 +212,19 @@ export function populateWorldBlock(a, b) {
       }
     }
   }
-  g = b.Hd * a.rc;
-  h = b.Id * a.sc;
+  g = b.Hd * a.widthInTiles;
+  h = b.Id * a.heightInTiles;
   if (!c || c.regionLocked) {
-    for (f = 0; f < a.rc; f++) {
-      for (d = 0; d < a.sc; d++) {
+    for (f = 0; f < a.widthInTiles; f++) {
+      for (d = 0; d < a.heightInTiles; d++) {
         var lockedTile = getBlockTile(b, f, d);
         lockedTile.setDecorationSprite(null);
         lockedTile.terrainMoveCost = 1E5;
       }
     }
   } else {
-    for (f = 0; f < a.rc; f++) {
-      for (d = 0; d < a.sc; d++) {
+    for (f = 0; f < a.widthInTiles; f++) {
+      for (d = 0; d < a.heightInTiles; d++) {
         var decoTile = getBlockTile(b, f, d);
         if (l = decoTile.Kn) {
           s = null;
@@ -281,14 +281,14 @@ export function populateWorldBlock(a, b) {
   var westCastle = findCastleByRegion(b.Hd - 1 + "_" + b.Id);
   var nwCastle = findCastleByRegion(b.Hd - 1 + "_" + (b.Id - 1));
   if (c != northCastle) {
-    for (n = 0; n < a.rc; n++) {
+    for (n = 0; n < a.widthInTiles; n++) {
       d = getBlockTile(b, n, 0);
       d.setBackgroundSprite(f);
       d.setDecorationSprite(null);
     }
   }
   if (c != westCastle) {
-    for (n = 0; n < a.sc; n++) {
+    for (n = 0; n < a.heightInTiles; n++) {
       d = getBlockTile(b, 0, n);
       d.setBackgroundSprite(f);
       d.setDecorationSprite(null);
@@ -320,12 +320,12 @@ export function WorldBlock(a, b, c) {
   this.tileGrid = [];
   this.Hd = a;
   this.Id = b;
-  this.sc = WORLD_BLOCK_ROWS;
-  this.rc = WORLD_BLOCK_COLUMNS;
-  this.Qj = a * this.rc;
-  this.Rj = b * this.sc;
-  this.wp = this.Qj + this.rc;
-  this.xp = this.Rj + this.sc;
+  this.heightInTiles = WORLD_BLOCK_ROWS;
+  this.widthInTiles = WORLD_BLOCK_COLUMNS;
+  this.Qj = a * this.widthInTiles;
+  this.Rj = b * this.heightInTiles;
+  this.wp = this.Qj + this.widthInTiles;
+  this.xp = this.Rj + this.heightInTiles;
   this.yp = this.Qj * game.tileSize;
   this.Mw = this.wp * game.tileSize;
   this.zp = this.Rj * game.tileSize;
@@ -336,17 +336,17 @@ export function WorldBlock(a, b, c) {
 export function repositionWorldBlock(a, b, c, d) {
   a.Hd = b;
   a.Id = c;
-  a.Qj = b * a.rc;
-  a.Rj = c * a.sc;
-  a.wp = a.Qj + a.rc;
-  a.xp = a.Rj + a.sc;
+  a.Qj = b * a.widthInTiles;
+  a.Rj = c * a.heightInTiles;
+  a.wp = a.Qj + a.widthInTiles;
+  a.xp = a.Rj + a.heightInTiles;
   a.yp = a.Qj * game.tileSize;
   a.Mw = a.wp * game.tileSize;
   a.zp = a.Rj * game.tileSize;
   a.Nw = a.xp * game.tileSize;
   if (d) {
-    for (c = 0; c < a.rc; c++) {
-      for (d = a.tileGrid[c], b = 0; b < a.sc; b++) {
+    for (c = 0; c < a.widthInTiles; c++) {
+      for (d = a.tileGrid[c], b = 0; b < a.heightInTiles; b++) {
         var f = d[b],
           g = a.Qj + c,
           h = a.Rj + b;
@@ -363,7 +363,7 @@ export function worldBlockContains(a, b, c) {
   return b >= a.yp && b < a.Mw && c >= a.zp && c < a.Nw;
 }
 export function getBlockTile(a, b, c) {
-  return 0 > b || b >= a.rc || 0 > c || c >= a.sc ? null : a.tileGrid[b][c];
+  return 0 > b || b >= a.widthInTiles || 0 > c || c >= a.heightInTiles ? null : a.tileGrid[b][c];
 }
 export function WorldMap() {
   this.wt = new WorldGenerator(WORLD_BLOCK_COLUMNS, WORLD_BLOCK_ROWS);
@@ -610,11 +610,11 @@ export function initializeWorldTerrain() {
     var a,
       b,
       c,
-      d = this.Hd * this.rc,
-      f = this.Id * this.sc;
-    for (b = 0; b < this.rc; b++) {
+      d = this.Hd * this.widthInTiles,
+      f = this.Id * this.heightInTiles;
+    for (b = 0; b < this.widthInTiles; b++) {
       c = [];
-      for (a = 0; a < this.sc; a++) {
+      for (a = 0; a < this.heightInTiles; a++) {
         c.push(new WorldTile(d + b, f + a));
       }
       this.tileGrid.push(c);
