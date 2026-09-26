@@ -1,4 +1,3 @@
-// @ts-nocheck -- M10 渐进类型化：JSDoc 覆盖后摘除（见 docs/WORKSTATE.md）
 /** 升级按钮及各类详情显示。
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
@@ -13,6 +12,8 @@ import { minionsBySpell } from "../content/minions.js";
 import { getMonsterTypesForLevel } from "../combat/encounters.js";
 import { getPartyMinLevel } from "../characters/party.js";
 import { statValue } from "../characters/stats.js";
+/** @typedef {{ createDomElements: () => void }} DomDetails */
+/** @typedef {{ reset: () => void, render: () => void, Rc: (upgrade: unknown) => void }} ActiveUpgradeButton */
 export function UpgradeButtonView(a, b, c, d) {
   this.elementId = a + "_" + c;
   this.visible = true;
@@ -81,7 +82,7 @@ export function ItemPurchaseDetails(a, b) {
 export function EquipmentDetails(a, b) {
   this.upgrade = a;
   this.contentContainer = b;
-  this.Sy = this.Py = this.Ry = this.Ty = this.hm = this.table = null;
+  this.aD = this.Sy = this.Py = this.Ry = this.Ty = this.hm = this.table = null;
   this.shown = false;
   this.Iu = null;
   this.Ju = -1;
@@ -98,7 +99,7 @@ export function AutoDungeonDetails(a, b) {
   this.contentContainer = b;
   this.mf = this.we = this.mo = this.$e = null;
   this.shown = false;
-  this.oz = this.cachedDescriptionText = "";
+  this.cachedTitleText = this.oz = this.cachedDescriptionText = "";
 }
 export function EquipmentSetDetails(a, b) {
   this.upgrade = a;
@@ -165,6 +166,7 @@ export function ScrollUpgradeDetails(a, b) {
   this.shown = false;
   this.Az = null;
   this.cachedCostValue = -1;
+  this.cachedTitleText = null;
 }
 export function CastlePurchaseDetails(a, b) {
   this.upgrade = a;
@@ -266,7 +268,7 @@ export function initializeViewsUpgradeDetails() {
   };
   UpgradeButtonView.prototype.update = function () {
     var a = this.upgrade.getUpgradeType(),
-      b = this.Ro();
+      b = (/** @type {UpgradeButtonView & { Ro: () => string }} */ (/** @type {unknown} */ (this))).Ro();
     if (!this.buttonElement) {
       mountUpgradeButton(this);
     }
@@ -306,7 +308,7 @@ export function initializeViewsUpgradeDetails() {
   };
   ItemPurchaseDetails.prototype.te = function () {
     if (!this.Lj) {
-      this.createDomElements();
+      (/** @type {DomDetails} */ (/** @type {unknown} */ (this))).createDomElements();
     }
     if (!this.shown) {
       showElement(this.Lj);
@@ -387,7 +389,7 @@ export function initializeViewsUpgradeDetails() {
   };
   EquipmentDetails.prototype.te = function () {
     if (!this.table) {
-      this.createDomElements();
+      (/** @type {DomDetails} */ (/** @type {unknown} */ (this))).createDomElements();
     }
     if (!this.shown) {
       showElement(this.table);
@@ -457,7 +459,7 @@ export function initializeViewsUpgradeDetails() {
   };
   GlobalUpgradeDetails.prototype.te = function () {
     if (!this.Bf) {
-      this.createDomElements();
+      (/** @type {DomDetails} */ (/** @type {unknown} */ (this))).createDomElements();
     }
     if (!this.shown) {
       showElement(this.Bf);
@@ -531,7 +533,7 @@ export function initializeViewsUpgradeDetails() {
   };
   AutoDungeonDetails.prototype.te = function () {
     if (!this.$e) {
-      this.createDomElements();
+      (/** @type {DomDetails} */ (/** @type {unknown} */ (this))).createDomElements();
     }
     if (!this.shown) {
       showElement(this.$e);
@@ -586,7 +588,7 @@ export function initializeViewsUpgradeDetails() {
   };
   EquipmentSetDetails.prototype.te = function () {
     if (!this.Bf) {
-      this.createDomElements();
+      (/** @type {DomDetails} */ (/** @type {unknown} */ (this))).createDomElements();
     }
     if (!this.shown) {
       showElement(this.Bf);
@@ -634,7 +636,7 @@ export function initializeViewsUpgradeDetails() {
   };
   SkillUpgradeDetails.prototype.te = function () {
     if (!this.wn) {
-      this.createDomElements();
+      (/** @type {DomDetails} */ (/** @type {unknown} */ (this))).createDomElements();
     }
     if (!this.shown) {
       showElement(this.wn);
@@ -689,7 +691,7 @@ export function initializeViewsUpgradeDetails() {
   };
   SpellUpgradeDetails.prototype.te = function () {
     if (!this.table) {
-      this.createDomElements();
+      (/** @type {DomDetails} */ (/** @type {unknown} */ (this))).createDomElements();
     }
     if (!this.shown) {
       showElement(this.table);
@@ -768,7 +770,7 @@ export function initializeViewsUpgradeDetails() {
   };
   MonsterLevelDetails.prototype.te = function () {
     if (!this.kk) {
-      this.createDomElements();
+      (/** @type {DomDetails} */ (/** @type {unknown} */ (this))).createDomElements();
     }
     if (!this.shown) {
       showElement(this.kk);
@@ -849,7 +851,7 @@ export function initializeViewsUpgradeDetails() {
   };
   DungeonPurchaseDetails.prototype.te = function () {
     if (!this.bf) {
-      this.createDomElements();
+      (/** @type {DomDetails} */ (/** @type {unknown} */ (this))).createDomElements();
     }
     if (!this.shown) {
       showElement(this.bf);
@@ -917,7 +919,7 @@ export function initializeViewsUpgradeDetails() {
   };
   ScrollUpgradeDetails.prototype.te = function () {
     if (!this.sn) {
-      this.createDomElements();
+      (/** @type {DomDetails} */ (/** @type {unknown} */ (this))).createDomElements();
     }
     if (!this.shown) {
       showElement(this.sn);
@@ -993,7 +995,7 @@ export function initializeViewsUpgradeDetails() {
   };
   CastlePurchaseDetails.prototype.te = function () {
     if (!this.Cm) {
-      this.createDomElements();
+      (/** @type {DomDetails} */ (/** @type {unknown} */ (this))).createDomElements();
     }
     if (!this.shown) {
       showElement(this.Cm);
@@ -1057,7 +1059,7 @@ export function initializeViewsUpgradeDetails() {
   };
   FarmUpgradeDetails.prototype.te = function () {
     if (!this.Hm) {
-      this.createDomElements();
+      (/** @type {DomDetails} */ (/** @type {unknown} */ (this))).createDomElements();
     }
     if (!this.shown) {
       showElement(this.Hm);
@@ -1128,7 +1130,7 @@ export function initializeViewsUpgradeDetails() {
   };
   CharacterLevelDetails.prototype.te = function () {
     if (!this.table) {
-      this.createDomElements();
+      (/** @type {DomDetails} */ (/** @type {unknown} */ (this))).createDomElements();
     }
     if (!this.shown) {
       showElement(this.table);
@@ -1162,8 +1164,8 @@ export function initializeViewsUpgradeDetails() {
       c = c[randomInt(c.length)].ll;
       this.Zm.style.background = "url('spritesheet/monsters.png') -" + (c.sourceX + 10) + "px -" + (c.sourceY + 12) + "px";
     }
-    for (var d, f = 0, g = 0, h = 0, l = 0, c = getPartyMinLevel(), a = this.upgrade.Kr(), b = 0; b < game.state.adventurers.length; b++) {
-      d = game.state.adventurers[b].stats;
+    for (var d, f = 0, g = 0, h = 0, l = 0, c = getPartyMinLevel(), a = this.upgrade.Kr(), adventurerIndex = 0; adventurerIndex < game.state.adventurers.length; adventurerIndex++) {
+      d = game.state.adventurers[adventurerIndex].stats;
       f += statValue(d.damage);
       g += statValue(d.armor);
       h += statValue(d.attackRating);
@@ -1277,7 +1279,7 @@ export function initializeViewsUpgradeDetails() {
   };
   AchievementClaimDetails.prototype.te = function () {
     if (!this.titleElement) {
-      this.createDomElements();
+      (/** @type {DomDetails} */ (/** @type {unknown} */ (this))).createDomElements();
     }
     if (!this.shown) {
       showElement(this.titleElement);
@@ -1319,7 +1321,7 @@ export function initializeViewsUpgradeDetails() {
   };
   AchievementProgressDetails.prototype.te = function () {
     if (!this.titleElement) {
-      this.createDomElements();
+      (/** @type {DomDetails} */ (/** @type {unknown} */ (this))).createDomElements();
     }
     if (!this.shown) {
       showElement(this.titleElement);
@@ -1357,7 +1359,7 @@ export function initializeViewsUpgradeDetails() {
   };
   PointUpgradeDetails.prototype.te = function () {
     if (!this.titleElement) {
-      this.createDomElements();
+      (/** @type {DomDetails} */ (/** @type {unknown} */ (this))).createDomElements();
     }
     if (!this.shown) {
       showElement(this.titleElement);
@@ -1396,11 +1398,11 @@ export function initializeViewsUpgradeDetails() {
     clearElementById(this.elementId);
     var a;
     for (a = 0; a < this.gj.length; a++) {
-      this.gj[a].reset();
+      (/** @type {UpgradeButtonView & ActiveUpgradeButton} */ (/** @type {unknown} */ (this.gj[a]))).reset();
     }
     var b = this.py.upgrades;
     for (a = 0; a < this.gj.length; a++) {
-      this.gj[a].Rc(b[a]);
+      (/** @type {UpgradeButtonView & ActiveUpgradeButton} */ (/** @type {unknown} */ (this.gj[a]))).Rc(b[a]);
     }
     this.mj = -100;
   };
@@ -1411,11 +1413,11 @@ export function initializeViewsUpgradeDetails() {
       this.mj = a;
       var b = this.py.upgrades;
       for (a = 0; a < this.gj.length; a++) {
-        this.gj[a].Rc(b[a]);
+        (/** @type {UpgradeButtonView & ActiveUpgradeButton} */ (/** @type {unknown} */ (this.gj[a]))).Rc(b[a]);
       }
     }
     for (a = 0; a < this.gj.length; a++) {
-      this.gj[a].render();
+      (/** @type {UpgradeButtonView & ActiveUpgradeButton} */ (/** @type {unknown} */ (this.gj[a]))).render();
     }
   };
 }
