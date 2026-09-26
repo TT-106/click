@@ -5,6 +5,7 @@
 
 ## 当前轮次状态（2026-09-26，M13 文档与验收收尾）
 
+- U7 增加两条农场购买差分：`withFarmableDungeon` 在共享存档里设一座已征服城堡及同坐标、已清理且定价 1000 金的地牢；`dungeon-farm-purchased` 走全局 type=8 的 `PurchaseCastleUpgrade`，`dungeon-row-farm-purchased` 走地牢行私有 type=7 的 `PurchaseDungeonUpgrade`（原版 `Es`）。两端各自断言 `farms` 实体与 `farmsPurchased` 统计增长，逐检查点完整 DTO 相等；矩阵 41/41。农场收获和长期收益尚无专项断言，农场行从未覆盖调为 PARTIAL，验收矩阵 51 行现为 31 PASS / 19 PARTIAL / 1 未覆盖。未改引擎、数值、存档键或 RNG，混淆清单 1,174、fields 段 264。
 - U7 新增 `scroll-cast-in-combat` 并修复一处真实保真缺陷：原版 `Scroll` 读定义 `xa`，重构构造器读 `spellDefinition` 但六条定义仍写 `xa`，休克卷轴在原版触发法术、重构版触发普通攻击；新场景首次直接分叉，按原版语义把六个数据键统一为 `spellDefinition` 后 39/39 场景、check/typecheck/parity/e2e/8h+24h soak 全绿。`symbol-map.json` fields 263→264，`analyze-fields` 混淆清单 1,175→1,174；`src` 内 `xa` 残留 0。`rename-field.mjs` 写盘后回扫漏导入 `node:path` 的错误也已修复，并用临时文件零命中探针验证完整退出。其他卷轴种类仍未逐一施放，矩阵该行保持 PARTIAL。
 - U7 新增 `auto-equipped`：fixture 背包已有比身上更好的装备；原版/重构版都通过 type=4 的 `EquipBestItemUpgrade` 走自动装备，分别断言装备槽内容变化、itemEquipped 点数事件计数增长，并逐检查点比较完整 DTO。完整矩阵 38/38，验收矩阵实际 51 行更新为 31 PASS / 18 PARTIAL / 2 未覆盖。此场景未覆盖逐件手动装备/卸下；引擎、数值与存档键未改，混淆清单 1,175，fields 段 263。
 - U7 新增 `achievement-claimed`：fixture 已有 `monsterKills100` 达成未领取；两端按 type=14 的 `ClaimAchievementUpgrade` 入口刷新 `Cd()` 并各执行一次购买，断言 `applied` 计数增长及完整 DTO 相等。全量矩阵 37/37；其余成就奖励效果保持 PARTIAL。另查明 `farmAndDungeonUpgrades` 只负责收获和收金币，真正农场购买在城堡升级列表与地牢行视图；证据见 facts#29。引擎与存档键未改，混淆清单 1,175，fields 段 263。

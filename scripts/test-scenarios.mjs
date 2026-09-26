@@ -6,7 +6,7 @@ import { chromium } from 'playwright';
 import saveCodec from '../src/engine/save-codec.js';
 import {
   decodeFixture, encodeSave, summarize,
-  withPotions, withScrolls, withGold, withKills, withPointPools, withTurns, withElapsed, withOfflineProcessing,
+  withPotions, withScrolls, withGold, withKills, withPointPools, withFarmableDungeon, withTurns, withElapsed, withOfflineProcessing,
   withVictories, withClassSpell, withCastleVictory, withReclassedSpell, withEquippedItem, withResurrectionTrial, withSkillPoints, withExperience,
   HARNESS_FIXED_NOW,
 } from '../tests/scenarios/save-mutations.mjs';
@@ -59,6 +59,9 @@ const equipmentChanged = (s) => ({
     > (base.pointManagerState?.pointsByType ?? []).find(p => p.pointEventType === 21)?.count,
 });
 const scrollWasCast = (s) => ({ scrollCast: (s.statistics?.scrollsUsed ?? 0) > (base.statistics?.scrollsUsed ?? 0) });
+const farmWasPurchased = (s) => ({
+  farmPurchased: (s.farms?.length ?? 0) > 0 && (s.statistics?.farmsPurchased ?? 0) > 0,
+});
 // U7：药水激活在视图之外没有入口，激活后存档里只有 statistics.potionsUsed 可证。
 const potionWasUsed = (s) => ({ potionUsed: (s.statistics?.potionsUsed ?? 0) > 0 });
 const scenarios = [
@@ -310,6 +313,24 @@ const scenarios = [
     ],
   },
   {
+    name: 'dungeon-farm-purchased',
+    // 城堡已征服、对应地牢已清、金币足够；购买后实体与统计必须真正落盘。
+    make: () => withGold(withFarmableDungeon(base), 1000000),
+    steps: [
+      { turns: 0, purchaseDungeonFarm: true, check: farmWasPurchased },
+      { turns: 900, check: farmWasPurchased },
+    ],
+  },
+  {
+    name: 'dungeon-row-farm-purchased',
+    // 地牢列表行直接持有 PurchaseDungeonUpgrade，不在全局 upgradeCollections 中。
+    make: () => withGold(withFarmableDungeon(base), 1000000),
+    steps: [
+      { turns: 0, purchaseDungeonRowFarm: true, check: farmWasPurchased },
+      { turns: 900, check: farmWasPurchased },
+    ],
+  },
+  {
     name: 'autosave-payload',
     // 自动保存计时分支 + 落盘字节比对：两端跑同样的真实帧循环，比较写进 localStorage 的原文。
     make: () => base,
@@ -437,7 +458,7 @@ try {
         // effectType 表示这一步改用"逐帧扫描活怪物效果队列"的推进方式，并直接对账施加次数。
         // purchaseUpgrades 表示这一步先推进再驱动升级购买（U7：只有视图层会触发的路径）。
         const step = Array.isArray(rawStep) ? { turns: rawStep[0], check: rawStep[1] } : rawStep;
-        const { turns, check, effectType, purchaseUpgrades, purchasePointUpgrades, claimAchievement, equipBestItems, castScrollDuringCombat, activatePotions, frames } = step;
+        const { turns, check, effectType, purchaseUpgrades, purchasePointUpgrades, claimAchievement, equipBestItems, castScrollDuringCombat, purchaseDungeonFarm, purchaseDungeonRowFarm, activatePotions, frames } = step;
         const results = await Promise.all(pages.map(async p => {
           await p.page.evaluate(ms => window.harness.setTime(ms), HARNESS_FIXED_NOW);
           // 重置后无队伍：走真实帧循环（守卫路径），而非裸推进
@@ -448,6 +469,8 @@ try {
           if (claimAchievement) return p.page.evaluate(a => window.harness.claimAchievement(a), { turns });
           if (equipBestItems) return p.page.evaluate(a => window.harness.equipBestItems(a), { turns });
           if (castScrollDuringCombat !== undefined) return p.page.evaluate(a => window.harness.castScrollDuringCombat(a), { maxTurns: castScrollDuringCombat });
+          if (purchaseDungeonFarm) return p.page.evaluate(a => window.harness.purchaseDungeonFarm(a), { turns });
+          if (purchaseDungeonRowFarm) return p.page.evaluate(a => window.harness.purchaseDungeonRowFarm(a), { turns });
           if (activatePotions !== undefined) return p.page.evaluate(a => window.harness.activatePotions(a), { turns, limit: activatePotions });
           // frames：走真实帧循环（loop.tick 内含 view.render 的 try/catch），随后读画布不透明像素
           if (frames !== undefined) return p.page.evaluate(n => {
@@ -510,6 +533,12 @@ try {
           }
           assert.equal(results[1].cast, results[0].cast, '两端卷轴施放次数不同');
         }
+        if (purchaseDungeonFarm || purchaseDungeonRowFarm) {
+          for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {
+            assert.ok(results[i].purchased > 0, `${label} 端必须真的购买地牢农场`);
+          }
+          assert.equal(results[1].purchased, results[0].purchased, '两端农场购买次数不同');
+        }
         if (frames !== undefined) {
           const inks = results.map(r => r.ink);
           for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {
@@ -565,6 +594,7 @@ try {
             if (verdict.equipmentChanged !== undefined) assert.equal(verdict.equipmentChanged, true, `${label} 自动装备后装备槽必须真实变化`);
             if (verdict.itemEquipEvents !== undefined) assert.equal(verdict.itemEquipEvents, true, `${label} 装备物品事件计数必须真实增长`);
             if (verdict.scrollCast !== undefined) assert.equal(verdict.scrollCast, true, `${label} 卷轴使用统计必须真实增长`);
+            if (verdict.farmPurchased !== undefined) assert.equal(verdict.farmPurchased, true, `${label} 农场实体与购买统计必须真实增长`);
             if (verdict.potionUsed !== undefined) assert.equal(verdict.potionUsed, true, `${label} 必须真的激活至少一瓶药水（potionsUsed 增长）`);
             if (verdict.note && i === 0) console.log(`  · ${verdict.note}`);
             if (verdict.victory !== undefined) assert.equal(verdict.victory, true, `${label} 必须真的走完征服尾部并触发胜利`);

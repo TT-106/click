@@ -8,7 +8,7 @@ const resetRandom = () => { seed = 123456789; };
 Math.random = () => { seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0; return seed / 4294967296; };
 Date.now = () => fixedNow;
 const original = new URLSearchParams(location.search).has('original');
-let game, initialize, ready, snapshot, load, advance, isOffline, loopTick, restart, reset, syncLoopClock, upgradeCollections, castScroll;
+let game, initialize, ready, snapshot, load, advance, isOffline, loopTick, restart, reset, syncLoopClock, upgradeCollections, castScroll, PurchaseDungeonUpgrade;
 if (original) {
   await new Promise((resolve, reject) => {
     const script = document.createElement('script');
@@ -32,6 +32,7 @@ if (original) {
   const simulation = await import('../src/engine/modules/simulation/tick.js');
   ({ upgradeCollections } = await import('../src/engine/modules/content/balance.js'));
   ({ castScroll } = await import('../src/engine/modules/combat/scrolls.js'));
+  ({ PurchaseDungeonUpgrade } = await import('../src/engine/modules/progression/upgrades.js'));
   // 引擎不直接碰 localStorage（宿主注入端口）。差分要比对"自动保存真正落盘的字节"，
   // 这里按 src/services/saves.js 的同一套键与备份语义注入端口。
   {
@@ -260,6 +261,34 @@ window.harness = {
       if (snapshot().statistics.scrollsUsed > before) break;
     }
     return { attempts, cast: snapshot().statistics.scrollsUsed - before, snapshot: snapshot() };
+  },
+  purchaseDungeonFarm({ turns = 0 } = {}) {
+    for (let i = 0; i < turns; i++) advance();
+    const collections = original ? window.Nx : upgradeCollections;
+    const rows = collections.flatMap(collection => original ? collection.HC : collection.upgradeRows).flat();
+    let purchased = 0;
+    for (const upgrade of rows) {
+      if ((original ? upgrade.Na() : upgrade.getUpgradeType()) !== 8) continue;
+      upgrade.Cd();
+      if (original ? upgrade.qc() : upgrade.canPurchaseNow()) {
+        if (original) upgrade.Qc(); else upgrade.purchase();
+        purchased++;
+        break;
+      }
+    }
+    return { purchased, snapshot: snapshot() };
+  },
+  purchaseDungeonRowFarm({ turns = 0 } = {}) {
+    for (let i = 0; i < turns; i++) advance();
+    const dungeon = (original ? window.Game.Aa.bk : game.dungeons.bk)[0];
+    if (!dungeon) throw new Error('没有可购买的地牢行');
+    const upgrade = original ? new window.Es(dungeon) : new PurchaseDungeonUpgrade(dungeon);
+    upgrade.Cd();
+    const purchased = original ? upgrade.qc() : upgrade.canPurchaseNow();
+    if (purchased) {
+      if (original) upgrade.Qc(); else upgrade.purchase();
+    }
+    return { purchased: Number(purchased), snapshot: snapshot() };
   },
   // U7：药水激活也没有非视图入口（Potion.aw 只由药水按钮调用），激活会在存档里
   // 记 statistics.potionsUsed，因此两端各自断言计数增长，再照常做完整存档差分。

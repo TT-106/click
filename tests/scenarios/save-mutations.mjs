@@ -68,6 +68,24 @@ export function withPointPools(save, overrides) {
   return out;
 }
 
+/** 让一座已登记的城堡及同坐标地牢满足农场购买条件，价格只改测试存档。 */
+export function withFarmableDungeon(save, cost = 1000) {
+  const out = clone(save);
+  const castle = out.castleManager.castleStates.find(c =>
+    out.dungeonManagerState.dungeonStates.some(d => d.dungeonId === c.castleId));
+  if (!castle) throw new Error('fixture 中没有城堡与地牢同坐标');
+  const dungeon = out.dungeonManagerState.dungeonStates.find(d => d.dungeonId === castle.castleId);
+  castle.conquered = true;
+  castle.dungeonsConquered = true;
+  castle.castleRegionLocked = false;
+  dungeon.discovered = true;
+  dungeon.conquered = true;
+  dungeon.cleared = true;
+  dungeon.dungeonFarm = false;
+  dungeon.dungeonFarmCost = cost;
+  return out;
+}
+
 export function withTurns(save, turnNumber) {
   const out = clone(save);
   out.turnNumber = turnNumber;

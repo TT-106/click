@@ -36,7 +36,7 @@
 
 17. 原版全局：`window.Game`（=w）、`Game.Hr`=GameLoop（sB 实例）、`Game.Hr.Hr()`=帧 tick、`window.lB()`=序列化、`window.pB(15)`=单回合步进、`game.hE(text)`=导入存档、`game.Em`=initialized、`game.ig`=processingOffline、`game.jf/Vj`=offlineDuration/offlineProcessed。
 18. 重构版入口：`src/engine/adapter.js`（唯一产品入口，命令校验 + 只读快照）；内部接口 `src/engine/internal-api.js`。
-19. 存档兼容契约：`tests/fixtures/original.c2save` + parity（0/1/99/900 回合）+ 场景矩阵（当前 39 场景）+ codec 单测 + `autosave-payload` 场景（比对真正落盘的原文）。
+19. 存档兼容契约：`tests/fixtures/original.c2save` + parity（0/1/99/900 回合）+ 场景矩阵（当前 41 场景）+ codec 单测 + `autosave-payload` 场景（比对真正落盘的原文）。
 
 ## 已修复的回归（方法论证据）
 
