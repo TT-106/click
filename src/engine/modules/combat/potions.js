@@ -6,7 +6,7 @@ import { BASE_POTION_CAPACITY, autoScrollsModifier, bossEncounterModifier, docil
 export var potionDefinitions;
 export function Potion(a) {
   this.potionId = a.potionId;
-  this.jc = game.itemSprites.getSprite(a.jc);
+  this.potionSprite = game.itemSprites.getSprite(a.potionSprite);
   this.uc = a.uc;
   this.tc = a.tc;
   this.vc = a.vc;
@@ -119,121 +119,121 @@ export function initializeCombatPotions() {
     potionId: "doubleGoldDropValue",
     uc: "双倍黄金",
     tc: "黄金掉落x2",
-    jc: "PotionLargeRose.PNG",
+    potionSprite: "PotionLargeRose.PNG",
     vc: 2
   }, {
     potionId: "doubleKills",
     uc: "双倍杀戮",
     tc: "杀戮翻倍",
-    jc: "PotionLargeViolet.PNG",
+    potionSprite: "PotionLargeViolet.PNG",
     vc: 1
   }, {
     potionId: "doubleExperience",
     uc: "双倍经验",
     tc: "经验翻倍",
-    jc: "PotionPurple.PNG",
+    potionSprite: "PotionPurple.PNG",
     vc: 3
   }, {
     potionId: "speedWalker",
     uc: "快速行走",
     tc: "+25%速度",
-    jc: "PotionShortRuby.PNG",
+    potionSprite: "PotionShortRuby.PNG",
     vc: 4
   }, {
     potionId: "fasterFarming",
     uc: "快速收获",
     tc: "提高收获速度",
-    jc: "PotionTallGreen.PNG",
+    potionSprite: "PotionTallGreen.PNG",
     vc: 5
   }, {
     potionId: "fasterInfestation",
     uc: "快速侵扰",
     tc: "快速开始收获",
-    jc: "PotionSquareBlue.PNG",
+    potionSprite: "PotionSquareBlue.PNG",
     vc: 6
   }, {
     potionId: "infiniteScrolls",
     uc: "无限卷轴",
     tc: "开火",
-    jc: "PotionShortSilver.PNG",
+    potionSprite: "PotionShortSilver.PNG",
     vc: 7
   }, {
     potionId: "moreMonsters",
     uc: "更多怪物",
     tc: "每个房间内怪物+10",
-    jc: "PotionRoundedTopaz.PNG",
+    potionSprite: "PotionRoundedTopaz.PNG",
     vc: 8
   }, {
     potionId: "guaranteedItemDrops",
     uc: "100%道具掉落",
     tc: "所有怪物掉落道具",
-    jc: "PotionShortPink.PNG",
+    potionSprite: "PotionShortPink.PNG",
     vc: 9
   }, {
     potionId: "potionDuration",
     uc: "药剂持续更久",
     tc: "梅塔药剂",
-    jc: "PotionRed.PNG",
+    potionSprite: "PotionRed.PNG",
     vc: 10
   }, {
     potionId: "freeSpellCasting",
     uc: "法术无消耗",
     tc: "法术不消耗法力",
-    jc: "PotionTriangularYellow.PNG",
+    potionSprite: "PotionTriangularYellow.PNG",
     vc: 11
   }, {
     potionId: "moreKillsPerFarm",
     uc: "每次收获更多杀戮",
     tc: "收获杀戮翻倍",
-    jc: "PotionEmerald.PNG",
+    potionSprite: "PotionEmerald.PNG",
     vc: 12
   }, {
     potionId: "docileMonsters",
     uc: "驯养怪物",
     tc: "怪物无害",
-    jc: "PotionShortTan.PNG",
+    potionSprite: "PotionShortTan.PNG",
     vc: 13
   }, {
     potionId: "higherItemValues",
     uc: "道具价值",
     tc: "新道具+20%黄金",
-    jc: "PotionTallYellow2.PNG",
+    potionSprite: "PotionTallYellow2.PNG",
     vc: 14
   }, {
     potionId: "frailMonsters",
     uc: "脆弱怪物",
     tc: "怪物容易死亡",
-    jc: "PotionShortOrange.PNG",
+    potionSprite: "PotionShortOrange.PNG",
     vc: 15
   }, {
     potionId: "autoFiringScrolls",
     uc: "卷轴自动开火",
     tc: "卷轴无需消耗自动使用",
-    jc: "PotionLargeGreen.PNG",
+    potionSprite: "PotionLargeGreen.PNG",
     vc: 16
   }, {
     potionId: "doubleGoldDrops",
     uc: "双倍黄金掉落",
     tc: "每个怪物掉落双倍黄金",
-    jc: "PotionTriangularRuby.PNG",
+    potionSprite: "PotionTriangularRuby.PNG",
     vc: 17
   }, {
     potionId: "doubleItemDrops",
     uc: "双倍道具掉落",
     tc: "每个怪物掉落双倍道具",
-    jc: "PotionLargeTan.PNG",
+    potionSprite: "PotionLargeTan.PNG",
     vc: 18
   }, {
     potionId: "randomTreasureRoom",
     uc: "随机财宝室",
     tc: "25%几率/房间",
-    jc: "PotionShortTan2.PNG",
+    potionSprite: "PotionShortTan2.PNG",
     vc: 19
   }, {
     potionId: "randomBossEncounter",
     uc: "随机首领战",
     tc: "20%几率/房间",
-    jc: "PotionTallBrown.PNG",
+    potionSprite: "PotionTallBrown.PNG",
     vc: 20
   }];
   Potion.prototype.aw = function () {

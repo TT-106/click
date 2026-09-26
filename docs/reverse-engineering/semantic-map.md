@@ -76,6 +76,10 @@
 
 首次批量脚本误把 entities.js 的 CharacterPosition `h` 当作 WorldTile，且遗漏 Vector2、RenderCommand 调用点及 WorldMap.vw() 的内部调用；修正后 check、parity、12 场景、E2E 均通过。
 
+## 第八批字段续：药水图片（2026-09-26）
+
+`jc` → `potionSprite`：药水定义中的值为 PNG 名，`Potion` 构造函数用 `game.itemSprites.getSprite()` 转为 Sprite 实例；世界掉落渲染与药水按钮均读取实例 Sprite。定义、构造桥接及两个读取点同批更新，存档键不涉及此字段。
+
 ## 待取证残留（约 1,300 处访问）
 
 高频：`Y/Z/aa/ca/ea/ga/fa/ka/na` 等长尾——工作清单 `artifacts/obfuscated-fields.json`（按频次排序，含样例代码）。取证方法与产出格式见 WORKSTATE.md 第 6 节。

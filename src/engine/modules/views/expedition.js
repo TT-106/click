@@ -686,7 +686,7 @@ export function initializeViewsExpedition() {
       if (this.potion != this.sm) {
         this.Tp.innerHTML = this.potion.uc;
         this.Op.innerHTML = this.potion.tc;
-        a = this.potion.jc;
+        a = this.potion.potionSprite;
         this.Pp.style.background = "url('spritesheet/items.png') -" + a.sourceX + "px -" + a.sourceY + "px";
       }
       this.sm = this.potion;
