@@ -81,6 +81,7 @@
 - 文档补齐：新增 `docs/rendering.md`（两套渲染策略、命令池倒序提交、等距焦点排序、每场景 36 行菱形窗，全部带 file:line）与 `docs/performance-after.md`（真实页面帧时间：均值 4.17ms、P99 5.2ms、最差 8.3ms、0 帧 >50ms、0 条被吞渲染异常；口径限制：headless 无 vsync，且没有原版页面基线，故不宣称帧时间持平）。工具 `scripts/measure-frames.mjs` + `npm run perf:frames`。
 - `upgrades-purchased` 扩到 limit 60 + `withExperience()` 后，命中族从"仅全局升级"扩到"全局升级 + 角色升级"，验收矩阵"角色升级"由未覆盖转 PASS；技能升级仍不在覆盖内（`CharacterSkillUpgrade` 不在 `upgradeCollections`，而在每个角色的 `skillTree1..4`）。
 - 第十四~十五轮改名再清 9 个字母（`hd/ae/kd` 与 `Bc/Cc/Sc/Nc/ld/Jc`），混淆清单 1,202 → 1,193，fields 段 236 → 245；全部四套回归绿。`oc`（同文件双主）与 `$c/zd/wd/od/Uc/Vc/ed/` 等仍未取证或未落地。
+- 规范 §33 缺的三份公式文档已补齐并逐条核对：`docs/formulas/combat.md`（1,435 行、10 节 + 一次普通攻击的随机数消耗顺序附录）、`items.md`（738 行）、`progression.md`（976 行）。核对方式：脚本抽取全部 `file:line` 引用与 ```js 代码块，逐条回源——引用共 733 条全部命中存在文件且行号在范围内，combat.md 的 401 行引码逐字命中；items/progression 的少量"未命中"经逐条人工复核是多行字面量被压行、尾注并入等排版差异（如 `Vp: 0, pp: 1, jp: 0.2` 对应 balance.js:448-450 的三行），非编造。裸文件名歧义已就地消解 7 处，其余 24 处在各文档头部写明消歧约定。
 - 待办的文档收口：`REFACTOR_REPORT.md`（12 场景、auto equip/treasure/monster upgrade 的 PASS 口径、M10 段）、`COMPATIBILITY_REPORT.md`（12 场景表、性能比值）、`PERFORMANCE_REPORT.md`（比值）与验收矩阵需按实况重写；审计已给出逐条差异清单，但其中"38 个含私有码点文件名的垃圾文件"经 `git ls-files` 实测为 0，属误报，不得写入。
 
 ## 1. 项目概况

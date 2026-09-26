@@ -1,5 +1,7 @@
 # 战斗公式（以代码为准）
 
+> 引用规范：形如 `combat/actions.js:84` 的路径相对 `src/engine/modules/`；若某处只写了裸文件名（如 `character.js:677`），以所在小节的模块归属为准——`characters/character.js` 与 `views/character.js` 同名，未逐一消歧。
+
 > 事实来源：`src/engine/modules/**` 当前实现。每条公式给出 `file:line` 与原文 JS 片段。
 > 与 `archive/original/c2.js`（46,980 行单文件）的等价性由 34 场景差分矩阵保证，因此本文描述的是**权威行为**，不是设计意图。
 > 凡看起来像 bug 的地方一律按原样记录并标 `[疑似遗留怪癖]`；本文不提出修正。
@@ -25,7 +27,7 @@
 | `ar` / `mr` / `Ft` | 连锁跳数、睡眠/定身群体数、转变群体数（`statType 21/20/27`） | `skill-effects.js:102-110`、`character.js:513,900,902` | 高（名字语义由 `character.js:513` 与 `:900` 的用法给出） |
 | `Qq` | 范围雨类法术半径（格）（`statType 22`） | `skill-effects.js:111-112`、`character.js:586` | 高 |
 | `ho` | 溅射/爆炸半径增量（`statType 25`，**`+= 1` 而非 `+= c`**） | `skill-effects.js:113-116`、`tick.js:297`、`character.js:677` | 高 |
-| `vt` / `nt` | 回旋镖跳数 / 弹射跳数（`statType 28/29`） | `skill-effects.js:129-134`、`character.js:857,878` | 高 |
+| `vt` / `nt` | 回旋镖跳数 / 弹射跳数（`statType 28/29`） | `skill-effects.js:129-134`、`src/engine/modules/characters/character.js:857,878` | 高 |
 | `ku/lu/mu` | 野蛮人/忍者/盗贼小鸡出现几率 %（`statType 30/31/32`，**赋值而非累加**） | `skill-effects.js:135-143`、`actions.js:171-190` | 高 |
 | `baseHealthRegenPercent` = 1、`baseSpiritRegenPercent` = 4 | 再生基准 % | `stats.js:23-24`、`tick.js:42,47` | 高 |
 | `stunCount`、`damageGiven`、`damageReceived`、`kills`、`minionKills` | 统计量，不回馈战斗 | `stats.js:26`、`actions.js:317-319,334` | 高 |
@@ -39,7 +41,7 @@
 | `yd` | 是否需要投射物飞行（远程攻击/带弹道的法术） | `actions.js:457,483`、`tick.js:376-392` |
 | `Xs` / `ut` | 本动作可继续弹跳 / 本动作是"回旋后"段 | `actions.js:74-81`、`actions.js:611-711` |
 | `chainCount` / `Ys` | 该链段数上限 / 当前段序号 | `actions.js:471-474`、`actions.js:612-613` |
-| `pl` | 回旋镖的落点（回到施法者的位置） | `actions.js:664`、`character.js:858-866` |
+| `pl` | 回旋镖的落点（回到施法者的位置） | `actions.js:664`、`src/engine/modules/characters/character.js:858-866` |
 | `actionDefinition` | 指向 `Spell` 实例；**null 表示这是一次普通攻击** | `actions.js:67-70`、`actions.js:86-114` |
 | `impactEffect` / `projectileEffect` | 两个 `VisualEffect`；impact 的动画剩余帧数同时充当"本动作还剩几帧可结算" | `actions.js:84`、`sprites.js:64-93` |
 
@@ -366,7 +368,7 @@ export function applyActionDamage(a) {
 
 ### C-12 治疗类法术的伤害闸门（同一函数的另一支）
 
-`src/engine/modules/combat/actions.js:86-92`
+`src/engine/modules/combat/actions.js:90-92`
 
 ```js
       if (g) {
@@ -945,7 +947,7 @@ cat 11（骷髅军队）先把目标怪从尸体环形缓冲 `game.monsters.Og`�
 | 8 | 爆炸/溅射 | 首击 `statValue(damage)`（`character.js:668`）+ 溅射（C-28） | — |
 | 9 | 召唤伙伴 | — | — |
 | 10 / 11 / 17 | 召唤（普通/骷髅/小鸡） | — | — |
-| 12 | 回旋镖 | `calculateSpellDamage`（无命中掷点，`character.js:867`、`actions.js:699`） | **`td: false`** → 效果在动作收尾时施加（`actions.js:116`） |
+| 12 | 回旋镖 | `calculateSpellDamage`（无命中掷点，`src/engine/modules/characters/character.js:867`、`actions.js:699`） | **`td: false`** → 效果在动作收尾时施加（`actions.js:116`） |
 | 13 | 弹射 | `Math.max(1, calculateAttackDamage)`（`actions.js:527`） | 有命中掷点但被 `max(1,…)` 兜住 |
 | 14 | 立即拾取全场掉落 | — | `actions.js:192-282` |
 | 15 | 探测财宝箱 | — | `actions.js:284-285` → `CombatQueue.prototype.wu`（`actions.js:719-724`） |
@@ -1157,8 +1159,7 @@ export function respondToTaunt(a, b) {
     b.setCombatTarget(null);
   }
   if (c && c.effects.Gn) {
-    attackTauntingTarget(a, b);
-    return true;
+    return attackTauntingTarget(a, b), true;
   }
   for (var d = getOpponents(b), f, g = b.position.levelPosition, h, l = null, n = -1, c = /** @type {any} */ (0); c < d.length; c++) {
     if (f = d[c], b !== f && (h = f.effects, h.Gn && !h.Kd && (h = g.Ud(f.position.levelPosition), 0 > n || h < n))) {
@@ -1212,20 +1213,20 @@ export function respondToTaunt(a, b) {
       d,
       f = null,
       g;
-    for (b = 0; b < this.fo.length && !(d = this.fo[b], d.getPriority() > c && (g = d.wd(a), g > c && (c = g, f = d), 100 <= c)); b++) {}
+    for (b = 0; b < this.fo.length && !(d = this.fo[b], d.getPriority() > c && (g = d.getBehaviorScore(a), g > c && (c = g, f = d), 100 <= c)); b++) {}
     if (f) {
-      f.od(a);
+      f.execute(a);
     }
   };
 ```
 
 - 每回合（`tick.js:104`）先把动作与所有拾取/施法目标**清空**，然后按 `this.fo`（职业定义的固定顺序，`content/classes.js:* createBehaviors`）**顺序扫描**。
-- 两道门：`getPriority() > c`（该行为的名义上限必须**严格大于**当前已得分）→ 才付代价调用 `wd(a)`（实际算分，含随机数与目标搜索）；`g > c` 才接管。
+- 两道门：`getPriority() > c`（该行为的名义上限必须**严格大于**当前已得分）→ 才付代价调用 `getBehaviorScore(a)`（实际算分，含随机数与目标搜索）；`g > c` 才接管。
 - `100 <= c` 提前跳出（满分即停）。
 - **同分先声明者胜**（严格 `>`），所以列表顺序就是优先级。
 - 关键名义权重（`priorityWeight` 实参，全部来自 `classes.js` 行为列表）：`FollowLeaderBehavior = 100`、`StunnedBehavior = 99`、拾取类 98/75/70、远程攻击 95、主要法术 95/94/90/85、近战 90/85/65、`ExploreDungeon/Idle = 10/1`、`WaitBehavior.eo = 2`。
 
-动态分数（`wd` 返回值）：
+动态分数（`getBehaviorScore` 返回值，旧符号 `wd`）：
 
 | 行为 | 分数式 | 位置 |
 |---|---|---|
@@ -1241,7 +1242,7 @@ export function respondToTaunt(a, b) {
 | `StunnedBehavior` | `eo = 99`，只在"靠门或靠楼梯"时才生效（否则让位） | `:1571-1585` |
 | `ExploreDungeonBehavior` 及其全体子类（`behaviors.js:361-376`） | 无房 / 法术未就绪 / **蓝不够 `getSpellSpiritCost`** → 0 | `:361-376` |
 
-`[疑似遗留怪癖]` `StunnedBehavior`（权重 99，仅次于逃跑）的 `wd` 条件与名字相反：它只在角色**已经站在门边或楼梯边**时才返回非 0，且 `od` 做的事是"把移动点夹在房内并 `actionType = 1`"。语义推断为"晕头转向时不要卡在门口"，置信度低——`StunnedBehavior` 与 `effects.Kd` 之间没有任何交叉引用，`Kd` 为真的角色在 `tick.js:793` 已被强制 `IDLE_ACTION`，根本不会走到行为仲裁，所以这 99 分在实战中只在"刚醒但还在门口"这类边角出现。要定论需原版文案或按名取用的第二处证据。
+`[疑似遗留怪癖]` `StunnedBehavior`（权重 99，仅次于逃跑）的 `getBehaviorScore` 条件与名字相反：它只在角色**已经站在门边或楼梯边**时才返回非 0，且 `od` 做的事是"把移动点夹在房内并 `actionType = 1`"。语义推断为"晕头转向时不要卡在门口"，置信度低——`StunnedBehavior` 与 `effects.Kd` 之间没有任何交叉引用，`Kd` 为真的角色在 `tick.js:793` 已被强制 `IDLE_ACTION`，根本不会走到行为仲裁，所以这 99 分在实战中只在"刚醒但还在门口"这类边角出现。要定论需原版文案或按名取用的第二处证据。
 
 ### C-34 施法者选目标（cat 分派）
 
@@ -1251,11 +1252,11 @@ export function respondToTaunt(a, b) {
 | 5（连锁） | 逐跳 `nearestFriendly(ja) within RANGED_ATTACK_RANGE`，排除已跳过的最近 4 个；**先取非潜行/非倒地/非转变者，取不到就退回这些"坏"者**（`bb = Bb ? Bb : qb`） | `character.js:543-569` |
 | 6（雨） | 主目标 + 以 `Qq + 1` 为半径的瓦片方块，每格 `0.5 > Math.random()` 才放效果 | `character.js:586-637` |
 | 8（爆炸） | 主目标 + `ho + 1` 圈内瓦片（分三层 `applyAreaTileEffect` 手写展开） | `character.js:677-728` |
-| 2 且 type ∈ {0,1,4}（群体禁用） | 以主目标为锚，同房间、`RANGED_ATTACK_RANGE` 内、**未带同类型效果**者，抽 `mr+1` / `Ft+1` 个 | `character.js:888-952` |
+| 2 且 type ∈ {0,1,4}（群体禁用） | 以主目标为锚，同房间、`RANGED_ATTACK_RANGE` 内、**未带同类型效果**者，抽 `mr+1` / `Ft+1` 个 | `src/engine/modules/characters/character.js:888-952` |
 | 16（复活） | 第一个 `effects.isStunned` 的冒险者 | `behaviors.js:965-975` |
 | 其它（1/2/4/9/10/11/12/13/14/15/17） | `a.combatTarget`（由行为层 `selectScrollTarget` / `findNearestVisibleOpponent` 预先填好） | `actions.js:494-503` |
 
-群体禁用那一步对首领的免疫是硬编码的：`character.js:963`
+群体禁用那一步对首领的免疫是硬编码的：`src/engine/modules/characters/character.js:963`
 
 ```js
                     if (Wd = Ud[xe], 4 !== Wd.characterType || 1 !== te && 0 !== te) {
@@ -1300,7 +1301,7 @@ export function createChainAction(a) {
 
 连续成功直到首次失败，与 C-3 的分裂攻击同一模式。`Ir()` 这个名字在 `CharacterStats` 上是"掷跳数"、在 `CombatAction` 上是"读 `Ys`"（`actions.js:716-718`）——**同名双语义**，差分上承重，禁止合并。
 
-链只在**远程攻击**上触发（`actions.js:470-474`）；近战分支不写 `Xs`。回旋镖（cat 12）的返回段用的是另一套：`chainCount = vt + 1`（`character.js:857`）、`Math.max(1, …)` 的弹射则是 `nt + 1`（`character.js:878`），并且 `ut` 支在最后一跳把目标设回施法者（`actions.js:655`）。
+链只在**远程攻击**上触发（`actions.js:470-474`）；近战分支不写 `Xs`。回旋镖（cat 12）的返回段用的是另一套：`chainCount = vt + 1`（`src/engine/modules/characters/character.js:857`）、`Math.max(1, …)` 的弹射则是 `nt + 1`（`src/engine/modules/characters/character.js:878`），并且 `ut` 支在最后一跳把目标设回施法者（`actions.js:655`）。
 
 `1 + (a.stats.ar + 1)`（`character.js:513`）＝连锁跳数 `ar + 2`——多出的 `1 +` 使 `ar = 0`（未学技能）时也有 2 跳。`[疑似遗留怪癖]` 看着像 off-by-one，但原版同式，保留。
 

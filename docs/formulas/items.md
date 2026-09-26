@@ -1,5 +1,7 @@
 # 道具生成公式（以代码为准）
 
+> 引用规范：形如 `combat/actions.js:84` 的路径相对 `src/engine/modules/`；若某处只写了裸文件名（如 `character.js:677`），以所在小节的模块归属为准——`characters/character.js` 与 `views/character.js` 同名，未逐一消歧。
+
 > 事实来源：`src/engine/modules/**` 当前实现。每条公式给出 `file:line` 与原文 JS 片段。
 > 与 `archive/original/c2.js` 的等价性由 34 场景差分矩阵保证，因此本文描述的是**权威行为**，不是设计意图。
 > 凡看起来像 bug 的地方一律按原样记录并标 `[疑似遗留怪癖]`；本文不提出修正。
@@ -147,7 +149,7 @@ export function randomizeItemLevel(a, b) {
 
 ```js
 CA = (100 - Math.min(90, globalUpgradeDefinitions.higherLevelItemChance.currentValue + CHEST_ITEM_LEVEL_BONUS)) / 100,
-DA = randomizeItemLevel(wl.stats.characterLevel, CA),
+DA = randomizeItemLevel(wl.stats.characterLevel, CA);
 ```
 
 两次独立掷点（`loot/items.js:227` 与 `:231` 各一次 `Math.random()`），故
@@ -517,7 +519,7 @@ var b = game.treasure,
   c = 0 < getMonsters().length;
 if (!getRoomTreasure(b, a)) {
   if (3 != a.Yp) {
-    if (!c && 2 > a.Nc.length) {
+    if (!c && 2 > a.doorList.length) {
       return;
     }
     c = globalUpgradeDefinitions.treasureChance.currentValue / 100;
@@ -704,7 +706,12 @@ return {
   itemGold: a.zf,
   itemValue: a.itemValue,
   itemCharacteristic: a.characteristic,
-  itemEffect: h ? { itemEffectType: h.Dw, itemEffectAmount: h.LD, itemEffectDescription: h.MD, itemEffectName: h.ms } : null
+  itemEffect: h ? {
+    itemEffectType: h.Dw,
+    itemEffectAmount: h.LD,
+    itemEffectDescription: h.MD,
+    itemEffectName: h.ms
+  } : null
 };
 ```
 
