@@ -6,7 +6,7 @@ import { chromium } from 'playwright';
 import {
   decodeFixture, encodeSave, summarize,
   withPotions, withScrolls, withGold, withTurns, withElapsed, withOfflineProcessing,
-  withVictories, withClassSpell, withCastleVictory, withReclassedSpell, withEquippedItem,
+  withVictories, withClassSpell, withCastleVictory, withReclassedSpell, withEquippedItem, withResurrectionTrial,
   HARNESS_FIXED_NOW,
 } from '../tests/scenarios/save-mutations.mjs';
 
@@ -156,6 +156,14 @@ const scenarios = [
     name: 'spell-find-chest',
     make: () => withEquippedItem(withReclassedSpell(base, 3, 7, '发现财宝箱'), 3, '41393542', '61', 7),
     steps: [[3000, snap => ({ spellCast: snap.statistics.spellCastCount > base.statistics.spellCastCount })], [3000, null]],
+  },
+  {
+    // 复活分支：spellCategoryId=16（牧师 复活）要求场上已有昏迷的冒险者，昏迷只在 resolveCharacterDefeat 里产生。
+    // 因此用随机首领药水提供致命敌人、把三名队友压到 1 级 1 血，并清空其他队员法术，
+    // 使两端的 spellCastCount 增长只能归因于牧师的复活；stunned 断言证明前置确实达成。
+    name: 'spell-resurrect',
+    make: () => withResurrectionTrial(base, { casterIndex: 3, victimIndexes: [0, 1, 2] }),
+    steps: [[1500, snap => ({ spellCast: snap.statistics.spellCastCount > base.statistics.spellCastCount, stunned: snap.statistics.characterStunnedCount > 0 })], [1500, null]],
   },
   {
     // 鸡群分支：spellCategoryId=17（鸡王 召唤鸡群）走 Math.random 概率选模板再 spawnMinion，
@@ -332,6 +340,7 @@ try {
             if (verdict.unchanged !== undefined) assert.equal(verdict.unchanged, true, `${label} 关闭离线后金币不应变化`);
             if (verdict.spellCast !== undefined) assert.equal(verdict.spellCast, true, `${label} 法术场景必须实际施法`);
             if (verdict.summoned !== undefined) assert.equal(verdict.summoned, true, `${label} 召唤场景必须真的召唤出随从`);
+            if (verdict.stunned !== undefined) assert.equal(verdict.stunned, true, `${label} 必须真的出现冒险者被击倒（昏迷前置）`);
             if (verdict.victory !== undefined) assert.equal(verdict.victory, true, `${label} 必须真的走完征服尾部并触发胜利`);
           }
         }

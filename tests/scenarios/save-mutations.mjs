@@ -138,6 +138,30 @@ export function withEquippedItem(save, index, itemTypeId, itemSlot, characterCla
   return out;
 }
 
+/** 构造"牧师独占施法、队友会被击倒"的复活试验存档：
+ *  1) 指定队员改为牧师 6 且只学 复活；2) 激活随机首领药水提供致命敌人；
+ *  3) 指定 victim 下标压到 1 级 1 血并清零其伤害/生命分量，使其真的被击倒；
+ *  4) 清空其余队员法术，让 spellCastCount 的增长只能归因到牧师。
+ *  两端载入同一份存档，昏迷只在引擎的 resolveCharacterDefeat 里产生。 */
+export function withResurrectionTrial(save, { casterIndex, victimIndexes }) {
+  const out = clone(save);
+  const caster = out.adventurers[casterIndex];
+  if (!caster) throw new Error(`fixture 缺少队员下标 ${casterIndex}`);
+  caster.characterClass = 6;
+  caster.spells = [{ spellName: '复活' }];
+  out.adventurers.forEach((character, index) => {
+    if (index !== casterIndex) character.spells = [];
+  });
+  for (const index of victimIndexes) {
+    const stats = out.adventurers[index].characteristicsComponent;
+    stats.characterLevel = 1;
+    stats.characterHealth = 1;
+    stats.maxHealthComponent = { itemValue: 0, levelValue: 0, spellBonusPercent: 0, skillBonusPercent: 0 };
+    stats.damageComponent = { itemValue: 0, levelValue: 0, spellBonusPercent: 0, skillBonusPercent: 0 };
+  }
+  return withPotions(out, ['randomBossEncounter'], { active: true });
+}
+
 /** 收集快照中与玩法相关的可观察量，用于"断言场景确实产生了变化"。 */
 export function summarize(snapshot) {
   return {
