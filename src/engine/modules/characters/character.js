@@ -1083,7 +1083,7 @@ export function updateCharacter(a, b) {
             for (Oc = 0; Oc < Nh; Oc++) {
               hj = 1 + rollGoldDrop();
               var vl = new GoldDrop(hj, tickCharacterTurn(wc, Re, Zd), tickCharacterTurn(zd, Vc, Od), Yd);
-              game.goldDrops.pe.push(vl);
+              game.goldDrops.drops.push(vl);
             }
           }
           if (1 === Ad || 2 === Ad) {
@@ -1118,7 +1118,7 @@ export function updateCharacter(a, b) {
           }
           if (1 === Ad) {
             var HA = 0 + randomInt(2);
-            for (Oc = 0; Oc < HA && game.potions.re.length < BASE_POTION_CAPACITY + potionCapacityBonus.currentValue; Oc++) {
+            for (Oc = 0; Oc < HA && game.potions.potionList.length < BASE_POTION_CAPACITY + potionCapacityBonus.currentValue; Oc++) {
               var IA = new Potion(potionDefinitions[randomInt(potionDefinitions.length)]),
                 JA = new PotionDrop(IA, tickCharacterTurn(wc, Re, Zd), tickCharacterTurn(zd, Vc, Od), Yd);
               game.potionDrops.Hf.push(JA);

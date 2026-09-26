@@ -85,15 +85,15 @@ export function DungeonListView(a, b, c) {
 export function getDungeonList(a) {
   switch (a.dw) {
     case 0:
-      return game.dungeons.uj;
+      return game.dungeons.discovered;
     case 1:
-      return game.dungeons.Ge;
+      return game.dungeons.attackable;
     case 2:
-      return game.dungeons.ze;
+      return game.dungeons.cleared;
     case 3:
-      return game.dungeons.dg;
+      return game.dungeons.farms;
     default:
-      return game.dungeons.uj;
+      return game.dungeons.discovered;
   }
 }
 export function DungeonsView(a) {
@@ -374,10 +374,10 @@ export function initializeViewsDungeons() {
     resetChildViews(this);
   };
   DungeonsView.prototype.update = function () {
-    var a = game.dungeons.uj.length,
-      b = game.dungeons.Ge.length,
-      c = game.dungeons.ze.length,
-      d = game.dungeons.dg.length;
+    var a = game.dungeons.discovered.length,
+      b = game.dungeons.attackable.length,
+      c = game.dungeons.cleared.length,
+      d = game.dungeons.farms.length;
     if (this.nz !== a) {
       this.nz = a;
       this.nr.label = getDungeonTabLabel(0, a);

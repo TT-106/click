@@ -123,12 +123,12 @@ export function initializeRegionsAndCastles() {
   }
   var Ja = game.dungeons;
   Ja.dungeonList.length = 0;
-  Ja.uj.length = 0;
-  Ja.Ge.length = 0;
-  Ja.ze.length = 0;
-  Ja.dg.length = 0;
+  Ja.discovered.length = 0;
+  Ja.attackable.length = 0;
+  Ja.cleared.length = 0;
+  Ja.farms.length = 0;
   Ja.Mk = 0;
-  Ja.bk.length = 0;
+  Ja.farmable.length = 0;
   Ja.Sd = 0;
   Ja.Do = {};
   var Db,

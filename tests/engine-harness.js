@@ -438,7 +438,7 @@ window.harness = {
   },
   purchaseDungeonRowFarm({ turns = 0 } = {}) {
     for (let i = 0; i < turns; i++) advance();
-    const dungeon = (original ? window.Game.Aa.bk : game.dungeons.bk)[0];
+    const dungeon = (original ? window.Game.Aa.bk : game.dungeons.farmable)[0];
     if (!dungeon) throw new Error('没有可购买的地牢行');
     const upgrade = original ? new window.Es(dungeon) : new PurchaseDungeonUpgrade(dungeon);
     if (original) upgrade.Cd(); else upgrade.refreshAvailabilityState();
@@ -503,7 +503,7 @@ window.harness = {
   activatePotions({ turns = 0, limit = 3 } = {}) {
     for (let i = 0; i < turns; i++) advance();
     const inventory = original ? window.Game.Yj : game.potions;
-    const list = inventory && inventory.re;
+    const list = inventory && (original ? inventory.re : inventory.potionList);
     if (!Array.isArray(list)) throw new Error('药水库存访问失败');
     let attempted = 0;
     for (const potion of list) {

@@ -49,85 +49,6 @@
     ]
   },
   {
-    "name": "he",
-    "reads": 14,
-    "writes": 4,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:70",
-        "code": "C.he"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:715",
-        "code": "y.he"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\floating-text.js:33",
-        "code": "game.world.he"
-      }
-    ],
-    "fileCount": 6,
-    "files": [
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\rendering\\floating-text.js",
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\simulation\\loop.js",
-      "src\\engine\\modules\\simulation\\tick.js",
-      "src\\engine\\modules\\world\\terrain.js"
-    ]
-  },
-  {
-    "name": "ie",
-    "reads": 14,
-    "writes": 4,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:71",
-        "code": "C.ie"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:716",
-        "code": "y.ie"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\floating-text.js:33",
-        "code": "game.world.ie"
-      }
-    ],
-    "fileCount": 6,
-    "files": [
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\rendering\\floating-text.js",
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\simulation\\loop.js",
-      "src\\engine\\modules\\simulation\\tick.js",
-      "src\\engine\\modules\\world\\terrain.js"
-    ]
-  },
-  {
-    "name": "Yd",
-    "reads": 14,
-    "writes": 4,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:164",
-        "code": "this.Yd"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:679",
-        "code": "this.Yd"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:680",
-        "code": "this.Yd"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\progression\\upgrades.js"
-    ]
-  },
-  {
     "name": "be",
     "reads": 16,
     "writes": 2,
@@ -171,92 +92,6 @@
     "fileCount": 1,
     "files": [
       "src\\engine\\modules\\views\\upgrade-details.js"
-    ]
-  },
-  {
-    "name": "ze",
-    "reads": 16,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\adapter.js:91",
-        "code": "game.dungeons.ze"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:129",
-        "code": "ea.ze"
-      },
-      {
-        "loc": "src\\engine\\modules\\simulation\\tick.js:152",
-        "code": "K.ze"
-      }
-    ],
-    "fileCount": 6,
-    "files": [
-      "src\\engine\\adapter.js",
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\simulation\\tick.js",
-      "src\\engine\\modules\\views\\dungeons.js",
-      "src\\engine\\modules\\world\\dungeons.js",
-      "src\\engine\\modules\\world\\initialization.js"
-    ]
-  },
-  {
-    "name": "pe",
-    "reads": 16,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:148",
-        "code": "game.goldDrops.pe"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1131",
-        "code": "game.goldDrops.pe"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:1086",
-        "code": "game.goldDrops.pe"
-      }
-    ],
-    "fileCount": 8,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js",
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\loot\\treasure.js",
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\simulation\\characters.js",
-      "src\\engine\\modules\\world\\generation.js",
-      "src\\engine\\modules\\world\\rooms.js"
-    ]
-  },
-  {
-    "name": "re",
-    "reads": 16,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:1121",
-        "code": "game.potions.re"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\actions.js:399",
-        "code": "game.potions.re"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\potions.js:99",
-        "code": "this.re"
-      }
-    ],
-    "fileCount": 6,
-    "files": [
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\combat\\potions.js",
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\simulation\\tick.js",
-      "src\\engine\\modules\\views\\expedition.js"
     ]
   },
   {
@@ -480,33 +315,6 @@
       "src\\engine\\modules\\rendering\\scene.js",
       "src\\engine\\modules\\views\\castles.js",
       "src\\engine\\modules\\world\\regions.js"
-    ]
-  },
-  {
-    "name": "Ge",
-    "reads": 15,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:128",
-        "code": "ea.Ge"
-      },
-      {
-        "loc": "src\\engine\\modules\\simulation\\tick.js:166",
-        "code": "K.Ge"
-      },
-      {
-        "loc": "src\\engine\\modules\\simulation\\tick.js:168",
-        "code": "K.Ge"
-      }
-    ],
-    "fileCount": 5,
-    "files": [
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\simulation\\tick.js",
-      "src\\engine\\modules\\views\\dungeons.js",
-      "src\\engine\\modules\\world\\dungeons.js",
-      "src\\engine\\modules\\world\\initialization.js"
     ]
   },
   {
@@ -756,36 +564,6 @@
     "files": [
       "src\\engine\\modules\\views\\dungeons.js",
       "src\\engine\\modules\\views\\upgrade-details.js"
-    ]
-  },
-  {
-    "name": "dg",
-    "reads": 13,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\adapter.js:92",
-        "code": "game.dungeons.dg"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\entities.js:287",
-        "code": "game.dungeons.dg"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:130",
-        "code": "ea.dg"
-      }
-    ],
-    "fileCount": 8,
-    "files": [
-      "src\\engine\\adapter.js",
-      "src\\engine\\modules\\persistence\\entities.js",
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\runtime\\game.js",
-      "src\\engine\\modules\\simulation\\tick.js",
-      "src\\engine\\modules\\views\\dungeons.js",
-      "src\\engine\\modules\\world\\dungeons.js",
-      "src\\engine\\modules\\world\\initialization.js"
     ]
   },
   {
@@ -3050,33 +2828,6 @@
     ]
   },
   {
-    "name": "uj",
-    "reads": 9,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\adapter.js:90",
-        "code": "game.dungeons.uj"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:127",
-        "code": "ea.uj"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:88",
-        "code": "game.dungeons.uj"
-      }
-    ],
-    "fileCount": 5,
-    "files": [
-      "src\\engine\\adapter.js",
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\views\\dungeons.js",
-      "src\\engine\\modules\\world\\dungeons.js",
-      "src\\engine\\modules\\world\\initialization.js"
-    ]
-  },
-  {
     "name": "Vi",
     "reads": 7,
     "writes": 3,
@@ -4327,32 +4078,6 @@
       "src\\engine\\modules\\progression\\upgrades.js",
       "src\\engine\\modules\\runtime\\game.js",
       "src\\engine\\modules\\simulation\\tick.js"
-    ]
-  },
-  {
-    "name": "bk",
-    "reads": 8,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:131",
-        "code": "ea.bk"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:985",
-        "code": "game.dungeons.bk"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\dungeons.js:70",
-        "code": "this.bk"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\progression\\upgrades.js",
-      "src\\engine\\modules\\world\\dungeons.js",
-      "src\\engine\\modules\\world\\initialization.js"
     ]
   },
   {

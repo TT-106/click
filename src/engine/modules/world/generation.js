@@ -184,8 +184,8 @@ export function generateDungeonLevel(a, b, c, d) {
   }
   clearItemDrops();
   b = game.goldDrops;
-  if (0 < b.pe.length) {
-    b.pe.length = 0;
+  if (0 < b.drops.length) {
+    b.drops.length = 0;
   }
   b = game.scrollDrops;
   if (0 < b.kf.length) {

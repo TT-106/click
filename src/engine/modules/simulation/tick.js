@@ -110,8 +110,8 @@ export function advanceSimulation(a) {
       la,
       Q,
       V = 800 + potionDurationBonus.currentValue;
-    for (O = x.re.length - 1; 0 <= O; O--) {
-      J = x.re[O];
+    for (O = x.potionList.length - 1; 0 <= O; O--) {
+      J = x.potionList[O];
       if (J.active) {
         Q = J.activationTurn;
         if (z && potionDurationModifier.currentValue && Q < game.state.turnNumber) {
@@ -120,9 +120,9 @@ export function advanceSimulation(a) {
         }
         if (game.state.turnNumber - Q >= V) {
           setPotionActive(J, false);
-          la = x.re.indexOf(J);
+          la = x.potionList.indexOf(J);
           if (-1 < la) {
-            x.re.splice(la, 1);
+            x.potionList.splice(la, 1);
           }
         }
       }
@@ -149,8 +149,8 @@ export function advanceSimulation(a) {
         da = false,
         W,
         ia = game.state.turnNumber;
-      for (H = 0; H < K.ze.length; H++) {
-        S = K.ze[H];
+      for (H = 0; H < K.cleared.length; H++) {
+        S = K.cleared[H];
         if (1500 <= ia - S.clearedTurn) {
           da = true;
           S.cleared = false;
@@ -158,27 +158,27 @@ export function advanceSimulation(a) {
         }
       }
       if (da) {
-        for (H = K.ze.length - 1; 0 <= H; H--) {
-          S = K.ze[H];
+        for (H = K.cleared.length - 1; 0 <= H; H--) {
+          S = K.cleared[H];
           if (!S.cleared) {
-            K.ze.splice(H, 1);
+            K.cleared.splice(H, 1);
             if (S.discovered && !S.cleared) {
-              W = K.Ge.indexOf(S);
+              W = K.attackable.indexOf(S);
               if (0 > W) {
-                K.Ge.push(S);
+                K.attackable.push(S);
               }
             }
           }
         }
-        sortDungeons(K, K.Ge);
+        sortDungeons(K, K.attackable);
       }
       var ea,
         va,
         yb = fasterFarmingModifier.currentValue,
         Fb = fasterInfestationModifier.currentValue,
         pa = (100 + potionPowerBonus.currentValue) * farmKillsModifier.currentValue;
-      for (H = 0; H < K.dg.length; H++) {
-        S = K.dg[H];
+      for (H = 0; H < K.farms.length; H++) {
+        S = K.farms[H];
         ea = S.clearedTurn;
         va = S.farmStartTurn;
         if (ea > ia) {
@@ -540,7 +540,7 @@ export function advanceSimulation(a) {
       q = game.world;
     if (null == ba || null == ca) {
       console.log("Setting world center x/y to null. worldCenterX=" + ba + " y=" + ca);
-    } else if (q.he = ba, q.ie = ca, !worldBlockContains(q.worldBlocks[1][1], q.he, q.ie)) {
+    } else if (q.worldCenterX = ba, q.worldCenterY = ca, !worldBlockContains(q.worldBlocks[1][1], q.worldCenterX, q.worldCenterY)) {
       var pe;
       var fc = false,
         vd,
@@ -549,7 +549,7 @@ export function advanceSimulation(a) {
         vc;
       for (vd = 0; 3 > vd; vd++) {
         for (qe = 0; 3 > qe; qe++) {
-          if (worldBlockContains(q.worldBlocks[vd][qe], q.he, q.ie)) {
+          if (worldBlockContains(q.worldBlocks[vd][qe], q.worldCenterX, q.worldCenterY)) {
             fc = true;
             gc = vd;
             vc = qe;
@@ -745,8 +745,8 @@ export function advanceSimulation(a) {
       }
       if (!pe) {
         console.log("Bug: party not contained by block grid. fixing.");
-        var eg = q.vw(q.he),
-          hc = q.ww(q.ie);
+        var eg = q.vw(q.worldCenterX),
+          hc = q.ww(q.worldCenterY);
         console.log("old: blockShiftCol=" + q.blockOriginColumn + " blockShiftRow=" + q.blockOriginRow);
         q.blockOriginColumn = eg - 1;
         q.blockOriginRow = hc - 1;
@@ -761,9 +761,9 @@ export function advanceSimulation(a) {
         repositionWorldBlock(q.worldBlocks[2][1], q.blockOriginColumn + 2, q.blockOriginRow + 1, true);
         repositionWorldBlock(q.worldBlocks[2][2], q.blockOriginColumn + 2, q.blockOriginRow + 2, true);
         var re = q.worldBlocks[1][1];
-        if (!worldBlockContains(re, q.he, q.ie)) {
+        if (!worldBlockContains(re, q.worldCenterX, q.worldCenterY)) {
           console.log("Failed to fix world block grid issue.");
-          console.log("posX: " + q.he + " posY: " + q.ie);
+          console.log("posX: " + q.worldCenterX + " posY: " + q.worldCenterY);
           console.log("minX: " + re.yp + " maxX: " + re.Mw);
           console.log("minY: " + re.zp + " maxY: " + re.Nw);
         }

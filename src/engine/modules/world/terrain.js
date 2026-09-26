@@ -367,7 +367,7 @@ export function getBlockTile(a, b, c) {
 }
 export function WorldMap() {
   this.wt = new WorldGenerator(WORLD_BLOCK_COLUMNS, WORLD_BLOCK_ROWS);
-  this.ie = this.he = 0;
+  this.worldCenterY = this.worldCenterX = 0;
   this.blockOriginColumn = WORLD_ORIGIN_COLUMN;
   this.blockOriginRow = WORLD_ORIGIN_ROW;
   this.worldBlocks = [];
@@ -391,12 +391,12 @@ export function placePartyInWorld() {
   var a = game.world;
   a.worldBlocks = createWorldBlocks(a);
   refreshWorldBlocks(a);
-  a.he = a.worldBlocks[1][1].yp + WORLD_BLOCK_COLUMNS * game.tileSize / 2 | 0;
-  a.ie = a.worldBlocks[1][1].zp + WORLD_BLOCK_ROWS * game.tileSize / 2 | 0;
+  a.worldCenterX = a.worldBlocks[1][1].yp + WORLD_BLOCK_COLUMNS * game.tileSize / 2 | 0;
+  a.worldCenterY = a.worldBlocks[1][1].zp + WORLD_BLOCK_ROWS * game.tileSize / 2 | 0;
   var b;
   for (b = 0; b < game.state.adventurers.length; b++) {
-    var c = a.he + randomInt(30),
-      d = a.ie + randomInt(30);
+    var c = a.worldCenterX + randomInt(30),
+      d = a.worldCenterY + randomInt(30);
     setVector(game.state.adventurers[b].position.worldPosition, c, d);
   }
   a.ty = true;

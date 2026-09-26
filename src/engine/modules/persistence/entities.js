@@ -284,7 +284,7 @@ export function restoreStatistics(a, b, c) {
     ea = a.weaponsRacksLooted;
   a = a.bookcasesLooted;
   if (!u) {
-    u = game.dungeons.dg.length;
+    u = game.dungeons.farms.length;
   }
   b.playedMillis = c ? Math.max(0, d ? d : f) : Math.max(0, f ? f : 0);
   b.turnCount = g ? g : 0;

@@ -755,7 +755,7 @@ export function initializeViewsExpedition() {
       (/** @type {any} */ (this)).so();
     }
     var a,
-      b = game.potions.re,
+      b = game.potions.potionList,
       c,
       d;
     for (a = 0; a < this.Ms.length; a++) {

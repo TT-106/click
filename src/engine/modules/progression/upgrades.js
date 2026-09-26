@@ -161,7 +161,7 @@ export function UnlockMonsterLevelUpgrade() {
   this.Ve = "解锁怪物等级";
 }
 export function RetireMonsterLevelUpgrade() {
-  this.Yd = -1;
+  this.retireLevel = -1;
   this.Cs = 1;
   this.Ql = this.affordableSoon = this.canPurchase = false;
   this.Ve = "退休怪物等级";
@@ -676,19 +676,19 @@ export function initializeProgressionUpgrades() {
   RetireMonsterLevelUpgrade.prototype.us = function () {
     if (!this.Ql) {
       this.Ql = true;
-      this.Yd = game.monsterCatalog.minUnlockedLevel;
-      this.Cs = scaleByLevel(this.Yd, monsterUnlockPriceCurve, 1);
-      this.Ve = "退休怪物等级" + this.Yd;
+      this.retireLevel = game.monsterCatalog.minUnlockedLevel;
+      this.Cs = scaleByLevel(this.retireLevel, monsterUnlockPriceCurve, 1);
+      this.Ve = "退休怪物等级" + this.retireLevel;
     }
   };
   RetireMonsterLevelUpgrade.prototype.Kr = function () {
-    return this.Yd;
+    return this.retireLevel;
   };
   RetireMonsterLevelUpgrade.prototype.og = function () {
     this.Ql = false;
-    this.Yd = game.monsterCatalog.minUnlockedLevel;
-    this.Cs = scaleByLevel(this.Yd, monsterUnlockPriceCurve, 1);
-    this.Ve = "退休怪物等级" + this.Yd;
+    this.retireLevel = game.monsterCatalog.minUnlockedLevel;
+    this.Cs = scaleByLevel(this.retireLevel, monsterUnlockPriceCurve, 1);
+    this.Ve = "退休怪物等级" + this.retireLevel;
   };
   RetireMonsterLevelUpgrade.prototype.getTitle = function () {
     return this.Ve;
@@ -702,7 +702,7 @@ export function initializeProgressionUpgrades() {
   RetireMonsterLevelUpgrade.prototype.purchase = function () {
     if (this.canPurchase) {
       spendKills(game.state.party, (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).getCost());
-      var a = this.Yd,
+      var a = this.retireLevel,
         b = game.monsterCatalog;
       if (a >= b.maxUnlockedLevel) {
         console.log("setMonsterLevelRetired attempt to retire max level");
@@ -720,7 +720,7 @@ export function initializeProgressionUpgrades() {
       }
       this.canPurchase = false;
       markUpgradeChanged(this);
-      recordGameEvent("Monster Level", "退休等级" + this.Yd);
+      recordGameEvent("Monster Level", "退休等级" + this.retireLevel);
     }
   };
   RetireMonsterLevelUpgrade.prototype.isDisplayable = function () {
@@ -735,19 +735,19 @@ export function initializeProgressionUpgrades() {
   RetireMonsterLevelUpgrade.prototype.refreshAvailabilityState = function () {
     var a = this.canPurchase,
       b = this.affordableSoon,
-      c = this.Yd;
-    if (this.Yd != game.monsterCatalog.minUnlockedLevel) {
-      this.Yd = game.monsterCatalog.minUnlockedLevel;
-      this.Cs = scaleByLevel(this.Yd, monsterUnlockPriceCurve, 1);
-      this.Ve = "退休怪物等级" + this.Yd;
+      c = this.retireLevel;
+    if (this.retireLevel != game.monsterCatalog.minUnlockedLevel) {
+      this.retireLevel = game.monsterCatalog.minUnlockedLevel;
+      this.Cs = scaleByLevel(this.retireLevel, monsterUnlockPriceCurve, 1);
+      this.Ve = "退休怪物等级" + this.retireLevel;
     }
-    if (this.Yd < getPartyMinLevel() && this.Yd < game.monsterCatalog.maxUnlockedLevel - 1) {
+    if (this.retireLevel < getPartyMinLevel() && this.retireLevel < game.monsterCatalog.maxUnlockedLevel - 1) {
       this.canPurchase = game.state.party.kills >= (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).getCost();
       this.affordableSoon = !this.canPurchase;
     } else {
       this.affordableSoon = this.canPurchase = false;
     }
-    return a != this.canPurchase || b != this.affordableSoon || c != this.Yd;
+    return a != this.canPurchase || b != this.affordableSoon || c != this.retireLevel;
   };
   CharacterSkillUpgrade.prototype = new Upgrade();
   CharacterSkillUpgrade.prototype.sx = function (a) {
@@ -982,7 +982,7 @@ export function initializeProgressionUpgrades() {
   };
   PurchaseCastleUpgrade.prototype.refreshAvailabilityState = function () {
     var a;
-    a = game.dungeons.bk;
+    a = game.dungeons.farmable;
     if (a = this.Ez < a.length ? a[this.Ez] : null) {
       if (a.zj.conquered) {
         this.canPurchase = game.state.party.gold >= (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).getCost();

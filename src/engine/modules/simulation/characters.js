@@ -299,10 +299,10 @@ export function initializeSimulationCharacters() {
         var goldAmount = rollGoldDrop();
         if (0 < goldAmount) {
           var s = new GoldDrop(goldAmount, updateCharacterFrames(c.getLevelPositionX(), g, h), updateCharacterFrames(c.getLevelPositionY(), l, n), f);
-          game.goldDrops.pe.push(s);
+          game.goldDrops.drops.push(s);
           if (doubleGoldDropsModifier.currentValue) {
             const extraGoldDrop = new GoldDrop(goldAmount, updateCharacterFrames(c.getLevelPositionX(), g, h), updateCharacterFrames(c.getLevelPositionY(), l, n), f);
-            game.goldDrops.pe.push(extraGoldDrop);
+            game.goldDrops.drops.push(extraGoldDrop);
           }
         }
       }

@@ -67,8 +67,8 @@ export function restoreGameState(a, b) {
           C.blockOriginRow = A;
           C.worldBlocks = createWorldBlocks(C);
           refreshWorldBlocks(C);
-          C.he = u;
-          C.ie = y;
+          C.worldCenterX = u;
+          C.worldCenterY = y;
           C.ty = true;
           var v = d.dungeonManagerState,
             D = v.farmedKills,
@@ -124,11 +124,11 @@ export function restoreGameState(a, b) {
             game.dungeons.lt = true;
             var ea = game.dungeons;
             if (ea.lt) {
-              sortDungeons(ea, ea.uj);
-              sortDungeons(ea, ea.Ge);
-              sortDungeons(ea, ea.ze);
-              sortDungeons(ea, ea.dg);
-              sortDungeons(ea, ea.bk);
+              sortDungeons(ea, ea.discovered);
+              sortDungeons(ea, ea.attackable);
+              sortDungeons(ea, ea.cleared);
+              sortDungeons(ea, ea.farms);
+              sortDungeons(ea, ea.farmable);
             }
           }
           game.dungeons.setFarmedKills(D ? D : 0);
@@ -712,8 +712,8 @@ export function createSaveState(a) {
       u,
       y = game.world;
     u = {
-      worldCenterX: y.he,
-      worldCenterY: y.ie,
+      worldCenterX: y.worldCenterX,
+      worldCenterY: y.worldCenterY,
       blockShiftCol: y.blockOriginColumn,
       blockShiftRow: y.blockOriginRow
     };
@@ -868,7 +868,7 @@ export function createSaveState(a) {
         upgradeCount: Ua.upgradeCount
       });
     }
-    var Va = game.potions.re,
+    var Va = game.potions.potionList,
       mc = [],
       vb;
     for (vb = 0; vb < Va.length; vb++) {

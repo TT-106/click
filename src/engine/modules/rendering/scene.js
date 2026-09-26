@@ -126,7 +126,7 @@ export function drawWorldCharacters(a, b) {
     d = c.position.getWorldPositionX();
     f = c.position.getWorldPositionY();
     c = c.getSprite();
-    a.se.dk(c, d, f, game.viewportHalfWidth + (d - game.world.he - (f - game.world.ie)), game.viewportHalfHeight + 0.5 * (d - game.world.he + (f - game.world.ie)), c.spriteSheet.spriteSize, 0);
+    a.se.dk(c, d, f, game.viewportHalfWidth + (d - game.world.worldCenterX - (f - game.world.worldCenterY)), game.viewportHalfHeight + 0.5 * (d - game.world.worldCenterX + (f - game.world.worldCenterY)), c.spriteSheet.spriteSize, 0);
   }
 }
 export function drawDungeonCharacters(a, b) {
@@ -258,8 +258,8 @@ export function initializeRenderingScene() {
     var b = game.viewportWidth / 2,
       c = 2 * game.viewportHeight;
     if (game.worldActive) {
-      a = game.world.he + (0.5 * (b - game.viewportHalfWidth) + (c - game.viewportHalfHeight)) | 0;
-      b = game.world.ie + (c - game.viewportHalfHeight - 0.5 * (b - game.viewportHalfWidth)) | 0;
+      a = game.world.worldCenterX + (0.5 * (b - game.viewportHalfWidth) + (c - game.viewportHalfHeight)) | 0;
+      b = game.world.worldCenterY + (c - game.viewportHalfHeight - 0.5 * (b - game.viewportHalfWidth)) | 0;
     } else {
       a = game.level.Ki + (0.5 * (b - game.viewportHalfWidth) + (c - game.viewportHalfHeight)) | 0;
       b = game.level.Li + (c - game.viewportHalfHeight - 0.5 * (b - game.viewportHalfWidth)) | 0;
@@ -351,8 +351,8 @@ export function initializeRenderingScene() {
     a.se.hB(a.context);
     if (game.world.ty) {
       if (a.context.fillStyle = "#000000", a.context.fillRect(0, 0, game.viewportWidth, game.viewportHeight), game.worldActive) {
-        var b = game.world.pixelToTileColumn(game.world.he),
-          c = game.world.pixelToTileRow(game.world.ie) - 18;
+        var b = game.world.pixelToTileColumn(game.world.worldCenterX),
+          c = game.world.pixelToTileRow(game.world.worldCenterY) - 18;
         drawWorldTileRow(a, c++, b - 5, b - 3);
         drawWorldTileRow(a, c++, b - 6, b - 2);
         drawWorldTileRow(a, c++, b - 7, b - 1);
@@ -494,7 +494,7 @@ export function initializeRenderingScene() {
         drawDungeonTileRow(a, D++, v - 2, v + 5);
         drawDungeonTileRow(a, D++, v - 1, v + 4);
         drawDungeonTileRow(a, D, v, v + 3);
-        var N = game.goldDrops.pe,
+        var N = game.goldDrops.drops,
           I,
           x,
           z,

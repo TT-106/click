@@ -145,7 +145,7 @@ export function LootChestBehavior(a) {
   this.actionRange = 10;
 }
 export function hasPendingLoot() {
-  return 0 < game.goldDrops.pe.length || 0 < game.itemDrops.yf.length || 0 < game.scrollDrops.kf.length;
+  return 0 < game.goldDrops.drops.length || 0 < game.itemDrops.yf.length || 0 < game.scrollDrops.kf.length;
 }
 export function LootPotionBehavior(a) {
   this.pm = null;
@@ -1128,7 +1128,7 @@ export function initializeAiBehaviors() {
       this.goldDrop.Re(null);
       this.goldDrop.setClaimDistance(0);
     }
-    var b = game.goldDrops.pe,
+    var b = game.goldDrops.drops,
       c,
       d,
       f = a.position.levelPosition,

@@ -16,14 +16,14 @@ export function GoldDrop(a, b, c, d) {
   this.claimDistance = 0;
 }
 export function GoldDropRegistry() {
-  this.pe = [];
+  this.drops = [];
   this.xw = this.xw = this.Sz = null;
 }
 export function removeGoldDrop(a) {
   var b = game.goldDrops;
-  a = b.pe.indexOf(a);
+  a = b.drops.indexOf(a);
   if (-1 < a) {
-    b.pe.splice(a, 1);
+    b.drops.splice(a, 1);
   }
 }
 export function TreasureChest(a, b, c, d, f) {
@@ -111,9 +111,9 @@ export function initializeLootTreasure() {
   };
   GoldDropRegistry.prototype.zl = function () {
     var a;
-    for (a = 0; a < this.pe.length; a++) {
-      this.pe[a].Re(null);
-      this.pe[a].setClaimDistance(0);
+    for (a = 0; a < this.drops.length; a++) {
+      this.drops[a].Re(null);
+      this.drops[a].setClaimDistance(0);
     }
   };
   TreasureRegistry.prototype.Xw = function (a) {

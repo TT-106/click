@@ -96,22 +96,22 @@ export function removePotionDrop(a) {
   }
 }
 export function PotionInventory() {
-  this.re = [];
+  this.potionList = [];
 }
 export function resetPotionInventory() {
   var a = game.potions;
-  if (0 < a.re.length) {
+  if (0 < a.potionList.length) {
     var b;
-    for (b = 0; b < a.re.length; b++) {
-      setPotionActive(a.re[b], false);
+    for (b = 0; b < a.potionList.length; b++) {
+      setPotionActive(a.potionList[b], false);
     }
-    a.re.length = 0;
+    a.potionList.length = 0;
   }
 }
 export function addPotion(a) {
   var b = game.potions;
-  if (a && b.re.length < BASE_POTION_CAPACITY + potionCapacityBonus.currentValue) {
-    b.re.push(a);
+  if (a && b.potionList.length < BASE_POTION_CAPACITY + potionCapacityBonus.currentValue) {
+    b.potionList.push(a);
   }
 }
 export function initializeCombatPotions() {
@@ -267,9 +267,9 @@ export function initializeCombatPotions() {
   };
   PotionInventory.prototype.bw = function (a) {
     if (a) {
-      var b = this.re.indexOf(a);
+      var b = this.potionList.indexOf(a);
       if (-1 < b) {
-        this.re.splice(b, 1);
+        this.potionList.splice(b, 1);
       }
       if (a.active) {
         setPotionActive(a, false);

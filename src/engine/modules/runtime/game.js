@@ -445,7 +445,7 @@ export function initializeRuntimeGame() {
       resetPotionInventory();
       clearItemDrops();
       clearScrollTargets();
-      a = game.dungeons.dg.length;
+      a = game.dungeons.farms.length;
       resetDungeons();
       game.dungeons.Mk = a;
       a = game.castles.Uj;

@@ -191,7 +191,7 @@ export function applySpellEffect(a, b) {
     spawnMinion(g, c, d);
   } else if (14 === d) {
     d = b.attacker.position.levelPosition;
-    g = game.goldDrops.pe;
+    g = game.goldDrops.drops;
     for (c = g.length - 1; 0 <= c; c--) {
       f = g[c];
       if (!f.collected) {
@@ -379,7 +379,7 @@ export function resolveCharacterDefeat(a, b) {
       for (g = 0; g < s; g++) {
         u = 1 + rollGoldDrop();
         u = new GoldDrop(u, tickCharacterTurn(n, c, f), tickCharacterTurn(p, h, l), d);
-        game.goldDrops.pe.push(u);
+        game.goldDrops.drops.push(u);
       }
       s = 7 + randomInt(8);
       if (doubleItemDropsModifier.currentValue) {
@@ -396,7 +396,7 @@ export function resolveCharacterDefeat(a, b) {
         game.scrollDrops.kf.push(u);
       }
       s = 0 + randomInt(2);
-      for (g = 0; g < s && game.potions.re.length < BASE_POTION_CAPACITY + potionCapacityBonus.currentValue; g++) {
+      for (g = 0; g < s && game.potions.potionList.length < BASE_POTION_CAPACITY + potionCapacityBonus.currentValue; g++) {
         u = new Potion(potionDefinitions[randomInt(potionDefinitions.length)]);
         u = new PotionDrop(u, tickCharacterTurn(n, c, f), tickCharacterTurn(p, h, l), d);
         game.potionDrops.Hf.push(u);

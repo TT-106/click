@@ -87,9 +87,9 @@ export const engine = {
       inCombat: !game.state.encounter.ym,
       offlineProgress: game.offlineDuration ? Math.min(100, Math.round(game.offlineProcessed / game.offlineDuration * 100)) : 0,
       dungeons: {
-        discovered: game.dungeons.uj.length,
-        cleared: game.dungeons.ze.length,
-        farms: game.dungeons.dg.length
+        discovered: game.dungeons.discovered.length,
+        cleared: game.dungeons.cleared.length,
+        farms: game.dungeons.farms.length
       },
       heroes: game.state.adventurers.map((hero, index) => {
         const sprite = game.monsterSprites.getSprite(hero.classDefinition.spriteName),

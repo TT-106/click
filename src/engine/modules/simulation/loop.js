@@ -57,8 +57,8 @@ export function initializeSimulationLoop() {
             c = game.camera;
             var d, f, g, h;
             if (game.worldActive) {
-              d = game.world.he;
-              f = game.world.ie;
+              d = game.world.worldCenterX;
+              f = game.world.worldCenterY;
             } else {
               d = game.level.Ki;
               f = game.level.Li;

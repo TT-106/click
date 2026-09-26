@@ -63,11 +63,11 @@ export function DungeonRegistry() {
   this.dungeonList = [];
   this.Do = {};
   this.Mk = 0;
-  this.Ge = [];
-  this.ze = [];
-  this.dg = [];
-  this.uj = [];
-  this.bk = [];
+  this.attackable = [];
+  this.cleared = [];
+  this.farms = [];
+  this.discovered = [];
+  this.farmable = [];
   this.lt = true;
   this.Sd = 0;
   this.EE = function (a, b) {
@@ -76,11 +76,11 @@ export function DungeonRegistry() {
 }
 export function resetDungeons() {
   var a = game.dungeons;
-  a.uj.length = 0;
-  a.Ge.length = 0;
-  a.ze.length = 0;
-  a.dg.length = 0;
-  a.bk.length = 0;
+  a.discovered.length = 0;
+  a.attackable.length = 0;
+  a.cleared.length = 0;
+  a.farms.length = 0;
+  a.farmable.length = 0;
   a.Mk = 0;
   a.Sd = 0;
   var b;
@@ -96,42 +96,42 @@ export function resetDungeons() {
 }
 export function discoverDungeon(a) {
   var b = game.dungeons;
-  if (0 > b.uj.indexOf(a)) {
-    b.uj.push(a);
+  if (0 > b.discovered.indexOf(a)) {
+    b.discovered.push(a);
     b.Mk++;
   }
-  if (a.discovered && !a.cleared && !a.isFarm && 0 > b.Ge.indexOf(a)) {
-    b.Ge.push(a);
-    sortDungeons(b, b.Ge);
+  if (a.discovered && !a.cleared && !a.isFarm && 0 > b.attackable.indexOf(a)) {
+    b.attackable.push(a);
+    sortDungeons(b, b.attackable);
   }
   refreshFarmableDungeons(b, a);
 }
 export function refreshFarmableDungeons(a, b) {
-  var c = a.bk.indexOf(b);
+  var c = a.farmable.indexOf(b);
   if (canFarmDungeon(b)) {
     if (0 > c) {
-      a.bk.push(b);
-      sortDungeons(a, a.bk);
+      a.farmable.push(b);
+      sortDungeons(a, a.farmable);
     }
   } else {
     if (-1 < c) {
-      a.bk.splice(c, 1);
+      a.farmable.splice(c, 1);
     }
   }
 }
 export function registerDungeonFarm(a) {
   var b = game.dungeons;
-  if (0 > b.dg.indexOf(a)) {
-    b.dg.push(a);
-    sortDungeons(b, b.dg);
+  if (0 > b.farms.indexOf(a)) {
+    b.farms.push(a);
+    sortDungeons(b, b.farms);
   }
-  var c = b.Ge.indexOf(a);
+  var c = b.attackable.indexOf(a);
   if (-1 < c) {
-    b.Ge.splice(c, 1);
+    b.attackable.splice(c, 1);
   }
-  c = b.ze.indexOf(a);
+  c = b.cleared.indexOf(a);
   if (-1 < c) {
-    b.ze.splice(c, 1);
+    b.cleared.splice(c, 1);
   }
   refreshFarmableDungeons(b, a);
 }
@@ -244,13 +244,13 @@ export function initializeWorldDungeons() {
     this.Sd = a;
   };
   DungeonRegistry.prototype.Is = function (a) {
-    if (0 > this.ze.indexOf(a)) {
-      this.ze.push(a);
-      sortDungeons(this, this.ze);
+    if (0 > this.cleared.indexOf(a)) {
+      this.cleared.push(a);
+      sortDungeons(this, this.cleared);
     }
-    var b = this.Ge.indexOf(a);
+    var b = this.attackable.indexOf(a);
     if (-1 < b) {
-      this.Ge.splice(b, 1);
+      this.attackable.splice(b, 1);
     }
     refreshFarmableDungeons(this, a);
   };

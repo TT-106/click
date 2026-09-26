@@ -30,8 +30,8 @@ export function showFloatingText(a, b, c, d) {
     if (game.worldActive) {
       d = b.getWorldPositionX();
       var f = b.getWorldPositionY();
-      b = game.viewportHalfWidth + (d - game.world.he - (f - game.world.ie)) + a.cA;
-      d = game.viewportHalfHeight + 0.5 * (d - game.world.he + (f - game.world.ie)) + a.dA;
+      b = game.viewportHalfWidth + (d - game.world.worldCenterX - (f - game.world.worldCenterY)) + a.cA;
+      d = game.viewportHalfHeight + 0.5 * (d - game.world.worldCenterX + (f - game.world.worldCenterY)) + a.dA;
     } else {
       d = b.getLevelPositionX();
       f = b.getLevelPositionY();
