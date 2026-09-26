@@ -25,12 +25,14 @@ if (!oldName || !newName) {
 const stripQuotes = (s) => s.replace(/^["']|["']$/g, '');
 const literalsOf = (s) => (s.match(/"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|`(?:[^`\\]|\\.)*`/g) || []).sort();
 
-const memberRe = new RegExp('\\.' + oldName + '\\b', 'g');
-const keyRe = new RegExp('^([ \\t]*)' + oldName + ':', 'gm');
-const shorthandRe = new RegExp('^([ \\t]*)' + oldName + '\\s*,', 'gm');
+const escapeRe = (text) => text.replace(/[$()*+.?[\\\]^{|}]/g, '\\$&');
+const escaped = escapeRe(oldName);
+const memberRe = new RegExp('\\.' + escaped + '\\b', 'g');
+const keyRe = new RegExp('^([ \\t]*)' + escaped + ':', 'gm');
+const shorthandRe = new RegExp('^([ \\t]*)' + escaped + '\\s*,', 'gm');
 // M10 的窄签名标注写在 /** @typedef ... */ / /** @type {...} */ 注释里，
 // 成员名不带前导点，因此只在含这两个标记的行内替换 `NAME:`。
-const typedefKeyRe = new RegExp('([\\{,\\s])' + oldName + ':(?=\\s)', 'g');
+const typedefKeyRe = new RegExp('([\\{,\\s])' + escaped + ':(?=\\s)', 'g');
 const isTypeAnnotation = (line) => line.includes('@typedef') || line.includes('@type {');
 
 const staged = [];

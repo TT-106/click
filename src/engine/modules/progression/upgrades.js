@@ -175,7 +175,7 @@ export function LearnSpellUpgrade(a) {
   this.oq = a;
   this.character = null;
   this.purchased = this.canPurchase = false;
-  this.zd = null;
+  this.spell = null;
 }
 export function PurchaseDungeonUpgrade(a) {
   this.dungeon = a;
@@ -830,13 +830,13 @@ export function initializeProgressionUpgrades() {
   LearnSpellUpgrade.prototype.og = function () {
     this.character = null;
     this.purchased = false;
-    this.zd = null;
+    this.spell = null;
   };
   LearnSpellUpgrade.prototype.uw = function () {
-    if (!this.zd) {
-      this.zd = new Spell(this.oq.spellDefinition);
+    if (!this.spell) {
+      this.spell = new Spell(this.oq.spellDefinition);
     }
-    return this.zd;
+    return this.spell;
   };
   LearnSpellUpgrade.prototype.Vo = function () {
     return this.character;

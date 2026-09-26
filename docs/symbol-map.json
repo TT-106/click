@@ -7628,7 +7628,11 @@
     "Sc": "spell",
     "Nc": "doorList",
     "ld": "spellToCast",
-    "Jc": "remainingDamage"
+    "Jc": "remainingDamage",
+    "zd": "spell",
+    "wd": "getBehaviorScore",
+    "od": "execute",
+    "$c": "itemDrop"
   },
   "gameFields": {
     "B": "tileSize",

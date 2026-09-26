@@ -86,6 +86,7 @@
 ## 1. 项目概况
 
 - 原始遗产：`archive/original/c2.js`（46,980 行混淆单体，sha256 见 `archive/migration/recovery-manifest.json`）。
+  - 规范 §33 要求符号库在 `docs/reverse-engineering/symbol-map.json`；本仓库实际路径是 `docs/symbol-map.json`，保持原位不改——162 处引用分布在 `src/` 模块头注释（会进入 `dist/` 构建产物）与 `archive/migration/tools/` 的历史恢复脚本里，后者记录的是当时工具的真实行为，不应被追溯改写。
 - `src/engine/`：经 AST 工具从 c2.js **机械恢复**的模块化引擎（非重写），74 模块；`src/app.js`+`src/ui/` 为新 UI 壳。
 - 语义事实库：`docs/reverse-engineering/facts.md`（20 条已验证事实）+ `semantic-map.md`（重命名日志）+ `docs/symbol-map.json`（1,231 符号）。
 

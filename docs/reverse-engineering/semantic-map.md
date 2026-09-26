@@ -233,6 +233,19 @@ RunStatistics 的 `On/Lk/qn/Mj/wi/uk` → `turnCount/doorsOpened/roomsCleared/le
 
 回归：check/typecheck/parity/34 场景/e2e 全绿；混淆清单 1,199 → 1,193。
 
+## 第十五轮落地：行为族（2026-09-26，四个字母）
+
+| 原字段 | 新名 | 所有者 | 决定性证据 |
+|---|---|---|---|
+| `zd` | `spell` | 两个法术行为类 + LearnSpellUpgrade | `if (!(this.spell \|\| a.statusEffectTypeId !== this.statusEffectTypeId)) this.spell = a;`；升级侧 `this.spell = new Spell(this.oq.spellDefinition)` —— 双主同义 |
+| `wd` | `getBehaviorScore` | 全部行为类 | 选择循环 `d.getPriority() > c && (g = d.getBehaviorScore(a), g > c && (c = g, f = d), 100 <= c)` —— 与 `getPriority` 并列的"这次能不能做、值多少" |
+| `od` | `execute` | 全部行为类 | 同一循环选出 `f` 之后 `f.execute(a)` |
+| `$c` | `itemDrop` | TravelWorldBehavior | 扫描 `game.itemDrops.yf` 后 `this.itemDrop.Re(a)` 认领，与 `qd/bd/ad` 同构 |
+
+工具修正：`rename-field.mjs` 对 `$c` 这类含正则元字符的名字必须先转义（`escapeRe`），否则 `\.$c` 里的 `$` 被当作行尾锚点，会静默零命中并让 `--expect` 失败；本轮首次跑就靠这个断言挡下。`wd/od` 各 20 处中有一处在 M10 的 `@typedef` 窄签名里（behaviors.js:21），逐文件成员正则数不到，工具的注释行规则才把它算进来。
+
+回归：check/typecheck/parity/34 场景/e2e 全绿；混淆清单 1,193 → 1,189。
+
 ## 重命名执行器 `scripts/rename-field.mjs`
 
 本批起改用手写守卫的执行器，用法 `node scripts/rename-field.mjs <old>=<new> <file...> --expect <total>`。写盘前强制四项校验：命中总数等于 `--expect`、行数不变、逐行缩进不变、字符串字面量多重集不变，任一失败整批不落盘。

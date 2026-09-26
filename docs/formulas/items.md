@@ -8,17 +8,17 @@
 
 | 字段 | 含义（依据赋值点/消费点） | 证据 |
 |---|---|---|
-| `op` | 指向 `ItemType`（模板） | `items.js:62` ← `items.js:202` |
-| `slot` | 装备槽字符串（`"20"`/`"80"`/…） | `items.js:63` |
-| `characterClass` | 生成时传入的职业号，装备校验用 | `items.js:64`、`character.js:143` |
-| `Ew` | 最终显示名（已拼好的字符串，派生值被持久化） | `items.js:65`、`items.js:201` |
-| `kA` | 稀有度序号 0–4 | `items.js:66`、`items.js:112-127` |
-| `ns` | 道具等级 | `items.js:67`、`views/character.js:185` |
-| `zf` | 金币价值（排序/卖出基准，非"更好"判据） | `items.js:68`、`inventory.js:56`、`character.js:1198` |
-| `itemValue` | 属性数值（"更好"判据、属性求和来源） | `items.js:69`、`inventory.js:75`、`character.js:168-178` |
-| `characteristic` | 该槽位绑定的属性类型 1–6（= 职业定义的 `statType`） | `items.js:70`、`character.js:46-55` |
-| `Rm` | `ItemEffect`（元素特效）或 `null` | `items.js:71` |
-| `nj` | 持有者 Character | `items.js:72`、`items.js:203`、`inventory.js:15` |
+| `op` | 指向 `ItemType`（模板） | `loot/items.js:62` ← `loot/items.js:202` |
+| `slot` | 装备槽字符串（`"20"`/`"80"`/…） | `loot/items.js:63` |
+| `characterClass` | 生成时传入的职业号，装备校验用 | `loot/items.js:64`、`characters/character.js:143` |
+| `Ew` | 最终显示名（已拼好的字符串，派生值被持久化） | `loot/items.js:65`、`loot/items.js:201` |
+| `kA` | 稀有度序号 0–4 | `loot/items.js:66`、`loot/items.js:112-127` |
+| `ns` | 道具等级 | `loot/items.js:67`、`views/character.js:185` |
+| `zf` | 金币价值（排序/卖出基准，非"更好"判据） | `loot/items.js:68`、`loot/inventory.js:56`、`characters/character.js:1198` |
+| `itemValue` | 属性数值（"更好"判据、属性求和来源） | `loot/items.js:69`、`loot/inventory.js:75`、`characters/character.js:168-178` |
+| `characteristic` | 该槽位绑定的属性类型 1–6（= 职业定义的 `statType`） | `loot/items.js:70`、`characters/character.js:46-55` |
+| `Rm` | `ItemEffect`（元素特效）或 `null` | `loot/items.js:71` |
+| `nj` | 持有者 Character | `loot/items.js:72`、`loot/items.js:203`、`loot/inventory.js:15` |
 
 `kA/ns/zf/itemValue/characteristic/Rm` 这些名字未在代码内命名语义，上表含义由**赋值点 + 消费点**反推，置信度：高（`persistence/entities.js:7-51` 的存档键名 `itemRarity/itemLevel/itemGold/itemValue/itemCharacteristic/itemEffect` 与之一一对应）。
 
@@ -48,7 +48,7 @@ itemRarityTiers = [{
 }];
 ```
 
-- `Vp` = 稀有度序号；`pp` = 属性/金币倍率（乘数）；`jp` = 元素特效出现概率。三个字段的语义由消费点确定（`items.js:157-167`、`:170`），置信度高。
+- `Vp` = 稀有度序号；`pp` = 属性/金币倍率（乘数）；`jp` = 元素特效出现概率。三个字段的语义由消费点确定（`loot/items.js:157-167`、`:170`），置信度高。
 - 名义总和 = 1.0；浮点实测 `0.8+0.16+0.036+0.0036+4e-4 === 1.0000000000000002`（不是 `1`）。落底的 `return 0` 分支吸收残差，故不影响分布。
 
 ### I-2 归一化掷点
@@ -78,16 +78,16 @@ P(返回 0) = (a - 0.2) / a
 ```
 
 即：**从"普通"里挖走的概率质量按比例摊给 4 个稀有档**，稀有档整体放大 `1/a` 倍。
-代入 `a = (100 - itemQualityChance)/100`（`items.js:277`）：
+代入 `a = (100 - itemQualityChance)/100`（`loot/items.js:277`）：
 
 | `itemQualityChance` | `a` | P(罕见) | P(稀有) | P(历史) | P(远古) | P(普通) |
 |---|---|---|---|---|---|---|
-| 0（基础，`balance.js:342-345`） | 1.00 | 0.16 | 0.036 | 0.0036 | 0.0004 | 0.80 |
-| 30（满级，`maxValue:30` `balance.js:346`） | 0.70 | 0.2286 | 0.05143 | 0.005143 | 0.000571 | 0.7143 |
+| 0（基础，`content/balance.js:342-345`） | 1.00 | 0.16 | 0.036 | 0.0036 | 0.0004 | 0.80 |
+| 30（满级，`maxValue:30` `content/balance.js:346`） | 0.70 | 0.2286 | 0.05143 | 0.005143 | 0.000571 | 0.7143 |
 
 调用点只有两处，都传 `a ≥ 0.55`，上式简化形式恒成立：
 
-- 普通掉落：`items.js:277` `n = g.uf((100 - globalUpgradeDefinitions.itemQualityChance.currentValue) / 100)`
+- 普通掉落：`loot/items.js:277` `n = g.uf((100 - globalUpgradeDefinitions.itemQualityChance.currentValue) / 100)`
 - 宝箱掉落：`characters/character.js:1101-1102`
 
 ```js
@@ -95,7 +95,7 @@ zA = (100 - Math.min(90, globalUpgradeDefinitions.itemQualityChance.currentValue
 AA = Op.uf(zA),
 ```
 
-`CHEST_ITEM_QUALITY_BONUS = 15`（`balance.js:293`）。宝箱路径的 `a` ∈ [0.55, 0.85]。
+`CHEST_ITEM_QUALITY_BONUS = 15`（`content/balance.js:293`）。宝箱路径的 `a` ∈ [0.55, 0.85]。
 
 ### I-3 序号 → tier 的匹配（数组顺序是否承重）
 
@@ -117,9 +117,9 @@ a: {
 - `itemRarityTiers` 按 `Vp` 值查表，**数组顺序不承重**（仅"查不到时回落 `[0]`"依赖顺序）。
 - `itemRarityProbabilities` 的**索引本身即稀有度 ID**，顺序承重：
   - 存档字段 `itemRarity` 直接写 `a.uf()`（`persistence/entities.js:13,20`）；
-  - UI 文案 `getItemRarityLabel`（`items.js:112-127`）、CSS 类 `getRarityClass`（`views/upgrade-details.js:228-240`）、统计分档 `recordItemFound`（`progression/statistics.js:102-117`）、冒险点分档 `awardAdventurePoints(13/14/15/16)`（`characters/character.js:1036-1049`、`combat/actions.js:235-249`）全部按 `0..4` 硬编码 switch。
-  - 越界值走 `"BUG FOUND: " + a.uf()`（`items.js:125`）。
-- **另一处顺序承重**：槽位池 `ps[slot]` 是注册序数组，`g = g[randomInt(g.length)]`（`items.js:149`）按下标取模板；`content/equipment.js:324+` 的 `registerItemType(...)` 调用顺序改变，同一次随机数会取出不同贴图/基底名，差分立即分叉。`ItemType.RD`（存档里的 `itemTypeId`）是 `baseName + png` 的字符串哈希（`items.js:233-245`），与注册顺序无关。
+  - UI 文案 `getItemRarityLabel`（`loot/items.js:112-127`）、CSS 类 `getRarityClass`（`views/upgrade-details.js:228-240`）、统计分档 `recordItemFound`（`progression/statistics.js:102-117`）、冒险点分档 `awardAdventurePoints(13/14/15/16)`（`characters/character.js:1036-1049`、`combat/actions.js:235-249`）全部按 `0..4` 硬编码 switch。
+  - 越界值走 `"BUG FOUND: " + a.uf()`（`loot/items.js:125`）。
+- **另一处顺序承重**：槽位池 `ps[slot]` 是注册序数组，`g = g[randomInt(g.length)]`（`loot/items.js:149`）按下标取模板；`content/equipment.js:324+` 的 `registerItemType(...)` 调用顺序改变，同一次随机数会取出不同贴图/基底名，差分立即分叉。`ItemType.RD`（存档里的 `itemTypeId`）是 `baseName + png` 的字符串哈希（`loot/items.js:233-245`），与注册顺序无关。
 
 ---
 
@@ -139,10 +139,10 @@ export function randomizeItemLevel(a, b) {
 }
 ```
 
-`LOWER_ITEM_LEVEL_CHANCE = 0.15`、`BASE_HIGHER_ITEM_CHANCE = 0.1`（`balance.js:444-445`）。
+`LOWER_ITEM_LEVEL_CHANCE = 0.15`、`BASE_HIGHER_ITEM_CHANCE = 0.1`（`content/balance.js:444-445`）。
 调用方传的第二个参数是 **`(100 - higherLevelItemChance)/100`**：
 
-- 普通掉落：`items.js:278` `f = randomizeItemLevel(f, (100 - globalUpgradeDefinitions.higherLevelItemChance.currentValue) / 100)`
+- 普通掉落：`loot/items.js:278` `f = randomizeItemLevel(f, (100 - globalUpgradeDefinitions.higherLevelItemChance.currentValue) / 100)`
 - 宝箱：`characters/character.js:1103-1104`
 
 ```js
@@ -150,7 +150,15 @@ CA = (100 - Math.min(90, globalUpgradeDefinitions.higherLevelItemChance.currentV
 DA = randomizeItemLevel(wl.stats.characterLevel, CA),
 ```
 
-于是（`higherLevelItemChance` 基础 0、每级 +3、上限 30，`balance.js:351-363`）：
+两次独立掷点（`loot/items.js:227` 与 `:231` 各一次 `Math.random()`），故
+
+```
+P(等级−1) = 0.15
+P(等级+1) = 0.85 · min(1, 0.1 + b)
+P(不变)   = 0.85 · (1 − min(1, 0.1 + b))
+```
+
+代入（`higherLevelItemChance` 基础 0、每级 +3、上限 30，`content/balance.js:351-363`）：
 
 | `higherLevelItemChance` | `b` | `c = min(1, 0.1+b)` | P(等级−1) | P(等级+1) | P(不变) |
 |---|---|---|---|---|---|
@@ -161,7 +169,7 @@ DA = randomizeItemLevel(wl.stats.characterLevel, CA),
 
 `[疑似遗留怪癖]` 标题为"道具等级加成/更高等级道具掉落几率(+3%)"的升级，**实际把 +1 级的概率从 85% 压低到 68%**。同一 `(100 - v)/100` 惯用法在稀有度处是正确的归一化除数（I-2），在等级处被当成加法概率使用。数值按原样记录。
 
-- 等级基准 `a`：普通掉落用**被杀怪物的等级**（`items.js:278` 的 `f` ← `simulation/characters.js:321` 传入的 `d = b.stats.characterLevel`，见 `simulation/characters.js:275-276`）；宝箱与首领爆发用**随机冒险者等级**（`characters/character.js:1104` 的 `wl.stats.characterLevel`、`combat/actions.js:389` 的 `b.stats.characterLevel`）。
+- 等级基准 `a`：普通掉落用**被杀怪物的等级**（`loot/items.js:278` 的 `f` ← `simulation/characters.js:321` 传入的 `d = b.stats.characterLevel`，见 `simulation/characters.js:275-276`）；首领爆发同样用**死者（首领）等级**（`combat/actions.js:389` 的 `b.stats.characterLevel`）；只有宝箱用**随机冒险者等级**（`characters/character.js:1104` 的 `wl.stats.characterLevel`）。
 - 新建队伍初始装备**不掷等级/稀有度**：`generateItem(game.itemGenerator, l[s], g, 1, 0)` 固定等级 1、稀有度 0（`views/party-creation.js:72`）。
 
 ### I-5 等级 → 数值（曲线 + ±10% 抖动）
@@ -236,11 +244,11 @@ s = randomizeScaledValue(d, itemGoldCurve, s) * itemGoldModifier.currentValue;
 
 | 次序 | 位置 | 用途 |
 |---|---|---|
-| 1 | `items.js:149` `randomInt(g.length)` | 槽位模板 |
-| 2 | `items.js:168`（内部 `:78`） | 属性抖动 |
-| 3 | `items.js:169`（内部 `:78`） | 金币抖动 |
-| 4 | `items.js:170` `Math.random() < h.jp` | 是否带元素特效（**仅 `characteristic===1` 时才消耗**，`&&` 短路） |
-| 5–6 | `items.js:172`、`:174` | 元素种类、特效量 |
+| 1 | `loot/items.js:149` `randomInt(g.length)` | 槽位模板 |
+| 2 | `loot/items.js:168`（内部 `:78`） | 属性抖动 |
+| 3 | `loot/items.js:169`（内部 `:78`） | 金币抖动 |
+| 4 | `loot/items.js:170` `Math.random() < h.jp` | 是否带元素特效（**仅 `characteristic===1` 时才消耗**，`&&` 短路） |
+| 5–6 | `loot/items.js:172`、`:174` | 元素种类、特效量 |
 | 7+ | `loot/item-names.js:58-60,62-69` 等 | 词库结构 1–2 次 + 取词 `randomInt` |
 
 ---
@@ -342,11 +350,11 @@ if (1 === l && Math.random() < h.jp) {
 ```
 
 - 门槛：`characteristic === 1`（伤害槽）**且** `U() < tier.jp`。
-- 种类分布：火 20% / 冰 20% / 休克 20% / 音波 10% / 毒 30%（阈值链顺序即概率，`FIRE=1, ICE=2, POISON=3, SHOCK=4, SONIC=5`，`items.js:306-310`）。
+- 种类分布：火 20% / 冰 20% / 休克 20% / 音波 10% / 毒 30%（阈值链顺序即概率，`FIRE=1, ICE=2, POISON=3, SHOCK=4, SONIC=5`，`loot/items.js:306-310`）。
 - 特效量：`max(1, floor( max(0.1·itemValue, 0.4·itemValue·U) ))`，即"不低于属性值 10%，最高 40% 均匀"，下限 1。
 - `formatAmount` 见 `core/math.js:55-60`（阈值链为原版行为锁定）。
 - `[疑似遗留怪癖]` 局部变量 `h`（tier）在 `:172` 被随机数覆写，之后无人再读，属可读性问题不影响数值。
-- `[疑似遗留怪癖]` 特效的消费链是死的：`Equipment.Qk` 用 `a.statType` 记录"主手武器"（`characters/movement.js:202-204`），但 `Item` 上只有 `characteristic`，从无 `statType` 字段 → `fz` 永不被赋值 → `So()` 恒 `null` → `combat/actions.js:453-454, 479-486` 读取的武器元素特效贴图分支永不生效。投射物分支 `Ey`（`movement.js:199-201`，经 `Cw()`）不受影响。
+- `[疑似遗留怪癖]` 特效的消费链是死的：`Equipment.Qk` 用 `a.statType` 记录"主手武器"（`characters/movement.js:202-204`），但 `Item` 上只有 `characteristic`，从无 `statType` 字段 → `fz` 永不被赋值 → `So()` 恒 `null` → `combat/actions.js:453-454, 479-486` 读取的武器元素特效贴图分支永不生效。投射物分支 `Ey`（`characters/movement.js:199-201`，经 `Cw()`）不受影响。
 
 ---
 
@@ -354,14 +362,14 @@ if (1 === l && Math.random() < h.jp) {
 
 ### I-13 `zf`（道具金币价值）
 
-`src/engine/modules/loot/items.js:169`（`s` → `Item` 第 7 参 → `this.zf`，`items.js:68`）
+`src/engine/modules/loot/items.js:169`（`s` → `Item` 第 7 参 → `this.zf`，`loot/items.js:68`）
 
 ```js
 s = randomizeScaledValue(d, itemGoldCurve, s) * itemGoldModifier.currentValue;
 ```
 
-`itemGoldModifier = { currentValue: 1, defaultValue: 1, activeValue: 1.2 }`（`balance.js:258-262`），由 `higherItemValues` 药水（`modifierId:14`，`combat/potions.js:58-59`、`potions.js:196-202` "新道具+20%黄金"）激活。
-`[疑似遗留怪癖]` `1.2 ×` 整数**不再取整**，药水生效期间 `zf` 可为小数（例 17 → 20.4）；显示经 `formatAmount` 截断（`views/character.js:186,318`），存档原样写入小数（`entities.js:21`）。
+`itemGoldModifier = { currentValue: 1, defaultValue: 1, activeValue: 1.2 }`（`content/balance.js:258-262`），由 `higherItemValues` 药水（`modifierId:14`，`combat/potions.js:58-59`、`combat/potions.js:196-202` "新道具+20%黄金"）激活。
+`[疑似遗留怪癖]` `1.2 ×` 整数**不再取整**，药水生效期间 `zf` 可为小数（例 17 → 20.4）；显示经 `formatAmount` 截断（`views/character.js:186,318`），存档原样写入小数（`persistence/entities.js:21`）。
 
 ### I-14 卖价（商店）
 
@@ -386,7 +394,7 @@ Vp.ni += floorNumber(Al);
 卖出所得 = floor( Σ_{被卖件} zf · (0.1 + equipmentQualityBonus.currentValue) )
 ```
 
-- 回收率基线 **10%**；`equipmentQualityBonus.levelIncrement = 0.01`（`balance.js:172-176`），对应点升级 `itemSales1/2`（`bonusIndex:10`，`progression/points.js:329-341`，文案"商店回收价提高10%"→ 10% 的相对 10%，即 0.1→0.12）。
+- 回收率基线 **10%**；`equipmentQualityBonus.levelIncrement = 0.01`（`content/balance.js:172-176`），对应点升级 `itemSales1/2`（`bonusIndex:10`，`progression/points.js:329-341`，文案"商店回收价提高10%"→ 10% 的相对 10%，即 0.1→0.12）。
 - **只有"不比已装备件好"的道具才卖**（空槽位的道具不卖）；每件卖出的道具记 1 次事件 17。
 - 逐冒险者累加、`floor` 只在该冒险者的合计上做最后一次。
 - 卖出的钱先进 `game.shops.ni`（"待收集"），由 `CollectFarmUpgrade.purchase` 才真正 `addGold`：`progression/upgrades.js:1253-1261`。
@@ -404,7 +412,7 @@ export function rollGoldDrop() {
 }
 ```
 
-`As`=`minGoldPerDrop`（基础 0，+10/级，上限 2000）、`ys`=`maxGoldPerDrop`（基础 15，+25/级，上限 2500）（`balance.js:364-389`；键名 `As/ys` 未重命名，语义取自各自 `settingId`）。
+`As`=`minGoldPerDrop`（基础 0，+10/级，上限 2000）、`ys`=`maxGoldPerDrop`（基础 15，+25/级，上限 2500）（`content/balance.js:364-389`；键名 `As/ys` 未重命名，语义取自各自 `settingId`）。
 `[疑似遗留怪癖]` 若 `min > max`，`randomInt(0)=0`（`core/math.js:44-46`）→ 恒定掉落 `min`，不报错。
 
 ---
@@ -466,10 +474,10 @@ if (randomInt(100) <= globalUpgradeDefinitions.itemDropChance.currentValue || gu
 
 | 掉落 | 升级键 / 基础 / 每级 / 上限 | 比较式 | 实际概率（基础值） |
 |---|---|---|---|
-| 金币 | `Lr` = `goldDropChance`，25 / +5 / 100（`balance.js:390-402`） | `randomInt(100) <= v` | **31/100** |
-| 卷轴 | `$s` = `scrollDropChance`，20 / +2 / 40（`balance.js:403-415`） | 同上 | **21/100** |
-| 道具 | `itemDropChance`，40 / +2 / 100（`balance.js:299-311`） | 同上，或药水 `guaranteedItemDrops` 强制 | **41/100** |
-| 药剂 | `Ns` = `potionDropChance`，1 / +0.5 / 5（`balance.js:416-428`） | `100*Math.random() <= v` | **1/100** |
+| 金币 | `Lr` = `goldDropChance`，25 / +5 / 100（`content/balance.js:390-402`） | `randomInt(100) <= v` | **31/100** |
+| 卷轴 | `$s` = `scrollDropChance`，20 / +2 / 40（`content/balance.js:403-415`） | 同上 | **21/100** |
+| 道具 | `itemDropChance`，40 / +2 / 100（`content/balance.js:299-311`） | 同上，或药水 `guaranteedItemDrops` 强制 | **41/100** |
+| 药剂 | `Ns` = `potionDropChance`，1 / +0.5 / 5（`content/balance.js:416-428`） | `100*Math.random() <= v` | **1/100** |
 
 `[疑似遗留怪癖]` `randomInt(100) ∈ [0,99]` 配 `<=` 使前三类比文案各多 1 个百分点；药剂那类改用连续比较，无此偏移。按原样记录。
 `[疑似遗留怪癖]` 道具双倍药水是"再掷一次 `spawnItemDrop`"（`:322-324`），两次独立掷稀有度/等级/模板；金币双倍是"再放一份等量金堆"（`:303-306`），不重掷 `rollGoldDrop`。
@@ -520,9 +528,9 @@ if (!getRoomTreasure(b, a)) {
 ```
 
 - 门前置：房内已无怪物且房门数 `<2` → 不放宝箱。
-- 概率门：`treasureChance` 基础 5 / +2 / 上限 20（`balance.js:429-441`）；连续比较 `Math.random() > v/100` → P = v/100。
+- 概率门：`treasureChance` 基础 5 / +2 / 上限 20（`content/balance.js:429-441`）；连续比较 `Math.random() > v/100` → P = v/100。
 - `room.Yp === 3`（财宝房）跳过前置与概率门，必定放箱。财宝房由 `randomTreasureRoom` 药水在揭示房间时以 25% 概率就地改写房型：`world/rooms.js:57-58`。财宝房内每个内圈格子 80% 概率生成 `2 · rollGoldDrop()` 的金堆：`world/rooms.js:190-201`。
-- 开箱产出（`characters/character.js:1080-1126`）由 `Mf` 分类：`1`=财宝箱（金 10+U[0,9] 份 + 道具 7+U[0,7] + 卷轴 2+U[0,4] + 药水 U[0,1]）、`2`=武器架（道具 + 卷轴）、`3`=书架（仅卷轴）。道具用等级/品质加成 `CHEST_ITEM_LEVEL_BONUS=10`、`CHEST_ITEM_QUALITY_BONUS=15`（`balance.js:293-294`），见 I-2、I-4。`Mf` 与 `ve` 表条目的对应见 `runtime/game.js:219-348`。
+- 开箱产出（`characters/character.js:1080-1126`）由 `Mf` 分类：`1`=财宝箱（金 10+U[0,9] 份 + 道具 7+U[0,7] + 卷轴 2+U[0,4] + 药水 U[0,1]）、`2`=武器架（道具 + 卷轴）、`3`=书架（仅卷轴）。道具用等级/品质加成 `CHEST_ITEM_LEVEL_BONUS=10`、`CHEST_ITEM_QUALITY_BONUS=15`（`content/balance.js:293-294`），见 I-2、I-4。`Mf` 与 `ve` 表条目的对应见 `runtime/game.js:219-348`。
 
 ### I-20 卷轴掉落的取样池
 
@@ -535,9 +543,9 @@ if (randomInt(100) <= globalUpgradeDefinitions.$s.currentValue) {
   const scrollDrop = new ScrollDrop(scroll, ...);
 ```
 
-池 `Pl` 只含**已解锁**卷轴（`combat/scrolls.js:217-221`）。`shockScroll.sg = 0` → `resetScrollInventory` 里 `ts(0 < 0, 0)` 使其开局即解锁（`scrolls.js:209`、`scrolls.js:223-227`、`scrolls.js:263-269`），故 `Pl` 非空。
+池 `Pl` 只含**已解锁**卷轴（`combat/scrolls.js:217-221`）。`shockScroll.sg = 0` → `resetScrollInventory` 里 `ts(0 < 0, 0)` 使其开局即解锁（`combat/scrolls.js:209`、`combat/scrolls.js:223-227`、`combat/scrolls.js:263-269`），故 `Pl` 非空。
 `[疑似遗留怪癖]` 若 `Pl` 为空，`randomInt(0)=0` → `scrolls[0]` 为 `undefined`，掉落仍被创建，拾取时 `addScrollCharge(undefined)` 抛错；代码无保护。
-药水入库另有容量门：`BASE_POTION_CAPACITY(6) + potionCapacityBonus.currentValue`（`combat/potions.js:111-116`），而**卷轴拾取无容量门**，只有叠加时被夹到 `30 + scrollCapacityBonus.currentValue`（`scrolls.js:54-59`）。
+药水入库另有容量门：`BASE_POTION_CAPACITY(6) + potionCapacityBonus.currentValue`（`combat/potions.js:111-116`），而**卷轴拾取无容量门**，只有叠加时被夹到 `30 + scrollCapacityBonus.currentValue`（`combat/scrolls.js:54-59`）。
 
 ---
 
@@ -586,9 +594,9 @@ export function equipItem(a, b) {
 
 限制只有两条：
 1. `characterClass` 必须相同（否则只打日志，静默不装）；
-2. `a.equipment` 存在（怪物 `MONSTER_TYPE` 的 `equipment` 为 `null`，`character.js:56`）。
+2. `a.equipment` 存在（怪物 `MONSTER_TYPE` 的 `equipment` 为 `null`，`characters/character.js:56`）。
 
-`[疑似遗留怪癖]` **不校验槽位是否属于该角色的 `slotList`**：`Qk` 无条件 `this.hw[a.slot] = a`（`characters/movement.js:197-198`），异职业槽位会写入一个不在 `slotList` 里的键，因而回算循环（`character.js:163-180` 遍历 `slotList`）看不见它 —— 装备进"影子槽"，既不生效也不显示，只有存档会带上它。当前所有生成路径的 `slot` 都取自持有者 `slotList`，因此正常流程不可达。
+`[疑似遗留怪癖]` **不校验槽位是否属于该角色的 `slotList`**：`Qk` 无条件 `this.hw[a.slot] = a`（`characters/movement.js:197-198`），异职业槽位会写入一个不在 `slotList` 里的键，因而回算循环（`characters/character.js:163-180` 遍历 `slotList`）看不见它 —— 装备进"影子槽"，既不生效也不显示，只有存档会带上它。当前所有生成路径的 `slot` 都取自持有者 `slotList`，因此正常流程不可达。
 
 属性显示值（派生，不存字段）：`characters/stats.js:14-17`
 
@@ -599,7 +607,7 @@ export function statValue(a) {
 }
 ```
 
-装备末尾还会夹住当前生命/法力：`character.js:181-182`。
+装备末尾还会夹住当前生命/法力：`characters/character.js:181-182`。
 
 ### I-23 自动装备
 
@@ -616,8 +624,8 @@ for (c = 0; c < f.length; c++) {
 }
 ```
 
-- "装备所有道具"升级（`progression/upgrades.js:431-438`）：对每名冒险者调 `Br`。计数版判定 `Cd` 在 `upgrades.js:445-473`，可购条件是 `可装件数 > this.vp`（`vp` 是构造入参 5，`upgrades.js:138-143`、`balance.js:487`）——`[疑似遗留怪癖]` 字段名 `vp` 与背包容量字段同名但语义是"件数门槛"。
-- 逐件装备升级 `EquipItemUpgrade`（`upgrades.js:490-518`）：从**全局扁平池** `game.inventories.Fj` 的第 `hA`(0–4) 位取件，落到 `item.nj.Qk(item)`。
+- "装备所有道具"升级（`progression/upgrades.js:431-438`）：对每名冒险者调 `Br`。计数版判定 `Cd` 在 `progression/upgrades.js:445-473`，可购条件是 `可装件数 > this.vp`（`vp` 是构造入参 5，`progression/upgrades.js:138-143`、`content/balance.js:487`）——`[疑似遗留怪癖]` 字段名 `vp` 与背包容量字段同名但语义是"件数门槛"。
+- 逐件装备升级 `EquipItemUpgrade`（`progression/upgrades.js:490-518`）：从**全局扁平池** `game.inventories.Fj` 的第 `hA`(0–4) 位取件，落到 `item.nj.Qk(item)`。
 - 背包行 UI 的装备按钮：`views/character.js:193-198`，判据写作 `!b || this.item.itemValue > b.itemValue`，与 `isBetterItem` 等价（重复实现）。
 
 全局池 `Fj` 只在有背包被改动（`ip` 脏位）时于回合边界重建，并且**已经过滤掉"比已装备件差"的件**：`simulation/tick.js:487-513`
@@ -666,7 +674,7 @@ export function InventoryRegistry() {
 this.vp = BASE_INVENTORY_CAPACITY + Math.min(MAX_PRESTIGE_INVENTORY_BONUS, game.state.victoryCount);
 ```
 
-`BASE_INVENTORY_CAPACITY = 20`、`MAX_PRESTIGE_INVENTORY_BONUS = 10`（`balance.js:123,126`）→ 每次胜利 +1 格，最多 +10。
+`BASE_INVENTORY_CAPACITY = 20`、`MAX_PRESTIGE_INVENTORY_BONUS = 10`（`content/balance.js:123,126`）→ 每次胜利 +1 格，最多 +10。
 
 `[疑似遗留怪癖]` 恢复存档时同一件道具经 `addInventoryItem` 重投，若容量小于存档条目数会静默丢件（`persistence/game-save.js:479-485`）。
 
@@ -676,12 +684,12 @@ this.vp = BASE_INVENTORY_CAPACITY + Math.min(MAX_PRESTIGE_INVENTORY_BONUS, game.
 
 三层结构：
 
-1. **模板 `ItemType`**（`items.js:47-60`）：`RD`(哈希 id)、`baseName`、`slotList`、`lA`(sprite)、四个 `is*` 旗标、`projectileAnimationId`。仅存在内存，注册时由 `content/equipment.js` 重建（`initializeItemCatalog` 每次清空 `os`/`ps`，`equipment.js:6-9`）。
-   - `isMeleeWeapon / isArmor / isMiscItem` 三旗标是 **write-only**，代码内无任何读者（注释见 `items.js:55-58`）。
-2. **实例 `Item`**（`items.js:61-73`）：生成瞬间即定型的数值 + 名字。
+1. **模板 `ItemType`**（`loot/items.js:47-60`）：`RD`(哈希 id)、`baseName`、`slotList`、`lA`(sprite)、四个 `is*` 旗标、`projectileAnimationId`。仅存在内存，注册时由 `content/equipment.js` 重建（`initializeItemCatalog` 每次清空 `os`/`ps`，`content/equipment.js:6-9`）。
+   - `isMeleeWeapon / isArmor / isMiscItem` 三旗标是 **write-only**，代码内无任何读者（注释见 `loot/items.js:55-58`）。
+2. **实例 `Item`**（`loot/items.js:61-73`）：生成瞬间即定型的数值 + 名字。
 3. **派生显示值**：`getItemStatLabel`、`getItemRarityLabel`、`getHighlightedItemName`、`formatAmount(zf)`、`formatAmount(itemValue)` 全为函数式派生，**不入库**。
 
-`[重要]` 但 `Ew`（最终显示名）**不是派生值而是实例字段**，由 `formatItemName` 掷词后固化（`items.js:181-201`）并写进存档 `itemName`。`getHighlightedItemName`（`items.js:128-133`）在读取时才对 `Ew` 做子串高亮，找不到基底名时原样返回。
+`[重要]` 但 `Ew`（最终显示名）**不是派生值而是实例字段**，由 `formatItemName` 掷词后固化（`loot/items.js:181-201`）并写进存档 `itemName`。`getHighlightedItemName`（`loot/items.js:128-133`）在读取时才对 `Ew` 做子串高亮，找不到基底名时原样返回。
 
 ### 存档字段（`persistence/entities.js:7-31`）
 
@@ -700,11 +708,11 @@ return {
 };
 ```
 
-- **全部数值都是"存下来的"而非"重算的"**：等级、稀有度、属性值、金币值、特效量逐字回读（`entities.js:32-51`）。加载不重掷任何随机数。
+- **全部数值都是"存下来的"而非"重算的"**：等级、稀有度、属性值、金币值、特效量逐字回读（`persistence/entities.js:32-51`）。加载不重掷任何随机数。
 - 特效的 4 个字段（含描述字符串与动画名）也全部持久化。
-- 恢复只依赖 `itemTypeId` 反查模板：`game.itemGenerator.os[a.itemTypeId]`，查不到 → `console.log("failed to lookup item type")` 并返回 `null`，调用点跳过该件（`game-save.js:481,490`）。基底名或 PNG 任一处改名都会改变哈希（`items.js:234-245`）而使旧档道具整体消失。
-- 回读时的零值兜底会**改写 0**：`g ? g : 1`（等级 0→1）、`n ? n : 1`（`characteristic` 0→1）、`f ? f : 0`、`h/l ? : 0`（`entities.js:50`）。
-- 角色侧另有 `characteristicsComponent` 保存六条 `StatComponent` 的 `itemValue/levelValue/spellBonusPercent/skillBonusPercent`（`entities.js:157-164`）。装备回算发生两次：先由 `equipItem` 求和（`game-save.js:491`），再由 `restoreStatComponent` 用存档值覆写（`game-save.js:522-527`）—— **存档值优先**。
+- 恢复只依赖 `itemTypeId` 反查模板：`game.itemGenerator.os[a.itemTypeId]`，查不到 → `console.log("failed to lookup item type")` 并返回 `null`，调用点跳过该件（`persistence/game-save.js:481,490`）。基底名或 PNG 任一处改名都会改变哈希（`loot/items.js:234-245`）而使旧档道具整体消失。
+- 回读时的零值兜底会**改写 0**：`g ? g : 1`（等级 0→1）、`n ? n : 1`（`characteristic` 0→1）、`f ? f : 0`、`h/l ? : 0`（`persistence/entities.js:50`）。
+- 角色侧另有 `characteristicsComponent` 保存六条 `StatComponent` 的 `itemValue/levelValue/spellBonusPercent/skillBonusPercent`（`persistence/entities.js:157-164`）。装备回算发生两次：先由 `equipItem` 求和（`persistence/game-save.js:491`），再由 `restoreStatComponent` 用存档值覆写（`persistence/game-save.js:522-527`）—— **存档值优先**。
 
 ---
 
@@ -712,14 +720,14 @@ return {
 
 | # | 位置 | 现象 |
 |---|---|---|
-| 1 | `items.js:278` + `balance.js:444-445` | "道具等级加成"升级把 +1 级概率由 85% 压到 68%（I-4） |
+| 1 | `loot/items.js:278` + `content/balance.js:444-445` | "道具等级加成"升级把 +1 级概率由 85% 压到 68%（I-4） |
 | 2 | `simulation/characters.js:298-325` | 金/卷轴/道具门为 `(v+1)/100`，文案为 `v%`；药剂门为 `v/100`（I-17） |
-| 3 | `items.js:169` | `zf` 在 `itemGoldModifier=1.2` 激活期可为小数，无取整（I-13） |
-| 4 | `movement.js:202-204` | `Equipment.Qk` 读不存在的 `item.statType` → `fz`/`So()` 恒 null → 武器元素特效贴图分支死代码（I-12） |
-| 5 | `inventory.js:56` vs `:79` | 背包排序/淘汰用 `zf`，替换门槛用 `itemValue`，口径不一致（I-23） |
-| 6 | `items.js:206-225` | `getClassStatMultiplier` 无 `default`，越界 `characteristic` → `NaN`（当前不可达）（I-11） |
-| 7 | `character.js:145-147`、`movement.js:197-198` | 装备不校验槽位归属，可写"影子槽"（当前不可达）（I-22） |
-| 8 | `items.js:55-58` | `isMeleeWeapon/isArmor/isMiscItem` write-only |
-| 9 | `balance.js:81-92` | `itemStatCurve` 与 `itemGoldCurve` 常量完全相同 |
-| 10 | `scrolls.js:309-313`（`simulation/characters.js`） | 卷轴池为空时会生成 `scroll: undefined` 的掉落，拾取即抛错（当前不可达） |
-| 11 | `upgrades.js:466` | `EquipBestItemUpgrade` 可购门槛写死为"件数 > 5"（构造参数 `equipmentUpgrades` 首项索引 5），与背包容量无关 |
+| 3 | `loot/items.js:169` | `zf` 在 `itemGoldModifier=1.2` 激活期可为小数，无取整（I-13） |
+| 4 | `characters/movement.js:202-204` | `Equipment.Qk` 读不存在的 `item.statType` → `fz`/`So()` 恒 null → 武器元素特效贴图分支死代码（I-12） |
+| 5 | `loot/inventory.js:56` vs `:79` | 背包排序/淘汰用 `zf`，替换门槛用 `itemValue`，口径不一致（I-23） |
+| 6 | `loot/items.js:206-225` | `getClassStatMultiplier` 无 `default`，越界 `characteristic` → `NaN`（当前不可达）（I-11） |
+| 7 | `characters/character.js:145-147`、`characters/movement.js:197-198` | 装备不校验槽位归属，可写"影子槽"（当前不可达）（I-22） |
+| 8 | `loot/items.js:55-58` | `isMeleeWeapon/isArmor/isMiscItem` write-only |
+| 9 | `content/balance.js:81-92` | `itemStatCurve` 与 `itemGoldCurve` 常量完全相同 |
+| 10 | `combat/scrolls.js:309-313`（`simulation/characters.js`） | 卷轴池为空时会生成 `scroll: undefined` 的掉落，拾取即抛错（当前不可达） |
+| 11 | `progression/upgrades.js:466` | `EquipBestItemUpgrade` 可购门槛写死为"件数 > 5"（构造参数 `equipmentUpgrades` 首项索引 5），与背包容量无关 |
