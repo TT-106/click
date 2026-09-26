@@ -27,15 +27,15 @@ export function removeGoldDrop(a) {
   }
 }
 export function TreasureChest(a, b, c, d, f) {
-  this.zq = a;
-  this.Aq = b;
+  this.levelX = a;
+  this.levelY = b;
   this.room = c;
   this.opened = false;
   this.closedSpriteName = f ? d.xh.closed : d.hh.closed;
   this.openedSpriteName = f ? d.xh.opened : d.hh.opened;
   this.kind = d.kind;
-  this.VE = f;
-  this.BC = d;
+  this.westWall = f;
+  this.definition = d;
   this.selected = false;
 }
 export function setChestOpened(a, b) {

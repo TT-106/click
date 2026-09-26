@@ -699,7 +699,7 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   SpellUpgradeDetails.prototype.update = function () {
-    var a = this.upgrade.uw();
+    var a = this.upgrade.getSpell();
     if (this.Lv !== a) {
       this.Lv = a;
       var b = a.spellCategoryId;

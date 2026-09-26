@@ -335,7 +335,7 @@ export function initializePersistenceEntities() {
     var b = a.count,
       c = a.locked,
       d = a.upgradeCount;
-    if (a = game.scrolls.vf(a.scrollId)) {
+    if (a = game.scrolls.getScrollById(a.scrollId)) {
       a.quantity = b;
       a.ts(c, d);
     }

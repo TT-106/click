@@ -524,7 +524,7 @@ export function initializeRenderingScene() {
           S = K.cq;
           da = projectWorldX(H, S);
           W = projectWorldY(H, S);
-          a.If(getScrollSprite(K.vf()), da, W);
+          a.If(getScrollSprite(K.getScroll()), da, W);
         }
         var ea = game.potionDrops.Hf,
           va,
@@ -567,12 +567,12 @@ export function initializeRenderingScene() {
         for (ja = 0; ja < mb.length; ja++) {
           Ea = mb[ja];
           if (Ea.room.Xi) {
-            La = Ea.zq;
-            wa = Ea.Aq;
+            La = Ea.levelX;
+            wa = Ea.levelY;
             Fa = projectWorldX(La, wa);
             ha = projectWorldY(La, wa);
             Ga = Ea.opened ? Ea.openedSpriteName : Ea.closedSpriteName;
-            if (Ea.BC.jh) {
+            if (Ea.definition.jh) {
               a.spriteRenderer.gx(Ga, La, wa, Fa, ha, Ga.spriteSheet.spriteSize, 0);
             } else {
               a.spriteRenderer.dk(Ga, La, wa, Fa, ha, Ga.spriteSheet.spriteSize, 0);

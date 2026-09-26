@@ -17,11 +17,11 @@ import { purchaseDungeonFarm } from "../simulation/tick.js";
 import { updateScrollAccuracy } from "../characters/stats.js";
 import { applyAchievementReward, getAchievementRequirementLabel, getAchievementRewardLabel } from "./achievements.js";
 /** @typedef {{ canPurchaseNow: () => boolean, lastChangeFrame: number }} SortableUpgrade */
-/** @typedef {{ getCost: () => number, isDisplayable: () => boolean, hu: () => boolean, uw: () => Spell, getTitle: () => string, vf: () => import("../combat/scrolls.js").Scroll, Wp: { isOwned: () => boolean } | null }} UpgradeMethods */
+/** @typedef {{ getCost: () => number, isDisplayable: () => boolean, isNearlyAffordable: () => boolean, getSpell: () => Spell, getTitle: () => string, getScroll: () => import("../combat/scrolls.js").Scroll, prerequisite: { isOwned: () => boolean } | null }} UpgradeMethods */
 export var SKILL_UPGRADE_TYPE;
 export function Upgrade() {
   this.lastAvailabilityFrame = -100;
-  this.Wp = null;
+  this.prerequisite = null;
   this.EC = false;
   this.lastChangeFrame = 0;
 }
@@ -278,7 +278,7 @@ export function initializeProgressionUpgrades() {
   Upgrade.prototype.getUpgradeType = function () {
     return null;
   };
-  Upgrade.prototype.uw = function () {
+  Upgrade.prototype.getSpell = function () {
     return null;
   };
   Upgrade.prototype.Vo = function () {
@@ -394,7 +394,7 @@ export function initializeProgressionUpgrades() {
       this.affordableSoon = this.canPurchase = false;
     } else {
       this.canPurchase = this.definition.cost <= game.state.party.kills;
-      this.affordableSoon = !this.canPurchase && (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).hu();
+      this.affordableSoon = !this.canPurchase && (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).isNearlyAffordable();
     }
     var a = (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).isDisplayable(),
       b = this.$A !== this.definition.purchasedLevels || this.cachedCanPurchase !== this.canPurchase || this.Zj !== this.affordableSoon || this.$j !== a;
@@ -404,7 +404,7 @@ export function initializeProgressionUpgrades() {
     this.$j = a;
     return b;
   };
-  GlobalUpgrade.prototype.hu = function () {
+  GlobalUpgrade.prototype.isNearlyAffordable = function () {
     var a = game.state.party.kills;
     if (a >= this.definition.cost) {
       return false;
@@ -572,7 +572,7 @@ export function initializeProgressionUpgrades() {
       markUpgradeChanged(this);
     }
   };
-  LevelUpUpgrade.prototype.hu = function () {
+  LevelUpUpgrade.prototype.isNearlyAffordable = function () {
     var a = game.state.party.experiencePoints,
       b = game.state.adventurers[this.adventurerIndex].stats.Am;
     if (a >= b) {
@@ -600,7 +600,7 @@ export function initializeProgressionUpgrades() {
       }
       this.Lo = a.stats.Am;
       this.canPurchase = game.state.party.experiencePoints >= this.Lo;
-      this.affordableSoon = !this.canPurchase && (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).hu();
+      this.affordableSoon = !this.canPurchase && (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).isNearlyAffordable();
       a = this.ZA !== this.canPurchase || this.Up !== this.affordableSoon || this.WA !== this.Lo;
       this.ZA = this.canPurchase;
       this.Up = this.affordableSoon;
@@ -808,7 +808,7 @@ export function initializeProgressionUpgrades() {
   CharacterSkillUpgrade.prototype.refreshAvailabilityState = function () {
     if (this.character) {
       var a = this.canPurchase;
-      var prerequisite = (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).Wp;
+      var prerequisite = (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).prerequisite;
       this.canPurchase = !this.purchased && (!prerequisite || prerequisite.isOwned()) && 0 < this.character.skillPoints;
       return a !== this.canPurchase;
     }
@@ -832,7 +832,7 @@ export function initializeProgressionUpgrades() {
     this.purchased = false;
     this.spell = null;
   };
-  LearnSpellUpgrade.prototype.uw = function () {
+  LearnSpellUpgrade.prototype.getSpell = function () {
     if (!this.spell) {
       this.spell = new Spell(this.oq.spellDefinition);
     }
@@ -875,7 +875,7 @@ export function initializeProgressionUpgrades() {
             }
           }
           a.hasUnspentSkills = hasUnspentSkills(a);
-          learnSpell(this.character, (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).uw());
+          learnSpell(this.character, (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).getSpell());
           markUpgradeChanged(this);
           recordGameEvent("Spell", this.character.classDefinition.className + " " + this.oq.spellDefinition.name);
         }
@@ -889,7 +889,7 @@ export function initializeProgressionUpgrades() {
       var a = this.canPurchase,
         b = this.character.skillPoints,
         c = this.character.initialSpellSkillPoint;
-      var prerequisite = (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).Wp;
+      var prerequisite = (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).prerequisite;
       this.canPurchase = !this.purchased && (!prerequisite || prerequisite.isOwned()) && (0 < b || c);
       return a !== this.canPurchase;
     }
@@ -1037,23 +1037,23 @@ export function initializeProgressionUpgrades() {
     this.scroll = null;
     this.affordableSoon = this.canPurchase = false;
   };
-  ScrollUpgrade.prototype.vf = function () {
+  ScrollUpgrade.prototype.getScroll = function () {
     if (!this.scroll) {
-      this.scroll = game.scrolls.vf(this.scrollId);
+      this.scroll = game.scrolls.getScrollById(this.scrollId);
     }
     return this.scroll;
   };
   ScrollUpgrade.prototype.Pz = function () {
-    return (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).vf();
+    return (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).getScroll();
   };
   ScrollUpgrade.prototype.getTitle = function () {
-    return (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).vf().lx;
+    return (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).getScroll().lx;
   };
   ScrollUpgrade.prototype.getCost = function () {
-    return (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).vf().rn;
+    return (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).getScroll().rn;
   };
   ScrollUpgrade.prototype.getDescription = function () {
-    return (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).vf().locked ? "解锁卷轴" : "升级卷轴";
+    return (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).getScroll().locked ? "解锁卷轴" : "升级卷轴";
   };
   ScrollUpgrade.prototype.getUpgradeType = function () {
     return 12;
@@ -1065,7 +1065,7 @@ export function initializeProgressionUpgrades() {
     return this.canPurchase;
   };
   ScrollUpgrade.prototype.purchase = function () {
-    var a = (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).vf(),
+    var a = (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).getScroll(),
       b = a.rn;
     if (!(game.state.party.gold < b)) {
       spendGold(b);
@@ -1094,7 +1094,7 @@ export function initializeProgressionUpgrades() {
     }
   };
   ScrollUpgrade.prototype.refreshAvailabilityState = function () {
-    var a = (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).vf(),
+    var a = (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).getScroll(),
       b = this.canPurchase,
       c = game.state.scrollCaster.stats.characterLevel,
       d = a.locked ? a.sg : a.sg + (a.upgradeCount + 1) * a.Yi;

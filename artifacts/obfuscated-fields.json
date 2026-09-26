@@ -233,34 +233,6 @@
     ]
   },
   {
-    "name": "vf",
-    "reads": 11,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:1012",
-        "code": "a.Zh.vf"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\actions.js:264",
-        "code": "f.vf"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\scrolls.js:240",
-        "code": "ScrollDrop.prototype.vf"
-      }
-    ],
-    "fileCount": 6,
-    "files": [
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\combat\\scrolls.js",
-      "src\\engine\\modules\\persistence\\entities.js",
-      "src\\engine\\modules\\progression\\upgrades.js",
-      "src\\engine\\modules\\rendering\\scene.js"
-    ]
-  },
-  {
     "name": "uf",
     "reads": 12,
     "writes": 2,
@@ -1565,7 +1537,7 @@
       },
       {
         "loc": "src\\engine\\modules\\rendering\\scene.js:575",
-        "code": "Ea.BC.jh"
+        "code": "Ea.definition.jh"
       },
       {
         "loc": "src\\engine\\modules\\runtime\\game.js:222",
@@ -1618,7 +1590,7 @@
       },
       {
         "loc": "src\\engine\\modules\\persistence\\game-save.js:852",
-        "code": "za.BC.uh"
+        "code": "za.definition.uh"
       },
       {
         "loc": "src\\engine\\modules\\runtime\\game.js:220",
@@ -6586,7 +6558,7 @@
       },
       {
         "loc": "src\\engine\\modules\\progression\\upgrades.js:1053",
-        "code": "(/** @type {UpgradeMethods} */ /** @type {unknown} */this).vf().rn"
+        "code": "(/** @type {UpgradeMethods} */ /** @type {unknown} */this).getScroll().rn"
       }
     ],
     "fileCount": 2,
@@ -8005,60 +7977,6 @@
       "src\\engine\\modules\\ai\\behaviors.js",
       "src\\engine\\modules\\combat\\actions.js",
       "src\\engine\\modules\\loot\\items.js",
-      "src\\engine\\modules\\rendering\\scene.js"
-    ]
-  },
-  {
-    "name": "zq",
-    "reads": 5,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1357",
-        "code": "this.treasureChest.zq"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1360",
-        "code": "this.treasureChest.zq"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:1062",
-        "code": "Xd.zq"
-      }
-    ],
-    "fileCount": 5,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js",
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\loot\\treasure.js",
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\rendering\\scene.js"
-    ]
-  },
-  {
-    "name": "Aq",
-    "reads": 5,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1357",
-        "code": "this.treasureChest.Aq"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1360",
-        "code": "this.treasureChest.Aq"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:1063",
-        "code": "Xd.Aq"
-      }
-    ],
-    "fileCount": 5,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js",
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\loot\\treasure.js",
-      "src\\engine\\modules\\persistence\\game-save.js",
       "src\\engine\\modules\\rendering\\scene.js"
     ]
   },
@@ -13088,30 +13006,6 @@
     ]
   },
   {
-    "name": "Wp",
-    "reads": 2,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:98",
-        "code": "d.Wp"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:24",
-        "code": "this.Wp"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:811",
-        "code": "(/** @type {UpgradeMethods} */ /** @type {unknown} */this).Wp"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\progression\\upgrades.js"
-    ]
-  },
-  {
     "name": "Jw",
     "reads": 3,
     "writes": 1,
@@ -13840,7 +13734,7 @@
       },
       {
         "loc": "src\\engine\\modules\\progression\\upgrades.js:1050",
-        "code": "(/** @type {UpgradeMethods} */ /** @type {unknown} */this).vf().lx"
+        "code": "(/** @type {UpgradeMethods} */ /** @type {unknown} */this).getScroll().lx"
       }
     ],
     "fileCount": 2,
@@ -14163,53 +14057,6 @@
     "fileCount": 1,
     "files": [
       "src\\engine\\modules\\progression\\achievements.js"
-    ]
-  },
-  {
-    "name": "uw",
-    "reads": 2,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:281",
-        "code": "Upgrade.prototype.uw"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:835",
-        "code": "LearnSpellUpgrade.prototype.uw"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:878",
-        "code": "(/** @type {UpgradeMethods} */ /** @type {unknown} */this).uw"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\progression\\upgrades.js",
-      "src\\engine\\modules\\views\\upgrade-details.js"
-    ]
-  },
-  {
-    "name": "hu",
-    "reads": 2,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:397",
-        "code": "(/** @type {UpgradeMethods} */ /** @type {unknown} */this).hu"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:407",
-        "code": "GlobalUpgrade.prototype.hu"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:575",
-        "code": "LevelUpUpgrade.prototype.hu"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\progression\\upgrades.js"
     ]
   },
   {
@@ -19549,31 +19396,6 @@
     ]
   },
   {
-    "name": "BC",
-    "reads": 2,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:38",
-        "code": "this.BC"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:852",
-        "code": "za.BC"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:575",
-        "code": "Ea.BC"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\loot\\treasure.js",
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\rendering\\scene.js"
-    ]
-  },
-  {
     "name": "EC",
     "reads": 1,
     "writes": 2,
@@ -24550,26 +24372,6 @@
     "fileCount": 1,
     "files": [
       "src\\engine\\modules\\loot\\items.js"
-    ]
-  },
-  {
-    "name": "VE",
-    "reads": 1,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:37",
-        "code": "this.VE"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:853",
-        "code": "za.VE"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\loot\\treasure.js",
-      "src\\engine\\modules\\persistence\\game-save.js"
     ]
   },
   {

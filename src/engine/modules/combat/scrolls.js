@@ -237,7 +237,7 @@ export function initializeCombatScrolls() {
     this.lx = getNextScrollLabel(this);
     this.rn = getScrollUpgradeCost(this);
   };
-  ScrollDrop.prototype.vf = function () {
+  ScrollDrop.prototype.getScroll = function () {
     return this.scroll;
   };
   ScrollDrop.prototype.oh = function (a) {
@@ -328,7 +328,7 @@ export function initializeCombatScrolls() {
       statBonusValue: 1
     }
   }];
-  ScrollInventory.prototype.vf = function (a) {
+  ScrollInventory.prototype.getScrollById = function (a) {
     return this.kx[a];
   };
 }

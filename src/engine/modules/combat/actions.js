@@ -261,7 +261,7 @@ export function applySpellEffect(a, b) {
         addVisualEffect(game.effects, scrollEffect);
         f.oh(true);
         removeScrollDrop(f);
-        addScrollCharge(f.vf());
+        addScrollCharge(f.getScroll());
         awardAdventurePoints(10);
       }
     }

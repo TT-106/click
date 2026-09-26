@@ -95,7 +95,7 @@ export function bindSkillTree(a, b) {
       d.og();
       d.sx(a);
       if (0 < c) {
-        d.Wp = b[c - 1];
+        d.prerequisite = b[c - 1];
       }
     }
   }
@@ -1009,7 +1009,7 @@ export function updateCharacter(a, b) {
       } else if (7 === a.actionType) {
         if (a.Zh && !a.Zh.collected) {
           showFloatingText(game.floatingText, a, "卷轴!", "white");
-          addScrollCharge(a.Zh.vf());
+          addScrollCharge(a.Zh.getScroll());
           a.Zh.oh(true);
           removeScrollDrop(a.Zh);
           a.Zh = null;
@@ -1059,8 +1059,8 @@ export function updateCharacter(a, b) {
             Zd = roomRightPixels(Yd) - game.tileSize,
             Vc = roomTopPixels(Yd) + game.tileSize,
             Od = roomBottomPixels(Yd) - game.tileSize,
-            wc = Xd.zq,
-            zd = Xd.Aq,
+            wc = Xd.levelX,
+            zd = Xd.levelY,
             Ad = Xd.kind;
           if (wc < Re) {
             wc = Re;

@@ -1354,10 +1354,10 @@ export function initializeAiBehaviors() {
   ChangeFloorBehavior.prototype.execute = function (a) {
     if (this.treasureChest && !this.treasureChest.opened) {
       a.setTargetTreasureChest(this.treasureChest);
-      if (distanceToPoint(a.position.levelPosition, this.treasureChest.zq, this.treasureChest.Aq) < this.Mi) {
+      if (distanceToPoint(a.position.levelPosition, this.treasureChest.levelX, this.treasureChest.levelY) < this.Mi) {
         a.actionType = 12;
       } else {
-        setVector(a.position.moveTargetPoint, this.treasureChest.zq, this.treasureChest.Aq);
+        setVector(a.position.moveTargetPoint, this.treasureChest.levelX, this.treasureChest.levelY);
         a.actionType = 1;
       }
       clearMovementTarget(a.position);

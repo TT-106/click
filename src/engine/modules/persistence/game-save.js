@@ -846,11 +846,11 @@ export function createSaveState(a) {
       for (bb = 0; bb < ja.length; bb++) {
         var za = ja[bb];
         Ga.push({
-          levelX: za.zq,
-          levelY: za.Aq,
+          levelX: za.levelX,
+          levelY: za.levelY,
           opened: za.opened,
-          settingsId: za.BC.uh,
-          westWall: za.VE,
+          settingsId: za.definition.uh,
+          westWall: za.westWall,
           roomId: za.room.roomId
         });
       }
