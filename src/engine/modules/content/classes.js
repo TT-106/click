@@ -22,28 +22,28 @@ export function initializeContentClasses() {
   RANGED_ATTACK_RANGE = 140;
   RANGED_MIN_DISTANCE = 50;
   casterStatMultipliers = {
-    Xf: 1.15,
-    Qf: 0.9,
-    Rf: 1,
-    Zf: 0.9,
-    Cf: 0.9,
-    Ef: 1.15
+    damageMultiplier: 1.15,
+    armorMultiplier: 0.9,
+    attackRatingMultiplier: 1,
+    defenceRatingMultiplier: 0.9,
+    maxHealthMultiplier: 0.9,
+    maxSpiritMultiplier: 1.15
   };
   guardianStatMultipliers = {
-    Xf: 1,
-    Qf: 1,
-    Rf: 1,
-    Zf: 1,
-    Cf: 1,
-    Ef: 1
+    damageMultiplier: 1,
+    armorMultiplier: 1,
+    attackRatingMultiplier: 1,
+    defenceRatingMultiplier: 1,
+    maxHealthMultiplier: 1,
+    maxSpiritMultiplier: 1
   };
   minionStatMultipliers = {
-    Xf: 1,
-    Qf: 0.8,
-    Rf: 1,
-    Zf: 0.8,
-    Cf: 0.5,
-    Ef: 1.1
+    damageMultiplier: 1,
+    armorMultiplier: 0.8,
+    attackRatingMultiplier: 1,
+    defenceRatingMultiplier: 0.8,
+    maxHealthMultiplier: 0.5,
+    maxSpiritMultiplier: 1.1
   };
   fighterClass = {
     characterClass: 0,
@@ -74,12 +74,12 @@ export function initializeContentClasses() {
       statType: 6
     }],
     statMultipliers: {
-      Xf: 0.95,
-      Qf: 1,
-      Rf: 0.95,
-      Zf: 1.1,
-      Cf: 1.1,
-      Ef: 0.9
+      damageMultiplier: 0.95,
+      armorMultiplier: 1,
+      attackRatingMultiplier: 0.95,
+      defenceRatingMultiplier: 1.1,
+      maxHealthMultiplier: 1.1,
+      maxSpiritMultiplier: 0.9
     },
     kc: fighterSpellDefinitions,
     Qg: function () {
@@ -127,12 +127,12 @@ export function initializeContentClasses() {
       statType: 6
     }],
     statMultipliers: {
-      Xf: 0.95,
-      Qf: 1,
-      Rf: 0.95,
-      Zf: 1.05,
-      Cf: 1,
-      Ef: 1.05
+      damageMultiplier: 0.95,
+      armorMultiplier: 1,
+      attackRatingMultiplier: 0.95,
+      defenceRatingMultiplier: 1.05,
+      maxHealthMultiplier: 1,
+      maxSpiritMultiplier: 1.05
     },
     kc: priestSpellDefinitions,
     Qg: function () {
@@ -177,12 +177,12 @@ export function initializeContentClasses() {
       statType: 4
     }],
     statMultipliers: {
-      Xf: 1.15,
-      Qf: 0.9,
-      Rf: 1.15,
-      Zf: 0.9,
-      Cf: 0.9,
-      Ef: 0.9
+      damageMultiplier: 1.15,
+      armorMultiplier: 0.9,
+      attackRatingMultiplier: 1.15,
+      defenceRatingMultiplier: 0.9,
+      maxHealthMultiplier: 0.9,
+      maxSpiritMultiplier: 0.9
     },
     kc: null,
     Qg: function () {
@@ -369,12 +369,12 @@ export function initializeContentClasses() {
       statType: 6
     }],
     statMultipliers: {
-      Xf: 1.05,
-      Qf: 0.95,
-      Rf: 1.05,
-      Zf: 0.95,
-      Cf: 1,
-      Ef: 1
+      damageMultiplier: 1.05,
+      armorMultiplier: 0.95,
+      attackRatingMultiplier: 1.05,
+      defenceRatingMultiplier: 0.95,
+      maxHealthMultiplier: 1,
+      maxSpiritMultiplier: 1
     },
     kc: barbarianSpellDefinitions,
     Qg: function () {
@@ -468,12 +468,12 @@ export function initializeContentClasses() {
       statType: 6
     }],
     statMultipliers: {
-      Xf: 1.1,
-      Qf: 0.9,
-      Rf: 1.1,
-      Zf: 1.1,
-      Cf: 1,
-      Ef: 1
+      damageMultiplier: 1.1,
+      armorMultiplier: 0.9,
+      attackRatingMultiplier: 1.1,
+      defenceRatingMultiplier: 1.1,
+      maxHealthMultiplier: 1,
+      maxSpiritMultiplier: 1
     },
     kc: ninjaSpellDefinitions,
     Qg: function () {
@@ -634,12 +634,12 @@ export function initializeContentClasses() {
       statType: 6
     }],
     statMultipliers: {
-      Xf: 1.2,
-      Qf: 1,
-      Rf: 500,
-      Zf: 1,
-      Cf: 1,
-      Ef: 1
+      damageMultiplier: 1.2,
+      armorMultiplier: 1,
+      attackRatingMultiplier: 500,
+      defenceRatingMultiplier: 1,
+      maxHealthMultiplier: 1,
+      maxSpiritMultiplier: 1
     }
   };
 }

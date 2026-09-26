@@ -144,12 +144,12 @@ export function initializeContentGuardians() {
       statType: 6
     }],
     statMultipliers: {
-      Xf: 1.1,
-      Qf: 0.8,
-      Rf: 1.1,
-      Zf: 1.1,
-      Cf: 0.8,
-      Ef: 1.1
+      damageMultiplier: 1.1,
+      armorMultiplier: 0.8,
+      attackRatingMultiplier: 1.1,
+      defenceRatingMultiplier: 1.1,
+      maxHealthMultiplier: 0.8,
+      maxSpiritMultiplier: 1.1
     },
     kc: null,
     createBehaviors: function () {
@@ -315,12 +315,12 @@ export function initializeContentGuardians() {
       statType: 6
     }],
     statMultipliers: {
-      Xf: 1.7,
-      Qf: 1.1,
-      Rf: 1.6,
-      Zf: 1,
-      Cf: 10,
-      Ef: 1.5
+      damageMultiplier: 1.7,
+      armorMultiplier: 1.1,
+      attackRatingMultiplier: 1.6,
+      defenceRatingMultiplier: 1,
+      maxHealthMultiplier: 10,
+      maxSpiritMultiplier: 1.5
     },
     kc: null,
     createBehaviors: function () {

@@ -210,17 +210,17 @@ export function getClassStatMultiplier(a, b) {
   }
   switch (b) {
     case 2:
-      return c.Qf;
+      return c.armorMultiplier;
     case 1:
-      return c.Xf;
+      return c.damageMultiplier;
     case 3:
-      return c.Rf;
+      return c.attackRatingMultiplier;
     case 4:
-      return c.Zf;
+      return c.defenceRatingMultiplier;
     case 5:
-      return c.Cf;
+      return c.maxHealthMultiplier;
     case 6:
-      return c.Ef;
+      return c.maxSpiritMultiplier;
   }
 }
 export function randomizeItemLevel(a, b) {

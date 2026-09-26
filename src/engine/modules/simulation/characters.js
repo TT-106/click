@@ -167,17 +167,17 @@ export function createBehaviorQueue(a) {
 export function applyLevelStats(a, b, c) {
   var d = scaleByLevel(b, experienceCurve, 1);
   a.Am = d;
-  d = scaleByLevel(b, armorCurve, c.Qf);
+  d = scaleByLevel(b, armorCurve, c.armorMultiplier);
   a.armor.levelValue = d;
-  d = scaleByLevel(b, armorCurve, c.Rf);
+  d = scaleByLevel(b, armorCurve, c.attackRatingMultiplier);
   a.attackRating.levelValue = d;
-  d = scaleByLevel(b, armorCurve, c.Zf);
+  d = scaleByLevel(b, armorCurve, c.defenceRatingMultiplier);
   a.defenceRating.levelValue = d;
-  d = scaleByLevel(b, armorCurve, c.Xf);
+  d = scaleByLevel(b, armorCurve, c.damageMultiplier);
   a.damage.levelValue = d;
-  d = scaleByLevel(b, healthCurve, c.Cf);
+  d = scaleByLevel(b, healthCurve, c.maxHealthMultiplier);
   a.maxHealth.levelValue = d;
-  c = scaleByLevel(b, spiritCurve, c.Ef);
+  c = scaleByLevel(b, spiritCurve, c.maxSpiritMultiplier);
   a.maxSpirit.levelValue = c;
   a.health = floorNumber(statValue(a.maxHealth));
   a.spirit = statValue(a.maxSpirit);
