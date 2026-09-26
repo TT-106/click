@@ -188,7 +188,7 @@ export function separateWorldCharacters(a) {
   return d;
 }
 export function initializeCharactersMovement() {
-  Equipment.prototype.ef = function (a) {
+  Equipment.prototype.getSlotItem = function (a) {
     return this.hw[a];
   };
   Equipment.prototype.So = function () {

@@ -26,7 +26,7 @@ import { tickCharacterTurn } from "../simulation/characters.js";
 import { generateDungeonLevel } from "../world/generation.js";
 import { discoverDungeon } from "../world/dungeons.js";
 /** CombatAction.setTargetCharacter 由 combat/actions.js 后挂到原型，调用点窄签名。 @typedef {CombatAction & { setTargetCharacter: (target: unknown) => void }} TargetedCombatAction */
-/** Equipment.ef/So 由 characters/movement.js 后挂到原型，调用点窄签名。 @typedef {Equipment & { ef: (slot: unknown) => unknown, So: () => unknown }} SlotEquipment */
+/** Equipment.getSlotItem/So 由 characters/movement.js 后挂到原型，调用点窄签名。 @typedef {Equipment & { getSlotItem: (slot: unknown) => unknown, So: () => unknown }} SlotEquipment */
 export function Character(a, b, c, d, f) {
   this.adventurerName = a;
   this.characterType = b;
@@ -143,7 +143,7 @@ export function equipItem(a, b) {
   if (b.characterClass !== a.characterClass) {
     console.log("failed to equip non-equipable item. itemSlot=" + b.slot + " charClass=" + a.characterClass);
   } else if (a.equipment) {
-    var c = a.equipment.ef(b.slot);
+    var c = a.equipment.getSlotItem(b.slot);
     a.equipment.Qk(b);
     if (a.inventory) {
       a.inventory.removeItem(b);
@@ -163,7 +163,7 @@ export function equipItem(a, b) {
     var g = c.no.slotList,
       h = c.no.equipment;
     for (d = 0; d < g.length; d++) {
-      if (f = h.ef(g[d])) {
+      if (f = h.getSlotItem(g[d])) {
         var l = c.damage;
         l.itemValue += 1 === f.characteristic ? f.itemValue : 0;
         l = c.armor;
@@ -1194,7 +1194,7 @@ export function updateCharacter(a, b) {
             if (0 !== zl.length) {
               for (var kj = undefined, Tp = 0, Up = undefined, Al = 0, LA = 0.1 + equipmentQualityBonus.currentValue, Ph = zl.length - 1; 0 <= Ph; Ph--) {
                 kj = zl[Ph];
-                if ((Up = yl.ef(kj.slot)) && !isBetterItem(kj, Up)) {
+                if ((Up = yl.getSlotItem(kj.slot)) && !isBetterItem(kj, Up)) {
                   Al += kj.itemGold * LA;
                   Tp++;
                   awardAdventurePoints(17);
@@ -1216,8 +1216,8 @@ export function updateCharacter(a, b) {
   }
 }
 export function initializeCharactersCharacter() {
-  Character.prototype.ef = function (a) {
-    return this.equipment ? (/** @type {SlotEquipment} */ (this.equipment)).ef(a) : null;
+  Character.prototype.getSlotItem = function (a) {
+    return this.equipment ? (/** @type {SlotEquipment} */ (this.equipment)).getSlotItem(a) : null;
   };
   Character.prototype.So = function () {
     return this.equipment ? (/** @type {SlotEquipment} */ (this.equipment)).So() : null;

@@ -1,82 +1,5 @@
 [
   {
-    "name": "ef",
-    "reads": 13,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:146",
-        "code": "a.equipment.ef"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:166",
-        "code": "h.ef"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:1197",
-        "code": "yl.ef"
-      }
-    ],
-    "fileCount": 9,
-    "files": [
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\characters\\movement.js",
-      "src\\engine\\modules\\characters\\party.js",
-      "src\\engine\\modules\\loot\\inventory.js",
-      "src\\engine\\modules\\persistence\\entities.js",
-      "src\\engine\\modules\\progression\\upgrades.js",
-      "src\\engine\\modules\\simulation\\tick.js",
-      "src\\engine\\modules\\views\\character.js",
-      "src\\engine\\modules\\views\\upgrade-details.js"
-    ]
-  },
-  {
-    "name": "Ye",
-    "reads": 10,
-    "writes": 5,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\loot\\item-names.js:7",
-        "code": "this.Ye"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\item-names.js:12",
-        "code": "this.Ye"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\item-names.js:17",
-        "code": "this.Ye"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\loot\\item-names.js"
-    ]
-  },
-  {
-    "name": "hf",
-    "reads": 10,
-    "writes": 5,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\loot\\item-names.js:9",
-        "code": "this.hf"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\item-names.js:14",
-        "code": "this.hf"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\item-names.js:19",
-        "code": "this.hf"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\loot\\item-names.js"
-    ]
-  },
-  {
     "name": "$e",
     "reads": 10,
     "writes": 5,
@@ -1287,29 +1210,6 @@
     "files": [
       "src\\engine\\modules\\content\\dungeon-themes.js",
       "src\\engine\\modules\\world\\rooms.js"
-    ]
-  },
-  {
-    "name": "ih",
-    "reads": 8,
-    "writes": 4,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\loot\\item-names.js:8",
-        "code": "this.ih"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\item-names.js:13",
-        "code": "this.ih"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\item-names.js:18",
-        "code": "this.ih"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\loot\\item-names.js"
     ]
   },
   {

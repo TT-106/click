@@ -110,7 +110,7 @@ export function serializeCharacter(a) {
   if (s && p) {
     var y, A;
     for (A = 0; A < p.length; A++) {
-      if (y = s.ef(p[A])) {
+      if (y = s.getSlotItem(p[A])) {
         u.push(serializeItem(y));
       }
     }

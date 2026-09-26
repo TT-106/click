@@ -76,7 +76,7 @@ export function initializeLootInventory() {
       }
       for (c = 0; c < f.length; c++) {
         b = f[c];
-        if (!((d = a.ef(b.slot)) && !isBetterItem(b, d))) {
+        if (!((d = a.getSlotItem(b.slot)) && !isBetterItem(b, d))) {
           a.Qk(b);
         }
       }
@@ -89,7 +89,7 @@ export function initializeLootInventory() {
     }
     var c, d, f;
     for (c = 0; c < b.length; c++) {
-      if (d = b[c], f = a.ef(d.slot), !f || isBetterItem(d, f)) {
+      if (d = b[c], f = a.getSlotItem(d.slot), !f || isBetterItem(d, f)) {
         return true;
       }
     }

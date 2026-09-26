@@ -369,7 +369,7 @@ export function initializeCharactersParty() {
             n = 0;
           for (g = 0; g < f.length; g++) {
             h = f[g];
-            if ((l = (/** @type {any} */ (d)).ef(h.slot)) && !isBetterItem(h, l)) {
+            if ((l = (/** @type {any} */ (d)).getSlotItem(h.slot)) && !isBetterItem(h, l)) {
               n++;
             }
           }

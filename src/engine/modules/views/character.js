@@ -186,7 +186,7 @@ export function initializeViewsCharacter() {
       this.gf.innerHTML = formatAmount(this.item.itemGold);
       this.Oh.innerHTML = formatAmount(this.item.itemValue) + " " + getItemStatLabel(this.item);
       var c = game.state.adventurers[this.adventurerIndex],
-        b = c.ef(a.slot);
+        b = c.getSlotItem(a.slot);
       this.Oh.className = b ? this.item.itemValue > b.itemValue ? "itemValueBetter" : this.item.itemValue < b.itemValue ? "itemValueWorse" : "" : "itemValueBetter";
       this.gf.className = b ? a.itemGold > b.itemGold ? "itemValueBetter" : a.itemGold < b.itemGold ? "itemValueWorse" : "" : "itemValueBetter";
       this.rarityCell.className = getRarityClass(this.item.getRarity());
@@ -373,7 +373,7 @@ export function initializeViewsCharacter() {
       }
       var c, d;
       for (c = 0; c < this.sf.length; c++) {
-        d = a.ef(b[c]);
+        d = a.getSlotItem(b[c]);
         if (d !== this.sf[c].item) {
           this.sf[c].ux(d);
         }
