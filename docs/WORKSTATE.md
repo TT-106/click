@@ -28,6 +28,7 @@
 - M10 `world/rooms.js` 已摘除 `@ts-nocheck`：`revealRoom/revealHallway` 初始布尔位与后续复用变量分名，两个后挂载 `Lw` 调用标注签名；四套回归全绿。剩余 13 个忽略文件。
 - M10 `world/generation.js` 已摘除 `@ts-nocheck`：`LayoutMethods` 明确后挂载布局方法签名，生成随机流与入场角色的复用变量分开，最后楼层布尔条件分开；四套回归全绿。剩余 12 个。
 - M10 `simulation/characters.js` 已摘除 `@ts-nocheck`：随从与守卫创建时对象/等级复用变量分开，掉落计算中的金币、卷轴、药水对象各自持有；随机调用与构造顺序不变。四套回归和 8h/24h soak 全绿；剩余 11 个。
+- M10 `combat/actions.js` 已摘除 `@ts-nocheck`：施法拾取分支的统计、掉落、特效和物品所有者变量分开，死亡处理的眩晕效果与后挂载 `Cb` 方法作窄签名标注；四套回归全绿。剩余 10 个忽略文件。
 - 本节优先于下方旧快照中的“当前工作树干净”“M10 未开始”“9 场景”等过时文字；提交与实际状态以 `git status`、`git log` 为准。
 
 ## 1. 项目概况

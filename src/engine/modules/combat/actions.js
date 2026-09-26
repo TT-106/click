@@ -1,4 +1,3 @@
-// @ts-nocheck -- M10 渐进类型化：JSDoc 覆盖后摘除（见 docs/WORKSTATE.md）
 /** 攻击和施法动作、命中、伤害及死亡处理。
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
@@ -32,6 +31,7 @@ export function CombatAction() {
   this.chainCount = this.Ys = 0;
   this.pl = null;
 }
+/** @typedef {CombatAction & { Cb: (target: unknown) => void }} TargetedCombatAction */
 export function findTargetsInRange(a, b, c, d) {
   a = getOpponents(a);
   if (0 === a.length) {
@@ -168,10 +168,10 @@ export function applySpellEffect(a, b) {
   } else if (17 === d) {
     c = b.attacker;
     d = b.impactEffect.xi;
-    h = c.stats;
-    g = h.ku;
-    f = h.lu;
-    h = h.mu;
+    var chickenStats = c.stats;
+    g = chickenStats.ku;
+    f = chickenStats.lu;
+    h = chickenStats.mu;
     if (0 < g && Math.random() < g / 100) {
       g = barbarianChickenMinion;
       showFloatingText(game.floatingText, c, "野蛮人小鸡!", "blue");
@@ -195,10 +195,10 @@ export function applySpellEffect(a, b) {
     for (c = g.length - 1; 0 <= c; c--) {
       f = g[c];
       if (!f.collected) {
-        h = new Vector2();
-        setVector(h, f.Xo, f.Yo);
-        h = new VisualEffect("Gold Sparkles", d, h, false, 1);
-        addVisualEffect(game.effects, h);
+        var goldOffset = new Vector2();
+        setVector(goldOffset, f.Xo, f.Yo);
+        var goldEffect = new VisualEffect("Gold Sparkles", d, goldOffset, false, 1);
+        addVisualEffect(game.effects, goldEffect);
         addGold(f.Xl);
         game.state.statisticsRecorder.recordGoldFromMonsters(f.Xl);
         f.oh(true);
@@ -209,27 +209,28 @@ export function applySpellEffect(a, b) {
     d = b.attacker.position.levelPosition;
     g = game.itemDrops.yf;
     for (c = g.length - 1; 0 <= c; c--) {
-      if (h = g[c], !h.collected) {
-        f = new Vector2();
-        setVector(f, h.mp, h.np);
-        f = new VisualEffect("Blue Sparkles", d, f, false, 1);
-        addVisualEffect(game.effects, f);
-        f = h.getItem();
-        h.oh(true);
-        removeItemDrop(h);
+      var itemDrop = g[c];
+      if (!itemDrop.collected) {
+        var itemOffset = new Vector2();
+        setVector(itemOffset, itemDrop.mp, itemDrop.np);
+        var itemEffect = new VisualEffect("Blue Sparkles", d, itemOffset, false, 1);
+        addVisualEffect(game.effects, itemEffect);
+        f = itemDrop.getItem();
+        itemDrop.oh(true);
+        removeItemDrop(itemDrop);
         a: {
-          h = undefined;
-          for (h = 0; h < game.state.adventurers.length; h++) {
-            if (game.state.adventurers[h].characterClass === f.characterClass) {
-              h = game.state.adventurers[h];
+          var itemOwner = undefined;
+          for (var ownerIndex = 0; ownerIndex < game.state.adventurers.length; ownerIndex++) {
+            if (game.state.adventurers[ownerIndex].characterClass === f.characterClass) {
+              itemOwner = game.state.adventurers[ownerIndex];
               break a;
             }
           }
           console.log("failed to find item character");
-          h = null;
+          itemOwner = null;
         }
         game.state.statisticsRecorder.recordItemFound(f);
-        addInventoryItem(h.inventory, f);
+        addInventoryItem(itemOwner.inventory, f);
         awardAdventurePoints(12);
         f = f.uf();
         if (0 != f) {
@@ -254,10 +255,10 @@ export function applySpellEffect(a, b) {
     for (c = g.length - 1; 0 <= c; c--) {
       f = g[c];
       if (!f.collected) {
-        h = new Vector2();
-        setVector(h, f.bq, f.cq);
-        h = new VisualEffect("Pink Sparkles", d, h, false, 1);
-        addVisualEffect(game.effects, h);
+        var scrollOffset = new Vector2();
+        setVector(scrollOffset, f.bq, f.cq);
+        var scrollEffect = new VisualEffect("Pink Sparkles", d, scrollOffset, false, 1);
+        addVisualEffect(game.effects, scrollEffect);
         f.oh(true);
         removeScrollDrop(f);
         addScrollCharge(f.vf());
@@ -269,10 +270,10 @@ export function applySpellEffect(a, b) {
     for (c = g.length - 1; 0 <= c; c--) {
       f = g[c];
       if (!f.collected) {
-        h = new Vector2();
-        setVector(h, f.Qp, f.Rp);
-        h = new VisualEffect("Green Sparkles", d, h, false, 1);
-        addVisualEffect(game.effects, h);
+        var potionOffset = new Vector2();
+        setVector(potionOffset, f.Qp, f.Rp);
+        var potionEffect = new VisualEffect("Green Sparkles", d, potionOffset, false, 1);
+        addVisualEffect(game.effects, potionEffect);
         f.oh(true);
         removePotionDrop(f);
         addPotion(f.potion);
@@ -328,13 +329,13 @@ export function resolveCharacterDefeat(a, b) {
       game.state.statisticsRecorder.recordCharacterStunned();
       b.effects.Kf = true;
       var c = b.position.levelPosition,
-        d = new StatusEffect(13, game.state.turnNumber, stunEffectDefinition.Qd, game.animations.Zg(stunEffectDefinition.vd), stunEffectDefinition.Od, stunEffectDefinition.Pd, 0),
-        c = new VisualEffect(stunEffectDefinition.vd, c, c, false, 1);
+        stunEffect = new StatusEffect(13, game.state.turnNumber, stunEffectDefinition.Qd, game.animations.Zg(stunEffectDefinition.vd), stunEffectDefinition.Od, stunEffectDefinition.Pd, 0);
+      c = new VisualEffect(stunEffectDefinition.vd, c, c, false, 1);
       b.stats.stunCount++;
       var f = b.effects;
-      if (d) {
-        f.of.push(d);
-        if (isDisablingEffect(d)) {
+      if (stunEffect) {
+        f.of.push(stunEffect);
+        if (isDisablingEffect(stunEffect)) {
           f.Kd = true;
         }
       }
@@ -364,9 +365,9 @@ export function resolveCharacterDefeat(a, b) {
         recordMonsterTypeKill(d);
       }
       var d = g.room,
-        c = roomLeftPixels(d) + game.tileSize,
-        f = roomRightPixels(d) - game.tileSize,
-        h = roomTopPixels(d) + game.tileSize,
+        c = roomLeftPixels(d) + game.tileSize;
+      f = roomRightPixels(d) - game.tileSize;
+      var h = roomTopPixels(d) + game.tileSize,
         l = roomBottomPixels(d) - game.tileSize,
         n = g.getLevelPositionX(),
         p = g.getLevelPositionY(),
@@ -436,7 +437,7 @@ export function performMultiAttack(a, b) {
 export function createAttackAction(a, b, c) {
   var d = new CombatAction();
   d.attacker = a;
-  d.Cb(b);
+  (/** @type {TargetedCombatAction} */ (d)).Cb(b);
   if (12 == a.characterClass) {
     c = b.position.levelPosition;
     a = calculateAttackDamage(a, b);
@@ -501,7 +502,7 @@ export function createSpellAction(a) {
   }
   var d = new CombatAction();
   d.attacker = a;
-  d.Cb(b);
+  (/** @type {TargetedCombatAction} */ (d)).Cb(b);
   var f = b.position.levelPosition,
     g = a.position.levelPosition;
   d.actionDefinition = c;
@@ -629,7 +630,7 @@ export function createChainAction(a) {
     l = g.xi,
     n = d.position.levelPosition;
   h.attacker = a.attacker;
-  h.Cb(d);
+  (/** @type {TargetedCombatAction} */ (h)).Cb(d);
   g = new VisualEffect(g.impactEffectName, l, n, false, 1);
   h.impactEffect = g;
   f = new VisualEffect(f.impactEffectName, l, n, true, 1);
@@ -651,7 +652,7 @@ export function createReturningAction(a) {
   if (b === c) {
     var f = new CombatAction();
     f.attacker = a.attacker;
-    f.Cb(a.attacker);
+    (/** @type {TargetedCombatAction} */ (f)).Cb(a.attacker);
     f.yd = true;
     f.actionDefinition = a.actionDefinition;
     f.ut = true;
@@ -694,7 +695,7 @@ export function createReturningAction(a) {
   var h = a.projectileEffect,
     b = d.xi,
     c = g.position.levelPosition;
-  f.Cb(g);
+  (/** @type {TargetedCombatAction} */ (f)).Cb(g);
   g = calculateSpellDamage(a.attacker, g);
   f.Jc = g;
   f.Rd = 0 === g;
