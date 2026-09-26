@@ -288,6 +288,21 @@ window.harness = {
     }
     return { purchased, purchasedByType, snapshot: snapshot() };
   },
+  // 手动装备（装备交换）：引擎无独立"卸下"动作——把背包道具装进占用槽位时，
+  // equipItem 自动把旧装备送回背包（removeInventoryItemAt 仅存在于出售路径与装备交换）。
+  // 两侧入口同名：Character.prototype.Qk（原版 e.Qk → $w + Kd(21)，重构版 → equipItem + awardAdventurePoints(21)）。
+  // 原版背包字段 Ld.items / 重构版 inventory.items；道具名字段原版 Ew、重构版 itemName（M12 已语义化）。
+  equipFromInventory({ charIndex = 0, itemName = '', turns = 0 } = {}) {
+    for (let i = 0; i < turns; i++) advance();
+    const chars = original ? window.Game.i.D : game.state.adventurers;
+    const c = chars[charIndex];
+    const inv = original ? c.Ld : c.inventory;
+    const nameField = original ? 'Ew' : 'itemName';
+    const item = inv.items.find(x => x[nameField] === itemName);
+    if (!item) throw new Error('inventory missing item: ' + itemName);
+    c.Qk(item);
+    return { equippedItemName: itemName, snapshot: snapshot() };
+  },
   // 冒险点升级不在 upgradeCollections 内，而在 PartyState 的点数管理器中。
   purchasePointUpgrades({ turns = 0, limit = 1 } = {}) {
     for (let i = 0; i < turns; i++) advance();

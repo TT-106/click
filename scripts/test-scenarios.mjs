@@ -84,6 +84,17 @@ const multiplePointUpgradesPurchased = (s) => {
     pointsSpent: (s.pointManagerState?.spentAdventurePoints ?? 0) - (base.pointManagerState?.spentAdventurePoints ?? 0),
   };
 };
+const manualEquipSwapped = (s) => {
+  const adv = (s.adventurers ?? [])[0] ?? {};
+  const equippedNames = (adv.equippedItemCollection ?? []).map(x => x.itemName);
+  const invNames = (adv.inventory ?? []).map(x => x.itemName);
+  const equipEvents = (s.pointManagerState?.pointsByType ?? []).find(p => p.pointEventType === 21)?.count ?? 0;
+  const baseEquipEvents = (base.pointManagerState?.pointsByType ?? []).find(p => p.pointEventType === 21)?.count ?? 0;
+  return {
+    swapDone: equippedNames.includes('金属的权杖') && invNames.includes('人民之美好的权杖'),
+    itemEquippedGrew: equipEvents > baseEquipEvents,
+  };
+};
 const achievementWasClaimed = (s) => ({
   achievementClaimed: (s.achievementManager?.achievements ?? []).filter(a => a.applied).length
     > (base.achievementManager?.achievements ?? []).filter(a => a.applied).length,
@@ -391,6 +402,19 @@ const scenarios = [
     ],
   },
   {
+    name: 'manual-equip-swap',
+    // 手动装备交换：背包中的"金属的权杖"（slot 20，价值 30）手动装进当前装备"人民之美好的权杖"（slot 20，价值 13）
+    // 的槽位；equipItem 把旧装备送回背包，Qk 包装器发 itemEquipped 点数事件（type 21）。
+    // turns=0 立即执行，避免自然掉落移动背包索引。
+    make: () => base,
+    steps: [
+      { turns: 0, equipFromInventory: { charIndex: 0, itemName: '金属的权杖' }, check: manualEquipSwapped },
+      // 第二步只跑自然推进做 DTO 全等：600 回合内商店会卖掉换下的旧装备，
+      // 交换状态断言只在装备动作后立即做（第一步）。
+      { turns: 600 },
+    ],
+  },
+  {
     name: 'achievement-claimed',
     // 原版 fixture 已有 monsterKills100 obtained=true/applied=false，无需制造不可能的成就状态。
     make: () => base,
@@ -644,7 +668,7 @@ try {
         // effectType 表示这一步改用"逐帧扫描活怪物效果队列"的推进方式，并直接对账施加次数。
         // purchaseUpgrades 表示这一步先推进再驱动升级购买（U7：只有视图层会触发的路径）。
         const step = Array.isArray(rawStep) ? { turns: rawStep[0], check: rawStep[1] } : rawStep;
-        const { turns, check, effectType, purchaseUpgrades, purchasePointUpgrades, claimAchievement, equipBestItems, castScrollDuringCombat, scrollId, purchaseDungeonFarm, purchaseDungeonRowFarm, harvestFarmKills, lootTreasureDuringExplore, treasureKind, activatePotions, floatingText, damageNumbers, trackBoss, frames, frameGap, victoryPanel } = step;
+        const { turns, check, effectType, purchaseUpgrades, purchasePointUpgrades, claimAchievement, equipBestItems, castScrollDuringCombat, scrollId, purchaseDungeonFarm, purchaseDungeonRowFarm, harvestFarmKills, lootTreasureDuringExplore, treasureKind, activatePotions, floatingText, damageNumbers, trackBoss, frames, frameGap, victoryPanel, equipFromInventory } = step;
         const results = await Promise.all(pages.map(async p => {
           await p.page.evaluate(ms => window.harness.setTime(ms), HARNESS_FIXED_NOW);
           // 重置后无队伍：走真实帧循环（守卫路径），而非裸推进
@@ -664,6 +688,7 @@ try {
           if (damageNumbers !== undefined) return p.page.evaluate(a => window.harness.countFloatingText(a), { turns, pattern: '^-[0-9]+$' });
           if (trackBoss !== undefined) return p.page.evaluate(a => window.harness.trackBossEncounter(a), { turns });
           if (victoryPanel !== undefined) return p.page.evaluate(n => { window.harness.idle(n); return window.harness.observeVictoryPanel(); }, victoryPanel);
+          if (equipFromInventory !== undefined) return p.page.evaluate(a => window.harness.equipFromInventory(a), equipFromInventory);
           if (frameGap !== undefined) return p.page.evaluate(n => window.harness.advanceFrameGap(n), frameGap);
           // frames：走真实帧循环（loop.tick 内含 view.render 的 try/catch），随后读画布不透明像素
           if (frames !== undefined) return p.page.evaluate(n => {
@@ -864,6 +889,8 @@ try {
             if (verdict.retiredLevelExcluded !== undefined) assert.equal(verdict.retiredLevelExcluded, true, `${label} 首个有效怪物等级必须大于 1（等级 1 已退休排除）；${verdict.note}`);
             if (verdict.pointUpgradePurchased !== undefined) assert.equal(verdict.pointUpgradePurchased, true, `${label} 冒险点必须真实支出且升级状态必须变为已购买`);
             if (verdict.distinctPointUpgradesBought !== undefined) assert.ok(verdict.distinctPointUpgradesBought >= 5, `${label} 必须购买至少 5 种不同点数升级（实际 ${verdict.distinctPointUpgradesBought}）`);
+            if (verdict.swapDone !== undefined) assert.equal(verdict.swapDone, true, `${label} 手动装备交换未发生（金属的权杖应已装备、人民之美好的权杖应回背包）`);
+            if (verdict.itemEquippedGrew !== undefined) assert.equal(verdict.itemEquippedGrew, true, `${label} itemEquipped 点数事件（type 21）必须增长`);
             if (verdict.achievementClaimed !== undefined) assert.equal(verdict.achievementClaimed, true, `${label} 成就奖励必须真实领取并标记 applied`);
             if (verdict.equipmentChanged !== undefined) assert.equal(verdict.equipmentChanged, true, `${label} 自动装备后装备槽必须真实变化`);
             if (verdict.itemEquipEvents !== undefined) assert.equal(verdict.itemEquipEvents, true, `${label} 装备物品事件计数必须真实增长`);
