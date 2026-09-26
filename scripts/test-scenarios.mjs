@@ -72,6 +72,20 @@ const scenarios = [
     steps: [[3000, snap => ({ spellCast: snap.statistics.spellCastCount > base.statistics.spellCastCount })], [3000, null]],
   },
   {
+    // 施法后的状态效果施加分支：spellCategoryId=2 且 statusEffectTypeId=4，
+    // 会走 combat/actions.js 的效果应用与 characters/character.js 的 cat2/type4 特判。
+    name: 'spell-status-transform',
+    make: () => withClassSpell(base, 4, '转变怪物'),
+    steps: [[3000, snap => ({ spellCast: snap.statistics.spellCastCount > base.statistics.spellCastCount })], [3000, null]],
+  },
+  {
+    // 增益法术分支：spellCategoryId=3 且 statusEffectTypeId=5，
+    // 加成结果写入存档的 spellBonusPercent，因此属于可直接对账的可观察量。
+    name: 'spell-buff-armor',
+    make: () => withClassSpell(base, 6, '提高护甲'),
+    steps: [[3000, snap => ({ spellCast: snap.statistics.spellCastCount > base.statistics.spellCastCount })], [3000, null]],
+  },
+  {
     // 城堡征服全流程：只剩最后一座城堡待攻克，队伍走进城堡再从出口离开，
     // 触发 iw() 的征服尾部（解锁邻区、recordCastleConquered）与胜利瞬间。
     // 断言放在终点：castlesConquered 在载入后为 0，只有真的走完征服尾部才会变成 1。

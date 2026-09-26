@@ -141,7 +141,8 @@ Xf/Qf/Rf/Zf/Cf/Ef → damageMultiplier/armorMultiplier/attackRatingMultiplier/de
 - ✅ 城堡征服全流程与胜利瞬间已关闭：`castle-victory` 场景用 `withCastleVictory()` 把 34 座城堡置为已征服、最后一座置为"区域未锁 + 地牢已全清 + 攻击已排期"，两端各自走进城堡并从出口楼梯离开，触发 `PartyState.iw` 的征服尾部。15,000 回合分 5 个检查点比较完整存档，终点在两端各自断言 `gameWon`、`victoryCount=1`、`castlesConquered=1` 与全城堡征服。15 场景矩阵全绿，8h/24h soak 全绿。
 - 该场景暴露并修复了两处重构遗留缺陷：`world/rooms.js` 金堆房把 DungeonTile 当作 CharacterPosition 调用 `getLevelPositionX/Y`（原为 `Ob/Pb` 的瓦片变体，约 6900 回合首次触发即 TypeError）；`progression/achievements.js` 定义表 22 条 `Hb:` 与读端 `a.characterClass` 未同步，导致职业胜利成就在重构版永远不达成（胜利瞬间两端 `obtained` 集合分叉）。两处均按原版语义修复，未改数值。
 - 仍然开放：Blast Stun 的直接入队计数断言。取证结论是 `blastStunSpell` 并非可学可施的法术——把它注入法师的 `spells` 后两端 `spellCastCount` 都不增长（原版同样不施放，属引擎事实）。它只在 `simulation/tick.js:346-348` 被懒创建为二段打击动作的 `actionDefinition` 并入队。`fireball-blast-stun` 场景已让火球系法术走完整 6000 回合差分，若该入队或执行分叉，被眩晕怪造成的伤害与击杀会让完整存档分叉，因此执行路径受间接约束；直接观测需要能读取两端怪物效果队列的钩子，原版侧尚未找到稳定入口。
-- 仍然开放：其余未覆盖的法术分支（电系/火系高阶效果、`potencyPercent` 非零的减益类），仍只有 `scrolls-stocked` 的 shock/web/arrow/fireball 四种卷轴与火球注入被直接驱动。
+- 部分关闭（原第 3 项）：`spell-status-transform` 注入火系"转变怪物"（spellCategoryId=2、statusEffectTypeId=4），`spell-buff-armor` 注入牧师"提高护甲"（cat=3、effect=5），两端各自断言实际施法并在 3000/6000 回合比较完整存档。此前唯一被差分驱动的法术是 cat=8 的火球，从未进入 `combat/actions.js:119-160` 的 cat2/cat3 效果施加分支；该分支现由这两条场景直接驱动，且 Blast Stun 施加效果时走的正是同一分支。
+- 仍然开放：召唤/持续伤害/位移类等剩余法术分支（如 骷髅军队、毒环、睡眠、潜行）仍无专属场景；现覆盖的是 cat=2 减益、cat=3 增益与 cat=8 伤害三条。
 - 12h 离线上限截断路径已由 `offline-13h-capped` 场景覆盖：同一 13h 旧存档载入两端后均断言待结算时长为 12h，再推进离线帧并比较完整存档与后续回合。
 - 扩展方式：`tests/scenarios/save-mutations.mjs` 增加对应变异器，`scripts/test-scenarios.mjs` 注册场景并为两端各自写有效性断言。
 
