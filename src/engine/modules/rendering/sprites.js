@@ -180,8 +180,8 @@ export function initializeRenderingSprites() {
   Sprite.prototype.getName = function () {
     return this.name;
   };
-  Sprite.prototype.Hj = function () {
-    return this.spriteSheet.Hj();
+  Sprite.prototype.getSheetImage = function () {
+    return this.spriteSheet.getSheetImage();
   };
   SpriteSheet.prototype.$w = function (a) {
     var b, c;
@@ -193,14 +193,14 @@ export function initializeRenderingSprites() {
   SpriteSheet.prototype.getSprite = function (a) {
     return this.animationMap[a];
   };
-  SpriteSheet.prototype.Hj = function () {
+  SpriteSheet.prototype.getSheetImage = function () {
     return this.Il;
   };
   SpriteSheet.prototype.cl = function () {
     return this.loaded;
   };
-  SpriteAnimation.prototype.Hj = function () {
-    return this.spriteSheet.Hj();
+  SpriteAnimation.prototype.getSheetImage = function () {
+    return this.spriteSheet.getSheetImage();
   };
   SpriteAnimation.prototype.To = function () {
     return this.frames.length;
@@ -216,7 +216,7 @@ export function initializeRenderingSprites() {
   AnimationSheet.prototype.getAnimation = function (a) {
     return this.animationMap[a];
   };
-  AnimationSheet.prototype.Hj = function () {
+  AnimationSheet.prototype.getSheetImage = function () {
     return this.Il;
   };
   AnimationSheet.prototype.cl = function () {

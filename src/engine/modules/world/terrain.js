@@ -150,14 +150,14 @@ export function WorldGenerator(a, b) {
   this.Bx = new DecorationBiome();
   addDecorationTileSet(this.Bx, L1_Terrain039Sprite);
   addDecorationTileSet(this.Bx, L2_Terrain040Sprite);
-  this.tj = new DecorationBiome();
-  addDecorationTileSet(this.tj, L2_MountainDesert01Sprite);
-  addDecorationTileSet(this.tj, L2_MountainDesert02Sprite);
-  addDecorationTileSet(this.tj, L1_Terrain033Sprite);
-  addDecorationTileSet(this.tj, L2_MountainDesert03Sprite);
-  addDecorationTileSet(this.tj, L2_MountainDesert04Sprite);
-  addDecorationTileSet(this.tj, L2_MountainDesert05Sprite);
-  addDecorationTileSet(this.tj, L2_MountainDesert06Sprite);
+  this.mountainDesertDecorationBiome = new DecorationBiome();
+  addDecorationTileSet(this.mountainDesertDecorationBiome, L2_MountainDesert01Sprite);
+  addDecorationTileSet(this.mountainDesertDecorationBiome, L2_MountainDesert02Sprite);
+  addDecorationTileSet(this.mountainDesertDecorationBiome, L1_Terrain033Sprite);
+  addDecorationTileSet(this.mountainDesertDecorationBiome, L2_MountainDesert03Sprite);
+  addDecorationTileSet(this.mountainDesertDecorationBiome, L2_MountainDesert04Sprite);
+  addDecorationTileSet(this.mountainDesertDecorationBiome, L2_MountainDesert05Sprite);
+  addDecorationTileSet(this.mountainDesertDecorationBiome, L2_MountainDesert06Sprite);
   this.widthInTiles = a;
   this.heightInTiles = b;
   this.tE = this.ZD = "L1_Terrain015.PNG";
@@ -239,7 +239,7 @@ export function populateWorldBlock(a, b) {
             }
           } else {
             if ("DDDD" === l) {
-              if (s = a.tj.getDecorationSpriteAt(g + f, h + d)) {
+              if (s = a.mountainDesertDecorationBiome.getDecorationSpriteAt(g + f, h + d)) {
                 p = 1E4;
               }
             } else {
@@ -322,13 +322,13 @@ export function WorldBlock(a, b, c) {
   this.regionRow = b;
   this.heightInTiles = WORLD_BLOCK_ROWS;
   this.widthInTiles = WORLD_BLOCK_COLUMNS;
-  this.Qj = a * this.widthInTiles;
-  this.Rj = b * this.heightInTiles;
-  this.wp = this.Qj + this.widthInTiles;
-  this.xp = this.Rj + this.heightInTiles;
-  this.yp = this.Qj * game.tileSize;
+  this.tileOriginColumn = a * this.widthInTiles;
+  this.tileOriginRow = b * this.heightInTiles;
+  this.wp = this.tileOriginColumn + this.widthInTiles;
+  this.xp = this.tileOriginRow + this.heightInTiles;
+  this.yp = this.tileOriginColumn * game.tileSize;
   this.Mw = this.wp * game.tileSize;
-  this.zp = this.Rj * game.tileSize;
+  this.zp = this.tileOriginRow * game.tileSize;
   this.Nw = this.xp * game.tileSize;
   this.wt = c;
   (/** @type {WorldBlock & {Aw: () => void}} */ (/** @type {unknown} */ (this))).Aw();
@@ -336,20 +336,20 @@ export function WorldBlock(a, b, c) {
 export function repositionWorldBlock(a, b, c, d) {
   a.regionColumn = b;
   a.regionRow = c;
-  a.Qj = b * a.widthInTiles;
-  a.Rj = c * a.heightInTiles;
-  a.wp = a.Qj + a.widthInTiles;
-  a.xp = a.Rj + a.heightInTiles;
-  a.yp = a.Qj * game.tileSize;
+  a.tileOriginColumn = b * a.widthInTiles;
+  a.tileOriginRow = c * a.heightInTiles;
+  a.wp = a.tileOriginColumn + a.widthInTiles;
+  a.xp = a.tileOriginRow + a.heightInTiles;
+  a.yp = a.tileOriginColumn * game.tileSize;
   a.Mw = a.wp * game.tileSize;
-  a.zp = a.Rj * game.tileSize;
+  a.zp = a.tileOriginRow * game.tileSize;
   a.Nw = a.xp * game.tileSize;
   if (d) {
     for (c = 0; c < a.widthInTiles; c++) {
       for (d = a.tileGrid[c], b = 0; b < a.heightInTiles; b++) {
         var f = d[b],
-          g = a.Qj + c,
-          h = a.Rj + b;
+          g = a.tileOriginColumn + c,
+          h = a.tileOriginRow + b;
         f.worldColumn = g;
         f.worldRow = h;
         f.NC = g * game.tileSize;
@@ -419,7 +419,7 @@ export function findNearestWorldColumn(a) {
     h = -1;
   for (c = 0; c < b.worldBlocks.length; c++) {
     d = b.worldBlocks[c][0];
-    d = a < d.Qj ? d.Qj : a >= d.wp ? d.wp - 1 : a;
+    d = a < d.tileOriginColumn ? d.tileOriginColumn : a >= d.wp ? d.wp - 1 : a;
     f = Math.abs(a - d);
     if (f < g) {
       h = d;
@@ -437,7 +437,7 @@ export function findNearestWorldRow(a) {
     h = -1;
   for (b = 0; b < f.length; b++) {
     c = f[b];
-    c = a < c.Rj ? c.Rj : a >= c.xp ? c.xp - 1 : a;
+    c = a < c.tileOriginRow ? c.tileOriginRow : a >= c.xp ? c.xp - 1 : a;
     d = Math.abs(a - c);
     if (d < g) {
       g = d;

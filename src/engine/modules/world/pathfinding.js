@@ -6,7 +6,7 @@ import { DungeonDoor, DungeonHallway, EMPTY_TILE, isRoomBorder, roomContainsTile
 import { game } from "../runtime/game.js";
 export function PathfindingGrid(a, b, c) {
   this.fl = a;
-  this.Nj = b;
+  this.heightInTiles = b;
   this.tileGrid = c;
   this.oB = new PathNodePool();
   this.usedNodes = [];
@@ -14,7 +14,7 @@ export function PathfindingGrid(a, b, c) {
   this.toRoom = this.fromRoom = null;
 }
 export function getPathNode(a, b) {
-  var c = "" + (b.getTileColumn() * a.Nj + b.getTileRow()),
+  var c = "" + (b.getTileColumn() * a.heightInTiles + b.getTileRow()),
     d = a.usedTiles.indexOf(c);
   if (-1 < d) {
     d = a.usedNodes[d];
@@ -40,7 +40,7 @@ export function getPathNode(a, b) {
   return d;
 }
 export function isHallwayWalkable(a, b, c, d, f) {
-  return 0 > b - 1 || 0 > c - 1 || b + 1 >= a.fl || c + 1 >= a.Nj ? false : roomContainsTile(a.fromRoom, b, c) ? !isNearRoomCorner(b, c, a.fromRoom) : roomContainsTile(a.toRoom, b, c) ? !isNearRoomCorner(b, c, a.toRoom) : isRoomBorder(a.fromRoom, b, c) || isRoomBorder(a.toRoom, b, c) ? !d : 0 === f || 2 === f ? a.tileGrid[b - 1][c].floorType === EMPTY_TILE && a.tileGrid[b + 1][c].floorType === EMPTY_TILE : a.tileGrid[b][c - 1].floorType === EMPTY_TILE && a.tileGrid[b][c + 1].floorType === EMPTY_TILE;
+  return 0 > b - 1 || 0 > c - 1 || b + 1 >= a.fl || c + 1 >= a.heightInTiles ? false : roomContainsTile(a.fromRoom, b, c) ? !isNearRoomCorner(b, c, a.fromRoom) : roomContainsTile(a.toRoom, b, c) ? !isNearRoomCorner(b, c, a.toRoom) : isRoomBorder(a.fromRoom, b, c) || isRoomBorder(a.toRoom, b, c) ? !d : 0 === f || 2 === f ? a.tileGrid[b - 1][c].floorType === EMPTY_TILE && a.tileGrid[b + 1][c].floorType === EMPTY_TILE : a.tileGrid[b][c - 1].floorType === EMPTY_TILE && a.tileGrid[b][c + 1].floorType === EMPTY_TILE;
 }
 export function isNearRoomCorner(a, b, c) {
   var d = c.tileColumn,
@@ -174,8 +174,8 @@ export function findHallwayPath(a, b, c) {
           p = g;
           s = d.x;
           n = d.y;
-          p.wj = s;
-          p.xj = n;
+          p.tileColumn = s;
+          p.tileRow = n;
           p.pixelColumn = s * game.tileSize;
           p.pixelRow = n * game.tileSize;
           g.horizontalPassage = d.x != a[f + 1].x;
@@ -184,8 +184,8 @@ export function findHallwayPath(a, b, c) {
             p = h;
             s = d.x;
             n = d.y;
-            p.wj = s;
-            p.xj = n;
+            p.tileColumn = s;
+            p.tileRow = n;
             p.pixelColumn = s * game.tileSize;
             p.pixelRow = n * game.tileSize;
             h.horizontalPassage = d.x != a[f - 1].x;

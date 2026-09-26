@@ -116,7 +116,7 @@ export function revealRoom(a) {
     }
     for (d = 0; d < b.length; d++) {
       f = b[d];
-      h = a.tileGrid[f.wj][f.xj];
+      h = a.tileGrid[f.tileColumn][f.tileRow];
       h.setBackgroundSprite(p);
       if (f.horizontalPassage) {
         if (f.isOpen) {
@@ -244,14 +244,14 @@ export function canPlaceRoomObject(a, b) {
     d = b.y,
     f;
   for (f = 0; f < a.doorList.length; f++) {
-    if (c === a.doorList[f].wj && d === a.doorList[f].xj) {
+    if (c === a.doorList[f].tileColumn && d === a.doorList[f].tileRow) {
       return false;
     }
   }
   return a.stairs && c === a.stairs.Ex && d === a.stairs.Fx ? false : true;
 }
 export function DungeonDoor(a) {
-  this.pixelRow = this.pixelColumn = this.xj = this.wj = 0;
+  this.pixelRow = this.pixelColumn = this.tileRow = this.tileColumn = 0;
   this.isOpen = false;
   this.horizontalPassage = true;
   this.leadsTo = a;
@@ -651,7 +651,7 @@ export function initializeWorldRooms() {
       b = this.pathTiles[c];
       a[b.x][b.y].floorType = 1;
     }
-    a[this.doorA.wj][this.doorA.xj].floorType = 3;
-    a[this.doorB.wj][this.doorB.xj].floorType = 3;
+    a[this.doorA.tileColumn][this.doorA.tileRow].floorType = 3;
+    a[this.doorB.tileColumn][this.doorB.tileRow].floorType = 3;
   };
 }

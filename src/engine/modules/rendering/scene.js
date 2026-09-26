@@ -92,7 +92,7 @@ export function drawWorldTileRow(a, b, c, d) {
       f.drawSprite(g.backgroundSprite, h, l);
       var n = g.decorationSprite;
       if (n) {
-        f.spriteRenderer.dk(n, g.getPixelX(), g.getPixelY(), h, l, n.spriteSheet.spriteSize, 0);
+        f.spriteRenderer.drawSpriteDepth(n, g.getPixelX(), g.getPixelY(), h, l, n.spriteSheet.spriteSize, 0);
       }
     }
   }
@@ -111,10 +111,10 @@ export function drawDungeonTileRow(a, b, c, d) {
       f.drawSprite(g.backgroundSprite, h, l);
       var n = g.decorationSprite;
       if (n) {
-        f.spriteRenderer.dk(n, g.getPixelX(), g.getPixelY(), h, l, n.spriteSheet.spriteSize, 0);
+        f.spriteRenderer.drawSpriteDepth(n, g.getPixelX(), g.getPixelY(), h, l, n.spriteSheet.spriteSize, 0);
       }
       if (n = g.bt) {
-        f.spriteRenderer.gx(n, g.getPixelX(), g.getPixelY(), h, l, n.spriteSheet.spriteSize, 0);
+        f.spriteRenderer.drawSpriteDepthRaised(n, g.getPixelX(), g.getPixelY(), h, l, n.spriteSheet.spriteSize, 0);
       }
     }
   }
@@ -126,7 +126,7 @@ export function drawWorldCharacters(a, b) {
     d = c.position.getWorldPositionX();
     f = c.position.getWorldPositionY();
     c = c.getSprite();
-    a.spriteRenderer.dk(c, d, f, game.viewportHalfWidth + (d - game.world.worldCenterX - (f - game.world.worldCenterY)), game.viewportHalfHeight + 0.5 * (d - game.world.worldCenterX + (f - game.world.worldCenterY)), c.spriteSheet.spriteSize, 0);
+    a.spriteRenderer.drawSpriteDepth(c, d, f, game.viewportHalfWidth + (d - game.world.worldCenterX - (f - game.world.worldCenterY)), game.viewportHalfHeight + 0.5 * (d - game.world.worldCenterX + (f - game.world.worldCenterY)), c.spriteSheet.spriteSize, 0);
   }
 }
 export function drawDungeonCharacters(a, b) {
@@ -145,7 +145,7 @@ export function drawDungeonCharacters(a, b) {
     h = projectDungeonY(d, f);
     l = c.effects.isStealthed;
     c = c.getSprite();
-    a.spriteRenderer.dk(c, d, f, g, h, c.spriteSheet.spriteSize, l ? 0.4 : 0);
+    a.spriteRenderer.drawSpriteDepth(c, d, f, g, h, c.spriteSheet.spriteSize, l ? 0.4 : 0);
   }
 }
 export function drawCharacterEffects(a, b) {
@@ -162,7 +162,7 @@ export function drawCharacterEffects(a, b) {
             n = projectDungeonY(g, h) + 10;
             y = true;
           }
-          a.spriteRenderer.fx(s, u, g, h, l, n, s.spriteSheet.spriteSize, 0);
+          a.spriteRenderer.drawAnimationRaised(s, u, g, h, l, n, s.spriteSheet.spriteSize, 0);
         }
       }
     }
@@ -239,18 +239,18 @@ export function initializeRenderingScene() {
       var b;
       if (this.sprite) {
         b = this.sprite.spriteSheet.spriteSize;
-        a.drawImage(this.sprite.Hj(), this.sprite.sourceX, this.sprite.sourceY, b, b, this.Zq, this.$q, this.am, this.am);
+        a.drawImage(this.sprite.getSheetImage(), this.sprite.sourceX, this.sprite.sourceY, b, b, this.Zq, this.$q, this.am, this.am);
       } else if (this.animation) {
         var c = this.animation.frames[this.frameIndex];
         b = this.animation.spriteSheet.spriteSize;
-        a.drawImage(this.animation.Hj(), c.frameSourceX, c.frameSourceY, b, b, this.Zq, this.$q, this.am, this.am);
+        a.drawImage(this.animation.getSheetImage(), c.frameSourceX, c.frameSourceY, b, b, this.Zq, this.$q, this.am, this.am);
       }
       if (0 < this.alpha) {
         a.restore();
       }
     }
   };
-  DepthSortedRenderer.prototype.hB = function (a) {
+  DepthSortedRenderer.prototype.setContext = function (a) {
     this.context = a;
     for (a = this.Bn = 0; a < this.Hl.length; a++) {
       resetRenderCommand(this.Hl[a]);
@@ -266,13 +266,13 @@ export function initializeRenderingScene() {
     }
     setVector(this.ko, a, b);
   };
-  DepthSortedRenderer.prototype.dk = function (a, b, c, d, f, g, h) {
+  DepthSortedRenderer.prototype.drawSpriteDepth = function (a, b, c, d, f, g, h) {
     if (a) {
       b = distanceToPoint(this.ko, b, c);
       setSpriteRenderCommand(acquireRenderCommand(this), a, b, d, f, g, h);
     }
   };
-  DepthSortedRenderer.prototype.gx = function (a, b, c, d, f, g, h) {
+  DepthSortedRenderer.prototype.drawSpriteDepthRaised = function (a, b, c, d, f, g, h) {
     if (a) {
       b = distanceToPoint(this.ko, b, c);
       c = acquireRenderCommand(this);
@@ -280,13 +280,13 @@ export function initializeRenderingScene() {
       c.vr = 0.1;
     }
   };
-  DepthSortedRenderer.prototype.fB = function (a, b, c, d, f, g, h, l) {
+  DepthSortedRenderer.prototype.drawAnimation = function (a, b, c, d, f, g, h, l) {
     if (a) {
       c = distanceToPoint(this.ko, c, d);
       setAnimationRenderCommand(acquireRenderCommand(this), a, b, c, f, g, h, l);
     }
   };
-  DepthSortedRenderer.prototype.fx = function (a, b, c, d, f, g, h, l) {
+  DepthSortedRenderer.prototype.drawAnimationRaised = function (a, b, c, d, f, g, h, l) {
     if (a) {
       c = distanceToPoint(this.ko, c, d);
       d = acquireRenderCommand(this);
@@ -294,7 +294,7 @@ export function initializeRenderingScene() {
       d.vr = 0.1;
     }
   };
-  DepthSortedRenderer.prototype.hx = function () {
+  DepthSortedRenderer.prototype.sortCommands = function () {
     if (!(2 > this.Bn)) {
       this.Hl.sort(this.FE);
     }
@@ -303,42 +303,42 @@ export function initializeRenderingScene() {
       this.Hl[a].draw(this.context);
     }
   };
-  ImmediateRenderer.prototype.hB = function (a) {
+  ImmediateRenderer.prototype.setContext = function (a) {
     this.context = a;
   };
-  ImmediateRenderer.prototype.dk = function (a, b, c, d, f, g, h) {
+  ImmediateRenderer.prototype.drawSpriteDepth = function (a, b, c, d, f, g, h) {
     if (a) {
       b = acquireImmediateCommand(this);
       setSpriteRenderCommand(b, a, 0, d, f, g, h);
       b.draw(this.context);
     }
   };
-  ImmediateRenderer.prototype.gx = function (a, b, c, d, f, g, h) {
+  ImmediateRenderer.prototype.drawSpriteDepthRaised = function (a, b, c, d, f, g, h) {
     if (a) {
       b = acquireImmediateCommand(this);
       setSpriteRenderCommand(b, a, 0, d, f, g, h);
       b.draw(this.context);
     }
   };
-  ImmediateRenderer.prototype.fB = function (a, b, c, d, f, g, h, l) {
+  ImmediateRenderer.prototype.drawAnimation = function (a, b, c, d, f, g, h, l) {
     if (a) {
       c = acquireImmediateCommand(this);
       setAnimationRenderCommand(c, a, b, 0, f, g, h, l);
       c.draw(this.context);
     }
   };
-  ImmediateRenderer.prototype.fx = function (a, b, c, d, f, g, h, l) {
+  ImmediateRenderer.prototype.drawAnimationRaised = function (a, b, c, d, f, g, h, l) {
     if (a) {
       c = acquireImmediateCommand(this);
       setAnimationRenderCommand(c, a, b, 0, f, g, h, l);
       c.draw(this.context);
     }
   };
-  ImmediateRenderer.prototype.hx = function () {};
+  ImmediateRenderer.prototype.sortCommands = function () {};
   SceneRenderer.prototype.drawSprite = function (a, b, c) {
     if (a) {
       var d = a.spriteSheet.spriteSize;
-      this.context.drawImage(a.Hj(), a.sourceX, a.sourceY, d, d, b, c, d, d);
+      this.context.drawImage(a.getSheetImage(), a.sourceX, a.sourceY, d, d, b, c, d, d);
     }
   };
   GameCanvasView.prototype = new View();
@@ -348,7 +348,7 @@ export function initializeRenderingScene() {
   GameCanvasView.prototype.update = function () {
     var a = this.gB;
     a.spriteRenderer = game.options.depthSortSprites ? a.uE : a.DD;
-    a.spriteRenderer.hB(a.context);
+    a.spriteRenderer.setContext(a.context);
     if (game.world.ty) {
       if (a.context.fillStyle = "#000000", a.context.fillRect(0, 0, game.viewportWidth, game.viewportHeight), game.worldActive) {
         var b = game.world.pixelToTileColumn(game.world.worldCenterX),
@@ -393,7 +393,7 @@ export function initializeRenderingScene() {
         if (game.options.showCombatText) {
           drawFloatingText(a);
         }
-        a.spriteRenderer.hx();
+        a.spriteRenderer.sortCommands();
         if (game.options.showMapOverlay) {
           var d = game.regions,
             f = d.regionGridOriginColumn,
@@ -573,9 +573,9 @@ export function initializeRenderingScene() {
             ha = projectWorldY(La, wa);
             Ga = Ea.opened ? Ea.openedSpriteName : Ea.closedSpriteName;
             if (Ea.definition.flushPlacement) {
-              a.spriteRenderer.gx(Ga, La, wa, Fa, ha, Ga.spriteSheet.spriteSize, 0);
+              a.spriteRenderer.drawSpriteDepthRaised(Ga, La, wa, Fa, ha, Ga.spriteSheet.spriteSize, 0);
             } else {
-              a.spriteRenderer.dk(Ga, La, wa, Fa, ha, Ga.spriteSheet.spriteSize, 0);
+              a.spriteRenderer.drawSpriteDepth(Ga, La, wa, Fa, ha, Ga.spriteSheet.spriteSize, 0);
             }
           }
         }
@@ -611,9 +611,9 @@ export function initializeRenderingScene() {
           Hb = projectDungeonY(Sb, Ma);
           pb = vb.getSprite();
           if (4 === vb.characterType) {
-            a.spriteRenderer.dk(pb, Sb, Ma, zb - ac, Hb - ac, 3 * game.tileSize, 0);
+            a.spriteRenderer.drawSpriteDepth(pb, Sb, Ma, zb - ac, Hb - ac, 3 * game.tileSize, 0);
           } else {
-            a.spriteRenderer.dk(pb, Sb, Ma, zb, Hb, pb.spriteSheet.spriteSize, 0);
+            a.spriteRenderer.drawSpriteDepth(pb, Sb, Ma, zb, Hb, pb.spriteSheet.spriteSize, 0);
           }
         }
         drawDungeonCharacters(a, game.minions.minionList);
@@ -645,7 +645,7 @@ export function initializeRenderingScene() {
                 wb = Bb.y;
                 Ib = projectDungeonX(qb, wb) + 10;
                 Ec = projectDungeonY(qb, wb) + 10;
-                a.spriteRenderer.fx(Ab, bc, qb, wb, Ib, Ec, Ab.spriteSheet.spriteSize, 0);
+                a.spriteRenderer.drawAnimationRaised(Ab, bc, qb, wb, Ib, Ec, Ab.spriteSheet.spriteSize, 0);
               } else if (2 === cc) {
                 var sa = a,
                   Tb = Wa,
@@ -716,14 +716,14 @@ export function initializeRenderingScene() {
                     sb = ec.getPixelY();
                     ka = projectDungeonX(Ub, sb) + 10;
                     Eb = projectDungeonY(Ub, sb) + 10;
-                    a.spriteRenderer.fB(lb, rc, Ub, sb, ka, Eb, lb.spriteSheet.spriteSize, 0);
+                    a.spriteRenderer.drawAnimation(lb, rc, Ub, sb, ka, Eb, lb.spriteSheet.spriteSize, 0);
                   }
                 }
               }
             }
           }
         }
-        a.spriteRenderer.hx();
+        a.spriteRenderer.sortCommands();
         drawCharacterHighlights(a, getMonsters(), "red");
         if (!game.state.encounter.ym) {
           drawCharacterHighlights(a, game.minions.minionList, "#007FFF");

@@ -18,7 +18,7 @@ import { spawnRoomTreasure } from "../loot/treasure.js";
 export function DungeonLayoutGenerator(a, b, c, d, f) {
   this.seededRandom = d;
   this.fl = a;
-  this.Nj = b;
+  this.heightInTiles = b;
   this.tileGrid = c;
   this.hasSecondEntrance = f;
   this.iB = ROOM_SPACING;
@@ -114,7 +114,7 @@ export function roomOverlapsExisting(a, b) {
 export function CastleLayoutGenerator(a, b, c, d) {
   this.seededRandom = d;
   this.fl = a;
-  this.Nj = b;
+  this.heightInTiles = b;
   this.tileGrid = c;
   this.iB = 5;
   this.Ow = 4;
@@ -266,11 +266,11 @@ export function initializeWorldGeneration() {
       for (b = 0; b < a; b++) {
         g = d + randomIntFrom(this.seededRandom, f - d);
         h = d + randomIntFrom(this.seededRandom, f - d);
-        c = new DungeonRoom(1 + randomIntFrom(this.seededRandom, this.fl - g - 1), 1 + randomIntFrom(this.seededRandom, this.Nj - h - 1), g, h, 0);
+        c = new DungeonRoom(1 + randomIntFrom(this.seededRandom, this.fl - g - 1), 1 + randomIntFrom(this.seededRandom, this.heightInTiles - h - 1), g, h, 0);
         for (l = 0; roomOverlapsExisting(this, c);) {
           var n = c,
             p = 1 + randomIntFrom(this.seededRandom, this.fl - g - 1),
-            s = 1 + randomIntFrom(this.seededRandom, this.Nj - h - 1);
+            s = 1 + randomIntFrom(this.seededRandom, this.heightInTiles - h - 1);
           n.tileColumn = p;
           n.tileRow = s;
           l++;
@@ -305,7 +305,7 @@ export function initializeWorldGeneration() {
       d = [],
       f,
       g,
-      h = new HallwayPathfinder(this.fl, this.Nj, this.tileGrid);
+      h = new HallwayPathfinder(this.fl, this.heightInTiles, this.tileGrid);
     for (a = 1; a < this.roomList.length; a++) {
       b = this.roomList[a];
       d.length = 0;
@@ -359,7 +359,7 @@ export function initializeWorldGeneration() {
   DungeonLayoutGenerator.prototype.dl = function (a, b, c) {
     var d;
     for (d = 0; d < a.length; d++) {
-      if (1 >= Math.abs(a[d].wj - b) && 1 >= Math.abs(a[d].xj - c)) {
+      if (1 >= Math.abs(a[d].tileColumn - b) && 1 >= Math.abs(a[d].tileRow - c)) {
         return true;
       }
     }
@@ -443,7 +443,7 @@ export function initializeWorldGeneration() {
       b,
       c,
       d,
-      f = new HallwayPathfinder(this.fl, this.Nj, this.tileGrid);
+      f = new HallwayPathfinder(this.fl, this.heightInTiles, this.tileGrid);
     for (a = 1; a < this.roomList.length; a++) {
       if (b = this.roomList[a - 1], c = this.roomList[a], d = findHallwayPath(f, b, c)) {
         var g = this.Zo++;
@@ -489,7 +489,7 @@ export function initializeWorldGeneration() {
   CastleLayoutGenerator.prototype.dl = function (a, b, c) {
     var d;
     for (d = 0; d < a.length; d++) {
-      if (1 >= Math.abs(a[d].wj - b) && 1 >= Math.abs(a[d].xj - c)) {
+      if (1 >= Math.abs(a[d].tileColumn - b) && 1 >= Math.abs(a[d].tileRow - c)) {
         return true;
       }
     }
