@@ -1,4 +1,3 @@
-// @ts-nocheck -- M10 渐进类型化：JSDoc 覆盖后摘除（见 docs/WORKSTATE.md）
 /** 成就、点数明细和永久奖励。
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
@@ -41,8 +40,8 @@ export function mountPointBreakdown(a) {
   for (c = 0; c < pointEventDefinitions.length; c++) {
     var d = a,
       f = pointEventDefinitions[c].pointEventTypeId,
-      g = b++,
-      g = d.Ls.insertRow(g),
+      rowIndex = b++,
+      g = d.Ls.insertRow(rowIndex),
       h = g.insertCell(0);
     h.style.textAlign = "right";
     h.style.width = "120px";
@@ -78,7 +77,7 @@ export function PointsView(a) {
 export function initializeViewsAchievements() {
   AchievementListView.prototype = new View();
   AchievementListView.prototype.reset = function () {
-    this.uo();
+    /** @type {{uo: () => void}} */ (/** @type {unknown} */ (this)).uo();
   };
   AchievementListView.prototype.uo = function () {
     clearElementById(this.elementId);
@@ -86,11 +85,11 @@ export function initializeViewsAchievements() {
     this.Uc.length = 0;
     this.Vc.length = 0;
     this.Nf.length = 0;
-    this.Zn();
+    /** @type {{Zn: () => void}} */ (/** @type {unknown} */ (this)).Zn();
     var a = this.elementId,
-      b = getElement(a);
-    if (b) {
-      this.Iq = createElement("table", b, null, "adventurerSkillTreeTable");
+      container = getElement(a);
+    if (container) {
+      this.Iq = createElement("table", container, null, "adventurerSkillTreeTable");
       var b = this.Hq.upgrades,
         c = this.Nt.upgrades,
         d = this.Ot.upgrades,
@@ -152,7 +151,7 @@ export function initializeViewsAchievements() {
   };
   AchievementListView.prototype.update = function () {
     if (!(this.Hq && this.Iq)) {
-      this.uo();
+      /** @type {{uo: () => void}} */ (/** @type {unknown} */ (this)).uo();
     }
     refreshUpgradeCollection(this.Hq);
     refreshUpgradeCollection(this.Nt);
@@ -245,18 +244,18 @@ export function initializeViewsAchievements() {
   };
   PointUpgradeListView.prototype = new View();
   PointUpgradeListView.prototype.reset = function () {
-    this.uo();
+    /** @type {{uo: () => void}} */ (/** @type {unknown} */ (this)).uo();
   };
   PointUpgradeListView.prototype.uo = function () {
     clearElementById(this.elementId);
     this.Gt = null;
     this.Uc.length = 0;
     this.Vc.length = 0;
-    this.Zn();
+    /** @type {{Zn: () => void}} */ (/** @type {unknown} */ (this)).Zn();
     var a = this.elementId,
-      b = getElement(a);
-    if (b) {
-      this.Gt = createElement("table", b, null, "adventurerSkillTreeTable");
+      container = getElement(a);
+    if (container) {
+      this.Gt = createElement("table", container, null, "adventurerSkillTreeTable");
       var b = this.hj.upgrades,
         c = this.Rl.upgrades,
         d = Math.max(b.length, c.length),
@@ -302,7 +301,7 @@ export function initializeViewsAchievements() {
   };
   PointUpgradeListView.prototype.update = function () {
     if (!(this.hj && this.Gt)) {
-      this.uo();
+      /** @type {{uo: () => void}} */ (/** @type {unknown} */ (this)).uo();
     }
     refreshUpgradeCollection(this.hj);
     refreshUpgradeCollection(this.Rl);
