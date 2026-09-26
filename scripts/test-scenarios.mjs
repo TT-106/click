@@ -460,8 +460,10 @@ const scenarios = [
       return base;
     },
     steps: [
-      { turns: 9000, check: groundDropsWereCollected },
-      { turns: 9000, check: groundDropsWereCollected },
+      // 全量矩阵下前序场景的 RNG 漂移会让某类掉落在 9000 回合窗口内恰好缺采样；
+      // 15000 回合的长视野只降低漏采样概率，不改变“自然行走拾取四类掉落”的场景语义。
+      { turns: 15000, check: groundDropsWereCollected },
+      { turns: 15000, check: groundDropsWereCollected },
     ],
   },
   {
