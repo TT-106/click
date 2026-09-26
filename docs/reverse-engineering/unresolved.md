@@ -2,9 +2,10 @@
 
 > 规范 §33 要求的 unresolved 台账。每项含已知证据与下一步动作。
 
-## U1 — ✅ 已解决：`Da` 三路拆分已落地（2026-09-26）
+## U1 — ✅ 已解决并验证关闭：`Da` 三路拆分已落地（2026-09-26）
 
-- 状态：**已解决并落地**。最终根因：actions.js:616（createChainAction）与 :682（createReturningAction）的 `a.Da` 读取的是**动作自身的目标字段**（应为 targetCharacter），而非施法角色的 combatTarget——前两轮取证档案将其误标为 Character 所有。修正这两处（并连带修正 285/442/494/866 四处多态入参误标）后，12 场景差分矩阵 + parity + E2E 全绿。
+- 状态：**已解决、落地并通过验证实验关闭**。
+- **收尾验证（第六轮）**：?watchDa 观察器在完整多场景历史（long-run 3000→offline×3→potions-active 600）下零类型违例、零意外 null 转换——值流在页面历史状态下亦完全正确，第五轮的场景顺序依赖崩溃确认为当时残留误标（866/285/442 等）所致，已全部修复。最终根因：actions.js:616（createChainAction）与 :682（createReturningAction）的 `a.Da` 读取的是**动作自身的目标字段**（应为 targetCharacter），而非施法角色的 combatTarget——前两轮取证档案将其误标为 Character 所有。修正这两处（并连带修正 285/442/494/866 四处多态入参误标）后，12 场景差分矩阵 + parity + E2E 全绿。
 - 现象：按第四轮取证（Character→combatTarget、CombatAction→targetCharacter、Explore 系 Behavior→selectedTarget）落地后，6 个差分场景（potions×2/scrolls/gold/veteran/late-horizon——全部是**存档变异类**）出现 levelCenter/levelSeed±1/currentLevelIndex 漂移；基线与 long-run-9000 不受影响。
 - **本轮新增实证**（RNG 计数器 + 栈记录器）：
   1. 推进期 RNG delta 全程 0/0（600 回合逐 50 回合步进）——分叉是**非随机决策**，不是随机流错位。
