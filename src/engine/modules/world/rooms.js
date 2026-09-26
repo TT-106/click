@@ -195,7 +195,7 @@ export function revealRoom(a) {
             d = 2 * rollGoldDrop();
             if (0 < d) {
               f = g[c];
-              game.goldDrops.pe.push(new GoldDrop(d, f.Ob(), f.Pb(), a));
+              game.goldDrops.pe.push(new GoldDrop(d, f.getLevelPositionX(), f.getLevelPositionY(), a));
             }
           }
         }
@@ -544,10 +544,10 @@ export function initializeWorldRooms() {
   DungeonTile.prototype.Bi = function () {
     return this.UD;
   };
-  DungeonTile.prototype.Ob = function () {
+  DungeonTile.prototype.getPixelX = function () {
     return this.VD;
   };
-  DungeonTile.prototype.Pb = function () {
+  DungeonTile.prototype.getPixelY = function () {
     return this.WD;
   };
   DungeonTile.prototype.setBackgroundSprite = function (a) {

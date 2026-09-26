@@ -112,10 +112,10 @@ export function drawDungeonTileRow(a, b, c, d) {
       f.If(g.Jn, h, l);
       var n = g.Yf;
       if (n) {
-        f.se.dk(n, g.Ob(), g.Pb(), h, l, n.Ad.spriteSize, 0);
+        f.se.dk(n, g.getPixelX(), g.getPixelY(), h, l, n.Ad.spriteSize, 0);
       }
       if (n = g.bt) {
-        f.se.gx(n, g.Ob(), g.Pb(), h, l, n.Ad.spriteSize, 0);
+        f.se.gx(n, g.getPixelX(), g.getPixelY(), h, l, n.Ad.spriteSize, 0);
       }
     }
   }
@@ -140,8 +140,8 @@ export function drawDungeonCharacters(a, b) {
     n;
   for (n = b.length - 1; 0 <= n; n--) {
     c = b[n];
-    d = c.position.Ob();
-    f = c.position.Pb();
+    d = c.position.getLevelPositionX();
+    f = c.position.getLevelPositionY();
     g = projectDungeonX(d, f);
     h = projectDungeonY(d, f);
     l = c.effects.wg;
@@ -157,8 +157,8 @@ export function drawCharacterEffects(a, b) {
         if (s = p[d], s.Pd && (s = s.hD)) {
           u = p[d].Od;
           if (!y) {
-            g = f.position.Ob();
-            h = f.position.Pb();
+            g = f.position.getLevelPositionX();
+            h = f.position.getLevelPositionY();
             l = projectDungeonX(g, h) + 10;
             n = projectDungeonY(g, h) + 10;
             y = true;
@@ -199,8 +199,8 @@ export function drawCharacterHighlights(a, b, c) {
   for (d = 0; d < b.length; d++) {
     l = b[d];
     if (!l.isDead) {
-      f = l.position.Ob();
-      g = l.position.Pb();
+      f = l.position.getLevelPositionX();
+      g = l.position.getLevelPositionY();
       h = projectDungeonX(f, g);
       f = projectDungeonY(f, g);
       g = l.stats;
@@ -589,8 +589,8 @@ export function initializeRenderingScene() {
           Va;
         for (Va = 0; Va < bb.length; Va++) {
           za = bb[Va];
-          nb = za.position.Ob();
-          fb = za.position.Pb();
+          nb = za.position.getLevelPositionX();
+          fb = za.position.getLevelPositionY();
           cb = projectWorldX(nb, fb);
           Ua = projectWorldY(nb, fb);
           a.If(za.getSprite(), cb, Ua);
@@ -606,8 +606,8 @@ export function initializeRenderingScene() {
           pb;
         for (ob = 0; ob < mc.length; ob++) {
           vb = mc[ob];
-          Sb = vb.position.Ob();
-          Ma = vb.position.Pb();
+          Sb = vb.position.getLevelPositionX();
+          Ma = vb.position.getLevelPositionY();
           zb = projectDungeonX(Sb, Ma);
           Hb = projectDungeonY(Sb, Ma);
           pb = vb.getSprite();
@@ -715,8 +715,8 @@ export function initializeRenderingScene() {
                   if ((ec = game.level.getTileAt(xb, Na)) && (hb = ec.Pq) && hb.Cj && !hb.bl()) {
                     lb = hb.Zg();
                     rc = hb.oc;
-                    Ub = ec.Ob();
-                    sb = ec.Pb();
+                    Ub = ec.getPixelX();
+                    sb = ec.getPixelY();
                     ka = projectDungeonX(Ub, sb) + 10;
                     Eb = projectDungeonY(Ub, sb) + 10;
                     a.se.fB(lb, rc, Ub, sb, ka, Eb, lb.Ad.spriteSize, 0);

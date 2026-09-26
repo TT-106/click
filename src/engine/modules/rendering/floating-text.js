@@ -33,8 +33,8 @@ export function showFloatingText(a, b, c, d) {
       b = game.viewportHalfWidth + (d - game.world.he - (f - game.world.ie)) + a.cA;
       d = game.viewportHalfHeight + 0.5 * (d - game.world.he + (f - game.world.ie)) + a.dA;
     } else {
-      d = b.Ob();
-      f = b.Pb();
+      d = b.getLevelPositionX();
+      f = b.getLevelPositionY();
       b = projectDungeonX(d, f) + a.cA;
       d = projectDungeonY(d, f) + a.dA;
     }

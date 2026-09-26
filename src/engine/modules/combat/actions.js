@@ -368,8 +368,8 @@ export function resolveCharacterDefeat(a, b) {
         f = roomRightPixels(d) - game.tileSize,
         h = roomTopPixels(d) + game.tileSize,
         l = roomBottomPixels(d) - game.tileSize,
-        n = g.Ob(),
-        p = g.Pb(),
+        n = g.getLevelPositionX(),
+        p = g.getLevelPositionY(),
         s = 10 + randomInt(10),
         u;
       if (doubleGoldDropsModifier.currentValue) {

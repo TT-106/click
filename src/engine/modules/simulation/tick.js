@@ -772,8 +772,8 @@ export function advanceSimulation(a) {
     }
   } else {
     for (uc = 0; uc < U.length; uc++) {
-      Z += U[uc].position.Ob();
-      $ += U[uc].position.Pb();
+      Z += U[uc].position.getLevelPositionX();
+      $ += U[uc].position.getLevelPositionY();
     }
     var of = $ / U.length,
       wd = game.level;

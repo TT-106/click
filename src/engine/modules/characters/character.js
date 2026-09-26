@@ -367,14 +367,14 @@ export function updateCharacter(a, b) {
               }
             }
             if (da) {
-              setVector(p.velocity, da.Ob(), da.Pb());
+              setVector(p.velocity, da.getPixelX(), da.getPixelY());
             } else {
               setVector(p.velocity, u.me, u.ne);
             }
             subtractVector(p.velocity, p.levelPosition);
             if (vectorLength(p.velocity) <= s) {
               if (da) {
-                setVector(p.levelPosition, da.Ob() | 0, da.Pb() | 0);
+                setVector(p.levelPosition, da.getPixelX() | 0, da.getPixelY() | 0);
               } else {
                 setVector(p.levelPosition, u.me | 0, u.ne | 0);
               }
@@ -614,8 +614,8 @@ export function updateCharacter(a, b) {
                       sa.impactEffect = Db;
                       var gb = Qa.position,
                         rb = gb.room,
-                        dc = game.level.Ai(gb.Ob()),
-                        Ka = game.level.Bi(gb.Pb()),
+                        dc = game.level.Ai(gb.getLevelPositionX()),
+                        Ka = game.level.Bi(gb.getLevelPositionY()),
                         Xa,
                         hb = rb.tileColumn,
                         lb = rb.tileRow,
@@ -676,8 +676,8 @@ export function updateCharacter(a, b) {
                     var Nc = a.stats.ho + 1,
                       gd = xb.position,
                       uc = gd.room,
-                      U = game.level.Ai(gd.Ob()),
-                      Z = game.level.Bi(gd.Pb()),
+                      U = game.level.Ai(gd.getLevelPositionX()),
+                      Z = game.level.Bi(gd.getLevelPositionY()),
                       $ = uc.tileColumn,
                       ba = uc.tileRow,
                       ca = $ + uc.widthInTiles,

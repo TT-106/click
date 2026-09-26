@@ -299,10 +299,10 @@ export function initializeSimulationCharacters() {
       if (randomInt(100) <= globalUpgradeDefinitions.Lr.currentValue) {
         var p = rollGoldDrop();
         if (0 < p) {
-          var s = new GoldDrop(p, updateCharacterFrames(c.Ob(), g, h), updateCharacterFrames(c.Pb(), l, n), f);
+          var s = new GoldDrop(p, updateCharacterFrames(c.getLevelPositionX(), g, h), updateCharacterFrames(c.getLevelPositionY(), l, n), f);
           game.goldDrops.pe.push(s);
           if (doubleGoldDropsModifier.currentValue) {
-            p = new GoldDrop(p, updateCharacterFrames(c.Ob(), g, h), updateCharacterFrames(c.Pb(), l, n), f);
+            p = new GoldDrop(p, updateCharacterFrames(c.getLevelPositionX(), g, h), updateCharacterFrames(c.getLevelPositionY(), l, n), f);
             game.goldDrops.pe.push(p);
           }
         }
@@ -310,18 +310,18 @@ export function initializeSimulationCharacters() {
       if (randomInt(100) <= globalUpgradeDefinitions.$s.currentValue) {
         p = game.scrolls.Pl;
         p = p[randomInt(p.length)];
-        p = new ScrollDrop(p, updateCharacterFrames(c.Ob(), g, h), updateCharacterFrames(c.Pb(), l, n), f);
+        p = new ScrollDrop(p, updateCharacterFrames(c.getLevelPositionX(), g, h), updateCharacterFrames(c.getLevelPositionY(), l, n), f);
         game.scrollDrops.kf.push(p);
       }
       if (100 * Math.random() <= globalUpgradeDefinitions.Ns.currentValue) {
         p = new Potion(potionDefinitions[randomInt(potionDefinitions.length)]);
-        p = new PotionDrop(p, updateCharacterFrames(c.Ob(), g, h), updateCharacterFrames(c.Pb(), l, n), f);
+        p = new PotionDrop(p, updateCharacterFrames(c.getLevelPositionX(), g, h), updateCharacterFrames(c.getLevelPositionY(), l, n), f);
         game.potionDrops.Hf.push(p);
       }
       if (randomInt(100) <= globalUpgradeDefinitions.itemDropChance.currentValue || guaranteedItemDropsModifier.currentValue) {
-        spawnItemDrop(game.itemDrops, updateCharacterFrames(c.Ob(), g, h), updateCharacterFrames(c.Pb(), l, n), f, d);
+        spawnItemDrop(game.itemDrops, updateCharacterFrames(c.getLevelPositionX(), g, h), updateCharacterFrames(c.getLevelPositionY(), l, n), f, d);
         if (doubleItemDropsModifier.currentValue) {
-          spawnItemDrop(game.itemDrops, updateCharacterFrames(c.Ob(), g, h), updateCharacterFrames(c.Pb(), l, n), f, d);
+          spawnItemDrop(game.itemDrops, updateCharacterFrames(c.getLevelPositionX(), g, h), updateCharacterFrames(c.getLevelPositionY(), l, n), f, d);
         }
       }
       b.isDead = true;

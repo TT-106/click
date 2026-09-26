@@ -77,8 +77,8 @@ export function serializeCharacter(a) {
   var l = h.room,
     n = h.cd;
   h = {
-    levelX: h.Ob(),
-    levelY: h.Pb(),
+    levelX: h.getLevelPositionX(),
+    levelY: h.getLevelPositionY(),
     worldX: h.dc(),
     worldY: h.ec(),
     roomId: l ? l.roomId : -1,

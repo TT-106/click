@@ -209,10 +209,10 @@ export function initializeCharactersMovement() {
   CharacterPosition.prototype.ec = function () {
     return this.worldPosition.y;
   };
-  CharacterPosition.prototype.Ob = function () {
+  CharacterPosition.prototype.getLevelPositionX = function () {
     return this.levelPosition.x;
   };
-  CharacterPosition.prototype.Pb = function () {
+  CharacterPosition.prototype.getLevelPositionY = function () {
     return this.levelPosition.y;
   };
   CharacterPosition.prototype.et = function (a) {
