@@ -1,4 +1,3 @@
-// @ts-nocheck -- M10 渐进类型化：JSDoc 覆盖后摘除（见 docs/WORKSTATE.md）
 /** 队伍资源、旅行目标与等级聚合。
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
@@ -439,10 +438,10 @@ export function initializeCharactersParty() {
           d = game.state.leader.position.worldPosition;
           f = null;
           g = 0;
-          var n = /** @type {any} */ (this.targetCastle.dungeonList),
-            p;
-          for (p = 0; p < n.length; p++) {
-            if (h = n[p], !h.conquered && (l = distanceSquaredToPoint(d, h.getPixelX(), h.getPixelY()), !f || l < g)) {
+          const castleDungeons = this.targetCastle.dungeonList;
+          var p;
+          for (p = 0; p < castleDungeons.length; p++) {
+            if (h = castleDungeons[p], !h.conquered && (l = distanceSquaredToPoint(d, h.getPixelX(), h.getPixelY()), !f || l < g)) {
               f = h;
               g = l;
             }
