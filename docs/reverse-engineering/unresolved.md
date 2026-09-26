@@ -101,6 +101,13 @@
 | Wf / ge | targetCastle / activeCastle | Party 导航（纠错后语义：城堡非地牢） |
 | Ue / Lf | targetTreasureChest / targetShop | Party 导航 |
 
+## 第八批取证已返回（2026-09-26，待落地）
+
+1. **statMultipliers 六键（全 HIGH，原子式改名红线）**：Xf→damageMultiplier、Qf→armorMultiplier、Rf→attackRatingMultiplier、Zf→defenceRatingMultiplier、Cf→maxHealthMultiplier、Ef→maxSpiritMultiplier。实证：applyLevelStats（simulation/characters.js:167-186）赋值目标顺序 + items.js getClassStatMultiplier 按 statType 1-6 映射 + c2.js:29706-29716 同构。落点全集：classes.js 11 处、guardians.js 4 处、minions.js 3 处字面量 + 4 个消费点。**部分改名会让 applyLevelStats 读到 undefined → NaN 沿等级曲线扩散**。
+2. **15 个新字段**：Fb→currentPointReward（PointEventDefinition，注意 Dc 才是基值，Fb 含成就加成，存档靠 game-save.js:649 回放重建）、Ub→cachedCanPurchase（Upgrade 脏标记；upgrades.js:1185 的 !canPurchase 为有意脏刷新勿机械纠正）、Rb→floorType（DungeonTile 0-3）、Lb→cachedCostValue（*Details 成本缓存位）、lc→treasureChest（ChangeFloorBehavior/TreasureLootView）、bc→getTileColumn/pixelToTileColumn（WorldTile/Dungeon/WorldMap 三原型方法）、ac→distanceTo/getRenderSortKey（Vector2/RenderCommand）、gc→collected（四种 Drop 类约 20 处）、hc→potion（PotionDrop/PotionButtonView）、→regionLocked（**存档键 castleRegionLocked**，game-save.js:171/773 两端同 commit）、fc→maxUnlockedLevel（**存档键 maxUnlockedLevel**）、jc→potionSprite（药剂定义+实例双形态）、kc→spellDefinitions（载入反查结构）、mc→descriptionText（点升级文案）、Zb→character（CharacterSkillUpgrade/LearnSpellUpgrade 升级目标角色）。
+3. **视图缓存簇兄弟位**：Lb→cachedCostValue 与已落地 cachedTitleText/cachedDescriptionText 同模式（upgrade-details.js:317-324 reset 置 -1）。
+4. **红线**： 存档键 castleRegionLocked 两端同 commit（隐藏消费：terrain.js:306 地表分支、party.js:236-250 解锁链、regions.js:162 重锁）；fc 存档映射 entities.js:325/game-save.js:946 两端同步，兄弟 hd 勿混改；jc 一名两形态（定义字面量为 PNG 字符串，Potion 实例为 Sprite 对象，potions.js:9 桥接）只改一侧必须同步桥；bc/ac 是方法建议按所有者拆名；kc 是键→定义记录勿标 Array；analyze-fields.mjs 落地后重跑刷新清单。
+
 - 经验教训（已入 facts#20 扩展）：**重命名跨文件字段时，"读点全集"必须包含工厂函数/工具函数内按多态入参的访问**；Babel 静态 grep 对 `a.Da`（a 的类型随调用方变化）天然失真，应配运行时类型断言。
 
 ## U2 — ✅ 已关闭：c2c.user.js DOM 契约实测通过（2026-09-26）
