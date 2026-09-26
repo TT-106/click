@@ -30,34 +30,6 @@
     ]
   },
   {
-    "name": "$d",
-    "reads": 16,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1012",
-        "code": "b.$d"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\targeting.js:202",
-        "code": "c.$d"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\targeting.js:217",
-        "code": "c.$d"
-      }
-    ],
-    "fileCount": 6,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js",
-      "src\\engine\\modules\\ai\\targeting.js",
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\characters\\party.js",
-      "src\\engine\\modules\\world\\generation.js",
-      "src\\engine\\modules\\world\\rooms.js"
-    ]
-  },
-  {
     "name": "Ud",
     "reads": 12,
     "writes": 6,
@@ -3408,7 +3380,7 @@
       },
       {
         "loc": "src\\engine\\modules\\characters\\character.js:315",
-        "code": "Q.$d.Xi"
+        "code": "Q.leadsTo.Xi"
       }
     ],
     "fileCount": 6,

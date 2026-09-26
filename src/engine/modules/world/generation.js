@@ -205,8 +205,8 @@ export function generateDungeonLevel(a, b, c, d) {
   clearVisualEffects();
   clearMonsters();
   if (d) {
-    revealRoom(f.Ce.$d);
-    d = f.Ce.$d;
+    revealRoom(f.Ce.leadsTo);
+    d = f.Ce.leadsTo;
     c = getAllies();
     for (b = 0; b < c.length; b++) {
       var ally = c[b],
@@ -220,7 +220,7 @@ export function generateDungeonLevel(a, b, c, d) {
       setVector(a.levelPosition, stairs.tq, stairs.uq);
     }
     populateEncounter(d);
-    spawnRoomTreasure(f.Ce.$d);
+    spawnRoomTreasure(f.Ce.leadsTo);
   }
 }
 export function clearDungeonTiles(a) {

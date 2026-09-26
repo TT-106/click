@@ -254,11 +254,11 @@ export function DungeonDoor(a) {
   this.pixelRow = this.pixelColumn = this.xj = this.wj = 0;
   this.isOpen = false;
   this.Ho = true;
-  this.$d = a;
+  this.leadsTo = a;
   this.hallway = null;
 }
 export function DungeonStairs(a) {
-  this.$d = a;
+  this.leadsTo = a;
   this.uq = this.tq = this.Fx = this.Ex = 0;
   this.sq = this.Fq = true;
 }

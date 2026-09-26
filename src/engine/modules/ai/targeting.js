@@ -199,7 +199,7 @@ export function searchDoorRoute(a, b, c, d, f) {
       return g.unshift(c), g;
     }
   } else {
-    var h = c.$d;
+    var h = c.leadsTo;
     f = h.doorList;
     if (!h.Xi) {
       return null;
@@ -214,7 +214,7 @@ export function searchDoorRoute(a, b, c, d, f) {
 }
 export function searchRoomRoute(a, b, c, d, f) {
   var g;
-  if (c.$d === b) {
+  if (c.leadsTo === b) {
     return g = [], g.push(c), g;
   }
   if (!c.isOpen) {
@@ -229,7 +229,7 @@ export function searchRoomRoute(a, b, c, d, f) {
       return g.unshift(c), g;
     }
   } else {
-    var h = c.$d;
+    var h = c.leadsTo;
     f = h.doorList;
     if (!h.Xi) {
       return null;

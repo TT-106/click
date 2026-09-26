@@ -312,10 +312,10 @@ export function updateCharacter(a, b) {
                     Q.isOpen = true;
                     game.state.statisticsRecorder.recordDoorOpened();
                     awardAdventurePoints(2);
-                    if (!Q.$d.Xi) {
-                      populateEncounter(Q.$d);
-                      revealRoom(Q.$d);
-                      spawnRoomTreasure(Q.$d);
+                    if (!Q.leadsTo.Xi) {
+                      populateEncounter(Q.leadsTo);
+                      revealRoom(Q.leadsTo);
+                      spawnRoomTreasure(Q.leadsTo);
                     }
                     var na = Q.hallway;
                     if (!na.Km) {
@@ -323,12 +323,12 @@ export function updateCharacter(a, b) {
                       var K = getOppositeDoor(na, Q);
                       if (!K.isOpen) {
                         V.et(K);
-                        V.destinationRoom = K.$d;
+                        V.destinationRoom = K.leadsTo;
                         break a;
                       }
                     }
                     if (Q === V.targetDoor) {
-                      V.destinationRoom = V.targetDoor.$d;
+                      V.destinationRoom = V.targetDoor.leadsTo;
                       V.targetDoor = null;
                     }
                   }
@@ -339,7 +339,7 @@ export function updateCharacter(a, b) {
                 p.room = null;
               } else {
                 p.currentHallway = null;
-                p.room = Q.$d;
+                p.room = Q.leadsTo;
               }
               p.fg = -1;
               if (0 === p.Ug.length) {

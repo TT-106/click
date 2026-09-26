@@ -1009,7 +1009,7 @@ export function initializeAiBehaviors() {
         f.movementTargetCleared = false;
       } else {
         if (b && b != f.targetRoom) {
-          g = findRouteToRoom(a, b.$d);
+          g = findRouteToRoom(a, b.leadsTo);
           f.Ug = g;
           f.movementTargetCleared = false;
         } else {
