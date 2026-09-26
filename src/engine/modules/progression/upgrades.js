@@ -218,7 +218,7 @@ export function applyPointUpgrade(a) {
   a.currentValue += a.levelIncrement;
 }
 export function getPointUpgradeModifier(a) {
-  switch (a.kh.Tb) {
+  switch (a.kh.bonusIndex) {
     case 5:
       return dungeonCostBonus;
     case 4:
@@ -246,7 +246,7 @@ export function getPointUpgradeModifier(a) {
     case 13:
       return spiritRegenerationBonus;
   }
-  console.log("Failed to find point upgrade setting: " + a.kh.Tb);
+  console.log("Failed to find point upgrade setting: " + a.kh.bonusIndex);
   return null;
 }
 export function CollectFarmUpgrade() {

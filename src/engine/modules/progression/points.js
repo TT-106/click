@@ -267,142 +267,142 @@ export function initializeProgressionPoints() {
   pointEventsById[22] = levelUpPointEvent;
   pointEventDefinitions = [killPointEvent, spellPointEvent, encounterPointEvent, levelClearedPointEvent, dungeonClearedPointEvent, castleConqueredPointEvent, chestPointEvent, bookcasePointEvent, weaponRackPointEvent, scrollFoundPointEvent, potionFoundPointEvent, itemFoundPointEvent, goldFoundPointEvent, summonPointEvent, uncommonItemPointEvent, rareItemPointEvent, historicItemPointEvent, ancientItemPointEvent, itemSoldPointEvent, itemEquippedPointEvent, levelUpPointEvent];
   pointUpgradeDefinitions = [{
-    Yb: "moreScrollsInStack",
+    upgradeId: "moreScrollsInStack",
     title: "更多卷轴",
     mc: "最大卷轴+10",
     pointCost: 5E5,
-    Tb: 1
+    bonusIndex: 1
   }, {
-    Yb: "cheaperFarms",
+    upgradeId: "cheaperFarms",
     title: "便宜农场",
     mc: "10%农场折扣",
     pointCost: 1E6,
-    Tb: 5
+    bonusIndex: 5
   }, {
-    Yb: "extraPotionSlot1",
+    upgradeId: "extraPotionSlot1",
     title: "额外药剂槽",
     mc: "多一瓶药剂",
     pointCost: 25E5,
-    Tb: 3
+    bonusIndex: 3
   }, {
-    Yb: "extraPotionSlot2",
+    upgradeId: "extraPotionSlot2",
     title: "额外药剂槽",
     mc: "多一瓶药剂",
     pointCost: 25E5,
-    Tb: 3
+    bonusIndex: 3
   }, {
-    Yb: "walkingSpeedBoost1",
+    upgradeId: "walkingSpeedBoost1",
     title: "行走速度提升",
     mc: "行走速度提高10%",
     pointCost: 4E6,
-    Tb: 2
+    bonusIndex: 2
   }, {
-    Yb: "walkingSpeedBoost2",
+    upgradeId: "walkingSpeedBoost2",
     title: "行走速度提升",
     mc: "行走速度提高10%",
     pointCost: 4E6,
-    Tb: 2
+    bonusIndex: 2
   }, {
-    Yb: "offlineTimeBonus1",
+    upgradeId: "offlineTimeBonus1",
     title: "离线时间加成功",
     mc: "+2小时",
     pointCost: 5E6,
-    Tb: 9
+    bonusIndex: 9
   }, {
-    Yb: "offlineTimeBonus2",
+    upgradeId: "offlineTimeBonus2",
     title: "离线时间加成功",
     mc: "+2小时",
     pointCost: 5E6,
-    Tb: 9
+    bonusIndex: 9
   }, {
-    Yb: "cheaperMonsterLevels",
+    upgradeId: "cheaperMonsterLevels",
     title: "便宜怪物等级",
     mc: "10%等级折扣",
     pointCost: 6E6,
-    Tb: 6
+    bonusIndex: 6
   }, {
-    Yb: "cheaperMonsterLevels2",
+    upgradeId: "cheaperMonsterLevels2",
     title: "便宜怪物等级",
     mc: "10%等级折扣",
     pointCost: 6E6,
-    Tb: 6
+    bonusIndex: 6
   }, {
-    Yb: "itemSales1",
+    upgradeId: "itemSales1",
     title: "道具卖价提高",
     mc: "商店回收价提高10%",
     pointCost: 8E6,
-    Tb: 10
+    bonusIndex: 10
   }, {
-    Yb: "itemSales2",
+    upgradeId: "itemSales2",
     title: "道具卖价提高",
     mc: "商店回收价提高10%",
     pointCost: 8E6,
-    Tb: 10
+    bonusIndex: 10
   }, {
-    Yb: "moreFarmKills1",
+    upgradeId: "moreFarmKills1",
     title: "每次收获更多杀戮",
     mc: "收获杀戮+20",
     pointCost: 7E6,
-    Tb: 8
+    bonusIndex: 8
   }, {
-    Yb: "moreFarmKills2",
+    upgradeId: "moreFarmKills2",
     title: "每次收获更多杀戮",
     mc: "收获杀戮+20",
     pointCost: 7E6,
-    Tb: 8
+    bonusIndex: 8
   }, {
-    Yb: "potionTurnDuration1",
+    upgradeId: "potionTurnDuration1",
     title: "药剂持续",
     mc: "持续时间延长15%",
     pointCost: 8E6,
-    Tb: 7
+    bonusIndex: 7
   }, {
-    Yb: "potionTurnDuration",
+    upgradeId: "potionTurnDuration",
     title: "药剂持续",
     mc: "持续时间延长15%",
     pointCost: 8E6,
-    Tb: 7
+    bonusIndex: 7
   }, {
-    Yb: "extraCharacterSlot",
+    upgradeId: "extraCharacterSlot",
     title: "第5个角色栏",
     mc: "更多杀戮",
     pointCost: 1E7,
-    Tb: 4
+    bonusIndex: 4
   }, {
-    Yb: "coolDownTurn1",
+    upgradeId: "coolDownTurn1",
     title: "永久快速攻击",
     mc: "攻击冷却回合-1",
     pointCost: 11E6,
-    Tb: 11
+    bonusIndex: 11
   }, {
-    Yb: "coolDownTurn2",
+    upgradeId: "coolDownTurn2",
     title: "永久快速攻击",
     mc: "攻击冷却回合-1",
     pointCost: 11E6,
-    Tb: 11
+    bonusIndex: 11
   }, {
-    Yb: "healthRegeneration1",
+    upgradeId: "healthRegeneration1",
     title: "快速治愈",
     mc: "队伍回复+1%",
     pointCost: 12E6,
-    Tb: 12
+    bonusIndex: 12
   }, {
-    Yb: "healthRegeneration2",
+    upgradeId: "healthRegeneration2",
     title: "快速治愈",
     mc: "队伍回复+1%",
     pointCost: 12E6,
-    Tb: 12
+    bonusIndex: 12
   }, {
-    Yb: "spiritRegeneration1",
+    upgradeId: "spiritRegeneration1",
     title: "法力回复",
     mc: "队伍回复+1%",
     pointCost: 13E6,
-    Tb: 13
+    bonusIndex: 13
   }, {
-    Yb: "spiritRegeneration2",
+    upgradeId: "spiritRegeneration2",
     title: "法力回复",
     mc: "队伍回复+1%",
     pointCost: 13E6,
-    Tb: 13
+    bonusIndex: 13
   }];
 }

@@ -593,7 +593,7 @@ export function restoreGameState(a, b) {
                       Bf = undefined;
                     b: {
                       for (var Mh = game.state.ae, Pe = undefined, Pe = 0; Pe < Mh.tl.length; Pe++) {
-                        if (Mh.tl[Pe].kh.Yb === Lh) {
+                        if (Mh.tl[Pe].kh.upgradeId === Lh) {
                           Bf = Mh.tl[Pe];
                           break b;
                         }
@@ -980,7 +980,7 @@ export function createSaveState(a) {
     for (Aa = 0; Aa < sc.length; Aa++) {
       var db = sc[Aa];
       rc.push({
-        upgradeId: db.kh.Yb,
+        upgradeId: db.kh.upgradeId,
         upgradePurchased: db.He()
       });
     }
