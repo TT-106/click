@@ -92,6 +92,8 @@ RunStatistics 的 `On/Lk/qn/Mj/wi/uk` → `turnCount/doorsOpened/roomsCleared/le
 
 统计活动组：`Xj/Rk/Xk/Wk/si/Dl/Sd/oj` → `playedMillis/farmsPurchased/totalGoldFromMonsters/totalGoldFromItems/directKills/scrollKills/farmedKills/characterStunnedCount`。存档键、record 方法、成就和视图互证；`party.js` 读取 `playedMillis`。`Sd` 同时存在于 Dungeon 相关对象，本批仅修改已核对的 RunStatistics 接收者。
 
+统计战斗组：`hl/wl/Gl/ul/El/kl` → `meleeAttackCount/rangedAttackCount/spellCastCount/potionsUsed/scrollsUsed/minionsSummoned`。RunStatistics 记录方法、存档读写、成就分支与信息面板同步；JSON 键不变。
+
 ## 待取证残留（约 1,300 处访问）
 
 高频：`Y/Z/aa/ca/ea/ga/fa/ka/na` 等长尾——工作清单 `artifacts/obfuscated-fields.json`（按频次排序，含样例代码）。取证方法与产出格式见 WORKSTATE.md 第 6 节。

@@ -14,6 +14,7 @@
 - `Zb` → `character` 已独立完成：CharacterSkillUpgrade/LearnSpellUpgrade 的 24 个所有者引用同步；四套验证全绿。第八批此四项已完，下一项为 StatisticsRecorder 计数字段取证与切片落地。
 - 统计推进事件组已完成：`On/Lk/qn/Mj/wi/uk` → `turnCount/doorsOpened/roomsCleared/levelsCleared/dungeonsCleared/castlesConquered`；含 `views/results.js` 离线进度直读点，存档 JSON 键不变。四套验证全绿；其余计数字段仍待分组落地。
 - 统计活动组已完成：`Xj/Rk/Xk/Wk/si/Dl/Sd/oj` 八字段落地，`Sd` 的 Dungeon 同名字段保持原状；四套验证全绿。待战斗组和物品组。
+- 统计战斗组已完成：`hl/wl/Gl/ul/El/kl` 六字段落地；四套验证全绿。待物品组九字段。
 - 本节优先于下方旧快照中的“当前工作树干净”“M10 未开始”“9 场景”等过时文字；提交与实际状态以 `git status`、`git log` 为准。
 
 ## 1. 项目概况

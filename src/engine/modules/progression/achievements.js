@@ -70,9 +70,9 @@ export function getAchievementProgress(a) {
     case 2:
       return b.scrollKills;
     case 3:
-      return b.El;
+      return b.scrollsUsed;
     case 4:
-      return b.ul;
+      return b.potionsUsed;
     case 5:
       return b.Nl;
     case 6:
@@ -88,13 +88,13 @@ export function getAchievementProgress(a) {
     case 11:
       return b.castlesConquered;
     case 12:
-      return b.Gl;
+      return b.spellCastCount;
     case 13:
-      return b.hl;
+      return b.meleeAttackCount;
     case 14:
-      return b.wl;
+      return b.rangedAttackCount;
     case 15:
-      return b.kl;
+      return b.minionsSummoned;
     case 16:
       return getPartyMaxLevel(game.state.party);
     case 17:

@@ -233,12 +233,12 @@ export function serializeStatistics(a) {
     minionKills: a.minionKills,
     farmedKills: a.farmedKills,
     characterStunnedCount: a.characterStunnedCount,
-    meleeAttackCount: a.hl,
-    rangedAttackCount: a.wl,
-    spellCastCount: a.Gl,
-    potionsUsed: a.ul,
-    scrollsUsed: a.El,
-    minionsSummoned: a.kl,
+    meleeAttackCount: a.meleeAttackCount,
+    rangedAttackCount: a.rangedAttackCount,
+    spellCastCount: a.spellCastCount,
+    potionsUsed: a.potionsUsed,
+    scrollsUsed: a.scrollsUsed,
+    minionsSummoned: a.minionsSummoned,
     itemsSold: a.Ph,
     itemsFound: a.Gi,
     uncommonItemsFound: a.Ol,
@@ -301,12 +301,12 @@ export function restoreStatistics(a, b, c) {
   b.setMinionKills(D ? D : 0);
   b.setFarmedKills(N ? N : 0);
   b.characterStunnedCount = I ? I : 0;
-  b.hl = x ? x : 0;
-  b.wl = z ? z : 0;
-  b.Gl = O ? O : 0;
-  b.ul = J ? J : 0;
-  b.El = la ? la : 0;
-  b.kl = Q ? Q : 0;
+  b.meleeAttackCount = x ? x : 0;
+  b.rangedAttackCount = z ? z : 0;
+  b.spellCastCount = O ? O : 0;
+  b.potionsUsed = J ? J : 0;
+  b.scrollsUsed = la ? la : 0;
+  b.minionsSummoned = Q ? Q : 0;
   b.Ph = V ? V : 0;
   b.Gi = na ? na : 0;
   b.Ol = K ? K : 0;

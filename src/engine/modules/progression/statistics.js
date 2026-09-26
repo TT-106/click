@@ -3,7 +3,7 @@
  */
 import { game } from "../runtime/game.js";
 export function RunStatistics() {
-  this.tk = this.Sl = this.Nl = this.nk = this.Zk = this.xl = this.Ol = this.Gi = this.Ph = this.kl = this.playedMillis = this.El = this.ul = this.Gl = this.wl = this.hl = this.characterStunnedCount = this.farmedKills = this.minionKills = this.scrollKills = this.directKills = this.totalGoldFromItems = this.totalGoldFromMonsters = this.farmsPurchased = this.castlesConquered = this.dungeonsCleared = this.levelsCleared = this.roomsCleared = this.doorsOpened = this.turnCount = 0;
+  this.tk = this.Sl = this.Nl = this.nk = this.Zk = this.xl = this.Ol = this.Gi = this.Ph = this.minionsSummoned = this.playedMillis = this.scrollsUsed = this.potionsUsed = this.spellCastCount = this.rangedAttackCount = this.meleeAttackCount = this.characterStunnedCount = this.farmedKills = this.minionKills = this.scrollKills = this.directKills = this.totalGoldFromItems = this.totalGoldFromMonsters = this.farmsPurchased = this.castlesConquered = this.dungeonsCleared = this.levelsCleared = this.roomsCleared = this.doorsOpened = this.turnCount = 0;
 }
 export function LifetimeStatistics() {}
 export function getClassVictories(a, b) {
@@ -25,7 +25,7 @@ export function bindStatistics() {
 }
 export function initializeProgressionStatistics() {
   RunStatistics.prototype.resetRunStatistics = function () {
-    this.tk = this.Sl = this.Nl = this.nk = this.Zk = this.xl = this.Ol = this.Gi = this.Ph = this.kl = this.playedMillis = this.El = this.ul = this.Gl = this.wl = this.hl = this.characterStunnedCount = this.farmedKills = this.minionKills = this.scrollKills = this.directKills = this.totalGoldFromItems = this.totalGoldFromMonsters = this.farmsPurchased = this.castlesConquered = this.dungeonsCleared = this.levelsCleared = this.roomsCleared = this.doorsOpened = this.turnCount = 0;
+    this.tk = this.Sl = this.Nl = this.nk = this.Zk = this.xl = this.Ol = this.Gi = this.Ph = this.minionsSummoned = this.playedMillis = this.scrollsUsed = this.potionsUsed = this.spellCastCount = this.rangedAttackCount = this.meleeAttackCount = this.characterStunnedCount = this.farmedKills = this.minionKills = this.scrollKills = this.directKills = this.totalGoldFromItems = this.totalGoldFromMonsters = this.farmsPurchased = this.castlesConquered = this.dungeonsCleared = this.levelsCleared = this.roomsCleared = this.doorsOpened = this.turnCount = 0;
   };
   RunStatistics.prototype.recordTurn = function () {
     this.turnCount++;
@@ -73,25 +73,25 @@ export function initializeProgressionStatistics() {
     this.minionKills = a;
   };
   RunStatistics.prototype.recordMinionSummoned = function () {
-    this.kl++;
+    this.minionsSummoned++;
   };
   RunStatistics.prototype.recordCharacterStunned = function () {
     this.characterStunnedCount++;
   };
   RunStatistics.prototype.recordMeleeAttack = function () {
-    this.hl++;
+    this.meleeAttackCount++;
   };
   RunStatistics.prototype.recordRangedAttack = function () {
-    this.wl++;
+    this.rangedAttackCount++;
   };
   RunStatistics.prototype.recordSpellCast = function () {
-    this.Gl++;
+    this.spellCastCount++;
   };
   RunStatistics.prototype.recordPotionUsed = function () {
-    this.ul++;
+    this.potionsUsed++;
   };
   RunStatistics.prototype.recordScrollUsed = function () {
-    this.El++;
+    this.scrollsUsed++;
   };
   RunStatistics.prototype.recordPlayedMilliseconds = function (a) {
     this.playedMillis += a;
