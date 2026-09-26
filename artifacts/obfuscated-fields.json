@@ -195,29 +195,6 @@
     ]
   },
   {
-    "name": "Hb",
-    "reads": 3,
-    "writes": 23,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\progression\\achievements.js:16",
-        "code": "this.Hb"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\achievements.js:16",
-        "code": "a.Hb"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\achievements.js:56",
-        "code": "a.Hb"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\progression\\achievements.js"
-    ]
-  },
-  {
     "name": "Fb",
     "reads": 3,
     "writes": 23,
@@ -265,59 +242,6 @@
       "src\\engine\\modules\\characters\\character.js",
       "src\\engine\\modules\\characters\\party.js",
       "src\\engine\\modules\\runtime\\game.js"
-    ]
-  },
-  {
-    "name": "Qb",
-    "reads": 24,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:317",
-        "code": "b.Qb"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:348",
-        "code": "b.Qb"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:419",
-        "code": "a.Qb"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js",
-      "src\\engine\\modules\\ai\\targeting.js",
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\characters\\movement.js"
-    ]
-  },
-  {
-    "name": "Mb",
-    "reads": 21,
-    "writes": 4,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\targeting.js:190",
-        "code": "c.Mb"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\targeting.js:220",
-        "code": "c.Mb"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:266",
-        "code": "u.Mb"
-      }
-    ],
-    "fileCount": 5,
-    "files": [
-      "src\\engine\\modules\\ai\\targeting.js",
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\characters\\party.js",
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\world\\rooms.js"
     ]
   },
   {
@@ -1236,6 +1160,29 @@
     "files": [
       "src\\engine\\modules\\progression\\achievements.js",
       "src\\engine\\modules\\progression\\points.js"
+    ]
+  },
+  {
+    "name": "Hb",
+    "reads": 0,
+    "writes": 22,
+    "samples": [
+      {
+        "loc": "src\\engine\\modules\\progression\\achievements.js:2008",
+        "code": "Hb: 1"
+      },
+      {
+        "loc": "src\\engine\\modules\\progression\\achievements.js:2016",
+        "code": "Hb: 0"
+      },
+      {
+        "loc": "src\\engine\\modules\\progression\\achievements.js:2024",
+        "code": "Hb: 6"
+      }
+    ],
+    "fileCount": 1,
+    "files": [
+      "src\\engine\\modules\\progression\\achievements.js"
     ]
   },
   {
@@ -4856,15 +4803,15 @@
     "writes": 1,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\monsters.js:43",
+        "loc": "src\\engine\\modules\\views\\monsters.js:42",
         "code": "this.zg"
       },
       {
-        "loc": "src\\engine\\modules\\views\\monsters.js:45",
+        "loc": "src\\engine\\modules\\views\\monsters.js:44",
         "code": "this.zg"
       },
       {
-        "loc": "src\\engine\\modules\\views\\monsters.js:48",
+        "loc": "src\\engine\\modules\\views\\monsters.js:47",
         "code": "this.zg"
       }
     ],
@@ -7307,15 +7254,15 @@
     "writes": 7,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\monsters.js:37",
+        "loc": "src\\engine\\modules\\views\\monsters.js:36",
         "code": "this.vi"
       },
       {
-        "loc": "src\\engine\\modules\\views\\monsters.js:298",
+        "loc": "src\\engine\\modules\\views\\monsters.js:297",
         "code": "this.vi"
       },
       {
-        "loc": "src\\engine\\modules\\views\\monsters.js:305",
+        "loc": "src\\engine\\modules\\views\\monsters.js:304",
         "code": "this.vi"
       }
     ],
@@ -8403,15 +8350,15 @@
     "writes": 1,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\monsters.js:38",
+        "loc": "src\\engine\\modules\\views\\monsters.js:37",
+        "code": "this.Tj"
+      },
+      {
+        "loc": "src\\engine\\modules\\views\\monsters.js:292",
         "code": "this.Tj"
       },
       {
         "loc": "src\\engine\\modules\\views\\monsters.js:293",
-        "code": "this.Tj"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\monsters.js:294",
         "code": "this.Tj"
       }
     ],
@@ -14993,11 +14940,11 @@
     "samples": [
       {
         "loc": "src\\engine\\modules\\views\\expedition.js:631",
-        "code": "this.so"
+        "code": "(/** @type {any} */this).so"
       },
       {
         "loc": "src\\engine\\modules\\views\\expedition.js:635",
-        "code": "this.so"
+        "code": "(/** @type {any} */this).so"
       },
       {
         "loc": "src\\engine\\modules\\views\\expedition.js:649",
@@ -15015,15 +14962,15 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\monsters.js:27",
+        "loc": "src\\engine\\modules\\views\\monsters.js:26",
+        "code": "this.xo"
+      },
+      {
+        "loc": "src\\engine\\modules\\views\\monsters.js:216",
         "code": "this.xo"
       },
       {
         "loc": "src\\engine\\modules\\views\\monsters.js:217",
-        "code": "this.xo"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\monsters.js:218",
         "code": "this.xo"
       }
     ],
@@ -15038,15 +14985,15 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\monsters.js:27",
+        "loc": "src\\engine\\modules\\views\\monsters.js:26",
+        "code": "this.$n"
+      },
+      {
+        "loc": "src\\engine\\modules\\views\\monsters.js:212",
         "code": "this.$n"
       },
       {
         "loc": "src\\engine\\modules\\views\\monsters.js:213",
-        "code": "this.$n"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\monsters.js:214",
         "code": "this.$n"
       }
     ],
@@ -15061,15 +15008,15 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\monsters.js:27",
+        "loc": "src\\engine\\modules\\views\\monsters.js:26",
+        "code": "this.Yn"
+      },
+      {
+        "loc": "src\\engine\\modules\\views\\monsters.js:208",
         "code": "this.Yn"
       },
       {
         "loc": "src\\engine\\modules\\views\\monsters.js:209",
-        "code": "this.Yn"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\monsters.js:210",
         "code": "this.Yn"
       }
     ],
@@ -15084,15 +15031,15 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\monsters.js:27",
+        "loc": "src\\engine\\modules\\views\\monsters.js:26",
+        "code": "this.vo"
+      },
+      {
+        "loc": "src\\engine\\modules\\views\\monsters.js:204",
         "code": "this.vo"
       },
       {
         "loc": "src\\engine\\modules\\views\\monsters.js:205",
-        "code": "this.vo"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\monsters.js:206",
         "code": "this.vo"
       }
     ],
@@ -15107,15 +15054,15 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\monsters.js:27",
+        "loc": "src\\engine\\modules\\views\\monsters.js:26",
+        "code": "this.Mo"
+      },
+      {
+        "loc": "src\\engine\\modules\\views\\monsters.js:196",
         "code": "this.Mo"
       },
       {
         "loc": "src\\engine\\modules\\views\\monsters.js:197",
-        "code": "this.Mo"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\monsters.js:198",
         "code": "this.Mo"
       }
     ],
@@ -15130,15 +15077,15 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\monsters.js:27",
+        "loc": "src\\engine\\modules\\views\\monsters.js:26",
+        "code": "this.wq"
+      },
+      {
+        "loc": "src\\engine\\modules\\views\\monsters.js:224",
         "code": "this.wq"
       },
       {
         "loc": "src\\engine\\modules\\views\\monsters.js:225",
-        "code": "this.wq"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\monsters.js:226",
         "code": "this.wq"
       }
     ],
@@ -15153,15 +15100,15 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\monsters.js:27",
+        "loc": "src\\engine\\modules\\views\\monsters.js:26",
+        "code": "this.yq"
+      },
+      {
+        "loc": "src\\engine\\modules\\views\\monsters.js:220",
         "code": "this.yq"
       },
       {
         "loc": "src\\engine\\modules\\views\\monsters.js:221",
-        "code": "this.yq"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\monsters.js:222",
         "code": "this.yq"
       }
     ],
@@ -15176,15 +15123,15 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\monsters.js:30",
+        "loc": "src\\engine\\modules\\views\\monsters.js:29",
+        "code": "this.Cp"
+      },
+      {
+        "loc": "src\\engine\\modules\\views\\monsters.js:189",
         "code": "this.Cp"
       },
       {
         "loc": "src\\engine\\modules\\views\\monsters.js:190",
-        "code": "this.Cp"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\monsters.js:191",
         "code": "this.Cp"
       }
     ],
@@ -15199,15 +15146,15 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\monsters.js:36",
+        "loc": "src\\engine\\modules\\views\\monsters.js:35",
         "code": "this.Dp"
       },
       {
-        "loc": "src\\engine\\modules\\views\\monsters.js:291",
+        "loc": "src\\engine\\modules\\views\\monsters.js:290",
         "code": "this.Dp"
       },
       {
-        "loc": "src\\engine\\modules\\views\\monsters.js:304",
+        "loc": "src\\engine\\modules\\views\\monsters.js:303",
         "code": "this.Dp"
       }
     ],
@@ -18394,15 +18341,15 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\monsters.js:27",
+        "loc": "src\\engine\\modules\\views\\monsters.js:26",
+        "code": "this.Es"
+      },
+      {
+        "loc": "src\\engine\\modules\\views\\monsters.js:193",
         "code": "this.Es"
       },
       {
         "loc": "src\\engine\\modules\\views\\monsters.js:194",
-        "code": "this.Es"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\monsters.js:195",
         "code": "this.Es"
       }
     ],
@@ -22168,7 +22115,7 @@
         "code": "this.Hw"
       },
       {
-        "loc": "src\\engine\\modules\\views\\monsters.js:16",
+        "loc": "src\\engine\\modules\\views\\monsters.js:15",
         "code": "this.Hw"
       }
     ],
@@ -23726,15 +23673,15 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\monsters.js:22",
+        "loc": "src\\engine\\modules\\views\\monsters.js:21",
+        "code": "this.ov"
+      },
+      {
+        "loc": "src\\engine\\modules\\views\\monsters.js:142",
         "code": "this.ov"
       },
       {
         "loc": "src\\engine\\modules\\views\\monsters.js:143",
-        "code": "this.ov"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\monsters.js:144",
         "code": "this.ov"
       }
     ],
@@ -23749,15 +23696,15 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\monsters.js:22",
+        "loc": "src\\engine\\modules\\views\\monsters.js:21",
+        "code": "this.jv"
+      },
+      {
+        "loc": "src\\engine\\modules\\views\\monsters.js:138",
         "code": "this.jv"
       },
       {
         "loc": "src\\engine\\modules\\views\\monsters.js:139",
-        "code": "this.jv"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\monsters.js:140",
         "code": "this.jv"
       }
     ],
@@ -23772,15 +23719,15 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\monsters.js:22",
+        "loc": "src\\engine\\modules\\views\\monsters.js:21",
+        "code": "this.Vv"
+      },
+      {
+        "loc": "src\\engine\\modules\\views\\monsters.js:166",
         "code": "this.Vv"
       },
       {
         "loc": "src\\engine\\modules\\views\\monsters.js:167",
-        "code": "this.Vv"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\monsters.js:168",
         "code": "this.Vv"
       }
     ],
@@ -23795,15 +23742,15 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\monsters.js:22",
+        "loc": "src\\engine\\modules\\views\\monsters.js:21",
+        "code": "this.zv"
+      },
+      {
+        "loc": "src\\engine\\modules\\views\\monsters.js:154",
         "code": "this.zv"
       },
       {
         "loc": "src\\engine\\modules\\views\\monsters.js:155",
-        "code": "this.zv"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\monsters.js:156",
         "code": "this.zv"
       }
     ],
@@ -23818,15 +23765,15 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\monsters.js:22",
+        "loc": "src\\engine\\modules\\views\\monsters.js:21",
+        "code": "this.Fv"
+      },
+      {
+        "loc": "src\\engine\\modules\\views\\monsters.js:150",
         "code": "this.Fv"
       },
       {
         "loc": "src\\engine\\modules\\views\\monsters.js:151",
-        "code": "this.Fv"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\monsters.js:152",
         "code": "this.Fv"
       }
     ],
@@ -23841,15 +23788,15 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\monsters.js:22",
+        "loc": "src\\engine\\modules\\views\\monsters.js:21",
+        "code": "this.Wu"
+      },
+      {
+        "loc": "src\\engine\\modules\\views\\monsters.js:134",
         "code": "this.Wu"
       },
       {
         "loc": "src\\engine\\modules\\views\\monsters.js:135",
-        "code": "this.Wu"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\monsters.js:136",
         "code": "this.Wu"
       }
     ],
@@ -23864,15 +23811,15 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\monsters.js:22",
+        "loc": "src\\engine\\modules\\views\\monsters.js:21",
+        "code": "this.fv"
+      },
+      {
+        "loc": "src\\engine\\modules\\views\\monsters.js:158",
         "code": "this.fv"
       },
       {
         "loc": "src\\engine\\modules\\views\\monsters.js:159",
-        "code": "this.fv"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\monsters.js:160",
         "code": "this.fv"
       }
     ],
@@ -23887,15 +23834,15 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\monsters.js:22",
+        "loc": "src\\engine\\modules\\views\\monsters.js:21",
+        "code": "this.Du"
+      },
+      {
+        "loc": "src\\engine\\modules\\views\\monsters.js:162",
         "code": "this.Du"
       },
       {
         "loc": "src\\engine\\modules\\views\\monsters.js:163",
-        "code": "this.Du"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\monsters.js:164",
         "code": "this.Du"
       }
     ],
@@ -23910,15 +23857,15 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\monsters.js:22",
+        "loc": "src\\engine\\modules\\views\\monsters.js:21",
+        "code": "this.pv"
+      },
+      {
+        "loc": "src\\engine\\modules\\views\\monsters.js:174",
         "code": "this.pv"
       },
       {
         "loc": "src\\engine\\modules\\views\\monsters.js:175",
-        "code": "this.pv"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\monsters.js:176",
         "code": "this.pv"
       }
     ],
@@ -23933,15 +23880,15 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\monsters.js:22",
+        "loc": "src\\engine\\modules\\views\\monsters.js:21",
+        "code": "this.lv"
+      },
+      {
+        "loc": "src\\engine\\modules\\views\\monsters.js:170",
         "code": "this.lv"
       },
       {
         "loc": "src\\engine\\modules\\views\\monsters.js:171",
-        "code": "this.lv"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\monsters.js:172",
         "code": "this.lv"
       }
     ],
@@ -23956,15 +23903,15 @@
     "writes": 2,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\monsters.js:22",
+        "loc": "src\\engine\\modules\\views\\monsters.js:21",
+        "code": "this.ev"
+      },
+      {
+        "loc": "src\\engine\\modules\\views\\monsters.js:146",
         "code": "this.ev"
       },
       {
         "loc": "src\\engine\\modules\\views\\monsters.js:147",
-        "code": "this.ev"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\monsters.js:148",
         "code": "this.ev"
       }
     ],
@@ -23979,15 +23926,15 @@
     "writes": 3,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\monsters.js:28",
+        "loc": "src\\engine\\modules\\views\\monsters.js:27",
         "code": "this.Sv"
       },
       {
-        "loc": "src\\engine\\modules\\views\\monsters.js:255",
+        "loc": "src\\engine\\modules\\views\\monsters.js:254",
         "code": "this.Sv"
       },
       {
-        "loc": "src\\engine\\modules\\views\\monsters.js:263",
+        "loc": "src\\engine\\modules\\views\\monsters.js:262",
         "code": "this.Sv"
       }
     ],
@@ -24002,15 +23949,15 @@
     "writes": 3,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\monsters.js:28",
+        "loc": "src\\engine\\modules\\views\\monsters.js:27",
         "code": "this.Uv"
       },
       {
-        "loc": "src\\engine\\modules\\views\\monsters.js:255",
+        "loc": "src\\engine\\modules\\views\\monsters.js:254",
         "code": "this.Uv"
       },
       {
-        "loc": "src\\engine\\modules\\views\\monsters.js:279",
+        "loc": "src\\engine\\modules\\views\\monsters.js:278",
         "code": "this.Uv"
       }
     ],
@@ -24025,15 +23972,15 @@
     "writes": 1,
     "samples": [
       {
-        "loc": "src\\engine\\modules\\views\\monsters.js:29",
+        "loc": "src\\engine\\modules\\views\\monsters.js:28",
         "code": "this.dx"
       },
       {
-        "loc": "src\\engine\\modules\\views\\monsters.js:230",
+        "loc": "src\\engine\\modules\\views\\monsters.js:229",
         "code": "this.dx"
       },
       {
-        "loc": "src\\engine\\modules\\views\\monsters.js:237",
+        "loc": "src\\engine\\modules\\views\\monsters.js:236",
         "code": "this.dx"
       }
     ],

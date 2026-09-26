@@ -63,6 +63,10 @@
 | pb | progressFillElement | castles/expedition/monsters/results 行视图 |
 | jb / sb | titleElement / descriptionElement | SkillUpgradeDetails（消费点 650/654 已核：innerHTML 文本槽） |
 
+| Hb | characterClass | Achievement（含 22 处定义字面量；胜利计数经 qo 进档） |
+| Qb | moveTargetPoint | CharacterPosition 移动目的地（约 25 处） |
+| Mb | isOpen | DungeonDoor（存档键 doorAOpen/doorBOpen 字面量未动，读写映射行已随字段同步） |
+
 - 经验教训（已入 facts#20 扩展）：**重命名跨文件字段时，"读点全集"必须包含工厂函数/工具函数内按多态入参的访问**；Babel 静态 grep 对 `a.Da`（a 的类型随调用方变化）天然失真，应配运行时类型断言。
 
 ## U2 — 外部自动化脚本（c2c.user.js）DOM 契约未实测
