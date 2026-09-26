@@ -75,6 +75,17 @@
 | Yb | upgradeId | pointUpgradeDefinitions（存档键 upgradeId 字面量未动） |
 | Tb | bonusIndex | pointUpgradeDefinitions（跨文件 switch 索引 1-13 数值域未动） |
 
+## 第七批取证已返回（2026-09-26，待落地）
+
+完整报告见会话记录；核心内容摘要：
+
+1. **StatisticsRecorder 方法簇（30 个方法，全 HIGH）**：is→recordTurn、es→recordRoomCleared、Ur→recordDoorOpened、→recordLevelCleared、Vr→recordDungeonCleared、Sr→recordCastleConquered、Xr→recordFarmPurchased、Yr→recordGoldFromItems、dp→recordGoldFromMonsters、Wr→recordFarmHarvest、cp→recordDirectKill、gp→recordScrollKill、→recordMinionKill、bs→recordMinionSummoned、Tr→recordCharacterStunned、as→recordMeleeAttack、ds→recordRangedAttack、gs→recordSpellCast、cs→recordPotionUsed、fs→recordScrollUsed、fp→recordPlayedMilliseconds、Zr→recordItemsSold、ep→recordItemFound（一写五键）、hs/js/Rr→recordTreasure/WeaponRack/BookcaseLooted、jx→resetRunStatistics、dt/wx→setFarmedKills/setMinionKills。**方法名不进存档**（存档键经 entities.js:219-251 已语义化）；隐藏消费全集：statistics.js:131-234 分发表 + achievements.js:63-113 两 switch + views/information.js:163+ 直接读计数器字段。
+2. **Party 导航簇（全 HIGH，运行时）**：Wf→targetCastle（**纠错：不是 targetDungeon**——Wb 才是地牢目标，按旧线索落地会立即崩溃）、ge→activeCastle、Wb→targetDungeon、ed/rB→targetRoom/setTargetRoom、Cc→destinationRoom、Ue/hq→targetTreasureChest、Lf→targetShop、et/Bc→setTargetDoor/targetDoor。
+3. **视图生命周期簇（全 HIGH，UI）**：so→createDomElements（ScrollBar/PotionBar）、Vw→cachedVisible（View 基类）、qi→createRowCells、pf→createDomElements（表/画布视图）、Ri→createHeaderRow、Dp→tableElement、Tj→rowViews。
+4. **瓦片/世界成员（全 HIGH）**：VD/WD→pixelColumn/pixelRow、TD/UD→tileColumn/tileRow、Pq→tileEffect（+li→remainingEffectDamage）、Cj→hasSpawned（VisualEffect）、jo→tileGrid（WorldBlock）、rc/sc→tileColumnCount/tileRowCount（多所有者）、ln/Ln→pathDistanceToDestination/terrainMoveCost（WorldTile 寻路缓存）。
+5. **两个关键纠错**：① MELEE_ACTION_TYPE=3 是误名（as 在 actionType===2 触发记为 melee——存档键语义以存档为准，落地 as/ds 改名时勿顺手纠正，常量改名另列任务）；② Wf≠targetDungeon（按旧线索落地会立即崩溃）。
+6. **红线**：计数字段改名须同步 entities.js:219-251（写）/253+（读）30 键；LifetimeStatistics 原型链依赖 RunStatistics（statistics.js:127），改方法名时分发表与两 switch 是隐藏消费全集；views/information.js:163+ 直接读 run vs lifetime 计数器字段。
+
 - 经验教训（已入 facts#20 扩展）：**重命名跨文件字段时，"读点全集"必须包含工厂函数/工具函数内按多态入参的访问**；Babel 静态 grep 对 `a.Da`（a 的类型随调用方变化）天然失真，应配运行时类型断言。
 
 ## U2 — 外部自动化脚本（c2c.user.js）DOM 契约未实测
