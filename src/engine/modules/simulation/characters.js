@@ -1,4 +1,3 @@
-// @ts-nocheck -- M10 渐进类型化：JSDoc 覆盖后摘除（见 docs/WORKSTATE.md）
 /** 角色创建、成长、旅行与坐标投影。
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
@@ -54,17 +53,17 @@ export function spawnMinion(a, b, c) {
   var d = new Character(a.defaultName, 1, a.characterClass, a, null),
     f = d.stats;
   d.sprite = game.monsterSprites.getSprite(a.spriteName);
-  var g = createBehaviorQueue(a.createBehaviors());
-  d.behaviors = g;
-  g = d.position;
-  g.room = b.position.room;
-  g.cd = b.position.cd;
-  setVector(g.levelPosition, c.x, c.y);
+  var behaviorQueue = createBehaviorQueue(a.createBehaviors());
+  d.behaviors = behaviorQueue;
+  var position = d.position;
+  position.room = b.position.room;
+  position.cd = b.position.cd;
+  setVector(position.levelPosition, c.x, c.y);
   var h = b.position.worldPosition;
   c = h.x + floorNumber(-10 + 20 * Math.random());
   h = h.y + floorNumber(-10 + 20 * Math.random());
-  setVector(g.worldPosition, c, h);
-  g = b.stats.characterLevel;
+  setVector(position.worldPosition, c, h);
+  var level = b.stats.characterLevel;
   d.summoner = b;
   if (!b.summonedMinions) {
     b.summonedMinions = [];
@@ -75,9 +74,9 @@ export function spawnMinion(a, b, c) {
   }
   d.summonedAtTurn = game.state.turnNumber;
   d.lifetimeTurns = a.Oi;
-  initializeCharacterSkills(d, g);
-  f.characterLevel = g;
-  applyLevelStats(f, g, a.statMultipliers);
+  initializeCharacterSkills(d, level);
+  f.characterLevel = level;
+  applyLevelStats(f, level, a.statMultipliers);
   if (a.jl) {
     for (b = 0; b < a.jl.length; b++) {
       learnSpell(d, new Spell(a.jl[b]));
@@ -92,8 +91,8 @@ export function spawnMinion(a, b, c) {
   applySkillTreeBonuses(d, b.skillTree4);
   if (a) {
     for (b = 0; b < a.length; b++) {
-      f = a[b];
-      applyStatBonus(d, f.statType, f.statBonusValue);
+      const bonus = a[b];
+      applyStatBonus(d, bonus.statType, bonus.statBonusValue);
     }
   }
   game.minions.Tt(d);
@@ -104,10 +103,10 @@ export function createCastleGuardian(a, b, c) {
   var d = new MonsterType(a.className, a.spriteName, b),
     f = new Character(a.defaultName, 3, a.characterClass, a, null),
     g = f.stats;
-  f.gq(d);
+  /** @type {{gq: (monster: MonsterType) => void}} */ (/** @type {unknown} */ (f)).gq(d);
   f.sprite = d.ll;
-  d = createBehaviorQueue(a.createBehaviors());
-  f.behaviors = d;
+  const behaviorQueue = createBehaviorQueue(a.createBehaviors());
+  f.behaviors = behaviorQueue;
   initializeCharacterSkills(f, b);
   g.characterLevel = b;
   applyLevelStats(g, b, a.statMultipliers);
@@ -120,11 +119,11 @@ export function createCastleGuardian(a, b, c) {
   b.room = c;
   b.cd = null;
   var h = roomLeftPixels(c) + game.tileSize,
-    g = roomTopPixels(c) + game.tileSize,
-    d = roomBottomPixels(c) - game.tileSize;
+    top = roomTopPixels(c) + game.tileSize,
+    bottom = roomBottomPixels(c) - game.tileSize;
   c = h + randomInt(roomRightPixels(c) - game.tileSize - h);
-  g += randomInt(d - g);
-  setVector(b.levelPosition, c, g);
+  top += randomInt(bottom - top);
+  setVector(b.levelPosition, c, top);
   applyBonusList(f, a.Nr);
   return f;
 }
@@ -247,11 +246,11 @@ export function tickCharacterTurn(a, b, c) {
 export function updateCharacterFrames(a, b, c) {
   var d = game.halfTileSize,
     f = Math.max(b, a - d),
-    d = Math.min(a + d, c);
-  if (f >= d) {
+    upper = Math.min(a + d, c);
+  if (f >= upper) {
     return a < b ? b : a > c ? c : a;
   }
-  a = f + randomInt(d - f);
+  a = f + randomInt(upper - f);
   return a < b ? b : a > c ? c : a;
 }
 export function initializeSimulationCharacters() {
@@ -297,26 +296,26 @@ export function initializeSimulationCharacters() {
         l = roomTopPixels(f) + game.tileSize,
         n = roomBottomPixels(f) - game.tileSize;
       if (randomInt(100) <= globalUpgradeDefinitions.Lr.currentValue) {
-        var p = rollGoldDrop();
-        if (0 < p) {
-          var s = new GoldDrop(p, updateCharacterFrames(c.getLevelPositionX(), g, h), updateCharacterFrames(c.getLevelPositionY(), l, n), f);
+        var goldAmount = rollGoldDrop();
+        if (0 < goldAmount) {
+          var s = new GoldDrop(goldAmount, updateCharacterFrames(c.getLevelPositionX(), g, h), updateCharacterFrames(c.getLevelPositionY(), l, n), f);
           game.goldDrops.pe.push(s);
           if (doubleGoldDropsModifier.currentValue) {
-            p = new GoldDrop(p, updateCharacterFrames(c.getLevelPositionX(), g, h), updateCharacterFrames(c.getLevelPositionY(), l, n), f);
-            game.goldDrops.pe.push(p);
+            const extraGoldDrop = new GoldDrop(goldAmount, updateCharacterFrames(c.getLevelPositionX(), g, h), updateCharacterFrames(c.getLevelPositionY(), l, n), f);
+            game.goldDrops.pe.push(extraGoldDrop);
           }
         }
       }
       if (randomInt(100) <= globalUpgradeDefinitions.$s.currentValue) {
-        p = game.scrolls.Pl;
-        p = p[randomInt(p.length)];
-        p = new ScrollDrop(p, updateCharacterFrames(c.getLevelPositionX(), g, h), updateCharacterFrames(c.getLevelPositionY(), l, n), f);
-        game.scrollDrops.kf.push(p);
+        const scrolls = game.scrolls.Pl;
+        const scroll = scrolls[randomInt(scrolls.length)];
+        const scrollDrop = new ScrollDrop(scroll, updateCharacterFrames(c.getLevelPositionX(), g, h), updateCharacterFrames(c.getLevelPositionY(), l, n), f);
+        game.scrollDrops.kf.push(scrollDrop);
       }
       if (100 * Math.random() <= globalUpgradeDefinitions.Ns.currentValue) {
-        p = new Potion(potionDefinitions[randomInt(potionDefinitions.length)]);
-        p = new PotionDrop(p, updateCharacterFrames(c.getLevelPositionX(), g, h), updateCharacterFrames(c.getLevelPositionY(), l, n), f);
-        game.potionDrops.Hf.push(p);
+        const potion = new Potion(potionDefinitions[randomInt(potionDefinitions.length)]);
+        const potionDrop = new PotionDrop(potion, updateCharacterFrames(c.getLevelPositionX(), g, h), updateCharacterFrames(c.getLevelPositionY(), l, n), f);
+        game.potionDrops.Hf.push(potionDrop);
       }
       if (randomInt(100) <= globalUpgradeDefinitions.itemDropChance.currentValue || guaranteedItemDropsModifier.currentValue) {
         spawnItemDrop(game.itemDrops, updateCharacterFrames(c.getLevelPositionX(), g, h), updateCharacterFrames(c.getLevelPositionY(), l, n), f, d);
