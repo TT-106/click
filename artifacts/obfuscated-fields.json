@@ -1,28 +1,5 @@
 [
   {
-    "name": "Nd",
-    "reads": 12,
-    "writes": 6,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\upgrade-details.js:158",
-        "code": "this.Nd"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\upgrade-details.js:174",
-        "code": "this.Nd"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\upgrade-details.js:181",
-        "code": "this.Nd"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\upgrade-details.js"
-    ]
-  },
-  {
     "name": "kf",
     "reads": 14,
     "writes": 1,

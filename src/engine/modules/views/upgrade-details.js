@@ -155,7 +155,7 @@ export function MonsterLevelDetails(a, b) {
 export function DungeonPurchaseDetails(a, b) {
   this.upgrade = a;
   this.contentContainer = b;
-  this.ui = this.Vg = this.titleElement = this.Nd = this.bf = this.Cq = null;
+  this.ui = this.Vg = this.titleElement = this.previewImageElement = this.bf = this.Cq = null;
   this.shown = false;
   this.cachedCostValue = -1;
 }
@@ -171,14 +171,14 @@ export function ScrollUpgradeDetails(a, b) {
 export function CastlePurchaseDetails(a, b) {
   this.upgrade = a;
   this.contentContainer = b;
-  this.ui = this.Vg = this.titleElement = this.Nd = this.Cm = this.Uz = null;
+  this.ui = this.Vg = this.titleElement = this.previewImageElement = this.Cm = this.Uz = null;
   this.shown = false;
   this.Gk = -1;
 }
 export function FarmUpgradeDetails(a, b) {
   this.upgrade = a;
   this.contentContainer = b;
-  this.ui = this.Vg = this.titleElement = this.Nd = this.Hm = this.Tz = null;
+  this.ui = this.Vg = this.titleElement = this.previewImageElement = this.Hm = this.Tz = null;
   this.shown = false;
   this.Dk = -1;
 }
@@ -867,7 +867,7 @@ export function initializeViewsUpgradeDetails() {
     }
     if (this.ui !== b && (this.ui = b)) {
       a = game.terrainSprites.getSprite(b.Fo);
-      this.Nd.style.background = "url('spritesheet/terrain.png') -" + a.sourceX + "px -" + a.sourceY + "px";
+      this.previewImageElement.style.background = "url('spritesheet/terrain.png') -" + a.sourceX + "px -" + a.sourceY + "px";
       this.Vg.innerHTML = b.dungeonName;
     }
   };
@@ -881,10 +881,10 @@ export function initializeViewsUpgradeDetails() {
     c.style.width = "50px";
     c.style.height = "50px";
     c.style.textAlign = "center";
-    this.Nd = createElement("img", c, null, null);
-    this.Nd.src = "images/Transparent.gif";
-    this.Nd.style.width = "50px";
-    this.Nd.style.height = "50px";
+    this.previewImageElement = createElement("img", c, null, null);
+    this.previewImageElement.src = "images/Transparent.gif";
+    this.previewImageElement.style.width = "50px";
+    this.previewImageElement.style.height = "50px";
     c = a.insertCell(1);
     c.style.textAlign = "left";
     this.titleElement = createElement("span", c, null, null);
@@ -1019,12 +1019,12 @@ export function initializeViewsUpgradeDetails() {
     c.style.width = "50px";
     c.style.height = "50px";
     c.style.textAlign = "center";
-    this.Nd = createElement("img", c, null, null);
-    this.Nd.src = "images/Transparent.gif";
-    this.Nd.style.width = "50px";
-    this.Nd.style.height = "50px";
+    this.previewImageElement = createElement("img", c, null, null);
+    this.previewImageElement.src = "images/Transparent.gif";
+    this.previewImageElement.style.width = "50px";
+    this.previewImageElement.style.height = "50px";
     c = game.terrainSprites.getSprite("L2_DungeonE.PNG");
-    this.Nd.style.background = "url('spritesheet/terrain.png') -" + c.sourceX + "px -" + c.sourceY + "px";
+    this.previewImageElement.style.background = "url('spritesheet/terrain.png') -" + c.sourceX + "px -" + c.sourceY + "px";
     c = a.insertCell(1);
     c.style.textAlign = "left";
     c.style.width = "150px";
@@ -1083,12 +1083,12 @@ export function initializeViewsUpgradeDetails() {
     c.style.width = "50px";
     c.style.height = "50px";
     c.style.textAlign = "center";
-    this.Nd = createElement("img", c, null, null);
-    this.Nd.src = "images/Transparent.gif";
-    this.Nd.style.width = "50px";
-    this.Nd.style.height = "50px";
+    this.previewImageElement = createElement("img", c, null, null);
+    this.previewImageElement.src = "images/Transparent.gif";
+    this.previewImageElement.style.width = "50px";
+    this.previewImageElement.style.height = "50px";
     c = game.terrainSprites.getSprite("L2_Terrain077.PNG");
-    this.Nd.style.background = "url('spritesheet/terrain.png') -" + c.sourceX + "px -" + c.sourceY + "px";
+    this.previewImageElement.style.background = "url('spritesheet/terrain.png') -" + c.sourceX + "px -" + c.sourceY + "px";
     c = a.insertCell(1);
     c.style.textAlign = "left";
     c.style.width = "150px";
