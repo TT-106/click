@@ -270,9 +270,9 @@ export function positionStairs(a, b, c) {
 }
 export function DungeonHallway(a, b, c, d) {
   this.hallwayId = 0;
-  this.Bl = a;
+  this.roomA = a;
   this.doorA = b;
-  this.Cl = c;
+  this.roomB = c;
   this.doorB = d;
   this.pathTiles = [];
   this.tileGrid = this.theme = null;

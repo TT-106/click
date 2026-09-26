@@ -764,29 +764,6 @@
     ]
   },
   {
-    "name": "Ui",
-    "reads": 9,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\world\\pathfinding.js:74",
-        "code": "this.Ui"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\pathfinding.js:96",
-        "code": "a.open.Ui"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\pathfinding.js:98",
-        "code": "a.open.Ui"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\world\\pathfinding.js"
-    ]
-  },
-  {
     "name": "hk",
     "reads": 5,
     "writes": 4,
@@ -3077,54 +3054,6 @@
     ]
   },
   {
-    "name": "Cl",
-    "reads": 5,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\world\\pathfinding.js:14",
-        "code": "this.Cl"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\pathfinding.js:43",
-        "code": "a.Cl"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\pathfinding.js:43",
-        "code": "a.Cl"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\world\\pathfinding.js",
-      "src\\engine\\modules\\world\\rooms.js"
-    ]
-  },
-  {
-    "name": "Bl",
-    "reads": 5,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\world\\pathfinding.js:14",
-        "code": "this.Bl"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\pathfinding.js:43",
-        "code": "a.Bl"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\pathfinding.js:43",
-        "code": "a.Bl"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\world\\pathfinding.js",
-      "src\\engine\\modules\\world\\rooms.js"
-    ]
-  },
-  {
     "name": "Fl",
     "reads": 5,
     "writes": 3,
@@ -3140,52 +3069,6 @@
       {
         "loc": "src\\engine\\modules\\world\\pathfinding.js:78",
         "code": "this.Fl"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\world\\pathfinding.js"
-    ]
-  },
-  {
-    "name": "xk",
-    "reads": 4,
-    "writes": 4,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\world\\pathfinding.js:27",
-        "code": "f.xk"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\pathfinding.js:54",
-        "code": "this.xk"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\pathfinding.js:134",
-        "code": "g.xk"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\world\\pathfinding.js"
-    ]
-  },
-  {
-    "name": "rl",
-    "reads": 5,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\world\\pathfinding.js:29",
-        "code": "f.rl"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\pathfinding.js:56",
-        "code": "this.rl"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\pathfinding.js:64",
-        "code": "a.rl"
       }
     ],
     "fileCount": 1,
@@ -7302,52 +7185,6 @@
     ]
   },
   {
-    "name": "Ip",
-    "reads": 5,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\world\\pathfinding.js:12",
-        "code": "this.Ip"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\pathfinding.js:20",
-        "code": "a.Ip"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\pathfinding.js:37",
-        "code": "a.Ip"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\world\\pathfinding.js"
-    ]
-  },
-  {
-    "name": "Ko",
-    "reads": 3,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\world\\pathfinding.js:28",
-        "code": "f.Ko"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\pathfinding.js:55",
-        "code": "this.Ko"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\pathfinding.js:140",
-        "code": "l.Ko"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\world\\pathfinding.js"
-    ]
-  },
-  {
     "name": "wp",
     "reads": 4,
     "writes": 2,
@@ -9805,52 +9642,6 @@
       {
         "loc": "src\\engine\\modules\\world\\pathfinding.js:106",
         "code": "g.ss"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\world\\pathfinding.js"
-    ]
-  },
-  {
-    "name": "It",
-    "reads": 1,
-    "writes": 4,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\world\\pathfinding.js:30",
-        "code": "f.It"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\pathfinding.js:57",
-        "code": "this.It"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\pathfinding.js:98",
-        "code": "g.It"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\world\\pathfinding.js"
-    ]
-  },
-  {
-    "name": "Hs",
-    "reads": 4,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\world\\pathfinding.js:33",
-        "code": "f.Hs"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\pathfinding.js:60",
-        "code": "this.Hs"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\pathfinding.js:112",
-        "code": "h.Hs"
       }
     ],
     "fileCount": 1,
@@ -15552,52 +15343,6 @@
     "fileCount": 1,
     "files": [
       "src\\engine\\modules\\world\\generation.js"
-    ]
-  },
-  {
-    "name": "Sw",
-    "reads": 3,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\world\\pathfinding.js:13",
-        "code": "this.Sw"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\pathfinding.js:18",
-        "code": "a.Sw"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\pathfinding.js:38",
-        "code": "a.Sw"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\world\\pathfinding.js"
-    ]
-  },
-  {
-    "name": "nx",
-    "reads": 3,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\world\\pathfinding.js:23",
-        "code": "d.nx"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\pathfinding.js:24",
-        "code": "d.nx"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\pathfinding.js:71",
-        "code": "this.nx"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\world\\pathfinding.js"
     ]
   },
   {
