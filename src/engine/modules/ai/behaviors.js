@@ -230,7 +230,7 @@ export function initializeAiBehaviors() {
     b = game.state.party;
     c = b.targetShop;
     var d = b.activeCastle,
-      f = b.Wb;
+      f = b.targetDungeon;
     if (c || f || d) {
       if (a === game.state.leader) {
         if (c) {

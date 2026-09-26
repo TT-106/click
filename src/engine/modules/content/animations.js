@@ -417,126 +417,126 @@ export function createAnimationCatalog() {
     firstFrameRow: 0,
     lastRowFrameCount: 7,
     lastFrameRow: 0,
-    zc: true
+    isDirectional: true
   }, {
     animationName: "Green Arrow",
     firstFrameColumn: 0,
     firstFrameRow: 1,
     lastRowFrameCount: 7,
     lastFrameRow: 1,
-    zc: true
+    isDirectional: true
   }, {
     animationName: "Pink Arrow",
     firstFrameColumn: 0,
     firstFrameRow: 2,
     lastRowFrameCount: 7,
     lastFrameRow: 2,
-    zc: true
+    isDirectional: true
   }, {
     animationName: "Pink Lightning",
     firstFrameColumn: 0,
     firstFrameRow: 3,
     lastRowFrameCount: 7,
     lastFrameRow: 3,
-    zc: true
+    isDirectional: true
   }, {
     animationName: "Green Projectile",
     firstFrameColumn: 0,
     firstFrameRow: 4,
     lastRowFrameCount: 7,
     lastFrameRow: 4,
-    zc: true
+    isDirectional: true
   }, {
     animationName: "Small Green Projectiles",
     firstFrameColumn: 0,
     firstFrameRow: 5,
     lastRowFrameCount: 7,
     lastFrameRow: 5,
-    zc: true
+    isDirectional: true
   }, {
     animationName: "Fire Projectile",
     firstFrameColumn: 0,
     firstFrameRow: 6,
     lastRowFrameCount: 7,
     lastFrameRow: 6,
-    zc: true
+    isDirectional: true
   }, {
     animationName: "Fire Arrow",
     firstFrameColumn: 0,
     firstFrameRow: 7,
     lastRowFrameCount: 7,
     lastFrameRow: 7,
-    zc: true
+    isDirectional: true
   }, {
     animationName: "Ice Projectile",
     firstFrameColumn: 0,
     firstFrameRow: 8,
     lastRowFrameCount: 7,
     lastFrameRow: 8,
-    zc: true
+    isDirectional: true
   }, {
     animationName: "Ice Arrow",
     firstFrameColumn: 0,
     firstFrameRow: 9,
     lastRowFrameCount: 7,
     lastFrameRow: 9,
-    zc: true
+    isDirectional: true
   }, {
     animationName: "Lightning",
     firstFrameColumn: 0,
     firstFrameRow: 10,
     lastRowFrameCount: 7,
     lastFrameRow: 10,
-    zc: true
+    isDirectional: true
   }, {
     animationName: "Lightning Arrow",
     firstFrameColumn: 0,
     firstFrameRow: 11,
     lastRowFrameCount: 7,
     lastFrameRow: 11,
-    zc: true
+    isDirectional: true
   }, {
     animationName: "Grey Bullet",
     firstFrameColumn: 0,
     firstFrameRow: 12,
     lastRowFrameCount: 7,
     lastFrameRow: 12,
-    zc: true
+    isDirectional: true
   }, {
     animationName: "Yellow Bullet",
     firstFrameColumn: 0,
     firstFrameRow: 13,
     lastRowFrameCount: 7,
     lastFrameRow: 13,
-    zc: true
+    isDirectional: true
   }, {
     animationName: "Ninja Star",
     firstFrameColumn: 0,
     firstFrameRow: 14,
     lastRowFrameCount: 7,
     lastFrameRow: 14,
-    zc: true
+    isDirectional: true
   }, {
     animationName: "Pink Star Projectile",
     firstFrameColumn: 0,
     firstFrameRow: 15,
     lastRowFrameCount: 7,
     lastFrameRow: 15,
-    zc: true
+    isDirectional: true
   }, {
     animationName: "Web",
     firstFrameColumn: 0,
     firstFrameRow: 16,
     lastRowFrameCount: 7,
     lastFrameRow: 16,
-    zc: true
+    isDirectional: true
   }, {
     animationName: "Pink Ball Projectile",
     firstFrameColumn: 0,
     firstFrameRow: 17,
     lastRowFrameCount: 7,
     lastFrameRow: 17,
-    zc: true
+    isDirectional: true
   }], 7)]);
 }
 export function initializeContentAnimations() {}

@@ -156,6 +156,12 @@ Xf/Qf/Rf/Zf/Cf/Ef → damageMultiplier/armorMultiplier/attackRatingMultiplier/de
 
 - 剩余约 1,300 处；第四轮取证已覆盖 fa/ea/wa/sa/ua/xa/$/La/Ia/na/ma/la 的证据（见下方"已取证待落地"），Y/Z/aa 等其余字母待新取证。
 
+## U6 — `Cb`：同字母双主，需按接收者线级拆分（2026-09-26 取证，未落地）
+
+- 取证结论（HIGH）：`Cb` 是**方法**而非字段，且有两个互不相同的所有者——`characters/character.js:1237` 的 `Character.prototype.Cb`（写入已语义化的 `this.combatTarget`）与 `combat/actions.js:713` 的 `CombatAction.prototype.Cb`（写入 `this.targetCharacter`）。28 处成员命中的归属：`ai/behaviors.js` 5（Character 接收者）、`ai/targeting.js` 4（Character，紧邻 `var c = b.combatTarget;` 后 `b.Cb(null)`）、`combat/scrolls.js` 1（Character）、`simulation/tick.js` 2（CombatAction，两处均在 `new CombatAction()` 之后）、`combat/actions.js` 6、`characters/character.js` 10。
+- 阻塞点：`characters/character.js` 同时含该类的定义与他类的 8 处调用点，因此逐文件的 `rename-field.mjs` 无法把它拆成 `setCombatTarget` / `setTargetCharacter` 两个名字；要么全仓库统一叫 `setTarget`（牺牲"字段已按所有者命名"的一致性），要么做线级编辑。
+- 处置建议：按 semantic-map"第八批方法族续：按接收者拆分"的既有先例做线级编辑，拆完再进 `docs/symbol-map.json` 的 fields 段（该段是全局"原字母 → 语义名"表，双主字母在其完成前不得写入）。
+
 ## 已取证待落地
 
 （第四轮 B 组九项 + 第五轮七项均已落地；剩余长尾见 artifacts/obfuscated-fields.json 高频清单——aa 之外的前列：$/Ea/Ga/Ma/Na/Wa/Qa 均已完成后，下一批为 bb/cc/dd 等字母，需新取证。）

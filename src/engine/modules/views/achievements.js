@@ -45,7 +45,7 @@ export function mountPointBreakdown(a) {
       h = g.insertCell(0);
     h.style.textAlign = "right";
     h.style.width = "120px";
-    h.innerHTML = pointEventsById[f].Gc;
+    h.innerHTML = pointEventsById[f].shortEventLabel;
     h = g.insertCell(1);
     h.style.textAlign = "right";
     h.style.width = "60px";

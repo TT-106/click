@@ -62,6 +62,13 @@
 - `COMPATIBILITY_REPORT.md` 第 2/5/7 节仍写着 12 场景、c2c "UNRESOLVED" 与旧性能样本，与 30 场景矩阵、`unresolved.md` U2 已关闭、最新 perf 实测相互矛盾——属于目标规范 §3.1 的"文档与代码矛盾"项，需与后续代码批次一起收口。
 - 下一批取证目标（按 `artifacts/obfuscated-fields.json` 频次）：`Cb`(r25/w2, 6 文件)、`Wb`(r16/w9)、`Bc`、`oc`、`zc`、`Ac`、`Ec`、`yc`/`Fc`/`Dc`/`Gc`（各 21 写，成组的数据表键）；单文件成组键优先，风险最低。
 
+## 当前续跑状态（第十轮，2026-09-26 下午）
+
+- 累计落地 12 个混淆字母清零：Potion 三元组（`uc/tc/vc`）＋升级行四字段（`Ic/Hc/qc/xc` → `achievement/purchased/canPurchaseNow/castle`）＋点位事件四元组（`Dc/yc/Fc/Gc` → `basePointReward/achievementPointBonus/fullEventLabel/shortEventLabel`）＋内容表三组（`Ec`→`opened`、`zc`→`isDirectional`、`Ac`→`doorSprites`）＋`Wb`→`targetDungeon`。混淆属性清单 1,238 → 1,223，`symbol-map.json` fields 202 → 217。
+- 每批均为"取命中数 → `scripts/rename-field.mjs` 守卫替换 → check/typecheck/parity/30 场景/e2e 全绿 → 一 commit"。三次真实拦截均由工具或 tsc 抓到：bash 吞 `$1` 抹平缩进、`\s*` 在 CRLF 上并行、M10 的 `@typedef` 窄签名漏改（工具已加注释行规则）。
+- 新增未决项 **U6**：`Cb` 是双主方法（`Character.prototype.Cb` 写 `combatTarget`，`CombatAction.prototype.Cb` 写 `targetCharacter`，定义与调用点同处 `characters/character.js`），逐文件工具无法拆分，需按接收者做线级编辑；拆完前不得写入全局 fields 段。
+- 下一步：继续按排行榜取组（`Bc`、`oc`、`Cc`、`Nc`、`Sc`、`Jc`、`Vc/Uc/Rc/Ic/Oc/Qc` 与 `views/*` 表行字段），并把 `Cb` 线级拆分排在一次纯方法批次里。
+
 ## 1. 项目概况
 
 - 原始遗产：`archive/original/c2.js`（46,980 行混淆单体，sha256 见 `archive/migration/recovery-manifest.json`）。

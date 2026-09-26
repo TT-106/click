@@ -221,11 +221,11 @@ export function initializeRuntimeGame() {
         Mf: 1,
         jh: false,
         xh: {
-          Ec: game.terrainSprites.getSprite("L2_Chest02.PNG"),
+          opened: game.terrainSprites.getSprite("L2_Chest02.PNG"),
           closed: game.terrainSprites.getSprite("L2_Chest01.PNG")
         },
         hh: {
-          Ec: game.terrainSprites.getSprite("L2_Chest04.PNG"),
+          opened: game.terrainSprites.getSprite("L2_Chest04.PNG"),
           closed: game.terrainSprites.getSprite("L2_Chest03.PNG")
         }
       });
@@ -234,11 +234,11 @@ export function initializeRuntimeGame() {
         Mf: 1,
         jh: false,
         xh: {
-          Ec: game.terrainSprites.getSprite("L2_Chest06.PNG"),
+          opened: game.terrainSprites.getSprite("L2_Chest06.PNG"),
           closed: game.terrainSprites.getSprite("L2_Chest05.PNG")
         },
         hh: {
-          Ec: game.terrainSprites.getSprite("L2_Chest08.PNG"),
+          opened: game.terrainSprites.getSprite("L2_Chest08.PNG"),
           closed: game.terrainSprites.getSprite("L2_Chest07.PNG")
         }
       });
@@ -247,11 +247,11 @@ export function initializeRuntimeGame() {
         Mf: 1,
         jh: false,
         xh: {
-          Ec: game.terrainSprites.getSprite("L2_Chest10.PNG"),
+          opened: game.terrainSprites.getSprite("L2_Chest10.PNG"),
           closed: game.terrainSprites.getSprite("L2_Chest09.PNG")
         },
         hh: {
-          Ec: game.terrainSprites.getSprite("L2_Chest12.PNG"),
+          opened: game.terrainSprites.getSprite("L2_Chest12.PNG"),
           closed: game.terrainSprites.getSprite("L2_Chest11.PNG")
         }
       });
@@ -260,11 +260,11 @@ export function initializeRuntimeGame() {
         Mf: 1,
         jh: false,
         xh: {
-          Ec: game.terrainSprites.getSprite("L2_Chest14.PNG"),
+          opened: game.terrainSprites.getSprite("L2_Chest14.PNG"),
           closed: game.terrainSprites.getSprite("L2_Chest13.PNG")
         },
         hh: {
-          Ec: game.terrainSprites.getSprite("L2_Chest16.PNG"),
+          opened: game.terrainSprites.getSprite("L2_Chest16.PNG"),
           closed: game.terrainSprites.getSprite("L2_Chest15.PNG")
         }
       });
@@ -273,11 +273,11 @@ export function initializeRuntimeGame() {
         Mf: 2,
         jh: true,
         xh: {
-          Ec: game.terrainSprites.getSprite("L3_Wall_WeapRack1_EW.PNG"),
+          opened: game.terrainSprites.getSprite("L3_Wall_WeapRack1_EW.PNG"),
           closed: game.terrainSprites.getSprite("L3_Wall_WeapRack2_EW.PNG")
         },
         hh: {
-          Ec: game.terrainSprites.getSprite("L3_Wall_WeapRack1_NS.PNG"),
+          opened: game.terrainSprites.getSprite("L3_Wall_WeapRack1_NS.PNG"),
           closed: game.terrainSprites.getSprite("L3_Wall_WeapRack2_NS.PNG")
         }
       });
@@ -286,11 +286,11 @@ export function initializeRuntimeGame() {
         Mf: 2,
         jh: true,
         xh: {
-          Ec: game.terrainSprites.getSprite("L3_Wall_WeapRack1_EW.PNG"),
+          opened: game.terrainSprites.getSprite("L3_Wall_WeapRack1_EW.PNG"),
           closed: game.terrainSprites.getSprite("L3_Wall_WeapRack3_EW.PNG")
         },
         hh: {
-          Ec: game.terrainSprites.getSprite("L3_Wall_WeapRack1_NS.PNG"),
+          opened: game.terrainSprites.getSprite("L3_Wall_WeapRack1_NS.PNG"),
           closed: game.terrainSprites.getSprite("L3_Wall_WeapRack3_NS.PNG")
         }
       });
@@ -299,11 +299,11 @@ export function initializeRuntimeGame() {
         Mf: 2,
         jh: true,
         xh: {
-          Ec: game.terrainSprites.getSprite("L3_Wall_WeapRack1_EW.PNG"),
+          opened: game.terrainSprites.getSprite("L3_Wall_WeapRack1_EW.PNG"),
           closed: game.terrainSprites.getSprite("L3_Wall_WeapRack4_EW.PNG")
         },
         hh: {
-          Ec: game.terrainSprites.getSprite("L3_Wall_WeapRack1_NS.PNG"),
+          opened: game.terrainSprites.getSprite("L3_Wall_WeapRack1_NS.PNG"),
           closed: game.terrainSprites.getSprite("L3_Wall_WeapRack4_NS.PNG")
         }
       });
@@ -312,11 +312,11 @@ export function initializeRuntimeGame() {
         Mf: 2,
         jh: true,
         xh: {
-          Ec: game.terrainSprites.getSprite("L3_Wall_WeapRack5_EW.PNG"),
+          opened: game.terrainSprites.getSprite("L3_Wall_WeapRack5_EW.PNG"),
           closed: game.terrainSprites.getSprite("L3_Wall_WeapRack6_EW.PNG")
         },
         hh: {
-          Ec: game.terrainSprites.getSprite("L3_Wall_WeapRack5_NS.PNG"),
+          opened: game.terrainSprites.getSprite("L3_Wall_WeapRack5_NS.PNG"),
           closed: game.terrainSprites.getSprite("L3_Wall_WeapRack6_NS.PNG")
         }
       });
@@ -325,11 +325,11 @@ export function initializeRuntimeGame() {
         Mf: 3,
         jh: true,
         xh: {
-          Ec: game.terrainSprites.getSprite("L3_WallDeco04.PNG"),
+          opened: game.terrainSprites.getSprite("L3_WallDeco04.PNG"),
           closed: game.terrainSprites.getSprite("L3_WallDeco04.PNG")
         },
         hh: {
-          Ec: game.terrainSprites.getSprite("L3_WallDeco03.PNG"),
+          opened: game.terrainSprites.getSprite("L3_WallDeco03.PNG"),
           closed: game.terrainSprites.getSprite("L3_WallDeco03.PNG")
         }
       });
@@ -338,11 +338,11 @@ export function initializeRuntimeGame() {
         Mf: 3,
         jh: true,
         xh: {
-          Ec: game.terrainSprites.getSprite("L3_WallDeco14.PNG"),
+          opened: game.terrainSprites.getSprite("L3_WallDeco14.PNG"),
           closed: game.terrainSprites.getSprite("L3_WallDeco14.PNG")
         },
         hh: {
-          Ec: game.terrainSprites.getSprite("L3_WallDeco13.PNG"),
+          opened: game.terrainSprites.getSprite("L3_WallDeco13.PNG"),
           closed: game.terrainSprites.getSprite("L3_WallDeco13.PNG")
         }
       });
@@ -420,7 +420,7 @@ export function initializeRuntimeGame() {
       game.state.turnNumber = 0;
       resetEncounter();
       var a = game.state.party;
-      a.Wb = null;
+      a.targetDungeon = null;
       a.activeCastle = null;
       a.targetShop = null;
       a.targetCastle = null;

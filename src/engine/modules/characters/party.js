@@ -16,7 +16,7 @@ import { saveProgress } from "../persistence/game-save.js";
 export function PartyState() {
   this.gold = this.experiencePoints = this.kills = 0;
   this.zs = this.xs = -1;
-  this.ed = this.Bc = this.Cc = this.targetTreasureChest = this.targetCastle = this.targetShop = this.activeCastle = this.Wb = null;
+  this.ed = this.Bc = this.Cc = this.targetTreasureChest = this.targetCastle = this.targetShop = this.activeCastle = this.targetDungeon = null;
   this.Ks = false;
   this.gn = null;
   this.Mp = false;
@@ -421,20 +421,20 @@ export function initializeCharactersParty() {
         }
       }
       if (this.targetShop || this.activeCastle) {
-        this.Wb = null;
+        this.targetDungeon = null;
         f = false;
       } else {
         c = false;
-        if (this.Wb) {
-          if (this.Wb.isFarm) {
-            this.Wb = null;
+        if (this.targetDungeon) {
+          if (this.targetDungeon.isFarm) {
+            this.targetDungeon = null;
           } else {
-            if (this.Wb.cleared) {
-              this.Wb = null;
+            if (this.targetDungeon.cleared) {
+              this.targetDungeon = null;
             }
           }
         }
-        if (!this.Wb) {
+        if (!this.targetDungeon) {
           d = game.state.leader.position.worldPosition;
           f = null;
           g = 0;
@@ -446,8 +446,8 @@ export function initializeCharactersParty() {
               g = l;
             }
           }
-          this.Wb = f;
-          if (!this.Wb) {
+          this.targetDungeon = f;
+          if (!this.targetDungeon) {
             f = game.dungeons;
             g = null;
             for (p = h = 0; p < f.dungeonList.length; p++) {
@@ -456,8 +456,8 @@ export function initializeCharactersParty() {
                 h = n;
               }
             }
-            this.Wb = g;
-            if (!this.Wb) {
+            this.targetDungeon = g;
+            if (!this.targetDungeon) {
               f = game.dungeons;
               g = null;
               for (p = h = 0; p < f.dungeonList.length; p++) {
@@ -466,8 +466,8 @@ export function initializeCharactersParty() {
                   h = n;
                 }
               }
-              this.Wb = g;
-              if (!this.Wb) {
+              this.targetDungeon = g;
+              if (!this.targetDungeon) {
                 f = game.dungeons;
                 g = null;
                 for (p = h = 0; p < f.dungeonList.length; p++) {
@@ -476,11 +476,11 @@ export function initializeCharactersParty() {
                     h = n;
                   }
                 }
-                this.Wb = g;
+                this.targetDungeon = g;
               }
             }
           }
-          if (this.Wb) {
+          if (this.targetDungeon) {
             c = true;
           }
         }
@@ -492,9 +492,9 @@ export function initializeCharactersParty() {
       } else if (this.activeCastle) {
         c = this.activeCastle.dm;
         d = this.activeCastle.em;
-      } else if (this.Wb) {
-        c = this.Wb.getWorldColumn();
-        d = this.Wb.getWorldRow();
+      } else if (this.targetDungeon) {
+        c = this.targetDungeon.getWorldColumn();
+        d = this.targetDungeon.getWorldRow();
       } else {
         return;
       }

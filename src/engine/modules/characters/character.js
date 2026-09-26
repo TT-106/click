@@ -1142,14 +1142,14 @@ export function updateCharacter(a, b) {
           a.targetTreasureChest = null;
         }
       } else if (9 === a.actionType) {
-        if (game.state.party.Wb) {
+        if (game.state.party.targetDungeon) {
           var Ef = game.state.party;
-          if (Ef.Wb && !Ef.Wb.isFarm) {
+          if (Ef.targetDungeon && !Ef.targetDungeon.isFarm) {
             Ef.Cc = null;
             Ef.Bc = null;
             Ef.ed = null;
             Ef.targetTreasureChest = null;
-            var ye = Ef.Wb;
+            var ye = Ef.targetDungeon;
             game.currentDungeon = ye;
             ye.currentLevelIndex = 0;
             generateDungeonLevel(ye.er(), ye.dungeonType, ye.Aj, true);

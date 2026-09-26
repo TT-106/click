@@ -15,13 +15,13 @@ export function Achievement(a) {
   this.requiredCount = a.requiredCount;
   this.characterClass = a.characterClass;
   this.pointEventTypeId = a.pointEventTypeId;
-  this.Vt = pointEventsById[a.pointEventTypeId].yc;
+  this.Vt = pointEventsById[a.pointEventTypeId].achievementPointBonus;
   this.isVictoryAchievement = !!a.isVictoryAchievement;
   this.Rt = this.Pt = null;
 }
 export function getAchievementRewardLabel(a) {
   if (!a.Pt) {
-    a.Pt = "+" + a.Vt + "成就点每" + pointEventsById[a.pointEventTypeId].Fc;
+    a.Pt = "+" + a.Vt + "成就点每" + pointEventsById[a.pointEventTypeId].fullEventLabel;
   }
   return a.Pt;
 }

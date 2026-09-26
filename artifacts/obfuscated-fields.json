@@ -28,32 +28,6 @@
     ]
   },
   {
-    "name": "Wb",
-    "reads": 16,
-    "writes": 9,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:233",
-        "code": "b.Wb"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:1145",
-        "code": "game.state.party.Wb"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:1147",
-        "code": "Ef.Wb"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js",
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\characters\\party.js",
-      "src\\engine\\modules\\runtime\\game.js"
-    ]
-  },
-  {
     "name": "rc",
     "reads": 20,
     "writes": 3,
@@ -153,174 +127,6 @@
       "src\\engine\\modules\\rendering\\sprites.js",
       "src\\engine\\modules\\simulation\\tick.js",
       "src\\engine\\modules\\views\\upgrade-details.js"
-    ]
-  },
-  {
-    "name": "zc",
-    "reads": 3,
-    "writes": 19,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\content\\animations.js:420",
-        "code": "zc: true"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\animations.js:427",
-        "code": "zc: true"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\animations.js:434",
-        "code": "zc: true"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\content\\animations.js",
-      "src\\engine\\modules\\rendering\\sprites.js",
-      "src\\engine\\modules\\simulation\\tick.js"
-    ]
-  },
-  {
-    "name": "Ac",
-    "reads": 12,
-    "writes": 10,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\content\\dungeon-themes.js:14",
-        "code": "Ac: {\n  kg: \"L2_Door001.PNG\",\n  jg: \"L2_Door002.PNG\",\n  Vf: \"L2_Door003.PNG\",\n  Uf: \"L2_Door004.PNG\"\n}"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\dungeon-themes.js:51",
-        "code": "Ac: {\n  kg: \"L2_Door001.PNG\",\n  jg: \"L2_Door002.PNG\",\n  Vf: \"L2_Door003.PNG\",\n  Uf: \"L2_Door004.PNG\"\n}"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\dungeon-themes.js:84",
-        "code": "Ac: {\n  kg: \"L2_Door001.PNG\",\n  jg: \"L2_Door002.PNG\",\n  Vf: \"L2_Door003.PNG\",\n  Uf: \"L2_Door004.PNG\"\n}"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\content\\dungeon-themes.js",
-      "src\\engine\\modules\\world\\rooms.js"
-    ]
-  },
-  {
-    "name": "Ec",
-    "reads": 2,
-    "writes": 20,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:35",
-        "code": "d.xh.Ec"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:35",
-        "code": "d.hh.Ec"
-      },
-      {
-        "loc": "src\\engine\\modules\\runtime\\game.js:224",
-        "code": "Ec: game.terrainSprites.getSprite(\"L2_Chest02.PNG\")"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\loot\\treasure.js",
-      "src\\engine\\modules\\runtime\\game.js"
-    ]
-  },
-  {
-    "name": "yc",
-    "reads": 1,
-    "writes": 21,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\progression\\achievements.js:18",
-        "code": "pointEventsById[a.pointEventTypeId].yc"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\points.js:82",
-        "code": "yc: 1"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\points.js:90",
-        "code": "yc: 1"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\progression\\achievements.js",
-      "src\\engine\\modules\\progression\\points.js"
-    ]
-  },
-  {
-    "name": "Fc",
-    "reads": 1,
-    "writes": 21,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\progression\\achievements.js:24",
-        "code": "pointEventsById[a.pointEventTypeId].Fc"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\points.js:83",
-        "code": "Fc: \"杀死一个怪物\""
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\points.js:91",
-        "code": "Fc: \"打开一扇门\""
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\progression\\achievements.js",
-      "src\\engine\\modules\\progression\\points.js"
-    ]
-  },
-  {
-    "name": "Dc",
-    "reads": 1,
-    "writes": 21,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\progression\\points.js:15",
-        "code": "c.Dc"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\points.js:81",
-        "code": "Dc: 1"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\points.js:89",
-        "code": "Dc: 1"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\progression\\points.js"
-    ]
-  },
-  {
-    "name": "Gc",
-    "reads": 1,
-    "writes": 21,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\progression\\points.js:84",
-        "code": "Gc: \"杀死怪物\""
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\points.js:92",
-        "code": "Gc: \"打开门\""
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\points.js:100",
-        "code": "Gc: \"遭遇战胜利\""
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\progression\\points.js",
-      "src\\engine\\modules\\views\\achievements.js"
     ]
   },
   {
@@ -4126,7 +3932,7 @@
       },
       {
         "loc": "src\\engine\\modules\\runtime\\game.js:223",
-        "code": "xh: {\n  Ec: game.terrainSprites.getSprite(\"L2_Chest02.PNG\"),\n  closed: game.terrainSprites.getSprite(\"L2_Chest01.PNG\")\n}"
+        "code": "xh: {\n  opened: game.terrainSprites.getSprite(\"L2_Chest02.PNG\"),\n  closed: game.terrainSprites.getSprite(\"L2_Chest01.PNG\")\n}"
       }
     ],
     "fileCount": 2,
@@ -4150,7 +3956,7 @@
       },
       {
         "loc": "src\\engine\\modules\\runtime\\game.js:227",
-        "code": "hh: {\n  Ec: game.terrainSprites.getSprite(\"L2_Chest04.PNG\"),\n  closed: game.terrainSprites.getSprite(\"L2_Chest03.PNG\")\n}"
+        "code": "hh: {\n  opened: game.terrainSprites.getSprite(\"L2_Chest04.PNG\"),\n  closed: game.terrainSprites.getSprite(\"L2_Chest03.PNG\")\n}"
       }
     ],
     "fileCount": 2,

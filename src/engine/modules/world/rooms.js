@@ -120,15 +120,15 @@ export function revealRoom(a) {
       h.setBackgroundSprite(p);
       if (f.Ho) {
         if (f.isOpen) {
-          h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.Ac.kg));
+          h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.doorSprites.kg));
         } else {
-          h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.Ac.Vf));
+          h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.doorSprites.Vf));
         }
       } else {
         if (f.isOpen) {
-          h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.Ac.jg));
+          h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.doorSprites.jg));
         } else {
-          h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.Ac.Uf));
+          h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.doorSprites.Uf));
         }
       }
     }
@@ -333,15 +333,15 @@ export function revealHallway(a, b) {
         f.setBackgroundSprite(h);
         if (a.af.Ho) {
           if (a.af.isOpen) {
-            f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.Ac.kg));
+            f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.doorSprites.kg));
           } else {
-            f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.Ac.Vf));
+            f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.doorSprites.Vf));
           }
         } else {
           if (a.af.isOpen) {
-            f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.Ac.jg));
+            f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.doorSprites.jg));
           } else {
-            f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.Ac.Uf));
+            f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.doorSprites.Uf));
           }
         }
         Q = z > I.y;
@@ -389,15 +389,15 @@ export function revealHallway(a, b) {
         f.setBackgroundSprite(h);
         if (a.Be.Ho) {
           if (a.Be.isOpen) {
-            f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.Ac.kg));
+            f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.doorSprites.kg));
           } else {
-            f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.Ac.Vf));
+            f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.doorSprites.Vf));
           }
         } else {
           if (a.Be.isOpen) {
-            f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.Ac.jg));
+            f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.doorSprites.jg));
           } else {
-            f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.Ac.Uf));
+            f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.doorSprites.Uf));
           }
         }
         f = z < N.y;

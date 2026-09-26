@@ -7592,7 +7592,15 @@
     "Ic": "achievement",
     "Hc": "purchased",
     "qc": "canPurchaseNow",
-    "xc": "castle"
+    "xc": "castle",
+    "Dc": "basePointReward",
+    "yc": "achievementPointBonus",
+    "Fc": "fullEventLabel",
+    "Gc": "shortEventLabel",
+    "Ec": "opened",
+    "zc": "isDirectional",
+    "Ac": "doorSprites",
+    "Wb": "targetDungeon"
   },
   "gameFields": {
     "B": "tileSize",

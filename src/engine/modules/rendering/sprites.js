@@ -26,7 +26,7 @@ export function SpriteSheet(a, b, c) {
 export function SpriteAnimation(a, b, c, d, f, g, h, l) {
   this.Ad = a;
   this.animationName = b;
-  this.zc = l;
+  this.isDirectional = l;
   a = [];
   var n, p, s;
   b = 0;
@@ -92,7 +92,7 @@ export function VisualEffect(a, b, c, d, f) {
   this.De = this.nd ? this.nd.To() : 0;
   this.bx = -1;
   this.oc = 0;
-  if (this.nd && this.nd.zc) {
+  if (this.nd && this.nd.isDirectional) {
     this.oc = getEffectDirection(this);
   }
   this.yi = 0;
@@ -210,7 +210,7 @@ export function initializeRenderingSprites() {
     for (c = 0; c < a.length; c++) {
       d = a[c];
       this.FB.push(d.animationName);
-      this.Yh[d.animationName] = new SpriteAnimation(this, d.animationName, d.firstFrameColumn, d.firstFrameRow, d.lastRowFrameCount, d.lastFrameRow, b, d.zc);
+      this.Yh[d.animationName] = new SpriteAnimation(this, d.animationName, d.firstFrameColumn, d.firstFrameRow, d.lastRowFrameCount, d.lastFrameRow, b, d.isDirectional);
     }
   };
   AnimationSheet.prototype.Zg = function (a) {

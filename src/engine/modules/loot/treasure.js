@@ -32,7 +32,7 @@ export function TreasureChest(a, b, c, d, f) {
   this.Nn = c;
   this.Kg = false;
   this.Vy = f ? d.xh.closed : d.hh.closed;
-  this.PA = f ? d.xh.Ec : d.hh.Ec;
+  this.PA = f ? d.xh.opened : d.hh.opened;
   this.Mf = d.Mf;
   this.VE = f;
   this.BC = d;

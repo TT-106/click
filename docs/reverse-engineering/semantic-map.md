@@ -154,6 +154,27 @@ RunStatistics 的 `On/Lk/qn/Mj/wi/uk` → `turnCount/doorsOpened/roomsCleared/le
 
 回归：`npm run check`（9 单测）、`npm run typecheck`（0 错误）、`test:parity`（0/1/99/900 回合）、`test:scenarios`（30/30，含 `potions-active`、`potions-inactive-auto`）、`test:e2e` 全绿。混淆属性清单由 1,238 项降至 1,235 项。
 
+## 第十轮落地：点位事件四元组 + 内容表三组 + 目标地牢（2026-09-26，全回归通过）
+
+子智能体取证 + 主智能体逐条复核命中数后一次落八项，`src` 内这八个字母的成员访问已全部归零。
+
+| 原字段 | 新名 | 所有者 | 决定性证据 | 存档参与 |
+|---|---|---|---|---|
+| `Dc` | `basePointReward` | PointEventDefinition | `points.js:15` `c.currentPointReward = c.basePointReward` —— 它是可变当前值的原值 | 否 |
+| `yc` | `achievementPointBonus` | PointEventDefinition | `achievements.js:18` 读入 `Vt` 后经 `increasePointEventReward` 作为奖励增量 | 否（DTO 只写 pointEventType/points/count） |
+| `Fc` | `fullEventLabel` | PointEventDefinition | `a.Pt = "+" + a.Vt + "成就点每" + …` 拼进整句，取值为量词短句 | 否 |
+| `Gc` | `shortEventLabel` | PointEventDefinition | `views/achievements.js:48` 写入 120px 统计表单元格，取值为短形式 | 否 |
+| `Ec` | `opened` | 宝箱/书架皮肤变体对象 | `this.PA = f ? d.xh.opened : d.hh.opened`，与既有英文键 `closed` 对称；`Kg`（存档 `opened` 位）选择用哪张 | 否 |
+| `zc` | `isDirectional` | 动画表条目 / SpriteAnimation | `tick.js:463` 该位为真时用"转向朝向"取代逐帧推进，仅弹道类条目携带 | 否 |
+| `Ac` | `doorSprites` | DungeonTheme | `rooms.js` 门圈层 12 处 `theme.doorSprites.kg/Vf/jg/Uf`，同级键已叫 floor/stairs/wallSprites | 否 |
+| `Wb` | `targetDungeon` | PartyState | 赋值源全是 `dungeonList` 过滤出的最近地牢，读取为 `getWorldColumn/Row`，兄弟字段已叫 targetCastle/targetShop | 否 |
+
+同名冲突排查：`Cb` 经取证确认在 `Character.prototype` 与 `CombatAction.prototype` 上是**两个不同语义的 setter**（`setCombatTarget` / `setTargetCharacter`），而 `characters/character.js` 一个文件里同时含定义与 8 处另一主的调用点，按接收者拆分无法用逐文件工具完成，因此本轮不动、留作线级专项（见 unresolved U6）。
+
+工具边界（本轮实测）：`rename-field.mjs` 的字符串字面量守卫比较的是全部字面量的多重集（含重复项），且基准取自替换前的原文，因此"改坏一处重复字面量"不会被放过；但它只能做逐文件的替换，`Cb` 这类"同一文件里既有本类定义又有他类调用点"的按接收者拆分超出它的能力，需要线级人工处理。
+
+回归：`check`（9 单测）/`typecheck`（0 错误）/`parity`（0/1/99/900 回合）/`test:scenarios`（30/30）/`test:e2e` 全绿；混淆属性清单自本轮会话开始（1,238 项，含 Potion 三元组与升级行四字段）降至 1,223 项，共 12 个字母在 `src` 内清零。
+
 ## 重命名执行器 `scripts/rename-field.mjs`
 
 本批起改用手写守卫的执行器，用法 `node scripts/rename-field.mjs <old>=<new> <file...> --expect <total>`。写盘前强制四项校验：命中总数等于 `--expect`、行数不变、逐行缩进不变、字符串字面量多重集不变，任一失败整批不落盘。

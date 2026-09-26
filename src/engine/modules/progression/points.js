@@ -12,7 +12,7 @@ export function resetAdventurePoints() {
   var b, c;
   for (b = 0; b < pointEventDefinitions.length; b++) {
     c = pointEventDefinitions[b];
-    c.currentPointReward = c.Dc;
+    c.currentPointReward = c.basePointReward;
     if (a.Qi[c.pointEventTypeId]) {
       console.log("error - duplicate point event type: " + c.pointEventTypeId);
     }
@@ -78,170 +78,170 @@ export function initializeProgressionPoints() {
   killPointEvent = {
     pointEventTypeId: 1,
     currentPointReward: 1,
-    Dc: 1,
-    yc: 1,
-    Fc: "杀死一个怪物",
-    Gc: "杀死怪物"
+    basePointReward: 1,
+    achievementPointBonus: 1,
+    fullEventLabel: "杀死一个怪物",
+    shortEventLabel: "杀死怪物"
   };
   spellPointEvent = {
     pointEventTypeId: 2,
     currentPointReward: 1,
-    Dc: 1,
-    yc: 1,
-    Fc: "打开一扇门",
-    Gc: "打开门"
+    basePointReward: 1,
+    achievementPointBonus: 1,
+    fullEventLabel: "打开一扇门",
+    shortEventLabel: "打开门"
   };
   encounterPointEvent = {
     pointEventTypeId: POINT_EVENT_ENCOUNTER,
     currentPointReward: 5,
-    Dc: 5,
-    yc: 5,
-    Fc: "胜一场遭遇战",
-    Gc: "遭遇战胜利"
+    basePointReward: 5,
+    achievementPointBonus: 5,
+    fullEventLabel: "胜一场遭遇战",
+    shortEventLabel: "遭遇战胜利"
   };
   levelClearedPointEvent = {
     pointEventTypeId: POINT_EVENT_LEVEL_CLEARED,
     currentPointReward: 100,
-    Dc: 100,
-    yc: 100,
-    Fc: "清空一个关卡",
-    Gc: "清空关卡"
+    basePointReward: 100,
+    achievementPointBonus: 100,
+    fullEventLabel: "清空一个关卡",
+    shortEventLabel: "清空关卡"
   };
   dungeonClearedPointEvent = {
     pointEventTypeId: POINT_EVENT_DUNGEON_CLEARED,
     currentPointReward: 300,
-    Dc: 300,
-    yc: 300,
-    Fc: "清理一个地牢",
-    Gc: "征服地牢"
+    basePointReward: 300,
+    achievementPointBonus: 300,
+    fullEventLabel: "清理一个地牢",
+    shortEventLabel: "征服地牢"
   };
   castleConqueredPointEvent = {
     pointEventTypeId: 19,
     currentPointReward: 2E3,
-    Dc: 2E3,
-    yc: 2E3,
-    Fc: "征服一座城堡",
-    Gc: "征服城堡"
+    basePointReward: 2E3,
+    achievementPointBonus: 2E3,
+    fullEventLabel: "征服一座城堡",
+    shortEventLabel: "征服城堡"
   };
   chestPointEvent = {
     pointEventTypeId: 6,
     currentPointReward: 50,
-    Dc: 50,
-    yc: 50,
-    Fc: "搜索一个财宝箱",
-    Gc: "搜索财宝箱"
+    basePointReward: 50,
+    achievementPointBonus: 50,
+    fullEventLabel: "搜索一个财宝箱",
+    shortEventLabel: "搜索财宝箱"
   };
   bookcasePointEvent = {
     pointEventTypeId: 7,
     currentPointReward: 50,
-    Dc: 50,
-    yc: 50,
-    Fc: "搜索一个武器架",
-    Gc: "搜索武器架"
+    basePointReward: 50,
+    achievementPointBonus: 50,
+    fullEventLabel: "搜索一个武器架",
+    shortEventLabel: "搜索武器架"
   };
   weaponRackPointEvent = {
     pointEventTypeId: 8,
     currentPointReward: 50,
-    Dc: 50,
-    yc: 50,
-    Fc: "搜索一个书架",
-    Gc: "搜索书架"
+    basePointReward: 50,
+    achievementPointBonus: 50,
+    fullEventLabel: "搜索一个书架",
+    shortEventLabel: "搜索书架"
   };
   scrollFoundPointEvent = {
     pointEventTypeId: 10,
     currentPointReward: 2,
-    Dc: 2,
-    yc: 2,
-    Fc: "找到一个卷轴",
-    Gc: "找到卷轴"
+    basePointReward: 2,
+    achievementPointBonus: 2,
+    fullEventLabel: "找到一个卷轴",
+    shortEventLabel: "找到卷轴"
   };
   potionFoundPointEvent = {
     pointEventTypeId: 11,
     currentPointReward: 15,
-    Dc: 15,
-    yc: 15,
-    Fc: "找到一瓶药剂",
-    Gc: "找到药剂"
+    basePointReward: 15,
+    achievementPointBonus: 15,
+    fullEventLabel: "找到一瓶药剂",
+    shortEventLabel: "找到药剂"
   };
   itemFoundPointEvent = {
     pointEventTypeId: 12,
     currentPointReward: 1,
-    Dc: 1,
-    yc: 1,
-    Fc: "找到一件道具",
-    Gc: "找到道具"
+    basePointReward: 1,
+    achievementPointBonus: 1,
+    fullEventLabel: "找到一件道具",
+    shortEventLabel: "找到道具"
   };
   goldFoundPointEvent = {
     pointEventTypeId: 9,
     currentPointReward: 1,
-    Dc: 1,
-    yc: 1,
-    Fc: "找到黄金",
-    Gc: "找到黄金"
+    basePointReward: 1,
+    achievementPointBonus: 1,
+    fullEventLabel: "找到黄金",
+    shortEventLabel: "找到黄金"
   };
   summonPointEvent = {
     pointEventTypeId: 18,
     currentPointReward: 15,
-    Dc: 15,
-    yc: 15,
-    Fc: "召唤一个宠物",
-    Gc: "召唤宠物"
+    basePointReward: 15,
+    achievementPointBonus: 15,
+    fullEventLabel: "召唤一个宠物",
+    shortEventLabel: "召唤宠物"
   };
   uncommonItemPointEvent = {
     pointEventTypeId: 13,
     currentPointReward: 5,
-    Dc: 5,
-    yc: 5,
-    Fc: "找到一件罕见道具",
-    Gc: "找到罕见道具"
+    basePointReward: 5,
+    achievementPointBonus: 5,
+    fullEventLabel: "找到一件罕见道具",
+    shortEventLabel: "找到罕见道具"
   };
   rareItemPointEvent = {
     pointEventTypeId: 14,
     currentPointReward: 25,
-    Dc: 25,
-    yc: 25,
-    Fc: "找到一件稀有道具",
-    Gc: "找到稀有道具"
+    basePointReward: 25,
+    achievementPointBonus: 25,
+    fullEventLabel: "找到一件稀有道具",
+    shortEventLabel: "找到稀有道具"
   };
   historicItemPointEvent = {
     pointEventTypeId: 15,
     currentPointReward: 200,
-    Dc: 200,
-    yc: 200,
-    Fc: "找到一件历史道具",
-    Gc: "找到历史道具"
+    basePointReward: 200,
+    achievementPointBonus: 200,
+    fullEventLabel: "找到一件历史道具",
+    shortEventLabel: "找到历史道具"
   };
   ancientItemPointEvent = {
     pointEventTypeId: 16,
     currentPointReward: 2E3,
-    Dc: 2E3,
-    yc: 2E3,
-    Fc: "找到一件远古道具",
-    Gc: "找到远古道具"
+    basePointReward: 2E3,
+    achievementPointBonus: 2E3,
+    fullEventLabel: "找到一件远古道具",
+    shortEventLabel: "找到远古道具"
   };
   itemSoldPointEvent = {
     pointEventTypeId: 17,
     currentPointReward: 1,
-    Dc: 1,
-    yc: 1,
-    Fc: "卖出一件道具",
-    Gc: "卖出道具"
+    basePointReward: 1,
+    achievementPointBonus: 1,
+    fullEventLabel: "卖出一件道具",
+    shortEventLabel: "卖出道具"
   };
   itemEquippedPointEvent = {
     pointEventTypeId: 21,
     currentPointReward: 10,
-    Dc: 10,
-    yc: 10,
-    Fc: "装备一件道具",
-    Gc: "装备道具"
+    basePointReward: 10,
+    achievementPointBonus: 10,
+    fullEventLabel: "装备一件道具",
+    shortEventLabel: "装备道具"
   };
   levelUpPointEvent = {
     pointEventTypeId: 22,
     currentPointReward: 400,
-    Dc: 400,
-    yc: 400,
-    Fc: "角色升一级",
-    Gc: "升级"
+    basePointReward: 400,
+    achievementPointBonus: 400,
+    fullEventLabel: "角色升一级",
+    shortEventLabel: "升级"
   };
   pointEventsById = {};
   pointEventsById[1] = killPointEvent;
