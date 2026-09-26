@@ -59,7 +59,7 @@ export function clearCombatQueue() {
 }
 export function advanceCombatAction(a, b) {
   var c = b.impactEffect;
-  if (c && !c.Cj) {
+  if (c && !c.hasSpawned) {
     if (b.Rd) {
       return b.Vn = true;
     }

@@ -14,11 +14,11 @@ export function DungeonTile(a, b, c, d) {
   this.pixelRow = d;
   this.bt = this.Yf = this.Jn = null;
   this.Rb = EMPTY_TILE;
-  this.Pq = null;
+  this.tileEffect = null;
   this.li = 0;
 }
 export function setTileEffect(a, b) {
-  a.Pq = b;
+  a.tileEffect = b;
   a.li = b ? randomInt(b.li) : 0;
 }
 export function DungeonRoom(a, b, c, d, f) {

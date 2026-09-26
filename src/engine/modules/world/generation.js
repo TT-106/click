@@ -232,7 +232,7 @@ export function clearDungeonTiles(a) {
       f.Yf = null;
       f.bt = null;
       f.Rb = EMPTY_TILE;
-      f.Pq = null;
+      f.tileEffect = null;
       f.li = 0;
     }
   }

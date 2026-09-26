@@ -712,7 +712,7 @@ export function initializeRenderingScene() {
                 Na;
               for (xb = sc; xb <= db; xb++) {
                 for (Na = Aa; Na <= Mc; Na++) {
-                  if ((ec = game.level.getTileAt(xb, Na)) && (hb = ec.Pq) && hb.Cj && !hb.bl()) {
+                  if ((ec = game.level.getTileAt(xb, Na)) && (hb = ec.tileEffect) && hb.hasSpawned && !hb.bl()) {
                     lb = hb.Zg();
                     rc = hb.oc;
                     Ub = ec.getPixelX();

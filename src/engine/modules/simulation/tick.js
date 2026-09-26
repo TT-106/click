@@ -283,12 +283,12 @@ export function advanceSimulation(a) {
       a: {
         var cb = ja,
           Ua = cb.projectileEffect;
-        if (Ua && !Ua.Cj) {
+        if (Ua && !Ua.hasSpawned) {
           addVisualEffect(game.effects, cb.projectileEffect);
         }
         if (!Ua || Ua.Pk || Ua.bg) {
           var Va = cb.impactEffect;
-          if (!Va.Cj) {
+          if (!Va.hasSpawned) {
             var mc = cb.actionDefinition;
             if (mc && 8 == mc.spellCategoryId) {
               var vb = cb,
@@ -368,7 +368,7 @@ export function advanceSimulation(a) {
       if (fb) {
         bb = true;
       } else {
-        if (za.Cj) {
+        if (za.hasSpawned) {
           nb = true;
         }
       }
@@ -378,7 +378,7 @@ export function advanceSimulation(a) {
       var Cb = Fa,
         kb = ja,
         Ra = kb.projectileEffect;
-      if (Ra && !Ra.Cj) {
+      if (Ra && !Ra.hasSpawned) {
         addVisualEffect(game.effects, Ra);
       }
       if (Ra) {
@@ -411,7 +411,7 @@ export function advanceSimulation(a) {
       db,
       Mc = 1 === Ga.characterType ? Ga.summoner.stats : Ga.stats;
     for (db = 0; db < gb.length; db++) {
-      if (rb = gb[db], !rb.isDead && (dc = rb.position.levelPosition, Ka = game.level.Ai(dc.x), Xa = game.level.Bi(dc.y), (hb = game.level.getTileAt(Ka, Xa)) && (lb = hb.Pq) && lb.Cj)) {
+      if (rb = gb[db], !rb.isDead && (dc = rb.position.levelPosition, Ka = game.level.Ai(dc.x), Xa = game.level.Bi(dc.y), (hb = game.level.getTileAt(Ka, Xa)) && (lb = hb.tileEffect) && lb.hasSpawned)) {
         if (lb.bl()) {
           setTileEffect(hb, null);
         } else if (lb.bx !== lb.oc && (sc = hb.li, 0 !== sc && (Aa = randomInt(sc + 1), 0 !== Aa))) {
@@ -443,7 +443,7 @@ export function advanceSimulation(a) {
   for (sb = 0; sb < Ub.Wg.length; sb++) {
     var ka = Ub.Wg[sb],
       Eb = a;
-    ka.Cj = true;
+    ka.hasSpawned = true;
     if (1 === ka.Io) {
       if (ka.projectileEffect && !ka.Pk) {
         assignVector(directionScratchVector, ka.xi);
