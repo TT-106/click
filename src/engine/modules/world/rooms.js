@@ -194,7 +194,7 @@ export function revealRoom(a) {
             d = 2 * rollGoldDrop();
             if (0 < d) {
               f = g[c];
-              game.goldDrops.pe.push(new GoldDrop(d, f.getLevelPositionX(), f.getLevelPositionY(), a));
+              game.goldDrops.pe.push(new GoldDrop(d, f.getPixelX(), f.getPixelY(), a));
             }
           }
         }
