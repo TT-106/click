@@ -31,7 +31,7 @@ export function CharacterPosition(a, b) {
   this.Ug = null;
   this.movementTargetCleared = false;
   this.targetRoom = this.destinationRoom = this.targetDoor = null;
-  this.fg = -1;
+  this.floorPositionIndex = -1;
   this.Hh = this.aB = this.qj = null;
 }
 export function clearMovementTarget(a) {
@@ -40,7 +40,7 @@ export function clearMovementTarget(a) {
   a.destinationRoom = null;
   a.targetRoom = null;
   a.Ug = null;
-  a.fg = -1;
+  a.floorPositionIndex = -1;
 }
 export function applySeparationForce(a, b, c, d) {
   if (!a.steeringVector) {

@@ -439,7 +439,7 @@ export function restoreGameState(a, b) {
                   Me = null;
                 }
                 wd.currentHallway = Me;
-                wd.fg = Bh;
+                wd.floorPositionIndex = Bh;
               }
               var fg = hc,
                 ld = $c;

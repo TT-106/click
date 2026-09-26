@@ -405,7 +405,7 @@ export function initializeRuntimeGame() {
         resetUpgradeCollection(c.skillTree3);
         resetUpgradeCollection(c.skillTree4);
       }
-      game.allies.Pf.length = 0;
+      game.allies.allies.length = 0;
       clearMonsters();
       clearMinions();
       b = game.monsterCatalog;
@@ -455,7 +455,7 @@ export function initializeRuntimeGame() {
       resetShops();
       clearCombatQueue();
       clearVisualEffects();
-      game.allies.Pf.length = 0;
+      game.allies.allies.length = 0;
       clearMonsters();
       clearMinions();
       for (var b, a = /** @type {any} */ (0); a < game.state.adventurers.length; a++) {

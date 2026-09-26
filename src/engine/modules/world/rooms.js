@@ -120,13 +120,13 @@ export function revealRoom(a) {
       h.setBackgroundSprite(p);
       if (f.Ho) {
         if (f.isOpen) {
-          h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.doorSprites.kg));
+          h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.doorSprites.doorOpenASprite));
         } else {
           h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.doorSprites.Vf));
         }
       } else {
         if (f.isOpen) {
-          h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.doorSprites.jg));
+          h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.doorSprites.doorOpenBSprite));
         } else {
           h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.doorSprites.Uf));
         }
@@ -333,13 +333,13 @@ export function revealHallway(a, b) {
         f.setBackgroundSprite(h);
         if (a.doorA.Ho) {
           if (a.doorA.isOpen) {
-            f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.doorSprites.kg));
+            f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.doorSprites.doorOpenASprite));
           } else {
             f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.doorSprites.Vf));
           }
         } else {
           if (a.doorA.isOpen) {
-            f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.doorSprites.jg));
+            f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.doorSprites.doorOpenBSprite));
           } else {
             f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.doorSprites.Uf));
           }
@@ -389,13 +389,13 @@ export function revealHallway(a, b) {
         f.setBackgroundSprite(h);
         if (a.doorB.Ho) {
           if (a.doorB.isOpen) {
-            f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.doorSprites.kg));
+            f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.doorSprites.doorOpenASprite));
           } else {
             f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.doorSprites.Vf));
           }
         } else {
           if (a.doorB.isOpen) {
-            f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.doorSprites.jg));
+            f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.doorSprites.doorOpenBSprite));
           } else {
             f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.doorSprites.Uf));
           }

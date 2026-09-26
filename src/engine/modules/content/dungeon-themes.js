@@ -12,8 +12,8 @@ export function initializeContentDungeonThemes() {
       Kh: "L2_StairsDownEW.PNG"
     },
     doorSprites: {
-      kg: "L2_Door001.PNG",
-      jg: "L2_Door002.PNG",
+      doorOpenASprite: "L2_Door001.PNG",
+      doorOpenBSprite: "L2_Door002.PNG",
       Vf: "L2_Door003.PNG",
       Uf: "L2_Door004.PNG"
     },
@@ -49,8 +49,8 @@ export function initializeContentDungeonThemes() {
       Kh: "L2_DarkStoneStairsDownEW.PNG"
     },
     doorSprites: {
-      kg: "L2_Door001.PNG",
-      jg: "L2_Door002.PNG",
+      doorOpenASprite: "L2_Door001.PNG",
+      doorOpenBSprite: "L2_Door002.PNG",
       Vf: "L2_Door003.PNG",
       Uf: "L2_Door004.PNG"
     },
@@ -82,8 +82,8 @@ export function initializeContentDungeonThemes() {
       Kh: "L2_StairsHutDownEW.PNG"
     },
     doorSprites: {
-      kg: "L2_Door001.PNG",
-      jg: "L2_Door002.PNG",
+      doorOpenASprite: "L2_Door001.PNG",
+      doorOpenBSprite: "L2_Door002.PNG",
       Vf: "L2_Door003.PNG",
       Uf: "L2_Door004.PNG"
     },
@@ -115,8 +115,8 @@ export function initializeContentDungeonThemes() {
       Kh: "L2_StairsBoneDownEW.PNG"
     },
     doorSprites: {
-      kg: "L2_DoorBoneOpenNS.PNG",
-      jg: "L2_DoorBoneOpenEW.PNG",
+      doorOpenASprite: "L2_DoorBoneOpenNS.PNG",
+      doorOpenBSprite: "L2_DoorBoneOpenEW.PNG",
       Vf: "L2_DoorBoneClosedNS.PNG",
       Uf: "L2_DoorBoneClosedEW.PNG"
     },
@@ -148,8 +148,8 @@ export function initializeContentDungeonThemes() {
       Kh: "L2_DarkStoneStairsDownEW.PNG"
     },
     doorSprites: {
-      kg: "L2_DoorDarkStoneOpenNS.PNG",
-      jg: "L2_DoorDarkStoneOpenEW.PNG",
+      doorOpenASprite: "L2_DoorDarkStoneOpenNS.PNG",
+      doorOpenBSprite: "L2_DoorDarkStoneOpenEW.PNG",
       Vf: "L2_DoorDarkStoneClosedNS.PNG",
       Uf: "L2_DoorDarkStoneClosedEW.PNG"
     },
@@ -181,8 +181,8 @@ export function initializeContentDungeonThemes() {
       Kh: "L2_StairsIceDownEW.PNG"
     },
     doorSprites: {
-      kg: "L2_DoorIceOpenNS.PNG",
-      jg: "L2_DoorIceOpenEW.PNG",
+      doorOpenASprite: "L2_DoorIceOpenNS.PNG",
+      doorOpenBSprite: "L2_DoorIceOpenEW.PNG",
       Vf: "L2_DoorIceClosedNS.PNG",
       Uf: "L2_DoorIceClosedEW.PNG"
     },
@@ -218,8 +218,8 @@ export function initializeContentDungeonThemes() {
       Kh: "L2_StairsIronDownEW.PNG"
     },
     doorSprites: {
-      kg: "L2_DoorIronOpenNS.PNG",
-      jg: "L2_DoorIronOpenEW.PNG",
+      doorOpenASprite: "L2_DoorIronOpenNS.PNG",
+      doorOpenBSprite: "L2_DoorIronOpenEW.PNG",
       Vf: "L2_DoorIronClosedNS.PNG",
       Uf: "L2_DoorIronClosedEW.PNG"
     },
@@ -251,8 +251,8 @@ export function initializeContentDungeonThemes() {
       Kh: "L2_DarkStoneStairsDownEW.PNG"
     },
     doorSprites: {
-      kg: "L2_DoorDarkStoneOpenNS.PNG",
-      jg: "L2_DoorDarkStoneOpenEW.PNG",
+      doorOpenASprite: "L2_DoorDarkStoneOpenNS.PNG",
+      doorOpenBSprite: "L2_DoorDarkStoneOpenEW.PNG",
       Vf: "L2_DoorDarkStoneClosedNS.PNG",
       Uf: "L2_DoorDarkStoneClosedEW.PNG"
     },
@@ -284,8 +284,8 @@ export function initializeContentDungeonThemes() {
       Kh: "L2_StairsDownEW.PNG"
     },
     doorSprites: {
-      kg: "L2_DoorOpenNS.PNG",
-      jg: "L2_DoorOpenEW.PNG",
+      doorOpenASprite: "L2_DoorOpenNS.PNG",
+      doorOpenBSprite: "L2_DoorOpenEW.PNG",
       Vf: "L2_DoorClosedNS.PNG",
       Uf: "L2_DoorClosedEW.PNG"
     },
@@ -317,8 +317,8 @@ export function initializeContentDungeonThemes() {
       Kh: "L2_StairsHutDownEW.PNG"
     },
     doorSprites: {
-      kg: "L2_DoorHutOpenNS.PNG",
-      jg: "L2_DoorHutOpenEW.PNG",
+      doorOpenASprite: "L2_DoorHutOpenNS.PNG",
+      doorOpenBSprite: "L2_DoorHutOpenEW.PNG",
       Vf: "L2_DoorHutClosedNS.PNG",
       Uf: "L2_DoorHutClosedEW.PNG"
     },

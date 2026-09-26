@@ -37,7 +37,7 @@ export function Scroll(a, b) {
   this.scrollId = a.scrollId;
   this.Wh = game.itemSprites.getSprite(a.Wh);
   this.baseName = a.baseName;
-  this.sg = a.sg;
+  this.baseCapacity = a.baseCapacity;
   this.Yi = a.Yi;
   this.Qh = a.Qh;
   this.mB = a.spellDefinition ? new Spell(a.spellDefinition) : null;
@@ -59,7 +59,7 @@ export function addScrollCharge(a) {
   }
 }
 export function getScrollUpgradeCost(a) {
-  return scaleByLevel(a.locked ? a.sg : a.sg + (a.upgradeCount + 1) * a.Yi, scrollPriceCurve, 1);
+  return scaleByLevel(a.locked ? a.baseCapacity : a.baseCapacity + (a.upgradeCount + 1) * a.Yi, scrollPriceCurve, 1);
 }
 export function getScrollLabel(a) {
   if (a.locked) {
@@ -206,7 +206,7 @@ export function resetScrollInventory() {
   var b, c;
   for (b = 0; b < scrollDefinitions.length; b++) {
     c = new Scroll(scrollDefinitions[b], game.scrollTargets);
-    (/** @type {any} */ (c)).ts(0 < scrollDefinitions[b].sg, 0);
+    (/** @type {any} */ (c)).ts(0 < scrollDefinitions[b].baseCapacity, 0);
     a.at.push(c);
     a.kx[c.scrollId] = c;
     if (!c.locked) {
@@ -264,7 +264,7 @@ export function initializeCombatScrolls() {
     baseName: "休克",
     Wh: "Scroll0028.PNG",
     spellDefinition: electricSpellDefinitions.sB,
-    sg: 0,
+    baseCapacity: 0,
     Yi: 4,
     Qh: 0
   }, {
@@ -272,7 +272,7 @@ export function initializeCombatScrolls() {
     baseName: "蛛网",
     Wh: "Scroll0054.PNG",
     spellDefinition: electricSpellDefinitions.CB,
-    sg: 3,
+    baseCapacity: 3,
     Yi: 4,
     Qh: 4,
     fq: {
@@ -284,7 +284,7 @@ export function initializeCombatScrolls() {
     baseName: "箭矢",
     Wh: "Scroll0012.PNG",
     spellDefinition: null,
-    sg: 6,
+    baseCapacity: 6,
     Yi: 4,
     Qh: 4,
     fq: {
@@ -296,7 +296,7 @@ export function initializeCombatScrolls() {
     baseName: "火雨",
     Wh: "Scroll0022.PNG",
     spellDefinition: fireSpellDefinitions.Lz,
-    sg: 9,
+    baseCapacity: 9,
     Yi: 4,
     Qh: 2,
     fq: {
@@ -308,7 +308,7 @@ export function initializeCombatScrolls() {
     baseName: "闪电",
     Wh: "Scroll0034.PNG",
     spellDefinition: electricSpellDefinitions.br,
-    sg: 12,
+    baseCapacity: 12,
     Yi: 4,
     Qh: 3,
     fq: {
@@ -320,7 +320,7 @@ export function initializeCombatScrolls() {
     baseName: "火球",
     Wh: "Scroll0097.PNG",
     spellDefinition: fireSpellDefinitions.Kz,
-    sg: 15,
+    baseCapacity: 15,
     Yi: 4,
     Qh: 2,
     fq: {

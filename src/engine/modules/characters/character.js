@@ -92,7 +92,7 @@ export function bindSkillTree(a, b) {
     var c, d;
     for (c = 0; c < b.length; c++) {
       d = b[c];
-      d.og();
+      d.resetState();
       d.sx(a);
       if (0 < c) {
         d.prerequisite = b[c - 1];
@@ -341,7 +341,7 @@ export function updateCharacter(a, b) {
                 p.currentHallway = null;
                 p.room = Q.leadsTo;
               }
-              p.fg = -1;
+              p.floorPositionIndex = -1;
               if (0 === p.Ug.length) {
                 if (!p.targetRoom) {
                   clearMovementTarget(p);
@@ -351,19 +351,19 @@ export function updateCharacter(a, b) {
           } else if (p.currentHallway) {
             var H = p.currentHallway.pathTiles,
               S = u === p.currentHallway.doorB;
-            if (-1 === p.fg) {
-              p.fg = S ? 0 : H.length - 1;
+            if (-1 === p.floorPositionIndex) {
+              p.floorPositionIndex = S ? 0 : H.length - 1;
             }
             var da = null,
               W;
             if (S) {
-              if (p.fg < H.length - 1) {
-                W = H[p.fg + 1];
+              if (p.floorPositionIndex < H.length - 1) {
+                W = H[p.floorPositionIndex + 1];
                 da = game.level.getTileAt(W.x, W.y);
               }
             } else {
-              if (0 < p.fg) {
-                W = H[p.fg - 1];
+              if (0 < p.floorPositionIndex) {
+                W = H[p.floorPositionIndex - 1];
                 da = game.level.getTileAt(W.x, W.y);
               }
             }
@@ -380,9 +380,9 @@ export function updateCharacter(a, b) {
                 setVector(p.levelPosition, u.pixelColumn | 0, u.pixelRow | 0);
               }
               if (S) {
-                p.fg++;
+                p.floorPositionIndex++;
               } else {
-                p.fg--;
+                p.floorPositionIndex--;
               }
             } else {
               normalizeVector(p.velocity);

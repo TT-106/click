@@ -82,7 +82,7 @@ export function serializeCharacter(a) {
     worldX: h.getWorldPositionX(),
     worldY: h.getWorldPositionY(),
     roomId: l ? l.roomId : -1,
-    floorPositionIndex: h.fg,
+    floorPositionIndex: h.floorPositionIndex,
     hallwayId: n ? n.hallwayId : -1
   };
   var n = a.spells,

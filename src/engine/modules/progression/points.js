@@ -20,7 +20,7 @@ export function resetAdventurePoints() {
     a.countsByEventType[c.pointEventTypeId] = 0;
   }
   for (b = 0; b < a.pointUpgrades.length; b++) {
-    a.pointUpgrades[b].og();
+    a.pointUpgrades[b].resetState();
   }
 }
 export function awardAdventurePoints(a) {

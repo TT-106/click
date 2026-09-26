@@ -167,18 +167,18 @@ export function spawnCastleGuardians(a, b) {
   }
 }
 export function AllyRegistry() {
-  this.Pf = [];
+  this.allies = [];
 }
 export function getAllies() {
-  return game.allies.Pf;
+  return game.allies.allies;
 }
 export function getOpponents(a) {
   var b = game.allies;
-  return a.effects.isConverted ? isHostile(a) ? getMonsters() : b.Pf : isHostile(a) ? b.Pf : getMonsters();
+  return a.effects.isConverted ? isHostile(a) ? getMonsters() : b.allies : isHostile(a) ? b.allies : getMonsters();
 }
 export function getFriendlyTargets(a) {
   var b = game.allies;
-  return isHostile(a) ? getMonsters() : b.Pf;
+  return isHostile(a) ? getMonsters() : b.allies;
 }
 export function MonsterType(a, b, c) {
   this.dE = a;
@@ -281,18 +281,18 @@ export function initializeCombatEncounters() {
     }
   };
   AllyRegistry.prototype.reset = function () {
-    if (0 < this.Pf.length) {
+    if (0 < this.allies.length) {
       console.log("teams array in invalid state on party creation");
-      this.Pf.length = 0;
+      this.allies.length = 0;
     }
     var a = game.state.adventurers,
       b;
     for (b = 0; b < a.length; b++) {
-      this.Pf.push(a[b]);
+      this.allies.push(a[b]);
     }
   };
   AllyRegistry.prototype.Tt = function (a) {
-    this.Pf.push(a);
+    this.allies.push(a);
   };
   MonsterType.prototype.Vk = function () {
     return this.dE;

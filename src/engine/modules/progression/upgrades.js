@@ -62,7 +62,7 @@ export function UpgradeCollection(a, b) {
 export function resetUpgradeCollection(a) {
   var b;
   for (b = 0; b < a.upgrades.length; b++) {
-    a.upgrades[b].og();
+    a.upgrades[b].resetState();
   }
   a.mj = 0;
   a.lastSortFrame = game.state.frameNumber - 1;
@@ -271,7 +271,7 @@ export function initializeProgressionUpgrades() {
   Upgrade.prototype.getTitle = function () {
     return "upgrade title";
   };
-  Upgrade.prototype.og = function () {};
+  Upgrade.prototype.resetState = function () {};
   Upgrade.prototype.isOwned = function () {
     return false;
   };
@@ -357,7 +357,7 @@ export function initializeProgressionUpgrades() {
       recalculateGlobalUpgrade(this);
     }
   };
-  GlobalUpgrade.prototype.og = function () {
+  GlobalUpgrade.prototype.resetState = function () {
     this.definition.purchasedLevels = 0;
     recalculateGlobalUpgrade(this);
   };
@@ -475,7 +475,7 @@ export function initializeProgressionUpgrades() {
   EquipItemUpgrade.prototype.Wo = function () {
     return null;
   };
-  EquipItemUpgrade.prototype.og = function () {
+  EquipItemUpgrade.prototype.resetState = function () {
     this.descriptionLabel = this.item = null;
   };
   EquipItemUpgrade.prototype.Oz = function () {
@@ -517,7 +517,7 @@ export function initializeProgressionUpgrades() {
     return b != this.vh || c != this.item;
   };
   LevelUpUpgrade.prototype = new Upgrade();
-  LevelUpUpgrade.prototype.og = function () {
+  LevelUpUpgrade.prototype.resetState = function () {
     this.descriptionLabel = null;
   };
   LevelUpUpgrade.prototype.Vo = function () {
@@ -620,7 +620,7 @@ export function initializeProgressionUpgrades() {
   UnlockMonsterLevelUpgrade.prototype.Kr = function () {
     return this.unlockLevel;
   };
-  UnlockMonsterLevelUpgrade.prototype.og = function () {
+  UnlockMonsterLevelUpgrade.prototype.resetState = function () {
     this.Ql = false;
     this.unlockLevel = game.monsterCatalog.maxUnlockedLevel + 1;
     this.Ds = scaleByLevel(this.unlockLevel, monsterUnlockPriceCurve, 1);
@@ -684,7 +684,7 @@ export function initializeProgressionUpgrades() {
   RetireMonsterLevelUpgrade.prototype.Kr = function () {
     return this.retireLevel;
   };
-  RetireMonsterLevelUpgrade.prototype.og = function () {
+  RetireMonsterLevelUpgrade.prototype.resetState = function () {
     this.Ql = false;
     this.retireLevel = game.monsterCatalog.minUnlockedLevel;
     this.Cs = scaleByLevel(this.retireLevel, monsterUnlockPriceCurve, 1);
@@ -762,7 +762,7 @@ export function initializeProgressionUpgrades() {
   CharacterSkillUpgrade.prototype.ft = function (a) {
     this.purchased = a;
   };
-  CharacterSkillUpgrade.prototype.og = function () {
+  CharacterSkillUpgrade.prototype.resetState = function () {
     this.character = null;
     this.purchased = false;
   };
@@ -827,7 +827,7 @@ export function initializeProgressionUpgrades() {
   LearnSpellUpgrade.prototype.ft = function (a) {
     this.purchased = a;
   };
-  LearnSpellUpgrade.prototype.og = function () {
+  LearnSpellUpgrade.prototype.resetState = function () {
     this.character = null;
     this.purchased = false;
     this.spell = null;
@@ -1033,7 +1033,7 @@ export function initializeProgressionUpgrades() {
     return a;
   };
   ScrollUpgrade.prototype = new Upgrade();
-  ScrollUpgrade.prototype.og = function () {
+  ScrollUpgrade.prototype.resetState = function () {
     this.scroll = null;
     this.affordableSoon = this.canPurchase = false;
   };
@@ -1097,7 +1097,7 @@ export function initializeProgressionUpgrades() {
     var a = (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).getScroll(),
       b = this.canPurchase,
       c = game.state.scrollCaster.stats.characterLevel,
-      d = a.locked ? a.sg : a.sg + (a.upgradeCount + 1) * a.Yi;
+      d = a.locked ? a.baseCapacity : a.baseCapacity + (a.upgradeCount + 1) * a.Yi;
     if (a.locked) {
       this.canPurchase = c >= d && game.state.party.gold >= a.rn;
       this.affordableSoon = !this.canPurchase && c >= d;
@@ -1183,7 +1183,7 @@ export function initializeProgressionUpgrades() {
     return c;
   };
   AdventurePointUpgrade.prototype = new Upgrade();
-  AdventurePointUpgrade.prototype.og = function () {
+  AdventurePointUpgrade.prototype.resetState = function () {
     this.purchased = this.canPurchase = false;
     this.cachedCanPurchase = !this.canPurchase;
     var a = getPointUpgradeModifier(this);

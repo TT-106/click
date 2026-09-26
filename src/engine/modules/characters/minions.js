@@ -19,9 +19,9 @@ export function initializeCharactersMinions() {
         this.eh.splice(b, 1);
       }
       b = game.allies;
-      a = (/** @type {any} */ (b)).Pf.indexOf(a);
+      a = (/** @type {any} */ (b)).allies.indexOf(a);
       if (-1 < a) {
-        (/** @type {any} */ (b)).Pf.splice(a, 1);
+        (/** @type {any} */ (b)).allies.splice(a, 1);
       }
     }
   };

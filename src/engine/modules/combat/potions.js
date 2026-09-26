@@ -12,18 +12,18 @@ export function Potion(a) {
   this.modifierId = a.modifierId;
   this.active = false;
   this.activationTurn = 0;
-  this.mg = getPotionModifier(this.modifierId);
+  this.modifier = getPotionModifier(this.modifierId);
 }
 export function setPotionActive(a, b) {
   var c = a.active;
   a.active = b;
   if (a.active && !c) {
-    if (a.mg) {
-      a.mg.currentValue = a.mg.activeValue;
+    if (a.modifier) {
+      a.modifier.currentValue = a.modifier.activeValue;
     }
   } else {
-    if (!a.active && c && a.mg) {
-      a.mg.currentValue = a.mg.defaultValue;
+    if (!a.active && c && a.modifier) {
+      a.modifier.currentValue = a.modifier.defaultValue;
     }
   }
 }
@@ -74,7 +74,7 @@ export function getPotionModifier(a) {
   return null;
 }
 export function isPotionModifierActive(a) {
-  return a.mg && a.mg.currentValue === a.mg.activeValue;
+  return a.modifier && a.modifier.currentValue === a.modifier.activeValue;
 }
 export function PotionDrop(a, b, c, d) {
   this.potion = a;
@@ -240,8 +240,8 @@ export function initializeCombatPotions() {
     if (!(this.active || !this.active && isPotionModifierActive(this))) {
       this.active = true;
       this.activationTurn = game.state.turnNumber;
-      if (this.mg) {
-        this.mg.currentValue = this.mg.activeValue;
+      if (this.modifier) {
+        this.modifier.currentValue = this.modifier.activeValue;
       }
       game.state.statisticsRecorder.recordPotionUsed();
     }
