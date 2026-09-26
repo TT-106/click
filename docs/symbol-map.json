@@ -7648,7 +7648,9 @@
     "pj": "countsByEventType",
     "tl": "pointUpgrades",
     "xa": "spellDefinition",
-    "oc": "frameIndex"
+    "oc": "frameIndex",
+    "Uc": "firstColumnButtons",
+    "Vc": "secondColumnButtons"
   },
   "gameFields": {
     "B": "tileSize",

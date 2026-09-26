@@ -286,3 +286,9 @@ RunStatistics 的 `On/Lk/qn/Mj/wi/uk` → `turnCount/doorsOpened/roomsCleared/le
 此前第十二轮把 `AnimationFrame.oc` 视为写入后未读、暂不命名。本轮对照原版 `c2.js:7109-7129`：`Qb` 构造动画帧列表时以递增的 `b++` 传给 `Rb`，后者存入 `oc`；同一数组在渲染命令 `c2.js:24844` 由 `this.oc` 索引。视觉效果的 `oc` 在 `c2.js:7235-7240` 按帧时长递增并按 `De`（帧数）回绕，法术预览的 `oc` 在 `c2.js:24158` 直接索引帧数组；五个源码文件的 22 处访问因此同为帧索引（VisualEffect 在定向动画中把初值设为方向帧索引）。旧结论的证据级别已由原版构造链补足，按单一语义映射落地，不改播放时序和 RNG，也不触及存档键。
 
 `scripts/rename-field.mjs` 守卫替换 22 处后，`src` 中 `.oc`/`oc:` 残留 0；check/typecheck/parity/42 场景/e2e 全绿（场景含逐像素渲染指纹），`analyze-fields.mjs` 清单 1,174 → 1,173，fields 段 264 → 265。
+
+## 第十九轮落地：表格前两列按钮数组 `Uc/Vc`（2026-09-26）
+
+`views/achievements.js` 的 AchievementListView 与 PointUpgradeListView、`views/character.js` 的 SkillsTabView 都在表格每行第 0/1 列构造 `UpgradeButtonView`，分别 push 到 `Uc/Vc`，随后按数组 reset/render；没有玩法状态或存档参与。原版 `c2.js:27155-27161/28241-28246/28390-28394` 的三处构造—消费链逐项同构。按列位置命名 `firstColumnButtons`/`secondColumnButtons`，两文件各字母 21 处、合计 42 处，列 3/4 的 `Nf/Pn` 留待后续取证。
+
+浏览器 E2E 直接断言角色技能第二列存在，并做故意改成不存在列号的反向验证（如期失败）。起始队伍无冒险点第二列实例，不能把该空列当成回归；这条起初过强的探针已撤回。check/typecheck/parity/42 场景/e2e 全绿；混淆清单 1,173 → 1,171，fields 段 265 → 267。

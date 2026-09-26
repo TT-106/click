@@ -68,3 +68,5 @@
 31. 宝箱交互必须同时满足“宝箱在角色所在房间”和“设置搜索目标”：原版 `c2.js:27715-27721` 按钮令宝箱 `el=true` 并调用 `Game.i.da.hq(chest)`，重构版 `views/dungeons.js:25-28` 同构；角色随后在 `characters/character.js:1044-1140` 的 `actionType=12` 分支打开并发放掉落、更新统计。`treasure-chest-looted` 在固定 RNG 下由正常地牢探索生成宝箱，只按角色当前房间选择，原版与重构版各自观察到 `treasureChestsLooted` 增长且完整存档相等；暂时禁用目标设置时原版侧断言失败。这个证据只覆盖 type=1 财宝箱，未覆盖 type=2 武器架/type=3 书架或地面掉落逐项拾取。
 
 32. `oc` 的四种运行时所有者都表示动画帧数组索引：原版 `c2.js:7109-7129` 用递增 `b++` 构造 `AnimationFrame.oc`；`c2.js:24844` 用 `RenderCommand.oc` 读取数组；`c2.js:7235-7240` 让 `VisualEffect.oc` 逐帧递增并按帧数回绕；`c2.js:24158` 用 `SpellUpgradeDetails.oc` 索引预览帧。原先把未读的 `AnimationFrame.oc` 列为 MEDIUM 的旧结论已由构造链补足。五文件 22 处统一为 `frameIndex`，`src` 残留 0，逐像素渲染场景及完整差分均通过。
+
+33. `Uc/Vc` 在 AchievementListView、PointUpgradeListView、SkillsTabView 的同构表格里分别保存第 0/1 列创建的 `UpgradeButtonView`，之后各自 reset/render。两字段共 42 处改为 `firstColumnButtons`/`secondColumnButtons`；浏览器端角色技能第二列容器存在，改成不存在列号的探针会使 E2E 失败。起始存档没有冒险点列表第二列实例，不能用该列是否存在判断视图有无回归。

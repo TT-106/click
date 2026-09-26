@@ -52,6 +52,8 @@ try {
     return Object.entries(want).filter(([sel])=>document.querySelectorAll(sel).length===0).map(([, label])=>label);
   });
   assert.deepEqual(missing, [], 'c2c.user.js 依赖的外部 DOM 契约出现缺失');
+  assert.ok(await page.locator('[id^="characterSkillsContainer0_0_1_"]').count() > 0,
+    '角色技能第二列按钮未渲染');
 
   await page.locator('#header-settings').click();
   await page.locator('[data-option="effects"]').uncheck();

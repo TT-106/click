@@ -56,6 +56,7 @@
 
 - 外部自动化脚本 `archive/original/c2c.user.js` 只通过 jQuery 选择器观察/操作游戏。`scripts/test-browser.mjs` 现在逐项断言它实际使用的 10 个选择器在活动 DOM 中存在：`#encounterNotificationPanel`、`#treasureChestLootButtonPanel`、`.gameTabLootButtonPanel`、`#adventurerEffectIconA0/B0`、`#potionButton_Row0_Col0`、`.potionContentContainer`、`#scrollButtonCell0`、`#pointUpgradesContainer_0_0_0`、`[id^="characterSkillsContainer0_0_0_"]`。缺失即失败，且经过反向验证（把 `#scrollButtonCell0` 指向不存在的 id 后 E2E 如期报错）。
 - 只在瞬时状态出现的契约（`.bossEncounterNotificationDiv`、`.lootButton`、`.potionButtonActive`、`.scrollButton`）未纳入，需要专门场景才有意义。
+- 本轮另断言角色技能表第二列的按钮容器实际存在；把列号改成不存在的值后 E2E 按预期失败。冒险点列表在起始存档中第二列为空，因此没有将该列的存在性作为通用条件。
 - `window.Game` 已私有化（恢复工程的既定决策）；外部若直接依赖 `window.Game` 需走 `adapter.js`。这是有意的边界，不是回归——但确实意味着旧脚本若用全局对象而非 DOM 就需要改。
 
 ## 6. 未覆盖区域（如实陈述）— 法术类别已全覆盖，余下为归因与入口分层

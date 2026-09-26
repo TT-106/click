@@ -14,8 +14,8 @@ export function AchievementListView(a) {
   this.elementId = a;
   this.visible = true;
   this.Ot = this.Nt = this.Hq = this.Iq = null;
-  this.Uc = [];
-  this.Vc = [];
+  this.firstColumnButtons = [];
+  this.secondColumnButtons = [];
   this.Nf = [];
   this.QC = "achievementsHeaderSpan";
   this.pz = -1;
@@ -63,8 +63,8 @@ export function PointUpgradeListView(a) {
   this.elementId = a;
   this.visible = true;
   this.Rl = this.hj = this.Gt = null;
-  this.Uc = [];
-  this.Vc = [];
+  this.firstColumnButtons = [];
+  this.secondColumnButtons = [];
 }
 export function PointsView(a) {
   this.elementId = "pointsTabContent";
@@ -82,8 +82,8 @@ export function initializeViewsAchievements() {
   AchievementListView.prototype.uo = function () {
     clearElementById(this.elementId);
     this.Iq = null;
-    this.Uc.length = 0;
-    this.Vc.length = 0;
+    this.firstColumnButtons.length = 0;
+    this.secondColumnButtons.length = 0;
     this.Nf.length = 0;
     /** @type {{Zn: () => void}} */ (/** @type {unknown} */ (this)).Zn();
     var a = this.elementId,
@@ -110,21 +110,21 @@ export function initializeViewsAchievements() {
         n.width = 150;
         h.width = 150;
         if (g < b.length) {
-          this.Uc.push(new UpgradeButtonView(l.id, b[g], g, true));
+          this.firstColumnButtons.push(new UpgradeButtonView(l.id, b[g], g, true));
         }
         if (g < c.length) {
-          this.Vc.push(new UpgradeButtonView(n.id, c[g], g, true));
+          this.secondColumnButtons.push(new UpgradeButtonView(n.id, c[g], g, true));
         }
         if (g < d.length) {
           this.Nf.push(new UpgradeButtonView(h.id, d[g], g, true));
         }
       }
     }
-    for (a = 0; a < this.Uc.length; a++) {
-      this.Uc[a].reset();
+    for (a = 0; a < this.firstColumnButtons.length; a++) {
+      this.firstColumnButtons[a].reset();
     }
-    for (a = 0; a < this.Vc.length; a++) {
-      this.Vc[a].reset();
+    for (a = 0; a < this.secondColumnButtons.length; a++) {
+      this.secondColumnButtons[a].reset();
     }
     for (a = 0; a < this.Nf.length; a++) {
       this.Nf[a].reset();
@@ -157,11 +157,11 @@ export function initializeViewsAchievements() {
     refreshUpgradeCollection(this.Nt);
     refreshUpgradeCollection(this.Ot);
     var a;
-    for (a = 0; a < this.Uc.length; a++) {
-      this.Uc[a].render();
+    for (a = 0; a < this.firstColumnButtons.length; a++) {
+      this.firstColumnButtons[a].render();
     }
-    for (a = 0; a < this.Vc.length; a++) {
-      this.Vc[a].render();
+    for (a = 0; a < this.secondColumnButtons.length; a++) {
+      this.secondColumnButtons[a].render();
     }
     for (a = 0; a < this.Nf.length; a++) {
       this.Nf[a].render();
@@ -249,8 +249,8 @@ export function initializeViewsAchievements() {
   PointUpgradeListView.prototype.uo = function () {
     clearElementById(this.elementId);
     this.Gt = null;
-    this.Uc.length = 0;
-    this.Vc.length = 0;
+    this.firstColumnButtons.length = 0;
+    this.secondColumnButtons.length = 0;
     /** @type {{Zn: () => void}} */ (/** @type {unknown} */ (this)).Zn();
     var a = this.elementId,
       container = getElement(a);
@@ -271,18 +271,18 @@ export function initializeViewsAchievements() {
         h.width = 150;
         g.width = 150;
         if (f < b.length) {
-          this.Uc.push(new UpgradeButtonView(h.id, b[f], f, true));
+          this.firstColumnButtons.push(new UpgradeButtonView(h.id, b[f], f, true));
         }
         if (f < c.length) {
-          this.Vc.push(new UpgradeButtonView(g.id, c[f], f, true));
+          this.secondColumnButtons.push(new UpgradeButtonView(g.id, c[f], f, true));
         }
       }
     }
-    for (a = 0; a < this.Uc.length; a++) {
-      this.Uc[a].reset();
+    for (a = 0; a < this.firstColumnButtons.length; a++) {
+      this.firstColumnButtons[a].reset();
     }
-    for (a = 0; a < this.Vc.length; a++) {
-      this.Vc[a].reset();
+    for (a = 0; a < this.secondColumnButtons.length; a++) {
+      this.secondColumnButtons[a].reset();
     }
   };
   PointUpgradeListView.prototype.Zn = function () {
@@ -306,11 +306,11 @@ export function initializeViewsAchievements() {
     refreshUpgradeCollection(this.hj);
     refreshUpgradeCollection(this.Rl);
     var a;
-    for (a = 0; a < this.Uc.length; a++) {
-      this.Uc[a].render();
+    for (a = 0; a < this.firstColumnButtons.length; a++) {
+      this.firstColumnButtons[a].render();
     }
-    for (a = 0; a < this.Vc.length; a++) {
-      this.Vc[a].render();
+    for (a = 0; a < this.secondColumnButtons.length; a++) {
+      this.secondColumnButtons[a].render();
     }
   };
   PointsView.prototype = new TabView();

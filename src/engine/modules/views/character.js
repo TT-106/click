@@ -165,8 +165,8 @@ export function SkillsTabView(a, b, c) {
   this.tabState = a;
   this.adventurerIndex = c;
   this.ry = this.qy = this.Rl = this.hj = this.Ax = null;
-  this.Uc = [];
-  this.Vc = [];
+  this.firstColumnButtons = [];
+  this.secondColumnButtons = [];
   this.Nf = [];
   this.Pn = [];
 }
@@ -650,8 +650,8 @@ export function initializeViewsCharacter() {
   SkillsTabView.prototype.reset = function () {
     clearElementById(this.elementId);
     this.Ax = null;
-    this.Uc.length = 0;
-    this.Vc.length = 0;
+    this.firstColumnButtons.length = 0;
+    this.secondColumnButtons.length = 0;
     this.Nf.length = 0;
     this.Pn.length = 0;
     (/** @type {SkillsTabView & { Zn: () => void }} */ (/** @type {unknown} */ (this))).Zn();
@@ -685,10 +685,10 @@ export function initializeViewsCharacter() {
           s.width = 150;
           l.width = 150;
           if (h < skillUpgrades.length) {
-            this.Uc.push(new UpgradeButtonView(n.id, skillUpgrades[h], h, true));
+            this.firstColumnButtons.push(new UpgradeButtonView(n.id, skillUpgrades[h], h, true));
           }
           if (h < c.length) {
-            this.Vc.push(new UpgradeButtonView(p.id, c[h], h, true));
+            this.secondColumnButtons.push(new UpgradeButtonView(p.id, c[h], h, true));
           }
           if (h < d.length) {
             this.Nf.push(new UpgradeButtonView(s.id, d[h], h, true));
@@ -701,11 +701,11 @@ export function initializeViewsCharacter() {
         console.log("no upgrades configured for character");
       }
     }
-    for (a = 0; a < this.Uc.length; a++) {
-      this.Uc[a].reset();
+    for (a = 0; a < this.firstColumnButtons.length; a++) {
+      this.firstColumnButtons[a].reset();
     }
-    for (a = 0; a < this.Vc.length; a++) {
-      this.Vc[a].reset();
+    for (a = 0; a < this.secondColumnButtons.length; a++) {
+      this.secondColumnButtons[a].reset();
     }
     for (a = 0; a < this.Nf.length; a++) {
       this.Nf[a].reset();
@@ -727,11 +727,11 @@ export function initializeViewsCharacter() {
   };
   SkillsTabView.prototype.update = function () {
     var a;
-    for (a = 0; a < this.Uc.length; a++) {
-      this.Uc[a].render();
+    for (a = 0; a < this.firstColumnButtons.length; a++) {
+      this.firstColumnButtons[a].render();
     }
-    for (a = 0; a < this.Vc.length; a++) {
-      this.Vc[a].render();
+    for (a = 0; a < this.secondColumnButtons.length; a++) {
+      this.secondColumnButtons[a].render();
     }
     for (a = 0; a < this.Nf.length; a++) {
       this.Nf[a].render();

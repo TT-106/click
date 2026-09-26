@@ -1,53 +1,5 @@
 [
   {
-    "name": "Uc",
-    "reads": 18,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\achievements.js:17",
-        "code": "this.Uc"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\achievements.js:66",
-        "code": "this.Uc"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\achievements.js:85",
-        "code": "this.Uc"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\views\\achievements.js",
-      "src\\engine\\modules\\views\\character.js"
-    ]
-  },
-  {
-    "name": "Vc",
-    "reads": 18,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\achievements.js:18",
-        "code": "this.Vc"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\achievements.js:67",
-        "code": "this.Vc"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\achievements.js:86",
-        "code": "this.Vc"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\views\\achievements.js",
-      "src\\engine\\modules\\views\\character.js"
-    ]
-  },
-  {
     "name": "ed",
     "reads": 7,
     "writes": 12,
