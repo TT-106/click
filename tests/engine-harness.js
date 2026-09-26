@@ -290,6 +290,28 @@ window.harness = {
     }
     return { purchased: Number(purchased), snapshot: snapshot() };
   },
+  lootTreasureDuringExplore({ maxTurns = 15000 } = {}) {
+    const registry = original ? window.Game.th : game.treasure;
+    const party = original ? window.Game.i.da : game.state.party;
+    const adventurers = original ? window.Game.i.D : game.state.adventurers;
+    const before = snapshot().statistics.treasureChestsLooted;
+    let selected = 0;
+    let spawned = 0;
+    for (let i = 0; i < maxTurns; i++) {
+      advance();
+      spawned = Math.max(spawned, registry.Mn.length);
+      if (snapshot().statistics.treasureChestsLooted > before) break;
+      // 与宝箱按钮相同：只选择已进入角色所在房间、尚未打开的宝箱。
+      const chest = registry.Mn.find(chest => !chest.Kg && adventurers.some(a =>
+        (original ? a.p.w : a.position.room) === chest.Nn));
+      if (chest && !chest.el) {
+        chest.el = true;
+        party.hq(chest);
+        selected++;
+      }
+    }
+    return { selected, spawned, looted: snapshot().statistics.treasureChestsLooted - before, snapshot: snapshot() };
+  },
   // U7：药水激活也没有非视图入口（Potion.aw 只由药水按钮调用），激活会在存档里
   // 记 statistics.potionsUsed，因此两端各自断言计数增长，再照常做完整存档差分。
   // aw / 库存数组字段 re 两端同名（尚未重命名），只有 Game 上的容器字段不同名。

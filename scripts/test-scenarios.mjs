@@ -62,6 +62,9 @@ const scrollWasCast = (s) => ({ scrollCast: (s.statistics?.scrollsUsed ?? 0) > (
 const farmWasPurchased = (s) => ({
   farmPurchased: (s.farms?.length ?? 0) > 0 && (s.statistics?.farmsPurchased ?? 0) > 0,
 });
+const treasureWasLooted = (s) => ({
+  treasureLooted: (s.statistics?.treasureChestsLooted ?? 0) > (base.statistics?.treasureChestsLooted ?? 0),
+});
 // U7：药水激活在视图之外没有入口，激活后存档里只有 statistics.potionsUsed 可证。
 const potionWasUsed = (s) => ({ potionUsed: (s.statistics?.potionsUsed ?? 0) > 0 });
 const scenarios = [
@@ -331,6 +334,14 @@ const scenarios = [
     ],
   },
   {
+    name: 'treasure-chest-looted',
+    make: () => base,
+    steps: [
+      { lootTreasureDuringExplore: 15000, check: treasureWasLooted },
+      { turns: 900, check: treasureWasLooted },
+    ],
+  },
+  {
     name: 'autosave-payload',
     // 自动保存计时分支 + 落盘字节比对：两端跑同样的真实帧循环，比较写进 localStorage 的原文。
     make: () => base,
@@ -458,7 +469,7 @@ try {
         // effectType 表示这一步改用"逐帧扫描活怪物效果队列"的推进方式，并直接对账施加次数。
         // purchaseUpgrades 表示这一步先推进再驱动升级购买（U7：只有视图层会触发的路径）。
         const step = Array.isArray(rawStep) ? { turns: rawStep[0], check: rawStep[1] } : rawStep;
-        const { turns, check, effectType, purchaseUpgrades, purchasePointUpgrades, claimAchievement, equipBestItems, castScrollDuringCombat, purchaseDungeonFarm, purchaseDungeonRowFarm, activatePotions, frames } = step;
+        const { turns, check, effectType, purchaseUpgrades, purchasePointUpgrades, claimAchievement, equipBestItems, castScrollDuringCombat, purchaseDungeonFarm, purchaseDungeonRowFarm, lootTreasureDuringExplore, activatePotions, frames } = step;
         const results = await Promise.all(pages.map(async p => {
           await p.page.evaluate(ms => window.harness.setTime(ms), HARNESS_FIXED_NOW);
           // 重置后无队伍：走真实帧循环（守卫路径），而非裸推进
@@ -471,6 +482,7 @@ try {
           if (castScrollDuringCombat !== undefined) return p.page.evaluate(a => window.harness.castScrollDuringCombat(a), { maxTurns: castScrollDuringCombat });
           if (purchaseDungeonFarm) return p.page.evaluate(a => window.harness.purchaseDungeonFarm(a), { turns });
           if (purchaseDungeonRowFarm) return p.page.evaluate(a => window.harness.purchaseDungeonRowFarm(a), { turns });
+          if (lootTreasureDuringExplore !== undefined) return p.page.evaluate(a => window.harness.lootTreasureDuringExplore(a), { maxTurns: lootTreasureDuringExplore });
           if (activatePotions !== undefined) return p.page.evaluate(a => window.harness.activatePotions(a), { turns, limit: activatePotions });
           // frames：走真实帧循环（loop.tick 内含 view.render 的 try/catch），随后读画布不透明像素
           if (frames !== undefined) return p.page.evaluate(n => {
@@ -575,6 +587,13 @@ try {
           assert.equal(counts[1], counts[0], `两端 type=${effectType} 施加次数不一致（原版 ${counts[0]} / 重构版 ${counts[1]}）`);
           console.log(`  · type=${effectType} 直接计数两端一致 = ${counts[0]}`);
         }
+        if (lootTreasureDuringExplore !== undefined) {
+          for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {
+            assert.ok(results[i].selected > 0, `${label} 端必须选择角色所在房间的宝箱；最多曾生成 ${results[i].spawned} 个`);
+            assert.ok(results[i].looted > 0, `${label} 端必须真的搜索宝箱`);
+          }
+          assert.equal(results[1].selected, results[0].selected, '两端选择宝箱次数不同');
+        }
         // 场景有效性断言：对每一端独立验证"场景确实产生了预期效果"
         for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {
           if (check) {
@@ -595,6 +614,7 @@ try {
             if (verdict.itemEquipEvents !== undefined) assert.equal(verdict.itemEquipEvents, true, `${label} 装备物品事件计数必须真实增长`);
             if (verdict.scrollCast !== undefined) assert.equal(verdict.scrollCast, true, `${label} 卷轴使用统计必须真实增长`);
             if (verdict.farmPurchased !== undefined) assert.equal(verdict.farmPurchased, true, `${label} 农场实体与购买统计必须真实增长`);
+            if (verdict.treasureLooted !== undefined) assert.equal(verdict.treasureLooted, true, `${label} 财宝箱拾取统计必须真实增长`);
             if (verdict.potionUsed !== undefined) assert.equal(verdict.potionUsed, true, `${label} 必须真的激活至少一瓶药水（potionsUsed 增长）`);
             if (verdict.note && i === 0) console.log(`  · ${verdict.note}`);
             if (verdict.victory !== undefined) assert.equal(verdict.victory, true, `${label} 必须真的走完征服尾部并触发胜利`);

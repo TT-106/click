@@ -36,7 +36,7 @@
 
 17. 原版全局：`window.Game`（=w）、`Game.Hr`=GameLoop（sB 实例）、`Game.Hr.Hr()`=帧 tick、`window.lB()`=序列化、`window.pB(15)`=单回合步进、`game.hE(text)`=导入存档、`game.Em`=initialized、`game.ig`=processingOffline、`game.jf/Vj`=offlineDuration/offlineProcessed。
 18. 重构版入口：`src/engine/adapter.js`（唯一产品入口，命令校验 + 只读快照）；内部接口 `src/engine/internal-api.js`。
-19. 存档兼容契约：`tests/fixtures/original.c2save` + parity（0/1/99/900 回合）+ 场景矩阵（当前 41 场景）+ codec 单测 + `autosave-payload` 场景（比对真正落盘的原文）。
+19. 存档兼容契约：`tests/fixtures/original.c2save` + parity（0/1/99/900 回合）+ 场景矩阵（当前 42 场景）+ codec 单测 + `autosave-payload` 场景（比对真正落盘的原文）。
 
 ## 已修复的回归（方法论证据）
 
@@ -64,3 +64,5 @@
 29. `farmAndDungeonUpgrades` 的名称会误导测试设计：`content/balance.js:497` 的两个实例是 `AutoPurchaseDungeonUpgrade`（`upgrades.js:1020-1028` 记录农场收获并增加击杀）和 `CollectFarmUpgrade`（`:1253-1260` 收集商店金币），**都不是购买农场**。购买入口是 `PurchaseCastleUpgrade`（`balance.js:494`）与 `views/dungeons.js:68` 直接持有的 `PurchaseDungeonUpgrade`；原版分别在 `c2.js:23399/27759` 构造对应对象。`PurchaseDungeonUpgrade` 虽不在全局升级集合，仍被地牢行视图使用，不能据全局 import 图误判为死实现。
 
 30. `Scroll` 构造器原版 `c2.js:12892` 读定义 `a.xa`，六条卷轴定义在 `c2.js:13027-13088` 均写 `xa:`。重构构造器 `combat/scrolls.js:43` 已读 `a.spellDefinition`，定义却曾仍写 `xa:`，导致所有卷轴 `mB` 为空；休克卷轴施放时原版 `spellCastCount` 增 1、重构版误走普通攻击令 `rangedAttackCount` 增 1。`scroll-cast-in-combat` 首跑直接抓到该分叉，定义六键已同批改为 `spellDefinition:`，39 场景及 8h/24h soak 全绿。此例说明差分的覆盖口径必须包括入口施放，库存相等不会保护效果。`rename-field.mjs` 在事后全库回扫还暴露漏导入 `node:path`：写盘已成功却以 ReferenceError 退出；导入与成员残留正则已修复，临时文件零命中和残留阳性探针均正常完成。
+
+31. 宝箱交互必须同时满足“宝箱在角色所在房间”和“设置搜索目标”：原版 `c2.js:27715-27721` 按钮令宝箱 `el=true` 并调用 `Game.i.da.hq(chest)`，重构版 `views/dungeons.js:25-28` 同构；角色随后在 `characters/character.js:1044-1140` 的 `actionType=12` 分支打开并发放掉落、更新统计。`treasure-chest-looted` 在固定 RNG 下由正常地牢探索生成宝箱，只按角色当前房间选择，原版与重构版各自观察到 `treasureChestsLooted` 增长且完整存档相等；暂时禁用目标设置时原版侧断言失败。这个证据只覆盖 type=1 财宝箱，未覆盖 type=2 武器架/type=3 书架或地面掉落逐项拾取。
