@@ -69,7 +69,9 @@ const scenarios = [
   {
     name: 'fireball-blast-stun',
     make: () => withClassSpell(base, 4, '火球'),
-    steps: [[3000, snap => ({ spellCast: snap.statistics.spellCastCount > base.statistics.spellCastCount })], [3000, null]],
+    // 第一步同时直接计数 blastStunSpell（cat=2、statusEffectTypeId=14）被施加到活怪物上的次数，
+    // 两端都必须 > 0 且数值相等；效果队列不入存档，因此这是独立的直接观察。
+    steps: [{ turns: 3000, check: snap => ({ spellCast: snap.statistics.spellCastCount > base.statistics.spellCastCount }), effectType: 14 }, [3000, null]],
   },
   {
     // 施法后的状态效果施加分支：spellCategoryId=2 且 statusEffectTypeId=4，
@@ -196,13 +198,19 @@ try {
       }
 
       let previous = await Promise.all(pages.map(p => p.page.evaluate(() => window.harness.snapshot())));
-      for (const [turns, check] of scenario.steps) {
-        const states = await Promise.all(pages.map(async p => {
+      for (const rawStep of scenario.steps) {
+        // 步骤可以是 [turns, check] 或 { turns, check, effectType }
+        // effectType 表示这一步改用"逐帧扫描活怪物效果队列"的推进方式，并直接对账施加次数。
+        const step = Array.isArray(rawStep) ? { turns: rawStep[0], check: rawStep[1] } : rawStep;
+        const { turns, check, effectType } = step;
+        const results = await Promise.all(pages.map(async p => {
           await p.page.evaluate(ms => window.harness.setTime(ms), HARNESS_FIXED_NOW);
           // 重置后无队伍：走真实帧循环（守卫路径），而非裸推进
-          if (scenario.restart || scenario.reset) return p.page.evaluate(n => window.harness.idle(n), turns);
-          return p.page.evaluate(turns => window.harness.advance(turns), turns);
+          if (scenario.restart || scenario.reset) return { snapshot: await p.page.evaluate(n => window.harness.idle(n), turns) };
+          if (effectType !== undefined) return p.page.evaluate(a => window.harness.countEffectApplications(a.turns, a.effectType), { turns, effectType });
+          return { snapshot: await p.page.evaluate(turns => window.harness.advance(turns), turns) };
         }));
+        const states = results.map(r => r.snapshot);
         try {
           assert.deepEqual(states[1], states[0], `推进 ${turns} 回合后状态分叉`);
         } catch (error) {
@@ -222,6 +230,14 @@ try {
             console.error(`  [诊断] 首处分叉 @${i}\n  ORIG: ${s[0].slice(Math.max(0, i - 100), i + 60)}\n  REF : ${s[1].slice(Math.max(0, i - 100), i + 60)}`);
           }
           throw error;
+        }
+        if (effectType !== undefined) {
+          const counts = results.map(r => r.applications);
+          for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {
+            assert.ok(counts[i] > 0, `${label} 必须真的观察到 type=${effectType} 效果被施加到活怪物`);
+          }
+          assert.equal(counts[1], counts[0], `两端 type=${effectType} 施加次数不一致（原版 ${counts[0]} / 重构版 ${counts[1]}）`);
+          console.log(`  · type=${effectType} 直接计数两端一致 = ${counts[0]}`);
         }
         // 场景有效性断言：对每一端独立验证"场景确实产生了预期效果"
         for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {

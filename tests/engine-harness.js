@@ -117,7 +117,35 @@ window.harness = {
   // 空转：经真实帧循环推进时间（无队伍时循环只待机）——用于重置后的守卫路径
   idle(count) { for (let i = 0; i < count; i++) { fixedNow += 250; loopTick(); } return snapshot(); },
   // U1 诊断：统一角色列表访问（原版 w.i.D / 重构 game.state.adventurers）
-  characters() { return original ? window.Game.i.D : game.state.adventurers; }
+  characters() { return original ? window.Game.i.D : game.state.adventurers; },
+  // U4 直接观察：逐帧扫描"活怪物"的瞬态效果队列，统计某类状态效果被施加的次数。
+  // 队列不入存档，因此这是唯一能在两端各自计数再对账的入口；扫描只读数组，不消耗随机数。
+  // 原版：w.Gf.Og 列表、角色效果容器 Ja.of、效果类型字段 X；重构版对应 effects.of / statusEffectTypeId。
+  countEffectApplications(turns, typeId) {
+    const monsterList = () => (original ? window.Game.Gf.Og : game.monsters.Og);
+    const effectList = m => {
+      const holder = original ? m.Ja : m.effects;
+      return holder && holder.of;
+    };
+    const effectType = original ? (e => e.X) : (e => e.statusEffectTypeId);
+    let applications = 0;
+    const carrying = new Set();
+    for (let i = 0; i < turns; i++) {
+      advance();
+      const list = monsterList();
+      if (!Array.isArray(list)) throw new Error('活怪物列表访问失败');
+      for (const monster of list) {
+        const effects = effectList(monster);
+        const has = Array.isArray(effects) && effects.some(e => effectType(e) === typeId);
+        if (has) {
+          if (!carrying.has(monster)) { carrying.add(monster); applications++; }
+        } else {
+          carrying.delete(monster);
+        }
+      }
+    }
+    return { applications, snapshot: snapshot() };
+  }
 };
 
 
