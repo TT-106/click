@@ -14,7 +14,7 @@ import { TARGETED_EFFECT } from "./sprites.js";
 import { createElement, getElement } from "../views/dom.js";
 export function RenderCommand() {
   this.nd = this.sprite = null;
-  this.vr = this.ur = this.oc = 0;
+  this.vr = this.ur = this.frameIndex = 0;
   this.pt = false;
   this.alpha = this.am = this.$q = this.Zq = 0;
 }
@@ -36,7 +36,7 @@ export function setSpriteRenderCommand(a, b, c, d, f, g, h) {
 }
 export function setAnimationRenderCommand(a, b, c, d, f, g, h, l) {
   a.nd = b;
-  a.oc = c;
+  a.frameIndex = c;
   a.ur = d;
   a.Zq = f;
   a.$q = g;
@@ -241,7 +241,7 @@ export function initializeRenderingScene() {
         b = this.sprite.Ad.spriteSize;
         a.drawImage(this.sprite.Hj(), this.sprite.sourceX, this.sprite.sourceY, b, b, this.Zq, this.$q, this.am, this.am);
       } else if (this.nd) {
-        var c = this.nd.frames[this.oc];
+        var c = this.nd.frames[this.frameIndex];
         b = this.nd.Ad.spriteSize;
         a.drawImage(this.nd.Hj(), c.frameSourceX, c.frameSourceY, b, b, this.Zq, this.$q, this.am, this.am);
       }
@@ -640,7 +640,7 @@ export function initializeRenderingScene() {
               if (Wa = Ha[jb], cc = Wa.Io, 1 === cc) {
                 Ab = Wa.Zg();
                 Bb = Wa.wm;
-                bc = Wa.oc;
+                bc = Wa.frameIndex;
                 qb = Bb.x;
                 wb = Bb.y;
                 Ib = projectDungeonX(qb, wb) + 10;
@@ -711,7 +711,7 @@ export function initializeRenderingScene() {
                 for (Na = Aa; Na <= Mc; Na++) {
                   if ((ec = game.level.getTileAt(xb, Na)) && (hb = ec.tileEffect) && hb.hasSpawned && !hb.bl()) {
                     lb = hb.Zg();
-                    rc = hb.oc;
+                    rc = hb.frameIndex;
                     Ub = ec.getPixelX();
                     sb = ec.getPixelY();
                     ka = projectDungeonX(Ub, sb) + 10;

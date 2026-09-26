@@ -66,3 +66,5 @@
 30. `Scroll` 构造器原版 `c2.js:12892` 读定义 `a.xa`，六条卷轴定义在 `c2.js:13027-13088` 均写 `xa:`。重构构造器 `combat/scrolls.js:43` 已读 `a.spellDefinition`，定义却曾仍写 `xa:`，导致所有卷轴 `mB` 为空；休克卷轴施放时原版 `spellCastCount` 增 1、重构版误走普通攻击令 `rangedAttackCount` 增 1。`scroll-cast-in-combat` 首跑直接抓到该分叉，定义六键已同批改为 `spellDefinition:`，39 场景及 8h/24h soak 全绿。此例说明差分的覆盖口径必须包括入口施放，库存相等不会保护效果。`rename-field.mjs` 在事后全库回扫还暴露漏导入 `node:path`：写盘已成功却以 ReferenceError 退出；导入与成员残留正则已修复，临时文件零命中和残留阳性探针均正常完成。
 
 31. 宝箱交互必须同时满足“宝箱在角色所在房间”和“设置搜索目标”：原版 `c2.js:27715-27721` 按钮令宝箱 `el=true` 并调用 `Game.i.da.hq(chest)`，重构版 `views/dungeons.js:25-28` 同构；角色随后在 `characters/character.js:1044-1140` 的 `actionType=12` 分支打开并发放掉落、更新统计。`treasure-chest-looted` 在固定 RNG 下由正常地牢探索生成宝箱，只按角色当前房间选择，原版与重构版各自观察到 `treasureChestsLooted` 增长且完整存档相等；暂时禁用目标设置时原版侧断言失败。这个证据只覆盖 type=1 财宝箱，未覆盖 type=2 武器架/type=3 书架或地面掉落逐项拾取。
+
+32. `oc` 的四种运行时所有者都表示动画帧数组索引：原版 `c2.js:7109-7129` 用递增 `b++` 构造 `AnimationFrame.oc`；`c2.js:24844` 用 `RenderCommand.oc` 读取数组；`c2.js:7235-7240` 让 `VisualEffect.oc` 逐帧递增并按帧数回绕；`c2.js:24158` 用 `SpellUpgradeDetails.oc` 索引预览帧。原先把未读的 `AnimationFrame.oc` 列为 MEDIUM 的旧结论已由构造链补足。五文件 22 处统一为 `frameIndex`，`src` 残留 0，逐像素渲染场景及完整差分均通过。

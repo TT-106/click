@@ -1,32 +1,5 @@
 [
   {
-    "name": "oc",
-    "reads": 9,
-    "writes": 13,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\actions.js:84",
-        "code": "d.oc"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:17",
-        "code": "this.oc"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:39",
-        "code": "a.oc"
-      }
-    ],
-    "fileCount": 5,
-    "files": [
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\rendering\\sprites.js",
-      "src\\engine\\modules\\simulation\\tick.js",
-      "src\\engine\\modules\\views\\upgrade-details.js"
-    ]
-  },
-  {
     "name": "Uc",
     "reads": 18,
     "writes": 3,

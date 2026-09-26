@@ -41,7 +41,7 @@ export function SpriteAnimation(a, b, c, d, f, g, h, l) {
   this.frames = a;
 }
 export function AnimationFrame(a, b, c) {
-  this.oc = a;
+  this.frameIndex = a;
   this.frameSourceX = b;
   this.frameSourceY = c;
 }
@@ -91,9 +91,9 @@ export function VisualEffect(a, b, c, d, f) {
   }
   this.De = this.nd ? this.nd.To() : 0;
   this.bx = -1;
-  this.oc = 0;
+  this.frameIndex = 0;
   if (this.nd && this.nd.isDirectional) {
-    this.oc = getEffectDirection(this);
+    this.frameIndex = getEffectDirection(this);
   }
   this.yi = 0;
   this.uA = false;
@@ -137,21 +137,21 @@ export function getEffectDirection(a) {
 export function advanceEffectFrame(a, b) {
   a.yi += b * FRAME_DURATION_MS;
   var c = a.projectileEffect ? PROJECTILE_FRAME_DURATION_MS : EFFECT_FRAME_DURATION_MS;
-  a.bx = a.oc;
+  a.bx = a.frameIndex;
   if (a.yi >= c) {
     var d = Math.min(1, floorNumber(a.yi / c));
     a.yi = Math.max(0, floorNumber(a.yi % c));
-    a.oc += d;
-    if (a.oc >= a.De) {
+    a.frameIndex += d;
+    if (a.frameIndex >= a.De) {
       if (a.uA) {
         if (a.ud.effects.isStunned) {
-          a.oc = 0;
+          a.frameIndex = 0;
         } else {
           a.bg = true;
         }
       } else {
         if (a.projectileEffect) {
-          a.oc = 0;
+          a.frameIndex = 0;
         } else {
           a.bg = true;
         }

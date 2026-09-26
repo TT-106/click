@@ -81,7 +81,7 @@ export function advanceCombatAction(a, b) {
       }
     }
   }
-  if ((d = b.impactEffect) && d.bx !== d.oc) {
+  if ((d = b.impactEffect) && d.bx !== d.frameIndex) {
     var f = d.To();
     if (b.actionDefinition) {
       var g = b.targetCharacter,

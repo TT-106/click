@@ -280,3 +280,9 @@ RunStatistics 的 `On/Lk/qn/Mj/wi/uk` → `turnCount/doorsOpened/roomsCleared/le
 `Scroll` 构造器在原版 `c2.js:12892` 读取 `a.xa` 并建立法术对象，六条卷轴定义在 `c2.js:13027-13088` 同名赋值。重构 `combat/scrolls.js:43` 的读取端已经是 `a.spellDefinition`，定义端 `:263-322` 却遗留六个 `xa:`。这是同文件两处声明/消费失配，而非新玩法。把六个定义键改成 `spellDefinition`，保留各定义指向的法术对象、null 值及顺序，存档键不变。`scroll-cast-in-combat` 在修复前令原版 `spellCastCount` +1、重构版 `rangedAttackCount` +1；修复后两端完整 DTO 相等。`src` 内 `xa:` 与 `.xa` 均 0 命中；`symbol-map.json` fields 加入一对一映射。
 
 回归：check/typecheck/parity/39 场景/e2e/8h+24h soak 全绿；`analyze-fields.mjs` 清单 1,175 → 1,174，fields 段 263 → 264。重命名执行器的事后回扫漏导入 `node:path`，本次写盘成功后才报 ReferenceError；已修复并用临时文件零命中、源树残留阳性探针确认能完整退出并报告遗漏。
+
+## 第十八轮落地：动画帧索引 `oc` → `frameIndex`（2026-09-26）
+
+此前第十二轮把 `AnimationFrame.oc` 视为写入后未读、暂不命名。本轮对照原版 `c2.js:7109-7129`：`Qb` 构造动画帧列表时以递增的 `b++` 传给 `Rb`，后者存入 `oc`；同一数组在渲染命令 `c2.js:24844` 由 `this.oc` 索引。视觉效果的 `oc` 在 `c2.js:7235-7240` 按帧时长递增并按 `De`（帧数）回绕，法术预览的 `oc` 在 `c2.js:24158` 直接索引帧数组；五个源码文件的 22 处访问因此同为帧索引（VisualEffect 在定向动画中把初值设为方向帧索引）。旧结论的证据级别已由原版构造链补足，按单一语义映射落地，不改播放时序和 RNG，也不触及存档键。
+
+`scripts/rename-field.mjs` 守卫替换 22 处后，`src` 中 `.oc`/`oc:` 残留 0；check/typecheck/parity/42 场景/e2e 全绿（场景含逐像素渲染指纹），`analyze-fields.mjs` 清单 1,174 → 1,173，fields 段 264 → 265。
