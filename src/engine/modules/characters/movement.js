@@ -194,7 +194,7 @@ export function initializeCharactersMovement() {
   Equipment.prototype.getEffectItem = function () {
     return this.fz;
   };
-  Equipment.prototype.Qk = function (a) {
+  Equipment.prototype.equipItem = function (a) {
     this.hw[a.slot] = a;
     if (a.Cw()) {
       this.Ey = a;

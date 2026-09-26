@@ -490,7 +490,7 @@ export function initializeProgressionUpgrades() {
   EquipItemUpgrade.prototype.purchase = function () {
     var a = this.item.inventory;
     if (a) {
-      a.Qk(this.item);
+      a.equipItem(this.item);
       markUpgradeChanged(this);
     }
   };

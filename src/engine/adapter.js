@@ -84,7 +84,7 @@ export const engine = {
       location: game.currentDungeon ? game.currentDungeon.dungeonName : game.currentCastle ? game.currentCastle.castleName : '永冬荒野',
       floor: game.currentDungeon ? game.currentDungeon.currentLevelIndex + 1 : null,
       inWorld: game.worldActive,
-      inCombat: !game.state.encounter.ym,
+      inCombat: !game.state.encounter.noMonstersLeft,
       offlineProgress: game.offlineDuration ? Math.min(100, Math.round(game.offlineProcessed / game.offlineDuration * 100)) : 0,
       dungeons: {
         discovered: game.dungeons.discovered.length,

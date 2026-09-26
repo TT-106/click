@@ -144,7 +144,7 @@ export function equipItem(a, b) {
     console.log("failed to equip non-equipable item. itemSlot=" + b.slot + " charClass=" + a.characterClass);
   } else if (a.equipment) {
     var c = a.equipment.getSlotItem(b.slot);
-    a.equipment.Qk(b);
+    a.equipment.equipItem(b);
     if (a.inventory) {
       a.inventory.removeItem(b);
       if (c) {
@@ -1222,7 +1222,7 @@ export function initializeCharactersCharacter() {
   Character.prototype.getEffectItem = function () {
     return this.equipment ? (/** @type {SlotEquipment} */ (this.equipment)).getEffectItem() : null;
   };
-  Character.prototype.Qk = function (a) {
+  Character.prototype.equipItem = function (a) {
     equipItem(this, a);
     if (this.characterType === ADVENTURER_TYPE) {
       awardAdventurePoints(21);

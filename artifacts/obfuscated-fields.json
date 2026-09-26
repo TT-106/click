@@ -1,101 +1,5 @@
 [
   {
-    "name": "ym",
-    "reads": 4,
-    "writes": 4,
-    "samples": [
-      {
-        "loc": "src\\engine\\adapter.js:87",
-        "code": "game.state.encounter.ym"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\encounters.js:24",
-        "code": "this.ym"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\encounters.js:31",
-        "code": "a.ym"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\adapter.js",
-      "src\\engine\\modules\\combat\\encounters.js",
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\views\\expedition.js"
-    ]
-  },
-  {
-    "name": "Al",
-    "reads": 5,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:27",
-        "code": "this.Al"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:316",
-        "code": "this.Al"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:317",
-        "code": "this.Al"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js",
-      "src\\engine\\modules\\ai\\targeting.js"
-    ]
-  },
-  {
-    "name": "Jl",
-    "reads": 7,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:49",
-        "code": "this.Jl"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:493",
-        "code": "this.Jl"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:507",
-        "code": "this.Jl"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js"
-    ]
-  },
-  {
-    "name": "qk",
-    "reads": 3,
-    "writes": 5,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:57",
-        "code": "this.qk"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:70",
-        "code": "this.qk"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:215",
-        "code": "this.qk"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js"
-    ]
-  },
-  {
     "name": "il",
     "reads": 4,
     "writes": 4,
@@ -116,35 +20,6 @@
     "fileCount": 1,
     "files": [
       "src\\engine\\modules\\ai\\behaviors.js"
-    ]
-  },
-  {
-    "name": "Qk",
-    "reads": 6,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:147",
-        "code": "a.equipment.Qk"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:1225",
-        "code": "Character.prototype.Qk"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\movement.js:197",
-        "code": "Equipment.prototype.Qk"
-      }
-    ],
-    "fileCount": 7,
-    "files": [
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\characters\\movement.js",
-      "src\\engine\\modules\\loot\\inventory.js",
-      "src\\engine\\modules\\progression\\upgrades.js",
-      "src\\engine\\modules\\simulation\\characters.js",
-      "src\\engine\\modules\\views\\character.js",
-      "src\\engine\\modules\\views\\party-creation.js"
     ]
   },
   {
@@ -296,31 +171,6 @@
       "src\\engine\\modules\\characters\\stats.js",
       "src\\engine\\modules\\combat\\actions.js",
       "src\\engine\\modules\\progression\\statistics.js",
-      "src\\engine\\modules\\simulation\\characters.js"
-    ]
-  },
-  {
-    "name": "ol",
-    "reads": 5,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\actions.js:407",
-        "code": "game.monsters.ol"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\actions.js:408",
-        "code": "game.state.encounter.ol"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\actions.js:413",
-        "code": "game.lifecycle.ol"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\combat\\encounters.js",
       "src\\engine\\modules\\simulation\\characters.js"
     ]
   },
@@ -5656,6 +5506,29 @@
       "src\\engine\\modules\\characters\\character.js",
       "src\\engine\\modules\\characters\\movement.js",
       "src\\engine\\modules\\characters\\party.js"
+    ]
+  },
+  {
+    "name": "Al",
+    "reads": 4,
+    "writes": 1,
+    "samples": [
+      {
+        "loc": "src\\engine\\modules\\ai\\targeting.js:246",
+        "code": "this.Al"
+      },
+      {
+        "loc": "src\\engine\\modules\\ai\\targeting.js:427",
+        "code": "this.Al"
+      },
+      {
+        "loc": "src\\engine\\modules\\ai\\targeting.js:428",
+        "code": "this.Al"
+      }
+    ],
+    "fileCount": 1,
+    "files": [
+      "src\\engine\\modules\\ai\\targeting.js"
     ]
   },
   {

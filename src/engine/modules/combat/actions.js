@@ -404,13 +404,13 @@ export function resolveCharacterDefeat(a, b) {
       b.isDead = true;
       d = updateWorldTravel();
       b.sprite = d;
-      game.monsters.ol(b);
-      game.state.encounter.ol();
+      game.monsters.clearEncounter(b);
+      game.state.encounter.clearEncounter();
       recordGameEvent("Boss Defeated", "等级:" + b.stats.characterLevel);
       showFloatingText(game.floatingText, b, "击杀首领!", "white");
     }
   } else {
-    game.lifecycle.ol(a, b);
+    game.lifecycle.clearEncounter(a, b);
   }
 }
 export function enqueueCombatAction(a, b) {

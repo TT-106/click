@@ -138,7 +138,7 @@ export function initializeCharacterSkills(a, b) {
         l = game.itemGenerator,
         n = l.rollRarity((100 - globalUpgradeDefinitions.itemQualityChance.currentValue) / 100);
       if (d = generateItem(l, d, g, h, n)) {
-        a.Qk(d);
+        a.equipItem(d);
       }
     }
   }
@@ -270,7 +270,7 @@ export function initializeSimulationCharacters() {
       game.minions.Lp(a);
     }
   };
-  CharacterLifecycle.prototype.ol = function (a, b) {
+  CharacterLifecycle.prototype.clearEncounter = function (a, b) {
     if (!b.isDead) {
       var c = b.position,
         d = b.stats.characterLevel,
@@ -326,8 +326,8 @@ export function initializeSimulationCharacters() {
       b.isDead = true;
       c = updateWorldTravel();
       b.sprite = c;
-      game.monsters.ol(b);
-      game.state.encounter.ol();
+      game.monsters.clearEncounter(b);
+      game.state.encounter.clearEncounter();
       awardAdventurePoints(1);
       if (0.15 > Math.random()) {
         c = updateDungeonTravel();

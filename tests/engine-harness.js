@@ -355,7 +355,7 @@ window.harness = {
     const nameField = original ? 'Ew' : 'itemName';
     const item = inv.items.find(x => x[nameField] === itemName);
     if (!item) throw new Error('inventory missing item: ' + itemName);
-    c.Qk(item);
+    if (original) c.Qk(item); else c.equipItem(item);
     return { equippedItemName: itemName, snapshot: snapshot() };
   },
   // 冒险点升级不在 upgradeCollections 内，而在 PartyState 的点数管理器中。

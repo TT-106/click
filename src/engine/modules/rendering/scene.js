@@ -725,7 +725,7 @@ export function initializeRenderingScene() {
         }
         a.spriteRenderer.sortCommands();
         drawCharacterHighlights(a, getMonsters(), "red");
-        if (!game.state.encounter.ym) {
+        if (!game.state.encounter.noMonstersLeft) {
           drawCharacterHighlights(a, game.minions.minionList, "#007FFF");
           drawCharacterHighlights(a, game.state.adventurers, "#8B008B");
         }

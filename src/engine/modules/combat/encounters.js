@@ -21,26 +21,26 @@ import { applyBonusList } from "./skill-effects.js";
 export function EncounterState() {
   this.Ar = 0;
   this.fw = "";
-  this.ym = true;
+  this.noMonstersLeft = true;
   this.du = false;
 }
 export function resetEncounter() {
   var a = game.state.encounter;
   a.Ar = 0;
   a.fw = "";
-  a.ym = true;
+  a.noMonstersLeft = true;
   a.du = false;
 }
 export function beginEncounter(a, b) {
   var c = game.state.encounter;
   c.Ar++;
   c.fw = a;
-  c.ym = false;
+  c.noMonstersLeft = false;
   c.du = b;
 }
 export function populateEncounter(a) {
   var b = game.monsterNames;
-  if (game.state.encounter.ym) {
+  if (game.state.encounter.noMonstersLeft) {
     var c = a.Yp;
     if (0 === c) {
       if (bossEncounterModifier.currentValue && 0.2 > Math.random()) {
@@ -264,9 +264,9 @@ export function clearMonsters() {
   }
 }
 export function initializeCombatEncounters() {
-  EncounterState.prototype.ol = function () {
+  EncounterState.prototype.clearEncounter = function () {
     if (1 > getMonsters().length) {
-      this.ym = true;
+      this.noMonstersLeft = true;
       game.state.statisticsRecorder.recordRoomCleared();
       clearScrollTargets();
       awardAdventurePoints(POINT_EVENT_ENCOUNTER);
@@ -304,7 +304,7 @@ export function initializeCombatEncounters() {
     var nameGenerator = /** @type {NamedMonsterGenerator} */ (/** @type {unknown} */ (this));
     return 0.5 > Math.random() ? nameGenerator.mn(this.Pw) + "" + a : nameGenerator.mn(this.oD) + "" + nameGenerator.mn(this.mE) + "的" + a;
   };
-  MonsterRegistry.prototype.ol = function (a) {
+  MonsterRegistry.prototype.clearEncounter = function (a) {
     if (a) {
       var b = this.activeMonsters.indexOf(a);
       if (-1 < b) {

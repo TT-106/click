@@ -523,7 +523,7 @@ export function initializeViewsExpedition() {
     }
   };
   EncounterNotificationView.prototype.isVisible = function () {
-    return !game.state.encounter.ym;
+    return !game.state.encounter.noMonstersLeft;
   };
   EncounterNotificationView.prototype.update = function () {
     var a = game.state.encounter.Ar,

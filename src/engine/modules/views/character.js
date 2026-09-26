@@ -193,7 +193,7 @@ export function initializeViewsCharacter() {
       if (!b || this.item.itemValue > b.itemValue) {
         this.equipButtonDiv.style.display = "block";
         this.equipButtonDiv.onclick = function () {
-          c.Qk(a);
+          c.equipItem(a);
           return false;
         };
       } else {

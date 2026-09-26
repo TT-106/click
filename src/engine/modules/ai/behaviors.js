@@ -24,7 +24,7 @@ export function BehaviorQueue() {
 }
 export function IdleBehavior(a) {
   this.kB = a;
-  this.Al = null;
+  this.lastWanderRoom = null;
 }
 export function ExploreDungeonBehavior() {
   this.priorityWeight = 10;
@@ -46,7 +46,7 @@ export function RangedAttackBehavior(a, b, c) {
   this.CA = a;
   this.actionRange = b;
   this.fn = new Vector2();
-  this.Jl = new Vector2();
+  this.kiteVector = new Vector2();
   this.co = this.ax = 0;
 }
 export function MeleeAttackBehavior(a, b, c, d) {
@@ -54,7 +54,7 @@ export function MeleeAttackBehavior(a, b, c, d) {
   this.targetCharacter = null;
   this.targetDistance = 0;
   this.actionRange = a;
-  this.qk = c;
+  this.behaviorActionType = c;
   this.YD = d;
 }
 export function LootGoldBehavior(a) {
@@ -67,7 +67,7 @@ export function OpportunisticAttackBehavior(a) {
   this.targetCharacter = null;
   this.targetDistance = 0;
   this.actionRange = RANGED_ATTACK_RANGE;
-  this.qk = MELEE_ACTION_TYPE;
+  this.behaviorActionType = MELEE_ACTION_TYPE;
 }
 export function LootItemBehavior(a) {
   this.Dn = null;
@@ -212,7 +212,7 @@ export function SpecialAttackBehavior(a, b, c, d) {
   this.targetDistance = 0;
   this.actionRange = a;
   this.Uw = b;
-  this.qk = d;
+  this.behaviorActionType = d;
 }
 export function StunnedBehavior(a) {
   this.eo = a;
@@ -313,8 +313,8 @@ export function initializeAiBehaviors() {
     var b = a.position,
       c = b.room;
     if (c) {
-      if (b.movementTargetCleared || this.Al != c) {
-        this.Al = c;
+      if (b.movementTargetCleared || this.lastWanderRoom != c) {
+        this.lastWanderRoom = c;
         var d = roomTopPixels(c) + game.tileSize,
           f = (c.heightInTiles - 1) * game.tileSize;
         setVector(b.moveTargetPoint, roomLeftPixels(c) + game.tileSize + randomInt((c.widthInTiles - 1) * game.tileSize), d + randomInt(f));
@@ -490,7 +490,7 @@ export function initializeAiBehaviors() {
       s,
       u = 0;
     setVector(this.fn, 0, 0);
-    setVector(this.Jl, 0, 0);
+    setVector(this.kiteVector, 0, 0);
     for (s = 0; s < a.length; s++) {
       n = a[s];
       if (!(n.isDead || n.effects.isDisabled || n.effects.isConverted || n.position.room != d)) {
@@ -504,7 +504,7 @@ export function initializeAiBehaviors() {
             subtractVector(this.fn, p);
             multiplyVector(this.fn, 1 / n);
           }
-          addVector(this.Jl, this.fn);
+          addVector(this.kiteVector, this.fn);
           u++;
         }
       }
@@ -512,11 +512,11 @@ export function initializeAiBehaviors() {
     if (0 === u) {
       return false;
     }
-    normalizeVector(this.Jl);
-    multiplyVector(this.Jl, this.actionRange);
-    addVector(this.Jl, c);
-    c = this.Jl.x;
-    d = this.Jl.y;
+    normalizeVector(this.kiteVector);
+    multiplyVector(this.kiteVector, this.actionRange);
+    addVector(this.kiteVector, c);
+    c = this.kiteVector.x;
+    d = this.kiteVector.y;
     if (c < f) {
       c = f;
     } else {
@@ -551,7 +551,7 @@ export function initializeAiBehaviors() {
           return;
         }
         markAttackTurn(a);
-        a.actionType = this.qk;
+        a.actionType = this.behaviorActionType;
       } else {
         choosePointNearTarget(a.position.moveTargetPoint, this.targetCharacter.position.levelPosition, a.position.room);
         a.actionType = 1;
@@ -644,7 +644,7 @@ export function initializeAiBehaviors() {
           return;
         }
         markAttackTurn(a);
-        a.actionType = this.qk;
+        a.actionType = this.behaviorActionType;
       } else {
         choosePointNearTarget(a.position.moveTargetPoint, this.targetCharacter.position.levelPosition, a.position.room);
         a.actionType = 1;
@@ -663,10 +663,10 @@ export function initializeAiBehaviors() {
     }
     if (a.effects.isStealthed) {
       this.actionRange = MELEE_ATTACK_RANGE;
-      this.qk = 2;
+      this.behaviorActionType = 2;
     } else {
       this.actionRange = RANGED_ATTACK_RANGE;
-      this.qk = MELEE_ACTION_TYPE;
+      this.behaviorActionType = MELEE_ACTION_TYPE;
     }
     this.targetDistance = a.position.levelPosition.distanceTo(this.targetCharacter.position.levelPosition);
     return this.priorityWeight;
@@ -1518,7 +1518,7 @@ export function initializeAiBehaviors() {
           return;
         }
         markAttackTurn(a);
-        a.actionType = this.qk;
+        a.actionType = this.behaviorActionType;
       } else {
         choosePointNearTarget(a.position.moveTargetPoint, this.targetCharacter.position.levelPosition, a.position.room);
         a.actionType = 1;

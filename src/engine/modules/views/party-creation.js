@@ -70,7 +70,7 @@ export function mountPartyCreation(a) {
         refreshPartyLevels();
         for (var l = g.slotList, s = p = undefined, s = /** @type {any} */ (0); s < l.length; s++) {
           if (p = generateItem(game.itemGenerator, l[s], g, 1, 0)) {
-            (/** @type {any} */ (g)).Qk(p);
+            (/** @type {any} */ (g)).equipItem(p);
           }
         }
         applyLevelStats(n, 1, f.statMultipliers);

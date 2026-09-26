@@ -77,7 +77,7 @@ export function initializeLootInventory() {
       for (c = 0; c < f.length; c++) {
         b = f[c];
         if (!((d = a.getSlotItem(b.slot)) && !isBetterItem(b, d))) {
-          a.Qk(b);
+          a.equipItem(b);
         }
       }
     }
