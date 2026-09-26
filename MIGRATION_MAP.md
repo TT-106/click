@@ -1,12 +1,12 @@
 # MIGRATION_MAP — 从 c2.js 到 src/engine 的迁移映射
 
 > 原始单体：`archive/original/c2.js`（46,980 行，sha256 `b9dd4f56…`，见 `archive/migration/recovery-manifest.json`）。
-> 恢复方式：**AST 级机械转换**（非重写）——sprite atlas 抽取、LZ codec 复用为 vendor、ES module 化、初始化序列化为 `initialize*()` 函数、`window.Game` 私有化、持久化注入（30s 自动保存）。
+> 恢复方式：**AST 级机械转换**（非重写）——sprite atlas 抽取、LZ codec 复用为 vendor、ES module 化、初始化序列化为 `initialize*()` 函数、`window.Game` 私有化、持久化注入（原版 300s 自动保存间隔）。
 > 符号级映射：`docs/symbol-map.json`（1,231 符号）；字段级日志：`docs/reverse-engineering/semantic-map.md`。
 
 ## 模块划分（74 个初始化单元 → src/engine/modules/*）
 
-原版按初始化单元切分为 74 个模块（symbol-map.json `modules` 节，含各模块的 `initName`/bindings/lines）。按目录分层：
+原版按初始化单元切分为 74 个模块（symbol-map.json `modules` 节，含各模块的 `initName`/bindings/lines）；当前 `src/engine/modules/` 共 77 个 JS 模块，另含组合根等文件。按目录分层：
 
 | 层 | 模块 | 原版职责 |
 |---|---|---|
@@ -40,11 +40,11 @@ UI 壳（`src/app.js`、`src/ui/*`）为新增层，通过 `adapter.js` 访问�
 1. `tests/unit/rng.test.mjs` — RNG 位级差分（Babel 提取原版 `ga` 对照）。
 2. `tests/unit/save-codec.test.mjs` — 存档编码契约。
 3. `scripts/test-parity.mjs` — 同存档 + 固定 RNG/时钟，原版 vs 重构 0/1/99/900 回合全状态相等。
-4. `scripts/test-scenarios.mjs` — 9 场景差分（离线 1h/8h、药水、卷轴、金币、后期、9000 回合）。
+4. `scripts/test-scenarios.mjs` — 当前 42 场景差分（离线四态、法术类别、城堡征服、升级/点数/成就/农场/宝箱入口、渲染与自动落盘等），两端逐检查点完整 DTO 相等并设专项必达断言。
 5. `scripts/test-browser.mjs` — 真实浏览器 E2E。
 
 ## 已知未迁移/未验证区域（如实记录）
 
-- 运行时字段仍有约 1,200 处单字母访问（`artifacts/obfuscated-fields.json`），已取证待重命名的映射见 semantic-map.md；剩余部分需按所有者甄别（同一字母被压缩器复用）。
-- prestige/victory 全流程、部分法术分支、大型城堡战未进入差分场景（待扩展 fixtures）。
-- 类型体系（JSDoc/TS）未开始（M10）。
+- `artifacts/obfuscated-fields.json` 当前列出 1,171 个仍待取证的混淆属性**名**（不是访问次数）；映射与已落地记录见 `docs/reverse-engineering/semantic-map.md`。
+- prestige/reset、胜利终局与 16 类法术已进入差分；武器架、书架、地面掉落逐项拾取、农场收获及部分升级效果仍缺专项断言，详见 `REFACTOR_REPORT.md` 附录 A。
+- M10 已移除引擎模块的 `@ts-nocheck` 并通过 `npm run typecheck`；`unknown`/`any` 的细化债见 `docs/m13-exhaustion-audit.md`。
