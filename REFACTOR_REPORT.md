@@ -78,7 +78,7 @@ npm test && npm run check      # 一条命令测试
 
 Clickpocalypse II 的核心实现已从高混淆遗留代码中恢复出真实语义：关键玩法行为有 50 个差分场景 + 位级 RNG 单测 + 浏览器 E2E + 8h/24h 等价回合 soak 的自动化证据保护，存档/RNG/时间/离线/自动保存经兼容验证，业务逻辑已迁入带清晰边界的现代模块（77 个），旧文件不再是唯一真相来源。
 
-这些结论由运行与差分证明，不是主观判断；同样明确的是**尚未证明的部分**：附录 A 实际有 51 行（逐行统计），其中 37 行 PASS、14 行 PARTIAL、0 行未覆盖；旧版写成 50 行及 28/17/5 是过时合计。缺口逐项写明，`docs/reverse-engineering/unresolved.md` 的 U5/U6/U7 是继续推进的入口。
+这些结论由运行与差分证明，不是主观判断；同样明确的是**尚未证明的部分**：附录 A 实际有 51 行（逐行统计），其中 45 行 PASS、6 行 PARTIAL、0 行未覆盖；缺口逐项写明，`docs/reverse-engineering/unresolved.md` 的 U5/U6/U7 是继续推进的入口。
 
 ---
 
@@ -95,7 +95,7 @@ Clickpocalypse II 的核心实现已从高混淆遗留代码中恢复出真实�
 | 角色技能/技能树 | PASS | `purchaseUpgrades` 遍历每名角色的四棵技能树；两端各自断言 `upgrades1..4` 已解锁布尔位总数超过 fixture 基线，法术学习 type=6 实际购买且 `spells` 数量增长，逐检查点完整存档相等；未逐项验证每种技能的战斗效果 |
 | 角色属性 | PASS | 六个分量 + 生命/精神/击杀在 52 场景每个检查点全量相等 |
 | 背包 | PASS | 物品计数/容量在差分中相等（itemsFound 真实增长） |
-| 装备 | PARTIAL | 载入与生成之外，`auto-equipped` 已让装备槽与装备事件点数变化；手动逐件装备/卸下仍缺专项断言 |
+| 装备 | PASS | `manual-equip-swap` 直接驱动手动装备路径：原版 `Character.prototype.Qk` / 重构版 `Character.Qk`（equipItem 交换 + itemEquipped 点数事件 type 21），断言新装备（金属的权杖）入槽、换下旧装备（人民之美好的权杖）回背包、事件计数增长；引擎无独立"卸下"操作（`removeInventoryItemAt` 仅在卖店与装备交换路径）系原版忠实行为；600 回合自然推进 DTO 全等 |
 | 自动装备 | PASS | `auto-equipped` 两端调用 type=4 的 `EquipBestItemUpgrade`，各自断言装备槽变化与 itemEquipped 点数事件计数增长，逐检查点完整存档相等 |
 | 怪物定义 | PASS | 名称/精灵/每级击杀数在存档 DTO 全量相等 |
 | 怪物升级 | PASS | 怪物 rank 随战斗推进被覆盖；`monster-level-unlocked` 断言最高等级 `maxUnlockedLevel` 解锁与等级表扩容；`monster-level-retired`（`RetireMonsterLevelUpgrade`，type=11）断言最低等级 `minUnlockedLevel` 递增至 2 且首个有效怪物等级抬高（等级 1 退休排除），两端 5 步递进与完整 DTO 完全相等，带负向破坏探针验证 |

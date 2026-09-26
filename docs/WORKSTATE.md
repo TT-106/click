@@ -1,9 +1,16 @@
 # WORKSTATE — Clickpocalypse II 语义恢复与现代化工程
 
 > 本文件是长程自治任务的**唯一续跑入口**。上下文压缩或中断后，先读本文件 + `git log --oneline`，再继续。
-> 最后更新：2026-09-26（cc/dc/ec/bc/ac 方法族修复后；下文较早批次的快照保留为历史记录）
+> 最后更新：2026-09-26（装备手动穿卸闭环、矩阵 53/53 后；下文较早批次的快照保留为历史记录）
 
 ## 当前轮次状态（2026-09-26，M13 文档与验收收尾）
+
+- U11 装备手动穿卸闭环（2026-09-26，提交 2113944）：
+  1. harness 新增 `equipFromInventory`：按角色索引与物品名从背包取件，驱动原版 `Character.prototype.Qk`（c2.js:21607，内部 `$w` 交换 + `Kd(21)`）与重构版 `Character.Qk`（character.js:1225 → equipItem + awardAdventurePoints(21)）。实测确认交换语义：新装备（金属的权杖）入槽、换下旧装备（人民之美好的权杖）回背包、itemEquipped 事件 23→24。
+  2. 新增 `manual-equip-swap` 场景（矩阵第 53 个）：turns=0 立即装备（避免自然掉落移动背包索引），断言 swapDone + itemEquippedGrew；第二步 600 回合自然推进只做 DTO 全等——调试中确认商店卖店路径（actionType 10 → removeInventoryItemAt）会卖掉换下的旧装备，交换断言只在装备动作后立即做，两引擎行为一致非分叉。
+  3. 引擎复核：无独立"卸下"操作——`removeInventoryItemAt` 仅在卖店（character.js:1201）与装备交换路径出现，"卸下=被新装备替换"是原版忠实行为，写入矩阵行而非当作缺口。
+  4. 附录 A：装备行 PARTIAL → PASS，当前 45 PASS / 6 PARTIAL / 0 未覆盖。剩余 PARTIAL：角色职业 0/1/2/5 未装载、技能效果层、法术特效、城堡购买花费、成就其余奖励、Canvas 多视口。
+  5. 下一步：M12 第七批长尾重命名（ed/yd/ud/pd/td/vd/xd/rd/Cd/nd/Ad/Wd，取证证据已就绪），红线见 unresolved.md 台账——game-save.js:521 `xd` 是局部变量非字段；ed/xd/nd 需按属主拆名；vd/td/rd 跨文件原子批；harness 6 处 `Cd()` 调用点与 Wd 的 JSDoc typedef 必须同批同步。
 
 - U10 点数升级全覆盖与胜利面板直接观察（2026-09-26，提交 1bc1304）：
   1. 新增 point-upgrades-multiple 场景（矩阵第 52 个）：注入 5 亿冒险点（23 项总造价 164.5M），purchasePointUpgrades 驱动购买全部点数升级；断言 pointManagerState.pointUpgrades[] 新购 upgradeId 数 >= 5、两端购买次数相等、spentAdventurePoints 按各项固定 pointCost 累加，随后 600 回合完整 DTO 相等。注意：点数升级购买记录在 pointManagerState.pointUpgrades[].upgradePurchased，不在 settings.upgrades（后者是全局升级级数表）——检查助手首版读错位置已修正。
