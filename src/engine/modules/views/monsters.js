@@ -1,4 +1,3 @@
-// @ts-nocheck -- M10 渐进类型化：JSDoc 覆盖后摘除（见 docs/WORKSTATE.md）
 /** 怪物升级与图鉴。
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
@@ -28,7 +27,7 @@ export function MonsterRowView(a, b) {
   this.Sv = this.$f = this.Jh = this.Uv = -1;
   this.dx = 80;
   this.Cp = null;
-  this.qi();
+  (/** @type {any} */ (this)).qi();
 }
 export function MonsterLevelTabView(a, b) {
   this.elementId = b;
@@ -314,7 +313,7 @@ export function initializeViewsMonsters() {
           }
         }
       } else {
-        this.pf();
+        (/** @type {any} */ (this)).pf();
       }
       this.vi = this.xd;
       for (a = 0; a < this.Tj.length; a++) {
@@ -328,9 +327,9 @@ export function initializeViewsMonsters() {
     var b = getElement(a),
       a = getMonsterTypesForLevel(game.monsterCatalog, this.xd);
     this.Dp = createElement("table", b, null, "monsterTable");
-    this.Ri(this.Dp.insertRow(0));
-    for (b = 0; b < a.length; b++) {
-      this.Tj.push(new MonsterRowView(this.Dp.insertRow(b + 1), a[b]));
+    (/** @type {any} */ (this)).Ri(this.Dp.insertRow(0));
+    for (var bi = 0; bi < a.length; bi++) {
+      this.Tj.push(new MonsterRowView(this.Dp.insertRow(bi + 1), a[bi]));
     }
   };
   MonsterLevelTabView.prototype.Ri = function (a) {

@@ -95,29 +95,6 @@
     ]
   },
   {
-    "name": "jb",
-    "reads": 22,
-    "writes": 10,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\upgrade-details.js:132",
-        "code": "this.jb"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\upgrade-details.js:187",
-        "code": "this.jb"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\upgrade-details.js:196",
-        "code": "this.jb"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\upgrade-details.js"
-    ]
-  },
-  {
     "name": "mb",
     "reads": 30,
     "writes": 1,
@@ -164,32 +141,6 @@
     ]
   },
   {
-    "name": "pb",
-    "reads": 20,
-    "writes": 10,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\castles.js:28",
-        "code": "this.pb"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\castles.js:178",
-        "code": "this.pb"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\castles.js:179",
-        "code": "this.pb"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\views\\castles.js",
-      "src\\engine\\modules\\views\\expedition.js",
-      "src\\engine\\modules\\views\\monsters.js",
-      "src\\engine\\modules\\views\\results.js"
-    ]
-  },
-  {
     "name": "tb",
     "reads": 2,
     "writes": 27,
@@ -213,29 +164,6 @@
       "src\\engine\\modules\\content\\classes.js",
       "src\\engine\\modules\\content\\guardians.js",
       "src\\engine\\modules\\content\\minions.js"
-    ]
-  },
-  {
-    "name": "sb",
-    "reads": 19,
-    "writes": 10,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\upgrade-details.js:132",
-        "code": "this.sb"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\upgrade-details.js:187",
-        "code": "this.sb"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\upgrade-details.js:196",
-        "code": "this.sb"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\upgrade-details.js"
     ]
   },
   {

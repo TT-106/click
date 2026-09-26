@@ -362,7 +362,7 @@ export function initializeCharactersParty() {
       a = false;
       for (b = c = 0; b < game.state.adventurers.length; b++) {
         d = game.state.adventurers[b];
-        f = d.inventory.items;
+        f = (/** @type {any} */ (d)).inventory.items;
         if (0 === f.length) {
           d = 0;
         } else {
@@ -370,7 +370,7 @@ export function initializeCharactersParty() {
             n = 0;
           for (g = 0; g < f.length; g++) {
             h = f[g];
-            if ((l = d.ef(h.slot)) && !isBetterItem(h, l)) {
+            if ((l = (/** @type {any} */ (d)).ef(h.slot)) && !isBetterItem(h, l)) {
               n++;
             }
           }
@@ -439,7 +439,7 @@ export function initializeCharactersParty() {
           d = game.state.leader.position.worldPosition;
           f = null;
           g = 0;
-          var n = this.Wf.dungeonList,
+          var n = /** @type {any} */ (this.Wf.dungeonList),
             p;
           for (p = 0; p < n.length; p++) {
             if (h = n[p], !h.conquered && (l = distanceSquaredToPoint(d, h.dc(), h.ec()), !f || l < g)) {
@@ -559,7 +559,7 @@ export function initializeCharactersParty() {
             return;
           }
         }
-        this.et(findNextUnopenedDoor());
+        (/** @type {any} */ (this)).et(findNextUnopenedDoor());
         this.Cc = this.Bc ? this.Bc ? this.Bc.$d : null : (this.ed = game.level.tf) ? this.ed.$d : null;
       }
     }

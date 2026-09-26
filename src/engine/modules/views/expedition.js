@@ -103,7 +103,7 @@ export function ScrollButtonCollection(a) {
   this.Gw = {};
   this.qp = [];
   var b, c, d;
-  for (b = 0; b < a.length; b++) {
+  for (b = 0; b < (/** @type {any} */ (a)).length; b++) {
     for (d = a[b], c = 0; c < d.length; c++) {
       this.qp.push(d[c]);
     }
@@ -496,7 +496,7 @@ export function initializeViewsExpedition() {
     var a = getElement(this.elementId);
     this.nl = createElement("div", a, null, "dungeonNotificationDiv");
     hideElement(a);
-    this.Vw = false;
+    (/** @type {any} */ (this)).Vw = false;
   };
   DungeonNotificationView.prototype.isVisible = function () {
     return !game.worldActive;
@@ -612,7 +612,7 @@ export function initializeViewsExpedition() {
     }
     a: {
       a = this.qp;
-      for (b = 0; b < a.length; b++) {
+      for (b = 0; b < (/** @type {any} */ (a)).length; b++) {
         if (this.Qr.Gw[a[b]]) {
           a = true;
           break a;
@@ -628,11 +628,11 @@ export function initializeViewsExpedition() {
   ScrollBarView.prototype.reset = function () {
     clearElementById(this.elementId);
     this.Zs.length = 0;
-    this.so();
+    (/** @type {any} */ (this)).so();
   };
   ScrollBarView.prototype.update = function () {
     if (!this.fu) {
-      this.so();
+      (/** @type {any} */ (this)).so();
     }
     var a,
       b = game.scrolls.at,
@@ -748,11 +748,11 @@ export function initializeViewsExpedition() {
     clearElementById(this.elementId);
     this.Ms.length = 0;
     this.su = false;
-    this.so();
+    (/** @type {any} */ (this)).so();
   };
   PotionBarView.prototype.update = function () {
     if (!this.su) {
-      this.so();
+      (/** @type {any} */ (this)).so();
     }
     var a,
       b = game.potions.re,
