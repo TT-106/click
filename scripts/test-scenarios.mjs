@@ -6,7 +6,7 @@ import { chromium } from 'playwright';
 import {
   decodeFixture, encodeSave, summarize,
   withPotions, withScrolls, withGold, withTurns, withElapsed, withOfflineProcessing,
-  withVictories, withClassSpell, withCastleVictory, withReclassedSpell,
+  withVictories, withClassSpell, withCastleVictory, withReclassedSpell, withEquippedItem,
   HARNESS_FIXED_NOW,
 } from '../tests/scenarios/save-mutations.mjs';
 
@@ -135,6 +135,26 @@ const scenarios = [
     // 弹跳投射物分支：spellCategoryId=13（死灵法师 绿色死亡）。
     name: 'spell-bouncing-projectile',
     make: () => withReclassedSpell(base, 3, 9, '绿色死亡'),
+    steps: [[3000, snap => ({ spellCast: snap.statistics.spellCastCount > base.statistics.spellCastCount })], [3000, null]],
+  },
+  {
+    // 远程法术分支需要已装备的远程武器：原版与重构版的 createAttackAction 都把 equipment.Ey
+    // 交给无空值保护的 getProjectileAnimation，因此改职业后要补回槽 61 的投射武器（itemTypeId 取自引擎注册表）。
+    // 唯一的 td:false 定义：spellCategoryId=12（忍者 快速打击，槽 62 飞镖 → projectileAnimationId=3）。
+    name: 'spell-deferred-strike',
+    make: () => withEquippedItem(withReclassedSpell(base, 3, 8, '快速打击'), 3, '2081168329', '62', 8),
+    steps: [[3000, snap => ({ spellCast: snap.statistics.spellCastCount > base.statistics.spellCastCount })], [3000, null]],
+  },
+  {
+    // 拾取分支：spellCategoryId=14（盗贼 立即搜索），一次收集本层全部金币/物品/卷轴/药水掉落。
+    name: 'spell-instant-search',
+    make: () => withEquippedItem(withReclassedSpell(base, 3, 7, '立即搜索'), 3, '41393542', '61', 7),
+    steps: [[3000, snap => ({ spellCast: snap.statistics.spellCastCount > base.statistics.spellCastCount })], [3000, null]],
+  },
+  {
+    // 宝箱发现分支：spellCategoryId=15（盗贼 发现财宝箱）→ hw.prototype.wu 置宝箱已发现。
+    name: 'spell-find-chest',
+    make: () => withEquippedItem(withReclassedSpell(base, 3, 7, '发现财宝箱'), 3, '41393542', '61', 7),
     steps: [[3000, snap => ({ spellCast: snap.statistics.spellCastCount > base.statistics.spellCastCount })], [3000, null]],
   },
   {

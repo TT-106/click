@@ -116,6 +116,28 @@ export function withReclassedSpell(save, index, characterClass, spellName) {
   return out;
 }
 
+/** 给指定队员追加一件已装备物品（存档里的 equippedItemCollection 条目）。
+ *  改职业后原职业的装备会因 characterClass 不符被 equipItem 跳过，远程武器槽因此为空；
+ *  盗贼槽 61（isProjectileItem）与忍者槽 62（飞镖，projectileAnimationId=3）用于驱动远程法术分支。 */
+export function withEquippedItem(save, index, itemTypeId, itemSlot, characterClass) {
+  const out = clone(save);
+  const character = out.adventurers[index];
+  if (!character) throw new Error(`fixture 缺少队员下标 ${index}`);
+  character.equippedItemCollection = [...(character.equippedItemCollection ?? []), {
+    itemTypeId,
+    itemSlot,
+    characterClass,
+    itemName: "差分探针武器",
+    itemRarity: 0,
+    itemLevel: 1,
+    itemGold: 1,
+    itemValue: 1,
+    itemCharacteristic: 1,
+    itemEffect: null,
+  }];
+  return out;
+}
+
 /** 收集快照中与玩法相关的可观察量，用于"断言场景确实产生了变化"。 */
 export function summarize(snapshot) {
   return {
