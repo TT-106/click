@@ -121,17 +121,17 @@ export function PurchaseItemUpgrade(a) {
   this.Up = this.Ub = this.affordableSoon = this.canPurchase = false;
 }
 export function GlobalUpgrade(a) {
-  this.mb = a;
+  this.definition = a;
   this.canPurchase = this.affordableSoon = false;
   this.$A = -1;
   this.Zj = this.Ub = this.$j = false;
   recalculateGlobalUpgrade(this);
 }
 export function recalculateGlobalUpgrade(a) {
-  a.mb.rd = scaleByLevel(a.mb.ah + a.mb.purchasedLevels * a.mb.Pg, globalUpgradePriceCurve, 1);
-  a.mb.currentValue = a.mb.baseValue + a.mb.purchasedLevels * a.mb.perLevelIncrement;
-  if (a.mb.currentValue > a.mb.maxValue) {
-    a.mb.currentValue = a.mb.maxValue;
+  a.definition.rd = scaleByLevel(a.definition.ah + a.definition.purchasedLevels * a.definition.Pg, globalUpgradePriceCurve, 1);
+  a.definition.currentValue = a.definition.baseValue + a.definition.purchasedLevels * a.definition.perLevelIncrement;
+  if (a.definition.currentValue > a.definition.maxValue) {
+    a.definition.currentValue = a.definition.maxValue;
   }
 }
 export function EquipBestItemUpgrade(a) {
@@ -352,16 +352,16 @@ export function initializeProgressionUpgrades() {
   };
   GlobalUpgrade.prototype = new Upgrade();
   GlobalUpgrade.prototype.us = function () {
-    if (0 < this.mb.purchasedLevels) {
+    if (0 < this.definition.purchasedLevels) {
       recalculateGlobalUpgrade(this);
     }
   };
   GlobalUpgrade.prototype.og = function () {
-    this.mb.purchasedLevels = 0;
+    this.definition.purchasedLevels = 0;
     recalculateGlobalUpgrade(this);
   };
   GlobalUpgrade.prototype.getTitle = function () {
-    return this.mb.title;
+    return this.definition.title;
   };
   GlobalUpgrade.prototype.getUpgradeType = function () {
     return 1;
@@ -373,31 +373,31 @@ export function initializeProgressionUpgrades() {
     return this.canPurchase;
   };
   GlobalUpgrade.prototype.Qc = function () {
-    if (!(this.mb.rd > game.state.party.kills)) {
-      spendKills(game.state.party, this.mb.rd);
-      this.mb.purchasedLevels++;
+    if (!(this.definition.rd > game.state.party.kills)) {
+      spendKills(game.state.party, this.definition.rd);
+      this.definition.purchasedLevels++;
       this.canPurchase = false;
       recalculateGlobalUpgrade(this);
       markUpgradeChanged(this);
-      recordGameEvent("Upgrade", this.mb.title + " 数值:" + this.mb.currentValue);
+      recordGameEvent("Upgrade", this.definition.title + " 数值:" + this.definition.currentValue);
     }
   };
   GlobalUpgrade.prototype.getCost = function () {
-    return this.mb.rd;
+    return this.definition.rd;
   };
   GlobalUpgrade.prototype.getDescription = function () {
-    return this.mb.description;
+    return this.definition.description;
   };
   GlobalUpgrade.prototype.Cd = function () {
-    if (this.mb.currentValue >= this.mb.maxValue) {
+    if (this.definition.currentValue >= this.definition.maxValue) {
       this.affordableSoon = this.canPurchase = false;
     } else {
-      this.canPurchase = this.mb.rd <= game.state.party.kills;
+      this.canPurchase = this.definition.rd <= game.state.party.kills;
       this.affordableSoon = !this.canPurchase && this.hu();
     }
     var a = this.Oc(),
-      b = this.$A !== this.mb.purchasedLevels || this.Ub !== this.canPurchase || this.Zj !== this.affordableSoon || this.$j !== a;
-    this.$A = this.mb.purchasedLevels;
+      b = this.$A !== this.definition.purchasedLevels || this.Ub !== this.canPurchase || this.Zj !== this.affordableSoon || this.$j !== a;
+    this.$A = this.definition.purchasedLevels;
     this.Ub = this.canPurchase;
     this.Zj = this.affordableSoon;
     this.$j = a;
@@ -405,11 +405,11 @@ export function initializeProgressionUpgrades() {
   };
   GlobalUpgrade.prototype.hu = function () {
     var a = game.state.party.kills;
-    if (a >= this.mb.rd) {
+    if (a >= this.definition.rd) {
       return false;
     }
-    a = this.mb.rd - a;
-    return 400 >= a || a <= 0.3 * this.mb.rd;
+    a = this.definition.rd - a;
+    return 400 >= a || a <= 0.3 * this.definition.rd;
   };
   EquipBestItemUpgrade.prototype = new Upgrade();
   EquipBestItemUpgrade.prototype.Wo = function () {
