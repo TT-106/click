@@ -313,7 +313,7 @@ window.harness = {
     for (const upgrade of upgrades) {
       if (purchased >= limit) break;
       // 原版点数面板 update 会经 UpgradeCollection 刷新 Cd；harness 无需打开面板也要走同一前置。
-      upgrade.Cd();
+      if (original) upgrade.Cd(); else upgrade.refreshAvailabilityState();
       if (original ? upgrade.qc() : upgrade.canPurchaseNow()) {
         readyCount++;
         if (original) upgrade.Qc(); else upgrade.purchase();
@@ -329,7 +329,7 @@ window.harness = {
     let claimed = 0;
     for (const upgrade of rows) {
       if ((original ? upgrade.Na() : upgrade.getUpgradeType()) !== 14) continue;
-      upgrade.Cd(); // 与升级面板刷新可购状态相同
+      if (original) upgrade.Cd(); else upgrade.refreshAvailabilityState(); // 与升级面板刷新可购状态相同
       if (original ? upgrade.qc() : upgrade.canPurchaseNow()) {
         if (original) upgrade.Qc(); else upgrade.purchase();
         claimed++;
@@ -345,7 +345,7 @@ window.harness = {
     let equipped = 0;
     for (const upgrade of rows) {
       if ((original ? upgrade.Na() : upgrade.getUpgradeType()) !== 4) continue;
-      upgrade.Cd();
+      if (original) upgrade.Cd(); else upgrade.refreshAvailabilityState();
       if (original ? upgrade.qc() : upgrade.canPurchaseNow()) {
         if (original) upgrade.Qc(); else upgrade.purchase();
         equipped++;
@@ -378,7 +378,7 @@ window.harness = {
     let purchased = 0;
     for (const upgrade of rows) {
       if ((original ? upgrade.Na() : upgrade.getUpgradeType()) !== 8) continue;
-      upgrade.Cd();
+      if (original) upgrade.Cd(); else upgrade.refreshAvailabilityState();
       if (original ? upgrade.qc() : upgrade.canPurchaseNow()) {
         if (original) upgrade.Qc(); else upgrade.purchase();
         purchased++;
@@ -392,7 +392,7 @@ window.harness = {
     const dungeon = (original ? window.Game.Aa.bk : game.dungeons.bk)[0];
     if (!dungeon) throw new Error('没有可购买的地牢行');
     const upgrade = original ? new window.Es(dungeon) : new PurchaseDungeonUpgrade(dungeon);
-    upgrade.Cd();
+    if (original) upgrade.Cd(); else upgrade.refreshAvailabilityState();
     const purchased = original ? upgrade.qc() : upgrade.canPurchaseNow();
     if (purchased) {
       if (original) upgrade.Qc(); else upgrade.purchase();
@@ -407,7 +407,7 @@ window.harness = {
     let killsHarvested = 0;
     for (const upgrade of rows) {
       if ((original ? upgrade.Na() : upgrade.getUpgradeType()) !== 9) continue;
-      upgrade.Cd();
+      if (original) upgrade.Cd(); else upgrade.refreshAvailabilityState();
       if (original ? upgrade.qc() : upgrade.canPurchaseNow()) {
         const pendingKills = original ? window.Game.Aa.Sd : game.dungeons.Sd;
         killsHarvested = pendingKills;

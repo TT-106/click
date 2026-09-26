@@ -28,7 +28,7 @@ export function Upgrade() {
 export function refreshUpgradeAvailability(a) {
   if (game.state.frameNumber != a.lastAvailabilityFrame) {
     a.lastAvailabilityFrame = game.state.frameNumber;
-    a.EC = a.Cd();
+    a.EC = a.refreshAvailabilityState();
   }
   return a.EC;
 }
@@ -129,7 +129,7 @@ export function GlobalUpgrade(a) {
   recalculateGlobalUpgrade(this);
 }
 export function recalculateGlobalUpgrade(a) {
-  a.definition.rd = scaleByLevel(a.definition.ah + a.definition.purchasedLevels * a.definition.Pg, globalUpgradePriceCurve, 1);
+  a.definition.cost = scaleByLevel(a.definition.ah + a.definition.purchasedLevels * a.definition.Pg, globalUpgradePriceCurve, 1);
   a.definition.currentValue = a.definition.baseValue + a.definition.purchasedLevels * a.definition.perLevelIncrement;
   if (a.definition.currentValue > a.definition.maxValue) {
     a.definition.currentValue = a.definition.maxValue;
@@ -299,7 +299,7 @@ export function initializeProgressionUpgrades() {
   Upgrade.prototype.getCost = function () {
     return 0;
   };
-  Upgrade.prototype.Cd = function () {
+  Upgrade.prototype.refreshAvailabilityState = function () {
     return false;
   };
   PurchaseItemUpgrade.prototype = new Upgrade();
@@ -333,7 +333,7 @@ export function initializeProgressionUpgrades() {
       markUpgradeChanged(this);
     }
   };
-  PurchaseItemUpgrade.prototype.Cd = function () {
+  PurchaseItemUpgrade.prototype.refreshAvailabilityState = function () {
     var a;
     a = game.castles.Jg;
     if (a = this.Ly < a.length ? a[this.Ly] : null) {
@@ -374,8 +374,8 @@ export function initializeProgressionUpgrades() {
     return this.canPurchase;
   };
   GlobalUpgrade.prototype.purchase = function () {
-    if (!(this.definition.rd > game.state.party.kills)) {
-      spendKills(game.state.party, this.definition.rd);
+    if (!(this.definition.cost > game.state.party.kills)) {
+      spendKills(game.state.party, this.definition.cost);
       this.definition.purchasedLevels++;
       this.canPurchase = false;
       recalculateGlobalUpgrade(this);
@@ -384,16 +384,16 @@ export function initializeProgressionUpgrades() {
     }
   };
   GlobalUpgrade.prototype.getCost = function () {
-    return this.definition.rd;
+    return this.definition.cost;
   };
   GlobalUpgrade.prototype.getDescription = function () {
     return this.definition.description;
   };
-  GlobalUpgrade.prototype.Cd = function () {
+  GlobalUpgrade.prototype.refreshAvailabilityState = function () {
     if (this.definition.currentValue >= this.definition.maxValue) {
       this.affordableSoon = this.canPurchase = false;
     } else {
-      this.canPurchase = this.definition.rd <= game.state.party.kills;
+      this.canPurchase = this.definition.cost <= game.state.party.kills;
       this.affordableSoon = !this.canPurchase && (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).hu();
     }
     var a = (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).isDisplayable(),
@@ -406,11 +406,11 @@ export function initializeProgressionUpgrades() {
   };
   GlobalUpgrade.prototype.hu = function () {
     var a = game.state.party.kills;
-    if (a >= this.definition.rd) {
+    if (a >= this.definition.cost) {
       return false;
     }
-    a = this.definition.rd - a;
-    return 400 >= a || a <= 0.3 * this.definition.rd;
+    a = this.definition.cost - a;
+    return 400 >= a || a <= 0.3 * this.definition.cost;
   };
   EquipBestItemUpgrade.prototype = new Upgrade();
   EquipBestItemUpgrade.prototype.Wo = function () {
@@ -442,7 +442,7 @@ export function initializeProgressionUpgrades() {
   EquipBestItemUpgrade.prototype.canPurchaseNow = function () {
     return this.vh;
   };
-  EquipBestItemUpgrade.prototype.Cd = function () {
+  EquipBestItemUpgrade.prototype.refreshAvailabilityState = function () {
     var a,
       b = 0;
     for (a = 0; a < game.state.adventurers.length; a++) {
@@ -500,7 +500,7 @@ export function initializeProgressionUpgrades() {
   EquipItemUpgrade.prototype.canPurchaseNow = function () {
     return this.vh;
   };
-  EquipItemUpgrade.prototype.Cd = function () {
+  EquipItemUpgrade.prototype.refreshAvailabilityState = function () {
     var a = game.inventories.Fj,
       b = this.vh,
       c = this.item;
@@ -590,7 +590,7 @@ export function initializeProgressionUpgrades() {
   LevelUpUpgrade.prototype.canPurchaseNow = function () {
     return this.canPurchase;
   };
-  LevelUpUpgrade.prototype.Cd = function () {
+  LevelUpUpgrade.prototype.refreshAvailabilityState = function () {
     if (this.adventurerIndex >= game.state.adventurers.length) {
       this.affordableSoon = this.canPurchase = false;
     } else {
@@ -654,7 +654,7 @@ export function initializeProgressionUpgrades() {
   UnlockMonsterLevelUpgrade.prototype.canPurchaseNow = function () {
     return this.canPurchase;
   };
-  UnlockMonsterLevelUpgrade.prototype.Cd = function () {
+  UnlockMonsterLevelUpgrade.prototype.refreshAvailabilityState = function () {
     var a = this.canPurchase,
       b = this.qe,
       c = game.monsterCatalog.maxUnlockedLevel + 1;
@@ -732,7 +732,7 @@ export function initializeProgressionUpgrades() {
   RetireMonsterLevelUpgrade.prototype.canPurchaseNow = function () {
     return this.canPurchase;
   };
-  RetireMonsterLevelUpgrade.prototype.Cd = function () {
+  RetireMonsterLevelUpgrade.prototype.refreshAvailabilityState = function () {
     var a = this.canPurchase,
       b = this.affordableSoon,
       c = this.Yd;
@@ -805,7 +805,7 @@ export function initializeProgressionUpgrades() {
       }
     }
   };
-  CharacterSkillUpgrade.prototype.Cd = function () {
+  CharacterSkillUpgrade.prototype.refreshAvailabilityState = function () {
     if (this.character) {
       var a = this.canPurchase;
       var prerequisite = (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).Wp;
@@ -884,7 +884,7 @@ export function initializeProgressionUpgrades() {
       }
     }
   };
-  LearnSpellUpgrade.prototype.Cd = function () {
+  LearnSpellUpgrade.prototype.refreshAvailabilityState = function () {
     if (this.character) {
       var a = this.canPurchase,
         b = this.character.skillPoints,
@@ -937,7 +937,7 @@ export function initializeProgressionUpgrades() {
       markUpgradeChanged(this);
     }
   };
-  PurchaseDungeonUpgrade.prototype.Cd = function () {
+  PurchaseDungeonUpgrade.prototype.refreshAvailabilityState = function () {
     var a = canFarmDungeon(this.dungeon);
     this.canPurchase = a && game.state.party.gold >= (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).getCost();
     this.affordableSoon = a && !this.canPurchase && 120 > (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).getCost() - game.state.party.gold;
@@ -980,7 +980,7 @@ export function initializeProgressionUpgrades() {
       markUpgradeChanged(this);
     }
   };
-  PurchaseCastleUpgrade.prototype.Cd = function () {
+  PurchaseCastleUpgrade.prototype.refreshAvailabilityState = function () {
     var a;
     a = game.dungeons.bk;
     if (a = this.Ez < a.length ? a[this.Ez] : null) {
@@ -1026,7 +1026,7 @@ export function initializeProgressionUpgrades() {
     this.canPurchase = false;
     markUpgradeChanged(this);
   };
-  AutoPurchaseDungeonUpgrade.prototype.Cd = function () {
+  AutoPurchaseDungeonUpgrade.prototype.refreshAvailabilityState = function () {
     this.canPurchase = 0 < game.dungeons.Sd;
     var a = this.cachedCanPurchase !== this.canPurchase;
     this.cachedCanPurchase = this.canPurchase;
@@ -1093,7 +1093,7 @@ export function initializeProgressionUpgrades() {
       this.canPurchase = false;
     }
   };
-  ScrollUpgrade.prototype.Cd = function () {
+  ScrollUpgrade.prototype.refreshAvailabilityState = function () {
     var a = (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).vf(),
       b = this.canPurchase,
       c = game.state.scrollCaster.stats.characterLevel,
@@ -1134,7 +1134,7 @@ export function initializeProgressionUpgrades() {
       markUpgradeChanged(this);
     }
   };
-  ClaimAchievementUpgrade.prototype.Cd = function () {
+  ClaimAchievementUpgrade.prototype.refreshAvailabilityState = function () {
     var a;
     a = game.state.achievements.Ze;
     a = this.vy < a.length ? a[this.vy] : null;
@@ -1169,7 +1169,7 @@ export function initializeProgressionUpgrades() {
     this.canPurchase = false;
     markUpgradeChanged(this);
   };
-  AchievementUpgrade.prototype.Cd = function () {
+  AchievementUpgrade.prototype.refreshAvailabilityState = function () {
     var a = this.achievement.Of,
       b = this.achievement.We;
     this.canPurchase = b && !a;
@@ -1228,7 +1228,7 @@ export function initializeProgressionUpgrades() {
   AdventurePointUpgrade.prototype.getDescription = function () {
     return this.kh.descriptionText;
   };
-  AdventurePointUpgrade.prototype.Cd = function () {
+  AdventurePointUpgrade.prototype.refreshAvailabilityState = function () {
     this.canPurchase = !this.purchased && this.kh.pointCost <= game.state.adventurePoints.availablePoints;
     var a = this.cachedCanPurchase !== this.canPurchase;
     this.cachedCanPurchase = this.canPurchase;
@@ -1259,7 +1259,7 @@ export function initializeProgressionUpgrades() {
     this.canPurchase = false;
     markUpgradeChanged(this);
   };
-  CollectFarmUpgrade.prototype.Cd = function () {
+  CollectFarmUpgrade.prototype.refreshAvailabilityState = function () {
     this.canPurchase = 0 < game.shops.ni;
     var a = this.cachedCanPurchase !== this.canPurchase;
     this.cachedCanPurchase = this.canPurchase;

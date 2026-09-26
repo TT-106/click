@@ -305,7 +305,7 @@ export function initializeContentBalance() {
       perLevelIncrement: 2,
       purchasedLevels: 0,
       maxValue: 100,
-      rd: 40,
+      cost: 40,
       ah: 1,
       Pg: 11
     },
@@ -318,7 +318,7 @@ export function initializeContentBalance() {
       perLevelIncrement: 2,
       purchasedLevels: 0,
       maxValue: 50,
-      rd: 100,
+      cost: 100,
       ah: 2,
       Pg: 11
     },
@@ -331,7 +331,7 @@ export function initializeContentBalance() {
       perLevelIncrement: 1,
       purchasedLevels: 0,
       maxValue: 50,
-      rd: 140,
+      cost: 140,
       ah: 2,
       Pg: 11
     },
@@ -344,7 +344,7 @@ export function initializeContentBalance() {
       perLevelIncrement: 2,
       purchasedLevels: 0,
       maxValue: 30,
-      rd: 120,
+      cost: 120,
       ah: 3,
       Pg: 11
     },
@@ -357,7 +357,7 @@ export function initializeContentBalance() {
       perLevelIncrement: 3,
       purchasedLevels: 0,
       maxValue: 30,
-      rd: 160,
+      cost: 160,
       ah: 4,
       Pg: 11
     },
@@ -370,7 +370,7 @@ export function initializeContentBalance() {
       perLevelIncrement: 25,
       purchasedLevels: 0,
       maxValue: 2500,
-      rd: 200,
+      cost: 200,
       ah: 6,
       Pg: 11
     },
@@ -383,7 +383,7 @@ export function initializeContentBalance() {
       perLevelIncrement: 10,
       purchasedLevels: 0,
       maxValue: 2E3,
-      rd: 300,
+      cost: 300,
       ah: 10,
       Pg: 11
     },
@@ -396,7 +396,7 @@ export function initializeContentBalance() {
       perLevelIncrement: 5,
       purchasedLevels: 0,
       maxValue: 100,
-      rd: 200,
+      cost: 200,
       ah: 5,
       Pg: 11
     },
@@ -409,7 +409,7 @@ export function initializeContentBalance() {
       perLevelIncrement: 2,
       purchasedLevels: 0,
       maxValue: 40,
-      rd: 200,
+      cost: 200,
       ah: 7,
       Pg: 11
     },
@@ -422,7 +422,7 @@ export function initializeContentBalance() {
       perLevelIncrement: 0.5,
       purchasedLevels: 0,
       maxValue: 5,
-      rd: 300,
+      cost: 300,
       ah: 8,
       Pg: 11
     },
@@ -435,7 +435,7 @@ export function initializeContentBalance() {
       perLevelIncrement: 2,
       purchasedLevels: 0,
       maxValue: 20,
-      rd: 340,
+      cost: 340,
       ah: 9,
       Pg: 11
     }

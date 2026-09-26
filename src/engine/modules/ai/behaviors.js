@@ -17,7 +17,7 @@ import { isSpellReady } from "../combat/scrolls.js";
 import { getRoomTreasure } from "../loot/treasure.js";
 /** @typedef {{ getPriority: () => number }} PrioritizedBehavior */
 /** @typedef {{ vx: (character: unknown) => unknown }} MovingBehavior */
-/** @typedef {{ Kp: (character: unknown) => void, Wd: (character: unknown) => boolean, Td: (character: unknown) => any, Md: () => any, Jd: (character: unknown) => number }} DungeonBehaviorMethods */
+/** @typedef {{ Kp: (character: unknown) => void, canExecute: (character: unknown) => boolean, Td: (character: unknown) => any, Md: () => any, Jd: (character: unknown) => number }} DungeonBehaviorMethods */
 /** @typedef {{ resetBehaviorState: () => void, execute: (character: unknown) => void, getBehaviorScore: (character: unknown) => number, getPriority: () => number }} RangedBehaviorMethods */
 export function BehaviorQueue() {
   this.fo = [];
@@ -360,7 +360,7 @@ export function initializeAiBehaviors() {
   ExploreDungeonBehavior.prototype.Kp = function () {};
   ExploreDungeonBehavior.prototype.getBehaviorScore = function (a) {
     var b = a.position.room;
-    if (!b || !(/** @type {DungeonBehaviorMethods} */ (/** @type {unknown} */ (this))).Wd(a)) {
+    if (!b || !(/** @type {DungeonBehaviorMethods} */ (/** @type {unknown} */ (this))).canExecute(a)) {
       return 0;
     }
     if (!freeSpellsModifier.currentValue) {
@@ -374,7 +374,7 @@ export function initializeAiBehaviors() {
     this.selectedTarget = (/** @type {DungeonBehaviorMethods} */ (/** @type {unknown} */ (this))).Td(a);
     return this.selectedTarget && this.selectedTarget.position.room === b ? (this.un = (/** @type {DungeonBehaviorMethods} */ (/** @type {unknown} */ (this))).Md()) ? (/** @type {DungeonBehaviorMethods} */ (/** @type {unknown} */ (this))).Jd(a) : 0 : 0;
   };
-  ExploreDungeonBehavior.prototype.Wd = function () {
+  ExploreDungeonBehavior.prototype.canExecute = function () {
     return true;
   };
   ExploreDungeonBehavior.prototype.Jd = function () {
@@ -615,7 +615,7 @@ export function initializeAiBehaviors() {
     }
     showFloatingText(game.floatingText, a, b, "white");
   };
-  LootGoldBehavior.prototype.Wd = function () {
+  LootGoldBehavior.prototype.canExecute = function () {
     return this.Hn && isSpellReady(this.Hn);
   };
   LootGoldBehavior.prototype.Jd = function () {
@@ -684,7 +684,7 @@ export function initializeAiBehaviors() {
     }
   };
   LootItemBehavior.prototype.Kp = function () {};
-  LootItemBehavior.prototype.Wd = function () {
+  LootItemBehavior.prototype.canExecute = function () {
     return this.Dn && isSpellReady(this.Dn);
   };
   LootItemBehavior.prototype.Jd = function () {
@@ -734,7 +734,7 @@ export function initializeAiBehaviors() {
     }
     showFloatingText(game.floatingText, a, b, "white");
   };
-  LootScrollBehavior.prototype.Wd = function () {
+  LootScrollBehavior.prototype.canExecute = function () {
     return this.on && isSpellReady(this.on);
   };
   LootScrollBehavior.prototype.Jd = function () {
@@ -813,7 +813,7 @@ export function initializeAiBehaviors() {
       this.fm = a;
     }
   };
-  HealBehavior.prototype.Wd = function () {
+  HealBehavior.prototype.canExecute = function () {
     return this.fm && isSpellReady(this.fm);
   };
   HealBehavior.prototype.Md = function () {
@@ -835,7 +835,7 @@ export function initializeAiBehaviors() {
       this.gm = a;
     }
   };
-  ApplyEffectBehavior.prototype.Wd = function () {
+  ApplyEffectBehavior.prototype.canExecute = function () {
     return this.gm && isSpellReady(this.gm);
   };
   ApplyEffectBehavior.prototype.Md = function () {
@@ -856,7 +856,7 @@ export function initializeAiBehaviors() {
       this.Zl = a;
     }
   };
-  AreaDamageBehavior.prototype.Wd = function () {
+  AreaDamageBehavior.prototype.canExecute = function () {
     return this.Zl && isSpellReady(this.Zl);
   };
   AreaDamageBehavior.prototype.Md = function () {
@@ -877,7 +877,7 @@ export function initializeAiBehaviors() {
       this.In = a;
     }
   };
-  ChainDamageBehavior.prototype.Wd = function () {
+  ChainDamageBehavior.prototype.canExecute = function () {
     return this.In && isSpellReady(this.In);
   };
   ChainDamageBehavior.prototype.Md = function () {
@@ -898,7 +898,7 @@ export function initializeAiBehaviors() {
       this.spell = a;
     }
   };
-  SummonBehavior.prototype.Wd = function () {
+  SummonBehavior.prototype.canExecute = function () {
     return this.spell && isSpellReady(this.spell);
   };
   SummonBehavior.prototype.Md = function () {
@@ -923,7 +923,7 @@ export function initializeAiBehaviors() {
     var a = (/** @type {LifeDrainBehavior & { selectedTarget: import("../characters/character.js").Character }} */ (/** @type {unknown} */ (this))).selectedTarget;
     return Math.max(0, (1 - a.stats.health / statValue(a.stats.maxHealth)) * (/** @type {PrioritizedBehavior} */ (/** @type {unknown} */ (this))).getPriority());
   };
-  LifeDrainBehavior.prototype.Wd = function () {
+  LifeDrainBehavior.prototype.canExecute = function () {
     return this.Lm && isSpellReady(this.Lm);
   };
   LifeDrainBehavior.prototype.Md = function () {
@@ -956,7 +956,7 @@ export function initializeAiBehaviors() {
   ReviveBehavior.prototype.Jd = function () {
     return (/** @type {PrioritizedBehavior} */ (/** @type {unknown} */ (this))).getPriority();
   };
-  ReviveBehavior.prototype.Wd = function () {
+  ReviveBehavior.prototype.canExecute = function () {
     return this.pn && isSpellReady(this.pn);
   };
   ReviveBehavior.prototype.Md = function () {
@@ -982,7 +982,7 @@ export function initializeAiBehaviors() {
       this.spell = a;
     }
   };
-  PartyBuffBehavior.prototype.Wd = function () {
+  PartyBuffBehavior.prototype.canExecute = function () {
     return this.spell && isSpellReady(this.spell);
   };
   PartyBuffBehavior.prototype.Jd = function () {
@@ -1057,7 +1057,7 @@ export function initializeAiBehaviors() {
       this.Wm = a;
     }
   };
-  LootChestBehavior.prototype.Wd = function () {
+  LootChestBehavior.prototype.canExecute = function () {
     return this.Wm && isSpellReady(this.Wm);
   };
   LootChestBehavior.prototype.Jd = function (a) {
@@ -1078,7 +1078,7 @@ export function initializeAiBehaviors() {
       this.pm = a;
     }
   };
-  LootPotionBehavior.prototype.Wd = function () {
+  LootPotionBehavior.prototype.canExecute = function () {
     return this.pm && isSpellReady(this.pm);
   };
   LootPotionBehavior.prototype.Jd = function (a) {
@@ -1390,7 +1390,7 @@ export function initializeAiBehaviors() {
   SelfSpellBehavior.prototype.Kp = function (a) {
     showFloatingText(game.floatingText, a, "Protect me", "white");
   };
-  SelfSpellBehavior.prototype.Wd = function (a) {
+  SelfSpellBehavior.prototype.canExecute = function (a) {
     return this.spell && isSpellReady(this.spell) && !a.companion ? true : false;
   };
   SelfSpellBehavior.prototype.Jd = function () {
@@ -1411,7 +1411,7 @@ export function initializeAiBehaviors() {
       this.spell = a;
     }
   };
-  AreaSpellBehavior.prototype.Wd = function (a) {
+  AreaSpellBehavior.prototype.canExecute = function (a) {
     if (!this.spell || !isSpellReady(this.spell)) {
       return false;
     }
@@ -1436,7 +1436,7 @@ export function initializeAiBehaviors() {
       this.spell = a;
     }
   };
-  CompanionSpellBehavior.prototype.Wd = function (a) {
+  CompanionSpellBehavior.prototype.canExecute = function (a) {
     if (!this.spell || !isSpellReady(this.spell)) {
       return false;
     }

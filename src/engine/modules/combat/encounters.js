@@ -55,7 +55,7 @@ export function populateEncounter(a) {
             monsterLevel = catalog.minUnlockedLevel + randomInt(1 + catalog.maxUnlockedLevel - catalog.minUnlockedLevel),
             monsterTypes = getMonsterTypesForLevel(catalog, monsterLevel),
             monsterType = monsterTypes[randomInt(monsterTypes.length)],
-            encounterName = b.dn.Vk(monsterType.nE) + " (等级." + monsterType.xd + ")";
+            encounterName = b.dn.Vk(monsterType.nE) + " (等级." + monsterType.level + ")";
           for (var monsterIndex = 0; monsterIndex < monsterCount; monsterIndex++) {
             var registry = game.monsters,
               room = a,
@@ -63,7 +63,7 @@ export function populateEncounter(a) {
               stats = monster.stats;
             monster.sprite = monsterType.ll;
             (/** @type {TypedMonster} */ (monster)).gq(monsterType);
-            stats.characterLevel = monsterType.xd;
+            stats.characterLevel = monsterType.level;
             monster.behaviors = new AttackBehavior(room, MELEE_ATTACK_RANGE);
             monster.position.room = room;
             if (frailMonstersModifier.currentValue) {
@@ -184,7 +184,7 @@ export function MonsterType(a, b, c) {
   this.dE = a;
   this.nE = endsWithText(a, "y") ? a.substring(0, a.length - 1) + "" : endsWithText(a, "Man") ? a.substring(0, a.length - 3) + "Men" : endsWithText(a, "fish") ? a : a + "";
   this.spriteName = b;
-  this.xd = c;
+  this.level = c;
   this.ll = game.monsterSprites.getSprite(b);
   this.$o = this.Sj = this.Hp = this.Fp = this.Ep = this.Gp = this.No = this.ek = this.ml = this.xq = 0;
   advanceMonsterTypeRank(this);
@@ -201,7 +201,7 @@ export function advanceMonsterTypeRank(a) {
   if (!(5 <= a.Sj)) {
     a.Sj++;
     a.ek += MONSTER_RANK_KILL_STEP;
-    var b = 10 * (a.xd - 1) + a.Sj;
+    var b = 10 * (a.level - 1) + a.Sj;
     a.$o = scaleByLevel(b, monsterDamageCurve, 1);
     a.No = scaleByLevel(b, monsterArmorCurve, 1);
     a.Gp = scaleByLevel(b, monsterHealthCurve, 1);
