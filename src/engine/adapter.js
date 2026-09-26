@@ -80,7 +80,7 @@ export const engine = {
       gold: game.state.party.gold,
       kills: game.state.party.kills,
       experience: game.state.party.experiencePoints,
-      points: game.state.ae.Dd,
+      points: game.state.adventurePoints.Dd,
       location: game.currentDungeon ? game.currentDungeon.dungeonName : game.currentCastle ? game.currentCastle.castleName : '永冬荒野',
       floor: game.currentDungeon ? game.currentDungeon.currentLevelIndex + 1 : null,
       inWorld: game.worldActive,

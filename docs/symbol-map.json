@@ -7619,7 +7619,10 @@
     "me": "pixelColumn",
     "ne": "pixelRow",
     "rc": "widthInTiles",
-    "sc": "heightInTiles"
+    "sc": "heightInTiles",
+    "hd": "minUnlockedLevel",
+    "ae": "adventurePoints",
+    "kd": "progressTextElement"
   },
   "gameFields": {
     "B": "tileSize",

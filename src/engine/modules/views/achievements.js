@@ -201,7 +201,7 @@ export function initializeViewsAchievements() {
       g,
       h,
       l,
-      n = game.state.ae;
+      n = game.state.adventurePoints;
     for (a = 0; a < pointEventDefinitions.length; a++) {
       b = pointEventDefinitions[a].pointEventTypeId;
       c = this.Ao[b];
@@ -286,7 +286,7 @@ export function initializeViewsAchievements() {
     }
   };
   PointUpgradeListView.prototype.Zn = function () {
-    var a = game.state.ae.tl,
+    var a = game.state.adventurePoints.tl,
       b = [],
       c = [],
       d;

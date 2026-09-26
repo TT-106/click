@@ -210,6 +210,16 @@ RunStatistics 的 `On/Lk/qn/Mj/wi/uk` → `turnCount/doorsOpened/roomsCleared/le
 
 回归：check（9 单测 + 109 文件语法）/typecheck 0 错误/parity 四档/34 场景/e2e 全绿；混淆属性清单 1,219 → 1,202（本批十七个字母全部清零），fields 段 219 → 236。
 
+## 第十三轮落地：怪物目录解锁位、冒险点管理器与行进度文本（2026-09-26）
+
+| 原字段 | 新名 | 所有者 | 决定性证据 | 存档配对 |
+|---|---|---|---|---|
+| `hd` | `minUnlockedLevel` | `game.monsterCatalog` | 日志原文 `"getMonsterTypesForLevel. monsterLevel (" + b + ") less than min unlocked level: " + a.minUnlockedLevel` | `entities.js:324` 读端 ↔ `game-save.js:944` 写端 `minUnlockedLevel: sa.minUnlockedLevel`，存档键不变 |
+| `ae` | `adventurePoints` | GameState 内联点管理器 | `recalculateAdventurePoints(game.state.adventurePoints)`、`canPurchase = ... <= game.state.adventurePoints.Dd`；`runtime/game.js:155` 的对象字面量键同批 | 值 `Dd` 的 DTO 键不变（`adapter.js` 的 `points` 输出键亦不变） |
+| `kd` | `progressTextElement` | CastleRowView 与 MonsterRowView（两个所有者同一语义） | 构造链里紧跟已语义化的 `progressFillElement`，且 `innerHTML = a > b ? "最大" : formatAmount(a) + " / " + formatAmount(b)` | 否（UI） |
+
+回归：check/typecheck/parity/34 场景/e2e 全绿；混淆清单 1,202 → 1,199。
+
 ## 重命名执行器 `scripts/rename-field.mjs`
 
 本批起改用手写守卫的执行器，用法 `node scripts/rename-field.mjs <old>=<new> <file...> --expect <total>`。写盘前强制四项校验：命中总数等于 `--expect`、行数不变、逐行缩进不变、字符串字面量多重集不变，任一失败整批不落盘。

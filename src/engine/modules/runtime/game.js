@@ -94,7 +94,7 @@ export function initializeRuntimeGame() {
     decorations: new DungeonDecorationGenerator(),
     monsterCatalog: new function () {
       this.n = [];
-      this.maxUnlockedLevel = this.hd = 1;
+      this.maxUnlockedLevel = this.minUnlockedLevel = 1;
       this.en = {};
       this.HE = function (a, b) {
         var c = a.Vk(),
@@ -152,7 +152,7 @@ export function initializeRuntimeGame() {
       adventurers: [],
       leader: null,
       scrollCaster: null,
-      ae: new function () {
+      adventurePoints: new function () {
         this.An = this.Dd = 0;
         this.Qi = {};
         this.pj = {};
@@ -204,7 +204,7 @@ export function initializeRuntimeGame() {
     initializeWorld: function () {
       var a = game.monsterCatalog;
       a.en = {};
-      a.hd = 1;
+      a.minUnlockedLevel = 1;
       a.maxUnlockedLevel = 1;
       a.n.length = 0;
       a.n.push(...monsterDefinitions);
@@ -409,7 +409,7 @@ export function initializeRuntimeGame() {
       clearMonsters();
       clearMinions();
       b = game.monsterCatalog;
-      b.hd = 1;
+      b.minUnlockedLevel = 1;
       b.maxUnlockedLevel = 1;
       b.en = {};
       if (a) {

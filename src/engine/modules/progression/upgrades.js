@@ -666,7 +666,7 @@ export function initializeProgressionUpgrades() {
     if (c = game.state.party.kills >= (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).getCost()) {
       if (c = getPartyMinLevel() >= this.qe) {
         c = game.monsterCatalog;
-        c = 1 + c.maxUnlockedLevel - c.hd < VISIBLE_MONSTER_LEVELS;
+        c = 1 + c.maxUnlockedLevel - c.minUnlockedLevel < VISIBLE_MONSTER_LEVELS;
       }
     }
     this.canPurchase = c;
@@ -676,7 +676,7 @@ export function initializeProgressionUpgrades() {
   RetireMonsterLevelUpgrade.prototype.us = function () {
     if (!this.Ql) {
       this.Ql = true;
-      this.Yd = game.monsterCatalog.hd;
+      this.Yd = game.monsterCatalog.minUnlockedLevel;
       this.Cs = scaleByLevel(this.Yd, monsterUnlockPriceCurve, 1);
       this.Ve = "退休怪物等级" + this.Yd;
     }
@@ -686,7 +686,7 @@ export function initializeProgressionUpgrades() {
   };
   RetireMonsterLevelUpgrade.prototype.og = function () {
     this.Ql = false;
-    this.Yd = game.monsterCatalog.hd;
+    this.Yd = game.monsterCatalog.minUnlockedLevel;
     this.Cs = scaleByLevel(this.Yd, monsterUnlockPriceCurve, 1);
     this.Ve = "退休怪物等级" + this.Yd;
   };
@@ -707,13 +707,13 @@ export function initializeProgressionUpgrades() {
       if (a >= b.maxUnlockedLevel) {
         console.log("setMonsterLevelRetired attempt to retire max level");
       } else {
-        if (a < b.hd) {
+        if (a < b.minUnlockedLevel) {
           console.log("setMonsterLevelRetired attempt to retire previously retired level");
         } else {
-          if (a > b.hd) {
+          if (a > b.minUnlockedLevel) {
             console.log("setMonsterLevelRetired attempt to retire non-min level");
           } else {
-            b.hd++;
+            b.minUnlockedLevel++;
             delete b.en[a + ""];
           }
         }
@@ -736,8 +736,8 @@ export function initializeProgressionUpgrades() {
     var a = this.canPurchase,
       b = this.affordableSoon,
       c = this.Yd;
-    if (this.Yd != game.monsterCatalog.hd) {
-      this.Yd = game.monsterCatalog.hd;
+    if (this.Yd != game.monsterCatalog.minUnlockedLevel) {
+      this.Yd = game.monsterCatalog.minUnlockedLevel;
       this.Cs = scaleByLevel(this.Yd, monsterUnlockPriceCurve, 1);
       this.Ve = "退休怪物等级" + this.Yd;
     }
@@ -1207,9 +1207,9 @@ export function initializeProgressionUpgrades() {
     return this.canPurchase;
   };
   AdventurePointUpgrade.prototype.purchase = function () {
-    if (!(this.purchased || this.kh.pointCost > game.state.ae.Dd)) {
+    if (!(this.purchased || this.kh.pointCost > game.state.adventurePoints.Dd)) {
       var a = this.kh.pointCost,
-        b = game.state.ae;
+        b = game.state.adventurePoints;
       b.An += a;
       b.Dd -= a;
       if (0 > b.Dd) {
@@ -1229,7 +1229,7 @@ export function initializeProgressionUpgrades() {
     return this.kh.descriptionText;
   };
   AdventurePointUpgrade.prototype.Cd = function () {
-    this.canPurchase = !this.purchased && this.kh.pointCost <= game.state.ae.Dd;
+    this.canPurchase = !this.purchased && this.kh.pointCost <= game.state.adventurePoints.Dd;
     var a = this.cachedCanPurchase !== this.canPurchase;
     this.cachedCanPurchase = this.canPurchase;
     return a;

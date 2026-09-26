@@ -565,7 +565,7 @@ export function restoreGameState(a, b) {
             var ve = Uc.spentAdventurePoints,
               zf = Uc.pointsByType,
               we = Uc.pointUpgrades;
-            game.state.ae.An = ve ? ve : 0;
+            game.state.adventurePoints.An = ve ? ve : 0;
             if (zf && 0 !== zf.length) {
               var xe;
               for (xe = 0; xe < zf.length; xe++) {
@@ -575,8 +575,8 @@ export function restoreGameState(a, b) {
                     lg = Wd.points,
                     mg = Wd.count;
                   if (yd) {
-                    game.state.ae.Qi[yd] = lg ? lg : 0;
-                    game.state.ae.pj[yd] = mg ? mg : 0;
+                    game.state.adventurePoints.Qi[yd] = lg ? lg : 0;
+                    game.state.adventurePoints.pj[yd] = mg ? mg : 0;
                   }
                 }
               }
@@ -591,7 +591,7 @@ export function restoreGameState(a, b) {
                     var ul = !!ng.upgradePurchased,
                       Bf = undefined;
                     b: {
-                      for (var Mh = game.state.ae, Pe = 0; Pe < Mh.tl.length; Pe++) {
+                      for (var Mh = game.state.adventurePoints, Pe = 0; Pe < Mh.tl.length; Pe++) {
                         if (Mh.tl[Pe].kh.upgradeId === Lh) {
                           Bf = Mh.tl[Pe];
                           break b;
@@ -606,7 +606,7 @@ export function restoreGameState(a, b) {
                 }
               }
             }
-            recalculateAdventurePoints(game.state.ae);
+            recalculateAdventurePoints(game.state.adventurePoints);
           }
           var gj = d.achievementManager;
           if (gj) {
@@ -936,12 +936,12 @@ export function createSaveState(a) {
       qc = game.monsterCatalog,
       Fc = qc.maxUnlockedLevel,
       Cb;
-    for (Cb = qc.hd; Cb <= Fc; Cb++) {
+    for (Cb = qc.minUnlockedLevel; Cb <= Fc; Cb++) {
       Tb.push(serializeMonsterLevel(Cb, getMonsterTypesForLevel(qc, Cb)));
     }
     nc = {
       monsterLevelStates: Tb,
-      minUnlockedLevel: sa.hd,
+      minUnlockedLevel: sa.minUnlockedLevel,
       maxUnlockedLevel: sa.maxUnlockedLevel
     };
     var kb,
@@ -956,8 +956,8 @@ export function createSaveState(a) {
     var Db = {
         upgrades: Ja
       },
-      gb = game.state.ae.An,
-      rb = game.state.ae,
+      gb = game.state.adventurePoints.An,
+      rb = game.state.adventurePoints,
       dc = [],
       Ka,
       Xa,
@@ -974,7 +974,7 @@ export function createSaveState(a) {
       });
     }
     var rc = [],
-      sc = game.state.ae.tl,
+      sc = game.state.adventurePoints.tl,
       Aa;
     for (Aa = 0; Aa < sc.length; Aa++) {
       var db = sc[Aa];

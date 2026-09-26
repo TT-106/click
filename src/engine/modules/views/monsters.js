@@ -23,7 +23,7 @@ export function MonsterLevelView() {
 export function MonsterRowView(a, b) {
   this.lh = a;
   this.monsterType = b;
-  this.kd = this.progressFillElement = this.ng = this.xo = this.$n = this.Yn = this.vo = this.Ij = this.Mo = this.wq = this.yq = this.Es = null;
+  this.progressTextElement = this.progressFillElement = this.ng = this.xo = this.$n = this.Yn = this.vo = this.Ij = this.Mo = this.wq = this.yq = this.Es = null;
   this.Sv = this.$f = this.Jh = this.Uv = -1;
   this.dx = 80;
   this.Cp = null;
@@ -78,7 +78,7 @@ export function mountMonsterTable(a, b) {
 }
 export function updateMonsterTabLabels(a) {
   var b,
-    c = game.monsterCatalog.hd,
+    c = game.monsterCatalog.minUnlockedLevel,
     d,
     f;
   for (f = 0; f < a.zg.length; f++) {
@@ -100,7 +100,7 @@ export function refreshMonsterTabVisibility(a) {
   for (c = 0; c < a.zg.length; c++) {
     f = a.zg[c];
     d = f.view.xd;
-    d = b.hd <= d && d <= b.maxUnlockedLevel;
+    d = b.minUnlockedLevel <= d && d <= b.maxUnlockedLevel;
     f.tabState.enabled = d;
     if (!d && f.tabState.selected) {
       f.tabState.selected = false;
@@ -241,14 +241,14 @@ export function initializeViewsMonsters() {
     this.progressFillElement.style.backgroundColor = "#F00";
     this.progressFillElement.style.height = "15px";
     this.progressFillElement.style.width = "0px";
-    this.kd = createElement("div", a, null, null);
-    this.kd.style.position = "absolute";
-    this.kd.style.textAlign = "center";
-    this.kd.style.top = "0";
-    this.kd.style.left = "0";
-    this.kd.style.height = "15px";
-    this.kd.style.width = "100%";
-    this.kd.style.zIndex = "10";
+    this.progressTextElement = createElement("div", a, null, null);
+    this.progressTextElement.style.position = "absolute";
+    this.progressTextElement.style.textAlign = "center";
+    this.progressTextElement.style.top = "0";
+    this.progressTextElement.style.left = "0";
+    this.progressTextElement.style.height = "15px";
+    this.progressTextElement.style.width = "100%";
+    this.progressTextElement.style.zIndex = "10";
   };
   MonsterRowView.prototype.reset = function () {
     this.Jh = this.Uv = this.$f = this.Sv = -1;
@@ -282,7 +282,7 @@ export function initializeViewsMonsters() {
     if (this.Jh !== d) {
       this.Jh = d;
       this.progressFillElement.style.width = d + "px";
-      this.kd.innerHTML = a > b ? "最大" : formatAmount(a) + " / " + formatAmount(b);
+      this.progressTextElement.innerHTML = a > b ? "最大" : formatAmount(a) + " / " + formatAmount(b);
     }
   };
   MonsterLevelTabView.prototype = new TabView();

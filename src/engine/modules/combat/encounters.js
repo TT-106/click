@@ -52,7 +52,7 @@ export function populateEncounter(a) {
         monsterCount += extraMonstersModifier.currentValue;
         if (0 < monsterCount) {
           var catalog = game.monsterCatalog,
-            monsterLevel = catalog.hd + randomInt(1 + catalog.maxUnlockedLevel - catalog.hd),
+            monsterLevel = catalog.minUnlockedLevel + randomInt(1 + catalog.maxUnlockedLevel - catalog.minUnlockedLevel),
             monsterTypes = getMonsterTypesForLevel(catalog, monsterLevel),
             monsterType = monsterTypes[randomInt(monsterTypes.length)],
             encounterName = b.dn.Vk(monsterType.nE) + " (等级." + monsterType.xd + ")";
@@ -223,8 +223,8 @@ export function generateBossName(a, b) {
   return b + "之" + a.mn(a.Pw) + "" + a.mn(a.XC);
 }
 export function getMonsterTypesForLevel(a, b) {
-  if (b < a.hd) {
-    console.log("getMonsterTypesForLevel. monsterLevel (" + b + ") less than min unlocked level: " + a.hd);
+  if (b < a.minUnlockedLevel) {
+    console.log("getMonsterTypesForLevel. monsterLevel (" + b + ") less than min unlocked level: " + a.minUnlockedLevel);
   }
   if (b > a.maxUnlockedLevel + 1) {
     console.log("getMonsterTypesForLevel. monsterLevel (" + b + ") greater than max unlocked level: " + a.maxUnlockedLevel);

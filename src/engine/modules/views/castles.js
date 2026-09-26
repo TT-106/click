@@ -24,7 +24,7 @@ export function CastleTableView() {
 }
 export function CastleRowView(a) {
   this.lh = a;
-  this.kd = this.progressFillElement = this.ng = this.mf = this.castle = null;
+  this.progressTextElement = this.progressFillElement = this.ng = this.mf = this.castle = null;
   this.Us = 120;
   this.Rv = this.Cu = this.cachedDescriptionText = "";
   this.Kv = 0;
@@ -184,14 +184,14 @@ export function initializeViewsCastles() {
     this.progressFillElement.style.backgroundColor = "#F00";
     this.progressFillElement.style.height = "15px";
     this.progressFillElement.style.width = "0px";
-    this.kd = createElement("div", a, null, null);
-    this.kd.style.position = "absolute";
-    this.kd.style.textAlign = "center";
-    this.kd.style.top = "0";
-    this.kd.style.left = "0";
-    this.kd.style.height = "15px";
-    this.kd.style.width = "100%";
-    this.kd.style.zIndex = "10";
+    this.progressTextElement = createElement("div", a, null, null);
+    this.progressTextElement.style.position = "absolute";
+    this.progressTextElement.style.textAlign = "center";
+    this.progressTextElement.style.top = "0";
+    this.progressTextElement.style.left = "0";
+    this.progressTextElement.style.height = "15px";
+    this.progressTextElement.style.width = "100%";
+    this.progressTextElement.style.zIndex = "10";
   };
   CastleRowView.prototype.render = function () {
     if (this.castle) {
@@ -209,7 +209,7 @@ export function initializeViewsCastles() {
       a = a.regionLocked ? "未解锁" : a.conquered ? "已征服" : canAttackCastle(a) ? game.monsterCatalog.maxUnlockedLevel >= a.requiredMonsterLevel ? "准备攻击" : "怪物等级" + a.requiredMonsterLevel : a.ye ? "计划攻击" : "地牢" + a.yk + " / " + a.dungeonList.length;
       if (this.Rv != a) {
         this.Rv = a;
-        this.kd.innerHTML = a;
+        this.progressTextElement.innerHTML = a;
       }
       a = this.castle;
       if (a.regionLocked) {

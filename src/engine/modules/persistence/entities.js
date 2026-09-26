@@ -321,7 +321,7 @@ export function restoreStatistics(a, b, c) {
 export function initializePersistenceEntities() {
   MonsterSaveAdapter.prototype.Kw = function (a) {
     var b = game.monsterCatalog;
-    b.hd = a.minUnlockedLevel;
+    b.minUnlockedLevel = a.minUnlockedLevel;
     b.maxUnlockedLevel = a.maxUnlockedLevel;
     a = a.monsterLevelStates;
     for (b = 0; b < a.length; b++) {

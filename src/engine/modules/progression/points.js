@@ -4,7 +4,7 @@
 import { game } from "../runtime/game.js";
 export var POINT_EVENT_ENCOUNTER, POINT_EVENT_LEVEL_CLEARED, POINT_EVENT_DUNGEON_CLEARED, killPointEvent, spellPointEvent, encounterPointEvent, levelClearedPointEvent, dungeonClearedPointEvent, castleConqueredPointEvent, chestPointEvent, bookcasePointEvent, weaponRackPointEvent, scrollFoundPointEvent, potionFoundPointEvent, itemFoundPointEvent, goldFoundPointEvent, summonPointEvent, uncommonItemPointEvent, rareItemPointEvent, historicItemPointEvent, ancientItemPointEvent, itemSoldPointEvent, itemEquippedPointEvent, levelUpPointEvent, pointEventsById, pointEventDefinitions, pointUpgradeDefinitions;
 export function resetAdventurePoints() {
-  var a = game.state.ae;
+  var a = game.state.adventurePoints;
   a.Dd = 0;
   a.An = 0;
   a.Qi = {};
@@ -24,7 +24,7 @@ export function resetAdventurePoints() {
   }
 }
 export function awardAdventurePoints(a) {
-  var b = game.state.ae,
+  var b = game.state.adventurePoints,
     c = pointEventsById[a];
   if (c) {
     c = c.currentPointReward;
@@ -45,7 +45,7 @@ export function awardAdventurePoints(a) {
   }
 }
 export function increasePointEventReward(a, b) {
-  var c = game.state.ae,
+  var c = game.state.adventurePoints,
     d = pointEventsById[a];
   if (d) {
     d.currentPointReward += b;
