@@ -54,12 +54,13 @@
 
 ## 6. 未覆盖区域（如实陈述）— UNRESOLVED
 
-以下系统**未进入差分场景**（无 fixture/变异器，非已知不兼容）：
-- 部分法术分支（如 blastStunSpell 系）
-- 大型城堡攻防战全程
-- 8 小时以上离线（12h 上限截断路径未测）
+以下系统仍未进入差分场景（无 fixture/变异器，非已知不兼容）：
+- Blast Stun 的直接入队计数：效果施加分支本身已由 `spell-status-transform`（cat=2、effect=4）与 `spell-buff-armor`（cat=3、effect=5）两条差分场景驱动，怪物效果队列本身不入存档，type=14 的专属计数仍缺。
+- 召唤、持续伤害、位移等剩余法术分支。
 
-后续扩展路径：在 `tests/scenarios/save-mutations.mjs` 增加对应变异器（victoryCount、castle 状态注入），即可纳入 `test:scenarios` 矩阵。
+已转入差分覆盖（2026-09-26）：城堡攻防战全程与胜利瞬间（`castle-victory`，两端各自断言 gameWon/victoryCount/castlesConquered 后比较完整存档）、12h 离线截断（`offline-13h-capped`）、火球与两条控制/增益法术分支。
+
+后续扩展路径：在 `tests/scenarios/save-mutations.mjs` 增加对应变异器，即可纳入 `test:scenarios` 矩阵（当前 17 个场景）。
 
 ## 7. 性能兼容 — VERIFIED
 
