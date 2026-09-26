@@ -8,10 +8,10 @@ import { rollGoldDrop, treasureRoomModifier } from "../content/balance.js";
 import { GoldDrop } from "../loot/treasure.js";
 export var EMPTY_TILE;
 export function DungeonTile(a, b, c, d) {
-  this.TD = a;
-  this.UD = b;
-  this.VD = c;
-  this.WD = d;
+  this.tileColumn = a;
+  this.tileRow = b;
+  this.pixelColumn = c;
+  this.pixelRow = d;
   this.bt = this.Yf = this.Jn = null;
   this.Rb = EMPTY_TILE;
   this.Pq = null;
@@ -539,16 +539,16 @@ export function paintHallwayTile(a, b, c, d) {
 }
 export function initializeWorldRooms() {
   DungeonTile.prototype.Ai = function () {
-    return this.TD;
+    return this.tileColumn;
   };
   DungeonTile.prototype.Bi = function () {
-    return this.UD;
+    return this.tileRow;
   };
   DungeonTile.prototype.getPixelX = function () {
-    return this.VD;
+    return this.pixelColumn;
   };
   DungeonTile.prototype.getPixelY = function () {
-    return this.WD;
+    return this.pixelRow;
   };
   DungeonTile.prototype.setBackgroundSprite = function (a) {
     this.Jn = a;
