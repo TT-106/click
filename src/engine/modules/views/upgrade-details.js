@@ -129,7 +129,7 @@ export function appendEquipmentRow(a, b) {
 export function SkillUpgradeDetails(a, b) {
   this.upgrade = a;
   this.contentContainer = b;
-  this.sb = this.jb = this.kq = this.wn = null;
+  this.descriptionElement = this.titleElement = this.kq = this.wn = null;
   this.shown = false;
   this.cachedTitleText = this.cachedDescriptionText = null;
 }
@@ -184,7 +184,7 @@ export function CharacterLevelDetails(a, b) {
   this.upgrade = a;
   this.contentContainer = b;
   this.jr = this.hr = this.gr = this.ir = this.cn = this.an = this.$m = this.bn = 0;
-  this.lr = this.Sq = this.Rq = this.kr = this.sb = this.jb = this.pi = this.Zm = this.table = null;
+  this.lr = this.Sq = this.Rq = this.kr = this.descriptionElement = this.titleElement = this.pi = this.Zm = this.table = null;
   this.shown = false;
   this.Lb = -1;
   this.cachedTitleText = this.Bs = null;
@@ -193,21 +193,21 @@ export function CharacterLevelDetails(a, b) {
 export function AchievementClaimDetails(a, b) {
   this.upgrade = a;
   this.contentContainer = b;
-  this.sb = this.jb = null;
+  this.descriptionElement = this.titleElement = null;
   this.shown = false;
   this.cachedTitleText = this.cachedDescriptionText = null;
 }
 export function AchievementProgressDetails(a, b) {
   this.upgrade = a;
   this.contentContainer = b;
-  this.sb = this.jb = null;
+  this.descriptionElement = this.titleElement = null;
   this.shown = false;
   this.cachedTitleText = this.cachedDescriptionText = null;
 }
 export function PointUpgradeDetails(a, b) {
   this.upgrade = a;
   this.contentContainer = b;
-  this.pi = this.sb = this.jb = null;
+  this.pi = this.descriptionElement = this.titleElement = null;
   this.shown = false;
   this.cachedTitleText = this.cachedDescriptionText = null;
   this.Lb = -1;
@@ -647,11 +647,11 @@ export function initializeViewsUpgradeDetails() {
       b = this.upgrade.getDescription();
     if (this.cachedTitleText !== a) {
       this.cachedTitleText = a;
-      this.jb.innerHTML = a;
+      this.titleElement.innerHTML = a;
     }
     if (this.cachedDescriptionText !== b) {
       this.cachedDescriptionText = b;
-      this.sb.innerHTML = b;
+      this.descriptionElement.innerHTML = b;
     }
   };
   SkillUpgradeDetails.prototype.createDomElements = function () {
@@ -661,22 +661,22 @@ export function initializeViewsUpgradeDetails() {
     this.kq = createElement("div", this.contentContainer, null, null);
     this.kq.style.position = "relative";
     this.kq.style.height = "30px";
-    this.jb = createElement("div", this.wn, null, null);
-    this.jb.style.position = "absolute";
-    this.jb.style.top = "0";
-    this.jb.style.left = "3px";
-    this.jb.style.right = "3px";
-    this.jb.style.height = "25px";
-    this.jb.style.paddingTop = "5px";
-    this.jb.style.textAlign = "left";
-    this.sb = createElement("div", this.kq, null, null);
-    this.sb.style.position = "absolute";
-    this.sb.style.left = "3px";
-    this.sb.style.top = "0";
-    this.sb.style.right = "0";
-    this.sb.style.height = "25px";
-    this.sb.style.paddingTop = "5px";
-    this.sb.style.textAlign = "left";
+    this.titleElement = createElement("div", this.wn, null, null);
+    this.titleElement.style.position = "absolute";
+    this.titleElement.style.top = "0";
+    this.titleElement.style.left = "3px";
+    this.titleElement.style.right = "3px";
+    this.titleElement.style.height = "25px";
+    this.titleElement.style.paddingTop = "5px";
+    this.titleElement.style.textAlign = "left";
+    this.descriptionElement = createElement("div", this.kq, null, null);
+    this.descriptionElement.style.position = "absolute";
+    this.descriptionElement.style.left = "3px";
+    this.descriptionElement.style.top = "0";
+    this.descriptionElement.style.right = "0";
+    this.descriptionElement.style.height = "25px";
+    this.descriptionElement.style.paddingTop = "5px";
+    this.descriptionElement.style.textAlign = "left";
   };
   SpellUpgradeDetails.prototype.getUpgradeType = function () {
     return 6;
@@ -1145,7 +1145,7 @@ export function initializeViewsUpgradeDetails() {
     }
     if (this.cachedTitleText != b) {
       this.cachedTitleText = b;
-      this.jb.innerHTML = b;
+      this.titleElement.innerHTML = b;
     }
     if (this.vi != c) {
       this.vi = c;
@@ -1193,7 +1193,7 @@ export function initializeViewsUpgradeDetails() {
     c = c < a ? "最低角色等级需求: " + a : 4 === b ? "评定: 小菜一碟" : 3 === b ? "评定: 有点挑战" : 2 === b ? "评定: 非常困难!" : "评定: 难如登天!";
     if (this.Bs !== c) {
       this.Bs = c;
-      this.sb.innerHTML = c;
+      this.descriptionElement.innerHTML = c;
     }
   };
   CharacterLevelDetails.prototype.createDomElements = function () {
@@ -1226,10 +1226,10 @@ export function initializeViewsUpgradeDetails() {
     this.pi = createElement("span", f, null, null);
     this.pi.style.width = "40px";
     this.pi.style.height = "25px";
-    this.jb = createElement("div", d, null, null);
-    this.jb.style.textAlign = "left";
-    this.sb = createElement("div", b, null, null);
-    this.sb.style.textAlign = "left";
+    this.titleElement = createElement("div", d, null, null);
+    this.titleElement.style.textAlign = "left";
+    this.descriptionElement = createElement("div", b, null, null);
+    this.descriptionElement.style.textAlign = "left";
     c = c.insertCell(0);
     c.colSpan = 3;
     c = createElement("table", c, null, null);
@@ -1276,12 +1276,12 @@ export function initializeViewsUpgradeDetails() {
     this.upgrade = a;
   };
   AchievementClaimDetails.prototype.te = function () {
-    if (!this.jb) {
+    if (!this.titleElement) {
       this.createDomElements();
     }
     if (!this.shown) {
-      showElement(this.jb);
-      showElement(this.sb);
+      showElement(this.titleElement);
+      showElement(this.descriptionElement);
       this.shown = true;
     }
   };
@@ -1290,11 +1290,11 @@ export function initializeViewsUpgradeDetails() {
       b = this.upgrade.getDescription();
     if (this.cachedTitleText !== a) {
       this.cachedTitleText = a;
-      this.jb.innerHTML = a;
+      this.titleElement.innerHTML = a;
     }
     if (this.cachedDescriptionText !== b) {
       this.cachedDescriptionText = b;
-      this.sb.innerHTML = b;
+      this.descriptionElement.innerHTML = b;
     }
   };
   AchievementClaimDetails.prototype.createDomElements = function () {
@@ -1303,10 +1303,10 @@ export function initializeViewsUpgradeDetails() {
     a.style.color = "#FA0";
     a.style.fontWeight = "bold";
     a.innerHTML = "成就!";
-    this.jb = createElement("div", this.contentContainer, null, null);
-    this.jb.style.padding = "5px";
-    this.sb = createElement("div", this.contentContainer, null, null);
-    this.sb.style.padding = "5px";
+    this.titleElement = createElement("div", this.contentContainer, null, null);
+    this.titleElement.style.padding = "5px";
+    this.descriptionElement = createElement("div", this.contentContainer, null, null);
+    this.descriptionElement.style.padding = "5px";
   };
   AchievementProgressDetails.prototype.getUpgradeType = function () {
     return 15;
@@ -1318,12 +1318,12 @@ export function initializeViewsUpgradeDetails() {
     this.upgrade = a;
   };
   AchievementProgressDetails.prototype.te = function () {
-    if (!this.jb) {
+    if (!this.titleElement) {
       this.createDomElements();
     }
     if (!this.shown) {
-      showElement(this.jb);
-      showElement(this.sb);
+      showElement(this.titleElement);
+      showElement(this.descriptionElement);
       this.shown = true;
     }
   };
@@ -1332,18 +1332,18 @@ export function initializeViewsUpgradeDetails() {
       b = this.upgrade.getDescription();
     if (this.cachedTitleText !== a) {
       this.cachedTitleText = a;
-      this.jb.innerHTML = a;
+      this.titleElement.innerHTML = a;
     }
     if (this.cachedDescriptionText !== b) {
       this.cachedDescriptionText = b;
-      this.sb.innerHTML = b;
+      this.descriptionElement.innerHTML = b;
     }
   };
   AchievementProgressDetails.prototype.createDomElements = function () {
-    this.jb = createElement("div", this.contentContainer, null, null);
-    this.jb.style.padding = "5px";
-    this.sb = createElement("div", this.contentContainer, null, null);
-    this.sb.style.padding = "5px";
+    this.titleElement = createElement("div", this.contentContainer, null, null);
+    this.titleElement.style.padding = "5px";
+    this.descriptionElement = createElement("div", this.contentContainer, null, null);
+    this.descriptionElement.style.padding = "5px";
   };
   PointUpgradeDetails.prototype.getUpgradeType = function () {
     return 16;
@@ -1356,12 +1356,12 @@ export function initializeViewsUpgradeDetails() {
     this.upgrade = a;
   };
   PointUpgradeDetails.prototype.te = function () {
-    if (!this.jb) {
+    if (!this.titleElement) {
       this.createDomElements();
     }
     if (!this.shown) {
-      showElement(this.jb);
-      showElement(this.sb);
+      showElement(this.titleElement);
+      showElement(this.descriptionElement);
       showElement(this.pi);
       this.shown = true;
     }
@@ -1372,11 +1372,11 @@ export function initializeViewsUpgradeDetails() {
       c = this.upgrade.getCost();
     if (this.cachedTitleText != a) {
       this.cachedTitleText = a;
-      this.jb.innerHTML = a;
+      this.titleElement.innerHTML = a;
     }
     if (this.cachedDescriptionText != b) {
       this.cachedDescriptionText = b;
-      this.sb.innerHTML = b;
+      this.descriptionElement.innerHTML = b;
     }
     if (this.Lb != c) {
       this.Lb = c;
@@ -1384,10 +1384,10 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   PointUpgradeDetails.prototype.createDomElements = function () {
-    this.jb = createElement("div", this.contentContainer, null, null);
-    this.jb.style.padding = "5px";
-    this.sb = createElement("div", this.contentContainer, null, null);
-    this.sb.style.padding = "5px";
+    this.titleElement = createElement("div", this.contentContainer, null, null);
+    this.titleElement.style.padding = "5px";
+    this.descriptionElement = createElement("div", this.contentContainer, null, null);
+    this.descriptionElement.style.padding = "5px";
     this.pi = createElement("div", this.contentContainer, null, null);
     this.pi.style.padding = "5px";
   };
