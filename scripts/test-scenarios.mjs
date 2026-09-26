@@ -108,6 +108,43 @@ const scenarios = [
     steps: [{ turns: 3000, check: snap => ({ spellCast: snap.statistics.spellCastCount > base.statistics.spellCastCount }), effectType: 0 }, [3000, null]],
   },
   {
+    // 治疗分支：spellCategoryId=1（牧师 治疗）。两端各自断言实际施法，再比较完整存档。
+    name: 'spell-heal',
+    make: () => withReclassedSpell(base, 3, 6, '治疗'),
+    steps: [[3000, snap => ({ spellCast: snap.statistics.spellCastCount > base.statistics.spellCastCount })], [3000, null]],
+  },
+  {
+    // 弹射范围伤害分支：spellCategoryId=4、bo:true（火法师 火环）。
+    name: 'spell-area-bounce',
+    make: () => withReclassedSpell(base, 3, 4, '火环'),
+    steps: [[3000, snap => ({ spellCast: snap.statistics.spellCastCount > base.statistics.spellCastCount })], [3000, null]],
+  },
+  {
+    // 连锁伤害分支：spellCategoryId=5（电法师 连锁闪电）。
+    name: 'spell-chain-lightning',
+    make: () => withReclassedSpell(base, 3, 3, '连锁闪电'),
+    steps: [[3000, snap => ({ spellCast: snap.statistics.spellCastCount > base.statistics.spellCastCount })], [3000, null]],
+  },
+  {
+    // 落雨型范围伤害分支：spellCategoryId=6（电法师 闪电雨）。
+    name: 'spell-rain-damage',
+    make: () => withReclassedSpell(base, 3, 3, '闪电雨'),
+    steps: [[3000, snap => ({ spellCast: snap.statistics.spellCastCount > base.statistics.spellCastCount })], [3000, null]],
+  },
+  {
+    // 弹跳投射物分支：spellCategoryId=13（死灵法师 绿色死亡）。
+    name: 'spell-bouncing-projectile',
+    make: () => withReclassedSpell(base, 3, 9, '绿色死亡'),
+    steps: [[3000, snap => ({ spellCast: snap.statistics.spellCastCount > base.statistics.spellCastCount })], [3000, null]],
+  },
+  {
+    // 鸡群分支：spellCategoryId=17（鸡王 召唤鸡群）走 Math.random 概率选模板再 spawnMinion，
+    // 召唤数写入存档统计 minionsSummoned，属于可直接对账的增长。
+    name: 'spell-chicken-swarm',
+    make: () => withReclassedSpell(base, 3, 11, '召唤鸡群'),
+    steps: [[3000, snap => ({ spellCast: snap.statistics.spellCastCount > base.statistics.spellCastCount, summoned: snap.statistics.minionsSummoned > base.statistics.minionsSummoned })], [3000, null]],
+  },
+  {
     // 城堡征服全流程：只剩最后一座城堡待攻克，队伍走进城堡再从出口离开，
     // 触发 iw() 的征服尾部（解锁邻区、recordCastleConquered）与胜利瞬间。
     // 断言放在终点：castlesConquered 在载入后为 0，只有真的走完征服尾部才会变成 1。

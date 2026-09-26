@@ -131,6 +131,12 @@ RunStatistics 的 `On/Lk/qn/Mj/wi/uk` → `turnCount/doorsOpened/roomsCleared/le
 | `b.Ib` | `actionDefinition` | 动作携带的法术定义 |
 | `function rw(a,b,c)` | `summonSpellMinion` | 按 `kv[a.ta]` → `minionsBySpell[a.name]` 反查随从模板，找不到时打印 `Failed to find minion for summon spell.` |
 | `function sw(a,b,c)` | `spawnMinion` | 模板命中后真正生成随从 |
+| `function Aw(a,b)`（`c2.js:21118`） | `getProjectileAnimation` | 远程动作的投射物动画名；首行 `3 === a.sw()` 无空值保护 |
+| `yw` 的远程分支（`c2.js:21057-21061`） | `createAttackAction` 的 `actions.js:459-467` | `h` 为假时以 `Aw(b, null)` 建投射特效，`b` 即 `equipment.Ey` |
+
+## 远程法术动作的空武器崩溃（2026-09-26，U4 法术分支驱动）
+
+用盗贼（characterClass=7）与忍者（=8）装载只有远程法术的存档驱动 3000 回计时，两端在同一处抛出 `TypeError: Cannot read properties of null (reading 'sw')`：原版栈 `Aw (c2.js:21119) ← yw (21061) ← Lq (21805) ← pB (29943)`，重构版栈 `getProjectileAnimation (combat/actions.js:558) ← createAttackAction (actions.js:466) ← updateCharacter (characters/character.js:461) ← advanceSimulation (simulation/tick.js:267)`。两条栈逐帧同构，因此这是原版自带、重构版原样保留的潜伏缺陷：远程攻击分支把 `equipment.Ey` 直接喂给只接受武器对象的 `Aw/getProjectileAnimation`，而该角色当时没有远程武器。按红线未做任何修补（改动会改变原始行为），只记录事实：cat=12/14/15 三条法术分支因此无法用当前 fixture 驱动。
 
 这条对照是 `tests/engine-harness.js` 里 `countEffectApplications(turns, typeId)` 的依据：两端用同一套扫描逻辑、各自的名字表，逐帧统计"某类效果新落到某只活怪物身上"的次数。引擎效果队列不入存档，因此这类只读扫描是唯一能把瞬态行为变成可对比数字的入口。
 
