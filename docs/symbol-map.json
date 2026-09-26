@@ -7585,7 +7585,10 @@
     "Jp": "allowOfflineProgress",
     "bp": "allowBackgroundProgress",
     "rq": "depthSortSprites",
-    "Po": "showFps"
+    "Po": "showFps",
+    "uc": "displayName",
+    "tc": "effectLabel",
+    "vc": "modifierId"
   },
   "gameFields": {
     "B": "tileSize",

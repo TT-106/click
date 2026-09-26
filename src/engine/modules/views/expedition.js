@@ -684,8 +684,8 @@ export function initializeViewsExpedition() {
         this.Si.className = a;
       }
       if (this.potion != this.sm) {
-        this.Tp.innerHTML = this.potion.uc;
-        this.Op.innerHTML = this.potion.tc;
+        this.Tp.innerHTML = this.potion.displayName;
+        this.Op.innerHTML = this.potion.effectLabel;
         a = this.potion.potionSprite;
         this.Pp.style.background = "url('spritesheet/items.png') -" + a.sourceX + "px -" + a.sourceY + "px";
       }

@@ -7,12 +7,12 @@ export var potionDefinitions;
 export function Potion(a) {
   this.potionId = a.potionId;
   this.potionSprite = game.itemSprites.getSprite(a.potionSprite);
-  this.uc = a.uc;
-  this.tc = a.tc;
-  this.vc = a.vc;
+  this.displayName = a.displayName;
+  this.effectLabel = a.effectLabel;
+  this.modifierId = a.modifierId;
   this.active = false;
   this.activationTurn = 0;
-  this.mg = getPotionModifier(this.vc);
+  this.mg = getPotionModifier(this.modifierId);
 }
 export function setPotionActive(a, b) {
   var c = a.active;
@@ -117,124 +117,124 @@ export function addPotion(a) {
 export function initializeCombatPotions() {
   potionDefinitions = [{
     potionId: "doubleGoldDropValue",
-    uc: "双倍黄金",
-    tc: "黄金掉落x2",
+    displayName: "双倍黄金",
+    effectLabel: "黄金掉落x2",
     potionSprite: "PotionLargeRose.PNG",
-    vc: 2
+    modifierId: 2
   }, {
     potionId: "doubleKills",
-    uc: "双倍杀戮",
-    tc: "杀戮翻倍",
+    displayName: "双倍杀戮",
+    effectLabel: "杀戮翻倍",
     potionSprite: "PotionLargeViolet.PNG",
-    vc: 1
+    modifierId: 1
   }, {
     potionId: "doubleExperience",
-    uc: "双倍经验",
-    tc: "经验翻倍",
+    displayName: "双倍经验",
+    effectLabel: "经验翻倍",
     potionSprite: "PotionPurple.PNG",
-    vc: 3
+    modifierId: 3
   }, {
     potionId: "speedWalker",
-    uc: "快速行走",
-    tc: "+25%速度",
+    displayName: "快速行走",
+    effectLabel: "+25%速度",
     potionSprite: "PotionShortRuby.PNG",
-    vc: 4
+    modifierId: 4
   }, {
     potionId: "fasterFarming",
-    uc: "快速收获",
-    tc: "提高收获速度",
+    displayName: "快速收获",
+    effectLabel: "提高收获速度",
     potionSprite: "PotionTallGreen.PNG",
-    vc: 5
+    modifierId: 5
   }, {
     potionId: "fasterInfestation",
-    uc: "快速侵扰",
-    tc: "快速开始收获",
+    displayName: "快速侵扰",
+    effectLabel: "快速开始收获",
     potionSprite: "PotionSquareBlue.PNG",
-    vc: 6
+    modifierId: 6
   }, {
     potionId: "infiniteScrolls",
-    uc: "无限卷轴",
-    tc: "开火",
+    displayName: "无限卷轴",
+    effectLabel: "开火",
     potionSprite: "PotionShortSilver.PNG",
-    vc: 7
+    modifierId: 7
   }, {
     potionId: "moreMonsters",
-    uc: "更多怪物",
-    tc: "每个房间内怪物+10",
+    displayName: "更多怪物",
+    effectLabel: "每个房间内怪物+10",
     potionSprite: "PotionRoundedTopaz.PNG",
-    vc: 8
+    modifierId: 8
   }, {
     potionId: "guaranteedItemDrops",
-    uc: "100%道具掉落",
-    tc: "所有怪物掉落道具",
+    displayName: "100%道具掉落",
+    effectLabel: "所有怪物掉落道具",
     potionSprite: "PotionShortPink.PNG",
-    vc: 9
+    modifierId: 9
   }, {
     potionId: "potionDuration",
-    uc: "药剂持续更久",
-    tc: "梅塔药剂",
+    displayName: "药剂持续更久",
+    effectLabel: "梅塔药剂",
     potionSprite: "PotionRed.PNG",
-    vc: 10
+    modifierId: 10
   }, {
     potionId: "freeSpellCasting",
-    uc: "法术无消耗",
-    tc: "法术不消耗法力",
+    displayName: "法术无消耗",
+    effectLabel: "法术不消耗法力",
     potionSprite: "PotionTriangularYellow.PNG",
-    vc: 11
+    modifierId: 11
   }, {
     potionId: "moreKillsPerFarm",
-    uc: "每次收获更多杀戮",
-    tc: "收获杀戮翻倍",
+    displayName: "每次收获更多杀戮",
+    effectLabel: "收获杀戮翻倍",
     potionSprite: "PotionEmerald.PNG",
-    vc: 12
+    modifierId: 12
   }, {
     potionId: "docileMonsters",
-    uc: "驯养怪物",
-    tc: "怪物无害",
+    displayName: "驯养怪物",
+    effectLabel: "怪物无害",
     potionSprite: "PotionShortTan.PNG",
-    vc: 13
+    modifierId: 13
   }, {
     potionId: "higherItemValues",
-    uc: "道具价值",
-    tc: "新道具+20%黄金",
+    displayName: "道具价值",
+    effectLabel: "新道具+20%黄金",
     potionSprite: "PotionTallYellow2.PNG",
-    vc: 14
+    modifierId: 14
   }, {
     potionId: "frailMonsters",
-    uc: "脆弱怪物",
-    tc: "怪物容易死亡",
+    displayName: "脆弱怪物",
+    effectLabel: "怪物容易死亡",
     potionSprite: "PotionShortOrange.PNG",
-    vc: 15
+    modifierId: 15
   }, {
     potionId: "autoFiringScrolls",
-    uc: "卷轴自动开火",
-    tc: "卷轴无需消耗自动使用",
+    displayName: "卷轴自动开火",
+    effectLabel: "卷轴无需消耗自动使用",
     potionSprite: "PotionLargeGreen.PNG",
-    vc: 16
+    modifierId: 16
   }, {
     potionId: "doubleGoldDrops",
-    uc: "双倍黄金掉落",
-    tc: "每个怪物掉落双倍黄金",
+    displayName: "双倍黄金掉落",
+    effectLabel: "每个怪物掉落双倍黄金",
     potionSprite: "PotionTriangularRuby.PNG",
-    vc: 17
+    modifierId: 17
   }, {
     potionId: "doubleItemDrops",
-    uc: "双倍道具掉落",
-    tc: "每个怪物掉落双倍道具",
+    displayName: "双倍道具掉落",
+    effectLabel: "每个怪物掉落双倍道具",
     potionSprite: "PotionLargeTan.PNG",
-    vc: 18
+    modifierId: 18
   }, {
     potionId: "randomTreasureRoom",
-    uc: "随机财宝室",
-    tc: "25%几率/房间",
+    displayName: "随机财宝室",
+    effectLabel: "25%几率/房间",
     potionSprite: "PotionShortTan2.PNG",
-    vc: 19
+    modifierId: 19
   }, {
     potionId: "randomBossEncounter",
-    uc: "随机首领战",
-    tc: "20%几率/房间",
+    displayName: "随机首领战",
+    effectLabel: "20%几率/房间",
     potionSprite: "PotionTallBrown.PNG",
-    vc: 20
+    modifierId: 20
   }];
   Potion.prototype.aw = function () {
     if (!(this.active || !this.active && isPotionModifierActive(this))) {

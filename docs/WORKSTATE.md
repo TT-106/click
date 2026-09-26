@@ -55,6 +55,13 @@
 - 脚本化行级替换的新教训：捕获组若已含后缀，替换串不得再拼一次同名词；类型检查与 `node --check` 都抓不到错误 DOM id，只有浏览器回归能抓到。批量替换后必须比对字符串字面量计数并跑完整回归。
 - 本节优先于下方旧快照中的“当前工作树干净”“M10 未开始”“9 场景”“剩余 23 个”等过时文字；提交与实际状态以 `git status`、`git log`、`rg -l '^// @ts-nocheck' src/engine/modules --glob '*.js'` 为准。
 
+## 当前续跑状态（第九轮，2026-09-26 下午）
+
+- U5 长尾重命名继续推进：**Potion 定义三元组 `uc/tc/vc` → `displayName/effectLabel/modifierId` 已落地**（构造点 + 20 条定义字面量 + `views/expedition.js` 两个读取点，全 `src` 已无这三个成员访问；存档只存 `potionId`，无键需要成对同步）。`check`/`typecheck`/`parity`/30 场景/`e2e` 全绿，混淆属性清单 1,238 → 1,235，`docs/symbol-map.json` fields 段 202 → 205。
+- 新增受守卫执行器 `scripts/rename-field.mjs`：写盘前校验命中总数、行数、逐行缩进与字符串字面量多重集。动因是内联 `node -e` 两次真实破坏（bash 吞掉 `$1` 抹平缩进；`\s*` 在 CRLF 上吃掉换行并行），此类破坏过不了 `node --check`/tsc。**后续批次一律用该工具，不要再写内联 shell 替换。**
+- `COMPATIBILITY_REPORT.md` 第 2/5/7 节仍写着 12 场景、c2c "UNRESOLVED" 与旧性能样本，与 30 场景矩阵、`unresolved.md` U2 已关闭、最新 perf 实测相互矛盾——属于目标规范 §3.1 的"文档与代码矛盾"项，需与后续代码批次一起收口。
+- 下一批取证目标（按 `artifacts/obfuscated-fields.json` 频次）：`Cb`(r25/w2, 6 文件)、`Wb`(r16/w9)、`Bc`、`oc`、`zc`、`Ac`、`Ec`、`yc`/`Fc`/`Dc`/`Gc`（各 21 写，成组的数据表键）；单文件成组键优先，风险最低。
+
 ## 1. 项目概况
 
 - 原始遗产：`archive/original/c2.js`（46,980 行混淆单体，sha256 见 `archive/migration/recovery-manifest.json`）。

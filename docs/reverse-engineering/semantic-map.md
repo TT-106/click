@@ -142,6 +142,24 @@ RunStatistics 的 `On/Lk/qn/Mj/wi/uk` → `turnCount/doorsOpened/roomsCleared/le
 
 这条对照是 `tests/engine-harness.js` 里 `countEffectApplications(turns, typeId)` 的依据：两端用同一套扫描逻辑、各自的名字表，逐帧统计"某类效果新落到某只活怪物身上"的次数。引擎效果队列不入存档，因此这类只读扫描是唯一能把瞬态行为变成可对比数字的入口。
 
+## 第九轮落地：Potion 定义三元组（2026-09-26，独立全回归）
+
+| 原字段 | 新名 | 证据 |
+|---|---|---|
+| `uc` | `displayName` | `views/expedition.js:687` 把该值写入药水按钮第一行 `innerHTML`；20 条定义取值均为药水面板主标题 |
+| `tc` | `effectLabel` | 同按钮第二行 `Op.innerHTML`（`expedition.js:688`）；取值均为效果短句（"黄金掉落x2"） |
+| `vc` | `modifierId` | `potions.js:15` 把它交给 `getPotionModifier` 的 `switch`，19 个分支各对应一条 `content/balance.js` 修正器 |
+
+作用域与持久化：三键只在 `combat/potions.js`（构造 + 20 条定义字面量）与 `views/expedition.js` 两个读取点出现，重命名后全 `src` 已无 `.uc/.tc/.vc` 成员访问。存档侧只写 `potionId`（`persistence/game-save.js:877`），载入时按 `potionId` 反查 `potionDefinitions`（`game-save.js:666-668`）再构造 `Potion`，因此三个运行时字段不参与序列化，无存档键需要成对同步。
+
+回归：`npm run check`（9 单测）、`npm run typecheck`（0 错误）、`test:parity`（0/1/99/900 回合）、`test:scenarios`（30/30，含 `potions-active`、`potions-inactive-auto`）、`test:e2e` 全绿。混淆属性清单由 1,238 项降至 1,235 项。
+
+## 重命名执行器 `scripts/rename-field.mjs`
+
+本批起改用手写守卫的执行器，用法 `node scripts/rename-field.mjs <old>=<new> <file...> --expect <total>`。写盘前强制四项校验：命中总数等于 `--expect`、行数不变、逐行缩进不变、字符串字面量多重集不变，任一失败整批不落盘。
+
+动因是本轮两次真实踩坑：`node -e "..."` 在双引号里被 bash 吞掉替换串的 `$1`，导致缩进被抹平；而 `^(\s*)key:` 的 `\s*` 在 CRLF 文件里可从 `\r` 后的行首位置吃掉 `\n`，把相邻两行并成一行。两者 `node --check` 与 tsc 都不报错，只有逐字结构比对能抓到。后续批次不应再用内联 shell 脚本改源码。
+
 ## 待取证残留（约 1,300 处访问）
 
 高频：`Y/Z/aa/ca/ea/ga/fa/ka/na` 等长尾——工作清单 `artifacts/obfuscated-fields.json`（按频次排序，含样例代码）。取证方法与产出格式见 WORKSTATE.md 第 6 节。
