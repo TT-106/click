@@ -19,7 +19,8 @@
     "check": "node scripts/check.mjs",
     "typecheck": "tsc -p tsconfig.json",
     "perf": "node scripts/measure-perf.mjs",
-    "perf:frames": "node scripts/measure-frames.mjs"
+    "perf:frames": "node scripts/measure-frames.mjs",
+    "audit:dead-reads": "node scripts/find-dead-reads.mjs"
   },
   "devDependencies": {
     "@babel/generator": "7.29.8",

@@ -199,7 +199,7 @@ export function initializeCharactersMovement() {
     if (a.Cw()) {
       this.Ey = a;
     }
-    if (1 === a.statType) {
+    if (1 === a.characteristic) {
       this.fz = a;
     }
   };

@@ -52,3 +52,9 @@
 
 24. **数据表键与读取端分文件**是逐文件改名最危险的形状：稀有度表的 `Vp/pp/jp` 声明在 `content/balance.js:447-467`，读取端只在 `loot/items.js:158/167/170`。第一次改名只喂了读取端，键被留在原处 → `tier.statMultiplier` 为 undefined → 物品属性 NaN → 99 回合后 `characterHealth` 109 变 99，被 parity 与场景矩阵同时拦下。`rename-field.mjs` 因此新增写盘后全库回扫，列出未被本次文件表覆盖的同名残留。
 25. 物品运行时字段与存档 DTO 键现已同词：`restoreItem` 的入参名本身就是 `itemName/itemRarity/itemLevel/itemGold/itemValue/itemCharacteristic/itemEffect`（`entities.js:33-42`），把运行时字段改成同名后，"运行时字段 ↔ 存档键必须成对同步"的心智负担在该类字段上不复存在。
+
+## 恢复期错映射的实例与检测手段的边界（2026-09-26）
+
+26. `Equipment.Qk`（重构版 `movement.js:195-205`）的判断条件曾写成 `1 === a.statType`，而原版是 `1 === a.s`（`c2.js:21419`），Item 上从未有 `statType` 字段——恢复时把 Item 的 `s` 在构造点映射成 `characteristic`、在这个判断点映射成了 `statType`，于是分支恒假、`fz`（携带武器特效的伤害装备）永不记录，攻击时的武器特效视觉静默消失。已按 `c2.js:21419` 改回 `1 === a.characteristic`。
+27. **该缺陷是差分看不见的**：`fz` 只影响 `VisualEffect` 瞬时视觉，不入存档，34 场景与 parity 全程绿。它是公式文档逐行核对时被发现的（子智能体报告"读了一个不存在的字段"），不是测试发现的。
+28. `scripts/find-dead-reads.mjs`（`npm run audit:dead-reads`）能抓的是"全库任何地方都没写过的属性名"；它抓不到 #26 这类错映射，因为 `statType` 作为**别的类**（卷轴定义）的字段确实存在。当前全库 12,904 个读取点里剩 10 个未定义名，逐个查明为宿主 API（`event.key`/`MediaQueryList.matches`/`keyCode`）、JSDoc 里的 `import(...).Character` 与两个**原版就有的遗留存档键回退**（`entities.js:254 a.totalPlayedMillis`、`:284 a.weaponsRacksLooted`，原版同一位置同样只读不写：`c2.js:28681/28711`）。也就是说：本工具是粗筛，不是类型检查，语义正确性仍要靠逐行对照源码。

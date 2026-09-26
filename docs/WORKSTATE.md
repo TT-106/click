@@ -86,6 +86,9 @@
 
 - 第十六轮改名 14 个字母后发生并修复一次真实回归：稀有度表的键在 balance.js、读取端在 items.js，只改读取端令物品属性变 NaN，99 回合后 `characterHealth` 109→99，parity 与 32 个场景同时失败；补改键后全绿。工具已加写盘后全库回扫（facts#24）。混淆清单 1,189 → 1,175，fields 段 249 → 263。
 
+- **修掉第二处真实保真缺陷**（差分看不见的那一类）：`movement.js` 装备判断读 `a.statType`，原版是 `a.s`（`c2.js:21419`），Item 从无该字段 → 分支恒假、武器特效视觉静默丢失；按原版改回 `a.characteristic`。它是公式文档逐行核对时发现的，parity 与 34 场景当时全绿——记录见 facts#26-28。新增 `npm run audit:dead-reads`（粗筛"全库无人写入的属性名"，现有 10 个命中全部查明为宿主 API 或原版同款遗留键）。
+- 物品/冒险点管理器改名 14 个字母后，稀有度表键的跨文件事故已修（facts#24），工具加写盘后回扫。
+
 ## 1. 项目概况
 
 - 原始遗产：`archive/original/c2.js`（46,980 行混淆单体，sha256 见 `archive/migration/recovery-manifest.json`）。
