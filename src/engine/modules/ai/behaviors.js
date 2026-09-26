@@ -1,4 +1,3 @@
-// @ts-nocheck -- M10 渐进类型化：JSDoc 覆盖后摘除（见 docs/WORKSTATE.md）
 /** 冒险者行为优先级、移动、拾取和施法策略。
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
@@ -16,6 +15,10 @@ import { MELEE_ATTACK_RANGE, RANGED_ATTACK_RANGE, RANGED_MIN_DISTANCE } from "..
 import { showFloatingText } from "../rendering/floating-text.js";
 import { isSpellReady } from "../combat/scrolls.js";
 import { getRoomTreasure } from "../loot/treasure.js";
+/** @typedef {{ getPriority: () => number }} PrioritizedBehavior */
+/** @typedef {{ vx: (character: unknown) => unknown }} MovingBehavior */
+/** @typedef {{ Kp: (character: unknown) => void, Wd: (character: unknown) => boolean, Td: (character: unknown) => any, Md: () => any, Jd: (character: unknown) => number }} DungeonBehaviorMethods */
+/** @typedef {{ resetBehaviorState: () => void, od: (character: unknown) => void, wd: (character: unknown) => number, getPriority: () => number }} RangedBehaviorMethods */
 export function BehaviorQueue() {
   this.fo = [];
 }
@@ -217,9 +220,9 @@ export function StunnedBehavior(a) {
 export function initializeAiBehaviors() {
   BehaviorQueue.prototype.dr = function (a) {
     if (game.worldActive) {
-      this.ou(a);
+      (/** @type {BehaviorQueue & { ou: (character: unknown) => void }} */ (/** @type {unknown} */ (this))).ou(a);
     } else {
-      this.nu(a);
+      (/** @type {BehaviorQueue & { nu: (character: unknown) => void }} */ (/** @type {unknown} */ (this))).nu(a);
     }
   };
   BehaviorQueue.prototype.ou = function (a) {
@@ -343,7 +346,7 @@ export function initializeAiBehaviors() {
         this.un.lastCastTurn = game.state.turnNumber;
         a.ld = this.un;
         a.actionType = CAST_ACTION_TYPE;
-        this.Kp(a);
+        (/** @type {DungeonBehaviorMethods} */ (/** @type {unknown} */ (this))).Kp(a);
       } else {
         assignVector(b.moveTargetPoint, this.selectedTarget.position.levelPosition);
         a.actionType = 1;
@@ -357,19 +360,19 @@ export function initializeAiBehaviors() {
   ExploreDungeonBehavior.prototype.Kp = function () {};
   ExploreDungeonBehavior.prototype.wd = function (a) {
     var b = a.position.room;
-    if (!b || !this.Wd(a)) {
+    if (!b || !(/** @type {DungeonBehaviorMethods} */ (/** @type {unknown} */ (this))).Wd(a)) {
       return 0;
     }
     if (!freeSpellsModifier.currentValue) {
-      var c = a.stats,
-        d = c.spirit,
-        c = getSpellSpiritCost(c);
-      if (d < c) {
+      var stats = a.stats,
+        spirit = stats.spirit,
+        spellCost = getSpellSpiritCost(stats);
+      if (spirit < spellCost) {
         return 0;
       }
     }
-    this.selectedTarget = this.Td(a);
-    return this.selectedTarget && this.selectedTarget.position.room === b ? (this.un = this.Md()) ? this.Jd(a) : 0 : 0;
+    this.selectedTarget = (/** @type {DungeonBehaviorMethods} */ (/** @type {unknown} */ (this))).Td(a);
+    return this.selectedTarget && this.selectedTarget.position.room === b ? (this.un = (/** @type {DungeonBehaviorMethods} */ (/** @type {unknown} */ (this))).Md()) ? (/** @type {DungeonBehaviorMethods} */ (/** @type {unknown} */ (this))).Jd(a) : 0 : 0;
   };
   ExploreDungeonBehavior.prototype.Wd = function () {
     return true;
@@ -395,7 +398,7 @@ export function initializeAiBehaviors() {
         if (!b) {
           return;
         }
-        this.vx(a);
+        (/** @type {MovingBehavior} */ (/** @type {unknown} */ (this))).vx(a);
       }
       if (b && isAdventurerOrMinion(a)) {
         forcePartyDestination(b);
@@ -410,11 +413,11 @@ export function initializeAiBehaviors() {
   FollowLeaderBehavior.prototype.vx = function (a) {
     var b = randomInt(3);
     a = a.position;
-    var c = a.room,
-      d = roomLeftPixels(c),
-      f = roomTopPixels(c),
-      g = roomRightPixels(c),
-      c = roomBottomPixels(c);
+    var room = a.room,
+      d = roomLeftPixels(room),
+      f = roomTopPixels(room),
+      g = roomRightPixels(room),
+      c = roomBottomPixels(room);
     if (0 === b) {
       setVector(a.moveTargetPoint, d + 1, f + 1);
     } else {
@@ -463,7 +466,7 @@ export function initializeAiBehaviors() {
     } else {
       this.co = 0;
     }
-    if (this.targetCharacter && !(this.targetCharacter.isDead || this.targetCharacter.effects.Kd || this.targetCharacter.effects.bi) && this.vx(a)) {
+    if (this.targetCharacter && !(this.targetCharacter.isDead || this.targetCharacter.effects.Kd || this.targetCharacter.effects.bi) && (/** @type {MovingBehavior} */ (/** @type {unknown} */ (this))).vx(a)) {
       this.ax = game.state.turnNumber;
       var b = a.position.room;
       if (b && isAdventurerOrMinion(a)) {
@@ -616,7 +619,7 @@ export function initializeAiBehaviors() {
     return this.Hn && isSpellReady(this.Hn);
   };
   LootGoldBehavior.prototype.Jd = function () {
-    return this.getPriority();
+    return (/** @type {PrioritizedBehavior} */ (/** @type {unknown} */ (this))).getPriority();
   };
   LootGoldBehavior.prototype.Md = function () {
     return this.Hn;
@@ -685,7 +688,7 @@ export function initializeAiBehaviors() {
     return this.Dn && isSpellReady(this.Dn);
   };
   LootItemBehavior.prototype.Jd = function () {
-    return this.getPriority();
+    return (/** @type {PrioritizedBehavior} */ (/** @type {unknown} */ (this))).getPriority();
   };
   LootItemBehavior.prototype.Md = function () {
     return this.Dn;
@@ -735,7 +738,7 @@ export function initializeAiBehaviors() {
     return this.on && isSpellReady(this.on);
   };
   LootScrollBehavior.prototype.Jd = function () {
-    return this.getPriority();
+    return (/** @type {PrioritizedBehavior} */ (/** @type {unknown} */ (this))).getPriority();
   };
   LootScrollBehavior.prototype.Md = function () {
     return this.on;
@@ -744,17 +747,17 @@ export function initializeAiBehaviors() {
     return a.effects.Vs || !hasOpponentsInRoom(a, a.position.room) ? null : a;
   };
   GuardRangedBehavior.prototype.resetBehaviorState = function () {
-    this.Vq.resetBehaviorState();
+    (/** @type {RangedAttackBehavior & RangedBehaviorMethods} */ (/** @type {unknown} */ (this.Vq))).resetBehaviorState();
   };
   GuardRangedBehavior.prototype.notifySpellLearned = function () {};
   GuardRangedBehavior.prototype.od = function (a) {
-    this.Vq.od(a);
+    (/** @type {RangedAttackBehavior & RangedBehaviorMethods} */ (/** @type {unknown} */ (this.Vq))).od(a);
   };
   GuardRangedBehavior.prototype.wd = function (a) {
-    return a.effects.wg ? 0 : this.Vq.wd(a);
+    return a.effects.wg ? 0 : (/** @type {RangedAttackBehavior & RangedBehaviorMethods} */ (/** @type {unknown} */ (this.Vq))).wd(a);
   };
   GuardRangedBehavior.prototype.getPriority = function () {
-    return this.Vq.getPriority();
+    return (/** @type {RangedAttackBehavior & RangedBehaviorMethods} */ (/** @type {unknown} */ (this.Vq))).getPriority();
   };
   TargetSpellBehavior.prototype.resetBehaviorState = function () {
     this.Vi = null;
@@ -794,8 +797,8 @@ export function initializeAiBehaviors() {
     if (!freeSpellsModifier.currentValue) {
       var b = a.stats,
         c = b.spirit,
-        b = getSpellSpiritCost(b);
-      if (c < b) {
+        spellCost = getSpellSpiritCost(b);
+      if (c < spellCost) {
         return 0;
       }
     }
@@ -818,7 +821,7 @@ export function initializeAiBehaviors() {
   };
   HealBehavior.prototype.Jd = function (a) {
     a = getOpponents(a);
-    return 0 === a.length ? 0 : Math.min(this.getPriority(), 5 / a.length * this.getPriority());
+    return 0 === a.length ? 0 : Math.min((/** @type {PrioritizedBehavior} */ (/** @type {unknown} */ (this))).getPriority(), 5 / a.length * (/** @type {PrioritizedBehavior} */ (/** @type {unknown} */ (this))).getPriority());
   };
   HealBehavior.prototype.Td = function (a) {
     return selectScrollTarget(a);
@@ -839,7 +842,7 @@ export function initializeAiBehaviors() {
     return this.gm;
   };
   ApplyEffectBehavior.prototype.Jd = function () {
-    return this.getPriority();
+    return (/** @type {PrioritizedBehavior} */ (/** @type {unknown} */ (this))).getPriority();
   };
   ApplyEffectBehavior.prototype.Td = function (a) {
     return selectScrollTarget(a);
@@ -860,7 +863,7 @@ export function initializeAiBehaviors() {
     return this.Zl;
   };
   AreaDamageBehavior.prototype.Jd = function () {
-    return this.getPriority();
+    return (/** @type {PrioritizedBehavior} */ (/** @type {unknown} */ (this))).getPriority();
   };
   AreaDamageBehavior.prototype.Td = function (a) {
     return selectScrollTarget(a);
@@ -881,7 +884,7 @@ export function initializeAiBehaviors() {
     return this.In;
   };
   ChainDamageBehavior.prototype.Jd = function () {
-    return this.getPriority();
+    return (/** @type {PrioritizedBehavior} */ (/** @type {unknown} */ (this))).getPriority();
   };
   ChainDamageBehavior.prototype.Td = function (a) {
     return selectScrollTarget(a);
@@ -902,7 +905,7 @@ export function initializeAiBehaviors() {
     return this.zd;
   };
   SummonBehavior.prototype.Jd = function () {
-    return this.getPriority();
+    return (/** @type {PrioritizedBehavior} */ (/** @type {unknown} */ (this))).getPriority();
   };
   SummonBehavior.prototype.Td = function (a) {
     return selectScrollTarget(a);
@@ -917,8 +920,8 @@ export function initializeAiBehaviors() {
     }
   };
   LifeDrainBehavior.prototype.Jd = function () {
-    var a = this.selectedTarget;
-    return Math.max(0, (1 - a.stats.health / statValue(a.stats.maxHealth)) * this.getPriority());
+    var a = (/** @type {LifeDrainBehavior & { selectedTarget: import("../characters/character.js").Character }} */ (/** @type {unknown} */ (this))).selectedTarget;
+    return Math.max(0, (1 - a.stats.health / statValue(a.stats.maxHealth)) * (/** @type {PrioritizedBehavior} */ (/** @type {unknown} */ (this))).getPriority());
   };
   LifeDrainBehavior.prototype.Wd = function () {
     return this.Lm && isSpellReady(this.Lm);
@@ -951,7 +954,7 @@ export function initializeAiBehaviors() {
     }
   };
   ReviveBehavior.prototype.Jd = function () {
-    return this.getPriority();
+    return (/** @type {PrioritizedBehavior} */ (/** @type {unknown} */ (this))).getPriority();
   };
   ReviveBehavior.prototype.Wd = function () {
     return this.pn && isSpellReady(this.pn);
@@ -983,7 +986,7 @@ export function initializeAiBehaviors() {
     return this.zd && isSpellReady(this.zd);
   };
   PartyBuffBehavior.prototype.Jd = function () {
-    return this.getPriority();
+    return (/** @type {PrioritizedBehavior} */ (/** @type {unknown} */ (this))).getPriority();
   };
   PartyBuffBehavior.prototype.Md = function () {
     return this.zd;
@@ -1058,7 +1061,7 @@ export function initializeAiBehaviors() {
     return this.Wm && isSpellReady(this.Wm);
   };
   LootChestBehavior.prototype.Jd = function (a) {
-    return hasOpponentsInRoom(a, a.position.room) ? 0 : hasPendingLoot() ? this.getPriority() : 0;
+    return hasOpponentsInRoom(a, a.position.room) ? 0 : hasPendingLoot() ? (/** @type {PrioritizedBehavior} */ (/** @type {unknown} */ (this))).getPriority() : 0;
   };
   LootChestBehavior.prototype.Md = function () {
     return this.Wm;
@@ -1084,7 +1087,7 @@ export function initializeAiBehaviors() {
       return 0;
     }
     a = getRoomTreasure(game.treasure, b);
-    return !a || a.Kg || a.el ? 0 : this.getPriority();
+    return !a || a.Kg || a.el ? 0 : (/** @type {PrioritizedBehavior} */ (/** @type {unknown} */ (this))).getPriority();
   };
   LootPotionBehavior.prototype.Md = function () {
     return this.pm;
@@ -1391,7 +1394,7 @@ export function initializeAiBehaviors() {
     return this.Sc && isSpellReady(this.Sc) && !a.companion ? true : false;
   };
   SelfSpellBehavior.prototype.Jd = function () {
-    return this.getPriority();
+    return (/** @type {PrioritizedBehavior} */ (/** @type {unknown} */ (this))).getPriority();
   };
   SelfSpellBehavior.prototype.Md = function () {
     return this.Sc;
@@ -1416,7 +1419,7 @@ export function initializeAiBehaviors() {
     return countSummonedMinions(a) < b;
   };
   AreaSpellBehavior.prototype.Jd = function () {
-    return this.getPriority();
+    return (/** @type {PrioritizedBehavior} */ (/** @type {unknown} */ (this))).getPriority();
   };
   AreaSpellBehavior.prototype.Md = function () {
     return this.Sc;
@@ -1460,7 +1463,7 @@ export function initializeAiBehaviors() {
     return countSummonedMinions(a) < b;
   };
   CompanionSpellBehavior.prototype.Jd = function () {
-    return this.getPriority();
+    return (/** @type {PrioritizedBehavior} */ (/** @type {unknown} */ (this))).getPriority();
   };
   CompanionSpellBehavior.prototype.Md = function () {
     return this.Sc;
