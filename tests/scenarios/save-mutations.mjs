@@ -159,6 +159,17 @@ export function withReclassedSpell(save, index, characterClass, spellName) {
   return out;
 }
 
+/** 把指定下标的队员改成目标职业（不带法术）；用于装载 fixture 队伍里没有的职业本身。
+ *  改职业后原职业装备在载入时被 equipItem 的 characterClass 校验跳过，近战武器槽为空，
+ *  需按职业的 slotStatBonusList 槽位用 withEquippedItem 补一件职业匹配武器。 */
+export function withCharacterClass(save, index, characterClass) {
+  const out = clone(save);
+  const character = out.adventurers[index];
+  if (!character) throw new Error(`fixture 缺少队员下标 ${index}`);
+  character.characterClass = characterClass;
+  return out;
+}
+
 /** 给指定队员追加一件已装备物品（存档里的 equippedItemCollection 条目）。
  *  改职业后原职业的装备会因 characterClass 不符被 equipItem 跳过，远程武器槽因此为空；
  *  盗贼槽 61（isProjectileItem）与忍者槽 62（飞镖，projectileAnimationId=3）用于驱动远程法术分支。 */

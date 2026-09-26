@@ -7,7 +7,7 @@ import saveCodec from '../src/engine/save-codec.js';
 import {
   decodeFixture, encodeSave, summarize,
   withPotions, withScrolls, withGold, withKills, withPointPools, withFarmableDungeon, withTurns, withElapsed, withOfflineProcessing, withBackgroundProcessing,
-  withVictories, withClassSpell, withCastleVictory, withReclassedSpell, withEquippedItem, withResurrectionTrial, withSkillPoints, withExperience,
+  withVictories, withClassSpell, withCastleVictory, withReclassedSpell, withEquippedItem, withResurrectionTrial, withSkillPoints, withExperience, withCharacterClass,
   HARNESS_FIXED_NOW,
 } from '../tests/scenarios/save-mutations.mjs';
 
@@ -93,6 +93,17 @@ const manualEquipSwapped = (s) => {
   return {
     swapDone: equippedNames.includes('金属的权杖') && invNames.includes('人民之美好的权杖'),
     itemEquippedGrew: equipEvents > baseEquipEvents,
+  };
+};
+const barbarianGrew = (s) => {
+  const adv = (s.adventurers ?? [])[3] ?? {};
+  const bAdv = (base.adventurers ?? [])[3] ?? {};
+  const bits = (t) => ['upgrades1', 'upgrades2', 'upgrades3', 'upgrades4']
+    .reduce((n, k) => n + Object.values(t?.[k] ?? {}).filter(Boolean).length, 0);
+  return {
+    classKept: adv.characterClass === 1,
+    skillsLearned: bits(adv) > bits(bAdv),
+    spellsLearned: (adv.spells?.length ?? 0) > (bAdv.spells?.length ?? 0),
   };
 };
 const achievementWasClaimed = (s) => ({
@@ -412,6 +423,22 @@ const scenarios = [
       // 第二步只跑自然推进做 DTO 全等：600 回合内商店会卖掉换下的旧装备，
       // 交换状态断言只在装备动作后立即做（第一步）。
       { turns: 600 },
+    ],
+  },
+  {
+    name: 'class-barbarian-growth',
+    // 职业装载闭环：职业表不存在职业 5（12 个正式职业 + Monster/Scroll Character 两个特殊类型）；
+    // 默认阵容已含职业 0/2/6/4，法术场景装载 3/7/8/9/10/11——唯一从未装载的正式职业是 1（野蛮人）。
+    // 本场景把队员 3（火法师）改为野蛮人并补上职业匹配的槽 21 锤类武器（itemTypeId = hash("锤"+sprite)），
+    // 驱动四棵职业专属技能树购买（含 LearnSpellUpgrade 学会 重锤/愤怒）与等级成长，再自然战斗推进。
+    make: () => withSkillPoints(
+      withExperience(withGold(withCharacterClass(withEquippedItem(base, 3, -1496887723, '21', 1), 3, 1), 1000000), 500000),
+      20),
+    steps: [
+      { turns: 300, purchaseUpgrades: 60 },
+      { turns: 300, purchaseUpgrades: 60 },
+      { turns: 300, purchaseUpgrades: 60, check: barbarianGrew },
+      { turns: 1000, check: barbarianGrew },
     ],
   },
   {
@@ -891,6 +918,9 @@ try {
             if (verdict.distinctPointUpgradesBought !== undefined) assert.ok(verdict.distinctPointUpgradesBought >= 5, `${label} 必须购买至少 5 种不同点数升级（实际 ${verdict.distinctPointUpgradesBought}）`);
             if (verdict.swapDone !== undefined) assert.equal(verdict.swapDone, true, `${label} 手动装备交换未发生（金属的权杖应已装备、人民之美好的权杖应回背包）`);
             if (verdict.itemEquippedGrew !== undefined) assert.equal(verdict.itemEquippedGrew, true, `${label} itemEquipped 点数事件（type 21）必须增长`);
+            if (verdict.classKept !== undefined) assert.equal(verdict.classKept, true, `${label} 改职业后的存档必须保持野蛮人（characterClass 1）`);
+            if (verdict.skillsLearned !== undefined) assert.equal(verdict.skillsLearned, true, `${label} 野蛮人四棵技能树的解锁布尔位必须真实增长`);
+            if (verdict.spellsLearned !== undefined) assert.equal(verdict.spellsLearned, true, `${label} 野蛮人必须经 LearnSpellUpgrade 真实学会职业法术`);
             if (verdict.achievementClaimed !== undefined) assert.equal(verdict.achievementClaimed, true, `${label} 成就奖励必须真实领取并标记 applied`);
             if (verdict.equipmentChanged !== undefined) assert.equal(verdict.equipmentChanged, true, `${label} 自动装备后装备槽必须真实变化`);
             if (verdict.itemEquipEvents !== undefined) assert.equal(verdict.itemEquipEvents, true, `${label} 装备物品事件计数必须真实增长`);
