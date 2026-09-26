@@ -33,6 +33,17 @@ try {
     const panelId={heroes:'characterTabContent0',monsters:'monstersTabContent',dungeons:'dungeonsTabContent',castles:'castlesTabContent',points:'pointsTabContent'}[name];
     assert.equal(await page.locator('#'+panelId).isVisible(),true,`${name} 面板未显示`);
   }
+  // 角色分页 1-4 与信息页：14 个静态 TabState 中全部用户可达分页逐一断言可见
+  // （创建队伍=setup 屏已在开战前覆盖；游戏结束/离线为状态门控面板，其门控状态 gameWon/offline 由引擎差分行断言）。
+  for (const idx of [1, 2, 3]) {
+    await page.locator('#main-nav [data-page="heroes"]').click();
+    await page.locator('#hero-tabs [data-hero-tab="' + idx + '"]').click();
+    assert.equal(await page.locator('#characterTabContent' + idx).isVisible(), true, '角色分页 ' + idx + ' 未显示');
+  }
+  await page.locator('#header-settings').click();
+  await page.locator('#original-info').click();
+  assert.equal(await page.locator('#infoTabContent').isVisible(), true, '统计资料面板未显示');
+
   // 外部自动化脚本 archive/original/c2c.user.js 依赖的 DOM 契约（U2）：
   // 它只按这些 id/class 观察与点击游戏，改名或改结构就会静默失效。
   await page.locator('#main-nav [data-page="points"]').click();

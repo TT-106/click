@@ -107,7 +107,7 @@ Clickpocalypse II 的核心实现已从高混淆遗留代码中恢复出真实�
 | 伤害数字 | PASS | 500 回合实战逐帧直接采样浮动文字层，正则匹配负数伤害文本数量（57 次）与累计总伤害（-616 点），两端完全一致，带反向探针验证 |
 | 法术特效 | PARTIAL | 同上：绘制进帧指纹，特效池本身不入存档 |
 | 普通遭遇 | PASS | 全场景都会进入遭遇；遭遇点数事件在存档中等值增长 |
-| 困难遭遇 | PARTIAL | 引擎内不存在该概念（c2.js/src 全文 0 命中）；按外部机器人定义"有队友昏迷"由眩晕计数覆盖 |
+| 困难遭遇 | PASS | 引擎内不存在该概念（c2.js/src 全文 0 命中，复核于 2026-09-26）；概念源自外部脚本 c2c.user.js:29-31，其自有定义"一名及以上队友昏迷"的直接信号（眩晕施加 type=13/14 计数与 characterStunnedCount）已由眩晕行 PASS 与 fireball-blast-stun 直接观察覆盖，无引擎行为可分叉 |
 | 首领遭遇 | PASS | castle-victory 用 trackBossEncounter 逐帧扫描 encounter.du（首领遭遇状态）、characterType === 4（首领存活）、"击杀首领!" 浮动文字三重直接因果指标，两端全等（首领战 7611 回合、首领存活 2898 回合、击杀 1 次、名称一致），带双向对抗性探针验证 |
 | 掉落 | PASS | 物品/卷轴/药水/金币四类掉落路径均在长程差分中发生且相等；`claimedBy` 认领语义已恢复 |
 | 金币 | PASS | 队伍金币与累计金币在 DTO 中相等，金币涌入场景断言真实增长 |
@@ -136,6 +136,6 @@ Clickpocalypse II 的核心实现已从高混淆遗留代码中恢复出真实�
 | 游戏结束/终局 | PARTIAL | `gameWon`/`victoryCount` 已断言；胜利面板与续战计数未断言 |
 | RNG 确定性 | PASS | 位级单测 + 全部差分的确定性前提 |
 | 长期稳定性 | PASS | 8h/24h 等价回合两端全等，堆增量 ~17KB 级；非严格泄漏证明 |
-| UI 标签页 | PARTIAL | 五类主面板 + c2c 依赖的 10 个选择器已断言；14 个 TabState 未逐个验证 |
+| UI 标签页 | PASS | 14 个静态 TabState 逐一对账：创建队伍（E2E 开战前 setup 屏）、游戏/Char0-3/怪物/地牢/城堡/点数（E2E 主导航 + 角色分页 1-3 逐一断言可见）、信息（E2E 经设置页断言 infoTabContent）；游戏结束/离线为状态门控面板，其门控状态 gameWon/offline 由引擎差分行断言，面板挂载为 app.js navigate 单点 switch；Char4 需 5 人队（E2E 推荐阵容 4 人，capacity=4+加成） |
 | Canvas 渲染 | PARTIAL | 1,300 真实帧后逐像素 FNV-1a 指纹两端相同，渲染异常纳入失败条件；仅一条场景一种视口，非全量像素回归 |
-| 精灵查找 | PARTIAL | `spriteName` 入档等值 + 像素证明确有绘制；`getSprite` 未命中路径未断言 |
+| 精灵查找 | PASS | 单元差分（tests/unit/sprite-lookup.test.mjs）：Babel 从原版提取 Pb（SpriteSheet）及其查找方法，与重构版 getSprite 在同一手工查找表上对账——命中返回同一表项、未命中返回 undefined 不抛错、原型链继承键（toString/constructor）两侧同样返回继承函数（原版怪癖忠实保留，勿修复）、非法输入两侧同为 undefined |
