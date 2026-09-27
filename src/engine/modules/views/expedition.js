@@ -20,26 +20,26 @@ export function AdventurerSummaryView(a) {
   this.elementId = "gameTabAdventurerInfo" + a;
   this.visible = true;
   this.adventurerIndex = a;
-  this.Nq = null;
-  this.Wl = ["adventurerEffectIconA" + a, "adventurerEffectIconB" + a, "adventurerEffectIconC" + a, "adventurerEffectIconD" + a, "adventurerEffectIconE" + a, "adventurerEffectIconF" + a];
-  this.Ay = "adventurerHealthSlider" + a;
-  this.zy = "adventurerHealth" + a;
-  this.Lq = "adventurerDamage" + a;
-  this.Jq = "adventurerArmor" + a;
-  this.Kq = "adventurerAR" + a;
-  this.Mq = "adventurerDR" + a;
-  this.By = "adventurerLevelClass" + a;
-  this.Dy = "adventurerSpiritPowerSlider" + a;
-  this.Cy = "adventurerSpiritPower" + a;
-  this.nn = this.defenceHeaderCell = this.attackRatingHeaderCell = this.potionButton = this.damageHeaderCell = null;
-  this.uv = this.sv = this.rv = this.tv = this.cachedLevel = this.rr = this.pr = this.or = this.qr = this.mv = this.cachedMonsterKills = this.kv = this.av = -1;
-  this.qm = [null, null, null, null, null, null];
+  this.summaryTable = null;
+  this.effectIconIds = ["adventurerEffectIconA" + a, "adventurerEffectIconB" + a, "adventurerEffectIconC" + a, "adventurerEffectIconD" + a, "adventurerEffectIconE" + a, "adventurerEffectIconF" + a];
+  this.healthSliderId = "adventurerHealthSlider" + a;
+  this.healthTextId = "adventurerHealth" + a;
+  this.damageTextId = "adventurerDamage" + a;
+  this.armorTextId = "adventurerArmor" + a;
+  this.attackRatingTextId = "adventurerAR" + a;
+  this.defenceRatingTextId = "adventurerDR" + a;
+  this.levelClassTextId = "adventurerLevelClass" + a;
+  this.spiritSliderId = "adventurerSpiritPowerSlider" + a;
+  this.spiritTextId = "adventurerSpiritPower" + a;
+  this.vacantOverlay = this.defenceHeaderCell = this.attackRatingHeaderCell = this.potionButton = this.damageHeaderCell = null;
+  this.cachedMonsterDefenceRating = this.cachedMonsterAttackRating = this.cachedMonsterDamage = this.cachedMonsterArmor = this.cachedLevel = this.cachedDefenceRating = this.cachedAttackRating = this.cachedArmor = this.cachedDamage = this.cachedMaxSpirit = this.cachedSpirit = this.cachedMaxHealth = this.cachedHealth = -1;
+  this.shownEffectTypeIds = [null, null, null, null, null, null];
   this.potionSlots = [null, null, null, null, null, null];
-  this.Dm = [0, 0, 0, 0, 0, 0];
-  this.qw = 8;
+  this.effectFrameIndices = [0, 0, 0, 0, 0, 0];
+  this.effectFrameInterval = 8;
   this.frameAge = 0;
   this.selectedPotionSlot = -1;
-  this.Oq = false;
+  this.isLocked = false;
 }
 export function colorComparedStats(a, b, c, d, f, g) {
   if (b != d || c != f) {
@@ -239,27 +239,27 @@ export function initializeViewsExpedition() {
   AdventurerSummaryView.prototype = new View();
   AdventurerSummaryView.prototype.reset = function () {
     clearElementById(this.elementId);
-    this.Nq = null;
-    this.Oq = false;
-    this.nn = null;
+    this.summaryTable = null;
+    this.isLocked = false;
+    this.vacantOverlay = null;
     if (0 > this.adventurerIndex || this.adventurerIndex >= game.state.adventurers.length) {
       if (this.adventurerIndex >= 4 + partyCapacityBonus.currentValue) {
-        this.nn = createElement("div", getElement(this.elementId), null, "gameTabLockedAdventurerInfo");
-        createElement("span", this.nn, null, "lockedSpanText").innerHTML = "未解锁";
-        this.Oq = true;
+        this.vacantOverlay = createElement("div", getElement(this.elementId), null, "gameTabLockedAdventurerInfo");
+        createElement("span", this.vacantOverlay, null, "lockedSpanText").innerHTML = "未解锁";
+        this.isLocked = true;
       } else {
-        this.nn = createElement("div", getElement(this.elementId), null, "gameTabBlankAdventurerInfo");
+        this.vacantOverlay = createElement("div", getElement(this.elementId), null, "gameTabBlankAdventurerInfo");
       }
     } else {
-      this.selectedPotionSlot = this.rr = this.pr = this.or = this.qr = this.mv = this.cachedMonsterKills = this.kv = this.av = this.cachedLevel = -1;
+      this.selectedPotionSlot = this.cachedDefenceRating = this.cachedAttackRating = this.cachedArmor = this.cachedDamage = this.cachedMaxSpirit = this.cachedSpirit = this.cachedMaxHealth = this.cachedHealth = this.cachedLevel = -1;
       var a;
-      for (a = 0; a < this.qm.length; a++) {
-        this.qm[a] = null;
+      for (a = 0; a < this.shownEffectTypeIds.length; a++) {
+        this.shownEffectTypeIds[a] = null;
         this.potionSlots[a] = null;
-        this.Dm[a] = 0;
+        this.effectFrameIndices[a] = 0;
       }
-      this.Nq = createElement("table", getElement(this.elementId), null, "adventurerInfoTable");
-      a = this.Nq.insertRow(0);
+      this.summaryTable = createElement("table", getElement(this.elementId), null, "adventurerInfoTable");
+      a = this.summaryTable.insertRow(0);
       var b = a.insertCell(0);
       b.className = "gameTabAdventurerIconCell";
       b.rowSpan = 2;
@@ -277,8 +277,8 @@ export function initializeViewsExpedition() {
       c.title = "生命值";
       d = createElement("div", c, null, null);
       d.className = "gameTabAdventurerSliderDiv";
-      createElement("div", d, this.Ay, "gameTabAdventurerHealthSlider");
-      createElement("div", c, this.zy, "gameTabAdventurerSliderOverlay");
+      createElement("div", d, this.healthSliderId, "gameTabAdventurerHealthSlider");
+      createElement("div", c, this.healthTextId, "gameTabAdventurerSliderOverlay");
       c = a.insertCell(3);
       c.style.width = "30px";
       c.style.textAlign = "left";
@@ -286,7 +286,7 @@ export function initializeViewsExpedition() {
       c.title = "生命值";
       c.innerHTML = "HP";
       c = a.insertCell(4);
-      c.id = this.Lq;
+      c.id = this.damageTextId;
       c.title = "伤害:提高攻击伤害";
       c.className = "gameTabAdventurerInfoHpAc";
       this.damageHeaderCell = a.insertCell(5);
@@ -295,7 +295,7 @@ export function initializeViewsExpedition() {
       this.damageHeaderCell.title = "伤害:提高攻击伤害";
       this.damageHeaderCell.innerHTML = "伤害";
       c = a.insertCell(6);
-      c.id = this.Kq;
+      c.id = this.attackRatingTextId;
       c.className = "gameTabAdventurerInfoHpAc";
       c.title = "攻击率：增加成功攻击的机会，可以理解为命中属性";
       this.attackRatingHeaderCell = a.insertCell(7);
@@ -304,26 +304,26 @@ export function initializeViewsExpedition() {
       this.attackRatingHeaderCell.title = "攻击率：增加成功攻击的机会，可以理解为命中属性";
       this.attackRatingHeaderCell.innerHTML = "攻击";
       d = 8;
-      for (c = 0; c < this.Wl.length; c++) {
+      for (c = 0; c < this.effectIconIds.length; c++) {
         b = a.insertCell(d++);
         b.rowSpan = 2;
         b = createElement("div", b, null, "gameTabAdventurerInfoEffect");
-        b = createElement("img", b, this.Wl[c], "itemImage");
+        b = createElement("img", b, this.effectIconIds[c], "itemImage");
         b.src = "images/Transparent.gif";
         b.style.width = "30px";
         b.style.height = "30px";
         b.style.display = "none";
       }
-      a = this.Nq.insertRow(1);
+      a = this.summaryTable.insertRow(1);
       c = a.insertCell(0);
-      c.id = this.By;
+      c.id = this.levelClassTextId;
       c.style.width = "120px";
       c = a.insertCell(1);
       c.className = "gameTabAdventurerSliderCell";
       c.title = "法力值";
       d = createElement("div", c, null, "gameTabAdventurerSliderDiv");
-      createElement("div", d, this.Dy, "gameTabAdventurerSpiritPointsSlider");
-      createElement("div", c, this.Cy, "gameTabAdventurerSliderOverlay");
+      createElement("div", d, this.spiritSliderId, "gameTabAdventurerSpiritPointsSlider");
+      createElement("div", c, this.spiritTextId, "gameTabAdventurerSliderOverlay");
       c = a.insertCell(2);
       c.style.width = "30px";
       c.style.textAlign = "left";
@@ -331,7 +331,7 @@ export function initializeViewsExpedition() {
       c.title = "法力值";
       c.innerHTML = "SP";
       c = a.insertCell(3);
-      c.id = this.Jq;
+      c.id = this.armorTextId;
       c.className = "gameTabAdventurerInfoHpAc";
       c.title = "护甲:降低受到的伤害";
       this.potionButton = a.insertCell(4);
@@ -340,7 +340,7 @@ export function initializeViewsExpedition() {
       this.potionButton.title = "护甲:降低受到的伤害";
       this.potionButton.innerHTML = "护甲";
       c = a.insertCell(5);
-      c.id = this.Mq;
+      c.id = this.defenceRatingTextId;
       c.className = "gameTabAdventurerInfoHpAc";
       c.title = "防御率：防止敌人成功攻击，可以理解为闪避属性";
       this.defenceHeaderCell = a.insertCell(6);
@@ -353,10 +353,10 @@ export function initializeViewsExpedition() {
   AdventurerSummaryView.prototype.update = function () {
     if (!(0 > this.adventurerIndex)) {
       if (this.adventurerIndex >= game.state.adventurers.length) {
-        if (this.Oq && this.adventurerIndex < 4 + partyCapacityBonus.currentValue) {
-          this.Oq = false;
-          this.nn.className = "gameTabBlankAdventurerInfo";
-          clearElement(this.nn);
+        if (this.isLocked && this.adventurerIndex < 4 + partyCapacityBonus.currentValue) {
+          this.isLocked = false;
+          this.vacantOverlay.className = "gameTabBlankAdventurerInfo";
+          clearElement(this.vacantOverlay);
         }
       } else {
         var a = game.state.adventurers[this.adventurerIndex],
@@ -370,40 +370,40 @@ export function initializeViewsExpedition() {
           n = statValue(b.attackRating),
           p = statValue(b.defenceRating),
           b = b.characterLevel;
-        if (this.av !== c || this.kv !== d) {
-          setElementHtml(this.zy, formatAmount(c) + "/" + formatAmount(d));
+        if (this.cachedHealth !== c || this.cachedMaxHealth !== d) {
+          setElementHtml(this.healthTextId, formatAmount(c) + "/" + formatAmount(d));
           var s = Math.min(100, floorNumber(100 * c / d));
-          getElement(this.Ay).style.width = s + "%";
-          this.av = c;
-          this.kv = d;
+          getElement(this.healthSliderId).style.width = s + "%";
+          this.cachedHealth = c;
+          this.cachedMaxHealth = d;
         }
-        if (this.cachedMonsterKills !== f || this.mv !== g) {
-          setElementHtml(this.Cy, formatAmount(f) + "/" + formatAmount(g));
+        if (this.cachedSpirit !== f || this.cachedMaxSpirit !== g) {
+          setElementHtml(this.spiritTextId, formatAmount(f) + "/" + formatAmount(g));
           c = Math.min(100, floorNumber(100 * f / g));
-          getElement(this.Dy).style.width = c + "%";
-          this.cachedMonsterKills = f;
-          this.mv = g;
+          getElement(this.spiritSliderId).style.width = c + "%";
+          this.cachedSpirit = f;
+          this.cachedMaxSpirit = g;
         }
         if (this.cachedLevel !== b) {
           this.cachedLevel = b;
-          setElementHtml(this.By, "等级" + b + " " + game.state.adventurers[this.adventurerIndex].classDefinition.className);
+          setElementHtml(this.levelClassTextId, "等级" + b + " " + game.state.adventurers[this.adventurerIndex].classDefinition.className);
         }
-        if (this.qr !== h) {
-          setElementHtml(this.Lq, formatAmount(h));
+        if (this.cachedDamage !== h) {
+          setElementHtml(this.damageTextId, formatAmount(h));
         }
-        if (this.or !== l) {
-          setElementHtml(this.Jq, formatAmount(l));
+        if (this.cachedArmor !== l) {
+          setElementHtml(this.armorTextId, formatAmount(l));
         }
-        if (this.pr !== n) {
-          setElementHtml(this.Kq, formatAmount(n));
+        if (this.cachedAttackRating !== n) {
+          setElementHtml(this.attackRatingTextId, formatAmount(n));
         }
-        if (this.rr !== p) {
-          setElementHtml(this.Mq, formatAmount(p));
+        if (this.cachedDefenceRating !== p) {
+          setElementHtml(this.defenceRatingTextId, formatAmount(p));
         }
         c = a.effects.activeEffects;
         f = false;
         this.frameAge++;
-        if (this.frameAge >= this.qw) {
+        if (this.frameAge >= this.effectFrameInterval) {
           this.frameAge = 0;
           f = true;
         }
@@ -418,53 +418,53 @@ export function initializeViewsExpedition() {
             d++;
           }
         }
-        for (a = 0; a < this.qm.length; a++) {
-          if (g = a < this.potionSlots.length ? this.potionSlots[a] : null, c = this.qm[a], g) {
+        for (a = 0; a < this.shownEffectTypeIds.length; a++) {
+          if (g = a < this.potionSlots.length ? this.potionSlots[a] : null, c = this.shownEffectTypeIds[a], g) {
             if (c && c === g) {
               if (f) {
                 g = statusEffectDefinitions[c];
                 c = g.spritesheetPath;
                 d = game.animations.getAnimation(g.animationName);
-                this.Dm[a]++;
-                if (this.Dm[a] >= d.To()) {
-                  this.Dm[a] = 0;
+                this.effectFrameIndices[a]++;
+                if (this.effectFrameIndices[a] >= d.To()) {
+                  this.effectFrameIndices[a] = 0;
                 }
-                d = d.frames[this.Dm[a]];
-                b = getElement(this.Wl[a]);
+                d = d.frames[this.effectFrameIndices[a]];
+                b = getElement(this.effectIconIds[a]);
                 b.style.background = "url('" + c + "') -" + d.frameSourceX + "px -" + d.frameSourceY + "px";
               }
             } else {
               c = g;
-              this.qm[a] = c;
+              this.shownEffectTypeIds[a] = c;
               g = statusEffectDefinitions[c];
               c = g.spritesheetPath;
               d = game.animations.getAnimation(g.animationName);
-              this.Dm[a] = 0;
+              this.effectFrameIndices[a] = 0;
               d = d.frames[0];
-              b = getElement(this.Wl[a]);
+              b = getElement(this.effectIconIds[a]);
               b.style.background = "url('" + c + "') -" + d.frameSourceX + "px -" + d.frameSourceY + "px";
               b.title = g.tooltipLabel;
-              showElementById(this.Wl[a]);
+              showElementById(this.effectIconIds[a]);
             }
           } else {
             if (c) {
-              hideElementById(this.Wl[a]);
-              this.qm[a] = null;
+              hideElementById(this.effectIconIds[a]);
+              this.shownEffectTypeIds[a] = null;
             }
           }
         }
         a = getMonsters();
         if (0 === a.length) {
           if (-1 < this.selectedPotionSlot) {
-            getElement(this.Lq).style.color = "#FFF";
-            getElement(this.Jq).style.color = "#FFF";
-            getElement(this.Kq).style.color = "#FFF";
-            getElement(this.Mq).style.color = "#FFF";
+            getElement(this.damageTextId).style.color = "#FFF";
+            getElement(this.armorTextId).style.color = "#FFF";
+            getElement(this.attackRatingTextId).style.color = "#FFF";
+            getElement(this.defenceRatingTextId).style.color = "#FFF";
             this.damageHeaderCell.style.color = "#FFF";
             this.potionButton.style.color = "#FFF";
             this.attackRatingHeaderCell.style.color = "#FFF";
             this.defenceHeaderCell.style.color = "#FFF";
-            this.uv = this.sv = this.tv = this.rv = this.selectedPotionSlot = -1;
+            this.cachedMonsterDefenceRating = this.cachedMonsterAttackRating = this.cachedMonsterArmor = this.cachedMonsterDamage = this.selectedPotionSlot = -1;
           }
         } else {
           c = a[0].stats;
@@ -473,19 +473,19 @@ export function initializeViewsExpedition() {
           g = statValue(c.attackRating);
           c = statValue(c.defenceRating);
           this.selectedPotionSlot = game.state.encounter.Ar;
-          colorComparedStats(this.Lq, h, f, this.qr, this.rv, this.damageHeaderCell);
-          colorComparedStats(this.Jq, l, a, this.or, this.tv, this.potionButton);
-          colorComparedStats(this.Kq, n, c, this.pr, this.uv, this.attackRatingHeaderCell);
-          colorComparedStats(this.Mq, p, g, this.rr, this.sv, this.defenceHeaderCell);
-          this.rv = f;
-          this.tv = a;
-          this.sv = g;
-          this.uv = c;
+          colorComparedStats(this.damageTextId, h, f, this.cachedDamage, this.cachedMonsterDamage, this.damageHeaderCell);
+          colorComparedStats(this.armorTextId, l, a, this.cachedArmor, this.cachedMonsterArmor, this.potionButton);
+          colorComparedStats(this.attackRatingTextId, n, c, this.cachedAttackRating, this.cachedMonsterDefenceRating, this.attackRatingHeaderCell);
+          colorComparedStats(this.defenceRatingTextId, p, g, this.cachedDefenceRating, this.cachedMonsterAttackRating, this.defenceHeaderCell);
+          this.cachedMonsterDamage = f;
+          this.cachedMonsterArmor = a;
+          this.cachedMonsterAttackRating = g;
+          this.cachedMonsterDefenceRating = c;
         }
-        this.qr = h;
-        this.or = l;
-        this.pr = n;
-        this.rr = p;
+        this.cachedDamage = h;
+        this.cachedArmor = l;
+        this.cachedAttackRating = n;
+        this.cachedDefenceRating = p;
       }
     }
   };
