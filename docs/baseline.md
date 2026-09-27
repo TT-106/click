@@ -9,7 +9,7 @@
 |---|---|
 | `archive/original/c2.js` | **行为基准本体**：原发行包的混淆单体脚本（约 46,980 行 / 956KB，2015-09-18 版）。全部差分以它为参照 |
 | `archive/original/c2-ver=20150918.js` | 同版本的另一份发行快照（1.06MB，原站带 `?ver=` 查询参数的文件） |
-| `archive/original/index.html` / `index2.html` | 原发行页面：加载 `c2.css?ver=20150726` 与 `c2.js?ver=20150918`，并引用汉化站外链脚本（jquery/kf，见 `index.html:904-908`）。脱离外链时游戏主体仍可运行 |
+| `archive/original/index.html` / `index2.html` | 原发行页面：加载 `c2.css?ver=20150726` 与 `c2.js?ver=20150918`，并引用汉化站外链脚本（jquery/kf，见 `archive/original/index.html:904-908`）。脱离外链时游戏主体仍可运行 |
 | `archive/original/c2.css`、`c2-ver=20150726.css` | 原版样式 |
 | `archive/original/chs.js` | 汉化词典脚本 |
 | `archive/original/c2c.user.js`、`README-js.md` | 第三方点击挂机用户脚本及其说明（非基准） |

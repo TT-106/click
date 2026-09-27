@@ -417,7 +417,7 @@ export function calculateSpellDamage(a, b) {
 }
 ```
 
-与 C-9 的差别：**不查 `defenceRating`、不判 `Kd`、不减 `damageResistance`**。用于忍者回旋镖（`cat 12`）的第 0 跳与所有后续跳（`actions.js:867`、`actions.js:699`）。
+与 C-9 的差别：**不查 `defenceRating`、不判 `isDisabled`、不减 `damageResistance`**。用于忍者回旋镖（`cat 12`）的第 0 跳与所有后续跳（`character.js:867`、`actions.js:699`）。
 
 ### C-14 地面持续伤害（雨/爆炸留下的 tile effect）
 

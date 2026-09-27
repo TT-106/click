@@ -10,7 +10,21 @@ import path from 'node:path';
 const ROOTS = ['.', 'src', 'src/engine/modules', 'src/ui', 'src/data', 'archive/original', 'tests', 'scripts', 'docs'];
 
 const defaultDocs = ['REFACTOR_REPORT.md', 'COMPATIBILITY_REPORT.md', 'PERFORMANCE_REPORT.md', 'MIGRATION_MAP.md'];
-const docs = process.argv.slice(2).length ? process.argv.slice(2) : defaultDocs;
+// 无参数时默认检查"根目录四份报告 + docs/ 下全部 md"——只查四份报告会漏掉
+// docs/formulas/*、docs/rng.md 等引用密度最高的文件（曾经因此漏报 4 条越界）。
+function collectDocs() {
+  const out = [...defaultDocs];
+  const walk = (dir) => {
+    for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+      const full = path.join(dir, e.name);
+      if (e.isDirectory()) { if (e.name !== 'node_modules') walk(full); }
+      else if (e.name.endsWith('.md')) out.push(full);
+    }
+  };
+  if (fs.existsSync('docs')) walk('docs');
+  return out;
+}
+const docs = process.argv.slice(2).length ? process.argv.slice(2) : collectDocs();
 
 const REF = /`([A-Za-z0-9_\-./]+\.(?:js|mjs|json|md|css|html|c2save)):(\d+)(?:-(\d+))?`/g;
 

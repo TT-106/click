@@ -38,7 +38,7 @@ MT19937 结构参数全部保留在 `math.js`：624 个状态字（`stateSize`�
 
 按 grep `randomInt` / `Math.random()` 在 `src/engine` 的调用方分类（完整 file:line 清单见 §4）：
 
-- **战斗数值**：伤害浮动（`combat/actions.js:305`）、命中（`actions.js:587`）、暴击（`actions.js:590, 602`）、护甲减伤浮动（`actions.js:594, 606`）、多重攻击触发（`actions.js:174-182, 423`）、连击数（`characters/stats.js:113-121`）。
+- **战斗数值**：伤害浮动（`combat/actions.js:305`）、命中（`actions.js:587`）、暴击（`actions.js:590, 602`）、护甲减伤浮动（`actions.js:594, 606`）、多重攻击触发（`actions.js:174-182, 423`）、连击数（`characters/stats.js:102-114`）。
 - **怪物与遭遇**：遭遇怪物数量与 boss 概率（`combat/encounters.js:44`）、城堡守卫生成分组与选型（`encounters.js:151-155`）、怪物名前后缀（`encounters.js:298`）、随机目标选取（`ai/targeting.js:112-113`）。
 - **掉落与宝箱**：杀怪四类掉落判定（`simulation/characters.js:298-332`）、击杀奖励爆发（`combat/actions.js:372-398`）、宝箱开箱奖励（`characters/character.js:1079-1120`）、宝箱生成概率与位置（`loot/treasure.js:62-67, 121-127`）、物品类型/稀有度/等级/特效（`loot/items.js:148, 169-173, 226-230, 333`）、物品命名（`loot/item-names.js:59-120`）、金币区间（`content/balance.js:8-13 rollGoldDrop`）。
 - **表现层与文案**（仍消耗**全局流**，不可删）：伤害/治疗浮动文字偏移（`rendering/floating-text.js:11-13, 49`）、场景抖动（`rendering/scene.js:221-222`）、闲逛目标（`characters/movement.js:108, 125, 143, 174`；`ai/behaviors.js:497`）、目标点抖动（`ai/targeting.js:129-134`）、闲聊文案（`ai/behaviors.js:587, 706`；`simulation/characters.js:201, 332`）、旅行尸体 sprite（`simulation/characters.js:187`）、商店 sprite（`world/dungeons.js:184`）、结算画面怪物 sprite（`views/results.js:103`）、升级提示示例（`views/upgrade-details.js:1161`）。
@@ -112,7 +112,7 @@ Date.now = () => fixedNow;
 | `src/engine/modules/combat/actions.js:587,590,594` [M] | 命中 `> f/(f+h)`、暴击、护甲减伤浮动 |
 | `src/engine/modules/combat/actions.js:602,606` [M] | 法术暴击与减伤浮动 |
 | `src/engine/modules/characters/stats.js:107` [M] | 技能触发 `Math.random() < a` |
-| `src/engine/modules/characters/stats.js:113-121` [M] | 连击数 `Ir()` 逐段 `Math.random()` |
+| `src/engine/modules/characters/stats.js:102-114` [M] | 连击数 `Ir()` 逐段 `Math.random()` |
 | `src/engine/modules/combat/encounters.js:44` [M] | boss 遭遇药水效果（`0.2 > Math.random()`） |
 | `src/engine/modules/combat/encounters.js:151-155` [M] | 城堡守卫分组（0.5）与选型 |
 | `src/engine/modules/combat/encounters.js:298` [M] | 怪物名前/后缀模式 |
