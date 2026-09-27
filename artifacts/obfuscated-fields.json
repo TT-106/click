@@ -94,101 +94,6 @@
     ]
   },
   {
-    "name": "hw",
-    "reads": 3,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\movement.js:9",
-        "code": "this.hw"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\movement.js:14",
-        "code": "this.hw"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\movement.js:192",
-        "code": "this.hw"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\characters\\movement.js"
-    ]
-  },
-  {
-    "name": "aw",
-    "reads": 2,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\potions.js:239",
-        "code": "Potion.prototype.aw"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\expedition.js:199",
-        "code": "a.aw"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\expedition.js:733",
-        "code": "PotionButtonView.prototype.aw"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\combat\\potions.js",
-      "src\\engine\\modules\\views\\expedition.js"
-    ]
-  },
-  {
-    "name": "bw",
-    "reads": 2,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\potions.js:268",
-        "code": "PotionInventory.prototype.bw"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\expedition.js:210",
-        "code": "a.bw"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\expedition.js:740",
-        "code": "PotionButtonView.prototype.bw"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\combat\\potions.js",
-      "src\\engine\\modules\\views\\expedition.js"
-    ]
-  },
-  {
-    "name": "Wt",
-    "reads": 2,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\loot\\inventory.js:85",
-        "code": "InventoryRegistry.prototype.Wt"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\character.js:424",
-        "code": "(/** @type {EquipAllView & { Wt: () => boolean }} */ /** @type {unknown} */this).Wt"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\character.js:440",
-        "code": "EquipAllView.prototype.Wt"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\loot\\inventory.js",
-      "src\\engine\\modules\\views\\character.js"
-    ]
-  },
-  {
     "name": "Zw",
     "reads": 2,
     "writes": 2,
@@ -404,29 +309,6 @@
     ]
   },
   {
-    "name": "fz",
-    "reads": 1,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\movement.js:11",
-        "code": "this.fz"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\movement.js:195",
-        "code": "this.fz"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\movement.js:203",
-        "code": "this.fz"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\characters\\movement.js"
-    ]
-  },
-  {
     "name": "HB",
     "reads": 2,
     "writes": 1,
@@ -523,54 +405,6 @@
     ]
   },
   {
-    "name": "BA",
-    "reads": 2,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\world\\initialization.js:48",
-        "code": "ja.BA"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\regions.js:103",
-        "code": "this.BA"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\regions.js:111",
-        "code": "a.BA"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\world\\initialization.js",
-      "src\\engine\\modules\\world\\regions.js"
-    ]
-  },
-  {
-    "name": "EA",
-    "reads": 2,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\world\\initialization.js:49",
-        "code": "ja.EA"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\regions.js:104",
-        "code": "this.EA"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\regions.js:117",
-        "code": "a.EA"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\world\\initialization.js",
-      "src\\engine\\modules\\world\\regions.js"
-    ]
-  },
-  {
     "name": "oB",
     "reads": 2,
     "writes": 1,
@@ -591,25 +425,6 @@
     "fileCount": 1,
     "files": [
       "src\\engine\\modules\\world\\pathfinding.js"
-    ]
-  },
-  {
-    "name": "IE",
-    "reads": 1,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\loot\\inventory.js:55",
-        "code": "this.IE"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\inventory.js:61",
-        "code": "a.IE"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\loot\\inventory.js"
     ]
   },
   {
@@ -786,66 +601,6 @@
     "fileCount": 1,
     "files": [
       "src\\engine\\modules\\world\\travel-costs.js"
-    ]
-  },
-  {
-    "name": "eF",
-    "reads": 0,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\content\\classes.js:346",
-        "code": "eF: false"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\content\\classes.js"
-    ]
-  },
-  {
-    "name": "bF",
-    "reads": 0,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\content\\classes.js:603",
-        "code": "bF: 50"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\content\\classes.js"
-    ]
-  },
-  {
-    "name": "cF",
-    "reads": 0,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\content\\classes.js:604",
-        "code": "cF: 160"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\content\\classes.js"
-    ]
-  },
-  {
-    "name": "tb",
-    "reads": 0,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\content\\classes.js:606",
-        "code": "tb: null"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\content\\classes.js"
     ]
   },
   {
