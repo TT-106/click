@@ -137,7 +137,7 @@ export function SkillUpgradeDetails(a, b) {
 export function SpellUpgradeDetails(a, b) {
   this.upgrade = a;
   this.contentContainer = b;
-  this.vu = this.Ml = this.yn = this.table = null;
+  this.vu = this.actionLabel = this.yn = this.table = null;
   this.shown = false;
   this.zn = this.Dx = this.Lv = null;
   this.isAnimated = true;
@@ -716,7 +716,7 @@ export function initializeViewsUpgradeDetails() {
         this.frameAge = this.frameIndex = 0;
         this.isAnimated = true;
       }
-      this.Ml.innerHTML = this.upgrade.getTitle();
+      this.actionLabel.innerHTML = this.upgrade.getTitle();
       this.vu.innerHTML = this.upgrade.getDescription();
     }
     if (this.isAnimated) {
@@ -749,9 +749,9 @@ export function initializeViewsUpgradeDetails() {
     this.yn.src = "images/Transparent.gif";
     this.yn.style.width = "29px";
     this.yn.style.height = "29px";
-    this.Ml = createElement("span", a, null, null);
-    this.Ml.style.paddingTop = "5px";
-    this.Ml.style.textAlign = "left";
+    this.actionLabel = createElement("span", a, null, null);
+    this.actionLabel.style.paddingTop = "5px";
+    this.actionLabel.style.textAlign = "left";
     b = b.insertCell(0);
     b.colSpan = 2;
     b.style.textAlign = "left";

@@ -31,7 +31,7 @@ export function AdventurerSummaryView(a) {
   this.By = "adventurerLevelClass" + a;
   this.Dy = "adventurerSpiritPowerSlider" + a;
   this.Cy = "adventurerSpiritPower" + a;
-  this.nn = this.Ak = this.pk = this.potionButton = this.zk = null;
+  this.nn = this.defenceHeaderCell = this.attackRatingHeaderCell = this.potionButton = this.damageHeaderCell = null;
   this.uv = this.sv = this.rv = this.tv = this.cachedLevel = this.rr = this.pr = this.or = this.qr = this.mv = this.cachedMonsterKills = this.kv = this.av = -1;
   this.qm = [null, null, null, null, null, null];
   this.potionSlots = [null, null, null, null, null, null];
@@ -62,7 +62,7 @@ export function DungeonNotificationView() {
   this.visible = false;
   this.dungeonName = "";
   this.nl = null;
-  this.Su = this.Bk = "";
+  this.Su = this.cachedDungeonName = "";
 }
 export function EncounterNotificationView() {
   this.elementId = "encounterNotificationPanel";
@@ -289,20 +289,20 @@ export function initializeViewsExpedition() {
       c.id = this.Lq;
       c.title = "伤害:提高攻击伤害";
       c.className = "gameTabAdventurerInfoHpAc";
-      this.zk = a.insertCell(5);
-      this.zk.style.width = "30px";
-      this.zk.style.textAlign = "left";
-      this.zk.title = "伤害:提高攻击伤害";
-      this.zk.innerHTML = "伤害";
+      this.damageHeaderCell = a.insertCell(5);
+      this.damageHeaderCell.style.width = "30px";
+      this.damageHeaderCell.style.textAlign = "left";
+      this.damageHeaderCell.title = "伤害:提高攻击伤害";
+      this.damageHeaderCell.innerHTML = "伤害";
       c = a.insertCell(6);
       c.id = this.Kq;
       c.className = "gameTabAdventurerInfoHpAc";
       c.title = "攻击率：增加成功攻击的机会，可以理解为命中属性";
-      this.pk = a.insertCell(7);
-      this.pk.style.width = "30px";
-      this.pk.style.textAlign = "left";
-      this.pk.title = "攻击率：增加成功攻击的机会，可以理解为命中属性";
-      this.pk.innerHTML = "攻击";
+      this.attackRatingHeaderCell = a.insertCell(7);
+      this.attackRatingHeaderCell.style.width = "30px";
+      this.attackRatingHeaderCell.style.textAlign = "left";
+      this.attackRatingHeaderCell.title = "攻击率：增加成功攻击的机会，可以理解为命中属性";
+      this.attackRatingHeaderCell.innerHTML = "攻击";
       d = 8;
       for (c = 0; c < this.Wl.length; c++) {
         b = a.insertCell(d++);
@@ -343,11 +343,11 @@ export function initializeViewsExpedition() {
       c.id = this.Mq;
       c.className = "gameTabAdventurerInfoHpAc";
       c.title = "防御率：防止敌人成功攻击，可以理解为闪避属性";
-      this.Ak = a.insertCell(6);
-      this.Ak.style.width = "30px";
-      this.Ak.style.textAlign = "left";
-      this.Ak.title = "防御率：防止敌人成功攻击，可以理解为闪避属性";
-      this.Ak.innerHTML = "防御";
+      this.defenceHeaderCell = a.insertCell(6);
+      this.defenceHeaderCell.style.width = "30px";
+      this.defenceHeaderCell.style.textAlign = "left";
+      this.defenceHeaderCell.title = "防御率：防止敌人成功攻击，可以理解为闪避属性";
+      this.defenceHeaderCell.innerHTML = "防御";
     }
   };
   AdventurerSummaryView.prototype.update = function () {
@@ -460,10 +460,10 @@ export function initializeViewsExpedition() {
             getElement(this.Jq).style.color = "#FFF";
             getElement(this.Kq).style.color = "#FFF";
             getElement(this.Mq).style.color = "#FFF";
-            this.zk.style.color = "#FFF";
+            this.damageHeaderCell.style.color = "#FFF";
             this.potionButton.style.color = "#FFF";
-            this.pk.style.color = "#FFF";
-            this.Ak.style.color = "#FFF";
+            this.attackRatingHeaderCell.style.color = "#FFF";
+            this.defenceHeaderCell.style.color = "#FFF";
             this.uv = this.sv = this.tv = this.rv = this.selectedPotionSlot = -1;
           }
         } else {
@@ -473,10 +473,10 @@ export function initializeViewsExpedition() {
           g = statValue(c.attackRating);
           c = statValue(c.defenceRating);
           this.selectedPotionSlot = game.state.encounter.Ar;
-          colorComparedStats(this.Lq, h, f, this.qr, this.rv, this.zk);
+          colorComparedStats(this.Lq, h, f, this.qr, this.rv, this.damageHeaderCell);
           colorComparedStats(this.Jq, l, a, this.or, this.tv, this.potionButton);
-          colorComparedStats(this.Kq, n, c, this.pr, this.uv, this.pk);
-          colorComparedStats(this.Mq, p, g, this.rr, this.sv, this.Ak);
+          colorComparedStats(this.Kq, n, c, this.pr, this.uv, this.attackRatingHeaderCell);
+          colorComparedStats(this.Mq, p, g, this.rr, this.sv, this.defenceHeaderCell);
           this.rv = f;
           this.tv = a;
           this.sv = g;
@@ -492,7 +492,7 @@ export function initializeViewsExpedition() {
   DungeonNotificationView.prototype = new View();
   DungeonNotificationView.prototype.reset = function () {
     clearElementById(this.elementId);
-    this.Su = this.Bk = "";
+    this.Su = this.cachedDungeonName = "";
     var a = getElement(this.elementId);
     this.nl = createElement("div", a, null, "dungeonNotificationDiv");
     hideElement(a);
@@ -510,9 +510,9 @@ export function initializeViewsExpedition() {
       a = game.currentCastle.castleName;
       b = 0;
     }
-    if (b !== this.Su || a !== this.Bk) {
+    if (b !== this.Su || a !== this.cachedDungeonName) {
       this.Su = b;
-      this.Bk = a;
+      this.cachedDungeonName = a;
       this.nl.innerHTML = 0 < b ? a + " (等级." + b + ")" : a;
     }
   };

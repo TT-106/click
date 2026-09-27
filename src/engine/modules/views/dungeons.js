@@ -13,7 +13,7 @@ export function TreasureLootView() {
   this.elementId = "treasureChestLootButtonPanel";
   this.visible = false;
   this.buttonLabel = "";
-  this.om = this.Ml = this.po = this.treasureChest = this.button = null;
+  this.om = this.actionLabel = this.po = this.treasureChest = this.button = null;
 }
 export function mountTreasureLoot(a) {
   var container = getElement(a.elementId);
@@ -44,7 +44,7 @@ export function mountTreasureLoot(a) {
     a.po.style.height = "50px";
     b = b.insertCell(1);
     b.style.textAlign = "left";
-    a.Ml = createElement("span", b, null, null);
+    a.actionLabel = createElement("span", b, null, null);
     a.om = c.insertCell(0);
     a.om.colSpan = 2;
     a.om.style.width = "200px";
@@ -69,7 +69,7 @@ export function DungeonRowView(a, b) {
   this.px = this.Gx = this.labelCell = this.labelCell = this.wr = this.Co = null;
   this.pB = "secureCell_" + b + "_" + this.rowElement.rowIndex;
   this.upgradeButton = this.progressContainer = this.progressTextElement = this.progressFillElement = this.progressCell = this.Ix = null;
-  this.Gu = this.Bk = this.Qv = "";
+  this.Gu = this.cachedDungeonName = this.Qv = "";
   this.mw = this.pu = -1;
   this.Bt = false;
   this.Ct = 260;
@@ -155,7 +155,7 @@ export function initializeViewsDungeons() {
     var a = getVisibleTreasure();
     if (a != this.treasureChest && (this.treasureChest = a)) {
       var b = this.treasureChest.kind;
-      this.Ml.innerHTML = 1 === b ? "搜索财宝箱!" : 2 === b ? "搜索武器架!" : 3 === b ? "搜索书架!" : "搜索事物!";
+      this.actionLabel.innerHTML = 1 === b ? "搜索财宝箱!" : 2 === b ? "搜索武器架!" : 3 === b ? "搜索书架!" : "搜索事物!";
       this.om.innerHTML = "在房间内点击.";
       if (a) {
         b = a.opened ? a.openedSpriteName : a.closedSpriteName;
@@ -186,7 +186,7 @@ export function initializeViewsDungeons() {
     /** @type {{ct: (dungeon: unknown) => void}} */ (/** @type {unknown} */ (this.yr)).ct(this.dungeon);
     this.upgradeButton.attachUpgrade(this.yr);
     this.mw = this.pu = -1;
-    this.Gu = this.Bk = this.Qv = "";
+    this.Gu = this.cachedDungeonName = this.Qv = "";
     if (b) {
       this.upgradeButton.reset();
     }
@@ -259,8 +259,8 @@ export function initializeViewsDungeons() {
         f = game.terrainSprites.getSprite(this.dungeon.Fo);
         this.wr.style.background = "url('spritesheet/terrain.png') -" + f.sourceX + "px -" + f.sourceY + "px";
       }
-      if (this.Bk !== c) {
-        this.Bk = c;
+      if (this.cachedDungeonName !== c) {
+        this.cachedDungeonName = c;
         this.labelCell.innerHTML = c;
       }
       if (this.Gu !== d) {
