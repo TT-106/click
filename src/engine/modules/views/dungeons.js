@@ -13,13 +13,13 @@ export function TreasureLootView() {
   this.elementId = "treasureChestLootButtonPanel";
   this.visible = false;
   this.buttonLabel = "";
-  this.om = this.actionLabel = this.po = this.treasureChest = this.button = null;
+  this.messageCell = this.actionLabel = this.treasureImage = this.treasureChest = this.button = null;
 }
 export function mountTreasureLoot(a) {
   var container = getElement(a.elementId);
   if (container) {
     clearElement(container);
-    a.buttonLabel = a.Ro();
+    a.buttonLabel = a.getButtonClass();
     a.button = createElement("div", container, a.elementId, a.buttonLabel);
     a.button.onmouseup = function () {
       if (a.treasureChest && !a.treasureChest.opened) {
@@ -38,17 +38,17 @@ export function mountTreasureLoot(a) {
     d.style.width = "50px";
     d.style.height = "50px";
     d.style.textAlign = "center";
-    a.po = createElement("img", d, null, null);
-    a.po.src = "images/Transparent.gif";
-    a.po.style.width = "50px";
-    a.po.style.height = "50px";
+    a.treasureImage = createElement("img", d, null, null);
+    a.treasureImage.src = "images/Transparent.gif";
+    a.treasureImage.style.width = "50px";
+    a.treasureImage.style.height = "50px";
     b = b.insertCell(1);
     b.style.textAlign = "left";
     a.actionLabel = createElement("span", b, null, null);
-    a.om = c.insertCell(0);
-    a.om.colSpan = 2;
-    a.om.style.width = "200px";
-    a.om.style.textAlign = "left";
+    a.messageCell = c.insertCell(0);
+    a.messageCell.colSpan = 2;
+    a.messageCell.style.width = "200px";
+    a.messageCell.style.textAlign = "left";
   }
 }
 export function getVisibleTreasure() {
@@ -65,25 +65,25 @@ export function getVisibleTreasure() {
 export function DungeonRowView(a, b) {
   this.rowElement = a;
   this.selectedDungeon = this.dungeon = null;
-  this.yr = new PurchaseDungeonUpgrade(this.dungeon);
-  this.px = this.Gx = this.labelCell = this.labelCell = this.wr = this.Co = null;
+  this.dungeonUpgrade = new PurchaseDungeonUpgrade(this.dungeon);
+  this.actionCell = this.descriptionCell = this.labelCell = this.labelCell = this.terrainImage = this.iconCell = null;
   this.pB = "secureCell_" + b + "_" + this.rowElement.rowIndex;
   this.upgradeButton = this.progressContainer = this.progressTextElement = this.progressFillElement = this.progressCell = this.Ix = null;
   this.Gu = this.cachedDungeonName = this.Qv = "";
   this.mw = this.pu = -1;
   this.Bt = false;
-  this.Ct = 260;
+  this.columnWidth = 260;
   /** @type {{createRowCells: () => void}} */ (/** @type {unknown} */ (this)).createRowCells();
 }
 export function DungeonListView(a, b, c) {
   this.elementId = c;
   this.tabState = a;
-  this.dw = b;
+  this.categoryId = b;
   this.tableElement = null;
   this.rowViews = [];
 }
 export function getDungeonList(a) {
-  switch (a.dw) {
+  switch (a.categoryId) {
     case 0:
       return game.dungeons.discovered;
     case 1:
@@ -99,20 +99,20 @@ export function getDungeonList(a) {
 export function DungeonsView(a) {
   this.elementId = "dungeonsTabContent";
   this.tabState = a;
-  this.nr = new TabState(getDungeonTabLabel(0, 0), true);
-  this.zw = new TabState(getDungeonTabLabel(1, 0), true);
-  this.qu = new TabState(getDungeonTabLabel(2, 0), true);
-  this.qx = new TabState(getDungeonTabLabel(3, 0), true);
+  this.discoveredTab = new TabState(getDungeonTabLabel(0, 0), true);
+  this.infestedTab = new TabState(getDungeonTabLabel(1, 0), true);
+  this.clearedTab = new TabState(getDungeonTabLabel(2, 0), true);
+  this.farmedTab = new TabState(getDungeonTabLabel(3, 0), true);
   a = new TabBar("dungeonTabMenu");
-  var b = new DungeonListView(this.nr, 0, "discoveredDungeonsTableContainer"),
-    c = new DungeonListView(this.zw, 1, "infestedDungeonsTableContainer"),
-    d = new DungeonListView(this.qu, 2, "clearedDungeonsTableContainer"),
-    f = new DungeonListView(this.qx, 3, "farmedDungeonsTableContainer");
-  this.nr.selected = true;
-  addTab(a, this.nr);
-  addTab(a, this.zw);
-  addTab(a, this.qu);
-  addTab(a, this.qx);
+  var b = new DungeonListView(this.discoveredTab, 0, "discoveredDungeonsTableContainer"),
+    c = new DungeonListView(this.infestedTab, 1, "infestedDungeonsTableContainer"),
+    d = new DungeonListView(this.clearedTab, 2, "clearedDungeonsTableContainer"),
+    f = new DungeonListView(this.farmedTab, 3, "farmedDungeonsTableContainer");
+  this.discoveredTab.selected = true;
+  addTab(a, this.discoveredTab);
+  addTab(a, this.infestedTab);
+  addTab(a, this.clearedTab);
+  addTab(a, this.farmedTab);
   this.Hz = this.Uy = this.aA = this.nz = -1;
   addChildView(this, new GoldView());
   addChildView(this, a);
@@ -156,22 +156,22 @@ export function initializeViewsDungeons() {
     if (a != this.treasureChest && (this.treasureChest = a)) {
       var b = this.treasureChest.kind;
       this.actionLabel.innerHTML = 1 === b ? "搜索财宝箱!" : 2 === b ? "搜索武器架!" : 3 === b ? "搜索书架!" : "搜索事物!";
-      this.om.innerHTML = "在房间内点击.";
+      this.messageCell.innerHTML = "在房间内点击.";
       if (a) {
         b = a.opened ? a.openedSpriteName : a.closedSpriteName;
-        this.po.style.background = "url('spritesheet/terrain.png') -" + b.sourceX + "px -" + b.sourceY + "px";
+        this.treasureImage.style.background = "url('spritesheet/terrain.png') -" + b.sourceX + "px -" + b.sourceY + "px";
       }
     }
-    b = /** @type {{Ro: () => string}} */ (/** @type {unknown} */ (this)).Ro();
+    b = /** @type {{getButtonClass: () => string}} */ (/** @type {unknown} */ (this)).getButtonClass();
     if (this.buttonLabel !== b) {
       this.buttonLabel = b;
       this.button.className = b;
       if (a && a.selected) {
-        this.om.innerHTML = "正在搜索中...";
+        this.messageCell.innerHTML = "正在搜索中...";
       }
     }
   };
-  TreasureLootView.prototype.Ro = function () {
+  TreasureLootView.prototype.getButtonClass = function () {
     return !this.treasureChest || this.treasureChest.opened || this.treasureChest.selected ? "lootButtonDisabled centeredElement" : "lootButton centeredElement";
   };
   DungeonRowView.prototype.reset = function () {
@@ -180,11 +180,11 @@ export function initializeViewsDungeons() {
       this.upgradeButton.reset();
     }
   };
-  DungeonRowView.prototype.ct = function (a) {
+  DungeonRowView.prototype.setDungeon = function (a) {
     var b = !this.dungeon;
     this.dungeon = a;
-    /** @type {{ct: (dungeon: unknown) => void}} */ (/** @type {unknown} */ (this.yr)).ct(this.dungeon);
-    this.upgradeButton.attachUpgrade(this.yr);
+    /** @type {{setDungeon: (dungeon: unknown) => void}} */ (/** @type {unknown} */ (this.dungeonUpgrade)).setDungeon(this.dungeon);
+    this.upgradeButton.attachUpgrade(this.dungeonUpgrade);
     this.mw = this.pu = -1;
     this.Gu = this.cachedDungeonName = this.Qv = "";
     if (b) {
@@ -193,33 +193,33 @@ export function initializeViewsDungeons() {
   };
   DungeonRowView.prototype.createRowCells = function () {
     var a = this.rowElement;
-    this.Co = a.insertCell(0);
-    this.Co.style.width = "50px";
-    this.Co.style.padding = "0";
-    this.Co.style.textAlign = "center";
-    this.wr = createElement("img", this.Co, null, "terrainImage");
-    this.wr.src = "images/Transparent.gif";
+    this.iconCell = a.insertCell(0);
+    this.iconCell.style.width = "50px";
+    this.iconCell.style.padding = "0";
+    this.iconCell.style.textAlign = "center";
+    this.terrainImage = createElement("img", this.iconCell, null, "terrainImage");
+    this.terrainImage.src = "images/Transparent.gif";
     if (this.dungeon) {
       var b = game.terrainSprites.getSprite(this.dungeon.mapSprite);
-      this.wr.style.background = "url('spritesheet/terrain.png') -" + b.sourceX + "px -" + b.sourceY + "px";
+      this.terrainImage.style.background = "url('spritesheet/terrain.png') -" + b.sourceX + "px -" + b.sourceY + "px";
     }
     this.labelCell = a.insertCell(1);
     this.labelCell.style.width = "200px";
     this.labelCell = a.insertCell(2);
     this.labelCell.style.width = "200px";
-    this.Gx = a.insertCell(3);
-    this.Gx.style.width = "90px";
-    this.px = a.insertCell(4);
-    this.px.style.width = "200px";
-    this.px.id = this.pB;
+    this.descriptionCell = a.insertCell(3);
+    this.descriptionCell.style.width = "90px";
+    this.actionCell = a.insertCell(4);
+    this.actionCell.style.width = "200px";
+    this.actionCell.id = this.pB;
     this.Ix = a.insertCell(5);
-    this.Ix.style.width = this.Ct + "px";
-    this.upgradeButton = new UpgradeButtonView(this.pB, this.yr, this.rowElement.rowIndex, true);
+    this.Ix.style.width = this.columnWidth + "px";
+    this.upgradeButton = new UpgradeButtonView(this.pB, this.dungeonUpgrade, this.rowElement.rowIndex, true);
     this.progressContainer = createElement("div", this.Ix, null, null);
     this.progressContainer.style.position = "relative";
     this.progressContainer.style.border = "1px solid #2c2c50";
     this.progressContainer.style.height = "15px";
-    this.progressContainer.style.width = this.Ct + "px";
+    this.progressContainer.style.width = this.columnWidth + "px";
     this.progressFillElement = createElement("div", this.progressContainer, null, null);
     this.progressFillElement.style.position = "absolute";
     this.progressFillElement.style.top = "0";
@@ -257,7 +257,7 @@ export function initializeViewsDungeons() {
       if (this.selectedDungeon !== this.dungeon) {
         this.selectedDungeon = this.dungeon;
         f = game.terrainSprites.getSprite(this.dungeon.mapSprite);
-        this.wr.style.background = "url('spritesheet/terrain.png') -" + f.sourceX + "px -" + f.sourceY + "px";
+        this.terrainImage.style.background = "url('spritesheet/terrain.png') -" + f.sourceX + "px -" + f.sourceY + "px";
       }
       if (this.cachedDungeonName !== c) {
         this.cachedDungeonName = c;
@@ -269,7 +269,7 @@ export function initializeViewsDungeons() {
       }
       if (this.Qv !== g) {
         this.Qv = g;
-        this.Gx.innerHTML = g;
+        this.descriptionCell.innerHTML = g;
       }
       if (this.Bt !== a) {
         if (this.Bt = a) {
@@ -282,7 +282,7 @@ export function initializeViewsDungeons() {
         if (b) {
           if (this.pu !== h) {
             this.pu = h;
-            b = h / 100 * this.Ct | 0;
+            b = h / 100 * this.columnWidth | 0;
             this.progressFillElement.style.width = b + "px";
             this.progressFillElement.style.backgroundColor = "#F00";
             this.progressTextElement.innerHTML = "地牢再次受到侵袭 " + h + "%";
@@ -290,7 +290,7 @@ export function initializeViewsDungeons() {
         } else {
           if (this.mw !== l) {
             this.mw = l;
-            b = l / 100 * this.Ct | 0;
+            b = l / 100 * this.columnWidth | 0;
             this.progressFillElement.style.width = b + "px";
             this.progressFillElement.style.backgroundColor = "#080";
             this.progressTextElement.innerHTML = "收获地牢 " + l + "%";
@@ -298,7 +298,7 @@ export function initializeViewsDungeons() {
         }
       }
       if (this.dungeon) {
-        refreshUpgradeAvailability(this.yr);
+        refreshUpgradeAvailability(this.dungeonUpgrade);
         this.upgradeButton.render();
       }
     }
@@ -320,7 +320,7 @@ export function initializeViewsDungeons() {
     var b;
     for (b = 0; b < this.rowViews.length; b++) {
       if (this.rowViews[b].dungeon !== a[b]) {
-        this.rowViews[b].ct(a[b]);
+        this.rowViews[b].setDungeon(a[b]);
       }
       this.rowViews[b].render();
     }
@@ -331,7 +331,7 @@ export function initializeViewsDungeons() {
       this.rowViews.splice(this.rowViews.length - 1, 1);
     }
     for (; this.rowViews.length < a;) {
-      this.rowViews.push(new DungeonRowView(this.tableElement.insertRow(this.rowViews.length + 1), this.dw));
+      this.rowViews.push(new DungeonRowView(this.tableElement.insertRow(this.rowViews.length + 1), this.categoryId));
     }
   };
   DungeonListView.prototype.createDomElements = function () {
@@ -342,8 +342,8 @@ export function initializeViewsDungeons() {
     this.tableElement = createElement("table", getElement(a), null, "monsterTable");
     /** @type {{createHeaderRow: (row: HTMLTableRowElement) => void}} */ (/** @type {unknown} */ (this)).createHeaderRow(this.tableElement.insertRow(0));
     for (c = 0; c < b.length; c++) {
-      a = new DungeonRowView(this.tableElement.insertRow(c + 1), this.dw);
-      a.ct(b[c]);
+      a = new DungeonRowView(this.tableElement.insertRow(c + 1), this.categoryId);
+      a.setDungeon(b[c]);
       this.rowViews.push(a);
     }
   };
@@ -380,19 +380,19 @@ export function initializeViewsDungeons() {
       d = game.dungeons.farms.length;
     if (this.nz !== a) {
       this.nz = a;
-      this.nr.label = getDungeonTabLabel(0, a);
+      this.discoveredTab.label = getDungeonTabLabel(0, a);
     }
     if (this.aA !== b) {
       this.aA = b;
-      this.zw.label = getDungeonTabLabel(1, b);
+      this.infestedTab.label = getDungeonTabLabel(1, b);
     }
     if (this.Uy !== c) {
       this.Uy = c;
-      this.qu.label = getDungeonTabLabel(2, c);
+      this.clearedTab.label = getDungeonTabLabel(2, c);
     }
     if (this.Hz !== d) {
       this.Hz = d;
-      this.qx.label = getDungeonTabLabel(3, d);
+      this.farmedTab.label = getDungeonTabLabel(3, d);
     }
     updateChildViews(this);
   };

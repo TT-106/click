@@ -8105,7 +8105,22 @@
     "it": "skillDefinition",
     "oq": "spellDefinition",
     "Ds": "cachedUnlockCost",
-    "Cs": "cachedRetireCost"
+    "Cs": "cachedRetireCost",
+    "om": "messageCell",
+    "po": "treasureImage",
+    "Ro": "getButtonClass",
+    "yr": "dungeonUpgrade",
+    "px": "actionCell",
+    "Gx": "descriptionCell",
+    "wr": "terrainImage",
+    "Co": "iconCell",
+    "Ct": "columnWidth",
+    "ct": "setDungeon",
+    "nr": "discoveredTab",
+    "zw": "infestedTab",
+    "qu": "clearedTab",
+    "qx": "farmedTab",
+    "dw": "categoryId"
   },
   "gameFields": {
     "B": "tileSize",

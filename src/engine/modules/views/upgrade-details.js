@@ -26,7 +26,7 @@ export function UpgradeButtonView(a, b, c, d) {
 }
 export function mountUpgradeButton(a) {
   var b = getElement(a.baseElementId);
-  a.buttonLabel = a.Ro();
+  a.buttonLabel = a.getButtonClass();
   a.buttonElement = createElement("div", b, a.elementId, a.buttonLabel);
   a.buttonElement.onmouseup = function () {
     a.onPurchaseClicked();
@@ -268,7 +268,7 @@ export function initializeViewsUpgradeDetails() {
   };
   UpgradeButtonView.prototype.update = function () {
     var a = this.upgrade.getUpgradeType(),
-      b = (/** @type {UpgradeButtonView & { Ro: () => string }} */ (/** @type {unknown} */ (this))).Ro();
+      b = (/** @type {UpgradeButtonView & { getButtonClass: () => string }} */ (/** @type {unknown} */ (this))).getButtonClass();
     if (!this.buttonElement) {
       mountUpgradeButton(this);
     }
@@ -293,7 +293,7 @@ export function initializeViewsUpgradeDetails() {
       this.buttonElement.className = b;
     }
   };
-  UpgradeButtonView.prototype.Ro = function () {
+  UpgradeButtonView.prototype.getButtonClass = function () {
     return this.upgrade.canPurchaseNow() ? "upgradeButton centeredElement topMargin" : this.upgrade.isOwned() ? "ownedUpgradeButton centeredElement topMargin" : "disabledUpgradeButton centeredElement topMargin";
   };
   ItemPurchaseDetails.prototype.getUpgradeType = function () {

@@ -899,7 +899,7 @@ export function initializeProgressionUpgrades() {
   PurchaseDungeonUpgrade.prototype.getDungeon = function () {
     return this.dungeon;
   };
-  PurchaseDungeonUpgrade.prototype.ct = function (a) {
+  PurchaseDungeonUpgrade.prototype.setDungeon = function (a) {
     this.dungeon = a;
   };
   PurchaseDungeonUpgrade.prototype.isDisplayable = function () {

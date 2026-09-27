@@ -1,0 +1,25 @@
+{
+  "_comment": "views/dungeons.js 批 1：TreasureLootView 的 om/po→messageCell/treasureImage（提示文字与宝箱图标）、Ro→getButtonClass（返回按钮 CSS 类名，与 UpgradeButtonView.Ro 同义）；DungeonRowView 的 yr/px/Gx/wr/Co/Ct→dungeonUpgrade/actionCell/descriptionCell/terrainImage/iconCell/columnWidth，ct→setDungeon（与 PurchaseDungeonUpgrade.ct 同义）；DungeonView 的四个页签 nr/zw/qu/qx→discoveredTab/infestedTab/clearedTab/farmedTab、dw→categoryId（DungeonListView 分类）。",
+  "files": [
+    "src/engine/modules/views/dungeons.js",
+    "src/engine/modules/views/upgrade-details.js",
+    "src/engine/modules/progression/upgrades.js"
+  ],
+  "map": {
+    "om": "messageCell",
+    "po": "treasureImage",
+    "Ro": "getButtonClass",
+    "yr": "dungeonUpgrade",
+    "px": "actionCell",
+    "Gx": "descriptionCell",
+    "wr": "terrainImage",
+    "Co": "iconCell",
+    "Ct": "columnWidth",
+    "ct": "setDungeon",
+    "nr": "discoveredTab",
+    "zw": "infestedTab",
+    "qu": "clearedTab",
+    "qx": "farmedTab",
+    "dw": "categoryId"
+  }
+}

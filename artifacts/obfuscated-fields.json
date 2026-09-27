@@ -234,29 +234,6 @@
     ]
   },
   {
-    "name": "om",
-    "reads": 5,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:16",
-        "code": "this.om"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:48",
-        "code": "a.om"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:49",
-        "code": "a.om"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\dungeons.js"
-    ]
-  },
-  {
     "name": "um",
     "reads": 6,
     "writes": 1,
@@ -784,76 +761,6 @@
       "src\\engine\\modules\\views\\castles.js",
       "src\\engine\\modules\\world\\initialization.js",
       "src\\engine\\modules\\world\\regions.js"
-    ]
-  },
-  {
-    "name": "po",
-    "reads": 4,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:16",
-        "code": "this.po"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:41",
-        "code": "a.po"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:42",
-        "code": "a.po"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\dungeons.js"
-    ]
-  },
-  {
-    "name": "Ro",
-    "reads": 4,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:22",
-        "code": "a.Ro"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:165",
-        "code": "(/** @type {unknown} */this).Ro"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:174",
-        "code": "TreasureLootView.prototype.Ro"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\views\\dungeons.js",
-      "src\\engine\\modules\\views\\upgrade-details.js"
-    ]
-  },
-  {
-    "name": "Co",
-    "reads": 4,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:69",
-        "code": "this.Co"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:196",
-        "code": "this.Co"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:197",
-        "code": "this.Co"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\dungeons.js"
     ]
   },
   {
@@ -1724,30 +1631,6 @@
     ]
   },
   {
-    "name": "ct",
-    "reads": 3,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:902",
-        "code": "PurchaseDungeonUpgrade.prototype.ct"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:183",
-        "code": "DungeonRowView.prototype.ct"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:186",
-        "code": "(/** @type {unknown} */this.yr).ct"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\progression\\upgrades.js",
-      "src\\engine\\modules\\views\\dungeons.js"
-    ]
-  },
-  {
     "name": "Mr",
     "reads": 4,
     "writes": 1,
@@ -2025,98 +1908,6 @@
     "fileCount": 1,
     "files": [
       "src\\engine\\modules\\views\\character.js"
-    ]
-  },
-  {
-    "name": "yr",
-    "reads": 4,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:68",
-        "code": "this.yr"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:186",
-        "code": "(/** @type {unknown} */this.yr)"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:187",
-        "code": "this.yr"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\dungeons.js"
-    ]
-  },
-  {
-    "name": "wr",
-    "reads": 3,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:69",
-        "code": "this.wr"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:200",
-        "code": "this.wr"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:201",
-        "code": "this.wr"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\dungeons.js"
-    ]
-  },
-  {
-    "name": "Ct",
-    "reads": 4,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:75",
-        "code": "this.Ct"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:216",
-        "code": "this.Ct"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:222",
-        "code": "this.Ct"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\dungeons.js"
-    ]
-  },
-  {
-    "name": "nr",
-    "reads": 4,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:102",
-        "code": "this.nr"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:107",
-        "code": "this.nr"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:111",
-        "code": "this.nr"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\dungeons.js"
     ]
   },
   {
@@ -4179,52 +3970,6 @@
     ]
   },
   {
-    "name": "px",
-    "reads": 2,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:69",
-        "code": "this.px"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:212",
-        "code": "this.px"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:213",
-        "code": "this.px"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\dungeons.js"
-    ]
-  },
-  {
-    "name": "Gx",
-    "reads": 2,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:69",
-        "code": "this.Gx"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:210",
-        "code": "this.Gx"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:211",
-        "code": "this.Gx"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\dungeons.js"
-    ]
-  },
-  {
     "name": "Ix",
     "reads": 2,
     "writes": 2,
@@ -4355,98 +4100,6 @@
       {
         "loc": "src\\engine\\modules\\views\\dungeons.js:274",
         "code": "this.Bt"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\dungeons.js"
-    ]
-  },
-  {
-    "name": "dw",
-    "reads": 3,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:81",
-        "code": "this.dw"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:86",
-        "code": "a.dw"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:334",
-        "code": "this.dw"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\dungeons.js"
-    ]
-  },
-  {
-    "name": "zw",
-    "reads": 3,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:103",
-        "code": "this.zw"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:108",
-        "code": "this.zw"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:113",
-        "code": "this.zw"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\dungeons.js"
-    ]
-  },
-  {
-    "name": "qu",
-    "reads": 3,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:104",
-        "code": "this.qu"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:109",
-        "code": "this.qu"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:114",
-        "code": "this.qu"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\dungeons.js"
-    ]
-  },
-  {
-    "name": "qx",
-    "reads": 3,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:105",
-        "code": "this.qx"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:110",
-        "code": "this.qx"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:115",
-        "code": "this.qx"
       }
     ],
     "fileCount": 1,
