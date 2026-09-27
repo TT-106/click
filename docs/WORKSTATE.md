@@ -1,9 +1,11 @@
 # WORKSTATE — Clickpocalypse II 语义恢复与现代化工程
 
 > 本文件是长程自治任务的**唯一续跑入口**。上下文压缩或中断后，先读本文件 + `git log --oneline`，再继续。
-> 最后更新：2026-09-27（U66-U92 共 27 批落地后，混淆清单 806 → 328；fields 段 267 → 737；59 场景矩阵全绿）
+> 最后更新：2026-09-27（U66-U93 共 28 批落地后，混淆清单 806 → 306；fields 段 267 → 758；59 场景矩阵全绿）
 
 ## 当前轮次状态（2026-09-27，M12 长尾重命名 + 命名修正）
+
+- U93 AI 行为队列全量命名（2026-09-27，混淆清单 328 → 306，fields 段 737 → 758）：`ai/behaviors.js` 22 项全部落地，文件清空。单文件：`IdleBehavior.kB`→priorityWeight、`WaitBehavior/StunnedBehavior.eo`→priorityWeight、`ExploreDungeonBehavior.SB`→targetDistance、`Yt`→canActWithoutAttack（仅 LootChest/LootPotion 置 true，豁免 canAttack 检查）、`FollowLeaderBehavior.Uq`→threatTarget、`zE`→threatDistance、`AD`→fleeHealthRatio、`GuardRangedBehavior.Vq`→delegateBehavior、`RangedAttackBehavior.ax`→lastAttackTurn、`CA`→engagementDistance（=RANGED_MIN_DISTANCE=50，据 minions/classes/guardians 构造点）、`MeleeAttackBehavior.YD`→preferNearbyOpponent（构造第 4 参恒为 false，惰性配置）、`AreaSpellBehavior.KE`→expectedSpellCategoryId。**同文件异主手工拆分**：`Uw` 在 CooldownBehavior 为 leashDistance（远离召唤师超过即回位）、在 SpecialAttackBehavior 为 maxEngageDistance（召唤师-目标距离上限），先手改 4 处再跑批。跨文件：`fo`→behaviorList（BehaviorQueue 行为列表，+simulation/characters.js）、`Vs`→isEnraged（statusEffectTypeId 12 = rageSpell，见 content/spells.js:232-237；+characters/effects.js）、`et`→setTargetDoor（CharacterPosition 与 PartyState 同名方法均设 targetDoor；+movement.js/party.js/character.js）、`ou`→updateWorldMode / `nu`→updateDungeonMode（BehaviorQueue 与 PartyState 对称的 worldActive 分派；+party.js/simulation/tick.js）、四类掉落物的房间字段 `vD`/`BE`/`oE`/`PD`→room（GoldDrop/ScrollDrop/PotionDrop/ItemDrop 构造第 4 参，behaviors.js 中以 `!== room` 过滤；+treasure.js/scrolls.js/potions.js/items.js）。
 
 - U92 地牢视图批 A（2026-09-27，混淆清单 343 → 328，fields 段 722 → 737）：TreasureLootView 的 `om/po/Ro`→messageCell/treasureImage/getButtonClass；DungeonRowView 的 `yr/px/Gx/wr/Co/Ct/ct`→dungeonUpgrade/actionCell/descriptionCell/terrainImage/iconCell/columnWidth/setDungeon；DungeonView 四页签 `nr/zw/qu/qx`→discoveredTab/infestedTab/clearedTab/farmedTab 与 `dw`→categoryId。
 - U91 升级虚访问器与状态缓存（2026-09-27，混淆清单 359 → 343，fields 段 706 → 722）：虚方法 `Wo/Vo/Pz/Kr/Nz/Oz`→getDungeon/getCharacter/getScrollItem/getMonsterLevel/getItems/getUpgradeItem、`ft`→setPurchased、`Br`→equipBestForCharacter；缓存 `Up/ZA/WA/Lo`→cachedAffordableSoon/cachedCanPurchase/cachedRequiredExperience/requiredExperience、`it/oq`→skillDefinition/spellDefinition、`Ds/Cs`→cachedUnlockCost/cachedRetireCost。
@@ -318,7 +320,7 @@ npm run perf             # 性能基线测量（重构 vs 原版）
 3. ~~交付物收尾~~ ✅ 已完成（REFACTOR_REPORT.md、PERFORMANCE_REPORT.md、COMPATIBILITY_REPORT.md、MIGRATION_MAP.md）。
 4. ~~扩展差分场景：prestige/victory~~ ✅ 30 场景矩阵已含 veteran-run/prestige-restart/full-reset、城堡征服→胜利瞬间、cat2/cat3 法术分支、Blast Stun 直接执行计数（两端各 31 次 type=14）、两条召唤分支（cat=9/11）与睡眠直接计数（type=0），并补齐 `content/spells.js` 里全部 16 个 `spellCategoryId`（1–6、8–17）：cat=12/14/15 需先用 `withEquippedItem()` 注入投射武器（否则命中原版自带的空武器解引用），cat=16 需 `withResurrectionTrial()` 用随机首领药水真正打出昏迷前置。U4 三项缺口至此全部关闭。
 5. **M10 类型体系**：✅ 完成（`src/engine/modules` 下 `@ts-nocheck` 为 0，仅 vendored `src/vendor/lz-string-1.3.3.js` 保留；tsconfig checkJs + `npm run typecheck` 入门禁）。工具：`m10-round.cjs`（按文件移除并报告各自错误）、`m10-nocheck.mjs`/`restore-nocheck-baseline.cjs`（范围管理）；跨文件原型挂载成员仍需调用点窄签名或 JSDoc typedef（不能用整文件 any-cast）。
-6. symbol-map.json 元数据刷新：`symbols` 段（1,231 条）已含本轮恢复的函数名（`applySpellEffect`/`isDisablingEffect`/`summonSpellMinion`/`spawnMinion`/`getProjectileAnimation` 等）；`fields` 段仍是 202 条"原字母 → 语义名"全局映射，新恢复的 StatusEffect 内部成员（`X`/`jD`/`Qd`/`Ok`/`bg`）与 `spellCategoryId`/`statusEffectTypeId`/`potencyPercent` 尚未写入——这些字母在 c2.js 里跨类复用，逐条写回前必须先确认唯一性，因此仍开放（对照表见 `docs/reverse-engineering/semantic-map.md`）。
+6. symbol-map.json 元数据刷新：`symbols` 段（1,231 条）已含本轮恢复的函数名（`applySpellEffect`/`isDisablingEffect`/`summonSpellMinion`/`spawnMinion`/`getProjectileAnimation` 等）；`fields` 段已由 202 条增补至 **758 条**（U66-U93 长尾重命名持续写入，排除跨类异主字母）；混淆清单同步由 `scripts/analyze-fields.mjs` 重生成，当前 **306 项**（起点 806）。仍开放的字母以 `artifacts/obfuscated-fields.json` 实时为准（首推 `world/terrain.js` 22、`views/character.js` 20、`characters/character.js` 18）。
 
 ## 8. 智能体产出验收状态
 
