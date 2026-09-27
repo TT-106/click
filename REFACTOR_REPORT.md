@@ -39,13 +39,13 @@ archive/original/c2.js  ──AST 机械恢复──▶  src/engine/（77 模块
 
 | 层 | 内容 |
 |---|---|
-| L1 单元（9 项） | RNG 位级差分（Babel 从 c2.js 提取原版 `ga` 对照，6 种子×100k 值 + 黄金值）、LZ-string codec 契约、格式化表驱动 |
+| L1 单元（10 项） | RNG 位级差分（Babel 从 c2.js 提取原版 `ga` 对照，6 种子×100k 值 + 黄金值）、LZ-string codec 契约（含与原版 fixture 互通）、格式化表驱动、精灵查找双端一致（原版 `Pb` 对照重构 `getSprite`） |
 | L3/L4 差分 | `test:parity`：同存档 + 固定 RNG/时钟，0/1/99/900 回合完整存档逐字段相等；`test:scenarios`：**59 场景**（长跑、离线四态 + 12h 截断 + 后台关闭态、药水激活、全 6 类卷轴战斗施放、16 类法术分支、城堡征服→胜利、金币涌入、后期、veteran、prestige、full reset、升级购买与怪物等级解锁、冒险点消费、成就领取、自动装备、两条农场购买入口、财宝箱/武器架/书架搜索、四类地面掉落拾取、农场收获与长期再侵袭生命周期跨越、药水真实使用、渲染帧 + 自动落盘） |
 | L5 集成 | 场景内的"两端各自增长断言 + 逐检查点全状态相等"即多模块组合验证（战斗→掉落→拾取→统计→存档） |
 | L6 浏览器 E2E | 建队/自动战斗/暂停/五类面板/**c2c.user.js 外部 DOM 契约**/设置/导出导入/非法存档/刷新恢复/键盘/三种视口 |
 | L7 长跑 soak | `test:soak`：115,200 与 345,600 等价回合（8h/24h），两端完整存档相等 + CDP 主动 GC 后堆增量样本 |
 | 渲染等价 | `rendered-scene` / `autosave-payload`：真实帧循环 1,300 帧后比对主画布逐像素 FNV-1a 指纹（两端相同）与落盘存档解码内容 |
-| 工程门 | `npm run check`（当前 111 文件语法 + 单测）、`npm run typecheck`（tsc 覆盖 76/77 引擎模块，经 import 图传递）；每切片一 commit |
+| 工程门 | `npm run check`（当前 121 文件语法 + 单测）、`npm run typecheck`（tsc 覆盖 76/77 引擎模块，经 import 图传递；`src/engine/modules` 下 `@ts-nocheck` 已清零）、`npm run build`（增量拷贝到 dist）；每切片一 commit |
 
 方法论实证：差分矩阵三次抓到人工没看到的真实缺陷——guardians/minions 数据键漏改导致城堡守卫生成崩溃；金堆房对 DungeonTile 误调角色坐标接口；以及本轮由新场景暴露的**自动保存间隔 3E4 vs 原版 3E5**（10 倍频率，改动前无任何测试能看到）。
 
@@ -59,10 +59,11 @@ archive/original/c2.js  ──AST 机械恢复──▶  src/engine/（77 模块
 
 ## 8. 剩余风险与未完成
 
-1. **字段重命名未竟**：`src` 内仍余 1,171 个混淆属性名（以最新工作清单为准）。工作清单 `artifacts/obfuscated-fields.json`，取证→改名→四套回归的流程已固化在 `scripts/rename-field.mjs`。
+1. ✅ **字段重命名已收官**（2026-09-27）：`node scripts/analyze-fields.mjs` 现报「**混淆属性总数: 0**」。U66–U120 共 55 批把清单从 806 逐批降到 0，工作清单 `artifacts/obfuscated-fields.json` 现为空数组。流程已固化为四个工具：`scripts/rename-field.mjs`（单字段）、`rename-fields-batch.mjs`（多字段事务批，带命中数/行数/缩进/字符串字面量四重校验）、`rename-atlas-schema.mjs`（带引号的 JSON 键）、`record-field-names.mjs`（回写 symbol-map 的 fields 段，现 1,047 条）。每批证据链与踩坑见 `docs/WORKSTATE.md` 顶部。
 2. **UI 独占路径仍有差分缺口**（U7）：三种财宝房目标物搜索与金币/卷轴/药水/物品四类地面掉落拾取已分别有专项断言；农场全生命周期（购买/推演成熟收获/休耕再侵袭/二次成熟）已有专项断言；卷轴全 6 类战斗施放与后台行为关闭态已闭环。`upgrades-purchased` 已驱动全局升级、角色升级、技能树与法术学习（type=6）购买，`monster-level-unlocked` 已驱动怪物等级解锁，`adventure-points-spent` 已驱动一项冒险点升级，`achievement-claimed` 已驱动一次成就领取，`auto-equipped` 已驱动自动装备，`scroll-cast-in-combat` 已驱动全部 6 类卷轴施放，`dungeon-farm-purchased` / `dungeon-row-farm-purchased` 已驱动两条购买入口，`potions-activated` 已驱动药水激活。
 3. **验收口径分层**：16 类法术分支靠"唯一注入法术 + 两端各自施法计数增长"归因，只有 cat=2 的三种状态与 cat=17 有专属可观测量；渲染等价只在一条场景、一种视口下比对指纹。
 4. 双主字母 `Cb`/`Qc` 已按所有者拆开；`oc` 的四种所有者已由原版帧数组构造链证明同为 `frameIndex`；`$c` 已改为 `itemDrop`（见 semantic-map）。
+5. ✅ **38 个"隐形文件名"垃圾文件已清除**（2026-09-27）：仓库里存在成对的 `X.js` 与 `X.js\uF00D`（尾随 U+F00D，不可见），后者一律 99 字节、内容仅一行 `// @ts-nocheck -- M10 渐进类型化…`，是历史脚本误写留下的残渣且已被 commit 跟踪。因为名字尾随不可见字符，`*.js` 类匹配（`check.mjs`、`analyze-fields.mjs`、人工 `ls`）都看不见它们——这正是早前"审计报告称 38 个垃圾文件、随后实测为 0"矛盾的根因（两次检查用的匹配方式不同）。工具：`scripts/find-invisible-name-files.mjs`（盘点）与 `scripts/remove-invisible-name-files.mjs`（三条安全断言：≤200B、含 `@ts-nocheck`、存在同名正常文件，任一不符即整批中止）。删除后 `check` 语法文件数由 121 回落，dist 亦不再被拷入垃圾。
 
 ## 9. 后续开发方式（对新开发者的承诺）
 

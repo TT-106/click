@@ -173,9 +173,12 @@ Xf/Qf/Rf/Zf/Cf/Ef → damageMultiplier/armorMultiplier/attackRatingMultiplier/de
 - 12h 离线上限截断路径已由 `offline-13h-capped` 场景覆盖：同一 13h 旧存档载入两端后均断言待结算时长为 12h，再推进离线帧并比较完整存档与后续回合。
 - 扩展方式：`tests/scenarios/save-mutations.mjs` 增加对应变异器，`scripts/test-scenarios.mjs` 注册场景并为两端各自写有效性断言。
 
-## U5 — 长尾字段重命名
+## U5 — ✅ 已关闭：长尾字段重命名清零（2026-09-27）
 
-- 剩余约 1,300 处；第四轮取证已覆盖 fa/ea/wa/sa/ua/xa/$/La/Ia/na/ma/la 的证据（见下方"已取证待落地"），Y/Z/aa 等其余字母待新取证。
+- `node scripts/analyze-fields.mjs` 现报「**混淆属性总数: 0**」。U66–U120 共 55 批把清单从 806 逐批降到 0（每批符号、证据链与踩坑见 `docs/WORKSTATE.md` 顶部）；`docs/symbol-map.json` 的 fields 段累计 **1,047** 条。
+- 最后一批（U120）是贴纸图集数据键 `a`→`name`、`b`→`position`（三份 atlas 共 2,836 条，工具 `scripts/rename-atlas-schema.mjs`）。`a`/`b` 因全库多义（大量局部变量与内建成员同名），**不写入** fields 段。
+- 过程中确认并**保留**的原版死字段，一律以 `unusedXxx` 诚实命名（`unusedClassFlag` / `unusedClassValue1` / `unusedClassValue2` / `unusedSpellFlag` / `unusedClassValue` / `unusedCachedText`），判定依据是"写入存在、全库（含 `archive/original/c2.js`）读点为 0"——不臆造语义，也不删字段（删字段会改变对象形状与枚举顺序）。
+- 仍留的原版全局字母（如 `pB`/`Hq`/`Nx`/`lB`）是 `tests/engine-harness.js` 原版侧必须调用的全局函数名，不在本清单口径内（`analyze-fields` 只统计 `src/engine` 与 `src/ui` 的属性访问）。
 
 ## U6 — ✅ 已关闭：`Cb` 双主方法已按所有者拆开（2026-09-26）
 
@@ -189,11 +192,11 @@ Xf/Qf/Rf/Zf/Cf/Ef → damageMultiplier/armorMultiplier/attackRatingMultiplier/de
 
 - 现象：这批行为只能从视图层入口进入，30 场景矩阵因此完全没跑到它们，实测特征是中局存档里 `statistics.upgradePurchased=0`、`pointManagerState.spentAdventurePoints=0`、`farms=[]`、`achievements.applied=0`、`treasureChestsLooted=0`、冒险者 `characterLevel` 恒为 1、`skillPoints` 恒为 0（`output/parity/*.json` 与 `output/scenarios/*-original.json` 各检查点相同）。
 - 当前增量（50 场景）：三种财宝房目标物的同房间搜索分别使对应统计增长，禁用目标设置的反向验证在原版侧失败；`ground-drops-collected` 用无已学法术的 fixture 自然推进 9,000 回合，两端分别断言点数事件 9/10/11/12（金币/卷轴/药水/物品常规拾取）均增长，完整 DTO 相等；`dungeon-farm-harvested` 与 `dungeon-farm-cycle-long-term` 完整覆盖农场推演成熟、`AutoPurchaseDungeonUpgrade`（type=9）收获击杀与清零待收获池、休耕再侵袭翻转（`cleared=false`）及二次成熟收获累计击杀（`>=200`），两端逐检查点 DTO 相等并带负向探针验证；验收矩阵中农场行已升级为 PASS。卷轴已由 `scroll-cast-in-combat` 覆盖全部 6 种类型（含箭雨回退普通远程攻击），验收矩阵升级为 PASS；后台行为关闭态由 `background-progress-disabled` 实证，验收矩阵升级为 PASS；怪物等级退休已由 `monster-level-retired` 覆盖，验收矩阵中怪物升级升级为 PASS；暴击系统由 `combat-critical-hits` 驱动战士与游侠 7 档暴击技能习得并采样浮动文字直接对账，验收矩阵中暴击升级为 PASS。更细的逐件认领瞬时态仍未直接对账。
-- 入口清单：`views/upgrade-details.js` 的 `onPurchaseClicked → Upgrade.purchase`（升级族 19 个实现）、`views/character.js` 的自动装备、`potions.js` 的 `aw()` 激活、`scrolls.js` 的 `castScroll()`、`combat/actions.js` 与 `characters/character.js` 里的掉落物 `claimedBy`/拾取分支。
+- 入口清单：`views/upgrade-details.js` 的 `onPurchaseClicked → Upgrade.purchase`（升级族 19 个实现）、`views/character.js` 的自动装备、`potions.js` 的 `activate()` 激活（原 `aw`）、`scrolls.js` 的 `castScroll()`、`combat/actions.js` 与 `characters/character.js` 里的掉落物 `claimedBy`/拾取分支。
 - 为什么浏览器 E2E 不是答案：本次尝试过在 `test-browser.mjs` 里点真按钮，但两点不成立——开局存档无可购项（唯一 `.upgradeButton` 是复用样式的 `#pauseButton`），中局 fixture 载入后 `pointUpgradesContainer_*` 全部为 `disabledUpgradeButton` 且矩形 0×0，Playwright 等不到可见元素。视图层点击既脆弱又不能与原版对照（原版那一侧没有新 UI 壳）。
-- 已落地（2026-09-26，第 31/32 个场景）：`tests/engine-harness.js` 新增 `purchaseUpgrades({turns,limit})` 与 `activatePotions({turns,limit})`，各自按本侧符号驱动同一入口（原版 `Nx`/`HC`/`qc()`/`Qc()`；重构版 `upgradeCollections`/`upgradeRows`/`canPurchaseNow()`/`purchase()`。药水侧容器原版 `Game.Yj`、重构 `game.potions`，数组字段 `re` 与方法 `aw()` 两端同名，同一行代码即可驱动两侧）。
+- 已落地（2026-09-26，第 31/32 个场景）：`tests/engine-harness.js` 新增 `purchaseUpgrades({turns,limit})` 与 `activatePotions({turns,limit})`，各自按本侧符号驱动同一入口（原版 `Nx`/`HC`/`qc()`/`Qc()`；重构版 `upgradeCollections`/`upgradeRows`/`canPurchaseNow()`/`purchase()`。药水侧容器原版 `Game.Yj`、重构 `game.potions`，数组字段 `re` 两端同名、方法 `aw()` 仅原版侧保留（重构侧已改名 `activate`，harness 走双端分支）；调用点因此改为 `if (original) potion.aw(); else potion.activate();` 的双端分支）。
   - `upgrades-purchased`：百万金币 + 每人 5 技能点，两端各完成 8 次购买，推进 600 回合后再各买 2 次（前一批解锁了后续项），每个检查点完整存档相等；存档侧确证命中的升级族是 `settings.upgrades`（全局升级表）。
-  - `potions-activated`：三瓶未激活药水入库，驱动 `Potion.aw()` 之后 `statistics.potionsUsed` 两端各自增长，随后完整存档相等——旧场景 `potions-inactive-auto` 里 `active` 恒为 false 的空白由此补上。
+  - `potions-activated`：三瓶未激活药水入库，驱动 `Potion.activate()`（原 `aw`，harness 双端分支） 之后 `statistics.potionsUsed` 两端各自增长，随后完整存档相等——旧场景 `potions-inactive-auto` 里 `active` 恒为 false 的空白由此补上。
 - 仍开放（如实陈述）：
   - 升级族覆盖仍不完整：`upgrades-purchased` 已遍历角色四棵技能树并断言全局设置、角色等级、技能解锁；新增购买类型分布断言证明 `LearnSpellUpgrade`（type=6）在两端各自购入，且存档 `spells` 数量增长。`monster-level-unlocked` 驱动怪物最高等级从 1 增至 2；`monster-level-retired` 驱动 `RetireMonsterLevelUpgrade`（type=11）使最低等级 `minUnlockedLevel` 升至 2，首个怪物等级抬高并排除等级 1；`adventure-points-spent` 驱动一项点数升级并断言消费；`achievement-claimed` 两端各领取一次并断言 `applied`；`auto-equipped` 驱动 type=4，装备槽和装备事件点数计数均变化。农场全生命周期已由 `dungeon-farm-purchased`（全局 type=8）、`dungeon-row-farm-purchased`（视图私有 type=7）、`dungeon-farm-harvested`（收获 type=9）与 `dungeon-farm-cycle-long-term`（长期再侵袭与二次收获）4 条场景完整覆盖。其余点数升级、逐件手动装备仍未被专项驱动。
   - 暴击机制与观察闭环：`combat-critical-hits` 驱动战士 4 档与游侠 3 档共 7 档技能树暴击节点点亮，随后 1000 回合实战通过 `countFloatingText` 在两端活动浮动文字层（原版 `Game.pc.al` / 重构版 `game.floatingText.al`）采样到完全同频的 `"暴击!"` 次数（各 11 次），确认跳过护甲减免与 RNG 顺序一致，1000 回合后 DTO 完全对齐，负向探针验证有效。
@@ -213,7 +216,7 @@ Xf/Qf/Rf/Zf/Cf/Ef → damageMultiplier/armorMultiplier/attackRatingMultiplier/de
 
 工具：`scripts/rename-identifiers-atomic.mjs`（名字置换必须在单次正则 pass 内查表替换，逐条 rename 会在中间态互相污染）。
 
-**仍开放的次生项**：`views/monsters.js` 的 `killCell`（U46 命名）渲染的其实是 `$o`（生命）而非击杀数，命名可疑；同表的 `yq`（第 9 列表头「总计杀死」）在 render 中未见赋值，需后续取证。这两项与本次曲线修正无关，单独登记。
+**次生项已于 U82 全部关闭（2026-09-27 复核）**：`views/monsters.js` 的 `killCell` 实为生命列、已随 U82 整批按表头列序改名为 `healthCell`（现 `healthCell.innerHTML = formatAmount(this.monsterType.maxHealth)`，`views/monsters.js:264`）；`yq` 确有赋值、已改名为 `killCountCell`（`killCountCell.innerHTML = formatAmount(this.monsterType.killCount)`，`views/monsters.js:280`，数据源 `c = this.monsterType.killCount` 见 `:259`）。**结论：怪物表列名与数据源现已一一对应，本节无未决项。**
 
 ## U8-原始记录（保留）
 
