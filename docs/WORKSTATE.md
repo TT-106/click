@@ -1,9 +1,11 @@
 # WORKSTATE — Clickpocalypse II 语义恢复与现代化工程
 
 > 本文件是长程自治任务的**唯一续跑入口**。上下文压缩或中断后，先读本文件 + `git log --oneline`，再继续。
-> 最后更新：2026-09-27（U66-U94 共 29 批落地后，混淆清单 806 → 284；fields 段 267 → 780；59 场景矩阵全绿）
+> 最后更新：2026-09-27（U66-U95 共 30 批落地后，混淆清单 806 → 260；fields 段 267 → 804；59 场景矩阵全绿）
 
 ## 当前轮次状态（2026-09-27，M12 长尾重命名 + 命名修正）
+
+- U95 角色视图与导航视图全量命名（2026-09-27，混淆清单 284 → 260，fields 段 780 → 804）：`views/character.js` 20 项 + `views/navigation.js` 5 项落地，两文件清空。character.js：InventoryTabView 三个元素 id/表视图 `QD/mD/nD`→inventoryTableElementId/equipmentTableElementId/equipmentTableView、EquipmentTableView 的 `zm`→equipmentTable、两处行视图 `ux`→setItem（InventoryItemView 与 EquipmentItemRowView 同名同义）、两行视图 `Cr`→equipCell（insertCell(6) 装备按钮格）；EquipAllView `Xq`→equipAllEnabled / `gw`→equipImprovementsButton；CharacterAttributesView 七个后挂载子视图 `bB/iz/Gy/Hy/lz/vA/yA`→summaryView/damageView/armorView/attackRatingView/defenceRatingView/maxHealthView/maxSpiritView（按 StatBreakdownView 构造标签「伤害/护甲/攻击等级/防御等级/最大生命/最大法力」定名）；SkillsTabView 四列 `Pn`→fourthColumnButtons、`ry/qy`→fourthSkillTree/thirdSkillTree、`Ax`→skillTreeTableElement。navigation.js：GameView `um`→cachedSkillPoints（每冒险者技能点缓存，驱动页签角标）；TabButtonView `tt`→labelElement（`<a>` 锚点）/`gv`→cachedLabel；PauseView `Vu`→cachedPaused。**`tw` 双文件同义合并**：`CharacterView.tw` 与 `GameView.tw` 函数体完全相同（`hasUnspentSkills ? skillPoints + initialSpellSkillPoint : 0`），统一命名 getAvailableSkillPoints 并写入全局表。
 
 - U94 世界地形/噪声/瓦片全量命名（2026-09-27，混淆清单 306 → 284，fields 段 758 → 780）：`world/terrain.js` 22 项全部落地，文件清空。FractalNoise 五个参数按 `sampleNoise` 消费点定名：`NE`→initialAmplitude（硬编码 1）、`PE`→persistence（`f *= PE`）、`QE`→lacunarity（`g *= QE`）、`RE`→octaveCount（循环次数）、`OE`→baseFrequency（初始频率），构造点 `new FractalNoise(seed, 2, 0.5, 4, 0.003)` 逐参核对（seed 未混淆）；`RA`→simplexNoise（SimplexNoise 实例）。两个生物群系：`ow`→densityNoise（`-0.3 < sampleNoise(ow)` 决定是否布置，TerrainBiome 与 DecorationBiome 同义）、`qD`/`fE`→variantNoise（各自按步长量化后索引 tileSpriteNames）。WorldGenerator：`pE`→terrainNoise（陆地/水基底）、`ox`→detailNoise（`-0.6 >` 细节分支）、`kt`→snowTerrainBiome / `Bx`→snowDecorationBiome（"SSSS" 雪地）。WorldTile：`NC`/`OC`→pixelX/pixelY（getPixelX/Y 直读）、2×2 邻域四角地形码 `LA`/`KA`/`yB`/`xB`→quadTopLeft/TopRight/BottomLeft/BottomRightTerrainCode（键序 `LA+KA+yB+xB` = 自身/东/南/东南，供 shoreTileLookup 查表）。精灵名：`tE`→mapEdgeSpriteName（地图北/西边界）、`ZD`→lockedRegionSpriteName（区块锁定时背景）、`JD`→fallbackShoreSprite（无匹配键时兜底 `L1_Terrain048.PNG`）。
 
