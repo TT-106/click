@@ -12,13 +12,13 @@ import { UpgradeListView } from "./upgrade-details.js";
 export function MonsterUpgradeSummaryView() {
   this.elementId = "monsterKillCountContainer";
   this.visible = true;
-  this.Hw = "killCountPanel";
-  this.rm = -1;
+  this.killCountPanelId = "killCountPanel";
+  this.cachedKills = -1;
 }
 export function MonsterLevelView() {
   this.elementId = "monsterUpgradeValuesContainer";
   this.visible = true;
-  this.ov = this.jv = this.Vv = this.zv = this.Fv = this.Wu = this.fv = this.Du = this.pv = this.lv = this.ev = -1;
+  this.cachedMinGoldPerDrop = this.cachedMaxGoldPerDrop = this.cachedTreasureChance = this.cachedPotionDropChance = this.cachedScrollDropChance = this.cachedGoldDropChance = this.cachedHigherLevelItemChance = this.cachedItemQualityChance = this.cachedMinMonsters = this.cachedMaxMonsters = this.cachedItemDropChance = -1;
 }
 export function MonsterRowView(a, b) {
   this.rowElement = a;
@@ -119,61 +119,61 @@ export function refreshMonsterTabVisibility(a) {
 export function initializeViewsMonsters() {
   MonsterUpgradeSummaryView.prototype = new View();
   MonsterUpgradeSummaryView.prototype.reset = function () {
-    this.rm = -1;
+    this.cachedKills = -1;
   };
   MonsterUpgradeSummaryView.prototype.update = function () {
     var a = game.state.party.kills;
-    if (a !== this.rm) {
-      this.rm = a;
-      setElementHtml(this.Hw, "" + formatGroupedAmount(a));
+    if (a !== this.cachedKills) {
+      this.cachedKills = a;
+      setElementHtml(this.killCountPanelId, "" + formatGroupedAmount(a));
     }
   };
   MonsterLevelView.prototype = new View();
   MonsterLevelView.prototype.reset = function () {};
   MonsterLevelView.prototype.update = function () {
-    if (this.Wu !== globalUpgradeDefinitions.Lr.currentValue) {
-      this.Wu = globalUpgradeDefinitions.Lr.currentValue;
-      setElementHtml("goldDropChance", this.Wu + "%");
+    if (this.cachedGoldDropChance !== globalUpgradeDefinitions.goldDropChance.currentValue) {
+      this.cachedGoldDropChance = globalUpgradeDefinitions.goldDropChance.currentValue;
+      setElementHtml("goldDropChance", this.cachedGoldDropChance + "%");
     }
-    if (this.jv !== globalUpgradeDefinitions.ys.currentValue) {
-      this.jv = globalUpgradeDefinitions.ys.currentValue;
-      setElementHtml("maxGoldPerDrop", this.jv + "");
+    if (this.cachedMaxGoldPerDrop !== globalUpgradeDefinitions.maxGoldPerDrop.currentValue) {
+      this.cachedMaxGoldPerDrop = globalUpgradeDefinitions.maxGoldPerDrop.currentValue;
+      setElementHtml("maxGoldPerDrop", this.cachedMaxGoldPerDrop + "");
     }
-    if (this.ov !== globalUpgradeDefinitions.As.currentValue) {
-      this.ov = globalUpgradeDefinitions.As.currentValue;
-      setElementHtml("minGoldPerDrop", this.ov + "");
+    if (this.cachedMinGoldPerDrop !== globalUpgradeDefinitions.minGoldPerDrop.currentValue) {
+      this.cachedMinGoldPerDrop = globalUpgradeDefinitions.minGoldPerDrop.currentValue;
+      setElementHtml("minGoldPerDrop", this.cachedMinGoldPerDrop + "");
     }
-    if (this.ev !== globalUpgradeDefinitions.itemDropChance.currentValue) {
-      this.ev = globalUpgradeDefinitions.itemDropChance.currentValue;
-      setElementHtml("itemDropChance", this.ev + "%");
+    if (this.cachedItemDropChance !== globalUpgradeDefinitions.itemDropChance.currentValue) {
+      this.cachedItemDropChance = globalUpgradeDefinitions.itemDropChance.currentValue;
+      setElementHtml("itemDropChance", this.cachedItemDropChance + "%");
     }
-    if (this.Fv !== globalUpgradeDefinitions.$s.currentValue) {
-      this.Fv = globalUpgradeDefinitions.$s.currentValue;
-      setElementHtml("scrollDropChance", this.Fv + "%");
+    if (this.cachedScrollDropChance !== globalUpgradeDefinitions.scrollDropChance.currentValue) {
+      this.cachedScrollDropChance = globalUpgradeDefinitions.scrollDropChance.currentValue;
+      setElementHtml("scrollDropChance", this.cachedScrollDropChance + "%");
     }
-    if (this.zv !== globalUpgradeDefinitions.Ns.currentValue) {
-      this.zv = globalUpgradeDefinitions.Ns.currentValue;
-      setElementHtml("potionDropChance", this.zv + "%");
+    if (this.cachedPotionDropChance !== globalUpgradeDefinitions.potionDropChance.currentValue) {
+      this.cachedPotionDropChance = globalUpgradeDefinitions.potionDropChance.currentValue;
+      setElementHtml("potionDropChance", this.cachedPotionDropChance + "%");
     }
-    if (this.fv !== globalUpgradeDefinitions.higherLevelItemChance.currentValue) {
-      this.fv = globalUpgradeDefinitions.higherLevelItemChance.currentValue;
-      setElementHtml("itemLevelBonus", this.fv + "%");
+    if (this.cachedHigherLevelItemChance !== globalUpgradeDefinitions.higherLevelItemChance.currentValue) {
+      this.cachedHigherLevelItemChance = globalUpgradeDefinitions.higherLevelItemChance.currentValue;
+      setElementHtml("itemLevelBonus", this.cachedHigherLevelItemChance + "%");
     }
-    if (this.Du !== globalUpgradeDefinitions.itemQualityChance.currentValue) {
-      this.Du = globalUpgradeDefinitions.itemQualityChance.currentValue;
-      setElementHtml("itemRarityChance", this.Du + "%");
+    if (this.cachedItemQualityChance !== globalUpgradeDefinitions.itemQualityChance.currentValue) {
+      this.cachedItemQualityChance = globalUpgradeDefinitions.itemQualityChance.currentValue;
+      setElementHtml("itemRarityChance", this.cachedItemQualityChance + "%");
     }
-    if (this.Vv !== globalUpgradeDefinitions.treasureChance.currentValue) {
-      this.Vv = globalUpgradeDefinitions.treasureChance.currentValue;
-      setElementHtml("treasureChestChance", this.Vv + "%");
+    if (this.cachedTreasureChance !== globalUpgradeDefinitions.treasureChance.currentValue) {
+      this.cachedTreasureChance = globalUpgradeDefinitions.treasureChance.currentValue;
+      setElementHtml("treasureChestChance", this.cachedTreasureChance + "%");
     }
-    if (this.lv !== globalUpgradeDefinitions.maxMonsters.currentValue) {
-      this.lv = globalUpgradeDefinitions.maxMonsters.currentValue;
-      setElementHtml("maxMonstersPerRoom", this.lv + "");
+    if (this.cachedMaxMonsters !== globalUpgradeDefinitions.maxMonsters.currentValue) {
+      this.cachedMaxMonsters = globalUpgradeDefinitions.maxMonsters.currentValue;
+      setElementHtml("maxMonstersPerRoom", this.cachedMaxMonsters + "");
     }
-    if (this.pv !== globalUpgradeDefinitions.minMonsters.currentValue) {
-      this.pv = globalUpgradeDefinitions.minMonsters.currentValue;
-      setElementHtml("minMonstersPerRoom", this.pv + "");
+    if (this.cachedMinMonsters !== globalUpgradeDefinitions.minMonsters.currentValue) {
+      this.cachedMinMonsters = globalUpgradeDefinitions.minMonsters.currentValue;
+      setElementHtml("minMonstersPerRoom", this.cachedMinMonsters + "");
     }
   };
   MonsterRowView.prototype.gq = function (a) {

@@ -1,0 +1,30 @@
+{
+  "_comment": "monsters.js 批 1：MonsterLevelView 的 11 个「全局升级值显示缓存」（update 中与 globalUpgradeDefinitions.X.currentValue 比较后写入对应 DOM id）、MonsterUpgradeSummaryView 的击杀数缓存与面板 id，以及 5 个数据键（balance.js 定义、monsters.js/characters.js 消费）恢复为与缓存同源的语义名。",
+  "files": [
+    "src/engine/modules/views/monsters.js",
+    "src/engine/modules/content/balance.js",
+    "src/engine/modules/simulation/characters.js"
+  ],
+  "map": {
+    "Wu": "cachedGoldDropChance",
+    "jv": "cachedMaxGoldPerDrop",
+    "ov": "cachedMinGoldPerDrop",
+    "ev": "cachedItemDropChance",
+    "Fv": "cachedScrollDropChance",
+    "zv": "cachedPotionDropChance",
+    "fv": "cachedHigherLevelItemChance",
+    "Du": "cachedItemQualityChance",
+    "Vv": "cachedTreasureChance",
+    "lv": "cachedMaxMonsters",
+    "pv": "cachedMinMonsters",
+
+    "Hw": "killCountPanelId",
+    "rm": "cachedKills",
+
+    "Lr": "goldDropChance",
+    "ys": "maxGoldPerDrop",
+    "As": "minGoldPerDrop",
+    "$s": "scrollDropChance",
+    "Ns": "potionDropChance"
+  }
+}

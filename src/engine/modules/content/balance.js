@@ -6,8 +6,8 @@ import { AutoPurchaseDungeonUpgrade, ClaimAchievementUpgrade, CollectFarmUpgrade
 import { scrollDefinitions } from "../combat/scrolls.js";
 export var experienceCurve, healthCurve, spiritCurve, damageCurve, armorCurve, monsterDamageCurve, monsterArmorCurve, monsterAttackCurve, monsterDefenceCurve, monsterHealthCurve, monsterExperienceCurve, itemStatCurve, itemGoldCurve, dungeonPriceCurve, monsterUnlockPriceCurve, scrollPriceCurve, globalUpgradePriceCurve, MONSTER_RANK_KILL_STEP, DUNGEON_WALK_SPEED, WORLD_WALK_SPEED, DEFAULT_MULTI_ATTACK_CHANCE, DEFAULT_CHAIN_CHANCE, DEFAULT_MINION_LIMIT, BASE_INVENTORY_CAPACITY, RETREAT_HEALTH_RATIO, RETREAT_SPIRIT_RATIO, MAX_PRESTIGE_INVENTORY_BONUS, walkingSpeedBonus, dungeonCostBonus, itemCostBonus, scrollCapacityBonus, potionCapacityBonus, partyCapacityBonus, potionDurationBonus, potionPowerBonus, offlineTimeBonus, equipmentQualityBonus, attackCooldownBonus, healthRegenerationBonus, spiritRegenerationBonus, BASE_POTION_CAPACITY, doubleKillsModifier, doubleGoldModifier, doubleExperienceModifier, walkingSpeedModifier, fasterFarmingModifier, fasterInfestationModifier, infiniteScrollsModifier, extraMonstersModifier, guaranteedItemDropsModifier, potionDurationModifier, freeSpellsModifier, farmKillsModifier, docileMonstersModifier, itemGoldModifier, frailMonstersModifier, autoScrollsModifier, doubleGoldDropsModifier, doubleItemDropsModifier, treasureRoomModifier, bossEncounterModifier, CHEST_ITEM_QUALITY_BONUS, CHEST_ITEM_LEVEL_BONUS, MIN_ROOM_DIMENSION, MAX_ROOM_SIZE, ROOM_SPACING, globalUpgradeDefinitions, VISIBLE_MONSTER_LEVELS, BASE_HIGHER_ITEM_CHANCE, LOWER_ITEM_LEVEL_CHANCE, itemRarityProbabilities, itemRarityTiers, EFFECT_FRAME_DURATION_MS, PROJECTILE_FRAME_DURATION_MS, globalUpgradesById, globalUpgradesToIndex, upgradeIndexKey, upgradeIndexEntry, characterLevelUpgrades, equipmentUpgrades, globalUpgrades, scrollUpgradeIndex, scrollUpgrades, monsterLevelUpgrades, castleUpgrades, itemPurchaseUpgrades, achievementClaimUpgrades, farmAndDungeonUpgrades, monsterUpgradeCollection, characterUpgradeCollection, quickUpgradeCollection, upgradeCollections;
 export function rollGoldDrop() {
-  var a = globalUpgradeDefinitions.As.currentValue,
-    b = Math.max(0, globalUpgradeDefinitions.ys.currentValue - a),
+  var a = globalUpgradeDefinitions.minGoldPerDrop.currentValue,
+    b = Math.max(0, globalUpgradeDefinitions.maxGoldPerDrop.currentValue - a),
     c = doubleGoldModifier.currentValue;
   return (a + randomInt(b)) * c;
 }
@@ -361,7 +361,7 @@ export function initializeContentBalance() {
       baseCost: 4,
       costPerLevel: 11
     },
-    ys: {
+    maxGoldPerDrop: {
       settingId: "maxGoldPerDrop",
       title: "最大黄金掉落",
       description: "最大掉落黄金数量+25",
@@ -374,7 +374,7 @@ export function initializeContentBalance() {
       baseCost: 6,
       costPerLevel: 11
     },
-    As: {
+    minGoldPerDrop: {
       settingId: "minGoldPerDrop",
       title: "最小黄金掉落",
       description: "最小掉落黄金数量+10",
@@ -387,7 +387,7 @@ export function initializeContentBalance() {
       baseCost: 10,
       costPerLevel: 11
     },
-    Lr: {
+    goldDropChance: {
       settingId: "goldDropChance",
       title: "更多黄金掉落",
       description: "每次杀怪黄金掉落几率+5%",
@@ -400,7 +400,7 @@ export function initializeContentBalance() {
       baseCost: 5,
       costPerLevel: 11
     },
-    $s: {
+    scrollDropChance: {
       settingId: "scrollDropChance",
       title: "更多卷轴掉落",
       description: "每次杀怪卷轴掉落几率+2%",
@@ -413,7 +413,7 @@ export function initializeContentBalance() {
       baseCost: 7,
       costPerLevel: 11
     },
-    Ns: {
+    potionDropChance: {
       settingId: "potionDropChance",
       title: "更多药剂掉落",
       description: "每次杀怪药剂掉落几率+0.5%",
@@ -485,7 +485,7 @@ export function initializeContentBalance() {
   }
   characterLevelUpgrades = [new LevelUpUpgrade(0), new LevelUpUpgrade(1), new LevelUpUpgrade(2), new LevelUpUpgrade(3), new LevelUpUpgrade(4)];
   equipmentUpgrades = [new EquipBestItemUpgrade(5), new EquipItemUpgrade(0, 5), new EquipItemUpgrade(1, 5), new EquipItemUpgrade(2, 5), new EquipItemUpgrade(3, 5), new EquipItemUpgrade(4, 5)];
-  globalUpgrades = [new GlobalUpgrade(globalUpgradeDefinitions.Lr), new GlobalUpgrade(globalUpgradeDefinitions.ys), new GlobalUpgrade(globalUpgradeDefinitions.As), new GlobalUpgrade(globalUpgradeDefinitions.itemDropChance), new GlobalUpgrade(globalUpgradeDefinitions.$s), new GlobalUpgrade(globalUpgradeDefinitions.Ns), new GlobalUpgrade(globalUpgradeDefinitions.itemQualityChance), new GlobalUpgrade(globalUpgradeDefinitions.maxMonsters), new GlobalUpgrade(globalUpgradeDefinitions.minMonsters), new GlobalUpgrade(globalUpgradeDefinitions.higherLevelItemChance), new GlobalUpgrade(globalUpgradeDefinitions.treasureChance)];
+  globalUpgrades = [new GlobalUpgrade(globalUpgradeDefinitions.goldDropChance), new GlobalUpgrade(globalUpgradeDefinitions.maxGoldPerDrop), new GlobalUpgrade(globalUpgradeDefinitions.minGoldPerDrop), new GlobalUpgrade(globalUpgradeDefinitions.itemDropChance), new GlobalUpgrade(globalUpgradeDefinitions.scrollDropChance), new GlobalUpgrade(globalUpgradeDefinitions.potionDropChance), new GlobalUpgrade(globalUpgradeDefinitions.itemQualityChance), new GlobalUpgrade(globalUpgradeDefinitions.maxMonsters), new GlobalUpgrade(globalUpgradeDefinitions.minMonsters), new GlobalUpgrade(globalUpgradeDefinitions.higherLevelItemChance), new GlobalUpgrade(globalUpgradeDefinitions.treasureChance)];
   scrollUpgrades = [];
   for (scrollUpgradeIndex = 0; scrollUpgradeIndex < scrollDefinitions.length; scrollUpgradeIndex++) {
     scrollUpgrades.push(new ScrollUpgrade(scrollDefinitions[scrollUpgradeIndex].scrollId));

@@ -295,7 +295,7 @@ export function initializeSimulationCharacters() {
         h = roomRightPixels(f) - game.tileSize,
         l = roomTopPixels(f) + game.tileSize,
         n = roomBottomPixels(f) - game.tileSize;
-      if (randomInt(100) <= globalUpgradeDefinitions.Lr.currentValue) {
+      if (randomInt(100) <= globalUpgradeDefinitions.goldDropChance.currentValue) {
         var goldAmount = rollGoldDrop();
         if (0 < goldAmount) {
           var s = new GoldDrop(goldAmount, updateCharacterFrames(c.getLevelPositionX(), g, h), updateCharacterFrames(c.getLevelPositionY(), l, n), f);
@@ -306,13 +306,13 @@ export function initializeSimulationCharacters() {
           }
         }
       }
-      if (randomInt(100) <= globalUpgradeDefinitions.$s.currentValue) {
+      if (randomInt(100) <= globalUpgradeDefinitions.scrollDropChance.currentValue) {
         const scrolls = game.scrolls.unlockedScrolls;
         const scroll = scrolls[randomInt(scrolls.length)];
         const scrollDrop = new ScrollDrop(scroll, updateCharacterFrames(c.getLevelPositionX(), g, h), updateCharacterFrames(c.getLevelPositionY(), l, n), f);
         game.scrollDrops.drops.push(scrollDrop);
       }
-      if (100 * Math.random() <= globalUpgradeDefinitions.Ns.currentValue) {
+      if (100 * Math.random() <= globalUpgradeDefinitions.potionDropChance.currentValue) {
         const potion = new Potion(potionDefinitions[randomInt(potionDefinitions.length)]);
         const potionDrop = new PotionDrop(potion, updateCharacterFrames(c.getLevelPositionX(), g, h), updateCharacterFrames(c.getLevelPositionY(), l, n), f);
         game.potionDrops.drops.push(potionDrop);
