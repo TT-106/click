@@ -8,24 +8,24 @@ import { castleTheme, caveTheme, chamberTheme, dungeonTheme, iceDungeonTheme, ir
 export var WORLD_BLOCK_COLUMNS, WORLD_BLOCK_ROWS, WORLD_ORIGIN_COLUMN, WORLD_ORIGIN_ROW;
 export function DungeonNameGenerator(a) {
   this.seededRandom = a;
-  this.yy = "可恶的 遗弃的 讨厌的 诅咒的 有害的 血腥的 痛苦的 诅咒的 毁坏的 矛盾的 爬行的 该死的 破旧的 厌恶的 黑暗的 昏暗的 遗弃的 发狂的 死亡的 深渊的 积灰的 不安的 荒凉的 潮湿的 粗短的 恶心的 不安的 害怕的 犯规的 禁止的 不好的 遗忘的 肮脏的 可怕的 灰暗的 地狱的 可恨的 可怕的 潮湿的 感染的 感染的 地狱的 有害的 诽谤的 可憎的 厌恶的 失去的 发霉的 神秘的 无情的 雾霾的 下流的 不好的 崩坏的 恶心的 调皮的 正常的 恶臭的 讨厌的 可憎的 厌恶的 反对的 有毒的 苍白的 污染的 腐坏的 毁灭的 糟糕的 腐臭的 驱蚊的 敌对的 发散的 恶心的 恶臭的 腐臭的 破碎的 恶心的 笼罩的 悲伤的 秘密的 阴影的 折磨的 折磨的 邪恶的 未知的 无名的 邪恶的 低语的 邪恶的".split(" ");
-  this.FA = "地洞 地窖 洞穴 窑洞 空洞 兽穴 深洞 迷宫 陵墓 墓穴 迷宫 沼泽 矿坑 通道 矿井 地道 底层 地穴 水坑 隧道".split(" ");
-  this.cz = "地下墓穴 地窖 膛室 窄小通道 停尸房 土窖 坟墓 石窟 地狱 阴间 陵墓 太平间 墓地 藏骨堂 神圣庇护所 埋葬所 坟墓 拱顶".split(" ");
-  this.xr = "庇护所;屠宰场;地牢;暗黑;次元;领域;熔炉;地狱;地下密牢;深渊;监狱;屠宰场;刑讯室;拱顶".split(";");
-  this.zC = "钟楼 城堡 监视哨 尖塔 巨石 方尖碑 柱子 避难所 矮塔 高塔 炮塔 堡垒".split(" ");
-  this.TB = "修道院 皇宫 大教堂 礼拜堂 女修道院 高坛 内阁 大使馆 讲台 万神殿 小修道院 圣物箱 圣堂 密室 圣殿 圣庙 神殿 寺庙".split(" ");
-  this.cB = "石冢 纪念碑 大厦 巨石 古迹 纪念馆 纪念堂 土堆 方尖碑 金字塔 宫殿 悬崖 古迹 神殿 献祭场 坟墓 遗迹".split(" ");
-  this.My = "城堡 堡垒 城塞 城堡 酒庄 房产 堡垒 要塞 防务 边塞 军防 礼堂 防务 舱室 保管室 宅邸 庄园 宫殿 大厦 大本营 别墅".split(" ");
-  this.Xz = "北极的;敏锐的;痛苦的;寒冷的;冷冻的;严寒的;冰冻的;霜冻的;冻结的;寒冬的;冰寒的;冰川的;冰镇的;冰冷的;冻僵的;霜降的;雪白的;刺骨的;麻木的;颤抖的;下雪的".split(";");
+  this.dungeonAdjectives = "可恶的 遗弃的 讨厌的 诅咒的 有害的 血腥的 痛苦的 诅咒的 毁坏的 矛盾的 爬行的 该死的 破旧的 厌恶的 黑暗的 昏暗的 遗弃的 发狂的 死亡的 深渊的 积灰的 不安的 荒凉的 潮湿的 粗短的 恶心的 不安的 害怕的 犯规的 禁止的 不好的 遗忘的 肮脏的 可怕的 灰暗的 地狱的 可恨的 可怕的 潮湿的 感染的 感染的 地狱的 有害的 诽谤的 可憎的 厌恶的 失去的 发霉的 神秘的 无情的 雾霾的 下流的 不好的 崩坏的 恶心的 调皮的 正常的 恶臭的 讨厌的 可憎的 厌恶的 反对的 有毒的 苍白的 污染的 腐坏的 毁灭的 糟糕的 腐臭的 驱蚊的 敌对的 发散的 恶心的 恶臭的 腐臭的 破碎的 恶心的 笼罩的 悲伤的 秘密的 阴影的 折磨的 折磨的 邪恶的 未知的 无名的 邪恶的 低语的 邪恶的".split(" ");
+  this.dungeonNouns = "地洞 地窖 洞穴 窑洞 空洞 兽穴 深洞 迷宫 陵墓 墓穴 迷宫 沼泽 矿坑 通道 矿井 地道 底层 地穴 水坑 隧道".split(" ");
+  this.cryptNouns = "地下墓穴 地窖 膛室 窄小通道 停尸房 土窖 坟墓 石窟 地狱 阴间 陵墓 太平间 墓地 藏骨堂 神圣庇护所 埋葬所 坟墓 拱顶".split(" ");
+  this.lairNouns = "庇护所;屠宰场;地牢;暗黑;次元;领域;熔炉;地狱;地下密牢;深渊;监狱;屠宰场;刑讯室;拱顶".split(";");
+  this.towerNouns = "钟楼 城堡 监视哨 尖塔 巨石 方尖碑 柱子 避难所 矮塔 高塔 炮塔 堡垒".split(" ");
+  this.templeNouns = "修道院 皇宫 大教堂 礼拜堂 女修道院 高坛 内阁 大使馆 讲台 万神殿 小修道院 圣物箱 圣堂 密室 圣殿 圣庙 神殿 寺庙".split(" ");
+  this.monumentNouns = "石冢 纪念碑 大厦 巨石 古迹 纪念馆 纪念堂 土堆 方尖碑 金字塔 宫殿 悬崖 古迹 神殿 献祭场 坟墓 遗迹".split(" ");
+  this.castleNouns = "城堡 堡垒 城塞 城堡 酒庄 房产 堡垒 要塞 防务 边塞 军防 礼堂 防务 舱室 保管室 宅邸 庄园 宫殿 大厦 大本营 别墅".split(" ");
+  this.iceAdjectives = "北极的;敏锐的;痛苦的;寒冷的;冷冻的;严寒的;冰冻的;霜冻的;冻结的;寒冬的;冰寒的;冰川的;冰镇的;冰冷的;冻僵的;霜降的;雪白的;刺骨的;麻木的;颤抖的;下雪的".split(";");
 }
 export function generateDungeonName(a, b) {
   var c;
   a: switch (b) {
     case 3:
-      c = a.Xz[randomIntFrom(a.seededRandom, a.Xz.length)];
+      c = a.iceAdjectives[randomIntFrom(a.seededRandom, a.iceAdjectives.length)];
       break a;
     default:
-      c = a.yy[randomIntFrom(a.seededRandom, a.yy.length)];
+      c = a.dungeonAdjectives[randomIntFrom(a.seededRandom, a.dungeonAdjectives.length)];
   }
   return "" + c + "" + getDungeonNoun(a, b);
 }
@@ -35,23 +35,23 @@ export function getDungeonNoun(a, b) {
     case 2:
     case 3:
     case 1:
-      return a.FA[randomIntFrom(a.seededRandom, a.FA.length)];
+      return a.dungeonNouns[randomIntFrom(a.seededRandom, a.dungeonNouns.length)];
     case 4:
     case 5:
-      return a.zC[randomIntFrom(a.seededRandom, a.zC.length)];
+      return a.towerNouns[randomIntFrom(a.seededRandom, a.towerNouns.length)];
     case 6:
-      return a.xr[randomIntFrom(a.seededRandom, a.xr.length)];
+      return a.lairNouns[randomIntFrom(a.seededRandom, a.lairNouns.length)];
     case 7:
     case 8:
-      return a.cB[randomIntFrom(a.seededRandom, a.cB.length)];
+      return a.monumentNouns[randomIntFrom(a.seededRandom, a.monumentNouns.length)];
     case 9:
-      return a.cz[randomIntFrom(a.seededRandom, a.cz.length)];
+      return a.cryptNouns[randomIntFrom(a.seededRandom, a.cryptNouns.length)];
     case 10:
-      return a.TB[randomIntFrom(a.seededRandom, a.TB.length)];
+      return a.templeNouns[randomIntFrom(a.seededRandom, a.templeNouns.length)];
     case 11:
-      return a.My[randomIntFrom(a.seededRandom, a.My.length)];
+      return a.castleNouns[randomIntFrom(a.seededRandom, a.castleNouns.length)];
     default:
-      return a.xr[randomIntFrom(a.seededRandom, a.xr.length)];
+      return a.lairNouns[randomIntFrom(a.seededRandom, a.lairNouns.length)];
   }
 }
 export function WorldRegion(a, b, c) {
@@ -63,8 +63,8 @@ export function WorldRegion(a, b, c) {
 export function Castle(a, b, c, d, f, g) {
   this.castleId = a;
   this.castleName = b;
-  this.ZC = c;
-  this.$C = d;
+  this.regionColumn = c;
+  this.regionRow = d;
   this.worldPixelX = f;
   this.worldPixelY = g;
   this.dungeonsConquered = this.conquered = false;
@@ -103,21 +103,21 @@ export function RegionLayout() {
   this.BA = game.regions.regionGridOriginColumn;
   this.EA = game.regions.regionGridOriginRow;
   var a = game.regions;
-  this.$D = a.regionGridOriginColumn + a.regionGridSpan;
+  this.maxRegionColumn = a.regionGridOriginColumn + a.regionGridSpan;
   a = game.regions;
-  this.bE = a.regionGridOriginRow + a.regionGridSpan;
+  this.maxRegionRow = a.regionGridOriginRow + a.regionGridSpan;
 }
 export function getWestRegion(a, b, c, d) {
   return b - 1 >= a.BA && (a = b - 1 + "_" + c, !d[a]) ? game.regions.byKey[a] : null;
 }
 export function getEastRegion(a, b, c, d) {
-  return b + 1 < a.$D && (a = b + 1 + "_" + c, !d[a]) ? game.regions.byKey[a] : null;
+  return b + 1 < a.maxRegionColumn && (a = b + 1 + "_" + c, !d[a]) ? game.regions.byKey[a] : null;
 }
 export function getNorthRegion(a, b, c, d) {
   return c - 1 >= a.EA && (a = b + "_" + (c - 1), !d[a]) ? game.regions.byKey[a] : null;
 }
 export function getSouthRegion(a, b, c, d) {
-  return c + 1 < a.bE && (a = b + "_" + (c + 1), !d[a]) ? game.regions.byKey[a] : null;
+  return c + 1 < a.maxRegionRow && (a = b + "_" + (c + 1), !d[a]) ? game.regions.byKey[a] : null;
 }
 export function chooseAdjacentRegion(a, b, c, d) {
   var f = b.regionColumn;
@@ -292,6 +292,6 @@ export function initializeWorldRegions() {
     refreshCastleConquest(this);
   };
   Castle.prototype.levelSeed = function () {
-    return hashCoordinates(this.ZC, this.$C, 1);
+    return hashCoordinates(this.regionColumn, this.regionRow, 1);
   };
 }

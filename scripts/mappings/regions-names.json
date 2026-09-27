@@ -1,0 +1,15 @@
+[
+  { "old": "yy", "new": "dungeonAdjectives", "files": ["src/engine/modules/world/regions.js"], "expect": "auto" },
+  { "old": "FA", "new": "dungeonNouns", "files": ["src/engine/modules/world/regions.js"], "expect": "auto" },
+  { "old": "cz", "new": "cryptNouns", "files": ["src/engine/modules/world/regions.js"], "expect": "auto" },
+  { "old": "xr", "new": "lairNouns", "files": ["src/engine/modules/world/regions.js"], "expect": "auto" },
+  { "old": "zC", "new": "towerNouns", "files": ["src/engine/modules/world/regions.js"], "expect": "auto" },
+  { "old": "TB", "new": "templeNouns", "files": ["src/engine/modules/world/regions.js"], "expect": "auto" },
+  { "old": "cB", "new": "monumentNouns", "files": ["src/engine/modules/world/regions.js"], "expect": "auto" },
+  { "old": "My", "new": "castleNouns", "files": ["src/engine/modules/world/regions.js"], "expect": "auto" },
+  { "old": "Xz", "new": "iceAdjectives", "files": ["src/engine/modules/world/regions.js"], "expect": "auto" },
+  { "old": "ZC", "new": "regionColumn", "files": ["src/engine/modules/world/regions.js"], "expect": "auto" },
+  { "old": "$C", "new": "regionRow", "files": ["src/engine/modules/world/regions.js"], "expect": "auto" },
+  { "old": "$D", "new": "maxRegionColumn", "files": ["src/engine/modules/world/regions.js"], "expect": "auto" },
+  { "old": "bE", "new": "maxRegionRow", "files": ["src/engine/modules/world/regions.js"], "expect": "auto" }
+]
