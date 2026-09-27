@@ -14,7 +14,7 @@ import { monsterSpriteDefinitions } from "../core/bootstrap-data.js";
 export function GameOverView(a) {
   this.elementId = "gameOverTabContent";
   this.tabState = a;
-  this.ql = false;
+  this.gameOverMounted = false;
 }
 export function mountGameOver(a) {
   clearElementById(a.elementId);
@@ -111,11 +111,11 @@ export function appendRandomMonsterPortrait(a) {
 export function OfflineProgressView(a) {
   this.elementId = "offlineTabContent";
   this.tabState = a;
-  this.$l = this.progressFillElement = null;
-  this.gu = 500;
+  this.cancelButton = this.progressFillElement = null;
+  this.progressBarWidth = 500;
   this.cachedFillWidth = -1;
-  this.Mt = this.stunCountCell = this.$t = this.vm = this.Vm = this.Um = this.Tm = this.Qw = null;
-  this.yu = this.Kk = this.Bu = this.Ck = this.Hk = this.Fk = this.Ek = this.vv = this.wy = this.JB = this.Iy = this.Fz = this.sA = this.nA = this.mA = this.HA = -1;
+  this.achievementsDeltaCell = this.stunnedCountDeltaCell = this.attackableCastlesDeltaCell = this.dungeonsClearedDeltaCell = this.levelsClearedDeltaCell = this.itemsSoldDeltaCell = this.itemsFoundDeltaCell = this.directKillsDeltaCell = null;
+  this.cachedAchievementsDelta = this.cachedStunnedCountDelta = this.cachedAttackableCastlesDelta = this.cachedDungeonsClearedDelta = this.cachedLevelsClearedDelta = this.cachedItemsSoldDelta = this.cachedItemsFoundDelta = this.cachedDirectKillsDelta = this.achievementsBaseline = this.stunnedCountBaseline = this.attackableCastlesBaseline = this.dungeonsClearedBaseline = this.levelsClearedBaseline = this.itemsSoldBaseline = this.itemsFoundBaseline = this.directKillsBaseline = -1;
 }
 export function mountOfflineProgress(a) {
   var b = getElement(a.elementId);
@@ -131,9 +131,9 @@ export function mountOfflineProgress(a) {
   c = createElement("div", b, null, "offlineProgressStatsContainer");
   a.fr(c);
   b = createElement("div", b, null, "offlineCancelButtonContainer");
-  a.$l = createElement("div", b, null, "offlineCancelButton");
-  a.$l.innerHTML = "跳过这个.我只是想杀杀怪物.";
-  a.$l.onclick = function () {
+  a.cancelButton = createElement("div", b, null, "offlineCancelButton");
+  a.cancelButton.innerHTML = "跳过这个.我只是想杀杀怪物.";
+  a.cancelButton.onclick = function () {
     game.finishOfflineProgress();
   };
 }
@@ -155,12 +155,12 @@ export function initializeViewsResults() {
     this.tabState.enabled = false;
     this.tabState.enabled = false;
     clearElementById(this.elementId);
-    this.ql = false;
+    this.gameOverMounted = false;
   };
   GameOverView.prototype.update = function () {
-    if (!this.ql) {
+    if (!this.gameOverMounted) {
       mountGameOver(this);
-      this.ql = true;
+      this.gameOverMounted = true;
     }
   };
   OfflineProgressView.prototype = new TabView();
@@ -174,91 +174,91 @@ export function initializeViewsResults() {
     a.selected = true;
     this.cachedFillWidth = -1;
     a = game.state.runStatistics;
-    this.HA = a.directKills;
-    this.mA = a.itemsFound;
-    this.nA = a.itemsSold;
-    this.sA = a.levelsCleared;
-    this.Fz = a.dungeonsCleared;
-    this.Iy = game.castles.attackableCastles.length;
-    this.JB = a.characterStunnedCount;
-    this.wy = game.state.achievements.claimQueue.length;
-    this.yu = this.Kk = this.Bu = this.Ck = this.Hk = this.Fk = this.Ek = this.vv = -1;
+    this.directKillsBaseline = a.directKills;
+    this.itemsFoundBaseline = a.itemsFound;
+    this.itemsSoldBaseline = a.itemsSold;
+    this.levelsClearedBaseline = a.levelsCleared;
+    this.dungeonsClearedBaseline = a.dungeonsCleared;
+    this.attackableCastlesBaseline = game.castles.attackableCastles.length;
+    this.stunnedCountBaseline = a.characterStunnedCount;
+    this.achievementsBaseline = game.state.achievements.claimQueue.length;
+    this.cachedAchievementsDelta = this.cachedStunnedCountDelta = this.cachedAttackableCastlesDelta = this.cachedDungeonsClearedDelta = this.cachedLevelsClearedDelta = this.cachedItemsSoldDelta = this.cachedItemsFoundDelta = this.cachedDirectKillsDelta = -1;
   };
   OfflineProgressView.prototype.onOfflineFinish = function () {
     var a = this.tabState;
     a.enabled = false;
     a.selected = false;
-    if (this.$l) {
+    if (this.cancelButton) {
       clearElementById(this.elementId);
-      this.Mt = this.stunCountCell = this.$t = this.vm = this.Vm = this.Um = this.Tm = this.Qw = this.progressFillElement = this.$l = null;
+      this.achievementsDeltaCell = this.stunnedCountDeltaCell = this.attackableCastlesDeltaCell = this.dungeonsClearedDeltaCell = this.levelsClearedDeltaCell = this.itemsSoldDeltaCell = this.itemsFoundDeltaCell = this.directKillsDeltaCell = this.progressFillElement = this.cancelButton = null;
     }
   };
   OfflineProgressView.prototype.reset = function () {
     this.tabState.enabled = false;
   };
   OfflineProgressView.prototype.update = function () {
-    if (!this.$l) {
+    if (!this.cancelButton) {
       mountOfflineProgress(this);
     }
     var a = Math.min(1, game.offlineProcessed / game.offlineDuration),
-      a = this.gu * a;
+      a = this.progressBarWidth * a;
     if (this.cachedFillWidth != a) {
       this.cachedFillWidth = a;
       this.progressFillElement.style.width = a + "px";
     }
     var b = game.state.runStatistics,
-      a = b.directKills - this.HA,
-      c = b.itemsFound - this.mA,
-      d = b.itemsSold - this.nA,
-      f = b.levelsCleared - this.sA,
-      g = b.dungeonsCleared - this.Fz,
-      h = game.castles.attackableCastles.length - this.Iy,
-      b = /** @type {any} */ (b.characterStunnedCount - this.JB),
-      l = game.state.achievements.claimQueue.length - this.wy;
-    if (this.vv != a) {
-      this.vv = a;
-      this.Qw.innerHTML = formatAmount(a);
+      a = b.directKills - this.directKillsBaseline,
+      c = b.itemsFound - this.itemsFoundBaseline,
+      d = b.itemsSold - this.itemsSoldBaseline,
+      f = b.levelsCleared - this.levelsClearedBaseline,
+      g = b.dungeonsCleared - this.dungeonsClearedBaseline,
+      h = game.castles.attackableCastles.length - this.attackableCastlesBaseline,
+      b = /** @type {any} */ (b.characterStunnedCount - this.stunnedCountBaseline),
+      l = game.state.achievements.claimQueue.length - this.achievementsBaseline;
+    if (this.cachedDirectKillsDelta != a) {
+      this.cachedDirectKillsDelta = a;
+      this.directKillsDeltaCell.innerHTML = formatAmount(a);
     }
-    if (this.Ek != c) {
-      this.Ek = c;
-      this.Tm.innerHTML = formatAmount(c);
+    if (this.cachedItemsFoundDelta != c) {
+      this.cachedItemsFoundDelta = c;
+      this.itemsFoundDeltaCell.innerHTML = formatAmount(c);
     }
-    if (this.Fk != d) {
-      this.Fk = d;
-      this.Um.innerHTML = formatAmount(d);
+    if (this.cachedItemsSoldDelta != d) {
+      this.cachedItemsSoldDelta = d;
+      this.itemsSoldDeltaCell.innerHTML = formatAmount(d);
     }
-    if (this.Hk != f) {
-      this.Hk = f;
-      this.Vm.innerHTML = formatAmount(f);
+    if (this.cachedLevelsClearedDelta != f) {
+      this.cachedLevelsClearedDelta = f;
+      this.levelsClearedDeltaCell.innerHTML = formatAmount(f);
     }
-    if (this.Ck != g) {
-      this.Ck = g;
-      this.vm.innerHTML = formatAmount(g);
+    if (this.cachedDungeonsClearedDelta != g) {
+      this.cachedDungeonsClearedDelta = g;
+      this.dungeonsClearedDeltaCell.innerHTML = formatAmount(g);
     }
-    if (this.Bu != h) {
-      this.Bu = h;
-      this.$t.innerHTML = formatAmount(h);
+    if (this.cachedAttackableCastlesDelta != h) {
+      this.cachedAttackableCastlesDelta = h;
+      this.attackableCastlesDeltaCell.innerHTML = formatAmount(h);
     }
-    if (this.Kk != b) {
-      this.Kk = b;
-      this.stunCountCell.innerHTML = formatAmount(b);
+    if (this.cachedStunnedCountDelta != b) {
+      this.cachedStunnedCountDelta = b;
+      this.stunnedCountDeltaCell.innerHTML = formatAmount(b);
     }
-    if (this.yu != l) {
-      this.yu = l;
-      this.Mt.innerHTML = formatAmount(l);
+    if (this.cachedAchievementsDelta != l) {
+      this.cachedAchievementsDelta = l;
+      this.achievementsDeltaCell.innerHTML = formatAmount(l);
     }
   };
   OfflineProgressView.prototype.fr = function (a) {
     a = createElement("table", a, null, "centeredElement");
     var b = 0;
-    this.Qw = (/** @type {any} */ (this)).getOfflineProgressCell(a, "杀死怪物", b++);
-    this.Tm = (/** @type {any} */ (this)).getOfflineProgressCell(a, "找到道具", b++);
-    this.Um = (/** @type {any} */ (this)).getOfflineProgressCell(a, "卖出道具", b++);
-    this.Vm = (/** @type {any} */ (this)).getOfflineProgressCell(a, "清理关卡", b++);
-    this.vm = (/** @type {any} */ (this)).getOfflineProgressCell(a, "清理地牢", b++);
-    this.$t = (/** @type {any} */ (this)).getOfflineProgressCell(a, "攻击城堡", b++);
-    this.stunCountCell = (/** @type {any} */ (this)).getOfflineProgressCell(a, "昏迷次数", b++);
-    this.Mt = (/** @type {any} */ (this)).getOfflineProgressCell(a, "成就", b);
+    this.directKillsDeltaCell = (/** @type {any} */ (this)).getOfflineProgressCell(a, "杀死怪物", b++);
+    this.itemsFoundDeltaCell = (/** @type {any} */ (this)).getOfflineProgressCell(a, "找到道具", b++);
+    this.itemsSoldDeltaCell = (/** @type {any} */ (this)).getOfflineProgressCell(a, "卖出道具", b++);
+    this.levelsClearedDeltaCell = (/** @type {any} */ (this)).getOfflineProgressCell(a, "清理关卡", b++);
+    this.dungeonsClearedDeltaCell = (/** @type {any} */ (this)).getOfflineProgressCell(a, "清理地牢", b++);
+    this.attackableCastlesDeltaCell = (/** @type {any} */ (this)).getOfflineProgressCell(a, "攻击城堡", b++);
+    this.stunnedCountDeltaCell = (/** @type {any} */ (this)).getOfflineProgressCell(a, "昏迷次数", b++);
+    this.achievementsDeltaCell = (/** @type {any} */ (this)).getOfflineProgressCell(a, "成就", b);
   };
   OfflineProgressView.prototype.getOfflineProgressCell = function (a, b, c) {
     a = a.insertRow(c);

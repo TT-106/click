@@ -1,0 +1,33 @@
+{
+  "_comment": "OfflineProgressView（离线进度面板）与 GameOverView 的字段语义恢复。来源：update() 的增量计算（runStatistics 当前值 - onOfflineStart 时的基线快照）+ fr() 的行标签 + 缓存/单元格初始化链。",
+  "files": ["src/engine/modules/views/results.js"],
+  "map": {
+    "ql": "gameOverMounted",
+    "$l": "cancelButton",
+    "gu": "progressBarWidth",
+    "vv": "cachedDirectKillsDelta",
+    "Qw": "directKillsDeltaCell",
+    "Ek": "cachedItemsFoundDelta",
+    "Tm": "itemsFoundDeltaCell",
+    "Fk": "cachedItemsSoldDelta",
+    "Um": "itemsSoldDeltaCell",
+    "Hk": "cachedLevelsClearedDelta",
+    "Vm": "levelsClearedDeltaCell",
+    "Ck": "cachedDungeonsClearedDelta",
+    "vm": "dungeonsClearedDeltaCell",
+    "Bu": "cachedAttackableCastlesDelta",
+    "$t": "attackableCastlesDeltaCell",
+    "Kk": "cachedStunnedCountDelta",
+    "stunCountCell": "stunnedCountDeltaCell",
+    "yu": "cachedAchievementsDelta",
+    "Mt": "achievementsDeltaCell",
+    "HA": "directKillsBaseline",
+    "mA": "itemsFoundBaseline",
+    "nA": "itemsSoldBaseline",
+    "sA": "levelsClearedBaseline",
+    "Fz": "dungeonsClearedBaseline",
+    "Iy": "attackableCastlesBaseline",
+    "JB": "stunnedCountBaseline",
+    "wy": "achievementsBaseline"
+  }
+}
