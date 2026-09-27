@@ -291,7 +291,7 @@ export function initializeCombatEncounters() {
       this.allies.push(a[b]);
     }
   };
-  AllyRegistry.prototype.Tt = function (a) {
+  AllyRegistry.prototype.addAlly = function (a) {
     this.allies.push(a);
   };
   MonsterType.prototype.getName = function () {

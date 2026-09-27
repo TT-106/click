@@ -46,7 +46,7 @@ export function restoreItem(a) {
   } else {
     p = null;
   }
-  a = game.itemGenerator.os[a.itemTypeId];
+  a = game.itemGenerator.itemTypesById[a.itemTypeId];
   return a ? new Item(a, b, c, d ? d : "Error", g ? g : 1, f ? f : 0, h ? h : 0, l ? l : 0, n ? n : 1, p) : (console.log("failed to lookup item type"), null);
 }
 export function serializeCharacter(a) {
@@ -141,7 +141,7 @@ export function serializeUpgradeFlags(a) {
     d;
   for (d = 0; d < a.length; d++) {
     c = a[d];
-    b[c.Jr().id] = c.isOwned();
+    b[c.getUpgradeDefinition().id] = c.isOwned();
   }
   return b;
 }
@@ -149,7 +149,7 @@ export function restoreUpgradeFlags(a, b) {
   var c, d, f;
   for (c = 0; c < a.length; c++) {
     f = a[c];
-    d = a[c].Jr();
+    d = a[c].getUpgradeDefinition();
     d = b[d.id];
     f.setPurchased(d);
   }

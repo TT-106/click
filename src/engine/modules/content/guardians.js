@@ -10,7 +10,7 @@ export function initializeContentGuardians() {
   castleGuardianDefinitions = [{
     characterClass: 0,
     className: "Guardian Fighter",
-    Ws: false,
+    unusedClassFlag: false,
     spriteName: "HumanFighter33.PNG",
     defaultName: "Zog",
     descriptionText: "",
@@ -39,12 +39,12 @@ export function initializeContentGuardians() {
     createBehaviors: function () {
       return [new MeleeAttackBehavior(MELEE_ATTACK_RANGE, 90, 2, false), new IdleBehavior(1)];
     },
-    Jm: [],
-    Nr: []
+    innateSpells: [],
+    statBonusList: []
   }, {
     characterClass: 3,
     className: "Guardian Mage",
-    Ws: false,
+    unusedClassFlag: false,
     spriteName: "HumanMage11.PNG",
     defaultName: "Zar",
     descriptionText: "",
@@ -73,15 +73,15 @@ export function initializeContentGuardians() {
     createBehaviors: function () {
       return [new RangedAttackBehavior(RANGED_MIN_DISTANCE, RANGED_ATTACK_RANGE, 95), new HealBehavior(RANGED_ATTACK_RANGE, 90), new SummonBehavior(RANGED_ATTACK_RANGE, 85, 4), new IdleBehavior(1)];
     },
-    Jm: [electricSpellDefinitions.chainLightningSpell, poisonCloudSpell],
-    Nr: [{
+    innateSpells: [electricSpellDefinitions.chainLightningSpell, poisonCloudSpell],
+    statBonusList: [{
       statBonusValue: 1,
       statType: 21
     }]
   }, {
     characterClass: 2,
     className: "Elven Archer",
-    Ws: false,
+    unusedClassFlag: false,
     spriteName: "HB_Elvenarcher1.PNG",
     defaultName: "Seth",
     descriptionText: "",
@@ -108,8 +108,8 @@ export function initializeContentGuardians() {
     createBehaviors: function () {
       return [new RangedAttackBehavior(RANGED_MIN_DISTANCE, RANGED_ATTACK_RANGE, 95), new MeleeAttackBehavior(RANGED_ATTACK_RANGE, 90, MELEE_ACTION_TYPE, false), new IdleBehavior(1)];
     },
-    Jm: [],
-    Nr: [{
+    innateSpells: [],
+    statBonusList: [{
       statBonusValue: 1,
       statType: 23
     }, {
@@ -119,7 +119,7 @@ export function initializeContentGuardians() {
   }, {
     characterClass: 8,
     className: "Ninja Warrior",
-    Ws: false,
+    unusedClassFlag: false,
     spriteName: "Ninja.PNG",
     defaultName: "N",
     descriptionText: "",
@@ -155,8 +155,8 @@ export function initializeContentGuardians() {
     createBehaviors: function () {
       return [new ChainDamageBehavior(RANGED_ATTACK_RANGE, 95), new RangedAttackBehavior(RANGED_MIN_DISTANCE, RANGED_ATTACK_RANGE, 90), new MeleeAttackBehavior(RANGED_ATTACK_RANGE, 85, MELEE_ACTION_TYPE, false), new IdleBehavior(1)];
     },
-    Jm: [ninjaSpellDefinitions.quickStrikeSpell],
-    Nr: [{
+    innateSpells: [ninjaSpellDefinitions.quickStrikeSpell],
+    statBonusList: [{
       statBonusValue: 15,
       statType: 17
     }, {
@@ -291,7 +291,7 @@ export function initializeContentGuardians() {
   bossClass = {
     characterClass: 0,
     className: "Boss",
-    Ws: false,
+    unusedClassFlag: false,
     defaultName: "Boss",
     descriptionText: "",
     startsWithSpell: false,

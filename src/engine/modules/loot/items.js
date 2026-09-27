@@ -133,13 +133,13 @@ export function getHighlightedItemName(a) {
 }
 export function ItemGenerator() {
   this.OD = new ItemNameGenerator();
-  this.ND = new ItemEffectGenerator();
-  this.ps = {};
-  this.os = {};
+  this.itemEffectGenerator = new ItemEffectGenerator();
+  this.itemTypesBySlot = {};
+  this.itemTypesById = {};
 }
 export function generateItem(a, b, c, d, f) {
   var g;
-  if (!(g = a.ps[b])) {
+  if (!(g = a.itemTypesBySlot[b])) {
     console.log("ItemGenerator.getRandomItemType() failed to find item types for slot: " + b);
   }
   if (0 === g.length) {
@@ -168,7 +168,7 @@ export function generateItem(a, b, c, d, f) {
   n = randomizeScaledValue(d, itemStatCurve, s);
   s = randomizeScaledValue(d, itemGoldCurve, s) * itemGoldModifier.currentValue;
   if (1 === l && Math.random() < h.elementalEffectChance) {
-    p = a.ND;
+    p = a.itemEffectGenerator;
     h = Math.random();
     h = 0.2 > h ? FIRE_ITEM_EFFECT : 0.4 > h ? ICE_ITEM_EFFECT : 0.6 > h ? SHOCK_ITEM_EFFECT : 0.7 > h ? SONIC_ITEM_EFFECT : POISON_ITEM_EFFECT;
     var u = floorNumber(Math.max(0.1 * n, 0.4 * n * Math.random()));
@@ -245,16 +245,16 @@ export function registerItemType(a, b, c) {
   g = f + "";
   f = b.slotList;
   b = new ItemType(g, b.baseName, f, c, b.isMeleeWeapon, b.isArmor, b.isMiscItem, b.isProjectile, b.projectileAnimationId);
-  if (a.os[g]) {
+  if (a.itemTypesById[g]) {
     console.log("item type hash collision: " + d);
   }
-  a.os[g] = b;
+  a.itemTypesById[g] = b;
   for (g = 0; g < (/** @type {any} */ (f)).length; g++) {
     d = f[g];
-    c = a.ps[d];
+    c = a.itemTypesBySlot[d];
     if (!c) {
       c = [];
-      a.ps[d] = c;
+      a.itemTypesBySlot[d] = c;
     }
     c.push(b);
   }

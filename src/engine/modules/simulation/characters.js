@@ -83,7 +83,7 @@ export function spawnMinion(a, b, c) {
     }
   }
   b = d.summoner;
-  a = d.classDefinition.Bp;
+  a = d.classDefinition.statBonusList;
   resetSkillStatBonuses(d.stats);
   applySkillTreeBonuses(d, b.skillTree1);
   applySkillTreeBonuses(d, b.skillTree2);
@@ -95,7 +95,7 @@ export function spawnMinion(a, b, c) {
       applyStatBonus(d, bonus.statType, bonus.statBonusValue);
     }
   }
-  game.minions.Tt(d);
+  game.minions.addMinion(d);
   game.state.statisticsRecorder.recordMinionSummoned();
   awardAdventurePoints(18);
 }
@@ -110,9 +110,9 @@ export function createCastleGuardian(a, b, c) {
   initializeCharacterSkills(f, b);
   g.characterLevel = b;
   applyLevelStats(g, b, a.statMultipliers);
-  if (a.Jm) {
-    for (b = 0; b < a.Jm.length; b++) {
-      learnSpell(f, new Spell(a.Jm[b]));
+  if (a.innateSpells) {
+    for (b = 0; b < a.innateSpells.length; b++) {
+      learnSpell(f, new Spell(a.innateSpells[b]));
     }
   }
   b = f.position;
@@ -124,7 +124,7 @@ export function createCastleGuardian(a, b, c) {
   c = h + randomInt(roomRightPixels(c) - game.tileSize - h);
   top += randomInt(bottom - top);
   setVector(b.levelPosition, c, top);
-  applyBonusList(f, a.Nr);
+  applyBonusList(f, a.statBonusList);
   return f;
 }
 export function initializeCharacterSkills(a, b) {
@@ -254,7 +254,7 @@ export function updateCharacterFrames(a, b, c) {
   return a < b ? b : a > c ? c : a;
 }
 export function initializeSimulationCharacters() {
-  CharacterLifecycle.prototype.Lp = function (a) {
+  CharacterLifecycle.prototype.despawnMinion = function (a) {
     if (!a.isDead) {
       var b = a.summoner;
       if (b && b.summonedMinions) {
@@ -267,7 +267,7 @@ export function initializeSimulationCharacters() {
         }
       }
       a.isDead = true;
-      game.minions.Lp(a);
+      game.minions.removeMinion(a);
     }
   };
   CharacterLifecycle.prototype.clearEncounter = function (a, b) {

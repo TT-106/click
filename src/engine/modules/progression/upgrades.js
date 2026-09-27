@@ -753,7 +753,7 @@ export function initializeProgressionUpgrades() {
   CharacterSkillUpgrade.prototype.bindCharacter = function (a) {
     this.character = a;
   };
-  CharacterSkillUpgrade.prototype.Jr = function () {
+  CharacterSkillUpgrade.prototype.getUpgradeDefinition = function () {
     return this.skillDefinition;
   };
   CharacterSkillUpgrade.prototype.isOwned = function () {
@@ -818,7 +818,7 @@ export function initializeProgressionUpgrades() {
   LearnSpellUpgrade.prototype.bindCharacter = function (a) {
     this.character = a;
   };
-  LearnSpellUpgrade.prototype.Jr = function () {
+  LearnSpellUpgrade.prototype.getUpgradeDefinition = function () {
     return this.spellDefinition;
   };
   LearnSpellUpgrade.prototype.isOwned = function () {

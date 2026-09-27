@@ -1,0 +1,10 @@
+[
+  { "old": "Jm", "new": "innateSpells", "expect": 7, "files": ["src/engine/modules/content/guardians.js", "src/engine/modules/simulation/characters.js"] },
+  { "old": "Nr", "new": "statBonusList", "expect": 5, "files": ["src/engine/modules/content/guardians.js", "src/engine/modules/simulation/characters.js"] },
+  { "old": "Bp", "new": "statBonusList", "expect": 6, "files": ["src/engine/modules/content/minions.js", "src/engine/modules/simulation/characters.js"] },
+  { "old": "Ws", "new": "unusedClassFlag", "expect": 5, "files": ["src/engine/modules/content/guardians.js"] },
+  { "old": "os", "new": "itemTypesById", "expect": 5, "files": ["src/engine/modules/content/equipment.js", "src/engine/modules/loot/items.js", "src/engine/modules/persistence/entities.js"] },
+  { "old": "ps", "new": "itemTypesBySlot", "expect": 5, "files": ["src/engine/modules/content/equipment.js", "src/engine/modules/loot/items.js"] },
+  { "old": "Jr", "new": "getUpgradeDefinition", "expect": 5, "files": ["src/engine/modules/combat/skill-effects.js", "src/engine/modules/persistence/entities.js", "src/engine/modules/progression/upgrades.js"] },
+  { "old": "ND", "new": "itemEffectGenerator", "expect": 2, "files": ["src/engine/modules/loot/items.js"] }
+]

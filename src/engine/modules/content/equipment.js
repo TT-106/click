@@ -5,8 +5,8 @@ import { game } from "../runtime/game.js";
 import { registerItemType } from "../loot/items.js";
 export function initializeItemCatalog() {
   var b = game.itemGenerator;
-  b.os = {};
-  b.ps = {};
+  b.itemTypesById = {};
+  b.itemTypesBySlot = {};
   var c = {
       baseName: "剑",
       isMeleeWeapon: true,

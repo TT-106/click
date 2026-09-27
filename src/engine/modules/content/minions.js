@@ -135,7 +135,7 @@ export function initializeContentMinions() {
     }],
     statMultipliers: minionStatMultipliers,
     innateSpells: [barbarianSpellDefinitions.hammerSpell],
-    Bp: [],
+    statBonusList: [],
     createBehaviors: function () {
       return [new AreaDamageBehavior(MELEE_ATTACK_RANGE, 100), new MeleeAttackBehavior(MELEE_ATTACK_RANGE, 90, 2, false), new ChangeFloorBehavior(), new TravelWorldBehavior(60, 10), new EnterDungeonBehavior(60, 10), new EnterCastleBehavior(60, 10), new UseShopBehavior(60, 10), new WaitBehavior()];
     }
@@ -169,7 +169,7 @@ export function initializeContentMinions() {
     }],
     statMultipliers: minionStatMultipliers,
     innateSpells: [ninjaSpellDefinitions.quickStrikeSpell],
-    Bp: [{
+    statBonusList: [{
       statBonusValue: 1,
       statType: 28
     }],
@@ -206,7 +206,7 @@ export function initializeContentMinions() {
     }],
     statMultipliers: minionStatMultipliers,
     innateSpells: [rogueSpellDefinitions.stealthSpell],
-    Bp: [],
+    statBonusList: [],
     createBehaviors: function () {
       return [new LootItemBehavior(100), new GuardRangedBehavior(RANGED_MIN_DISTANCE, RANGED_ATTACK_RANGE, 95), new OpportunisticAttackBehavior(95), new ChangeFloorBehavior(), new TravelWorldBehavior(60, 10), new EnterDungeonBehavior(60, 10), new EnterCastleBehavior(60, 10), new UseShopBehavior(60, 10), new WaitBehavior()];
     }
@@ -237,7 +237,7 @@ export function initializeContentMinions() {
     }],
     statMultipliers: guardianStatMultipliers,
     spellDefinitions: null,
-    Bp: [{
+    statBonusList: [{
       statBonusValue: 2,
       statType: 23
     }, {
@@ -278,7 +278,7 @@ export function initializeContentMinions() {
     statMultipliers: casterStatMultipliers,
     spellDefinitions: null,
     innateSpells: [electricSpellDefinitions.chainLightningSpell, poisonCloudSpell],
-    Bp: [{
+    statBonusList: [{
       statBonusValue: 3,
       statType: 21
     }],

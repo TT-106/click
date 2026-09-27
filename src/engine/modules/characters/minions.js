@@ -12,7 +12,7 @@ export function clearMinions() {
   }
 }
 export function initializeCharactersMinions() {
-  MinionRegistry.prototype.Lp = function (a) {
+  MinionRegistry.prototype.removeMinion = function (a) {
     if (a) {
       var b = this.minionList.indexOf(a);
       if (-1 < b) {
@@ -25,8 +25,8 @@ export function initializeCharactersMinions() {
       }
     }
   };
-  MinionRegistry.prototype.Tt = function (a) {
+  MinionRegistry.prototype.addMinion = function (a) {
     this.minionList.push(a);
-    game.allies.Tt(a);
+    game.allies.addAlly(a);
   };
 }

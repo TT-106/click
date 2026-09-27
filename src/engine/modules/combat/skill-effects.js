@@ -18,7 +18,7 @@ export function applySkillTreeBonuses(a, b) {
   for (f = 0; f < c.length; f++) {
     d = c[f];
     if (d.getUpgradeType() === SKILL_UPGRADE_TYPE && d.isOwned()) {
-      d = d.Jr();
+      d = d.getUpgradeDefinition();
       applyStatBonus(a, d.statType, d.statBonusValue);
     }
   }

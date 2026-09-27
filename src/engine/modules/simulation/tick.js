@@ -60,7 +60,7 @@ export function advanceSimulation(a) {
       u = s.summoner;
       if (u.isDead) {
         showDeathEffect(s);
-        game.lifecycle.Lp(s);
+        game.lifecycle.despawnMinion(s);
       } else {
         y = s.summonedAtTurn;
         A = s.lifetimeTurns;
@@ -70,7 +70,7 @@ export function advanceSimulation(a) {
           } else {
             if (game.state.turnNumber - y > A) {
               showDeathEffect(s);
-              game.lifecycle.Lp(s);
+              game.lifecycle.despawnMinion(s);
             }
           }
         }

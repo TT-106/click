@@ -345,7 +345,7 @@ export function resolveCharacterDefeat(a, b) {
       showFloatingText(game.floatingText, b, "昏迷!", "white");
     }
   } else if (1 === b.characterType) {
-    game.lifecycle.Lp(b);
+    game.lifecycle.despawnMinion(b);
   } else if (4 === b.characterType) {
     if (!b.isDead) {
       var g = b.position,
