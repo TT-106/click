@@ -5,6 +5,7 @@
 
 ## 当前轮次状态（2026-09-27，M12 长尾重命名 + 命名修正）
 
+- U89 法术定义表键（2026-09-27，混淆清单 390 → 360，fields 段 675 → 705）：按定义内 `name` 字段恢复 30 个法术键（shockSpell/spiderWebSpell/lightningRainSpell/fireRingSpell/fireRainSpell/fireBallSpell/transformMonsterSpell/healSpell/resurrectSpell/buffArmorSpell/buffDamageSpell/buffAttackRatingSpell/buffDefenceRatingSpell/tauntSpell/stealthSpell/instantSearchSpell/findTreasureSpell/rageSpell/hammerSpell/agonySpell/greenDeathSpell/skeletonArmySpell/ghostSkeletonSpell/wolfPackSpell/dogGuardianSpell/lesserHealSpell/sleepSpell/quickStrikeSpell/summonChickensSpell/chickenGuardianSpell），六文件共 82 处。**方法**：先按 `name:` 行提取「键 → 中文名」对照表再命名，避免臆测。
 - U88 农场坐标/世界生成器/生物群系贴纸表（2026-09-27，混淆清单 397 → 390，fields 段 668 → 675）：`Farm.kw/lw`→farmColumn/farmRow（DTO 键 farmCol/farmRow 佐证）、`WorldBlock/WorldMap.wt`→generator、`FarmRegistry.jw`→farmsById、`ShopRegistry.zx`→shopsById、`TerrainBiome.Dr`/`DecorationBiome.Fs`→tileSpriteNames。
 - U87 世界块边界与注册表（2026-09-27，混淆清单 406 → 397，fields 段 659 → 668）：WorldBlock 六边界 `wp/xp/yp/Mw/zp/Nw`→tileEndColumn/tileEndRow/pixelLeft/pixelRight/pixelTop/pixelBottom、`WorldTile.Kn`→terrainTypeKey、`DungeonRegistry.Do`→dungeonRegistry、`SimplexNoise.Im`→gradients。
 - U86 渲染器/效果房间/世界标志（2026-09-27，混淆清单 412 → 406，fields 段 653 → 659）：`VisualEffect.ew`→room（scene.js 按房间瓦片范围画高亮）、GameCanvasView.`gB`→renderer 与两个后端 `uE`/`DD`→depthSortedRenderer/immediateRenderer、`WorldMap.ty`→hasPartyPlaced、`game.state.dz`→fps。
