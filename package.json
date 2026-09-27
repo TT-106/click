@@ -12,15 +12,20 @@
     "start": "node scripts/serve.mjs",
     "build": "node scripts/build.mjs",
     "test": "node --test \"tests/unit/*.test.mjs\"",
+    "test:unit": "node --test \"tests/unit/*.test.mjs\"",
     "test:parity": "node scripts/test-parity.mjs",
     "test:scenarios": "node scripts/test-scenarios.mjs",
     "test:soak": "node scripts/test-soak.mjs",
     "test:e2e": "node scripts/test-browser.mjs",
     "check": "node scripts/check.mjs",
+    "lint": "node scripts/lint-invariants.mjs",
     "typecheck": "tsc -p tsconfig.json",
+    "analyze": "node scripts/analyze-fields.mjs",
     "perf": "node scripts/measure-perf.mjs",
     "perf:frames": "node scripts/measure-frames.mjs",
-    "audit:dead-reads": "node scripts/find-dead-reads.mjs"
+    "audit:dead-reads": "node scripts/find-dead-reads.mjs",
+    "audit:doc-refs": "node scripts/verify-doc-refs.mjs",
+    "audit:doc-snippets": "node scripts/check-doc-snippets.mjs"
   },
   "devDependencies": {
     "@babel/generator": "7.29.8",

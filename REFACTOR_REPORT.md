@@ -69,9 +69,25 @@ archive/original/c2.js  ──AST 机械恢复──▶  src/engine/（77 模块
 ## 9. 后续开发方式（对新开发者的承诺）
 
 ```bash
-npm install && npm run dev     # 一条命令跑起来
-npm test && npm run check      # 一条命令测试
+npm install && npm run dev          # 一条命令跑起来
+npm test && npm run check           # 一条命令测试（单测 + 语法 + tsc）
+npm run lint                        # 一条命令守住不变量（见下）
 ```
+
+`npm run lint`（`scripts/lint-invariants.mjs`，**零第三方依赖**）把本轮建立的关键不变量变成可自动回归的守卫——这些不变量被破坏时通常不会立刻报错，而是悄悄退化：
+
+| 不变量 | 含义 |
+|---|---|
+| 混淆属性名 = 0 | `analyze-fields` 报 0；防止旧名回流 |
+| 无隐形字符文件名 | 防止 `X.js\uF00D` 这类垃圾同名文件重现 |
+| `src/engine/modules` 无 `@ts-nocheck` | 防止用整文件豁免掩盖类型错误 |
+| 源码无 `TODO`/`FIXME`/`HACK`/`@ts-ignore`/`eslint-disable` | 防止待办与规则豁免堆积 |
+| 文档 `file:line` 引用无越界 | 防止文档与代码脱节（934 条引用） |
+| 原版存档 fixture 无单字母键 | 守住"4,477 键全语义化"的存档契约 |
+
+已做**反向验证**：故意插入一个 `// TODO` 后 `npm run lint` 退出码为 1 并指名文件，移除后恢复 0。
+
+其余命令：`npm run test:parity`（差分）、`npm run test:scenarios`（59 场景）、`npm run test:e2e`（浏览器）、`npm run test:soak`（8h/24h）、`npm run build`、`npm run analyze`、`npm run audit:doc-refs` / `audit:doc-snippets` / `audit:dead-reads`。
 - 找战斗：`src/engine/modules/combat/`；物品：`loot/`；地牢：`world/`；存档：`persistence/`；随机：`core/math.js`；渲染：`rendering/`。
 - 改任何行为前先读 `docs/architecture.md` 对应小节；改数值前读 `content/`；**不要**碰 RNG 顺序与存档键（差分会拦住你，但先读 facts.md 更省时间）。
 - 续跑入口：`docs/WORKSTATE.md`（含下一步任务队列与避坑清单）。
