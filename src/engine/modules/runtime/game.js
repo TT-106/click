@@ -428,10 +428,10 @@ export function initializeRuntimeGame() {
       a.destinationRoom = null;
       a.targetDoor = null;
       a.targetRoom = null;
-      a.Ks = false;
+      a.forcedTravelActive = false;
       a.forcedDestinationRoom = null;
-      a.Mp = false;
-      a.hp = false;
+      a.travellingToDisabledAlly = false;
+      a.destinationOffWorld = false;
       a.worldDestColumn = 0;
       a.worldDestRow = 0;
       game.gameWon = false;

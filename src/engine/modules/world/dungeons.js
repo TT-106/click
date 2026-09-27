@@ -169,14 +169,14 @@ export function Shop(a, b, c) {
   this.worldRow = c;
 }
 export function ShopRegistry() {
-  this.ht = [];
+  this.shopList = [];
   this.shopsById = {};
   this.collectedGold = 0;
   this.tB = "L2_Terrain089.PNG L2_Terrain077.PNG L2_Terrain077.PNG L2_Terrain076.PNG L2_Terrain078.PNG L2_Terrain079.PNG L2_Terrain083.PNG L2_Terrain084.PNG L2_Terrain085.PNG".split(" ");
 }
 export function resetShops() {
   var a = game.shops;
-  a.ht.length = 0;
+  a.shopList.length = 0;
   a.collectedGold = 0;
   a.shopsById = {};
 }
@@ -259,7 +259,7 @@ export function initializeWorldDungeons() {
     return 0.5 > Math.random() ? a - b : a + b;
   };
   ShopRegistry.prototype.Ut = function (a) {
-    this.ht.push(a);
+    this.shopList.push(a);
     this.shopsById[a.dungeonId] = a;
     if (a = game.world.getTileAtPixel(a.worldColumn, a.worldRow)) {
       var b = game.terrainSprites.getSprite(randomShopSprite(this));

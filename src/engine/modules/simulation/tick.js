@@ -90,9 +90,9 @@ export function advanceSimulation(a) {
     if (game.worldActive) {
       I.updateWorldMode();
     } else {
-      I.Ks = false;
+      I.forcedTravelActive = false;
       I.forcedDestinationRoom = null;
-      I.Mp = false;
+      I.travellingToDisabledAlly = false;
       I.updateDungeonMode();
     }
     if (!game.worldActive) {

@@ -15,19 +15,19 @@ import { refreshFarmableDungeons } from "../world/dungeons.js";
 import { saveProgress } from "../persistence/game-save.js";
 export function PartyState() {
   this.gold = this.experiencePoints = this.kills = 0;
-  this.zs = this.xs = -1;
+  this.cachedMinLevel = this.cachedMaxLevel = -1;
   this.targetRoom = this.targetDoor = this.destinationRoom = this.targetTreasureChest = this.targetCastle = this.targetShop = this.activeCastle = this.targetDungeon = null;
-  this.Ks = false;
+  this.forcedTravelActive = false;
   this.forcedDestinationRoom = null;
-  this.Mp = false;
-  this.Ht = new WorldPathfinder();
-  this.hp = false;
+  this.travellingToDisabledAlly = false;
+  this.worldPathfinder = new WorldPathfinder();
+  this.destinationOffWorld = false;
   this.worldDestRow = this.worldDestColumn = 0;
 }
 export function forcePartyDestination(a) {
   var b = game.state.party;
   setPartyDestination(b, a);
-  b.Ks = true;
+  b.forcedTravelActive = true;
 }
 export function setPartyDestination(a, b) {
   a.forcedDestinationRoom = b;
@@ -38,7 +38,7 @@ export function setPartyDestination(a, b) {
   }
 }
 export function isPartyTravelling(a) {
-  return a.Mp || a.Ks;
+  return a.travellingToDisabledAlly || a.forcedTravelActive;
 }
 export function addKills(a) {
   var b = game.state.party;
@@ -66,22 +66,22 @@ export function spendGold(a) {
   }
 }
 export function getPartyMaxLevel(a) {
-  if (0 > a.xs) {
-    a.xs = calculatePartyMaxLevel();
+  if (0 > a.cachedMaxLevel) {
+    a.cachedMaxLevel = calculatePartyMaxLevel();
   }
-  return a.xs;
+  return a.cachedMaxLevel;
 }
 export function getPartyMinLevel() {
   var a = game.state.party;
-  if (0 > a.zs) {
-    a.zs = calculatePartyMinLevel(a);
+  if (0 > a.cachedMinLevel) {
+    a.cachedMinLevel = calculatePartyMinLevel(a);
   }
-  return a.zs;
+  return a.cachedMinLevel;
 }
 export function refreshPartyLevels() {
   var a = game.state.party;
-  a.xs = calculatePartyMaxLevel();
-  a.zs = calculatePartyMinLevel(a);
+  a.cachedMaxLevel = calculatePartyMaxLevel();
+  a.cachedMinLevel = calculatePartyMinLevel(a);
 }
 export function calculatePartyMaxLevel() {
   var a = -1,
@@ -386,8 +386,8 @@ export function initializeCharactersParty() {
         a = game.shops;
         b = game.state.leader.position.worldPosition;
         c = null;
-        for (h = d = 0; h < a.ht.length; h++) {
-          if (f = a.ht[h], g = distanceSquaredToPoint(b, game.world.tileToPixelX(f.worldColumn), game.world.tileToPixelY(f.worldRow)), !c || g < d) {
+        for (h = d = 0; h < a.shopList.length; h++) {
+          if (f = a.shopList[h], g = distanceSquaredToPoint(b, game.world.tileToPixelX(f.worldColumn), game.world.tileToPixelY(f.worldRow)), !c || g < d) {
             c = f;
             d = g;
           }
@@ -500,16 +500,16 @@ export function initializeCharactersParty() {
       }
       if (a || f || b) {
         if (game.world.getTileAtPixel(c, d)) {
-          calculateWorldCosts(this.Ht, c, d);
-          this.hp = false;
+          calculateWorldCosts(this.worldPathfinder, c, d);
+          this.destinationOffWorld = false;
         } else {
-          this.hp = true;
+          this.destinationOffWorld = true;
           this.worldDestColumn = findNearestWorldColumn(c);
           this.worldDestRow = findNearestWorldRow(d);
-          calculateWorldCosts(this.Ht, this.worldDestColumn, this.worldDestRow);
+          calculateWorldCosts(this.worldPathfinder, this.worldDestColumn, this.worldDestRow);
         }
       } else {
-        if (a = this.hp) {
+        if (a = this.destinationOffWorld) {
           b = game.state.leader.position;
           a = this.worldDestColumn - game.world.pixelToTileColumn(b.getWorldPositionX());
           b = this.worldDestRow - game.world.pixelToTileRow(b.getWorldPositionY());
@@ -517,12 +517,12 @@ export function initializeCharactersParty() {
         }
         if (a) {
           if (game.world.getTileAtPixel(c, d)) {
-            calculateWorldCosts(this.Ht, c, d);
-            this.hp = false;
+            calculateWorldCosts(this.worldPathfinder, c, d);
+            this.destinationOffWorld = false;
           } else {
             this.worldDestColumn = findNearestWorldColumn(c);
             this.worldDestRow = findNearestWorldRow(d);
-            calculateWorldCosts(this.Ht, this.worldDestColumn, this.worldDestRow);
+            calculateWorldCosts(this.worldPathfinder, this.worldDestColumn, this.worldDestRow);
           }
         }
       }
@@ -535,12 +535,12 @@ export function initializeCharactersParty() {
         c;
       for (a = 0; a < b.length; a++) {
         if (c = b[a], c.position.room && c.effects.isDisabled) {
-          this.Mp = true;
+          this.travellingToDisabledAlly = true;
           setPartyDestination(this, c.position.room);
           break a;
         }
       }
-      this.Mp = false;
+      this.travellingToDisabledAlly = false;
     }
     if (!isPartyTravelling(this)) {
       if (this.targetTreasureChest) {

@@ -1,0 +1,9 @@
+[
+  { "old": "Mp", "new": "travellingToDisabledAlly", "expect": 6, "files": ["src/engine/modules/characters/party.js", "src/engine/modules/runtime/game.js", "src/engine/modules/simulation/tick.js"] },
+  { "old": "Ks", "new": "forcedTravelActive", "expect": 5, "files": ["src/engine/modules/characters/party.js", "src/engine/modules/runtime/game.js", "src/engine/modules/simulation/tick.js"] },
+  { "old": "hp", "new": "destinationOffWorld", "expect": 6, "files": ["src/engine/modules/characters/party.js", "src/engine/modules/runtime/game.js"] },
+  { "old": "Ht", "new": "worldPathfinder", "expect": 5, "files": ["src/engine/modules/characters/party.js"] },
+  { "old": "zs", "new": "cachedMinLevel", "expect": 5, "files": ["src/engine/modules/characters/party.js"] },
+  { "old": "xs", "new": "cachedMaxLevel", "expect": 5, "files": ["src/engine/modules/characters/party.js"] },
+  { "old": "ht", "new": "shopList", "expect": 5, "files": ["src/engine/modules/characters/party.js", "src/engine/modules/world/dungeons.js"] }
+]
