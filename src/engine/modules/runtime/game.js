@@ -432,8 +432,8 @@ export function initializeRuntimeGame() {
       a.forcedDestinationRoom = null;
       a.Mp = false;
       a.hp = false;
-      a.Nm = 0;
-      a.Om = 0;
+      a.worldDestColumn = 0;
+      a.worldDestRow = 0;
       game.gameWon = false;
       game.state.runStatistics.resetRunStatistics();
       game.paused = false;

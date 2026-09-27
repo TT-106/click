@@ -139,7 +139,7 @@ export function hasForcedDestination(a) {
   return (b = game.state.party.forcedDestinationRoom) ? a.position.destinationRoom === b ? false : true : false;
 }
 export function LootChestBehavior(a) {
-  this.Wm = null;
+  this.learnedSpell = null;
   this.priorityWeight = a;
   this.Yt = true;
   this.actionRange = 10;
@@ -1050,21 +1050,21 @@ export function initializeAiBehaviors() {
   };
   LootChestBehavior.prototype = new ExploreDungeonBehavior();
   LootChestBehavior.prototype.resetBehaviorState = function () {
-    this.Wm = null;
+    this.learnedSpell = null;
   };
   LootChestBehavior.prototype.notifySpellLearned = function (a) {
-    if (!(this.Wm || 14 !== a.spellCategoryId)) {
-      this.Wm = a;
+    if (!(this.learnedSpell || 14 !== a.spellCategoryId)) {
+      this.learnedSpell = a;
     }
   };
   LootChestBehavior.prototype.canExecute = function () {
-    return this.Wm && isSpellReady(this.Wm);
+    return this.learnedSpell && isSpellReady(this.learnedSpell);
   };
   LootChestBehavior.prototype.getFinalScore = function (a) {
     return hasOpponentsInRoom(a, a.position.room) ? 0 : hasPendingLoot() ? (/** @type {PrioritizedBehavior} */ (/** @type {unknown} */ (this))).getPriority() : 0;
   };
   LootChestBehavior.prototype.getActionTarget = function () {
-    return this.Wm;
+    return this.learnedSpell;
   };
   LootChestBehavior.prototype.selectTarget = function (a) {
     return hasPendingLoot() ? a : null;

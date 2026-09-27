@@ -22,7 +22,7 @@ export function PartyState() {
   this.Mp = false;
   this.Ht = new WorldPathfinder();
   this.hp = false;
-  this.Om = this.Nm = 0;
+  this.worldDestRow = this.worldDestColumn = 0;
 }
 export function forcePartyDestination(a) {
   var b = game.state.party;
@@ -504,15 +504,15 @@ export function initializeCharactersParty() {
           this.hp = false;
         } else {
           this.hp = true;
-          this.Nm = findNearestWorldColumn(c);
-          this.Om = findNearestWorldRow(d);
-          calculateWorldCosts(this.Ht, this.Nm, this.Om);
+          this.worldDestColumn = findNearestWorldColumn(c);
+          this.worldDestRow = findNearestWorldRow(d);
+          calculateWorldCosts(this.Ht, this.worldDestColumn, this.worldDestRow);
         }
       } else {
         if (a = this.hp) {
           b = game.state.leader.position;
-          a = this.Nm - game.world.pixelToTileColumn(b.getWorldPositionX());
-          b = this.Om - game.world.pixelToTileRow(b.getWorldPositionY());
+          a = this.worldDestColumn - game.world.pixelToTileColumn(b.getWorldPositionX());
+          b = this.worldDestRow - game.world.pixelToTileRow(b.getWorldPositionY());
           a = 8 > Math.sqrt(a * a + b * b);
         }
         if (a) {
@@ -520,9 +520,9 @@ export function initializeCharactersParty() {
             calculateWorldCosts(this.Ht, c, d);
             this.hp = false;
           } else {
-            this.Nm = findNearestWorldColumn(c);
-            this.Om = findNearestWorldRow(d);
-            calculateWorldCosts(this.Ht, this.Nm, this.Om);
+            this.worldDestColumn = findNearestWorldColumn(c);
+            this.worldDestRow = findNearestWorldRow(d);
+            calculateWorldCosts(this.Ht, this.worldDestColumn, this.worldDestRow);
           }
         }
       }

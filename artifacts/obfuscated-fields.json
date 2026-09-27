@@ -96,29 +96,6 @@
     ]
   },
   {
-    "name": "Wm",
-    "reads": 4,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:142",
-        "code": "this.Wm"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1053",
-        "code": "this.Wm"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1056",
-        "code": "this.Wm"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js"
-    ]
-  },
-  {
     "name": "dm",
     "reads": 6,
     "writes": 1,
@@ -270,54 +247,6 @@
       "src\\engine\\modules\\combat\\actions.js",
       "src\\engine\\modules\\loot\\treasure.js",
       "src\\engine\\modules\\rendering\\scene.js"
-    ]
-  },
-  {
-    "name": "Om",
-    "reads": 3,
-    "writes": 4,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\party.js:25",
-        "code": "this.Om"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\party.js:508",
-        "code": "this.Om"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\party.js:509",
-        "code": "this.Om"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\characters\\party.js",
-      "src\\engine\\modules\\runtime\\game.js"
-    ]
-  },
-  {
-    "name": "Nm",
-    "reads": 3,
-    "writes": 4,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\party.js:25",
-        "code": "this.Nm"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\party.js:507",
-        "code": "this.Nm"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\party.js:509",
-        "code": "this.Nm"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\characters\\party.js",
-      "src\\engine\\modules\\runtime\\game.js"
     ]
   },
   {
