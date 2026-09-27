@@ -75,7 +75,7 @@ export function restoreGameState(a, b) {
             N = v.dungeonCostLevel,
             I = v.dungeonStates;
           if (I) {
-            game.dungeons.lt = false;
+            game.dungeons.sortingEnabled = false;
             var x;
             for (x = 0; x < I.length; x++) {
               var z = I[x];
@@ -97,7 +97,7 @@ export function restoreGameState(a, b) {
                     W.clearedTurn = V ? V : 0;
                     W.discovered = J ? true : false;
                     W.isFarm = na ? true : false;
-                    W.tx(Q ? true : false);
+                    W.setConquered(Q ? true : false);
                     W.farmStartTurn = K ? K : 0;
                     W.farmCost = H;
                     var ia = S ? S : 0;
@@ -111,7 +111,7 @@ export function restoreGameState(a, b) {
                         registerDungeonFarm(W);
                       } else {
                         if (la) {
-                          game.dungeons.Is(W);
+                          game.dungeons.registerClearedDungeon(W);
                         }
                       }
                     }
@@ -121,9 +121,9 @@ export function restoreGameState(a, b) {
                 }
               }
             }
-            game.dungeons.lt = true;
+            game.dungeons.sortingEnabled = true;
             var ea = game.dungeons;
-            if (ea.lt) {
+            if (ea.sortingEnabled) {
               sortDungeons(ea, ea.discovered);
               sortDungeons(ea, ea.attackable);
               sortDungeons(ea, ea.cleared);
@@ -165,7 +165,7 @@ export function restoreGameState(a, b) {
                 if (ta) {
                   var Ea = game.castles.castleRegistry[ta];
                   if (Ea) {
-                    Ea.tx(eb ? true : false);
+                    Ea.setConquered(eb ? true : false);
                     Ea.dungeonsConquered = Gb ? true : false;
                     Ea.regionLocked = Da ? true : false;
                     Ea.attackScheduled = ub ? true : false;
@@ -780,7 +780,7 @@ export function createSaveState(a) {
         castleStates: V
       },
       W = [],
-      ia = game.farms.nw,
+      ia = game.farms.farmList,
       ea,
       va;
     for (va = 0; va < ia.length; va++) {

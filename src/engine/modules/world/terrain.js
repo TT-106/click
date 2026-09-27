@@ -267,7 +267,7 @@ export function populateWorldBlock(a, b) {
     }
   }
   var entranceTile, castleTile;
-  if (c && !c.regionLocked && ((d = (d = game.dungeons.dungeonRegistry[b.regionColumn + "_" + b.regionRow]) ? d : null) ? (f = d.getWorldColumn(), g = d.getWorldRow(), (entranceTile = game.world.getTileAtPixel(f, g)) ? entranceTile.setDecorationSprite(game.terrainSprites.getSprite(d.mapSprite)) : (console.log("no tile for: col=" + f + " row=" + g), d = null)) : d = null, d && ((f = game.farms.farmsById[d.dungeonId]) && (f = game.world.getTileAtPixel(f.farmColumn, f.farmRow)) && f.setDecorationSprite(game.terrainSprites.getSprite(game.farms.Gz)), a.Ut(d)), f = findCastle(b.regionColumn + "_" + b.regionRow))) {
+  if (c && !c.regionLocked && ((d = (d = game.dungeons.dungeonRegistry[b.regionColumn + "_" + b.regionRow]) ? d : null) ? (f = d.getWorldColumn(), g = d.getWorldRow(), (entranceTile = game.world.getTileAtPixel(f, g)) ? entranceTile.setDecorationSprite(game.terrainSprites.getSprite(d.mapSprite)) : (console.log("no tile for: col=" + f + " row=" + g), d = null)) : d = null, d && ((f = game.farms.farmsById[d.dungeonId]) && (f = game.world.getTileAtPixel(f.farmColumn, f.farmRow)) && f.setDecorationSprite(game.terrainSprites.getSprite(game.farms.farmSpriteName)), a.ensureShopForDungeon(d)), f = findCastle(b.regionColumn + "_" + b.regionRow))) {
     d = f.worldPixelX;
     f = f.worldPixelY;
     if (castleTile = game.world.getTileAtPixel(d, f)) {
@@ -572,7 +572,7 @@ export function initializeWorldTerrain() {
     c = (sampleNoise(this.variantNoise, c, d) - -0.8) / (0.1 / this.tileSpriteNames.length) | 0;
     return c > this.tileSpriteNames.length ? null : game.terrainSprites.getSprite(this.tileSpriteNames[c]);
   };
-  WorldGenerator.prototype.Ut = function (a) {
+  WorldGenerator.prototype.ensureShopForDungeon = function (a) {
     var b;
     if (b = game.shops.shopsById[a.dungeonId]) {
       if (a = game.world.getTileAtPixel(b.worldColumn, b.worldRow)) {
@@ -581,11 +581,11 @@ export function initializeWorldTerrain() {
       }
     } else {
       b = game.shops;
-      for (var c = a.vw(), d = a.ww(), f = a.getWorldColumn(), g = a.getWorldRow(), h = 1 + c * WORLD_BLOCK_COLUMNS + randomInt(WORLD_BLOCK_COLUMNS - 1), l = 1 + d * WORLD_BLOCK_ROWS + randomInt(WORLD_BLOCK_ROWS - 1); h === f && l === g;) {
+      for (var c = a.getRegionColumn(), d = a.getRegionRow(), f = a.getWorldColumn(), g = a.getWorldRow(), h = 1 + c * WORLD_BLOCK_COLUMNS + randomInt(WORLD_BLOCK_COLUMNS - 1), l = 1 + d * WORLD_BLOCK_ROWS + randomInt(WORLD_BLOCK_ROWS - 1); h === f && l === g;) {
         h = 1 + c * WORLD_BLOCK_COLUMNS + randomInt(WORLD_BLOCK_COLUMNS - 1);
         l = 1 + d * WORLD_BLOCK_ROWS + randomInt(WORLD_BLOCK_ROWS - 1);
       }
-      b.Ut(new Shop(a.dungeonId, h, l));
+      b.addShop(new Shop(a.dungeonId, h, l));
     }
   };
   WorldTile.prototype.getPixelX = function () {
@@ -635,11 +635,11 @@ export function initializeWorldTerrain() {
   WorldMap.prototype.pixelToTileRow = function (a) {
     return a / game.tileSize | 0;
   };
-  WorldMap.prototype.vw = function (a) {
+  WorldMap.prototype.pixelToBlockColumn = function (a) {
     var map = /** @type {WorldMap & {pixelToTileColumn: (a: number) => number}} */ (/** @type {unknown} */ (this));
     return map.pixelToTileColumn(a) / WORLD_BLOCK_COLUMNS | 0;
   };
-  WorldMap.prototype.ww = function (a) {
+  WorldMap.prototype.pixelToBlockRow = function (a) {
     var map = /** @type {WorldMap & {pixelToTileRow: (a: number) => number}} */ (/** @type {unknown} */ (this));
     return map.pixelToTileRow(a) / WORLD_BLOCK_ROWS | 0;
   };

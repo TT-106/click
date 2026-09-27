@@ -22,8 +22,8 @@ export function Dungeon(a, b, c, d, f, g, h, l, n) {
   this.farmStartTurn = this.clearedTurn = 0;
   this.worldColumn = d;
   this.worldRow = f;
-  this.WE = g;
-  this.XE = h;
+  this.regionColumn = g;
+  this.regionRow = h;
   this.levelCount = l;
   this.currentLevelIndex = 0;
   this.region = n;
@@ -68,9 +68,9 @@ export function DungeonRegistry() {
   this.farms = [];
   this.discovered = [];
   this.farmable = [];
-  this.lt = true;
+  this.sortingEnabled = true;
   this.pendingFarmKills = 0;
-  this.EE = function (a, b) {
+  this.compareByFarmCost = function (a, b) {
     return floorNumber(a.farmCost * dungeonCostBonus.currentValue) < floorNumber(b.farmCost * dungeonCostBonus.currentValue) ? -1 : 1;
   };
 }
@@ -136,8 +136,8 @@ export function registerDungeonFarm(a) {
   refreshFarmableDungeons(b, a);
 }
 export function sortDungeons(a, b) {
-  if (!(!a.lt || !b || 2 > b.length)) {
-    b.sort(a.EE);
+  if (!(!a.sortingEnabled || !b || 2 > b.length)) {
+    b.sort(a.compareByFarmCost);
   }
 }
 export function Farm(a, b, c) {
@@ -146,21 +146,21 @@ export function Farm(a, b, c) {
   this.farmRow = c;
 }
 export function FarmRegistry() {
-  this.nw = [];
+  this.farmList = [];
   this.farmsById = {};
-  this.Gz = "L2_Town01.PNG";
+  this.farmSpriteName = "L2_Town01.PNG";
 }
 export function resetFarms() {
   var a = game.farms;
-  a.nw.length = 0;
+  a.farmList.length = 0;
   a.farmsById = {};
 }
 export function registerFarm(a, b) {
-  a.nw.push(b);
+  a.farmList.push(b);
   a.farmsById[b.dungeonId] = b;
   var c = game.world.getTileAtPixel(b.farmColumn, b.farmRow);
   if (c) {
-    c.setDecorationSprite(game.terrainSprites.getSprite(a.Gz));
+    c.setDecorationSprite(game.terrainSprites.getSprite(a.farmSpriteName));
   }
 }
 export function Shop(a, b, c) {
@@ -172,7 +172,7 @@ export function ShopRegistry() {
   this.shopList = [];
   this.shopsById = {};
   this.collectedGold = 0;
-  this.tB = "L2_Terrain089.PNG L2_Terrain077.PNG L2_Terrain077.PNG L2_Terrain076.PNG L2_Terrain078.PNG L2_Terrain079.PNG L2_Terrain083.PNG L2_Terrain084.PNG L2_Terrain085.PNG".split(" ");
+  this.shopSpriteNames = "L2_Terrain089.PNG L2_Terrain077.PNG L2_Terrain077.PNG L2_Terrain076.PNG L2_Terrain078.PNG L2_Terrain079.PNG L2_Terrain083.PNG L2_Terrain084.PNG L2_Terrain085.PNG".split(" ");
 }
 export function resetShops() {
   var a = game.shops;
@@ -181,10 +181,10 @@ export function resetShops() {
   a.shopsById = {};
 }
 export function randomShopSprite(a) {
-  return a.tB[randomInt(a.tB.length)];
+  return a.shopSpriteNames[randomInt(a.shopSpriteNames.length)];
 }
 export function initializeWorldDungeons() {
-  Dungeon.prototype.tx = function (a) {
+  Dungeon.prototype.setConquered = function (a) {
     this.conquered = a;
   };
   Dungeon.prototype.getPixelX = function () {
@@ -199,11 +199,11 @@ export function initializeWorldDungeons() {
   Dungeon.prototype.getWorldRow = function () {
     return this.worldRow;
   };
-  Dungeon.prototype.vw = function () {
-    return this.WE;
+  Dungeon.prototype.getRegionColumn = function () {
+    return this.regionColumn;
   };
-  Dungeon.prototype.ww = function () {
-    return this.XE;
+  Dungeon.prototype.getRegionRow = function () {
+    return this.regionRow;
   };
   Dungeon.prototype.levelSeed = function () {
     return hashCoordinates(this.worldColumn, this.worldRow, this.currentLevelIndex);
@@ -211,7 +211,7 @@ export function initializeWorldDungeons() {
   Dungeon.prototype.advanceLevel = function () {
     this.currentLevelIndex++;
     resetEncounter();
-    game.state.statisticsRecorder.$r();
+    game.state.statisticsRecorder.recordLevelCleared();
     if (this.currentLevelIndex < this.levelCount) {
       generateDungeonLevel((/** @type {any} */ (this)).levelSeed(), this.dungeonType, this.hasSecondEntrance, true);
       awardAdventurePoints(POINT_EVENT_LEVEL_CLEARED);
@@ -220,8 +220,8 @@ export function initializeWorldDungeons() {
       game.currentDungeon = null;
       this.conquered = this.cleared = game.worldActive = true;
       this.clearedTurn = game.state.turnNumber;
-      game.dungeons.Is(this);
-      this.region.Is();
+      game.dungeons.registerClearedDungeon(this);
+      this.region.refreshConquest();
       game.state.statisticsRecorder.recordDungeonCleared();
       awardAdventurePoints(POINT_EVENT_DUNGEON_CLEARED);
       recordGameEvent("Dungeon", "Dungeon Cleared");
@@ -243,7 +243,7 @@ export function initializeWorldDungeons() {
   DungeonRegistry.prototype.setFarmedKills = function (a) {
     this.pendingFarmKills = a;
   };
-  DungeonRegistry.prototype.Is = function (a) {
+  DungeonRegistry.prototype.registerClearedDungeon = function (a) {
     if (0 > this.cleared.indexOf(a)) {
       this.cleared.push(a);
       sortDungeons(this, this.cleared);
@@ -254,11 +254,11 @@ export function initializeWorldDungeons() {
     }
     refreshFarmableDungeons(this, a);
   };
-  FarmRegistry.prototype.Yw = function (a) {
+  FarmRegistry.prototype.jitterCoordinate = function (a) {
     var b = 1 + randomInt(2);
     return 0.5 > Math.random() ? a - b : a + b;
   };
-  ShopRegistry.prototype.Ut = function (a) {
+  ShopRegistry.prototype.addShop = function (a) {
     this.shopList.push(a);
     this.shopsById[a.dungeonId] = a;
     if (a = game.world.getTileAtPixel(a.worldColumn, a.worldRow)) {
@@ -266,7 +266,7 @@ export function initializeWorldDungeons() {
       a.setDecorationSprite(b);
     }
   };
-  ShopRegistry.prototype.Yw = function (a) {
+  ShopRegistry.prototype.jitterCoordinate = function (a) {
     return 0.5 > Math.random() ? a - 4 : a + 4;
   };
 }

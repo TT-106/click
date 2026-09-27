@@ -36,7 +36,7 @@ export function initializeProgressionStatistics() {
   RunStatistics.prototype.recordDoorOpened = function () {
     this.doorsOpened++;
   };
-  RunStatistics.prototype.$r = function () {
+  RunStatistics.prototype.recordLevelCleared = function () {
     this.levelsCleared++;
   };
   RunStatistics.prototype.recordDungeonCleared = function () {
@@ -140,9 +140,9 @@ export function initializeProgressionStatistics() {
     this.statisticsRecorder.recordRoomCleared();
     this.lifetimeStatistics.recordRoomCleared();
   };
-  StatisticsRecorder.prototype.$r = function () {
-    this.statisticsRecorder.$r();
-    this.lifetimeStatistics.$r();
+  StatisticsRecorder.prototype.recordLevelCleared = function () {
+    this.statisticsRecorder.recordLevelCleared();
+    this.lifetimeStatistics.recordLevelCleared();
   };
   StatisticsRecorder.prototype.recordDungeonCleared = function () {
     this.statisticsRecorder.recordDungeonCleared();

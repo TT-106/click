@@ -72,9 +72,9 @@
 ### 3.2 地牢 / 农场 / 商店
 | 字段 | 构造 | 内部结构 | 持久化 |
 |---|---|---|---|
-| `dungeons` (60) | `DungeonRegistry`（world/dungeons.js:54-65） | `Ab`=全部、`Do`=按 id、`uj/ze/dg`=已发现/已清理/农场视图（adapter.js:89-93 消费）、`Ge/bk`=其他排序视图、`lt`=排序脏标记、`Sd`=farmedKills、`Mk`=dungeonCostLevel | ✅ `dungeonManagerState`：`farmedKills↔Sd`、`dungeonCostLevel↔Mk`、`dungeonStates[]` 映射 `cb→conquered`、`isFarm→dungeonFarm`、`farmCost→dungeonFarmCost`、`Aj/Fo` 由 `dungeonType` 派生（restore game-save.js:73-135；serialize :731-757） |
-| `farms` (83) | `FarmRegistry` | `nw`=农场列表（元素 `kw/lw`=列/行） | ✅ `farms[]`：`farmCol↔kw`、`farmRow↔lw`（restore game-save.js:220-234；serialize :782-794） |
-| `shops` (84) | `ShopRegistry` | `ni`=collectedGold | ✅ `shopManager.collectedGold`（restore :214-219；serialize :758-760） |
+| `dungeons` (60) | `DungeonRegistry`（world/dungeons.js:62-77） | `dungeonList`=全部地牢、`dungeonRegistry`=按 id 索引、`discovered`/`attackable`/`cleared`/`farms`/`farmable`=五个视图列表（persistence adapter 的仪表盘键同名消费）、`discoveredDungeonCount`=已发现数（驱动农场造价 `scaleByLevel(count+1,…)`）、`pendingFarmKills`=农场待收击杀、`sortingEnabled`=自动排序开关（载入期间置 false，载入结束一次性批量排序；**并非"脏标记"**）、`compareByFarmCost`=按 `floorNumber(farmCost * dungeonCostBonus.currentValue)` 升序的比较器 | ✅ `dungeonManagerState`：`farmedKills↔pendingFarmKills`、`dungeonCostLevel↔discoveredDungeonCount`、`dungeonStates[]` 映射 `cb→conquered`、`isFarm→dungeonFarm`、`farmCost→dungeonFarmCost`、`hasSecondEntrance`/`mapSprite` 由 `dungeonType` 派生（restore game-save.js:73-135；serialize :731-757） |
+| `farms` (83) | `FarmRegistry` | `farmList`=农场列表（元素 `farmColumn`/`farmRow`，序列化顺序即列表顺序，不可重排）、`farmsById`=按 dungeonId、`farmSpriteName`=农场地块装饰贴纸（"L2_Town01.PNG"） | ✅ `farms[]`：`farmCol↔farmColumn`、`farmRow↔farmRow`（restore game-save.js:220-234；serialize :782-794） |
+| `shops` (84) | `ShopRegistry` | `shopList`=商店列表、`shopsById`=按 dungeonId、`collectedGold`=待收金币池、`shopSpriteNames`=9 个候选装饰贴纸（`shopSpriteNames[randomInt(length)]` 抽取，重复项是权重而非笔误，不可去重） | ✅ `shopManager.collectedGold`（restore :214-219；serialize :758-760） |
 
 ### 3.3 战斗 / 掉落 / 物品（全部 runtime-only，不入档）
 - `monsters`(57)/`minions`(58)/`allies`(59)：`MonsterRegistry`/`MinionRegistry`/`AllyRegistry`；resetRun 清空（game.js:408-410），restore 末尾 `allies.reset()`（game-save.js:686）。

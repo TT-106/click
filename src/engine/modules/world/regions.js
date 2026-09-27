@@ -285,10 +285,10 @@ export function initializeWorldRegions() {
   WORLD_BLOCK_ROWS = 18;
   WORLD_ORIGIN_COLUMN = 100;
   WORLD_ORIGIN_ROW = 100;
-  Castle.prototype.tx = function (a) {
+  Castle.prototype.setConquered = function (a) {
     this.conquered = a;
   };
-  Castle.prototype.Is = function () {
+  Castle.prototype.refreshConquest = function () {
     refreshCastleConquest(this);
   };
   Castle.prototype.levelSeed = function () {

@@ -745,8 +745,8 @@ export function advanceSimulation(a) {
       }
       if (!pe) {
         console.log("Bug: party not contained by block grid. fixing.");
-        var eg = q.vw(q.worldCenterX),
-          hc = q.ww(q.worldCenterY);
+        var eg = q.pixelToBlockColumn(q.worldCenterX),
+          hc = q.pixelToBlockRow(q.worldCenterY);
         console.log("old: blockShiftCol=" + q.blockOriginColumn + " blockShiftRow=" + q.blockOriginRow);
         q.blockOriginColumn = eg - 1;
         q.blockOriginRow = hc - 1;
@@ -810,8 +810,8 @@ export function purchaseDungeonFarm(a, b) {
     a.farmStartTurn = game.state.turnNumber;
     registerDungeonFarm(a);
     var c = game.farms,
-      d = c.Yw(a.getWorldColumn()),
-      f = c.Yw(a.getWorldRow());
+      d = c.jitterCoordinate(a.getWorldColumn()),
+      f = c.jitterCoordinate(a.getWorldRow());
     registerFarm(c, new Farm(a.dungeonId, d, f));
     game.state.statisticsRecorder.recordFarmPurchased();
   }

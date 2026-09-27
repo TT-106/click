@@ -1,0 +1,13 @@
+[
+  { "old": "Is", "new": "registerClearedDungeon", "expect": 3, "files": ["src/engine/modules/world/dungeons.js", "src/engine/modules/persistence/game-save.js"] },
+  { "old": "lt", "new": "sortingEnabled", "expect": 5, "files": ["src/engine/modules/world/dungeons.js", "src/engine/modules/persistence/game-save.js"] },
+  { "old": "tx", "new": "setConquered", "expect": 4, "files": ["src/engine/modules/world/dungeons.js", "src/engine/modules/world/regions.js", "src/engine/modules/persistence/game-save.js"] },
+  { "old": "nw", "new": "farmList", "expect": 4, "files": ["src/engine/modules/world/dungeons.js", "src/engine/modules/persistence/game-save.js"] },
+  { "old": "Gz", "new": "farmSpriteName", "expect": 3, "files": ["src/engine/modules/world/dungeons.js", "src/engine/modules/world/terrain.js"] },
+  { "old": "tB", "new": "shopSpriteNames", "expect": 3, "files": ["src/engine/modules/world/dungeons.js"] },
+  { "old": "WE", "new": "regionColumn", "expect": 2, "files": ["src/engine/modules/world/dungeons.js"] },
+  { "old": "XE", "new": "regionRow", "expect": 2, "files": ["src/engine/modules/world/dungeons.js"] },
+  { "old": "EE", "new": "compareByFarmCost", "expect": 2, "files": ["src/engine/modules/world/dungeons.js"] },
+  { "old": "Yw", "new": "jitterCoordinate", "expect": 4, "files": ["src/engine/modules/world/dungeons.js", "src/engine/modules/simulation/tick.js"] },
+  { "old": "$r", "new": "recordLevelCleared", "expect": 5, "files": ["src/engine/modules/progression/statistics.js", "src/engine/modules/world/dungeons.js"] }
+]
