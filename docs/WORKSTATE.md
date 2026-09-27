@@ -5,6 +5,7 @@
 
 ## 当前轮次状态（2026-09-26，M13 文档与验收收尾）
 
+- U59 远程攻击与拾取法术缓存（2026-09-26，一笔提交，六门禁全绿，混淆清单 828 → 822）：co→consecutiveAttackTurns（RangedAttackBehavior 风筝：同目标连续攻击回合数，>2 归零重选）；pm/gm/Zl/fm/on→learnedSpell（召唤幽灵骷髅 15/范围伤害 13/连锁伤害 32/治疗系 10/召唤类 16 五个 notifySpellLearned 缓存，统一为学到的法术缓存并按 isSpellReady 门控）。执行器 --expect 探数流程再次生效（pm 实际 7 处而非 3）。
 - U58 布局/移动/游走字段（2026-09-26，一笔提交，六门禁全绿，混淆清单 831 → 828）：fl→widthInTiles（DungeonLayoutGenerator 列边界 + PathfindingGrid 列上界，兄弟 heightInTiles 已改）、dl→canPlaceDoorAt（布局生成时的门位碰撞检查）、ql→victoryOptionsApplied（party-creation 视图：胜利次数奖励技能点只应用一次；results.js 同名 ql 为离线进度挂载旗标，语义不同保留待办）、fn→fleeDirection（远程攻击风筝的累积逃离方向向量）。
 - U57 导航/资源视图字段（2026-09-26，一笔提交，六门禁全绿，混淆清单 836 → 831）：Fl→grid 在 pathfinding.js 重新落地（8 处——**U44 的 Fl 改名同样在早前 git checkout 中被静默回退**，残留扫描再次立功）；nl→notificationElement（远征地牢通知 div）、sl→pauseButton（暂停按钮）、Kl→tabListItem（页签 li）、Ll→tabBarContainer（页签容器）、Dk→cachedResourceCount（资源视图缓存计数）。
 - U56 地牢/远征视图标签格（2026-09-26，一笔提交，六门禁全绿，混淆清单 841 → 836）：Ml→actionLabel（地牢行与升级详情的动作按钮文字："搜索财宝箱!/搜索武器架!/搜索书架!"）、Bk→cachedDungeonName（地牢行与远征通知的缓存地牢名）、Ak/pk/zk→defenceHeaderCell/attackRatingHeaderCell/damageHeaderCell（远征统计表头格：防御率/攻击率/伤害，tooltip title 同步）。
