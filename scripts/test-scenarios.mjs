@@ -305,7 +305,7 @@ const scenarios = [
     steps: [[3000, snap => ({ spellCast: snap.statistics.spellCastCount > base.statistics.spellCastCount })], [3000, null]],
   },
   {
-    // 远程法术分支需要已装备的远程武器：原版与重构版的 createAttackAction 都把 equipment.Ey
+    // 远程法术分支需要已装备的远程武器：原版与重构版的 createAttackAction 都把 equipment.projectileWeapon
     // 交给无空值保护的 getProjectileAnimation，因此改职业后要补回槽 61 的投射武器（itemTypeId 取自引擎注册表）。
     // 唯一的 td:false 定义：spellCategoryId=12（忍者 快速打击，槽 62 飞镖 → projectileAnimationId=3）。
     name: 'spell-deferred-strike',

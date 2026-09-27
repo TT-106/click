@@ -5,7 +5,7 @@ import { Item, ItemEffect } from "../loot/items.js";
 import { game } from "../runtime/game.js";
 import { MonsterType, advanceMonsterTypeRank } from "../combat/encounters.js";
 export function serializeItem(a) {
-  var b = a.itemType.RD,
+  var b = a.itemType.itemTypeId,
     c = a.slot,
     d = a.characterClass,
     f = a.itemName,
@@ -22,10 +22,10 @@ export function serializeItem(a) {
     itemValue: a.itemValue,
     itemCharacteristic: a.characteristic,
     itemEffect: h ? {
-      itemEffectType: h.Dw,
-      itemEffectAmount: h.LD,
-      itemEffectDescription: h.MD,
-      itemEffectName: h.ms
+      itemEffectType: h.itemEffectType,
+      itemEffectAmount: h.itemEffectAmount,
+      itemEffectDescription: h.itemEffectDescription,
+      itemEffectName: h.itemEffectName
     } : null
   };
 }

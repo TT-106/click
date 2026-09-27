@@ -1,0 +1,17 @@
+[
+  { "old": "xm", "new": "effectsByType", "expect": 7, "files": ["src/engine/modules/loot/items.js"] },
+  { "old": "Dw", "new": "itemEffectType", "expect": 4, "files": ["src/engine/modules/loot/items.js", "src/engine/modules/persistence/entities.js", "src/engine/modules/combat/actions.js"] },
+  { "old": "LD", "new": "itemEffectAmount", "expect": 2, "files": ["src/engine/modules/loot/items.js", "src/engine/modules/persistence/entities.js"] },
+  { "old": "MD", "new": "itemEffectDescription", "expect": 2, "files": ["src/engine/modules/loot/items.js", "src/engine/modules/persistence/entities.js"] },
+  { "old": "ms", "new": "itemEffectName", "expect": 5, "files": ["src/engine/modules/loot/items.js", "src/engine/modules/persistence/entities.js", "src/engine/modules/combat/actions.js", "src/engine/modules/simulation/tick.js"] },
+  { "old": "RD", "new": "itemTypeId", "expect": 2, "files": ["src/engine/modules/loot/items.js", "src/engine/modules/persistence/entities.js"] },
+  { "old": "lA", "new": "iconSprite", "expect": 2, "files": ["src/engine/modules/loot/items.js"] },
+  { "old": "OD", "new": "itemNameGenerator", "expect": 2, "files": ["src/engine/modules/loot/items.js"] },
+  { "old": "Cw", "new": "isProjectileWeapon", "expect": 4, "files": ["src/engine/modules/loot/items.js", "src/engine/modules/characters/movement.js"] },
+  { "old": "sw", "new": "getProjectileAnimationId", "expect": 4, "files": ["src/engine/modules/loot/items.js", "src/engine/modules/combat/actions.js"] },
+  { "old": "To", "new": "getFrameCount", "expect": 6, "files": ["src/engine/modules/rendering/sprites.js", "src/engine/modules/combat/actions.js", "src/engine/modules/views/expedition.js", "src/engine/modules/views/upgrade-details.js"] },
+  { "old": "Ys", "new": "currentChainStep", "expect": 5, "files": ["src/engine/modules/combat/actions.js"] },
+  { "old": "bx", "new": "previousFrameIndex", "expect": 4, "files": ["src/engine/modules/rendering/sprites.js", "src/engine/modules/combat/actions.js", "src/engine/modules/simulation/tick.js"] },
+  { "old": "uA", "new": "loopsWhileStunned", "expect": 3, "files": ["src/engine/modules/rendering/sprites.js", "src/engine/modules/combat/actions.js"] },
+  { "old": "Ey", "new": "projectileWeapon", "expect": 4, "files": ["src/engine/modules/characters/movement.js", "src/engine/modules/combat/actions.js", "scripts/test-scenarios.mjs"] }
+]

@@ -8,7 +8,7 @@ export function Equipment(a, b) {
   this.characterClass = b;
   this.hw = {};
   this.slotList = a;
-  this.Ey = this.fz = null;
+  this.projectileWeapon = this.fz = null;
   var c;
   for (c = 0; c < a.length; c++) {
     this.hw[a[c]] = null;
@@ -196,8 +196,8 @@ export function initializeCharactersMovement() {
   };
   Equipment.prototype.equipItem = function (a) {
     this.hw[a.slot] = a;
-    if (a.Cw()) {
-      this.Ey = a;
+    if (a.isProjectileWeapon()) {
+      this.projectileWeapon = a;
     }
     if (1 === a.characteristic) {
       this.fz = a;

@@ -724,7 +724,7 @@ export function initializeViewsUpgradeDetails() {
       if (this.frameAge >= this.effectFrameInterval) {
         this.frameAge = 0;
         this.frameIndex++;
-        if (this.frameIndex >= this.asset.To()) {
+        if (this.frameIndex >= this.asset.getFrameCount()) {
           this.frameIndex = 0;
         }
         a = this.asset.frames[this.frameIndex];

@@ -426,7 +426,7 @@ export function initializeViewsExpedition() {
                 c = g.spritesheetPath;
                 d = game.animations.getAnimation(g.animationName);
                 this.effectFrameIndices[a]++;
-                if (this.effectFrameIndices[a] >= d.To()) {
+                if (this.effectFrameIndices[a] >= d.getFrameCount()) {
                   this.effectFrameIndices[a] = 0;
                 }
                 d = d.frames[this.effectFrameIndices[a]];

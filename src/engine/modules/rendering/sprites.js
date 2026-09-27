@@ -89,14 +89,14 @@ export function VisualEffect(a, b, c, d, f) {
   if (a && !this.animation) {
     console.log("Failed to find animated sprite: " + a);
   }
-  this.frameCount = this.animation ? this.animation.To() : 0;
-  this.bx = -1;
+  this.frameCount = this.animation ? this.animation.getFrameCount() : 0;
+  this.previousFrameIndex = -1;
   this.frameIndex = 0;
   if (this.animation && this.animation.isDirectional) {
     this.frameIndex = getEffectDirection(this);
   }
   this.elapsedMs = 0;
-  this.uA = false;
+  this.loopsWhileStunned = false;
 }
 export function getEffectDirection(a) {
   assignVector(directionScratchVector, a.targetPosition);
@@ -137,13 +137,13 @@ export function getEffectDirection(a) {
 export function advanceEffectFrame(a, b) {
   a.elapsedMs += b * FRAME_DURATION_MS;
   var c = a.projectileEffect ? PROJECTILE_FRAME_DURATION_MS : EFFECT_FRAME_DURATION_MS;
-  a.bx = a.frameIndex;
+  a.previousFrameIndex = a.frameIndex;
   if (a.elapsedMs >= c) {
     var d = Math.min(1, floorNumber(a.elapsedMs / c));
     a.elapsedMs = Math.max(0, floorNumber(a.elapsedMs % c));
     a.frameIndex += d;
     if (a.frameIndex >= a.frameCount) {
-      if (a.uA) {
+      if (a.loopsWhileStunned) {
         if (a.boundCharacter.effects.isStunned) {
           a.frameIndex = 0;
         } else {
@@ -202,7 +202,7 @@ export function initializeRenderingSprites() {
   SpriteAnimation.prototype.getSheetImage = function () {
     return this.spriteSheet.getSheetImage();
   };
-  SpriteAnimation.prototype.To = function () {
+  SpriteAnimation.prototype.getFrameCount = function () {
     return this.frames.length;
   };
   AnimationSheet.prototype.$w = function (a, b) {
@@ -263,7 +263,7 @@ export function initializeRenderingSprites() {
   VisualEffect.prototype.isFinished = function () {
     return this.finished || this.reachedTarget;
   };
-  VisualEffect.prototype.To = function () {
+  VisualEffect.prototype.getFrameCount = function () {
     return this.frameCount;
   };
 }

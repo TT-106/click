@@ -16,40 +16,40 @@ export function ItemDrop(a, b, c, d) {
   this.claimDistance = 0;
 }
 export function ItemEffect(a, b, c, d) {
-  this.Dw = a;
-  this.LD = b;
-  this.MD = c;
-  this.ms = d;
+  this.itemEffectType = a;
+  this.itemEffectAmount = b;
+  this.itemEffectDescription = c;
+  this.itemEffectName = d;
 }
 export function ItemEffectGenerator() {
-  this.xm = [];
-  this.xm[FIRE_ITEM_EFFECT] = {
+  this.effectsByType = [];
+  this.effectsByType[FIRE_ITEM_EFFECT] = {
     description: "Fire Damage",
     weaponEffectAnimationName: "Red Damage"
   };
-  this.xm[ICE_ITEM_EFFECT] = {
+  this.effectsByType[ICE_ITEM_EFFECT] = {
     description: "Ice Damage",
     weaponEffectAnimationName: "White Damage"
   };
-  this.xm[POISON_ITEM_EFFECT] = {
+  this.effectsByType[POISON_ITEM_EFFECT] = {
     description: "Poison Damage",
     weaponEffectAnimationName: "Green Damage"
   };
-  this.xm[SHOCK_ITEM_EFFECT] = {
+  this.effectsByType[SHOCK_ITEM_EFFECT] = {
     description: "Shock Damage",
     weaponEffectAnimationName: "Electric Damage"
   };
-  this.xm[SONIC_ITEM_EFFECT] = {
+  this.effectsByType[SONIC_ITEM_EFFECT] = {
     description: "Sonic Damage",
     weaponEffectAnimationName: "Sonic Damage"
   };
 }
 export function ItemType(a, b, c, d, f, g, h, l, n) {
-  this.RD = a;
+  this.itemTypeId = a;
   this.baseName = b;
   this.slotList = c;
   this.projectileAnimationId = n;
-  if (!(this.lA = game.itemSprites.getSprite(d))) {
+  if (!(this.iconSprite = game.itemSprites.getSprite(d))) {
     console.log("error. invalid item sprite: " + d);
   }
   // write-only 分类旗标（原 na/ma/la；双端零读者，语义由数据模式推断：近战/护甲/杂项）
@@ -88,7 +88,7 @@ export function getItemStatLabel(a) {
       return "最大法力";
     case 1:
       if (a.itemEffect) {
-        switch (a.itemEffect.Dw) {
+        switch (a.itemEffect.itemEffectType) {
           case FIRE_ITEM_EFFECT:
             return "火焰伤害";
           case ICE_ITEM_EFFECT:
@@ -132,7 +132,7 @@ export function getHighlightedItemName(a) {
   return -1 === c ? a : a.substring(0, c) + '<span style="color:#FAF;">' + b + "</span>" + a.substring(c + b.length);
 }
 export function ItemGenerator() {
-  this.OD = new ItemNameGenerator();
+  this.itemNameGenerator = new ItemNameGenerator();
   this.itemEffectGenerator = new ItemEffectGenerator();
   this.itemTypesBySlot = {};
   this.itemTypesById = {};
@@ -175,10 +175,10 @@ export function generateItem(a, b, c, d, f) {
     if (1 > u) {
       u = 1;
     }
-    p = p.xm[h];
+    p = p.effectsByType[h];
     p = new ItemEffect(h, u, "+" + formatAmount(u) + " " + p.description, p.weaponEffectAnimationName);
   }
-  a = a.OD;
+  a = a.itemNameGenerator;
   switch (f) {
     case 0:
       a = a.commonNames;
@@ -309,25 +309,25 @@ export function initializeLootItems() {
   SHOCK_ITEM_EFFECT = 4;
   SONIC_ITEM_EFFECT = 5;
   ItemType.prototype.getIconSprite = function () {
-    return this.lA;
+    return this.iconSprite;
   };
-  ItemType.prototype.sw = function () {
+  ItemType.prototype.getProjectileAnimationId = function () {
     return this.projectileAnimationId;
   };
-  ItemType.prototype.Cw = function () {
+  ItemType.prototype.isProjectileWeapon = function () {
     return this.isProjectileItem;
   };
   Item.prototype.getIconSprite = function () {
     return this.itemType.getIconSprite();
   };
-  Item.prototype.sw = function () {
-    return this.itemType.sw();
+  Item.prototype.getProjectileAnimationId = function () {
+    return this.itemType.getProjectileAnimationId();
   };
   Item.prototype.getRarity = function () {
     return this.itemRarity;
   };
-  Item.prototype.Cw = function () {
-    return this.itemType.Cw();
+  Item.prototype.isProjectileWeapon = function () {
+    return this.itemType.isProjectileWeapon();
   };
   ItemGenerator.prototype.rollRarity = function (a) {
     var b = 0,

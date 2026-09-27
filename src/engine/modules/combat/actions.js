@@ -28,7 +28,7 @@ export function CombatAction() {
   this.hasProjectilePhase = this.resolved = this.noDamage = false;
   this.impactEffect = this.projectileEffect = this.attacker = this.targetCharacter = this.actionDefinition = null;
   this.returns = this.chains = false;
-  this.chainCount = this.Ys = 0;
+  this.chainCount = this.currentChainStep = 0;
   this.returnOriginPosition = null;
 }
 /** @typedef {CombatAction & { setTargetCharacter: (target: unknown) => void }} TargetedCombatAction */
@@ -81,8 +81,8 @@ export function advanceCombatAction(a, b) {
       }
     }
   }
-  if ((d = b.impactEffect) && d.bx !== d.frameIndex) {
-    var f = d.To();
+  if ((d = b.impactEffect) && d.previousFrameIndex !== d.frameIndex) {
+    var f = d.getFrameCount();
     if (b.actionDefinition) {
       var g = b.targetCharacter,
         h = b.actionDefinition,
@@ -339,7 +339,7 @@ export function resolveCharacterDefeat(a, b) {
           f.isDisabled = true;
         }
       }
-      c.uA = true;
+      c.loopsWhileStunned = true;
       c.boundCharacter = b;
       addVisualEffect(game.effects, c);
       showFloatingText(game.floatingText, b, "昏迷!", "white");
@@ -449,7 +449,7 @@ export function createAttackAction(a, b, c) {
     c = b.position.levelPosition;
     var f = a.position.levelPosition,
       g = calculateAttackDamage(a, b);
-    b = a.equipment ? a.equipment.Ey : null;
+    b = a.equipment ? a.equipment.projectileWeapon : null;
     var h = a.getEffectItem(),
       h = h ? h.itemEffect : null;
     d.remainingDamage = g;
@@ -457,11 +457,11 @@ export function createAttackAction(a, b, c) {
     d.hasProjectilePhase = true;
     g = "Red Splat";
     if (h) {
-      var l = h.ms;
+      var l = h.itemEffectName;
       if (l) {
         g = l;
       }
-      f = new VisualEffect(getProjectileAnimation(b, h.Dw), f, c, true, 1);
+      f = new VisualEffect(getProjectileAnimation(b, h.itemEffectType), f, c, true, 1);
     } else {
       f = new VisualEffect(getProjectileAnimation(b, null), f, c, true, 1);
     }
@@ -481,7 +481,7 @@ export function createAttackAction(a, b, c) {
     d.remainingDamage = f;
     d.noDamage = 0 === f;
     d.hasProjectilePhase = false;
-    if (b && (f = b.ms)) {
+    if (b && (f = b.itemEffectName)) {
       a = new VisualEffect(f, c, c, false, 1);
     }
     if (!a) {
@@ -555,7 +555,7 @@ export function applyAreaTileEffect(a, b, c, d, f, g, h) {
   }
 }
 export function getProjectileAnimation(a, b) {
-  if (3 === a.sw()) {
+  if (3 === a.getProjectileAnimationId()) {
     return "Ninja Star";
   }
   if (b) {
@@ -640,7 +640,7 @@ export function createChainAction(a) {
   h.remainingDamage = d;
   h.noDamage = 0 === d;
   h.actionDefinition = a.actionDefinition;
-  h.Ys = b + 1;
+  h.currentChainStep = b + 1;
   h.chains = true;
   h.chainCount = c;
   return h;
@@ -656,7 +656,7 @@ export function createReturningAction(a) {
     f.hasProjectilePhase = true;
     f.actionDefinition = a.actionDefinition;
     f.returns = true;
-    f.Ys = 1;
+    f.currentChainStep = 1;
     f.chainCount = 0;
     c = a.projectileEffect;
     d = a.attacker.position.levelPosition;
@@ -688,7 +688,7 @@ export function createReturningAction(a) {
   f.attacker = a.attacker;
   f.hasProjectilePhase = true;
   f.actionDefinition = a.actionDefinition;
-  f.Ys = b + 1;
+  f.currentChainStep = b + 1;
   f.returns = true;
   f.chainCount = c;
   f.returnOriginPosition = a.returnOriginPosition;
@@ -714,7 +714,7 @@ export function initializeCombatActions() {
     this.targetCharacter = a;
   };
   CombatAction.prototype.getChainCount = function () {
-    return this.Ys;
+    return this.currentChainStep;
   };
   CombatQueue.prototype.findTreasureSpell = function (a) {
     if (a = getRoomTreasure(game.treasure, a.attacker.position.room)) {
