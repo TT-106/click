@@ -199,8 +199,8 @@ export function applySpellEffect(a, b) {
         setVector(goldOffset, f.Xo, f.Yo);
         var goldEffect = new VisualEffect("Gold Sparkles", d, goldOffset, false, 1);
         addVisualEffect(game.effects, goldEffect);
-        addGold(f.Xl);
-        game.state.statisticsRecorder.recordGoldFromMonsters(f.Xl);
+        addGold(f.goldAmount);
+        game.state.statisticsRecorder.recordGoldFromMonsters(f.goldAmount);
         f.setCollected(true);
         removeGoldDrop(f);
         awardAdventurePoints(9);

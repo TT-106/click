@@ -197,7 +197,7 @@ export function updateCharacter(a, b) {
             if (vectorLength(c.velocity) <= d) {
               assignVector(c.worldPosition, c.worldDestinationPoint);
               c.movementTargetCleared = true;
-            } else if (f === c.Rn && g === c.Sn) {
+            } else if (f === c.destTileColumn && g === c.destTileRow) {
               c.movementTargetCleared = true;
             } else {
               if (!c.nextWorldTile || !c.currentWorldTile || c.currentWorldTile.getWorldColumn() !== f || c.currentWorldTile.getWorldRow() !== g) {
@@ -207,11 +207,11 @@ export function updateCharacter(a, b) {
                   console.log("no current world tile!");
                   break a;
                 }
-                if (1 >= Math.abs(f - c.Rn) && 1 >= Math.abs(g - c.Sn)) {
-                  c.nextWorldTile = game.world.getTileAtPixel(c.Rn, c.Sn);
+                if (1 >= Math.abs(f - c.destTileColumn) && 1 >= Math.abs(g - c.destTileRow)) {
+                  c.nextWorldTile = game.world.getTileAtPixel(c.destTileColumn, c.destTileRow);
                 } else {
                   c.nextWorldTile = findCheapestNeighbor(c.currentWorldTile, c.previousWorldTile);
-                  if (c.nextWorldTile && c.nextWorldTile.getWorldColumn() !== c.Rn && c.nextWorldTile.getWorldRow() !== c.Sn) {
+                  if (c.nextWorldTile && c.nextWorldTile.getWorldColumn() !== c.destTileColumn && c.nextWorldTile.getWorldRow() !== c.destTileRow) {
                     c.nextWorldTile = findCheapestNeighbor(c.nextWorldTile, c.currentWorldTile);
                   }
                 }
@@ -238,7 +238,7 @@ export function updateCharacter(a, b) {
             assignVector(c.worldPosition, c.worldDestinationPoint);
             c.movementTargetCleared = true;
           } else {
-            if (l === c.Rn && n === c.Sn) {
+            if (l === c.destTileColumn && n === c.destTileRow) {
               c.movementTargetCleared = true;
             } else {
               setVector(c.velocity, c.worldDestinationPoint.x + 1, c.worldDestinationPoint.y + 1);
@@ -286,7 +286,7 @@ export function updateCharacter(a, b) {
                   var z,
                     O = getAllies(),
                     J,
-                    la = u.hallway.Km;
+                    la = u.hallway.discovered;
                   for (z = 0; z < O.length; z++) {
                     if (O[z].effects.isDisabled) {
                       x = false;
@@ -318,7 +318,7 @@ export function updateCharacter(a, b) {
                       spawnRoomTreasure(Q.leadsTo);
                     }
                     var na = Q.hallway;
-                    if (!na.Km) {
+                    if (!na.discovered) {
                       revealHallway(na, true);
                       var K = getOppositeDoor(na, Q);
                       if (!K.isOpen) {
@@ -994,13 +994,13 @@ export function updateCharacter(a, b) {
         }
       } else if (5 === a.actionType) {
         if (a.targetGoldDrop && !a.targetGoldDrop.collected) {
-          var Pe = a.targetGoldDrop.Xl,
+          var Pe = a.targetGoldDrop.goldAmount,
             gj = game.floatingText;
           if (0 < Pe) {
             showFloatingText(gj, a, Pe + "黄金", "yellow");
           }
-          addGold(a.targetGoldDrop.Xl);
-          game.state.statisticsRecorder.recordGoldFromMonsters(a.targetGoldDrop.Xl);
+          addGold(a.targetGoldDrop.goldAmount);
+          game.state.statisticsRecorder.recordGoldFromMonsters(a.targetGoldDrop.goldAmount);
           a.targetGoldDrop.setCollected(true);
           removeGoldDrop(a.targetGoldDrop);
           a.targetGoldDrop = null;

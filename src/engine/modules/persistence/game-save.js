@@ -823,7 +823,7 @@ export function createSaveState(a) {
       for (wa = 0; wa < Ea.length; wa++) {
         var Fa = Ea[wa];
         La.push({
-          visible: Fa.Km,
+          visible: Fa.discovered,
           doorAOpen: Fa.doorA.isOpen,
           doorBOpen: Fa.doorB.isOpen
         });

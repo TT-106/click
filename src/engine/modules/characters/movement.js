@@ -26,7 +26,7 @@ export function CharacterPosition(a, b) {
   this.worldPosition = new Vector2();
   this.room = this.currentHallway = null;
   this.worldDestinationPoint = new Vector2();
-  this.Sn = this.Rn = 0;
+  this.destTileRow = this.destTileColumn = 0;
   this.moveTargetPoint = new Vector2();
   this.routeQueue = null;
   this.movementTargetCleared = false;
@@ -62,8 +62,8 @@ export function applySeparationForce(a, b, c, d) {
   }
 }
 export function setWorldDestination(a, b, c) {
-  a.Rn = b;
-  a.Sn = c;
+  a.destTileColumn = b;
+  a.destTileRow = c;
   setVector(a.worldDestinationPoint, game.world.tileToPixelX(b), game.world.tileToPixelY(c));
 }
 export function findCheapestNeighbor(a, b) {

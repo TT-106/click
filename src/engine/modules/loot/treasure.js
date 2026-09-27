@@ -7,7 +7,7 @@ import { getMonsters } from "../combat/encounters.js";
 import { globalUpgradeDefinitions } from "../content/balance.js";
 import { canPlaceRoomObject } from "../world/rooms.js";
 export function GoldDrop(a, b, c, d) {
-  this.Xl = a;
+  this.goldAmount = a;
   this.Xo = b;
   this.Yo = c;
   this.vD = d;

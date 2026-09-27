@@ -167,7 +167,7 @@ export function findNextUnopenedDoor() {
   }
   for (a = 0; a < n.length; a++) {
     b = n[a];
-    if (b.Km) {
+    if (b.discovered) {
       d = b.doorA;
       if (!d.isOpen) {
         if (g) {

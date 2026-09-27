@@ -507,7 +507,7 @@ export function initializeRenderingScene() {
           z = I.Yo;
           O = projectWorldX(x, z);
           J = projectWorldY(x, z);
-          var Q = I.Xl,
+          var Q = I.goldAmount,
             V = game.goldDrops;
           a.drawSprite(100 > Q ? V.Sz : 1E3 > Q ? V.xw : V.wD, O, J);
         }

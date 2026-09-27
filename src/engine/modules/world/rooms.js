@@ -276,7 +276,7 @@ export function DungeonHallway(a, b, c, d) {
   this.doorB = d;
   this.pathTiles = [];
   this.tileGrid = this.theme = null;
-  this.Km = false;
+  this.discovered = false;
 }
 export function getOppositeDoor(a, b) {
   if (b === a.doorA) {
@@ -289,8 +289,8 @@ export function getOppositeDoor(a, b) {
   return null;
 }
 export function revealHallway(a, b) {
-  var shouldReveal = b && !a.Km;
-  a.Km = b;
+  var shouldReveal = b && !a.discovered;
+  a.discovered = b;
   if (shouldReveal) {
     var c = a.pathTiles,
       d,
