@@ -7,12 +7,12 @@ import { isBetterItem } from "./items.js";
 export function Inventory() {
   this.items = [];
   this.vp = BASE_INVENTORY_CAPACITY + Math.min(MAX_PRESTIGE_INVENTORY_BONUS, game.state.victoryCount);
-  this.Bw = null;
+  this.owner = null;
   this.ip = false;
 }
 export function addInventoryItem(a, b) {
   if (a.items.length < a.vp) {
-    b.inventory = a.Bw;
+    b.inventory = a.owner;
     a.items.push(b);
     a.ip = true;
     sortInventory(game.inventories, a.items);
@@ -36,7 +36,7 @@ export function addInventoryItem(a, b) {
     c = d;
     if (-1 < c && isBetterItem(b, a.items[c])) {
       removeInventoryItemAt(a, c);
-      b.inventory = a.Bw;
+      b.inventory = a.owner;
       a.items.push(b);
       a.ip = true;
       sortInventory(game.inventories, a.items);

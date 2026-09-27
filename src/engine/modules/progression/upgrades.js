@@ -255,7 +255,7 @@ export function CollectFarmUpgrade() {
 }
 export function initializeProgressionUpgrades() {
   SKILL_UPGRADE_TYPE = 5;
-  Upgrade.prototype.sx = function () {};
+  Upgrade.prototype.bindCharacter = function () {};
   Upgrade.prototype.isDisplayable = function () {
     return true;
   };
@@ -750,7 +750,7 @@ export function initializeProgressionUpgrades() {
     return a != this.canPurchase || b != this.affordableSoon || c != this.retireLevel;
   };
   CharacterSkillUpgrade.prototype = new Upgrade();
-  CharacterSkillUpgrade.prototype.sx = function (a) {
+  CharacterSkillUpgrade.prototype.bindCharacter = function (a) {
     this.character = a;
   };
   CharacterSkillUpgrade.prototype.Jr = function () {
@@ -815,7 +815,7 @@ export function initializeProgressionUpgrades() {
     console.log("error: adventurer not assigned to skill upgrade");
   };
   LearnSpellUpgrade.prototype = new Upgrade();
-  LearnSpellUpgrade.prototype.sx = function (a) {
+  LearnSpellUpgrade.prototype.bindCharacter = function (a) {
     this.character = a;
   };
   LearnSpellUpgrade.prototype.Jr = function () {

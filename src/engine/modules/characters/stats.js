@@ -5,7 +5,7 @@ import { floorNumber } from "../core/math.js";
 import { DEFAULT_CHAIN_CHANCE, DEFAULT_MINION_LIMIT, DEFAULT_MULTI_ATTACK_CHANCE, attackCooldownBonus, freeSpellsModifier } from "../content/balance.js";
 import { game } from "../runtime/game.js";
 export function StatComponent(a) {
-  this.no = a;
+  this.owner = a;
   this.skillBonusPercent = this.spellBonusPercent = this.levelValue = this.itemValue = 0;
 }
 export function addSpellStatBonus(a, b) {
@@ -16,7 +16,7 @@ export function statValue(a) {
   return b + floorNumber((a.skillBonusPercent + a.spellBonusPercent) / 100 * b);
 }
 export function CharacterStats(a) {
-  this.no = a;
+  this.owner = a;
   this.characterLevel = 0;
   this.experienceToLevelUp = 100;
   this.lm = this.spellSpiritCost = this.spirit = this.health = 0;
@@ -29,7 +29,7 @@ export function CharacterStats(a) {
   this.chainChance = DEFAULT_CHAIN_CHANCE;
   this.extraAttackCount = 0;
   this.extraAttackChance = DEFAULT_MULTI_ATTACK_CHANCE;
-  this.mu = this.lu = this.ku = this.Ss = this.Qs = this.Ps = this.Rs = this.Ts = this.nt = this.vt = this.ho = this.Qq = this.Ft = this.mr = this.ar = 0;
+  this.mu = this.lu = this.ku = this.Ss = this.Qs = this.Ps = this.Rs = this.Ts = this.ricochetCountBonus = this.swiftStrikeTargetBonus = this.areaRadiusBonus = this.rainAreaBonus = this.transformTargetBonus = this.controlTargetBonus = this.chainArcBonus = 0;
   this.damage = new StatComponent(a);
   this.armor = new StatComponent(a);
   this.attackRating = new StatComponent(a);
@@ -77,14 +77,14 @@ export function resetSkillStatBonuses(a) {
   a.Ss = 0;
   a.extraAttackCount = 0;
   a.extraAttackChance = DEFAULT_MULTI_ATTACK_CHANCE;
-  a.mr = 0;
-  a.Ft = 0;
-  a.ar = 0;
+  a.controlTargetBonus = 0;
+  a.transformTargetBonus = 0;
+  a.chainArcBonus = 0;
   a.lm = 0;
-  a.ho = 0;
-  a.Qq = 0;
-  a.vt = 0;
-  a.nt = 0;
+  a.areaRadiusBonus = 0;
+  a.rainAreaBonus = 0;
+  a.swiftStrikeTargetBonus = 0;
+  a.ricochetCountBonus = 0;
   a.ku = 0;
   a.lu = 0;
   a.mu = 0;

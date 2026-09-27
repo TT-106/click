@@ -291,7 +291,7 @@ export function initializeWorldRegions() {
   Castle.prototype.Is = function () {
     refreshCastleConquest(this);
   };
-  Castle.prototype.er = function () {
+  Castle.prototype.levelSeed = function () {
     return hashCoordinates(this.ZC, this.$C, 1);
   };
 }

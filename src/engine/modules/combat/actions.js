@@ -27,7 +27,7 @@ export function CombatAction() {
   this.remainingDamage = 0;
   this.hasProjectilePhase = this.resolved = this.noDamage = false;
   this.impactEffect = this.projectileEffect = this.attacker = this.targetCharacter = this.actionDefinition = null;
-  this.ut = this.Xs = false;
+  this.returns = this.chains = false;
   this.chainCount = this.Ys = 0;
   this.returnOriginPosition = null;
 }
@@ -71,12 +71,12 @@ export function advanceCombatAction(a, b) {
     if (0 < b.remainingDamage) {
       showDamageText(b.targetCharacter, b.remainingDamage);
     }
-    if (b.Xs) {
+    if (b.chains) {
       if (d = createChainAction(b)) {
         enqueueCombatAction(a, d);
       }
     } else {
-      if (b.ut && (d = createReturningAction(b))) {
+      if (b.returns && (d = createReturningAction(b))) {
         enqueueCombatAction(a, d);
       }
     }
@@ -469,7 +469,7 @@ export function createAttackAction(a, b, c) {
     d.projectileEffect = f;
     a = a.stats.Ir();
     if (0 < a) {
-      d.Xs = true;
+      d.chains = true;
       d.chainCount = a;
     }
     a = new VisualEffect(g, c, c, false, 1);
@@ -641,7 +641,7 @@ export function createChainAction(a) {
   h.noDamage = 0 === d;
   h.actionDefinition = a.actionDefinition;
   h.Ys = b + 1;
-  h.Xs = true;
+  h.chains = true;
   h.chainCount = c;
   return h;
 }
@@ -655,7 +655,7 @@ export function createReturningAction(a) {
     (/** @type {TargetedCombatAction} */ (f)).setTargetCharacter(a.attacker);
     f.hasProjectilePhase = true;
     f.actionDefinition = a.actionDefinition;
-    f.ut = true;
+    f.returns = true;
     f.Ys = 1;
     f.chainCount = 0;
     c = a.projectileEffect;
@@ -689,7 +689,7 @@ export function createReturningAction(a) {
   f.hasProjectilePhase = true;
   f.actionDefinition = a.actionDefinition;
   f.Ys = b + 1;
-  f.ut = true;
+  f.returns = true;
   f.chainCount = c;
   f.returnOriginPosition = a.returnOriginPosition;
   var h = a.projectileEffect,

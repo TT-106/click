@@ -52,19 +52,19 @@ export function Character(a, b, c, d, f) {
   } else {
     d = null;
   }
-  this.KD = d;
+  this.slotStatTypes = d;
   this.equipment = b != MONSTER_TYPE ? new Equipment(this.slotList, this.characterClass) : null;
   this.monsterType = this.sprite = null;
   this.position = new CharacterPosition(WORLD_WALK_SPEED, DUNGEON_WALK_SPEED);
   this.effects = new CharacterEffects(this);
   if (this.inventory = f) {
-    this.inventory.Bw = this;
+    this.inventory.owner = this;
   }
   this.actionType = IDLE_ACTION;
   this.isDead = false;
   this.spellToCast = this.targetTreasureChest = this.targetItemDrop = this.targetPotionDrop = this.targetScrollDrop = this.targetGoldDrop = this.combatTarget = this.behaviors = null;
   this.stats = new CharacterStats(this);
-  this.au = -3 * getAttackCooldown(this.stats, true);
+  this.lastAttackTurn = -3 * getAttackCooldown(this.stats, true);
   this.summoner = null;
   this.summonedAtTurn = this.lifetimeTurns = 0;
   this.companion = this.summonedMinions = null;
@@ -93,7 +93,7 @@ export function bindSkillTree(a, b) {
     for (c = 0; c < b.length; c++) {
       d = b[c];
       d.resetState();
-      d.sx(a);
+      d.bindCharacter(a);
       if (0 < c) {
         d.prerequisite = b[c - 1];
       }
@@ -128,10 +128,10 @@ export function countSummonedMinions(a) {
   return a.summonedMinions && 0 !== a.summonedMinions.length ? a.companion ? Math.max(0, a.summonedMinions.length - 1) : a.summonedMinions.length : 0;
 }
 export function markAttackTurn(a) {
-  a.au = game.state.turnNumber;
+  a.lastAttackTurn = game.state.turnNumber;
 }
 export function canAttack(a) {
-  return game.state.turnNumber - a.au >= getAttackCooldown(a.stats, isAdventurerOrMinion(a));
+  return game.state.turnNumber - a.lastAttackTurn >= getAttackCooldown(a.stats, isAdventurerOrMinion(a));
 }
 export function isAdventurerOrMinion(a) {
   return a.characterType === ADVENTURER_TYPE || 1 === a.characterType || 5 === a.characterType;
@@ -160,8 +160,8 @@ export function equipItem(a, b) {
     c.damage.itemValue = 0;
     c.maxHealth.itemValue = 0;
     c.maxSpirit.itemValue = 0;
-    var g = c.no.slotList,
-      h = c.no.equipment;
+    var g = c.owner.slotList,
+      h = c.owner.equipment;
     for (d = 0; d < g.length; d++) {
       if (f = h.getSlotItem(g[d])) {
         var l = c.damage;
@@ -191,7 +191,7 @@ export function updateCharacter(a, b) {
           a: {
             assignVector(c.velocity, c.worldDestinationPoint);
             subtractVector(c.velocity, c.worldPosition);
-            var d = b * c.MC * walkingSpeedBonus.currentValue * walkingSpeedModifier.currentValue,
+            var d = b * c.worldWalkSpeed * walkingSpeedBonus.currentValue * walkingSpeedModifier.currentValue,
               f = game.world.pixelToTileColumn(c.worldPosition.x),
               g = game.world.pixelToTileRow(c.worldPosition.y);
             if (vectorLength(c.velocity) <= d) {
@@ -231,7 +231,7 @@ export function updateCharacter(a, b) {
         } else {
           assignVector(c.velocity, c.worldDestinationPoint);
           subtractVector(c.velocity, c.worldPosition);
-          var h = b * c.MC * walkingSpeedBonus.currentValue * walkingSpeedModifier.currentValue,
+          var h = b * c.worldWalkSpeed * walkingSpeedBonus.currentValue * walkingSpeedModifier.currentValue,
             l = game.world.pixelToTileColumn(c.worldPosition.x),
             n = game.world.pixelToTileRow(c.worldPosition.y);
           if (vectorLength(c.velocity) <= h) {
@@ -257,7 +257,7 @@ export function updateCharacter(a, b) {
       } else {
         var p = a.position,
           s;
-        s = isAdventurerOrMinion(a) ? b * p.Jw * walkingSpeedBonus.currentValue * walkingSpeedModifier.currentValue : p.Jw * b;
+        s = isAdventurerOrMinion(a) ? b * p.dungeonWalkSpeed * walkingSpeedBonus.currentValue * walkingSpeedModifier.currentValue : p.dungeonWalkSpeed * b;
         if (null != p.routeQueue && 0 < p.routeQueue.length) {
           var u = p.routeQueue[0];
           setVector(p.velocity, u.pixelColumn, u.pixelRow);
@@ -404,7 +404,7 @@ export function updateCharacter(a, b) {
           if (vectorLength(p.velocity) <= s) {
             assignVector(p.levelPosition, p.moveTargetPoint);
             if (p.targetRoom) {
-              game.state.party.iw();
+              game.state.party.completeLevel();
             }
             clearMovementTarget(p);
           } else {
@@ -510,7 +510,7 @@ export function updateCharacter(a, b) {
               if (ha) {
                 var ja = a.combatTarget;
                 if (ja && !ja.isDead) {
-                  var Ga = 1 + (a.stats.ar + 1),
+                  var Ga = 1 + (a.stats.chainArcBonus + 1),
                     bb = null,
                     za = null,
                     nb = null,
@@ -583,7 +583,7 @@ export function updateCharacter(a, b) {
               if (cc) {
                 var Qa = a.combatTarget;
                 if (Qa && !Qa.isDead) {
-                  var nc = a.stats.Qq + 1,
+                  var nc = a.stats.rainAreaBonus + 1,
                     sa,
                     Tb,
                     qc = cc.projectileEffectName,
@@ -674,7 +674,7 @@ export function updateCharacter(a, b) {
                     Y.room = nf;
                     Y.remainingEffectDamage = oe;
                     Ya.impactEffect = Y;
-                    var Nc = a.stats.ho + 1,
+                    var Nc = a.stats.areaRadiusBonus + 1,
                       gd = xb.position,
                       uc = gd.room,
                       U = game.level.pixelToTileColumn(gd.getLevelPositionX()),
@@ -853,8 +853,8 @@ export function updateCharacter(a, b) {
             } else if (12 === pa) {
               var bd = createSpellAction(a);
               if (bd) {
-                bd.ut = true;
-                bd.chainCount = a.stats.vt + 1;
+                bd.returns = true;
+                bd.chainCount = a.stats.swiftStrikeTargetBonus + 1;
                 var Fh = a.position.levelPosition;
                 if (Fh) {
                   if (!bd.returnOriginPosition) {
@@ -875,9 +875,9 @@ export function updateCharacter(a, b) {
             } else if (13 === pa) {
               var Ih = createSpellAction(a);
               if (Ih) {
-                var fj = a.stats.nt + 1;
+                var fj = a.stats.ricochetCountBonus + 1;
                 if (0 < fj) {
-                  Ih.Xs = true;
+                  Ih.chains = true;
                   Ih.chainCount = fj;
                 }
               }
@@ -897,9 +897,9 @@ export function updateCharacter(a, b) {
                 var Jh,
                   te = vf.statusEffectTypeId;
                 if (1 === te || 0 === te) {
-                  Jh = a.stats.mr + 1;
+                  Jh = a.stats.controlTargetBonus + 1;
                 } else if (4 === te) {
-                  Jh = a.stats.Ft + 1;
+                  Jh = a.stats.transformTargetBonus + 1;
                 } else {
                   console.log("wrong effect type: " + te);
                   break a;
@@ -1152,7 +1152,7 @@ export function updateCharacter(a, b) {
             var ye = Ef.targetDungeon;
             game.currentDungeon = ye;
             ye.currentLevelIndex = 0;
-            generateDungeonLevel(ye.er(), ye.dungeonType, ye.hasSecondEntrance, true);
+            generateDungeonLevel(ye.levelSeed(), ye.dungeonType, ye.hasSecondEntrance, true);
             game.worldActive = false;
             if (ye.discovered) {
               recordGameEvent("Dungeon", "Entering Dungeon Again");
@@ -1177,7 +1177,7 @@ export function updateCharacter(a, b) {
               Se.targetTreasureChest = null;
               var xl = Se.activeCastle;
               game.currentCastle = xl;
-              generateDungeonLevel(xl.er(), 11, false, true);
+              generateDungeonLevel(xl.levelSeed(), 11, false, true);
               game.worldActive = false;
               recordGameEvent("Castle", "正在进入城堡:" + xl.castleName);
             }

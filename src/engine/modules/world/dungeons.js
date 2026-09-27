@@ -205,15 +205,15 @@ export function initializeWorldDungeons() {
   Dungeon.prototype.ww = function () {
     return this.XE;
   };
-  Dungeon.prototype.er = function () {
+  Dungeon.prototype.levelSeed = function () {
     return hashCoordinates(this.worldColumn, this.worldRow, this.currentLevelIndex);
   };
-  Dungeon.prototype.iw = function () {
+  Dungeon.prototype.advanceLevel = function () {
     this.currentLevelIndex++;
     resetEncounter();
     game.state.statisticsRecorder.$r();
     if (this.currentLevelIndex < this.levelCount) {
-      generateDungeonLevel((/** @type {any} */ (this)).er(), this.dungeonType, this.hasSecondEntrance, true);
+      generateDungeonLevel((/** @type {any} */ (this)).levelSeed(), this.dungeonType, this.hasSecondEntrance, true);
       awardAdventurePoints(POINT_EVENT_LEVEL_CLEARED);
       recordGameEvent("Dungeon", "进入等级" + this.currentLevelIndex);
     } else {

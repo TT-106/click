@@ -243,7 +243,7 @@ export function advanceSimulation(a) {
     if (eb = ta[Gb].position, null != eb.steeringVector) {
       var Da = eb;
       if (Da.steeringVector) {
-        var ub = Da.Jw * a * 3;
+        var ub = Da.dungeonWalkSpeed * a * 3;
         assignVector(Da.velocity, Da.steeringVector);
         normalizeVector(Da.velocity);
         multiplyVector(Da.velocity, ub);
@@ -294,7 +294,7 @@ export function advanceSimulation(a) {
                 Sb = game.upgradeRegistry,
                 Ma = vb.targetCharacter,
                 zb = vb.attacker,
-                Hb = floorNumber((zb.stats.ho + 1) * game.tileSize),
+                Hb = floorNumber((zb.stats.areaRadiusBonus + 1) * game.tileSize),
                 ac = findTargetsInRange(zb, Ma, 200, Hb);
               if (ac && 0 !== ac.length) {
                 var ob = undefined,

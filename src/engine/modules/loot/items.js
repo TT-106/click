@@ -163,7 +163,7 @@ export function generateItem(a, b, c, d, f) {
     h = itemRarityTiers[0];
   }
   var p = null;
-  l = c.KD[b];
+  l = c.slotStatTypes[b];
   var s = getClassStatMultiplier(c, l) * h.statMultiplier;
   n = randomizeScaledValue(d, itemStatCurve, s);
   s = randomizeScaledValue(d, itemGoldCurve, s) * itemGoldModifier.currentValue;

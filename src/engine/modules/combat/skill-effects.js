@@ -100,19 +100,19 @@ export function applyStatBonus(a, b, c) {
       a.extraAttackChance += c;
       break;
     case 21:
-      a.ar += c;
+      a.chainArcBonus += c;
       break;
     case 20:
-      a.mr += c;
+      a.controlTargetBonus += c;
       break;
     case 27:
-      a.Ft += c;
+      a.transformTargetBonus += c;
       break;
     case 22:
-      a.Qq += c;
+      a.rainAreaBonus += c;
       break;
     case 25:
-      a.ho += 1;
+      a.areaRadiusBonus += 1;
       break;
     case 23:
       a.chainCount += c;
@@ -127,10 +127,10 @@ export function applyStatBonus(a, b, c) {
       a.maxSummonedMinions += c;
       break;
     case 28:
-      a.vt += c;
+      a.swiftStrikeTargetBonus += c;
       break;
     case 29:
-      a.nt += c;
+      a.ricochetCountBonus += c;
       break;
     case 30:
       a.ku = c;

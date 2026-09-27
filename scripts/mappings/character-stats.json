@@ -1,0 +1,19 @@
+[
+  { "old": "no", "new": "owner", "files": ["src/engine/modules/characters/character.js", "src/engine/modules/characters/effects.js", "src/engine/modules/characters/stats.js"], "expect": "auto" },
+  { "old": "ho", "new": "areaRadiusBonus", "files": ["src/engine/modules/characters/character.js", "src/engine/modules/characters/stats.js", "src/engine/modules/combat/skill-effects.js", "src/engine/modules/simulation/tick.js"], "expect": "auto" },
+  { "old": "ut", "new": "returns", "files": ["src/engine/modules/characters/character.js", "src/engine/modules/combat/actions.js"], "expect": "auto" },
+  { "old": "Xs", "new": "chains", "files": ["src/engine/modules/characters/character.js", "src/engine/modules/combat/actions.js"], "expect": "auto" },
+  { "old": "er", "new": "levelSeed", "files": ["src/engine/modules/characters/character.js", "src/engine/modules/world/dungeons.js", "src/engine/modules/world/regions.js"], "expect": "auto" },
+  { "old": "Bw", "new": "owner", "files": ["src/engine/modules/characters/character.js", "src/engine/modules/loot/inventory.js"], "expect": "auto" },
+  { "old": "au", "new": "lastAttackTurn", "files": ["src/engine/modules/characters/character.js", "src/engine/modules/runtime/game.js"], "expect": "auto" },
+  { "old": "sx", "new": "bindCharacter", "files": ["src/engine/modules/characters/character.js", "src/engine/modules/progression/upgrades.js"], "expect": "auto" },
+  { "old": "Jw", "new": "dungeonWalkSpeed", "files": ["src/engine/modules/characters/character.js", "src/engine/modules/characters/movement.js", "src/engine/modules/simulation/tick.js"], "expect": "auto" },
+  { "old": "ar", "new": "chainArcBonus", "files": ["src/engine/modules/characters/character.js", "src/engine/modules/characters/stats.js", "src/engine/modules/combat/skill-effects.js"], "expect": "auto" },
+  { "old": "Qq", "new": "rainAreaBonus", "files": ["src/engine/modules/characters/character.js", "src/engine/modules/characters/stats.js", "src/engine/modules/combat/skill-effects.js"], "expect": "auto" },
+  { "old": "vt", "new": "swiftStrikeTargetBonus", "files": ["src/engine/modules/characters/character.js", "src/engine/modules/characters/stats.js", "src/engine/modules/combat/skill-effects.js"], "expect": "auto" },
+  { "old": "nt", "new": "ricochetCountBonus", "files": ["src/engine/modules/characters/character.js", "src/engine/modules/characters/stats.js", "src/engine/modules/combat/skill-effects.js"], "expect": "auto" },
+  { "old": "mr", "new": "controlTargetBonus", "files": ["src/engine/modules/characters/character.js", "src/engine/modules/characters/stats.js", "src/engine/modules/combat/skill-effects.js"], "expect": "auto" },
+  { "old": "Ft", "new": "transformTargetBonus", "files": ["src/engine/modules/characters/character.js", "src/engine/modules/characters/stats.js", "src/engine/modules/combat/skill-effects.js"], "expect": "auto" },
+  { "old": "MC", "new": "worldWalkSpeed", "files": ["src/engine/modules/characters/character.js", "src/engine/modules/characters/movement.js"], "expect": "auto" },
+  { "old": "KD", "new": "slotStatTypes", "files": ["src/engine/modules/characters/character.js", "src/engine/modules/loot/items.js"], "expect": "auto" }
+]

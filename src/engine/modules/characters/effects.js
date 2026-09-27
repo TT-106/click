@@ -18,7 +18,7 @@ export function isDisablingEffect(a) {
   return 0 === a.statusEffectTypeId || 1 === a.statusEffectTypeId || 13 === a.statusEffectTypeId || 14 === a.statusEffectTypeId;
 }
 export function CharacterEffects(a) {
-  this.no = a;
+  this.owner = a;
   this.isStunned = this.isStealthed = this.isConverted = this.isEnraged = this.hasStealthEffect = this.isDisabled = false;
   this.activeEffects = [];
 }
@@ -35,7 +35,7 @@ export function updateCharacterEffects(a, b) {
   a.isConverted = false;
   a.isStealthed = false;
   a.isStunned = false;
-  var n = a.no.stats,
+  var n = a.owner.stats,
     p = n.damage,
     s = n.armor,
     u = n.attackRating,

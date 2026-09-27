@@ -20,8 +20,8 @@ export function CharacterPosition(a, b) {
   this.separationVector = new Vector2();
   this.worldSeparationVector = new Vector2();
   this.separationDelta = new Vector2();
-  this.Jw = b;
-  this.MC = a;
+  this.dungeonWalkSpeed = b;
+  this.worldWalkSpeed = a;
   this.levelPosition = new Vector2();
   this.worldPosition = new Vector2();
   this.room = this.currentHallway = null;

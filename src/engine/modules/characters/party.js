@@ -202,10 +202,10 @@ export function initializeCharactersParty() {
   PartyState.prototype.setTargetTreasureChest = function (a) {
     this.targetTreasureChest = a;
   };
-  PartyState.prototype.iw = function () {
+  PartyState.prototype.completeLevel = function () {
     this.targetTreasureChest = this.targetRoom = this.targetDoor = this.destinationRoom = null;
     if (game.currentDungeon) {
-      game.currentDungeon.iw();
+      game.currentDungeon.advanceLevel();
     } else if (game.currentCastle) {
       var a = game.currentCastle;
       game.currentCastle = null;
