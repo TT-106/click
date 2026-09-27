@@ -252,7 +252,9 @@ const scenarios = [
     // 加成结果写入存档的 spellBonusPercent，因此属于可直接对账的可观察量。
     name: 'spell-buff-armor',
     make: () => withClassSpell(base, 6, '提高护甲'),
-    steps: [[3000, snap => ({ spellCast: snap.statistics.spellCastCount > base.statistics.spellCastCount })], [3000, null]],
+    // allyEffectType=5：cat=3「提高护甲」的 statusEffectTypeId=5，效果落在**队友**身上，
+    // 因此必须用盟友侧观察器（活怪物队列里永远看不到），两端施加次数都要 >0 且相等。
+    steps: [{ turns: 3000, check: snap => ({ spellCast: snap.statistics.spellCastCount > base.statistics.spellCastCount }), allyEffectType: 5 }, [3000, null]],
   },
   {
     // 召唤类分支：spellCategoryId=9 → applySpellEffect 走 summonSpellMinion，
@@ -268,6 +270,14 @@ const scenarios = [
     steps: [{ turns: 3000, check: snap => ({ spellCast: snap.statistics.spellCastCount > base.statistics.spellCastCount, summoned: snap.statistics.minionsSummoned > base.statistics.minionsSummoned }) }, [3000, null]],
   },
   {
+    // 召唤类分支：spellCategoryId=10（德鲁伊 狼群）。与 cat=9 共用 summonSpellMinion 分支
+    // （actions.js:154 的 `10 === d || 9 === d`），因此可观测量同为存档统计 minionsSummoned。
+    // 补这条是为了消掉「cat=10 无任何场景驱动」的覆盖空洞——由 scripts/check-spell-coverage.mjs 发现。
+    name: 'spell-summon-wolf-pack',
+    make: () => withReclassedSpell(base, 3, 10, '狼群'),
+    steps: [{ turns: 3000, check: snap => ({ spellCast: snap.statistics.spellCastCount > base.statistics.spellCastCount, summoned: snap.statistics.minionsSummoned > base.statistics.minionsSummoned }) }, [3000, null]],
+  },
+  {
     // 控制类分支：spellCategoryId=2、statusEffectTypeId=0（睡眠），
     // 用逐帧扫描直接计数睡眠落到活怪物上的次数。
     name: 'spell-sleep',
@@ -278,31 +288,41 @@ const scenarios = [
     // 治疗分支：spellCategoryId=1（牧师 治疗）。两端各自断言实际施法，再比较完整存档。
     name: 'spell-heal',
     make: () => withReclassedSpell(base, 3, 6, '治疗'),
-    steps: [[3000, snap => ({ spellCast: snap.statistics.spellCastCount > base.statistics.spellCastCount })], [3000, null]],
+    // healNumbers：cat=1 治疗分支写 `showFloatingText(h, g, "+" + f, "#00FF00")`，
+    // 因此采样正号整数浮动文字即可直接对账「治疗真的落到队友身上」，两端条数与累计回血都必须 >0 且相等。
+    steps: [{ turns: 3000, check: snap => ({ spellCast: snap.statistics.spellCastCount > base.statistics.spellCastCount }), healNumbers: true }, [3000, null]],
   },
   {
     // 弹射范围伤害分支：spellCategoryId=4、bo:true（火法师 火环）。
     name: 'spell-area-bounce',
     make: () => withReclassedSpell(base, 3, 4, '火环'),
-    steps: [[3000, snap => ({ spellCast: snap.statistics.spellCastCount > base.statistics.spellCastCount })], [3000, null]],
+    // damageNumbers：本步改用逐帧采样伤害浮动文字（pattern ^-[0-9]+$），对每个伤害类法术给出
+    // 与存档无关的**直接可观测量**——两端伤害文本条数与累计扣血必须都 >0 且完全相等。
+    steps: [{ turns: 3000, check: snap => ({ spellCast: snap.statistics.spellCastCount > base.statistics.spellCastCount }), damageNumbers: true }, [3000, null]],
   },
   {
     // 连锁伤害分支：spellCategoryId=5（电法师 连锁闪电）。
     name: 'spell-chain-lightning',
     make: () => withReclassedSpell(base, 3, 3, '连锁闪电'),
-    steps: [[3000, snap => ({ spellCast: snap.statistics.spellCastCount > base.statistics.spellCastCount })], [3000, null]],
+    // damageNumbers：本步改用逐帧采样伤害浮动文字（pattern ^-[0-9]+$），对每个伤害类法术给出
+    // 与存档无关的**直接可观测量**——两端伤害文本条数与累计扣血必须都 >0 且完全相等。
+    steps: [{ turns: 3000, check: snap => ({ spellCast: snap.statistics.spellCastCount > base.statistics.spellCastCount }), damageNumbers: true }, [3000, null]],
   },
   {
     // 落雨型范围伤害分支：spellCategoryId=6（电法师 闪电雨）。
     name: 'spell-rain-damage',
     make: () => withReclassedSpell(base, 3, 3, '闪电雨'),
-    steps: [[3000, snap => ({ spellCast: snap.statistics.spellCastCount > base.statistics.spellCastCount })], [3000, null]],
+    // damageNumbers：本步改用逐帧采样伤害浮动文字（pattern ^-[0-9]+$），对每个伤害类法术给出
+    // 与存档无关的**直接可观测量**——两端伤害文本条数与累计扣血必须都 >0 且完全相等。
+    steps: [{ turns: 3000, check: snap => ({ spellCast: snap.statistics.spellCastCount > base.statistics.spellCastCount }), damageNumbers: true }, [3000, null]],
   },
   {
     // 弹跳投射物分支：spellCategoryId=13（死灵法师 绿色死亡）。
     name: 'spell-bouncing-projectile',
     make: () => withReclassedSpell(base, 3, 9, '绿色死亡'),
-    steps: [[3000, snap => ({ spellCast: snap.statistics.spellCastCount > base.statistics.spellCastCount })], [3000, null]],
+    // damageNumbers：本步改用逐帧采样伤害浮动文字（pattern ^-[0-9]+$），对每个伤害类法术给出
+    // 与存档无关的**直接可观测量**——两端伤害文本条数与累计扣血必须都 >0 且完全相等。
+    steps: [{ turns: 3000, check: snap => ({ spellCast: snap.statistics.spellCastCount > base.statistics.spellCastCount }), damageNumbers: true }, [3000, null]],
   },
   {
     // 远程法术分支需要已装备的远程武器：原版与重构版的 createAttackAction 都把 equipment.projectileWeapon
@@ -310,18 +330,24 @@ const scenarios = [
     // 唯一的 td:false 定义：spellCategoryId=12（忍者 快速打击，槽 62 飞镖 → projectileAnimationId=3）。
     name: 'spell-deferred-strike',
     make: () => withEquippedItem(withReclassedSpell(base, 3, 8, '快速打击'), 3, '2081168329', '62', 8),
-    steps: [[3000, snap => ({ spellCast: snap.statistics.spellCastCount > base.statistics.spellCastCount })], [3000, null]],
+    // damageNumbers：本步改用逐帧采样伤害浮动文字（pattern ^-[0-9]+$），对每个伤害类法术给出
+    // 与存档无关的**直接可观测量**——两端伤害文本条数与累计扣血必须都 >0 且完全相等。
+    steps: [{ turns: 3000, check: snap => ({ spellCast: snap.statistics.spellCastCount > base.statistics.spellCastCount }), damageNumbers: true }, [3000, null]],
   },
   {
     // 拾取分支：spellCategoryId=14（盗贼 立即搜索），一次收集本层全部金币/物品/卷轴/药水掉落。
     name: 'spell-instant-search',
     make: () => withEquippedItem(withReclassedSpell(base, 3, 7, '立即搜索'), 3, '41393542', '61', 7),
-    steps: [[3000, snap => ({ spellCast: snap.statistics.spellCastCount > base.statistics.spellCastCount })], [3000, null]],
+    // cat=14 立即搜索的直接可观测量：它会收集本层全部掉落，因此拾取统计必须真实增长。
+    steps: [{ turns: 3000, check: snap => ({ spellCast: snap.statistics.spellCastCount > base.statistics.spellCastCount, itemsFound: snap.statistics.itemsFound > base.statistics.itemsFound }) }, [3000, null]],
   },
   {
     // 宝箱发现分支：spellCategoryId=15（盗贼 发现财宝箱）→ hw.prototype.wu 置宝箱已发现。
     name: 'spell-find-chest',
     make: () => withEquippedItem(withReclassedSpell(base, 3, 7, '发现财宝箱'), 3, '41393542', '61', 7),
+    // cat=15 无可稳定直接可观测量（如实说明）：法术只把房间财宝设为队伍目标，是否最终开箱取决于
+    // AI 是否走到箱子，整矩阵下受场景顺序影响会 flaky；故本场景仍以「唯一注入法术 + 施法计数增长 +
+    // 逐检查点完整存档差分」归因，不用 order-dependent 的统计断言充数。
     steps: [[3000, snap => ({ spellCast: snap.statistics.spellCastCount > base.statistics.spellCastCount })], [3000, null]],
   },
   {
@@ -337,7 +363,9 @@ const scenarios = [
     // 召唤数写入存档统计 minionsSummoned，属于可直接对账的增长。
     name: 'spell-chicken-swarm',
     make: () => withReclassedSpell(base, 3, 11, '召唤鸡群'),
-    steps: [[3000, snap => ({ spellCast: snap.statistics.spellCastCount > base.statistics.spellCastCount, summoned: snap.statistics.minionsSummoned > base.statistics.minionsSummoned })], [3000, null]],
+    // 召唤 + 伤害双重可观测：召唤数写入存档统计（minionsSummoned），同时逐帧采样伤害浮动文字
+    // 直接对账「召唤出来的鸡真的在造成伤害」，两端条数与累计扣血都必须 >0 且完全相等。
+    steps: [{ turns: 3000, check: snap => ({ spellCast: snap.statistics.spellCastCount > base.statistics.spellCastCount, summoned: snap.statistics.minionsSummoned > base.statistics.minionsSummoned }), damageNumbers: true }, [3000, null]],
   },
   {
     // 城堡征战与首领遭遇全流程：只剩最后一座城堡待攻克，队伍走进城堡，
@@ -785,12 +813,15 @@ try {
         // effectType 表示这一步改用"逐帧扫描活怪物效果队列"的推进方式，并直接对账施加次数。
         // purchaseUpgrades 表示这一步先推进再驱动升级购买（U7：只有视图层会触发的路径）。
         const step = Array.isArray(rawStep) ? { turns: rawStep[0], check: rawStep[1] } : rawStep;
-        const { turns, check, effectType, purchaseUpgrades, purchasePointUpgrades, claimAchievement, equipBestItems, castScrollDuringCombat, scrollId, purchaseDungeonFarm, purchaseDungeonRowFarm, harvestFarmKills, lootTreasureDuringExplore, treasureKind, activatePotions, floatingText, damageNumbers, spellEffects, trackBoss, frames, frameGap, victoryPanel, equipFromInventory } = step;
+        const { turns, check, effectType, purchaseUpgrades, purchasePointUpgrades, claimAchievement, equipBestItems, castScrollDuringCombat, scrollId, purchaseDungeonFarm, purchaseDungeonRowFarm, harvestFarmKills, lootTreasureDuringExplore, treasureKind, activatePotions, floatingText, damageNumbers, healNumbers, spellEffects, allyEffectType, trackBoss, frames, frameGap, victoryPanel, equipFromInventory } = step;
         const results = await Promise.all(pages.map(async p => {
           await p.page.evaluate(ms => window.harness.setTime(ms), HARNESS_FIXED_NOW);
           // 重置后无队伍：走真实帧循环（守卫路径），而非裸推进
           if (scenario.restart || scenario.reset) return { snapshot: await p.page.evaluate(n => window.harness.idle(n), turns) };
           if (effectType !== undefined) return p.page.evaluate(a => window.harness.countEffectApplications(a.turns, a.effectType), { turns, effectType });
+          // allyEffectType：增益类法术（cat=3 提高护甲等）的效果落在**施法者队伍**身上，
+          // 活怪物队列里永远看不到，故走盟友侧观察器。
+          if (allyEffectType !== undefined) return p.page.evaluate(a => window.harness.countAllyEffectApplications(a.turns, a.allyEffectType), { turns, allyEffectType });
           if (purchaseUpgrades !== undefined) return p.page.evaluate(a => window.harness.purchaseUpgrades(a), { turns, limit: purchaseUpgrades });
           if (purchasePointUpgrades !== undefined) return p.page.evaluate(a => window.harness.purchasePointUpgrades(a), { turns, limit: purchasePointUpgrades });
           if (claimAchievement) return p.page.evaluate(a => window.harness.claimAchievement(a), { turns, limit: claimAchievement === true ? 1 : claimAchievement });
@@ -803,6 +834,9 @@ try {
           if (activatePotions !== undefined) return p.page.evaluate(a => window.harness.activatePotions(a), { turns, limit: activatePotions });
           if (floatingText !== undefined) return p.page.evaluate(a => window.harness.countFloatingText(a), { turns, text: floatingText });
           if (damageNumbers !== undefined) return p.page.evaluate(a => window.harness.countFloatingText(a), { turns, pattern: '^-[0-9]+$' });
+          // healNumbers：治疗分支的直接可观测量。cat=1 在 actions.js 里写 `showFloatingText(h, g, "+" + f, "#00FF00")`，
+          // 因此采样正号整数文本即可证明「治疗真的落到了队友身上」，且与存档 DTO 无关。
+          if (healNumbers !== undefined) return p.page.evaluate(a => window.harness.countFloatingText(a), { turns, pattern: '^\\+[0-9]+$' });
           if (spellEffects !== undefined) return p.page.evaluate(a => window.harness.countVisualEffects(a), { turns });
           if (trackBoss !== undefined) return p.page.evaluate(a => window.harness.trackBossEncounter(a), { turns });
           if (victoryPanel !== undefined) return p.page.evaluate(n => { window.harness.idle(n); return window.harness.observeVictoryPanel(); }, victoryPanel);
@@ -932,6 +966,14 @@ try {
           }
           assert.equal(attempts[1], attempts[0], `两端尝试激活的药水数不一致（原版 ${attempts[0]} / 重构版 ${attempts[1]}）`);
         }
+        if (allyEffectType !== undefined) {
+          const counts = results.map(r => r.applications);
+          for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {
+            assert.ok(counts[i] > 0, `${label} 必须真的观察到 type=${allyEffectType} 增益落到队友身上`);
+          }
+          assert.equal(counts[1], counts[0], `两端 type=${allyEffectType} 盟友增益施加次数不一致（原版 ${counts[0]} / 重构版 ${counts[1]}）`);
+          console.log(`  · 盟友侧 type=${allyEffectType} 直接计数两端一致 = ${counts[0]}`);
+        }
         if (effectType !== undefined) {
           const counts = results.map(r => r.applications);
           for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {
@@ -958,6 +1000,17 @@ try {
           assert.equal(counts[1], counts[0], `两端伤害浮动文字数量不一致（原版 ${counts[0]} / 重构版 ${counts[1]}）`);
           assert.equal(sums[1], sums[0], `两端伤害浮动文字总和不一致（原版 ${sums[0]} / 重构版 ${sums[1]}）`);
           console.log(`  · 伤害数字直接计数与总伤害两端一致 = ${counts[0]} 次, 累计扣血 ${sums[0]}`);
+        }
+        if (healNumbers !== undefined) {
+          const counts = results.map(r => r.count);
+          const sums = results.map(r => r.sum);
+          for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {
+            assert.ok(counts[i] > 0, `${label} 必须真正生成治疗浮动文字`);
+            assert.ok(sums[i] > 0, `${label} 治疗浮动文字累计总和必须大于 0`);
+          }
+          assert.equal(counts[1], counts[0], `两端治疗浮动文字数量不一致（原版 ${counts[0]} / 重构版 ${counts[1]}）`);
+          assert.equal(sums[1], sums[0], `两端治疗浮动文字总和不一致（原版 ${sums[0]} / 重构版 ${sums[1]}）`);
+          console.log(`  · 治疗数字直接计数与总治疗量两端一致 = ${counts[0]} 次, 累计回血 ${sums[0]}`);
         }
         if (spellEffects !== undefined) {
           const totals = results.map(r => r.total);
@@ -1021,9 +1074,11 @@ try {
             if (verdict.criticalSkillsActive !== undefined) assert.equal(verdict.criticalSkillsActive, true, `${label} 战士与游侠暴击技能必须全部习得；${verdict.note}`);
             if (verdict.monsterUnlocked !== undefined) assert.equal(verdict.monsterUnlocked, true, `${label} 怪物最高解锁等级和存档等级表长度必须真实增长；${verdict.note}`);
             if (verdict.minLevelRetired !== undefined) assert.equal(verdict.minLevelRetired, true, `${label} 怪物最低解锁等级（minUnlockedLevel）必须真实增长（退休）；${verdict.note}`);
+            if (verdict.maxLevelUnlocked !== undefined) assert.equal(verdict.maxLevelUnlocked, true, `${label} 退休前置：最高解锁怪物等级必须达到 3 级；${verdict.note}`);
             if (verdict.retiredLevelExcluded !== undefined) assert.equal(verdict.retiredLevelExcluded, true, `${label} 首个有效怪物等级必须大于 1（等级 1 已退休排除）；${verdict.note}`);
             if (verdict.pointUpgradePurchased !== undefined) assert.equal(verdict.pointUpgradePurchased, true, `${label} 冒险点必须真实支出且升级状态必须变为已购买`);
             if (verdict.distinctPointUpgradesBought !== undefined) assert.ok(verdict.distinctPointUpgradesBought >= 5, `${label} 必须购买至少 5 种不同点数升级（实际 ${verdict.distinctPointUpgradesBought}）`);
+            if (verdict.pointsSpent !== undefined) assert.ok(verdict.pointsSpent > 0, `${label} 购买点数升级必须真实支出冒险点（实际 ${verdict.pointsSpent}）`);
             if (verdict.swapDone !== undefined) assert.equal(verdict.swapDone, true, `${label} 手动装备交换未发生（金属的权杖应已装备、人民之美好的权杖应回背包）`);
             if (verdict.itemEquippedGrew !== undefined) assert.equal(verdict.itemEquippedGrew, true, `${label} itemEquipped 点数事件（type 21）必须增长`);
             if (verdict.classKept !== undefined) assert.equal(verdict.classKept, true, `${label} 改职业后的存档必须保持野蛮人（characterClass 1）`);
@@ -1033,6 +1088,8 @@ try {
             if (verdict.appliedDelta !== undefined) assert.ok(verdict.appliedDelta >= 3, `${label} 多次领取后 applied 计数必须至少增长 3（实际 ${verdict.appliedDelta}）`);
             if (verdict.killRewardGrew !== undefined) assert.equal(verdict.killRewardGrew, true, `${label} 击杀事件奖励（pointsByType[1].points = reward × count）必须真实抬升`);
             if (verdict.enough !== undefined) assert.equal(verdict.enough, true, `${label} 战士多重攻击位 ${verdict.multiLearned}/6、游侠跳弹位 ${verdict.chainLearned}/8 必须真实习得（多重 ≥4 且跳弹 ≥6）`);
+            if (verdict.multiLearned !== undefined) assert.ok(verdict.multiLearned >= 4, `${label} 战士多重攻击技能位必须至少习得 4 个（实际 ${verdict.multiLearned}/6）`);
+            if (verdict.chainLearned !== undefined) assert.ok(verdict.chainLearned >= 6, `${label} 游侠跳弹链技能位必须至少习得 6 个（实际 ${verdict.chainLearned}/8）`);
             if (verdict.achievementClaimed !== undefined) assert.equal(verdict.achievementClaimed, true, `${label} 成就奖励必须真实领取并标记 applied`);
             if (verdict.equipmentChanged !== undefined) assert.equal(verdict.equipmentChanged, true, `${label} 自动装备后装备槽必须真实变化`);
             if (verdict.itemEquipEvents !== undefined) assert.equal(verdict.itemEquipEvents, true, `${label} 装备物品事件计数必须真实增长`);
@@ -1044,6 +1101,7 @@ try {
             if (verdict.farmCycleHarvestCount !== undefined) assert.equal(verdict.farmCycleHarvestCount, true, `${label} 农场完整生命周期多次收获累计击杀必须达到预期`);
             if (verdict.farmCleared !== undefined) assert.equal(verdict.farmCleared, true, `${label} 农场在收获时必须处于已清理成熟状态`);
             if (verdict.treasureLooted !== undefined) assert.equal(verdict.treasureLooted, true, `${label} 财宝箱拾取统计必须真实增长`);
+            if (verdict.itemsFound !== undefined) assert.equal(verdict.itemsFound, true, `${label} 立即搜索必须真的拾取到物品（itemsFound 统计增长）`);
             if (verdict.weaponRackLooted !== undefined) assert.equal(verdict.weaponRackLooted, true, `${label} 武器架拾取统计必须真实增长`);
             if (verdict.bookcaseLooted !== undefined) assert.equal(verdict.bookcaseLooted, true, `${label} 书架拾取统计必须真实增长`);
             if (verdict.collectedDropTypes !== undefined) assert.deepEqual(verdict.collectedDropTypes, [9, 10, 11, 12], `${label} 四种地面掉落物必须分别被拾取（9=金币、10=卷轴、11=药水、12=物品）`);
@@ -1051,6 +1109,12 @@ try {
             if (verdict.potionUsed !== undefined) assert.equal(verdict.potionUsed, true, `${label} 必须真的激活至少一瓶药水（potionsUsed 增长）`);
             if (verdict.note && i === 0) console.log(`  · ${verdict.note}`);
             if (verdict.victory !== undefined) assert.equal(verdict.victory, true, `${label} 必须真的走完征服尾部并触发胜利`);
+            // 防呆（本项目真实踩过）：check 返回的键若没在上面被断言，检查会静默变成**空断言**——
+            // 例如新场景写了 `itemsFound: ...` 却忘了补断言行，测试照样全绿。这里显式列出全部已处理键，
+            // 出现未知键即失败，逼迫补断言；键清单由本文件的断言行机械抽取，勿手改。
+            const handledVerdictKeys = new Set(["achievementClaimed","appliedDelta","attackPlanned","backgroundProgressDisabled","bookcaseLooted","chainLearned","changed","characterLeveled","classKept","collectedDropTypes","criticalSkillsActive","distinctPointUpgradesBought","enough","equipmentChanged","farmCleared","farmCycleHarvestCount","farmHarvested","farmPurchased","farmedKillsCleared","itemEquipEvents","itemEquippedGrew","itemsFound","killRewardGrew","maxLevelUnlocked","minLevelRetired","monsterUnlocked","multiLearned","noLootSpell","note","pointUpgradePurchased","pointsSpent","potionUsed","retiredLevelExcluded","scrollCast","settingsPurchased","skillLearned","skillsLearned","spellCast","spellLearned","spellsLearned","stunned","summoned","swapDone","treasureLooted","unchanged","upgraded","victory","weaponRackLooted"]);
+            const unknownVerdictKeys = Object.keys(verdict).filter(k => !handledVerdictKeys.has(k));
+            assert.deepEqual(unknownVerdictKeys, [], `${label} check 返回了未被断言的键：${unknownVerdictKeys.join(", ")}（请在 runner 里补断言，否则该检查是空的）`);
           }
         }
         previous = states;

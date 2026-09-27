@@ -3,7 +3,7 @@
 > 引用规范：形如 `combat/actions.js:84` 的路径相对 `src/engine/modules/`；若某处只写了裸文件名（如 `character.js:677`），以所在小节的模块归属为准——`characters/character.js` 与 `views/character.js` 同名，未逐一消歧。
 
 > 事实来源：`src/engine/modules/**` 当前实现。每条公式给出 `file:line` 与原文 JS 片段。
-> 与 `archive/original/c2.js` 的等价性由 **59 场景差分矩阵**（`npm run test:scenarios`）保证，因此本文描述的是**权威行为**，不是设计意图。
+> 与 `archive/original/c2.js` 的等价性由 **60 场景差分矩阵**（`npm run test:scenarios`）保证，因此本文描述的是**权威行为**，不是设计意图。
 > **片段同步状态（2026-09-27）**：内嵌片段与散文里的标识符已按 `docs/symbol-map.json` 的字段映射批量同步到当前语义名（`scripts/fix-doc-identifiers.mjs`）；节选/伪码型片段的行号不逐字对应（见 `scripts/check-doc-snippets.mjs` 的残留清单），判读时以片段上方的 `file:line` 为准。
 > 凡看起来像 bug 的地方一律按原样记录并标 `[疑似遗留怪癖]`；本文不提出修正。
 > **引用体例**：JS 片段为源码原文，但为控制篇幅做了两种压缩——(a) `…` 表示省略的行；(b) 少数多行嵌套被并为单行（token 序列不变）。凡 token 序列与源码不一致之处均为笔误，欢迎按 `file:line` 复核后修正。

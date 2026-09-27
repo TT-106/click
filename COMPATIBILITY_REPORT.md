@@ -18,7 +18,7 @@
 
 ## 2. 行为兼容（原版 vs 重构差分）— VERIFIED（覆盖范围内）
 
-`scripts/test-scenarios.mjs` 的 **59 个场景**全部通过（同一变异存档 + 固定 LCG 随机流 + 固定时钟，双端逐字段比较完整存档 DTO；矩阵可用 `SCENARIO_FILTER=a,b` 单跑）：
+`scripts/test-scenarios.mjs` 的 **60 个场景**全部通过（同一变异存档 + 固定 LCG 随机流 + 固定时钟，双端逐字段比较完整存档 DTO；矩阵可用 `SCENARIO_FILTER=a,b` 单跑）：
 
 | 组 | 场景 | 除全状态相等外的专项断言 |
 |---|---|---|
@@ -26,7 +26,7 @@
 | 离线 | offline-1h、offline-8h、offline-13h-capped、offline-disabled、**background-progress-disabled** | 金币/击杀必须真实增长；13h 必须被截为 12h；关闭离线后金币必须不变；后台关闭态注入 5000ms 间隙严格仅前进 1 回合且无追赶，与开启态 20 回合形成因果对照 |
 | 药水 | potions-active、potions-inactive-auto、**potions-activated** | 第三条直接驱动 `Potion.activate()`（原 `aw`；harness 走 `original ? potion.aw() : potion.activate()` 双端分支），两端 `statistics.potionsUsed` 各自增长 |
 | 卷轴 | scrolls-stocked、**scroll-cast-in-combat** | 库存/数量/解锁相等；第二条在战斗中按序施放全部 6 种卷轴（休克/蜘蛛网/箭雨回退普攻/火雨/连锁闪电/火球），两端逐项断言尝试数与成功施放，900 回合后比较完整存档；非法卷轴 ID 抛错保护 |
-| 法术 | fireball-blast-stun、spell-status-transform、spell-buff-armor、spell-summon-ghost-skeleton、spell-summon-skeleton-army、spell-sleep、spell-heal、spell-area-bounce、spell-chain-lightning、spell-rain-damage、spell-bouncing-projectile、spell-chicken-swarm、spell-deferred-strike、spell-instant-search、spell-find-chest、spell-resurrect | 16 个 `spellCategoryId` 每条一个场景；cat=2 的 type 0/4/14 与 cat=17 另有直接计数/随从数对账；其余为"唯一注入法术 + 两端各自施法计数增长" |
+| 法术 | fireball-blast-stun、spell-status-transform、spell-buff-armor、spell-summon-ghost-skeleton、spell-summon-skeleton-army、**spell-summon-wolf-pack**、spell-sleep、spell-heal、spell-area-bounce、spell-chain-lightning、spell-rain-damage、spell-bouncing-projectile、spell-chicken-swarm、spell-deferred-strike、spell-instant-search、spell-find-chest、spell-resurrect | 16 个 `spellCategoryId` 每条一个场景（覆盖由 `scripts/check-spell-coverage.mjs` 机械核对）。**15/16 类有专属可观测量**：cat=1 治疗浮动文字、cat=2/8 活怪物效果队列计数、cat=3 盟友效果队列计数、cat=4/5/6/12/13 伤害浮动文字、cat=9/10/11 随从数、cat=14 拾取统计、cat=16 昏迷前置、cat=17 伤害+随从双观测；仅 cat=15 仍为"唯一注入法术 + 施法计数增长 + 完整存档差分"归因 |
 | 战斗与终局 | castle-victory、**combat-damage-numbers** | castle-victory：两端各自断言 `gameWon`/`victoryCount=1`/`castlesConquered=1`/全城堡征服，并以 trackBossEncounter 逐帧扫描首领遭遇四维指标（encounter.du 首领遭遇状态、characterType=4 首领存活、"击杀首领!" 浮动文字击杀计数、首领遭遇名称）两端全等（首领战 7611 回合、首领存活 2898 回合、击杀 1 次）；combat-damage-numbers：500 回合实战正则采样负数伤害飘字，两端数量（57 次）与累计总伤害（-616 点）完全一致 |
 | 视图独占路径 | **upgrades-purchased** | 独立运行时两端各完成 28+24 次购买，其中 type=6 法术学习为 2+1 次；逐检查点分别断言 `settings.upgrades`、角色等级、`upgrades1..4` 解锁位与 `spells` 数量超过 fixture 基线，并比较完整存档 |
 | 怪物等级解锁与退休 | **monster-level-unlocked、monster-level-retired** | 前者提供击杀与经验解锁怪物等级，断言 `maxUnlockedLevel` 与等级表扩容；后者驱动 `RetireMonsterLevelUpgrade`（type=11），断言 `minUnlockedLevel` 递增至 2 且首个怪物等级抬高（等级 1 排除），两端 5 步递进与完整 DTO 完全相等，带负向破坏探针验证 |
@@ -65,12 +65,12 @@
 ## 6. 未覆盖区域（如实陈述）— 法术类别已全覆盖，余下为归因与入口分层
 
 法术类别覆盖已收口：`content/spells.js` 里出现的 16 个 `spellCategoryId`（1–6、8–17，目录中不存在 cat=7）每条都有专属差分场景。仍要如实说明的边界有两条：
-- 归因方式分层。只有 cat=2 的 type 0/4/14（harness 逐帧扫描活怪物效果队列的直接计数）与 cat=17（存档内 `minionsSummoned` 对账）有专属可观测量；其余类别依赖"该角色唯一注入法术 + 两端各自 `spellCastCount` 增长"的归因，再叠加逐检查点完整存档差分。
+- 归因方式分层（2026-09-27 收窄）。**16 类里 15 类已有专属可观测量**，不再依赖纯计数归因：cat=1 治疗浮动文字（`healNumbers`，实测 91 次 / 累计 +279）、cat=2/8 逐帧扫描活怪物效果队列、cat=3 逐帧扫描**盟友**效果队列（新增 `countAllyEffectApplications`；cat=3 的增益落在队友身上，活怪物队列里恒为 0，实测 20 次）、cat=4/5/6/12/13 伤害浮动文字（`damageNumbers`，实测 379–559 次 / 累计 -4688 ~ -5943）、cat=9/10/11 存档内 `minionsSummoned`、cat=14 拾取统计 `itemsFound`、cat=16 昏迷前置 `characterStunnedCount`、cat=17 伤害+随从双观测。**仅剩 cat=15（发现财宝箱）** 仍为计数归因：该法术只把房间财宝设为队伍目标，是否最终开箱取决于 AI 是否走到箱子，统计断言实测单跑通过、整矩阵失败（场景顺序相关），因此不硬凑 order-dependent 断言。
 - 入口分层。怪物/首领 AI 施法与卷轴施法两条入口与职业施法共用同一 `applySpellEffect` 分发，但没有按类别为这两条入口单独设场景（`scrolls-stocked` 抽到哪类卷轴取决于随机池，未被逐类别断言）。
 
 已转入差分覆盖（2026-09-26）：城堡攻防战全程与胜利瞬间（`castle-victory`，两端各自断言 gameWon/victoryCount/castlesConquered 后比较完整存档）、12h 离线截断（`offline-13h-capped`）、火球与两条控制/增益法术分支、召唤族两条分支（cat=9/11，两端各自断言 `minionsSummoned` 增长）、睡眠（cat=2、type=0），以及 Blast Stun 的直接执行计数——harness 逐帧扫描两端活怪物效果队列，`fireball-blast-stun` 实测原版与重构版各 31 次 type=14 施加，数值相等。同批次再补 10 条：cat=1 治疗、cat=4 火环、cat=5 连锁闪电、cat=6 闪电雨、cat=13 绿色死亡、cat=17 召唤鸡群（含 `Math.random` 概率模板分支），需要注入投射武器的 cat=12 快速打击（唯一 `td: false`）、cat=14 立即搜索、cat=15 发现财宝箱——后三条在注入前会命中原版自带的空武器解引用（`Aw`/`getProjectileAnimation` 对 `equipment.Ey` 无空值保护，两端同点同错，栈逐帧同构），属忠实保留而非重构差异，因此未改动引擎，只在存档里补回真实武器类型（盗贼槽 61、忍者槽 62）；以及 cat=16 复活（`withResurrectionTrial()` 激活 `randomBossEncounter` 药水并把三名队友压到 1 级 1 血，两端实测 `characterStunnedCount` 同为 22，真正打出"已有昏迷队友"的前置）；地牢农场购买、推演成熟收获、待收获击杀池清零、再侵袭休耕与二次成熟收获等全生命周期已由 `dungeon-farm-purchased`、`dungeon-row-farm-purchased`、`dungeon-farm-harvested`、`dungeon-farm-cycle-long-term` 差分场景完整覆盖并带负向探针验证；卷轴全 6 类战斗施放与后台行为关闭态已分别由 `scroll-cast-in-combat` 与 `background-progress-disabled` 差分场景闭环；怪物等级退休已由 `monster-level-retired`（`RetireMonsterLevelUpgrade`）闭环；暴击机制与伤害绕过护甲已由 `combat-critical-hits` 驱动战士与游侠 7 档暴击技能并通过浮动文字 `countFloatingText` 直接对账闭环。
 
-后续扩展路径：在 `tests/scenarios/save-mutations.mjs` 增加对应变异器，即可纳入 `test:scenarios` 矩阵（当前 59 个场景）。
+后续扩展路径：在 `tests/scenarios/save-mutations.mjs` 增加对应变异器，即可纳入 `test:scenarios` 矩阵（当前 60 个场景）。
 
 ## 7. 性能兼容 — PARTIALLY VERIFIED
 

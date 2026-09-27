@@ -3,7 +3,7 @@
 > 引用规范：形如 `combat/actions.js:84` 的路径相对 `src/engine/modules/`；若某处只写了裸文件名（如 `character.js:677`），以所在小节的模块归属为准——`characters/character.js` 与 `views/character.js` 同名，未逐一消歧。
 
 > 事实来源：`src/engine/modules/**` 当前实现。每条公式给出 `file:line` 与原文 JS 片段。
-> 与 `archive/original/c2.js`（46,980 行单文件）的等价性由 **59 场景差分矩阵**（`npm run test:scenarios`）保证，因此本文描述的是**权威行为**，不是设计意图。
+> 与 `archive/original/c2.js`（46,980 行单文件）的等价性由 **60 场景差分矩阵**（`npm run test:scenarios`）保证，因此本文描述的是**权威行为**，不是设计意图。
 > **片段同步状态（2026-09-27）**：内嵌 JS 片段与散文里的标识符已按 `docs/symbol-map.json` 的 1,047 条字段映射**批量同步到当前语义名**（工具 `scripts/fix-doc-identifiers.mjs`），逐字摘录型片段的 `file:line` 也由 `scripts/check-doc-snippets.mjs` 重定位并对齐（61/76 条已同步）。**仍有 15 条是"节选/伪码"型片段**（含 `...` 或跨多处拼接），其行号与片段不逐字对应——这是已知的文档精度缺口，判读时以片段上方的 `file:line` 与当前源码为准。
 > 凡看起来像 bug 的地方一律按原样记录并标 `[疑似遗留怪癖]`；本文不提出修正。
 > 路径缩写：`actions.js` = `src/engine/modules/combat/actions.js`，`character.js` = `src/engine/modules/characters/character.js`，其余同理。

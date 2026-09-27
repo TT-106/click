@@ -16,6 +16,10 @@
 | 文档内旧标识符（fields 命中） | 66 → **0** | `scripts/fix-doc-identifiers.mjs` |
 | `@type {any}` 强制转换 | 50 → **43** | `docs/m10-type-debt.md` |
 | 门禁 | 6 门 → **10 门**（新增 `lint`，并把 soak/perf/perf:frames 纳入最终扫描） | §5 末行；`output/s-*.log` |
+| 差分场景 | 59 → **60**（补上 cat=10「狼群」的覆盖空洞） | `npm run test:scenarios` 60/60；`scripts/check-spell-coverage.mjs` |
+| 法术直接可观测量 | 4/16 → **15/16 类**（新增 `damageNumbers`/`healNumbers`/`allyEffectType` 三条通道） | 矩阵「法术」行；实测 91~559 次/类 |
+| `lint` 不变量 | 6 条 → **7 条**（新增"每个 spellCategoryId 必须有场景"） | `npm run lint` |
+| 空断言 | 3 处静默失效的 `check` 键（`maxLevelUnlocked`/`multiLearned`+`chainLearned`/`pointsSpent`） → **全部补上断言，并加防呆让未断言的键直接失败** | `scripts/test-scenarios.mjs` 的 `handledVerdictKeys` |
 
 新增的可复用工具（全部零第三方依赖）：`scripts/lint-invariants.mjs`（不变量守卫）、`record-field-names.mjs`、`rename-atlas-schema.mjs`、`find/remove-invisible-name-files.mjs`、`verify-doc-refs.mjs`、`check-doc-snippets.mjs`、`fix-doc-identifiers.mjs`、`find-unused-modules.mjs`。
 
@@ -51,12 +55,12 @@ archive/original/c2.js  ──AST 机械恢复──▶  src/engine/（77 模块
 | 外部契约 | `window.Game/lB/pB/hE` → adapter/runtime API（MIGRATION_MAP.md 对照表） |
 | 公式文档 | `docs/formulas/combat.md`（伤害/命中/暴击/眩晕/技能法术/治疗/目标选择/遭遇结束 + 随机数消耗顺序）、`items.md`（稀有度/等级/词缀/售价/掉落门）、`progression.md`（经验曲线/点数事件/升级价格/成就/统计/重置/离线），共 733 条 file:line 引用逐条回源核对 |
 
-## 5. 测试体系（全部实测通过，共 59 个差分场景）
+## 5. 测试体系（全部实测通过，共 60 个差分场景）
 
 | 层 | 内容 |
 |---|---|
 | L1 单元（10 项） | RNG 位级差分（Babel 从 c2.js 提取原版 `ga` 对照，6 种子×100k 值 + 黄金值）、LZ-string codec 契约（含与原版 fixture 互通）、格式化表驱动、精灵查找双端一致（原版 `Pb` 对照重构 `getSprite`） |
-| L3/L4 差分 | `test:parity`：同存档 + 固定 RNG/时钟，0/1/99/900 回合完整存档逐字段相等；`test:scenarios`：**59 场景**（长跑、离线四态 + 12h 截断 + 后台关闭态、药水激活、全 6 类卷轴战斗施放、16 类法术分支、城堡征服→胜利、金币涌入、后期、veteran、prestige、full reset、升级购买与怪物等级解锁、冒险点消费、成就领取、自动装备、两条农场购买入口、财宝箱/武器架/书架搜索、四类地面掉落拾取、农场收获与长期再侵袭生命周期跨越、药水真实使用、渲染帧 + 自动落盘） |
+| L3/L4 差分 | `test:parity`：同存档 + 固定 RNG/时钟，0/1/99/900 回合完整存档逐字段相等；`test:scenarios`：**60 场景**（长跑、离线四态 + 12h 截断 + 后台关闭态、药水激活、全 6 类卷轴战斗施放、16 类法术分支、城堡征服→胜利、金币涌入、后期、veteran、prestige、full reset、升级购买与怪物等级解锁、冒险点消费、成就领取、自动装备、两条农场购买入口、财宝箱/武器架/书架搜索、四类地面掉落拾取、农场收获与长期再侵袭生命周期跨越、药水真实使用、渲染帧 + 自动落盘） |
 | L5 集成 | 场景内的"两端各自增长断言 + 逐检查点全状态相等"即多模块组合验证（战斗→掉落→拾取→统计→存档） |
 | L6 浏览器 E2E | 建队/自动战斗/暂停/五类面板/**c2c.user.js 外部 DOM 契约**/设置/导出导入/非法存档/刷新恢复/键盘/三种视口 |
 | L7 长跑 soak | `test:soak`：115,200 与 345,600 等价回合（8h/24h），两端完整存档相等 + CDP 主动 GC 后堆增量样本 |
@@ -80,7 +84,7 @@ archive/original/c2.js  ──AST 机械恢复──▶  src/engine/（77 模块
 3. **验收口径分层（对应附录 A 的 7 行 PARTIAL）**：16 类法术分支靠"唯一注入法术 + 两端各自施法计数增长"归因，只有 cat=2 的三种状态与 cat=17 有专属可观测量；渲染等价只在 **2 条场景 × 2 种视口**下比对逐像素指纹；soak 是加速等价回合而非真机帧循环。这三条已在附录 A 对应行内以"**缺口（写明）**"标注，不得读作 PASS。
 4. 双主字母 `Cb`/`Qc` 已按所有者拆开；`oc` 的四种所有者已由原版帧数组构造链证明同为 `frameIndex`；`$c` 已改为 `itemDrop`（见 semantic-map）。
 5. ✅ **38 个"隐形文件名"垃圾文件已清除**（2026-09-27）：仓库里存在成对的 `X.js` 与 `X.js\uF00D`（尾随 U+F00D，不可见），后者一律 99 字节、内容仅一行 `// @ts-nocheck -- M10 渐进类型化…`，是历史脚本误写留下的残渣且已被 commit 跟踪。因为名字尾随不可见字符，`*.js` 类匹配（`check.mjs`、`analyze-fields.mjs`、人工 `ls`）都看不见它们——这正是早前"审计报告称 38 个垃圾文件、随后实测为 0"矛盾的根因（两次检查用的匹配方式不同）。工具：`scripts/find-invisible-name-files.mjs`（盘点）与 `scripts/remove-invisible-name-files.mjs`（三条安全断言：≤200B、含 `@ts-nocheck`、存在同名正常文件，任一不符即整批中止）。删除后 `check` 语法文件数由 121 回落，dist 亦不再被拷入垃圾。
-6. ✅ **文档↔代码一致性已机械校验**（2026-09-27）：57 批改名后，`docs/formulas/*` 的片段与散文仍在用改名前的标识符。新增三个可复现工具并据此修正：`check-doc-snippets.mjs`（76 条内嵌片段中 **61 条**已与源码重同步，含 ref 行号重定位）、`fix-doc-identifiers.mjs`（三份文档 71 行标识符更新，fields 命中 **66 → 0**）、`verify-doc-refs.mjs`（**全部文档**——根目录四份报告 + `docs/**/*.md` 共 **1,088 条 `file:line` 引用**：解析不到 **0**、行号越界 **0**，同名歧义 28 条按文档声明的缩写约定接受；校验范围起初只覆盖四份报告，漏掉了引用密度最高的 `docs/formulas/*`，扩充后立刻抓出 5 条越界并逐条修正：`combat.md` 把忍者回旋镖调用点误写成 `actions.js` 的 867 行（实为 characters/character.js 第 867 行）、`persistence.md` 的 scripts/test-parity.mjs 的 36 行（该文件仅 31 行）、`rng.md` 的连击数区间 stats.js 的 113-121 行（`rollChainCount` 实际在 102-114）、`baseline.md` 的 根目录 index.html 的 904-908 行（应为 `archive/original/index.html`）、`facts.md` 的 c2.js 的 270000-271250 行（该文件仅 46,981 行，实际为 `c2.js:16743-16799` 的 `function Cs()`））。四份报告引用的场景名与 59 条场景清单逐一对账全部命中。**仍未闭合**：15 条"节选/伪码"型片段（含 `...`）的行号不逐字对应，已在三份公式文档文首如实声明——判读时以片段上方的 `file:line` 与当前源码为准。
+6. ✅ **文档↔代码一致性已机械校验**（2026-09-27）：57 批改名后，`docs/formulas/*` 的片段与散文仍在用改名前的标识符。新增三个可复现工具并据此修正：`check-doc-snippets.mjs`（76 条内嵌片段中 **61 条**已与源码重同步，含 ref 行号重定位）、`fix-doc-identifiers.mjs`（三份文档 71 行标识符更新，fields 命中 **66 → 0**）、`verify-doc-refs.mjs`（**全部文档**——根目录四份报告 + `docs/**/*.md` 共 **1,088 条 `file:line` 引用**：解析不到 **0**、行号越界 **0**，同名歧义 28 条按文档声明的缩写约定接受；校验范围起初只覆盖四份报告，漏掉了引用密度最高的 `docs/formulas/*`，扩充后立刻抓出 5 条越界并逐条修正：`combat.md` 把忍者回旋镖调用点误写成 `actions.js` 的 867 行（实为 characters/character.js 第 867 行）、`persistence.md` 的 scripts/test-parity.mjs 的 36 行（该文件仅 31 行）、`rng.md` 的连击数区间 stats.js 的 113-121 行（`rollChainCount` 实际在 102-114）、`baseline.md` 的 根目录 index.html 的 904-908 行（应为 `archive/original/index.html`）、`facts.md` 的 c2.js 的 270000-271250 行（该文件仅 46,981 行，实际为 `c2.js:16743-16799` 的 `function Cs()`））。四份报告引用的场景名与 60 条场景清单逐一对账全部命中。**仍未闭合**：15 条"节选/伪码"型片段（含 `...`）的行号不逐字对应，已在三份公式文档文首如实声明——判读时以片段上方的 `file:line` 与当前源码为准。
 7. **类型债务仍存（PARTIALLY VERIFIED，详见 `docs/m10-type-debt.md`）**：`tsc` 0 错误、77/77 引擎模块无 `@ts-nocheck`、0 处 `@ts-ignore`/`eslint-disable`，但仍有 **43 处 `@type {any}`** 与 **141 行 `unknown` 收窄**。根因是**结构性**的：本项目用"`function X(){}` + `initializeXxx()` 里逐条 `X.prototype.m = ...`"的原型后挂载写法，tsc 在函数边界外看不到这些成员；加上 AST 恢复期的变量复用。本轮已完成：`tsconfig` 补 `lib: ["ES2022","DOM"]`（浏览器项目本就该有，此前 DOM 类型完全缺失）；`views/results.js` 用 1 个交叉类型 typedef 消掉 9 处 `any`。**刻意不做**：为消 cast 而改运行时行为（补默认字段/改原型链）——规范 §39 的优先级是「行为正确 > 存档兼容 > 可测试 > 可维护 > 类型安全」。最值得的下一步是把未被任何 `@type` 引用的 `persistence/save-dto.js`（119 行 DTO typedef）接到 `game-save.js` 上，换取真正的存档形状校验。
 
 ## 9. 后续开发方式（对新开发者的承诺）
@@ -104,14 +108,14 @@ npm run lint                        # 一条命令守住不变量（见下）
 
 已做**反向验证**：故意插入一个 `// TODO` 后 `npm run lint` 退出码为 1 并指名文件，移除后恢复 0。
 
-其余命令：`npm run test:parity`（差分）、`npm run test:scenarios`（59 场景）、`npm run test:e2e`（浏览器）、`npm run test:soak`（8h/24h）、`npm run build`、`npm run analyze`、`npm run audit:doc-refs` / `audit:doc-snippets` / `audit:dead-reads`。
+其余命令：`npm run test:parity`（差分）、`npm run test:scenarios`（60 场景）、`npm run test:e2e`（浏览器）、`npm run test:soak`（8h/24h）、`npm run build`、`npm run analyze`、`npm run audit:doc-refs` / `audit:doc-snippets` / `audit:dead-reads`。
 - 找战斗：`src/engine/modules/combat/`；物品：`loot/`；地牢：`world/`；存档：`persistence/`；随机：`core/math.js`；渲染：`rendering/`。
 - 改任何行为前先读 `docs/architecture.md` 对应小节；改数值前读 `content/`；**不要**碰 RNG 顺序与存档键（差分会拦住你，但先读 facts.md 更省时间）。
 - 续跑入口：`docs/WORKSTATE.md`（含下一步任务队列与避坑清单）。
 
 ## 10. 结论
 
-Clickpocalypse II 的核心实现已从高混淆遗留代码中恢复出真实语义：关键玩法行为有 59 个差分场景 + 位级 RNG 单测 + 浏览器 E2E + 8h/24h 等价回合 soak 的自动化证据保护，存档/RNG/时间/离线/自动保存经兼容验证，业务逻辑已迁入带清晰边界的现代模块（77 个），旧文件不再是唯一真相来源。
+Clickpocalypse II 的核心实现已从高混淆遗留代码中恢复出真实语义：关键玩法行为有 60 个差分场景 + 位级 RNG 单测 + 浏览器 E2E + 8h/24h 等价回合 soak 的自动化证据保护，存档/RNG/时间/离线/自动保存经兼容验证，业务逻辑已迁入带清晰边界的现代模块（77 个），旧文件不再是唯一真相来源。
 
 这些结论由运行与差分证明，不是主观判断；同样明确的是**尚未证明的部分**：附录 A 实际有 51 行（逐行统计），其中 **44 行 PASS、7 行 PARTIAL、0 行未覆盖**。PARTIAL 的 7 行都在证据格里以"**缺口（写明）**"逐条写清缺什么——法术的逐类状态级断言、成就 requirementType 1-27 的逐项进度、物品的远古稀有度档位、角色技能的逐项战斗效果、多版本存档迁移样本、渲染指纹的视口/浏览器覆盖、真机帧时间与低端设备表现。`docs/reverse-engineering/unresolved.md` 的 U4（覆盖口径）/U7（UI 独占路径）是继续推进的入口；U5（长尾字段）已于 2026-09-27 关闭。
 
@@ -140,7 +144,7 @@ Clickpocalypse II 的核心实现已从高混淆遗留代码中恢复出真实�
 | 暴击 | PASS | `combat-critical-hits` 驱动战士与游侠在 5 轮升级中解锁全部 7 档暴击几率技能（战士 4 档 + 游侠 3 档），随后在 1000 回合实战中由 `countFloatingText` 采样两端浮动文字层，直接断言两端黄色 `"暴击!"` 出现次数完全一致（各 11 次，无技能时为 0），验证绕过护甲扣除与 RNG 顺序一致，1000 回合后完整 DTO 逐项全等，带非暴击文字负向探针验证 |
 | 眩晕/状态效果 | PASS | `isStunned/isStealthed/isConverted` 语义已落地；type 13/14/0 直接计数两端同值，`characterStunnedCount` 增长断言 |
 | 技能效果层 | PASS | `skill-combat-effects` 驱动战士多重攻击（statType 18 extraAttackCount + 19 extraAttackChance，performMultiAttack 分支）与游侠跳弹链（statType 23 chainCount + 24 chainChance，命中后 createChainAction 沿 Xs 链扩展）共 14 个技能位习得，随后 1500 回合实战直接采样伤害飘字（两端 149 次 / 累计 -52345 完全一致），带"跳过技能购买步即失败"反向探针；暴击几率技能族另有 combat-critical-hits 直接对账；剩余被动属性类技能（statType 1-17/20-22/25-32）改写 stats 字段后即进入全量 DTO 差分覆盖 |
-| 法术 | PARTIAL | 16 个 `spellCategoryId` 每条一个差分场景，两端各自断言施法计数增长。**缺口（写明）**：只有 cat=2 的三种状态与 cat=17 有专属可观测量（前者直接计数效果队列、后者 `minionsSummoned` 增长），其余类别靠"唯一注入法术 + 两端施法计数增长"归因，**没有逐类的状态级断言** |
+| 法术 | PARTIAL | 16 个 `spellCategoryId` 每条一个差分场景（**覆盖由 `scripts/check-spell-coverage.mjs` 机械核对：无场景 0 个**）。**15/16 类已有专属可观测量**：cat=1 治疗浮动文字（91 次 / 累计 +279）、cat=2/8 活怪物效果队列直接计数、cat=3 盟友侧效果队列直接计数（20 次，新增 `countAllyEffectApplications`——增益落在队友身上，活怪物队列里看不到）、cat=4/5/6/12/13 伤害浮动文字（379–559 次 / 累计 -4688 ~ -5943）、cat=9/10/11 随从数、cat=14 拾取统计、cat=16 昏迷前置、cat=17 伤害+随从双观测。**缺口（写明）**：仅 **cat=15（发现财宝箱）** 仍靠"唯一注入法术 + 施法计数增长 + 完整存档差分"归因——该法术只把房间财宝设为队伍目标，是否最终开箱取决于 AI 是否走到箱子；实测该统计断言单跑通过、整矩阵失败（场景顺序相关），故不硬凑 |
 | 伤害数字 | PASS | 500 回合实战逐帧直接采样浮动文字层，正则匹配负数伤害文本数量（57 次）与累计总伤害（-616 点），两端完全一致，带反向探针验证 |
 | 法术特效 | PASS | `spell-visual-effects` 直接对账特效池（不入存档 DTO 的差分盲区）：harness countVisualEffects 逐帧采样原版 Game.df.Wg（名字段 ca）/ 重构版 game.effects.Wg（impactEffectName），火法师装载火球术自然战斗 3000+1000 回合，两端特效总数（719）、逐类计数（Red Splat/Green Damage/Small Green Projectiles 等 3 种）与创建顺序序列完全一致；反向验证：字段名取错时原版 0 vs 重构版 132 即失败 |
 | 普通遭遇 | PASS | 全场景都会进入遭遇；遭遇点数事件在存档中等值增长 |

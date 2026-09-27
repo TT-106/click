@@ -97,6 +97,18 @@ function walk(dir, out = [], skip = new Set(['node_modules', '.git', 'dist', 'ou
   else notes.push('原版存档 fixture 无单字母键 ✓');
 }
 
+// 6) 每个 spellCategoryId 都必须有差分场景驱动（防止新增法术类别时漏场景）
+{
+  const r = await run(process.execPath, ['scripts/check-spell-coverage.mjs']);
+  const m = (r.stdout || '').match(/无场景\s*(\d+)\s*个/);
+  if (!m) problems.push('check-spell-coverage 未输出"无场景"计数');
+  else if (Number(m[1]) !== 0) problems.push(`有 ${m[1]} 个 spellCategoryId 没有差分场景驱动（见 check-spell-coverage 输出）`);
+  else {
+    const withObs = (r.stdout || '').match(/无直接可观测量\s*(\d+)\s*个/);
+    notes.push(`法术类别全部有场景覆盖 ✓（其中 ${withObs ? withObs[1] : '?'} 类仅有计数归因，已在矩阵里写明）`);
+  }
+}
+
 console.log('lint 不变量检查：');
 for (const n of notes) console.log(`  ✓ ${n}`);
 if (problems.length) {

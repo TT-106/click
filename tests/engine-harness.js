@@ -198,6 +198,34 @@ window.harness = {
     }
     return { applications, snapshot: snapshot() };
   },
+  // 盟友侧状态效果直接计数：cat=3（提高护甲）这类**增益落在施法者队伍**身上，而上面那个
+  // countEffectApplications 只扫活怪物队列（原版 `w.Gf.Og`），对盟友增益恒为 0。故单列一个扫
+  // 全体冒险者的入口；同样只读数组、不消耗随机数。原版 `w.i.D` = 冒险者列表（见 characters()）。
+  countAllyEffectApplications(turns, typeId) {
+    const allyList = () => (original ? window.Game.i.D : game.state.adventurers);
+    const effectList = m => {
+      const holder = original ? m.Ja : m.effects;
+      return holder && (original ? holder.of : holder.activeEffects);
+    };
+    const effectType = original ? (e => e.X) : (e => e.statusEffectTypeId);
+    let applications = 0;
+    const carrying = new Set();
+    for (let i = 0; i < turns; i++) {
+      advance();
+      const list = allyList();
+      if (!Array.isArray(list)) throw new Error('盟友列表访问失败');
+      for (const ally of list) {
+        const effects = effectList(ally);
+        const has = Array.isArray(effects) && effects.some(e => effectType(e) === typeId);
+        if (has) {
+          if (!carrying.has(ally)) { carrying.add(ally); applications++; }
+        } else {
+          carrying.delete(ally);
+        }
+      }
+    }
+    return { applications, snapshot: snapshot() };
+  },
   // 采样浮动战斗文字（用于暴击、首领击杀、伤害数字、治疗、免疫等瞬时视觉的直接计数对账）。
   countFloatingText({ turns = 0, text, pattern } = {}) {
     const list = () => (original ? window.Game.pc.al : game.floatingText.texts);

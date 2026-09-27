@@ -19,11 +19,11 @@
 |---|---|
 | 引擎 | `src/engine/modules/**`：77 个模块，由 AST 工具从 c2.js **机械恢复**（不是重写） |
 | 入口 | 产品入口 `src/engine/adapter.js`（命令校验 + 只读快照）；UI 壳 `src/app.js` + `src/ui/`；原版单体仍在 `archive/original/` 作差分参照 |
-| 测试 | `npm test`（10 单测）· `test:parity`（0/1/99/900 回合完整 DTO 相等）· **`test:scenarios`（59 场景差分矩阵，全绿）** · `test:e2e`（浏览器：建队/暂停/五类面板/c2c DOM 契约/导入导出/坏档/刷新/三视口）· `test:soak`（8h/24h 等价回合） |
+| 测试 | `npm test`（10 单测）· `test:parity`（0/1/99/900 回合完整 DTO 相等）· **`test:scenarios`（60 场景差分矩阵，全绿）** · `test:e2e`（浏览器：建队/暂停/五类面板/c2c DOM 契约/导入导出/坏档/刷新/三视口）· `test:soak`（8h/24h 等价回合） |
 | 静态门 | `npm run check`（111 文件语法 + 单测）· `npm run typecheck`（tsc 0 错误，`src/engine/modules` 下 `@ts-nocheck` 已清零）· `npm run build`（dist 174 文件） |
 | 改名进度 | 混淆字段清单 **806 → 41**（U66–U112 共 47 批）；`docs/symbol-map.json` 的 `fields` 段 **1,010 条**；剩余积压以 `node scripts/show-field-backlog.mjs` 为唯一口径（41 项分布在 25 个模块） |
 | 验收矩阵 | `REFACTOR_REPORT.md` 附录 A：51 行 **全 PASS / 0 PARTIAL / 0 未覆盖**（每行带证据场景名） |
-| 报告 | `REFACTOR_REPORT.md`、`COMPATIBILITY_REPORT.md`（59 场景表 + RNG/存档/离线口径）、`PERFORMANCE_REPORT.md`、`MIGRATION_MAP.md`，本轮已把场景数从 45/48/50/52 统一为 59 并补齐表内缺失的 7 条场景 |
+| 报告 | `REFACTOR_REPORT.md`、`COMPATIBILITY_REPORT.md`（60 场景表 + RNG/存档/离线口径）、`PERFORMANCE_REPORT.md`、`MIGRATION_MAP.md`，本轮已把场景数从 45/48/50/52 统一为 59 并补齐表内缺失的 7 条场景 |
 | 公式文档 | `docs/formulas/{combat,items,progression}.md`，733 条 `file:line` 引用逐条回源过 |
 | 里程碑 | M0–M10、M13（回归矩阵）已完成；**M11 有 baseline 未做优化（也无必要）**；M12 长尾改名是当前主线，剩 ~41 项 |
 

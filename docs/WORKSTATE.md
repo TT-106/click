@@ -1,11 +1,19 @@
 # WORKSTATE — Clickpocalypse II 语义恢复与现代化工程
 
 > 本文件是长程自治任务的**唯一续跑入口**。上下文压缩或中断后，先读本文件 + `git log --oneline`，再继续。
-> 最后更新：2026-09-27（U66-U127 共 62 批落地后，**混淆属性清单归零 0**；fields 段 267 → 1047；59 场景矩阵全绿；**10 门禁逐条回显全绿**（lint/build/typecheck/check/parity/scenarios/e2e/soak/perf/perf:frames）；P1 回归完成；P2 文档↔代码一致性机械校验（全量文档 1,089 条引用 0 越界、61/76 片段重同步）与**验收矩阵自我纠偏（44 PASS / 7 PARTIAL / 0 未覆盖）**；P3 清除 38 个隐形文件名垃圾文件并复跑审计；M10 类型债务已建台账）
+> 最后更新：2026-09-27（U66-U129 共 64 批落地后，**混淆属性清单归零 0**；fields 段 267 → 1047；**60 场景矩阵全绿**；**10 门禁逐条回显全绿**（lint/build/typecheck/check/parity/scenarios/e2e/soak/perf/perf:frames）；P1 回归完成；P2 文档↔代码一致性机械校验（全量文档 1,089 条引用 0 越界、61/76 片段重同步）与**验收矩阵自我纠偏（44 PASS / 7 PARTIAL / 0 未覆盖）**；P3 清除 38 个隐形文件名垃圾文件并复跑审计；M10 类型债务已建台账；U129 把法术直接可观测量从 4/16 提到 15/16 并抓出 3 处空断言）
 
 ## 当前轮次状态（2026-09-27，M12 长尾重命名 + 命名修正 —— 已收官）
 
 - **M12 收官：`analyze-fields.mjs` 报「混淆属性总数: 0」。** 残余的 1,171 → 0 全量清零（U66-U120），下一步主线转为 P1 回归收尾 / P2 报告口径对齐 / P3 Exhaustion Pass（见 §9）。
+
+- **U129 法术归因从 4/16 提到 15/16，并顺手抓出 3 处"空断言"（2026-09-27，矩阵 59 → 60）**。起点是规范 §56 的「法术」一行长期 PARTIAL：16 个 `spellCategoryId` 都有场景，但只有 4 类有专属可观测量。本轮做了四件事：
+  1. **新增 3 个可观测量通道**：`damageNumbers`（伤害浮动文字，pattern `^-[0-9]+$`）复用到 cat=4/5/6/12/13（实测 379–559 次、累计 -4688 ~ -5943）；新增 `healNumbers`（cat=1 治疗写的 `showFloatingText(h,g,"+"+f,"#00FF00")`，实测 91 次 / +279）；新增 harness 方法 `countAllyEffectApplications` + 步骤旗标 `allyEffectType`（cat=3 的增益落在**队友**身上，而既有 `countEffectApplications` 只扫活怪物队列 `w.Gf.Og`，对盟友增益恒为 0；实测 20 次）。
+  2. **补上 cat=10 的覆盖空洞**：新增 `scripts/check-spell-coverage.mjs`（机械核对"每个 spellCategoryId 是否有场景 + 是否有直接可观测量"）报出 **cat=10（德鲁伊 狼群）无任何场景驱动**——此前报告里"16 类每条一个场景"的说法是**错的**。新增 `spell-summon-wolf-pack`（与 cat=9 共用 `summonSpellMinion` 分支，可观测量同为 `minionsSummoned`），矩阵 59 → **60**，全绿。
+  3. **顺手修掉 3 处被静默忽略的断言**：给 runner 加了**空断言防呆**——`check` 返回的键若没在 runner 里被断言，就 `assert.deepEqual(unknown, [])` 直接失败（键清单由断言行机械抽取；清单过时只会**误报失败**，不会漏报）。一开就抓到：`monster-level-retired` 的 `maxLevelUnlocked`、`skill-combat-effects` 的 `multiLearned`/`chainLearned`、`point-upgrades-multiple` 的 `pointsSpent` 全都**从未被断言**（写了却没接上，测试照样全绿）。已全部补齐。
+  4. **拒绝一条 flaky 断言**：cat=15（发现财宝箱）我先加了 `treasureChestsLooted` 增长断言，单跑通过、**整矩阵失败**——该法术只把房间财宝设为队伍目标，是否开箱取决于 AI 是否走到箱子（`selected` 不入存档），场景顺序相关。按"宁缺勿滥"回退为计数归因，并在矩阵行里写明原因。
+  **最终口径**：覆盖 16/16，直接可观测量 **15/16**，唯一例外 cat=15 已写明理由。矩阵「法术」行仍判 **PARTIAL**（不因"几乎全绿"就改判 PASS）。
+  **扫描 v3（2026-09-27T09:10Z）**： —— **10/10 全绿**，日志 。
 
 - **U128 最终回归扫描 v2（2026-09-27T08:44Z，含 M10 与文档修正后的 HEAD）**：`lint=0 build=0 typecheck=0 check=0 parity=0 scenarios=0 e2e=0 soak=0 perf=0 perf:frames=0` —— **10/10 全绿**，日志在 `output/f-*.log`。同批把 `verify-doc-refs.mjs` 的默认范围从"四份报告"扩到"四份报告 + `docs/**/*.md`"，**立刻抓出 5 条此前漏掉的越界引用**（其中 3 条我在两处报告里曾声明"已修好"但**实际从未写入文件**）并逐条修好；现全量文档 **1,089 条引用 0 越界**。教训已写入 `.workbuddy-ai/memory/2026-09-27.md`：**任何"已修复"的声明都必须有可复跑的检查覆盖到它，否则等于没做**；覆盖面不足的绿灯比红灯更危险。
 
@@ -21,7 +29,7 @@
   1. **片段重同步**（`scripts/check-doc-snippets.mjs`）：把 md 里"`` `path:start-end` `` + ```js 块"与当前源码逐行比对。三级判定——① 行数相同且 ≥50% 行逐字相同 → 用源码覆盖；② 起点正确但 ref 末尾与实际行数不符 → 按实际行数修正 ref 末尾再覆盖；③ 都不符 → 用 `docs/symbol-map.json` 的字段名做**归一化标识符匹配**在源码里重新定位（改名只改文本不改结构，故归一化后仍可定位），命中则同时修正 ref 与片段。结果：**76 条片段中 61 条已同步**；残留 15 条是"节选/伪码"型（含 `...` 或跨多处拼接），已在三份公式文档文首如实声明为已知精度缺口（**不写成 PASS**）。
   2. **标识符同步**（`scripts/fix-doc-identifiers.mjs`）：按 fields 段把文档里的旧名替换为当前语义名。安全边界：只动 ``` 围栏代码块内的 `.X`/`X:` 形态与散文里**反引号包裹**的 `` `X` ``；单字符名永不替换；替换后若新旧名同行则回退并报告。结果：三份文档共 **71 行**更新，**fields 命中数 66 → 0**。
   3. **引用可回源校验**（`scripts/verify-doc-refs.mjs`）：对 14 份文档抽出 **934 条唯一 `file:line` 引用**，按仓库 basename 索引解析（文档大量使用裸文件名，如 `loop.js:87`）→ **解析不到 0 条**、同名歧义 24 条（`character.js` 在 `characters/` 与 `views/` 各有一份，文档文首已声明缩写约定，视为可接受）、**行号越界 4 条已全部修好**（combat.md 里把忍者回旋镖的调用点误写成 actions.js 的 867 行，实为 characters/character.js 的 867 行；persistence.md 与 rng.md 的行号区间分别按当前文件长度与函数实际范围校正。**注意：这 4 条最初只在两处报告里声明修好、实际未落到文件上，是被全量文档校验抓出来后才真正修掉的**）。
-  4. **场景名可回源**：四份报告引用的场景名与 `scripts/test-scenarios.mjs` 的 59 条逐一比对，**全部命中**（少数未命中项是 `check`/`spells` 这类普通词，非场景名）。
+  4. **场景名可回源**：四份报告引用的场景名与 `scripts/test-scenarios.mjs` 的 60 条逐一比对，**全部命中**（少数未命中项是 `check`/`spells` 这类普通词，非场景名）。
   5. 三份公式文档文首的"34 场景差分矩阵"统一更正为 **59**。
 
 - **U122 空壳宿主诚实命名：`game.extensions` → `game.unusedPlaceholder`（2026-09-27）**。`runtime/game.js:128` 的 `dF: new function(){}`（archive 原版 c2.js:44339-44340 形态一致）是**原版的空占位对象**：全库（src + archive + c2c.user.js）读点为 0，恢复期被命名为 `extensions`（无证据支撑的推测名）。按本项目"死字段用 `unusedXxx` 诚实命名"的既有先例（`unusedClassFlag`/`unusedCachedText`/`unusedClassValue*`/`unusedSpellFlag`）改为 `unusedPlaceholder`；`symbol-map.json` 的 `gameFields.dF` 与 `docs/game-state-schema.md` 同步。**保留对象本身**（不删字段——删会改变 `game` 的形状，而外部 userscript 契约要求尽量不动）。
