@@ -1,9 +1,11 @@
 # WORKSTATE — Clickpocalypse II 语义恢复与现代化工程
 
 > 本文件是长程自治任务的**唯一续跑入口**。上下文压缩或中断后，先读本文件 + `git log --oneline`，再继续。
-> 最后更新：2026-09-27（U66-U98 共 33 批落地后，混淆清单 806 → 206；fields 段 267 → 856；59 场景矩阵全绿）
+> 最后更新：2026-09-27（U66-U99 共 34 批落地后，混淆清单 806 → 189；fields 段 267 → 873；59 场景矩阵全绿）
 
 ## 当前轮次状态（2026-09-27，M12 长尾重命名 + 命名修正）
+
+- U99 地牢/城堡布局生成（2026-09-27，混淆清单 206 → 189，fields 段 856 → 873）：`world/generation.js` 17 项全部落地，文件清空（并同步 `world/rooms.js`、`world/terrain.js` 消费点）。LayoutGenerator 参数：`iB`→roomSpacing、`Ow`→minRoomCount、`xA`→maxRoomCount（`Ow + randomIntFrom(seed, xA - Ow)` = 房间数，常量 MIN_ROOM_DIMENSION=5/MAX_ROOM_SIZE=10 实际为**房间数上下界**）、`DA`/`wA`→minRoomDimension/maxRoomDimension（`g = DA + rand(wA - DA)` = 房间边长 8..15）、`Xp`→nextRoomId、`Zo`→nextHallwayId。布局流程方法：`rw`→generate（入口）、`ru`→connectRooms（走廊连通，失败返回 false）、`uu`→placeStairs（入口/出口楼梯）、`to`→createStairs（按随机横/竖放置 DungeonStairs）、`yx`→moveUpLeft（房间 tileColumn/tileRow 同减，循环逼近 (1,1)）、`gt`→shiftUp（仅 tileRow 递减，与既有 shiftLeft 对称）。DungeonRoom/DungeonHallway：`ro`→connectedRooms、`Bq`→paintTiles（按几何把 floorType 写入 tileGrid）、`xx`→applyTheme（写入 theme 与 tileGrid）。DungeonLevel/WorldBlock 共用 `Aw`→createTileGrid（分配 tileGrid 并填充瓦片）。LayoutMethods typedef 同步更新（批处理的 typedefKeyRe 覆盖该行）。
 
 - U98 成就视图与成就定义（2026-09-27，混淆清单 225 → 206，fields 段 838 → 856）：`views/achievements.js` 17 项 + `progression/achievements.js` 2 项落地，两文件清空。AchievementListView：三列 UpgradeCollection `Hq/Nt/Ot`→first/second/thirdColumnCollection、`Iq`→tableElement、`QC`→headerElementId、`pz`→cachedAchievementCount、`uo`→rebuild（清空后重建，reset 与 update 复用）；AdventurePointBreakdownView：`Ls`→tableElement、`Ao/sz/Dv`→cachedPointsByEventType/cachedCountsByEventType/cachedPointReward、三列单元格 `sy/tu/ex`→pointsCells/countCells/rewardCells（按表头「冒险点数/计数/AP/行动」对应 update 写入点）；PointUpgradeListView `Gt`→tableElement。跨文件方法：`Zn`→refreshCollections（本文件重建列集合 + `views/character.js` SkillsTabView 重载技能树集合）、`St`→createHeaderRow（本文件点数表 + `views/information.js` 统计表）。progression/achievements.js：`Rt`→cachedRequirementLabel、`Pt`→cachedRewardLabel。**注意**：`Hq/Zn/uo/St/Pt/Rt` 在 `symbols` 段是**其他模块的函数名**（同名不同义），本次按本文件语义命名并写入 `fields` 段；`Hq` 因 `tests/engine-harness.js:430` 的 `window.Hq`（原版全局函数，不可改名）而**不入全局表**，analyze-fields 会因此继续列出该 1 项。**JSDoc 陷阱**：`@property {function(number): void} St …`（非 `St:` 形态）不会被批处理捕获，需手工改名，否则 tsc TS2339。
 
