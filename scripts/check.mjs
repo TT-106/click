@@ -1,8 +1,22 @@
 // 组合检查：语法检查全部源码 → 单元测试。parity/E2E 需要浏览器，由 test:parity / test:e2e 单独运行。
-import { execFileSync, spawnSync } from 'node:child_process';
-import { readdir, stat } from 'node:fs/promises';
+import { execFileSync, spawn } from 'node:child_process';
+import { readdir } from 'node:fs/promises';
 import path from 'node:path';
 import process from 'node:process';
+
+// 注意：本环境（Windows）下 spawnSync/execFileSync 使用**管道** stdio 会稳定抛 EBUSY，
+// 而异步 spawn 的管道 stdio 正常。语法检查需要逐文件捕获 stderr，故改用异步 spawn。
+function runCaptured(cmd, args) {
+  return new Promise((resolve) => {
+    const child = spawn(cmd, args, { stdio: ['ignore', 'pipe', 'pipe'] });
+    let stdout = '';
+    let stderr = '';
+    child.stdout.on('data', (d) => { stdout += d; });
+    child.stderr.on('data', (d) => { stderr += d; });
+    child.on('error', (err) => resolve({ status: null, stdout, stderr, error: err }));
+    child.on('close', (code) => resolve({ status: code, stdout, stderr }));
+  });
+}
 
 async function listJs(dir) {
   const out = [];
@@ -21,10 +35,11 @@ for (const dir of ['src', 'scripts', 'tests']) {
 
 let failures = 0;
 for (const file of targets) {
-  const result = spawnSync(process.execPath, ['--check', file], { encoding: 'utf8' });
+  const result = await runCaptured(process.execPath, ['--check', file]);
   if (result.status !== 0) {
     failures++;
-    console.error(`✗ 语法错误: ${file}\n${result.stderr}`);
+    const detail = result.stderr || (result.error && String(result.error)) || '';
+    console.error(`✗ 语法错误: ${file}\n${detail}`);
   }
 }
 console.log(`✓ 语法检查 ${targets.length} 个文件`);
