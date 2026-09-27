@@ -19,11 +19,11 @@ export function PartyCreationView(a) {
   this.elementId = "partyCreationTabContent";
   this.tabState = a;
   this.selectedCharacters = [];
-  this.cr = [];
+  this.characterSelectionButtons = [];
   this.validParty = false;
-  this.rx = null;
-  this.tz = this.zr = this.jm = false;
-  this.startButton = this.oo = null;
+  this.selectedCharactersTable = null;
+  this.cachedHasDuplicateName = this.hasDuplicateName = this.selectedPartyDirty = false;
+  this.startButton = this.nameWarningElement = null;
   this.victoryOptionsApplied = false;
 }
 export function mountPartyCreation(a) {
@@ -162,7 +162,7 @@ export function mountClassChoices(a, b) {
           n = "稍后解锁该角色";
       }
       g.innerHTML = n;
-      d.cr.push(null);
+      d.characterSelectionButtons.push(null);
     } else {
       mountClassChoice(a, g, h);
     }
@@ -172,10 +172,10 @@ export function mountSelectedParty(a, b) {
   var c = createElement("div", b, null, "selectedCharactersHeaderContainer");
   createElement("span", c, null, "partySelectionHeaderSpan").innerHTML = "已选择角色";
   c = createElement("div", b, null, "selectedCharactersPanel");
-  a.rx = createElement("table", c, null, "partySelectionTable");
-  a.oo = createElement("div", c, null, "partySelectionNameWarning");
-  a.oo.innerHTML = "给你的角色取个独特的名字.";
-  a.oo.style.display = "none";
+  a.selectedCharactersTable = createElement("table", c, null, "partySelectionTable");
+  a.nameWarningElement = createElement("div", c, null, "partySelectionNameWarning");
+  a.nameWarningElement.innerHTML = "给你的角色取个独特的名字.";
+  a.nameWarningElement.style.display = "none";
 }
 export function mountClassChoice(a, b, c) {
   var d = adventurerClasses[c],
@@ -183,14 +183,14 @@ export function mountClassChoice(a, b, c) {
     g,
     h;
   b = createElement("table", b, null, "characterSelectionButton");
-  a.cr.push(b);
+  a.characterSelectionButtons.push(b);
   b.onclick = function () {
     if (!(a.selectedCharacters.length >= 4 + partyCapacityBonus.currentValue)) {
       a.selectedCharacters.push({
         classIndex: c,
         defaultName: adventurerClasses[c].defaultName
       });
-      a.jm = true;
+      a.selectedPartyDirty = true;
       validateSelectedParty(a);
     }
   };
@@ -268,7 +268,7 @@ export function mountSelectedCharacter(a, b, c, d) {
   f.onmouseup = function () {
     if (!(0 > d || d >= a.selectedCharacters.length)) {
       a.selectedCharacters.splice(d, 1);
-      a.jm = true;
+      a.selectedPartyDirty = true;
       validateSelectedParty(a);
     }
     return false;
@@ -283,7 +283,7 @@ export function mountSelectedCharacter(a, b, c, d) {
         var b = a.selectedCharacters[d - 1];
         a.selectedCharacters[d - 1] = a.selectedCharacters[d];
         a.selectedCharacters[d] = b;
-        a.jm = true;
+        a.selectedPartyDirty = true;
         validateSelectedParty(a);
       }
       return false;
@@ -299,7 +299,7 @@ export function mountSelectedCharacter(a, b, c, d) {
         var b = a.selectedCharacters[d + 1];
         a.selectedCharacters[d + 1] = a.selectedCharacters[d];
         a.selectedCharacters[d] = b;
-        a.jm = true;
+        a.selectedPartyDirty = true;
         validateSelectedParty(a);
       }
       return false;
@@ -349,7 +349,7 @@ export function validateSelectedParty(a) {
   for (d = 0; d < adventurerClasses.length; d++) {
     c = game.state.victoryCount < adventurerClasses[d].requiredVictories;
     if (!c) {
-      a.cr[d].className = a.selectedCharacters.length === f ? "disabledCharacterSelectionButton" : "characterSelectionButton";
+      a.characterSelectionButtons[d].className = a.selectedCharacters.length === f ? "disabledCharacterSelectionButton" : "characterSelectionButton";
     }
   }
   if (0 === a.selectedCharacters.length) {
@@ -378,7 +378,7 @@ export function validateSelectedParty(a) {
     a.startButton.className = "disabledUpgradeButton";
   }
   a.startButton.innerHTML = f;
-  a.zr = h;
+  a.hasDuplicateName = h;
   a.validParty = b;
 }
 export function initializeViewsPartyCreation() {
@@ -400,7 +400,7 @@ export function initializeViewsPartyCreation() {
     clearElementById(this.elementId);
     this.victoryOptionsApplied = false;
     this.selectedCharacters.length = 0;
-    this.cr.length = 0;
+    this.characterSelectionButtons.length = 0;
     this.validParty = false;
     this.startButton = null;
   };
@@ -410,9 +410,9 @@ export function initializeViewsPartyCreation() {
         mountPartyCreation(this);
         this.victoryOptionsApplied = true;
       }
-      if (this.jm) {
-        this.jm = false;
-        var a = this.rx;
+      if (this.selectedPartyDirty) {
+        this.selectedPartyDirty = false;
+        var a = this.selectedCharactersTable;
         if (a) {
           for (; 0 < a.rows.length;) {
             a.deleteRow(0);
@@ -422,17 +422,17 @@ export function initializeViewsPartyCreation() {
           a = /** @type {any} */ (0),
           c;
         for (c = 0; c < this.selectedCharacters.length; c++) {
-          b = this.rx.insertRow(a);
+          b = this.selectedCharactersTable.insertRow(a);
           a++;
           b = b.insertCell(0);
           mountSelectedCharacter(this, b, this.selectedCharacters[c], c);
         }
       }
-      if (this.tz != this.zr) {
-        if (this.tz = this.zr) {
-          showElement(this.oo);
+      if (this.cachedHasDuplicateName != this.hasDuplicateName) {
+        if (this.cachedHasDuplicateName = this.hasDuplicateName) {
+          showElement(this.nameWarningElement);
         } else {
-          hideElement(this.oo);
+          hideElement(this.nameWarningElement);
         }
       }
     }

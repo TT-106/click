@@ -511,7 +511,7 @@ export function advanceSimulation(a) {
       sortInventory(Ya, Ya.list);
     }
   }
-  game.floatingText.oy();
+  game.floatingText.update();
   if (!game.processingOffline) {
     var Nc;
     for (Nc = 0; Nc < upgradeCollections.length; Nc++) {

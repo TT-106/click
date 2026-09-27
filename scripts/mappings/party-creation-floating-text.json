@@ -1,0 +1,14 @@
+[
+  { "old": "jm", "new": "selectedPartyDirty", "expect": 7, "files": ["src/engine/modules/views/party-creation.js"] },
+  { "old": "oo", "new": "nameWarningElement", "expect": 6, "files": ["src/engine/modules/views/party-creation.js"] },
+  { "old": "cr", "new": "characterSelectionButtons", "expect": 5, "files": ["src/engine/modules/views/party-creation.js"] },
+  { "old": "rx", "new": "selectedCharactersTable", "expect": 4, "files": ["src/engine/modules/views/party-creation.js"] },
+  { "old": "zr", "new": "hasDuplicateName", "expect": 4, "files": ["src/engine/modules/views/party-creation.js"] },
+  { "old": "tz", "new": "cachedHasDuplicateName", "expect": 3, "files": ["src/engine/modules/views/party-creation.js"] },
+  { "old": "oy", "new": "update", "expect": 4, "files": ["src/engine/modules/rendering/floating-text.js", "src/engine/modules/simulation/tick.js"] },
+  { "old": "pw", "new": "movePhase", "expect": 4, "files": ["src/engine/modules/rendering/floating-text.js"] },
+  { "old": "GD", "new": "driftX", "expect": 2, "files": ["src/engine/modules/rendering/floating-text.js"] },
+  { "old": "HD", "new": "driftY", "expect": 2, "files": ["src/engine/modules/rendering/floating-text.js"] },
+  { "old": "dA", "new": "screenYOffset", "expect": 3, "files": ["src/engine/modules/rendering/floating-text.js"] },
+  { "old": "cA", "new": "screenXOffset", "expect": 3, "files": ["src/engine/modules/rendering/floating-text.js"] }
+]

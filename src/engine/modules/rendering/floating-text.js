@@ -9,13 +9,13 @@ export function FloatingText(a, b) {
   this.color = b;
   this.frameAge = this.screenY = this.screenX = 0;
   var c = 1 + randomInt(1);
-  this.GD = 0.5 > Math.random() ? -c : c;
-  this.HD = -1 + -randomInt(1);
-  this.pw = true;
+  this.driftX = 0.5 > Math.random() ? -c : c;
+  this.driftY = -1 + -randomInt(1);
+  this.movePhase = true;
 }
 export function FloatingTextLayer() {
   this.texts = [];
-  this.dA = this.cA = 20;
+  this.screenYOffset = this.screenXOffset = 20;
 }
 export function showDamageText(a, b) {
   var c = game.floatingText;
@@ -30,13 +30,13 @@ export function showFloatingText(a, b, c, d) {
     if (game.worldActive) {
       d = b.getWorldPositionX();
       var f = b.getWorldPositionY();
-      b = game.viewportHalfWidth + (d - game.world.worldCenterX - (f - game.world.worldCenterY)) + a.cA;
-      d = game.viewportHalfHeight + 0.5 * (d - game.world.worldCenterX + (f - game.world.worldCenterY)) + a.dA;
+      b = game.viewportHalfWidth + (d - game.world.worldCenterX - (f - game.world.worldCenterY)) + a.screenXOffset;
+      d = game.viewportHalfHeight + 0.5 * (d - game.world.worldCenterX + (f - game.world.worldCenterY)) + a.screenYOffset;
     } else {
       d = b.getLevelPositionX();
       f = b.getLevelPositionY();
-      b = projectDungeonX(d, f) + a.cA;
-      d = projectDungeonY(d, f) + a.dA;
+      b = projectDungeonX(d, f) + a.screenXOffset;
+      d = projectDungeonY(d, f) + a.screenYOffset;
     }
     c.screenX = b;
     c.screenY = d;
@@ -44,22 +44,22 @@ export function showFloatingText(a, b, c, d) {
   }
 }
 export function initializeRenderingFloatingText() {
-  FloatingText.prototype.oy = function () {
-    if (this.pw) {
+  FloatingText.prototype.update = function () {
+    if (this.movePhase) {
       if (0.5 > Math.random()) {
-        this.screenX += this.GD;
+        this.screenX += this.driftX;
       }
-      this.screenY += this.HD;
+      this.screenY += this.driftY;
     }
-    this.pw = !this.pw;
+    this.movePhase = !this.movePhase;
     this.frameAge++;
     return 60 <= this.frameAge;
   };
-  FloatingTextLayer.prototype.oy = function () {
+  FloatingTextLayer.prototype.update = function () {
     var a,
       b = false;
     for (a = 0; a < this.texts.length; a++) {
-      if (this.texts[a].oy()) {
+      if (this.texts[a].update()) {
         b = true;
       }
     }
