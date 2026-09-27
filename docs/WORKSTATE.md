@@ -1,10 +1,11 @@
 # WORKSTATE — Clickpocalypse II 语义恢复与现代化工程
 
 > 本文件是长程自治任务的**唯一续跑入口**。上下文压缩或中断后，先读本文件 + `git log --oneline`，再继续。
-> 最后更新：2026-09-27（U66-U82 十七批落地后，混淆清单 806 → 440；fields 段 267 → 625；59 场景矩阵全绿）
+> 最后更新：2026-09-27（U66-U92 共 27 批落地后，混淆清单 806 → 328；fields 段 267 → 737；59 场景矩阵全绿）
 
 ## 当前轮次状态（2026-09-27，M12 长尾重命名 + 命名修正）
 
+- U92 地牢视图批 A（2026-09-27，混淆清单 343 → 328，fields 段 722 → 737）：TreasureLootView 的 `om/po/Ro`→messageCell/treasureImage/getButtonClass；DungeonRowView 的 `yr/px/Gx/wr/Co/Ct/ct`→dungeonUpgrade/actionCell/descriptionCell/terrainImage/iconCell/columnWidth/setDungeon；DungeonView 四页签 `nr/zw/qu/qx`→discoveredTab/infestedTab/clearedTab/farmedTab 与 `dw`→categoryId。
 - U91 升级虚访问器与状态缓存（2026-09-27，混淆清单 359 → 343，fields 段 706 → 722）：虚方法 `Wo/Vo/Pz/Kr/Nz/Oz`→getDungeon/getCharacter/getScrollItem/getMonsterLevel/getItems/getUpgradeItem、`ft`→setPurchased、`Br`→equipBestForCharacter；缓存 `Up/ZA/WA/Lo`→cachedAffordableSoon/cachedCanPurchase/cachedRequiredExperience/requiredExperience、`it/oq`→skillDefinition/spellDefinition、`Ds/Cs`→cachedUnlockCost/cachedRetireCost。
 - U90 行为更新方法（2026-09-27，混淆清单 360 → 359，fields 段 705 → 706）：`dr`→updateBehaviors（Character 委托 BehaviorQueue，后按 worldActive 分派 ou/nu；AttackBehavior 同义覆盖）。
 - U89 法术定义表键（2026-09-27，混淆清单 390 → 360，fields 段 675 → 705）：按定义内 `name` 字段恢复 30 个法术键（shockSpell/spiderWebSpell/lightningRainSpell/fireRingSpell/fireRainSpell/fireBallSpell/transformMonsterSpell/healSpell/resurrectSpell/buffArmorSpell/buffDamageSpell/buffAttackRatingSpell/buffDefenceRatingSpell/tauntSpell/stealthSpell/instantSearchSpell/findTreasureSpell/rageSpell/hammerSpell/agonySpell/greenDeathSpell/skeletonArmySpell/ghostSkeletonSpell/wolfPackSpell/dogGuardianSpell/lesserHealSpell/sleepSpell/quickStrikeSpell/summonChickensSpell/chickenGuardianSpell），六文件共 82 处。**方法**：先按 `name:` 行提取「键 → 中文名」对照表再命名，避免臆测。
