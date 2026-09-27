@@ -1,7 +1,7 @@
 # COMPATIBILITY REPORT — 兼容性验证报告
 
 > 结论分级遵循目标规范 §89：VERIFIED（有自动化证据）/ PARTIALLY VERIFIED / UNRESOLVED。
-> 测试环境：Node 22.19 / Chrome (playwright channel) headless / Win32。数据截至 2026-09-26。
+> 测试环境：Node 22.x / Chrome (playwright channel) headless / Win32。数据截至 **2026-09-27**（本文件在 M12 收官与 P1 回归后复跑并更新）。
 
 ## 1. 存档兼容 — VERIFIED
 
@@ -24,7 +24,7 @@
 |---|---|---|
 | 长跑/后期 | long-run-9000、late-horizon | 9,000 与 +1,000,000 回合起点下逐检查点全等 |
 | 离线 | offline-1h、offline-8h、offline-13h-capped、offline-disabled、**background-progress-disabled** | 金币/击杀必须真实增长；13h 必须被截为 12h；关闭离线后金币必须不变；后台关闭态注入 5000ms 间隙严格仅前进 1 回合且无追赶，与开启态 20 回合形成因果对照 |
-| 药水 | potions-active、potions-inactive-auto、**potions-activated** | 第三条直接驱动 `Potion.aw()`，两端 `statistics.potionsUsed` 各自增长 |
+| 药水 | potions-active、potions-inactive-auto、**potions-activated** | 第三条直接驱动 `Potion.activate()`（原 `aw`；harness 走 `original ? potion.aw() : potion.activate()` 双端分支），两端 `statistics.potionsUsed` 各自增长 |
 | 卷轴 | scrolls-stocked、**scroll-cast-in-combat** | 库存/数量/解锁相等；第二条在战斗中按序施放全部 6 种卷轴（休克/蜘蛛网/箭雨回退普攻/火雨/连锁闪电/火球），两端逐项断言尝试数与成功施放，900 回合后比较完整存档；非法卷轴 ID 抛错保护 |
 | 法术 | fireball-blast-stun、spell-status-transform、spell-buff-armor、spell-summon-ghost-skeleton、spell-summon-skeleton-army、spell-sleep、spell-heal、spell-area-bounce、spell-chain-lightning、spell-rain-damage、spell-bouncing-projectile、spell-chicken-swarm、spell-deferred-strike、spell-instant-search、spell-find-chest、spell-resurrect | 16 个 `spellCategoryId` 每条一个场景；cat=2 的 type 0/4/14 与 cat=17 另有直接计数/随从数对账；其余为"唯一注入法术 + 两端各自施法计数增长" |
 | 战斗与终局 | castle-victory、**combat-damage-numbers** | castle-victory：两端各自断言 `gameWon`/`victoryCount=1`/`castlesConquered=1`/全城堡征服，并以 trackBossEncounter 逐帧扫描首领遭遇四维指标（encounter.du 首领遭遇状态、characterType=4 首领存活、"击杀首领!" 浮动文字击杀计数、首领遭遇名称）两端全等（首领战 7611 回合、首领存活 2898 回合、击杀 1 次）；combat-damage-numbers：500 回合实战正则采样负数伤害飘字，两端数量（57 次）与累计总伤害（-616 点）完全一致 |
@@ -74,4 +74,4 @@
 
 ## 7. 性能兼容 — PARTIALLY VERIFIED
 
-当前 `output/perf/perf-baseline.json` 的单次 CPU 样本：回合推进 0.0824 vs 0.0764 ms（1.08x）、序列化 0.114 vs 0.080 ms（1.43x）、导入 22.4 vs 30.0 ms（0.75x）、离线 1h 结算 199.8 vs 251.7 ms（0.79x，同为 18,925 回合）。旧样本的相对快慢曾翻转，倍数不是稳定结论；只能确认无数量级退化，单回合模拟约占 250ms 预算的 0.03%。`npm run perf:frames` 另测当前页面两种状态各 599 次 rAF 间隔，P95 为 4.5/4.8ms、>50ms 为 0；间隔含浏览器调度，且没有原版页面同口径基线或真机 vsync 测量，故页面帧时间等价仍未验证。
+当前 `output/perf/perf-baseline.json` 的单次 CPU 样本（**2026-09-27 复跑**）：回合推进 0.072 vs 0.068 ms（1.06x）、序列化 0.09 vs 0.08 ms（1.13x）、导入 26.1 vs 62.1 ms（0.42x）、离线 1h 结算 156 vs 156 ms（1.00x，同为 18,925 回合）。与 2026-09-26 样本（1.08x / 1.43x / 0.75x / 0.79x）相比**导入与离线结算的相对快慢明显翻转**，故倍数不是稳定结论；只能确认无数量级退化，单回合模拟约占 250ms 预算的 0.03%。`npm run perf:frames` 另测当前页面两种状态各 599 次 rAF 间隔，P95 为 4.5/4.8ms、>50ms 为 0；间隔含浏览器调度，且没有原版页面同口径基线或真机 vsync 测量，故页面帧时间等价仍未验证。

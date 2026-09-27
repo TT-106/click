@@ -1,11 +1,13 @@
 # WORKSTATE — Clickpocalypse II 语义恢复与现代化工程
 
 > 本文件是长程自治任务的**唯一续跑入口**。上下文压缩或中断后，先读本文件 + `git log --oneline`，再继续。
-> 最后更新：2026-09-27（U66-U124 共 59 批落地后，**混淆属性清单归零 0**；fields 段 267 → 1047；59 场景矩阵全绿；六门禁逐条回显验证；P1 回归（soak 8h/24h + perf + perf:frames）全绿；P3 清除 38 个隐形文件名垃圾文件并复跑审计；P2 文档↔代码一致性机械校验（934 条引用 0 越界、61/76 片段重同步）与**验收矩阵自我纠偏（44 PASS / 7 PARTIAL）**）
+> 最后更新：2026-09-27（U66-U127 共 62 批落地后，**混淆属性清单归零 0**；fields 段 267 → 1047；59 场景矩阵全绿；**10 门禁逐条回显全绿**（lint/build/typecheck/check/parity/scenarios/e2e/soak/perf/perf:frames）；P1 回归完成；P2 文档↔代码一致性机械校验（全量文档 1,089 条引用 0 越界、61/76 片段重同步）与**验收矩阵自我纠偏（44 PASS / 7 PARTIAL / 0 未覆盖）**；P3 清除 38 个隐形文件名垃圾文件并复跑审计；M10 类型债务已建台账）
 
 ## 当前轮次状态（2026-09-27，M12 长尾重命名 + 命名修正 —— 已收官）
 
 - **M12 收官：`analyze-fields.mjs` 报「混淆属性总数: 0」。** 残余的 1,171 → 0 全量清零（U66-U120），下一步主线转为 P1 回归收尾 / P2 报告口径对齐 / P3 Exhaustion Pass（见 §9）。
+
+- **U128 最终回归扫描 v2（2026-09-27T08:44Z，含 M10 与文档修正后的 HEAD）**：`lint=0 build=0 typecheck=0 check=0 parity=0 scenarios=0 e2e=0 soak=0 perf=0 perf:frames=0` —— **10/10 全绿**，日志在 `output/f-*.log`。同批把 `verify-doc-refs.mjs` 的默认范围从"四份报告"扩到"四份报告 + `docs/**/*.md`"，**立刻抓出 5 条此前漏掉的越界引用**（其中 3 条我在两处报告里曾声明"已修好"但**实际从未写入文件**）并逐条修好；现全量文档 **1,089 条引用 0 越界**。教训已写入 `.workbuddy-ai/memory/2026-09-27.md`：**任何"已修复"的声明都必须有可复跑的检查覆盖到它，否则等于没做**；覆盖面不足的绿灯比红灯更危险。
 
 - **U127 M10 类型债务：配置修正 + 一个可复制的收窄手法（2026-09-27）**。① `tsconfig.json` 补 `"lib": ["ES2022","DOM"]` —— 浏览器项目本就该有（此前 DOM 类型完全缺失，`document`/`HTMLElement` 不可用，是大量 `any` 的诱因之一）；补后 `tsc` 仍 **0 错误**。② `views/results.js` 的 **9 处 `@type {any}` → 1 个交叉类型 typedef**（`OfflineProgressView & { getOfflineProgressCell: (table: HTMLTableElement, label: string, rowIndex: number) => HTMLTableCellElement }`），该文件 `any` 归零；手法与 `views/character.js:424` 的 `EquipAllView & { Wt: ... }` 同源。全库 `@type {any}` **50 → 43**。③ **反向验证过的结论**：`views/base.js` 的 `visible`/`isVisible`/`update` 三处 cast **无法**用 `@property` 或补默认值消掉——前者 tsc 不认，后者会改变对象形状与 `isVisible()` 返回值（已实测：去掉 cast 立即 3 条 TS2339；补默认值属行为变更，按 §39 优先级拒绝）。故这三处**保持原样**。④ 新增 `docs/m10-type-debt.md` 如实台账（43 处 `any` + 141 行 `unknown`，根因是"原型后挂载 + 变量复用"，附继续收窄的配方与"最值得下一步：把 `save-dto.js` 接到 `game-save.js`"）。**不许把"tsc 0 错误"写成"类型完备"。**
 
@@ -215,7 +217,7 @@
   3. **财宝目标簇**（52 处）：Mn→targets、Nn→room、Kg→opened（DTO 键 opened 未动）、Mf→kind（1 宝箱/2 武器架/3 书架；**定义字面量 Mf: 在 runtime/game.js 10 处**）、el→selected（队伍已选中标志）、hq→setTargetTreasureChest（PartyState+Character 双原型）、PA/Vy→openedSpriteName/closedSpriteName；harness lootTreasureDuringExplore 同步双端字段名分支。
   至此第七批取证全部落地完毕；第八批余项（bc/ac 方法拆名、jc/kc/mc/Zb、Dt 索引等）仍有证据待落地。
 
-- U13 验收矩阵全闭环（2026-09-26，提交 9973320 / 2d5ea8e 系列 / e1b8f8b / 多项提交 / f9af2a2 / 2e74c7d）：**附录 A 51 行全部 PASS，0 PARTIAL / 0 未覆盖**，差分矩阵扩至 **59/59**，U3 soak 在新 HEAD 复跑通过（8h/24h 完整存档一致，GC 后堆原版 6,278,324/6,296,272 vs 重构版 7,094,344/7,111,312 bytes，增量 16k/17k）。本批闭环的七行：
+- U13 验收矩阵全闭环（2026-09-26，提交 9973320 / 2d5ea8e 系列 / e1b8f8b / 多项提交 / f9af2a2 / 2e74c7d）：**附录 A 51 行全部 PASS，0 PARTIAL / 0 未覆盖**（⚠ 该口径已被 2026-09-27 的 U124 纠正：其中 7 行的证据格里本就写明了缺口，按矩阵自身定义应判 PARTIAL，现为 **44 PASS / 7 PARTIAL**），差分矩阵扩至 **59/59**，U3 soak 在新 HEAD 复跑通过（8h/24h 完整存档一致，GC 后堆原版 6,278,324/6,296,272 vs 重构版 7,094,344/7,111,312 bytes，增量 16k/17k）。本批闭环的七行：
   1. **角色职业**：`class-barbarian-growth`（withCharacterClass 新变异器 + 槽 21 职业匹配锤武器 itemTypeId=hash("锤"+sprite)），四棵野蛮人技能树 + LearnSpellUpgrade；职业 5 不存在（12 正式职业 + 2 特殊类型），0/2/4/6 默认阵容、3/7/8/9/10/11 法术场景已覆盖，反向探针验证。
   2. **城堡**：`castle-attack-planned`（withAttackableCastle：唯一未锁城堡地牢清空 → canAttackCastle 成立 → 载入重建 Jg），type=13 购买免费、门控 maxUnlockedLevel≥requiredMonsterLevel——**旧矩阵"城堡购买/进攻花费"系误记，原版无此花费**；harness purchaseUpgrades 驱动器补上与视图同路径的 refreshAvailabilityState 前置刷新。
   3. **成就**：`achievement-rewards-multiple`（withClaimableAchievements 8 项可领取，4 槽队列多轮领取 limit=8），applied ≥3 增长 + pointsByType[1].points = reward×count 抬升；全部 328 项成就共用 increasePointEventReward 单一机制。
