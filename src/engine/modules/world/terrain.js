@@ -7,7 +7,7 @@ import { WORLD_BLOCK_COLUMNS, WORLD_BLOCK_ROWS, WORLD_ORIGIN_COLUMN, WORLD_ORIGI
 import { Shop, randomShopSprite } from "./dungeons.js";
 export var OCEAN_TERRAIN_CODE, shoreTileLookup, L2_ForestCanopy01Sprite, L2_ForestCanopy03Sprite, L2_ForestMaple03Sprite, L2_ForestPine01Sprite, L2_ForestPine02Sprite, L2_ForestPine03Sprite, L2_ForestPine07Sprite, L2_ForestPine08Sprite, L2_ForestPine09Sprite, L2_ForestMixed05Sprite, L2_ForestWillow03Sprite, L1_HillsSprite, L2_MountainBigEarth01Sprite, L2_MountainBigRock01Sprite, L2_MountainBigVolcano01Sprite, L2_MountainBigVolcanoActive01Sprite, L2_MountainBigVolcanoErupt01Sprite, L2_MountainRocky01Sprite, L2_MountainRocky02Sprite, L2_MountainRocky03Sprite, L2_MountainRocky04Sprite, L2_MountainRocky05Sprite, L2_Terrain041Sprite, L1_Terrain033Sprite, L2_MountainDesert01Sprite, L2_MountainDesert02Sprite, L2_MountainDesert03Sprite, L2_MountainDesert04Sprite, L2_MountainDesert05Sprite, L2_MountainDesert06Sprite, L2_ForestPine04Sprite, L2_ForestPine05Sprite, L2_ForestPine06Sprite, L2_Terrain040Sprite, L1_Terrain039Sprite;
 export function FractalNoise(a, b, c, d, f) {
-  var g = this.RA = new SimplexNoise(),
+  var g = this.simplexNoise = new SimplexNoise(),
     h,
     l;
   h = new SeededRandom(a);
@@ -19,19 +19,19 @@ export function FractalNoise(a, b, c, d, f) {
   for (a = 0; 512 > a; a++) {
     g.permutation[a] = l[a & 255];
   }
-  this.NE = 1;
-  this.QE = b;
-  this.PE = c;
-  this.RE = d;
-  this.OE = f;
+  this.initialAmplitude = 1;
+  this.lacunarity = b;
+  this.persistence = c;
+  this.octaveCount = d;
+  this.baseFrequency = f;
 }
 export function sampleNoise(a, b, c) {
   var d = 0,
-    f = a.NE,
-    g = a.OE,
+    f = a.initialAmplitude,
+    g = a.baseFrequency,
     h;
-  for (h = 0; h < a.RE; h++) {
-    var l = a.RA,
+  for (h = 0; h < a.octaveCount; h++) {
+    var l = a.simplexNoise,
       n = b * g,
       p = c * g,
       s = undefined,
@@ -94,30 +94,30 @@ export function sampleNoise(a, b, c) {
       y = N * N * (l.gradients[I][0] * y + l.gradients[I][1] * v);
     }
     d += 70 * f * (s + u + y);
-    f *= a.PE;
-    g *= a.QE;
+    f *= a.persistence;
+    g *= a.lacunarity;
   }
   return d;
 }
 export function TerrainBiome() {
-  this.ow = new FractalNoise(5, 2, 0.5, 4, 0.003);
-  this.qD = new FractalNoise(2, 2, 0.5, 2, 1E-4);
+  this.densityNoise = new FractalNoise(5, 2, 0.5, 4, 0.003);
+  this.variantNoise = new FractalNoise(2, 2, 0.5, 2, 1E-4);
   this.tileSpriteNames = [];
 }
 export function addTerrainTileSet(a, b) {
   a.tileSpriteNames.push(b);
 }
 export function DecorationBiome() {
-  this.ow = new FractalNoise(9, 2, 0.5, 4, 0.003);
-  this.fE = new FractalNoise(7, 2, 0.9, 1, 0.02);
+  this.densityNoise = new FractalNoise(9, 2, 0.5, 4, 0.003);
+  this.variantNoise = new FractalNoise(7, 2, 0.9, 1, 0.02);
   this.tileSpriteNames = [];
 }
 export function addDecorationTileSet(a, b) {
   a.tileSpriteNames.push(b);
 }
 export function WorldGenerator(a, b) {
-  this.pE = new FractalNoise(10, 2.012, 0.5, 5, 1E-4);
-  this.ox = new FractalNoise(2, 2, 0.5, 3, 5E-4);
+  this.terrainNoise = new FractalNoise(10, 2.012, 0.5, 5, 1E-4);
+  this.detailNoise = new FractalNoise(2, 2, 0.5, 3, 5E-4);
   this.terrainBiome = new TerrainBiome();
   addTerrainTileSet(this.terrainBiome, L2_ForestCanopy01Sprite);
   addTerrainTileSet(this.terrainBiome, L2_ForestCanopy03Sprite);
@@ -143,13 +143,13 @@ export function WorldGenerator(a, b) {
   addDecorationTileSet(this.decorationBiome, L2_MountainRocky05Sprite);
   addDecorationTileSet(this.decorationBiome, L2_Terrain041Sprite);
   addDecorationTileSet(this.decorationBiome, L1_HillsSprite);
-  this.kt = new TerrainBiome();
-  addTerrainTileSet(this.kt, L2_ForestPine04Sprite);
-  addTerrainTileSet(this.kt, L2_ForestPine05Sprite);
-  addTerrainTileSet(this.kt, L2_ForestPine06Sprite);
-  this.Bx = new DecorationBiome();
-  addDecorationTileSet(this.Bx, L1_Terrain039Sprite);
-  addDecorationTileSet(this.Bx, L2_Terrain040Sprite);
+  this.snowTerrainBiome = new TerrainBiome();
+  addTerrainTileSet(this.snowTerrainBiome, L2_ForestPine04Sprite);
+  addTerrainTileSet(this.snowTerrainBiome, L2_ForestPine05Sprite);
+  addTerrainTileSet(this.snowTerrainBiome, L2_ForestPine06Sprite);
+  this.snowDecorationBiome = new DecorationBiome();
+  addDecorationTileSet(this.snowDecorationBiome, L1_Terrain039Sprite);
+  addDecorationTileSet(this.snowDecorationBiome, L2_Terrain040Sprite);
   this.mountainDesertDecorationBiome = new DecorationBiome();
   addDecorationTileSet(this.mountainDesertDecorationBiome, L2_MountainDesert01Sprite);
   addDecorationTileSet(this.mountainDesertDecorationBiome, L2_MountainDesert02Sprite);
@@ -160,7 +160,7 @@ export function WorldGenerator(a, b) {
   addDecorationTileSet(this.mountainDesertDecorationBiome, L2_MountainDesert06Sprite);
   this.widthInTiles = a;
   this.heightInTiles = b;
-  this.tE = this.ZD = "L1_Terrain015.PNG";
+  this.mapEdgeSpriteName = this.lockedRegionSpriteName = "L1_Terrain015.PNG";
 }
 export function populateWorldBlock(a, b) {
   var c = findCastleByRegion(b.regionColumn + "_" + b.regionRow),
@@ -176,16 +176,16 @@ export function populateWorldBlock(a, b) {
         s = getTerrainCode(a, g + f, h + d, c),
         u = undefined;
       if (u = getBlockTile(l, n - 1, p - 1)) {
-        u.xB = s;
+        u.quadBottomRightTerrainCode = s;
       }
       if (u = getBlockTile(l, n, p - 1)) {
-        u.yB = s;
+        u.quadBottomLeftTerrainCode = s;
       }
       if (u = getBlockTile(l, n - 1, p)) {
-        u.KA = s;
+        u.quadTopRightTerrainCode = s;
       }
       if (u = getBlockTile(l, n, p)) {
-        u.LA = s;
+        u.quadTopLeftTerrainCode = s;
       }
     }
   }
@@ -194,16 +194,16 @@ export function populateWorldBlock(a, b) {
       var shoreTile = getBlockTile(b, f, d);
       var shoreSpriteName = undefined;
       if (!c || c.regionLocked) {
-        shoreSpriteName = a.ZD;
+        shoreSpriteName = a.lockedRegionSpriteName;
         shoreTile.terrainTypeKey = null;
         shoreTile.terrainMoveCost = 1E5;
       } else {
-        l = shoreTile.LA + shoreTile.KA + shoreTile.yB + shoreTile.xB;
+        l = shoreTile.quadTopLeftTerrainCode + shoreTile.quadTopRightTerrainCode + shoreTile.quadBottomLeftTerrainCode + shoreTile.quadBottomRightTerrainCode;
         shoreSpriteName = shoreTileLookup[l];
         shoreTile.terrainTypeKey = l;
         if (!shoreSpriteName) {
           console.log("no sprite found for key: [" + l + "]");
-          shoreSpriteName = shoreTileLookup.JD;
+          shoreSpriteName = shoreTileLookup.fallbackShoreSprite;
         }
         shoreTile.terrainMoveCost = "PPPP" === shoreTile.terrainTypeKey || "OOOO" === shoreTile.terrainTypeKey || "IIII" === shoreTile.terrainTypeKey ? 1E5 : 0;
       }
@@ -244,10 +244,10 @@ export function populateWorldBlock(a, b) {
               }
             } else {
               if ("SSSS" === l) {
-                if (s = a.kt.getBackgroundSpriteAt(g + f, h + d)) {
+                if (s = a.snowTerrainBiome.getBackgroundSpriteAt(g + f, h + d)) {
                   p = 10;
                 } else {
-                  if (s = a.Bx.getDecorationSpriteAt(g + f, h + d)) {
+                  if (s = a.snowDecorationBiome.getDecorationSpriteAt(g + f, h + d)) {
                     p = 1E4;
                   }
                 }
@@ -276,7 +276,7 @@ export function populateWorldBlock(a, b) {
       console.log("no tile for: col=" + d + " row=" + f);
     }
   }
-  f = game.terrainSprites.getSprite(a.tE);
+  f = game.terrainSprites.getSprite(a.mapEdgeSpriteName);
   var northCastle = findCastleByRegion(b.regionColumn + "_" + (b.regionRow - 1));
   var westCastle = findCastleByRegion(b.regionColumn - 1 + "_" + b.regionRow);
   var nwCastle = findCastleByRegion(b.regionColumn - 1 + "_" + (b.regionRow - 1));
@@ -303,17 +303,17 @@ export function populateWorldBlock(a, b) {
 export function getTerrainCode(a, b, c, d) {
   b *= game.tileSize;
   c *= game.tileSize;
-  var f = sampleNoise(a.pE, b, c);
-  return !d || d.regionLocked ? 0.5 > f && (a = sampleNoise(a.ox, b, c), -0.6 > a) ? "P" : "D" : d.conquered ? 0.5 > f && (a = sampleNoise(a.ox, b, c), -0.6 > a) ? OCEAN_TERRAIN_CODE : "G" : 0.5 > f && (a = sampleNoise(a.ox, b, c), -0.6 > a) ? "I" : "S";
+  var f = sampleNoise(a.terrainNoise, b, c);
+  return !d || d.regionLocked ? 0.5 > f && (a = sampleNoise(a.detailNoise, b, c), -0.6 > a) ? "P" : "D" : d.conquered ? 0.5 > f && (a = sampleNoise(a.detailNoise, b, c), -0.6 > a) ? OCEAN_TERRAIN_CODE : "G" : 0.5 > f && (a = sampleNoise(a.detailNoise, b, c), -0.6 > a) ? "I" : "S";
 }
 export function WorldTile(a, b) {
   this.worldColumn = a;
   this.worldRow = b;
-  this.NC = a * game.tileSize;
-  this.OC = b * game.tileSize;
+  this.pixelX = a * game.tileSize;
+  this.pixelY = b * game.tileSize;
   this.decorationSprite = this.backgroundSprite = null;
   this.terrainTypeKey = "GGGG";
-  this.xB = this.KA = this.yB = this.LA = OCEAN_TERRAIN_CODE;
+  this.quadBottomRightTerrainCode = this.quadTopRightTerrainCode = this.quadBottomLeftTerrainCode = this.quadTopLeftTerrainCode = OCEAN_TERRAIN_CODE;
   this.terrainMoveCost = this.pathDistanceToDestination = 0;
 }
 export function WorldBlock(a, b, c) {
@@ -352,8 +352,8 @@ export function repositionWorldBlock(a, b, c, d) {
           h = a.tileOriginRow + b;
         f.worldColumn = g;
         f.worldRow = h;
-        f.NC = g * game.tileSize;
-        f.OC = h * game.tileSize;
+        f.pixelX = g * game.tileSize;
+        f.pixelY = h * game.tileSize;
       }
     }
     populateWorldBlock(a.generator, a);
@@ -517,7 +517,7 @@ export function initializeWorldTerrain() {
     PPPP: "L1_Terrain004.PNG",
     SSSS: "L1_Terrain035.PNG",
     IIII: "L1_Terrain005.PNG",
-    JD: "L1_Terrain048.PNG"
+    fallbackShoreSprite: "L1_Terrain048.PNG"
   };
   L2_ForestCanopy01Sprite = "L2_ForestCanopy01.PNG";
   L2_ForestCanopy03Sprite = "L2_ForestCanopy03.PNG";
@@ -557,19 +557,19 @@ export function initializeWorldTerrain() {
   TerrainBiome.prototype.getBackgroundSpriteAt = function (a, b) {
     var c = a * game.tileSize,
       d = b * game.tileSize;
-    if (-0.3 < sampleNoise(this.ow, c, d)) {
+    if (-0.3 < sampleNoise(this.densityNoise, c, d)) {
       return null;
     }
-    c = (sampleNoise(this.qD, c, d) - -0.8) / (2 / this.tileSpriteNames.length) | 0;
+    c = (sampleNoise(this.variantNoise, c, d) - -0.8) / (2 / this.tileSpriteNames.length) | 0;
     return c > this.tileSpriteNames.length ? game.terrainSprites.getSprite("L2_Town01.PNG") : game.terrainSprites.getSprite(this.tileSpriteNames[c]);
   };
   DecorationBiome.prototype.getDecorationSpriteAt = function (a, b) {
     var c = a * game.tileSize,
       d = b * game.tileSize;
-    if (-0.3 < sampleNoise(this.ow, c, d)) {
+    if (-0.3 < sampleNoise(this.densityNoise, c, d)) {
       return null;
     }
-    c = (sampleNoise(this.fE, c, d) - -0.8) / (0.1 / this.tileSpriteNames.length) | 0;
+    c = (sampleNoise(this.variantNoise, c, d) - -0.8) / (0.1 / this.tileSpriteNames.length) | 0;
     return c > this.tileSpriteNames.length ? null : game.terrainSprites.getSprite(this.tileSpriteNames[c]);
   };
   WorldGenerator.prototype.Ut = function (a) {
@@ -589,10 +589,10 @@ export function initializeWorldTerrain() {
     }
   };
   WorldTile.prototype.getPixelX = function () {
-    return this.NC;
+    return this.pixelX;
   };
   WorldTile.prototype.getPixelY = function () {
-    return this.OC;
+    return this.pixelY;
   };
   WorldTile.prototype.getWorldColumn = function () {
     return this.worldColumn;
