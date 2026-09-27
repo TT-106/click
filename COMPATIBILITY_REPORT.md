@@ -39,6 +39,7 @@
 | 地面掉落拾取 | **ground-drops-collected** | fixture 四人均无已学法术，不走“立即搜索”旁路；两端在 9,000 回合后分别断言点数事件 9/10/11/12 的 count 超过基线，证明金币/卷轴/药水/物品四类常规拾取，再比完整存档 |
 | 经济与成长 | gold-windfall、veteran-run、prestige-restart、full-reset | 重置后状态相等 + 空转相等 |
 | 渲染与落盘 | **rendered-scene、autosave-payload** | 1,300 真实帧后主画布逐像素 FNV-1a 指纹两端相同；清空 localStorage 后两端都必须写入且解码内容一致（守住原版 3E5 自动保存间隔） |
+| U13 之后扩充（7 条） | **skill-combat-effects、manual-equip-swap、class-barbarian-growth、castle-attack-planned、achievement-rewards-multiple、spell-visual-effects、rendered-scene-narrow** | 技能效果层（战士多重攻击与游侠跳弹：1,500 回合伤害飘字次数与累计扣血对账）、装备手动穿卸交换（换下件回背包 + itemEquipped 事件增长）、野蛮人职业四棵技能树与学法术、唯一可进攻城堡经 type=13 购买后征服、多成就 4 槽领取队列的点数回报、特效池逐帧采样（存档覆盖不到的瞬时状态）、700×900 窄视口 1,300 帧逐像素指纹 |
 
 矩阵的失败诊断保持"定位第一次分叉"：首处差异的字节偏移、两侧上下文与全保真序列化复核都会打印，差异样本落 `output/scenarios/`。
 
