@@ -382,22 +382,24 @@
 
 - 原始遗产：`archive/original/c2.js`（46,980 行混淆单体，sha256 见 `archive/migration/recovery-manifest.json`）。
   - 规范 §33 要求符号库在 `docs/reverse-engineering/symbol-map.json`；本仓库实际路径是 `docs/symbol-map.json`，保持原位不改——162 处引用分布在 `src/` 模块头注释（会进入 `dist/` 构建产物）与 `archive/migration/tools/` 的历史恢复脚本里，后者记录的是当时工具的真实行为，不应被追溯改写。
-- `src/engine/`：经 AST 工具从 c2.js **机械恢复**的模块化引擎（非重写），74 模块；`src/app.js`+`src/ui/` 为新 UI 壳。
+- `src/engine/`：经 AST 工具从 c2.js **机械恢复**的模块化引擎（非重写），**77 模块 / 32,438 行**；`src/app.js`+`src/ui/` 为新 UI 壳。
 - 语义事实库：`docs/reverse-engineering/facts.md`（20 条已验证事实）+ `semantic-map.md`（重命名日志）+ `docs/symbol-map.json`（1,231 符号）。
 
 ## 2. 里程碑状态
 
-| Milestone | 状态 |
+| Milestone | 状态（2026-09-27 复核） |
 |---|---|
 | M0-M3 | ✅ 基线/静态图/运行时恢复/行为 harness 全部完成且实测通过 |
-| M4 High-Confidence Rename | 🟡 符号 99.8% 已命名；**字段重命名已完成 30+ 个字段身份**（动画帧表、Achievement 组、Upgrade.canPurchase、视图 upgrade、Vector2 x/y、Character.position、CharacterPosition.levelPosition/room、Item.slot/characteristic、tb slot/statType（含 guardians/minions）、怪物 name、WorldMap worldBlocks/blockOrigin*/tileGrid、spriteName、getSprite 方法族、tabState、数值组 currentValue/levelIncrement/activeValue/baseValue/purchasedLevels/perLevelIncrement）|
+| M4 High-Confidence Rename | ✅ **完成**：`analyze-fields` 报「混淆属性总数: 0」；`docs/symbol-map.json` 的 fields 段累计 **1,047** 条（起点 267）。符号 99.8% 已命名（余下是 harness 必须调用的原版全局函数名，如 `pB`/`Hq`/`Nx`）。双主字母与全库多义的 `a`/`b` 按规则**不写入** fields 段。 |
 | M5-M9 | ✅ 结构完成（见 MIGRATION_MAP.md） |
-| M10 Type Hardening | ✅ 完成：`src/engine/modules` 下 `@ts-nocheck` 为 0（仅 `src/vendor/lz-string-1.3.3.js` 保留），全仓库 tsc 错误 0；每切片均过四套回归 |
-| M11 Performance | ✅ 基线完成（docs/performance-baseline.md）：重构/原版比值实测在 1.0-1.2x 之间波动（回合推进两次为 1.06x、1.20x，属单样本 CPU 噪声）；优化未开始（也无必要——模拟占回合预算 0.03%） |
-| M12 Legacy Reduction | 🟡 技能/法术/状态效果/视图高频字段已清（e/f/g/X/V/W/c 组落地）；剩余长尾字段约 1,300 处访问（Y/Z/aa/ca 等，需新取证） |
-| M13 Final Regression | ✅ check/parity/30 场景/e2e/soak 全绿，build 与 perf 已实测；城堡征服→胜利瞬间（castle-victory）、Blast Stun 直接计数（两端各 31 次 type=14）、召唤族（cat=9/11）、睡眠（cat=2、type=0 直接计数）与其余全部法术类别（含 cat=12/14/15 需注入投射武器、cat=16 需首领药水制造昏迷）均已闭合；U4 三项缺口全部关闭 |
+| M10 Type Hardening | 🟡 **PARTIALLY VERIFIED**（不再写"完成"）：`tsc` 0 错误、77/77 引擎模块无 `@ts-nocheck`、0 处 `@ts-ignore`/`eslint-disable`；**但仍有 43 处 `@type {any}` 与 142 行 `unknown` 收窄**，根因是"原型后挂载 + AST 恢复期变量复用"（结构性，非未写完）。台账见 `docs/m10-type-debt.md`。本轮已完成 `tsconfig` 补 `lib:["ES2022","DOM"]` 与 `views/results.js` 的 9 处 cast → 1 个 typedef。 |
+| M11 Performance | ✅ 基线完成：两次样本的比值在 1.0–1.4x 波动且**相对快慢会翻转**（2026-09-27：回合推进 1.06x、序列化 1.13x、导入 0.42x、离线 1.00x），不能当稳定结论；确认无数量级退化，模拟占回合预算 0.03%。优化未开始（也无必要）。 |
+| M12 Legacy Reduction | ✅ **完成**：混淆字段清单 **806 → 0**（U66–U122 共 57 批），工作清单 `artifacts/obfuscated-fields.json` 现为空数组；`npm run lint` 已把它固化为不变量（防回流）。 |
+| M13 Final Regression | ✅ 复跑通过：**10 门禁全绿**（lint/build/typecheck/check/parity/**60 场景**/e2e/soak/perf/perf:frames，退出码逐条回显，日志 `output/v3-*.log`）。U4 三项缺口已关闭。**但**验收矩阵仍为 **44 PASS / 7 PARTIAL / 0 未覆盖**——7 条 PARTIAL 的缺口逐条写在附录 A，**不得读作 PASS**。 |
 
-## 3. 可运行状态与命令（全部实测通过 @ commit 4665924+）
+> **未闭合总账**（避免"文档说完成、实际没完成"）：① 附录 A 的 7 条 PARTIAL；② 15 条"节选/伪码"型公式片段行号不逐字对应；③ M10 的 43 处 `any` / 142 行 `unknown`；④ P4 类（真机帧时间与低端设备、多版本存档迁移样本）需要真机/更多历史存档，本环境无法闭合；⑤ 需产品决策的冲突（是否修原版缺陷、是否 UI redesign）按 §9-P4 **不属于本任务，须先问用户**。
+
+## 3. 可运行状态与命令（全部实测通过 @ 2026-09-27 的 HEAD；日志 output/v3-*.log）
 
 ```bash
 npm run dev              # http://127.0.0.1:4173（静态服务，测试前置）
