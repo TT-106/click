@@ -1,9 +1,17 @@
 # WORKSTATE — Clickpocalypse II 语义恢复与现代化工程
 
 > 本文件是长程自治任务的**唯一续跑入口**。上下文压缩或中断后，先读本文件 + `git log --oneline`，再继续。
-> 最后更新：2026-09-27（U66-U106 共 41 批落地后，混淆清单 806 → 117；fields 段 267 → 942；59 场景矩阵全绿）
+> 最后更新：2026-09-27（U66-U107 共 42 批落地后，混淆清单 806 → 107；fields 段 267 → 950；59 场景矩阵全绿）
 
 ## 当前轮次状态（2026-09-27，M12 长尾重命名 + 命名修正）
+
+- U107 守卫/随从定义表与物品池与随从生命周期（2026-09-27，混淆清单 117 → 107，fields 段 942 → 950）：定义表簇 `content/guardians.js`+`content/minions.js`+`loot/items.js`+`content/equipment.js` 落地（+`simulation/characters.js`、`persistence/entities.js`、`combat/skill-effects.js`、`progression/upgrades.js`、`combat/actions.js`、`combat/encounters.js`、`characters/minions.js`、`simulation/tick.js`）。
+  - **定义表键**：`Jm`→innateSpells（守卫定义自带法术，读点 `simulation/characters.js:113-115` 与随从表同款 `learnSpell(f, new Spell(...))` 循环逐字同构；bossClass 早已是该名，U97 证据）；`Nr`→statBonusList（`applyBonusList(f, a.Nr)`，与 bossClass.statBonusList 同位同形）；`Bp`→statBonusList（随从定义同概念、异字母，按"多字母同义并名"先例合并）；`Ws`→**unusedClassFlag**（4 条守卫定义 + bossClass 共 5 处写入，**src 与 archive/original/c2.js 的 `.Ws` 读取点均为 0**，属原版死字段，按"不臆造语义"原则与 `unusedCachedText` 同款诚实命名）。
+  - **ItemGenerator**：`os`→itemTypesById（`entities.js:49` 以存档键 `itemTypeId` 反查）、`ps`→itemTypesBySlot（`generateItem` 取槽位表，失败日志 "failed to find item types for slot"）、`ND`→itemEffectGenerator。
+  - **升级虚访问器**：`Jr`→getUpgradeDefinition（CharacterSkillUpgrade 返回 skillDefinition、LearnSpellUpgrade 返回 spellDefinition，`entities.js:144` 以 `.Jr().id` 作 DTO 键、`skill-effects.js:21` 取 statType/statBonusValue——两子类同义故共用一名，与 U91 的 getDungeon/getSpell 虚访问器族成对）。
+  - **双主字母手工拆分**（不入全局表）：`Lp`→MinionRegistry.removeMinion（从 minionList 与 allies 摘除）/ CharacterLifecycle.despawnMinion（标记 isDead、解挂 summoner.summonedMinions/companion 后委托前者；调用点 actions.js:348、tick.js:63/73）；`Tt`→MinionRegistry.addMinion / AllyRegistry.addAlly。
+  - **事故与修复（务必吸取）**：临时拆分脚本误用 `src.split(from).join(() => to)`——`join` 的参数是**分隔符**，函数被字符串化为 `() => to`，10 行引擎代码被写成非法语法；行数/缩进/字符串字面量多重集三项校验**全部通过**（因为破坏不改变这些不变量）。随后 `npm run x 2>&1 | tail -3 && ...` 的退出码取自 `tail`，tsc 的 4 条 TS1005 与场景矩阵 TimeoutError 被包装成"exit code 0"，差点提交。修法：按行号+期望原文断言逐行还原（10/10 断言命中，`node --check` 通过，diff 复核仅剩预期改名），并把门禁改为 `... | tail -n; echo "EXIT=$?"`。**规则：任何脚本化改写后立即 `node --check`  touched 文件；任何测试链必须回显自身退出码。**
+  - 新增 `scripts/show-field-backlog.mjs`（剩余混淆字段按模块聚合，用于挑批：单文件成组风险最低）。
 
 - U106 队伍旅行状态与商店注册表（2026-09-27，混淆清单 124 → 117，fields 段 935 → 942）：`characters/party.js` 7 项全部落地（+`runtime/game.js`、`simulation/tick.js`、`world/dungeons.js`）。PartyState（构造器无参，语义全靠读写站点）：`Mp`→travellingToDisabledAlly（`updateDungeonMode` 扫描队友，命中"`position.room` 且 `effects.isDisabled`"者即置真并把全队目的地强制到该房间，否则置假；`isPartyTravelling` 读它，behaviors.js 用它门控 WaitBehavior 等抢占目的地的行为）、`Ks`→forcedTravelActive（`forcePartyDestination` 与 `forcedDestinationRoom` 成对置真，tick/续关复位）、`hp`→destinationOffWorld（世界模式下 `getTileAtPixel` 未命中即目标落在地图外，改走 `findNearestWorldColumn/Row` 折算最近可走格；512 行再用它 + "距目的地 <8 格"决定是否重算）、`Ht`→worldPathfinder（`new WorldPathfinder()` 私有缓冲，仅供 `calculateWorldCosts`）、`zs`/`xs`→cachedMinLevel/cachedMaxLevel（-1 为失效哨兵，`getPartyMinLevel`/`getPartyMaxLevel` 惰性缓存、`refreshPartyLevels` 强制重算；消费方 upgrades 解锁/退休等级与 encounters/achievements）。ShopRegistry：`ht`→shopList（**注意 party.js:389-390 的 `a.ht` 宿主是 `game.shops` 而非 PartyState**——按 ShopRegistry 语义命名，两文件同批）。七项均不入存档（party DTO 只有 gold/kills/experiencePoints），故无 DTO 键可复用。
 

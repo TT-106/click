@@ -1,29 +1,5 @@
 [
   {
-    "name": "Jm",
-    "reads": 3,
-    "writes": 4,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\content\\guardians.js:42",
-        "code": "Jm: []"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\guardians.js:76",
-        "code": "Jm: [electricSpellDefinitions.chainLightningSpell, poisonCloudSpell]"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\guardians.js:111",
-        "code": "Jm: []"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\content\\guardians.js",
-      "src\\engine\\modules\\simulation\\characters.js"
-    ]
-  },
-  {
     "name": "xm",
     "reads": 6,
     "writes": 1,
@@ -70,32 +46,6 @@
     ]
   },
   {
-    "name": "Lp",
-    "reads": 4,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\minions.js:15",
-        "code": "MinionRegistry.prototype.Lp"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\actions.js:348",
-        "code": "game.lifecycle.Lp"
-      },
-      {
-        "loc": "src\\engine\\modules\\simulation\\characters.js:257",
-        "code": "CharacterLifecycle.prototype.Lp"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\characters\\minions.js",
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\simulation\\characters.js",
-      "src\\engine\\modules\\simulation\\tick.js"
-    ]
-  },
-  {
     "name": "To",
     "reads": 4,
     "writes": 2,
@@ -119,30 +69,6 @@
       "src\\engine\\modules\\rendering\\sprites.js",
       "src\\engine\\modules\\views\\expedition.js",
       "src\\engine\\modules\\views\\upgrade-details.js"
-    ]
-  },
-  {
-    "name": "Bp",
-    "reads": 1,
-    "writes": 5,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\content\\minions.js:138",
-        "code": "Bp: []"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\minions.js:172",
-        "code": "Bp: [{\n  statBonusValue: 1,\n  statType: 28\n}]"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\minions.js:209",
-        "code": "Bp: []"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\content\\minions.js",
-      "src\\engine\\modules\\simulation\\characters.js"
     ]
   },
   {
@@ -310,127 +236,6 @@
       "src\\engine\\modules\\loot\\items.js",
       "src\\engine\\modules\\persistence\\entities.js",
       "src\\engine\\modules\\simulation\\tick.js"
-    ]
-  },
-  {
-    "name": "Jr",
-    "reads": 3,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\skill-effects.js:21",
-        "code": "d.Jr"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\entities.js:144",
-        "code": "c.Jr"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\entities.js:152",
-        "code": "a[c].Jr"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\combat\\skill-effects.js",
-      "src\\engine\\modules\\persistence\\entities.js",
-      "src\\engine\\modules\\progression\\upgrades.js"
-    ]
-  },
-  {
-    "name": "os",
-    "reads": 3,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\content\\equipment.js:8",
-        "code": "b.os"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\items.js:138",
-        "code": "this.os"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\items.js:248",
-        "code": "a.os"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\content\\equipment.js",
-      "src\\engine\\modules\\loot\\items.js",
-      "src\\engine\\modules\\persistence\\entities.js"
-    ]
-  },
-  {
-    "name": "ps",
-    "reads": 3,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\content\\equipment.js:9",
-        "code": "b.ps"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\items.js:137",
-        "code": "this.ps"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\items.js:142",
-        "code": "a.ps"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\content\\equipment.js",
-      "src\\engine\\modules\\loot\\items.js"
-    ]
-  },
-  {
-    "name": "Ws",
-    "reads": 0,
-    "writes": 5,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\content\\guardians.js:13",
-        "code": "Ws: false"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\guardians.js:47",
-        "code": "Ws: false"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\guardians.js:84",
-        "code": "Ws: false"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\content\\guardians.js"
-    ]
-  },
-  {
-    "name": "Nr",
-    "reads": 1,
-    "writes": 4,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\content\\guardians.js:43",
-        "code": "Nr: []"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\guardians.js:77",
-        "code": "Nr: [{\n  statBonusValue: 1,\n  statType: 21\n}]"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\guardians.js:112",
-        "code": "Nr: [{\n  statBonusValue: 1,\n  statType: 23\n}, {\n  statBonusValue: 40,\n  statType: 24\n}]"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\content\\guardians.js",
-      "src\\engine\\modules\\simulation\\characters.js"
     ]
   },
   {
@@ -740,31 +545,6 @@
     "fileCount": 1,
     "files": [
       "src\\engine\\modules\\world\\pathfinding.js"
-    ]
-  },
-  {
-    "name": "Tt",
-    "reads": 2,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\minions.js:28",
-        "code": "MinionRegistry.prototype.Tt"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\minions.js:30",
-        "code": "game.allies.Tt"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\encounters.js:294",
-        "code": "AllyRegistry.prototype.Tt"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\characters\\minions.js",
-      "src\\engine\\modules\\combat\\encounters.js",
-      "src\\engine\\modules\\simulation\\characters.js"
     ]
   },
   {
@@ -2206,25 +1986,6 @@
       {
         "loc": "src\\engine\\modules\\loot\\items.js:181",
         "code": "a.OD"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\loot\\items.js"
-    ]
-  },
-  {
-    "name": "ND",
-    "reads": 1,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\loot\\items.js:136",
-        "code": "this.ND"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\items.js:171",
-        "code": "a.ND"
       }
     ],
     "fileCount": 1,

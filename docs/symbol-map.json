@@ -8325,7 +8325,15 @@
     "Ht": "worldPathfinder",
     "zs": "cachedMinLevel",
     "xs": "cachedMaxLevel",
-    "ht": "shopList"
+    "ht": "shopList",
+    "Jm": "innateSpells",
+    "Nr": "statBonusList",
+    "Bp": "statBonusList",
+    "Ws": "unusedClassFlag",
+    "os": "itemTypesById",
+    "ps": "itemTypesBySlot",
+    "Jr": "getUpgradeDefinition",
+    "ND": "itemEffectGenerator"
   },
   "gameFields": {
     "B": "tileSize",
