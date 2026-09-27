@@ -6,12 +6,12 @@ import { game } from "../runtime/game.js";
 import { isBetterItem } from "./items.js";
 export function Inventory() {
   this.items = [];
-  this.vp = BASE_INVENTORY_CAPACITY + Math.min(MAX_PRESTIGE_INVENTORY_BONUS, game.state.victoryCount);
+  this.capacity = BASE_INVENTORY_CAPACITY + Math.min(MAX_PRESTIGE_INVENTORY_BONUS, game.state.victoryCount);
   this.owner = null;
   this.ip = false;
 }
 export function addInventoryItem(a, b) {
-  if (a.items.length < a.vp) {
+  if (a.items.length < a.capacity) {
     b.inventory = a.owner;
     a.items.push(b);
     a.ip = true;

@@ -1,0 +1,14 @@
+[
+  { "old": "vp", "new": "itemCountThreshold", "expect": 4, "files": ["src/engine/modules/progression/upgrades.js"] },
+  { "old": "us", "new": "restoreState", "expect": 5, "files": ["src/engine/modules/progression/upgrades.js"] },
+  { "old": "EC", "new": "availabilityChanged", "expect": 3, "files": ["src/engine/modules/progression/upgrades.js"] },
+  { "old": "Ly", "new": "castleIndex", "expect": 3, "files": ["src/engine/modules/progression/upgrades.js"] },
+  { "old": "$A", "new": "cachedPurchasedLevels", "expect": 3, "files": ["src/engine/modules/progression/upgrades.js"] },
+  { "old": "Yz", "new": "cachedCandidateCount", "expect": 3, "files": ["src/engine/modules/progression/upgrades.js"] },
+  { "old": "hA", "new": "inventoryIndex", "expect": 3, "files": ["src/engine/modules/progression/upgrades.js"] },
+  { "old": "Ez", "new": "dungeonIndex", "expect": 3, "files": ["src/engine/modules/progression/upgrades.js"] },
+  { "old": "vy", "new": "claimQueueIndex", "expect": 3, "files": ["src/engine/modules/progression/upgrades.js"] },
+  { "old": "YA", "new": "cachedObtained", "expect": 3, "files": ["src/engine/modules/progression/upgrades.js"] },
+  { "old": "VA", "new": "cachedApplied", "expect": 3, "files": ["src/engine/modules/progression/upgrades.js"] },
+  { "old": "vp", "new": "capacity", "expect": 2, "files": ["src/engine/modules/loot/inventory.js"] }
+]

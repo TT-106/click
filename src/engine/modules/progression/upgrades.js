@@ -22,15 +22,15 @@ export var SKILL_UPGRADE_TYPE;
 export function Upgrade() {
   this.lastAvailabilityFrame = -100;
   this.prerequisite = null;
-  this.EC = false;
+  this.availabilityChanged = false;
   this.lastChangeFrame = 0;
 }
 export function refreshUpgradeAvailability(a) {
   if (game.state.frameNumber != a.lastAvailabilityFrame) {
     a.lastAvailabilityFrame = game.state.frameNumber;
-    a.EC = a.refreshAvailabilityState();
+    a.availabilityChanged = a.refreshAvailabilityState();
   }
-  return a.EC;
+  return a.availabilityChanged;
 }
 export function markUpgradeChanged(a) {
   a.lastChangeFrame = game.state.frameNumber;
@@ -71,7 +71,7 @@ export function restoreUpgradeCollection(a) {
   var b, c, d;
   for (b = 0; b < a.upgradeRows.length; b++) {
     for (d = a.upgradeRows[b], c = 0; c < d.length; c++) {
-      d[c].us();
+      d[c].restoreState();
     }
   }
   a.updateCounter = 0;
@@ -116,7 +116,7 @@ export function refreshUpgradeCollection(a) {
   }
 }
 export function PurchaseItemUpgrade(a) {
-  this.Ly = a;
+  this.castleIndex = a;
   this.castle = null;
   this.cachedDescription = "计划攻击";
   this.cachedAffordableSoon = this.cachedCanPurchase = this.affordableSoon = this.canPurchase = false;
@@ -124,7 +124,7 @@ export function PurchaseItemUpgrade(a) {
 export function GlobalUpgrade(a) {
   this.definition = a;
   this.canPurchase = this.affordableSoon = false;
-  this.$A = -1;
+  this.cachedPurchasedLevels = -1;
   this.cachedDescription = this.cachedCanPurchase = this.cachedAffordableSoon = false;
   recalculateGlobalUpgrade(this);
 }
@@ -137,15 +137,15 @@ export function recalculateGlobalUpgrade(a) {
 }
 export function EquipBestItemUpgrade(a) {
   this.hasCandidate = false;
-  this.Yz = -1;
+  this.cachedCandidateCount = -1;
   this.descriptionLabel = "";
-  this.vp = a;
+  this.itemCountThreshold = a;
 }
 export function EquipItemUpgrade(a, b) {
   this.hasCandidate = false;
-  this.hA = a;
+  this.inventoryIndex = a;
   this.descriptionLabel = this.item = null;
-  this.vp = b;
+  this.itemCountThreshold = b;
 }
 export function LevelUpUpgrade(a) {
   this.cachedCanPurchase = this.cachedAffordableSoon = this.canPurchase = this.affordableSoon = false;
@@ -182,7 +182,7 @@ export function PurchaseDungeonUpgrade(a) {
   this.cachedDescription = this.cachedCanPurchase = this.cachedAffordableSoon = this.canPurchase = this.affordableSoon = false;
 }
 export function PurchaseCastleUpgrade(a) {
-  this.Ez = a;
+  this.dungeonIndex = a;
   this.dungeon = null;
   this.cachedDescription = this.cachedCanPurchase = this.cachedAffordableSoon = this.canPurchase = this.affordableSoon = false;
 }
@@ -195,7 +195,7 @@ export function ScrollUpgrade(a) {
   this.scroll = null;
 }
 export function ClaimAchievementUpgrade(a) {
-  this.vy = a;
+  this.claimQueueIndex = a;
   this.achievement = null;
   this.cachedTitle = "Achievement";
   this.cachedDescription = "Reward";
@@ -205,7 +205,7 @@ export function AchievementUpgrade(a) {
   this.achievement = a;
   this.cachedTitle = this.achievement.obtained ? this.achievement.name : getAchievementRequirementLabel(this.achievement);
   this.cachedDescription = getAchievementActionLabel(this);
-  this.YA = this.VA = this.canPurchase = false;
+  this.cachedObtained = this.cachedApplied = this.canPurchase = false;
 }
 export function getAchievementActionLabel(a) {
   return a.achievement.obtained ? getAchievementRewardLabel(a.achievement) : "奖励不明";
@@ -290,7 +290,7 @@ export function initializeProgressionUpgrades() {
   Upgrade.prototype.getItems = function () {
     return null;
   };
-  Upgrade.prototype.us = function () {};
+  Upgrade.prototype.restoreState = function () {};
   Upgrade.prototype.purchase = function () {};
   Upgrade.prototype.getDescription = function () {};
   Upgrade.prototype.getUpgradeItem = function () {
@@ -336,7 +336,7 @@ export function initializeProgressionUpgrades() {
   PurchaseItemUpgrade.prototype.refreshAvailabilityState = function () {
     var a;
     a = game.castles.attackableCastles;
-    if (a = this.Ly < a.length ? a[this.Ly] : null) {
+    if (a = this.castleIndex < a.length ? a[this.castleIndex] : null) {
       this.canPurchase = game.monsterCatalog.maxUnlockedLevel >= a.requiredMonsterLevel;
       this.affordableSoon = !this.canPurchase;
     } else {
@@ -352,7 +352,7 @@ export function initializeProgressionUpgrades() {
     return b;
   };
   GlobalUpgrade.prototype = new Upgrade();
-  GlobalUpgrade.prototype.us = function () {
+  GlobalUpgrade.prototype.restoreState = function () {
     if (0 < this.definition.purchasedLevels) {
       recalculateGlobalUpgrade(this);
     }
@@ -397,8 +397,8 @@ export function initializeProgressionUpgrades() {
       this.affordableSoon = !this.canPurchase && (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).isNearlyAffordable();
     }
     var a = (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).isDisplayable(),
-      b = this.$A !== this.definition.purchasedLevels || this.cachedCanPurchase !== this.canPurchase || this.cachedDescription !== this.affordableSoon || this.cachedAffordableSoon !== a;
-    this.$A = this.definition.purchasedLevels;
+      b = this.cachedPurchasedLevels !== this.definition.purchasedLevels || this.cachedCanPurchase !== this.canPurchase || this.cachedDescription !== this.affordableSoon || this.cachedAffordableSoon !== a;
+    this.cachedPurchasedLevels = this.definition.purchasedLevels;
     this.cachedCanPurchase = this.canPurchase;
     this.cachedDescription = this.affordableSoon;
     this.cachedAffordableSoon = a;
@@ -463,12 +463,12 @@ export function initializeProgressionUpgrades() {
       b += c;
     }
     a = b;
-    var hasBetterItems = a > this.vp;
-    if (c = this.hasCandidate !== hasBetterItems || this.Yz !== a) {
+    var hasBetterItems = a > this.itemCountThreshold;
+    if (c = this.hasCandidate !== hasBetterItems || this.cachedCandidateCount !== a) {
       this.descriptionLabel = "装备所有更好的道具(" + a + ")";
     }
     this.hasCandidate = hasBetterItems;
-    this.Yz = a;
+    this.cachedCandidateCount = a;
     return c;
   };
   EquipItemUpgrade.prototype = new Upgrade();
@@ -504,8 +504,8 @@ export function initializeProgressionUpgrades() {
     var a = game.inventories.list,
       b = this.hasCandidate,
       c = this.item;
-    if (a.length <= this.vp && a.length > this.hA) {
-      this.item = a[this.hA];
+    if (a.length <= this.itemCountThreshold && a.length > this.inventoryIndex) {
+      this.item = a[this.inventoryIndex];
       if (c != this.item) {
         this.descriptionLabel = "Equip " + this.item.itemName;
       }
@@ -609,7 +609,7 @@ export function initializeProgressionUpgrades() {
     }
   };
   UnlockMonsterLevelUpgrade.prototype = new Upgrade();
-  UnlockMonsterLevelUpgrade.prototype.us = function () {
+  UnlockMonsterLevelUpgrade.prototype.restoreState = function () {
     if (!this.displayableSoon) {
       this.displayableSoon = true;
       this.unlockLevel = game.monsterCatalog.maxUnlockedLevel + 1;
@@ -673,7 +673,7 @@ export function initializeProgressionUpgrades() {
     return a !== this.canPurchase || b !== this.unlockLevel;
   };
   RetireMonsterLevelUpgrade.prototype = new Upgrade();
-  RetireMonsterLevelUpgrade.prototype.us = function () {
+  RetireMonsterLevelUpgrade.prototype.restoreState = function () {
     if (!this.displayableSoon) {
       this.displayableSoon = true;
       this.retireLevel = game.monsterCatalog.minUnlockedLevel;
@@ -983,7 +983,7 @@ export function initializeProgressionUpgrades() {
   PurchaseCastleUpgrade.prototype.refreshAvailabilityState = function () {
     var a;
     a = game.dungeons.farmable;
-    if (a = this.Ez < a.length ? a[this.Ez] : null) {
+    if (a = this.dungeonIndex < a.length ? a[this.dungeonIndex] : null) {
       if (a.region.conquered) {
         this.canPurchase = game.state.party.gold >= (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).getCost();
         this.affordableSoon = !this.canPurchase;
@@ -1137,7 +1137,7 @@ export function initializeProgressionUpgrades() {
   ClaimAchievementUpgrade.prototype.refreshAvailabilityState = function () {
     var a;
     a = game.state.achievements.claimQueue;
-    a = this.vy < a.length ? a[this.vy] : null;
+    a = this.claimQueueIndex < a.length ? a[this.claimQueueIndex] : null;
     this.canPurchase = null != a;
     var b = this.achievement != a || this.cachedCanPurchase != this.canPurchase;
     if (b && a) {
@@ -1173,13 +1173,13 @@ export function initializeProgressionUpgrades() {
     var a = this.achievement.applied,
       b = this.achievement.obtained;
     this.canPurchase = b && !a;
-    var c = this.VA != a || this.YA != b;
+    var c = this.cachedApplied != a || this.cachedObtained != b;
     if (c) {
       this.cachedTitle = this.achievement.obtained ? this.achievement.name : getAchievementRequirementLabel(this.achievement);
       this.cachedDescription = getAchievementActionLabel(this);
     }
-    this.VA = a;
-    this.YA = b;
+    this.cachedApplied = a;
+    this.cachedObtained = b;
     return c;
   };
   AdventurePointUpgrade.prototype = new Upgrade();
