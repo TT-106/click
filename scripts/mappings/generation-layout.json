@@ -1,0 +1,19 @@
+[
+  { "old": "Xp", "new": "nextRoomId", "files": ["src/engine/modules/world/generation.js"], "expect": "auto" },
+  { "old": "Zo", "new": "nextHallwayId", "files": ["src/engine/modules/world/generation.js"], "expect": "auto" },
+  { "old": "iB", "new": "roomSpacing", "files": ["src/engine/modules/world/generation.js"], "expect": "auto" },
+  { "old": "Ow", "new": "minRoomCount", "files": ["src/engine/modules/world/generation.js"], "expect": "auto" },
+  { "old": "xA", "new": "maxRoomCount", "files": ["src/engine/modules/world/generation.js"], "expect": "auto" },
+  { "old": "wA", "new": "maxRoomDimension", "files": ["src/engine/modules/world/generation.js"], "expect": "auto" },
+  { "old": "DA", "new": "minRoomDimension", "files": ["src/engine/modules/world/generation.js"], "expect": "auto" },
+  { "old": "ro", "new": "connectedRooms", "files": ["src/engine/modules/world/generation.js", "src/engine/modules/world/rooms.js"], "expect": "auto" },
+  { "old": "Bq", "new": "paintTiles", "files": ["src/engine/modules/world/generation.js", "src/engine/modules/world/rooms.js"], "expect": "auto" },
+  { "old": "to", "new": "createStairs", "files": ["src/engine/modules/world/generation.js"], "expect": "auto" },
+  { "old": "gt", "new": "shiftUp", "files": ["src/engine/modules/world/generation.js", "src/engine/modules/world/rooms.js"], "expect": "auto" },
+  { "old": "yx", "new": "moveUpLeft", "files": ["src/engine/modules/world/generation.js", "src/engine/modules/world/rooms.js"], "expect": "auto" },
+  { "old": "xx", "new": "applyTheme", "files": ["src/engine/modules/world/generation.js", "src/engine/modules/world/rooms.js"], "expect": "auto" },
+  { "old": "ru", "new": "connectRooms", "files": ["src/engine/modules/world/generation.js"], "expect": "auto" },
+  { "old": "uu", "new": "placeStairs", "files": ["src/engine/modules/world/generation.js"], "expect": "auto" },
+  { "old": "rw", "new": "generate", "files": ["src/engine/modules/world/generation.js"], "expect": "auto" },
+  { "old": "Aw", "new": "createTileGrid", "files": ["src/engine/modules/world/generation.js", "src/engine/modules/world/terrain.js"], "expect": "auto" }
+]

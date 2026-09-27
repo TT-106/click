@@ -331,7 +331,7 @@ export function WorldBlock(a, b, c) {
   this.pixelTop = this.tileOriginRow * game.tileSize;
   this.pixelBottom = this.tileEndRow * game.tileSize;
   this.generator = c;
-  (/** @type {WorldBlock & {Aw: () => void}} */ (/** @type {unknown} */ (this))).Aw();
+  (/** @type {WorldBlock & {createTileGrid: () => void}} */ (/** @type {unknown} */ (this))).createTileGrid();
 }
 export function repositionWorldBlock(a, b, c, d) {
   a.regionColumn = b;
@@ -606,7 +606,7 @@ export function initializeWorldTerrain() {
   WorldTile.prototype.setDecorationSprite = function (a) {
     this.decorationSprite = a;
   };
-  WorldBlock.prototype.Aw = function () {
+  WorldBlock.prototype.createTileGrid = function () {
     var a,
       b,
       c,

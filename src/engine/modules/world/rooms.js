@@ -27,7 +27,7 @@ export function DungeonRoom(a, b, c, d, f) {
   this.widthInTiles = c;
   this.heightInTiles = d;
   this.encounterType = f;
-  this.ro = [];
+  this.connectedRooms = [];
   this.doorList = [];
   this.tileGrid = this.theme = this.stairs = null;
   this.discovered = false;
@@ -559,11 +559,11 @@ export function initializeWorldRooms() {
     this.remainingEffectDamage = a;
   };
   EMPTY_TILE = 0;
-  DungeonRoom.prototype.xx = function (a, b) {
+  DungeonRoom.prototype.applyTheme = function (a, b) {
     this.theme = a;
     this.tileGrid = b;
   };
-  DungeonRoom.prototype.yx = function () {
+  DungeonRoom.prototype.moveUpLeft = function () {
     if (1 < this.tileColumn) {
       this.tileColumn--;
     }
@@ -576,12 +576,12 @@ export function initializeWorldRooms() {
       this.tileColumn--;
     }
   };
-  DungeonRoom.prototype.gt = function () {
+  DungeonRoom.prototype.shiftUp = function () {
     if (1 < this.tileRow) {
       this.tileRow--;
     }
   };
-  DungeonRoom.prototype.Bq = function (a) {
+  DungeonRoom.prototype.paintTiles = function (a) {
     /** @type {{Lw: (grid: unknown) => void}} */ (/** @type {unknown} */ (this)).Lw(a);
     var b, c;
     c = this.tileRow - 1;
@@ -620,11 +620,11 @@ export function initializeWorldRooms() {
     a = a.tileRow + a.heightInTiles / 2 - (this.tileRow + this.heightInTiles / 2);
     return b * b + a * a;
   };
-  DungeonHallway.prototype.xx = function (a, b) {
+  DungeonHallway.prototype.applyTheme = function (a, b) {
     this.theme = a;
     this.tileGrid = b;
   };
-  DungeonHallway.prototype.Bq = function (a) {
+  DungeonHallway.prototype.paintTiles = function (a) {
     var b, c;
     for (c = 0; c < this.pathTiles.length; c++) {
       b = this.pathTiles[c];
