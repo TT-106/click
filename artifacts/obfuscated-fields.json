@@ -1,101 +1,5 @@
 [
   {
-    "name": "Kk",
-    "reads": 2,
-    "writes": 6,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\character.js:89",
-        "code": "this.Kk"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\character.js:456",
-        "code": "this.Kk"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\character.js:526",
-        "code": "this.Kk"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\views\\character.js",
-      "src\\engine\\modules\\views\\results.js"
-    ]
-  },
-  {
-    "name": "Ik",
-    "reads": 2,
-    "writes": 6,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\character.js:89",
-        "code": "this.Ik"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\character.js:456",
-        "code": "this.Ik"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\character.js:522",
-        "code": "this.Ik"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\views\\character.js",
-      "src\\engine\\modules\\views\\information.js"
-    ]
-  },
-  {
-    "name": "Gk",
-    "reads": 2,
-    "writes": 6,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\character.js:89",
-        "code": "this.Gk"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\character.js:456",
-        "code": "this.Gk"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\character.js:518",
-        "code": "this.Gk"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\views\\character.js",
-      "src\\engine\\modules\\views\\upgrade-details.js"
-    ]
-  },
-  {
-    "name": "Jk",
-    "reads": 2,
-    "writes": 6,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\character.js:89",
-        "code": "this.Jk"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\character.js:456",
-        "code": "this.Jk"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\character.js:502",
-        "code": "this.Jk"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\views\\character.js",
-      "src\\engine\\modules\\views\\expedition.js"
-    ]
-  },
-  {
     "name": "Ml",
     "reads": 4,
     "writes": 4,
@@ -12196,6 +12100,29 @@
       {
         "loc": "src\\engine\\modules\\views\\results.js:246",
         "code": "this.yu"
+      }
+    ],
+    "fileCount": 1,
+    "files": [
+      "src\\engine\\modules\\views\\results.js"
+    ]
+  },
+  {
+    "name": "Kk",
+    "reads": 1,
+    "writes": 3,
+    "samples": [
+      {
+        "loc": "src\\engine\\modules\\views\\results.js:118",
+        "code": "this.Kk"
+      },
+      {
+        "loc": "src\\engine\\modules\\views\\results.js:185",
+        "code": "this.Kk"
+      },
+      {
+        "loc": "src\\engine\\modules\\views\\results.js:242",
+        "code": "this.Kk"
       }
     ],
     "fileCount": 1,

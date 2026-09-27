@@ -86,7 +86,7 @@ export function CharacterSummaryView(a, b) {
   this.visible = true;
   this.adventurerIndex = b;
   this.dD = this.xy = this.Jy = this.AB = this.hz = this.gz = this.ez = this.stunCountCell = this.Ap = this.pA = this.EB = this.Wz = this.bz = this.DB = this.spiritCell = this.rA = this.tableElement = null;
-  this.zu = this.iv = this.Mu = this.Ov = this.Pu = this.Ou = this.Nu = this.Kk = this.Ik = this.Gk = this.Pv = this.$u = this.Lu = this.Jk = this.Zu = this.cachedLevel = -1;
+  this.zu = this.iv = this.Mu = this.Ov = this.Pu = this.Ou = this.Nu = this.killsCell = this.petKillsCell = this.spiritRegenCell = this.Pv = this.$u = this.Lu = this.cooldownCell = this.Zu = this.cachedLevel = -1;
 }
 export function StatBreakdownView(a, b, c, d) {
   this.elementId = a;
@@ -453,7 +453,7 @@ export function initializeViewsCharacter() {
   };
   CharacterSummaryView.prototype = new View();
   CharacterSummaryView.prototype.reset = function () {
-    this.zu = this.iv = this.Mu = this.Ov = this.Pu = this.Ou = this.Nu = this.Kk = this.Ik = this.Gk = this.Pv = this.$u = this.Lu = this.Jk = this.Zu = this.cachedLevel = -1;
+    this.zu = this.iv = this.Mu = this.Ov = this.Pu = this.Ou = this.Nu = this.killsCell = this.petKillsCell = this.spiritRegenCell = this.Pv = this.$u = this.Lu = this.cooldownCell = this.Zu = this.cachedLevel = -1;
     var a = 0;
     this.tableElement = createElement("table", getElement(this.elementId), null, "characteristicsTable");
     this.rA = appendAttributeRow(this.tableElement, "等级:", a++);
@@ -499,8 +499,8 @@ export function initializeViewsCharacter() {
       this.Zu = c;
       this.spiritCell.innerHTML = formatAmount(c);
     }
-    if (this.Jk !== d) {
-      this.Jk = d;
+    if (this.cooldownCell !== d) {
+      this.cooldownCell = d;
       this.DB.innerHTML = formatAmount(d);
     }
     if (this.Lu !== f) {
@@ -515,16 +515,16 @@ export function initializeViewsCharacter() {
       this.Pv = h;
       this.EB.innerHTML = h + "%";
     }
-    if (this.Gk !== l) {
-      this.Gk = l;
+    if (this.spiritRegenCell !== l) {
+      this.spiritRegenCell = l;
       this.pA.innerHTML = formatAmount(l);
     }
-    if (this.Ik !== n) {
-      this.Ik = n;
+    if (this.petKillsCell !== n) {
+      this.petKillsCell = n;
       this.Ap.innerHTML = formatAmount(n);
     }
-    if (this.Kk !== p) {
-      this.Kk = p;
+    if (this.killsCell !== p) {
+      this.killsCell = p;
       this.stunCountCell.innerHTML = formatAmount(p);
     }
     if (this.Nu !== s) {

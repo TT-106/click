@@ -173,7 +173,7 @@ export function CastlePurchaseDetails(a, b) {
   this.contentContainer = b;
   this.selectedDungeon = this.labelCell = this.titleElement = this.previewImageElement = this.Cm = this.Uz = null;
   this.shown = false;
-  this.Gk = -1;
+  this.cachedRequiredLevel = -1;
 }
 export function FarmUpgradeDetails(a, b) {
   this.upgrade = a;
@@ -988,7 +988,7 @@ export function initializeViewsUpgradeDetails() {
     return 9;
   };
   CastlePurchaseDetails.prototype.reset = function () {
-    this.Gk = -1;
+    this.cachedRequiredLevel = -1;
   };
   CastlePurchaseDetails.prototype.attachUpgrade = function (a) {
     this.upgrade = a;
@@ -1004,8 +1004,8 @@ export function initializeViewsUpgradeDetails() {
   };
   CastlePurchaseDetails.prototype.update = function () {
     var a = game.dungeons.pendingFarmKills;
-    if (this.Gk !== a) {
-      this.Gk = a;
+    if (this.cachedRequiredLevel !== a) {
+      this.cachedRequiredLevel = a;
       this.Uz.innerHTML = "+" + formatAmount(a);
     }
   };

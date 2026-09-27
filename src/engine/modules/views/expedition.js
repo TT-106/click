@@ -32,7 +32,7 @@ export function AdventurerSummaryView(a) {
   this.Dy = "adventurerSpiritPowerSlider" + a;
   this.Cy = "adventurerSpiritPower" + a;
   this.nn = this.Ak = this.pk = this.potionButton = this.zk = null;
-  this.uv = this.sv = this.rv = this.tv = this.cachedLevel = this.rr = this.pr = this.or = this.qr = this.mv = this.Jk = this.kv = this.av = -1;
+  this.uv = this.sv = this.rv = this.tv = this.cachedLevel = this.rr = this.pr = this.or = this.qr = this.mv = this.cachedMonsterKills = this.kv = this.av = -1;
   this.qm = [null, null, null, null, null, null];
   this.potionSlots = [null, null, null, null, null, null];
   this.Dm = [0, 0, 0, 0, 0, 0];
@@ -251,7 +251,7 @@ export function initializeViewsExpedition() {
         this.nn = createElement("div", getElement(this.elementId), null, "gameTabBlankAdventurerInfo");
       }
     } else {
-      this.selectedPotionSlot = this.rr = this.pr = this.or = this.qr = this.mv = this.Jk = this.kv = this.av = this.cachedLevel = -1;
+      this.selectedPotionSlot = this.rr = this.pr = this.or = this.qr = this.mv = this.cachedMonsterKills = this.kv = this.av = this.cachedLevel = -1;
       var a;
       for (a = 0; a < this.qm.length; a++) {
         this.qm[a] = null;
@@ -377,11 +377,11 @@ export function initializeViewsExpedition() {
           this.av = c;
           this.kv = d;
         }
-        if (this.Jk !== f || this.mv !== g) {
+        if (this.cachedMonsterKills !== f || this.mv !== g) {
           setElementHtml(this.Cy, formatAmount(f) + "/" + formatAmount(g));
           c = Math.min(100, floorNumber(100 * f / g));
           getElement(this.Dy).style.width = c + "%";
-          this.Jk = f;
+          this.cachedMonsterKills = f;
           this.mv = g;
         }
         if (this.cachedLevel !== b) {
