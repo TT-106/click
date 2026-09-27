@@ -1,0 +1,12 @@
+{
+  "_comment": "dr→updateBehaviors：Character.dr() 委托给 behaviors.dr(this)（character.js:1243）；BehaviorQueue.dr 按 worldActive 在 ou（世界行为）/nu（地牢行为）间分派；AttackBehavior.dr 为同名同义的覆盖实现；simulation/tick.js 每帧对角色调用。",
+  "files": [
+    "src/engine/modules/ai/behaviors.js",
+    "src/engine/modules/ai/targeting.js",
+    "src/engine/modules/characters/character.js",
+    "src/engine/modules/simulation/tick.js"
+  ],
+  "map": {
+    "dr": "updateBehaviors"
+  }
+}

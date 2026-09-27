@@ -218,7 +218,7 @@ export function StunnedBehavior(a) {
   this.eo = a;
 }
 export function initializeAiBehaviors() {
-  BehaviorQueue.prototype.dr = function (a) {
+  BehaviorQueue.prototype.updateBehaviors = function (a) {
     if (game.worldActive) {
       (/** @type {BehaviorQueue & { ou: (character: unknown) => void }} */ (/** @type {unknown} */ (this))).ou(a);
     } else {

@@ -793,7 +793,7 @@ export function updateCharacterBehaviors(a) {
       if (c.effects.isDisabled) {
         c.actionType = IDLE_ACTION;
       } else {
-        c.dr();
+        c.updateBehaviors();
       }
     }
   }

@@ -422,7 +422,7 @@ export function initializeAiTargeting() {
   MELEE_ACTION_TYPE = 3;
   CAST_ACTION_TYPE = 4;
   AttackBehavior.prototype.notifySpellLearned = function () {};
-  AttackBehavior.prototype.dr = function (a) {
+  AttackBehavior.prototype.updateBehaviors = function (a) {
     if (!respondToTaunt(this, a) && (a.position.movementTargetCleared || a.actionType === IDLE_ACTION)) {
       var b = (this.patrolRoom.tileRow + 1) * game.tileSize,
         c = (this.patrolRoom.heightInTiles - 1) * game.tileSize;

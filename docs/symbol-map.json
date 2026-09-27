@@ -8088,7 +8088,8 @@
     "DE": "sleepSpell",
     "Hx": "quickStrikeSpell",
     "KB": "summonChickensSpell",
-    "MB": "chickenGuardianSpell"
+    "MB": "chickenGuardianSpell",
+    "dr": "updateBehaviors"
   },
   "gameFields": {
     "B": "tileSize",

@@ -1160,32 +1160,6 @@
     ]
   },
   {
-    "name": "dr",
-    "reads": 2,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:221",
-        "code": "BehaviorQueue.prototype.dr"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\targeting.js:425",
-        "code": "AttackBehavior.prototype.dr"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:1243",
-        "code": "Character.prototype.dr"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js",
-      "src\\engine\\modules\\ai\\targeting.js",
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\simulation\\tick.js"
-    ]
-  },
-  {
     "name": "Vs",
     "reads": 2,
     "writes": 3,

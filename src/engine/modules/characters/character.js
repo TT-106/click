@@ -1240,9 +1240,9 @@ export function initializeCharactersCharacter() {
   Character.prototype.setTargetTreasureChest = function (a) {
     this.targetTreasureChest = a;
   };
-  Character.prototype.dr = function () {
+  Character.prototype.updateBehaviors = function () {
     if (this.behaviors && !this.isDead) {
-      this.behaviors.dr(this);
+      this.behaviors.updateBehaviors(this);
     }
   };
 }
