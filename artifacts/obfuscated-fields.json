@@ -72,52 +72,6 @@
     ]
   },
   {
-    "name": "Fm",
-    "reads": 2,
-    "writes": 5,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\loot\\item-names.js:46",
-        "code": "b.Fm"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\item-names.js:50",
-        "code": "b.Fm"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\item-names.js:65",
-        "code": "CommonItemNames.prototype.Fm"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\loot\\item-names.js"
-    ]
-  },
-  {
-    "name": "Gm",
-    "reads": 2,
-    "writes": 5,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\loot\\item-names.js:48",
-        "code": "b.Gm"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\item-names.js:52",
-        "code": "b.Gm"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\item-names.js:68",
-        "code": "CommonItemNames.prototype.Gm"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\loot\\item-names.js"
-    ]
-  },
-  {
     "name": "xm",
     "reads": 6,
     "writes": 1,
@@ -380,29 +334,6 @@
     "files": [
       "src\\engine\\modules\\loot\\inventory.js",
       "src\\engine\\modules\\simulation\\tick.js"
-    ]
-  },
-  {
-    "name": "Uo",
-    "reads": 1,
-    "writes": 5,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\loot\\item-names.js:40",
-        "code": "b.Uo"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\item-names.js:58",
-        "code": "CommonItemNames.prototype.Uo"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\item-names.js:71",
-        "code": "HistoricItemNames.prototype.Uo"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\loot\\item-names.js"
     ]
   },
   {
@@ -2221,76 +2152,6 @@
     ]
   },
   {
-    "name": "MA",
-    "reads": 2,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\loot\\item-names.js:28",
-        "code": "this.MA"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\item-names.js:117",
-        "code": "this.MA"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\item-names.js:117",
-        "code": "this.MA"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\loot\\item-names.js"
-    ]
-  },
-  {
-    "name": "NA",
-    "reads": 2,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\loot\\item-names.js:29",
-        "code": "this.NA"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\item-names.js:117",
-        "code": "this.NA"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\item-names.js:117",
-        "code": "this.NA"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\loot\\item-names.js"
-    ]
-  },
-  {
-    "name": "$y",
-    "reads": 2,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\loot\\item-names.js:33",
-        "code": "this.$y"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\items.js:184",
-        "code": "a.$y"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\items.js:199",
-        "code": "a.$y"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\loot\\item-names.js",
-      "src\\engine\\modules\\loot\\items.js"
-    ]
-  },
-  {
     "name": "EC",
     "reads": 1,
     "writes": 2,
@@ -2844,86 +2705,6 @@
     "fileCount": 1,
     "files": [
       "src\\engine\\modules\\loot\\inventory.js"
-    ]
-  },
-  {
-    "name": "LE",
-    "reads": 1,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\loot\\item-names.js:34",
-        "code": "this.LE"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\items.js:187",
-        "code": "a.LE"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\loot\\item-names.js",
-      "src\\engine\\modules\\loot\\items.js"
-    ]
-  },
-  {
-    "name": "lE",
-    "reads": 1,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\loot\\item-names.js:35",
-        "code": "this.lE"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\items.js:190",
-        "code": "a.lE"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\loot\\item-names.js",
-      "src\\engine\\modules\\loot\\items.js"
-    ]
-  },
-  {
-    "name": "BD",
-    "reads": 1,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\loot\\item-names.js:36",
-        "code": "this.BD"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\items.js:193",
-        "code": "a.BD"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\loot\\item-names.js",
-      "src\\engine\\modules\\loot\\items.js"
-    ]
-  },
-  {
-    "name": "UE",
-    "reads": 1,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\loot\\item-names.js:37",
-        "code": "this.UE"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\items.js:196",
-        "code": "a.UE"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\loot\\item-names.js",
-      "src\\engine\\modules\\loot\\items.js"
     ]
   },
   {

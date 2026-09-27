@@ -8289,7 +8289,17 @@
     "Hz": "cachedFarmCount",
     "Uy": "cachedClearedCount",
     "aA": "cachedAttackableCount",
-    "nz": "cachedDiscoveredCount"
+    "nz": "cachedDiscoveredCount",
+    "Uo": "pickNameFormat",
+    "Fm": "randomSuffix",
+    "Gm": "randomTitle",
+    "MA": "suffixAdjectives",
+    "NA": "suffixNouns",
+    "$y": "commonNames",
+    "LE": "uncommonNames",
+    "lE": "rareNames",
+    "BD": "historicNames",
+    "UE": "ancientNames"
   },
   "gameFields": {
     "B": "tileSize",
