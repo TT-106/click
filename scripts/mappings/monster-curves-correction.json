@@ -1,0 +1,14 @@
+{
+  "_comment": "怪物六条属性曲线的命名修正（unresolved U8 落地）。证据：combat/encounters.js:70-82 把 $o 赋给 stats.maxHealth、Gp→stats.damage、Ep→stats.armor、Fp→stats.attackRating、Hp→stats.defenceRating；views/monsters.js:335-373 的表头列序（经验/生命/伤害/护甲/攻击/防御）与 :263-269 的赋值一一对应，说明表列正确而曲线名错位。故做名字置换：伤害↔生命、精神→护甲、护甲→经验。monsterAttackCurve/monsterDefenceCurve 命名正确，不动。",
+  "files": [
+    "src/engine/modules/content/balance.js",
+    "src/engine/modules/combat/encounters.js",
+    "src/engine/modules/views/upgrade-details.js"
+  ],
+  "map": {
+    "monsterDamageCurve": "monsterHealthCurve",
+    "monsterHealthCurve": "monsterDamageCurve",
+    "monsterSpiritCurve": "monsterArmorCurve",
+    "monsterArmorCurve": "monsterExperienceCurve"
+  }
+}

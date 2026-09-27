@@ -5,7 +5,7 @@ import { View } from "./base.js";
 import { clearElement, clearElementById, createElement, getElement, hideElement, showElement } from "./dom.js";
 import { SKILL_UPGRADE_TYPE } from "../progression/upgrades.js";
 import { floorNumber, formatAmount, formatGroupedAmount, randomInt, scaleByLevel } from "../core/math.js";
-import { healthCurve, monsterAttackCurve, monsterDefenceCurve, monsterHealthCurve, monsterSpiritCurve, spiritCurve } from "../content/balance.js";
+import { healthCurve, monsterAttackCurve, monsterDefenceCurve, monsterDamageCurve, monsterArmorCurve, spiritCurve } from "../content/balance.js";
 import { getHighlightedItemName, getItemRarityLabel, getItemStatLabel } from "../loot/items.js";
 import { game } from "../runtime/game.js";
 import { minionsBySpell } from "../content/minions.js";
@@ -1152,8 +1152,8 @@ export function initializeViewsUpgradeDetails() {
     if (this.cachedLevel != c) {
       this.cachedLevel = c;
       a = Math.max(1, 10 * (this.cachedLevel - 1)) + 1;
-      this.monsterHealth = scaleByLevel(a, monsterHealthCurve, 1);
-      this.monsterSpirit = scaleByLevel(a, monsterSpiritCurve, 1);
+      this.monsterHealth = scaleByLevel(a, monsterDamageCurve, 1);
+      this.monsterSpirit = scaleByLevel(a, monsterArmorCurve, 1);
       this.monsterAttack = scaleByLevel(a, monsterAttackCurve, 1);
       this.monsterDefence = scaleByLevel(a, monsterDefenceCurve, 1);
       this.monsterDamageLabel.innerHTML = formatAmount(this.monsterHealth) + " 伤害";

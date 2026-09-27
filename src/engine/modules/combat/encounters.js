@@ -5,7 +5,7 @@ import { game } from "../runtime/game.js";
 import { Spell, clearScrollTargets } from "./scrolls.js";
 import { POINT_EVENT_ENCOUNTER, awardAdventurePoints } from "../progression/points.js";
 import { removeStunEffects } from "../characters/effects.js";
-import { MONSTER_RANK_KILL_STEP, bossEncounterModifier, extraMonstersModifier, frailMonstersModifier, globalUpgradeDefinitions, monsterArmorCurve, monsterAttackCurve, monsterDamageCurve, monsterDefenceCurve, monsterHealthCurve, monsterSpiritCurve } from "../content/balance.js";
+import { MONSTER_RANK_KILL_STEP, bossEncounterModifier, extraMonstersModifier, frailMonstersModifier, globalUpgradeDefinitions, monsterExperienceCurve, monsterAttackCurve, monsterHealthCurve, monsterDefenceCurve, monsterDamageCurve, monsterArmorCurve } from "../content/balance.js";
 import { endsWithText, floorNumber, randomInt, scaleByLevel, setVector } from "../core/math.js";
 import { Character, isHostile, learnSpell } from "../characters/character.js";
 import { AttackBehavior, MONSTER_TYPE } from "../ai/targeting.js";
@@ -202,10 +202,10 @@ export function advanceMonsterTypeRank(a) {
     a.rank++;
     a.rankKillThreshold += MONSTER_RANK_KILL_STEP;
     var b = 10 * (a.level - 1) + a.rank;
-    a.$o = scaleByLevel(b, monsterDamageCurve, 1);
-    a.experienceReward = scaleByLevel(b, monsterArmorCurve, 1);
-    a.Gp = scaleByLevel(b, monsterHealthCurve, 1);
-    a.Ep = scaleByLevel(b, monsterSpiritCurve, 1);
+    a.$o = scaleByLevel(b, monsterHealthCurve, 1);
+    a.experienceReward = scaleByLevel(b, monsterExperienceCurve, 1);
+    a.Gp = scaleByLevel(b, monsterDamageCurve, 1);
+    a.Ep = scaleByLevel(b, monsterArmorCurve, 1);
     a.Fp = scaleByLevel(b, monsterAttackCurve, 1);
     a.Hp = scaleByLevel(b, monsterDefenceCurve, 1);
   }
