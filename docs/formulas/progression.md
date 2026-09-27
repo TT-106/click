@@ -3,7 +3,8 @@
 > 引用规范：形如 `combat/actions.js:84` 的路径相对 `src/engine/modules/`；若某处只写了裸文件名（如 `character.js:677`），以所在小节的模块归属为准——`characters/character.js` 与 `views/character.js` 同名，未逐一消歧。
 
 > 事实来源：`src/engine/modules/**` 当前实现。每条公式给出 `file:line` 与原文 JS 片段。
-> 与 `archive/original/c2.js` 的等价性由 34 场景差分矩阵保证，因此本文描述的是**权威行为**。
+> 与 `archive/original/c2.js` 的等价性由 **59 场景差分矩阵**（`npm run test:scenarios`）保证，因此本文描述的是**权威行为**。
+> **片段同步状态（2026-09-27）**：内嵌片段与散文里的标识符已按 `docs/symbol-map.json` 的字段映射批量同步到当前语义名（`scripts/fix-doc-identifiers.mjs`）；节选/伪码型片段的行号不逐字对应（见 `scripts/check-doc-snippets.mjs` 的残留清单），判读时以片段上方的 `file:line` 为准。
 > 凡看起来像 bug 的地方一律按原样记录并标 `[疑似遗留怪癖]`；本文不提出修正。
 > **引用体例**：JS 片段为源码原文，但为控制篇幅做了两种压缩——(a) `…` 表示省略的行；(b) 少数多行嵌套被并为单行（token 序列不变）。凡 token 序列与源码不一致之处均为笔误，欢迎按 `file:line` 复核后修正。
 
@@ -47,12 +48,12 @@ scaleByLevel(x, curve, mult) = floor( mult · (curve.base + curve.coefficient ·
 | `spiritCurve` | 1.5 | 15 | 1.017 | 85 | `maxSpirit.levelValue` |
 | `damageCurve` | 1.6 | 25 | 1.017 | 22 | `spellSpiritCost` |
 | `armorCurve` | 1.8 | 15 | 1.015 | 15 | `armor / attackRating / defenceRating / damage` 四条 `levelValue` |
-| `monsterHealthCurve` | 1.7 | 1 | 1.0017 | 30 | → `Gp` → 怪物 `damage.levelValue` |
-| `monsterSpiritCurve` | 1.7 | 1 | 1.0017 | 25 | → `Ep` → 怪物 `armor.levelValue` |
-| `monsterAttackCurve` | 1.7 | 1 | 1.0017 | 30 | → `Fp` → 怪物 `attackRating.levelValue` |
-| `monsterDefenceCurve` | 1.7 | 1 | 1.0017 | 25 | → `Hp` → 怪物 `defenceRating.levelValue` |
-| `monsterDamageCurve` | 1.7 | 1 | 1.0018 | 15 | → `$o` → 怪物 `maxHealth.levelValue` |
-| `monsterArmorCurve` | 1.24 | 1 | 1.0002 | 4 | → `No` = 每杀经验 |
+| `monsterHealthCurve` | 1.7 | 1 | 1.0017 | 30 | → `damage` → 怪物 `damage.levelValue` |
+| `monsterSpiritCurve` | 1.7 | 1 | 1.0017 | 25 | → `armor` → 怪物 `armor.levelValue` |
+| `monsterAttackCurve` | 1.7 | 1 | 1.0017 | 30 | → `attackRating` → 怪物 `attackRating.levelValue` |
+| `monsterDefenceCurve` | 1.7 | 1 | 1.0017 | 25 | → `defenceRating` → 怪物 `defenceRating.levelValue` |
+| `monsterDamageCurve` | 1.7 | 1 | 1.0018 | 15 | → `maxHealth` → 怪物 `maxHealth.levelValue` |
+| `monsterArmorCurve` | 1.24 | 1 | 1.0002 | 4 | → `experienceReward` = 每杀经验 |
 | `itemStatCurve` / `itemGoldCurve` | 1.8 | 15 | 1.015 | 15 | 道具属性/金价 |
 | `dungeonPriceCurve` | 1.7 | 120 | 1.018 | 100 | 地牢农场价 |
 | `monsterUnlockPriceCurve` | 1.02 | 100 | 1.01 | 100 | 怪物等级解锁/退休价 |
@@ -72,7 +73,7 @@ scaleByLevel(x, curve, mult) = floor( mult · (curve.base + curve.coefficient ·
 ```js
 export function applyLevelStats(a, b, c) {
   var d = scaleByLevel(b, experienceCurve, 1);
-  a.Am = d;
+  a.experienceToLevelUp = d;
   d = scaleByLevel(b, armorCurve, c.armorMultiplier);
   a.armor.levelValue = d;
   d = scaleByLevel(b, armorCurve, c.attackRatingMultiplier);
@@ -97,12 +98,12 @@ export function applyLevelStats(a, b, c) {
 ```js
 Sa.characterLevel = bd ? bd : 1;
 var sl = scaleByLevel(Sa.characterLevel, experienceCurve, 1);
-Sa.Am = sl;
+Sa.experienceToLevelUp = sl;
 var Kh = scaleByLevel(Sa.characterLevel, damageCurve, 1);
 Sa.spellSpiritCost = Kh;
 ```
 
-`Am` 字段名未语义化。含义 = **"从当前等级晋升一级所需的 XP"**，证据：`LevelUpUpgrade.purchase` 以 `stats.Am` 为价格扣除队伍 XP（`progression/upgrades.js:537-544`），UI 亦按 `"… XP"` 显示（`views/upgrade-details.js:410`）。置信度高。
+`experienceToLevelUp` 字段名未语义化。含义 = **"从当前等级晋升一级所需的 XP"**，证据：`LevelUpUpgrade.purchase` 以 `stats.Am` 为价格扣除队伍 XP（`progression/upgrades.js:537-544`），UI 亦按 `"… XP"` 显示（`views/upgrade-details.js:410`）。置信度高。
 
 **代入 `b = 当前等级`**（不是 `等级+1`），配合 §0 的 `x−1` 位移：
 
@@ -131,13 +132,13 @@ export function addExperience(a) {
 }
 ```
 
-`Am`/`experiencePoints` 的唯一比较者是 `LevelUpUpgrade`：
+`experienceToLevelUp`/`experiencePoints` 的唯一比较者是 `LevelUpUpgrade`：
 
 `src/engine/modules/progression/upgrades.js:593-610`（判定）与 `:532-574`（执行）
 
 ```js
-this.Lo = a.stats.Am;
-this.canPurchase = game.state.party.experiencePoints >= this.Lo;
+this.requiredExperience = a.stats.experienceToLevelUp;
+this.canPurchase = game.state.party.experiencePoints >= this.requiredExperience;
 ```
 
 ```js
@@ -185,10 +186,10 @@ awardAdventurePoints(22);
 `src/engine/modules/simulation/characters.js:289-290` 与 `combat/actions.js:363-364`
 
 ```js
-addExperience(f.No * doubleExperienceModifier.currentValue);
+addExperience(f.experienceReward * doubleExperienceModifier.currentValue);
 ```
 
-`No` = 该怪物种类的"每杀经验"，来自 `monsterArmorCurve`，随"怪物等级 + 阶位"缩放（§7）。`doubleExperienceModifier` 由"双倍经验"药水激活（1 → 2，`content/balance.js:203-207`）。
+`experienceReward` = 该怪物种类的"每杀经验"，来自 `monsterArmorCurve`，随"怪物等级 + 阶位"缩放（§7）。`doubleExperienceModifier` 由"双倍经验"药水激活（1 → 2，`content/balance.js:203-207`）。
 
 ---
 
@@ -257,7 +258,10 @@ export function awardAdventurePoints(a) {
     f++;
     b.pointsByEventType[a] = d + c;
     b.countsByEventType[a] = f;
+  } else {
+    console.log("error: point settings not found: " + a);
   }
+}
 ```
 
 `game.state.adventurePoints` 三个 map 的语义（由 `persistence/game-save.js:563-609`、`:960-992` 的读写对反推，置信度高）：
@@ -302,7 +306,10 @@ export function increasePointEventReward(a, b) {
   if (d) {
     d.currentPointReward += b;
     recalculateAdventurePoints(c);
+  } else {
+    console.log("error: point settings not found: " + a);
   }
+}
 export function recalculateAdventurePoints(a) {
   var b, c, d, f;
   for (b = a.availablePoints = 0; b < pointEventDefinitions.length; b++) {
@@ -353,15 +360,34 @@ for (b = 0; b < a.pointUpgrades.length; b++) { a.pointUpgrades[b].og(); }   // �
 `src/engine/modules/progression/upgrades.js:1209-1236`
 
 ```js
-AdventurePointUpgrade.prototype.purchase = function () {
-  if (!(this.purchased || this.kh.pointCost > game.state.adventurePoints.availablePoints)) {
-    var a = this.kh.pointCost,
-      b = game.state.adventurePoints;
-    b.spentPoints += a;
-    b.availablePoints -= a;
-    if (0 > b.availablePoints) { b.availablePoints = 0; }
-    this.purchased = true;
-    applyPointUpgrade(this);
+  AdventurePointUpgrade.prototype.purchase = function () {
+    if (!(this.purchased || this.definition.pointCost > game.state.adventurePoints.availablePoints)) {
+      var a = this.definition.pointCost,
+        b = game.state.adventurePoints;
+      b.spentPoints += a;
+      b.availablePoints -= a;
+      if (0 > b.availablePoints) {
+        b.availablePoints = 0;
+      }
+      this.purchased = true;
+      this.canPurchase = false;
+      applyPointUpgrade(this);
+      markUpgradeChanged(this);
+      recordGameEvent("Points Upgrade", this.definition.title);
+    }
+  };
+  AdventurePointUpgrade.prototype.getCost = function () {
+    return this.definition.pointCost;
+  };
+  AdventurePointUpgrade.prototype.getDescription = function () {
+    return this.definition.descriptionText;
+  };
+  AdventurePointUpgrade.prototype.refreshAvailabilityState = function () {
+    this.canPurchase = !this.purchased && this.definition.pointCost <= game.state.adventurePoints.availablePoints;
+    var a = this.cachedCanPurchase !== this.canPurchase;
+    this.cachedCanPurchase = this.canPurchase;
+    return a;
+  };
 ```
 
 `applyPointUpgrade` / `getPointUpgradeModifier`（`progression/upgrades.js:217-252`）：
@@ -404,7 +430,7 @@ export function applyPointUpgrade(a) {
 
 ```js
 export function recalculateGlobalUpgrade(a) {
-  a.definition.rd = scaleByLevel(a.definition.ah + a.definition.purchasedLevels * a.definition.Pg, globalUpgradePriceCurve, 1);
+  a.definition.cost = scaleByLevel(a.definition.baseCost + a.definition.purchasedLevels * a.definition.costPerLevel, globalUpgradePriceCurve, 1);
   a.definition.currentValue = a.definition.baseValue + a.definition.purchasedLevels * a.definition.perLevelIncrement;
   if (a.definition.currentValue > a.definition.maxValue) {
     a.definition.currentValue = a.definition.maxValue;
@@ -444,9 +470,9 @@ ye.farmCost = scaleByLevel(game.dungeons.Mk + 1, dungeonPriceCurve, 1);
 `src/engine/modules/progression/upgrades.js:931-933`
 
 ```js
-PurchaseDungeonUpgrade.prototype.getCost = function () {
-  return this.dungeon ? floorNumber(this.dungeon.farmCost * dungeonCostBonus.currentValue) : 0;
-};
+  PurchaseDungeonUpgrade.prototype.getCost = function () {
+    return this.dungeon ? floorNumber(this.dungeon.farmCost * dungeonCostBonus.currentValue) : 0;
+  };
 ```
 
 ```
@@ -464,11 +490,11 @@ farmCost(第 (Mk+1) 个被发现的地牢) = floor( 100 + 120 · Mk^1.7 · 1.018
 
 ```js
 this.qe = c;                                                 // = monsterCatalog.maxUnlockedLevel + 1
-this.Ds = scaleByLevel(this.qe, monsterUnlockPriceCurve, 1);
+this.cachedUnlockCost = scaleByLevel(this.qe, monsterUnlockPriceCurve, 1);
 ```
 ```js
 UnlockMonsterLevelUpgrade.prototype.getCost = function () {
-  return floorNumber(this.Ds * itemCostBonus.currentValue);
+  return floorNumber(this.cachedUnlockCost * itemCostBonus.currentValue);
 };
 ```
 ```
@@ -498,7 +524,7 @@ if (c = game.state.party.kills >= (…).getCost()) {
 
 ```js
 export function getScrollUpgradeCost(a) {
-  return scaleByLevel(a.locked ? a.sg : a.sg + (a.upgradeCount + 1) * a.Yi, scrollPriceCurve, 1);
+  return scaleByLevel(a.locked ? a.baseCapacity : a.baseCapacity + (a.upgradeCount + 1) * a.capacityIncrement, scrollPriceCurve, 1);
 }
 ```
 
@@ -512,10 +538,10 @@ idx = 未解锁 ? sg : sg + (upgradeCount + 1)·Yi          // Yi = 4（全部 6
 ```js
 d = a.locked ? a.sg : a.sg + (a.upgradeCount + 1) * a.Yi;
 if (a.locked) {
-  this.canPurchase = c >= d && game.state.party.gold >= a.rn;
+  this.canPurchase = c >= d && game.state.party.gold >= a.upgradeCost;
   …
 } else {
-  this.canPurchase = a.upgradeCount < a.Qh && c >= d && game.state.party.gold >= a.rn;
+  this.canPurchase = a.upgradeCount < a.Qh && c >= d && game.state.party.gold >= a.upgradeCost;
 ```
 
 `c` = `scrollCaster.stats.characterLevel`（= 队伍最低等级，§P-2）。`sg` 为"解锁等级"、`Qh` 为"最大升级次数"（含义由 `getScrollLabel` 的 `II…VIII` 上限 `:64-85` 与 `upgradeCount < Qh` 反推，置信高）。实算档位价：`idx 0 → 100`、`3 → 783`、`6 → 2701`、`9 → 5399`、`12 → 8832`、`15 → 13011`。
@@ -535,9 +561,9 @@ if (a.locked) {
 `src/engine/modules/simulation/tick.js:214-236`
 
 ```js
-b.Qt++;
-if (b.Qt >= b.PC) {
-  b.Qt = 0;
+b.achievementCheckTurnCounter++;
+if (b.achievementCheckTurnCounter >= b.achievementCheckIntervalTurns) {
+  b.achievementCheckTurnCounter = 0;
   var T = game.state.achievements, …
   for (X = T.ik.length - 1; 0 <= X; X--) {
     var qa = Ca = T.ik[X];
@@ -584,13 +610,13 @@ export function getAchievementProgress(a) {
 ```js
 switch (a.requirementType) {
   case 23:
-    return 1 === a.requiredCount ? 0 < b.hn : 2 === a.requiredCount ? 0 < b.jn : 3 === a.requiredCount ? 0 < b.kn : false;
+    return 1 === a.requiredCount ? 0 < b.partySize1Victories : 2 === a.requiredCount ? 0 < b.partySize2Victories : 3 === a.requiredCount ? 0 < b.partySize3Victories : false;
   case 24:
-    return 0 < b.vn;
+    return 0 < b.singleClassVictories;
   case 25:
     return 0 < getClassVictories(b, a.characterClass);
   case 26:
-    return b.Xm >= a.requiredCount;
+    return b.maxContinuationVictories >= a.requiredCount;
   case 27:
     return 0 < getSoloClassVictories(b, a.characterClass);
   default:
@@ -598,7 +624,7 @@ switch (a.requirementType) {
 }
 ```
 
-字段语义（由 `characters/party.js:269-321` 的写入点确定，置信高）：`hn/jn/kn` = 1/2/3 人队胜利次数；`vn` = 4 人同职业胜利次数；`qo[class]` = 该职业参与胜利次数；`lq[class]` = 该职业单人胜利次数；`Xm` = 历史最长的"连续不重生胜利链"；`mm` = 上一条链长度；`nm` = 当前链长度。
+字段语义（由 `characters/party.js:269-321` 的写入点确定，置信高）：`hn/jn/kn` = 1/2/3 人队胜利次数；`singleClassVictories` = 4 人同职业胜利次数；`qo[class]` = 该职业参与胜利次数；`lq[class]` = 该职业单人胜利次数；`maxContinuationVictories` = 历史最长的"连续不重生胜利链"；`currentContinuationVictories` = 上一条链长度；`currentContinueCount` = 当前链长度。
 
 ### 4.2 奖励应用
 
@@ -634,14 +660,16 @@ export function applyAchievementReward(a) {
 `src/engine/modules/runtime/game.js:181-190`
 
 ```js
-runStatistics: new RunStatistics(),
-lifetimeStatistics: new LifetimeStatistics(),
-statisticsRecorder: new StatisticsRecorder(),
-victoryStatistics: new function () {
-  this.vn = this.mm = this.Xm = this.kn = this.jn = this.hn = 0;
-  this.qo = {}; this.lq = {}; this.nm = 0;
-}(),
-victoryCount: 0
+      runStatistics: new RunStatistics(),
+      lifetimeStatistics: new LifetimeStatistics(),
+      statisticsRecorder: new StatisticsRecorder(),
+      victoryStatistics: new function () {
+        this.singleClassVictories = this.currentContinuationVictories = this.maxContinuationVictories = this.partySize3Victories = this.partySize2Victories = this.partySize1Victories = 0;
+        this.classVictories = {};
+        this.soloClassVictories = {};
+        this.currentContinueCount = 0;
+      }(),
+      victoryCount: 0
 ```
 
 - **本周目** `runStatistics`：30 个计数字段，一次声明清零（`progression/statistics.js:5-7`），`resetRunStatistics()` 同式清零（`:27-29`）。
@@ -650,15 +678,15 @@ victoryCount: 0
 `progression/statistics.js:127-130`
 
 ```js
-LifetimeStatistics.prototype = new RunStatistics();
-LifetimeStatistics.prototype.resetRunStatistics = function () {
-  console.log("Reset invoked on total statistics. Not resetting anything.");
-};
+  LifetimeStatistics.prototype = new RunStatistics();
+  LifetimeStatistics.prototype.resetRunStatistics = function () {
+    console.log("Reset invoked on total statistics. Not resetting anything.");
+  };
 ```
 
 - **双写门面** `StatisticsRecorder`：每个记录方法同时写两块（`:131-234`），`bindStatistics()` 把 `statisticsRecorder` 指向本周目对象（`:20-25`）。
-  `[注意]` 两个方法名仍为混淆态：`$r` = `levelsCleared++`（`:39-41`、`:143-146`）、`$k` = `minionKills++`（`:69-71`、`:175-178`）。`recordItemsSold(a)`/`recordGoldFrom*(a)` 带参数（批量累加），其余都是 `++`。
-- **成就取数只读累计块**（§4.1），因此 `$r`（levelsCleared）与 `playedMillis` 之外的本周目计数不直接参与成就。
+  `[注意]` 两个方法名仍为混淆态：`recordLevelCleared` = `levelsCleared++`（`:39-41`、`:143-146`）、`$k` = `minionKills++`（`:69-71`、`:175-178`）。`recordItemsSold(a)`/`recordGoldFrom*(a)` 带参数（批量累加），其余都是 `++`。
+- **成就取数只读累计块**（§4.1），因此 `recordLevelCleared`（levelsCleared）与 `playedMillis` 之外的本周目计数不直接参与成就。
 
 ### 5.2 事件 → 计数器 → 代码点
 
@@ -667,7 +695,7 @@ LifetimeStatistics.prototype.resetRunStatistics = function () {
 | `turnCount` | `recordTurn` | `simulation/tick.js:88` |
 | `doorsOpened` | `recordDoorOpened` | `characters/character.js:313` |
 | `roomsCleared` | `recordRoomCleared` | `combat/encounters.js:270` |
-| `levelsCleared` | `$r` | `world/dungeons.js:214` |
+| `levelsCleared` | `recordLevelCleared` | `world/dungeons.js:214` |
 | `dungeonsCleared` | `recordDungeonCleared` | `world/dungeons.js:225` |
 | `castlesConquered` | `recordCastleConquered` | `characters/party.js:254` |
 | `farmsPurchased` | `recordFarmPurchased` | `simulation/tick.js:816` |
@@ -725,23 +753,23 @@ if (0 === c) {
   b = game.state.adventurers.length;
   if (4 > b) {
     if (1 === b) {
-      a.hn += 1;
+      a.partySize1Victories += 1;
       …
-      a.lq[c] = d + 1;          // d = 该职业原有单人胜利数
+      a.soloClassVictories[c] = d + 1;          // d = 该职业原有单人胜利数
   …
   for (c = 0; c < b; c++) {
     d = game.state.adventurers[c].characterClass;
-    if (!(f = a.qo[d])) {
+    if (!(f = a.classVictories[d])) {
       f = 0;
     }
-    a.qo[d] = f + 1;
+    a.classVictories[d] = f + 1;
   }
-  c = a.nm;
+  c = a.currentContinueCount;
   if (0 < c) {
-    if (c > a.Xm) {
-      a.Xm = c;
+    if (c > a.maxContinuationVictories) {
+      a.maxContinuationVictories = c;
     }
-    a.mm = c;
+    a.currentContinuationVictories = c;
   }
   if (4 <= b) {
     d = true;
@@ -753,13 +781,13 @@ if (0 === c) {
       }
     }
     if (d) {
-      a.vn += 1;
+      a.singleClassVictories += 1;
     }
   }
 ```
 
-- 计数写入瞬间**先于** `nm` 自增（`nm++` 在玩家点"继续"时执行，`views/results.js:61`），所以 `Xm` 记的是"上一次链的长度"。
-- `[疑似遗留怪癖]` `nm` 从未在胜利瞬间被写入，因此首胜（`nm = 0`）完全不参与 `Xm/mm`；`requirementType 26`（"延续胜利"/"不进行重生"）只能由"继续"路径累积。
+- 计数写入瞬间**先于** `currentContinueCount` 自增（`nm++` 在玩家点"继续"时执行，`views/results.js:61`），所以 `maxContinuationVictories` 记的是"上一次链的长度"。
+- `[疑似遗留怪癖]` `currentContinueCount` 从未在胜利瞬间被写入，因此首胜（`nm = 0`）完全不参与 `Xm/mm`；`requirementType 26`（"延续胜利"/"不进行重生"）只能由"继续"路径累积。
 
 ---
 
@@ -784,8 +812,8 @@ resetRun: function (a) {
     game.state.lifetimeStatistics = new LifetimeStatistics();
     bindStatistics();
     var b = game.state.victoryStatistics;
-    b.hn = 0; b.jn = 0; b.kn = 0; b.Xm = 0; b.mm = 0; b.vn = 0;
-    b.qo = {}; b.lq = {}; b.nm = 0;
+    b.partySize1Victories = 0; b.partySize2Victories = 0; b.partySize3Victories = 0; b.maxContinuationVictories = 0; b.currentContinuationVictories = 0; b.singleClassVictories = 0;
+    b.classVictories = {}; b.soloClassVictories = {}; b.currentContinueCount = 0;
     resetAdventurePoints();
     resetAchievements();
   }
@@ -801,7 +829,7 @@ resetRun: function (a) {
   b = game.monsterCatalog;
   b.minUnlockedLevel = 1;
   b.maxUnlockedLevel = 1;
-  b.en = {};
+  b.monsterTypesByLevelCache = {};
   if (a) { game.state.victoryCount = 0; }
 }
 ```
@@ -810,12 +838,12 @@ resetRun: function (a) {
 
 ```js
 restartRun: function () {
-  game.state.victoryStatistics.nm = 0;
-  game.state.victoryStatistics.mm = 0;
+  game.state.victoryStatistics.currentContinueCount = 0;
+  game.state.victoryStatistics.currentContinuationVictories = 0;
   game.resetRun(false);           // ← 重生（文案"重生 - 以1级的队伍重新开始游戏"）
   deleteStoredSave();
   saveProgress(game.saves);
-  game.view.Js();
+  game.view.resetTabs();
 },
 resetGame: function () {
   game.resetRun(true);            // ← 彻底清档
@@ -832,7 +860,7 @@ resetGame: function () {
 | 成就 `We/Of`（328 条） | **保留** | 保留 | 全部重置 |
 | `lifetimeStatistics` | **保留** | 保留 | 换对象清零 |
 | `runStatistics` | 清零（不换对象，`runtime/game.js:377`） | 清零 | 换对象 + 清零 |
-| `victoryStatistics`（含 `Xm` 链） | **保留**，仅 `nm/mm` 被 `restartRun` 归 0 | 保留，且 `nm++` | 全字段清零 |
+| `victoryStatistics`（含 `maxContinuationVictories` 链） | **保留**，仅 `nm/mm` 被 `restartRun` 归 0 | 保留，且 `nm++` | 全字段清零 |
 | 冒险者 / 等级 / 技能点 / 装备 / 背包 items | 清空（`adventurers.length = 0`） | **保留** | 清空 |
 | 全局升级 `purchasedLevels`（11 条） | 归 0（`resetUpgradeCollection`→`og()`，`progression/upgrades.js:62-69,360-363`） | **保留**（`resetContinuation` 不碰 `upgradeCollections`） | 归 0 |
 | 卷轴库存（解锁/升级次数/充能） | 重建为初值（`resetScrollInventory`） | **保留** | 重建 |
@@ -860,16 +888,16 @@ l = Math.min(40, game.state.victoryCount); if (0 < l) { p.skillPoints = l; … }
 
 ```js
 export function advanceMonsterTypeRank(a) {
-  if (!(5 <= a.Sj)) {
-    a.Sj++;
-    a.ek += MONSTER_RANK_KILL_STEP;
-    var b = 10 * (a.xd - 1) + a.Sj;
-    a.$o = scaleByLevel(b, monsterDamageCurve, 1);
-    a.No = scaleByLevel(b, monsterArmorCurve, 1);
-    a.Gp = scaleByLevel(b, monsterHealthCurve, 1);
-    a.Ep = scaleByLevel(b, monsterSpiritCurve, 1);
-    a.Fp = scaleByLevel(b, monsterAttackCurve, 1);
-    a.Hp = scaleByLevel(b, monsterDefenceCurve, 1);
+  if (!(5 <= a.rank)) {
+    a.rank++;
+    a.rankKillThreshold += MONSTER_RANK_KILL_STEP;
+    var b = 10 * (a.level - 1) + a.rank;
+    a.maxHealth = scaleByLevel(b, monsterHealthCurve, 1);
+    a.experienceReward = scaleByLevel(b, monsterExperienceCurve, 1);
+    a.damage = scaleByLevel(b, monsterDamageCurve, 1);
+    a.armor = scaleByLevel(b, monsterArmorCurve, 1);
+    a.attackRating = scaleByLevel(b, monsterAttackCurve, 1);
+    a.defenceRating = scaleByLevel(b, monsterDefenceCurve, 1);
   }
 }
 ```
@@ -878,17 +906,17 @@ export function advanceMonsterTypeRank(a) {
 
 ```js
 export function recordMonsterTypeKill(a) {
-  a.xq++;
-  a.ml++;
-  if (a.ml >= a.ek && 5 > a.Sj) {
-    a.ml -= a.ek;
+  a.killCount++;
+  a.rankProgressKills++;
+  if (a.rankProgressKills >= a.rankKillThreshold && 5 > a.rank) {
+    a.rankProgressKills -= a.rankKillThreshold;
     advanceMonsterTypeRank(a);
   }
 }
 ```
 
-- 曲线输入 `b = 10·(怪物等级 − 1) + 阶位`，阶位 `Sj ∈ [1,5]`，`MONSTER_RANK_KILL_STEP = 20`（`content/balance.js:117`）。`Sj` 与 `ek` 同步增长（构造即 `advanceMonsterTypeRank`：`Sj 0→1`、`ek 0→20`，`combat/encounters.js:189-190`），故**处于阶位 `Sj` 时升下一阶还需 `20·Sj` 次**（20 → 40 → 60 → 80 → 100，累进而非固定步长），`ml` 是"自上次升阶以来"的余数计数器（升阶时 `ml -= ek` 保留余数）。`Sj = 5` 后不再推进但 `ml/xq` 继续累加。`xq` = 该怪类历史总杀（存档字段 `kills`，`persistence/entities.js:189-195`）。
-- `No`（`monsterArmorCurve`，power 1.24 / growth 1.0002）是**每杀经验**（§P-3），其增长明显慢于战斗属性曲线。含义未在代码内命名，由唯一读者 `addExperience(….No × doubleExperienceModifier.currentValue)`（`simulation/characters.js:290` 变量名 `f.No`、`combat/actions.js:364` 变量名 `d.No`）反推，置信高。
+- 曲线输入 `b = 10·(怪物等级 − 1) + 阶位`，阶位 `Sj ∈ [1,5]`，`MONSTER_RANK_KILL_STEP = 20`（`content/balance.js:117`）。`Sj` 与 `ek` 同步增长（构造即 `advanceMonsterTypeRank`：`Sj 0→1`、`ek 0→20`，`combat/encounters.js:189-190`），故**处于阶位 `Sj` 时升下一阶还需 `20·Sj` 次**（20 → 40 → 60 → 80 → 100，累进而非固定步长），`rankProgressKills` 是"自上次升阶以来"的余数计数器（升阶时 `ml -= ek` 保留余数）。`Sj = 5` 后不再推进但 `ml/xq` 继续累加。`killCount` = 该怪类历史总杀（存档字段 `kills`，`persistence/entities.js:189-195`）。
+- `experienceReward`（`monsterArmorCurve`，power 1.24 / growth 1.0002）是**每杀经验**（§P-3），其增长明显慢于战斗属性曲线。含义未在代码内命名，由唯一读者 `addExperience(….No × doubleExperienceModifier.currentValue)`（`simulation/characters.js:290` 变量名 `f.No`、`combat/actions.js:364` 变量名 `d.No`）反推，置信高。
 - 曲线→属性映射错位（`combat/encounters.js:76-83`）：`damage ← Gp(monsterHealthCurve)`、`armor ← Ep(monsterSpiritCurve)`、`attackRating ← Fp(monsterAttackCurve)`、`defenceRating ← Hp(monsterDefenceCurve)`、`maxHealth ← $o(monsterDamageCurve)`。`[疑似遗留怪癖]` 伤害与生命取了对方名字的曲线；数值按原样记录。
 - 脆弱怪物药水把 5 条 levelValue 统一乘 0.7（`combat/encounters.js:69-75`）。
 - 遭遇规模：`minMonsters + randomInt(max(min, maxMonsters) − minMonsters) + extraMonstersModifier`（`combat/encounters.js:49-52`，首领房另有 `maxMonsters.baseValue` 作下限，`combat/encounters.js:145-148`）。
@@ -916,13 +944,13 @@ if (game.options.allowOfflineProgress && game.lastActiveAt) {
 `runtime/game.js:469-475`
 
 ```js
-beginOfflineProgress: function () {
-  if (!game.gameWon && game.partyCreated) {
-    game.offlineDuration = Math.min(game.offlineDuration, 432E5 + offlineTimeBonus.currentValue);
-    game.processingOffline = true;
-    game.offlineProcessed = 0;
-  }
-},
+    beginOfflineProgress: function () {
+      if (!game.gameWon && game.partyCreated) {
+        game.offlineDuration = Math.min(game.offlineDuration, 432E5 + offlineTimeBonus.currentValue);
+        game.processingOffline = true;
+        game.offlineProcessed = 0;
+      }
+    },
 ```
 
 ```
@@ -961,10 +989,10 @@ if (1E3 < a && game.options.allowBackgroundProgress && (game.processingOffline |
 一次 `advanceSimulation(15)` **恰为 1 回合**，因为累加器与门槛同值（`simulation/tick.js:27-33`）：
 
 ```js
-b.Jo += a;
-if (15 <= b.Jo) {
+b.turnTimeAccumulator += a;
+if (15 <= b.turnTimeAccumulator) {
   game.state.turnNumber++;
-  b.Jo -= 15;
+  b.turnTimeAccumulator -= 15;
 ```
 
 （在线分支是 `advanceSimulation(帧差 / frameDuration)`，`simulation/loop.js:53-56`；15 个模拟单位 ≈ 15 × 16.67ms ≈ 250ms，与 `turnDuration` 一致。）
@@ -997,7 +1025,7 @@ if (15 <= b.Jo) {
 | # | 位置 | 现象 |
 |---|---|---|
 | 1 | `simulation/characters.js:169-184` | `armor/attackRating/defenceRating/damage` 四条 `levelValue` 同用 `armorCurve`；`damageCurve` 只喂 `spellSpiritCost`（§P-1） |
-| 2 | `combat/encounters.js:76-83, 205-210` | 怪物"伤害/生命"取了对方名字的曲线；`No`（经验）取自名为 `monsterArmorCurve` 的曲线（§7） |
+| 2 | `combat/encounters.js:76-83, 205-210` | 怪物"伤害/生命"取了对方名字的曲线；`experienceReward`（经验）取自名为 `monsterArmorCurve` 的曲线（§7） |
 | 3 | `progression/points.js:134-149` | `bookcasePointEvent`/`weaponRackPointEvent` 变量名与自身文案互换（纯命名） |
 | 4 | `progression/points.js:246-268` | 点事件 ID 无 20；`pointEventsById[20]` 为空，发放只打日志 |
 | 5 | `progression/points.js:26-46` + `:57-73` | 成就加成对历史事件次数**追溯生效**，"先杀后领"回补全部差额（§2.2/§2.3） |
@@ -1006,12 +1034,12 @@ if (15 <= b.Jo) {
 | 8 | `progression/upgrades.js:943` | 农场"即将可买"用绝对差额 `<120`，而全局升级用"差额 ≤400 或 ≤30%"、升级 XP 用"≤300 或 ≤20%"，三套口径 |
 | 9 | `combat/scrolls.js:61-63` + `progression/upgrades.js:1100` | 卷轴的价格档位与等级门槛是同一个表达式；`sg = 0` 的 `shockScroll` 开局即解锁 |
 | 10 | `runtime/game.js:448-450` | "继续"路径把地牢定价计数器 `Mk` 重置为**农场数量** |
-| 11 | `progression/statistics.js:39,69` | `levelsCleared`/`minionKills` 的记录方法仍是混淆名 `$r`/`$k`（与 `docs/reverse-engineering/unresolved.md` 第七批一致，未落地改名） |
+| 11 | `progression/statistics.js:39,69` | `levelsCleared`/`minionKills` 的记录方法仍是混淆名 `recordLevelCleared`/`$k`（与 `docs/reverse-engineering/unresolved.md` 第七批一致，未落地改名） |
 | 12 | `characters/character.js:440,454` + `ai/targeting.js:422` | `MELEE_ACTION_TYPE = 3` 记账为 `rangedAttackCount`（存档键为准，勿顺手纠正） |
 | 13 | `progression/achievements.js:98-99` | `requirementType 16` 读实时队伍等级，进度可随重生回退；函数无 `default` |
 | 14 | `persistence/entities.js:286-288` | `farmsPurchased` 缺失时用"当前农场数"补值，"0 农场"与"从未买农场"不可区分 |
 | 15 | `persistence/entities.js:283-284,318-319` | `weaponRacksLooted` 取 `weaponRacksLooted/weaponsRacksLooted` 两键最大值，`bookcasesLooted` 只取一键 |
-| 16 | `characters/party.js:302-308` + `views/results.js:61` | `nm` 在"点继续"时才自增，首胜不进 `Xm/mm` |
+| 16 | `characters/party.js:302-308` + `views/results.js:61` | `currentContinueCount` 在"点继续"时才自增，首胜不进 `Xm/mm` |
 | 17 | `runtime/game.js:471` vs `simulation/loop.js:42` | 12h/14h/16h 上限只约束读档离线；后台标签页累加不受钳 |
 | 18 | `loot/inventory.js:9` | 背包容量在 `Inventory` 构造时快照 `victoryCount`，之后不回填 |
 | 19 | `runtime/game.js:360-376,415-417` | `resetRun` 用同一形参承担"重生"与"清档"两种语义；`resetContinuation` 与它保留集合不一致（全局升级/卷轴/怪物目录在"继续"中保留、在"重生"中清空） |

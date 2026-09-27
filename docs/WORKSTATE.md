@@ -7,6 +7,13 @@
 
 - **M12 收官：`analyze-fields.mjs` 报「混淆属性总数: 0」。** 残余的 1,171 → 0 全量清零（U66-U120），下一步主线转为 P1 回归收尾 / P2 报告口径对齐 / P3 Exhaustion Pass（见 §9）。
 
+- **U123 P2 文档↔代码一致性收尾（2026-09-27，新增三个可复用校验工具）**。57 批改名之后，`docs/formulas/*` 内嵌的 JS 片段与散文里的标识符仍在用改名前的名字（`a.sg`/`b.Qt`/`a.We`/`Kd`/`wo`…），属规范 §10/§89 明令禁止的"文档与代码相互矛盾"。本轮把这件事变成可复现的机械检查：
+  1. **片段重同步**（`scripts/check-doc-snippets.mjs`）：把 md 里"`` `path:start-end` `` + ```js 块"与当前源码逐行比对。三级判定——① 行数相同且 ≥50% 行逐字相同 → 用源码覆盖；② 起点正确但 ref 末尾与实际行数不符 → 按实际行数修正 ref 末尾再覆盖；③ 都不符 → 用 `docs/symbol-map.json` 的字段名做**归一化标识符匹配**在源码里重新定位（改名只改文本不改结构，故归一化后仍可定位），命中则同时修正 ref 与片段。结果：**76 条片段中 61 条已同步**；残留 15 条是"节选/伪码"型（含 `...` 或跨多处拼接），已在三份公式文档文首如实声明为已知精度缺口（**不写成 PASS**）。
+  2. **标识符同步**（`scripts/fix-doc-identifiers.mjs`）：按 fields 段把文档里的旧名替换为当前语义名。安全边界：只动 ``` 围栏代码块内的 `.X`/`X:` 形态与散文里**反引号包裹**的 `` `X` ``；单字符名永不替换；替换后若新旧名同行则回退并报告。结果：三份文档共 **71 行**更新，**fields 命中数 66 → 0**。
+  3. **引用可回源校验**（`scripts/verify-doc-refs.mjs`）：对 14 份文档抽出 **934 条唯一 `file:line` 引用**，按仓库 basename 索引解析（文档大量使用裸文件名，如 `loop.js:87`）→ **解析不到 0 条**、同名歧义 24 条（`character.js` 在 `characters/` 与 `views/` 各有一份，文档文首已声明缩写约定，视为可接受）、**行号越界 4 条已全部修好**（`combat.md` 的 `actions.js:867` 实为 `character.js:867` 调用点；`persistence.md` 的 `test-parity.mjs:1-36` → `1-31`；`rng.md` 的 `stats.js:113-121` → `102-114`，两处同源）。
+  4. **场景名可回源**：四份报告引用的场景名与 `scripts/test-scenarios.mjs` 的 59 条逐一比对，**全部命中**（少数未命中项是 `check`/`spells` 这类普通词，非场景名）。
+  5. 三份公式文档文首的"34 场景差分矩阵"统一更正为 **59**。
+
 - **U122 空壳宿主诚实命名：`game.extensions` → `game.unusedPlaceholder`（2026-09-27）**。`runtime/game.js:128` 的 `dF: new function(){}`（archive 原版 c2.js:44339-44340 形态一致）是**原版的空占位对象**：全库（src + archive + c2c.user.js）读点为 0，恢复期被命名为 `extensions`（无证据支撑的推测名）。按本项目"死字段用 `unusedXxx` 诚实命名"的既有先例（`unusedClassFlag`/`unusedCachedText`/`unusedClassValue*`/`unusedSpellFlag`）改为 `unusedPlaceholder`；`symbol-map.json` 的 `gameFields.dF` 与 `docs/game-state-schema.md` 同步。**保留对象本身**（不删字段——删会改变 `game` 的形状，而外部 userscript 契约要求尽量不动）。
 
 - **U121 命名准确性复核：`game.upgradeRegistry` → `game.spellCaches`（2026-09-27）**。P2 列出的"宿主名疑似误名"已确认并修正：该匿名子对象（`runtime/game.js:124`）**唯一成员**是 `blastStunSpellCache`（`tick.js:346-350` 惰性 `new Spell(blastStunSpell)` 供火球溅射二段动作复用），与升级注册表无关，故更名 `spellCaches`。同步更新 `docs/symbol-map.json` 的 `gameFields.RC`、`docs/formulas/combat.md:904`、`docs/game-state-schema.md:97`、`docs/HANDOFF-PROMPT.md`。改名批：`scripts/mappings/spell-caches-host.json`（2 处，事务校验通过）。
