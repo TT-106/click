@@ -19,17 +19,17 @@ export function CharacterStats(a) {
   this.owner = a;
   this.characterLevel = 0;
   this.experienceToLevelUp = 100;
-  this.lm = this.spellSpiritCost = this.spirit = this.health = 0;
+  this.critChance = this.spellSpiritCost = this.spirit = this.health = 0;
   this.baseHealthRegenPercent = 1;
   this.baseSpiritRegenPercent = 4;
   this.baseAttackCooldown = 12;
   this.stunCount = this.damageReceived = this.damageGiven = this.minionKills = this.kills = 0;
   this.maxSummonedMinions = DEFAULT_MINION_LIMIT;
-  this.chainCount = this.attackCooldownReduction = this.spiritRegenBonus = this.healthRegenBonus = this.spellCostReduction = this.wo = 0;
+  this.chainCount = this.attackCooldownReduction = this.spiritRegenBonus = this.healthRegenBonus = this.spellCostReduction = this.damageResistance = 0;
   this.chainChance = DEFAULT_CHAIN_CHANCE;
   this.extraAttackCount = 0;
   this.extraAttackChance = DEFAULT_MULTI_ATTACK_CHANCE;
-  this.mu = this.lu = this.ku = this.Ss = this.Qs = this.Ps = this.Rs = this.Ts = this.ricochetCountBonus = this.swiftStrikeTargetBonus = this.areaRadiusBonus = this.rainAreaBonus = this.transformTargetBonus = this.controlTargetBonus = this.chainArcBonus = 0;
+  this.rogueChickenChance = this.ninjaChickenChance = this.barbarianChickenChance = this.buffDefenceRatingPotency = this.buffAttackRatingPotency = this.buffArmorPotency = this.buffDamagePotency = this.healPotency = this.ricochetCountBonus = this.swiftStrikeTargetBonus = this.areaRadiusBonus = this.rainAreaBonus = this.transformTargetBonus = this.controlTargetBonus = this.chainArcBonus = 0;
   this.damage = new StatComponent(a);
   this.armor = new StatComponent(a);
   this.attackRating = new StatComponent(a);
@@ -59,7 +59,7 @@ export function updateScrollAccuracy() {
   }
 }
 export function resetSkillStatBonuses(a) {
-  a.wo = 0;
+  a.damageResistance = 0;
   a.spellCostReduction = 0;
   a.damage.skillBonusPercent = 0;
   a.armor.skillBonusPercent = 0;
@@ -70,24 +70,24 @@ export function resetSkillStatBonuses(a) {
   a.healthRegenBonus = 0;
   a.spiritRegenBonus = 0;
   a.attackCooldownReduction = 0;
-  a.Ts = 0;
-  a.Rs = 0;
-  a.Ps = 0;
-  a.Qs = 0;
-  a.Ss = 0;
+  a.healPotency = 0;
+  a.buffDamagePotency = 0;
+  a.buffArmorPotency = 0;
+  a.buffAttackRatingPotency = 0;
+  a.buffDefenceRatingPotency = 0;
   a.extraAttackCount = 0;
   a.extraAttackChance = DEFAULT_MULTI_ATTACK_CHANCE;
   a.controlTargetBonus = 0;
   a.transformTargetBonus = 0;
   a.chainArcBonus = 0;
-  a.lm = 0;
+  a.critChance = 0;
   a.areaRadiusBonus = 0;
   a.rainAreaBonus = 0;
   a.swiftStrikeTargetBonus = 0;
   a.ricochetCountBonus = 0;
-  a.ku = 0;
-  a.lu = 0;
-  a.mu = 0;
+  a.barbarianChickenChance = 0;
+  a.ninjaChickenChance = 0;
+  a.rogueChickenChance = 0;
   a.chainCount = 0;
   a.chainChance = DEFAULT_CHAIN_CHANCE;
   a.maxSummonedMinions = DEFAULT_MINION_LIMIT;
@@ -99,7 +99,7 @@ export function initializeCharactersStats() {
   CharacterStats.prototype.recordMinionKill = function () {
     this.minionKills++;
   };
-  CharacterStats.prototype.Ir = function () {
+  CharacterStats.prototype.rollChainCount = function () {
     var a = this.chainChance / 100,
       b = 0,
       c;

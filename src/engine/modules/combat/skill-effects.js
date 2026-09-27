@@ -37,7 +37,7 @@ export function applyStatBonus(a, b, c) {
   a = a.stats;
   switch (b) {
     case 1:
-      a.wo += c;
+      a.damageResistance += c;
       break;
     case 2:
       b = a.damage;
@@ -73,25 +73,25 @@ export function applyStatBonus(a, b, c) {
       a.attackCooldownReduction += c;
       break;
     case 11:
-      a.Ts += c;
+      a.healPotency += c;
       break;
     case 13:
-      a.Ps += c;
+      a.buffArmorPotency += c;
       break;
     case 12:
-      a.Rs += c;
+      a.buffDamagePotency += c;
       break;
     case 14:
-      a.Qs += c;
+      a.buffAttackRatingPotency += c;
       break;
     case 15:
-      a.Ss += c;
+      a.buffDefenceRatingPotency += c;
       break;
     case 16:
       a.spellCostReduction += c;
       break;
     case 17:
-      a.lm += c;
+      a.critChance += c;
       break;
     case 18:
       a.extraAttackCount += c;
@@ -133,13 +133,13 @@ export function applyStatBonus(a, b, c) {
       a.ricochetCountBonus += c;
       break;
     case 30:
-      a.ku = c;
+      a.barbarianChickenChance = c;
       break;
     case 31:
-      a.lu = c;
+      a.ninjaChickenChance = c;
       break;
     case 32:
-      a.mu = c;
+      a.rogueChickenChance = c;
   }
 }
 export function initializeCombatSkillEffects() {

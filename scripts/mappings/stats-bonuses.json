@@ -1,0 +1,12 @@
+[
+  { "old": "lm", "new": "critChance", "files": ["src/engine/modules/characters/stats.js", "src/engine/modules/combat/actions.js", "src/engine/modules/combat/skill-effects.js", "src/engine/modules/views/character.js"], "expect": "auto" },
+  { "old": "wo", "new": "damageResistance", "files": ["src/engine/modules/characters/stats.js", "src/engine/modules/combat/actions.js", "src/engine/modules/combat/skill-effects.js", "src/engine/modules/views/character.js"], "expect": "auto" },
+  { "old": "Ts", "new": "healPotency", "files": ["src/engine/modules/characters/stats.js", "src/engine/modules/combat/actions.js", "src/engine/modules/combat/skill-effects.js"], "expect": "auto" },
+  { "old": "Rs", "new": "buffDamagePotency", "files": ["src/engine/modules/characters/stats.js", "src/engine/modules/combat/actions.js", "src/engine/modules/combat/skill-effects.js"], "expect": "auto" },
+  { "old": "Ps", "new": "buffArmorPotency", "files": ["src/engine/modules/characters/stats.js", "src/engine/modules/combat/actions.js", "src/engine/modules/combat/skill-effects.js"], "expect": "auto" },
+  { "old": "Qs", "new": "buffAttackRatingPotency", "files": ["src/engine/modules/characters/stats.js", "src/engine/modules/combat/actions.js", "src/engine/modules/combat/skill-effects.js"], "expect": "auto" },
+  { "old": "Ss", "new": "buffDefenceRatingPotency", "files": ["src/engine/modules/characters/stats.js", "src/engine/modules/combat/actions.js", "src/engine/modules/combat/skill-effects.js"], "expect": "auto" },
+  { "old": "ku", "new": "barbarianChickenChance", "files": ["src/engine/modules/characters/stats.js", "src/engine/modules/combat/actions.js", "src/engine/modules/combat/skill-effects.js"], "expect": "auto" },
+  { "old": "lu", "new": "ninjaChickenChance", "files": ["src/engine/modules/characters/stats.js", "src/engine/modules/combat/actions.js", "src/engine/modules/combat/skill-effects.js"], "expect": "auto" },
+  { "old": "mu", "new": "rogueChickenChance", "files": ["src/engine/modules/characters/stats.js", "src/engine/modules/combat/actions.js", "src/engine/modules/combat/skill-effects.js"], "expect": "auto" }
+]

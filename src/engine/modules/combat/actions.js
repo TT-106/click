@@ -91,7 +91,7 @@ export function advanceCombatAction(a, b) {
         if (d = g.stats, 4 === l || 5 === l || 8 === l || 13 === l || 12 === l) {
           applyActionDamage(b);
         } else if (1 === l && (h = h.potencyPercent, l = statValue(d.maxHealth), d.health < l)) {
-          var n = b.attacker.stats.Ts;
+          var n = b.attacker.stats.healPotency;
           if (1 < n) {
             h = Math.min(100, h * n);
           }
@@ -128,16 +128,16 @@ export function applySpellEffect(a, b) {
         h = 1;
       switch (d) {
         case 5:
-          h = f.Ps;
+          h = f.buffArmorPotency;
           break;
         case 6:
-          h = f.Rs;
+          h = f.buffDamagePotency;
           break;
         case 7:
-          h = f.Qs;
+          h = f.buffAttackRatingPotency;
           break;
         case 8:
-          h = f.Ss;
+          h = f.buffDefenceRatingPotency;
       }
       d = new StatusEffect(d, game.state.turnNumber, g.durationTurns, game.animations.getAnimation(g.animationName), g.overlayFrameIndex, g.hasAnimation, 1 > h ? c : c * h);
     } else {
@@ -169,9 +169,9 @@ export function applySpellEffect(a, b) {
     c = b.attacker;
     d = b.impactEffect.targetPosition;
     var chickenStats = c.stats;
-    g = chickenStats.ku;
-    f = chickenStats.lu;
-    h = chickenStats.mu;
+    g = chickenStats.barbarianChickenChance;
+    f = chickenStats.ninjaChickenChance;
+    h = chickenStats.rogueChickenChance;
     if (0 < g && Math.random() < g / 100) {
       g = barbarianChickenMinion;
       showFloatingText(game.floatingText, c, "野蛮人小鸡!", "blue");
@@ -467,7 +467,7 @@ export function createAttackAction(a, b, c) {
     }
     f.boundCharacter = a;
     d.projectileEffect = f;
-    a = a.stats.Ir();
+    a = a.stats.rollChainCount();
     if (0 < a) {
       d.chains = true;
       d.chainCount = a;
@@ -584,8 +584,8 @@ export function calculateAttackDamage(a, b) {
     g = statValue(c.damage),
     h = statValue(d.defenceRating),
     l = statValue(d.armor),
-    d = d.wo,
-    c = c.lm;
+    d = d.damageResistance,
+    c = c.critChance;
   if (!b.effects.isDisabled && Math.random() > f / (f + h)) {
     return 0;
   }
@@ -600,7 +600,7 @@ export function calculateSpellDamage(a, b) {
   var c = a.stats,
     d = statValue(c.damage),
     f = statValue(b.stats.armor),
-    c = c.lm;
+    c = c.critChance;
   if (0 < c && Math.random() < c / 100) {
     return showFloatingText(game.floatingText, a, "暴击!", "#FFFF00"), d;
   }
@@ -609,7 +609,7 @@ export function calculateSpellDamage(a, b) {
   return 0 >= d ? 0 : d;
 }
 export function createChainAction(a) {
-  var b = a.Ir(),
+  var b = a.getChainCount(),
     c = a.chainCount;
   if (b >= c) {
     return null;
@@ -646,7 +646,7 @@ export function createChainAction(a) {
   return h;
 }
 export function createReturningAction(a) {
-  var b = a.Ir(),
+  var b = a.getChainCount(),
     c = a.chainCount,
     d;
   if (b === c) {
@@ -713,7 +713,7 @@ export function initializeCombatActions() {
   CombatAction.prototype.setTargetCharacter = function (a) {
     this.targetCharacter = a;
   };
-  CombatAction.prototype.Ir = function () {
+  CombatAction.prototype.getChainCount = function () {
     return this.Ys;
   };
   CombatQueue.prototype.findTreasureSpell = function (a) {

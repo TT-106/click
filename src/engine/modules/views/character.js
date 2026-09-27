@@ -486,9 +486,9 @@ export function initializeViewsCharacter() {
       p = a.stunCount,
       s = a.damageGiven,
       u = a.damageReceived,
-      y = a.wo,
+      y = a.damageResistance,
       A = a.spellCostReduction,
-      C = a.lm,
+      C = a.critChance,
       v = 1 + a.extraAttackCount,
       a = 0 < a.extraAttackCount ? a.extraAttackChance : 0;
     if (this.cachedLevel !== b) {
