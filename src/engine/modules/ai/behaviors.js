@@ -47,7 +47,7 @@ export function RangedAttackBehavior(a, b, c) {
   this.actionRange = b;
   this.fleeDirection = new Vector2();
   this.kiteVector = new Vector2();
-  this.co = this.ax = 0;
+  this.consecutiveAttackTurns = this.ax = 0;
 }
 export function MeleeAttackBehavior(a, b, c, d) {
   this.priorityWeight = b;
@@ -75,7 +75,7 @@ export function LootItemBehavior(a) {
   this.actionRange = 10;
 }
 export function LootScrollBehavior(a) {
-  this.on = null;
+  this.learnedSpell = null;
   this.priorityWeight = a;
   this.actionRange = 10;
 }
@@ -89,18 +89,18 @@ export function TargetSpellBehavior(a, b) {
   this.actionRange = a;
 }
 export function HealBehavior(a, b) {
-  this.fm = null;
+  this.learnedSpell = null;
   this.priorityWeight = b;
   this.actionRange = a;
 }
 export function ApplyEffectBehavior(a, b, c) {
-  this.gm = null;
+  this.learnedSpell = null;
   this.statusEffectTypeId = c;
   this.priorityWeight = b;
   this.actionRange = a;
 }
 export function AreaDamageBehavior(a, b) {
-  this.Zl = null;
+  this.learnedSpell = null;
   this.priorityWeight = b;
   this.actionRange = a;
 }
@@ -148,7 +148,7 @@ export function hasPendingLoot() {
   return 0 < game.goldDrops.drops.length || 0 < game.itemDrops.drops.length || 0 < game.scrollDrops.drops.length;
 }
 export function LootPotionBehavior(a) {
-  this.pm = null;
+  this.learnedSpell = null;
   this.priorityWeight = a;
   this.Yt = true;
   this.actionRange = 10;
@@ -456,15 +456,15 @@ export function initializeAiBehaviors() {
     return this.priorityWeight;
   };
   RangedAttackBehavior.prototype.resetBehaviorState = function () {
-    this.co = this.ax = 0;
+    this.consecutiveAttackTurns = this.ax = 0;
     this.targetCharacter = null;
   };
   RangedAttackBehavior.prototype.notifySpellLearned = function () {};
   RangedAttackBehavior.prototype.execute = function (a) {
     if (this.ax == game.state.turnNumber - 1) {
-      this.co++;
+      this.consecutiveAttackTurns++;
     } else {
-      this.co = 0;
+      this.consecutiveAttackTurns = 0;
     }
     if (this.targetCharacter && !(this.targetCharacter.isDead || this.targetCharacter.effects.isDisabled || this.targetCharacter.effects.isConverted) && (/** @type {MovingBehavior} */ (/** @type {unknown} */ (this))).repositionInsideRoom(a)) {
       this.ax = game.state.turnNumber;
@@ -536,7 +536,7 @@ export function initializeAiBehaviors() {
   };
   RangedAttackBehavior.prototype.getBehaviorScore = function (a) {
     this.targetCharacter = findNearestVisibleOpponent(a);
-    return this.targetCharacter ? 2 < this.co ? this.co = 0 : a.position.levelPosition.distanceTo(this.targetCharacter.position.levelPosition) > this.CA ? 0 : this.priorityWeight : 0;
+    return this.targetCharacter ? 2 < this.consecutiveAttackTurns ? this.consecutiveAttackTurns = 0 : a.position.levelPosition.distanceTo(this.targetCharacter.position.levelPosition) > this.CA ? 0 : this.priorityWeight : 0;
   };
   RangedAttackBehavior.prototype.getPriority = function () {
     return this.priorityWeight;
@@ -698,11 +698,11 @@ export function initializeAiBehaviors() {
   };
   LootScrollBehavior.prototype = new ExploreDungeonBehavior();
   LootScrollBehavior.prototype.resetBehaviorState = function () {
-    this.on = null;
+    this.learnedSpell = null;
   };
   LootScrollBehavior.prototype.notifySpellLearned = function (a) {
-    if (!(this.on || 12 !== a.statusEffectTypeId)) {
-      this.on = a;
+    if (!(this.learnedSpell || 12 !== a.statusEffectTypeId)) {
+      this.learnedSpell = a;
     }
   };
   LootScrollBehavior.prototype.performOnArrival = function (a) {
@@ -735,13 +735,13 @@ export function initializeAiBehaviors() {
     showFloatingText(game.floatingText, a, b, "white");
   };
   LootScrollBehavior.prototype.canExecute = function () {
-    return this.on && isSpellReady(this.on);
+    return this.learnedSpell && isSpellReady(this.learnedSpell);
   };
   LootScrollBehavior.prototype.getFinalScore = function () {
     return (/** @type {PrioritizedBehavior} */ (/** @type {unknown} */ (this))).getPriority();
   };
   LootScrollBehavior.prototype.getActionTarget = function () {
-    return this.on;
+    return this.learnedSpell;
   };
   LootScrollBehavior.prototype.selectTarget = function (a) {
     return a.effects.Vs || !hasOpponentsInRoom(a, a.position.room) ? null : a;
@@ -806,18 +806,18 @@ export function initializeAiBehaviors() {
   };
   HealBehavior.prototype = new ExploreDungeonBehavior();
   HealBehavior.prototype.resetBehaviorState = function () {
-    this.fm = null;
+    this.learnedSpell = null;
   };
   HealBehavior.prototype.notifySpellLearned = function (a) {
-    if (!(this.fm || 5 !== a.spellCategoryId)) {
-      this.fm = a;
+    if (!(this.learnedSpell || 5 !== a.spellCategoryId)) {
+      this.learnedSpell = a;
     }
   };
   HealBehavior.prototype.canExecute = function () {
-    return this.fm && isSpellReady(this.fm);
+    return this.learnedSpell && isSpellReady(this.learnedSpell);
   };
   HealBehavior.prototype.getActionTarget = function () {
-    return this.fm;
+    return this.learnedSpell;
   };
   HealBehavior.prototype.getFinalScore = function (a) {
     a = getOpponents(a);
@@ -828,18 +828,18 @@ export function initializeAiBehaviors() {
   };
   ApplyEffectBehavior.prototype = new ExploreDungeonBehavior();
   ApplyEffectBehavior.prototype.resetBehaviorState = function () {
-    this.gm = null;
+    this.learnedSpell = null;
   };
   ApplyEffectBehavior.prototype.notifySpellLearned = function (a) {
-    if (!(this.gm || a.statusEffectTypeId !== this.statusEffectTypeId)) {
-      this.gm = a;
+    if (!(this.learnedSpell || a.statusEffectTypeId !== this.statusEffectTypeId)) {
+      this.learnedSpell = a;
     }
   };
   ApplyEffectBehavior.prototype.canExecute = function () {
-    return this.gm && isSpellReady(this.gm);
+    return this.learnedSpell && isSpellReady(this.learnedSpell);
   };
   ApplyEffectBehavior.prototype.getActionTarget = function () {
-    return this.gm;
+    return this.learnedSpell;
   };
   ApplyEffectBehavior.prototype.getFinalScore = function () {
     return (/** @type {PrioritizedBehavior} */ (/** @type {unknown} */ (this))).getPriority();
@@ -849,18 +849,18 @@ export function initializeAiBehaviors() {
   };
   AreaDamageBehavior.prototype = new ExploreDungeonBehavior();
   AreaDamageBehavior.prototype.resetBehaviorState = function () {
-    this.Zl = null;
+    this.learnedSpell = null;
   };
   AreaDamageBehavior.prototype.notifySpellLearned = function (a) {
-    if (!(this.Zl || 8 !== a.spellCategoryId)) {
-      this.Zl = a;
+    if (!(this.learnedSpell || 8 !== a.spellCategoryId)) {
+      this.learnedSpell = a;
     }
   };
   AreaDamageBehavior.prototype.canExecute = function () {
-    return this.Zl && isSpellReady(this.Zl);
+    return this.learnedSpell && isSpellReady(this.learnedSpell);
   };
   AreaDamageBehavior.prototype.getActionTarget = function () {
-    return this.Zl;
+    return this.learnedSpell;
   };
   AreaDamageBehavior.prototype.getFinalScore = function () {
     return (/** @type {PrioritizedBehavior} */ (/** @type {unknown} */ (this))).getPriority();
@@ -1071,15 +1071,15 @@ export function initializeAiBehaviors() {
   };
   LootPotionBehavior.prototype = new ExploreDungeonBehavior();
   LootPotionBehavior.prototype.resetBehaviorState = function () {
-    this.pm = null;
+    this.learnedSpell = null;
   };
   LootPotionBehavior.prototype.notifySpellLearned = function (a) {
-    if (!(this.pm || 15 !== a.spellCategoryId)) {
-      this.pm = a;
+    if (!(this.learnedSpell || 15 !== a.spellCategoryId)) {
+      this.learnedSpell = a;
     }
   };
   LootPotionBehavior.prototype.canExecute = function () {
-    return this.pm && isSpellReady(this.pm);
+    return this.learnedSpell && isSpellReady(this.learnedSpell);
   };
   LootPotionBehavior.prototype.getFinalScore = function (a) {
     var b = a.position.room;
@@ -1090,7 +1090,7 @@ export function initializeAiBehaviors() {
     return !a || a.opened || a.selected ? 0 : (/** @type {PrioritizedBehavior} */ (/** @type {unknown} */ (this))).getPriority();
   };
   LootPotionBehavior.prototype.getActionTarget = function () {
-    return this.pm;
+    return this.learnedSpell;
   };
   LootPotionBehavior.prototype.selectTarget = function (a) {
     return a;

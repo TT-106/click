@@ -142,98 +142,6 @@
     ]
   },
   {
-    "name": "on",
-    "reads": 4,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:78",
-        "code": "this.on"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:701",
-        "code": "this.on"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:704",
-        "code": "this.on"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js"
-    ]
-  },
-  {
-    "name": "fm",
-    "reads": 4,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:92",
-        "code": "this.fm"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:809",
-        "code": "this.fm"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:812",
-        "code": "this.fm"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js"
-    ]
-  },
-  {
-    "name": "gm",
-    "reads": 4,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:97",
-        "code": "this.gm"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:831",
-        "code": "this.gm"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:834",
-        "code": "this.gm"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js"
-    ]
-  },
-  {
-    "name": "Zl",
-    "reads": 4,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:103",
-        "code": "this.Zl"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:852",
-        "code": "this.Zl"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:855",
-        "code": "this.Zl"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js"
-    ]
-  },
-  {
     "name": "In",
     "reads": 4,
     "writes": 3,
@@ -344,29 +252,6 @@
       {
         "loc": "src\\engine\\modules\\ai\\behaviors.js:1056",
         "code": "this.Wm"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js"
-    ]
-  },
-  {
-    "name": "pm",
-    "reads": 4,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:151",
-        "code": "this.pm"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1074",
-        "code": "this.pm"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:1077",
-        "code": "this.pm"
       }
     ],
     "fileCount": 1,
@@ -1853,29 +1738,6 @@
     "files": [
       "src\\engine\\modules\\ai\\behaviors.js",
       "src\\engine\\modules\\simulation\\characters.js"
-    ]
-  },
-  {
-    "name": "co",
-    "reads": 1,
-    "writes": 5,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:50",
-        "code": "this.co"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:459",
-        "code": "this.co"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:465",
-        "code": "this.co"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js"
     ]
   },
   {
