@@ -1,0 +1,13 @@
+[
+  { "old": "Ix", "new": "progressBarCell", "files": ["src/engine/modules/views/dungeons.js"], "expect": "auto" },
+  { "old": "Gu", "new": "cachedCastleName", "files": ["src/engine/modules/views/dungeons.js"], "expect": "auto" },
+  { "old": "Qv", "new": "cachedStatusText", "files": ["src/engine/modules/views/dungeons.js"], "expect": "auto" },
+  { "old": "mw", "new": "cachedFarmProgress", "files": ["src/engine/modules/views/dungeons.js"], "expect": "auto" },
+  { "old": "pu", "new": "cachedInvasionProgress", "files": ["src/engine/modules/views/dungeons.js"], "expect": "auto" },
+  { "old": "Bt", "new": "showsProgress", "files": ["src/engine/modules/views/dungeons.js"], "expect": "auto" },
+  { "old": "pB", "new": "actionCellId", "files": ["src/engine/modules/views/dungeons.js"], "expect": "auto" },
+  { "old": "Hz", "new": "cachedFarmCount", "files": ["src/engine/modules/views/dungeons.js"], "expect": "auto" },
+  { "old": "Uy", "new": "cachedClearedCount", "files": ["src/engine/modules/views/dungeons.js"], "expect": "auto" },
+  { "old": "aA", "new": "cachedAttackableCount", "files": ["src/engine/modules/views/dungeons.js"], "expect": "auto" },
+  { "old": "nz", "new": "cachedDiscoveredCount", "files": ["src/engine/modules/views/dungeons.js"], "expect": "auto" }
+]

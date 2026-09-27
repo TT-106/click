@@ -67,11 +67,11 @@ export function DungeonRowView(a, b) {
   this.selectedDungeon = this.dungeon = null;
   this.dungeonUpgrade = new PurchaseDungeonUpgrade(this.dungeon);
   this.actionCell = this.descriptionCell = this.labelCell = this.labelCell = this.terrainImage = this.iconCell = null;
-  this.pB = "secureCell_" + b + "_" + this.rowElement.rowIndex;
-  this.upgradeButton = this.progressContainer = this.progressTextElement = this.progressFillElement = this.progressCell = this.Ix = null;
-  this.Gu = this.cachedDungeonName = this.Qv = "";
-  this.mw = this.pu = -1;
-  this.Bt = false;
+  this.actionCellId = "secureCell_" + b + "_" + this.rowElement.rowIndex;
+  this.upgradeButton = this.progressContainer = this.progressTextElement = this.progressFillElement = this.progressCell = this.progressBarCell = null;
+  this.cachedCastleName = this.cachedDungeonName = this.cachedStatusText = "";
+  this.cachedFarmProgress = this.cachedInvasionProgress = -1;
+  this.showsProgress = false;
   this.columnWidth = 260;
   /** @type {{createRowCells: () => void}} */ (/** @type {unknown} */ (this)).createRowCells();
 }
@@ -113,7 +113,7 @@ export function DungeonsView(a) {
   addTab(a, this.infestedTab);
   addTab(a, this.clearedTab);
   addTab(a, this.farmedTab);
-  this.Hz = this.Uy = this.aA = this.nz = -1;
+  this.cachedFarmCount = this.cachedClearedCount = this.cachedAttackableCount = this.cachedDiscoveredCount = -1;
   addChildView(this, new GoldView());
   addChildView(this, a);
   addChildView(this, b);
@@ -185,8 +185,8 @@ export function initializeViewsDungeons() {
     this.dungeon = a;
     /** @type {{setDungeon: (dungeon: unknown) => void}} */ (/** @type {unknown} */ (this.dungeonUpgrade)).setDungeon(this.dungeon);
     this.upgradeButton.attachUpgrade(this.dungeonUpgrade);
-    this.mw = this.pu = -1;
-    this.Gu = this.cachedDungeonName = this.Qv = "";
+    this.cachedFarmProgress = this.cachedInvasionProgress = -1;
+    this.cachedCastleName = this.cachedDungeonName = this.cachedStatusText = "";
     if (b) {
       this.upgradeButton.reset();
     }
@@ -211,11 +211,11 @@ export function initializeViewsDungeons() {
     this.descriptionCell.style.width = "90px";
     this.actionCell = a.insertCell(4);
     this.actionCell.style.width = "200px";
-    this.actionCell.id = this.pB;
-    this.Ix = a.insertCell(5);
-    this.Ix.style.width = this.columnWidth + "px";
-    this.upgradeButton = new UpgradeButtonView(this.pB, this.dungeonUpgrade, this.rowElement.rowIndex, true);
-    this.progressContainer = createElement("div", this.Ix, null, null);
+    this.actionCell.id = this.actionCellId;
+    this.progressBarCell = a.insertCell(5);
+    this.progressBarCell.style.width = this.columnWidth + "px";
+    this.upgradeButton = new UpgradeButtonView(this.actionCellId, this.dungeonUpgrade, this.rowElement.rowIndex, true);
+    this.progressContainer = createElement("div", this.progressBarCell, null, null);
     this.progressContainer.style.position = "relative";
     this.progressContainer.style.border = "1px solid #2c2c50";
     this.progressContainer.style.height = "15px";
@@ -235,7 +235,7 @@ export function initializeViewsDungeons() {
     this.progressTextElement.style.height = "15px";
     this.progressTextElement.style.width = "100%";
     this.progressTextElement.style.zIndex = "10";
-    this.Bt = true;
+    this.showsProgress = true;
   };
   DungeonRowView.prototype.render = function () {
     if (this.dungeon) {
@@ -263,16 +263,16 @@ export function initializeViewsDungeons() {
         this.cachedDungeonName = c;
         this.labelCell.innerHTML = c;
       }
-      if (this.Gu !== d) {
-        this.Gu = d;
+      if (this.cachedCastleName !== d) {
+        this.cachedCastleName = d;
         this.labelCell.innerHTML = d;
       }
-      if (this.Qv !== g) {
-        this.Qv = g;
+      if (this.cachedStatusText !== g) {
+        this.cachedStatusText = g;
         this.descriptionCell.innerHTML = g;
       }
-      if (this.Bt !== a) {
-        if (this.Bt = a) {
+      if (this.showsProgress !== a) {
+        if (this.showsProgress = a) {
           showElement(this.progressContainer);
         } else {
           hideElement(this.progressContainer);
@@ -280,16 +280,16 @@ export function initializeViewsDungeons() {
       }
       if (a) {
         if (b) {
-          if (this.pu !== h) {
-            this.pu = h;
+          if (this.cachedInvasionProgress !== h) {
+            this.cachedInvasionProgress = h;
             b = h / 100 * this.columnWidth | 0;
             this.progressFillElement.style.width = b + "px";
             this.progressFillElement.style.backgroundColor = "#F00";
             this.progressTextElement.innerHTML = "地牢再次受到侵袭 " + h + "%";
           }
         } else {
-          if (this.mw !== l) {
-            this.mw = l;
+          if (this.cachedFarmProgress !== l) {
+            this.cachedFarmProgress = l;
             b = l / 100 * this.columnWidth | 0;
             this.progressFillElement.style.width = b + "px";
             this.progressFillElement.style.backgroundColor = "#080";
@@ -378,20 +378,20 @@ export function initializeViewsDungeons() {
       b = game.dungeons.attackable.length,
       c = game.dungeons.cleared.length,
       d = game.dungeons.farms.length;
-    if (this.nz !== a) {
-      this.nz = a;
+    if (this.cachedDiscoveredCount !== a) {
+      this.cachedDiscoveredCount = a;
       this.discoveredTab.label = getDungeonTabLabel(0, a);
     }
-    if (this.aA !== b) {
-      this.aA = b;
+    if (this.cachedAttackableCount !== b) {
+      this.cachedAttackableCount = b;
       this.infestedTab.label = getDungeonTabLabel(1, b);
     }
-    if (this.Uy !== c) {
-      this.Uy = c;
+    if (this.cachedClearedCount !== c) {
+      this.cachedClearedCount = c;
       this.clearedTab.label = getDungeonTabLabel(2, c);
     }
-    if (this.Hz !== d) {
-      this.Hz = d;
+    if (this.cachedFarmCount !== d) {
+      this.cachedFarmCount = d;
       this.farmedTab.label = getDungeonTabLabel(3, d);
     }
     updateChildViews(this);
