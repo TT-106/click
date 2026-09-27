@@ -8309,7 +8309,16 @@
     "Rv": "cachedStatusText",
     "Cu": "cachedStatusColor",
     "Kv": "cachedProgressWidth",
-    "fb": "unusedCachedText"
+    "fb": "unusedCachedText",
+    "tn": "statBonusPerUpgrade",
+    "fq": "statBonusPerUpgrade",
+    "rn": "upgradeCost",
+    "lx": "nextLabel",
+    "at": "scrollList",
+    "kx": "scrollsById",
+    "eq": "scrollTargets",
+    "mB": "scrollSpell",
+    "Kw": "restoreMonsterTypes"
   },
   "gameFields": {
     "B": "tileSize",

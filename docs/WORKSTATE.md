@@ -1,9 +1,12 @@
 # WORKSTATE — Clickpocalypse II 语义恢复与现代化工程
 
 > 本文件是长程自治任务的**唯一续跑入口**。上下文压缩或中断后，先读本文件 + `git log --oneline`，再继续。
-> 最后更新：2026-09-27（U66-U104 共 39 批落地后，混淆清单 806 → 134；fields 段 267 → 926；59 场景矩阵全绿）
+> 最后更新：2026-09-27（U66-U105 共 40 批落地后，混淆清单 806 → 124；fields 段 267 → 935；59 场景矩阵全绿）
 
 ## 当前轮次状态（2026-09-27，M12 长尾重命名 + 命名修正）
+
+- U105 卷轴系统与存档适配器（2026-09-27，混淆清单 134 → 124，fields 段 926 → 935）：`combat/scrolls.js` 10 项全部落地，文件清空（+`progression/upgrades.js`、`persistence/game-save.js`、`persistence/entities.js`、`views/expedition.js`、`tests/engine-harness.js`）。Scroll：`tn`+定义键 `fq`→statBonusPerUpgrade（每升一级给 `game.state.scrollCaster` 施加一次的 `{statType,statBonusValue}`，`applyLockedAndUpgradeState` 按 upgradeCount 逐次施加、`ScrollUpgrade.purchase` 同路径；定义→实例同义复制，与 `baseCapacity` 先例一致）、`rn`→upgradeCost（`getScrollUpgradeCost` 直读，`refreshAvailabilityState` 与金币比较）、`lx`→nextLabel（`getNextScrollLabel`，卷轴升级按钮标题）、`eq`→scrollTargets（构造第二参 `game.scrollTargets`，读 `scrollTargets.recentTargets` 做目标历史）、`mB`→scrollSpell（`spellDefinition ? new Spell(...) : null`，施放时写入 `game.state.scrollCaster.spellToCast`）。ScrollInventory：`at`→scrollList（与 `potionList`/`minionList`/`castleList` 同族；game-save:859 序列化遍历、expedition:638 按钮绑定、harness 重构侧分支）、`kx`→scrollsById（`getScrollById` 直读）。**双主字母 `ts` 手工按属主拆分**（不入全局表）：`Scroll.prototype.ts`→`applyLockedAndUpgradeState(locked, upgradeCount)`（第一参是"目标锁定态"——`this.locked && !locked` 才解锁；开局调用点传 `0 < baseCapacity`，即 baseCapacity 为 0 的休克卷轴起手已解锁）、`StatisticsSaveAdapter.prototype.ts`→`restoreScroll(entry)`（读 DTO 的 count/locked/upgradeCount/scrollId），并把两个方法内的复用形参拆为 `locked/upgradeCount/count/entry`。另 `MonsterSaveAdapter.Kw`→`restoreMonsterTypes`（重建 `monsterTypesByLevelCache` + `maxUnlockedLevel`）。**存档 DTO 键（scrollInventory 的 count/locked/upgradeCount/scrollId）未改。**
+    - **踩坑复用**：harness `castScrollDuringCombat` 的 `game.scrolls.at`（重构侧分支）必须同批改名，原版侧 `window.Game.nh.at` 保留——批处理的全库回扫把它抓出来了（第 2 处残留）。
 
 - U104 城堡视图与区域归属（2026-09-27，混淆清单 144 → 134，fields 段 916 → 926）：`views/castles.js` 10 项全部落地，文件清空（+`world/initialization.js`、`world/regions.js`）。WorldRegion：`io`→regionKey（区域键 "col_row"，初始化写入 `vb[regionKey]`/`castleRegistry[regionKey]`，地图视图 `findCastle(region.regionKey)`）、`cu`→castle（该区域归属的城堡，初始化 `region.castle = castle`，地图格 `region.castle` 取色）。CastleMapView：`ws`→tableElement、`vs`→mapCells（二维格数组）、`Fu`→cachedRevision（与 `game.castles.revision` 比对整体重建）。CastleRowView：`Us`→progressWidth(120)、`Rv`→cachedStatusText、`Cu`→cachedStatusColor、`Kv`→cachedProgressWidth，`fb`→unusedCachedText（**写后不读的历史死字段**，仅在 setCastleRowModel 置空，按"不臆造语义"原则以诚实名保留）。
 

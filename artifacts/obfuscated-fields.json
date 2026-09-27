@@ -1,53 +1,5 @@
 [
   {
-    "name": "tn",
-    "reads": 6,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\scrolls.js:44",
-        "code": "this.tn"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\scrolls.js:229",
-        "code": "this.tn"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\scrolls.js:232",
-        "code": "this.tn"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\combat\\scrolls.js",
-      "src\\engine\\modules\\progression\\upgrades.js"
-    ]
-  },
-  {
-    "name": "rn",
-    "reads": 4,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\scrolls.js:47",
-        "code": "this.rn"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\scrolls.js:238",
-        "code": "this.rn"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:1053",
-        "code": "(/** @type {UpgradeMethods} */ /** @type {unknown} */this).getScroll().rn"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\combat\\scrolls.js",
-      "src\\engine\\modules\\progression\\upgrades.js"
-    ]
-  },
-  {
     "name": "Jm",
     "reads": 3,
     "writes": 4,
@@ -216,29 +168,6 @@
       "src\\engine\\modules\\rendering\\sprites.js",
       "src\\engine\\modules\\views\\expedition.js",
       "src\\engine\\modules\\views\\upgrade-details.js"
-    ]
-  },
-  {
-    "name": "fq",
-    "reads": 1,
-    "writes": 5,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\scrolls.js:44",
-        "code": "a.fq"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\scrolls.js:278",
-        "code": "fq: {\n  statType: 20,\n  statBonusValue: 2\n}"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\scrolls.js:290",
-        "code": "fq: {\n  statType: 23,\n  statBonusValue: 1\n}"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\combat\\scrolls.js"
     ]
   },
   {
@@ -548,56 +477,6 @@
       "src\\engine\\modules\\loot\\items.js",
       "src\\engine\\modules\\persistence\\entities.js",
       "src\\engine\\modules\\simulation\\tick.js"
-    ]
-  },
-  {
-    "name": "at",
-    "reads": 4,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\scrolls.js:198",
-        "code": "this.at"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\scrolls.js:204",
-        "code": "a.at"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\scrolls.js:210",
-        "code": "a.at"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\combat\\scrolls.js",
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\views\\expedition.js"
-    ]
-  },
-  {
-    "name": "ts",
-    "reads": 3,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\scrolls.js:209",
-        "code": "(/** @type {any} */c).ts"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\scrolls.js:223",
-        "code": "Scroll.prototype.ts"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\entities.js:334",
-        "code": "StatisticsSaveAdapter.prototype.ts"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\combat\\scrolls.js",
-      "src\\engine\\modules\\persistence\\entities.js",
-      "src\\engine\\modules\\persistence\\game-save.js"
     ]
   },
   {
@@ -1225,53 +1104,6 @@
     ]
   },
   {
-    "name": "lx",
-    "reads": 1,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\scrolls.js:49",
-        "code": "this.lx"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\scrolls.js:237",
-        "code": "this.lx"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:1050",
-        "code": "(/** @type {UpgradeMethods} */ /** @type {unknown} */this).getScroll().lx"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\combat\\scrolls.js",
-      "src\\engine\\modules\\progression\\upgrades.js"
-    ]
-  },
-  {
-    "name": "kx",
-    "reads": 2,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\scrolls.js:197",
-        "code": "this.kx"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\scrolls.js:203",
-        "code": "a.kx"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\scrolls.js:211",
-        "code": "a.kx"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\combat\\scrolls.js"
-    ]
-  },
-  {
     "name": "Wt",
     "reads": 2,
     "writes": 2,
@@ -1868,52 +1700,6 @@
     "files": [
       "src\\engine\\modules\\combat\\actions.js",
       "src\\engine\\modules\\rendering\\sprites.js"
-    ]
-  },
-  {
-    "name": "eq",
-    "reads": 2,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\scrolls.js:36",
-        "code": "this.eq"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\scrolls.js:124",
-        "code": "a.eq"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\scrolls.js:142",
-        "code": "a.eq"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\combat\\scrolls.js"
-    ]
-  },
-  {
-    "name": "mB",
-    "reads": 2,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\scrolls.js:43",
-        "code": "this.mB"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\scrolls.js:152",
-        "code": "a.mB"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\scrolls.js:153",
-        "code": "a.mB"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\combat\\scrolls.js"
     ]
   },
   {
@@ -2611,26 +2397,6 @@
     "fileCount": 1,
     "files": [
       "src\\engine\\modules\\loot\\items.js"
-    ]
-  },
-  {
-    "name": "Kw",
-    "reads": 1,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\persistence\\entities.js:322",
-        "code": "MonsterSaveAdapter.prototype.Kw"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:542",
-        "code": "a.monsterAdapter.Kw"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\persistence\\entities.js",
-      "src\\engine\\modules\\persistence\\game-save.js"
     ]
   },
   {
