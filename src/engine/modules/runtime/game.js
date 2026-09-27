@@ -71,11 +71,11 @@ export function initializeRuntimeGame() {
       this.castleList = [];
       this.attackableCastles = [];
       this.scheduledCastles = [];
-      this.bm = {};
+      this.castleRegistry = {};
       this.Ny = "L2_Terrain087.PNG";
       this.ju = {};
       this.nextRequiredMonsterLevel = 1;
-      this.cm = 0;
+      this.revision = 0;
       this.GE = function (a, b) {
         return a.requiredMonsterLevel < b.requiredMonsterLevel ? -1 : 1;
       };
@@ -95,7 +95,7 @@ export function initializeRuntimeGame() {
     monsterCatalog: new function () {
       this.n = [];
       this.maxUnlockedLevel = this.minUnlockedLevel = 1;
-      this.en = {};
+      this.monsterTypesByLevelCache = {};
       this.HE = function (a, b) {
         var c = a.getName(),
           d = b.getName();
@@ -203,7 +203,7 @@ export function initializeRuntimeGame() {
     },
     initializeWorld: function () {
       var a = game.monsterCatalog;
-      a.en = {};
+      a.monsterTypesByLevelCache = {};
       a.minUnlockedLevel = 1;
       a.maxUnlockedLevel = 1;
       a.n.length = 0;
@@ -411,7 +411,7 @@ export function initializeRuntimeGame() {
       b = game.monsterCatalog;
       b.minUnlockedLevel = 1;
       b.maxUnlockedLevel = 1;
-      b.en = {};
+      b.monsterTypesByLevelCache = {};
       if (a) {
         game.state.victoryCount = 0;
       }

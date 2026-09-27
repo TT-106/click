@@ -56,7 +56,7 @@ export function initializeViewsCastles() {
       /** @type {{createDomElements: () => void}} */ (/** @type {unknown} */ (this)).createDomElements();
     }
     var a;
-    a = game.castles.cm;
+    a = game.castles.revision;
     if (this.Fu != a) {
       this.Fu = a;
       a = game.regions;

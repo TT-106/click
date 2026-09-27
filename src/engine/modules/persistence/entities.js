@@ -328,7 +328,7 @@ export function initializePersistenceEntities() {
       for (var c = a[b], d = c.level, c = c.monsterTypes, f = [], g = undefined, g = /** @type {any} */ (0); g < c.length; g++) {
         f.push(restoreMonsterType(c[g], d));
       }
-      game.monsterCatalog.en[d + ""] = f;
+      game.monsterCatalog.monsterTypesByLevelCache[d + ""] = f;
     }
   };
   StatisticsSaveAdapter.prototype.ts = function (a) {

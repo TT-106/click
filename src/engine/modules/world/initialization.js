@@ -36,8 +36,8 @@ export function initializeRegionsAndCastles() {
   ha.castleList.length = 0;
   ha.attackableCastles.length = 0;
   ha.scheduledCastles.length = 0;
-  ha.bm = {};
-  ha.cm = 0;
+  ha.castleRegistry = {};
+  ha.revision = 0;
   ha.nextRequiredMonsterLevel = 1;
   var ja = new RegionLayout(),
     Ga = new SeededRandom(11),
@@ -114,7 +114,7 @@ export function initializeRegionsAndCastles() {
   ha.castleList = Bb;
   var Fc, Cb, kb, Ra;
   for (Fc = 0; Fc < ha.castleList.length; Fc++) {
-    for (kb = ha.castleList[Fc], ha.bm[kb.castleId] && console.log("duplicate castle id: " + kb.castleId), ha.bm[kb.castleId] = kb, Ra = kb.regions, Cb = 0; Cb < Ra.length; Cb++) {
+    for (kb = ha.castleList[Fc], ha.castleRegistry[kb.castleId] && console.log("duplicate castle id: " + kb.castleId), ha.castleRegistry[kb.castleId] = kb, Ra = kb.regions, Cb = 0; Cb < Ra.length; Cb++) {
       if (ha.ju[Ra[Cb].io]) {
         console.log("duplicate castle owner: " + Ra[Cb].io);
       }

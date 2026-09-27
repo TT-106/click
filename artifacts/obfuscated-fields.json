@@ -72,32 +72,6 @@
     ]
   },
   {
-    "name": "en",
-    "reads": 4,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\encounters.js:233",
-        "code": "a.en"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\encounters.js:244",
-        "code": "a.en"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\entities.js:331",
-        "code": "game.monsterCatalog.en"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\combat\\encounters.js",
-      "src\\engine\\modules\\persistence\\entities.js",
-      "src\\engine\\modules\\progression\\upgrades.js",
-      "src\\engine\\modules\\runtime\\game.js"
-    ]
-  },
-  {
     "name": "tn",
     "reads": 6,
     "writes": 1,
@@ -263,32 +237,6 @@
     ]
   },
   {
-    "name": "bm",
-    "reads": 5,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:166",
-        "code": "game.castles.bm"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:204",
-        "code": "game.castles.bm"
-      },
-      {
-        "loc": "src\\engine\\modules\\runtime\\game.js:74",
-        "code": "this.bm"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\runtime\\game.js",
-      "src\\engine\\modules\\world\\initialization.js",
-      "src\\engine\\modules\\world\\regions.js"
-    ]
-  },
-  {
     "name": "am",
     "reads": 4,
     "writes": 3,
@@ -332,32 +280,6 @@
     "fileCount": 1,
     "files": [
       "src\\engine\\modules\\rendering\\scene.js"
-    ]
-  },
-  {
-    "name": "cm",
-    "reads": 1,
-    "writes": 6,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\runtime\\game.js:78",
-        "code": "this.cm"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\castles.js:59",
-        "code": "game.castles.cm"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\initialization.js:40",
-        "code": "ha.cm"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\runtime\\game.js",
-      "src\\engine\\modules\\views\\castles.js",
-      "src\\engine\\modules\\world\\initialization.js",
-      "src\\engine\\modules\\world\\regions.js"
     ]
   },
   {

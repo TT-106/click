@@ -153,7 +153,7 @@ export function resetCastles() {
   var a = game.castles;
   a.attackableCastles.length = 0;
   a.scheduledCastles.length = 0;
-  a.cm = 0;
+  a.revision = 0;
   a.nextRequiredMonsterLevel = 1;
   var b;
   for (b = 0; b < a.castleList.length; b++) {
@@ -179,14 +179,14 @@ export function unlockStartingRegion() {
   }
 }
 export function findCastle(a) {
-  return (a = game.castles.bm[a]) ? a : null;
+  return (a = game.castles.castleRegistry[a]) ? a : null;
 }
 export function findCastleByRegion(a) {
   return (a = game.castles.ju[a]) ? a : null;
 }
 export function refreshAttackableCastles(a) {
   var b = game.castles;
-  b.cm++;
+  b.revision++;
   var c = b.attackableCastles.indexOf(a);
   if (canAttackCastle(a)) {
     if (0 > c) {
@@ -201,7 +201,7 @@ export function refreshAttackableCastles(a) {
 }
 export function refreshScheduledCastles(a) {
   var b = game.castles;
-  b.cm++;
+  b.revision++;
   var c = b.scheduledCastles.indexOf(a);
   if (a.attackScheduled) {
     if (0 > c) {
@@ -215,7 +215,7 @@ export function refreshScheduledCastles(a) {
   }
 }
 export function invalidateCastleRevision() {
-  game.castles.cm++;
+  game.castles.revision++;
 }
 export function sortCastles(a, b) {
   if (!(!b || 2 > b.length)) {

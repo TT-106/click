@@ -7899,7 +7899,10 @@
     "Xm": "maxContinuationVictories",
     "nm": "currentContinueCount",
     "qo": "classVictories",
-    "lq": "soloClassVictories"
+    "lq": "soloClassVictories",
+    "en": "monsterTypesByLevelCache",
+    "bm": "castleRegistry",
+    "cm": "revision"
   },
   "gameFields": {
     "B": "tileSize",

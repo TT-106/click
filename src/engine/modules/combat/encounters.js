@@ -230,7 +230,7 @@ export function getMonsterTypesForLevel(a, b) {
     console.log("getMonsterTypesForLevel. monsterLevel (" + b + ") greater than max unlocked level: " + a.maxUnlockedLevel);
   }
   var c = b + "",
-    d = a.en[c];
+    d = a.monsterTypesByLevelCache[c];
   if (!d) {
     for (var generatedTypes = [], f = [], g, h = 0; 20 > generatedTypes.length;) {
       g = a.n[randomInt(a.n.length)];
@@ -241,7 +241,7 @@ export function getMonsterTypesForLevel(a, b) {
       }
     }
     generatedTypes.sort(a.HE);
-    a.en[c] = generatedTypes;
+    a.monsterTypesByLevelCache[c] = generatedTypes;
     d = generatedTypes;
   }
   return d;

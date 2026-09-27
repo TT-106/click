@@ -1,0 +1,38 @@
+[
+  {
+    "_note": "MonsterCatalog.en：按怪物等级字符串缓存的已生成怪物类型列表。证据：getMonsterTypesForLevel 先读 a.en[c] 命中即返回、未命中才生成并写回（combat/encounters.js:233/244）；存档恢复时重建（persistence/entities.js:331）；怪物等级升级/退休时 delete 失效（progression/upgrades.js:717）。",
+    "old": "en",
+    "new": "monsterTypesByLevelCache",
+    "files": [
+      "src/engine/modules/combat/encounters.js",
+      "src/engine/modules/persistence/entities.js",
+      "src/engine/modules/progression/upgrades.js",
+      "src/engine/modules/runtime/game.js"
+    ],
+    "expect": "auto"
+  },
+  {
+    "_note": "CastleRegistry.bm：按 castleId 索引的城堡注册表（findCastle 用它做 O(1) 查找；初始化时逐座注册并查重）。",
+    "old": "bm",
+    "new": "castleRegistry",
+    "files": [
+      "src/engine/modules/persistence/game-save.js",
+      "src/engine/modules/runtime/game.js",
+      "src/engine/modules/world/initialization.js",
+      "src/engine/modules/world/regions.js"
+    ],
+    "expect": "auto"
+  },
+  {
+    "_note": "CastleRegistry.cm：城堡状态版本号。三处 refresh/invalidate（可攻击列表、计划列表、reset）各自 ++，CastleMapView.update 读它做整表重建的变更检测（views/castles.js:59-61）。",
+    "old": "cm",
+    "new": "revision",
+    "files": [
+      "src/engine/modules/runtime/game.js",
+      "src/engine/modules/views/castles.js",
+      "src/engine/modules/world/initialization.js",
+      "src/engine/modules/world/regions.js"
+    ],
+    "expect": "auto"
+  }
+]

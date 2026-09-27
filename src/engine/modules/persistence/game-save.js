@@ -163,7 +163,7 @@ export function restoreGameState(a, b) {
                   ub = qa.attackScheduled,
                   mb = qa.requiredMonsterLevel;
                 if (ta) {
-                  var Ea = game.castles.bm[ta];
+                  var Ea = game.castles.castleRegistry[ta];
                   if (Ea) {
                     Ea.tx(eb ? true : false);
                     Ea.dungeonsConquered = Gb ? true : false;
@@ -201,7 +201,7 @@ export function restoreGameState(a, b) {
           var Ga = d.currentCastle;
           if (Ga) {
             var bb = Ga.castleId,
-              za = game.castles.bm[bb];
+              za = game.castles.castleRegistry[bb];
             if (za) {
               game.currentCastle = za;
             } else {

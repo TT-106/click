@@ -714,7 +714,7 @@ export function initializeProgressionUpgrades() {
             console.log("setMonsterLevelRetired attempt to retire non-min level");
           } else {
             b.minUnlockedLevel++;
-            delete b.en[a + ""];
+            delete b.monsterTypesByLevelCache[a + ""];
           }
         }
       }
