@@ -109,6 +109,21 @@ function walk(dir, out = [], skip = new Set(['node_modules', '.git', 'dist', 'ou
   }
 }
 
+// 7) 类型债务的当前规模（只报告，不失败——它是"债"，不是"违规"；防止数字只存在于某次对话里）
+{
+  const files = walk('src').filter((f) => f.endsWith('.js'));
+  let anyCasts = 0;
+  let unknownLines = 0;
+  for (const f of files) {
+    const text = fs.readFileSync(f, 'utf8');
+    // 必须用精确的 cast 语法：宽松匹配 @type {any} 会把注释里对它的"提及"也算进去
+    anyCasts += (text.match(/\/\*\* @type \{any\} \*\//g) || []).length;
+    // unknown 按**行数**计（与 docs/m10-type-debt.md 的口径一致：grep -rn "\bunknown\b" ... | wc -l）
+    unknownLines += text.split('\n').filter((line) => /\bunknown\b/.test(line)).length;
+  }
+  notes.push(`类型债务（仅报告）：${anyCasts} 处 @type {any}、${unknownLines} 行含 unknown —— 台账 docs/m10-type-debt.md`);
+}
+
 console.log('lint 不变量检查：');
 for (const n of notes) console.log(`  ✓ ${n}`);
 if (problems.length) {

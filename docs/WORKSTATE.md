@@ -17,7 +17,7 @@
 
 - **U128 最终回归扫描 v2（2026-09-27T08:44Z，含 M10 与文档修正后的 HEAD）**：`lint=0 build=0 typecheck=0 check=0 parity=0 scenarios=0 e2e=0 soak=0 perf=0 perf:frames=0` —— **10/10 全绿**，日志在 `output/f-*.log`。同批把 `verify-doc-refs.mjs` 的默认范围从"四份报告"扩到"四份报告 + `docs/**/*.md`"，**立刻抓出 5 条此前漏掉的越界引用**（其中 3 条我在两处报告里曾声明"已修好"但**实际从未写入文件**）并逐条修好；现全量文档 **1,089 条引用 0 越界**。教训已写入 `.workbuddy-ai/memory/2026-09-27.md`：**任何"已修复"的声明都必须有可复跑的检查覆盖到它，否则等于没做**；覆盖面不足的绿灯比红灯更危险。
 
-- **U127 M10 类型债务：配置修正 + 一个可复制的收窄手法（2026-09-27）**。① `tsconfig.json` 补 `"lib": ["ES2022","DOM"]` —— 浏览器项目本就该有（此前 DOM 类型完全缺失，`document`/`HTMLElement` 不可用，是大量 `any` 的诱因之一）；补后 `tsc` 仍 **0 错误**。② `views/results.js` 的 **9 处 `@type {any}` → 1 个交叉类型 typedef**（`OfflineProgressView & { getOfflineProgressCell: (table: HTMLTableElement, label: string, rowIndex: number) => HTMLTableCellElement }`），该文件 `any` 归零；手法与 `views/character.js:424` 的 `EquipAllView & { Wt: ... }` 同源。全库 `@type {any}` **50 → 43**。③ **反向验证过的结论**：`views/base.js` 的 `visible`/`isVisible`/`update` 三处 cast **无法**用 `@property` 或补默认值消掉——前者 tsc 不认，后者会改变对象形状与 `isVisible()` 返回值（已实测：去掉 cast 立即 3 条 TS2339；补默认值属行为变更，按 §39 优先级拒绝）。故这三处**保持原样**。④ 新增 `docs/m10-type-debt.md` 如实台账（43 处 `any` + 141 行 `unknown`，根因是"原型后挂载 + 变量复用"，附继续收窄的配方与"最值得下一步：把 `save-dto.js` 接到 `game-save.js`"）。**不许把"tsc 0 错误"写成"类型完备"。**
+- **U127 M10 类型债务：配置修正 + 一个可复制的收窄手法（2026-09-27）**。① `tsconfig.json` 补 `"lib": ["ES2022","DOM"]` —— 浏览器项目本就该有（此前 DOM 类型完全缺失，`document`/`HTMLElement` 不可用，是大量 `any` 的诱因之一）；补后 `tsc` 仍 **0 错误**。② `views/results.js` 的 **9 处 `@type {any}` → 1 个交叉类型 typedef**（`OfflineProgressView & { getOfflineProgressCell: (table: HTMLTableElement, label: string, rowIndex: number) => HTMLTableCellElement }`），该文件 `any` 归零；手法与 `views/character.js:424` 的 `EquipAllView & { Wt: ... }` 同源。全库 `@type {any}` **50 → 42**（精确统计：`grep -ro "/\*\* @type {any} \*/" src/`；宽松匹配会把注释里的提及也算上，实测差 1）。③ **反向验证过的结论**：`views/base.js` 的 `visible`/`isVisible`/`update` 三处 cast **无法**用 `@property` 或补默认值消掉——前者 tsc 不认，后者会改变对象形状与 `isVisible()` 返回值（已实测：去掉 cast 立即 3 条 TS2339；补默认值属行为变更，按 §39 优先级拒绝）。故这三处**保持原样**。④ 新增 `docs/m10-type-debt.md` 如实台账（42 处 `any` + 142 行 `unknown`，根因是"原型后挂载 + 变量复用"，附继续收窄的配方与"最值得下一步：把 `save-dto.js` 接到 `game-save.js`"）。**不许把"tsc 0 错误"写成"类型完备"。**
 
 - **U126 最终回归扫描（规范 §88，2026-09-27T08:30Z，全部退出码回显）**：`lint=0 build=0 typecheck=0 check=0 parity=0 scenarios=0 e2e=0 soak=0 perf=0 perf:frames=0` —— **10/10 全绿**。日志在 `output/s-*.log`。同批更新 `PERFORMANCE_REPORT.md`：补 2026-09-27 样本（回合推进 1.06x、序列化 1.13x、导入 0.42x、离线结算 1.00x），并如实写出"两次样本的相对快慢会翻转，不能当稳定优势"；soak 内存补记"重构版相对原版约 0.83MB **稳定偏移**（非增长），8h→24h 两端各仅 +0.02MB"。另把 `.workbuddy-ai/` 加入 `.gitignore`（本地记忆不入库，续跑入口仍是本文件）。
 
@@ -392,12 +392,12 @@
 | M0-M3 | ✅ 基线/静态图/运行时恢复/行为 harness 全部完成且实测通过 |
 | M4 High-Confidence Rename | ✅ **完成**：`analyze-fields` 报「混淆属性总数: 0」；`docs/symbol-map.json` 的 fields 段累计 **1,047** 条（起点 267）。符号 99.8% 已命名（余下是 harness 必须调用的原版全局函数名，如 `pB`/`Hq`/`Nx`）。双主字母与全库多义的 `a`/`b` 按规则**不写入** fields 段。 |
 | M5-M9 | ✅ 结构完成（见 MIGRATION_MAP.md） |
-| M10 Type Hardening | 🟡 **PARTIALLY VERIFIED**（不再写"完成"）：`tsc` 0 错误、77/77 引擎模块无 `@ts-nocheck`、0 处 `@ts-ignore`/`eslint-disable`；**但仍有 43 处 `@type {any}` 与 142 行 `unknown` 收窄**，根因是"原型后挂载 + AST 恢复期变量复用"（结构性，非未写完）。台账见 `docs/m10-type-debt.md`。本轮已完成 `tsconfig` 补 `lib:["ES2022","DOM"]` 与 `views/results.js` 的 9 处 cast → 1 个 typedef。 |
+| M10 Type Hardening | 🟡 **PARTIALLY VERIFIED**（不再写"完成"）：`tsc` 0 错误、77/77 引擎模块无 `@ts-nocheck`、0 处 `@ts-ignore`/`eslint-disable`；**但仍有 42 处 `@type {any}` 与 142 行 `unknown` 收窄**，根因是"原型后挂载 + AST 恢复期变量复用"（结构性，非未写完）。台账见 `docs/m10-type-debt.md`。本轮已完成 `tsconfig` 补 `lib:["ES2022","DOM"]` 与 `views/results.js` 的 9 处 cast → 1 个 typedef。 |
 | M11 Performance | ✅ 基线完成：两次样本的比值在 1.0–1.4x 波动且**相对快慢会翻转**（2026-09-27：回合推进 1.06x、序列化 1.13x、导入 0.42x、离线 1.00x），不能当稳定结论；确认无数量级退化，模拟占回合预算 0.03%。优化未开始（也无必要）。 |
 | M12 Legacy Reduction | ✅ **完成**：混淆字段清单 **806 → 0**（U66–U122 共 57 批），工作清单 `artifacts/obfuscated-fields.json` 现为空数组；`npm run lint` 已把它固化为不变量（防回流）。 |
 | M13 Final Regression | ✅ 复跑通过：**10 门禁全绿**（lint/build/typecheck/check/parity/**60 场景**/e2e/soak/perf/perf:frames，退出码逐条回显，日志 `output/v3-*.log`）。U4 三项缺口已关闭。**但**验收矩阵仍为 **44 PASS / 7 PARTIAL / 0 未覆盖**——7 条 PARTIAL 的缺口逐条写在附录 A，**不得读作 PASS**。 |
 
-> **未闭合总账**（避免"文档说完成、实际没完成"）：① 附录 A 的 7 条 PARTIAL；② 15 条"节选/伪码"型公式片段行号不逐字对应；③ M10 的 43 处 `any` / 142 行 `unknown`；④ P4 类（真机帧时间与低端设备、多版本存档迁移样本）需要真机/更多历史存档，本环境无法闭合；⑤ 需产品决策的冲突（是否修原版缺陷、是否 UI redesign）按 §9-P4 **不属于本任务，须先问用户**。
+> **未闭合总账**（避免"文档说完成、实际没完成"）：① 附录 A 的 7 条 PARTIAL；② 15 条"节选/伪码"型公式片段行号不逐字对应；③ M10 的 42 处 `any` / 142 行 `unknown`；④ P4 类（真机帧时间与低端设备、多版本存档迁移样本）需要真机/更多历史存档，本环境无法闭合；⑤ 需产品决策的冲突（是否修原版缺陷、是否 UI redesign）按 §9-P4 **不属于本任务，须先问用户**。
 
 ## 3. 可运行状态与命令（全部实测通过 @ 2026-09-27 的 HEAD；日志 output/v3-*.log）
 

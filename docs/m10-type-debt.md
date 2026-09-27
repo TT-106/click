@@ -9,11 +9,11 @@
 | `tsc` 错误 | **0** | `npm run typecheck` |
 | `src/engine/modules` 下 `@ts-nocheck` | **0**（77 个模块全部参与检查） | `npm run lint`（不变量 3） |
 | tsc 实际加载的引擎模块 | **76 / 77**（经 import 图从 `core/**` + `persistence/**` 传递） | `tsc -p tsconfig.json --listFiles` |
-| `@type {any}` 强制转换 | **43** | `grep -ro "@type {any}" src/ \| wc -l` |
-| JSDoc 里的 `unknown`（含 `unknown` 收窄转换） | 141 行 | `grep -rn "\bunknown\b" src/ --include=*.js \| wc -l` |
+| `@type {any}` 强制转换 | **42** | `grep -ro "/\*\* @type {any} \*/" src/ \| wc -l`（**必须用精确模式**：宽松匹配 `@type {any}` 会把本文档与源码注释里对它的**提及**也算进去，实测差 1 处——`views/results.js:16` 的说明性注释） |
+| JSDoc 里的 `unknown`（含 `unknown` 收窄转换） | 142 行 | `grep -rn "\bunknown\b" src/ --include=*.js \| wc -l` |
 | `@ts-ignore` / `eslint-disable` | **0** | `npm run lint`（不变量 4） |
 
-**分布（`@type {any}` 前 6 名）**：`views/expedition.js` 7、`simulation/tick.js` 4、`views/party-creation.js` 3、`views/monsters.js` 3、`views/base.js` 3、`characters/party.js` 3。
+**分布（前 6 名）**：`views/expedition.js` 7、`simulation/tick.js` 4、`views/party-creation.js` 3、`views/monsters.js` 3、`views/base.js` 3、`characters/party.js` 3；`views/results.js` 已从 9 降到 **1**（仅剩一个数值表达式的 cast）。
 
 ## 2. 根因（结构性，不是"没写完"）
 
@@ -26,7 +26,7 @@
 - **`tsconfig.json` 补 `"lib": ["ES2022", "DOM"]`**：这是浏览器项目本就该有的配置（此前无 DOM 类型，`document`/`HTMLElement` 一律不可用，也是大量 `any` 的诱因之一）。补齐后 `tsc` 仍 **0 错误**。
 - **`views/results.js` 的 9 处 `@type {any}` → 1 个交叉类型 typedef**：`buildOfflineProgressTable` 的 8 次 `getOfflineProgressCell` 调用改用
   `@typedef {OfflineProgressView & { getOfflineProgressCell: (table: HTMLTableElement, label: string, rowIndex: number) => HTMLTableCellElement }} OfflineProgressViewWithCells`
-  ——既去掉 `any`，也让参数/返回值误用能被 tsc 抓到（与 `views/character.js:424` 的 `EquipAllView & { Wt: ... }` 同一手法）。该文件 `@type {any}` 归零。
+  ——既去掉 `any`，也让参数/返回值误用能被 tsc 抓到（与 `views/character.js:424` 的 `EquipAllView & { Wt: ... }` 同一手法）。该文件 `@type {any}` 从 9 降到 1（剩下的是 `views/results.js:222` 对 `b.characterStunnedCount - this.stunnedCountBaseline` 的数值表达式 cast）。
 
 ## 4. 继续收窄的配方（未做，按需推进）
 
@@ -38,5 +38,5 @@
 ## 5. 结论（如实）
 
 - **VERIFIED**：`tsc` 0 错误；77/77 模块无整文件豁免；无 `@ts-ignore`/`eslint-disable`。
-- **PARTIALLY VERIFIED**：类型**完备性**——仍有 43 处 `any` 与 141 行 `unknown` 收窄，集中在"原型后挂载 + 变量复用"两类结构性问题。
+- **PARTIALLY VERIFIED**：类型**完备性**——仍有 42 处 `any` 与 142 行 `unknown` 收窄，集中在"原型后挂载 + 变量复用"两类结构性问题。
 - **UNRESOLVED**：`persistence/save-dto.js` 是**未被任何 `@type` 引用的类型资产**（119 行纯 JSDoc typedef，无运行时导出）。它目前只作为"存档 DTO schema 的文档化来源"（被 `docs/formulas/items.md:286` 引用），把 `game-save.js` 的序列化/恢复函数接上去可获得真正的 DTO 形状校验——这是 M10 后续最值得做的一步，但会触碰存档路径，必须在差分矩阵保护下逐函数推进。
