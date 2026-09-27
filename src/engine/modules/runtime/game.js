@@ -121,11 +121,11 @@ export function initializeRuntimeGame() {
       this.pool = [];
     }(),
     combatQueue: new CombatQueue(),
-    upgradeRegistry: new function () {
+    spellCaches: new function () {
       this.blastStunSpellCache = null;
     }(),
     floatingText: new FloatingTextLayer(),
-    extensions: new function () {}(),
+    unusedPlaceholder: new function () {}(),
     saves: new function () {
       this.saveKey = "C2_V1_001";
       this.lastSavedAt = nowMilliseconds();

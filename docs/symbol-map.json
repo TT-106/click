@@ -8470,9 +8470,9 @@
     "eq": "scrollTargets",
     "lD": "monsterNames",
     "df": "effects",
-    "RC": "upgradeRegistry",
+    "RC": "spellCaches",
     "pc": "floatingText",
-    "dF": "extensions",
+    "dF": "unusedPlaceholder",
     "pg": "saves",
     "i": "state",
     "Kw": "restoreRuntimeState"

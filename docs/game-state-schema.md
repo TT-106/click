@@ -94,7 +94,7 @@
 | `saves` (129-135) | `saveKey="C2_V1_001"`(:130)、`lastSavedAt`(:131)、**`autoSaveInterval=3E4`（30 秒，:132）**、`statisticsAdapter`/`monsterAdapter`(:133-134) | `saveKey` ✅ 进 DTO 首键（game.js:703→:1007）；`lastSavedAt` ❌（自动保存节拍器，loop.js:87-92）；两个 adapter ❌（无状态恢复器） |
 | `monsterSprites/terrainSprites/itemSprites/animations` (48-51) | SpriteSheet/动画目录，`cl()` 就绪探测（loop.js:219） | ❌ Definition + 资源缓存 |
 | `lifecycle` (55) | `CharacterLifecycle`（simulation/characters.js） | ❌ runtime-only |
-| `pathfinder`(93)/`decorations`(94)/`upgradeRegistry`(124-126)/`extensions`(128) | 空壳/装饰生成器 | ❌ runtime-only |
+| `pathfinder`(93)/`decorations`(94)/`spellCaches`(124-126)/`unusedPlaceholder`(128) | 空壳/装饰生成器 | ❌ runtime-only |
 
 **注意**：`game.saves.saveKey`（game.js:130）与宿主侧 `SAVE_KEY`（services/save-validation.js:3）是**两处独立定义**的同一常量，改存储键必须同步。
 

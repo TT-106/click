@@ -1,0 +1,3 @@
+[
+  { "old": "extensions", "new": "unusedPlaceholder", "expect": 1, "files": ["src/engine/modules/runtime/game.js"] }
+]

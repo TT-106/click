@@ -1,0 +1,3 @@
+[
+  { "old": "upgradeRegistry", "new": "spellCaches", "expect": 2, "files": ["src/engine/modules/runtime/game.js", "src/engine/modules/simulation/tick.js"] }
+]

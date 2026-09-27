@@ -1,11 +1,17 @@
 # WORKSTATE — Clickpocalypse II 语义恢复与现代化工程
 
 > 本文件是长程自治任务的**唯一续跑入口**。上下文压缩或中断后，先读本文件 + `git log --oneline`，再继续。
-> 最后更新：2026-09-27（U66-U120 共 55 批落地后，**混淆属性清单归零 0**；fields 段 267 → 1047；59 场景矩阵全绿；六门禁退出码逐条回显验证）
+> 最后更新：2026-09-27（U66-U122 共 57 批落地后，**混淆属性清单归零 0**；fields 段 267 → 1047；59 场景矩阵全绿；六门禁退出码逐条回显验证；P1 回归（soak 8h/24h + perf + perf:frames）全绿；P3 清除 38 个隐形文件名垃圾文件）
 
 ## 当前轮次状态（2026-09-27，M12 长尾重命名 + 命名修正 —— 已收官）
 
 - **M12 收官：`analyze-fields.mjs` 报「混淆属性总数: 0」。** 残余的 1,171 → 0 全量清零（U66-U120），下一步主线转为 P1 回归收尾 / P2 报告口径对齐 / P3 Exhaustion Pass（见 §9）。
+
+- **U122 空壳宿主诚实命名：`game.extensions` → `game.unusedPlaceholder`（2026-09-27）**。`runtime/game.js:128` 的 `dF: new function(){}`（archive 原版 c2.js:44339-44340 形态一致）是**原版的空占位对象**：全库（src + archive + c2c.user.js）读点为 0，恢复期被命名为 `extensions`（无证据支撑的推测名）。按本项目"死字段用 `unusedXxx` 诚实命名"的既有先例（`unusedClassFlag`/`unusedCachedText`/`unusedClassValue*`/`unusedSpellFlag`）改为 `unusedPlaceholder`；`symbol-map.json` 的 `gameFields.dF` 与 `docs/game-state-schema.md` 同步。**保留对象本身**（不删字段——删会改变 `game` 的形状，而外部 userscript 契约要求尽量不动）。
+
+- **U121 命名准确性复核：`game.upgradeRegistry` → `game.spellCaches`（2026-09-27）**。P2 列出的"宿主名疑似误名"已确认并修正：该匿名子对象（`runtime/game.js:124`）**唯一成员**是 `blastStunSpellCache`（`tick.js:346-350` 惰性 `new Spell(blastStunSpell)` 供火球溅射二段动作复用），与升级注册表无关，故更名 `spellCaches`。同步更新 `docs/symbol-map.json` 的 `gameFields.RC`、`docs/formulas/combat.md:904`、`docs/game-state-schema.md:97`、`docs/HANDOFF-PROMPT.md`。改名批：`scripts/mappings/spell-caches-host.json`（2 处，事务校验通过）。
+
+- **P1 回归收尾已完成（2026-09-27，全部实测）**：`test:soak` ✅（8h/24h 完整存档一致；GC 后堆 原版 6.28MB vs 重构 7.11MB，8h→24h 两端各仅 +0.02MB，无泄漏趋势）；`perf` ✅（回合推进 0.072 vs 原版 0.068 ms/回合 = **1.06x**；序列化 0.09/0.08；导入 26.1/62.1 ms；离线 1h 结算两端同为 156ms）；`perf:frames` ✅；六门禁 ✅。**结论：未见数量级退化，M11 保持"有 baseline、无需优化"的既有判断。**
 
 - **P3 Exhaustion Pass 首个战果：清除 38 个"隐形文件名"垃圾文件（2026-09-27）**。仓库里成对存在 `X.js` 与 `X.js\uF00D`（尾随 U+F00D 不可见），后者一律 **99 字节**、内容仅一行 `// @ts-nocheck -- M10 渐进类型化：本文件 JSDoc 覆盖后摘除（见 docs/WORKSTATE.md）`，且**已被 git 跟踪**——是历史脚本误写残渣。因为名字尾随不可见字符，`/\.(js|mjs)$/`（`check.mjs`）、`endsWith('.js')`（`analyze-fields.mjs`）、人工 `ls` 全部看不见它们，这正是"审计报告称 38 个垃圾文件、随后实测为 0"这一矛盾的根因（两次检查口径不同）。工具：`scripts/find-invisible-name-files.mjs`（盘点，含 U+E000–U+F8FF 私用区与控制/零宽字符）与 `scripts/remove-invisible-name-files.mjs`（三条安全断言：≤200B、内容含 `@ts-nocheck`、存在同名正常文件；任一不符即整批中止，用 `fs.unlinkSync` 避免把隐形路径交给 git CLI）。**验证**：删除后六门禁全绿；`analyze-fields` 仍为 0；`typecheck` 仍 0 错误（说明真实模块本就**没有** `@ts-nocheck`，handoff 里"已清零"的说法是对的，之前的"37 个文件带豁免"是这 38 个垃圾文件造成的误判）。
 

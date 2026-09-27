@@ -291,7 +291,7 @@ export function advanceSimulation(a) {
             var mc = cb.actionDefinition;
             if (mc && 8 == mc.spellCategoryId) {
               var vb = cb,
-                Sb = game.upgradeRegistry,
+                Sb = game.spellCaches,
                 Ma = vb.targetCharacter,
                 zb = vb.attacker,
                 Hb = floorNumber((zb.stats.areaRadiusBonus + 1) * game.tileSize),

@@ -901,7 +901,7 @@ export function applySkillTreeBonuses(a, b) {
 
 1. 主目标 `Ma` 只吃**击退**（`applySeparationForce`，`movement.js:45-63`），不吃这轮的溅射伤害动作——它的伤害由原始 cat-8 动作自己带（`character.js:668-670` 用 `statValue(damage)` 直填 `remainingDamage`）。
 2. 每个其它目标的溅射伤害是 `Math.max(1, calculateAttackDamage(zb, Ma))` —— **对 `Ma`（主目标）算伤害、对 `qb` 结算**。所以溅射量取决于主目标的护甲/DR/是否被瘫痪，与实际受害者无关；`Math.max(1, …)` 使溅射**永远不会 0**（`Rd = false` 也写死）。
-3. `Qa` 就是 `game.upgradeRegistry`（`tick.js:294`），`Wq` 是其上的**全局唯一缓存 Spell 实例** → 全场共享一个 `Blast Stun` 对象。
+3. `Qa` 就是 `game.spellCaches`（`tick.js:294`，宿主原名 `game.upgradeRegistry`，因其唯一成员是法术缓存而于 2026-09-27 更名），`Wq` 是其上的**全局唯一缓存 Spell 实例** → 全场共享一个 `Blast Stun` 对象。
 4. `[疑似遗留怪癖]` **第一次**触发时 `Tb.actionDefinition` 被赋成当时的 `null`，之后才创建 `Wq`（赋值在前、懒初始化在后，逐字与原版一致，`c2.js:30003-30005`）。第一次火球溅射的眩晕动作因此是空定义，走到 `advanceCombatAction` 的 `else` 支（`actions.js:110-113`）且 `remainingDamage = 0` → 什么也不发生；从第二次起才真的晕。
 5. 击退位移：`movement.js:55-61` `multiplyVector(a.Gd, d * (1 - b / d))` → 距主目标越远推力越小；执行在 `tick.js:244-261`，速度 `Da.Jw * a * 3`（随从地牢移速 ×3，`3` 未命名）。
 

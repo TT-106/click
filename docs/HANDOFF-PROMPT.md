@@ -160,7 +160,7 @@ npm run build     >output/g6.log 2>&1; echo "BUILD=$?"
 `test:soak`（8h/24h）与 `perf`/`perf:frames` 在 U105–U112 之后**还没重跑**；六门禁每批都跑了。收尾时按顺序全跑一遍并如实记录任何红。若出现分叉，先判"谁分叉"（原版还是重构版），不要默认改重构版——见 `unresolved.md` 的方法论。
 
 ### P2 — 验收矩阵与报告的持续对齐（防"文档与代码矛盾"）
-`REFACTOR_REPORT.md` 附录 A 51 行目前全 PASS；**每行证据必须仍可回源**（场景名还在 `scripts/test-scenarios.mjs` 里、file:line 还指得对）。改名批会移动行号，收尾时抽查若干行的 file:line。已知的口径弱点（**不得写成 PASS**）：法术 16 类中只有 cat=2 的三种状态与 cat=17 有专属可观测量；渲染等价只在两条 frames 场景、两种视口下比指纹；soak 是加速等价回合，未测真机帧时间与低端设备；`upgradeRegistry` 这个宿主名可能本身是误名（它唯一成员是 `blastStunSpellCache`），P0 期间顺手复核。
+`REFACTOR_REPORT.md` 附录 A 51 行目前全 PASS；**每行证据必须仍可回源**（场景名还在 `scripts/test-scenarios.mjs` 里、file:line 还指得对）。改名批会移动行号，收尾时抽查若干行的 file:line。已知的口径弱点（**不得写成 PASS**）：法术 16 类中只有 cat=2 的三种状态与 cat=17 有专属可观测量；渲染等价只在两条 frames 场景、两种视口下比指纹；soak 是加速等价回合，未测真机帧时间与低端设备；~~`upgradeRegistry` 这个宿主名可能本身是误名~~ **已复核并修正（2026-09-27）**：该宿主唯一成员是 `blastStunSpellCache`，已更名为 `game.spellCaches`（`runtime/game.js` + `tick.js` + `gameFields.RC` + 三处文档同步）。
 
 ### P3 — Exhaustion Pass（规范 §87）
 `TODO|FIXME|HACK|unknown|@ts-ignore|eslint-disable|console.log` + 未使用文件/重复实现/临时 adapter/注释掉的旧实现，逐条判定"合理保留 / 必须修 / 记录风险"。上一版结论在 `docs/m13-exhaustion-audit.md`，需按当前 HEAD 复跑。

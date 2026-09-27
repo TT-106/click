@@ -14,3 +14,31 @@
 | 重复实现/临时 adapter | `src/engine/adapter.js` 是产品边界；`internal-api.js` 接入引擎，`legacy-panels.js` 挂载原 DOM | 职责不同且仍被调用。相似代码尚未做逐符号语义去重审计，因此不能宣称全库无重复。 |
 
 复核命令：`rg -n -i '\b(TODO|FIXME|HACK)\b|@ts-ignore|eslint-disable' src scripts tests -g '*.js' -g '*.mjs'`；`rg -n '\bunknown\b|\bany\b|console\.log' src -g '*.js'`；`npx tsc --listFilesOnly -p tsconfig.json`。检索结果应结合原版行为和 import 路径判断，不凭命中数直接删改。
+
+---
+
+## 复跑（2026-09-27，M12 收官 + P3 之后）
+
+复核命令：`grep -rnE '\b(TODO|FIXME|HACK)\b' src scripts tests`、`grep -rn "@ts-ignore\|eslint-disable" src scripts tests`、`grep -rn '\bunknown\b|\bany\b|\blegacy\b|console\.log' src --include=*.js`、`node scripts/find-unused-modules.mjs`、`node scripts/find-invisible-name-files.mjs`。
+
+| 检查项 | 本次结果 | 处理 |
+|---|---|---|
+| `TODO`/`FIXME`/`HACK` | **0 命中**（src + scripts + tests） | 无待办标记。 |
+| `@ts-ignore` / `eslint-disable` | **0 命中** | 无静态规则豁免。 |
+| `unknown` | 141 行 | 与上次持平；仍是 JSDoc 原型后挂载方法的窄转换，属类型表达尚不完整。 |
+| `any` | 51 行（其中 `@type {any}` 强制转换 50 处） | 与上次持平；集中在 `views/results.js`(9)/`views/expedition.js`(7)/`simulation/tick.js`(4)。需按属主逐项收窄，禁止批量替换。 |
+| `legacy` | 5 行 | 全是 `src/ui/legacy-panels.js` 与 `src/app.js` 的产品桥接，保留（外部脚本依赖其 DOM 选择器身份）。 |
+| `console.log` | 91 行 | 与上次持平；为从原版恢复的错误/边界诊断（含 `simulation/loop.js` 吞渲染异常的机制）。未经逐条原版对照不改日志行为。 |
+| 注释掉的旧实现 | 引擎模块内以 `//` 开头的行仅 **3 行**，且都是"为什么"型架构注释（`core/math.js:87`、`runtime/index.js:76`、`runtime/storage-port.js:1`） | 无注释残片。 |
+| **文件名隐形字符** | **发现并清除 38 个**（`X.js\uF00D`，99B，仅含一行 `@ts-nocheck` 注释，已被 git 跟踪） | 见下节。这是本次复跑的最大收获。 |
+| 未使用模块 | `src/` 共 93 个 `.js`；无任何 import 指向的只有 3 个：`src/app.js`（入口，由 `index.html` 加载）、`src/services/save-worker.js`（由 `new Worker` 字符串加载）、`src/engine/modules/persistence/save-dto.js`（**纯 JSDoc typedef 的 schema 文件**，无运行时导出，被 `docs/formulas/items.md` 引用） | 三者均非死文件。`save-dto.js` 目前未接入任何 `@type` 标注——**是"可加载但未生效"的类型资产**，登记为 M10 后续可加固项（不删除）。 |
+| 重复实现/临时 adapter | `adapter.js`（产品边界）/`internal-api.js`（引擎接入）/`legacy-panels.js`（原 DOM 挂载）职责不同且均在调用链上 | 未做逐符号语义去重审计，故不宣称"全库无重复"。 |
+
+### 38 个"隐形文件名"垃圾文件（本次清除）
+
+- 形态：`X.js` 与 `X.js\uF00D` 成对存在（尾随 U+F00D，零宽不可见），后者一律 **99 字节**、内容仅一行 `// @ts-nocheck -- M10 渐进类型化：本文件 JSDoc 覆盖后摘除（见 docs/WORKSTATE.md）`，且**已被 git 跟踪**（`git ls-files` 显示为 `"…\357\200\215"`）。
+- 根因：历史脚本想给 `X.js` 加 `@ts-nocheck`，却把内容写进了带尾随隐形字符的**新文件**，随后被 commit。真实模块从未带 `@ts-nocheck`。
+- 为什么长期没被发现：`check.mjs` 的 `/\.(js|mjs)$/`、`analyze-fields.mjs` 的 `endsWith('.js')`、`find -name "*.js"`、人工 `ls` **全部**看不见它们（名字以 U+F00D 结尾）。这同时解释了早期审计"38 个垃圾文件"与后续复核"实测为 0"的矛盾——两次用的匹配口径不同，后者是错的。
+- 工具与安全断言：`scripts/find-invisible-name-files.mjs`（盘点，匹配 U+0000–U+001F / U+007F–U+009F / U+200B–U+200F / U+202A–U+202E / U+2060–U+206F / U+FEFF / U+E000–U+F8FF）；`scripts/remove-invisible-name-files.mjs` 删除前逐条断言"≤200B + 内容含 `@ts-nocheck` + 存在同名正常文件"，任一不符即整批中止，且用 `fs.unlinkSync`（不把隐形路径交给 git CLI）。
+- 验证：删除后六门禁全绿、`analyze-fields` 仍为 0、`typecheck` 仍 0 错误。
+
