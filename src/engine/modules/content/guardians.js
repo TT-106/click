@@ -326,8 +326,8 @@ export function initializeContentGuardians() {
     createBehaviors: function () {
       return [new MeleeAttackBehavior(MELEE_ATTACK_RANGE, 90, 2, false), new IdleBehavior(1)];
     },
-    eu: [],
-    WC: [{
+    innateSpells: [],
+    statBonusList: [{
       statBonusValue: 30,
       statType: 17
     }, {

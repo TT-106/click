@@ -93,10 +93,10 @@ export function initializeRuntimeGame() {
     pathfinder: new function () {}(),
     decorations: new DungeonDecorationGenerator(),
     monsterCatalog: new function () {
-      this.n = [];
+      this.monsterTemplates = [];
       this.maxUnlockedLevel = this.minUnlockedLevel = 1;
       this.monsterTypesByLevelCache = {};
-      this.HE = function (a, b) {
+      this.compareMonsterTypes = function (a, b) {
         var c = a.getName(),
           d = b.getName();
         return c < d ? -1 : c > d ? 1 : 0;
@@ -115,7 +115,7 @@ export function initializeRuntimeGame() {
       this.recentTargets = [];
     }(),
     monsterNames: new function () {
-      this.dn = new MonsterNameGenerator();
+      this.nameGenerator = new MonsterNameGenerator();
     }(),
     effects: new function () {
       this.pool = [];
@@ -206,8 +206,8 @@ export function initializeRuntimeGame() {
       a.monsterTypesByLevelCache = {};
       a.minUnlockedLevel = 1;
       a.maxUnlockedLevel = 1;
-      a.n.length = 0;
-      a.n.push(...monsterDefinitions);
+      a.monsterTemplates.length = 0;
+      a.monsterTemplates.push(...monsterDefinitions);
       initializeItemCatalog();
       var qa = game.goldDrops;
       qa.smallGoldSprite = game.itemSprites.getSprite("CoinsGoldSmall.PNG");

@@ -26,7 +26,7 @@ export function DungeonRoom(a, b, c, d, f) {
   this.tileRow = b;
   this.widthInTiles = c;
   this.heightInTiles = d;
-  this.Yp = f;
+  this.encounterType = f;
   this.ro = [];
   this.doorList = [];
   this.tileGrid = this.theme = this.stairs = null;
@@ -54,8 +54,8 @@ export function revealRoom(a) {
   var wasHidden = !a.discovered;
   a.discovered = true;
   if (wasHidden) {
-    if (0 === a.Yp && treasureRoomModifier.currentValue && 0.25 > Math.random()) {
-      a.Yp = 3;
+    if (0 === a.encounterType && treasureRoomModifier.currentValue && 0.25 > Math.random()) {
+      a.encounterType = 3;
     }
     var c = a.tileColumn,
       d = c + a.widthInTiles,
@@ -187,7 +187,7 @@ export function revealRoom(a) {
         }
       }
     }
-    if (3 === a.Yp) {
+    if (3 === a.encounterType) {
       for (d = a.tileColumn + 1, b = d + a.widthInTiles, h = a.tileRow + 1, p = h + a.heightInTiles, l = d; l < b; l++) {
         for (g = a.tileGrid[l], c = h; c < p; c++) {
           if (0.8 > Math.random()) {

@@ -266,9 +266,10 @@ window.harness = {
     for (let i = 0; i < turns; i++) {
       advance();
       const enc = getEncounter();
-      if (enc && enc.du) {
+      if (enc && (isOriginal ? enc.du : enc.isBossEncounter)) {
         bossEncounterTurns++;
-        if (enc.fw && !bossNames.includes(enc.fw)) bossNames.push(enc.fw);
+        const bossName = isOriginal ? enc.fw : enc.encounterName;
+        if (bossName && !bossNames.includes(bossName)) bossNames.push(bossName);
       }
       const monsters = getMonsters();
       if (Array.isArray(monsters)) {

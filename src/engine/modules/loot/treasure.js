@@ -54,7 +54,7 @@ export function spawnRoomTreasure(a) {
   var b = game.treasure;
     c = 0 < getMonsters().length;
   if (!getRoomTreasure(b, a)) {
-    if (3 != a.Yp) {
+    if (3 != a.encounterType) {
       if (!c && 2 > a.doorList.length) {
         return;
       }

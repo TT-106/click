@@ -472,7 +472,7 @@ export function initializeViewsExpedition() {
           f = statValue(c.armor);
           g = statValue(c.attackRating);
           c = statValue(c.defenceRating);
-          this.comparisonEncounterIndex = game.state.encounter.Ar;
+          this.comparisonEncounterIndex = game.state.encounter.encounterCount;
           colorComparedStats(this.damageTextId, h, f, this.cachedDamage, this.cachedMonsterDamage, this.damageHeaderCell);
           colorComparedStats(this.armorTextId, l, a, this.cachedArmor, this.cachedMonsterArmor, this.potionButton);
           colorComparedStats(this.attackRatingTextId, n, c, this.cachedAttackRating, this.cachedMonsterDefenceRating, this.attackRatingHeaderCell);
@@ -526,7 +526,7 @@ export function initializeViewsExpedition() {
     return !game.state.encounter.noMonstersLeft;
   };
   EncounterNotificationView.prototype.update = function () {
-    var a = game.state.encounter.Ar,
+    var a = game.state.encounter.encounterCount,
       b = getMonsters().length;
     if (this.cachedEncounterIndex !== a || this.cachedMonsterCount != b) {
       if (this.cachedEncounterIndex !== a) {
@@ -535,8 +535,8 @@ export function initializeViewsExpedition() {
       this.cachedEncounterIndex = a;
       this.cachedMonsterCount = b;
       var c;
-      c = game.state.encounter.fw;
-      a = game.state.encounter.du;
+      c = game.state.encounter.encounterName;
+      a = game.state.encounter.isBossEncounter;
       this.notificationElement.innerHTML = a ? "遭遇首领!<br/> " + c : "一场遭遇战!<br/>" + b + "/" + this.encounterTotalMonsters + " " + c;
       if (this.isBossEncounter != a) {
         this.isBossEncounter = a;

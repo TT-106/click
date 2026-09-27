@@ -975,7 +975,7 @@ try {
           const kills = results.map(r => r.bossKills);
           const names = results.map(r => r.bossNames);
           for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {
-            assert.ok(encounters[i] > 0, `${label} 必须真正进入首领遭遇状态（encounter.du === true）`);
+            assert.ok(encounters[i] > 0, `${label} 必须真正进入首领遭遇状态（encounter.isBossEncounter === true）`);
             assert.ok(seens[i] > 0, `${label} 必须真正生成并看到 characterType=4 的首领怪物`);
             assert.ok(kills[i] > 0, `${label} 必须真正击败首领并产出"击杀首领!"浮动文字`);
             assert.ok(names[i].length > 0, `${label} 必须具备生成的首领遭遇名称`);

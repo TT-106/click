@@ -17,31 +17,31 @@ import { bossClass, bossSpriteDefinitions, castleGuardianDefinitions } from "../
 import { applyLevelStats, createBehaviorQueue, createCastleGuardian, initializeCharacterSkills } from "../simulation/characters.js";
 import { applyBonusList } from "./skill-effects.js";
 /** @typedef {Character & { setMonsterType: (monsterType: MonsterType) => void }} TypedMonster */
-/** @typedef {MonsterNameGenerator & { mn: (words: string[]) => string }} NamedMonsterGenerator */
+/** @typedef {MonsterNameGenerator & { pickWord: (words: string[]) => string }} NamedMonsterGenerator */
 export function EncounterState() {
-  this.Ar = 0;
-  this.fw = "";
+  this.encounterCount = 0;
+  this.encounterName = "";
   this.noMonstersLeft = true;
-  this.du = false;
+  this.isBossEncounter = false;
 }
 export function resetEncounter() {
   var a = game.state.encounter;
-  a.Ar = 0;
-  a.fw = "";
+  a.encounterCount = 0;
+  a.encounterName = "";
   a.noMonstersLeft = true;
-  a.du = false;
+  a.isBossEncounter = false;
 }
 export function beginEncounter(a, b) {
   var c = game.state.encounter;
-  c.Ar++;
-  c.fw = a;
+  c.encounterCount++;
+  c.encounterName = a;
   c.noMonstersLeft = false;
-  c.du = b;
+  c.isBossEncounter = b;
 }
 export function populateEncounter(a) {
   var b = game.monsterNames;
   if (game.state.encounter.noMonstersLeft) {
-    var c = a.Yp;
+    var c = a.encounterType;
     if (0 === c) {
       if (bossEncounterModifier.currentValue && 0.2 > Math.random()) {
         spawnDungeonBoss(b, a);
@@ -55,7 +55,7 @@ export function populateEncounter(a) {
             monsterLevel = catalog.minUnlockedLevel + randomInt(1 + catalog.maxUnlockedLevel - catalog.minUnlockedLevel),
             monsterTypes = getMonsterTypesForLevel(catalog, monsterLevel),
             monsterType = monsterTypes[randomInt(monsterTypes.length)],
-            encounterName = b.dn.generateName(monsterType.nE) + " (等级." + monsterType.level + ")";
+            encounterName = b.nameGenerator.generateName(monsterType.pluralName) + " (等级." + monsterType.level + ")";
           for (var monsterIndex = 0; monsterIndex < monsterCount; monsterIndex++) {
             var registry = game.monsters,
               room = a,
@@ -100,7 +100,7 @@ export function populateEncounter(a) {
         var castleLevel = game.monsterCatalog.maxUnlockedLevel;
         castleMonsterCount += extraMonstersModifier.currentValue;
         spawnCastleGuardians(castleMonsterCount, a);
-        a = game.currentCastle ? generateMonsterName(b.dn, game.currentCastle.castleName) : generateMonsterName(b.dn, "Unknown Castle");
+        a = game.currentCastle ? generateMonsterName(b.nameGenerator, game.currentCastle.castleName) : generateMonsterName(b.nameGenerator, "Unknown Castle");
         beginEncounter(a + " (等级." + castleLevel + ")", false);
       } else {
         if (2 === c) {
@@ -113,7 +113,7 @@ export function populateEncounter(a) {
 export function spawnDungeonBoss(a, b) {
   var c = getPartyMaxLevel(game.state.party),
     d;
-  d = game.currentCastle ? generateBossName(a.dn, game.currentCastle.castleName) : game.currentDungeon ? generateBossName(a.dn, game.currentDungeon.dungeonName) : generateBossName(a.dn, "Unknown Castle");
+  d = game.currentCastle ? generateBossName(a.nameGenerator, game.currentCastle.castleName) : game.currentDungeon ? generateBossName(a.nameGenerator, game.currentDungeon.dungeonName) : generateBossName(a.nameGenerator, "Unknown Castle");
   var spriteDefinition = bossSpriteDefinitions[randomInt(bossSpriteDefinitions.length)];
   d = d + " (等级." + c + ")";
   var g = game.monsters,
@@ -126,9 +126,9 @@ export function spawnDungeonBoss(a, b) {
   initializeCharacterSkills(boss, c);
   l.characterLevel = c;
   applyLevelStats(l, c, bossClass.statMultipliers);
-  if (bossClass.eu) {
-    for (c = 0; c < bossClass.eu.length; c++) {
-      learnSpell(boss, new Spell(bossClass.eu[c]));
+  if (bossClass.innateSpells) {
+    for (c = 0; c < bossClass.innateSpells.length; c++) {
+      learnSpell(boss, new Spell(bossClass.innateSpells[c]));
     }
   }
   c = boss.position;
@@ -140,7 +140,7 @@ export function spawnDungeonBoss(a, b) {
     spawnX = left + randomInt(roomRightPixels(b) - game.tileSize - left),
     spawnY = top + randomInt(bottom - top);
   setVector(c.levelPosition, spawnX, spawnY);
-  applyBonusList(boss, bossClass.WC);
+  applyBonusList(boss, bossClass.statBonusList);
   g.activeMonsters.push(boss);
   g = Math.max(globalUpgradeDefinitions.maxMonsters.baseValue, globalUpgradeDefinitions.minMonsters.currentValue);
   var maxCount = Math.max(globalUpgradeDefinitions.maxMonsters.currentValue, g);
@@ -181,8 +181,8 @@ export function getFriendlyTargets(a) {
   return isHostile(a) ? getMonsters() : b.allies;
 }
 export function MonsterType(a, b, c) {
-  this.dE = a;
-  this.nE = endsWithText(a, "y") ? a.substring(0, a.length - 1) + "" : endsWithText(a, "Man") ? a.substring(0, a.length - 3) + "Men" : endsWithText(a, "fish") ? a : a + "";
+  this.baseName = a;
+  this.pluralName = endsWithText(a, "y") ? a.substring(0, a.length - 1) + "" : endsWithText(a, "Man") ? a.substring(0, a.length - 3) + "Men" : endsWithText(a, "fish") ? a : a + "";
   this.spriteName = b;
   this.level = c;
   this.sprite = game.monsterSprites.getSprite(b);
@@ -211,16 +211,16 @@ export function advanceMonsterTypeRank(a) {
   }
 }
 export function MonsterNameGenerator() {
-  this.Pw = "沉溺的;惊人的;腐坏的;敏捷的;好斗的;冷漠的;愤怒的;敌对的;弯曲的;狡猾的;对抗的;可恶的;讨厌的;血腥的;沉思的;勇敢的;无耻的;破碎的;基础的;漂亮的;对抗的;聪明的;诅咒的;谴责的;神秘的;恐怖的;懦弱的;刻薄的;混乱的;天上的;黑暗的;恐惧的;不满的;失宠的;贫穷的;伪装的;喝醉的;悲惨的;卑鄙的;恶心的;不安的;羞辱的;宅男的;著名的;绝望的;可憎的;开除的;兴奋的;进取的;可怕的;冰冻的;火焰的;惊恐的;可怕的;有爱的;恶魔的;友善的;吓人的;皮毛的;堕落的;虚弱的;冻结的;传说的;凶猛的;未来的;狂乱的;疯狂的;可怕的;预感的;强大的;遗忘的;残忍的;阴森的;郁闷的;惊人的;催眠的;可憎的;错误的;肮脏的;无瑕的;沉醉的;难耐的;智能的;无礼的;缺陷的;监禁的;发炎的;讨厌的;不朽的;险恶的;无情的;厚重的;高尚的;噩梦的;有序的;失格的;卑劣的;丑恶的;资深的;浮华的;投机的;冒险的;掠夺的;阶段的;多产的;幽默的;性感的;邪门的;悚然的;特殊的;灭魂的;狂暴的;浮夸的;严肃的;机密的;阴影的;卑鄙的;反感的;矛盾的;威胁的;糟糕的;浑浊的;高耸的;不幸的;离群的;不正的;无益的;倔强的;亵渎的;无道的;缺德的;无德的;不死的;过去的;呆板的".split(";");
-  this.XC = "男爵 首领 教主 首席 独裁者 主管 君主 国王 太保 领主 巨头 帝王 主人 霸王 督导 王子 总统 统治者 元首 苏丹 寡头".split(" ");
-  this.oD = "遗弃的 美丽的 破碎的 燃烧的 反叛的 贫瘠的 痛苦的 血液的 血腥的 困扰的 毁坏的 结晶的 寒冷的 死亡的 深渊的 黑暗的 雾霾的 遥远的 烦扰的 荒凉的 发狂的 潮湿的 矮胖的 恶心的 不安的 发狂的 乌木的 冻结的 孤单的 忘却的 禁止的 畏惧的 金典的 黑暗的 潮湿的 感染的 绝命的 迷失的 残忍的 神秘的 模糊的 幽冥的 美好的 就近的 肮脏 顽皮的 普通的 北方的 苍白的 污染的 粉碎的 阴影的 秘密的 覆盖的 痛苦的 悲伤地 折磨的 虐待的 亵渎的 未知的 无名的 卑鄙的 窃语的".split(" ");
-  this.mE = "学院;沼泽;废矿;洞穴;地穴;城市;山洞;峡谷;黑暗;领域;地牢;次元;区域;梦想;帝国;森林;工厂;墓地;洞穴;地狱;山谷;地狱景象;阴间;王国;国土;图书馆;沼泽;陵墓;太平间;泥泞平原;附近;位面;省;大门;行星;领域;过往;坑;宫殿;河流;河流水域;丛林;沼泽;屠宰场;郊外;冻土;地形;坟墓;寺庙;塔;地底".split(";");
+  this.adjectives = "沉溺的;惊人的;腐坏的;敏捷的;好斗的;冷漠的;愤怒的;敌对的;弯曲的;狡猾的;对抗的;可恶的;讨厌的;血腥的;沉思的;勇敢的;无耻的;破碎的;基础的;漂亮的;对抗的;聪明的;诅咒的;谴责的;神秘的;恐怖的;懦弱的;刻薄的;混乱的;天上的;黑暗的;恐惧的;不满的;失宠的;贫穷的;伪装的;喝醉的;悲惨的;卑鄙的;恶心的;不安的;羞辱的;宅男的;著名的;绝望的;可憎的;开除的;兴奋的;进取的;可怕的;冰冻的;火焰的;惊恐的;可怕的;有爱的;恶魔的;友善的;吓人的;皮毛的;堕落的;虚弱的;冻结的;传说的;凶猛的;未来的;狂乱的;疯狂的;可怕的;预感的;强大的;遗忘的;残忍的;阴森的;郁闷的;惊人的;催眠的;可憎的;错误的;肮脏的;无瑕的;沉醉的;难耐的;智能的;无礼的;缺陷的;监禁的;发炎的;讨厌的;不朽的;险恶的;无情的;厚重的;高尚的;噩梦的;有序的;失格的;卑劣的;丑恶的;资深的;浮华的;投机的;冒险的;掠夺的;阶段的;多产的;幽默的;性感的;邪门的;悚然的;特殊的;灭魂的;狂暴的;浮夸的;严肃的;机密的;阴影的;卑鄙的;反感的;矛盾的;威胁的;糟糕的;浑浊的;高耸的;不幸的;离群的;不正的;无益的;倔强的;亵渎的;无道的;缺德的;无德的;不死的;过去的;呆板的".split(";");
+  this.bossTitles = "男爵 首领 教主 首席 独裁者 主管 君主 国王 太保 领主 巨头 帝王 主人 霸王 督导 王子 总统 统治者 元首 苏丹 寡头".split(" ");
+  this.bossAdjectives = "遗弃的 美丽的 破碎的 燃烧的 反叛的 贫瘠的 痛苦的 血液的 血腥的 困扰的 毁坏的 结晶的 寒冷的 死亡的 深渊的 黑暗的 雾霾的 遥远的 烦扰的 荒凉的 发狂的 潮湿的 矮胖的 恶心的 不安的 发狂的 乌木的 冻结的 孤单的 忘却的 禁止的 畏惧的 金典的 黑暗的 潮湿的 感染的 绝命的 迷失的 残忍的 神秘的 模糊的 幽冥的 美好的 就近的 肮脏 顽皮的 普通的 北方的 苍白的 污染的 粉碎的 阴影的 秘密的 覆盖的 痛苦的 悲伤地 折磨的 虐待的 亵渎的 未知的 无名的 卑鄙的 窃语的".split(" ");
+  this.bossLocations = "学院;沼泽;废矿;洞穴;地穴;城市;山洞;峡谷;黑暗;领域;地牢;次元;区域;梦想;帝国;森林;工厂;墓地;洞穴;地狱;山谷;地狱景象;阴间;王国;国土;图书馆;沼泽;陵墓;太平间;泥泞平原;附近;位面;省;大门;行星;领域;过往;坑;宫殿;河流;河流水域;丛林;沼泽;屠宰场;郊外;冻土;地形;坟墓;寺庙;塔;地底".split(";");
 }
 export function generateMonsterName(a, b) {
-  return b + "之" + a.mn(a.Pw);
+  return b + "之" + a.pickWord(a.adjectives);
 }
 export function generateBossName(a, b) {
-  return b + "之" + a.mn(a.Pw) + "" + a.mn(a.XC);
+  return b + "之" + a.pickWord(a.adjectives) + "" + a.pickWord(a.bossTitles);
 }
 export function getMonsterTypesForLevel(a, b) {
   if (b < a.minUnlockedLevel) {
@@ -233,14 +233,14 @@ export function getMonsterTypesForLevel(a, b) {
     d = a.monsterTypesByLevelCache[c];
   if (!d) {
     for (var generatedTypes = [], f = [], g, h = 0; 20 > generatedTypes.length;) {
-      g = a.n[randomInt(a.n.length)];
+      g = a.monsterTemplates[randomInt(a.monsterTemplates.length)];
       if (!(-1 < f.indexOf(g))) {
         f.push(g);
         generatedTypes.push(new MonsterType(g.name, g.spriteName, b));
         h++;
       }
     }
-    generatedTypes.sort(a.HE);
+    generatedTypes.sort(a.compareMonsterTypes);
     a.monsterTypesByLevelCache[c] = generatedTypes;
     d = generatedTypes;
   }
@@ -249,7 +249,7 @@ export function getMonsterTypesForLevel(a, b) {
 export function MonsterRegistry() {
   this.activeMonsters = [];
   this.defeatedMonsters = [];
-  this.aE = 50;
+  this.maxDefeatedMonsters = 50;
 }
 export function getMonsters() {
   return game.monsters.activeMonsters;
@@ -295,14 +295,14 @@ export function initializeCombatEncounters() {
     this.allies.push(a);
   };
   MonsterType.prototype.getName = function () {
-    return this.dE;
+    return this.baseName;
   };
-  MonsterNameGenerator.prototype.mn = function (a) {
+  MonsterNameGenerator.prototype.pickWord = function (a) {
     return a[randomInt(a.length)];
   };
   MonsterNameGenerator.prototype.generateName = function (a) {
     var nameGenerator = /** @type {NamedMonsterGenerator} */ (/** @type {unknown} */ (this));
-    return 0.5 > Math.random() ? nameGenerator.mn(this.Pw) + "" + a : nameGenerator.mn(this.oD) + "" + nameGenerator.mn(this.mE) + "的" + a;
+    return 0.5 > Math.random() ? nameGenerator.pickWord(this.adjectives) + "" + a : nameGenerator.pickWord(this.bossAdjectives) + "" + nameGenerator.pickWord(this.bossLocations) + "的" + a;
   };
   MonsterRegistry.prototype.clearEncounter = function (a) {
     if (a) {
@@ -310,7 +310,7 @@ export function initializeCombatEncounters() {
       if (-1 < b) {
         this.activeMonsters.splice(b, 1);
       }
-      for (this.defeatedMonsters.push(a); this.defeatedMonsters.length > this.aE;) {
+      for (this.defeatedMonsters.push(a); this.defeatedMonsters.length > this.maxDefeatedMonsters;) {
         this.defeatedMonsters.shift();
       }
     }

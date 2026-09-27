@@ -1,0 +1,19 @@
+[
+  { "old": "Ar", "new": "encounterCount", "files": ["src/engine/modules/combat/encounters.js", "src/engine/modules/views/expedition.js"], "expect": "auto" },
+  { "old": "fw", "new": "encounterName", "files": ["src/engine/modules/combat/encounters.js", "src/engine/modules/views/expedition.js", "tests/engine-harness.js", "scripts/test-scenarios.mjs"], "expect": "auto" },
+  { "old": "du", "new": "isBossEncounter", "files": ["src/engine/modules/combat/encounters.js", "src/engine/modules/views/expedition.js", "tests/engine-harness.js", "scripts/test-scenarios.mjs"], "expect": "auto" },
+  { "old": "Yp", "new": "encounterType", "files": ["src/engine/modules/combat/encounters.js", "src/engine/modules/world/rooms.js", "src/engine/modules/loot/treasure.js"], "expect": "auto" },
+  { "old": "dn", "new": "nameGenerator", "files": ["src/engine/modules/combat/encounters.js", "src/engine/modules/runtime/game.js"], "expect": "auto" },
+  { "old": "n", "new": "monsterTemplates", "files": ["src/engine/modules/combat/encounters.js", "src/engine/modules/runtime/game.js"], "expect": "auto" },
+  { "old": "HE", "new": "compareMonsterTypes", "files": ["src/engine/modules/combat/encounters.js", "src/engine/modules/runtime/game.js"], "expect": "auto" },
+  { "old": "eu", "new": "spellDefinitions", "files": ["src/engine/modules/combat/encounters.js", "src/engine/modules/content/guardians.js"], "expect": "auto" },
+  { "old": "WC", "new": "statBonusList", "files": ["src/engine/modules/combat/encounters.js", "src/engine/modules/content/guardians.js"], "expect": "auto" },
+  { "old": "mn", "new": "pickWord", "files": ["src/engine/modules/combat/encounters.js"], "expect": "auto" },
+  { "old": "Pw", "new": "adjectives", "files": ["src/engine/modules/combat/encounters.js"], "expect": "auto" },
+  { "old": "XC", "new": "bossTitles", "files": ["src/engine/modules/combat/encounters.js"], "expect": "auto" },
+  { "old": "oD", "new": "bossAdjectives", "files": ["src/engine/modules/combat/encounters.js"], "expect": "auto" },
+  { "old": "mE", "new": "bossLocations", "files": ["src/engine/modules/combat/encounters.js"], "expect": "auto" },
+  { "old": "nE", "new": "pluralName", "files": ["src/engine/modules/combat/encounters.js"], "expect": "auto" },
+  { "old": "dE", "new": "baseName", "files": ["src/engine/modules/combat/encounters.js"], "expect": "auto" },
+  { "old": "aE", "new": "maxDefeatedMonsters", "files": ["src/engine/modules/combat/encounters.js"], "expect": "auto" }
+]
