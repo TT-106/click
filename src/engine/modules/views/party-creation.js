@@ -24,7 +24,7 @@ export function PartyCreationView(a) {
   this.rx = null;
   this.tz = this.zr = this.jm = false;
   this.startButton = this.oo = null;
-  this.ql = false;
+  this.victoryOptionsApplied = false;
 }
 export function mountPartyCreation(a) {
   var b = getElement(a.elementId);
@@ -398,7 +398,7 @@ export function initializeViewsPartyCreation() {
   PartyCreationView.prototype.reset = function () {
     this.tabState.enabled = false;
     clearElementById(this.elementId);
-    this.ql = false;
+    this.victoryOptionsApplied = false;
     this.selectedCharacters.length = 0;
     this.cr.length = 0;
     this.validParty = false;
@@ -406,9 +406,9 @@ export function initializeViewsPartyCreation() {
   };
   PartyCreationView.prototype.update = function () {
     if (!(0 < game.state.adventurers.length)) {
-      if (!this.ql) {
+      if (!this.victoryOptionsApplied) {
         mountPartyCreation(this);
-        this.ql = true;
+        this.victoryOptionsApplied = true;
       }
       if (this.jm) {
         this.jm = false;

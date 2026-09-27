@@ -45,7 +45,7 @@ export function RangedAttackBehavior(a, b, c) {
   this.targetCharacter = null;
   this.CA = a;
   this.actionRange = b;
-  this.fn = new Vector2();
+  this.fleeDirection = new Vector2();
   this.kiteVector = new Vector2();
   this.co = this.ax = 0;
 }
@@ -489,7 +489,7 @@ export function initializeAiBehaviors() {
       p,
       s,
       u = 0;
-    setVector(this.fn, 0, 0);
+    setVector(this.fleeDirection, 0, 0);
     setVector(this.kiteVector, 0, 0);
     for (s = 0; s < a.length; s++) {
       n = a[s];
@@ -498,13 +498,13 @@ export function initializeAiBehaviors() {
         n = c.distanceTo(p);
         if (!(n > this.CA)) {
           if (0 === n) {
-            setVector(this.fn, Math.random(), Math.random());
+            setVector(this.fleeDirection, Math.random(), Math.random());
           } else {
-            assignVector(this.fn, c);
-            subtractVector(this.fn, p);
-            multiplyVector(this.fn, 1 / n);
+            assignVector(this.fleeDirection, c);
+            subtractVector(this.fleeDirection, p);
+            multiplyVector(this.fleeDirection, 1 / n);
           }
-          addVector(this.kiteVector, this.fn);
+          addVector(this.kiteVector, this.fleeDirection);
           u++;
         }
       }

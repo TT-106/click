@@ -96,100 +96,6 @@
     ]
   },
   {
-    "name": "ql",
-    "reads": 2,
-    "writes": 6,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\party-creation.js:27",
-        "code": "this.ql"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\party-creation.js:401",
-        "code": "this.ql"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\party-creation.js:409",
-        "code": "this.ql"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\views\\party-creation.js",
-      "src\\engine\\modules\\views\\results.js"
-    ]
-  },
-  {
-    "name": "fl",
-    "reads": 5,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\world\\generation.js:20",
-        "code": "this.fl"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\generation.js:116",
-        "code": "this.fl"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\generation.js:269",
-        "code": "this.fl"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\world\\generation.js",
-      "src\\engine\\modules\\world\\pathfinding.js"
-    ]
-  },
-  {
-    "name": "dl",
-    "reads": 6,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\world\\generation.js:41",
-        "code": "a.dl"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\generation.js:44",
-        "code": "a.dl"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\generation.js:62",
-        "code": "a.dl"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\world\\generation.js"
-    ]
-  },
-  {
-    "name": "fn",
-    "reads": 6,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:48",
-        "code": "this.fn"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:492",
-        "code": "this.fn"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:501",
-        "code": "this.fn"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js"
-    ]
-  },
-  {
     "name": "Hn",
     "reads": 4,
     "writes": 3,
@@ -11757,6 +11663,29 @@
     "fileCount": 1,
     "files": [
       "src\\engine\\modules\\views\\party-creation.js"
+    ]
+  },
+  {
+    "name": "ql",
+    "reads": 1,
+    "writes": 3,
+    "samples": [
+      {
+        "loc": "src\\engine\\modules\\views\\results.js:17",
+        "code": "this.ql"
+      },
+      {
+        "loc": "src\\engine\\modules\\views\\results.js:158",
+        "code": "this.ql"
+      },
+      {
+        "loc": "src\\engine\\modules\\views\\results.js:161",
+        "code": "this.ql"
+      }
+    ],
+    "fileCount": 1,
+    "files": [
+      "src\\engine\\modules\\views\\results.js"
     ]
   },
   {

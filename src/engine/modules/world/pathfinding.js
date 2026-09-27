@@ -5,7 +5,7 @@ import { Vector2, copyVector, setVector } from "../core/math.js";
 import { DungeonDoor, DungeonHallway, EMPTY_TILE, isRoomBorder, roomContainsTile } from "./rooms.js";
 import { game } from "../runtime/game.js";
 export function PathfindingGrid(a, b, c) {
-  this.fl = a;
+  this.widthInTiles = a;
   this.heightInTiles = b;
   this.tileGrid = c;
   this.oB = new PathNodePool();
@@ -40,7 +40,7 @@ export function getPathNode(a, b) {
   return d;
 }
 export function isHallwayWalkable(a, b, c, d, f) {
-  return 0 > b - 1 || 0 > c - 1 || b + 1 >= a.fl || c + 1 >= a.heightInTiles ? false : roomContainsTile(a.fromRoom, b, c) ? !isNearRoomCorner(b, c, a.fromRoom) : roomContainsTile(a.toRoom, b, c) ? !isNearRoomCorner(b, c, a.toRoom) : isRoomBorder(a.fromRoom, b, c) || isRoomBorder(a.toRoom, b, c) ? !d : 0 === f || 2 === f ? a.tileGrid[b - 1][c].floorType === EMPTY_TILE && a.tileGrid[b + 1][c].floorType === EMPTY_TILE : a.tileGrid[b][c - 1].floorType === EMPTY_TILE && a.tileGrid[b][c + 1].floorType === EMPTY_TILE;
+  return 0 > b - 1 || 0 > c - 1 || b + 1 >= a.widthInTiles || c + 1 >= a.heightInTiles ? false : roomContainsTile(a.fromRoom, b, c) ? !isNearRoomCorner(b, c, a.fromRoom) : roomContainsTile(a.toRoom, b, c) ? !isNearRoomCorner(b, c, a.toRoom) : isRoomBorder(a.fromRoom, b, c) || isRoomBorder(a.toRoom, b, c) ? !d : 0 === f || 2 === f ? a.tileGrid[b - 1][c].floorType === EMPTY_TILE && a.tileGrid[b + 1][c].floorType === EMPTY_TILE : a.tileGrid[b][c - 1].floorType === EMPTY_TILE && a.tileGrid[b][c + 1].floorType === EMPTY_TILE;
 }
 export function isNearRoomCorner(a, b, c) {
   var d = c.tileColumn,
