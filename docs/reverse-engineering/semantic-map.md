@@ -292,3 +292,15 @@ RunStatistics 的 `On/Lk/qn/Mj/wi/uk` → `turnCount/doorsOpened/roomsCleared/le
 `views/achievements.js` 的 AchievementListView 与 PointUpgradeListView、`views/character.js` 的 SkillsTabView 都在表格每行第 0/1 列构造 `UpgradeButtonView`，分别 push 到 `Uc/Vc`，随后按数组 reset/render；没有玩法状态或存档参与。原版 `c2.js:27155-27161/28241-28246/28390-28394` 的三处构造—消费链逐项同构。按列位置命名 `firstColumnButtons`/`secondColumnButtons`，两文件各字母 21 处、合计 42 处，列 3/4 的 `Nf/Pn` 留待后续取证。
 
 浏览器 E2E 直接断言角色技能第二列存在，并做故意改成不存在列号的反向验证（如期失败）。起始队伍无冒险点第二列实例，不能把该空列当成回归；这条起初过强的探针已撤回。check/typecheck/parity/42 场景/e2e 全绿；混淆清单 1,173 → 1,171，fields 段 265 → 267。
+
+## 第二十轮落地：信息页统计表 126 字段（2026-09-26）
+
+取证方法：先写 `scripts/analyze-statistics-view.mjs`，从 `views/information.js` 的 `StatisticsView.update()` 里机械提取三类结构化证据并交叉配对——(1) 构造函数的链式初始化（`= -1` 的是数字缓存、`= null` 的是 DOM 单元格，两类各自成链）；(2) `if (this.CACHE != local) { this.CACHE = local; this.CELL.innerHTML = ... }` 的变更检测模式；(3) `fr()` 中 `appendStatisticsRow(this, "标签", …)` 与 `getStatisticCell(row, n)` 的行标签/列号。再把 update() 头部的局部变量声明（`x = a.turnCount` / `y = b.turnCount`，a=runStatistics、b=lifetimeStatistics）映射回统计量名，得到 58 组自动配对；剩余 4 组（武器架/召唤宠物/清理地牢/胜利数）按同一模式人工补齐，共 65 缓存 + 61 单元格。
+
+命名：缓存字段为 `cachedRunXxx` / `cachedLifetimeXxx`（对应"当前"与"总计"两列），单元格为 `runXxxCell` / `lifetimeXxxCell`。两处旧命名实为缓存字段，一并修正：`monsterKillsCell` → `cachedRunMinionKills`（其配对单元格是"宠物杀死/当前"），`stunCountCell` → `runStunnedCountCell`（其配对缓存是 `cachedRunStunnedCount`）。
+
+属主甄别：`scripts/find-field-refs.mjs` 扫描显示只有 `Ek/Fk/Ck/Hk/Tm/Um/vm/Vm` 在 `views/results.js` 出现同名成员，但那是 OfflineProgressView 的离线增量显示（缓存的是"本次离线增量"而非统计量本身），属另一属主，本批未动、也不写入全局 fields 段；`tests/engine-harness.js` 的 `window.Nx`/`window.lB` 是原版全局函数（升级集合访问器与快照函数），与信息页字段无关。
+
+执行：新增 `scripts/rename-fields-batch.mjs`（一次事务处理多字段映射，复用 rename-field.mjs 的行数/缩进/字符串字面量多重集校验，写盘后对全部旧名做 src/tests/scripts 全库回扫）。126 个字段命中数全部符合预期（缓存 4 处 = 构造/reset/比较/赋值，单元格 3 处 = 构造/fr/更新）。
+
+回归：check/typecheck/parity（0/1/99/900）/59 场景/e2e 全绿；混淆清单 806 → 691，fields 段 267 → 383（异主 8 字母与 2 个语义名不写入）。
