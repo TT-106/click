@@ -1,10 +1,13 @@
 # WORKSTATE — Clickpocalypse II 语义恢复与现代化工程
 
 > 本文件是长程自治任务的**唯一续跑入口**。上下文压缩或中断后，先读本文件 + `git log --oneline`，再继续。
-> 最后更新：2026-09-27（U66-U73 八批字段落地后，混淆清单 806 → 558；59 场景矩阵全绿）
+> 最后更新：2026-09-27（U66-U76 十一批字段落地后，混淆清单 806 → 542；59 场景矩阵全绿）
 
-## 当前轮次状态（2026-09-27，M12 长尾重命名：视图六批 + 跨文件两批）
+## 当前轮次状态（2026-09-27，M12 长尾重命名：视图六批 + 跨文件五批）
 
+- U76 商店与楼梯坐标 4 字段（2026-09-27，混淆清单 546 → 542，fields 段 519 → 523）：`Shop.iq/jq`→`worldColumn/worldRow`（创建点由块行列+随机偏移算出瓦片坐标；party 寻路用 `tileToPixelX` 消费；与 `targetDungeon.getWorldColumn()` 分支一致）、`DungeonStairs.tq/uq`→`pixelColumn/pixelRow`（`positionStairs` 中为 `tileSize` 乘积的像素值）。**附带确认**：`WorldMap.getTileAtPixel(a,b)` 实际接收**世界瓦片坐标**（内部以 `/WORLD_BLOCK_COLUMNS` 算块索引），名字是历史误名；因此 `Castle.worldPixelX/Y` 的命名也需复核——两者一并登记待查。
+- U75 城堡与目录 3 字段（2026-09-27，混淆清单 549 → 546，fields 段 516 → 519）：`MonsterCatalog.en`→`monsterTypesByLevelCache`（按等级缓存，命中即返回、等级升级/退休时 delete 失效）、`CastleRegistry.bm`→`castleRegistry`（按 castleId 索引，`findCastle` O(1)）、`CastleRegistry.cm`→`revision`（三处 refresh/invalidate 递增，`CastleMapView.update` 读它做整表重建检测）。
+- U74 胜利统计 9 字段（2026-09-27，混淆清单 558 → 549，fields 段 507 → 516）：命名直接采用 `game-save.js` 序列化端既有 DTO 键——`hn/jn/kn`→partySize1/2/3Victories、`vn`→singleClassVictories、`mm`→currentContinuationVictories、`Xm`→maxContinuationVictories、`nm`→currentContinueCount、`qo`→classVictories、`lq`→soloClassVictories；反序列化端（:363-388）成对同步。**方法**：优先复用 DTO 已有语义键，避免另起新名。
 - U73 跨文件批次 02（2026-09-27，混淆清单 560 → 558，fields 段 505 → 507）：`No`→`experienceReward`（**双证据**：怪物表第 2 列表头「经验」且 render 显示它；击杀时 `addExperience(No * doubleExperienceModifier)`；由 `advanceMonsterTypeRank` 按曲线重算）、`Fo`→`mapSprite`（地牢大地图贴纸，`getDungeonMapSprite` 生成/恢复，列表/详情/入口装饰三处消费——**残留扫描发现 terrain.js:270 入口地块装饰也读它，已纳入同批**）。新增 unresolved **U8**：怪物六条属性曲线与怪物表显示列错位（伤害曲线显示在「生命」列等），登记为待验证，不可据单点推测改名。
 - U72 跨文件批次 01（2026-09-27，混淆清单 562 → 560，fields 段 503 → 505）：`CharacterStats.Am`→`experienceToLevelUp`（升到下一级所需经验：stats 初值 100、game-save 按 experienceCurve 重算、`LevelUpUpgrade.purchase` 从 `party.experiencePoints` 扣除、升级详情显示为 XP）；`electricSpellDefinitions.br`→`chainLightningSpell`（连锁闪电，spellCategoryId=5，targeting/scrolls/guardians/minions 四个消费点同步）。新增 `show-field-uses.mjs`（跨文件字段引用取证，带行号）。
 - U71 expedition.js 其余视图 41 字段（2026-09-27，六门禁全绿，混淆清单 599 → 562，fields 段 465 → 503）：通知/货币/冒险点/卷轴/药水五组视图落地（明细见提交信息）。**同文件异主解除**（手工先行拆分）：`AdventurerSummaryView.selectedPotionSlot`→`comparisonEncounterIndex`（对比遭遇序号）vs `EncounterNotificationView.selectedPotionSlot`→`cachedEncounterIndex`（遭遇序号缓存）；`ScrollButtonCollection.qp`→`buttons`（按钮列表）vs `ScrollButtonView.qp`→`keyBindings`（快捷键绑定）。跨文件异主 `Hw`/`rm`（monsters.js）、`tm`（upgrade-details.js）未动、不入全局表。
