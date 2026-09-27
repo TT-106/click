@@ -5,6 +5,7 @@
 
 ## 当前轮次状态（2026-09-27，M12 长尾重命名 + 命名修正）
 
+- U86 渲染器/效果房间/世界标志（2026-09-27，混淆清单 412 → 406，fields 段 653 → 659）：`VisualEffect.ew`→room（scene.js 按房间瓦片范围画高亮）、GameCanvasView.`gB`→renderer 与两个后端 `uE`/`DD`→depthSortedRenderer/immediateRenderer、`WorldMap.ty`→hasPartyPlaced、`game.state.dz`→fps。
 - U85 地块贴纸/金币贴纸/浮动文字（2026-09-27，混淆清单 419 → 412，fields 段 646 → 653）：`DungeonTile.bt`→cachedBackgroundSprite、`GoldDropRegistry` 三档金币贴纸 `Sz/xw/wD`→smallGoldSprite/mediumGoldSprite/largeGoldSprite、`FloatingText.xt/yt/SE`→screenX/screenY/color。
 - U84 渲染命令与渲染器状态（2026-09-27，混淆清单 430 → 419，fields 段 635 → 646）：RenderCommand 的 `vr/ur/pt/Zq/$q/am`→raiseOffset/sortKey/isSet/screenX/screenY/renderSize；DepthSortedRenderer 的 `FE/ko/Bn`→compareRenderSortKey/scratchVector/commandIndex；ImmediateRenderer.`uB`→command；VisualEffect.`Io`→effectType。
 - U83 掉落坐标与相机偏移（2026-09-27，混淆清单 440 → 430，fields 段 625 → 635）：四类掉落物坐标统一 `Xo/Yo`、`bq/cq`、`mp/np`、`Qp/Rp`→levelPositionX/levelPositionY；相机子瓦片偏移 `zt/At`→viewportOffsetX/viewportOffsetY（loop.js 由中心坐标对 tileSize 取余算出，scene.js/characters.js 等距投影公式消费）。
