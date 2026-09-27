@@ -566,7 +566,7 @@ export function initializeViewsUpgradeDetails() {
     this.previewImage.src = "images/Transparent.gif";
     this.previewImage.style.width = "50px";
     this.previewImage.style.height = "50px";
-    c = game.terrainSprites.getSprite(game.castles.Ny);
+    c = game.terrainSprites.getSprite(game.castles.castleSpriteName);
     this.previewImage.style.background = "url('spritesheet/terrain.png') -" + c.sourceX + "px -" + c.sourceY + "px";
     a = a.insertCell(1);
     a.style.textAlign = "left";

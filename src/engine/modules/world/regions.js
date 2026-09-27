@@ -182,7 +182,7 @@ export function findCastle(a) {
   return (a = game.castles.castleRegistry[a]) ? a : null;
 }
 export function findCastleByRegion(a) {
-  return (a = game.castles.ju[a]) ? a : null;
+  return (a = game.castles.byRegionKey[a]) ? a : null;
 }
 export function refreshAttackableCastles(a) {
   var b = game.castles;
@@ -219,7 +219,7 @@ export function invalidateCastleRevision() {
 }
 export function sortCastles(a, b) {
   if (!(!b || 2 > b.length)) {
-    b.sort(a.GE);
+    b.sort(a.compareCastles);
   }
 }
 export function getDungeonTheme(a) {

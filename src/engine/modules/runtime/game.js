@@ -65,18 +65,18 @@ export function initializeRuntimeGame() {
       this.regionGridOriginColumn = a;
       this.regionGridOriginRow = b;
       this.byKey = {};
-      this.Mr = [];
+      this.regionGrid = [];
     }(),
     castles: new function () {
       this.castleList = [];
       this.attackableCastles = [];
       this.scheduledCastles = [];
       this.castleRegistry = {};
-      this.Ny = "L2_Terrain087.PNG";
-      this.ju = {};
+      this.castleSpriteName = "L2_Terrain087.PNG";
+      this.byRegionKey = {};
       this.nextRequiredMonsterLevel = 1;
       this.revision = 0;
-      this.GE = function (a, b) {
+      this.compareCastles = function (a, b) {
         return a.requiredMonsterLevel < b.requiredMonsterLevel ? -1 : 1;
       };
     }(),
@@ -122,7 +122,7 @@ export function initializeRuntimeGame() {
     }(),
     combatQueue: new CombatQueue(),
     upgradeRegistry: new function () {
-      this.Wq = null;
+      this.blastStunSpellCache = null;
     }(),
     floatingText: new FloatingTextLayer(),
     extensions: new function () {}(),
@@ -165,17 +165,17 @@ export function initializeRuntimeGame() {
       }(),
       achievements: new function () {
         this.achievementList = [];
-        this.Lt = {};
+        this.byId = {};
         this.obtainedList = [];
         this.claimQueue = [];
         var a, b;
         for (a = 0; a < achievementDefinitions.length; a++) {
           b = new Achievement(achievementDefinitions[a]);
           this.achievementList.push(b);
-          if (this.Lt[b.id]) {
+          if (this.byId[b.id]) {
             console.log("Error. Duplicate achievement id: " + b.id);
           }
-          this.Lt[b.id] = b;
+          this.byId[b.id] = b;
         }
       }(),
       runStatistics: new RunStatistics(),
@@ -516,13 +516,13 @@ export function initializeRuntimeGame() {
       game.resetRun(false);
       deleteStoredSave();
       saveProgress(game.saves);
-      game.view.Js();
+      game.view.resetTabs();
     },
     resetGame: function () {
       game.resetRun(true);
       deleteStoredSave();
       saveProgress(game.saves);
-      game.view.Js();
+      game.view.resetTabs();
     }
   };
 }

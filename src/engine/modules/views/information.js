@@ -10,8 +10,8 @@ import { floorNumber, formatAmount } from "../core/math.js";
 export function SaveControlsView() {
   this.elementId = "infoTabSaveLoadContainer";
   this.visible = true;
-  this.SD = "lastSaveDiv";
-  this.tr = -1;
+  this.lastSaveDivElementId = "lastSaveDiv";
+  this.cachedLastSavedAt = -1;
   getElement("saveButton").onclick = function () {
     game.saveNow();
     return false;
@@ -98,21 +98,21 @@ export function InformationView(a) {
 }
 /** StatisticsView.prototype 在初始化里被 new View() 替换，后挂成员对 TS 不可见；用 this 类型标注这几个方法。
  * @typedef {Object} MountedStatisticsViewMethods
- * @property {function(): void} fr 重建统计表 DOM。
- * @property {function(number, number, number): string} Er 拼时、分、秒。
+ * @property {function(): void} buildStatisticsTable 重建统计表 DOM。
+ * @property {function(number, number, number): string} formatHoursMinutesSeconds 拼时、分、秒。
  * @property {function(number): void} createHeaderRow 在表尾插入一行表头。
  * @property {function(HTMLTableRowElement, number): HTMLTableCellElement} getStatisticCell 取指定行的单元格。
  */
 export function StatisticsView() {
   this.elementId = "statisticsContainer";
   this.visible = true;
-  this.st = null;
+  this.tableElement = null;
   this.cachedLifetimeAncientItemsFound = this.cachedRunAncientItemsFound = this.cachedLifetimeHistoricItemsFound = this.cachedRunHistoricItemsFound = this.cachedLifetimeRareItemsFound = this.cachedRunRareItemsFound = this.cachedLifetimeUncommonItemsFound = this.cachedRunUncommonItemsFound = this.cachedLifetimeItemsFound = this.cachedRunItemsFound = this.cachedLifetimeItemsSold = this.cachedRunItemsSold = this.cachedLifetimeScrollsUsed = this.cachedRunScrollsUsed = this.cachedLifetimePotionsUsed = this.cachedRunPotionsUsed = this.cachedLifetimeSpellCasts = this.cachedRunSpellCasts = this.cachedLifetimeRangedAttacks = this.cachedRunRangedAttacks = this.cachedLifetimeMeleeAttacks = this.cachedRunMeleeAttacks = this.cachedLifetimeStunnedCount = this.cachedRunStunnedCount = this.cachedLifetimeFarmedKills = this.cachedRunFarmedKills = this.cachedLifetimeMinionKills = this.cachedRunMinionKills = this.cachedLifetimeScrollKills = this.cachedRunScrollKills = this.cachedLifetimeDirectKills = this.cachedRunDirectKills = this.cachedLifetimeGoldFromItems = this.cachedRunGoldFromItems = this.cachedLifetimeGoldFromMonsters = this.cachedRunGoldFromMonsters = this.cachedLifetimeBookcasesLooted = this.cachedRunBookcasesLooted = this.cachedLifetimeWeaponRacksLooted = this.cachedRunWeaponRacksLooted = this.cachedLifetimeTreasureChestsLooted = this.cachedRunTreasureChestsLooted = this.cachedLifetimeMinionsSummoned = this.cachedRunMinionsSummoned = this.cachedLifetimeFarmsPurchased = this.cachedRunFarmsPurchased = this.cachedLifetimeCastlesConquered = this.cachedRunCastlesConquered = this.cachedLifetimeDungeonsCleared = this.cachedRunDungeonsCleared = this.cachedLifetimeLevelsCleared = this.cachedRunLevelsCleared = this.cachedLifetimeRoomsCleared = this.cachedRunRoomsCleared = this.cachedLifetimeDoorsOpened = this.cachedRunDoorsOpened = this.cachedLifetimeTurnCount = this.cachedRunTurnCount = this.cachedLifetimePlaySeconds = this.cachedLifetimePlayMinutes = this.cachedLifetimePlayHours = this.cachedRunPlaySeconds = this.cachedRunPlayMinutes = this.cachedRunPlayHours = this.cachedVictoryCount = -1;
   this.lifetimeAncientItemsFoundCell = this.runAncientItemsFoundCell = this.lifetimeHistoricItemsFoundCell = this.runHistoricItemsFoundCell = this.lifetimeRareItemsFoundCell = this.runRareItemsFoundCell = this.lifetimeUncommonItemsFoundCell = this.runUncommonItemsFoundCell = this.lifetimeItemsFoundCell = this.runItemsFoundCell = this.lifetimeItemsSoldCell = this.runItemsSoldCell = this.lifetimeScrollsUsedCell = this.runScrollsUsedCell = this.lifetimePotionsUsedCell = this.runPotionsUsedCell = this.lifetimeSpellCastsCell = this.runSpellCastsCell = this.lifetimeRangedAttacksCell = this.runRangedAttacksCell = this.lifetimeMeleeAttacksCell = this.runMeleeAttacksCell = this.lifetimeStunnedCountCell = this.runStunnedCountCell = this.lifetimeFarmedKillsCell = this.runFarmedKillsCell = this.lifetimeMinionKillsCell = this.runMinionKillsCell = this.lifetimeScrollKillsCell = this.runScrollKillsCell = this.lifetimeDirectKillsCell = this.runDirectKillsCell = this.lifetimeGoldFromItemsCell = this.runGoldFromItemsCell = this.lifetimeGoldFromMonstersCell = this.runGoldFromMonstersCell = this.lifetimeBookcasesLootedCell = this.runBookcasesLootedCell = this.lifetimeWeaponRacksLootedCell = this.runWeaponRacksLootedCell = this.lifetimeTreasureChestsLootedCell = this.runTreasureChestsLootedCell = this.lifetimeMinionsSummonedCell = this.runMinionsSummonedCell = this.lifetimeFarmsPurchasedCell = this.runFarmsPurchasedCell = this.lifetimeCastlesConqueredCell = this.runCastlesConqueredCell = this.lifetimeDungeonsClearedCell = this.runDungeonsClearedCell = this.lifetimeLevelsClearedCell = this.runLevelsClearedCell = this.lifetimeDoorsOpenedCell = this.runDoorsOpenedCell = this.lifetimeRoomsClearedCell = this.runRoomsClearedCell = this.lifetimeTurnCountCell = this.runTurnCountCell = this.runPlayTimeCell = this.lifetimePlayTimeCell = this.victoryCountCell = null;
-  this.AA = 36E5;
+  this.millisecondsPerHour = 36E5;
 }
 export function appendStatisticsRow(a, b, c) {
-  a = a.st.insertRow(c);
+  a = a.tableElement.insertRow(c);
   c = a.insertCell(0);
   c.className = "statisticsTableLabel";
   c.innerHTML = b;
@@ -121,19 +121,19 @@ export function appendStatisticsRow(a, b, c) {
 export function OptionsView() {
   this.elementId = "gameOptionsContainer";
   this.visible = true;
-  this.tA = false;
+  this.hasBoundOptionListeners = false;
 }
 export function initializeViewsInformation() {
   SaveControlsView.prototype = new View();
   SaveControlsView.prototype.reset = function () {
-    this.tr = -1;
+    this.cachedLastSavedAt = -1;
   };
   SaveControlsView.prototype.update = function () {
     var a;
     a = game.saves.lastSavedAt;
-    if (this.tr !== a && 0 < a) {
-      this.tr = a;
-      setElementHtml(this.SD, "最后保存于: " + new Date(this.tr).toLocaleTimeString());
+    if (this.cachedLastSavedAt !== a && 0 < a) {
+      this.cachedLastSavedAt = a;
+      setElementHtml(this.lastSaveDivElementId, "最后保存于: " + new Date(this.cachedLastSavedAt).toLocaleTimeString());
     }
   };
   InformationView.prototype = new TabView();
@@ -157,11 +157,11 @@ export function initializeViewsInformation() {
   StatisticsView.prototype = new View();
   StatisticsView.prototype.reset = /** @this {StatisticsView & MountedStatisticsViewMethods} */ function () {
     this.cachedLifetimeAncientItemsFound = this.cachedRunAncientItemsFound = this.cachedLifetimeHistoricItemsFound = this.cachedRunHistoricItemsFound = this.cachedLifetimeRareItemsFound = this.cachedRunRareItemsFound = this.cachedLifetimeUncommonItemsFound = this.cachedRunUncommonItemsFound = this.cachedLifetimeItemsFound = this.cachedRunItemsFound = this.cachedLifetimeItemsSold = this.cachedRunItemsSold = this.cachedLifetimeScrollsUsed = this.cachedRunScrollsUsed = this.cachedLifetimePotionsUsed = this.cachedRunPotionsUsed = this.cachedLifetimeSpellCasts = this.cachedRunSpellCasts = this.cachedLifetimeRangedAttacks = this.cachedRunRangedAttacks = this.cachedLifetimeMeleeAttacks = this.cachedRunMeleeAttacks = this.cachedLifetimeStunnedCount = this.cachedRunStunnedCount = this.cachedLifetimeFarmedKills = this.cachedRunFarmedKills = this.cachedLifetimeMinionKills = this.cachedRunMinionKills = this.cachedLifetimeScrollKills = this.cachedRunScrollKills = this.cachedLifetimeDirectKills = this.cachedRunDirectKills = this.cachedLifetimeGoldFromItems = this.cachedRunGoldFromItems = this.cachedLifetimeGoldFromMonsters = this.cachedRunGoldFromMonsters = this.cachedLifetimeBookcasesLooted = this.cachedRunBookcasesLooted = this.cachedLifetimeWeaponRacksLooted = this.cachedRunWeaponRacksLooted = this.cachedLifetimeTreasureChestsLooted = this.cachedRunTreasureChestsLooted = this.cachedLifetimeMinionsSummoned = this.cachedRunMinionsSummoned = this.cachedLifetimeFarmsPurchased = this.cachedRunFarmsPurchased = this.cachedLifetimeCastlesConquered = this.cachedRunCastlesConquered = this.cachedLifetimeDungeonsCleared = this.cachedRunDungeonsCleared = this.cachedLifetimeLevelsCleared = this.cachedRunLevelsCleared = this.cachedLifetimeDoorsOpened = this.cachedRunDoorsOpened = this.cachedLifetimeRoomsCleared = this.cachedRunRoomsCleared = this.cachedLifetimeTurnCount = this.cachedRunTurnCount = this.cachedLifetimePlaySeconds = this.cachedLifetimePlayMinutes = this.cachedLifetimePlayHours = this.cachedRunPlaySeconds = this.cachedRunPlayMinutes = this.cachedRunPlayHours = this.cachedVictoryCount = -1;
-    this.fr();
+    this.buildStatisticsTable();
   };
   StatisticsView.prototype.update = /** @this {StatisticsView & MountedStatisticsViewMethods} */ function () {
-    if (!this.st) {
-      this.fr();
+    if (!this.tableElement) {
+      this.buildStatisticsTable();
     }
     var a = game.state.runStatistics,
       b = game.state.lifetimeStatistics,
@@ -462,33 +462,33 @@ export function initializeViewsInformation() {
       this.cachedLifetimeAncientItemsFound = b;
       this.lifetimeAncientItemsFoundCell.innerHTML = formatAmount(b);
     }
-    c = floorNumber(d / this.AA);
+    c = floorNumber(d / this.millisecondsPerHour);
     g = floorNumber(d / 6E4 % 60);
     d = floorNumber(d / 1E3 % 60);
-    h = floorNumber(f / this.AA);
+    h = floorNumber(f / this.millisecondsPerHour);
     l = floorNumber(f / 6E4 % 60);
     f = floorNumber(f / 1E3 % 60);
     if (this.cachedLifetimePlayHours != c || this.cachedLifetimePlayMinutes != g || this.cachedLifetimePlaySeconds != d) {
       this.cachedLifetimePlayHours = c;
       this.cachedLifetimePlayMinutes = g;
       this.cachedLifetimePlaySeconds = d;
-      this.lifetimePlayTimeCell.innerHTML = this.Er(c, g, d);
+      this.lifetimePlayTimeCell.innerHTML = this.formatHoursMinutesSeconds(c, g, d);
     }
     if (this.cachedRunPlayHours != h || this.cachedRunPlayMinutes != l || this.cachedRunPlaySeconds != f) {
       this.cachedRunPlayHours = h;
       this.cachedRunPlayMinutes = l;
       this.cachedRunPlaySeconds = f;
-      this.runPlayTimeCell.innerHTML = this.Er(h, l, f);
+      this.runPlayTimeCell.innerHTML = this.formatHoursMinutesSeconds(h, l, f);
     }
   };
-  StatisticsView.prototype.Er = function (a, b, c) {
+  StatisticsView.prototype.formatHoursMinutesSeconds = function (a, b, c) {
     return (10 > a ? "0" : "") + a + ":" + (10 > b ? "0" : "") + b + ":" + (10 > c ? "0" : "") + c;
   };
-  StatisticsView.prototype.fr = /** @this {StatisticsView & MountedStatisticsViewMethods} */ function () {
+  StatisticsView.prototype.buildStatisticsTable = /** @this {StatisticsView & MountedStatisticsViewMethods} */ function () {
     clearElementById(this.elementId);
     var container = /** @type {HTMLDivElement} */ (getElement(this.elementId));
     createElement("div", container, null, "sectionTitle").innerHTML = "统计";
-    this.st = createElement("table", container, null, "statisticsTable");
+    this.tableElement = createElement("table", container, null, "statisticsTable");
     var rowIndex = 0;
     this.createHeaderRow(rowIndex++);
     var row = appendStatisticsRow(this, "游戏胜利:", rowIndex++);
@@ -586,7 +586,7 @@ export function initializeViewsInformation() {
     this.lifetimeAncientItemsFoundCell = this.getStatisticCell(row, 2);
   };
   StatisticsView.prototype.createHeaderRow = function (a) {
-    a = this.st.insertRow(a);
+    a = this.tableElement.insertRow(a);
     appendHeaderCell(a).innerHTML = "";
     var b = appendHeaderCell(a);
     b.style.textAlign = "right";
@@ -617,7 +617,7 @@ export function initializeViewsInformation() {
     f.checked = game.options.allowBackgroundProgress;
     g.checked = game.options.depthSortSprites;
     h.checked = game.options.showFps;
-    if (!this.tA) {
+    if (!this.hasBoundOptionListeners) {
       a.addEventListener("change", function () {
         game.options.showCombatText = a.checked;
       });
@@ -639,7 +639,7 @@ export function initializeViewsInformation() {
       h.addEventListener("change", function () {
         game.options.showFps = h.checked;
       });
-      this.tA = true;
+      this.hasBoundOptionListeners = true;
     }
   };
 }

@@ -343,11 +343,11 @@ export function advanceSimulation(a) {
                   Tb.attacker = vb.attacker;
                   (/** @type {any} */ (Tb)).setTargetCharacter(nc);
                   Tb.hasProjectilePhase = false;
-                  Tb.actionDefinition = Qa.Wq;
-                  if (!Qa.Wq) {
-                    Qa.Wq = new Spell(blastStunSpell);
+                  Tb.actionDefinition = Qa.blastStunSpellCache;
+                  if (!Qa.blastStunSpellCache) {
+                    Qa.blastStunSpellCache = new Spell(blastStunSpell);
                   }
-                  var qc = Qa.Wq.impactEffectName;
+                  var qc = Qa.blastStunSpellCache.impactEffectName;
                   if (qc) {
                     var Fc = new VisualEffect(qc, sa, sa, false, 1);
                     Tb.impactEffect = Fc;

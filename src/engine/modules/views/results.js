@@ -121,7 +121,7 @@ export function mountOfflineProgress(a) {
   var b = getElement(a.elementId);
   clearElement(b);
   var c = createElement("div", b, null, "offlineHeader"),
-    d = a.Er(floorNumber(game.offlineDuration / 36E5), floorNumber(game.offlineDuration / 6E4 % 60), floorNumber(game.offlineDuration / 1E3 % 60));
+    d = a.formatHoursMinutesSeconds(floorNumber(game.offlineDuration / 36E5), floorNumber(game.offlineDuration / 6E4 % 60), floorNumber(game.offlineDuration / 1E3 % 60));
   createElement("div", c, null, "offlineTitleText").innerHTML = "末日危机2";
   createElement("div", c, null, "offlineSubHeader").innerHTML = "离线:" + d;
   createElement("div", c, null, "offlineSubHeader").innerHTML = "正在清算你离开时发生了什么...";
@@ -129,7 +129,7 @@ export function mountOfflineProgress(a) {
   c = createElement("div", c, null, "offlineProgressBar");
   a.progressFillElement = createElement("div", c, null, "offlineProgressSlider");
   c = createElement("div", b, null, "offlineProgressStatsContainer");
-  a.fr(c);
+  a.buildOfflineProgressTable(c);
   b = createElement("div", b, null, "offlineCancelButtonContainer");
   a.cancelButton = createElement("div", b, null, "offlineCancelButton");
   a.cancelButton.innerHTML = "跳过这个.我只是想杀杀怪物.";
@@ -248,7 +248,7 @@ export function initializeViewsResults() {
       this.achievementsDeltaCell.innerHTML = formatAmount(l);
     }
   };
-  OfflineProgressView.prototype.fr = function (a) {
+  OfflineProgressView.prototype.buildOfflineProgressTable = function (a) {
     a = createElement("table", a, null, "centeredElement");
     var b = 0;
     this.directKillsDeltaCell = (/** @type {any} */ (this)).getOfflineProgressCell(a, "杀死怪物", b++);
@@ -270,7 +270,7 @@ export function initializeViewsResults() {
     b.style.width = "70px";
     return b;
   };
-  OfflineProgressView.prototype.Er = function (a, b, c) {
+  OfflineProgressView.prototype.formatHoursMinutesSeconds = function (a, b, c) {
     return (10 > a ? "0" : "") + a + ":" + (10 > b ? "0" : "") + b + ":" + (10 > c ? "0" : "") + c;
   };
 }

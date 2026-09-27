@@ -1,0 +1,17 @@
+[
+  { "old": "tr", "new": "cachedLastSavedAt", "expect": 5, "files": ["src/engine/modules/views/information.js"] },
+  { "old": "st", "new": "tableElement", "expect": 5, "files": ["src/engine/modules/views/information.js"] },
+  { "old": "AA", "new": "millisecondsPerHour", "expect": 3, "files": ["src/engine/modules/views/information.js"] },
+  { "old": "tA", "new": "hasBoundOptionListeners", "expect": 3, "files": ["src/engine/modules/views/information.js"] },
+  { "old": "SD", "new": "lastSaveDivElementId", "expect": 2, "files": ["src/engine/modules/views/information.js"] },
+  { "old": "fr", "new": "buildStatisticsTable", "expect": 3, "files": ["src/engine/modules/views/information.js"] },
+  { "old": "fr", "new": "buildOfflineProgressTable", "expect": 2, "files": ["src/engine/modules/views/results.js"] },
+  { "old": "Er", "new": "formatHoursMinutesSeconds", "expect": 5, "files": ["src/engine/modules/views/information.js", "src/engine/modules/views/results.js"] },
+  { "old": "Mr", "new": "regionGrid", "expect": 5, "files": ["src/engine/modules/runtime/game.js", "src/engine/modules/views/castles.js", "src/engine/modules/world/initialization.js"] },
+  { "old": "Wq", "new": "blastStunSpellCache", "expect": 5, "files": ["src/engine/modules/runtime/game.js", "src/engine/modules/simulation/tick.js"] },
+  { "old": "Js", "new": "resetTabs", "expect": 5, "files": ["src/engine/modules/runtime/game.js", "src/engine/modules/views/navigation.js"] },
+  { "old": "Lt", "new": "byId", "expect": 4, "files": ["src/engine/modules/runtime/game.js", "src/engine/modules/persistence/game-save.js"] },
+  { "old": "ju", "new": "byRegionKey", "expect": 4, "files": ["src/engine/modules/runtime/game.js", "src/engine/modules/world/initialization.js", "src/engine/modules/world/regions.js"] },
+  { "old": "Ny", "new": "castleSpriteName", "expect": 3, "files": ["src/engine/modules/runtime/game.js", "src/engine/modules/views/upgrade-details.js", "src/engine/modules/world/terrain.js"] },
+  { "old": "GE", "new": "compareCastles", "expect": 2, "files": ["src/engine/modules/runtime/game.js", "src/engine/modules/world/regions.js"] }
+]

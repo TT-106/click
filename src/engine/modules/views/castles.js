@@ -68,7 +68,7 @@ export function initializeViewsCastles() {
         h;
       for (c = 0; c < f; c++) {
         for (b = 0; b < d; b++) {
-          if (g = this.mapCells[b][c], h = a.Mr[b][c]) {
+          if (g = this.mapCells[b][c], h = a.regionGrid[b][c]) {
             h = h.castle;
             h = getCastleStatusColor(h);
             if (g.style.backgroundColor != h) {
@@ -101,7 +101,7 @@ export function initializeViewsCastles() {
         l = createElement("div", l, null, null);
         l.style.width = "39px";
         l.style.height = "39px";
-        if (h = b.Mr[g][c]) {
+        if (h = b.regionGrid[g][c]) {
           if (h = findCastle(h.regionKey)) {
             h = createElement("img", l, null, null);
             h.src = "images/Transparent.gif";

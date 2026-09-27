@@ -107,8 +107,8 @@ export function initializeViewsNavigation() {
       }
     }
   };
-  GameView.prototype.Js = function () {
-    this.tabBar.Js();
+  GameView.prototype.resetTabs = function () {
+    this.tabBar.resetTabs();
     var a;
     for (a = 0; a < this.cachedSkillPoints.length; a++) {
       this.cachedSkillPoints[a] = 0;
@@ -194,7 +194,7 @@ export function initializeViewsNavigation() {
       this.tabBarContainer[a].render();
     }
   };
-  TabBar.prototype.Js = function () {
+  TabBar.prototype.resetTabs = function () {
     var a, b;
     for (a = 0; a < this.tabBarContainer.length; a++) {
       b = this.tabBarContainer[a].tabState;

@@ -271,7 +271,7 @@ export function populateWorldBlock(a, b) {
     d = f.worldPixelX;
     f = f.worldPixelY;
     if (castleTile = game.world.getTileAtPixel(d, f)) {
-      castleTile.setDecorationSprite(game.terrainSprites.getSprite(game.castles.Ny));
+      castleTile.setDecorationSprite(game.terrainSprites.getSprite(game.castles.castleSpriteName));
     } else {
       console.log("no tile for: col=" + d + " row=" + f);
     }

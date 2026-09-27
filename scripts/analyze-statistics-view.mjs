@@ -48,9 +48,9 @@ for (const m of updateBody.matchAll(multiRe)) {
   if (domM) pairs.push({ cache: [m[2], m[4], m[6]].join('/'), local: [m[3], m[5], m[7]].join('/'), dom: domM[1], expr: domM[2].trim() });
 }
 
-// ---- 4. 解析 fr() 的单元格 → (行标签, 列) ----
-const frMatch = src.match(/StatisticsView\.prototype\.fr = [\s\S]*?\n  \};/);
-if (!frMatch) throw new Error('未找到 fr 方法');
+// ---- 4. 解析 buildStatisticsTable() 的单元格 → (行标签, 列) ----
+const frMatch = src.match(/StatisticsView\.prototype\.buildStatisticsTable = [\s\S]*?\n  \};/);
+if (!frMatch) throw new Error('未找到 buildStatisticsTable 方法');
 const frBody = frMatch[0];
 const cellInfo = new Map();
 let currentLabel = null;

@@ -620,7 +620,7 @@ export function restoreGameState(a, b) {
                     Yd = Xd.obtained,
                     Re = Xd.applied;
                   if (Oc) {
-                    var Zd = game.state.achievements.Lt[Oc];
+                    var Zd = game.state.achievements.byId[Oc];
                     if (Zd) {
                       Zd.obtained = Yd ? true : false;
                       Zd.applied = Re ? true : false;

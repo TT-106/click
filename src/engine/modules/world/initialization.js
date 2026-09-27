@@ -11,7 +11,7 @@ import { bindStatistics } from "../progression/statistics.js";
 export function initializeRegionsAndCastles() {
   var eb = game.regions;
   eb.byKey = {};
-  eb.Mr.length = 0;
+  eb.regionGrid.length = 0;
   var Gb = eb.regionGridSpan,
     Da,
     ub,
@@ -30,7 +30,7 @@ export function initializeRegionsAndCastles() {
       mb.push(Fa);
       eb.byKey[wa] = Fa;
     }
-    eb.Mr.push(mb);
+    eb.regionGrid.push(mb);
   }
   var ha = game.castles;
   ha.castleList.length = 0;
@@ -115,10 +115,10 @@ export function initializeRegionsAndCastles() {
   var Fc, Cb, kb, Ra;
   for (Fc = 0; Fc < ha.castleList.length; Fc++) {
     for (kb = ha.castleList[Fc], ha.castleRegistry[kb.castleId] && console.log("duplicate castle id: " + kb.castleId), ha.castleRegistry[kb.castleId] = kb, Ra = kb.regions, Cb = 0; Cb < Ra.length; Cb++) {
-      if (ha.ju[Ra[Cb].regionKey]) {
+      if (ha.byRegionKey[Ra[Cb].regionKey]) {
         console.log("duplicate castle owner: " + Ra[Cb].regionKey);
       }
-      ha.ju[Ra[Cb].regionKey] = kb;
+      ha.byRegionKey[Ra[Cb].regionKey] = kb;
     }
   }
   var Ja = game.dungeons;
