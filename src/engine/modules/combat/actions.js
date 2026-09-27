@@ -361,7 +361,7 @@ export function resolveCharacterDefeat(a, b) {
           game.state.statisticsRecorder.recordMinionKill();
         }
         d = b.monsterType;
-        addExperience(d.No * doubleExperienceModifier.currentValue);
+        addExperience(d.experienceReward * doubleExperienceModifier.currentValue);
         recordMonsterTypeKill(d);
       }
       var d = g.room,

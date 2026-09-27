@@ -103,7 +103,7 @@ export function restoreGameState(a, b) {
                     var ia = S ? S : 0;
                     W.dungeonType = ia;
                     W.hasSecondEntrance = !(4 === ia || 5 === ia || 7 === ia || 8 === ia);
-                    W.Fo = getDungeonMapSprite(ia);
+                    W.mapSprite = getDungeonMapSprite(ia);
                     W.levelCount = da;
                     if (J) {
                       discoverDungeon(W);

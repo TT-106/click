@@ -200,7 +200,7 @@ export function initializeViewsDungeons() {
     this.wr = createElement("img", this.Co, null, "terrainImage");
     this.wr.src = "images/Transparent.gif";
     if (this.dungeon) {
-      var b = game.terrainSprites.getSprite(this.dungeon.Fo);
+      var b = game.terrainSprites.getSprite(this.dungeon.mapSprite);
       this.wr.style.background = "url('spritesheet/terrain.png') -" + b.sourceX + "px -" + b.sourceY + "px";
     }
     this.labelCell = a.insertCell(1);
@@ -256,7 +256,7 @@ export function initializeViewsDungeons() {
       a = a && (f || b);
       if (this.selectedDungeon !== this.dungeon) {
         this.selectedDungeon = this.dungeon;
-        f = game.terrainSprites.getSprite(this.dungeon.Fo);
+        f = game.terrainSprites.getSprite(this.dungeon.mapSprite);
         this.wr.style.background = "url('spritesheet/terrain.png') -" + f.sourceX + "px -" + f.sourceY + "px";
       }
       if (this.cachedDungeonName !== c) {

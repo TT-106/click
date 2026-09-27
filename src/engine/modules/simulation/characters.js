@@ -287,7 +287,7 @@ export function initializeSimulationCharacters() {
           f.stats.recordMinionKill();
         }
         f = b.monsterType;
-        addExperience(f.No * doubleExperienceModifier.currentValue);
+        addExperience(f.experienceReward * doubleExperienceModifier.currentValue);
         recordMonsterTypeKill(f);
       }
       var f = c.room,

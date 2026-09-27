@@ -1568,33 +1568,6 @@
     ]
   },
   {
-    "name": "No",
-    "reads": 3,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\actions.js:364",
-        "code": "d.No"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\encounters.js:189",
-        "code": "this.No"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\encounters.js:206",
-        "code": "a.No"
-      }
-    ],
-    "fileCount": 5,
-    "files": [
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\combat\\encounters.js",
-      "src\\engine\\modules\\persistence\\entities.js",
-      "src\\engine\\modules\\simulation\\characters.js",
-      "src\\engine\\modules\\views\\monsters.js"
-    ]
-  },
-  {
     "name": "Yp",
     "reads": 4,
     "writes": 2,
@@ -1933,33 +1906,6 @@
       "src\\engine\\modules\\persistence\\game-save.js",
       "src\\engine\\modules\\world\\dungeons.js",
       "src\\engine\\modules\\world\\initialization.js",
-      "src\\engine\\modules\\world\\terrain.js"
-    ]
-  },
-  {
-    "name": "Fo",
-    "reads": 4,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:106",
-        "code": "W.Fo"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:203",
-        "code": "this.dungeon.Fo"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\dungeons.js:259",
-        "code": "this.dungeon.Fo"
-      }
-    ],
-    "fileCount": 5,
-    "files": [
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\views\\dungeons.js",
-      "src\\engine\\modules\\views\\upgrade-details.js",
-      "src\\engine\\modules\\world\\dungeons.js",
       "src\\engine\\modules\\world\\terrain.js"
     ]
   },

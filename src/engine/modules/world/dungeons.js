@@ -17,7 +17,7 @@ export function Dungeon(a, b, c, d, f, g, h, l, n) {
   this.dungeonType = c;
   this.farmCost = 0;
   this.hasSecondEntrance = !(4 === c || 5 === c || 7 === c || 8 === c);
-  this.Fo = getDungeonMapSprite(c);
+  this.mapSprite = getDungeonMapSprite(c);
   this.conquered = this.isFarm = this.cleared = this.discovered = false;
   this.farmStartTurn = this.clearedTurn = 0;
   this.worldColumn = d;

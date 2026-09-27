@@ -260,7 +260,7 @@ export function initializeViewsMonsters() {
       d = Math.min(1, a / b),
       d = this.dx * d | 0;
     if (this.cachedLevel != this.monsterType.level || this.Sv != this.monsterType.rank) {
-      this.Mo.innerHTML = formatAmount(this.monsterType.No);
+      this.Mo.innerHTML = formatAmount(this.monsterType.experienceReward);
       this.killCell.innerHTML = formatAmount(this.monsterType.$o);
       this.vo.innerHTML = formatAmount(this.monsterType.Gp);
       this.Yn.innerHTML = formatAmount(this.monsterType.Ep);

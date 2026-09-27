@@ -7888,7 +7888,9 @@
     "su": "mounted",
     "Ms": "buttonViews",
     "Am": "experienceToLevelUp",
-    "br": "chainLightningSpell"
+    "br": "chainLightningSpell",
+    "No": "experienceReward",
+    "Fo": "mapSprite"
   },
   "gameFields": {
     "B": "tileSize",

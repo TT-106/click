@@ -204,7 +204,7 @@ export function restoreMonsterType(a, b) {
   d.Gp = 0;
   d.Fp = 0;
   d.Hp = 0;
-  d.No = 0;
+  d.experienceReward = 0;
   d.$o = 0;
   d.rankKillThreshold = 0;
   advanceMonsterTypeRank(d);

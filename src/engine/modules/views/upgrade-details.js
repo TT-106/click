@@ -866,7 +866,7 @@ export function initializeViewsUpgradeDetails() {
       this.Cq.innerHTML = formatAmount(a);
     }
     if (this.selectedDungeon !== b && (this.selectedDungeon = b)) {
-      a = game.terrainSprites.getSprite(b.Fo);
+      a = game.terrainSprites.getSprite(b.mapSprite);
       this.previewImageElement.style.background = "url('spritesheet/terrain.png') -" + a.sourceX + "px -" + a.sourceY + "px";
       this.labelCell.innerHTML = b.dungeonName;
     }

@@ -1,0 +1,28 @@
+[
+  {
+    "_note": "MonsterType.No：击杀该怪物类型获得的经验奖励。证据：怪物表第 2 列（表头「经验」）显示它（views/monsters.js:263）；击杀时 addExperience(d.No * doubleExperienceModifier)（combat/actions.js:364、simulation/characters.js:290）；由 advanceMonsterTypeRank 按曲线重算（combat/encounters.js:206，曲线为 monsterArmorCurve——曲线命名疑点见 unresolved）。",
+    "old": "No",
+    "new": "experienceReward",
+    "files": [
+      "src/engine/modules/combat/actions.js",
+      "src/engine/modules/combat/encounters.js",
+      "src/engine/modules/persistence/entities.js",
+      "src/engine/modules/simulation/characters.js",
+      "src/engine/modules/views/monsters.js"
+    ],
+    "expect": "auto"
+  },
+  {
+    "_note": "Dungeon.Fo：地牢在大地图上的贴纸（由 getDungeonMapSprite 生成/恢复）。",
+    "old": "Fo",
+    "new": "mapSprite",
+    "files": [
+      "src/engine/modules/persistence/game-save.js",
+      "src/engine/modules/views/dungeons.js",
+      "src/engine/modules/views/upgrade-details.js",
+      "src/engine/modules/world/dungeons.js",
+      "src/engine/modules/world/terrain.js"
+    ],
+    "expect": "auto"
+  }
+]
