@@ -23,10 +23,10 @@ export function MonsterLevelView() {
 export function MonsterRowView(a, b) {
   this.rowElement = a;
   this.monsterType = b;
-  this.progressTextElement = this.progressFillElement = this.progressCell = this.xo = this.$n = this.Yn = this.vo = this.killCell = this.Mo = this.wq = this.yq = this.Es = null;
-  this.Sv = this.cachedLevel = this.cachedFillWidth = this.Uv = -1;
-  this.dx = 80;
-  this.Cp = null;
+  this.progressTextElement = this.progressFillElement = this.progressCell = this.defenceRatingCell = this.attackRatingCell = this.armorCell = this.damageCell = this.healthCell = this.experienceCell = this.rankCell = this.killCountCell = this.nameCell = null;
+  this.cachedRank = this.cachedLevel = this.cachedFillWidth = this.cachedKills = -1;
+  this.progressBarWidth = 80;
+  this.spriteImage = null;
   (/** @type {any} */ (this)).createRowCells();
 }
 export function MonsterLevelTabView(a, b) {
@@ -176,7 +176,7 @@ export function initializeViewsMonsters() {
       setElementHtml("minMonstersPerRoom", this.cachedMinMonsters + "");
     }
   };
-  MonsterRowView.prototype.gq = function (a) {
+  MonsterRowView.prototype.setMonsterType = function (a) {
     this.monsterType = a;
   };
   MonsterRowView.prototype.createRowCells = function () {
@@ -186,54 +186,54 @@ export function initializeViewsMonsters() {
     c.style.width = "50px";
     c.style.padding = "0";
     c.style.textAlign = "center";
-    this.Cp = createElement("img", c, null, "characterImage");
-    this.Cp.src = "images/Transparent.gif";
-    this.Cp.style.background = "url('spritesheet/monsters.png') -" + b.sourceX + "px -" + (b.sourceY + 10) + "px";
-    this.Cp.style.height = "30px";
-    this.Es = a.insertCell(1);
-    this.Es.style.width = "200px";
-    this.Es.innerHTML = this.monsterType.getName();
-    this.Mo = a.insertCell(2);
-    this.Mo.style.width = "80px";
-    this.Mo.style.textAlign = "right";
-    this.Mo.style.paddingRight = "5px";
-    this.killCell = a.insertCell(3);
-    this.killCell.style.width = "80px";
-    this.killCell.style.textAlign = "right";
-    this.killCell.style.paddingRight = "5px";
-    this.vo = a.insertCell(4);
-    this.vo.style.width = "80px";
-    this.vo.style.textAlign = "right";
-    this.vo.style.paddingRight = "5px";
-    this.Yn = a.insertCell(5);
-    this.Yn.style.width = "80px";
-    this.Yn.style.textAlign = "right";
-    this.Yn.style.paddingRight = "5px";
-    this.$n = a.insertCell(6);
-    this.$n.style.width = "80px";
-    this.$n.style.textAlign = "right";
-    this.$n.style.paddingRight = "5px";
-    this.xo = a.insertCell(7);
-    this.xo.style.width = "80px";
-    this.xo.style.textAlign = "right";
-    this.xo.style.paddingRight = "5px";
-    this.yq = a.insertCell(8);
-    this.yq.style.width = "80px";
-    this.yq.style.textAlign = "right";
-    this.yq.style.paddingRight = "5px";
-    this.wq = a.insertCell(9);
-    this.wq.style.width = "80px";
-    this.wq.style.textAlign = "right";
-    this.wq.style.paddingRight = "5px";
+    this.spriteImage = createElement("img", c, null, "characterImage");
+    this.spriteImage.src = "images/Transparent.gif";
+    this.spriteImage.style.background = "url('spritesheet/monsters.png') -" + b.sourceX + "px -" + (b.sourceY + 10) + "px";
+    this.spriteImage.style.height = "30px";
+    this.nameCell = a.insertCell(1);
+    this.nameCell.style.width = "200px";
+    this.nameCell.innerHTML = this.monsterType.getName();
+    this.experienceCell = a.insertCell(2);
+    this.experienceCell.style.width = "80px";
+    this.experienceCell.style.textAlign = "right";
+    this.experienceCell.style.paddingRight = "5px";
+    this.healthCell = a.insertCell(3);
+    this.healthCell.style.width = "80px";
+    this.healthCell.style.textAlign = "right";
+    this.healthCell.style.paddingRight = "5px";
+    this.damageCell = a.insertCell(4);
+    this.damageCell.style.width = "80px";
+    this.damageCell.style.textAlign = "right";
+    this.damageCell.style.paddingRight = "5px";
+    this.armorCell = a.insertCell(5);
+    this.armorCell.style.width = "80px";
+    this.armorCell.style.textAlign = "right";
+    this.armorCell.style.paddingRight = "5px";
+    this.attackRatingCell = a.insertCell(6);
+    this.attackRatingCell.style.width = "80px";
+    this.attackRatingCell.style.textAlign = "right";
+    this.attackRatingCell.style.paddingRight = "5px";
+    this.defenceRatingCell = a.insertCell(7);
+    this.defenceRatingCell.style.width = "80px";
+    this.defenceRatingCell.style.textAlign = "right";
+    this.defenceRatingCell.style.paddingRight = "5px";
+    this.killCountCell = a.insertCell(8);
+    this.killCountCell.style.width = "80px";
+    this.killCountCell.style.textAlign = "right";
+    this.killCountCell.style.paddingRight = "5px";
+    this.rankCell = a.insertCell(9);
+    this.rankCell.style.width = "80px";
+    this.rankCell.style.textAlign = "right";
+    this.rankCell.style.paddingRight = "5px";
     this.progressCell = a.insertCell(10);
-    this.progressCell.style.width = this.dx + "px";
+    this.progressCell.style.width = this.progressBarWidth + "px";
     this.progressCell.style.paddingLeft = "5px";
     this.progressCell.style.paddingRight = "5px";
     a = createElement("div", this.progressCell, null, null);
     a.style.position = "relative";
     a.style.border = "1px solid #2c2c50";
     a.style.height = "15px";
-    a.style.width = this.dx + "px";
+    a.style.width = this.progressBarWidth + "px";
     this.progressFillElement = createElement("div", a, null, null);
     this.progressFillElement.style.position = "absolute";
     this.progressFillElement.style.top = "0";
@@ -251,33 +251,33 @@ export function initializeViewsMonsters() {
     this.progressTextElement.style.zIndex = "10";
   };
   MonsterRowView.prototype.reset = function () {
-    this.cachedFillWidth = this.Uv = this.cachedLevel = this.Sv = -1;
+    this.cachedFillWidth = this.cachedKills = this.cachedLevel = this.cachedRank = -1;
   };
   MonsterRowView.prototype.render = function () {
-    var a = this.monsterType.ml,
+    var a = this.monsterType.rankProgressKills,
       b = this.monsterType.rankKillThreshold,
-      c = this.monsterType.xq,
+      c = this.monsterType.killCount,
       d = Math.min(1, a / b),
-      d = this.dx * d | 0;
-    if (this.cachedLevel != this.monsterType.level || this.Sv != this.monsterType.rank) {
-      this.Mo.innerHTML = formatAmount(this.monsterType.experienceReward);
-      this.killCell.innerHTML = formatAmount(this.monsterType.$o);
-      this.vo.innerHTML = formatAmount(this.monsterType.Gp);
-      this.Yn.innerHTML = formatAmount(this.monsterType.Ep);
-      this.$n.innerHTML = formatAmount(this.monsterType.Fp);
-      this.xo.innerHTML = formatAmount(this.monsterType.Hp);
-      this.wq.innerHTML = formatAmount(this.monsterType.rank);
+      d = this.progressBarWidth * d | 0;
+    if (this.cachedLevel != this.monsterType.level || this.cachedRank != this.monsterType.rank) {
+      this.experienceCell.innerHTML = formatAmount(this.monsterType.experienceReward);
+      this.healthCell.innerHTML = formatAmount(this.monsterType.maxHealth);
+      this.damageCell.innerHTML = formatAmount(this.monsterType.damage);
+      this.armorCell.innerHTML = formatAmount(this.monsterType.armor);
+      this.attackRatingCell.innerHTML = formatAmount(this.monsterType.attackRating);
+      this.defenceRatingCell.innerHTML = formatAmount(this.monsterType.defenceRating);
+      this.rankCell.innerHTML = formatAmount(this.monsterType.rank);
       if (this.cachedLevel != this.monsterType.level) {
-        this.Es.innerHTML = this.monsterType.getName();
+        this.nameCell.innerHTML = this.monsterType.getName();
         var f = this.monsterType.sprite;
-        this.Cp.style.background = "url('spritesheet/monsters.png') -" + f.sourceX + "px -" + (f.sourceY + 10) + "px";
+        this.spriteImage.style.background = "url('spritesheet/monsters.png') -" + f.sourceX + "px -" + (f.sourceY + 10) + "px";
       }
       this.cachedLevel = this.monsterType.level;
-      this.Sv = this.monsterType.rank;
+      this.cachedRank = this.monsterType.rank;
     }
-    if (this.Uv !== c) {
-      this.Uv = c;
-      this.yq.innerHTML = formatAmount(c);
+    if (this.cachedKills !== c) {
+      this.cachedKills = c;
+      this.killCountCell.innerHTML = formatAmount(c);
     }
     if (this.cachedFillWidth !== d) {
       this.cachedFillWidth = d;
@@ -308,7 +308,7 @@ export function initializeViewsMonsters() {
             console.log("MonsterTableView.updateMonsterLevelRows length mismatch");
           } else {
             for (b = 0; b < this.rowViews.length; b++) {
-              this.rowViews[b].gq(a[b]);
+              this.rowViews[b].setMonsterType(a[b]);
             }
           }
         }

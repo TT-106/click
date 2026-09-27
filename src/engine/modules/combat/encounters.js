@@ -16,7 +16,7 @@ import { getPartyMaxLevel } from "../characters/party.js";
 import { bossClass, bossSpriteDefinitions, castleGuardianDefinitions } from "../content/guardians.js";
 import { applyLevelStats, createBehaviorQueue, createCastleGuardian, initializeCharacterSkills } from "../simulation/characters.js";
 import { applyBonusList } from "./skill-effects.js";
-/** @typedef {Character & { gq: (monsterType: MonsterType) => void }} TypedMonster */
+/** @typedef {Character & { setMonsterType: (monsterType: MonsterType) => void }} TypedMonster */
 /** @typedef {MonsterNameGenerator & { mn: (words: string[]) => string }} NamedMonsterGenerator */
 export function EncounterState() {
   this.Ar = 0;
@@ -62,23 +62,23 @@ export function populateEncounter(a) {
               monster = new Character("Monster", MONSTER_TYPE, 12, monsterClass, null),
               stats = monster.stats;
             monster.sprite = monsterType.sprite;
-            (/** @type {TypedMonster} */ (monster)).gq(monsterType);
+            (/** @type {TypedMonster} */ (monster)).setMonsterType(monsterType);
             stats.characterLevel = monsterType.level;
             monster.behaviors = new AttackBehavior(room, MELEE_ATTACK_RANGE);
             monster.position.room = room;
             if (frailMonstersModifier.currentValue) {
-              stats.damage.levelValue = floorNumber(0.7 * monsterType.Gp);
-              stats.armor.levelValue = floorNumber(0.7 * monsterType.Ep);
-              stats.attackRating.levelValue = floorNumber(0.7 * monsterType.Fp);
-              stats.defenceRating.levelValue = floorNumber(0.7 * monsterType.Hp);
-              stats.maxHealth.levelValue = floorNumber(0.7 * monsterType.$o);
+              stats.damage.levelValue = floorNumber(0.7 * monsterType.damage);
+              stats.armor.levelValue = floorNumber(0.7 * monsterType.armor);
+              stats.attackRating.levelValue = floorNumber(0.7 * monsterType.attackRating);
+              stats.defenceRating.levelValue = floorNumber(0.7 * monsterType.defenceRating);
+              stats.maxHealth.levelValue = floorNumber(0.7 * monsterType.maxHealth);
               stats.health = floorNumber(floorNumber(0.7 * statValue(stats.maxHealth)));
             } else {
-              stats.damage.levelValue = monsterType.Gp;
-              stats.armor.levelValue = monsterType.Ep;
-              stats.attackRating.levelValue = monsterType.Fp;
-              stats.defenceRating.levelValue = monsterType.Hp;
-              stats.maxHealth.levelValue = monsterType.$o;
+              stats.damage.levelValue = monsterType.damage;
+              stats.armor.levelValue = monsterType.armor;
+              stats.attackRating.levelValue = monsterType.attackRating;
+              stats.defenceRating.levelValue = monsterType.defenceRating;
+              stats.maxHealth.levelValue = monsterType.maxHealth;
               stats.health = floorNumber(statValue(stats.maxHealth));
             }
             var left = roomLeftPixels(room) + game.tileSize,
@@ -120,7 +120,7 @@ export function spawnDungeonBoss(a, b) {
     bossType = new MonsterType(bossClass.className, spriteDefinition.spriteName, c),
     boss = new Character(bossClass.defaultName, 4, bossClass.characterClass, bossClass, null),
     l = boss.stats;
-  (/** @type {TypedMonster} */ (boss)).gq(bossType);
+  (/** @type {TypedMonster} */ (boss)).setMonsterType(bossType);
   boss.sprite = bossType.sprite;
   boss.behaviors = createBehaviorQueue(bossClass.createBehaviors());
   initializeCharacterSkills(boss, c);
@@ -186,14 +186,14 @@ export function MonsterType(a, b, c) {
   this.spriteName = b;
   this.level = c;
   this.sprite = game.monsterSprites.getSprite(b);
-  this.$o = this.rank = this.Hp = this.Fp = this.Ep = this.Gp = this.experienceReward = this.rankKillThreshold = this.ml = this.xq = 0;
+  this.maxHealth = this.rank = this.defenceRating = this.attackRating = this.armor = this.damage = this.experienceReward = this.rankKillThreshold = this.rankProgressKills = this.killCount = 0;
   advanceMonsterTypeRank(this);
 }
 export function recordMonsterTypeKill(a) {
-  a.xq++;
-  a.ml++;
-  if (a.ml >= a.rankKillThreshold && 5 > a.rank) {
-    a.ml -= a.rankKillThreshold;
+  a.killCount++;
+  a.rankProgressKills++;
+  if (a.rankProgressKills >= a.rankKillThreshold && 5 > a.rank) {
+    a.rankProgressKills -= a.rankKillThreshold;
     advanceMonsterTypeRank(a);
   }
 }
@@ -202,12 +202,12 @@ export function advanceMonsterTypeRank(a) {
     a.rank++;
     a.rankKillThreshold += MONSTER_RANK_KILL_STEP;
     var b = 10 * (a.level - 1) + a.rank;
-    a.$o = scaleByLevel(b, monsterHealthCurve, 1);
+    a.maxHealth = scaleByLevel(b, monsterHealthCurve, 1);
     a.experienceReward = scaleByLevel(b, monsterExperienceCurve, 1);
-    a.Gp = scaleByLevel(b, monsterDamageCurve, 1);
-    a.Ep = scaleByLevel(b, monsterArmorCurve, 1);
-    a.Fp = scaleByLevel(b, monsterAttackCurve, 1);
-    a.Hp = scaleByLevel(b, monsterDefenceCurve, 1);
+    a.damage = scaleByLevel(b, monsterDamageCurve, 1);
+    a.armor = scaleByLevel(b, monsterArmorCurve, 1);
+    a.attackRating = scaleByLevel(b, monsterAttackCurve, 1);
+    a.defenceRating = scaleByLevel(b, monsterDefenceCurve, 1);
   }
 }
 export function MonsterNameGenerator() {

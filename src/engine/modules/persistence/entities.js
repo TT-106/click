@@ -190,29 +190,29 @@ export function serializeMonsterType(a) {
   return {
     name: a.getName(),
     sprite: a.sprite.getName(),
-    kills: a.xq
+    kills: a.killCount
   };
 }
 export function restoreMonsterType(a, b) {
   var c = a.kills,
     d = new MonsterType(a.name, a.sprite, b),
     c = c ? c : 0;
-  d.xq = 0;
-  d.ml = 0;
+  d.killCount = 0;
+  d.rankProgressKills = 0;
   d.rank = 0;
-  d.Ep = 0;
-  d.Gp = 0;
-  d.Fp = 0;
-  d.Hp = 0;
+  d.armor = 0;
+  d.damage = 0;
+  d.attackRating = 0;
+  d.defenceRating = 0;
   d.experienceReward = 0;
-  d.$o = 0;
+  d.maxHealth = 0;
   d.rankKillThreshold = 0;
   advanceMonsterTypeRank(d);
-  for (d.xq = c; c > d.rankKillThreshold;) {
+  for (d.killCount = c; c > d.rankKillThreshold;) {
     c -= d.rankKillThreshold;
     advanceMonsterTypeRank(d);
   }
-  d.ml = c;
+  d.rankProgressKills = c;
   return d;
 }
 export function StatisticsSaveAdapter() {}

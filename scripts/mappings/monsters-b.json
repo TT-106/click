@@ -1,0 +1,35 @@
+{
+  "_comment": "monsters.js 批 2：MonsterRowView 的表格列元素与缓存（按表头列序：数量/图标/怪物类型/经验/生命/伤害/护甲/攻击/防御/总计杀死/怪物等级/进度），以及 MonsterType 的六项属性与两个击杀计数（跨 encounters/entities/monsters 三文件），最后是 gq 方法（Character 与 MonsterRowView 双属主、同一语义「绑定怪物类型」）。killCell→healthCell 与 yq→killCountCell 修正 U8 次生项：killCell 渲染的其实是 $o(maxHealth)、yq 渲染 xq(killCount)。",
+  "files": [
+    "src/engine/modules/views/monsters.js",
+    "src/engine/modules/combat/encounters.js",
+    "src/engine/modules/persistence/entities.js",
+    "src/engine/modules/characters/character.js",
+    "src/engine/modules/simulation/characters.js"
+  ],
+  "map": {
+    "Es": "nameCell",
+    "Mo": "experienceCell",
+    "killCell": "healthCell",
+    "vo": "damageCell",
+    "Yn": "armorCell",
+    "$n": "attackRatingCell",
+    "xo": "defenceRatingCell",
+    "yq": "killCountCell",
+    "wq": "rankCell",
+    "Cp": "spriteImage",
+    "Sv": "cachedRank",
+    "Uv": "cachedKills",
+    "dx": "progressBarWidth",
+
+    "$o": "maxHealth",
+    "Gp": "damage",
+    "Ep": "armor",
+    "Fp": "attackRating",
+    "Hp": "defenceRating",
+    "xq": "killCount",
+    "ml": "rankProgressKills",
+
+    "gq": "setMonsterType"
+  }
+}

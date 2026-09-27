@@ -1228,7 +1228,7 @@ export function initializeCharactersCharacter() {
       awardAdventurePoints(21);
     }
   };
-  Character.prototype.gq = function (a) {
+  Character.prototype.setMonsterType = function (a) {
     this.monsterType = a;
   };
   Character.prototype.getSprite = function () {
