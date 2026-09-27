@@ -361,31 +361,6 @@
     ]
   },
   {
-    "name": "io",
-    "reads": 5,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\castles.js:105",
-        "code": "h.io"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\initialization.js:108",
-        "code": "Ib.io"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\initialization.js:118",
-        "code": "Ra[Cb].io"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\views\\castles.js",
-      "src\\engine\\modules\\world\\initialization.js",
-      "src\\engine\\modules\\world\\regions.js"
-    ]
-  },
-  {
     "name": "oo",
     "reads": 4,
     "writes": 2,
@@ -913,75 +888,6 @@
     "files": [
       "src\\engine\\modules\\runtime\\game.js",
       "src\\engine\\modules\\views\\navigation.js"
-    ]
-  },
-  {
-    "name": "ws",
-    "reads": 2,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\castles.js:15",
-        "code": "this.ws"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\castles.js:51",
-        "code": "this.ws"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\castles.js:55",
-        "code": "this.ws"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\castles.js"
-    ]
-  },
-  {
-    "name": "vs",
-    "reads": 4,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\castles.js:16",
-        "code": "this.vs"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\castles.js:52",
-        "code": "this.vs"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\castles.js:71",
-        "code": "this.vs"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\castles.js"
-    ]
-  },
-  {
-    "name": "Us",
-    "reads": 4,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\castles.js:28",
-        "code": "this.Us"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\castles.js:172",
-        "code": "this.Us"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\castles.js:179",
-        "code": "this.Us"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\castles.js"
     ]
   },
   {
@@ -1798,123 +1704,6 @@
     "files": [
       "src\\engine\\modules\\simulation\\tick.js",
       "src\\engine\\modules\\world\\dungeons.js"
-    ]
-  },
-  {
-    "name": "Fu",
-    "reads": 1,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\castles.js:17",
-        "code": "this.Fu"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\castles.js:49",
-        "code": "this.Fu"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\castles.js:60",
-        "code": "this.Fu"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\castles.js"
-    ]
-  },
-  {
-    "name": "Rv",
-    "reads": 1,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\castles.js:29",
-        "code": "this.Rv"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\castles.js:36",
-        "code": "a.Rv"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\castles.js:210",
-        "code": "this.Rv"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\castles.js"
-    ]
-  },
-  {
-    "name": "Cu",
-    "reads": 1,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\castles.js:29",
-        "code": "this.Cu"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\castles.js:35",
-        "code": "a.Cu"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\castles.js:204",
-        "code": "this.Cu"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\castles.js"
-    ]
-  },
-  {
-    "name": "Kv",
-    "reads": 1,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\castles.js:30",
-        "code": "this.Kv"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\castles.js:37",
-        "code": "a.Kv"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\castles.js:225",
-        "code": "this.Kv"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\castles.js"
-    ]
-  },
-  {
-    "name": "cu",
-    "reads": 1,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\castles.js:72",
-        "code": "h.cu"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\initialization.js:88",
-        "code": "wb.cu"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\initialization.js:107",
-        "code": "qc.cu"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\views\\castles.js",
-      "src\\engine\\modules\\world\\initialization.js",
-      "src\\engine\\modules\\world\\regions.js"
     ]
   },
   {
@@ -3227,21 +3016,6 @@
     "fileCount": 1,
     "files": [
       "src\\engine\\modules\\content\\guardians.js"
-    ]
-  },
-  {
-    "name": "fb",
-    "reads": 0,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\castles.js:38",
-        "code": "a.fb"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\castles.js"
     ]
   },
   {

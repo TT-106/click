@@ -1,9 +1,11 @@
 # WORKSTATE — Clickpocalypse II 语义恢复与现代化工程
 
 > 本文件是长程自治任务的**唯一续跑入口**。上下文压缩或中断后，先读本文件 + `git log --oneline`，再继续。
-> 最后更新：2026-09-27（U66-U103 共 38 批落地后，混淆清单 806 → 144；fields 段 267 → 916；59 场景矩阵全绿）
+> 最后更新：2026-09-27（U66-U104 共 39 批落地后，混淆清单 806 → 134；fields 段 267 → 926；59 场景矩阵全绿）
 
 ## 当前轮次状态（2026-09-27，M12 长尾重命名 + 命名修正）
+
+- U104 城堡视图与区域归属（2026-09-27，混淆清单 144 → 134，fields 段 916 → 926）：`views/castles.js` 10 项全部落地，文件清空（+`world/initialization.js`、`world/regions.js`）。WorldRegion：`io`→regionKey（区域键 "col_row"，初始化写入 `vb[regionKey]`/`castleRegistry[regionKey]`，地图视图 `findCastle(region.regionKey)`）、`cu`→castle（该区域归属的城堡，初始化 `region.castle = castle`，地图格 `region.castle` 取色）。CastleMapView：`ws`→tableElement、`vs`→mapCells（二维格数组）、`Fu`→cachedRevision（与 `game.castles.revision` 比对整体重建）。CastleRowView：`Us`→progressWidth(120)、`Rv`→cachedStatusText、`Cu`→cachedStatusColor、`Kv`→cachedProgressWidth，`fb`→unusedCachedText（**写后不读的历史死字段**，仅在 setCastleRowModel 置空，按"不臆造语义"原则以诚实名保留）。
 
 - U103 装备名称生成器（2026-09-27，混淆清单 154 → 144，fields 段 906 → 916）：`loot/item-names.js` 10 项全部落地，文件清空（+`loot/items.js` 消费点）。三方法 `Uo/Fm/Gm`→pickNameFormat（返回 ITEM_NAME_* 枚举，Common 0.3 阈值 / Historic·Rare·Uncommon 0.25 / Ancient 恒为前后缀组合）、randomSuffix、randomTitle；AncientItemNames 双词表 `MA/NA`→suffixAdjectives/suffixNouns（`Fm` 拼为「形容词+名词」）；ItemNameGenerator 五档稀有度集合 `$y/LE/lE/BD/UE`→commonNames/uncommonNames/rareNames/historicNames/ancientNames（items.js 按 rarity tier 0–4 选择，default 落 common）。
 

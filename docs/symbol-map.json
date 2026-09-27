@@ -8299,7 +8299,17 @@
     "LE": "uncommonNames",
     "lE": "rareNames",
     "BD": "historicNames",
-    "UE": "ancientNames"
+    "UE": "ancientNames",
+    "io": "regionKey",
+    "cu": "castle",
+    "ws": "tableElement",
+    "vs": "mapCells",
+    "Us": "progressWidth",
+    "Fu": "cachedRevision",
+    "Rv": "cachedStatusText",
+    "Cu": "cachedStatusColor",
+    "Kv": "cachedProgressWidth",
+    "fb": "unusedCachedText"
   },
   "gameFields": {
     "B": "tileSize",
