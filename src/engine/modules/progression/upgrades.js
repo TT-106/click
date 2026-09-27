@@ -1047,10 +1047,10 @@ export function initializeProgressionUpgrades() {
     return (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).getScroll();
   };
   ScrollUpgrade.prototype.getTitle = function () {
-    return (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).getScroll().lx;
+    return (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).getScroll().nextLabel;
   };
   ScrollUpgrade.prototype.getCost = function () {
-    return (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).getScroll().rn;
+    return (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).getScroll().upgradeCost;
   };
   ScrollUpgrade.prototype.getDescription = function () {
     return (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).getScroll().locked ? "解锁卷轴" : "升级卷轴";
@@ -1066,7 +1066,7 @@ export function initializeProgressionUpgrades() {
   };
   ScrollUpgrade.prototype.purchase = function () {
     var a = (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).getScroll(),
-      b = a.rn;
+      b = a.upgradeCost;
     if (!(game.state.party.gold < b)) {
       spendGold(b);
       a: {
@@ -1079,15 +1079,15 @@ export function initializeProgressionUpgrades() {
             break a;
           }
           a.upgradeCount++;
-          if (a.tn) {
-            applyStatBonus(game.state.scrollCaster, a.tn.statType, a.tn.statBonusValue);
+          if (a.statBonusPerUpgrade) {
+            applyStatBonus(game.state.scrollCaster, a.statBonusPerUpgrade.statType, a.statBonusPerUpgrade.statBonusValue);
             updateScrollAccuracy();
           }
           recordGameEvent("Scroll Upgrade", a.label + " (数量=" + a.upgradeCount + ")");
         }
         a.label = getScrollLabel(a);
-        a.lx = getNextScrollLabel(a);
-        a.rn = getScrollUpgradeCost(a);
+        a.nextLabel = getNextScrollLabel(a);
+        a.upgradeCost = getScrollUpgradeCost(a);
       }
       markUpgradeChanged(this);
       this.canPurchase = false;
@@ -1099,10 +1099,10 @@ export function initializeProgressionUpgrades() {
       c = game.state.scrollCaster.stats.characterLevel,
       d = a.locked ? a.baseCapacity : a.baseCapacity + (a.upgradeCount + 1) * a.capacityIncrement;
     if (a.locked) {
-      this.canPurchase = c >= d && game.state.party.gold >= a.rn;
+      this.canPurchase = c >= d && game.state.party.gold >= a.upgradeCost;
       this.affordableSoon = !this.canPurchase && c >= d;
     } else {
-      this.canPurchase = a.upgradeCount < a.maxCharges && c >= d && game.state.party.gold >= a.rn;
+      this.canPurchase = a.upgradeCount < a.maxCharges && c >= d && game.state.party.gold >= a.upgradeCost;
       this.affordableSoon = !this.canPurchase && a.upgradeCount < a.maxCharges && c >= d;
     }
     return b !== this.canPurchase;

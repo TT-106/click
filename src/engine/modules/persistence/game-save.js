@@ -539,7 +539,7 @@ export function restoreGameState(a, b) {
             game.state.leader = game.state.adventurers[0];
             game.state.scrollCaster = chooseScrollCaster();
           }
-          a.monsterAdapter.Kw(d.monsterTypes);
+          a.monsterAdapter.restoreMonsterTypes(d.monsterTypes);
           var jg = d.settings.upgrades,
             Vd,
             Nd;
@@ -557,7 +557,7 @@ export function restoreGameState(a, b) {
           if (kg) {
             var ue;
             for (ue = 0; ue < kg.length; ue++) {
-              tl.ts(kg[ue]);
+              tl.restoreScroll(kg[ue]);
             }
           }
           var Uc = d.pointManagerState;
@@ -856,7 +856,7 @@ export function createSaveState(a) {
       }
       ha = Ga;
     }
-    var nb = game.scrolls.at,
+    var nb = game.scrolls.scrollList,
       fb = [],
       cb;
     for (cb = 0; cb < nb.length; cb++) {

@@ -635,7 +635,7 @@ export function initializeViewsExpedition() {
       (/** @type {any} */ (this)).createDomElements();
     }
     var a,
-      b = game.scrolls.at,
+      b = game.scrolls.scrollList,
       c,
       d;
     for (a = 0; a < this.buttonViews.length; a++) {

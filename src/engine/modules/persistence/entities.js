@@ -319,7 +319,7 @@ export function restoreStatistics(a, b, c) {
   b.weaponRacksLooted = c;
 }
 export function initializePersistenceEntities() {
-  MonsterSaveAdapter.prototype.Kw = function (a) {
+  MonsterSaveAdapter.prototype.restoreMonsterTypes = function (a) {
     var b = game.monsterCatalog;
     b.minUnlockedLevel = a.minUnlockedLevel;
     b.maxUnlockedLevel = a.maxUnlockedLevel;
@@ -331,13 +331,13 @@ export function initializePersistenceEntities() {
       game.monsterCatalog.monsterTypesByLevelCache[d + ""] = f;
     }
   };
-  StatisticsSaveAdapter.prototype.ts = function (a) {
-    var b = a.count,
-      c = a.locked,
-      d = a.upgradeCount;
-    if (a = game.scrolls.getScrollById(a.scrollId)) {
-      a.quantity = b;
-      a.ts(c, d);
+  StatisticsSaveAdapter.prototype.restoreScroll = function (entry) {
+    var count = entry.count,
+      locked = entry.locked,
+      upgradeCount = entry.upgradeCount;
+    if (entry = game.scrolls.getScrollById(entry.scrollId)) {
+      entry.quantity = count;
+      entry.applyLockedAndUpgradeState(locked, upgradeCount);
     }
   };
 }

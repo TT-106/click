@@ -1,0 +1,11 @@
+[
+  { "old": "tn", "new": "statBonusPerUpgrade", "expect": 7, "files": ["src/engine/modules/combat/scrolls.js", "src/engine/modules/progression/upgrades.js"] },
+  { "old": "fq", "new": "statBonusPerUpgrade", "expect": 6, "files": ["src/engine/modules/combat/scrolls.js"] },
+  { "old": "rn", "new": "upgradeCost", "expect": 7, "files": ["src/engine/modules/combat/scrolls.js", "src/engine/modules/progression/upgrades.js"] },
+  { "old": "lx", "new": "nextLabel", "expect": 4, "files": ["src/engine/modules/combat/scrolls.js", "src/engine/modules/progression/upgrades.js"] },
+  { "old": "at", "new": "scrollList", "expect": 5, "files": ["src/engine/modules/combat/scrolls.js", "src/engine/modules/persistence/game-save.js", "src/engine/modules/views/expedition.js"] },
+  { "old": "kx", "new": "scrollsById", "expect": 4, "files": ["src/engine/modules/combat/scrolls.js"] },
+  { "old": "eq", "new": "scrollTargets", "expect": 3, "files": ["src/engine/modules/combat/scrolls.js"] },
+  { "old": "mB", "new": "scrollSpell", "expect": 3, "files": ["src/engine/modules/combat/scrolls.js"] },
+  { "old": "Kw", "new": "restoreMonsterTypes", "expect": 2, "files": ["src/engine/modules/persistence/entities.js", "src/engine/modules/persistence/game-save.js"] }
+]

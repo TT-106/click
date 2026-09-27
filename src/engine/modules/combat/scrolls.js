@@ -33,20 +33,20 @@ export function isSpellReady(a) {
   return game.state.turnNumber - a.lastCastTurn >= a.cooldownTurns;
 }
 export function Scroll(a, b) {
-  this.eq = b;
+  this.scrollTargets = b;
   this.scrollId = a.scrollId;
   this.spriteName = game.itemSprites.getSprite(a.spriteName);
   this.baseName = a.baseName;
   this.baseCapacity = a.baseCapacity;
   this.capacityIncrement = a.capacityIncrement;
   this.maxCharges = a.maxCharges;
-  this.mB = a.spellDefinition ? new Spell(a.spellDefinition) : null;
-  this.tn = a.fq;
+  this.scrollSpell = a.spellDefinition ? new Spell(a.spellDefinition) : null;
+  this.statBonusPerUpgrade = a.statBonusPerUpgrade;
   this.locked = true;
   this.quantity = this.upgradeCount = 0;
-  this.rn = getScrollUpgradeCost(this);
+  this.upgradeCost = getScrollUpgradeCost(this);
   this.label = getScrollLabel(this);
-  this.lx = getNextScrollLabel(this);
+  this.nextLabel = getNextScrollLabel(this);
 }
 export function getScrollSprite(a) {
   return a.spriteName;
@@ -121,7 +121,7 @@ export function castScroll(a, b) {
           p,
           s = -1;
         for (h = 0; h < d.length; h++) {
-          if (!(g = d[h], c === g || g.isDead || g.position.room !== f || (p = g.effects, p.isStealthed || p.isDisabled || p.isConverted || -1 < a.eq.recentTargets.indexOf(g) || (p = l.squaredDistanceTo(g.position.levelPosition), !(0 > s || p < s))))) {
+          if (!(g = d[h], c === g || g.isDead || g.position.room !== f || (p = g.effects, p.isStealthed || p.isDisabled || p.isConverted || -1 < a.scrollTargets.recentTargets.indexOf(g) || (p = l.squaredDistanceTo(g.position.levelPosition), !(0 > s || p < s))))) {
             n = g;
             s = p;
           }
@@ -139,7 +139,7 @@ export function castScroll(a, b) {
       }
     }
     if (c) {
-      d = a.eq;
+      d = a.scrollTargets;
       if (0 > d.recentTargets.indexOf(c)) {
         d.recentTargets.push(c);
         if (4 <= d.recentTargets.length) {
@@ -149,8 +149,8 @@ export function castScroll(a, b) {
       d = game.state.scrollCaster.position;
       d.room = c.position.room;
       game.state.scrollCaster.setCombatTarget(c);
-      if (a.mB) {
-        game.state.scrollCaster.spellToCast = a.mB;
+      if (a.scrollSpell) {
+        game.state.scrollCaster.spellToCast = a.scrollSpell;
         game.state.scrollCaster.actionType = CAST_ACTION_TYPE;
       } else {
         game.state.scrollCaster.actionType = MELEE_ACTION_TYPE;
@@ -194,21 +194,21 @@ export function removeScrollDrop(a) {
   }
 }
 export function ScrollInventory() {
-  this.kx = {};
-  this.at = [];
+  this.scrollsById = {};
+  this.scrollList = [];
   this.unlockedScrolls = [];
 }
 export function resetScrollInventory() {
   var a = game.scrolls;
-  a.kx = {};
-  a.at.length = 0;
+  a.scrollsById = {};
+  a.scrollList.length = 0;
   a.unlockedScrolls.length = 0;
   var b, c;
   for (b = 0; b < scrollDefinitions.length; b++) {
     c = new Scroll(scrollDefinitions[b], game.scrollTargets);
-    (/** @type {any} */ (c)).ts(0 < scrollDefinitions[b].baseCapacity, 0);
-    a.at.push(c);
-    a.kx[c.scrollId] = c;
+    (/** @type {any} */ (c)).applyLockedAndUpgradeState(0 < scrollDefinitions[b].baseCapacity, 0);
+    a.scrollList.push(c);
+    a.scrollsById[c.scrollId] = c;
     if (!c.locked) {
       registerUnlockedScroll(a, c);
     }
@@ -220,22 +220,22 @@ export function registerUnlockedScroll(a, b) {
   }
 }
 export function initializeCombatScrolls() {
-  Scroll.prototype.ts = function (a, b) {
-    if (this.locked && !a) {
+  Scroll.prototype.applyLockedAndUpgradeState = function (locked, upgradeCount) {
+    if (this.locked && !locked) {
       this.locked = false;
       registerUnlockedScroll(game.scrolls, this);
     }
-    this.upgradeCount = b;
-    if (0 < b && this.tn) {
-      var c;
-      for (c = 0; c < this.upgradeCount; c++) {
-        applyStatBonus(game.state.scrollCaster, this.tn.statType, this.tn.statBonusValue);
+    this.upgradeCount = upgradeCount;
+    if (0 < upgradeCount && this.statBonusPerUpgrade) {
+      var level;
+      for (level = 0; level < this.upgradeCount; level++) {
+        applyStatBonus(game.state.scrollCaster, this.statBonusPerUpgrade.statType, this.statBonusPerUpgrade.statBonusValue);
       }
       updateScrollAccuracy();
     }
     this.label = getScrollLabel(this);
-    this.lx = getNextScrollLabel(this);
-    this.rn = getScrollUpgradeCost(this);
+    this.nextLabel = getNextScrollLabel(this);
+    this.upgradeCost = getScrollUpgradeCost(this);
   };
   ScrollDrop.prototype.getScroll = function () {
     return this.scroll;
@@ -275,7 +275,7 @@ export function initializeCombatScrolls() {
     baseCapacity: 3,
     capacityIncrement: 4,
     maxCharges: 4,
-    fq: {
+    statBonusPerUpgrade: {
       statType: 20,
       statBonusValue: 2
     }
@@ -287,7 +287,7 @@ export function initializeCombatScrolls() {
     baseCapacity: 6,
     capacityIncrement: 4,
     maxCharges: 4,
-    fq: {
+    statBonusPerUpgrade: {
       statType: 23,
       statBonusValue: 1
     }
@@ -299,7 +299,7 @@ export function initializeCombatScrolls() {
     baseCapacity: 9,
     capacityIncrement: 4,
     maxCharges: 2,
-    fq: {
+    statBonusPerUpgrade: {
       statType: 22,
       statBonusValue: 1
     }
@@ -311,7 +311,7 @@ export function initializeCombatScrolls() {
     baseCapacity: 12,
     capacityIncrement: 4,
     maxCharges: 3,
-    fq: {
+    statBonusPerUpgrade: {
       statType: 21,
       statBonusValue: 1
     }
@@ -323,12 +323,12 @@ export function initializeCombatScrolls() {
     baseCapacity: 15,
     capacityIncrement: 4,
     maxCharges: 2,
-    fq: {
+    statBonusPerUpgrade: {
       statType: 25,
       statBonusValue: 1
     }
   }];
   ScrollInventory.prototype.getScrollById = function (a) {
-    return this.kx[a];
+    return this.scrollsById[a];
   };
 }

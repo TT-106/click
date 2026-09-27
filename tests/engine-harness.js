@@ -419,7 +419,7 @@ window.harness = {
   castScrollDuringCombat({ maxTurns = 3000, scrollId } = {}) {
     const scroll = (original
       ? window.Game.nh.at.find(s => !s.Qe && s.mh > 0 && (!scrollId || s.qg === scrollId))
-      : game.scrolls.at.find(s => !s.locked && s.quantity > 0 && (!scrollId || s.scrollId === scrollId)));
+      : game.scrolls.scrollList.find(s => !s.locked && s.quantity > 0 && (!scrollId || s.scrollId === scrollId)));
     if (!scroll) throw new Error(`没有已解锁且有库存的卷轴 (${scrollId || 'any'})`);
     const before = snapshot().statistics.scrollsUsed;
     let attempts = 0;
