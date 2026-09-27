@@ -17,15 +17,15 @@ import { statValue } from "../characters/stats.js";
 export function UpgradeButtonView(a, b, c, d) {
   this.elementId = a + "_" + c;
   this.visible = true;
-  this.QA = a;
+  this.baseElementId = a;
   this.upgrade = b;
   this.activeDetails = null;
-  this.GC = d;
-  this.zo = this.buttonElement = null;
+  this.alwaysVisible = d;
+  this.cachedUpgradeType = this.buttonElement = null;
   this.buttonLabel = "";
 }
 export function mountUpgradeButton(a) {
-  var b = getElement(a.QA);
+  var b = getElement(a.baseElementId);
   a.buttonLabel = a.Ro();
   a.buttonElement = createElement("div", b, a.elementId, a.buttonLabel);
   a.buttonElement.onmouseup = function () {
@@ -74,7 +74,7 @@ export function createUpgradeDetails(a, b) {
 export function ItemPurchaseDetails(a, b) {
   this.upgrade = a;
   this.contentContainer = b;
-  this.descriptionLabel = this.titleLabel = this.costElement = this.rp = this.detailsContainer = null;
+  this.descriptionLabel = this.titleLabel = this.costElement = this.descriptionContainer = this.detailsContainer = null;
   this.shown = false;
   this.cachedCostValue = -1;
   this.cachedTitleText = this.cachedDescriptionText = null;
@@ -90,16 +90,16 @@ export function EquipmentDetails(a, b) {
 export function GlobalUpgradeDetails(a, b) {
   this.upgrade = a;
   this.contentContainer = b;
-  this.ks = this.iA = this.Fw = this.jA = this.Qm = this.kp = this.tableElement = null;
+  this.itemStatLabel = this.levelLabel = this.rarityLabel = this.itemNameLabel = this.monsterImage = this.itemImage = this.tableElement = null;
   this.shown = false;
-  this.cv = null;
+  this.cachedItem = null;
 }
 export function AutoDungeonDetails(a, b) {
   this.upgrade = a;
   this.contentContainer = b;
-  this.labelCell = this.titleElement = this.mo = this.tableElement = null;
+  this.labelCell = this.titleElement = this.previewImage = this.tableElement = null;
   this.shown = false;
-  this.cachedTitleText = this.oz = this.cachedDescriptionText = "";
+  this.cachedTitleText = this.cachedTitle = this.cachedDescriptionText = "";
 }
 export function EquipmentSetDetails(a, b) {
   this.upgrade = a;
@@ -130,16 +130,16 @@ export function appendEquipmentRow(a, b) {
 export function SkillUpgradeDetails(a, b) {
   this.upgrade = a;
   this.contentContainer = b;
-  this.descriptionElement = this.titleElement = this.kq = this.wn = null;
+  this.descriptionElement = this.titleElement = this.descriptionContainer = this.titleContainer = null;
   this.shown = false;
   this.cachedTitleText = this.cachedDescriptionText = null;
 }
 export function SpellUpgradeDetails(a, b) {
   this.upgrade = a;
   this.contentContainer = b;
-  this.vu = this.actionLabel = this.yn = this.table = null;
+  this.descriptionLabel = this.actionLabel = this.spellImage = this.table = null;
   this.shown = false;
-  this.zn = this.Dx = this.Lv = null;
+  this.asset = this.assetSource = this.cachedSpell = null;
   this.isAnimated = true;
   this.frameAge = this.frameIndex = 0;
   this.qw = 8;
@@ -147,7 +147,7 @@ export function SpellUpgradeDetails(a, b) {
 export function MonsterLevelDetails(a, b) {
   this.upgrade = a;
   this.contentContainer = b;
-  this.descriptionLabel = this.titleLabel = this.costLabel = this.Dq = this.tableContainer = null;
+  this.descriptionLabel = this.titleLabel = this.costLabel = this.descriptionContainer = this.tableContainer = null;
   this.shown = false;
   this.cachedCostValue = -1;
   this.cachedTitleText = this.cachedDescriptionText = null;
@@ -155,32 +155,32 @@ export function MonsterLevelDetails(a, b) {
 export function DungeonPurchaseDetails(a, b) {
   this.upgrade = a;
   this.contentContainer = b;
-  this.selectedDungeon = this.labelCell = this.titleElement = this.previewImageElement = this.tableElement = this.Cq = null;
+  this.selectedDungeon = this.labelCell = this.titleElement = this.previewImageElement = this.tableElement = this.costElement = null;
   this.shown = false;
   this.cachedCostValue = -1;
 }
 export function ScrollUpgradeDetails(a, b) {
   this.upgrade = a;
   this.contentContainer = b;
-  this.tm = this.dq = this.titleElement = this.Vh = this.sn = this.Cq = null;
+  this.cachedScroll = this.titleCell = this.titleElement = this.scrollImage = this.tableElement = this.costElement = null;
   this.shown = false;
-  this.Az = null;
+  this.cachedDescriptionText = null;
   this.cachedCostValue = -1;
   this.cachedTitleText = null;
 }
 export function CastlePurchaseDetails(a, b) {
   this.upgrade = a;
   this.contentContainer = b;
-  this.selectedDungeon = this.labelCell = this.titleElement = this.previewImageElement = this.Cm = this.Uz = null;
+  this.selectedDungeon = this.labelCell = this.titleElement = this.previewImageElement = this.tableElement = this.bonusLabel = null;
   this.shown = false;
   this.cachedRequiredLevel = -1;
 }
 export function FarmUpgradeDetails(a, b) {
   this.upgrade = a;
   this.contentContainer = b;
-  this.selectedDungeon = this.labelCell = this.titleElement = this.previewImageElement = this.Hm = this.Tz = null;
+  this.selectedDungeon = this.labelCell = this.titleElement = this.previewImageElement = this.tableElement = this.bonusLabel = null;
   this.shown = false;
-  this.Dk = -1;
+  this.cachedBonus = -1;
 }
 export function CharacterLevelDetails(a, b) {
   this.upgrade = a;
@@ -245,20 +245,20 @@ export function initializeViewsUpgradeDetails() {
     if (this.activeDetails) {
       this.activeDetails.attachUpgrade(a);
     }
-    if (!(this.GC || this.upgrade.isDisplayable())) {
+    if (!(this.alwaysVisible || this.upgrade.isDisplayable())) {
       if (this.buttonElement) {
         hideElement(this.buttonElement);
       }
     }
   };
   UpgradeButtonView.prototype.isVisible = function () {
-    return this.GC ? true : this.upgrade && this.upgrade.isDisplayable();
+    return this.alwaysVisible ? true : this.upgrade && this.upgrade.isDisplayable();
   };
   UpgradeButtonView.prototype.reset = function () {
-    if (getElement(this.QA)) {
+    if (getElement(this.baseElementId)) {
       this.buttonElement = null;
       mountUpgradeButton(this);
-      this.zo = this.activeDetails = null;
+      this.cachedUpgradeType = this.activeDetails = null;
     }
   };
   UpgradeButtonView.prototype.onPurchaseClicked = function () {
@@ -272,14 +272,14 @@ export function initializeViewsUpgradeDetails() {
     if (!this.buttonElement) {
       mountUpgradeButton(this);
     }
-    if (this.zo !== a) {
-      this.zo = a;
-      if (this.activeDetails && this.zo !== this.activeDetails.getUpgradeType()) {
+    if (this.cachedUpgradeType !== a) {
+      this.cachedUpgradeType = a;
+      if (this.activeDetails && this.cachedUpgradeType !== this.activeDetails.getUpgradeType()) {
         clearElement(this.buttonElement);
         this.activeDetails = null;
       }
       if (!this.activeDetails) {
-        this.activeDetails = createUpgradeDetails(this, this.zo);
+        this.activeDetails = createUpgradeDetails(this, this.cachedUpgradeType);
       }
       if (this.activeDetails) {
         this.activeDetails.showDetails();
@@ -312,7 +312,7 @@ export function initializeViewsUpgradeDetails() {
     }
     if (!this.shown) {
       showElement(this.detailsContainer);
-      showElement(this.rp);
+      showElement(this.descriptionContainer);
       this.shown = true;
     }
   };
@@ -337,9 +337,9 @@ export function initializeViewsUpgradeDetails() {
     this.detailsContainer = createElement("div", this.contentContainer, null, null);
     this.detailsContainer.style.position = "relative";
     this.detailsContainer.style.height = "30px";
-    this.rp = createElement("div", this.contentContainer, null, null);
-    this.rp.style.position = "relative";
-    this.rp.style.height = "30px";
+    this.descriptionContainer = createElement("div", this.contentContainer, null, null);
+    this.descriptionContainer.style.position = "relative";
+    this.descriptionContainer.style.height = "30px";
     var a = createElement("div", this.detailsContainer, null, null);
     a.style.position = "absolute";
     a.style.right = "3px";
@@ -368,7 +368,7 @@ export function initializeViewsUpgradeDetails() {
     this.titleLabel.style.height = "25px";
     this.titleLabel.style.paddingTop = "5px";
     this.titleLabel.style.textAlign = "left";
-    this.descriptionLabel = createElement("div", this.rp, null, null);
+    this.descriptionLabel = createElement("div", this.descriptionContainer, null, null);
     this.descriptionLabel.style.position = "absolute";
     this.descriptionLabel.style.left = "3px";
     this.descriptionLabel.style.top = "0";
@@ -452,7 +452,7 @@ export function initializeViewsUpgradeDetails() {
     return 3;
   };
   GlobalUpgradeDetails.prototype.reset = function () {
-    this.cv = null;
+    this.cachedItem = null;
   };
   GlobalUpgradeDetails.prototype.attachUpgrade = function (a) {
     this.upgrade = a;
@@ -468,18 +468,18 @@ export function initializeViewsUpgradeDetails() {
   };
   GlobalUpgradeDetails.prototype.update = function () {
     var a = this.upgrade.Oz();
-    if (this.cv !== a) {
-      this.cv = a;
+    if (this.cachedItem !== a) {
+      this.cachedItem = a;
       var b = a.getIconSprite(),
         c = a.inventory.getSprite();
-      this.kp.style.background = "url('spritesheet/items.png') -" + b.sourceX + "px -" + b.sourceY + "px";
-      this.jA.innerHTML = getHighlightedItemName(a);
-      this.Fw.className = getRarityClass(a.getRarity());
-      this.Fw.innerHTML = " (" + getItemRarityLabel(a) + ")";
-      this.Qm.style.background = "url('spritesheet/monsters.png') -" + (c.sourceX + 10) + "px -" + (c.sourceY + 12) + "px";
-      this.iA.innerHTML = "等级" + a.itemLevel;
+      this.itemImage.style.background = "url('spritesheet/items.png') -" + b.sourceX + "px -" + b.sourceY + "px";
+      this.itemNameLabel.innerHTML = getHighlightedItemName(a);
+      this.rarityLabel.className = getRarityClass(a.getRarity());
+      this.rarityLabel.innerHTML = " (" + getItemRarityLabel(a) + ")";
+      this.monsterImage.style.background = "url('spritesheet/monsters.png') -" + (c.sourceX + 10) + "px -" + (c.sourceY + 12) + "px";
+      this.levelLabel.innerHTML = "等级" + a.itemLevel;
       b = (b = a.inventory.getSlotItem(a.slot)) ? a.itemValue - b.itemValue : a.itemValue;
-      this.ks.innerHTML = 0 < b ? "+" + formatAmount(b) + " " + getItemStatLabel(a) : formatAmount(b) + " " + getItemStatLabel(a);
+      this.itemStatLabel.innerHTML = 0 < b ? "+" + formatAmount(b) + " " + getItemStatLabel(a) : formatAmount(b) + " " + getItemStatLabel(a);
     }
   };
   GlobalUpgradeDetails.prototype.createDomElements = function () {
@@ -491,36 +491,36 @@ export function initializeViewsUpgradeDetails() {
     c.style.width = "30px";
     c.style.height = "30px";
     c.style.textAlign = "center";
-    this.kp = createElement("img", c, null, null);
-    this.kp.src = "images/Transparent.gif";
-    this.kp.style.width = "30px";
-    this.kp.style.height = "30px";
+    this.itemImage = createElement("img", c, null, null);
+    this.itemImage.src = "images/Transparent.gif";
+    this.itemImage.style.width = "30px";
+    this.itemImage.style.height = "30px";
     a = a.insertCell(1);
     a.style.textAlign = "left";
     a.colSpan = 2;
-    this.jA = createElement("span", a, null, null);
-    this.Fw = createElement("span", a, null, null);
+    this.itemNameLabel = createElement("span", a, null, null);
+    this.rarityLabel = createElement("span", a, null, null);
     a = b.insertCell(0);
     a.style.width = "30px";
     a.style.height = "30px";
     a.style.verticalAlign = "top";
-    this.Qm = createElement("img", a, null, null);
-    this.Qm.className = "characterImage";
-    this.Qm.src = "images/Transparent.gif";
-    this.Qm.style.height = "30px";
-    this.Qm.style.width = "30px";
+    this.monsterImage = createElement("img", a, null, null);
+    this.monsterImage.className = "characterImage";
+    this.monsterImage.src = "images/Transparent.gif";
+    this.monsterImage.style.height = "30px";
+    this.monsterImage.style.width = "30px";
     a = b.insertCell(1);
     a.style.width = "70px";
     a.style.paddingLeft = "2px";
     a.style.textAlign = "left";
-    this.iA = createElement("span", a, null, null);
+    this.levelLabel = createElement("span", a, null, null);
     b = b.insertCell(2);
     b.style.width = "140px";
     b.style.paddingLeft = "2px";
     b.style.textAlign = "right";
-    this.ks = createElement("span", b, null, null);
-    this.ks.style.marginLeft = "10px";
-    this.ks.style.color = "#0A0";
+    this.itemStatLabel = createElement("span", b, null, null);
+    this.itemStatLabel.style.marginLeft = "10px";
+    this.itemStatLabel.style.color = "#0A0";
   };
   AutoDungeonDetails.prototype.getUpgradeType = function () {
     return 13;
@@ -543,8 +543,8 @@ export function initializeViewsUpgradeDetails() {
   AutoDungeonDetails.prototype.update = function () {
     var a = this.upgrade.getDescription(),
       b = this.upgrade.getTitle();
-    if (this.oz != b) {
-      this.oz = b;
+    if (this.cachedTitle != b) {
+      this.cachedTitle = b;
       this.titleElement.innerHTML = b;
     }
     if (this.cachedDescriptionText != a) {
@@ -562,12 +562,12 @@ export function initializeViewsUpgradeDetails() {
     c.style.width = "50px";
     c.style.height = "50px";
     c.style.textAlign = "center";
-    this.mo = createElement("img", c, null, null);
-    this.mo.src = "images/Transparent.gif";
-    this.mo.style.width = "50px";
-    this.mo.style.height = "50px";
+    this.previewImage = createElement("img", c, null, null);
+    this.previewImage.src = "images/Transparent.gif";
+    this.previewImage.style.width = "50px";
+    this.previewImage.style.height = "50px";
     c = game.terrainSprites.getSprite(game.castles.Ny);
-    this.mo.style.background = "url('spritesheet/terrain.png') -" + c.sourceX + "px -" + c.sourceY + "px";
+    this.previewImage.style.background = "url('spritesheet/terrain.png') -" + c.sourceX + "px -" + c.sourceY + "px";
     a = a.insertCell(1);
     a.style.textAlign = "left";
     this.titleElement = createElement("span", a, null, null);
@@ -635,12 +635,12 @@ export function initializeViewsUpgradeDetails() {
     this.upgrade = a;
   };
   SkillUpgradeDetails.prototype.showDetails = function () {
-    if (!this.wn) {
+    if (!this.titleContainer) {
       (/** @type {DomDetails} */ (/** @type {unknown} */ (this))).createDomElements();
     }
     if (!this.shown) {
-      showElement(this.wn);
-      showElement(this.kq);
+      showElement(this.titleContainer);
+      showElement(this.descriptionContainer);
       this.shown = true;
     }
   };
@@ -657,13 +657,13 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   SkillUpgradeDetails.prototype.createDomElements = function () {
-    this.wn = createElement("div", this.contentContainer, null, null);
-    this.wn.style.position = "relative";
-    this.wn.style.height = "30px";
-    this.kq = createElement("div", this.contentContainer, null, null);
-    this.kq.style.position = "relative";
-    this.kq.style.height = "30px";
-    this.titleElement = createElement("div", this.wn, null, null);
+    this.titleContainer = createElement("div", this.contentContainer, null, null);
+    this.titleContainer.style.position = "relative";
+    this.titleContainer.style.height = "30px";
+    this.descriptionContainer = createElement("div", this.contentContainer, null, null);
+    this.descriptionContainer.style.position = "relative";
+    this.descriptionContainer.style.height = "30px";
+    this.titleElement = createElement("div", this.titleContainer, null, null);
     this.titleElement.style.position = "absolute";
     this.titleElement.style.top = "0";
     this.titleElement.style.left = "3px";
@@ -671,7 +671,7 @@ export function initializeViewsUpgradeDetails() {
     this.titleElement.style.height = "25px";
     this.titleElement.style.paddingTop = "5px";
     this.titleElement.style.textAlign = "left";
-    this.descriptionElement = createElement("div", this.kq, null, null);
+    this.descriptionElement = createElement("div", this.descriptionContainer, null, null);
     this.descriptionElement.style.position = "absolute";
     this.descriptionElement.style.left = "3px";
     this.descriptionElement.style.top = "0";
@@ -684,7 +684,7 @@ export function initializeViewsUpgradeDetails() {
     return 6;
   };
   SpellUpgradeDetails.prototype.reset = function () {
-    this.Lv = null;
+    this.cachedSpell = null;
   };
   SpellUpgradeDetails.prototype.attachUpgrade = function (a) {
     this.upgrade = a;
@@ -700,35 +700,35 @@ export function initializeViewsUpgradeDetails() {
   };
   SpellUpgradeDetails.prototype.update = function () {
     var a = this.upgrade.getSpell();
-    if (this.Lv !== a) {
-      this.Lv = a;
+    if (this.cachedSpell !== a) {
+      this.cachedSpell = a;
       var b = a.spellCategoryId;
       if (10 === b || 9 === b || 17 === b || 11 === b) {
         a = minionsBySpell[a.name].spriteName;
-        this.Dx = game.monsterSprites;
-        this.zn = game.monsterSprites.getSprite(a);
+        this.assetSource = game.monsterSprites;
+        this.asset = game.monsterSprites.getSprite(a);
         this.isAnimated = false;
-        this.yn.style.background = "url('spritesheet/monsters.png') -" + (this.zn.sourceX + 10) + "px -" + (this.zn.sourceY + 12) + "px";
+        this.spellImage.style.background = "url('spritesheet/monsters.png') -" + (this.asset.sourceX + 10) + "px -" + (this.asset.sourceY + 12) + "px";
       } else {
         a = a.impactEffectName;
-        this.Dx = game.animations.animationMap[a];
-        this.zn = game.animations.getAnimation(a);
+        this.assetSource = game.animations.animationMap[a];
+        this.asset = game.animations.getAnimation(a);
         this.frameAge = this.frameIndex = 0;
         this.isAnimated = true;
       }
       this.actionLabel.innerHTML = this.upgrade.getTitle();
-      this.vu.innerHTML = this.upgrade.getDescription();
+      this.descriptionLabel.innerHTML = this.upgrade.getDescription();
     }
     if (this.isAnimated) {
       this.frameAge++;
       if (this.frameAge >= this.qw) {
         this.frameAge = 0;
         this.frameIndex++;
-        if (this.frameIndex >= this.zn.To()) {
+        if (this.frameIndex >= this.asset.To()) {
           this.frameIndex = 0;
         }
-        a = this.zn.frames[this.frameIndex];
-        this.yn.style.background = "url('" + this.Dx.fileName + "') -" + a.frameSourceX + "px -" + a.frameSourceY + "px";
+        a = this.asset.frames[this.frameIndex];
+        this.spellImage.style.background = "url('" + this.assetSource.fileName + "') -" + a.frameSourceX + "px -" + a.frameSourceY + "px";
       }
     }
   };
@@ -745,18 +745,18 @@ export function initializeViewsUpgradeDetails() {
     c.style.textAlign = "center";
     a.style.width = "180px";
     a.style.textAlign = "left";
-    this.yn = createElement("img", c, null, null);
-    this.yn.src = "images/Transparent.gif";
-    this.yn.style.width = "29px";
-    this.yn.style.height = "29px";
+    this.spellImage = createElement("img", c, null, null);
+    this.spellImage.src = "images/Transparent.gif";
+    this.spellImage.style.width = "29px";
+    this.spellImage.style.height = "29px";
     this.actionLabel = createElement("span", a, null, null);
     this.actionLabel.style.paddingTop = "5px";
     this.actionLabel.style.textAlign = "left";
     b = b.insertCell(0);
     b.colSpan = 2;
     b.style.textAlign = "left";
-    this.vu = createElement("span", b, null, null);
-    this.vu.style.paddingTop = "5px";
+    this.descriptionLabel = createElement("span", b, null, null);
+    this.descriptionLabel.style.paddingTop = "5px";
   };
   MonsterLevelDetails.prototype.getUpgradeType = function () {
     return 7;
@@ -774,7 +774,7 @@ export function initializeViewsUpgradeDetails() {
     }
     if (!this.shown) {
       showElement(this.tableContainer);
-      showElement(this.Dq);
+      showElement(this.descriptionContainer);
       this.shown = true;
     }
   };
@@ -799,9 +799,9 @@ export function initializeViewsUpgradeDetails() {
     this.tableContainer = createElement("div", this.contentContainer, null, null);
     this.tableContainer.style.position = "relative";
     this.tableContainer.style.height = "30px";
-    this.Dq = createElement("div", this.contentContainer, null, null);
-    this.Dq.style.position = "relative";
-    this.Dq.style.height = "30px";
+    this.descriptionContainer = createElement("div", this.contentContainer, null, null);
+    this.descriptionContainer.style.position = "relative";
+    this.descriptionContainer.style.height = "30px";
     var a = createElement("div", this.tableContainer, null, null);
     a.style.position = "absolute";
     a.style.right = "3px";
@@ -830,7 +830,7 @@ export function initializeViewsUpgradeDetails() {
     this.titleLabel.style.height = "25px";
     this.titleLabel.style.paddingTop = "5px";
     this.titleLabel.style.textAlign = "left";
-    this.descriptionLabel = createElement("div", this.Dq, null, null);
+    this.descriptionLabel = createElement("div", this.descriptionContainer, null, null);
     this.descriptionLabel.style.position = "absolute";
     this.descriptionLabel.style.left = "3px";
     this.descriptionLabel.style.top = "0";
@@ -863,7 +863,7 @@ export function initializeViewsUpgradeDetails() {
       b = this.upgrade.Wo();
     if (this.cachedCostValue !== a) {
       this.cachedCostValue = a;
-      this.Cq.innerHTML = formatAmount(a);
+      this.costElement.innerHTML = formatAmount(a);
     }
     if (this.selectedDungeon !== b && (this.selectedDungeon = b)) {
       a = game.terrainSprites.getSprite(b.mapSprite);
@@ -890,7 +890,7 @@ export function initializeViewsUpgradeDetails() {
     this.titleElement = createElement("span", c, null, null);
     this.titleElement.innerHTML = this.upgrade.getTitle();
     c = a.insertCell(2);
-    this.Cq = createElement("span", c, null, null);
+    this.costElement = createElement("span", c, null, null);
     a = a.insertCell(3);
     a.style.width = "30px";
     a = createElement("div", a, null, null);
@@ -912,17 +912,17 @@ export function initializeViewsUpgradeDetails() {
   };
   ScrollUpgradeDetails.prototype.reset = function () {
     this.cachedCostValue = -1;
-    this.tm = null;
+    this.cachedScroll = null;
   };
   ScrollUpgradeDetails.prototype.attachUpgrade = function (a) {
     this.upgrade = a;
   };
   ScrollUpgradeDetails.prototype.showDetails = function () {
-    if (!this.sn) {
+    if (!this.tableElement) {
       (/** @type {DomDetails} */ (/** @type {unknown} */ (this))).createDomElements();
     }
     if (!this.shown) {
-      showElement(this.sn);
+      showElement(this.tableElement);
       this.shown = true;
     }
   };
@@ -933,41 +933,41 @@ export function initializeViewsUpgradeDetails() {
       d = this.upgrade.getDescription();
     if (this.cachedCostValue !== a) {
       this.cachedCostValue = a;
-      this.Cq.innerHTML = formatAmount(a);
+      this.costElement.innerHTML = formatAmount(a);
     }
-    if (this.tm !== b && (this.tm = b)) {
+    if (this.cachedScroll !== b && (this.cachedScroll = b)) {
       a = b.spriteName;
-      this.Vh.style.background = "url('spritesheet/items.png') -" + a.sourceX + "px -" + a.sourceY + "px";
+      this.scrollImage.style.background = "url('spritesheet/items.png') -" + a.sourceX + "px -" + a.sourceY + "px";
     }
     if (this.cachedTitleText !== c) {
       this.cachedTitleText = c;
-      this.dq.innerHTML = c;
+      this.titleCell.innerHTML = c;
     }
-    if (this.Az !== d) {
-      this.Az = d;
+    if (this.cachedDescriptionText !== d) {
+      this.cachedDescriptionText = d;
       this.titleElement.innerHTML = this.upgrade.getDescription();
     }
   };
   ScrollUpgradeDetails.prototype.createDomElements = function () {
-    this.sn = createElement("table", this.contentContainer, null, null);
-    this.sn.style.width = "100%";
-    var a = this.sn.insertRow(0),
-      b = this.sn.insertRow(1),
+    this.tableElement = createElement("table", this.contentContainer, null, null);
+    this.tableElement.style.width = "100%";
+    var a = this.tableElement.insertRow(0),
+      b = this.tableElement.insertRow(1),
       c = a.insertCell(0);
     c.rowSpan = 2;
     c.style.width = "30px";
     c.style.height = "30px";
     c.style.textAlign = "center";
-    this.Vh = createElement("img", c, null, null);
-    this.Vh.src = "images/Transparent.gif";
-    this.Vh.style.width = "30px";
-    this.Vh.style.height = "30px";
+    this.scrollImage = createElement("img", c, null, null);
+    this.scrollImage.src = "images/Transparent.gif";
+    this.scrollImage.style.width = "30px";
+    this.scrollImage.style.height = "30px";
     c = a.insertCell(1);
     c.style.textAlign = "left";
     this.titleElement = createElement("span", c, null, null);
     this.titleElement.innerHTML = this.upgrade.getTitle();
     c = a.insertCell(2);
-    this.Cq = createElement("span", c, null, null);
+    this.costElement = createElement("span", c, null, null);
     a = a.insertCell(3);
     a.style.width = "30px";
     a = createElement("div", a, null, null);
@@ -979,10 +979,10 @@ export function initializeViewsUpgradeDetails() {
     a.src = "images/Transparent.gif";
     a.style.width = "100%";
     a.style.height = "15px";
-    this.dq = b.insertCell(0);
-    this.dq.colSpan = 3;
-    this.dq.style.width = "200px";
-    this.dq.style.textAlign = "left";
+    this.titleCell = b.insertCell(0);
+    this.titleCell.colSpan = 3;
+    this.titleCell.style.width = "200px";
+    this.titleCell.style.textAlign = "left";
   };
   CastlePurchaseDetails.prototype.getUpgradeType = function () {
     return 9;
@@ -994,11 +994,11 @@ export function initializeViewsUpgradeDetails() {
     this.upgrade = a;
   };
   CastlePurchaseDetails.prototype.showDetails = function () {
-    if (!this.Cm) {
+    if (!this.tableElement) {
       (/** @type {DomDetails} */ (/** @type {unknown} */ (this))).createDomElements();
     }
     if (!this.shown) {
-      showElement(this.Cm);
+      showElement(this.tableElement);
       this.shown = true;
     }
   };
@@ -1006,14 +1006,14 @@ export function initializeViewsUpgradeDetails() {
     var a = game.dungeons.pendingFarmKills;
     if (this.cachedRequiredLevel !== a) {
       this.cachedRequiredLevel = a;
-      this.Uz.innerHTML = "+" + formatAmount(a);
+      this.bonusLabel.innerHTML = "+" + formatAmount(a);
     }
   };
   CastlePurchaseDetails.prototype.createDomElements = function () {
-    this.Cm = createElement("table", this.contentContainer, null, null);
-    this.Cm.style.width = "100%";
-    var a = this.Cm.insertRow(0),
-      b = this.Cm.insertRow(1),
+    this.tableElement = createElement("table", this.contentContainer, null, null);
+    this.tableElement.style.width = "100%";
+    var a = this.tableElement.insertRow(0),
+      b = this.tableElement.insertRow(1),
       c = a.insertCell(0);
     c.rowSpan = 2;
     c.style.width = "50px";
@@ -1031,7 +1031,7 @@ export function initializeViewsUpgradeDetails() {
     this.titleElement = createElement("span", c, null, null);
     this.titleElement.innerHTML = this.upgrade ? this.upgrade.getTitle() : "收获地牢";
     c = a.insertCell(2);
-    this.Uz = createElement("span", c, null, null);
+    this.bonusLabel = createElement("span", c, null, null);
     a = a.insertCell(3);
     a.style.width = "30px";
     a = createElement("div", a, null, null);
@@ -1052,32 +1052,32 @@ export function initializeViewsUpgradeDetails() {
     return 10;
   };
   FarmUpgradeDetails.prototype.reset = function () {
-    this.Dk = -1;
+    this.cachedBonus = -1;
   };
   FarmUpgradeDetails.prototype.attachUpgrade = function (a) {
     this.upgrade = a;
   };
   FarmUpgradeDetails.prototype.showDetails = function () {
-    if (!this.Hm) {
+    if (!this.tableElement) {
       (/** @type {DomDetails} */ (/** @type {unknown} */ (this))).createDomElements();
     }
     if (!this.shown) {
-      showElement(this.Hm);
+      showElement(this.tableElement);
       this.shown = true;
     }
   };
   FarmUpgradeDetails.prototype.update = function () {
     var a = game.shops.collectedGold;
-    if (this.Dk !== a) {
-      this.Dk = a;
-      this.Tz.innerHTML = "+" + formatAmount(a);
+    if (this.cachedBonus !== a) {
+      this.cachedBonus = a;
+      this.bonusLabel.innerHTML = "+" + formatAmount(a);
     }
   };
   FarmUpgradeDetails.prototype.createDomElements = function () {
-    this.Hm = createElement("table", this.contentContainer, null, null);
-    this.Hm.style.width = "100%";
-    var a = this.Hm.insertRow(0),
-      b = this.Hm.insertRow(1),
+    this.tableElement = createElement("table", this.contentContainer, null, null);
+    this.tableElement.style.width = "100%";
+    var a = this.tableElement.insertRow(0),
+      b = this.tableElement.insertRow(1),
       c = a.insertCell(0);
     c.rowSpan = 2;
     c.style.width = "50px";
@@ -1095,7 +1095,7 @@ export function initializeViewsUpgradeDetails() {
     this.titleElement = createElement("span", c, null, null);
     this.titleElement.innerHTML = this.upgrade ? this.upgrade.getTitle() : "收集道具黄金";
     c = a.insertCell(2);
-    this.Tz = createElement("span", c, null, null);
+    this.bonusLabel = createElement("span", c, null, null);
     a = a.insertCell(3);
     a.style.width = "30px";
     a = createElement("div", a, null, null);

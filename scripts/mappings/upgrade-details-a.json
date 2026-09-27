@@ -1,0 +1,44 @@
+{
+  "_comment": "upgrade-details.js 批 A：UpgradeButtonView 与九个「已明确」的详情类（Item/Global/AutoDungeon/Skill/Spell/MonsterLevel/Dungeon/Scroll/Castle/Farm）。来源：构造函数成员 + reset/createDomElements 的元素创建上下文 + update 的「缓存→元素」配对。rp/Dq/kq 三者同为描述容器、Cq 为造价、Cm/Hm/sn 为表格、Uz/Tz 为加成标签，均按同类语义统一命名。",
+  "files": ["src/engine/modules/views/upgrade-details.js"],
+  "map": {
+    "QA": "baseElementId",
+    "GC": "alwaysVisible",
+    "zo": "cachedUpgradeType",
+
+    "rp": "descriptionContainer",
+    "Dq": "descriptionContainer",
+    "kq": "descriptionContainer",
+    "wn": "titleContainer",
+
+    "yn": "spellImage",
+    "vu": "descriptionLabel",
+    "zn": "asset",
+    "Dx": "assetSource",
+    "Lv": "cachedSpell",
+
+    "kp": "itemImage",
+    "jA": "itemNameLabel",
+    "Fw": "rarityLabel",
+    "Qm": "monsterImage",
+    "iA": "levelLabel",
+    "ks": "itemStatLabel",
+    "cv": "cachedItem",
+
+    "mo": "previewImage",
+    "oz": "cachedTitle",
+
+    "Cq": "costElement",
+    "Cm": "tableElement",
+    "Uz": "bonusLabel",
+    "Hm": "tableElement",
+    "Tz": "bonusLabel",
+    "Dk": "cachedBonus",
+
+    "tm": "cachedScroll",
+    "Vh": "scrollImage",
+    "dq": "titleCell",
+    "sn": "tableElement",
+    "Az": "cachedDescriptionText"
+  }
+}
