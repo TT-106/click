@@ -201,7 +201,21 @@ Xf/Qf/Rf/Zf/Cf/Ef → damageMultiplier/armorMultiplier/attackRatingMultiplier/de
   - `castScroll()` 已由 `scroll-cast-in-combat` 驱动：harness 在活怪物存在时按序施放全部 6 种卷轴（休克/蜘蛛网/箭雨/火雨/连锁闪电/火球），逐项断言施放尝试与成功，原版全局 `Hq` 与重构 `castScroll` 都让 `scrollsUsed` 增长（箭雨回退普攻并断言普攻命中，其余 5 种断言施法计数），900 回合后两端完整存档相等，非法 scrollId 两端严格抛错保护。该场景首跑曾揭示卷轴定义六条 `xa:` 与重构 Scroll 构造器 `a.spellDefinition` 跨文件式错配，已按原版配对为 `spellDefinition:` 彻底闭环。
   - DOM 路线已实测不可行并排除：7 个升级 `canPurchase` 为真时，渲染出的 558 个按钮仍全部是 `disabledUpgradeButton`（哪一行拿到 `.upgradeButton` 类取决于排序后的可见槽位），且原版一侧没有新 UI 壳可点。
 
-## U8 — 怪物属性曲线命名与显示列的错位疑点（2026-09-27 新发现，待验证）
+## U8 — 怪物属性曲线命名错位（2026-09-27 发现并当日解决 ✅）
+
+**结论：曲线名整体错位，怪物表的列标签是正确的。** 决定性证据在 `combat/encounters.js:70-82`——生成怪物实例时把 `monsterType.$o` 赋给 `stats.maxHealth`、`Gp`→`stats.damage`、`Ep`→`stats.armor`、`Fp`→`stats.attackRating`、`Hp`→`stats.defenceRating`；这与 `views/monsters.js:335-373` 的表头列序（经验/生命/伤害/护甲/攻击/防御）和 `:263-269` 的 render 赋值完全吻合，因此是曲线名错位而非列标签错位。
+
+**落地（原子单 pass 置换，20 处 / 3 文件，数值与调用顺序未变）**：
+- `monsterDamageCurve`（原算「生命」）↔ `monsterHealthCurve`（原算「伤害」）
+- `monsterSpiritCurve`（原算「护甲」）→ `monsterArmorCurve`
+- `monsterArmorCurve`（原算「经验」）→ `monsterExperienceCurve`
+- `monsterAttackCurve` / `monsterDefenceCurve` 命名本已正确，未动。
+
+工具：`scripts/rename-identifiers-atomic.mjs`（名字置换必须在单次正则 pass 内查表替换，逐条 rename 会在中间态互相污染）。
+
+**仍开放的次生项**：`views/monsters.js` 的 `killCell`（U46 命名）渲染的其实是 `$o`（生命）而非击杀数，命名可疑；同表的 `yq`（第 9 列表头「总计杀死」）在 render 中未见赋值，需后续取证。这两项与本次曲线修正无关，单独登记。
+
+## U8-原始记录（保留）
 
 - 现象：`content/balance.js` 的六条怪物曲线与怪物表列显示不一致：
   - 表头列序（`views/monsters.js:335-373`）：图标 | 怪物类型 | 经验 | 生命 | 伤害 | 护甲 | 攻击 | 防御 | 总计杀死 | 怪物等级 | 进度

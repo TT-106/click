@@ -1,10 +1,14 @@
 # WORKSTATE — Clickpocalypse II 语义恢复与现代化工程
 
 > 本文件是长程自治任务的**唯一续跑入口**。上下文压缩或中断后，先读本文件 + `git log --oneline`，再继续。
-> 最后更新：2026-09-27（U66-U76 十一批字段落地后，混淆清单 806 → 542；59 场景矩阵全绿）
+> 最后更新：2026-09-27（U66-U80 十五批落地后，混淆清单 806 → 478；U8 曲线命名错位已解决；59 场景矩阵全绿）
 
-## 当前轮次状态（2026-09-27，M12 长尾重命名：视图六批 + 跨文件五批）
+## 当前轮次状态（2026-09-27，M12 长尾重命名 + 命名修正）
 
+- U80 怪物曲线命名修正（2026-09-27，混淆清单不变，**unresolved U8 关闭**）：决定性证据 `combat/encounters.js:70-82`（`$o`→stats.maxHealth、`Gp`→damage、`Ep`→armor、`Fp`→attackRating、`Hp`→defenceRating）与怪物表列序一致 → 表列正确、曲线名错位。原子单 pass 置换：`monsterDamageCurve`↔`monsterHealthCurve`、`monsterSpiritCurve`→`monsterArmorCurve`、`monsterArmorCurve`→`monsterExperienceCurve`（20 处 / 3 文件，数值与顺序未变）。新增 `scripts/rename-identifiers-atomic.mjs`（名字置换专用，单 pass 查表替换，逐条 rename 会中间态污染）。**次生项**：`views/monsters.js` 的 `killCell` 实渲染 `$o`（生命）、`yq`（「总计杀死」列）render 中未见赋值，已登记待查。
+- U79 upgrade-details.js 批 B（2026-09-27，混淆清单 506 → 478，fields 段 558 → 586）：EquipmentDetails 的角色升级预览（characterImage/descriptionLabel/experienceLabel/levelLabel/healthPreviewLabel/spiritPreviewLabel/cachedCharacter/cachedCharacterLevel）、EquipmentSetDetails 三列元素数组（iconElements/nameElements/rarityElements/cachedItems）、CharacterLevelDetails 的怪物四项与队伍均值缓存（monsterHealth/Spirit/Attack/Defence、cachedPartyDamage/Armor/AttackRating/DefenceRating、四个标签、monsterPreviewImage/cachedAssessmentText）、UpgradeListView.py→upgradeCollection、SpellUpgradeDetails.qw→effectFrameInterval。
+- U78 upgrade-details.js 批 A（2026-09-27，混淆清单 538 → 506，fields 段 527 → 558）：UpgradeButtonView 的 baseElementId/alwaysVisible/cachedUpgradeType；十个详情类的元素命名（descriptionContainer/titleContainer/spellImage/asset/assetSource/cachedSpell/itemImage/itemNameLabel/rarityLabel/monsterImage/levelLabel/itemStatLabel/cachedItem/previewImage/cachedTitle/costElement/tableElement/bonusLabel/cachedScroll/scrollImage/titleCell/cachedDescriptionText）。`Dk` 与 navigation 侧 cachedResourceCount 异主 → 本批按其本义改 cachedBonus 但不入全局表。发现 `AutoDungeonDetails.cachedTitleText` 未被使用（原版冗余）。
+- U77 楼梯瓦片与朝向（2026-09-27，混淆清单 542 → 538，fields 段 523 → 527）：`DungeonStairs.Ex/Fx`→tileColumn/tileRow、`Fq`→isVerticalStairs、`sq`→showsStairs（由布局生成器 `to(room, flag)` 第二参决定，入口 `!hasSecondEntrance`、出口 `secondEntrance`）。
 - U76 商店与楼梯坐标 4 字段（2026-09-27，混淆清单 546 → 542，fields 段 519 → 523）：`Shop.iq/jq`→`worldColumn/worldRow`（创建点由块行列+随机偏移算出瓦片坐标；party 寻路用 `tileToPixelX` 消费；与 `targetDungeon.getWorldColumn()` 分支一致）、`DungeonStairs.tq/uq`→`pixelColumn/pixelRow`（`positionStairs` 中为 `tileSize` 乘积的像素值）。**附带确认**：`WorldMap.getTileAtPixel(a,b)` 实际接收**世界瓦片坐标**（内部以 `/WORLD_BLOCK_COLUMNS` 算块索引），名字是历史误名；因此 `Castle.worldPixelX/Y` 的命名也需复核——两者一并登记待查。
 - U75 城堡与目录 3 字段（2026-09-27，混淆清单 549 → 546，fields 段 516 → 519）：`MonsterCatalog.en`→`monsterTypesByLevelCache`（按等级缓存，命中即返回、等级升级/退休时 delete 失效）、`CastleRegistry.bm`→`castleRegistry`（按 castleId 索引，`findCastle` O(1)）、`CastleRegistry.cm`→`revision`（三处 refresh/invalidate 递增，`CastleMapView.update` 读它做整表重建检测）。
 - U74 胜利统计 9 字段（2026-09-27，混淆清单 558 → 549，fields 段 507 → 516）：命名直接采用 `game-save.js` 序列化端既有 DTO 键——`hn/jn/kn`→partySize1/2/3Victories、`vn`→singleClassVictories、`mm`→currentContinuationVictories、`Xm`→maxContinuationVictories、`nm`→currentContinueCount、`qo`→classVictories、`lq`→soloClassVictories；反序列化端（:363-388）成对同步。**方法**：优先复用 DTO 已有语义键，避免另起新名。
