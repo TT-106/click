@@ -8269,7 +8269,17 @@
     "ZC": "regionColumn",
     "$C": "regionRow",
     "$D": "maxRegionColumn",
-    "bE": "maxRegionRow"
+    "bE": "maxRegionRow",
+    "lm": "critChance",
+    "wo": "damageResistance",
+    "Ts": "healPotency",
+    "Rs": "buffDamagePotency",
+    "Ps": "buffArmorPotency",
+    "Qs": "buffAttackRatingPotency",
+    "Ss": "buffDefenceRatingPotency",
+    "ku": "barbarianChickenChance",
+    "lu": "ninjaChickenChance",
+    "mu": "rogueChickenChance"
   },
   "gameFields": {
     "B": "tileSize",

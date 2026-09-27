@@ -1,9 +1,11 @@
 # WORKSTATE — Clickpocalypse II 语义恢复与现代化工程
 
 > 本文件是长程自治任务的**唯一续跑入口**。上下文压缩或中断后，先读本文件 + `git log --oneline`，再继续。
-> 最后更新：2026-09-27（U66-U100 共 35 批落地后，混淆清单 806 → 176；fields 段 267 → 886；59 场景矩阵全绿）
+> 最后更新：2026-09-27（U66-U101 共 36 批落地后，混淆清单 806 → 165；fields 段 267 → 896；59 场景矩阵全绿）
 
 ## 当前轮次状态（2026-09-27，M12 长尾重命名 + 命名修正）
+
+- U101 战斗属性增益收尾（2026-09-27，混淆清单 176 → 165，fields 段 886 → 896）：`characters/stats.js` 11 项全部落地，文件清空（+actions/skill-effects/views 消费点）。按 `applyStatBonus` 的 statType 与技能定义标题定名：`lm`→critChance（statType 17「暴击几率」，`calculateAttackDamage/calculateSpellDamage` 的 `Math.random() < c/100` 暴击判定，views 写入 critChanceCell）、`wo`→damageResistance（statType 1，`g - floorNumber(d/100*g)` 减伤，views 写入 damageResistanceCell）、`Ts`→healPotency（statType 11「治疗提高法术 效果翻倍」，spellCategoryId 1 治疗分支 `h*n`）、`Rs/Ps/Qs/Ss`→buffDamage/Armor/AttackRating/DefenceRatingPotency（statType 12/13/14/15，`applySpellEffect` 按 statusEffectTypeId 6/5/7/8 取用为 buff 强度倍率）、`ku/lu/mu`→barbarian/ninja/rogueChickenChance（statType 30/31/32「小鸡几率:野蛮人/忍者/盗贼」，cats 17 召唤分支）。**同文件异主手工拆分**：`Ir` 在 CharacterStats 为 rollChainCount（按 chainChance 逐次掷骰得链击次数）、在 CombatAction 为 getChainCount（读 `this.Ys`），手改 5 处后再跑批；`Ir` 不入全局表。
 
 - U100 区域命名与城堡坐标（2026-09-27，混淆清单 189 → 176，fields 段 873 → 886）：`world/regions.js` 13 项全部落地，文件清空。DungeonNameGenerator 九组词表：`yy`→dungeonAdjectives（默认形容词）、`FA`→dungeonNouns（类型 0/1/2/3）、`zC`→towerNouns（4/5）、`xr`→lairNouns（6 与 default）、`cB`→monumentNouns（7/8）、`cz`→cryptNouns（9）、`TB`→templeNouns（10）、`My`→castleNouns（11）、`Xz`→iceAdjectives（类型 3 冰冻分支）。Castle：`ZC/$C`→regionColumn/regionRow（构造点 `world/initialization.js:83 new Castle(castleId, castleName, 区域列, 区域行, worldPixelX, worldPixelY)` 逐参核对；`levelSeed()` 以 `hashCoordinates(区域列, 区域行, 1)` 取样）。RegionLayout：`$D`→maxRegionColumn、`bE`→maxRegionRow（origin + span，供 getEastRegion/getSouthRegion 边界判断）。
 
