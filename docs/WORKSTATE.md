@@ -7,6 +7,8 @@
 
 - **M12 收官：`analyze-fields.mjs` 报「混淆属性总数: 0」。** 残余的 1,171 → 0 全量清零（U66-U120），下一步主线转为 P1 回归收尾 / P2 报告口径对齐 / P3 Exhaustion Pass（见 §9）。
 
+- **U126 最终回归扫描（规范 §88，2026-09-27T08:30Z，全部退出码回显）**：`lint=0 build=0 typecheck=0 check=0 parity=0 scenarios=0 e2e=0 soak=0 perf=0 perf:frames=0` —— **10/10 全绿**。日志在 `output/s-*.log`。同批更新 `PERFORMANCE_REPORT.md`：补 2026-09-27 样本（回合推进 1.06x、序列化 1.13x、导入 0.42x、离线结算 1.00x），并如实写出"两次样本的相对快慢会翻转，不能当稳定优势"；soak 内存补记"重构版相对原版约 0.83MB **稳定偏移**（非增长），8h→24h 两端各仅 +0.02MB"。另把 `.workbuddy-ai/` 加入 `.gitignore`（本地记忆不入库，续跑入口仍是本文件）。
+
 - **U125 把不变量变成可回归守卫：新增 `npm run lint`（2026-09-27，零第三方依赖）**。`scripts/lint-invariants.mjs` 逐条断言本轮建立的关键不变量——① `analyze-fields` 报混淆属性名 0；② 无"文件名尾随隐形字符"的垃圾文件；③ `src/engine/modules` 无 `@ts-nocheck`；④ 源码无 `TODO`/`FIXME`/`HACK`/`@ts-ignore`/`eslint-disable`；⑤ 文档 `file:line` 引用无越界（934 条）；⑥ 原版存档 fixture 无单字母键（守住 4,477 键全语义化的契约）。**已反向验证**：插入 `// TODO` 后退出码 1 且指名文件，移除后恢复 0。同批在 `package.json` 补 `test:unit`/`analyze`/`audit:doc-refs`/`audit:doc-snippets` 别名，使 §37 要求的"CI 友好命令"齐备（**刻意不引入 eslint**：`check` 已覆盖语法 + tsc + 单测，再拉一棵依赖树与"不为了现代而现代"的原则冲突）。
 
 - **U124 验收矩阵自我纠偏：7 行 PASS → PARTIAL（2026-09-27）**。附录 A 的判定口径本就写着"PARTIAL = 已驱动但存在写明缺口；不得把 PARTIAL 写成 PASS"，但有 7 行的证据格里已经写明了缺口却仍标 PASS——按本表自己的定义属误标。已改判并补写"**缺口（写明）**"：**角色技能/技能树**（未逐项验证每种技能的战斗效果）、**法术**（16 类中只有 cat=2 三种状态与 cat=17 有专属可观测量）、**物品**（远古稀有度档位未在 fixture 出现）、**成就**（requirementType 1-27 的进度计算未逐项断言）、**旧版存档兼容**（仅一份原版存档、一个版本，无多版本迁移样本）、**长期稳定性**（soak 是加速等价回合，未测真机帧时间/低端设备）、**Canvas 渲染**（逐像素指纹只在 2 条场景 × 2 视口）。**矩阵现为 44 PASS / 7 PARTIAL / 0 未覆盖（共 51 行）**，§6/§10 的"全 PASS / 51 行 PASS"表述同步更正。**这是本轮唯一把结论往保守方向改的动作——按 §89"禁止夸大"，宁可少报。**
