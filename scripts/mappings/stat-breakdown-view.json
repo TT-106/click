@@ -1,0 +1,19 @@
+{
+  "_comment": "StatBreakdownView（某一属性的加成分解：总值/道具/等级/技能/法术）字段语义恢复。来源：构造函数参数（属性名标签、statIndex）、reset() 的 appendAttributeRow 行标签、update() 读取 getStatByIndex 结果的 statValue/itemValue/levelValue/spellBonusPercent/skillBonusPercent。",
+  "files": ["src/engine/modules/views/character.js"],
+  "map": {
+    "Mv": "cachedSpellBonusPercent",
+    "zB": "spellBonusCell",
+    "Jv": "cachedSkillBonusPercent",
+    "vB": "skillBonusCell",
+    "hv": "cachedLevelValue",
+    "qA": "levelValueCell",
+    "dv": "cachedItemValue",
+    "gA": "itemValueCell",
+    "Tv": "cachedStatValue",
+    "XB": "statValueCell",
+    "Cn": "tableElement",
+    "qE": "statLabel",
+    "bD": "statIndex"
+  }
+}

@@ -91,11 +91,11 @@ export function CharacterSummaryView(a, b) {
 export function StatBreakdownView(a, b, c, d) {
   this.elementId = a;
   this.visible = true;
-  this.qE = c;
-  this.bD = d;
+  this.statLabel = c;
+  this.statIndex = d;
   this.adventurerIndex = b;
-  this.zB = this.vB = this.qA = this.gA = this.XB = this.Cn = null;
-  this.Mv = this.Jv = this.hv = this.dv = this.Tv = -1;
+  this.spellBonusCell = this.skillBonusCell = this.levelValueCell = this.itemValueCell = this.statValueCell = this.tableElement = null;
+  this.cachedSpellBonusPercent = this.cachedSkillBonusPercent = this.cachedLevelValue = this.cachedItemValue = this.cachedStatValue = -1;
 }
 export function getStatByIndex(a, b) {
   switch (b) {
@@ -558,10 +558,10 @@ export function initializeViewsCharacter() {
   };
   StatBreakdownView.prototype = new View();
   StatBreakdownView.prototype.reset = function () {
-    this.Mv = this.Jv = this.hv = this.dv = this.Tv = -1;
-    this.Cn = createElement("table", getElement(this.elementId), null, "characteristicsTable");
-    var label = this.qE + ":",
-      b = this.Cn.insertRow(0),
+    this.cachedSpellBonusPercent = this.cachedSkillBonusPercent = this.cachedLevelValue = this.cachedItemValue = this.cachedStatValue = -1;
+    this.tableElement = createElement("table", getElement(this.elementId), null, "characteristicsTable");
+    var label = this.statLabel + ":",
+      b = this.tableElement.insertRow(0),
       c = document.createElement("th");
     c.className = "characteristicsTableLabel";
     b.appendChild(c);
@@ -569,38 +569,38 @@ export function initializeViewsCharacter() {
     var valueCell = document.createElement("th");
     valueCell.style.textAlign = "left";
     b.appendChild(valueCell);
-    this.XB = valueCell;
-    this.gA = appendAttributeRow(this.Cn, "道具加成:", 1);
-    this.qA = appendAttributeRow(this.Cn, "等级加成:", 2);
-    this.vB = appendAttributeRow(this.Cn, "技能加成:", 3);
-    this.zB = appendAttributeRow(this.Cn, "法术加成:", 4);
+    this.statValueCell = valueCell;
+    this.itemValueCell = appendAttributeRow(this.tableElement, "道具加成:", 1);
+    this.levelValueCell = appendAttributeRow(this.tableElement, "等级加成:", 2);
+    this.skillBonusCell = appendAttributeRow(this.tableElement, "技能加成:", 3);
+    this.spellBonusCell = appendAttributeRow(this.tableElement, "法术加成:", 4);
   };
   StatBreakdownView.prototype.update = function () {
-    var a = getStatByIndex(game.state.adventurers[this.adventurerIndex].stats, this.bD),
+    var a = getStatByIndex(game.state.adventurers[this.adventurerIndex].stats, this.statIndex),
       b = statValue(a),
       c = a.itemValue,
       d = a.levelValue,
       f = a.spellBonusPercent,
       a = a.skillBonusPercent;
-    if (this.Tv !== b) {
-      this.Tv = b;
-      this.XB.innerHTML = formatAmount(b);
+    if (this.cachedStatValue !== b) {
+      this.cachedStatValue = b;
+      this.statValueCell.innerHTML = formatAmount(b);
     }
-    if (this.dv !== c) {
-      this.dv = c;
-      this.gA.innerHTML = formatAmount(c);
+    if (this.cachedItemValue !== c) {
+      this.cachedItemValue = c;
+      this.itemValueCell.innerHTML = formatAmount(c);
     }
-    if (this.hv !== d) {
-      this.hv = d;
-      this.qA.innerHTML = formatAmount(d);
+    if (this.cachedLevelValue !== d) {
+      this.cachedLevelValue = d;
+      this.levelValueCell.innerHTML = formatAmount(d);
     }
-    if (this.Mv !== f) {
-      this.Mv = f;
-      this.zB.innerHTML = formatAmount(f) + "%";
+    if (this.cachedSpellBonusPercent !== f) {
+      this.cachedSpellBonusPercent = f;
+      this.spellBonusCell.innerHTML = formatAmount(f) + "%";
     }
-    if (this.Jv !== a) {
-      this.Jv = a;
-      this.vB.innerHTML = formatAmount(a) + "%";
+    if (this.cachedSkillBonusPercent !== a) {
+      this.cachedSkillBonusPercent = a;
+      this.skillBonusCell.innerHTML = formatAmount(a) + "%";
     }
   };
   CharacterAttributesView.prototype = new View();
