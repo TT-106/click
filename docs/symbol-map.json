@@ -8343,7 +8343,19 @@
     "XE": "regionRow",
     "EE": "compareByFarmCost",
     "Yw": "jitterCoordinate",
-    "$r": "recordLevelCleared"
+    "$r": "recordLevelCleared",
+    "jm": "selectedPartyDirty",
+    "oo": "nameWarningElement",
+    "cr": "characterSelectionButtons",
+    "rx": "selectedCharactersTable",
+    "zr": "hasDuplicateName",
+    "tz": "cachedHasDuplicateName",
+    "oy": "update",
+    "pw": "movePhase",
+    "GD": "driftX",
+    "HD": "driftY",
+    "dA": "screenYOffset",
+    "cA": "screenXOffset"
   },
   "gameFields": {
     "B": "tileSize",

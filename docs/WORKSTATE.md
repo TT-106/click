@@ -1,9 +1,11 @@
 # WORKSTATE — Clickpocalypse II 语义恢复与现代化工程
 
 > 本文件是长程自治任务的**唯一续跑入口**。上下文压缩或中断后，先读本文件 + `git log --oneline`，再继续。
-> 最后更新：2026-09-27（U66-U108 共 43 批落地后，混淆清单 806 → 93；fields 段 267 → 960；59 场景矩阵全绿）
+> 最后更新：2026-09-27（U66-U109 共 44 批落地后，混淆清单 806 → 81；fields 段 267 → 972；59 场景矩阵全绿）
 
 ## 当前轮次状态（2026-09-27，M12 长尾重命名 + 命名修正）
+
+- U109 建队视图与浮动文字层（2026-09-27，混淆清单 93 → 81，fields 段 960 → 972）：`views/party-creation.js` 6 项 + `rendering/floating-text.js` 6 项，两文件清空（+`simulation/tick.js` 的 `game.floatingText.update()` 调用点）。PartyCreationView：`oo`→nameWarningElement（DOM id `partySelectionNameWarning`，文案"给你的角色取个独特的名字."）、`rx`→selectedCharactersTable（id `partySelectionTable`，表头"已选择角色"，deleteRow/insertRow 行序即已选序）、`cr`→characterSelectionButtons（className 字面量 `characterSelectionButton`/`disabledCharacterSelectionButton` 按 `adventurerClasses` 下标切换）、`zr`/`tz`→hasDuplicateName/cachedHasDuplicateName（`validateSelectedParty` 内唯一 true 源是名字重复，与 oo 的显隐成对）、`jm`→selectedPartyDirty（四处 add/deselect/moveUp/moveDown 置脏，update 首段据此重建已选列表）、与既有 `validParty`、`victoryOptionsApplied` 同族。FloatingText：`GD`→driftX（`1+randomInt(1)` 定步长、`0.5>Math.random()` 定号，仅作用于 screenX）、`HD`→driftY（`-1 + -randomInt(1)` 恒负 ⇒ 上浮）、`pw`→movePhase（每次 update 末尾取反，门控"隔帧移动"）、`oy`→update（FloatingText 与 FloatingTextLayer 同名同义，帧龄 ≥60 回收）；FloatingTextLayer：`cA`/`dA`→screenXOffset/screenYOffset（都初值 20，分别加在投影 X/Y 上）。**随机消费顺序与字段声明顺序未动**（screenX 受 `Math.random()` 门控、screenY 无条件，是原版行为）。
 
 - U108 地牢/农场/商店注册表与区域坐标（2026-09-27，混淆清单 107 → 93，fields 段 950 → 960）：`world/dungeons.js` 14 项全部落地，文件清空（+`world/regions.js`、`world/terrain.js`、`persistence/game-save.js`、`simulation/tick.js`、`progression/statistics.js`）。
   - **单主可入表 10 项**：`lt`→sortingEnabled（DungeonRegistry **自动排序开关**：载入期间 game-save:78 置 false、:124 恢复 true 后 :126 才批量 sortDungeons 五视图——旧文档称"排序脏标记"是错的，本批已更正 `docs/game-state-schema.md`）、`Is`→registerClearedDungeon（push cleared + 排序 + 从 attackable 摘除 + refreshFarmableDungeons）、`EE`→compareByFarmCost（`floorNumber(farmCost*dungeonCostBonus.currentValue)` 升序，五视图共用）、`tx`→setConquered（Dungeon 与 Castle 两宿主同体 `this.conquered = a`，存档以 DTO 键 `conquered` 反解调用，故共用一名）、`nw`→farmList（序列化 `farms[]` 顺序即列表顺序，不可重排）、`Gz`→farmSpriteName（农场地块装饰 "L2_Town01.PNG"）、`tB`→shopSpriteNames（9 个候选贴纸，`[randomInt(length)]` 抽取——**重复项 L2_Terrain077 是权重不是笔误，禁止去重**）、`WE/XE`→regionColumn/regionRow（`initialization.js:153-154` 逐参核对，与 Castle/Region 同名概念对齐）、`Yw`→jitterCoordinate（±1..2 坐标抖动，tick:813-814 建农场时消费；ShopRegistry 那份同名方法原版即 0 调用点，属死方法）、`$r`→recordLevelCleared（`levelsCleared++`，与 recordRoomCleared/recordDungeonCleared 同族）。

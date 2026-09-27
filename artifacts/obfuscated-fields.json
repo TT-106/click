@@ -23,29 +23,6 @@
     ]
   },
   {
-    "name": "jm",
-    "reads": 1,
-    "writes": 6,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\party-creation.js:25",
-        "code": "this.jm"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\party-creation.js:193",
-        "code": "a.jm"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\party-creation.js:271",
-        "code": "a.jm"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\party-creation.js"
-    ]
-  },
-  {
     "name": "To",
     "reads": 4,
     "writes": 2,
@@ -164,29 +141,6 @@
     "files": [
       "src\\engine\\modules\\persistence\\game-save.js",
       "src\\engine\\modules\\world\\generation.js"
-    ]
-  },
-  {
-    "name": "oo",
-    "reads": 4,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\party-creation.js:26",
-        "code": "this.oo"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\party-creation.js:176",
-        "code": "a.oo"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\party-creation.js:177",
-        "code": "a.oo"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\party-creation.js"
     ]
   },
   {
@@ -426,29 +380,6 @@
     "files": [
       "src\\engine\\modules\\views\\information.js",
       "src\\engine\\modules\\views\\results.js"
-    ]
-  },
-  {
-    "name": "cr",
-    "reads": 4,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\party-creation.js:22",
-        "code": "this.cr"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\party-creation.js:165",
-        "code": "d.cr"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\party-creation.js:186",
-        "code": "a.cr"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\party-creation.js"
     ]
   },
   {
@@ -742,53 +673,6 @@
     ]
   },
   {
-    "name": "pw",
-    "reads": 2,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\rendering\\floating-text.js:14",
-        "code": "this.pw"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\floating-text.js:48",
-        "code": "this.pw"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\floating-text.js:54",
-        "code": "this.pw"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\rendering\\floating-text.js"
-    ]
-  },
-  {
-    "name": "oy",
-    "reads": 2,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\rendering\\floating-text.js:47",
-        "code": "FloatingText.prototype.oy"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\floating-text.js:58",
-        "code": "FloatingTextLayer.prototype.oy"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\floating-text.js:62",
-        "code": "this.texts[a].oy"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\rendering\\floating-text.js",
-      "src\\engine\\modules\\simulation\\tick.js"
-    ]
-  },
-  {
     "name": "$w",
     "reads": 2,
     "writes": 2,
@@ -953,52 +837,6 @@
     "files": [
       "src\\engine\\modules\\simulation\\characters.js",
       "src\\engine\\modules\\simulation\\tick.js"
-    ]
-  },
-  {
-    "name": "rx",
-    "reads": 2,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\party-creation.js:24",
-        "code": "this.rx"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\party-creation.js:175",
-        "code": "a.rx"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\party-creation.js:415",
-        "code": "this.rx"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\party-creation.js"
-    ]
-  },
-  {
-    "name": "zr",
-    "reads": 2,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\party-creation.js:25",
-        "code": "this.zr"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\party-creation.js:381",
-        "code": "a.zr"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\party-creation.js:431",
-        "code": "this.zr"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\party-creation.js"
     ]
   },
   {
@@ -1327,52 +1165,6 @@
     ]
   },
   {
-    "name": "dA",
-    "reads": 2,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\rendering\\floating-text.js:18",
-        "code": "this.dA"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\floating-text.js:34",
-        "code": "a.dA"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\floating-text.js:39",
-        "code": "a.dA"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\rendering\\floating-text.js"
-    ]
-  },
-  {
-    "name": "cA",
-    "reads": 2,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\rendering\\floating-text.js:18",
-        "code": "this.cA"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\floating-text.js:33",
-        "code": "a.cA"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\floating-text.js:38",
-        "code": "a.cA"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\rendering\\floating-text.js"
-    ]
-  },
-  {
     "name": "FB",
     "reads": 2,
     "writes": 1,
@@ -1513,29 +1305,6 @@
     "fileCount": 1,
     "files": [
       "src\\engine\\modules\\views\\information.js"
-    ]
-  },
-  {
-    "name": "tz",
-    "reads": 1,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\party-creation.js:25",
-        "code": "this.tz"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\party-creation.js:431",
-        "code": "this.tz"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\party-creation.js:432",
-        "code": "this.tz"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\party-creation.js"
     ]
   },
   {
@@ -1724,44 +1493,6 @@
     "fileCount": 1,
     "files": [
       "src\\engine\\modules\\loot\\items.js"
-    ]
-  },
-  {
-    "name": "GD",
-    "reads": 1,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\rendering\\floating-text.js:12",
-        "code": "this.GD"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\floating-text.js:50",
-        "code": "this.GD"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\rendering\\floating-text.js"
-    ]
-  },
-  {
-    "name": "HD",
-    "reads": 1,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\rendering\\floating-text.js:13",
-        "code": "this.HD"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\floating-text.js:52",
-        "code": "this.HD"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\rendering\\floating-text.js"
     ]
   },
   {
