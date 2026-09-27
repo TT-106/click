@@ -25,7 +25,10 @@
     "perf:frames": "node scripts/measure-frames.mjs",
     "audit:dead-reads": "node scripts/find-dead-reads.mjs",
     "audit:doc-refs": "node scripts/verify-doc-refs.mjs",
-    "audit:doc-snippets": "node scripts/check-doc-snippets.mjs"
+    "audit:doc-snippets": "node scripts/check-doc-snippets.mjs",
+    "audit:doc-counts": "node scripts/check-doc-counts.mjs",
+    "audit:arch": "node scripts/audit-architecture.mjs",
+    "check:achievements": "node scripts/check-achievement-requirements.mjs"
   },
   "devDependencies": {
     "@babel/generator": "7.29.8",

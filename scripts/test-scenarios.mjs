@@ -7,7 +7,7 @@ import saveCodec from '../src/engine/save-codec.js';
 import {
   decodeFixture, encodeSave, summarize,
   withPotions, withScrolls, withGold, withKills, withPointPools, withFarmableDungeon, withTurns, withElapsed, withOfflineProcessing, withBackgroundProcessing,
-  withVictories, withClassSpell, withCastleVictory, withReclassedSpell, withEquippedItem, withResurrectionTrial, withSkillPoints, withExperience, withCharacterClass, withAttackableCastle, withClaimableAchievements,
+  withVictories, withClassSpell, withCastleVictory, withReclassedSpell, withEquippedItem, withResurrectionTrial, withSkillPoints, withExperience, withCharacterClass, withAttackableCastle, withClaimableAchievements, withAchievementThresholds,
   HARNESS_FIXED_NOW,
 } from '../tests/scenarios/save-mutations.mjs';
 
@@ -132,6 +132,18 @@ const castleAttackPlanned = (s) => ({
 const achievementWasClaimed = (s) => ({
   achievementClaimed: (s.achievementManager?.achievements ?? []).filter(a => a.applied).length
     > (base.achievementManager?.achievements ?? []).filter(a => a.applied).length,
+});
+// 成就进度临界值（NEXT-ARCHITECTURE-PROMPT §4）：直接对账 requirementType 9（farmsPurchased）
+// 与 17（doorsOpened）两条进度计算的临界点。同一场景内一负一正，证明"成就检查节拍真的跑了、
+// 判定真的按 requiredCount 比较"，而不是靠两端存档相等这种弱断言。
+const achievementObtained = (s, id) => (s.achievementManager?.achievements ?? []).find(a => a.achievementId === id)?.obtained === true;
+const achievementThresholdBelow = (s) => ({
+  achievementBelowThreshold: achievementObtained(s, 'farmsPurchased5') === false,
+  achievementAtThreshold: achievementObtained(s, 'doorsOpened100K') === true,
+});
+const achievementThresholdMet = (s) => ({
+  achievementThresholdReached: achievementObtained(s, 'farmsPurchased5') === true,
+  achievementAtThreshold: achievementObtained(s, 'doorsOpened100K') === true,
 });
 const equipmentChanged = (s) => ({
   equipmentChanged: (s.adventurers ?? []).some((a, i) =>
@@ -537,6 +549,27 @@ const scenarios = [
     steps: [
       { turns: 0, claimAchievement: 8, check: multipleAchievementsClaimed },
       { turns: 600 },
+    ],
+  },
+  {
+    name: 'achievement-threshold-below',
+    // 成就进度临界值下侧：farmsPurchased=4 < requiredCount 5 → farmsPurchased5 必须仍未获得；
+    // 同一场景里 doorsOpened=100000 恰好达标 → doorsOpened100K 必须已获得（正对照，
+    // 证明成就检查节拍确实执行过，负断言不是因为"根本没跑"）。
+    make: () => withAchievementThresholds(base, { farmsPurchased: 4, doorsOpened: 100000 }),
+    steps: [
+      { turns: 40, check: achievementThresholdBelow },
+      { turns: 200, check: achievementThresholdBelow },
+    ],
+  },
+  {
+    name: 'achievement-threshold-met',
+    // 同一临界值的上侧：farmsPurchased=5 恰好达标。与上一条配对，构成 requiredCount 两侧的差分；
+    // 两端各自的 obtained 必须与期望一致，再比对完整存档。
+    make: () => withAchievementThresholds(base, { farmsPurchased: 5, doorsOpened: 100000 }),
+    steps: [
+      { turns: 40, check: achievementThresholdMet },
+      { turns: 200, check: achievementThresholdMet },
     ],
   },
   {
@@ -1091,6 +1124,9 @@ try {
             if (verdict.multiLearned !== undefined) assert.ok(verdict.multiLearned >= 4, `${label} 战士多重攻击技能位必须至少习得 4 个（实际 ${verdict.multiLearned}/6）`);
             if (verdict.chainLearned !== undefined) assert.ok(verdict.chainLearned >= 6, `${label} 游侠跳弹链技能位必须至少习得 6 个（实际 ${verdict.chainLearned}/8）`);
             if (verdict.achievementClaimed !== undefined) assert.equal(verdict.achievementClaimed, true, `${label} 成就奖励必须真实领取并标记 applied`);
+            if (verdict.achievementBelowThreshold !== undefined) assert.equal(verdict.achievementBelowThreshold, true, `${label} farmsPurchased=4 低于 requiredCount=5，farmsPurchased5 必须仍未获得（进度判定确实按 requiredCount 比较）`);
+            if (verdict.achievementThresholdReached !== undefined) assert.equal(verdict.achievementThresholdReached, true, `${label} farmsPurchased=5 达到 requiredCount，farmsPurchased5 必须已获得`);
+            if (verdict.achievementAtThreshold !== undefined) assert.equal(verdict.achievementAtThreshold, true, `${label} doorsOpened=100000 达到 requiredCount，doorsOpened100K 必须已获得（证明成就检查节拍真的执行）`);
             if (verdict.equipmentChanged !== undefined) assert.equal(verdict.equipmentChanged, true, `${label} 自动装备后装备槽必须真实变化`);
             if (verdict.itemEquipEvents !== undefined) assert.equal(verdict.itemEquipEvents, true, `${label} 装备物品事件计数必须真实增长`);
             if (verdict.scrollCast !== undefined) assert.equal(verdict.scrollCast, true, `${label} 卷轴使用统计必须真实增长`);
@@ -1112,7 +1148,7 @@ try {
             // 防呆（本项目真实踩过）：check 返回的键若没在上面被断言，检查会静默变成**空断言**——
             // 例如新场景写了 `itemsFound: ...` 却忘了补断言行，测试照样全绿。这里显式列出全部已处理键，
             // 出现未知键即失败，逼迫补断言；键清单由本文件的断言行机械抽取，勿手改。
-            const handledVerdictKeys = new Set(["achievementClaimed","appliedDelta","attackPlanned","backgroundProgressDisabled","bookcaseLooted","chainLearned","changed","characterLeveled","classKept","collectedDropTypes","criticalSkillsActive","distinctPointUpgradesBought","enough","equipmentChanged","farmCleared","farmCycleHarvestCount","farmHarvested","farmPurchased","farmedKillsCleared","itemEquipEvents","itemEquippedGrew","itemsFound","killRewardGrew","maxLevelUnlocked","minLevelRetired","monsterUnlocked","multiLearned","noLootSpell","note","pointUpgradePurchased","pointsSpent","potionUsed","retiredLevelExcluded","scrollCast","settingsPurchased","skillLearned","skillsLearned","spellCast","spellLearned","spellsLearned","stunned","summoned","swapDone","treasureLooted","unchanged","upgraded","victory","weaponRackLooted"]);
+            const handledVerdictKeys = new Set(["achievementAtThreshold","achievementBelowThreshold","achievementClaimed","achievementThresholdReached","appliedDelta","attackPlanned","backgroundProgressDisabled","bookcaseLooted","chainLearned","changed","characterLeveled","classKept","collectedDropTypes","criticalSkillsActive","distinctPointUpgradesBought","enough","equipmentChanged","farmCleared","farmCycleHarvestCount","farmHarvested","farmPurchased","farmedKillsCleared","itemEquipEvents","itemEquippedGrew","itemsFound","killRewardGrew","maxLevelUnlocked","minLevelRetired","monsterUnlocked","multiLearned","noLootSpell","note","pointUpgradePurchased","pointsSpent","potionUsed","retiredLevelExcluded","scrollCast","settingsPurchased","skillLearned","skillsLearned","spellCast","spellLearned","spellsLearned","stunned","summoned","swapDone","treasureLooted","unchanged","upgraded","victory","weaponRackLooted"]);
             const unknownVerdictKeys = Object.keys(verdict).filter(k => !handledVerdictKeys.has(k));
             assert.deepEqual(unknownVerdictKeys, [], `${label} check 返回了未被断言的键：${unknownVerdictKeys.join(", ")}（请在 runner 里补断言，否则该检查是空的）`);
           }

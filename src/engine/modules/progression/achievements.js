@@ -45,8 +45,31 @@ export function applyAchievementReward(a) {
     recordGameEvent("Achievement", a.name);
   }
 }
-export function hasVictoryAchievement(a) {
-  var b = game.state.victoryStatistics;
+/** 成就判定所需的全部输入数据。
+ * 有了它，判定逻辑（getAchievementProgress / hasVictoryAchievement）可以在不启动
+ * runtime/index.js、也不借用全局 game 的前提下被直接构造与测试；
+ * 唯一的"从 game 现取"位置是 getAchievementCheckData()。
+ * @typedef {Object} AchievementCheckData
+ * @property {Object} lifetimeStatistics 累计统计（requirementType 1-22、28 读它）
+ * @property {Object} victoryStatistics 胜利统计（requirementType 23-27 读它）
+ * @property {number} partyMaxLevel 队伍最高等级（requirementType 16 读它）
+ */
+
+/** 收集一次判定所需的全部数据。
+ * partyMaxLevel 刻意做成惰性 getter：只有 requirementType 16 会读它，而 getPartyMaxLevel
+ * 会写 party.cachedMaxLevel；提前求值会改变"哪些回合写入缓存"的时序（行为变更），故保持按需。 */
+export function getAchievementCheckData() {
+  return {
+    lifetimeStatistics: game.state.lifetimeStatistics,
+    victoryStatistics: game.state.victoryStatistics,
+    get partyMaxLevel() {
+      return getPartyMaxLevel(game.state.party);
+    },
+  };
+}
+export function hasVictoryAchievement(a, data) {
+  data = data || getAchievementCheckData();
+  var b = data.victoryStatistics;
   switch (a.requirementType) {
     case 23:
       return 1 === a.requiredCount ? 0 < b.partySize1Victories : 2 === a.requiredCount ? 0 < b.partySize2Victories : 3 === a.requiredCount ? 0 < b.partySize3Victories : false;
@@ -62,8 +85,9 @@ export function hasVictoryAchievement(a) {
       return false;
   }
 }
-export function getAchievementProgress(a) {
-  var b = game.state.lifetimeStatistics;
+export function getAchievementProgress(a, data) {
+  data = data || getAchievementCheckData();
+  var b = data.lifetimeStatistics;
   switch (a.requirementType) {
     case 1:
       return b.directKills;
@@ -96,7 +120,7 @@ export function getAchievementProgress(a) {
     case 15:
       return b.minionsSummoned;
     case 16:
-      return getPartyMaxLevel(game.state.party);
+      return data.partyMaxLevel;
     case 17:
       return b.doorsOpened;
     case 18:

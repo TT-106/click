@@ -97,7 +97,7 @@ function walk(dir, out = [], skip = new Set(['node_modules', '.git', 'dist', 'ou
   else notes.push('原版存档 fixture 无单字母键 ✓');
 }
 
-// 6) 每个 spellCategoryId 都必须有差分场景驱动（防止新增法术类别时漏场景）
+// 7) 每个 spellCategoryId 都必须有差分场景驱动（防止新增法术类别时漏场景）
 {
   const r = await run(process.execPath, ['scripts/check-spell-coverage.mjs']);
   const m = (r.stdout || '').match(/无场景\s*(\d+)\s*个/);
@@ -109,7 +109,29 @@ function walk(dir, out = [], skip = new Set(['node_modules', '.git', 'dist', 'ou
   }
 }
 
-// 7) 类型债务的当前规模（只报告，不失败——它是"债"，不是"违规"；防止数字只存在于某次对话里）
+// 8) 成就定义表与判定实现必须一致（328 条定义 × 28 种 requirementType）
+{
+  const r = await run(process.execPath, ['scripts/check-achievement-requirements.mjs']);
+  if (r.status !== 0 || !/✓ 定义表与判定实现完全一致/.test(r.stdout || '')) {
+    problems.push('成就定义表与判定实现不一致（见 check-achievement-requirements 输出）');
+  } else {
+    const m = (r.stdout || '').match(/定义条数\s*(\d+)/);
+    notes.push(`成就定义表与判定实现一致 ✓（${m ? m[1] : '?'} 条定义 × 28 种 requirementType）`);
+  }
+}
+
+// 9) 当前态文档里的可数指标（场景数/单测数/不变量条数/语法检查文件数）必须与源码实况一致
+{
+  const r = await run(process.execPath, ['scripts/check-doc-counts.mjs']);
+  if (r.status !== 0 || !/✓ 全部一致/.test(r.stdout || '')) {
+    problems.push('文档可数指标与源码实况不一致（见 check-doc-counts 输出）');
+  } else {
+    const pairs = [...(r.stdout || '').matchAll(/^\s{2}(.+?) = (\d+)$/gm)].map((m) => `${m[1]} ${m[2]}`);
+    notes.push(`文档可数指标与实况一致 ✓（${pairs.join('、')}）`);
+  }
+}
+
+// 报告：类型债务的当前规模（只报告，不失败——它是"债"，不是"违规"；防止数字只存在于某次对话里）
 {
   const files = walk('src').filter((f) => f.endsWith('.js'));
   let anyCasts = 0;

@@ -157,6 +157,24 @@ export function withClaimableAchievements(save, count = 8) {
   return out;
 }
 
+/** 成就进度临界值：把两个累计统计字段精确摆在阈值两侧。
+ *  farmsPurchased=4 使 farmsPurchased5（requiredCount 5）差 1 未达成；doorsOpened=100000 使
+ *  doorsOpened100K（requiredCount 100000）恰好达成。选这两个字段是因为它们在几十回合的自然推进里
+ *  不会增长（购买农场需要已征服城堡与金币，door 计数只会被自然推进抬高，不影响"恰好达标"）。
+ *  同时把这两条成就重置为未获得，避免 fixture 已有的 obtained 状态干扰判定。 */
+export function withAchievementThresholds(save, { farmsPurchased, doorsOpened }) {
+  const out = clone(save);
+  out.totalStatistics.farmsPurchased = farmsPurchased;
+  out.totalStatistics.doorsOpened = doorsOpened;
+  for (const achievement of out.achievementManager.achievements) {
+    if (achievement.achievementId === 'farmsPurchased5' || achievement.achievementId === 'doorsOpened100K') {
+      achievement.obtained = false;
+      achievement.applied = false;
+    }
+  }
+  return out;
+}
+
 /** 城堡进攻计划前置态：把唯一未锁城堡（100_100）变成"可进攻"——
  *  地牢清空并标记 dungeonsConquered（载入时直接恢复为 Bj，使 canAttackCastle 成立），
  *  未征服、未计划攻击、所需怪物等级清零。载入时 game-save 按 canAttackCastle 重建
