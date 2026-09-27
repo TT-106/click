@@ -201,6 +201,16 @@ Xf/Qf/Rf/Zf/Cf/Ef → damageMultiplier/armorMultiplier/attackRatingMultiplier/de
   - `castScroll()` 已由 `scroll-cast-in-combat` 驱动：harness 在活怪物存在时按序施放全部 6 种卷轴（休克/蜘蛛网/箭雨/火雨/连锁闪电/火球），逐项断言施放尝试与成功，原版全局 `Hq` 与重构 `castScroll` 都让 `scrollsUsed` 增长（箭雨回退普攻并断言普攻命中，其余 5 种断言施法计数），900 回合后两端完整存档相等，非法 scrollId 两端严格抛错保护。该场景首跑曾揭示卷轴定义六条 `xa:` 与重构 Scroll 构造器 `a.spellDefinition` 跨文件式错配，已按原版配对为 `spellDefinition:` 彻底闭环。
   - DOM 路线已实测不可行并排除：7 个升级 `canPurchase` 为真时，渲染出的 558 个按钮仍全部是 `disabledUpgradeButton`（哪一行拿到 `.upgradeButton` 类取决于排序后的可见槽位），且原版一侧没有新 UI 壳可点。
 
+## U8 — 怪物属性曲线命名与显示列的错位疑点（2026-09-27 新发现，待验证）
+
+- 现象：`content/balance.js` 的六条怪物曲线与怪物表列显示不一致：
+  - 表头列序（`views/monsters.js:335-373`）：图标 | 怪物类型 | 经验 | 生命 | 伤害 | 护甲 | 攻击 | 防御 | 总计杀死 | 怪物等级 | 进度
+  - 行单元格赋值（`views/monsters.js:263-269`）：`Mo`(经验列)←`No`、`killCell`(生命列)←`$o`=monsterDamageCurve、`vo`(伤害列)←`Gp`=monsterHealthCurve、`Yn`(护甲列)←`Ep`=monsterSpiritCurve、`$n`(攻击列)←`Fp`=monsterAttackCurve、`xo`(防御列)←`Hp`=monsterDefenceCurve
+  - 且 `advanceMonsterTypeRank`（`combat/encounters.js:205-210`）里 `No` 由 **monsterArmorCurve** 计算，而 `No` 的用途是击杀经验（`addExperience`）与「经验」列显示。
+- 待验证方向：用「曲线值量级 → 消费点 → 显示列」三方对照复核。可能结论有二：(a) 曲线名整体错位一格，需按真实用途重命名；(b) 原版 UI 列标题与内部字段本就不同步（原版遗留），曲线名正确而列标题误导。
+- 影响面：仅命名准确性，行为无影响（差分矩阵 59/59 全绿）。落地前必须先建立完整对照表，不可据单点推测批量改名。
+- 相关字段：`$o`/`Gp`/`Ep`/`Fp`/`Hp`/`No`（其中 `No` 已按经验语义落地为 `experienceReward`）。同批还发现 `views/monsters.js` 的 `killCell`（U46 命名）实际渲染的是 `$o`，命名可疑，一并在此登记。
+
 ## 已取证待落地
 
 （第四轮 B 组九项 + 第五轮七项均已落地；剩余长尾见 artifacts/obfuscated-fields.json 高频清单——aa 之外的前列：$/Ea/Ga/Ma/Na/Wa/Qa 均已完成后，下一批为 bb/cc/dd 等字母，需新取证。）

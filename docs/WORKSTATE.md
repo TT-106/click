@@ -1,10 +1,12 @@
 # WORKSTATE — Clickpocalypse II 语义恢复与现代化工程
 
 > 本文件是长程自治任务的**唯一续跑入口**。上下文压缩或中断后，先读本文件 + `git log --oneline`，再继续。
-> 最后更新：2026-09-27（U66-U71 六批视图字段落地后，混淆清单 806 → 562；59 场景矩阵全绿）
+> 最后更新：2026-09-27（U66-U73 八批字段落地后，混淆清单 806 → 558；59 场景矩阵全绿）
 
-## 当前轮次状态（2026-09-27，M12 长尾重命名：视图字段六批）
+## 当前轮次状态（2026-09-27，M12 长尾重命名：视图六批 + 跨文件两批）
 
+- U73 跨文件批次 02（2026-09-27，混淆清单 560 → 558，fields 段 505 → 507）：`No`→`experienceReward`（**双证据**：怪物表第 2 列表头「经验」且 render 显示它；击杀时 `addExperience(No * doubleExperienceModifier)`；由 `advanceMonsterTypeRank` 按曲线重算）、`Fo`→`mapSprite`（地牢大地图贴纸，`getDungeonMapSprite` 生成/恢复，列表/详情/入口装饰三处消费——**残留扫描发现 terrain.js:270 入口地块装饰也读它，已纳入同批**）。新增 unresolved **U8**：怪物六条属性曲线与怪物表显示列错位（伤害曲线显示在「生命」列等），登记为待验证，不可据单点推测改名。
+- U72 跨文件批次 01（2026-09-27，混淆清单 562 → 560，fields 段 503 → 505）：`CharacterStats.Am`→`experienceToLevelUp`（升到下一级所需经验：stats 初值 100、game-save 按 experienceCurve 重算、`LevelUpUpgrade.purchase` 从 `party.experiencePoints` 扣除、升级详情显示为 XP）；`electricSpellDefinitions.br`→`chainLightningSpell`（连锁闪电，spellCategoryId=5，targeting/scrolls/guardians/minions 四个消费点同步）。新增 `show-field-uses.mjs`（跨文件字段引用取证，带行号）。
 - U71 expedition.js 其余视图 41 字段（2026-09-27，六门禁全绿，混淆清单 599 → 562，fields 段 465 → 503）：通知/货币/冒险点/卷轴/药水五组视图落地（明细见提交信息）。**同文件异主解除**（手工先行拆分）：`AdventurerSummaryView.selectedPotionSlot`→`comparisonEncounterIndex`（对比遭遇序号）vs `EncounterNotificationView.selectedPotionSlot`→`cachedEncounterIndex`（遭遇序号缓存）；`ScrollButtonCollection.qp`→`buttons`（按钮列表）vs `ScrollButtonView.qp`→`keyBindings`（快捷键绑定）。跨文件异主 `Hw`/`rm`（monsters.js）、`tm`（upgrade-details.js）未动、不入全局表。
 - U70 AdventurerSummaryView 28 字段（2026-09-27，六门禁全绿，混淆清单 625 → 599，fields 段 439 → 465）：按 DOM id 字面量与建表列标题恢复 11 个元素 id 字段、4 个对比怪物值缓存（cachedMonsterDamage/Armor/AttackRating/DefenceRating）、8 个自身值缓存、效果图标三件套（effectIconIds/shownEffectTypeIds/effectFrameIndices/effectFrameInterval）、vacantOverlay/isLocked/summaryTable。**关键修正**：`cachedMonsterKills` 实际缓存的是法力值（`f = b.spirit`），改名 `cachedSpirit`。`qw` 在 upgrade-details.js 异主未入表。
 - U69 StatBreakdownView 13 字段（2026-09-27，六门禁全绿，混淆清单 638 → 625，fields 段 426 → 439）：单属性加成分解视图——5 个缓存 cachedStatValue/cachedItemValue/cachedLevelValue/cachedSpellBonusPercent/cachedSkillBonusPercent、5 个单元格 statValueCell/itemValueCell/levelValueCell/spellBonusCell/skillBonusCell、tableElement/statLabel/statIndex。
