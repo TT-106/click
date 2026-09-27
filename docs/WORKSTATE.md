@@ -1,9 +1,11 @@
 # WORKSTATE — Clickpocalypse II 语义恢复与现代化工程
 
 > 本文件是长程自治任务的**唯一续跑入口**。上下文压缩或中断后，先读本文件 + `git log --oneline`，再继续。
-> 最后更新：2026-09-27（U66-U99 共 34 批落地后，混淆清单 806 → 189；fields 段 267 → 873；59 场景矩阵全绿）
+> 最后更新：2026-09-27（U66-U100 共 35 批落地后，混淆清单 806 → 176；fields 段 267 → 886；59 场景矩阵全绿）
 
 ## 当前轮次状态（2026-09-27，M12 长尾重命名 + 命名修正）
+
+- U100 区域命名与城堡坐标（2026-09-27，混淆清单 189 → 176，fields 段 873 → 886）：`world/regions.js` 13 项全部落地，文件清空。DungeonNameGenerator 九组词表：`yy`→dungeonAdjectives（默认形容词）、`FA`→dungeonNouns（类型 0/1/2/3）、`zC`→towerNouns（4/5）、`xr`→lairNouns（6 与 default）、`cB`→monumentNouns（7/8）、`cz`→cryptNouns（9）、`TB`→templeNouns（10）、`My`→castleNouns（11）、`Xz`→iceAdjectives（类型 3 冰冻分支）。Castle：`ZC/$C`→regionColumn/regionRow（构造点 `world/initialization.js:83 new Castle(castleId, castleName, 区域列, 区域行, worldPixelX, worldPixelY)` 逐参核对；`levelSeed()` 以 `hashCoordinates(区域列, 区域行, 1)` 取样）。RegionLayout：`$D`→maxRegionColumn、`bE`→maxRegionRow（origin + span，供 getEastRegion/getSouthRegion 边界判断）。
 
 - U99 地牢/城堡布局生成（2026-09-27，混淆清单 206 → 189，fields 段 856 → 873）：`world/generation.js` 17 项全部落地，文件清空（并同步 `world/rooms.js`、`world/terrain.js` 消费点）。LayoutGenerator 参数：`iB`→roomSpacing、`Ow`→minRoomCount、`xA`→maxRoomCount（`Ow + randomIntFrom(seed, xA - Ow)` = 房间数，常量 MIN_ROOM_DIMENSION=5/MAX_ROOM_SIZE=10 实际为**房间数上下界**）、`DA`/`wA`→minRoomDimension/maxRoomDimension（`g = DA + rand(wA - DA)` = 房间边长 8..15）、`Xp`→nextRoomId、`Zo`→nextHallwayId。布局流程方法：`rw`→generate（入口）、`ru`→connectRooms（走廊连通，失败返回 false）、`uu`→placeStairs（入口/出口楼梯）、`to`→createStairs（按随机横/竖放置 DungeonStairs）、`yx`→moveUpLeft（房间 tileColumn/tileRow 同减，循环逼近 (1,1)）、`gt`→shiftUp（仅 tileRow 递减，与既有 shiftLeft 对称）。DungeonRoom/DungeonHallway：`ro`→connectedRooms、`Bq`→paintTiles（按几何把 floorType 写入 tileGrid）、`xx`→applyTheme（写入 theme 与 tileGrid）。DungeonLevel/WorldBlock 共用 `Aw`→createTileGrid（分配 tileGrid 并填充瓦片）。LayoutMethods typedef 同步更新（批处理的 typedefKeyRe 覆盖该行）。
 

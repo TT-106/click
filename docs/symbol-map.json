@@ -8256,7 +8256,20 @@
     "ru": "connectRooms",
     "uu": "placeStairs",
     "rw": "generate",
-    "Aw": "createTileGrid"
+    "Aw": "createTileGrid",
+    "yy": "dungeonAdjectives",
+    "FA": "dungeonNouns",
+    "cz": "cryptNouns",
+    "xr": "lairNouns",
+    "zC": "towerNouns",
+    "TB": "templeNouns",
+    "cB": "monumentNouns",
+    "My": "castleNouns",
+    "Xz": "iceAdjectives",
+    "ZC": "regionColumn",
+    "$C": "regionRow",
+    "$D": "maxRegionColumn",
+    "bE": "maxRegionRow"
   },
   "gameFields": {
     "B": "tileSize",
