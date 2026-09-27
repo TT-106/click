@@ -38,7 +38,7 @@ export function AdventurerSummaryView(a) {
   this.effectFrameIndices = [0, 0, 0, 0, 0, 0];
   this.effectFrameInterval = 8;
   this.frameAge = 0;
-  this.selectedPotionSlot = -1;
+  this.comparisonEncounterIndex = -1;
   this.isLocked = false;
 }
 export function colorComparedStats(a, b, c, d, f, g) {
@@ -62,37 +62,37 @@ export function DungeonNotificationView() {
   this.visible = false;
   this.dungeonName = "";
   this.notificationElement = null;
-  this.Su = this.cachedDungeonName = "";
+  this.cachedDungeonLevel = this.cachedDungeonName = "";
 }
 export function EncounterNotificationView() {
   this.elementId = "encounterNotificationPanel";
   this.visible = false;
   this.notificationElement = null;
-  this.bA = this.xz = this.selectedPotionSlot = -1;
-  this.Bz = false;
+  this.encounterTotalMonsters = this.cachedMonsterCount = this.cachedEncounterIndex = -1;
+  this.isBossEncounter = false;
 }
 export function CurrencyView() {
   this.elementId = "currencyPanel";
   this.visible = true;
-  this.pD = "expCell";
-  this.tD = "goldAmountCell";
-  this.Hw = "killsCountCell";
-  this.rm = this.vz = this.uz = -1;
+  this.experienceCellId = "expCell";
+  this.goldCellId = "goldAmountCell";
+  this.killsCellId = "killsCountCell";
+  this.cachedKills = this.cachedGold = this.cachedExperience = -1;
 }
 export function AdventurePointsView(a) {
   this.elementId = a;
   this.visible = true;
-  this.Np = null;
-  this.qz = -1;
+  this.pointsCell = null;
+  this.cachedPoints = -1;
 }
 export function mountAdventurePoints(a) {
   var b = createElement("table", getElement(a.elementId), null, null);
   b.style.width = "100%";
   b = b.insertRow(0);
-  a.Np = b.insertCell(0);
+  a.pointsCell = b.insertCell(0);
   b = b.insertCell(1);
-  a.Np.style.textAlign = "right";
-  a.Np.style.paddingTop = "5px";
+  a.pointsCell.style.textAlign = "right";
+  a.pointsCell.style.paddingTop = "5px";
   b.style.width = "30px";
   b.style.paddingTop = "5px";
   b.style.textAlign = "left";
@@ -100,12 +100,12 @@ export function mountAdventurePoints(a) {
   b.innerHTML = "AP";
 }
 export function ScrollButtonCollection(a) {
-  this.Gw = {};
-  this.qp = [];
+  this.keyStates = {};
+  this.buttons = [];
   var b, c, d;
   for (b = 0; b < (/** @type {any} */ (a)).length; b++) {
     for (d = a[b], c = 0; c < d.length; c++) {
-      this.qp.push(d[c]);
+      this.buttons.push(d[c]);
     }
   }
   scrollButtonsChanged(this);
@@ -113,50 +113,50 @@ export function ScrollButtonCollection(a) {
 }
 export function clearScrollButtons(a) {
   document.onkeyup = function (b) {
-    a.Gw[b.keyCode] = true;
+    a.keyStates[b.keyCode] = true;
   };
 }
 export function scrollButtonsChanged(a) {
   var b;
-  for (b = 0; b < a.qp.length; b++) {
-    a.Gw[a.qp[b]] = false;
+  for (b = 0; b < a.buttons.length; b++) {
+    a.keyStates[a.buttons[b]] = false;
   }
 }
 export function ScrollButtonView(a, b, c, d) {
   this.elementId = a;
   this.visible = true;
-  this.itemImage = this.Cx = this.mx = this.$p = this.tm = this.scroll = null;
-  this.aq = false;
-  this.Gv = !this.aq;
-  this.rz = -1;
-  this.yz = null;
-  this.wz = true;
-  this.YC = b;
-  this.Qr = c;
-  this.qp = d;
+  this.itemImage = this.quantityCell = this.nameCell = this.buttonElement = this.cachedScroll = this.scroll = null;
+  this.isEnabled = false;
+  this.wasEnabled = !this.isEnabled;
+  this.cachedQuantity = -1;
+  this.cachedLabel = null;
+  this.cachedLocked = true;
+  this.casterIndex = b;
+  this.collection = c;
+  this.keyBindings = d;
 }
 export function getScrollButtonClass(a) {
   if (a.scroll && (0 < a.scroll.quantity || infiniteScrollsModifier.currentValue)) {
-    positionScrollCaster(a.YC);
+    positionScrollCaster(a.casterIndex);
     castScroll(a.scroll, infiniteScrollsModifier.currentValue);
   }
 }
 export function mountScrollButton(a) {
-  a.$p = createElement("div", getElement(a.elementId), null, "scrollButtonDisabled");
-  a.Gv = false;
-  var b = createElement("table", a.$p, null, null),
+  a.buttonElement = createElement("div", getElement(a.elementId), null, "scrollButtonDisabled");
+  a.wasEnabled = false;
+  var b = createElement("table", a.buttonElement, null, null),
     c = b.insertRow(0),
     b = b.insertRow(1),
     d = c.insertCell(0);
   d.rowSpan = 2;
-  a.mx = c.insertCell(1);
-  a.Cx = b.insertCell(0);
-  a.mx.style.textAlign = "left";
-  a.Cx.style.textAlign = "left";
+  a.nameCell = c.insertCell(1);
+  a.quantityCell = b.insertCell(0);
+  a.nameCell.style.textAlign = "left";
+  a.quantityCell.style.textAlign = "left";
   a.itemImage = createElement("img", d, null, "itemImage");
   a.itemImage.style.height = "30px";
   a.itemImage.src = "images/Transparent.gif";
-  a.$p.onmouseup = function () {
+  a.buttonElement.onmouseup = function () {
     getScrollButtonClass(a);
     return false;
   };
@@ -164,48 +164,48 @@ export function mountScrollButton(a) {
 export function ScrollBarView() {
   this.elementId = "scrollButtonContainer";
   this.visible = true;
-  this.fu = null;
-  this.Zs = [];
-  this.oA = [[49, 35, 97], [50, 40, 98], [51, 34, 99], [52, 37, 100], [53, 12, 101], [54, 39, 102]];
-  this.Qr = new ScrollButtonCollection(this.oA);
+  this.tableElement = null;
+  this.buttonViews = [];
+  this.keyBindings = [[49, 35, 97], [50, 40, 98], [51, 34, 99], [52, 37, 100], [53, 12, 101], [54, 39, 102]];
+  this.collection = new ScrollButtonCollection(this.keyBindings);
 }
 export function PotionButtonView(a, b) {
   this.elementId = a;
   this.visible = true;
   this.potion = null;
-  this.TA = b;
-  this.yo = this.sm = null;
-  this.gu = 192;
-  this.Pp = this.Op = this.Tp = this.dropPotionButton = this.tableElement = this.progressFillElement = this.km = null;
+  this.slotIndex = b;
+  this.cachedButtonClass = this.cachedPotion = null;
+  this.progressBarWidth = 192;
+  this.potionImage = this.effectLabelCell = this.nameCell = this.dropPotionButton = this.tableElement = this.progressFillElement = this.contentContainer = null;
   this.dropButtonVisible = false;
   this.cachedFillWidth = -1;
-  this.Sp = this.Bo = false;
+  this.isLocked = this.dropButtonShown = false;
 }
 export function mountPotionButton(a) {
-  a.km = createElement("div", getElement(a.elementId), null, "potionContentContainer");
-  a.Sp = a.TA >= BASE_POTION_CAPACITY + potionCapacityBonus.currentValue;
-  a.tableElement = createElement("table", a.km, null, a.Sp ? "potionButtonLocked" : "potionButtonDisabled");
+  a.contentContainer = createElement("div", getElement(a.elementId), null, "potionContentContainer");
+  a.isLocked = a.slotIndex >= BASE_POTION_CAPACITY + potionCapacityBonus.currentValue;
+  a.tableElement = createElement("table", a.contentContainer, null, a.isLocked ? "potionButtonLocked" : "potionButtonDisabled");
   var b = a.tableElement.insertRow(0),
     c = a.tableElement.insertRow(1),
     d = b.insertCell(0);
   d.rowSpan = 2;
-  a.Tp = b.insertCell(1);
-  a.Op = c.insertCell(0);
-  a.Tp.style.textAlign = "left";
-  a.Op.style.textAlign = "left";
-  a.Pp = createElement("img", d, null, "itemImage");
-  a.Pp.src = "images/Transparent.gif";
-  a.km.onmouseup = function () {
+  a.nameCell = b.insertCell(1);
+  a.effectLabelCell = c.insertCell(0);
+  a.nameCell.style.textAlign = "left";
+  a.effectLabelCell.style.textAlign = "left";
+  a.potionImage = createElement("img", d, null, "itemImage");
+  a.potionImage.src = "images/Transparent.gif";
+  a.contentContainer.onmouseup = function () {
     a.aw();
     return false;
   };
-  a.progressFillElement = createElement("div", a.km, null, "potionButtonProgressSlider");
+  a.progressFillElement = createElement("div", a.contentContainer, null, "potionButtonProgressSlider");
   a.dropButtonVisible = false;
-  a.dropPotionButton = createElement("div", a.km, null, "dropPotionButton");
+  a.dropPotionButton = createElement("div", a.contentContainer, null, "dropPotionButton");
   a.dropPotionButton.title = "丢弃药剂";
   a.dropPotionButton.innerHTML = "X";
   a.dropPotionButton.style.display = "none";
-  a.Bo = false;
+  a.dropButtonShown = false;
   a.dropPotionButton.onmouseup = function () {
     a.bw();
     return false;
@@ -214,8 +214,8 @@ export function mountPotionButton(a) {
 export function PotionBarView() {
   this.elementId = "potionButtonContainer";
   this.visible = true;
-  this.su = false;
-  this.Ms = [];
+  this.mounted = false;
+  this.buttonViews = [];
 }
 export function ExpeditionView(a) {
   this.elementId = "gameTabContent";
@@ -251,7 +251,7 @@ export function initializeViewsExpedition() {
         this.vacantOverlay = createElement("div", getElement(this.elementId), null, "gameTabBlankAdventurerInfo");
       }
     } else {
-      this.selectedPotionSlot = this.cachedDefenceRating = this.cachedAttackRating = this.cachedArmor = this.cachedDamage = this.cachedMaxSpirit = this.cachedSpirit = this.cachedMaxHealth = this.cachedHealth = this.cachedLevel = -1;
+      this.comparisonEncounterIndex = this.cachedDefenceRating = this.cachedAttackRating = this.cachedArmor = this.cachedDamage = this.cachedMaxSpirit = this.cachedSpirit = this.cachedMaxHealth = this.cachedHealth = this.cachedLevel = -1;
       var a;
       for (a = 0; a < this.shownEffectTypeIds.length; a++) {
         this.shownEffectTypeIds[a] = null;
@@ -455,7 +455,7 @@ export function initializeViewsExpedition() {
         }
         a = getMonsters();
         if (0 === a.length) {
-          if (-1 < this.selectedPotionSlot) {
+          if (-1 < this.comparisonEncounterIndex) {
             getElement(this.damageTextId).style.color = "#FFF";
             getElement(this.armorTextId).style.color = "#FFF";
             getElement(this.attackRatingTextId).style.color = "#FFF";
@@ -464,7 +464,7 @@ export function initializeViewsExpedition() {
             this.potionButton.style.color = "#FFF";
             this.attackRatingHeaderCell.style.color = "#FFF";
             this.defenceHeaderCell.style.color = "#FFF";
-            this.cachedMonsterDefenceRating = this.cachedMonsterAttackRating = this.cachedMonsterArmor = this.cachedMonsterDamage = this.selectedPotionSlot = -1;
+            this.cachedMonsterDefenceRating = this.cachedMonsterAttackRating = this.cachedMonsterArmor = this.cachedMonsterDamage = this.comparisonEncounterIndex = -1;
           }
         } else {
           c = a[0].stats;
@@ -472,7 +472,7 @@ export function initializeViewsExpedition() {
           f = statValue(c.armor);
           g = statValue(c.attackRating);
           c = statValue(c.defenceRating);
-          this.selectedPotionSlot = game.state.encounter.Ar;
+          this.comparisonEncounterIndex = game.state.encounter.Ar;
           colorComparedStats(this.damageTextId, h, f, this.cachedDamage, this.cachedMonsterDamage, this.damageHeaderCell);
           colorComparedStats(this.armorTextId, l, a, this.cachedArmor, this.cachedMonsterArmor, this.potionButton);
           colorComparedStats(this.attackRatingTextId, n, c, this.cachedAttackRating, this.cachedMonsterDefenceRating, this.attackRatingHeaderCell);
@@ -492,7 +492,7 @@ export function initializeViewsExpedition() {
   DungeonNotificationView.prototype = new View();
   DungeonNotificationView.prototype.reset = function () {
     clearElementById(this.elementId);
-    this.Su = this.cachedDungeonName = "";
+    this.cachedDungeonLevel = this.cachedDungeonName = "";
     var a = getElement(this.elementId);
     this.notificationElement = createElement("div", a, null, "dungeonNotificationDiv");
     hideElement(a);
@@ -510,8 +510,8 @@ export function initializeViewsExpedition() {
       a = game.currentCastle.castleName;
       b = 0;
     }
-    if (b !== this.Su || a !== this.cachedDungeonName) {
-      this.Su = b;
+    if (b !== this.cachedDungeonLevel || a !== this.cachedDungeonName) {
+      this.cachedDungeonLevel = b;
       this.cachedDungeonName = a;
       this.notificationElement.innerHTML = 0 < b ? a + " (等级." + b + ")" : a;
     }
@@ -528,18 +528,18 @@ export function initializeViewsExpedition() {
   EncounterNotificationView.prototype.update = function () {
     var a = game.state.encounter.Ar,
       b = getMonsters().length;
-    if (this.selectedPotionSlot !== a || this.xz != b) {
-      if (this.selectedPotionSlot !== a) {
-        this.bA = b;
+    if (this.cachedEncounterIndex !== a || this.cachedMonsterCount != b) {
+      if (this.cachedEncounterIndex !== a) {
+        this.encounterTotalMonsters = b;
       }
-      this.selectedPotionSlot = a;
-      this.xz = b;
+      this.cachedEncounterIndex = a;
+      this.cachedMonsterCount = b;
       var c;
       c = game.state.encounter.fw;
       a = game.state.encounter.du;
-      this.notificationElement.innerHTML = a ? "遭遇首领!<br/> " + c : "一场遭遇战!<br/>" + b + "/" + this.bA + " " + c;
-      if (this.Bz != a) {
-        this.Bz = a;
+      this.notificationElement.innerHTML = a ? "遭遇首领!<br/> " + c : "一场遭遇战!<br/>" + b + "/" + this.encounterTotalMonsters + " " + c;
+      if (this.isBossEncounter != a) {
+        this.isBossEncounter = a;
         this.notificationElement.className = a ? "bossEncounterNotificationDiv" : "encounterNotificationDiv";
       }
     }
@@ -550,17 +550,17 @@ export function initializeViewsExpedition() {
     var a = game.state.party.experiencePoints,
       b = game.state.party.gold,
       c = game.state.party.kills;
-    if (a !== this.uz) {
-      this.uz = a;
-      setElementHtml(this.pD, "" + formatAmount(a));
+    if (a !== this.cachedExperience) {
+      this.cachedExperience = a;
+      setElementHtml(this.experienceCellId, "" + formatAmount(a));
     }
-    if (b !== this.vz) {
-      this.vz = b;
-      setElementHtml(this.tD, "" + formatAmount(b));
+    if (b !== this.cachedGold) {
+      this.cachedGold = b;
+      setElementHtml(this.goldCellId, "" + formatAmount(b));
     }
-    if (c !== this.rm) {
-      this.rm = c;
-      setElementHtml(this.Hw, "" + formatAmount(c));
+    if (c !== this.cachedKills) {
+      this.cachedKills = c;
+      setElementHtml(this.killsCellId, "" + formatAmount(c));
     }
   };
   AdventurePointsView.prototype = new View();
@@ -569,51 +569,51 @@ export function initializeViewsExpedition() {
     mountAdventurePoints(this);
   };
   AdventurePointsView.prototype.update = function () {
-    if (!this.Np) {
+    if (!this.pointsCell) {
       mountAdventurePoints(this);
     }
     var a = game.state.adventurePoints.availablePoints;
-    if (a !== this.qz) {
-      this.qz = a;
-      this.Np.innerHTML = formatGroupedAmount(a);
+    if (a !== this.cachedPoints) {
+      this.cachedPoints = a;
+      this.pointsCell.innerHTML = formatGroupedAmount(a);
     }
   };
   ScrollButtonView.prototype = new View();
   ScrollButtonView.prototype.reset = function () {};
   ScrollButtonView.prototype.update = function () {
-    if (!this.$p) {
+    if (!this.buttonElement) {
       mountScrollButton(this);
     }
     var a = false;
-    if (this.scroll != this.tm && (this.tm = this.scroll, a = true, this.scroll)) {
+    if (this.scroll != this.cachedScroll && (this.cachedScroll = this.scroll, a = true, this.scroll)) {
       var b = this.scroll.spriteName;
       this.itemImage.style.background = "url('spritesheet/items.png') -" + b.sourceX + "px -" + b.sourceY + "px";
     }
     b = this.scroll.label;
-    if (this.yz !== b) {
-      this.yz = b;
-      this.mx.innerHTML = b;
+    if (this.cachedLabel !== b) {
+      this.cachedLabel = b;
+      this.nameCell.innerHTML = b;
     }
     b = this.scroll ? this.scroll.quantity : -1;
     if (infiniteScrollsModifier.currentValue) {
       b = -2;
     }
     var c = 0 < b || infiniteScrollsModifier.currentValue;
-    this.aq = !this.scroll.locked && c && !game.worldActive && 0 < getMonsters().length;
-    if (a || this.Gv != this.aq) {
-      this.Gv = this.aq;
-      this.$p.className = this.aq ? "scrollButton" : "scrollButtonDisabled";
+    this.isEnabled = !this.scroll.locked && c && !game.worldActive && 0 < getMonsters().length;
+    if (a || this.wasEnabled != this.isEnabled) {
+      this.wasEnabled = this.isEnabled;
+      this.buttonElement.className = this.isEnabled ? "scrollButton" : "scrollButtonDisabled";
     }
     a = this.scroll.locked;
-    if (this.rz !== b || this.wz != a) {
-      this.rz = b;
-      this.wz = a;
-      this.Cx.innerHTML = a ? "" : infiniteScrollsModifier.currentValue ? "无限" : "x" + b;
+    if (this.cachedQuantity !== b || this.cachedLocked != a) {
+      this.cachedQuantity = b;
+      this.cachedLocked = a;
+      this.quantityCell.innerHTML = a ? "" : infiniteScrollsModifier.currentValue ? "无限" : "x" + b;
     }
     a: {
-      a = this.qp;
+      a = this.keyBindings;
       for (b = 0; b < (/** @type {any} */ (a)).length; b++) {
-        if (this.Qr.Gw[a[b]]) {
+        if (this.collection.keyStates[a[b]]) {
           a = true;
           break a;
         }
@@ -627,28 +627,28 @@ export function initializeViewsExpedition() {
   ScrollBarView.prototype = new View();
   ScrollBarView.prototype.reset = function () {
     clearElementById(this.elementId);
-    this.Zs.length = 0;
+    this.buttonViews.length = 0;
     (/** @type {any} */ (this)).createDomElements();
   };
   ScrollBarView.prototype.update = function () {
-    if (!this.fu) {
+    if (!this.tableElement) {
       (/** @type {any} */ (this)).createDomElements();
     }
     var a,
       b = game.scrolls.at,
       c,
       d;
-    for (a = 0; a < this.Zs.length; a++) {
+    for (a = 0; a < this.buttonViews.length; a++) {
       d = b.length > a ? b[a] : null;
-      c = this.Zs[a];
+      c = this.buttonViews[a];
       c.scroll = d;
       c.render();
     }
-    scrollButtonsChanged(this.Qr);
+    scrollButtonsChanged(this.collection);
   };
   ScrollBarView.prototype.createDomElements = function () {
-    this.fu = createElement("table", getElement(this.elementId), null, null);
-    var a = this.fu.insertRow(0),
+    this.tableElement = createElement("table", getElement(this.elementId), null, null);
+    var a = this.tableElement.insertRow(0),
       b,
       c,
       d;
@@ -656,47 +656,47 @@ export function initializeViewsExpedition() {
       c = a.insertCell(d);
       b = "scrollButtonCell" + d;
       createElement("div", c, b, null);
-      this.Zs.push(new ScrollButtonView(b, d, this.Qr, this.oA[d]));
+      this.buttonViews.push(new ScrollButtonView(b, d, this.collection, this.keyBindings[d]));
     }
   };
   PotionButtonView.prototype = new View();
   PotionButtonView.prototype.reset = function () {
     clearElementById(this.elementId);
-    this.Pp = this.Op = this.Tp = this.dropPotionButton = this.tableElement = this.progressFillElement = this.km = this.yo = this.sm = this.potion = null;
-    this.dropButtonVisible = this.Sp = false;
+    this.potionImage = this.effectLabelCell = this.nameCell = this.dropPotionButton = this.tableElement = this.progressFillElement = this.contentContainer = this.cachedButtonClass = this.cachedPotion = this.potion = null;
+    this.dropButtonVisible = this.isLocked = false;
   };
   PotionButtonView.prototype.update = function () {
     if (!this.tableElement) {
       mountPotionButton(this);
     }
-    if (this.Sp && this.TA < BASE_POTION_CAPACITY + potionCapacityBonus.currentValue) {
-      this.Sp = false;
+    if (this.isLocked && this.slotIndex < BASE_POTION_CAPACITY + potionCapacityBonus.currentValue) {
+      this.isLocked = false;
       this.tableElement.className = "potionButtonDisabled";
     }
     if (this.potion) {
-      if (!this.sm) {
+      if (!this.cachedPotion) {
         showElement(this.tableElement);
       }
       var a;
       a = (a = this.potion) ? !a.active && isPotionModifierActive(a) ? "potionButtonDisabled" : a.active ? "potionButtonActive" : "potionButton" : "potionButtonDisabled";
-      if (this.yo != a) {
-        this.yo = a;
+      if (this.cachedButtonClass != a) {
+        this.cachedButtonClass = a;
         this.tableElement.className = a;
       }
-      if (this.potion != this.sm) {
-        this.Tp.innerHTML = this.potion.displayName;
-        this.Op.innerHTML = this.potion.effectLabel;
+      if (this.potion != this.cachedPotion) {
+        this.nameCell.innerHTML = this.potion.displayName;
+        this.effectLabelCell.innerHTML = this.potion.effectLabel;
         a = this.potion.potionSprite;
-        this.Pp.style.background = "url('spritesheet/items.png') -" + a.sourceX + "px -" + a.sourceY + "px";
+        this.potionImage.style.background = "url('spritesheet/items.png') -" + a.sourceX + "px -" + a.sourceY + "px";
       }
-      this.sm = this.potion;
+      this.cachedPotion = this.potion;
       if (this.potion.active) {
         if (!this.dropButtonVisible) {
           showElement(this.progressFillElement);
           this.dropButtonVisible = true;
         }
         a = Math.min(1, (game.state.turnNumber - this.potion.activationTurn) / (800 + potionDurationBonus.currentValue));
-        a *= this.gu;
+        a *= this.progressBarWidth;
         if (this.cachedFillWidth !== a) {
           this.cachedFillWidth = a;
           this.progressFillElement.style.width = a + "px";
@@ -707,26 +707,26 @@ export function initializeViewsExpedition() {
           this.dropButtonVisible = false;
         }
       }
-      if (!this.Bo) {
-        this.Bo = true;
+      if (!this.dropButtonShown) {
+        this.dropButtonShown = true;
         this.dropPotionButton.style.display = "block";
       }
     } else {
-      if (this.sm) {
-        this.sm = null;
-        this.Tp.innerHTML = "";
-        this.Op.innerHTML = "";
-        this.Pp.style.background = "";
-        if (this.Bo) {
-          this.Bo = false;
+      if (this.cachedPotion) {
+        this.cachedPotion = null;
+        this.nameCell.innerHTML = "";
+        this.effectLabelCell.innerHTML = "";
+        this.potionImage.style.background = "";
+        if (this.dropButtonShown) {
+          this.dropButtonShown = false;
           this.dropPotionButton.style.display = "none";
         }
         if (this.dropButtonVisible) {
           hideElement(this.progressFillElement);
           this.dropButtonVisible = false;
         }
-        this.yo = "potionButtonDisabled";
-        this.tableElement.className = this.yo;
+        this.cachedButtonClass = "potionButtonDisabled";
+        this.tableElement.className = this.cachedButtonClass;
       }
     }
   };
@@ -746,28 +746,28 @@ export function initializeViewsExpedition() {
   PotionBarView.prototype = new View();
   PotionBarView.prototype.reset = function () {
     clearElementById(this.elementId);
-    this.Ms.length = 0;
-    this.su = false;
+    this.buttonViews.length = 0;
+    this.mounted = false;
     (/** @type {any} */ (this)).createDomElements();
   };
   PotionBarView.prototype.update = function () {
-    if (!this.su) {
+    if (!this.mounted) {
       (/** @type {any} */ (this)).createDomElements();
     }
     var a,
       b = game.potions.potionList,
       c,
       d;
-    for (a = 0; a < this.Ms.length; a++) {
+    for (a = 0; a < this.buttonViews.length; a++) {
       d = a < b.length ? b[a] : null;
-      c = this.Ms[a];
+      c = this.buttonViews[a];
       c.potion = d;
       c.render();
     }
   };
   PotionBarView.prototype.createDomElements = function () {
     var a = getElement(this.elementId);
-    this.su = true;
+    this.mounted = true;
     var b,
       c,
       d = 0;
@@ -781,7 +781,7 @@ export function initializeViewsExpedition() {
         n.id = l;
         n.style.left = 196 * f + "px";
         n.style.top = 47 * g + "px";
-        this.Ms.push(new PotionButtonView(l, h));
+        this.buttonViews.push(new PotionButtonView(l, h));
       }
     }
   };

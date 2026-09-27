@@ -1,0 +1,54 @@
+{
+  "_comment": "expedition.js 其余视图（通知/货币/冒险点/卷轴/药水）的字段语义恢复。来源：构造函数参数与 id 字面量、update() 的「缓存→元素」配对与快捷键/槽位循环。同文件异主字段 selectedPotionSlot(AdventurerSummaryView) 与 qp(ScrollButtonCollection) 已在本次提交前手工解除另一属主（EncounterNotificationView.selectedPotionSlot→cachedEncounterIndex、ScrollButtonView.qp→keyBindings）。",
+  "files": ["src/engine/modules/views/expedition.js"],
+  "map": {
+    "Su": "cachedDungeonLevel",
+    "selectedPotionSlot": "comparisonEncounterIndex",
+    "bA": "encounterTotalMonsters",
+    "xz": "cachedMonsterCount",
+    "Bz": "isBossEncounter",
+
+    "pD": "experienceCellId",
+    "tD": "goldCellId",
+    "Hw": "killsCellId",
+    "uz": "cachedExperience",
+    "vz": "cachedGold",
+    "rm": "cachedKills",
+
+    "Np": "pointsCell",
+    "qz": "cachedPoints",
+
+    "Gw": "keyStates",
+    "qp": "buttons",
+
+    "Cx": "quantityCell",
+    "mx": "nameCell",
+    "$p": "buttonElement",
+    "tm": "cachedScroll",
+    "aq": "isEnabled",
+    "Gv": "wasEnabled",
+    "rz": "cachedQuantity",
+    "yz": "cachedLabel",
+    "wz": "cachedLocked",
+    "YC": "casterIndex",
+    "Qr": "collection",
+
+    "fu": "tableElement",
+    "Zs": "buttonViews",
+    "oA": "keyBindings",
+
+    "TA": "slotIndex",
+    "yo": "cachedButtonClass",
+    "sm": "cachedPotion",
+    "gu": "progressBarWidth",
+    "Pp": "potionImage",
+    "Op": "effectLabelCell",
+    "Tp": "nameCell",
+    "km": "contentContainer",
+    "Sp": "isLocked",
+    "Bo": "dropButtonShown",
+
+    "su": "mounted",
+    "Ms": "buttonViews"
+  }
+}
