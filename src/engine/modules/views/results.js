@@ -11,6 +11,12 @@ import { unlockStartingRegion } from "../world/regions.js";
 import { saveProgress } from "../persistence/game-save.js";
 import { adventurerClasses } from "../content/classes.js";
 import { monsterSpriteDefinitions } from "../core/bootstrap-data.js";
+/**
+ * `buildOfflineProgressTable` 与 `getOfflineProgressCell` 都在 `initializeViewsResults()` 里后挂到原型上，
+ * tsc 在函数边界外看不到它们，此前用 `@type {any}` 绕过（8 处）。用交叉类型把方法显式声明出来，
+ * 既去掉 `any`，也让参数/返回值的误用能被 tsc 抓到（DOM 类型来自 tsconfig 的 `lib: ["ES2022","DOM"]`）。
+ * @typedef {OfflineProgressView & { getOfflineProgressCell: (table: HTMLTableElement, label: string, rowIndex: number) => HTMLTableCellElement }} OfflineProgressViewWithCells
+ */
 export function GameOverView(a) {
   this.elementId = "gameOverTabContent";
   this.tabState = a;
@@ -250,15 +256,16 @@ export function initializeViewsResults() {
   };
   OfflineProgressView.prototype.buildOfflineProgressTable = function (a) {
     a = createElement("table", a, null, "centeredElement");
-    var b = 0;
-    this.directKillsDeltaCell = (/** @type {any} */ (this)).getOfflineProgressCell(a, "杀死怪物", b++);
-    this.itemsFoundDeltaCell = (/** @type {any} */ (this)).getOfflineProgressCell(a, "找到道具", b++);
-    this.itemsSoldDeltaCell = (/** @type {any} */ (this)).getOfflineProgressCell(a, "卖出道具", b++);
-    this.levelsClearedDeltaCell = (/** @type {any} */ (this)).getOfflineProgressCell(a, "清理关卡", b++);
-    this.dungeonsClearedDeltaCell = (/** @type {any} */ (this)).getOfflineProgressCell(a, "清理地牢", b++);
-    this.attackableCastlesDeltaCell = (/** @type {any} */ (this)).getOfflineProgressCell(a, "攻击城堡", b++);
-    this.stunnedCountDeltaCell = (/** @type {any} */ (this)).getOfflineProgressCell(a, "昏迷次数", b++);
-    this.achievementsDeltaCell = (/** @type {any} */ (this)).getOfflineProgressCell(a, "成就", b);
+    var b = 0,
+      self = /** @type {OfflineProgressViewWithCells} */ (/** @type {unknown} */ (this));
+    this.directKillsDeltaCell = self.getOfflineProgressCell(a, "杀死怪物", b++);
+    this.itemsFoundDeltaCell = self.getOfflineProgressCell(a, "找到道具", b++);
+    this.itemsSoldDeltaCell = self.getOfflineProgressCell(a, "卖出道具", b++);
+    this.levelsClearedDeltaCell = self.getOfflineProgressCell(a, "清理关卡", b++);
+    this.dungeonsClearedDeltaCell = self.getOfflineProgressCell(a, "清理地牢", b++);
+    this.attackableCastlesDeltaCell = self.getOfflineProgressCell(a, "攻击城堡", b++);
+    this.stunnedCountDeltaCell = self.getOfflineProgressCell(a, "昏迷次数", b++);
+    this.achievementsDeltaCell = self.getOfflineProgressCell(a, "成就", b);
   };
   OfflineProgressView.prototype.getOfflineProgressCell = function (a, b, c) {
     a = a.insertRow(c);
