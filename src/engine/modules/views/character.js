@@ -68,15 +68,15 @@ export function CharacterTabsView(a, b) {
   this.elementId = a;
   this.visible = true;
   this.adventurerIndex = b;
-  this.jt = new TabState("技能", true);
-  this.fA = new TabState("背包", true);
-  this.jt.selected = true;
-  this.zz = false;
+  this.skillsTab = new TabState("技能", true);
+  this.inventoryTab = new TabState("背包", true);
+  this.skillsTab.selected = true;
+  this.cachedHasUnspentSkills = false;
   var c = new TabBar("characterTabMenu" + this.adventurerIndex),
-    d = new SkillsTabView(this.jt, "characterSkillsContainer" + this.adventurerIndex, this.adventurerIndex),
-    f = new InventoryTabView(this.fA, "characterInventoryContainer" + this.adventurerIndex, this.adventurerIndex);
-  addTab(c, this.jt);
-  addTab(c, this.fA);
+    d = new SkillsTabView(this.skillsTab, "characterSkillsContainer" + this.adventurerIndex, this.adventurerIndex),
+    f = new InventoryTabView(this.inventoryTab, "characterInventoryContainer" + this.adventurerIndex, this.adventurerIndex);
+  addTab(c, this.skillsTab);
+  addTab(c, this.inventoryTab);
   addChildView(this, c);
   addChildView(this, d);
   addChildView(this, f);
@@ -85,8 +85,8 @@ export function CharacterSummaryView(a, b) {
   this.elementId = a;
   this.visible = true;
   this.adventurerIndex = b;
-  this.dD = this.xy = this.Jy = this.AB = this.hz = this.gz = this.ez = this.stunCountCell = this.Ap = this.pA = this.EB = this.Wz = this.bz = this.DB = this.spiritCell = this.rA = this.tableElement = null;
-  this.zu = this.iv = this.Mu = this.Ov = this.Pu = this.Ou = this.Nu = this.killsCell = this.petKillsCell = this.spiritRegenCell = this.Pv = this.$u = this.Lu = this.cooldownCell = this.Zu = this.cachedLevel = -1;
+  this.critChanceCell = this.extraAttackCell = this.attacksPerTurnCell = this.spellPenetrationCell = this.damageResistanceCell = this.damageReceivedCell = this.damageGivenCell = this.stunCountCell = this.petKillsCell = this.killsCell = this.spiritRegenCell = this.healthRegenCell = this.attackCooldownCell = this.spiritCell = this.healthCell = this.levelCell = this.tableElement = null;
+  this.cachedExtraAttackChance = this.cachedAttacksPerTurn = this.cachedCritChance = this.cachedSpellCostReduction = this.cachedDamageResistance = this.cachedDamageReceived = this.cachedDamageGiven = this.cachedStunCount = this.cachedMinionKills = this.cachedKills = this.cachedSpiritRegenPercent = this.cachedHealthRegenPercent = this.cachedAttackCooldown = this.cachedSpirit = this.cachedHealth = this.cachedLevel = -1;
 }
 export function StatBreakdownView(a, b, c, d) {
   this.elementId = a;
@@ -445,33 +445,33 @@ export function initializeViewsCharacter() {
   CharacterTabsView.prototype.update = function () {
     var a = game.state.adventurers[this.adventurerIndex],
       a = 0 < a.skillPoints && a.hasUnspentSkills;
-    if (this.zz !== a) {
-      this.zz = a;
-      this.jt.highlighted = a ? true : false;
+    if (this.cachedHasUnspentSkills !== a) {
+      this.cachedHasUnspentSkills = a;
+      this.skillsTab.highlighted = a ? true : false;
     }
     updateChildViews(this);
   };
   CharacterSummaryView.prototype = new View();
   CharacterSummaryView.prototype.reset = function () {
-    this.zu = this.iv = this.Mu = this.Ov = this.Pu = this.Ou = this.Nu = this.killsCell = this.petKillsCell = this.spiritRegenCell = this.Pv = this.$u = this.Lu = this.cooldownCell = this.Zu = this.cachedLevel = -1;
+    this.cachedExtraAttackChance = this.cachedAttacksPerTurn = this.cachedCritChance = this.cachedSpellCostReduction = this.cachedDamageResistance = this.cachedDamageReceived = this.cachedDamageGiven = this.cachedStunCount = this.cachedMinionKills = this.cachedKills = this.cachedSpiritRegenPercent = this.cachedHealthRegenPercent = this.cachedAttackCooldown = this.cachedSpirit = this.cachedHealth = this.cachedLevel = -1;
     var a = 0;
     this.tableElement = createElement("table", getElement(this.elementId), null, "characteristicsTable");
-    this.rA = appendAttributeRow(this.tableElement, "等级:", a++);
-    this.spiritCell = appendAttributeRow(this.tableElement, "生命:", a++);
-    this.DB = appendAttributeRow(this.tableElement, "法力:", a++);
-    this.Wz = appendAttributeRow(this.tableElement, "生命回复:", a++);
-    this.EB = appendAttributeRow(this.tableElement, "法力回复:", a++);
-    this.pA = appendAttributeRow(this.tableElement, "杀死:", a++);
-    this.Ap = appendAttributeRow(this.tableElement, "宠物杀死:", a++);
+    this.levelCell = appendAttributeRow(this.tableElement, "等级:", a++);
+    this.healthCell = appendAttributeRow(this.tableElement, "生命:", a++);
+    this.spiritCell = appendAttributeRow(this.tableElement, "法力:", a++);
+    this.healthRegenCell = appendAttributeRow(this.tableElement, "生命回复:", a++);
+    this.spiritRegenCell = appendAttributeRow(this.tableElement, "法力回复:", a++);
+    this.killsCell = appendAttributeRow(this.tableElement, "杀死:", a++);
+    this.petKillsCell = appendAttributeRow(this.tableElement, "宠物杀死:", a++);
     this.stunCountCell = appendAttributeRow(this.tableElement, "昏迷次数:", a++);
-    this.ez = appendAttributeRow(this.tableElement, "输出伤害:", a++);
-    this.gz = appendAttributeRow(this.tableElement, "受到伤害:", a++);
-    this.hz = appendAttributeRow(this.tableElement, "伤害抵抗:", a++);
-    this.AB = appendAttributeRow(this.tableElement, "法术忽视:", a++);
-    this.dD = appendAttributeRow(this.tableElement, "暴击几率:", a++);
-    this.bz = appendAttributeRow(this.tableElement, "冷却回合:", a++);
-    this.Jy = appendAttributeRow(this.tableElement, "每回合攻击次数:", a++);
-    this.xy = appendAttributeRow(this.tableElement, "额外攻击:", a);
+    this.damageGivenCell = appendAttributeRow(this.tableElement, "输出伤害:", a++);
+    this.damageReceivedCell = appendAttributeRow(this.tableElement, "受到伤害:", a++);
+    this.damageResistanceCell = appendAttributeRow(this.tableElement, "伤害抵抗:", a++);
+    this.spellPenetrationCell = appendAttributeRow(this.tableElement, "法术忽视:", a++);
+    this.critChanceCell = appendAttributeRow(this.tableElement, "暴击几率:", a++);
+    this.attackCooldownCell = appendAttributeRow(this.tableElement, "冷却回合:", a++);
+    this.attacksPerTurnCell = appendAttributeRow(this.tableElement, "每回合攻击次数:", a++);
+    this.extraAttackCell = appendAttributeRow(this.tableElement, "额外攻击:", a);
   };
   CharacterSummaryView.prototype.update = function () {
     var a = game.state.adventurers[this.adventurerIndex].stats,
@@ -493,67 +493,67 @@ export function initializeViewsCharacter() {
       a = 0 < a.extraAttackCount ? a.extraAttackChance : 0;
     if (this.cachedLevel !== b) {
       this.cachedLevel = b;
-      this.rA.innerHTML = b + "";
+      this.levelCell.innerHTML = b + "";
     }
-    if (this.Zu !== c) {
-      this.Zu = c;
-      this.spiritCell.innerHTML = formatAmount(c);
+    if (this.cachedHealth !== c) {
+      this.cachedHealth = c;
+      this.healthCell.innerHTML = formatAmount(c);
     }
-    if (this.cooldownCell !== d) {
-      this.cooldownCell = d;
-      this.DB.innerHTML = formatAmount(d);
+    if (this.cachedSpirit !== d) {
+      this.cachedSpirit = d;
+      this.spiritCell.innerHTML = formatAmount(d);
     }
-    if (this.Lu !== f) {
-      this.Lu = f;
-      this.bz.innerHTML = f + "";
+    if (this.cachedAttackCooldown !== f) {
+      this.cachedAttackCooldown = f;
+      this.attackCooldownCell.innerHTML = f + "";
     }
-    if (this.$u !== g) {
-      this.$u = g;
-      this.Wz.innerHTML = g + "%";
+    if (this.cachedHealthRegenPercent !== g) {
+      this.cachedHealthRegenPercent = g;
+      this.healthRegenCell.innerHTML = g + "%";
     }
-    if (this.Pv !== h) {
-      this.Pv = h;
-      this.EB.innerHTML = h + "%";
+    if (this.cachedSpiritRegenPercent !== h) {
+      this.cachedSpiritRegenPercent = h;
+      this.spiritRegenCell.innerHTML = h + "%";
     }
-    if (this.spiritRegenCell !== l) {
-      this.spiritRegenCell = l;
-      this.pA.innerHTML = formatAmount(l);
+    if (this.cachedKills !== l) {
+      this.cachedKills = l;
+      this.killsCell.innerHTML = formatAmount(l);
     }
-    if (this.petKillsCell !== n) {
-      this.petKillsCell = n;
-      this.Ap.innerHTML = formatAmount(n);
+    if (this.cachedMinionKills !== n) {
+      this.cachedMinionKills = n;
+      this.petKillsCell.innerHTML = formatAmount(n);
     }
-    if (this.killsCell !== p) {
-      this.killsCell = p;
+    if (this.cachedStunCount !== p) {
+      this.cachedStunCount = p;
       this.stunCountCell.innerHTML = formatAmount(p);
     }
-    if (this.Nu !== s) {
-      this.Nu = s;
-      this.ez.innerHTML = formatAmount(s);
+    if (this.cachedDamageGiven !== s) {
+      this.cachedDamageGiven = s;
+      this.damageGivenCell.innerHTML = formatAmount(s);
     }
-    if (this.Ou !== u) {
-      this.Ou = u;
-      this.gz.innerHTML = formatAmount(u);
+    if (this.cachedDamageReceived !== u) {
+      this.cachedDamageReceived = u;
+      this.damageReceivedCell.innerHTML = formatAmount(u);
     }
-    if (this.Pu !== y) {
-      this.Pu = y;
-      this.hz.innerHTML = y + "%";
+    if (this.cachedDamageResistance !== y) {
+      this.cachedDamageResistance = y;
+      this.damageResistanceCell.innerHTML = y + "%";
     }
-    if (this.Ov !== A) {
-      this.Ov = A;
-      this.AB.innerHTML = A + "%";
+    if (this.cachedSpellCostReduction !== A) {
+      this.cachedSpellCostReduction = A;
+      this.spellPenetrationCell.innerHTML = A + "%";
     }
-    if (this.Mu !== C) {
-      this.Mu = C;
-      this.dD.innerHTML = C + "%";
+    if (this.cachedCritChance !== C) {
+      this.cachedCritChance = C;
+      this.critChanceCell.innerHTML = C + "%";
     }
-    if (this.iv != v) {
-      this.iv = v;
-      this.Jy.innerHTML = v + "";
+    if (this.cachedAttacksPerTurn != v) {
+      this.cachedAttacksPerTurn = v;
+      this.attacksPerTurnCell.innerHTML = v + "";
     }
-    if (this.zu != a) {
-      this.zu = a;
-      this.xy.innerHTML = a + "%";
+    if (this.cachedExtraAttackChance != a) {
+      this.cachedExtraAttackChance = a;
+      this.extraAttackCell.innerHTML = a + "%";
     }
   };
   StatBreakdownView.prototype = new View();

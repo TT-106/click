@@ -1,0 +1,42 @@
+{
+  "_comment": "CharacterSummaryView（角色属性表）与 CharacterTabsView 的字段语义恢复。来源：reset() 里 appendAttributeRow 的行标签、update() 的 stats 字段读取与「缓存→单元格」配对。注意：旧名 spiritCell/killsCell/petKillsCell/spiritRegenCell/cooldownCell 是错位的缓存名，本批按实际行标签重建语义，故序号 1-9 的顺序不可调换（新名复用了旧名）。",
+  "files": ["src/engine/modules/views/character.js"],
+  "map": {
+    "spiritRegenCell": "cachedKills",
+    "cooldownCell": "cachedSpirit",
+    "petKillsCell": "cachedMinionKills",
+    "killsCell": "cachedStunCount",
+    "spiritCell": "healthCell",
+    "DB": "spiritCell",
+    "pA": "killsCell",
+    "Ap": "petKillsCell",
+    "EB": "spiritRegenCell",
+
+    "rA": "levelCell",
+    "Wz": "healthRegenCell",
+    "ez": "damageGivenCell",
+    "gz": "damageReceivedCell",
+    "hz": "damageResistanceCell",
+    "AB": "spellPenetrationCell",
+    "dD": "critChanceCell",
+    "bz": "attackCooldownCell",
+    "Jy": "attacksPerTurnCell",
+    "xy": "extraAttackCell",
+
+    "Zu": "cachedHealth",
+    "Lu": "cachedAttackCooldown",
+    "$u": "cachedHealthRegenPercent",
+    "Pv": "cachedSpiritRegenPercent",
+    "Nu": "cachedDamageGiven",
+    "Ou": "cachedDamageReceived",
+    "Pu": "cachedDamageResistance",
+    "Ov": "cachedSpellCostReduction",
+    "Mu": "cachedCritChance",
+    "iv": "cachedAttacksPerTurn",
+    "zu": "cachedExtraAttackChance",
+
+    "zz": "cachedHasUnspentSkills",
+    "jt": "skillsTab",
+    "fA": "inventoryTab"
+  }
+}
