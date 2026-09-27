@@ -1,10 +1,11 @@
 # WORKSTATE — Clickpocalypse II 语义恢复与现代化工程
 
 > 本文件是长程自治任务的**唯一续跑入口**。上下文压缩或中断后，先读本文件 + `git log --oneline`，再继续。
-> 最后更新：2026-09-27（U66 信息页统计表 126 字段落地后，混淆清单 806 → 691；59 场景矩阵全绿）
+> 最后更新：2026-09-27（U66/U67 信息页与离线进度视图整批落地后，混淆清单 806 → 666；59 场景矩阵全绿）
 
-## 当前轮次状态（2026-09-27，M12 长尾重命名：信息页统计表整批）
+## 当前轮次状态（2026-09-27，M12 长尾重命名：视图统计字段两批）
 
+- U67 离线进度视图 27 字段（2026-09-27，一笔提交 5470154，六门禁全绿，混淆清单 691 → 666，fields 段 383 → 400）：`views/results.js` 的 OfflineProgressView 是"离线期间各统计增量"面板——`onOfflineStart` 快照 8 个基线（HA/mA/nA/sA/Fz/Iy/JB/wy→`xxxBaseline`），`update()` 每帧算 `runStatistics 当前值 - 基线`（vv/Ek/Fk/Hk/Ck/Bu/Kk/yu→`cachedXxxDelta`），`fr()` 的 8 行标签决定单元格语义（Qw/Tm/Um/Vm/vm/$t/stunCountCell/Mt→`xxxDeltaCell`）。行标签到统计量：杀死怪物=directKills、找到道具=itemsFound、卖出道具=itemsSold、清理关卡=levelsCleared、清理地牢=dungeonsCleared、攻击城堡=attackableCastles.length、昏迷次数=characterStunnedCount、成就=claimQueue.length。另：GameOverView 的 `ql`→`gameOverMounted`（面板首次挂载标志）、`$l`→`cancelButton`、`gu`→`progressBarWidth`（500px 满宽）。**异主不写入 fields 段**：`gu` 在 expedition.js 另有同名（远征视图，2 处）、`stunCountCell` 在 character.js 另有一处（待下批）。
 - U66 信息页统计表 126 字段（2026-09-27，一笔提交 84e9a87，六门禁全绿，混淆清单 806 → 691，fields 段 267 → 383）：写入 `scripts/analyze-statistics-view.mjs`（从 update() 的「缓存↔单元格」比较模式、fr() 的行标签/列号、头部局部变量到 runStatistics/lifetimeStatistics 的声明三路交叉配对，自动导出 58 组，人工补齐 4 组）与 `scripts/rename-fields-batch.mjs`（多字段事务替换，复用 rename-field 的四项校验 + 旧名全库回扫）。65 缓存字段→`cachedRunXxx`/`cachedLifetimeXxx`，61 单元格→`runXxxCell`/`lifetimeXxxCell`；修正两处旧命名：`monsterKillsCell`→`cachedRunMinionKills`（实为缓存字段，配对单元格是"宠物杀死/当前"）、`stunCountCell`→`runStunnedCountCell`。属主甄别：`Ek/Fk/Ck/Hk/Tm/Um/vm/Vm` 在 results.js 是 OfflineProgressView 的**离线增量**字段（不同属主，未动、不入 fields 段）；harness 的 `window.Nx`/`window.lB` 是原版全局函数（升级集合访问器/快照），与本批无关。新增 `scripts/find-field-refs.mjs`（字段外部引用扫描，用于属主边界判定）。
 - U65 目的地瓦片与金币掉落（2026-09-26，一笔提交，六门禁全绿，混淆清单 810 → 806）：Rn/Sn→destTileColumn/destTileRow（setWorldDestination 的世界目的地瓦片，大地图寻路终点判断 f===destTileColumn 等全量消费）、Xl→goldAmount（金币掉落金额：addGold 入账、recordGoldFromMonsters 统计、scene 掉落拾取判定三处消费）、Km→discovered（走廊/房间发现旗标：party 寻路读它决定门口路径代价，game-save 可见性恢复）。
 - U64 城堡世界像素坐标收尾（2026-09-26，一笔提交，六门禁全绿，混淆清单 812 → 810）：dm/em→worldPixelX/worldPixelY 补齐 terrain.js 残留 2 处——terrain 装饰城堡地块时经 findCastle(...).dm/em 读城堡像素位置；残留扫描强制闭环的价值再次体现。
