@@ -155,7 +155,7 @@ export function initializeContentGuardians() {
     createBehaviors: function () {
       return [new ChainDamageBehavior(RANGED_ATTACK_RANGE, 95), new RangedAttackBehavior(RANGED_MIN_DISTANCE, RANGED_ATTACK_RANGE, 90), new MeleeAttackBehavior(RANGED_ATTACK_RANGE, 85, MELEE_ACTION_TYPE, false), new IdleBehavior(1)];
     },
-    Jm: [ninjaSpellDefinitions.Hx],
+    Jm: [ninjaSpellDefinitions.quickStrikeSpell],
     Nr: [{
       statBonusValue: 15,
       statType: 17

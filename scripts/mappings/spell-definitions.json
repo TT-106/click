@@ -1,0 +1,43 @@
+{
+  "_comment": "spells.js 各职业法术定义表的键恢复为法术语义名（依据每个定义内的 name 字段：name: \"火球\" → fireBallSpell 等）。消费点为目标选择（targeting）、召唤表（guardians/minions）、卷轴（scrolls）与施法（actions）。",
+  "files": [
+    "src/engine/modules/content/spells.js",
+    "src/engine/modules/ai/targeting.js",
+    "src/engine/modules/content/guardians.js",
+    "src/engine/modules/content/minions.js",
+    "src/engine/modules/combat/scrolls.js",
+    "src/engine/modules/combat/actions.js"
+  ],
+  "map": {
+    "sB": "shockSpell",
+    "CB": "spiderWebSpell",
+    "XD": "lightningRainSpell",
+    "rD": "fireRingSpell",
+    "Lz": "fireRainSpell",
+    "Kz": "fireBallSpell",
+    "TE": "transformMonsterSpell",
+    "yD": "healSpell",
+    "xE": "resurrectSpell",
+    "Zz": "buffArmorSpell",
+    "FD": "buffDamageSpell",
+    "ED": "buffAttackRatingSpell",
+    "$z": "buffDefenceRatingSpell",
+    "ME": "tauntSpell",
+    "IB": "stealthSpell",
+    "ID": "instantSearchSpell",
+    "wu": "findTreasureSpell",
+    "rE": "rageSpell",
+    "wB": "hammerSpell",
+    "CD": "agonySpell",
+    "xD": "greenDeathSpell",
+    "OB": "skeletonArmySpell",
+    "NB": "ghostSkeletonSpell",
+    "PB": "wolfPackSpell",
+    "LB": "dogGuardianSpell",
+    "cE": "lesserHealSpell",
+    "DE": "sleepSpell",
+    "Hx": "quickStrikeSpell",
+    "KB": "summonChickensSpell",
+    "MB": "chickenGuardianSpell"
+  }
+}

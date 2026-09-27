@@ -296,107 +296,107 @@ export function initializeAiTargeting() {
   MONSTER_TYPE = 2;
   summonDogSpellDefinition = {
     id: "summonDogSpell",
-    spellDefinition: druidSpellDefinitions.LB
+    spellDefinition: druidSpellDefinitions.dogGuardianSpell
   };
   summonWolfPackSpellDefinition = {
     id: "summonWolfPackSpell",
-    spellDefinition: druidSpellDefinitions.PB
+    spellDefinition: druidSpellDefinitions.wolfPackSpell
   };
   minorHealSpellDefinition = {
     id: "minorHealSpell",
-    spellDefinition: druidSpellDefinitions.cE
+    spellDefinition: druidSpellDefinitions.lesserHealSpell
   };
   sleepSpellDefinition = {
     id: "sleepSpell",
-    spellDefinition: druidSpellDefinitions.DE
+    spellDefinition: druidSpellDefinitions.sleepSpell
   };
   summonChickensSpellDefinition = {
     id: "summonChickensSpell",
-    spellDefinition: chickenSpellDefinitions.KB
+    spellDefinition: chickenSpellDefinitions.summonChickensSpell
   };
   summonGuardChickenSpellDefinition = {
     id: "summonGuardChickenSpell",
-    spellDefinition: chickenSpellDefinitions.MB
+    spellDefinition: chickenSpellDefinitions.chickenGuardianSpell
   };
   swiftStrikeSpellDefinition = {
     id: "swiftStrikeSpell",
-    spellDefinition: ninjaSpellDefinitions.Hx
+    spellDefinition: ninjaSpellDefinitions.quickStrikeSpell
   };
   hurtSpellDefinition = {
     id: "hurtSpell",
-    spellDefinition: necromancerSpellDefinitions.CD
+    spellDefinition: necromancerSpellDefinitions.agonySpell
   };
   greenDeathSpellDefinition = {
     id: "greenDeathSpell",
-    spellDefinition: necromancerSpellDefinitions.xD
+    spellDefinition: necromancerSpellDefinitions.greenDeathSpell
   };
   summonSkeletonArmySpellDefinition = {
     id: "summonSkeletonArmySpell",
-    spellDefinition: necromancerSpellDefinitions.OB
+    spellDefinition: necromancerSpellDefinitions.skeletonArmySpell
   };
   summonPhantomSkullSpellDefinition = {
     id: "summonPhantomSkullSpell",
-    spellDefinition: necromancerSpellDefinitions.NB
+    spellDefinition: necromancerSpellDefinitions.ghostSkeletonSpell
   };
   tauntSpellDefinition = {
     id: "tauntSpell",
-    spellDefinition: fighterSpellDefinitions.ME
+    spellDefinition: fighterSpellDefinitions.tauntSpell
   };
   rageSpellDefinition = {
     id: "rageSpell",
-    spellDefinition: barbarianSpellDefinitions.rE
+    spellDefinition: barbarianSpellDefinitions.rageSpell
   };
   sledgeHammerSpellDefinition = {
     id: "sledgeHammerSpell",
-    spellDefinition: barbarianSpellDefinitions.wB
+    spellDefinition: barbarianSpellDefinitions.hammerSpell
   };
   stealthSpellDefinition = {
     id: "stealthSpell",
-    spellDefinition: rogueSpellDefinitions.IB
+    spellDefinition: rogueSpellDefinitions.stealthSpell
   };
   instantLootSpellDefinition = {
     id: "instantLootSpell",
-    spellDefinition: rogueSpellDefinitions.ID
+    spellDefinition: rogueSpellDefinitions.instantSearchSpell
   };
   detectTreasureChestSpellDefinition = {
     id: "detectTreasureChestSpell",
-    spellDefinition: rogueSpellDefinitions.wu
+    spellDefinition: rogueSpellDefinitions.findTreasureSpell
   };
   healSpellDefinition = {
     id: "healSpell",
-    spellDefinition: priestSpellDefinitions.yD
+    spellDefinition: priestSpellDefinitions.healSpell
   };
   armorSpellDefinition = {
     id: "armorSpell",
-    spellDefinition: priestSpellDefinitions.Zz
+    spellDefinition: priestSpellDefinitions.buffArmorSpell
   };
   damageSpellDefinition = {
     id: "damageSpell",
-    spellDefinition: priestSpellDefinitions.FD
+    spellDefinition: priestSpellDefinitions.buffDamageSpell
   };
   attackRatingSpellDefinition = {
     id: "attackRatingSpell",
-    spellDefinition: priestSpellDefinitions.ED
+    spellDefinition: priestSpellDefinitions.buffAttackRatingSpell
   };
   defenseRatingSpellDefinition = {
     id: "defenseRatingSpell",
-    spellDefinition: priestSpellDefinitions.$z
+    spellDefinition: priestSpellDefinitions.buffDefenceRatingSpell
   };
   reviveSpellDefinition = {
     id: "reviveSpell",
-    spellDefinition: priestSpellDefinitions.xE
+    spellDefinition: priestSpellDefinitions.resurrectSpell
   };
   shockSpellDefinition = {
     id: "shockSpell",
-    spellDefinition: electricSpellDefinitions.sB
+    spellDefinition: electricSpellDefinitions.shockSpell
   };
   spiderWebSpellDefinition = {
     id: "spiderWebSpell",
-    spellDefinition: electricSpellDefinitions.CB
+    spellDefinition: electricSpellDefinitions.spiderWebSpell
   };
   lightningRainSpellDefinition = {
     id: "lightningRainSpell",
-    spellDefinition: electricSpellDefinitions.XD
+    spellDefinition: electricSpellDefinitions.lightningRainSpell
   };
   chainedLightningSpellDefinition = {
     id: "chainedLightningSpell",
@@ -404,19 +404,19 @@ export function initializeAiTargeting() {
   };
   fireBlastSpellDefinition = {
     id: "fireBlastSpell",
-    spellDefinition: fireSpellDefinitions.rD
+    spellDefinition: fireSpellDefinitions.fireRingSpell
   };
   fireBallSpellDefinition = {
     id: "fireBallSpell",
-    spellDefinition: fireSpellDefinitions.Kz
+    spellDefinition: fireSpellDefinitions.fireBallSpell
   };
   fireRainSpellDefinition = {
     id: "fireRainSpell",
-    spellDefinition: fireSpellDefinitions.Lz
+    spellDefinition: fireSpellDefinitions.fireRainSpell
   };
   turnMonsterSpellDefinition = {
     id: "turnMonsterSpell",
-    spellDefinition: fireSpellDefinitions.TE
+    spellDefinition: fireSpellDefinitions.transformMonsterSpell
   };
   IDLE_ACTION = 0;
   MELEE_ACTION_TYPE = 3;

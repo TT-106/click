@@ -134,7 +134,7 @@ export function initializeContentMinions() {
       statType: 6
     }],
     statMultipliers: minionStatMultipliers,
-    innateSpells: [barbarianSpellDefinitions.wB],
+    innateSpells: [barbarianSpellDefinitions.hammerSpell],
     Bp: [],
     createBehaviors: function () {
       return [new AreaDamageBehavior(MELEE_ATTACK_RANGE, 100), new MeleeAttackBehavior(MELEE_ATTACK_RANGE, 90, 2, false), new ChangeFloorBehavior(), new TravelWorldBehavior(60, 10), new EnterDungeonBehavior(60, 10), new EnterCastleBehavior(60, 10), new UseShopBehavior(60, 10), new WaitBehavior()];
@@ -168,7 +168,7 @@ export function initializeContentMinions() {
       statType: 6
     }],
     statMultipliers: minionStatMultipliers,
-    innateSpells: [ninjaSpellDefinitions.Hx],
+    innateSpells: [ninjaSpellDefinitions.quickStrikeSpell],
     Bp: [{
       statBonusValue: 1,
       statType: 28
@@ -205,7 +205,7 @@ export function initializeContentMinions() {
       statType: 6
     }],
     statMultipliers: minionStatMultipliers,
-    innateSpells: [rogueSpellDefinitions.IB],
+    innateSpells: [rogueSpellDefinitions.stealthSpell],
     Bp: [],
     createBehaviors: function () {
       return [new LootItemBehavior(100), new GuardRangedBehavior(RANGED_MIN_DISTANCE, RANGED_ATTACK_RANGE, 95), new OpportunisticAttackBehavior(95), new ChangeFloorBehavior(), new TravelWorldBehavior(60, 10), new EnterDungeonBehavior(60, 10), new EnterCastleBehavior(60, 10), new UseShopBehavior(60, 10), new WaitBehavior()];
@@ -287,7 +287,7 @@ export function initializeContentMinions() {
     }
   };
   minionsBySpell = {};
-  minionsBySpell[druidSpellDefinitions.LB.name] = {
+  minionsBySpell[druidSpellDefinitions.dogGuardianSpell.name] = {
     characterClass: 6,
     isCompanion: true,
     className: "Dog",
@@ -316,14 +316,14 @@ export function initializeContentMinions() {
     }],
     statMultipliers: guardianStatMultipliers,
     spellDefinitions: null,
-    innateSpells: [priestSpellDefinitions.$z, priestSpellDefinitions.Zz],
+    innateSpells: [priestSpellDefinitions.buffDefenceRatingSpell, priestSpellDefinitions.buffArmorSpell],
     createBehaviors: function () {
       return [new CooldownBehavior(160, 100), new SpecialAttackBehavior(MELEE_ATTACK_RANGE, 160, 90, 2), new PartyBuffBehavior(RANGED_ATTACK_RANGE, 8, 35), new PartyBuffBehavior(RANGED_ATTACK_RANGE, 5, 30), new ChangeFloorBehavior(), new TravelWorldBehavior(60, 10), new EnterDungeonBehavior(60, 10), new EnterCastleBehavior(60, 10), new UseShopBehavior(60, 10), new WaitBehavior()];
     }
   };
-  minionsBySpell[druidSpellDefinitions.PB.name] = wolfMinion;
-  minionsBySpell[necromancerSpellDefinitions.OB.name] = skeletonMinion;
-  minionsBySpell[necromancerSpellDefinitions.NB.name] = phantomSkullMinion;
-  minionsBySpell[chickenSpellDefinitions.KB.name] = chickenMinion;
-  minionsBySpell[chickenSpellDefinitions.MB.name] = deathChickenMinion;
+  minionsBySpell[druidSpellDefinitions.wolfPackSpell.name] = wolfMinion;
+  minionsBySpell[necromancerSpellDefinitions.skeletonArmySpell.name] = skeletonMinion;
+  minionsBySpell[necromancerSpellDefinitions.ghostSkeletonSpell.name] = phantomSkullMinion;
+  minionsBySpell[chickenSpellDefinitions.summonChickensSpell.name] = chickenMinion;
+  minionsBySpell[chickenSpellDefinitions.chickenGuardianSpell.name] = deathChickenMinion;
 }

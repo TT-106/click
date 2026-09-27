@@ -282,7 +282,7 @@ export function applySpellEffect(a, b) {
     }
   } else {
     if (15 === d) {
-      a.wu(b);
+      a.findTreasureSpell(b);
     } else {
       if (16 === d && (c = b.targetCharacter)) {
         c = c.effects;
@@ -716,7 +716,7 @@ export function initializeCombatActions() {
   CombatAction.prototype.Ir = function () {
     return this.Ys;
   };
-  CombatQueue.prototype.wu = function (a) {
+  CombatQueue.prototype.findTreasureSpell = function (a) {
     if (a = getRoomTreasure(game.treasure, a.attacker.position.room)) {
       a.selected = true;
       game.state.party.setTargetTreasureChest(a);
