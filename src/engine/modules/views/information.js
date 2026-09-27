@@ -100,7 +100,7 @@ export function InformationView(a) {
  * @typedef {Object} MountedStatisticsViewMethods
  * @property {function(): void} fr 重建统计表 DOM。
  * @property {function(number, number, number): string} Er 拼时、分、秒。
- * @property {function(number): void} St 在表尾插入一行表头。
+ * @property {function(number): void} createHeaderRow 在表尾插入一行表头。
  * @property {function(HTMLTableRowElement, number): HTMLTableCellElement} getStatisticCell 取指定行的单元格。
  */
 export function StatisticsView() {
@@ -490,7 +490,7 @@ export function initializeViewsInformation() {
     createElement("div", container, null, "sectionTitle").innerHTML = "统计";
     this.st = createElement("table", container, null, "statisticsTable");
     var rowIndex = 0;
-    this.St(rowIndex++);
+    this.createHeaderRow(rowIndex++);
     var row = appendStatisticsRow(this, "游戏胜利:", rowIndex++);
     this.getStatisticCell(row, 1).innerHTML = "无";
     this.victoryCountCell = this.getStatisticCell(row, 2);
@@ -585,7 +585,7 @@ export function initializeViewsInformation() {
     this.runAncientItemsFoundCell = this.getStatisticCell(row, 1);
     this.lifetimeAncientItemsFoundCell = this.getStatisticCell(row, 2);
   };
-  StatisticsView.prototype.St = function (a) {
+  StatisticsView.prototype.createHeaderRow = function (a) {
     a = this.st.insertRow(a);
     appendHeaderCell(a).innerHTML = "";
     var b = appendHeaderCell(a);

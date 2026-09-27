@@ -1,0 +1,21 @@
+[
+  { "old": "Hq", "new": "firstColumnCollection", "files": ["src/engine/modules/views/achievements.js"], "expect": "auto" },
+  { "old": "Nt", "new": "secondColumnCollection", "files": ["src/engine/modules/views/achievements.js"], "expect": "auto" },
+  { "old": "Ot", "new": "thirdColumnCollection", "files": ["src/engine/modules/views/achievements.js"], "expect": "auto" },
+  { "old": "Iq", "new": "tableElement", "files": ["src/engine/modules/views/achievements.js"], "expect": "auto" },
+  { "old": "QC", "new": "headerElementId", "files": ["src/engine/modules/views/achievements.js"], "expect": "auto" },
+  { "old": "pz", "new": "cachedAchievementCount", "files": ["src/engine/modules/views/achievements.js"], "expect": "auto" },
+  { "old": "uo", "new": "rebuild", "files": ["src/engine/modules/views/achievements.js"], "expect": "auto" },
+  { "old": "Zn", "new": "refreshCollections", "files": ["src/engine/modules/views/achievements.js", "src/engine/modules/views/character.js"], "expect": "auto" },
+  { "old": "Ls", "new": "tableElement", "files": ["src/engine/modules/views/achievements.js"], "expect": "auto" },
+  { "old": "Gt", "new": "tableElement", "files": ["src/engine/modules/views/achievements.js"], "expect": "auto" },
+  { "old": "Ao", "new": "cachedPointsByEventType", "files": ["src/engine/modules/views/achievements.js"], "expect": "auto" },
+  { "old": "sz", "new": "cachedCountsByEventType", "files": ["src/engine/modules/views/achievements.js"], "expect": "auto" },
+  { "old": "Dv", "new": "cachedPointReward", "files": ["src/engine/modules/views/achievements.js"], "expect": "auto" },
+  { "old": "sy", "new": "pointsCells", "files": ["src/engine/modules/views/achievements.js"], "expect": "auto" },
+  { "old": "tu", "new": "countCells", "files": ["src/engine/modules/views/achievements.js"], "expect": "auto" },
+  { "old": "ex", "new": "rewardCells", "files": ["src/engine/modules/views/achievements.js"], "expect": "auto" },
+  { "old": "St", "new": "createHeaderRow", "files": ["src/engine/modules/views/achievements.js", "src/engine/modules/views/information.js"], "expect": "auto" },
+  { "old": "Rt", "new": "cachedRequirementLabel", "files": ["src/engine/modules/progression/achievements.js"], "expect": "auto" },
+  { "old": "Pt", "new": "cachedRewardLabel", "files": ["src/engine/modules/progression/achievements.js"], "expect": "auto" }
+]

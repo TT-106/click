@@ -17,19 +17,19 @@ export function Achievement(a) {
   this.pointEventTypeId = a.pointEventTypeId;
   this.pointRewardBonus = pointEventsById[a.pointEventTypeId].achievementPointBonus;
   this.isVictoryAchievement = !!a.isVictoryAchievement;
-  this.Rt = this.Pt = null;
+  this.cachedRequirementLabel = this.cachedRewardLabel = null;
 }
 export function getAchievementRewardLabel(a) {
-  if (!a.Pt) {
-    a.Pt = "+" + a.pointRewardBonus + "成就点每" + pointEventsById[a.pointEventTypeId].fullEventLabel;
+  if (!a.cachedRewardLabel) {
+    a.cachedRewardLabel = "+" + a.pointRewardBonus + "成就点每" + pointEventsById[a.pointEventTypeId].fullEventLabel;
   }
-  return a.Pt;
+  return a.cachedRewardLabel;
 }
 export function getAchievementRequirementLabel(a) {
-  if (!a.Rt) {
-    a.Rt = describeAchievementRequirement(a);
+  if (!a.cachedRequirementLabel) {
+    a.cachedRequirementLabel = describeAchievementRequirement(a);
   }
-  return a.Rt;
+  return a.cachedRequirementLabel;
 }
 export function applyAchievementReward(a) {
   if (!a.obtained || a.applied) {

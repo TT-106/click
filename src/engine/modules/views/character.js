@@ -654,7 +654,7 @@ export function initializeViewsCharacter() {
     this.secondColumnButtons.length = 0;
     this.buttons.length = 0;
     this.fourthColumnButtons.length = 0;
-    (/** @type {SkillsTabView & { Zn: () => void }} */ (/** @type {unknown} */ (this))).Zn();
+    (/** @type {SkillsTabView & { refreshCollections: () => void }} */ (/** @type {unknown} */ (this))).refreshCollections();
     var a = this.elementId,
       b = getElement(a);
     if (b && !(0 > this.adventurerIndex || this.adventurerIndex >= game.state.adventurers.length)) {
@@ -714,7 +714,7 @@ export function initializeViewsCharacter() {
       this.fourthColumnButtons[a].reset();
     }
   };
-  SkillsTabView.prototype.Zn = function () {
+  SkillsTabView.prototype.refreshCollections = function () {
     if (0 > this.adventurerIndex || this.adventurerIndex >= game.state.adventurers.length) {
       this.fourthSkillTree = this.thirdSkillTree = this.skillTreeCollection = this.skillCollection = null;
     } else {

@@ -13,35 +13,35 @@ import { TabView } from "./navigation.js";
 export function AchievementListView(a) {
   this.elementId = a;
   this.visible = true;
-  this.Ot = this.Nt = this.Hq = this.Iq = null;
+  this.thirdColumnCollection = this.secondColumnCollection = this.firstColumnCollection = this.tableElement = null;
   this.firstColumnButtons = [];
   this.secondColumnButtons = [];
   this.buttons = [];
-  this.QC = "achievementsHeaderSpan";
-  this.pz = -1;
+  this.headerElementId = "achievementsHeaderSpan";
+  this.cachedAchievementCount = -1;
 }
 export function AdventurePointBreakdownView() {
   this.elementId = "pointsBreakdownContainer";
   this.visible = true;
-  this.Ls = null;
-  this.Ao = {};
-  this.sz = {};
-  this.Dv = {};
-  this.sy = {};
-  this.tu = {};
-  this.ex = {};
+  this.tableElement = null;
+  this.cachedPointsByEventType = {};
+  this.cachedCountsByEventType = {};
+  this.cachedPointReward = {};
+  this.pointsCells = {};
+  this.countCells = {};
+  this.rewardCells = {};
 }
 export function mountPointBreakdown(a) {
   clearElementById(a.elementId);
-  a.Ls = createElement("table", getElement(a.elementId), null, "pointsTable");
+  a.tableElement = createElement("table", getElement(a.elementId), null, "pointsTable");
   var b = 0;
-  a.St(b++);
+  a.createHeaderRow(b++);
   var c;
   for (c = 0; c < pointEventDefinitions.length; c++) {
     var d = a,
       f = pointEventDefinitions[c].pointEventTypeId,
       rowIndex = b++,
-      g = d.Ls.insertRow(rowIndex),
+      g = d.tableElement.insertRow(rowIndex),
       h = g.insertCell(0);
     h.style.textAlign = "right";
     h.style.width = "120px";
@@ -49,20 +49,20 @@ export function mountPointBreakdown(a) {
     h = g.insertCell(1);
     h.style.textAlign = "right";
     h.style.width = "60px";
-    d.tu[f] = h;
+    d.countCells[f] = h;
     h = g.insertCell(2);
     h.style.textAlign = "right";
     h.style.width = "60px";
-    d.ex[f] = h;
+    d.rewardCells[f] = h;
     g = g.insertCell(3);
     g.style.textAlign = "right";
-    d.sy[f] = g;
+    d.pointsCells[f] = g;
   }
 }
 export function PointUpgradeListView(a) {
   this.elementId = a;
   this.visible = true;
-  this.skillTreeCollection = this.skillCollection = this.Gt = null;
+  this.skillTreeCollection = this.skillCollection = this.tableElement = null;
   this.firstColumnButtons = [];
   this.secondColumnButtons = [];
 }
@@ -77,29 +77,29 @@ export function PointsView(a) {
 export function initializeViewsAchievements() {
   AchievementListView.prototype = new View();
   AchievementListView.prototype.reset = function () {
-    /** @type {{uo: () => void}} */ (/** @type {unknown} */ (this)).uo();
+    /** @type {{rebuild: () => void}} */ (/** @type {unknown} */ (this)).rebuild();
   };
-  AchievementListView.prototype.uo = function () {
+  AchievementListView.prototype.rebuild = function () {
     clearElementById(this.elementId);
-    this.Iq = null;
+    this.tableElement = null;
     this.firstColumnButtons.length = 0;
     this.secondColumnButtons.length = 0;
     this.buttons.length = 0;
-    /** @type {{Zn: () => void}} */ (/** @type {unknown} */ (this)).Zn();
+    /** @type {{refreshCollections: () => void}} */ (/** @type {unknown} */ (this)).refreshCollections();
     var a = this.elementId,
       container = getElement(a);
     if (container) {
-      this.Iq = createElement("table", container, null, "adventurerSkillTreeTable");
-      var b = this.Hq.upgrades,
-        c = this.Nt.upgrades,
-        d = this.Ot.upgrades,
+      this.tableElement = createElement("table", container, null, "adventurerSkillTreeTable");
+      var b = this.firstColumnCollection.upgrades,
+        c = this.secondColumnCollection.upgrades,
+        d = this.thirdColumnCollection.upgrades,
         f = Math.max(b.length, Math.max(c.length, d.length)),
         g,
         h,
         l,
         n;
       for (g = 0; g < f; g++) {
-        h = this.Iq.insertRow(g);
+        h = this.tableElement.insertRow(g);
         l = h.insertCell(0);
         n = h.insertCell(1);
         h = h.insertCell(2);
@@ -130,7 +130,7 @@ export function initializeViewsAchievements() {
       this.buttons[a].reset();
     }
   };
-  AchievementListView.prototype.Zn = function () {
+  AchievementListView.prototype.refreshCollections = function () {
     var a = game.state.achievements.achievementList,
       b = [],
       c = [],
@@ -145,17 +145,17 @@ export function initializeViewsAchievements() {
         }
       }
     }
-    this.Hq = new UpgradeCollection([b], false);
-    this.Nt = new UpgradeCollection([c], false);
-    this.Ot = new UpgradeCollection([d], false);
+    this.firstColumnCollection = new UpgradeCollection([b], false);
+    this.secondColumnCollection = new UpgradeCollection([c], false);
+    this.thirdColumnCollection = new UpgradeCollection([d], false);
   };
   AchievementListView.prototype.update = function () {
-    if (!(this.Hq && this.Iq)) {
-      /** @type {{uo: () => void}} */ (/** @type {unknown} */ (this)).uo();
+    if (!(this.firstColumnCollection && this.tableElement)) {
+      /** @type {{rebuild: () => void}} */ (/** @type {unknown} */ (this)).rebuild();
     }
-    refreshUpgradeCollection(this.Hq);
-    refreshUpgradeCollection(this.Nt);
-    refreshUpgradeCollection(this.Ot);
+    refreshUpgradeCollection(this.firstColumnCollection);
+    refreshUpgradeCollection(this.secondColumnCollection);
+    refreshUpgradeCollection(this.thirdColumnCollection);
     var a;
     for (a = 0; a < this.firstColumnButtons.length; a++) {
       this.firstColumnButtons[a].render();
@@ -169,28 +169,28 @@ export function initializeViewsAchievements() {
     var b = game.state.achievements;
     a = b.achievementList.length;
     b = b.claimQueue.length + (a - b.obtainedList.length);
-    if (this.pz != b) {
-      this.pz = b;
-      setElementHtml(this.QC, "成就(" + b + "/" + a + ")");
+    if (this.cachedAchievementCount != b) {
+      this.cachedAchievementCount = b;
+      setElementHtml(this.headerElementId, "成就(" + b + "/" + a + ")");
     }
   };
   AdventurePointBreakdownView.prototype = new View();
   AdventurePointBreakdownView.prototype.reset = function () {
-    this.Ao = {};
-    this.sy = {};
-    this.tu = {};
-    this.ex = {};
+    this.cachedPointsByEventType = {};
+    this.pointsCells = {};
+    this.countCells = {};
+    this.rewardCells = {};
     var a, b;
     for (a = 0; a < pointEventDefinitions.length; a++) {
       b = pointEventDefinitions[a].pointEventTypeId;
-      this.Ao[b] = -1;
-      this.sz[b] = -1;
-      this.Dv[b] = -1;
+      this.cachedPointsByEventType[b] = -1;
+      this.cachedCountsByEventType[b] = -1;
+      this.cachedPointReward[b] = -1;
     }
     mountPointBreakdown(this);
   };
   AdventurePointBreakdownView.prototype.update = function () {
-    if (!this.Ls) {
+    if (!this.tableElement) {
       mountPointBreakdown(this);
     }
     var a,
@@ -204,31 +204,31 @@ export function initializeViewsAchievements() {
       n = game.state.adventurePoints;
     for (a = 0; a < pointEventDefinitions.length; a++) {
       b = pointEventDefinitions[a].pointEventTypeId;
-      c = this.Ao[b];
+      c = this.cachedPointsByEventType[b];
       d = n.pointsByEventType[b];
-      f = this.Ao[b];
+      f = this.cachedPointsByEventType[b];
       g = n.countsByEventType[b];
-      h = this.Dv[b];
+      h = this.cachedPointReward[b];
       l = pointEventDefinitions[a].currentPointReward;
       if (c != d) {
-        this.Ao[b] = d;
-        c = this.sy[b];
+        this.cachedPointsByEventType[b] = d;
+        c = this.pointsCells[b];
         c.innerHTML = formatGroupedAmount(d);
       }
       if (f != g) {
-        this.sz[b] = g;
-        d = this.tu[b];
+        this.cachedCountsByEventType[b] = g;
+        d = this.countCells[b];
         d.innerHTML = formatAmount(g);
       }
       if (h != l) {
-        this.Dv[b] = l;
-        b = this.ex[b];
+        this.cachedPointReward[b] = l;
+        b = this.rewardCells[b];
         b.innerHTML = formatAmount(l);
       }
     }
   };
-  AdventurePointBreakdownView.prototype.St = function (a) {
-    a = this.Ls.insertRow(a);
+  AdventurePointBreakdownView.prototype.createHeaderRow = function (a) {
+    a = this.tableElement.insertRow(a);
     var b = appendHeaderCell(a);
     b.style.textAlign = "right";
     b.innerHTML = "冒险行动";
@@ -244,18 +244,18 @@ export function initializeViewsAchievements() {
   };
   PointUpgradeListView.prototype = new View();
   PointUpgradeListView.prototype.reset = function () {
-    /** @type {{uo: () => void}} */ (/** @type {unknown} */ (this)).uo();
+    /** @type {{rebuild: () => void}} */ (/** @type {unknown} */ (this)).rebuild();
   };
-  PointUpgradeListView.prototype.uo = function () {
+  PointUpgradeListView.prototype.rebuild = function () {
     clearElementById(this.elementId);
-    this.Gt = null;
+    this.tableElement = null;
     this.firstColumnButtons.length = 0;
     this.secondColumnButtons.length = 0;
-    /** @type {{Zn: () => void}} */ (/** @type {unknown} */ (this)).Zn();
+    /** @type {{refreshCollections: () => void}} */ (/** @type {unknown} */ (this)).refreshCollections();
     var a = this.elementId,
       container = getElement(a);
     if (container) {
-      this.Gt = createElement("table", container, null, "adventurerSkillTreeTable");
+      this.tableElement = createElement("table", container, null, "adventurerSkillTreeTable");
       var b = this.skillCollection.upgrades,
         c = this.skillTreeCollection.upgrades,
         d = Math.max(b.length, c.length),
@@ -263,7 +263,7 @@ export function initializeViewsAchievements() {
         g,
         h;
       for (f = 0; f < d; f++) {
-        g = this.Gt.insertRow(f);
+        g = this.tableElement.insertRow(f);
         h = g.insertCell(0);
         g = g.insertCell(1);
         h.id = a + "_" + f + "_0";
@@ -285,7 +285,7 @@ export function initializeViewsAchievements() {
       this.secondColumnButtons[a].reset();
     }
   };
-  PointUpgradeListView.prototype.Zn = function () {
+  PointUpgradeListView.prototype.refreshCollections = function () {
     var a = game.state.adventurePoints.pointUpgrades,
       b = [],
       c = [],
@@ -300,8 +300,8 @@ export function initializeViewsAchievements() {
     this.skillTreeCollection = new UpgradeCollection([c], false);
   };
   PointUpgradeListView.prototype.update = function () {
-    if (!(this.skillCollection && this.Gt)) {
-      /** @type {{uo: () => void}} */ (/** @type {unknown} */ (this)).uo();
+    if (!(this.skillCollection && this.tableElement)) {
+      /** @type {{rebuild: () => void}} */ (/** @type {unknown} */ (this)).rebuild();
     }
     refreshUpgradeCollection(this.skillCollection);
     refreshUpgradeCollection(this.skillTreeCollection);
