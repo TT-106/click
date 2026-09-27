@@ -1,54 +1,5 @@
 [
   {
-    "name": "xm",
-    "reads": 6,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\loot\\items.js:25",
-        "code": "this.xm"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\items.js:26",
-        "code": "this.xm"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\items.js:30",
-        "code": "this.xm"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\loot\\items.js"
-    ]
-  },
-  {
-    "name": "To",
-    "reads": 4,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\actions.js:85",
-        "code": "d.To"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\sprites.js:92",
-        "code": "this.animation.To"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\sprites.js:205",
-        "code": "SpriteAnimation.prototype.To"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\rendering\\sprites.js",
-      "src\\engine\\modules\\views\\expedition.js",
-      "src\\engine\\modules\\views\\upgrade-details.js"
-    ]
-  },
-  {
     "name": "bo",
     "reads": 0,
     "writes": 6,
@@ -141,55 +92,6 @@
     "files": [
       "src\\engine\\modules\\persistence\\game-save.js",
       "src\\engine\\modules\\world\\generation.js"
-    ]
-  },
-  {
-    "name": "Ys",
-    "reads": 1,
-    "writes": 4,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\actions.js:31",
-        "code": "this.Ys"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\actions.js:643",
-        "code": "h.Ys"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\actions.js:659",
-        "code": "f.Ys"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\combat\\actions.js"
-    ]
-  },
-  {
-    "name": "ms",
-    "reads": 4,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\actions.js:460",
-        "code": "h.ms"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\actions.js:484",
-        "code": "b.ms"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\items.js:22",
-        "code": "this.ms"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\loot\\items.js",
-      "src\\engine\\modules\\persistence\\entities.js",
-      "src\\engine\\modules\\simulation\\tick.js"
     ]
   },
   {
@@ -426,104 +328,6 @@
     "fileCount": 1,
     "files": [
       "src\\engine\\modules\\characters\\movement.js"
-    ]
-  },
-  {
-    "name": "Cw",
-    "reads": 2,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\movement.js:199",
-        "code": "a.Cw"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\items.js:317",
-        "code": "ItemType.prototype.Cw"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\items.js:329",
-        "code": "Item.prototype.Cw"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\characters\\movement.js",
-      "src\\engine\\modules\\loot\\items.js"
-    ]
-  },
-  {
-    "name": "bx",
-    "reads": 2,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\actions.js:84",
-        "code": "d.bx"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\sprites.js:93",
-        "code": "this.bx"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\sprites.js:140",
-        "code": "a.bx"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\rendering\\sprites.js",
-      "src\\engine\\modules\\simulation\\tick.js"
-    ]
-  },
-  {
-    "name": "Dw",
-    "reads": 3,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\actions.js:464",
-        "code": "h.Dw"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\items.js:19",
-        "code": "this.Dw"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\items.js:91",
-        "code": "a.itemEffect.Dw"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\loot\\items.js",
-      "src\\engine\\modules\\persistence\\entities.js"
-    ]
-  },
-  {
-    "name": "sw",
-    "reads": 2,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\actions.js:558",
-        "code": "a.sw"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\items.js:314",
-        "code": "ItemType.prototype.sw"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\items.js:323",
-        "code": "Item.prototype.sw"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\loot\\items.js"
     ]
   },
   {
@@ -863,30 +667,6 @@
     ]
   },
   {
-    "name": "Ey",
-    "reads": 1,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\movement.js:11",
-        "code": "this.Ey"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\movement.js:200",
-        "code": "this.Ey"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\actions.js:452",
-        "code": "a.equipment.Ey"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\characters\\movement.js",
-      "src\\engine\\modules\\combat\\actions.js"
-    ]
-  },
-  {
     "name": "fz",
     "reads": 1,
     "writes": 2,
@@ -907,30 +687,6 @@
     "fileCount": 1,
     "files": [
       "src\\engine\\modules\\characters\\movement.js"
-    ]
-  },
-  {
-    "name": "uA",
-    "reads": 1,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\actions.js:342",
-        "code": "c.uA"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\sprites.js:99",
-        "code": "this.uA"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\sprites.js:146",
-        "code": "a.uA"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\combat\\actions.js",
-      "src\\engine\\modules\\rendering\\sprites.js"
     ]
   },
   {
@@ -1395,104 +1151,6 @@
     "fileCount": 1,
     "files": [
       "src\\engine\\modules\\loot\\inventory.js"
-    ]
-  },
-  {
-    "name": "LD",
-    "reads": 1,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\loot\\items.js:20",
-        "code": "this.LD"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\entities.js:26",
-        "code": "h.LD"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\loot\\items.js",
-      "src\\engine\\modules\\persistence\\entities.js"
-    ]
-  },
-  {
-    "name": "MD",
-    "reads": 1,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\loot\\items.js:21",
-        "code": "this.MD"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\entities.js:27",
-        "code": "h.MD"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\loot\\items.js",
-      "src\\engine\\modules\\persistence\\entities.js"
-    ]
-  },
-  {
-    "name": "RD",
-    "reads": 1,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\loot\\items.js:48",
-        "code": "this.RD"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\entities.js:8",
-        "code": "a.itemType.RD"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\loot\\items.js",
-      "src\\engine\\modules\\persistence\\entities.js"
-    ]
-  },
-  {
-    "name": "lA",
-    "reads": 1,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\loot\\items.js:52",
-        "code": "this.lA"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\items.js:312",
-        "code": "this.lA"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\loot\\items.js"
-    ]
-  },
-  {
-    "name": "OD",
-    "reads": 1,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\loot\\items.js:135",
-        "code": "this.OD"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\items.js:181",
-        "code": "a.OD"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\loot\\items.js"
     ]
   },
   {

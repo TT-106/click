@@ -8355,7 +8355,22 @@
     "GD": "driftX",
     "HD": "driftY",
     "dA": "screenYOffset",
-    "cA": "screenXOffset"
+    "cA": "screenXOffset",
+        "xm": "effectsByType",
+        "Dw": "itemEffectType",
+        "LD": "itemEffectAmount",
+        "MD": "itemEffectDescription",
+        "ms": "itemEffectName",
+        "RD": "itemTypeId",
+        "lA": "iconSprite",
+        "OD": "itemNameGenerator",
+        "Cw": "isProjectileWeapon",
+        "sw": "getProjectileAnimationId",
+        "To": "getFrameCount",
+        "Ys": "currentChainStep",
+        "bx": "previousFrameIndex",
+        "uA": "loopsWhileStunned",
+        "Ey": "projectileWeapon"
   },
   "gameFields": {
     "B": "tileSize",
