@@ -61,13 +61,13 @@ export function DungeonNotificationView() {
   this.elementId = "dungeonNotificationPanel";
   this.visible = false;
   this.dungeonName = "";
-  this.nl = null;
+  this.notificationElement = null;
   this.Su = this.cachedDungeonName = "";
 }
 export function EncounterNotificationView() {
   this.elementId = "encounterNotificationPanel";
   this.visible = false;
-  this.nl = null;
+  this.notificationElement = null;
   this.bA = this.xz = this.selectedPotionSlot = -1;
   this.Bz = false;
 }
@@ -494,7 +494,7 @@ export function initializeViewsExpedition() {
     clearElementById(this.elementId);
     this.Su = this.cachedDungeonName = "";
     var a = getElement(this.elementId);
-    this.nl = createElement("div", a, null, "dungeonNotificationDiv");
+    this.notificationElement = createElement("div", a, null, "dungeonNotificationDiv");
     hideElement(a);
     (/** @type {any} */ (this)).cachedVisible = false;
   };
@@ -513,13 +513,13 @@ export function initializeViewsExpedition() {
     if (b !== this.Su || a !== this.cachedDungeonName) {
       this.Su = b;
       this.cachedDungeonName = a;
-      this.nl.innerHTML = 0 < b ? a + " (等级." + b + ")" : a;
+      this.notificationElement.innerHTML = 0 < b ? a + " (等级." + b + ")" : a;
     }
   };
   EncounterNotificationView.prototype = new View();
   EncounterNotificationView.prototype.reset = function () {
-    if (!this.nl) {
-      this.nl = createElement("div", getElement(this.elementId), null, "encounterNotificationDiv");
+    if (!this.notificationElement) {
+      this.notificationElement = createElement("div", getElement(this.elementId), null, "encounterNotificationDiv");
     }
   };
   EncounterNotificationView.prototype.isVisible = function () {
@@ -537,10 +537,10 @@ export function initializeViewsExpedition() {
       var c;
       c = game.state.encounter.fw;
       a = game.state.encounter.du;
-      this.nl.innerHTML = a ? "遭遇首领!<br/> " + c : "一场遭遇战!<br/>" + b + "/" + this.bA + " " + c;
+      this.notificationElement.innerHTML = a ? "遭遇首领!<br/> " + c : "一场遭遇战!<br/>" + b + "/" + this.bA + " " + c;
       if (this.Bz != a) {
         this.Bz = a;
-        this.nl.className = a ? "bossEncounterNotificationDiv" : "encounterNotificationDiv";
+        this.notificationElement.className = a ? "bossEncounterNotificationDiv" : "encounterNotificationDiv";
       }
     }
   };

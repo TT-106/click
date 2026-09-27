@@ -22,7 +22,7 @@ export function getPathNode(a, b) {
     d = a.oB;
     if (0 < d.pooledNodes.length) {
       var f = d = d.pooledNodes.shift();
-      f.Fl = a;
+      f.grid = a;
       f.ss = b;
       f.costSoFar = 0;
       f.heuristicScore = -1;
@@ -49,7 +49,7 @@ export function isNearRoomCorner(a, b, c) {
   return 2 > Math.abs(g - b) && (2 > Math.abs(d - a) || 2 > Math.abs(f - a)) || 2 > Math.abs(g + c.heightInTiles - 1 - b) && (2 > Math.abs(d - a) || 2 > Math.abs(f - a)) ? true : false;
 }
 export function PathNode(a, b) {
-  this.Fl = a;
+  this.grid = a;
   this.ss = b;
   this.costSoFar = 0;
   this.heuristicScore = -1;
@@ -75,18 +75,18 @@ export function PathOpenSet() {
 }
 export function HallwayPathfinder(a, b, c) {
   this.tileGrid = c;
-  this.Fl = new PathfindingGrid(a, b, c);
+  this.grid = new PathfindingGrid(a, b, c);
   this.open = new PathOpenSet();
 }
 export function findHallwayPath(a, b, c) {
   var d = a.tileGrid[b.tileColumn + b.widthInTiles / 2 | 0][b.tileRow + b.heightInTiles / 2 | 0],
     f = a.tileGrid[c.tileColumn + c.widthInTiles / 2 | 0][c.tileRow + c.heightInTiles / 2 | 0],
-    g = a.Fl;
+    g = a.grid;
   g.fromRoom = b;
   g.toRoom = c;
   a: {
-    var g = getPathNode(a.Fl, d),
-      f = getPathNode(a.Fl, f),
+    var g = getPathNode(a.grid, d),
+      f = getPathNode(a.grid, f),
       h,
       l,
       n,
@@ -110,7 +110,7 @@ export function findHallwayPath(a, b, c) {
       g.closed = true;
       h = g;
       if (0 === h.neighbors.length) {
-        l = h.Fl;
+        l = h.grid;
         n = h.ss;
         p = h.neighbors;
         s = n.getTileColumn();
@@ -151,7 +151,7 @@ export function findHallwayPath(a, b, c) {
     console.log("ran out of open nodes before finding path");
     f = null;
   }
-  a = a.Fl;
+  a = a.grid;
   for (d = 0; d < a.usedNodes.length; d++) {
     a.oB.pooledNodes.push(a.usedNodes[d]);
   }

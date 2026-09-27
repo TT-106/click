@@ -9,17 +9,17 @@ export function GoldView() {
   this.elementId = "goldContainer";
   this.visible = true;
   this.uD = "partyGoldPanel";
-  this.Dk = -1;
+  this.cachedResourceCount = -1;
 }
 export function initializeViewsResources() {
   GoldView.prototype = new View();
   GoldView.prototype.reset = function () {
-    this.Dk = -1;
+    this.cachedResourceCount = -1;
   };
   GoldView.prototype.update = function () {
     var a = game.state.party.gold;
-    if (a !== this.Dk) {
-      this.Dk = a;
+    if (a !== this.cachedResourceCount) {
+      this.cachedResourceCount = a;
       setElementHtml(this.uD, "" + formatGroupedAmount(a));
     }
   };

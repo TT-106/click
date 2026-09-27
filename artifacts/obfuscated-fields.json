@@ -1,28 +1,5 @@
 [
   {
-    "name": "nl",
-    "reads": 4,
-    "writes": 4,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\expedition.js:64",
-        "code": "this.nl"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\expedition.js:70",
-        "code": "this.nl"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\expedition.js:497",
-        "code": "this.nl"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\expedition.js"
-    ]
-  },
-  {
     "name": "Ek",
     "reads": 2,
     "writes": 6,
@@ -119,75 +96,6 @@
     ]
   },
   {
-    "name": "sl",
-    "reads": 6,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\navigation.js:17",
-        "code": "this.sl"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\navigation.js:22",
-        "code": "a.sl"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\navigation.js:23",
-        "code": "a.sl"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\navigation.js"
-    ]
-  },
-  {
-    "name": "Kl",
-    "reads": 6,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\navigation.js:35",
-        "code": "this.Kl"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\navigation.js:42",
-        "code": "a.Kl"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\navigation.js:44",
-        "code": "a.Kl"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\navigation.js"
-    ]
-  },
-  {
-    "name": "Ll",
-    "reads": 7,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\navigation.js:61",
-        "code": "this.Ll"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\navigation.js:73",
-        "code": "a.Ll"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\navigation.js:74",
-        "code": "a.Ll"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\navigation.js"
-    ]
-  },
-  {
     "name": "ql",
     "reads": 2,
     "writes": 6,
@@ -209,30 +117,6 @@
     "files": [
       "src\\engine\\modules\\views\\party-creation.js",
       "src\\engine\\modules\\views\\results.js"
-    ]
-  },
-  {
-    "name": "Dk",
-    "reads": 2,
-    "writes": 6,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\resources.js:12",
-        "code": "this.Dk"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\resources.js:17",
-        "code": "this.Dk"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\resources.js:21",
-        "code": "this.Dk"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\views\\resources.js",
-      "src\\engine\\modules\\views\\upgrade-details.js"
     ]
   },
   {
@@ -280,29 +164,6 @@
     "fileCount": 1,
     "files": [
       "src\\engine\\modules\\world\\generation.js"
-    ]
-  },
-  {
-    "name": "Fl",
-    "reads": 5,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\world\\pathfinding.js:25",
-        "code": "f.Fl"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\pathfinding.js:52",
-        "code": "this.Fl"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\pathfinding.js:78",
-        "code": "this.Fl"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\world\\pathfinding.js"
     ]
   },
   {
@@ -12236,6 +12097,29 @@
       {
         "loc": "src\\engine\\modules\\views\\upgrade-details.js:703",
         "code": "this.Lv"
+      }
+    ],
+    "fileCount": 1,
+    "files": [
+      "src\\engine\\modules\\views\\upgrade-details.js"
+    ]
+  },
+  {
+    "name": "Dk",
+    "reads": 1,
+    "writes": 3,
+    "samples": [
+      {
+        "loc": "src\\engine\\modules\\views\\upgrade-details.js:183",
+        "code": "this.Dk"
+      },
+      {
+        "loc": "src\\engine\\modules\\views\\upgrade-details.js:1055",
+        "code": "this.Dk"
+      },
+      {
+        "loc": "src\\engine\\modules\\views\\upgrade-details.js:1071",
+        "code": "this.Dk"
       }
     ],
     "fileCount": 1,

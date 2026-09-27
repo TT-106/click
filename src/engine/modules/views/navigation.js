@@ -14,13 +14,13 @@ export function GameView() {
 }
 export function PauseView() {
   this.Vu = !game.paused;
-  this.sl = null;
+  this.pauseButton = null;
   this.elementId = "pauseButtonContainer";
   this.visible = true;
 }
 export function bindPauseButton(a) {
-  a.sl = getElement("pauseButton");
-  a.sl.onmouseup = function () {
+  a.pauseButton = getElement("pauseButton");
+  a.pauseButton.onmouseup = function () {
     game.paused = !game.paused;
     return false;
   };
@@ -32,19 +32,19 @@ export function TabState(a, b) {
 }
 export function TabButtonView(a) {
   this.tabState = a;
-  this.tt = this.Kl = null;
+  this.tt = this.tabListItem = null;
   this.enabled = !a.initiallyEnabled;
   this.selected = !a.selected;
   this.highlighted = !a.highlighted;
   this.gv = null;
 }
 export function mountTabButton(a, b, c) {
-  a.Kl = createElement("li", b, null, null);
+  a.tabListItem = createElement("li", b, null, null);
   if (!a.enabled) {
-    hideElement(a.Kl);
+    hideElement(a.tabListItem);
   }
-  a.Kl.className = a.selected ? "selectedTab" : "";
-  a.tt = createElement("a", a.Kl, null, null);
+  a.tabListItem.className = a.selected ? "selectedTab" : "";
+  a.tt = createElement("a", a.tabListItem, null, null);
   a.tt.innerHTML = a.tabState.label;
   a.tt.onclick = function () {
     var b = a.tabState,
@@ -58,7 +58,7 @@ export function mountTabButton(a, b, c) {
 export function TabBar(a) {
   this.elementId = a;
   this.tabs = [];
-  this.Ll = [];
+  this.tabBarContainer = [];
 }
 export function addTab(a, b) {
   a.tabs.push(b);
@@ -70,13 +70,13 @@ export function mountTabBar(a) {
     b = createElement("ul", /** @type {any} */ (b), null, null);
     var c;
     var d;
-    if (0 < a.Ll.length) {
-      a.Ll.length = 0;
+    if (0 < a.tabBarContainer.length) {
+      a.tabBarContainer.length = 0;
     }
     for (d = 0; d < a.tabs.length; d++) {
       c = new TabButtonView(a.tabs[d]);
       mountTabButton(c, b, a);
-      a.Ll.push(c);
+      a.tabBarContainer.push(c);
     }
   }
 }
@@ -145,16 +145,16 @@ export function initializeViewsNavigation() {
   };
   PauseView.prototype = new View();
   PauseView.prototype.update = function () {
-    if (!this.sl) {
+    if (!this.pauseButton) {
       bindPauseButton(this);
     }
     if (this.Vu != game.paused) {
       if (this.Vu = game.paused) {
-        this.sl.innerHTML = "恢复";
-        this.sl.className = "ownedUpgradeButton";
+        this.pauseButton.innerHTML = "恢复";
+        this.pauseButton.className = "ownedUpgradeButton";
       } else {
-        this.sl.innerHTML = "暂停";
-        this.sl.className = "upgradeButton";
+        this.pauseButton.innerHTML = "暂停";
+        this.pauseButton.className = "upgradeButton";
       }
     }
   };
@@ -165,9 +165,9 @@ export function initializeViewsNavigation() {
     var a = this.tabState.enabled;
     if (this.enabled !== a) {
       if (this.enabled = a) {
-        showElement(this.Kl);
+        showElement(this.tabListItem);
       } else {
-        hideElement(this.Kl);
+        hideElement(this.tabListItem);
       }
     }
     if (a) {
@@ -181,7 +181,7 @@ export function initializeViewsNavigation() {
       if (this.selected != a || this.highlighted != b) {
         this.selected = a;
         this.highlighted = b;
-        this.Kl.className = a ? b ? "selectedTab tabHighlighted" : "selectedTab" : b ? "tabHighlighted" : "";
+        this.tabListItem.className = a ? b ? "selectedTab tabHighlighted" : "selectedTab" : b ? "tabHighlighted" : "";
       }
     }
   };
@@ -190,14 +190,14 @@ export function initializeViewsNavigation() {
   };
   TabBar.prototype.render = function () {
     var a;
-    for (a = 0; a < this.Ll.length; a++) {
-      this.Ll[a].render();
+    for (a = 0; a < this.tabBarContainer.length; a++) {
+      this.tabBarContainer[a].render();
     }
   };
   TabBar.prototype.Js = function () {
     var a, b;
-    for (a = 0; a < this.Ll.length; a++) {
-      b = this.Ll[a].tabState;
+    for (a = 0; a < this.tabBarContainer.length; a++) {
+      b = this.tabBarContainer[a].tabState;
       b.enabled = b.initiallyEnabled;
       b.highlighted = false;
       b.selected = 0 === a;
