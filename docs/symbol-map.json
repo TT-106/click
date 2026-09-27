@@ -8051,7 +8051,14 @@
     "Nw": "pixelBottom",
     "Kn": "terrainTypeKey",
     "Do": "dungeonRegistry",
-    "Im": "gradients"
+    "Im": "gradients",
+    "kw": "farmColumn",
+    "lw": "farmRow",
+    "wt": "generator",
+    "jw": "farmsById",
+    "zx": "shopsById",
+    "Dr": "tileSpriteNames",
+    "Fs": "tileSpriteNames"
   },
   "gameFields": {
     "B": "tileSize",

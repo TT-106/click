@@ -2616,52 +2616,6 @@
     ]
   },
   {
-    "name": "Dr",
-    "reads": 4,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\world\\terrain.js:105",
-        "code": "this.Dr"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\terrain.js:108",
-        "code": "a.Dr"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\terrain.js:563",
-        "code": "this.Dr"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\world\\terrain.js"
-    ]
-  },
-  {
-    "name": "Fs",
-    "reads": 4,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\world\\terrain.js:113",
-        "code": "this.Fs"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\terrain.js:116",
-        "code": "a.Fs"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\terrain.js:572",
-        "code": "this.Fs"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\world\\terrain.js"
-    ]
-  },
-  {
     "name": "kt",
     "reads": 4,
     "writes": 1,
@@ -2677,29 +2631,6 @@
       {
         "loc": "src\\engine\\modules\\world\\terrain.js:148",
         "code": "this.kt"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\world\\terrain.js"
-    ]
-  },
-  {
-    "name": "wt",
-    "reads": 3,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\world\\terrain.js:333",
-        "code": "this.wt"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\terrain.js:359",
-        "code": "a.wt"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\terrain.js:369",
-        "code": "this.wt"
       }
     ],
     "fileCount": 1,
@@ -3833,56 +3764,6 @@
     ]
   },
   {
-    "name": "kw",
-    "reads": 3,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:790",
-        "code": "yb.kw"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\dungeons.js:145",
-        "code": "this.kw"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\dungeons.js:161",
-        "code": "b.kw"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\world\\dungeons.js",
-      "src\\engine\\modules\\world\\terrain.js"
-    ]
-  },
-  {
-    "name": "lw",
-    "reads": 3,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:791",
-        "code": "yb.lw"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\dungeons.js:146",
-        "code": "this.lw"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\dungeons.js:161",
-        "code": "b.lw"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\world\\dungeons.js",
-      "src\\engine\\modules\\world\\terrain.js"
-    ]
-  },
-  {
     "name": "Rt",
     "reads": 2,
     "writes": 2,
@@ -4977,54 +4858,6 @@
     "fileCount": 1,
     "files": [
       "src\\engine\\modules\\views\\party-creation.js"
-    ]
-  },
-  {
-    "name": "jw",
-    "reads": 2,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\world\\dungeons.js:150",
-        "code": "this.jw"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\dungeons.js:156",
-        "code": "a.jw"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\dungeons.js:160",
-        "code": "a.jw"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\world\\dungeons.js",
-      "src\\engine\\modules\\world\\terrain.js"
-    ]
-  },
-  {
-    "name": "zx",
-    "reads": 2,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\world\\dungeons.js:173",
-        "code": "this.zx"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\dungeons.js:181",
-        "code": "a.zx"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\dungeons.js:263",
-        "code": "this.zx"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\world\\dungeons.js",
-      "src\\engine\\modules\\world\\terrain.js"
     ]
   },
   {

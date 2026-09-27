@@ -1,0 +1,17 @@
+{
+  "_comment": "Farm.kw/lw→farmColumn/farmRow（DTO 键 farmCol/farmRow 佐证；terrain.js 生成商店时按农场所在世界块计算）；WorldBlock/WorldMap.wt→generator（WorldGenerator 实例，populateWorldBlock 使用）；FarmRegistry.jw→farmsById、ShopRegistry.zx→shopsById（均按 dungeonId 索引，与 castleRegistry/dungeonRegistry 对称）；TerrainBiome.Dr 与 DecorationBiome.Fs→tileSpriteNames（addTerrainTileSet/addDecorationTileSet 收集的贴纸名数组，噪声采样后择一）。",
+  "files": [
+    "src/engine/modules/persistence/game-save.js",
+    "src/engine/modules/world/dungeons.js",
+    "src/engine/modules/world/terrain.js"
+  ],
+  "map": {
+    "kw": "farmColumn",
+    "lw": "farmRow",
+    "wt": "generator",
+    "jw": "farmsById",
+    "zx": "shopsById",
+    "Dr": "tileSpriteNames",
+    "Fs": "tileSpriteNames"
+  }
+}

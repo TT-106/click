@@ -142,23 +142,23 @@ export function sortDungeons(a, b) {
 }
 export function Farm(a, b, c) {
   this.dungeonId = a;
-  this.kw = b;
-  this.lw = c;
+  this.farmColumn = b;
+  this.farmRow = c;
 }
 export function FarmRegistry() {
   this.nw = [];
-  this.jw = {};
+  this.farmsById = {};
   this.Gz = "L2_Town01.PNG";
 }
 export function resetFarms() {
   var a = game.farms;
   a.nw.length = 0;
-  a.jw = {};
+  a.farmsById = {};
 }
 export function registerFarm(a, b) {
   a.nw.push(b);
-  a.jw[b.dungeonId] = b;
-  var c = game.world.getTileAtPixel(b.kw, b.lw);
+  a.farmsById[b.dungeonId] = b;
+  var c = game.world.getTileAtPixel(b.farmColumn, b.farmRow);
   if (c) {
     c.setDecorationSprite(game.terrainSprites.getSprite(a.Gz));
   }
@@ -170,7 +170,7 @@ export function Shop(a, b, c) {
 }
 export function ShopRegistry() {
   this.ht = [];
-  this.zx = {};
+  this.shopsById = {};
   this.collectedGold = 0;
   this.tB = "L2_Terrain089.PNG L2_Terrain077.PNG L2_Terrain077.PNG L2_Terrain076.PNG L2_Terrain078.PNG L2_Terrain079.PNG L2_Terrain083.PNG L2_Terrain084.PNG L2_Terrain085.PNG".split(" ");
 }
@@ -178,7 +178,7 @@ export function resetShops() {
   var a = game.shops;
   a.ht.length = 0;
   a.collectedGold = 0;
-  a.zx = {};
+  a.shopsById = {};
 }
 export function randomShopSprite(a) {
   return a.tB[randomInt(a.tB.length)];
@@ -260,7 +260,7 @@ export function initializeWorldDungeons() {
   };
   ShopRegistry.prototype.Ut = function (a) {
     this.ht.push(a);
-    this.zx[a.dungeonId] = a;
+    this.shopsById[a.dungeonId] = a;
     if (a = game.world.getTileAtPixel(a.worldColumn, a.worldRow)) {
       var b = game.terrainSprites.getSprite(randomShopSprite(this));
       a.setDecorationSprite(b);

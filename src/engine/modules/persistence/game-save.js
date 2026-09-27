@@ -787,8 +787,8 @@ export function createSaveState(a) {
       var yb = ia[va];
       ea = {
         dungeonId: yb.dungeonId,
-        farmCol: yb.kw,
-        farmRow: yb.lw
+        farmCol: yb.farmColumn,
+        farmRow: yb.farmRow
       };
       W.push(ea);
     }
