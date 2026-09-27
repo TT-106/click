@@ -1,9 +1,11 @@
 # WORKSTATE — Clickpocalypse II 语义恢复与现代化工程
 
 > 本文件是长程自治任务的**唯一续跑入口**。上下文压缩或中断后，先读本文件 + `git log --oneline`，再继续。
-> 最后更新：2026-09-27（U66-U97 共 32 批落地后，混淆清单 806 → 225；fields 段 267 → 838；59 场景矩阵全绿）
+> 最后更新：2026-09-27（U66-U98 共 33 批落地后，混淆清单 806 → 206；fields 段 267 → 856；59 场景矩阵全绿）
 
 ## 当前轮次状态（2026-09-27，M12 长尾重命名 + 命名修正）
+
+- U98 成就视图与成就定义（2026-09-27，混淆清单 225 → 206，fields 段 838 → 856）：`views/achievements.js` 17 项 + `progression/achievements.js` 2 项落地，两文件清空。AchievementListView：三列 UpgradeCollection `Hq/Nt/Ot`→first/second/thirdColumnCollection、`Iq`→tableElement、`QC`→headerElementId、`pz`→cachedAchievementCount、`uo`→rebuild（清空后重建，reset 与 update 复用）；AdventurePointBreakdownView：`Ls`→tableElement、`Ao/sz/Dv`→cachedPointsByEventType/cachedCountsByEventType/cachedPointReward、三列单元格 `sy/tu/ex`→pointsCells/countCells/rewardCells（按表头「冒险点数/计数/AP/行动」对应 update 写入点）；PointUpgradeListView `Gt`→tableElement。跨文件方法：`Zn`→refreshCollections（本文件重建列集合 + `views/character.js` SkillsTabView 重载技能树集合）、`St`→createHeaderRow（本文件点数表 + `views/information.js` 统计表）。progression/achievements.js：`Rt`→cachedRequirementLabel、`Pt`→cachedRewardLabel。**注意**：`Hq/Zn/uo/St/Pt/Rt` 在 `symbols` 段是**其他模块的函数名**（同名不同义），本次按本文件语义命名并写入 `fields` 段；`Hq` 因 `tests/engine-harness.js:430` 的 `window.Hq`（原版全局函数，不可改名）而**不入全局表**，analyze-fields 会因此继续列出该 1 项。**JSDoc 陷阱**：`@property {function(number): void} St …`（非 `St:` 形态）不会被批处理捕获，需手工改名，否则 tsc TS2339。
 
 - U97 遭遇战与怪物命名（2026-09-27，混淆清单 242 → 225，fields 段 821 → 838）：`combat/encounters.js` 17 项全部落地，文件清空。EncounterState：`Ar`→encounterCount、`fw`→encounterName、`du`→isBossEncounter（+expedition 视图与 harness）。DungeonRoom：`Yp`→encounterType（0 普通/1 城堡守卫/2 首领/3 宝箱房；rooms.js 与 treasure.js 同步）。monsterCatalog：`n`→monsterTemplates（+game.js 载入 monsterDefinitions）、`HE`→compareMonsterTypes（getName 字典序比较）、`dn`→nameGenerator。bossClass：`eu`→innateSpells（**修正**：首轮误判为 spellDefinitions，与同类既有 `spellDefinitions: null` 撞键，tsc TS1117 暴露后按 minions.js 同名键改 innateSpells）、`WC`→statBonusList。MonsterNameGenerator 四组词表 `Pw`→adjectives、`XC`→bossTitles、`oD`→bossAdjectives、`mE`→bossLocations，及 `mn`→pickWord。MonsterType：`dE`→baseName（getName）、`nE`→pluralName（复数化）。MonsterRegistry：`aE`→maxDefeatedMonsters。
 - **新踩坑（重要）**：差分 harness 同时读取**原版**与重构版同一对象，字段改名后原版分支仍用旧名。`du`/`fw` 改名后 `castle-victory` 失败（原版 encounter.isBossEncounter 恒 undefined）。修法：harness 内按 `isOriginal ? enc.du : enc.isBossEncounter` 分支取值（与既有的 `m.zb===4 / m.characterType===4` 同款处理）。另：`scripts/test-scenarios.mjs` 里断言消息模板串含 `encounter.du`，会触发批处理"字符串字面量多重集"校验，需先手工改提示文本再入批。
