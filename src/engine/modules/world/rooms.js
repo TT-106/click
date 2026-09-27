@@ -11,7 +11,7 @@ export function DungeonTile(a, b, c, d) {
   this.tileRow = b;
   this.pixelColumn = c;
   this.pixelRow = d;
-  this.bt = this.decorationSprite = this.backgroundSprite = null;
+  this.cachedBackgroundSprite = this.decorationSprite = this.backgroundSprite = null;
   this.floorType = EMPTY_TILE;
   this.tileEffect = null;
   this.remainingEffectDamage = 0;
@@ -175,9 +175,9 @@ export function revealRoom(a) {
       }
       if (d && p && 0 !== p.length && canPlaceRoomObject(a, d)) {
         if (h = h[d.x][d.y], h) {
-          if (!h.bt) {
+          if (!h.cachedBackgroundSprite) {
             if (b = p[randomIntFrom(b.seededRandom, p.length)]) {
-              h.bt = game.terrainSprites.getSprite(b);
+              h.cachedBackgroundSprite = game.terrainSprites.getSprite(b);
             } else {
               console.log("failed to select wall sprite.");
             }

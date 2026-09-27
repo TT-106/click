@@ -2201,31 +2201,6 @@
     ]
   },
   {
-    "name": "bt",
-    "reads": 2,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:116",
-        "code": "g.bt"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\generation.js:233",
-        "code": "f.bt"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\rooms.js:14",
-        "code": "this.bt"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\world\\generation.js",
-      "src\\engine\\modules\\world\\rooms.js"
-    ]
-  },
-  {
     "name": "Mr",
     "reads": 4,
     "writes": 1,
@@ -3927,31 +3902,6 @@
     ]
   },
   {
-    "name": "xw",
-    "reads": 1,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:20",
-        "code": "this.xw"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:20",
-        "code": "this.xw"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:512",
-        "code": "V.xw"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\loot\\treasure.js",
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\runtime\\game.js"
-    ]
-  },
-  {
     "name": "Zw",
     "reads": 2,
     "writes": 2,
@@ -4193,54 +4143,6 @@
     "fileCount": 1,
     "files": [
       "src\\engine\\modules\\progression\\achievements.js"
-    ]
-  },
-  {
-    "name": "yt",
-    "reads": 1,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\rendering\\floating-text.js:10",
-        "code": "this.yt"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\floating-text.js:42",
-        "code": "c.yt"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\floating-text.js:52",
-        "code": "this.yt"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\rendering\\floating-text.js",
-      "src\\engine\\modules\\rendering\\scene.js"
-    ]
-  },
-  {
-    "name": "xt",
-    "reads": 1,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\rendering\\floating-text.js:10",
-        "code": "this.xt"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\floating-text.js:41",
-        "code": "c.xt"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\floating-text.js:50",
-        "code": "this.xt"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\rendering\\floating-text.js",
-      "src\\engine\\modules\\rendering\\scene.js"
     ]
   },
   {
@@ -6322,31 +6224,6 @@
     "files": [
       "src\\engine\\modules\\loot\\item-names.js",
       "src\\engine\\modules\\loot\\items.js"
-    ]
-  },
-  {
-    "name": "Sz",
-    "reads": 1,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\loot\\treasure.js:20",
-        "code": "this.Sz"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:512",
-        "code": "V.Sz"
-      },
-      {
-        "loc": "src\\engine\\modules\\runtime\\game.js:213",
-        "code": "qa.Sz"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\loot\\treasure.js",
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\runtime\\game.js"
     ]
   },
   {
@@ -8658,26 +8535,6 @@
     ]
   },
   {
-    "name": "SE",
-    "reads": 1,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\rendering\\floating-text.js:9",
-        "code": "this.SE"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:177",
-        "code": "c.SE"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\rendering\\floating-text.js",
-      "src\\engine\\modules\\rendering\\scene.js"
-    ]
-  },
-  {
     "name": "GD",
     "reads": 1,
     "writes": 1,
@@ -8790,26 +8647,6 @@
     "files": [
       "src\\engine\\modules\\rendering\\scene.js",
       "src\\engine\\modules\\rendering\\sprites.js"
-    ]
-  },
-  {
-    "name": "wD",
-    "reads": 1,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:512",
-        "code": "V.wD"
-      },
-      {
-        "loc": "src\\engine\\modules\\runtime\\game.js:215",
-        "code": "qa.wD"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\runtime\\game.js"
     ]
   },
   {

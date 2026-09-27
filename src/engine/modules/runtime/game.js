@@ -210,9 +210,9 @@ export function initializeRuntimeGame() {
       a.n.push(...monsterDefinitions);
       initializeItemCatalog();
       var qa = game.goldDrops;
-      qa.Sz = game.itemSprites.getSprite("CoinsGoldSmall.PNG");
-      qa.xw = game.itemSprites.getSprite("CoinsGoldMedium.PNG");
-      qa.wD = game.itemSprites.getSprite("CoinsGoldLarge.PNG");
+      qa.smallGoldSprite = game.itemSprites.getSprite("CoinsGoldSmall.PNG");
+      qa.mediumGoldSprite = game.itemSprites.getSprite("CoinsGoldMedium.PNG");
+      qa.largeGoldSprite = game.itemSprites.getSprite("CoinsGoldLarge.PNG");
       resetScrollInventory();
       resetPotionInventory();
       var ta = game.treasure;

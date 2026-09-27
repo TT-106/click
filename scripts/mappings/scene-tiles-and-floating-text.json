@@ -1,0 +1,20 @@
+{
+  "_comment": "scene.js 批 2 与相关：DungeonTile.bt→cachedBackgroundSprite（惰性缓存的地面贴纸，rooms.js 按需 getSprite、generation.js 置空、scene.js 取用）；GoldDropRegistry 的三个金币贴纸 Sz/xw/wD→smallGoldSprite/mediumGoldSprite/largeGoldSprite（game.js 按 Small/Medium/Large 加载，scene.js 按掉落金额 100/1000 分档选择）；FloatingText 的 xt/yt→screenX/screenY（fillText 的目标坐标）与 SE→color（构造时传入的文本颜色）。",
+  "files": [
+    "src/engine/modules/rendering/scene.js",
+    "src/engine/modules/rendering/floating-text.js",
+    "src/engine/modules/world/rooms.js",
+    "src/engine/modules/world/generation.js",
+    "src/engine/modules/loot/treasure.js",
+    "src/engine/modules/runtime/game.js"
+  ],
+  "map": {
+    "bt": "cachedBackgroundSprite",
+    "Sz": "smallGoldSprite",
+    "xw": "mediumGoldSprite",
+    "wD": "largeGoldSprite",
+    "xt": "screenX",
+    "yt": "screenY",
+    "SE": "color"
+  }
+}

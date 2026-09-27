@@ -113,7 +113,7 @@ export function drawDungeonTileRow(a, b, c, d) {
       if (n) {
         f.spriteRenderer.drawSpriteDepth(n, g.getPixelX(), g.getPixelY(), h, l, n.spriteSheet.spriteSize, 0);
       }
-      if (n = g.bt) {
+      if (n = g.cachedBackgroundSprite) {
         f.spriteRenderer.drawSpriteDepthRaised(n, g.getPixelX(), g.getPixelY(), h, l, n.spriteSheet.spriteSize, 0);
       }
     }
@@ -174,8 +174,8 @@ export function drawFloatingText(a) {
   if (0 !== d.length) {
     for (a.context.font = "12px Georgia", b = 0; b < d.length; b++) {
       c = d[b];
-      a.context.fillStyle = c.SE;
-      a.context.fillText(c.text, c.xt, c.yt);
+      a.context.fillStyle = c.color;
+      a.context.fillText(c.text, c.screenX, c.screenY);
     }
   }
 }
@@ -509,7 +509,7 @@ export function initializeRenderingScene() {
           J = projectWorldY(x, z);
           var Q = I.goldAmount,
             V = game.goldDrops;
-          a.drawSprite(100 > Q ? V.Sz : 1E3 > Q ? V.xw : V.wD, O, J);
+          a.drawSprite(100 > Q ? V.smallGoldSprite : 1E3 > Q ? V.mediumGoldSprite : V.largeGoldSprite, O, J);
         }
         var na = game.scrollDrops.drops,
           K,

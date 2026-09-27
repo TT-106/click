@@ -6,8 +6,8 @@ import { game } from "../runtime/game.js";
 import { projectDungeonX, projectDungeonY } from "../simulation/characters.js";
 export function FloatingText(a, b) {
   this.text = a;
-  this.SE = b;
-  this.frameAge = this.yt = this.xt = 0;
+  this.color = b;
+  this.frameAge = this.screenY = this.screenX = 0;
   var c = 1 + randomInt(1);
   this.GD = 0.5 > Math.random() ? -c : c;
   this.HD = -1 + -randomInt(1);
@@ -38,8 +38,8 @@ export function showFloatingText(a, b, c, d) {
       b = projectDungeonX(d, f) + a.cA;
       d = projectDungeonY(d, f) + a.dA;
     }
-    c.xt = b;
-    c.yt = d;
+    c.screenX = b;
+    c.screenY = d;
     a.texts.push(c);
   }
 }
@@ -47,9 +47,9 @@ export function initializeRenderingFloatingText() {
   FloatingText.prototype.oy = function () {
     if (this.pw) {
       if (0.5 > Math.random()) {
-        this.xt += this.GD;
+        this.screenX += this.GD;
       }
-      this.yt += this.HD;
+      this.screenY += this.HD;
     }
     this.pw = !this.pw;
     this.frameAge++;

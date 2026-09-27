@@ -17,7 +17,7 @@ export function GoldDrop(a, b, c, d) {
 }
 export function GoldDropRegistry() {
   this.drops = [];
-  this.xw = this.xw = this.Sz = null;
+  this.mediumGoldSprite = this.mediumGoldSprite = this.smallGoldSprite = null;
 }
 export function removeGoldDrop(a) {
   var b = game.goldDrops;

@@ -230,7 +230,7 @@ export function clearDungeonTiles(a) {
       var f = d[b];
       f.backgroundSprite = null;
       f.decorationSprite = null;
-      f.bt = null;
+      f.cachedBackgroundSprite = null;
       f.floorType = EMPTY_TILE;
       f.tileEffect = null;
       f.remainingEffectDamage = 0;

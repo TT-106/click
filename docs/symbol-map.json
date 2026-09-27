@@ -8029,7 +8029,14 @@
     "ko": "scratchVector",
     "Bn": "commandIndex",
     "uB": "command",
-    "Io": "effectType"
+    "Io": "effectType",
+    "bt": "cachedBackgroundSprite",
+    "Sz": "smallGoldSprite",
+    "xw": "mediumGoldSprite",
+    "wD": "largeGoldSprite",
+    "xt": "screenX",
+    "yt": "screenY",
+    "SE": "color"
   },
   "gameFields": {
     "B": "tileSize",
