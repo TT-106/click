@@ -258,7 +258,7 @@ export function initializeCombatPotions() {
   PotionDrop.prototype.setClaimDistance = function (a) {
     this.claimDistance = a;
   };
-  PotionDropRegistry.prototype.zl = function () {
+  PotionDropRegistry.prototype.releaseClaims = function () {
     var a;
     for (a = 0; a < this.drops.length; a++) {
       this.drops[a].setClaimedBy(null);

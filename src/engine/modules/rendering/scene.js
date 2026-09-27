@@ -49,17 +49,17 @@ export function DepthSortedRenderer() {
     return a.getRenderSortKey() - b.getRenderSortKey();
   };
   this.ko = new Vector2();
-  this.Hl = [];
+  this.renderCommands = [];
   this.Bn = 0;
   this.context = null;
 }
 export function acquireRenderCommand(a) {
   var b;
-  if (a.Bn >= a.Hl.length) {
+  if (a.Bn >= a.renderCommands.length) {
     b = new RenderCommand();
-    a.Hl.push(b);
+    a.renderCommands.push(b);
   } else {
-    b = a.Hl[a.Bn];
+    b = a.renderCommands[a.Bn];
   }
   a.Bn++;
   return b;
@@ -170,7 +170,7 @@ export function drawCharacterEffects(a, b) {
 }
 export function drawFloatingText(a) {
   var b, c, d;
-  d = game.floatingText.al;
+  d = game.floatingText.texts;
   if (0 !== d.length) {
     for (a.context.font = "12px Georgia", b = 0; b < d.length; b++) {
       c = d[b];
@@ -252,8 +252,8 @@ export function initializeRenderingScene() {
   };
   DepthSortedRenderer.prototype.setContext = function (a) {
     this.context = a;
-    for (a = this.Bn = 0; a < this.Hl.length; a++) {
-      resetRenderCommand(this.Hl[a]);
+    for (a = this.Bn = 0; a < this.renderCommands.length; a++) {
+      resetRenderCommand(this.renderCommands[a]);
     }
     var b = game.viewportWidth / 2,
       c = 2 * game.viewportHeight;
@@ -296,11 +296,11 @@ export function initializeRenderingScene() {
   };
   DepthSortedRenderer.prototype.sortCommands = function () {
     if (!(2 > this.Bn)) {
-      this.Hl.sort(this.FE);
+      this.renderCommands.sort(this.FE);
     }
     var a;
     for (a = this.Bn - 1; 0 <= a; a--) {
-      this.Hl[a].draw(this.context);
+      this.renderCommands[a].draw(this.context);
     }
   };
   ImmediateRenderer.prototype.setContext = function (a) {
@@ -554,7 +554,7 @@ export function initializeRenderingScene() {
           eb = qa.np;
           Gb = projectWorldX(ta, eb);
           Da = projectWorldY(ta, eb);
-          a.drawSprite(qa.getItem().Uk(), Gb, Da);
+          a.drawSprite(qa.getItem().getIconSprite(), Gb, Da);
         }
         var mb = game.treasure.targets,
           Ea,

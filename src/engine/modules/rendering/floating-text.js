@@ -14,7 +14,7 @@ export function FloatingText(a, b) {
   this.pw = true;
 }
 export function FloatingTextLayer() {
-  this.al = [];
+  this.texts = [];
   this.dA = this.cA = 20;
 }
 export function showDamageText(a, b) {
@@ -40,7 +40,7 @@ export function showFloatingText(a, b, c, d) {
     }
     c.xt = b;
     c.yt = d;
-    a.al.push(c);
+    a.texts.push(c);
   }
 }
 export function initializeRenderingFloatingText() {
@@ -58,15 +58,15 @@ export function initializeRenderingFloatingText() {
   FloatingTextLayer.prototype.oy = function () {
     var a,
       b = false;
-    for (a = 0; a < this.al.length; a++) {
-      if (this.al[a].oy()) {
+    for (a = 0; a < this.texts.length; a++) {
+      if (this.texts[a].oy()) {
         b = true;
       }
     }
     if (b) {
-      for (a = this.al.length - 1; 0 <= a; a--) {
-        if (60 <= this.al[a].frameAge) {
-          this.al.splice(a, 1);
+      for (a = this.texts.length - 1; 0 <= a; a--) {
+        if (60 <= this.texts[a].frameAge) {
+          this.texts.splice(a, 1);
         }
       }
     }

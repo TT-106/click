@@ -200,7 +200,7 @@ window.harness = {
   },
   // 采样浮动战斗文字（用于暴击、首领击杀、伤害数字、治疗、免疫等瞬时视觉的直接计数对账）。
   countFloatingText({ turns = 0, text, pattern } = {}) {
-    const list = () => (original ? window.Game.pc.al : game.floatingText.al);
+    const list = () => (original ? window.Game.pc.al : game.floatingText.texts);
     let count = 0;
     let sum = 0;
     const seen = new Set();
@@ -257,7 +257,7 @@ window.harness = {
     const isOriginal = original;
     const getEncounter = () => (isOriginal ? window.Game.i.Xg : game.state.encounter);
     const getMonsters = () => (isOriginal ? window.Game.Gf.Pi : game.monsters.activeMonsters);
-    const getFloating = () => (isOriginal ? window.Game.pc.al : game.floatingText.al);
+    const getFloating = () => (isOriginal ? window.Game.pc.al : game.floatingText.texts);
     let bossEncounterTurns = 0;
     let bossSeenTurns = 0;
     let bossKills = 0;

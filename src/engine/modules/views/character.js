@@ -178,7 +178,7 @@ export function initializeViewsCharacter() {
   InventoryItemView.prototype.onOfflineStart = function () {};
   InventoryItemView.prototype.ux = function (a) {
     if (this.item = a) {
-      var b = this.item.Uk();
+      var b = this.item.getIconSprite();
       this.descriptionLabel.style.background = "url('spritesheet/items.png') -" + b.sourceX + "px -" + b.sourceY + "px";
       this.nameLabel.innerHTML = getHighlightedItemName(this.item);
       this.rarityCell.innerHTML = getItemRarityLabel(this.item);
@@ -309,7 +309,7 @@ export function initializeViewsCharacter() {
   EquipmentItemRowView.prototype.onOfflineStart = function () {};
   EquipmentItemRowView.prototype.ux = function (a) {
     if (this.item = a) {
-      a = this.item.Uk();
+      a = this.item.getIconSprite();
       this.descriptionLabel.style.background = "url('spritesheet/items.png') -" + a.sourceX + "px -" + a.sourceY + "px";
       this.nameLabel.innerHTML = getHighlightedItemName(this.item);
       this.rarityCell.innerHTML = getItemRarityLabel(this.item);

@@ -216,7 +216,7 @@ export function initializeSimulationLoop() {
         }
       }
     } else {
-      this.resourcesReady = game.monsterSprites.cl() && game.terrainSprites.cl() && game.itemSprites.cl() && game.animations.cl();
+      this.resourcesReady = game.monsterSprites.isLoaded() && game.terrainSprites.isLoaded() && game.itemSprites.isLoaded() && game.animations.isLoaded();
       this.lastTickAt = nowMilliseconds();
     }
     requestAnimationFrame(this.requestTick);

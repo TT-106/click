@@ -470,7 +470,7 @@ export function initializeViewsUpgradeDetails() {
     var a = this.upgrade.Oz();
     if (this.cv !== a) {
       this.cv = a;
-      var b = a.Uk(),
+      var b = a.getIconSprite(),
         c = a.inventory.getSprite();
       this.kp.style.background = "url('spritesheet/items.png') -" + b.sourceX + "px -" + b.sourceY + "px";
       this.jA.innerHTML = getHighlightedItemName(a);
@@ -604,7 +604,7 @@ export function initializeViewsUpgradeDetails() {
     for (b = 0; b < f; b++) {
       if (c = a[b], this.sr.length < b || this.sr[b] !== c) {
         this.sr[b] = c;
-        d = c.Uk();
+        d = c.getIconSprite();
         this.IA[b].style.background = "url('spritesheet/items.png') -" + d.sourceX + "px -" + d.sourceY + "px";
         this.JA[b].innerHTML = getHighlightedItemName(c);
         this.Rw[b].className = getRarityClass(c.getRarity());

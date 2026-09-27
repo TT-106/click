@@ -252,7 +252,7 @@ export function initializeCombatScrolls() {
   ScrollDrop.prototype.setClaimDistance = function (a) {
     this.claimDistance = a;
   };
-  ScrollDropRegistry.prototype.zl = function () {
+  ScrollDropRegistry.prototype.releaseClaims = function () {
     var a;
     for (a = 0; a < this.drops.length; a++) {
       this.drops[a].setClaimedBy(null);

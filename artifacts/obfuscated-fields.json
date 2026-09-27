@@ -1,32 +1,5 @@
 [
   {
-    "name": "zl",
-    "reads": 4,
-    "writes": 4,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\combat\\potions.js:261",
-        "code": "PotionDropRegistry.prototype.zl"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\scrolls.js:255",
-        "code": "ScrollDropRegistry.prototype.zl"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\items.js:344",
-        "code": "ItemDropRegistry.prototype.zl"
-      }
-    ],
-    "fileCount": 5,
-    "files": [
-      "src\\engine\\modules\\combat\\potions.js",
-      "src\\engine\\modules\\combat\\scrolls.js",
-      "src\\engine\\modules\\loot\\items.js",
-      "src\\engine\\modules\\loot\\treasure.js",
-      "src\\engine\\modules\\simulation\\tick.js"
-    ]
-  },
-  {
     "name": "yl",
     "reads": 7,
     "writes": 1,
@@ -98,102 +71,6 @@
     ]
   },
   {
-    "name": "Uk",
-    "reads": 6,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\loot\\items.js:311",
-        "code": "ItemType.prototype.Uk"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\items.js:320",
-        "code": "Item.prototype.Uk"
-      },
-      {
-        "loc": "src\\engine\\modules\\loot\\items.js:321",
-        "code": "this.itemType.Uk"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\loot\\items.js",
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\views\\character.js",
-      "src\\engine\\modules\\views\\upgrade-details.js"
-    ]
-  },
-  {
-    "name": "Ql",
-    "reads": 2,
-    "writes": 6,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:160",
-        "code": "this.Ql"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:166",
-        "code": "this.Ql"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:613",
-        "code": "this.Ql"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\progression\\upgrades.js"
-    ]
-  },
-  {
-    "name": "al",
-    "reads": 7,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\rendering\\floating-text.js:17",
-        "code": "this.al"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\floating-text.js:43",
-        "code": "a.al"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\floating-text.js:61",
-        "code": "this.al"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\rendering\\floating-text.js",
-      "src\\engine\\modules\\rendering\\scene.js"
-    ]
-  },
-  {
-    "name": "Hl",
-    "reads": 7,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:52",
-        "code": "this.Hl"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:58",
-        "code": "a.Hl"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:60",
-        "code": "a.Hl"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\rendering\\scene.js"
-    ]
-  },
-  {
     "name": "vk",
     "reads": 6,
     "writes": 2,
@@ -242,101 +119,6 @@
       "src\\engine\\modules\\rendering\\scene.js",
       "src\\engine\\modules\\runtime\\game.js",
       "src\\engine\\modules\\simulation\\characters.js",
-      "src\\engine\\modules\\simulation\\loop.js"
-    ]
-  },
-  {
-    "name": "Il",
-    "reads": 6,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\rendering\\sprites.js:19",
-        "code": "this.Il"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\sprites.js:20",
-        "code": "this.Il"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\sprites.js:24",
-        "code": "this.Il"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\rendering\\sprites.js"
-    ]
-  },
-  {
-    "name": "Pk",
-    "reads": 4,
-    "writes": 4,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\rendering\\sprites.js:85",
-        "code": "this.Pk"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\sprites.js:169",
-        "code": "c.Pk"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\sprites.js:264",
-        "code": "this.Pk"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\rendering\\sprites.js",
-      "src\\engine\\modules\\simulation\\tick.js"
-    ]
-  },
-  {
-    "name": "yi",
-    "reads": 4,
-    "writes": 4,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\rendering\\sprites.js:98",
-        "code": "this.yi"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\sprites.js:138",
-        "code": "a.yi"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\sprites.js:141",
-        "code": "a.yi"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\rendering\\sprites.js",
-      "src\\engine\\modules\\simulation\\tick.js"
-    ]
-  },
-  {
-    "name": "cl",
-    "reads": 5,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\rendering\\sprites.js:199",
-        "code": "SpriteSheet.prototype.cl"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\sprites.js:222",
-        "code": "AnimationSheet.prototype.cl"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\sprites.js:229",
-        "code": "AnimationCatalog.prototype.cl"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\rendering\\sprites.js",
       "src\\engine\\modules\\simulation\\loop.js"
     ]
   },
@@ -9049,7 +8831,7 @@
       },
       {
         "loc": "src\\engine\\modules\\rendering\\floating-text.js:62",
-        "code": "this.al[a].oy"
+        "code": "this.texts[a].oy"
       }
     ],
     "fileCount": 2,

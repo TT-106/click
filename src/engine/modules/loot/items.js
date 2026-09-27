@@ -308,7 +308,7 @@ export function initializeLootItems() {
   POISON_ITEM_EFFECT = 3;
   SHOCK_ITEM_EFFECT = 4;
   SONIC_ITEM_EFFECT = 5;
-  ItemType.prototype.Uk = function () {
+  ItemType.prototype.getIconSprite = function () {
     return this.lA;
   };
   ItemType.prototype.sw = function () {
@@ -317,8 +317,8 @@ export function initializeLootItems() {
   ItemType.prototype.Cw = function () {
     return this.isProjectileItem;
   };
-  Item.prototype.Uk = function () {
-    return this.itemType.Uk();
+  Item.prototype.getIconSprite = function () {
+    return this.itemType.getIconSprite();
   };
   Item.prototype.sw = function () {
     return this.itemType.sw();
@@ -341,7 +341,7 @@ export function initializeLootItems() {
     }
     return 0;
   };
-  ItemDropRegistry.prototype.zl = function () {
+  ItemDropRegistry.prototype.releaseClaims = function () {
     var a;
     for (a = 0; a < this.drops.length; a++) {
       this.drops[a].setClaimedBy(null);

@@ -109,7 +109,7 @@ export function initializeLootTreasure() {
   GoldDrop.prototype.setClaimDistance = function (a) {
     this.claimDistance = a;
   };
-  GoldDropRegistry.prototype.zl = function () {
+  GoldDropRegistry.prototype.releaseClaims = function () {
     var a;
     for (a = 0; a < this.drops.length; a++) {
       this.drops[a].setClaimedBy(null);

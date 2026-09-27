@@ -16,12 +16,12 @@ export function SpriteSheet(a, b, c) {
   this.spriteSize = b;
   this.animationMap = {};
   var d = this;
-  this.Il = new Image();
-  this.Il.onload = function () {
+  this.image = new Image();
+  this.image.onload = function () {
     (/** @type {any} */ (d)).$w(c);
     d.loaded = true;
   };
-  this.Il.src = a;
+  this.image.src = a;
 }
 export function SpriteAnimation(a, b, c, d, f, g, h, l) {
   this.spriteSheet = a;
@@ -52,12 +52,12 @@ export function AnimationSheet(a, b, c, d) {
   this.animationMap = {};
   this.FB = [];
   var f = this;
-  this.Il = new Image();
-  this.Il.onload = function () {
+  this.image = new Image();
+  this.image.onload = function () {
     (/** @type {any} */ (f)).$w(c, d);
     f.loaded = true;
   };
-  this.Il.src = a;
+  this.image.src = a;
 }
 export function AnimationCatalog(a) {
   this.animationMap = null;
@@ -82,7 +82,7 @@ export function VisualEffect(a, b, c, d, f) {
   this.iD = b;
   this.currentPosition = f;
   this.targetPosition = c;
-  this.Pk = false;
+  this.reachedTarget = false;
   this.projectileEffect = d;
   this.finished = this.hasSpawned = this.isReturning = false;
   this.animation = a ? game.animations.getAnimation(a) : null;
@@ -95,7 +95,7 @@ export function VisualEffect(a, b, c, d, f) {
   if (this.animation && this.animation.isDirectional) {
     this.frameIndex = getEffectDirection(this);
   }
-  this.yi = 0;
+  this.elapsedMs = 0;
   this.uA = false;
 }
 export function getEffectDirection(a) {
@@ -135,12 +135,12 @@ export function getEffectDirection(a) {
   console.log("direction fail x=" + a + " y=" + b + " angle=" + c);
 }
 export function advanceEffectFrame(a, b) {
-  a.yi += b * FRAME_DURATION_MS;
+  a.elapsedMs += b * FRAME_DURATION_MS;
   var c = a.projectileEffect ? PROJECTILE_FRAME_DURATION_MS : EFFECT_FRAME_DURATION_MS;
   a.bx = a.frameIndex;
-  if (a.yi >= c) {
-    var d = Math.min(1, floorNumber(a.yi / c));
-    a.yi = Math.max(0, floorNumber(a.yi % c));
+  if (a.elapsedMs >= c) {
+    var d = Math.min(1, floorNumber(a.elapsedMs / c));
+    a.elapsedMs = Math.max(0, floorNumber(a.elapsedMs % c));
     a.frameIndex += d;
     if (a.frameIndex >= a.frameCount) {
       if (a.uA) {
@@ -166,7 +166,7 @@ export function clearVisualEffects() {
     for (b = 0; b < a.pool.length; b++) {
       var c = a.pool[b];
       c.finished = true;
-      c.Pk = true;
+      c.reachedTarget = true;
     }
     a.pool.length = 0;
   }
@@ -194,9 +194,9 @@ export function initializeRenderingSprites() {
     return this.animationMap[a];
   };
   SpriteSheet.prototype.getSheetImage = function () {
-    return this.Il;
+    return this.image;
   };
-  SpriteSheet.prototype.cl = function () {
+  SpriteSheet.prototype.isLoaded = function () {
     return this.loaded;
   };
   SpriteAnimation.prototype.getSheetImage = function () {
@@ -217,19 +217,19 @@ export function initializeRenderingSprites() {
     return this.animationMap[a];
   };
   AnimationSheet.prototype.getSheetImage = function () {
-    return this.Il;
+    return this.image;
   };
-  AnimationSheet.prototype.cl = function () {
+  AnimationSheet.prototype.isLoaded = function () {
     return this.loaded;
   };
   AnimationCatalog.prototype.getAnimation = function (a) {
     var b = this.animationMap[a];
     return b ? b.getAnimation(a) : null;
   };
-  AnimationCatalog.prototype.cl = function () {
+  AnimationCatalog.prototype.isLoaded = function () {
     var a;
     for (a = 0; a < this.Zt.length; a++) {
-      if (!this.Zt[a].cl()) {
+      if (!this.Zt[a].isLoaded()) {
         return false;
       }
     }
@@ -261,7 +261,7 @@ export function initializeRenderingSprites() {
     this.remainingEffectDamage = a;
   };
   VisualEffect.prototype.isFinished = function () {
-    return this.finished || this.Pk;
+    return this.finished || this.reachedTarget;
   };
   VisualEffect.prototype.To = function () {
     return this.frameCount;

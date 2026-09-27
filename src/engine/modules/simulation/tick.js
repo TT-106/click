@@ -96,10 +96,10 @@ export function advanceSimulation(a) {
       I.nu();
     }
     if (!game.worldActive) {
-      game.goldDrops.zl();
-      game.scrollDrops.zl();
-      game.potionDrops.zl();
-      game.itemDrops.zl();
+      game.goldDrops.releaseClaims();
+      game.scrollDrops.releaseClaims();
+      game.potionDrops.releaseClaims();
+      game.itemDrops.releaseClaims();
     }
     updateCharacterBehaviors(getAllies());
     updateCharacterBehaviors(getMonsters());
@@ -285,7 +285,7 @@ export function advanceSimulation(a) {
         if (Ua && !Ua.hasSpawned) {
           addVisualEffect(game.effects, cb.projectileEffect);
         }
-        if (!Ua || Ua.Pk || Ua.finished) {
+        if (!Ua || Ua.reachedTarget || Ua.finished) {
           var Va = cb.impactEffect;
           if (!Va.hasSpawned) {
             var mc = cb.actionDefinition;
@@ -387,7 +387,7 @@ export function advanceSimulation(a) {
           setVector(kb.attacker.position.levelPosition, Db.x, Db.y);
         }
       }
-      if ((!Ra || Ra.Pk || Ra.finished) && advanceCombatAction(Cb, kb)) {
+      if ((!Ra || Ra.reachedTarget || Ra.finished) && advanceCombatAction(Cb, kb)) {
         bb = true;
       }
     } else {
@@ -444,7 +444,7 @@ export function advanceSimulation(a) {
       Eb = a;
     ka.hasSpawned = true;
     if (1 === ka.Io) {
-      if (ka.projectileEffect && !ka.Pk) {
+      if (ka.projectileEffect && !ka.reachedTarget) {
         assignVector(directionScratchVector, ka.targetPosition);
         subtractVector(directionScratchVector, ka.currentPosition);
         var xb = vectorLength(directionScratchVector),
@@ -452,7 +452,7 @@ export function advanceSimulation(a) {
           Na = /** @type {any} */ (ka.boundCharacter === game.state.scrollCaster ? 11 * Eb : ka.isReturning ? 5 * Eb : 7 * Eb);
         if (xb <= Na) {
           assignVector(ka.currentPosition, ka.targetPosition);
-          ka.Pk = true;
+          ka.reachedTarget = true;
           ka.finished = true;
         } else {
           normalizeVector(directionScratchVector);
@@ -470,10 +470,10 @@ export function advanceSimulation(a) {
         advanceEffectFrame(ka, Eb);
       } else {
         if (2 === ka.Io) {
-          ka.yi += Eb * FRAME_DURATION_MS;
-          if (400 <= ka.yi) {
+          ka.elapsedMs += Eb * FRAME_DURATION_MS;
+          if (400 <= ka.elapsedMs) {
             ka.finished = true;
-            ka.Pk = true;
+            ka.reachedTarget = true;
           }
         }
       }

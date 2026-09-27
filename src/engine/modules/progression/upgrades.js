@@ -157,13 +157,13 @@ export function LevelUpUpgrade(a) {
 export function UnlockMonsterLevelUpgrade() {
   this.unlockLevel = -1;
   this.Ds = 1;
-  this.Ql = this.canPurchase = false;
+  this.displayableSoon = this.canPurchase = false;
   this.cachedTitle = "解锁怪物等级";
 }
 export function RetireMonsterLevelUpgrade() {
   this.retireLevel = -1;
   this.Cs = 1;
-  this.Ql = this.affordableSoon = this.canPurchase = false;
+  this.displayableSoon = this.affordableSoon = this.canPurchase = false;
   this.cachedTitle = "退休怪物等级";
 }
 export function CharacterSkillUpgrade(a) {
@@ -610,8 +610,8 @@ export function initializeProgressionUpgrades() {
   };
   UnlockMonsterLevelUpgrade.prototype = new Upgrade();
   UnlockMonsterLevelUpgrade.prototype.us = function () {
-    if (!this.Ql) {
-      this.Ql = true;
+    if (!this.displayableSoon) {
+      this.displayableSoon = true;
       this.unlockLevel = game.monsterCatalog.maxUnlockedLevel + 1;
       this.Ds = scaleByLevel(this.unlockLevel, monsterUnlockPriceCurve, 1);
       this.cachedTitle = "解锁怪物等级" + this.unlockLevel;
@@ -621,7 +621,7 @@ export function initializeProgressionUpgrades() {
     return this.unlockLevel;
   };
   UnlockMonsterLevelUpgrade.prototype.resetState = function () {
-    this.Ql = false;
+    this.displayableSoon = false;
     this.unlockLevel = game.monsterCatalog.maxUnlockedLevel + 1;
     this.Ds = scaleByLevel(this.unlockLevel, monsterUnlockPriceCurve, 1);
     this.cachedTitle = "解锁怪物等级" + this.unlockLevel;
@@ -674,8 +674,8 @@ export function initializeProgressionUpgrades() {
   };
   RetireMonsterLevelUpgrade.prototype = new Upgrade();
   RetireMonsterLevelUpgrade.prototype.us = function () {
-    if (!this.Ql) {
-      this.Ql = true;
+    if (!this.displayableSoon) {
+      this.displayableSoon = true;
       this.retireLevel = game.monsterCatalog.minUnlockedLevel;
       this.Cs = scaleByLevel(this.retireLevel, monsterUnlockPriceCurve, 1);
       this.cachedTitle = "退休怪物等级" + this.retireLevel;
@@ -685,7 +685,7 @@ export function initializeProgressionUpgrades() {
     return this.retireLevel;
   };
   RetireMonsterLevelUpgrade.prototype.resetState = function () {
-    this.Ql = false;
+    this.displayableSoon = false;
     this.retireLevel = game.monsterCatalog.minUnlockedLevel;
     this.Cs = scaleByLevel(this.retireLevel, monsterUnlockPriceCurve, 1);
     this.cachedTitle = "退休怪物等级" + this.retireLevel;
