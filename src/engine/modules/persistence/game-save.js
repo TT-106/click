@@ -91,7 +91,7 @@ export function restoreGameState(a, b) {
                   S = z.dungeonType,
                   da = z.levelCount;
                 if (O) {
-                  var W = game.dungeons.Do[O];
+                  var W = game.dungeons.dungeonRegistry[O];
                   if (W) {
                     W.cleared = la ? true : false;
                     W.clearedTurn = V ? V : 0;
@@ -137,7 +137,7 @@ export function restoreGameState(a, b) {
           if (va) {
             var yb = va.dungeonId,
               Fb = va.currentLevelIndex,
-              pa = game.dungeons.Do[yb];
+              pa = game.dungeons.dungeonRegistry[yb];
             if (pa) {
               pa.currentLevelIndex = Fb;
               game.currentDungeon = pa;

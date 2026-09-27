@@ -130,7 +130,7 @@ export function initializeRegionsAndCastles() {
   Ja.discoveredDungeonCount = 0;
   Ja.farmable.length = 0;
   Ja.pendingFarmKills = 0;
-  Ja.Do = {};
+  Ja.dungeonRegistry = {};
   var Db,
     gb = new SeededRandom(1),
     rb = new DungeonNameGenerator(gb),
@@ -176,7 +176,7 @@ export function initializeRegionsAndCastles() {
   var Ya, tc;
   for (Ya = 0; Ya < Ja.dungeonList.length; Ya++) {
     tc = Ja.dungeonList[Ya];
-    Ja.Do[tc.dungeonId] = tc;
+    Ja.dungeonRegistry[tc.dungeonId] = tc;
   }
   sortDungeons(Ja, Ja.dungeonList);
   resetFarms();

@@ -764,8 +764,8 @@ export function advanceSimulation(a) {
         if (!worldBlockContains(re, q.worldCenterX, q.worldCenterY)) {
           console.log("Failed to fix world block grid issue.");
           console.log("posX: " + q.worldCenterX + " posY: " + q.worldCenterY);
-          console.log("minX: " + re.yp + " maxX: " + re.Mw);
-          console.log("minY: " + re.zp + " maxY: " + re.Nw);
+          console.log("minX: " + re.pixelLeft + " maxX: " + re.pixelRight);
+          console.log("minY: " + re.pixelTop + " maxY: " + re.pixelBottom);
         }
       }
     }

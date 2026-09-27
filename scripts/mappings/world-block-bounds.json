@@ -1,0 +1,22 @@
+{
+  "_comment": "WorldBlock 的六个边界（wp/xp 为瓦片上界，yp/zp 为像素起点，Mw/Nw 为像素终点：`b >= yp && b < Mw && c >= zp && c < Nw` 即像素范围判定）→ tileEndColumn/tileEndRow/pixelLeft/pixelRight/pixelTop/pixelBottom；WorldTile.Kn→terrainTypeKey（四字符地形键 \"GGGG\"/\"PPPP\" 等，决定 terrainMoveCost 与装饰分支）；DungeonRegistry.Do→dungeonRegistry（按 dungeonId 索引，与 castleRegistry 对称）；SimplexNoise.Im→gradients（12 个梯度方向向量）。",
+  "files": [
+    "src/engine/modules/world/terrain.js",
+    "src/engine/modules/simulation/tick.js",
+    "src/engine/modules/world/dungeons.js",
+    "src/engine/modules/world/initialization.js",
+    "src/engine/modules/persistence/game-save.js",
+    "src/engine/modules/core/math.js"
+  ],
+  "map": {
+    "wp": "tileEndColumn",
+    "xp": "tileEndRow",
+    "yp": "pixelLeft",
+    "Mw": "pixelRight",
+    "zp": "pixelTop",
+    "Nw": "pixelBottom",
+    "Kn": "terrainTypeKey",
+    "Do": "dungeonRegistry",
+    "Im": "gradients"
+  }
+}

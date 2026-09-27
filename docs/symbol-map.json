@@ -8042,7 +8042,16 @@
     "uE": "depthSortedRenderer",
     "DD": "immediateRenderer",
     "ty": "hasPartyPlaced",
-    "dz": "fps"
+    "dz": "fps",
+    "wp": "tileEndColumn",
+    "xp": "tileEndRow",
+    "yp": "pixelLeft",
+    "Mw": "pixelRight",
+    "zp": "pixelTop",
+    "Nw": "pixelBottom",
+    "Kn": "terrainTypeKey",
+    "Do": "dungeonRegistry",
+    "Im": "gradients"
   },
   "gameFields": {
     "B": "tileSize",

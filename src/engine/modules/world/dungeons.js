@@ -61,7 +61,7 @@ export function randomDungeonType(a) {
 }
 export function DungeonRegistry() {
   this.dungeonList = [];
-  this.Do = {};
+  this.dungeonRegistry = {};
   this.discoveredDungeonCount = 0;
   this.attackable = [];
   this.cleared = [];
