@@ -181,22 +181,22 @@ export function generateItem(a, b, c, d, f) {
   a = a.OD;
   switch (f) {
     case 0:
-      a = a.$y;
+      a = a.commonNames;
       break;
     case 1:
-      a = a.LE;
+      a = a.uncommonNames;
       break;
     case 2:
-      a = a.lE;
+      a = a.rareNames;
       break;
     case 3:
-      a = a.BD;
+      a = a.historicNames;
       break;
     case 4:
-      a = a.UE;
+      a = a.ancientNames;
       break;
     default:
-      a = a.$y;
+      a = a.commonNames;
   }
   a = formatItemName(g.baseName, a);
   b = new Item(g, b, c.characterClass, a, d, f, s, n, l, p);

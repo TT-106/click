@@ -25,98 +25,98 @@ export function UncommonItemNames() {
 }
 export function AncientItemNames() {
   this.prefixAdjectives = "惊骇的;非典的;灿烂的;定制的;狡猾的;聪明的;勇敢的;大胆的;特色的;独家的;天才的;史诗的;手工的;无双的;孤独的;残忍的;奇迹的;独特的;绝伦的;正义的;聪慧的;特殊的;奇异的;邪恶的;勇敢的;徒劳的".split(";");
-  this.MA = "绝对 诧异 勇敢 独裁 非凡 先天 惊人 陶醉 失真 巨大 神秘 完美 卓越 精粹 超级 合计 奇迹 神话 独步 无敌 无尽 超常 空前 无比 无双 危难 超脱".split(" ");
-  this.NA = "看法 冒险 勇气 信任 冷静 毁灭 荒废 效能 凶猛 荣誉 魅力 伟大 紧张 权利 完美 坚持 毅力 品质 柔滑 风格 精神 胜利 暴力 奇迹".split(" ");
+  this.suffixAdjectives = "绝对 诧异 勇敢 独裁 非凡 先天 惊人 陶醉 失真 巨大 神秘 完美 卓越 精粹 超级 合计 奇迹 神话 独步 无敌 无尽 超常 空前 无比 无双 危难 超脱".split(" ");
+  this.suffixNouns = "看法 冒险 勇气 信任 冷静 毁灭 荒废 效能 凶猛 荣誉 魅力 伟大 紧张 权利 完美 坚持 毅力 品质 柔滑 风格 精神 胜利 暴力 奇迹".split(" ");
   this.titlePool = ["专家"];
 }
 export function ItemNameGenerator() {
-  this.$y = new CommonItemNames();
-  this.LE = new UncommonItemNames();
-  this.lE = new RareItemNames();
-  this.BD = new HistoricItemNames();
-  this.UE = new AncientItemNames();
+  this.commonNames = new CommonItemNames();
+  this.uncommonNames = new UncommonItemNames();
+  this.rareNames = new RareItemNames();
+  this.historicNames = new HistoricItemNames();
+  this.ancientNames = new AncientItemNames();
 }
 export function formatItemName(a, b) {
-  switch (b.Uo()) {
+  switch (b.pickNameFormat()) {
     case 0:
       return a;
     case ITEM_NAME_PREFIX:
       return b.randomPrefix() + "" + a;
     case ITEM_NAME_SUFFIX:
-      return b.Fm() + "之" + a;
+      return b.randomSuffix() + "之" + a;
     case ITEM_NAME_TITLE:
-      return b.Gm() + "之" + a;
+      return b.randomTitle() + "之" + a;
     case ITEM_NAME_PREFIX_SUFFIX:
-      return b.Fm() + "之" + b.randomPrefix() + a;
+      return b.randomSuffix() + "之" + b.randomPrefix() + a;
     case ITEM_NAME_PREFIX_TITLE:
-      return b.Gm() + "之" + b.randomPrefix() + a;
+      return b.randomTitle() + "之" + b.randomPrefix() + a;
     default:
       return a;
   }
 }
 export function initializeLootItemNames() {
-  CommonItemNames.prototype.Uo = function () {
+  CommonItemNames.prototype.pickNameFormat = function () {
     var a = Math.random();
     return 0.3 > a ? ITEM_NAME_PREFIX : 0.6 > a ? 0.5 > Math.random() ? ITEM_NAME_SUFFIX : ITEM_NAME_TITLE : 0.5 > Math.random() ? ITEM_NAME_PREFIX_SUFFIX : ITEM_NAME_PREFIX_TITLE;
   };
   CommonItemNames.prototype.randomPrefix = function () {
     return this.prefixAdjectives[randomInt(this.prefixAdjectives.length)];
   };
-  CommonItemNames.prototype.Fm = function () {
+  CommonItemNames.prototype.randomSuffix = function () {
     return this.suffixNouns[randomInt(this.suffixNouns.length)];
   };
-  CommonItemNames.prototype.Gm = function () {
+  CommonItemNames.prototype.randomTitle = function () {
     return this.titlePool[randomInt(this.titlePool.length)];
   };
-  HistoricItemNames.prototype.Uo = function () {
+  HistoricItemNames.prototype.pickNameFormat = function () {
     var a = Math.random();
     return 0.25 > a ? ITEM_NAME_PREFIX : 0.5 > a ? 0.5 > Math.random() ? ITEM_NAME_SUFFIX : ITEM_NAME_TITLE : 0.5 > Math.random() ? ITEM_NAME_PREFIX_SUFFIX : ITEM_NAME_PREFIX_TITLE;
   };
   HistoricItemNames.prototype.randomPrefix = function () {
     return this.prefixAdjectives[randomInt(this.prefixAdjectives.length)];
   };
-  HistoricItemNames.prototype.Fm = function () {
+  HistoricItemNames.prototype.randomSuffix = function () {
     return this.suffixNouns[randomInt(this.suffixNouns.length)];
   };
-  HistoricItemNames.prototype.Gm = function () {
+  HistoricItemNames.prototype.randomTitle = function () {
     return this.titlePool[randomInt(this.titlePool.length)];
   };
-  RareItemNames.prototype.Uo = function () {
+  RareItemNames.prototype.pickNameFormat = function () {
     var a = Math.random();
     return 0.25 > a ? ITEM_NAME_PREFIX : 0.5 > a ? 0.5 > Math.random() ? ITEM_NAME_SUFFIX : ITEM_NAME_TITLE : 0.5 > Math.random() ? ITEM_NAME_PREFIX_SUFFIX : ITEM_NAME_PREFIX_TITLE;
   };
   RareItemNames.prototype.randomPrefix = function () {
     return this.prefixAdjectives[randomInt(this.prefixAdjectives.length)];
   };
-  RareItemNames.prototype.Fm = function () {
+  RareItemNames.prototype.randomSuffix = function () {
     return this.suffixNouns[randomInt(this.suffixNouns.length)];
   };
-  RareItemNames.prototype.Gm = function () {
+  RareItemNames.prototype.randomTitle = function () {
     return this.titlePool[randomInt(this.titlePool.length)];
   };
-  UncommonItemNames.prototype.Uo = function () {
+  UncommonItemNames.prototype.pickNameFormat = function () {
     var a = Math.random();
     return 0.3 > a ? ITEM_NAME_PREFIX : 0.5 > a ? 0.5 > Math.random() ? ITEM_NAME_SUFFIX : ITEM_NAME_TITLE : 0.5 > Math.random() ? ITEM_NAME_PREFIX_SUFFIX : ITEM_NAME_PREFIX_TITLE;
   };
   UncommonItemNames.prototype.randomPrefix = function () {
     return this.prefixAdjectives[randomInt(this.prefixAdjectives.length)];
   };
-  UncommonItemNames.prototype.Fm = function () {
+  UncommonItemNames.prototype.randomSuffix = function () {
     return this.suffixNouns[randomInt(this.suffixNouns.length)];
   };
-  UncommonItemNames.prototype.Gm = function () {
+  UncommonItemNames.prototype.randomTitle = function () {
     return this.titlePool[randomInt(this.titlePool.length)];
   };
-  AncientItemNames.prototype.Uo = function () {
+  AncientItemNames.prototype.pickNameFormat = function () {
     return ITEM_NAME_PREFIX_SUFFIX;
   };
   AncientItemNames.prototype.randomPrefix = function () {
     return this.prefixAdjectives[randomInt(this.prefixAdjectives.length)];
   };
-  AncientItemNames.prototype.Fm = function () {
-    return this.MA[randomInt(this.MA.length)] + "" + this.NA[randomInt(this.NA.length)];
+  AncientItemNames.prototype.randomSuffix = function () {
+    return this.suffixAdjectives[randomInt(this.suffixAdjectives.length)] + "" + this.suffixNouns[randomInt(this.suffixNouns.length)];
   };
-  AncientItemNames.prototype.Gm = function () {
+  AncientItemNames.prototype.randomTitle = function () {
     return this.titlePool[randomInt(this.titlePool.length)];
   };
   ITEM_NAME_PREFIX = 1;

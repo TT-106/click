@@ -1,0 +1,12 @@
+[
+  { "old": "Uo", "new": "pickNameFormat", "files": ["src/engine/modules/loot/item-names.js"], "expect": "auto" },
+  { "old": "Fm", "new": "randomSuffix", "files": ["src/engine/modules/loot/item-names.js"], "expect": "auto" },
+  { "old": "Gm", "new": "randomTitle", "files": ["src/engine/modules/loot/item-names.js"], "expect": "auto" },
+  { "old": "MA", "new": "suffixAdjectives", "files": ["src/engine/modules/loot/item-names.js"], "expect": "auto" },
+  { "old": "NA", "new": "suffixNouns", "files": ["src/engine/modules/loot/item-names.js"], "expect": "auto" },
+  { "old": "$y", "new": "commonNames", "files": ["src/engine/modules/loot/item-names.js", "src/engine/modules/loot/items.js"], "expect": "auto" },
+  { "old": "LE", "new": "uncommonNames", "files": ["src/engine/modules/loot/item-names.js", "src/engine/modules/loot/items.js"], "expect": "auto" },
+  { "old": "lE", "new": "rareNames", "files": ["src/engine/modules/loot/item-names.js", "src/engine/modules/loot/items.js"], "expect": "auto" },
+  { "old": "BD", "new": "historicNames", "files": ["src/engine/modules/loot/item-names.js", "src/engine/modules/loot/items.js"], "expect": "auto" },
+  { "old": "UE", "new": "ancientNames", "files": ["src/engine/modules/loot/item-names.js", "src/engine/modules/loot/items.js"], "expect": "auto" }
+]
