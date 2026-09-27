@@ -5,6 +5,8 @@
 
 ## 当前轮次状态（2026-09-27，M12 长尾重命名 + 命名修正）
 
+- U88 农场坐标/世界生成器/生物群系贴纸表（2026-09-27，混淆清单 397 → 390，fields 段 668 → 675）：`Farm.kw/lw`→farmColumn/farmRow（DTO 键 farmCol/farmRow 佐证）、`WorldBlock/WorldMap.wt`→generator、`FarmRegistry.jw`→farmsById、`ShopRegistry.zx`→shopsById、`TerrainBiome.Dr`/`DecorationBiome.Fs`→tileSpriteNames。
+- U87 世界块边界与注册表（2026-09-27，混淆清单 406 → 397，fields 段 659 → 668）：WorldBlock 六边界 `wp/xp/yp/Mw/zp/Nw`→tileEndColumn/tileEndRow/pixelLeft/pixelRight/pixelTop/pixelBottom、`WorldTile.Kn`→terrainTypeKey、`DungeonRegistry.Do`→dungeonRegistry、`SimplexNoise.Im`→gradients。
 - U86 渲染器/效果房间/世界标志（2026-09-27，混淆清单 412 → 406，fields 段 653 → 659）：`VisualEffect.ew`→room（scene.js 按房间瓦片范围画高亮）、GameCanvasView.`gB`→renderer 与两个后端 `uE`/`DD`→depthSortedRenderer/immediateRenderer、`WorldMap.ty`→hasPartyPlaced、`game.state.dz`→fps。
 - U85 地块贴纸/金币贴纸/浮动文字（2026-09-27，混淆清单 419 → 412，fields 段 646 → 653）：`DungeonTile.bt`→cachedBackgroundSprite、`GoldDropRegistry` 三档金币贴纸 `Sz/xw/wD`→smallGoldSprite/mediumGoldSprite/largeGoldSprite、`FloatingText.xt/yt/SE`→screenX/screenY/color。
 - U84 渲染命令与渲染器状态（2026-09-27，混淆清单 430 → 419，fields 段 635 → 646）：RenderCommand 的 `vr/ur/pt/Zq/$q/am`→raiseOffset/sortKey/isSet/screenX/screenY/renderSize；DepthSortedRenderer 的 `FE/ko/Bn`→compareRenderSortKey/scratchVector/commandIndex；ImmediateRenderer.`uB`→command；VisualEffect.`Io`→effectType。
