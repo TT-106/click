@@ -1,0 +1,22 @@
+[
+  { "old": "zm", "new": "equipmentTable", "files": ["src/engine/modules/views/character.js"], "expect": "auto" },
+  { "old": "Pn", "new": "fourthColumnButtons", "files": ["src/engine/modules/views/character.js"], "expect": "auto" },
+  { "old": "Cr", "new": "equipCell", "files": ["src/engine/modules/views/character.js"], "expect": "auto" },
+  { "old": "Xq", "new": "equipAllEnabled", "files": ["src/engine/modules/views/character.js"], "expect": "auto" },
+  { "old": "gw", "new": "equipImprovementsButton", "files": ["src/engine/modules/views/character.js"], "expect": "auto" },
+  { "old": "tw", "new": "getAvailableSkillPoints", "files": ["src/engine/modules/views/character.js"], "expect": "auto" },
+  { "old": "ry", "new": "fourthSkillTree", "files": ["src/engine/modules/views/character.js"], "expect": "auto" },
+  { "old": "qy", "new": "thirdSkillTree", "files": ["src/engine/modules/views/character.js"], "expect": "auto" },
+  { "old": "Ax", "new": "skillTreeTableElement", "files": ["src/engine/modules/views/character.js"], "expect": "auto" },
+  { "old": "ux", "new": "setItem", "files": ["src/engine/modules/views/character.js"], "expect": "auto" },
+  { "old": "bB", "new": "summaryView", "files": ["src/engine/modules/views/character.js"], "expect": "auto" },
+  { "old": "iz", "new": "damageView", "files": ["src/engine/modules/views/character.js"], "expect": "auto" },
+  { "old": "Gy", "new": "armorView", "files": ["src/engine/modules/views/character.js"], "expect": "auto" },
+  { "old": "Hy", "new": "attackRatingView", "files": ["src/engine/modules/views/character.js"], "expect": "auto" },
+  { "old": "lz", "new": "defenceRatingView", "files": ["src/engine/modules/views/character.js"], "expect": "auto" },
+  { "old": "vA", "new": "maxHealthView", "files": ["src/engine/modules/views/character.js"], "expect": "auto" },
+  { "old": "yA", "new": "maxSpiritView", "files": ["src/engine/modules/views/character.js"], "expect": "auto" },
+  { "old": "QD", "new": "inventoryTableElementId", "files": ["src/engine/modules/views/character.js"], "expect": "auto" },
+  { "old": "mD", "new": "equipmentTableElementId", "files": ["src/engine/modules/views/character.js"], "expect": "auto" },
+  { "old": "nD", "new": "equipmentTableView", "files": ["src/engine/modules/views/character.js"], "expect": "auto" }
+]

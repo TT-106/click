@@ -7,13 +7,13 @@ import { clearElementById, createElement, getElement, hideElement, showElement }
 export function GameView() {
   this.elementId = "gameContainer";
   this.visible = true;
-  this.um = [0, 0, 0, 0, 0];
+  this.cachedSkillPoints = [0, 0, 0, 0, 0];
   this.tabStates = [];
   this.panels = [];
   this.tabBar = null;
 }
 export function PauseView() {
-  this.Vu = !game.paused;
+  this.cachedPaused = !game.paused;
   this.pauseButton = null;
   this.elementId = "pauseButtonContainer";
   this.visible = true;
@@ -32,11 +32,11 @@ export function TabState(a, b) {
 }
 export function TabButtonView(a) {
   this.tabState = a;
-  this.tt = this.tabListItem = null;
+  this.labelElement = this.tabListItem = null;
   this.enabled = !a.initiallyEnabled;
   this.selected = !a.selected;
   this.highlighted = !a.highlighted;
-  this.gv = null;
+  this.cachedLabel = null;
 }
 export function mountTabButton(a, b, c) {
   a.tabListItem = createElement("li", b, null, null);
@@ -44,9 +44,9 @@ export function mountTabButton(a, b, c) {
     hideElement(a.tabListItem);
   }
   a.tabListItem.className = a.selected ? "selectedTab" : "";
-  a.tt = createElement("a", a.tabListItem, null, null);
-  a.tt.innerHTML = a.tabState.label;
-  a.tt.onclick = function () {
+  a.labelElement = createElement("a", a.tabListItem, null, null);
+  a.labelElement.innerHTML = a.tabState.label;
+  a.labelElement.onclick = function () {
     var b = a.tabState,
       f;
     for (f = 0; f < c.tabs.length; f++) {
@@ -110,14 +110,14 @@ export function initializeViewsNavigation() {
   GameView.prototype.Js = function () {
     this.tabBar.Js();
     var a;
-    for (a = 0; a < this.um.length; a++) {
-      this.um[a] = 0;
+    for (a = 0; a < this.cachedSkillPoints.length; a++) {
+      this.cachedSkillPoints[a] = 0;
     }
   };
   GameView.prototype.reset = function () {
     var a;
-    for (a = 0; a < this.um.length; a++) {
-      this.um[a] = 0;
+    for (a = 0; a < this.cachedSkillPoints.length; a++) {
+      this.cachedSkillPoints[a] = 0;
     }
     resetChildViews(this);
   };
@@ -125,9 +125,9 @@ export function initializeViewsNavigation() {
     var a, b, c;
     for (a = 0; a < game.state.adventurers.length; a++) {
       b = game.state.adventurers[a];
-      c = (/** @type {any} */ (this)).tw(b);
-      if (this.um[a] !== c) {
-        this.um[a] = c;
+      c = (/** @type {any} */ (this)).getAvailableSkillPoints(b);
+      if (this.cachedSkillPoints[a] !== c) {
+        this.cachedSkillPoints[a] = c;
         b = b.classDefinition.shortName;
         if (0 < c) {
           this.tabStates[a].label = b + " " + c;
@@ -140,7 +140,7 @@ export function initializeViewsNavigation() {
     }
     updateChildViews(this);
   };
-  GameView.prototype.tw = function (a) {
+  GameView.prototype.getAvailableSkillPoints = function (a) {
     return a.hasUnspentSkills ? a.skillPoints + a.initialSpellSkillPoint : 0;
   };
   PauseView.prototype = new View();
@@ -148,8 +148,8 @@ export function initializeViewsNavigation() {
     if (!this.pauseButton) {
       bindPauseButton(this);
     }
-    if (this.Vu != game.paused) {
-      if (this.Vu = game.paused) {
+    if (this.cachedPaused != game.paused) {
+      if (this.cachedPaused = game.paused) {
         this.pauseButton.innerHTML = "恢复";
         this.pauseButton.className = "ownedUpgradeButton";
       } else {
@@ -159,7 +159,7 @@ export function initializeViewsNavigation() {
     }
   };
   TabButtonView.prototype.reset = function () {
-    this.gv = null;
+    this.cachedLabel = null;
   };
   TabButtonView.prototype.render = function () {
     var a = this.tabState.enabled;
@@ -172,9 +172,9 @@ export function initializeViewsNavigation() {
     }
     if (a) {
       a = this.tabState.label;
-      if (this.gv !== a) {
-        this.gv = a;
-        this.tt.innerHTML = a;
+      if (this.cachedLabel !== a) {
+        this.cachedLabel = a;
+        this.labelElement.innerHTML = a;
       }
       var a = this.tabState.selected,
         b = this.tabState.highlighted;

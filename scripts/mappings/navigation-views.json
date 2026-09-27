@@ -1,0 +1,7 @@
+[
+  { "old": "um", "new": "cachedSkillPoints", "files": ["src/engine/modules/views/navigation.js"], "expect": "auto" },
+  { "old": "tt", "new": "labelElement", "files": ["src/engine/modules/views/navigation.js"], "expect": "auto" },
+  { "old": "gv", "new": "cachedLabel", "files": ["src/engine/modules/views/navigation.js"], "expect": "auto" },
+  { "old": "Vu", "new": "cachedPaused", "files": ["src/engine/modules/views/navigation.js"], "expect": "auto" },
+  { "old": "tw", "new": "getAvailableSkillPoints", "files": ["src/engine/modules/views/navigation.js"], "expect": "auto" }
+]
