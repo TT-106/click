@@ -8380,7 +8380,20 @@
         "Ez": "dungeonIndex",
         "vy": "claimQueueIndex",
         "YA": "cachedObtained",
-        "VA": "cachedApplied"
+        "VA": "cachedApplied",
+        "tr": "cachedLastSavedAt",
+        "st": "tableElement",
+        "AA": "millisecondsPerHour",
+        "tA": "hasBoundOptionListeners",
+        "SD": "lastSaveDivElementId",
+        "Er": "formatHoursMinutesSeconds",
+        "Mr": "regionGrid",
+        "Wq": "blastStunSpellCache",
+        "Js": "resetTabs",
+        "Lt": "byId",
+        "ju": "byRegionKey",
+        "Ny": "castleSpriteName",
+        "GE": "compareCastles"
   },
   "gameFields": {
     "B": "tileSize",

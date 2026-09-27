@@ -71,173 +71,6 @@
     ]
   },
   {
-    "name": "Mr",
-    "reads": 4,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\runtime\\game.js:68",
-        "code": "this.Mr"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\castles.js:71",
-        "code": "a.Mr"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\castles.js:104",
-        "code": "b.Mr"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\runtime\\game.js",
-      "src\\engine\\modules\\views\\castles.js",
-      "src\\engine\\modules\\world\\initialization.js"
-    ]
-  },
-  {
-    "name": "Wq",
-    "reads": 3,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\runtime\\game.js:125",
-        "code": "this.Wq"
-      },
-      {
-        "loc": "src\\engine\\modules\\simulation\\tick.js:346",
-        "code": "Qa.Wq"
-      },
-      {
-        "loc": "src\\engine\\modules\\simulation\\tick.js:347",
-        "code": "Qa.Wq"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\runtime\\game.js",
-      "src\\engine\\modules\\simulation\\tick.js"
-    ]
-  },
-  {
-    "name": "Js",
-    "reads": 3,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\runtime\\game.js:519",
-        "code": "game.view.Js"
-      },
-      {
-        "loc": "src\\engine\\modules\\runtime\\game.js:525",
-        "code": "game.view.Js"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\navigation.js:110",
-        "code": "GameView.prototype.Js"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\runtime\\game.js",
-      "src\\engine\\modules\\views\\navigation.js"
-    ]
-  },
-  {
-    "name": "tr",
-    "reads": 2,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\information.js:14",
-        "code": "this.tr"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\information.js:129",
-        "code": "this.tr"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\information.js:134",
-        "code": "this.tr"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\information.js"
-    ]
-  },
-  {
-    "name": "st",
-    "reads": 3,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\information.js:109",
-        "code": "this.st"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\information.js:115",
-        "code": "a.st"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\information.js:163",
-        "code": "this.st"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\information.js"
-    ]
-  },
-  {
-    "name": "fr",
-    "reads": 3,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\information.js:160",
-        "code": "this.fr"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\information.js:164",
-        "code": "this.fr"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\information.js:487",
-        "code": "StatisticsView.prototype.fr"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\views\\information.js",
-      "src\\engine\\modules\\views\\results.js"
-    ]
-  },
-  {
-    "name": "Er",
-    "reads": 3,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\information.js:475",
-        "code": "this.Er"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\information.js:481",
-        "code": "this.Er"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\information.js:484",
-        "code": "StatisticsView.prototype.Er"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\views\\information.js",
-      "src\\engine\\modules\\views\\results.js"
-    ]
-  },
-  {
     "name": "ss",
     "reads": 3,
     "writes": 2,
@@ -406,30 +239,6 @@
     ]
   },
   {
-    "name": "Lt",
-    "reads": 3,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:623",
-        "code": "game.state.achievements.Lt"
-      },
-      {
-        "loc": "src\\engine\\modules\\runtime\\game.js:168",
-        "code": "this.Lt"
-      },
-      {
-        "loc": "src\\engine\\modules\\runtime\\game.js:175",
-        "code": "this.Lt"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\runtime\\game.js"
-    ]
-  },
-  {
     "name": "$w",
     "reads": 2,
     "writes": 2,
@@ -473,31 +282,6 @@
     "fileCount": 1,
     "files": [
       "src\\engine\\modules\\rendering\\sprites.js"
-    ]
-  },
-  {
-    "name": "ju",
-    "reads": 3,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\runtime\\game.js:76",
-        "code": "this.ju"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\initialization.js:118",
-        "code": "ha.ju"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\initialization.js:121",
-        "code": "ha.ju"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\runtime\\game.js",
-      "src\\engine\\modules\\world\\initialization.js",
-      "src\\engine\\modules\\world\\regions.js"
     ]
   },
   {
@@ -739,77 +523,6 @@
     ]
   },
   {
-    "name": "Ny",
-    "reads": 2,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\runtime\\game.js:75",
-        "code": "this.Ny"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\upgrade-details.js:569",
-        "code": "game.castles.Ny"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\terrain.js:274",
-        "code": "game.castles.Ny"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\runtime\\game.js",
-      "src\\engine\\modules\\views\\upgrade-details.js",
-      "src\\engine\\modules\\world\\terrain.js"
-    ]
-  },
-  {
-    "name": "AA",
-    "reads": 2,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\information.js:112",
-        "code": "this.AA"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\information.js:465",
-        "code": "this.AA"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\information.js:468",
-        "code": "this.AA"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\information.js"
-    ]
-  },
-  {
-    "name": "tA",
-    "reads": 1,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\information.js:124",
-        "code": "this.tA"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\information.js:620",
-        "code": "this.tA"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\information.js:642",
-        "code": "this.tA"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\information.js"
-    ]
-  },
-  {
     "name": "BA",
     "reads": 2,
     "writes": 1,
@@ -978,26 +691,6 @@
     ]
   },
   {
-    "name": "GE",
-    "reads": 1,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\runtime\\game.js:79",
-        "code": "this.GE"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\regions.js:222",
-        "code": "a.GE"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\runtime\\game.js",
-      "src\\engine\\modules\\world\\regions.js"
-    ]
-  },
-  {
     "name": "zD",
     "reads": 1,
     "writes": 1,
@@ -1055,25 +748,6 @@
     "files": [
       "src\\engine\\modules\\simulation\\characters.js",
       "src\\engine\\modules\\simulation\\tick.js"
-    ]
-  },
-  {
-    "name": "SD",
-    "reads": 1,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\information.js:13",
-        "code": "this.SD"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\information.js:136",
-        "code": "this.SD"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\views\\information.js"
     ]
   },
   {
