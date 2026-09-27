@@ -151,7 +151,7 @@ export function restoreUpgradeFlags(a, b) {
     f = a[c];
     d = a[c].Jr();
     d = b[d.id];
-    f.ft(d);
+    f.setPurchased(d);
   }
 }
 export function serializeStatComponent(a) {

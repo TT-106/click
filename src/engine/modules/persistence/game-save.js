@@ -600,7 +600,7 @@ export function restoreGameState(a, b) {
                       Bf = null;
                     }
                     if (Bf) {
-                      Bf.ft(ul);
+                      Bf.setPurchased(ul);
                     }
                   }
                 }

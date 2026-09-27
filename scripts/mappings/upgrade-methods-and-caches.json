@@ -1,0 +1,29 @@
+{
+  "_comment": "upgrades.js 的升级基类虚访问器与状态缓存。虚方法（基类默认 null、子类覆盖）：Wo→getDungeon（Purchase* 返回 dungeon）、Vo→getCharacter、Pz→getScrollItem（ScrollUpgrade 返回 getScroll()）、Kr→getMonsterLevel、Nz→getItems（返回 game.inventories.list）、Oz→getUpgradeItem（返回 this.item）；ft→setPurchased（设置 purchased，AdventurePointUpgrade 另触发 applyPointUpgrade）；Br→equipBestForCharacter（InventoryRegistry 与 EquipAllView 同义）。缓存字段：Up→cachedAffordableSoon、ZA→cachedCanPurchase、WA→cachedRequiredExperience、Lo→requiredExperience（LevelUpUpgrade 的升级所需经验）；定义引用：it→skillDefinition、oq→spellDefinition；价格缓存：Ds→cachedUnlockCost、Cs→cachedRetireCost。注意 getItem 已存在（ItemDrop/localStorage），故 Oz 用 getUpgradeItem 避让。",
+  "files": [
+    "src/engine/modules/progression/upgrades.js",
+    "src/engine/modules/views/upgrade-details.js",
+    "src/engine/modules/persistence/entities.js",
+    "src/engine/modules/persistence/game-save.js",
+    "src/engine/modules/loot/inventory.js",
+    "src/engine/modules/views/character.js"
+  ],
+  "map": {
+    "Wo": "getDungeon",
+    "Vo": "getCharacter",
+    "Pz": "getScrollItem",
+    "Kr": "getMonsterLevel",
+    "Nz": "getItems",
+    "Oz": "getUpgradeItem",
+    "ft": "setPurchased",
+    "Br": "equipBestForCharacter",
+    "Up": "cachedAffordableSoon",
+    "ZA": "cachedCanPurchase",
+    "WA": "cachedRequiredExperience",
+    "Lo": "requiredExperience",
+    "it": "skillDefinition",
+    "oq": "spellDefinition",
+    "Ds": "cachedUnlockCost",
+    "Cs": "cachedRetireCost"
+  }
+}

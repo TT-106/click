@@ -65,7 +65,7 @@ export function initializeLootInventory() {
   Inventory.prototype.removeItem = function (a) {
     removeInventoryItemAt(this, this.items.indexOf(a));
   };
-  InventoryRegistry.prototype.Br = function (a) {
+  InventoryRegistry.prototype.equipBestForCharacter = function (a) {
     var b = a.inventory.items;
     if (b && 0 !== b.length) {
       var c,

@@ -48,7 +48,7 @@ export function EquipAllView(a) {
   this.gw = getElement("equipImprovements" + a);
   var b = this;
   this.gw.onclick = function () {
-    (/** @type {EquipAllView & { Br: () => void }} */ (/** @type {unknown} */ (b))).Br();
+    (/** @type {EquipAllView & { equipBestForCharacter: () => void }} */ (/** @type {unknown} */ (b))).equipBestForCharacter();
     return false;
   };
 }
@@ -434,8 +434,8 @@ export function initializeViewsCharacter() {
       }
     }
   };
-  EquipAllView.prototype.Br = function () {
-    game.inventories.Br(game.state.adventurers[this.adventurerIndex]);
+  EquipAllView.prototype.equipBestForCharacter = function () {
+    game.inventories.equipBestForCharacter(game.state.adventurers[this.adventurerIndex]);
   };
   EquipAllView.prototype.Wt = function () {
     return game.inventories.Wt(game.state.adventurers[this.adventurerIndex]);

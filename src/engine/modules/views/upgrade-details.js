@@ -397,8 +397,8 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   EquipmentDetails.prototype.update = function () {
-    if (this.upgrade.Vo()) {
-      var a = this.upgrade.Vo(),
+    if (this.upgrade.getCharacter()) {
+      var a = this.upgrade.getCharacter(),
         b = a.stats.characterLevel;
       if (this.cachedCharacter !== a || this.cachedCharacterLevel != b) {
         this.cachedCharacter = a;
@@ -467,7 +467,7 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   GlobalUpgradeDetails.prototype.update = function () {
-    var a = this.upgrade.Oz();
+    var a = this.upgrade.getUpgradeItem();
     if (this.cachedItem !== a) {
       this.cachedItem = a;
       var b = a.getIconSprite(),
@@ -596,7 +596,7 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   EquipmentSetDetails.prototype.update = function () {
-    var a = this.upgrade.Nz(),
+    var a = this.upgrade.getItems(),
       b,
       c,
       d,
@@ -860,7 +860,7 @@ export function initializeViewsUpgradeDetails() {
   };
   DungeonPurchaseDetails.prototype.update = function () {
     var a = this.upgrade.getCost(),
-      b = this.upgrade.Wo();
+      b = this.upgrade.getDungeon();
     if (this.cachedCostValue !== a) {
       this.cachedCostValue = a;
       this.costElement.innerHTML = formatAmount(a);
@@ -928,7 +928,7 @@ export function initializeViewsUpgradeDetails() {
   };
   ScrollUpgradeDetails.prototype.update = function () {
     var a = this.upgrade.getCost(),
-      b = this.upgrade.Pz(),
+      b = this.upgrade.getScrollItem(),
       c = this.upgrade.getTitle(),
       d = this.upgrade.getDescription();
     if (this.cachedCostValue !== a) {
@@ -1140,7 +1140,7 @@ export function initializeViewsUpgradeDetails() {
   CharacterLevelDetails.prototype.update = function () {
     var a = this.upgrade.getCost(),
       b = this.upgrade.getTitle(),
-      c = this.upgrade.Kr();
+      c = this.upgrade.getMonsterLevel();
     if (this.cachedCostValue != a) {
       this.cachedCostValue = a;
       this.costLabel.innerHTML = formatAmount(a);
@@ -1164,7 +1164,7 @@ export function initializeViewsUpgradeDetails() {
       c = c[randomInt(c.length)].sprite;
       this.monsterPreviewImage.style.background = "url('spritesheet/monsters.png') -" + (c.sourceX + 10) + "px -" + (c.sourceY + 12) + "px";
     }
-    for (var d, f = 0, g = 0, h = 0, l = 0, c = getPartyMinLevel(), a = this.upgrade.Kr(), adventurerIndex = 0; adventurerIndex < game.state.adventurers.length; adventurerIndex++) {
+    for (var d, f = 0, g = 0, h = 0, l = 0, c = getPartyMinLevel(), a = this.upgrade.getMonsterLevel(), adventurerIndex = 0; adventurerIndex < game.state.adventurers.length; adventurerIndex++) {
       d = game.state.adventurers[adventurerIndex].stats;
       f += statValue(d.damage);
       g += statValue(d.armor);
