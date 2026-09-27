@@ -3,7 +3,7 @@
 > 引用规范：形如 `combat/actions.js:84` 的路径相对 `src/engine/modules/`；若某处只写了裸文件名（如 `character.js:677`），以所在小节的模块归属为准——`characters/character.js` 与 `views/character.js` 同名，未逐一消歧。
 
 > 事实来源：`src/engine/modules/**` 当前实现。每条公式给出 `file:line` 与原文 JS 片段。
-> 与 `archive/original/c2.js`（46,980 行单文件）的等价性由 **60 场景差分矩阵**（`npm run test:scenarios`）保证，因此本文描述的是**权威行为**，不是设计意图。
+> 与 `archive/original/c2.js`（46,980 行单文件）的等价性由 **62 场景差分矩阵**（`npm run test:scenarios`）保证，因此本文描述的是**权威行为**，不是设计意图。
 > **片段同步状态（2026-09-27）**：内嵌 JS 片段与散文里的标识符已按 `docs/symbol-map.json` 的 1,047 条字段映射**批量同步到当前语义名**（工具 `scripts/fix-doc-identifiers.mjs`），逐字摘录型片段的 `file:line` 也由 `scripts/check-doc-snippets.mjs` 重定位并对齐（61/76 条已同步）。**仍有 15 条是"节选/伪码"型片段**（含 `...` 或跨多处拼接），其行号与片段不逐字对应——这是已知的文档精度缺口，判读时以片段上方的 `file:line` 与当前源码为准。
 > 凡看起来像 bug 的地方一律按原样记录并标 `[疑似遗留怪癖]`；本文不提出修正。
 > 路径缩写：`actions.js` = `src/engine/modules/combat/actions.js`，`character.js` = `src/engine/modules/characters/character.js`，其余同理。
@@ -1490,7 +1490,7 @@ export function populateEncounter(a) {
 | 19 | `[迁移缺陷？]` `combat/scrolls.js:43` vs `:262-330` | `Scroll` 构造器读 `a.spellDefinition`，而 `scrollDefinitions` 数据表的键仍是 `spellDefinition`（`scrolls.js:266,274,286,298,310,322`）→ `a.spellDefinition` 恒 `undefined` → **`scrollSpell` 对所有 6 种卷轴恒为 `null`** → `castScroll` 的 `if (a.mB)`（`:152-157`）永远走 `else`，即卷轴**从不施法**，一律退化为卷轴施法者的远程攻击 | 原版为 `this.mB = a.xa ? new li(a.xa) : null`（`c2.js:12892`），**读的是存在的 `spellDefinition`**；6 条卷轴里 5 条有法术定义。**极可能是重命名漏改数据字面量**，与 `docs/reverse-engineering/facts.md` 第 20 条记录的同类事故同型 |
 | 20 | `[迁移缺陷？]` 承接 #19 | 该支路进一步把 `actionType = MELEE_ACTION_TYPE`（远程）交给卷轴施法者，而它没有投射武器槽（`slotStatBonusList` 只有 `"230".."235"`，`classes.js:617-635`）→ `Ey === null` → **必抛本表 #1 的 TypeError**。原版只有 `arrowScroll`（`xa: null`）会掉进这条 | 未由差分覆盖：`docs/reverse-engineering/unresolved.md` U7 明记 `castScroll()` 至今未被驱动（`scrolls-stocked` 场景只比库存） |
 
-#19/#20 的定论方式：给 harness 加一条驱动 `castScroll()` 的场景（要求房内已有可打目标，`getOpponents` 非空），两端各自断言 `statistics.spellsCast` 是否增长、以及是否抛出 `reading 'sw'`。当前矩阵两端都不会抛（因为两端都不会走到），所以这条**无法由现有 34 场景证伪**。
+#19/#20 的定论方式：给 harness 加一条驱动 `castScroll()` 的场景（要求房内已有可打目标，`getOpponents` 非空），两端各自断言 `statistics.spellsCast` 是否增长、以及是否抛出 `reading 'sw'`。当前矩阵两端都不会抛（因为两端都不会走到），所以这条**无法由现有 62 场景证伪**。
 
 ---
 
@@ -1505,4 +1505,4 @@ export function populateEncounter(a) {
 5. 若 `chainCount > 0` 且掷出 ≥1，`findChainTarget` 可能 `randomInt(d.length)`（≤6 次）
 6. 之后每帧 `applyActionDamage` 的 `randomInt(remainingDamage - 1)` —— 每次 `Math.random()`，直到 `remainingDamage` 归 0
 
-`docs/rng.md` 已确认 `randomInt` 走全局 `Math.random`、与 `SeededRandom` 两条流互不相干；任何一步增删都会让 34 场景矩阵立刻分叉。
+`docs/rng.md` 已确认 `randomInt` 走全局 `Math.random`、与 `SeededRandom` 两条流互不相干；任何一步增删都会让 62 场景矩阵立刻分叉。

@@ -45,11 +45,17 @@ for (const doc of docs) {
         if (line !== before) lineChanged++;
       }
     } else {
-      // 散文：只改**反引号包裹的标识符**（显式引用，反引号天然定界，最安全）
+      // 散文：只改**反引号包裹的**引用（反引号天然定界，最安全）。两种形态：
+      //   形态 1：`X`          裸标识符
+      //   形态 2：`a.X` / `X.Y` 反引号内的成员访问链（U130 补：此前只认形态 1，
+      //           于是 `room.Yp` 这类留在原处、而同行裸露的 `Yp` 被改成新名 —— 反而制造了
+      //           "一行里新旧名并存"的新矛盾）
       for (const [oldName, newName] of pairs) {
-        const re = new RegExp('`' + escapeRe(oldName) + '`', 'g');
+        const bareRe = new RegExp('`' + escapeRe(oldName) + '`', 'g');
+        const memberRe = new RegExp('`([^`]*)\\.' + escapeRe(oldName) + '\\b([^`]*)`', 'g');
         const before = line;
-        line = line.replace(re, '`' + newName + '`');
+        line = line.replace(bareRe, '`' + newName + '`')
+          .replace(memberRe, (_m, pre, post) => '`' + pre + '.' + newName + post + '`');
         if (line !== before) lineChanged++;
       }
     }
@@ -57,7 +63,8 @@ for (const doc of docs) {
       // 自检：新名与旧名同时出现在同一行 → 可能是巧合，回退并报告
       const suspicious = pairs.some(([oldName, newName]) =>
         (inFence ? (line.includes('.' + oldName) && line.includes('.' + newName))
-                 : (line.includes('`' + oldName + '`') && line.includes('`' + newName + '`'))));
+                 : (line.includes('`' + oldName + '`') && line.includes('`' + newName + '`'))
+                   || (line.includes('.' + oldName) && line.includes('.' + newName))));
       if (suspicious) {
         totalSkipped++;
         console.log(`  ~ 跳过（新旧名同行，疑似巧合）  ${doc}:${i + 1}`);

@@ -152,7 +152,7 @@ Base64 字符串
 | 原版 fixture | 真实原版存档（2026-09-25 采集，含进行中冒险），解码后 30 顶层键 / 4,477 全键全语义命名 | `tests/fixtures/original.c2save`；facts.md #6 |
 | codec 单测 | 往返恒等 + **能解原版 fixture 且键齐全**（saveKey/gameTimestamp/... ） | `tests/unit/save-codec.test.mjs:7-23`；`npm test`（package.json:14） |
 | parity 差分 | 同一 fixture 驱动原版（archive/original/c2.js，`?original` harness）与重构引擎，固定 LCG + 固定 `Date.now`，推进 **0/1/99/900 回合**后全量快照 `deepEqual` | `scripts/test-parity.mjs:1-31`；`npm run test:parity` |
-| 场景矩阵 | **9 个变异场景**两端对拍：`long-run-9000`、`offline-1h`、`offline-8h`、`offline-disabled`、`potions-active`、`potions-inactive-auto`、`scrolls-stocked`、`gold-windfall`、`late-horizon`（+100 万回合），每场景多步推进并校验场景确实生效 | `scripts/test-scenarios.mjs:14-73`；变异工具 `tests/scenarios/save-mutations.mjs` |
+| 场景矩阵 | **变异场景**两端对拍（下表列出的是最初的 9 个；当前矩阵已扩展到 62 个，见 `COMPATIBILITY_REPORT.md` §2）：`long-run-9000`、`offline-1h`、`offline-8h`、`offline-disabled`、`potions-active`、`potions-inactive-auto`、`scrolls-stocked`、`gold-windfall`、`late-horizon`（+100 万回合），每场景多步推进并校验场景确实生效 | `scripts/test-scenarios.mjs:14-73`；变异工具 `tests/scenarios/save-mutations.mjs` |
 | 服务层校验 | 导入/启动的 schema + 安全校验（见 §1.2），worker 隔离 + 超时 | `src/services/save-validation.js`、`save-worker.js`、saves.js:8 |
 | E2E | 含导出导入/非法存档/刷新恢复等浏览器级冒烟 | `scripts/test-browser.mjs`（WORKSTATE §3：2026-09-26 全过） |
 

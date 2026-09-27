@@ -1,9 +1,25 @@
 # WORKSTATE — Clickpocalypse II 语义恢复与现代化工程
 
-> 本文件是长程自治任务的**唯一续跑入口**。上下文压缩或中断后，先读本文件 + `git log --oneline`，再继续。
-> 最后更新：2026-09-27（U66-U129 共 64 批落地后，**混淆属性清单归零 0**；fields 段 267 → 1047；**60 场景矩阵全绿**；**10 门禁逐条回显全绿**（lint/build/typecheck/check/parity/scenarios/e2e/soak/perf/perf:frames）；P1 回归完成；P2 文档↔代码一致性机械校验（全量文档 1,089 条引用 0 越界、61/76 片段重同步）与**验收矩阵自我纠偏（44 PASS / 7 PARTIAL / 0 未覆盖）**；P3 清除 38 个隐形文件名垃圾文件并复跑审计；M10 类型债务已建台账；U129 把法术直接可观测量从 4/16 提到 15/16 并抓出 3 处空断言）
+> 下一阶段架构现代化执行提示词：`docs/NEXT-ARCHITECTURE-PROMPT.md`。本文件记录历史工作状态，开始新切片前仍须重新取证。
 
-## 当前轮次状态（2026-09-27，M12 长尾重命名 + 命名修正 —— 已收官）
+> 本文件是长程自治任务的**唯一续跑入口**。上下文压缩或中断后，先读本文件 + `git log --oneline`，再继续。
+> 最后更新：2026-09-27（U66-U130。U130 = 架构现代化首个纵向切片：成就进度判定已收进以显式数据为输入的接口；**62 场景矩阵全绿**；**10 门禁逐条回显全绿**；验收矩阵 **45 PASS / 6 PARTIAL / 0 未覆盖**（成就行由 PARTIAL 升为 PASS）。U66-U129 共 64 批落地后，**混淆属性清单归零 0**；fields 段 267 → 1047；**60 场景矩阵全绿**；**10 门禁逐条回显全绿**（lint/build/typecheck/check/parity/scenarios/e2e/soak/perf/perf:frames）；P1 回归完成；P2 文档↔代码一致性机械校验（全量文档 1,089 条引用 0 越界、61/76 片段重同步）与**验收矩阵自我纠偏（44 PASS / 7 PARTIAL / 0 未覆盖）**；P3 清除 38 个隐形文件名垃圾文件并复跑审计；M10 类型债务已建台账；U129 把法术直接可观测量从 4/16 提到 15/16 并抓出 3 处空断言）
+
+## 当前轮次状态（2026-09-27，U130 架构现代化首个纵向切片 —— 已收官）
+
+- **U130 架构债基线 + 成就进度纵向切片（2026-09-27，执行 `docs/NEXT-ARCHITECTURE-PROMPT.md` §3/§4）**。
+  ① **先建立基线**：清理 6 个 0 字节未跟踪垃圾文件（隔离到 `output/quarantine-untracked-2026-09-27/`，可原样移回；其中 1 个文件名含 U+F02A 是 `npm run lint` 报红的唯一原因）；随后逐项跑 **10 门禁全绿**（`output/base-*.log`）。
+  ② **只读架构债审计**：新增 `scripts/audit-architecture.mjs`（Babel 解析 93 个文件 → 依赖图/SCC/初始化期依赖/game 热点），结果落 `artifacts/architecture-audit.json`。**关键事实**：49 个文件 import `game`（48 个绑定）；**唯一 SCC 含 55 个模块**（不是若干小环，因此"目录拆分 ≠ 依赖方向单一"）；74 个 `initialize*()` 里 **41 条初始化期真正执行的跨模块依赖**、且声明顺序是它们的合法拓扑序（⇒ 顺序是承重契约）；产品壳对引擎只有 2 条直接 import（**未绕过 adapter**，但 `adapter.js:63-68` 的 `startParty` 直接改写遗留视图内部字段，属对象层面旁路）；`save-dto.js` 的 9 个 typedef **在 DTO 文件外 0 引用**（纯文档资产）。事实与推断分开写入 **`docs/architecture-debt.md`**。
+  ③ **首个切片**：`progression/achievements.js` 的 `getAchievementProgress` / `hasVictoryAchievement` 改为以 `AchievementCheckData`（`lifetimeStatistics` / `victoryStatistics` / `partyMaxLevel`）为输入；新增 `getAchievementCheckData()` 作为**本文件唯一读 game 的位置**；`partyMaxLevel` 用惰性 getter（提前求值会改变 `party.cachedMaxLevel` 的写入时序 = 行为变更）。**没加 `*From` 包装层**（§2 明令禁止只转发的空壳），用可选参数保留原调用路径。
+  ④ **测试**：新增 `scripts/check-achievement-requirements.mjs`（**已入 lint 不变量 8**；328 条定义 × 28 类 requirementType = **806 条**表驱动断言，用 `achievementId` 命名约定独立推导"该读哪个字段"，另断言 `isVictoryAchievement ⇔ type∈23..27` 与"未知类型 → `undefined`/`false`"两个原版怪癖）；新增 `tests/unit/achievement-progress.test.mjs`（**不启动引擎**，含 `partyMaxLevel` 惰性与兼容入口耦合）；新增 `achievement-threshold-below` / `achievement-threshold-met` 两条差分场景（矩阵 **60 → 62**，把 `farmsPurchased` 摆在 requiredCount=5 两侧、并用 `doorsOpened` 恰好达标作正对照）。**四条新断言全部做过反向验证**（改 `case 1` / 提前求值 / `case 9` 常量化 / 改 `requiredCount`），逐一确认会红后恢复。
+  ⑤ **真实性能回归与修复**：第一版让每条成就各自现取数据，用**交替 A/B**（`git stash` 切换、同机同轮）实测每回合 +0.02ms（HEAD 0.058–0.067 → 单参版 0.079–0.096）；把 `getAchievementCheckData()` 提到 `tick.js` 循环外后回到 0.074–0.077，与 HEAD 无显著差异。**教训确认**：单批对比会给出 1.31x 这种假信号，必须交替 A/B。
+  ⑥ **验收矩阵成就行 PARTIAL → PASS**（44/7 → **45/6**），`docs/REMAINING-WORK.md` 的 P-4 标记闭合。
+  ⑦ **把"文档数字漂移"变成门禁**：新增 `scripts/check-doc-counts.mjs`（**入 lint 不变量 9**）——差分场景数 / 单测条数 / 语法检查文件数 / lint 不变量条数四项与源码实况比对；一次性修正了当前态文档里 20 处过期数字（60→62 场景、128→133 文件、10→15 单测、6→9 不变量 等）。`scripts/fix-doc-identifiers.mjs` 增强（散文里反引号包裹的 `obj.X` 形态也同步），`docs/architecture.md` 25 处旧标识符改用源码里已核对的名字，**残留 31 处已在文首如实写明**（统计记录器方法别名与装备定义表键未取证，**不臆造替换**）。
+  **门禁（U130 后，退出码逐条回显，日志 `output/g-*.log`）**：`lint=0 build=0 typecheck=0 check=0 parity=0 scenarios=0（62/62）e2e=0 soak=0 perf=0 perf:frames=0`。
+
+---
+
+## 历史轮次（2026-09-27，M12 长尾重命名 + 命名修正 —— 已收官）
 
 - **M12 收官：`analyze-fields.mjs` 报「混淆属性总数: 0」。** 残余的 1,171 → 0 全量清零（U66-U120），下一步主线转为 P1 回归收尾 / P2 报告口径对齐 / P3 Exhaustion Pass（见 §9）。
 
@@ -395,11 +411,11 @@
 | M10 Type Hardening | 🟡 **PARTIALLY VERIFIED**（不再写"完成"）：`tsc` 0 错误、77/77 引擎模块无 `@ts-nocheck`、0 处 `@ts-ignore`/`eslint-disable`；**但仍有 42 处 `@type {any}` 与 142 行 `unknown` 收窄**，根因是"原型后挂载 + AST 恢复期变量复用"（结构性，非未写完）。台账见 `docs/m10-type-debt.md`。本轮已完成 `tsconfig` 补 `lib:["ES2022","DOM"]` 与 `views/results.js` 的 9 处 cast → 1 个 typedef。 |
 | M11 Performance | ✅ 基线完成：两次样本的比值在 1.0–1.4x 波动且**相对快慢会翻转**（2026-09-27：回合推进 1.06x、序列化 1.13x、导入 0.42x、离线 1.00x），不能当稳定结论；确认无数量级退化，模拟占回合预算 0.03%。优化未开始（也无必要）。 |
 | M12 Legacy Reduction | ✅ **完成**：混淆字段清单 **806 → 0**（U66–U122 共 57 批），工作清单 `artifacts/obfuscated-fields.json` 现为空数组；`npm run lint` 已把它固化为不变量（防回流）。 |
-| M13 Final Regression | ✅ 复跑通过：**10 门禁全绿**（lint/build/typecheck/check/parity/**60 场景**/e2e/soak/perf/perf:frames，退出码逐条回显，日志 `output/v3-*.log`）。U4 三项缺口已关闭。**但**验收矩阵仍为 **44 PASS / 7 PARTIAL / 0 未覆盖**——7 条 PARTIAL 的缺口逐条写在附录 A，**不得读作 PASS**。 |
+| M13 Final Regression | ✅ 复跑通过（U130 重跑，日志 `output/g-*.log`）：**10 门禁全绿**（lint/build/typecheck/check/parity/**62 场景**/e2e/soak/perf/perf:frames，退出码逐条回显）。**但**验收矩阵为 **45 PASS / 6 PARTIAL / 0 未覆盖**（成就行已闭合，其余 6 条缺口逐条写在附录 A），**不得读作 PASS**。 |
 
-> **未闭合总账**（避免"文档说完成、实际没完成"）：① 附录 A 的 7 条 PARTIAL；② 15 条"节选/伪码"型公式片段行号不逐字对应；③ M10 的 42 处 `any` / 142 行 `unknown`；④ P4 类（真机帧时间与低端设备、多版本存档迁移样本）需要真机/更多历史存档，本环境无法闭合；⑤ 需产品决策的冲突（是否修原版缺陷、是否 UI redesign）按 §9-P4 **不属于本任务，须先问用户**。
+> **未闭合总账**（避免"文档说完成、实际没完成"）：① 附录 A 的 6 条 PARTIAL（成就行已于 U130 闭合）；② 15 条"节选/伪码"型公式片段行号不逐字对应；③ M10 的 42 处 `any` / 142 行 `unknown`；④ P4 类（真机帧时间与低端设备、多版本存档迁移样本）需要真机/更多历史存档，本环境无法闭合；⑤ 需产品决策的冲突（是否修原版缺陷、是否 UI redesign）按 §9-P4 **不属于本任务，须先问用户**。
 
-## 3. 可运行状态与命令（全部实测通过 @ 2026-09-27 的 HEAD；日志 output/v3-*.log）
+## 3. 可运行状态与命令（全部实测通过 @ 2026-09-27 U130 后的工作树；日志 `output/g-*.log`）
 
 ```bash
 npm run dev              # http://127.0.0.1:4173（静态服务，测试前置）

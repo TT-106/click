@@ -9,7 +9,7 @@
 |---|---|---|
 | 混淆属性名 | **41 → 0** | `npm run analyze` 报 0；`npm run lint` 把它固化为不变量 |
 | `symbol-map` 的 fields 段 | 1,010 → **1,047** | `docs/symbol-map.json` |
-| 验收矩阵 | 51 PASS / 0 PARTIAL → **44 PASS / 7 PARTIAL / 0 未覆盖** | 附录 A（把"证据格里已写明缺口却标 PASS"的 7 行按矩阵自身口径改判） |
+| 验收矩阵 | 51 PASS / 0 PARTIAL → **45 PASS / 6 PARTIAL / 0 未覆盖** | 附录 A（把"证据格里已写明缺口却标 PASS"的 7 行按矩阵自身口径改判；随后成就行因逐项进度断言落地而由 PARTIAL 升为 PASS） |
 | 隐形文件名垃圾文件 | 38 个（已被 git 跟踪） → **0** | `scripts/find-invisible-name-files.mjs`；`check` 语法文件数回落 |
 | 文档 `file:line` 引用 | 越界 4 → **0**（934 条引用解析不到 0 条） | `scripts/verify-doc-refs.mjs` |
 | 文档内嵌代码片段 | 漂移 64/76 → **15/76**（残留为节选/伪码型，已在文首声明） | `scripts/check-doc-snippets.mjs` |
@@ -59,19 +59,19 @@ archive/original/c2.js  ──AST 机械恢复──▶  src/engine/（77 模块
 
 | 层 | 内容 |
 |---|---|
-| L1 单元（10 项） | RNG 位级差分（Babel 从 c2.js 提取原版 `ga` 对照，6 种子×100k 值 + 黄金值）、LZ-string codec 契约（含与原版 fixture 互通）、格式化表驱动、精灵查找双端一致（原版 `Pb` 对照重构 `getSprite`） |
-| L3/L4 差分 | `test:parity`：同存档 + 固定 RNG/时钟，0/1/99/900 回合完整存档逐字段相等；`test:scenarios`：**60 场景**（长跑、离线四态 + 12h 截断 + 后台关闭态、药水激活、全 6 类卷轴战斗施放、16 类法术分支、城堡征服→胜利、金币涌入、后期、veteran、prestige、full reset、升级购买与怪物等级解锁、冒险点消费、成就领取、自动装备、两条农场购买入口、财宝箱/武器架/书架搜索、四类地面掉落拾取、农场收获与长期再侵袭生命周期跨越、药水真实使用、渲染帧 + 自动落盘） |
+| L1 单元（15 项） | RNG 位级差分（Babel 从 c2.js 提取原版 `ga` 对照，6 种子×100k 值 + 黄金值）、LZ-string codec 契约（含与原版 fixture 互通）、格式化表驱动、精灵查找双端一致（原版 `Pb` 对照重构 `getSprite`）、成就进度判定表驱动（28 种 `requirementType` 的字段映射 + 未知类型怪癖 + `partyMaxLevel` 惰性，**不启动引擎**） |
+| L3/L4 差分 | `test:parity`：同存档 + 固定 RNG/时钟，0/1/99/900 回合完整存档逐字段相等；`test:scenarios`：**62 场景**（长跑、离线四态 + 12h 截断 + 后台关闭态、药水激活、全 6 类卷轴战斗施放、16 类法术分支、城堡征服→胜利、金币涌入、后期、veteran、prestige、full reset、升级购买与怪物等级解锁、冒险点消费、成就领取与**成就进度临界值两侧**、自动装备、两条农场购买入口、财宝箱/武器架/书架搜索、四类地面掉落拾取、农场收获与长期再侵袭生命周期跨越、药水真实使用、渲染帧 + 自动落盘） |
 | L5 集成 | 场景内的"两端各自增长断言 + 逐检查点全状态相等"即多模块组合验证（战斗→掉落→拾取→统计→存档） |
 | L6 浏览器 E2E | 建队/自动战斗/暂停/五类面板/**c2c.user.js 外部 DOM 契约**/设置/导出导入/非法存档/刷新恢复/键盘/三种视口 |
 | L7 长跑 soak | `test:soak`：115,200 与 345,600 等价回合（8h/24h），两端完整存档相等 + CDP 主动 GC 后堆增量样本 |
 | 渲染等价 | `rendered-scene` / `autosave-payload`：真实帧循环 1,300 帧后比对主画布逐像素 FNV-1a 指纹（两端相同）与落盘存档解码内容 |
-| 工程门 | `npm run check`（当前 128 文件语法 + 单测）、`npm run typecheck`（tsc 覆盖 76/77 引擎模块，经 import 图传递；`src/engine/modules` 下 `@ts-nocheck` 已清零）、`npm run build`（增量拷贝到 dist）、`npm run lint`（6 条不变量守卫，见 §9）；每切片一 commit。**2026-09-27 最终回归扫描（10 门全绿，退出码逐条回显）**：`lint=0 build=0 typecheck=0 check=0 parity=0 scenarios=0 e2e=0 soak=0 perf=0 perf:frames=0` |
+| 工程门 | `npm run check`（当前 133 文件语法 + 单测）、`npm run typecheck`（tsc 覆盖 76/77 引擎模块，经 import 图传递；`src/engine/modules` 下 `@ts-nocheck` 已清零）、`npm run build`（增量拷贝到 dist）、`npm run lint`（9 条不变量守卫，见 §9）；每切片一 commit。**2026-09-27 最终回归扫描（10 门全绿，退出码逐条回显）**：`lint=0 build=0 typecheck=0 check=0 parity=0 scenarios=0 e2e=0 soak=0 perf=0 perf:frames=0` |
 
 方法论实证：差分矩阵三次抓到人工没看到的真实缺陷——guardians/minions 数据键漏改导致城堡守卫生成崩溃；金堆房对 DungeonTile 误调角色坐标接口；以及本轮由新场景暴露的**自动保存间隔 3E4 vs 原版 3E5**（10 倍频率，改动前无任何测试能看到）。
 
 ## 6. 兼容性（详见 COMPATIBILITY_REPORT.md）
 
-存档兼容、行为差分、RNG 确定性、离线语义、自动保存落盘内容 = **VERIFIED**；外部 DOM 契约已实测（选择器逐项断言 + 反向验证）；附录 A 的 **7 行 PARTIAL** 与 `docs/reverse-engineering/unresolved.md`（U4 覆盖口径、U7 UI 独占路径）逐项写明了缺口。U5（长尾字段重命名）已于 2026-09-27 关闭：`analyze-fields` 报 0。
+存档兼容、行为差分、RNG 确定性、离线语义、自动保存落盘内容 = **VERIFIED**；外部 DOM 契约已实测（选择器逐项断言 + 反向验证）；附录 A 的 **6 行 PARTIAL** 与 `docs/reverse-engineering/unresolved.md`（U4 覆盖口径、U7 UI 独占路径）逐项写明了缺口。U5（长尾字段重命名）已于 2026-09-27 关闭：`analyze-fields` 报 0。
 
 ## 7. 性能（详见 PERFORMANCE_REPORT.md）
 
@@ -117,7 +117,7 @@ npm run lint                        # 一条命令守住不变量（见下）
 
 Clickpocalypse II 的核心实现已从高混淆遗留代码中恢复出真实语义：关键玩法行为有 60 个差分场景 + 位级 RNG 单测 + 浏览器 E2E + 8h/24h 等价回合 soak 的自动化证据保护，存档/RNG/时间/离线/自动保存经兼容验证，业务逻辑已迁入带清晰边界的现代模块（77 个），旧文件不再是唯一真相来源。
 
-这些结论由运行与差分证明，不是主观判断；同样明确的是**尚未证明的部分**：附录 A 实际有 51 行（逐行统计），其中 **44 行 PASS、7 行 PARTIAL、0 行未覆盖**。PARTIAL 的 7 行都在证据格里以"**缺口（写明）**"逐条写清缺什么——法术的逐类状态级断言、成就 requirementType 1-27 的逐项进度、物品的远古稀有度档位、角色技能的逐项战斗效果、多版本存档迁移样本、渲染指纹的视口/浏览器覆盖、真机帧时间与低端设备表现。`docs/reverse-engineering/unresolved.md` 的 U4（覆盖口径）/U7（UI 独占路径）是继续推进的入口；U5（长尾字段）已于 2026-09-27 关闭。
+这些结论由运行与差分证明，不是主观判断；同样明确的是**尚未证明的部分**：附录 A 实际有 51 行（逐行统计），其中 **45 行 PASS、6 行 PARTIAL、0 行未覆盖**。PARTIAL 的 6 行都在证据格里以"**缺口（写明）**"逐条写清缺什么——法术的逐类状态级断言、物品的远古稀有度档位、角色技能的逐项战斗效果、多版本存档迁移样本、渲染指纹的视口/浏览器覆盖、真机帧时间与低端设备表现（成就 requirementType 的逐项进度已于 2026-09-27 关闭，见附录 A 该行）。`docs/reverse-engineering/unresolved.md` 的 U4（覆盖口径）/U7（UI 独占路径）是继续推进的入口；U5（长尾字段）已于 2026-09-27 关闭。
 
 ---
 
@@ -125,7 +125,9 @@ Clickpocalypse II 的核心实现已从高混淆遗留代码中恢复出真实�
 
 判定口径：**PASS** = 有自动化检查真的驱动该系统并对它作出断言；**PARTIAL** = 已驱动但存在写明缺口；**未覆盖** = 无专项检查，仅受"完整存档逐字段相等"间接约束。不得把 PARTIAL 写成 PASS。
 
-> **2026-09-27 复核（按上述口径自我纠偏）**：有 7 行的证据格里本来就写明了缺口，却仍标着 PASS——按本表自己的定义属误标，已改判为 **PARTIAL** 并在证据格补写"**缺口（写明）**"：角色技能/技能树、法术、物品、成就、旧版存档兼容、长期稳定性、Canvas 渲染。故本表当前为 **44 PASS / 7 PARTIAL / 0 未覆盖**（共 51 行）。
+> **2026-09-27 复核（按上述口径自我纠偏）**：有 7 行的证据格里本来就写明了缺口，却仍标着 PASS——按本表自己的定义属误标，已改判为 **PARTIAL** 并在证据格补写"**缺口（写明）**"：角色技能/技能树、法术、物品、成就、旧版存档兼容、长期稳定性、Canvas 渲染。故本表当时为 **44 PASS / 7 PARTIAL / 0 未覆盖**（共 51 行）。
+>
+> **2026-09-27 再复核（成就行升为 PASS）**：`requirementType` 1-28 的逐项进度计算已由表驱动检查 + 表驱动单测 + 两条临界值差分场景闭合（证据见下方「成就」行），该行缺口文字已删除、判定改为 **PASS**。本表当前为 **45 PASS / 6 PARTIAL / 0 未覆盖**（共 51 行）。**其余 6 行仍为 PARTIAL，缺口一字未减。**
 
 | 系统 | 判定 | 证据 / 缺口 |
 |---|---|---|
@@ -162,7 +164,7 @@ Clickpocalypse II 的核心实现已从高混淆遗留代码中恢复出真实�
 | 农场 | PASS | 农场全局与地牢行购买（`dungeon-farm-purchased`/`dungeon-row-farm-purchased`）、推演成熟收获（`dungeon-farm-harvested`，通过 `AutoPurchaseDungeonUpgrade` 收获击杀并清零池）、休耕再侵袭与二次成熟（`dungeon-farm-cycle-long-term`，1500 回合再侵袭至 `cleared=false` + 1200 回合再次成熟并二次收获，累计击杀 `>=200`）全链路闭环，两端逐检查点完整 DTO 相等并带负向探针保护 |
 | 冒险点 | PASS | 21 个点数池与消费簿记逐检查点相等 |
 | 点数升级 | PASS | `adventure-points-spent` 单项购买 + `point-upgrades-multiple` 注入 5 亿点驱动购买全部 23 种点数升级（总造价 164.5M），断言 `pointManagerState.pointUpgrades[]` 新购 upgradeId 数 >= 5 且两端购买次数相等，`spentAdventurePoints` 按各项固定 pointCost 累加；购买后的修正器生效路径（balance 对象 currentValue 经 bonusIndex 映射）两端同构，随后 600 回合完整 DTO 相等 |
-| 成就 | PARTIAL | 328 行成就定义与 `obtained` 集合相等并真实增长；`achievement-claimed` 单项领取 + `achievement-rewards-multiple` 多项领取（8 项置为可领取，驱动 4 槽队列多轮领取，断言 applied ≥ 3 增长且击杀事件奖励行 points = reward × count 真实抬升，带反向探针）；全部成就奖励共用同一机制 increasePointEventReward，逐项差异只在事件类型与点数，机制已闭环；各类达成条件（requirementType 1-27）的进度计算未逐项断言，但统计源字段均受差分矩阵覆盖 |
+| 成就 | PASS | 328 行成就定义与 `obtained` 集合相等并真实增长；`achievement-claimed` 单项领取 + `achievement-rewards-multiple` 多项领取（8 项置为可领取，驱动 4 槽队列多轮领取，断言 applied ≥ 3 增长且击杀事件奖励行 points = reward × count 真实抬升，带反向探针）；全部成就奖励共用同一机制 increasePointEventReward，逐项差异只在事件类型与点数，机制已闭环。**逐项进度计算已断言（2026-09-27 关闭原缺口）**：`scripts/check-achievement-requirements.mjs`（已入 `npm run lint`）对全部 **328 条定义 × 28 种 `requirementType`** 做表驱动核对——用 `achievementId` 命名约定独立推导"该读哪个统计字段"，与实现逐条对账（596 条非胜利类 + 210 条胜利类断言），并断言 `isVictoryAchievement ⇔ requirementType ∈ {23..27}`、未知 `requirementType` 的返回 `undefined`（switch 无 default）与 `false` 两个原版怪癖；`tests/unit/achievement-progress.test.mjs` 另在**不启动引擎**的前提下覆盖 28 类字段映射、23-27 的 `requiredCount`/`characterClass` 分支与 `partyMaxLevel` 惰性；`achievement-threshold-below` / `achievement-threshold-met` 两条差分场景把 `farmsPurchased` 摆在 requiredCount 两侧（4 与 5）、并同时把 `doorsOpened` 摆到恰好达标，两端各自断言"未达成/已达成"后比较完整存档 |
 | 统计 | PASS | 30 个计数器 ×3 个区块（本轮/累计/每轮）全量差分相等 |
 | 暂停 | PASS | E2E 断言暂停时回合冻结、空格恢复 |
 | 后台行为 | PASS | 离线分支与 >1s 帧差路径被覆盖；`background-progress-disabled` 断言 `inactiveTabProcessingEnabled: false` 下注入 5000ms 帧间隙严格仅前进 1 回合且无追赶，与开启态 20 回合（5000ms/250ms）形成严格因果对照 |

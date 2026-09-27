@@ -1,6 +1,8 @@
 # 交接提示词 — Clickpocalypse II 语义恢复与现代化工程
 
-> 把本文件整段作为新 Agent 的任务说明（配合仓库根目录的 `clickpocalypse2_glm53flash_overnight_refactor_goal.md` 全文作为执行规范）。它是**执行手册**，不是项目介绍。
+> **历史交接记录，已过期。** U112 之后的 M12 改名、回归与验收矩阵状态已有变化。下一阶段以 `docs/NEXT-ARCHITECTURE-PROMPT.md` 为执行提示词，先核对 `docs/WORKSTATE.md` 和当前代码；下文仅供追溯。
+
+> 历史用法：曾将本文件整段作为新 Agent 的任务说明，并配合仓库根目录的 `clickpocalypse2_glm53flash_overnight_refactor_goal.md` 使用；此用法已由上述新提示词取代。
 > 写作时间：2026-09-27，最后落地批次 **U112**（统计/离线视图 + 运行时注册表子对象，六门禁逐条回显退出码全绿）。接手第一件事：`git log --oneline -6` 与 `git status` 确认工作树干净，然后按 §9-P0 继续下一簇。
 
 ---

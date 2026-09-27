@@ -18,7 +18,7 @@
 
 ## 2. 行为兼容（原版 vs 重构差分）— VERIFIED（覆盖范围内）
 
-`scripts/test-scenarios.mjs` 的 **60 个场景**全部通过（同一变异存档 + 固定 LCG 随机流 + 固定时钟，双端逐字段比较完整存档 DTO；矩阵可用 `SCENARIO_FILTER=a,b` 单跑）：
+`scripts/test-scenarios.mjs` 的 **62 个场景**全部通过（同一变异存档 + 固定 LCG 随机流 + 固定时钟，双端逐字段比较完整存档 DTO；矩阵可用 `SCENARIO_FILTER=a,b` 单跑）：
 
 | 组 | 场景 | 除全状态相等外的专项断言 |
 |---|---|---|
@@ -33,6 +33,7 @@
 | 暴击直接观察 | **combat-critical-hits** | 战士与游侠 5 轮升级点亮全部 7 档暴击几率技能（战士 4 档 + 游侠 3 档），随后 1000 回合实战通过 `countFloatingText` 在两端浮动文字层采样 `"暴击!"` 出现次数完全一致（各 11 次，无技能时为 0），验证绕过护甲扣除与 RNG 顺序一致，两端完整 DTO 完全相等，带非暴击文字负向探针验证 |
 | 冒险点消费 | **adventure-points-spent、point-upgrades-multiple** | 前者购买一项点数升级；后者注入 5 亿点驱动购买全部 23 种点数升级（总造价 164.5M），断言新购 upgradeId 数 >= 5 且两端购买次数与 spentAdventurePoints 累加一致 | 按事件次数构造足额点数，刷新可购状态后两端各自购买一项点数升级；断言 `spentAdventurePoints` 增长与 `upgradePurchased` 置位，逐检查点完整存档相等 |
 | 成就领取 | **achievement-claimed** | 真实 fixture 已有一项 `obtained=true/applied=false`；两端刷新可领取升级并各领一次，断言 `applied` 增长，逐检查点完整存档相等 |
+| 成就进度临界值 | **achievement-threshold-below、achievement-threshold-met** | 把 `totalStatistics.farmsPurchased` 精确摆在 `farmsPurchased5`（requirementType 9，requiredCount 5）两侧——4 与 5；同一场景里把 `doorsOpened` 设为 100000 使 `doorsOpened100K`（requirementType 17）恰好达标作为正对照。两端各自断言"低于阈值仍未获得 / 达到阈值已获得"后比较完整存档；这两个统计字段在几十回合自然推进中不会增长，故临界值判定是确定的 |
 | 自动装备 | **auto-equipped** | 真实 fixture 背包已有更好的装备；两端走 type=4 的升级入口，分别断言装备槽变化、装备事件点数计数增长并比较完整存档 |
 | 农场生命周期 | **dungeon-farm-purchased、dungeon-row-farm-purchased、dungeon-farm-harvested、dungeon-farm-cycle-long-term** | 同一合成前置存档分别驱动全局升级 type=8 与地牢行私有 type=7；推演成熟收获、待收获击杀池清零、再侵袭休耕与二次成熟收获等全生命周期完整覆盖并带负向探针验证；两端完整存档相等 |
 | 财宝房搜索 | **treasure-chest-looted、weapon-rack-looted、bookcase-looted** | 只选角色所在房间的未打开 type=1/2/3 目标物，走按钮同一目标设置入口；两端各自断言对应的三种拾取统计分别增长，逐检查点完整存档相等；禁用目标设置的反向验证会失败 |
@@ -70,7 +71,7 @@
 
 已转入差分覆盖（2026-09-26）：城堡攻防战全程与胜利瞬间（`castle-victory`，两端各自断言 gameWon/victoryCount/castlesConquered 后比较完整存档）、12h 离线截断（`offline-13h-capped`）、火球与两条控制/增益法术分支、召唤族两条分支（cat=9/11，两端各自断言 `minionsSummoned` 增长）、睡眠（cat=2、type=0），以及 Blast Stun 的直接执行计数——harness 逐帧扫描两端活怪物效果队列，`fireball-blast-stun` 实测原版与重构版各 31 次 type=14 施加，数值相等。同批次再补 10 条：cat=1 治疗、cat=4 火环、cat=5 连锁闪电、cat=6 闪电雨、cat=13 绿色死亡、cat=17 召唤鸡群（含 `Math.random` 概率模板分支），需要注入投射武器的 cat=12 快速打击（唯一 `td: false`）、cat=14 立即搜索、cat=15 发现财宝箱——后三条在注入前会命中原版自带的空武器解引用（`Aw`/`getProjectileAnimation` 对 `equipment.Ey` 无空值保护，两端同点同错，栈逐帧同构），属忠实保留而非重构差异，因此未改动引擎，只在存档里补回真实武器类型（盗贼槽 61、忍者槽 62）；以及 cat=16 复活（`withResurrectionTrial()` 激活 `randomBossEncounter` 药水并把三名队友压到 1 级 1 血，两端实测 `characterStunnedCount` 同为 22，真正打出"已有昏迷队友"的前置）；地牢农场购买、推演成熟收获、待收获击杀池清零、再侵袭休耕与二次成熟收获等全生命周期已由 `dungeon-farm-purchased`、`dungeon-row-farm-purchased`、`dungeon-farm-harvested`、`dungeon-farm-cycle-long-term` 差分场景完整覆盖并带负向探针验证；卷轴全 6 类战斗施放与后台行为关闭态已分别由 `scroll-cast-in-combat` 与 `background-progress-disabled` 差分场景闭环；怪物等级退休已由 `monster-level-retired`（`RetireMonsterLevelUpgrade`）闭环；暴击机制与伤害绕过护甲已由 `combat-critical-hits` 驱动战士与游侠 7 档暴击技能并通过浮动文字 `countFloatingText` 直接对账闭环。
 
-后续扩展路径：在 `tests/scenarios/save-mutations.mjs` 增加对应变异器，即可纳入 `test:scenarios` 矩阵（当前 60 个场景）。
+后续扩展路径：在 `tests/scenarios/save-mutations.mjs` 增加对应变异器，即可纳入 `test:scenarios` 矩阵（当前 62 个场景）。
 
 ## 7. 性能兼容 — PARTIALLY VERIFIED
 

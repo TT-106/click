@@ -32,31 +32,34 @@
 
 ```bash
 npm install && npm run dev        # 开发服务器（部分门禁需要它）
-npm run lint                      # 7 条不变量守卫（零依赖）
+npm run lint                      # 9 条不变量守卫（零依赖）
 npm run typecheck                 # tsc，当前 0 错误
-npm run check                     # 128 文件语法 + 10 单测
+npm run check                     # 133 文件语法 + 15 单测
 npm run test:parity               # 0/1/99/900 回合完整 DTO 相等
-npm run test:scenarios            # 60 场景差分（可用 SCENARIO_FILTER=a,b 单跑）
+npm run test:scenarios            # 62 场景差分（可用 SCENARIO_FILTER=a,b 单跑）
 npm run test:e2e                  # 浏览器 E2E
 npm run test:soak                 # 8h/24h 等价回合
 npm run perf && npm run perf:frames
 node scripts/analyze-fields.mjs           # 混淆属性名（当前 0）
 node scripts/check-spell-coverage.mjs     # 法术类别覆盖（当前 16/16，可观测量 15/16）
+node scripts/check-achievement-requirements.mjs  # 成就定义表 ↔ 判定实现（328 条 × 28 类，已入 lint）
+node scripts/check-doc-counts.mjs         # 文档可数指标 ↔ 源码实况（已入 lint）
 node scripts/check-doc-snippets.mjs       # 文档片段漂移（当前 15/76）
 node scripts/verify-doc-refs.mjs          # 文档 file:line 引用（当前 0 越界）
+node scripts/audit-architecture.mjs       # 架构债只读审计（依赖图/SCC/初始化顺序/game 热点）
 node scripts/find-invisible-name-files.mjs
 node scripts/find-unused-modules.mjs
 node scripts/show-field-backlog.mjs
 node scripts/find-field-refs.mjs <owner> <names>
 ```
 
-**当前实测基线**（2026-09-27，`output/v3-*.log`）：10 门禁全绿；混淆字段 **0**；差分场景 **60/60**；验收矩阵 **44 PASS / 7 PARTIAL / 0 未覆盖**；`@type {any}` **43** 处；JSDoc `unknown` **142** 行；文档片段漂移 **15/76**。
+**当前实测基线**（2026-09-27 第二轮，日志 `output/g-*.log`）：10 门禁全绿；混淆字段 **0**；差分场景 **62/62**；验收矩阵 **45 PASS / 6 PARTIAL / 0 未覆盖**；`@type {any}` **42** 处；JSDoc `unknown` **142** 行；文档片段漂移 **15/76**。
 
 ---
 
 ## 3. 剩余工作逐项详解
 
-### 3.1 验收矩阵的 7 条 PARTIAL（**主线工作**）
+### 3.1 验收矩阵的 PARTIAL（**主线工作**；2026-09-27 起为 6 条，P-4 已闭合）
 
 判定口径：PASS = 有自动化检查真的驱动该系统并对它断言；PARTIAL = 已驱动但存在写明缺口。以下每项都给出「闭合它需要什么」与「完成定义」。
 
@@ -107,22 +110,13 @@ node scripts/find-field-refs.mjs <owner> <names>
 
 ---
 
-#### P-4 成就 — requirementType 1-27 进度计算未逐项断言
+#### P-4 成就 — requirementType 1-27 进度计算未逐项断言 — ✅ **已闭合（2026-09-27）**
 
-- **现状**：328 行成就定义与 `obtained` 集合相等并真实增长；`achievement-claimed` 单项领取、`achievement-rewards-multiple` 多项领取（4 槽队列多轮领取）已闭环。
-- **缺口**：各类达成条件（`requirementType` 1-27）的**进度计算**未逐项断言。
-- **关键事实（这条其实是"最好做"的）**：进度计算是**纯函数**——
-  - `progression/achievements.js:65-115` 的 `getAchievementProgress(a)`：一个 `switch (a.requirementType)`，case 1-22 与 28，每个 case 只是 `return b.<某个统计字段>`（`b = game.state.lifetimeStatistics`），case 16 是 `getPartyMaxLevel(game.state.party)`。
-  - `progression/achievements.js:48-64` 的 `hasVictoryAchievement(a)`：case 23-27，读 `game.state.victoryStatistics`。
-  - `progression/achievements.js:116+` 的 `describeAchievementRequirement(a)`：纯文案。
-- **闭合方案（两条路，推荐 B）**：
-  - **A. 单元级表驱动**：把 `getAchievementProgress` 的 23 个 case 与 `hasVictoryAchievement` 的 5 个 case 做成表：给定构造好的 `lifetimeStatistics`/`victoryStatistics` → 断言返回值等于期望字段。这是纯函数，**不需要浏览器**，可放进 `tests/unit/`。
-  - **B. 差分级（更强）**：在 `scripts/test-scenarios.mjs` 加一条场景，用变异器把每个 `requirementType` 对应的统计字段设成 `requiredCount - 1`，刷新成就状态，断言"该成就尚未获得"；再设成 `requiredCount`，断言"变为可领取"。**两端各跑一遍**，这样同时验证了原版与重构版的进度计算一致。
-  - 建议 **A + B 都做**：A 保证 case 覆盖完整（可机械枚举），B 保证与原版一致。
-- **注意**：`getAchievementProgress` 的 `switch` **没有 default 分支** → 未知 `requirementType` 返回 `undefined`。这是原版行为，**不要"修"**；但要在测试里断言这一行为（原版怪癖忠实保留，先例见 `tests/unit/sprite-lookup.test.mjs` 对原型链继承键的处理）。
-- **风险**：低。唯一坑是 `requirementType` 的编号必须在**定义表**（`progression/achievements.js` 里的 328 行定义）与**计算函数**之间对齐——建议先用一条脚本枚举"定义表里出现过的 requirementType 集合"与"switch 里处理过的集合"，报告差集（本轮已发现过类似的错位：`docs/reverse-engineering/unresolved.md` 的 U8 记录了怪物曲线名整体错位一格）。
-- **DoD**：新增表驱动单测 + 差分场景；矩阵「成就」行缺口删除。
-- **难度**：中低（**建议第二个做**，与 P-3 一起能把 2 条 PARTIAL 推向 PASS）。
+- **结论**：该行已由 PARTIAL 升为 **PASS**。闭合证据（全部可复跑）：
+  1. `scripts/check-achievement-requirements.mjs`（已挂进 `npm run lint`）：对 **328 条定义 × 28 种 `requirementType`** 表驱动核对——用 `achievementId` 命名约定独立推导"该读哪个统计字段"，与实现逐条对账（596 条非胜利类 + 210 条胜利类断言），并断言 `isVictoryAchievement ⇔ requirementType ∈ {23..27}` 与两个原版怪癖（未知类型 → `undefined` / `false`）。反向验证：把 `case 1` 改成读 `scrollKills` → 立刻报 11 处不符并指名 `monsterKills*`，恢复后转绿。
+  2. `tests/unit/achievement-progress.test.mjs`：在**不启动 `runtime/index.js`、不构造 `game`** 的前提下覆盖 28 类字段映射、23-27 的 `requiredCount`/`characterClass` 分支、`partyMaxLevel` 惰性（非 16 类读取即失败）与兼容入口的耦合。反向验证：让 `partyMaxLevel` 提前求值 → 惰性测试立刻失败。
+  3. `achievement-threshold-below` / `achievement-threshold-met` 两条差分场景：把 `farmsPurchased` 摆在 requiredCount=5 的两侧（4 与 5），同时把 `doorsOpened` 摆到恰好达标作为正对照，两端各自断言"未达成 / 已达成"后比较完整存档（矩阵 60 → 62）。反向验证：把 `case 9` 改成返回常量 → 场景立刻分叉并失败。
+- **残留（不构成 PARTIAL，如实记录）**：两条场景的 verdict 断言在"实现分叉"时会先被完整存档比对拦下，因此它们实际保护的是**场景前提**（"这条场景真的坐在临界值两侧"）而不是行为分叉本身——与既有 `changed`/`unchanged` 一类"场景有效性断言"同性质。
 
 ---
 
@@ -255,12 +249,12 @@ node scripts/find-field-refs.mjs <owner> <names>
 | P-1 技能 | `npm run test:scenarios` | 全绿；附录 A 该行缺口文字被替换 |
 | P-2 法术 | `node scripts/check-spell-coverage.mjs` | "无直接可观测量 0 个" |
 | P-3 物品 | `SCENARIO_FILTER=<新场景> npm run test:scenarios` | 通过且远古统计两端增长 |
-| P-4 成就 | `npm test` + `npm run test:scenarios` | 表驱动单测通过 + 新场景全绿 |
+| P-4 成就 ✅ | `npm test` + `npm run test:scenarios` + `node scripts/check-achievement-requirements.mjs` | 15 单测通过 + 2 条新场景全绿 + 表驱动核对 0 不符（**2026-09-27 已闭合**） |
 | P-5 存档 | `npm run test:parity` + `npm run test:scenarios` | 全绿；缺口改写为"需外部样本" |
 | P-6 帧时间 | `npm run perf:frames` | 有原版同口径基线（新增） |
 | P-7 渲染 | `npm run test:scenarios` | 新视口场景指纹两端相同 |
 | 文档片段 | `node scripts/check-doc-snippets.mjs` | 0 漂移 |
-| 类型 | `npm run typecheck && npm run lint` | tsc 0 错误 + 7 不变量绿 |
+| 类型 | `npm run typecheck && npm run lint` | tsc 0 错误 + 9 不变量绿 |
 | **总门禁** | `npm run lint && npm run build && npm run typecheck && npm run check && npm run test:parity && npm run test:scenarios && npm run test:e2e && npm run test:soak && npm run perf && npm run perf:frames` | **10/10 退出码为 0** |
 
 ---
@@ -268,7 +262,7 @@ node scripts/find-field-refs.mjs <owner> <names>
 ## 5. 建议推进顺序（按"收益 ÷ 风险"排序）
 
 1. **P-3 远古稀有度** — 最简单，一条场景即可把 1 条 PARTIAL 推向 PASS。**先做这个建立手感。**
-2. **P-4 成就 requirementType** — 纯函数可表驱动 + 差分双保险，能再推 1 条。
+2. ~~**P-4 成就 requirementType**~~ — ✅ 已于 2026-09-27 闭合（表驱动检查 + 表驱动单测 + 两条临界值差分场景）。
 3. **P-7 渲染多视口** — 改配置即可，能再推 1 条（或至少显著收窄）。
 4. **P-2 法术 cat=15** — 需一个新观察器 + 原版字段名取证，中等工作量。
 5. **P-6 原版帧时间基线** — 原版页面可加载，补基线价值高。
@@ -307,5 +301,5 @@ node scripts/find-field-refs.mjs <owner> <names>
 ## 8. 一句话交接
 
 **可执行的清单（P0–P3）已 100% 完成；剩下的是"证据广度"与"类型债务"两类。**
-本环境**物理上无法闭合**的是：真机帧时间/低端设备、多版本真实存档样本。**其余 6 条 PARTIAL + 15 条文档片段 + 类型债务都可以推进**，且第 1–3 项（P-3/P-4/P-7）每条只需一条场景/一次配置改动，就能把一条 PARTIAL 真正推向 PASS。
+本环境**物理上无法闭合**的是：真机帧时间/低端设备、多版本真实存档样本。**其余 6 条 PARTIAL（P-1/P-2/P-3/P-5/P-6/P-7）+ 15 条文档片段 + 类型债务都可以推进**，且 P-3 与 P-7 各自只需一条场景/一次配置改动就能把一条 PARTIAL 真正推向 PASS。
 **请从 §5 的第 1 项开始，并严格遵守 §1 的红线。**
