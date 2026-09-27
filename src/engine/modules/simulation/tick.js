@@ -129,7 +129,7 @@ export function advanceSimulation(a) {
     }
     if (autoScrollsModifier.currentValue && 0 < getMonsters().length && (b.bu++, b.bu >= b.TC)) {
       b.bu = 0;
-      var na = game.scrolls.Pl;
+      var na = game.scrolls.unlockedScrolls;
       if (b.rk >= na.length) {
         b.rk = 0;
       }

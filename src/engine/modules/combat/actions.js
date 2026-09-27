@@ -29,7 +29,7 @@ export function CombatAction() {
   this.impactEffect = this.projectileEffect = this.attacker = this.targetCharacter = this.actionDefinition = null;
   this.ut = this.Xs = false;
   this.chainCount = this.Ys = 0;
-  this.pl = null;
+  this.returnOriginPosition = null;
 }
 /** @typedef {CombatAction & { setTargetCharacter: (target: unknown) => void }} TargetedCombatAction */
 export function findTargetsInRange(a, b, c, d) {
@@ -390,7 +390,7 @@ export function resolveCharacterDefeat(a, b) {
       }
       s = 2 + randomInt(5);
       for (g = 0; g < s; g++) {
-        u = game.scrolls.Pl;
+        u = game.scrolls.unlockedScrolls;
         u = u[randomInt(u.length)];
         u = new ScrollDrop(u, tickCharacterTurn(n, c, f), tickCharacterTurn(p, h, l), d);
         game.scrollDrops.drops.push(u);
@@ -660,7 +660,7 @@ export function createReturningAction(a) {
     f.chainCount = 0;
     c = a.projectileEffect;
     d = a.attacker.position.levelPosition;
-    var g = a.pl,
+    var g = a.returnOriginPosition,
       b = a.impactEffect;
     f.noDamage = false;
     if (c) {
@@ -691,7 +691,7 @@ export function createReturningAction(a) {
   f.Ys = b + 1;
   f.ut = true;
   f.chainCount = c;
-  f.pl = a.pl;
+  f.returnOriginPosition = a.returnOriginPosition;
   var h = a.projectileEffect,
     b = d.targetPosition,
     c = g.position.levelPosition;

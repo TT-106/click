@@ -189,13 +189,13 @@ export function updateCharacter(a, b) {
         var c = a.position;
         if (a === game.state.leader) {
           a: {
-            assignVector(c.velocity, c.Ul);
+            assignVector(c.velocity, c.worldDestinationPoint);
             subtractVector(c.velocity, c.worldPosition);
             var d = b * c.MC * walkingSpeedBonus.currentValue * walkingSpeedModifier.currentValue,
               f = game.world.pixelToTileColumn(c.worldPosition.x),
               g = game.world.pixelToTileRow(c.worldPosition.y);
             if (vectorLength(c.velocity) <= d) {
-              assignVector(c.worldPosition, c.Ul);
+              assignVector(c.worldPosition, c.worldDestinationPoint);
               c.movementTargetCleared = true;
             } else if (f === c.Rn && g === c.Sn) {
               c.movementTargetCleared = true;
@@ -220,8 +220,8 @@ export function updateCharacter(a, b) {
               subtractVector(c.velocity, c.worldPosition);
               if (separateWorldCharacters(c)) {
                 normalizeVector(c.velocity);
-                multiplyVector(c.Tl, 0.5);
-                addVector(c.velocity, c.Tl);
+                multiplyVector(c.worldSeparationVector, 0.5);
+                addVector(c.velocity, c.worldSeparationVector);
               }
               normalizeVector(c.velocity);
               multiplyVector(c.velocity, d);
@@ -229,24 +229,24 @@ export function updateCharacter(a, b) {
             }
           }
         } else {
-          assignVector(c.velocity, c.Ul);
+          assignVector(c.velocity, c.worldDestinationPoint);
           subtractVector(c.velocity, c.worldPosition);
           var h = b * c.MC * walkingSpeedBonus.currentValue * walkingSpeedModifier.currentValue,
             l = game.world.pixelToTileColumn(c.worldPosition.x),
             n = game.world.pixelToTileRow(c.worldPosition.y);
           if (vectorLength(c.velocity) <= h) {
-            assignVector(c.worldPosition, c.Ul);
+            assignVector(c.worldPosition, c.worldDestinationPoint);
             c.movementTargetCleared = true;
           } else {
             if (l === c.Rn && n === c.Sn) {
               c.movementTargetCleared = true;
             } else {
-              setVector(c.velocity, c.Ul.x + 1, c.Ul.y + 1);
+              setVector(c.velocity, c.worldDestinationPoint.x + 1, c.worldDestinationPoint.y + 1);
               subtractVector(c.velocity, c.worldPosition);
               if (separateWorldCharacters(c)) {
                 normalizeVector(c.velocity);
-                multiplyVector(c.Tl, 0.5);
-                addVector(c.velocity, c.Tl);
+                multiplyVector(c.worldSeparationVector, 0.5);
+                addVector(c.velocity, c.worldSeparationVector);
               }
               normalizeVector(c.velocity);
               multiplyVector(c.velocity, h);
@@ -857,12 +857,12 @@ export function updateCharacter(a, b) {
                 bd.chainCount = a.stats.vt + 1;
                 var Fh = a.position.levelPosition;
                 if (Fh) {
-                  if (!bd.pl) {
-                    bd.pl = new Vector2();
+                  if (!bd.returnOriginPosition) {
+                    bd.returnOriginPosition = new Vector2();
                   }
-                  assignVector(bd.pl, Fh);
+                  assignVector(bd.returnOriginPosition, Fh);
                 } else {
-                  bd.pl = null;
+                  bd.returnOriginPosition = null;
                 }
                 var Gh = calculateSpellDamage(a, bd.targetCharacter);
                 bd.remainingDamage = Gh;
@@ -1110,7 +1110,7 @@ export function updateCharacter(a, b) {
           if (1 === Ad || 3 === Ad) {
             var EA = 2 + randomInt(5);
             for (Oc = 0; Oc < EA; Oc++) {
-              var Qp = game.scrolls.Pl,
+              var Qp = game.scrolls.unlockedScrolls,
                 FA = Qp[randomInt(Qp.length)],
                 GA = new ScrollDrop(FA, tickCharacterTurn(wc, Re, Zd), tickCharacterTurn(zd, Vc, Od), Yd);
               game.scrollDrops.drops.push(GA);

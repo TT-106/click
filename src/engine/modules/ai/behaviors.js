@@ -156,30 +156,30 @@ export function LootPotionBehavior(a) {
 export function UseShopBehavior(a, b) {
   this.pickupRadius = game.tileSize + 5;
   this.priorityWeight = a;
-  this.il = b;
+  this.minPriorityValue = b;
   this.goldDrop = null;
-  this.Wy = 0;
+  this.cachedDropDistance = 0;
 }
 export function EnterDungeonBehavior(a, b) {
   this.pickupRadius = game.tileSize + 5;
   this.priorityWeight = a;
-  this.il = b;
+  this.minPriorityValue = b;
   this.scrollDrop = null;
-  this.Zy = 0;
+  this.cachedDropDistance = 0;
 }
 export function EnterCastleBehavior(a, b) {
   this.pickupRadius = game.tileSize + 5;
   this.priorityWeight = a;
-  this.il = b;
+  this.minPriorityValue = b;
   this.potionDrop = null;
-  this.Yy = 0;
+  this.cachedDropDistance = 0;
 }
 export function TravelWorldBehavior(a, b) {
   this.pickupRadius = game.tileSize + 5;
   this.priorityWeight = a;
-  this.il = b;
+  this.minPriorityValue = b;
   this.itemDrop = null;
-  this.Xy = 0;
+  this.cachedDropDistance = 0;
 }
 export function ChangeFloorBehavior() {
   this.pickupRadius = game.tileSize + 1;
@@ -1150,10 +1150,10 @@ export function initializeAiBehaviors() {
       if (this.goldDrop = g) {
         this.goldDrop.setClaimedBy(a);
         this.goldDrop.setClaimDistance(n);
-        this.Wy = Math.sqrt(n);
+        this.cachedDropDistance = Math.sqrt(n);
       }
     }
-    return this.goldDrop ? approachValue(this.priorityWeight, this.il, this.Wy) : 0;
+    return this.goldDrop ? approachValue(this.priorityWeight, this.minPriorityValue, this.cachedDropDistance) : 0;
   };
   UseShopBehavior.prototype.getPriority = function () {
     return this.priorityWeight;
@@ -1213,10 +1213,10 @@ export function initializeAiBehaviors() {
       if (this.scrollDrop = g) {
         this.scrollDrop.setClaimedBy(a);
         this.scrollDrop.setClaimDistance(n);
-        this.Zy = Math.sqrt(n);
+        this.cachedDropDistance = Math.sqrt(n);
       }
     }
-    return this.scrollDrop ? approachValue(this.priorityWeight, this.il, this.Zy) : 0;
+    return this.scrollDrop ? approachValue(this.priorityWeight, this.minPriorityValue, this.cachedDropDistance) : 0;
   };
   EnterDungeonBehavior.prototype.getPriority = function () {
     return this.priorityWeight;
@@ -1276,10 +1276,10 @@ export function initializeAiBehaviors() {
       if (this.potionDrop = g) {
         this.potionDrop.setClaimedBy(a);
         this.potionDrop.setClaimDistance(n);
-        this.Yy = Math.sqrt(n);
+        this.cachedDropDistance = Math.sqrt(n);
       }
     }
-    return this.potionDrop ? approachValue(this.priorityWeight, this.il, this.Yy) : 0;
+    return this.potionDrop ? approachValue(this.priorityWeight, this.minPriorityValue, this.cachedDropDistance) : 0;
   };
   EnterCastleBehavior.prototype.getPriority = function () {
     return this.priorityWeight;
@@ -1339,10 +1339,10 @@ export function initializeAiBehaviors() {
       if (this.itemDrop = g) {
         this.itemDrop.setClaimedBy(a);
         this.itemDrop.setClaimDistance(n);
-        this.Xy = Math.sqrt(n);
+        this.cachedDropDistance = Math.sqrt(n);
       }
     }
-    return this.itemDrop ? approachValue(this.priorityWeight, this.il, this.Xy) : 0;
+    return this.itemDrop ? approachValue(this.priorityWeight, this.minPriorityValue, this.cachedDropDistance) : 0;
   };
   TravelWorldBehavior.prototype.getPriority = function () {
     return this.priorityWeight;

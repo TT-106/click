@@ -196,13 +196,13 @@ export function removeScrollDrop(a) {
 export function ScrollInventory() {
   this.kx = {};
   this.at = [];
-  this.Pl = [];
+  this.unlockedScrolls = [];
 }
 export function resetScrollInventory() {
   var a = game.scrolls;
   a.kx = {};
   a.at.length = 0;
-  a.Pl.length = 0;
+  a.unlockedScrolls.length = 0;
   var b, c;
   for (b = 0; b < scrollDefinitions.length; b++) {
     c = new Scroll(scrollDefinitions[b], game.scrollTargets);
@@ -215,8 +215,8 @@ export function resetScrollInventory() {
   }
 }
 export function registerUnlockedScroll(a, b) {
-  if (0 > a.Pl.indexOf(b)) {
-    a.Pl.push(b);
+  if (0 > a.unlockedScrolls.indexOf(b)) {
+    a.unlockedScrolls.push(b);
   }
 }
 export function initializeCombatScrolls() {

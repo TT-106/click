@@ -18,14 +18,14 @@ export function CharacterPosition(a, b) {
   this.velocity = new Vector2();
   this.steeringVector = null;
   this.separationVector = new Vector2();
-  this.Tl = new Vector2();
+  this.worldSeparationVector = new Vector2();
   this.separationDelta = new Vector2();
   this.Jw = b;
   this.MC = a;
   this.levelPosition = new Vector2();
   this.worldPosition = new Vector2();
   this.room = this.currentHallway = null;
-  this.Ul = new Vector2();
+  this.worldDestinationPoint = new Vector2();
   this.Sn = this.Rn = 0;
   this.moveTargetPoint = new Vector2();
   this.routeQueue = null;
@@ -64,7 +64,7 @@ export function applySeparationForce(a, b, c, d) {
 export function setWorldDestination(a, b, c) {
   a.Rn = b;
   a.Sn = c;
-  setVector(a.Ul, game.world.tileToPixelX(b), game.world.tileToPixelY(c));
+  setVector(a.worldDestinationPoint, game.world.tileToPixelX(b), game.world.tileToPixelY(c));
 }
 export function findCheapestNeighbor(a, b) {
   var c = a.getWorldColumn(),
@@ -158,7 +158,7 @@ export function separateDungeonCharacters(a) {
   return d;
 }
 export function separateWorldCharacters(a) {
-  setVector(a.Tl, 0, 0);
+  setVector(a.worldSeparationVector, 0, 0);
   var b,
     c,
     d = false,
@@ -177,13 +177,13 @@ export function separateWorldCharacters(a) {
           subtractVector(a.separationDelta, b.worldPosition);
         }
         normalizeVector(a.separationDelta);
-        addVector(a.Tl, a.separationDelta);
+        addVector(a.worldSeparationVector, a.separationDelta);
         d = true;
       }
     }
   }
   if (d) {
-    normalizeVector(a.Tl);
+    normalizeVector(a.worldSeparationVector);
   }
   return d;
 }

@@ -307,7 +307,7 @@ export function initializeSimulationCharacters() {
         }
       }
       if (randomInt(100) <= globalUpgradeDefinitions.$s.currentValue) {
-        const scrolls = game.scrolls.Pl;
+        const scrolls = game.scrolls.unlockedScrolls;
         const scroll = scrolls[randomInt(scrolls.length)];
         const scrollDrop = new ScrollDrop(scroll, updateCharacterFrames(c.getLevelPositionX(), g, h), updateCharacterFrames(c.getLevelPositionY(), l, n), f);
         game.scrollDrops.drops.push(scrollDrop);
