@@ -8370,7 +8370,17 @@
         "Ys": "currentChainStep",
         "bx": "previousFrameIndex",
         "uA": "loopsWhileStunned",
-        "Ey": "projectileWeapon"
+        "Ey": "projectileWeapon",
+        "us": "restoreState",
+        "EC": "availabilityChanged",
+        "Ly": "castleIndex",
+        "$A": "cachedPurchasedLevels",
+        "Yz": "cachedCandidateCount",
+        "hA": "inventoryIndex",
+        "Ez": "dungeonIndex",
+        "vy": "claimQueueIndex",
+        "YA": "cachedObtained",
+        "VA": "cachedApplied"
   },
   "gameFields": {
     "B": "tileSize",
