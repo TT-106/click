@@ -1,0 +1,27 @@
+{
+  "_comment": "四类掉落物的关卡像素坐标（GoldDrop.Xo/Yo、ScrollDrop.bq/cq、ItemDrop.mp/np、PotionDrop.Qp/Rp —— 均由行动生成、行为以 distanceToPoint(levelPosition, …) 判定拾取距离、场景渲染取用）统一为 levelPositionX/levelPositionY；相机（game.camera）的子瓦片偏移 zt/At（loop.js 由世界/关卡中心坐标对 tileSize 取余后算出，scene.js 与 characters.js 的等距投影公式使用）命名为 viewportOffsetX/viewportOffsetY。",
+  "files": [
+    "src/engine/modules/ai/behaviors.js",
+    "src/engine/modules/combat/actions.js",
+    "src/engine/modules/combat/scrolls.js",
+    "src/engine/modules/combat/potions.js",
+    "src/engine/modules/loot/treasure.js",
+    "src/engine/modules/loot/items.js",
+    "src/engine/modules/rendering/scene.js",
+    "src/engine/modules/runtime/game.js",
+    "src/engine/modules/simulation/characters.js",
+    "src/engine/modules/simulation/loop.js"
+  ],
+  "map": {
+    "Xo": "levelPositionX",
+    "Yo": "levelPositionY",
+    "bq": "levelPositionX",
+    "cq": "levelPositionY",
+    "mp": "levelPositionX",
+    "np": "levelPositionY",
+    "Qp": "levelPositionX",
+    "Rp": "levelPositionY",
+    "zt": "viewportOffsetX",
+    "At": "viewportOffsetY"
+  }
+}

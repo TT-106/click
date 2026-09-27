@@ -65,8 +65,8 @@ export function initializeSimulationLoop() {
             }
             g = Math.round(d % game.tileSize);
             h = Math.round(f % game.tileSize);
-            c.zt = g - h;
-            c.At = Math.round((g + h) / 2);
+            c.viewportOffsetX = g - h;
+            c.viewportOffsetY = Math.round((g + h) / 2);
             c.tileColumn = d / game.tileSize | 0;
             c.tileRow = f / game.tileSize | 0;
           }

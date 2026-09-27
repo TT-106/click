@@ -8,8 +8,8 @@ import { BASE_HIGHER_ITEM_CHANCE, LOWER_ITEM_LEVEL_CHANCE, globalUpgradeDefiniti
 export var FIRE_ITEM_EFFECT, ICE_ITEM_EFFECT, POISON_ITEM_EFFECT, SHOCK_ITEM_EFFECT, SONIC_ITEM_EFFECT;
 export function ItemDrop(a, b, c, d) {
   this.item = a;
-  this.mp = b;
-  this.np = c;
+  this.levelPositionX = b;
+  this.levelPositionY = c;
   this.PD = d;
   this.collected = false;
   this.claimedBy = null;

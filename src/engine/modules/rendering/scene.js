@@ -85,10 +85,10 @@ export function drawWorldTileRow(a, b, c, d) {
     if (g) {
       var h;
       h = game.camera;
-      h = game.viewportHalfWidth + (c - h.tileColumn - (b - h.tileRow)) * game.tileSize - h.zt;
+      h = game.viewportHalfWidth + (c - h.tileColumn - (b - h.tileRow)) * game.tileSize - h.viewportOffsetX;
       var l;
       l = game.camera;
-      l = game.viewportHalfHeight + (c - l.tileColumn + (b - l.tileRow)) * game.halfTileSize - l.At;
+      l = game.viewportHalfHeight + (c - l.tileColumn + (b - l.tileRow)) * game.halfTileSize - l.viewportOffsetY;
       f.drawSprite(g.backgroundSprite, h, l);
       var n = g.decorationSprite;
       if (n) {
@@ -104,10 +104,10 @@ export function drawDungeonTileRow(a, b, c, d) {
     if (g && g.floorType !== EMPTY_TILE) {
       var h;
       h = game.camera;
-      h = game.viewportHalfWidth + (c - h.tileColumn - (b - h.tileRow)) * game.tileSize - h.zt;
+      h = game.viewportHalfWidth + (c - h.tileColumn - (b - h.tileRow)) * game.tileSize - h.viewportOffsetX;
       var l;
       l = game.camera;
-      l = game.viewportHalfHeight + (c - l.tileColumn + (b - l.tileRow)) * game.halfTileSize - l.At;
+      l = game.viewportHalfHeight + (c - l.tileColumn + (b - l.tileRow)) * game.halfTileSize - l.viewportOffsetY;
       f.drawSprite(g.backgroundSprite, h, l);
       var n = g.decorationSprite;
       if (n) {
@@ -503,8 +503,8 @@ export function initializeRenderingScene() {
           la;
         for (la = 0; la < N.length; la++) {
           I = N[la];
-          x = I.Xo;
-          z = I.Yo;
+          x = I.levelPositionX;
+          z = I.levelPositionY;
           O = projectWorldX(x, z);
           J = projectWorldY(x, z);
           var Q = I.goldAmount,
@@ -520,8 +520,8 @@ export function initializeRenderingScene() {
           ia;
         for (ia = 0; ia < na.length; ia++) {
           K = na[ia];
-          H = K.bq;
-          S = K.cq;
+          H = K.levelPositionX;
+          S = K.levelPositionY;
           da = projectWorldX(H, S);
           W = projectWorldY(H, S);
           a.drawSprite(getScrollSprite(K.getScroll()), da, W);
@@ -535,8 +535,8 @@ export function initializeRenderingScene() {
           X;
         for (X = 0; X < ea.length; X++) {
           va = ea[X];
-          yb = va.Qp;
-          Fb = va.Rp;
+          yb = va.levelPositionX;
+          Fb = va.levelPositionY;
           pa = projectWorldX(yb, Fb);
           T = projectWorldY(yb, Fb);
           a.drawSprite(va.potion.potionSprite, pa, T);
@@ -550,8 +550,8 @@ export function initializeRenderingScene() {
           ub;
         for (ub = 0; ub < Ca.length; ub++) {
           qa = Ca[ub];
-          ta = qa.mp;
-          eb = qa.np;
+          ta = qa.levelPositionX;
+          eb = qa.levelPositionY;
           Gb = projectWorldX(ta, eb);
           Da = projectWorldY(ta, eb);
           a.drawSprite(qa.getItem().getIconSprite(), Gb, Da);

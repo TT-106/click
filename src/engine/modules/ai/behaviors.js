@@ -1105,10 +1105,10 @@ export function initializeAiBehaviors() {
         this.goldDrop = null;
       } else if (this.goldDrop.claimedBy == a) {
         a.targetGoldDrop = this.goldDrop;
-        if (distanceToPoint(a.position.levelPosition, this.goldDrop.Xo, this.goldDrop.Yo) < this.pickupRadius) {
+        if (distanceToPoint(a.position.levelPosition, this.goldDrop.levelPositionX, this.goldDrop.levelPositionY) < this.pickupRadius) {
           a.actionType = 5;
         } else {
-          setVector(a.position.moveTargetPoint, this.goldDrop.Xo, this.goldDrop.Yo);
+          setVector(a.position.moveTargetPoint, this.goldDrop.levelPositionX, this.goldDrop.levelPositionY);
           a.actionType = 1;
         }
         clearMovementTarget(a.position);
@@ -1140,7 +1140,7 @@ export function initializeAiBehaviors() {
       for (d = 0; d < b.length; d++) {
         c = b[d];
         if (!(c.collected || c.vD !== l)) {
-          h = distanceSquaredToPoint(f, c.Xo, c.Yo);
+          h = distanceSquaredToPoint(f, c.levelPositionX, c.levelPositionY);
           if (!(c.claimedBy && h > c.getClaimDistance() || !(0 > n || h < n))) {
             g = c;
             n = h;
@@ -1168,10 +1168,10 @@ export function initializeAiBehaviors() {
         this.scrollDrop = null;
       } else if (this.scrollDrop.claimedBy == a) {
         a.targetScrollDrop = this.scrollDrop;
-        if (distanceToPoint(a.position.levelPosition, this.scrollDrop.bq, this.scrollDrop.cq) < this.pickupRadius) {
+        if (distanceToPoint(a.position.levelPosition, this.scrollDrop.levelPositionX, this.scrollDrop.levelPositionY) < this.pickupRadius) {
           a.actionType = 7;
         } else {
-          setVector(a.position.moveTargetPoint, this.scrollDrop.bq, this.scrollDrop.cq);
+          setVector(a.position.moveTargetPoint, this.scrollDrop.levelPositionX, this.scrollDrop.levelPositionY);
           a.actionType = 1;
         }
         clearMovementTarget(a.position);
@@ -1203,7 +1203,7 @@ export function initializeAiBehaviors() {
       for (d = 0; d < b.length; d++) {
         c = b[d];
         if (!(c.collected || c.BE !== l)) {
-          h = distanceSquaredToPoint(f, c.bq, c.cq);
+          h = distanceSquaredToPoint(f, c.levelPositionX, c.levelPositionY);
           if (!(c.claimedBy && h > c.getClaimDistance() || !(0 > n || h < n))) {
             g = c;
             n = h;
@@ -1231,10 +1231,10 @@ export function initializeAiBehaviors() {
         this.potionDrop = null;
       } else if (this.potionDrop.claimedBy == a) {
         a.targetPotionDrop = this.potionDrop;
-        if (distanceToPoint(a.position.levelPosition, this.potionDrop.Qp, this.potionDrop.Rp) < this.pickupRadius) {
+        if (distanceToPoint(a.position.levelPosition, this.potionDrop.levelPositionX, this.potionDrop.levelPositionY) < this.pickupRadius) {
           a.actionType = 8;
         } else {
-          setVector(a.position.moveTargetPoint, this.potionDrop.Qp, this.potionDrop.Rp);
+          setVector(a.position.moveTargetPoint, this.potionDrop.levelPositionX, this.potionDrop.levelPositionY);
           a.actionType = 1;
         }
         clearMovementTarget(a.position);
@@ -1266,7 +1266,7 @@ export function initializeAiBehaviors() {
       for (d = 0; d < b.length; d++) {
         c = b[d];
         if (!(c.collected || c.oE !== l)) {
-          h = distanceSquaredToPoint(f, c.Qp, c.Rp);
+          h = distanceSquaredToPoint(f, c.levelPositionX, c.levelPositionY);
           if (!(c.claimedBy && h > c.getClaimDistance() || !(0 > n || h < n))) {
             g = c;
             n = h;
@@ -1294,10 +1294,10 @@ export function initializeAiBehaviors() {
         this.itemDrop = null;
       } else if (this.itemDrop.claimedBy == a) {
         a.targetItemDrop = this.itemDrop;
-        if (distanceToPoint(a.position.levelPosition, this.itemDrop.mp, this.itemDrop.np) < this.pickupRadius) {
+        if (distanceToPoint(a.position.levelPosition, this.itemDrop.levelPositionX, this.itemDrop.levelPositionY) < this.pickupRadius) {
           a.actionType = 6;
         } else {
-          setVector(a.position.moveTargetPoint, this.itemDrop.mp, this.itemDrop.np);
+          setVector(a.position.moveTargetPoint, this.itemDrop.levelPositionX, this.itemDrop.levelPositionY);
           a.actionType = 1;
         }
         clearMovementTarget(a.position);
@@ -1329,7 +1329,7 @@ export function initializeAiBehaviors() {
       for (d = 0; d < b.length; d++) {
         c = b[d];
         if (!(c.collected || c.PD !== l)) {
-          h = distanceSquaredToPoint(f, c.mp, c.np);
+          h = distanceSquaredToPoint(f, c.levelPositionX, c.levelPositionY);
           if (!(c.claimedBy && h > c.getClaimDistance() || !(0 > n || h < n))) {
             g = c;
             n = h;

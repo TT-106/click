@@ -8,8 +8,8 @@ import { globalUpgradeDefinitions } from "../content/balance.js";
 import { canPlaceRoomObject } from "../world/rooms.js";
 export function GoldDrop(a, b, c, d) {
   this.goldAmount = a;
-  this.Xo = b;
-  this.Yo = c;
+  this.levelPositionX = b;
+  this.levelPositionY = c;
   this.vD = d;
   this.collected = false;
   this.claimedBy = null;

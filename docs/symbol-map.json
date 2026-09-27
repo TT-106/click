@@ -8008,7 +8008,17 @@
     "Hp": "defenceRating",
     "xq": "killCount",
     "ml": "rankProgressKills",
-    "gq": "setMonsterType"
+    "gq": "setMonsterType",
+    "Xo": "levelPositionX",
+    "Yo": "levelPositionY",
+    "bq": "levelPositionX",
+    "cq": "levelPositionY",
+    "mp": "levelPositionX",
+    "np": "levelPositionY",
+    "Qp": "levelPositionX",
+    "Rp": "levelPositionY",
+    "zt": "viewportOffsetX",
+    "At": "viewportOffsetY"
   },
   "gameFields": {
     "B": "tileSize",

@@ -176,8 +176,8 @@ export function clearScrollTargets() {
 }
 export function ScrollDrop(a, b, c, d) {
   this.scroll = a;
-  this.bq = b;
-  this.cq = c;
+  this.levelPositionX = b;
+  this.levelPositionY = c;
   this.BE = d;
   this.collected = false;
   this.claimedBy = null;

@@ -196,7 +196,7 @@ export function applySpellEffect(a, b) {
       f = g[c];
       if (!f.collected) {
         var goldOffset = new Vector2();
-        setVector(goldOffset, f.Xo, f.Yo);
+        setVector(goldOffset, f.levelPositionX, f.levelPositionY);
         var goldEffect = new VisualEffect("Gold Sparkles", d, goldOffset, false, 1);
         addVisualEffect(game.effects, goldEffect);
         addGold(f.goldAmount);
@@ -212,7 +212,7 @@ export function applySpellEffect(a, b) {
       var itemDrop = g[c];
       if (!itemDrop.collected) {
         var itemOffset = new Vector2();
-        setVector(itemOffset, itemDrop.mp, itemDrop.np);
+        setVector(itemOffset, itemDrop.levelPositionX, itemDrop.levelPositionY);
         var itemEffect = new VisualEffect("Blue Sparkles", d, itemOffset, false, 1);
         addVisualEffect(game.effects, itemEffect);
         f = itemDrop.getItem();
@@ -256,7 +256,7 @@ export function applySpellEffect(a, b) {
       f = g[c];
       if (!f.collected) {
         var scrollOffset = new Vector2();
-        setVector(scrollOffset, f.bq, f.cq);
+        setVector(scrollOffset, f.levelPositionX, f.levelPositionY);
         var scrollEffect = new VisualEffect("Pink Sparkles", d, scrollOffset, false, 1);
         addVisualEffect(game.effects, scrollEffect);
         f.setCollected(true);
@@ -271,7 +271,7 @@ export function applySpellEffect(a, b) {
       f = g[c];
       if (!f.collected) {
         var potionOffset = new Vector2();
-        setVector(potionOffset, f.Qp, f.Rp);
+        setVector(potionOffset, f.levelPositionX, f.levelPositionY);
         var potionEffect = new VisualEffect("Green Sparkles", d, potionOffset, false, 1);
         addVisualEffect(game.effects, potionEffect);
         f.setCollected(true);

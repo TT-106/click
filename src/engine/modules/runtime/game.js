@@ -50,7 +50,7 @@ export function initializeRuntimeGame() {
     itemSprites: new SpriteSheet("spritesheet/items.png", 32, itemsAtlas),
     animations: createAnimationCatalog(),
     camera: new function () {
-      this.At = this.zt = this.tileRow = this.tileColumn = 0;
+      this.viewportOffsetY = this.viewportOffsetX = this.tileRow = this.tileColumn = 0;
     }(),
     lifecycle: new CharacterLifecycle(),
     world: new WorldMap(),

@@ -78,8 +78,8 @@ export function isPotionModifierActive(a) {
 }
 export function PotionDrop(a, b, c, d) {
   this.potion = a;
-  this.Qp = b;
-  this.Rp = c;
+  this.levelPositionX = b;
+  this.levelPositionY = c;
   this.oE = d;
   this.collected = false;
   this.claimedBy = null;
