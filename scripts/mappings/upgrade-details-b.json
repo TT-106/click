@@ -1,0 +1,37 @@
+{
+  "_comment": "upgrade-details.js 批 B：EquipmentDetails / EquipmentSetDetails / CharacterLevelDetails / UpgradeListView。来源：createDomElements 的元素结构（角色头像、XP/等级/HP/SP 预览、装备图标-名称-稀有度三列）与 update 的曲线计算与队伍均值对比缓存。CharacterLevelDetails 的怪物四项按「曲线来源」命名（monsterHealth/Spirit/Attack/Defence），与 encounters.js:70-80 给 stats 赋值的曲线一致；曲线名与用途错位问题见 unresolved U8。",
+  "files": ["src/engine/modules/views/upgrade-details.js"],
+  "map": {
+    "hm": "characterImage",
+    "Ty": "descriptionLabel",
+    "aD": "experienceLabel",
+    "Ry": "levelLabel",
+    "Py": "healthPreviewLabel",
+    "Sy": "spiritPreviewLabel",
+    "Iu": "cachedCharacter",
+    "Ju": "cachedCharacterLevel",
+
+    "IA": "iconElements",
+    "JA": "nameElements",
+    "Rw": "rarityElements",
+    "sr": "cachedItems",
+
+    "bn": "monsterHealth",
+    "$m": "monsterSpirit",
+    "an": "monsterAttack",
+    "cn": "monsterDefence",
+    "ir": "cachedPartyDamage",
+    "gr": "cachedPartyArmor",
+    "hr": "cachedPartyAttackRating",
+    "jr": "cachedPartyDefenceRating",
+    "kr": "monsterDamageLabel",
+    "Rq": "monsterArmorLabel",
+    "Sq": "monsterAttackLabel",
+    "lr": "monsterDefenceLabel",
+    "Zm": "monsterPreviewImage",
+    "Bs": "cachedAssessmentText",
+
+    "qw": "effectFrameInterval",
+    "py": "upgradeCollection"
+  }
+}

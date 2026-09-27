@@ -82,10 +82,10 @@ export function ItemPurchaseDetails(a, b) {
 export function EquipmentDetails(a, b) {
   this.upgrade = a;
   this.contentContainer = b;
-  this.aD = this.Sy = this.Py = this.Ry = this.Ty = this.hm = this.table = null;
+  this.experienceLabel = this.spiritPreviewLabel = this.healthPreviewLabel = this.levelLabel = this.descriptionLabel = this.characterImage = this.table = null;
   this.shown = false;
-  this.Iu = null;
-  this.Ju = -1;
+  this.cachedCharacter = null;
+  this.cachedCharacterLevel = -1;
 }
 export function GlobalUpgradeDetails(a, b) {
   this.upgrade = a;
@@ -104,12 +104,12 @@ export function AutoDungeonDetails(a, b) {
 export function EquipmentSetDetails(a, b) {
   this.upgrade = a;
   this.contentContainer = b;
-  this.IA = [];
-  this.JA = [];
-  this.Rw = [];
+  this.iconElements = [];
+  this.nameElements = [];
+  this.rarityElements = [];
   this.tableElement = null;
   this.shown = false;
-  this.sr = [];
+  this.cachedItems = [];
 }
 export function appendEquipmentRow(a, b) {
   var c = a.tableElement.insertRow(b),
@@ -121,11 +121,11 @@ export function appendEquipmentRow(a, b) {
   d.src = "images/Transparent.gif";
   d.style.width = "30px";
   d.style.height = "30px";
-  a.IA.push(d);
+  a.iconElements.push(d);
   c = c.insertCell(1);
   c.style.textAlign = "left";
-  a.JA.push(createElement("span", c, null, null));
-  a.Rw.push(createElement("span", c, null, null));
+  a.nameElements.push(createElement("span", c, null, null));
+  a.rarityElements.push(createElement("span", c, null, null));
 }
 export function SkillUpgradeDetails(a, b) {
   this.upgrade = a;
@@ -142,7 +142,7 @@ export function SpellUpgradeDetails(a, b) {
   this.asset = this.assetSource = this.cachedSpell = null;
   this.isAnimated = true;
   this.frameAge = this.frameIndex = 0;
-  this.qw = 8;
+  this.effectFrameInterval = 8;
 }
 export function MonsterLevelDetails(a, b) {
   this.upgrade = a;
@@ -185,11 +185,11 @@ export function FarmUpgradeDetails(a, b) {
 export function CharacterLevelDetails(a, b) {
   this.upgrade = a;
   this.contentContainer = b;
-  this.jr = this.hr = this.gr = this.ir = this.cn = this.an = this.$m = this.bn = 0;
-  this.lr = this.Sq = this.Rq = this.kr = this.descriptionElement = this.titleElement = this.costLabel = this.Zm = this.table = null;
+  this.cachedPartyDefenceRating = this.cachedPartyAttackRating = this.cachedPartyArmor = this.cachedPartyDamage = this.monsterDefence = this.monsterAttack = this.monsterSpirit = this.monsterHealth = 0;
+  this.monsterDefenceLabel = this.monsterAttackLabel = this.monsterArmorLabel = this.monsterDamageLabel = this.descriptionElement = this.titleElement = this.costLabel = this.monsterPreviewImage = this.table = null;
   this.shown = false;
   this.cachedCostValue = -1;
-  this.cachedTitleText = this.Bs = null;
+  this.cachedTitleText = this.cachedAssessmentText = null;
   this.cachedLevel = -1;
 }
 export function AchievementClaimDetails(a, b) {
@@ -217,7 +217,7 @@ export function PointUpgradeDetails(a, b) {
 export function UpgradeListView(a, b, c) {
   this.elementId = a;
   this.visible = true;
-  this.py = b;
+  this.upgradeCollection = b;
   this.cachedUpdateCounter = -100;
   this.buttons = [];
   var d = b.upgrades;
@@ -381,8 +381,8 @@ export function initializeViewsUpgradeDetails() {
     return 2;
   };
   EquipmentDetails.prototype.reset = function () {
-    this.Iu = null;
-    this.Ju = -1;
+    this.cachedCharacter = null;
+    this.cachedCharacterLevel = -1;
   };
   EquipmentDetails.prototype.attachUpgrade = function (a) {
     this.upgrade = a;
@@ -400,17 +400,17 @@ export function initializeViewsUpgradeDetails() {
     if (this.upgrade.Vo()) {
       var a = this.upgrade.Vo(),
         b = a.stats.characterLevel;
-      if (this.Iu !== a || this.Ju != b) {
-        this.Iu = a;
-        this.Ju = b;
+      if (this.cachedCharacter !== a || this.cachedCharacterLevel != b) {
+        this.cachedCharacter = a;
+        this.cachedCharacterLevel = b;
         var c = a.getSprite(),
           d = a.classDefinition.statMultipliers;
-        this.hm.style.background = "url('spritesheet/monsters.png') -" + (c.sourceX + 10) + "px -" + (c.sourceY + 12) + "px";
-        this.Ty.innerHTML = this.upgrade.getDescription();
-        this.aD.innerHTML = formatAmount(a.stats.experienceToLevelUp) + " XP";
-        this.Ry.innerHTML = "等级 " + (b + 1);
-        this.Py.innerHTML = ", " + formatAmount(scaleByLevel(b + 1, healthCurve, d.maxHealthMultiplier)) + " HP";
-        this.Sy.innerHTML = ", " + formatAmount(scaleByLevel(b + 1, spiritCurve, d.maxSpiritMultiplier)) + " SP";
+        this.characterImage.style.background = "url('spritesheet/monsters.png') -" + (c.sourceX + 10) + "px -" + (c.sourceY + 12) + "px";
+        this.descriptionLabel.innerHTML = this.upgrade.getDescription();
+        this.experienceLabel.innerHTML = formatAmount(a.stats.experienceToLevelUp) + " XP";
+        this.levelLabel.innerHTML = "等级 " + (b + 1);
+        this.healthPreviewLabel.innerHTML = ", " + formatAmount(scaleByLevel(b + 1, healthCurve, d.maxHealthMultiplier)) + " HP";
+        this.spiritPreviewLabel.innerHTML = ", " + formatAmount(scaleByLevel(b + 1, spiritCurve, d.maxSpiritMultiplier)) + " SP";
       }
     } else {
       console.log("bug in upgrade button");
@@ -425,28 +425,28 @@ export function initializeViewsUpgradeDetails() {
     c.style.width = "30px";
     c.style.height = "30px";
     c.style.verticalAlign = "top";
-    this.hm = createElement("img", c, null, null);
-    this.hm.className = "characterImage";
-    this.hm.src = "images/Transparent.gif";
-    this.hm.style.height = "30px";
-    this.hm.style.width = "30px";
+    this.characterImage = createElement("img", c, null, null);
+    this.characterImage.className = "characterImage";
+    this.characterImage.src = "images/Transparent.gif";
+    this.characterImage.style.height = "30px";
+    this.characterImage.style.width = "30px";
     c = a.insertCell(1);
     c.style.width = "180px";
     c.style.textAlign = "left";
     c.style.paddingLeft = "3px";
-    this.Ty = createElement("span", c, null, null);
+    this.descriptionLabel = createElement("span", c, null, null);
     a = a.insertCell(2);
     a.style.width = "40px";
     a.style.textAlign = "right";
-    this.aD = createElement("span", a, null, null);
+    this.experienceLabel = createElement("span", a, null, null);
     b = b.insertCell(0);
     b.colSpan = 3;
     b.style.paddingLeft = "2px";
     b.style.textAlign = "left";
     b.style.verticalAlign = "middle";
-    this.Ry = createElement("span", b, null, null);
-    this.Py = createElement("span", b, null, null);
-    this.Sy = createElement("span", b, null, null);
+    this.levelLabel = createElement("span", b, null, null);
+    this.healthPreviewLabel = createElement("span", b, null, null);
+    this.spiritPreviewLabel = createElement("span", b, null, null);
   };
   GlobalUpgradeDetails.prototype.getUpgradeType = function () {
     return 3;
@@ -581,7 +581,7 @@ export function initializeViewsUpgradeDetails() {
     return 4;
   };
   EquipmentSetDetails.prototype.reset = function () {
-    this.sr.length = 0;
+    this.cachedItems.length = 0;
   };
   EquipmentSetDetails.prototype.attachUpgrade = function (a) {
     this.upgrade = a;
@@ -602,13 +602,13 @@ export function initializeViewsUpgradeDetails() {
       d,
       f = Math.min(5, a.length);
     for (b = 0; b < f; b++) {
-      if (c = a[b], this.sr.length < b || this.sr[b] !== c) {
-        this.sr[b] = c;
+      if (c = a[b], this.cachedItems.length < b || this.cachedItems[b] !== c) {
+        this.cachedItems[b] = c;
         d = c.getIconSprite();
-        this.IA[b].style.background = "url('spritesheet/items.png') -" + d.sourceX + "px -" + d.sourceY + "px";
-        this.JA[b].innerHTML = getHighlightedItemName(c);
-        this.Rw[b].className = getRarityClass(c.getRarity());
-        this.Rw[b].innerHTML = " (" + getItemRarityLabel(c) + ")";
+        this.iconElements[b].style.background = "url('spritesheet/items.png') -" + d.sourceX + "px -" + d.sourceY + "px";
+        this.nameElements[b].innerHTML = getHighlightedItemName(c);
+        this.rarityElements[b].className = getRarityClass(c.getRarity());
+        this.rarityElements[b].innerHTML = " (" + getItemRarityLabel(c) + ")";
       }
     }
   };
@@ -721,7 +721,7 @@ export function initializeViewsUpgradeDetails() {
     }
     if (this.isAnimated) {
       this.frameAge++;
-      if (this.frameAge >= this.qw) {
+      if (this.frameAge >= this.effectFrameInterval) {
         this.frameAge = 0;
         this.frameIndex++;
         if (this.frameIndex >= this.asset.To()) {
@@ -1117,16 +1117,16 @@ export function initializeViewsUpgradeDetails() {
   };
   CharacterLevelDetails.prototype.reset = function () {
     this.cachedCostValue = -1;
-    this.cachedTitleText = this.Bs = null;
+    this.cachedTitleText = this.cachedAssessmentText = null;
     this.cachedLevel = -1;
-    this.cn = this.an = this.$m = this.bn = this.jr = this.hr = this.ir = this.gr = 0;
+    this.monsterDefence = this.monsterAttack = this.monsterSpirit = this.monsterHealth = this.cachedPartyDefenceRating = this.cachedPartyAttackRating = this.cachedPartyDamage = this.cachedPartyArmor = 0;
   };
   CharacterLevelDetails.prototype.attachUpgrade = function (a) {
     this.upgrade = a;
     this.cachedCostValue = -1;
-    this.cachedTitleText = this.Bs = null;
+    this.cachedTitleText = this.cachedAssessmentText = null;
     this.cachedLevel = -1;
-    this.cn = this.an = this.$m = this.bn = this.jr = this.hr = this.ir = this.gr = 0;
+    this.monsterDefence = this.monsterAttack = this.monsterSpirit = this.monsterHealth = this.cachedPartyDefenceRating = this.cachedPartyAttackRating = this.cachedPartyDamage = this.cachedPartyArmor = 0;
   };
   CharacterLevelDetails.prototype.showDetails = function () {
     if (!this.table) {
@@ -1152,17 +1152,17 @@ export function initializeViewsUpgradeDetails() {
     if (this.cachedLevel != c) {
       this.cachedLevel = c;
       a = Math.max(1, 10 * (this.cachedLevel - 1)) + 1;
-      this.bn = scaleByLevel(a, monsterHealthCurve, 1);
-      this.$m = scaleByLevel(a, monsterSpiritCurve, 1);
-      this.an = scaleByLevel(a, monsterAttackCurve, 1);
-      this.cn = scaleByLevel(a, monsterDefenceCurve, 1);
-      this.kr.innerHTML = formatAmount(this.bn) + " 伤害";
-      this.Rq.innerHTML = formatAmount(this.$m) + " 护甲";
-      this.Sq.innerHTML = formatAmount(this.an) + " 攻击";
-      this.lr.innerHTML = formatAmount(this.cn) + " 防御";
+      this.monsterHealth = scaleByLevel(a, monsterHealthCurve, 1);
+      this.monsterSpirit = scaleByLevel(a, monsterSpiritCurve, 1);
+      this.monsterAttack = scaleByLevel(a, monsterAttackCurve, 1);
+      this.monsterDefence = scaleByLevel(a, monsterDefenceCurve, 1);
+      this.monsterDamageLabel.innerHTML = formatAmount(this.monsterHealth) + " 伤害";
+      this.monsterArmorLabel.innerHTML = formatAmount(this.monsterSpirit) + " 护甲";
+      this.monsterAttackLabel.innerHTML = formatAmount(this.monsterAttack) + " 攻击";
+      this.monsterDefenceLabel.innerHTML = formatAmount(this.monsterDefence) + " 防御";
       c = getMonsterTypesForLevel(game.monsterCatalog, c);
       c = c[randomInt(c.length)].sprite;
-      this.Zm.style.background = "url('spritesheet/monsters.png') -" + (c.sourceX + 10) + "px -" + (c.sourceY + 12) + "px";
+      this.monsterPreviewImage.style.background = "url('spritesheet/monsters.png') -" + (c.sourceX + 10) + "px -" + (c.sourceY + 12) + "px";
     }
     for (var d, f = 0, g = 0, h = 0, l = 0, c = getPartyMinLevel(), a = this.upgrade.Kr(), adventurerIndex = 0; adventurerIndex < game.state.adventurers.length; adventurerIndex++) {
       d = game.state.adventurers[adventurerIndex].stats;
@@ -1175,26 +1175,26 @@ export function initializeViewsUpgradeDetails() {
     g = floorNumber(g / game.state.adventurers.length);
     h = floorNumber(h / game.state.adventurers.length);
     l = floorNumber(l / game.state.adventurers.length);
-    if (this.ir !== f) {
-      this.Rq.style.color = this.$m >= f ? "#F00" : "#0A0";
-      this.ir = f;
+    if (this.cachedPartyDamage !== f) {
+      this.monsterArmorLabel.style.color = this.monsterSpirit >= f ? "#F00" : "#0A0";
+      this.cachedPartyDamage = f;
     }
-    if (this.gr !== g) {
-      this.kr.style.color = this.bn >= g ? "#F00" : "#0A0";
-      this.gr = g;
+    if (this.cachedPartyArmor !== g) {
+      this.monsterDamageLabel.style.color = this.monsterHealth >= g ? "#F00" : "#0A0";
+      this.cachedPartyArmor = g;
     }
-    if (this.hr !== h) {
-      this.lr.style.color = this.cn >= h ? "#F00" : "#0A0";
-      this.hr = h;
+    if (this.cachedPartyAttackRating !== h) {
+      this.monsterDefenceLabel.style.color = this.monsterDefence >= h ? "#F00" : "#0A0";
+      this.cachedPartyAttackRating = h;
     }
-    if (this.jr !== l) {
-      this.Sq.style.color = this.an >= l ? "#F00" : "#0A0";
-      this.jr = l;
+    if (this.cachedPartyDefenceRating !== l) {
+      this.monsterAttackLabel.style.color = this.monsterAttack >= l ? "#F00" : "#0A0";
+      this.cachedPartyDefenceRating = l;
     }
-    b = (f > this.$m ? 1 : 0) + (g > this.bn ? 1 : 0) + (h > this.cn ? 1 : 0) + (l > this.an ? 1 : 0);
+    b = (f > this.monsterSpirit ? 1 : 0) + (g > this.monsterHealth ? 1 : 0) + (h > this.monsterDefence ? 1 : 0) + (l > this.monsterAttack ? 1 : 0);
     c = c < a ? "最低角色等级需求: " + a : 4 === b ? "评定: 小菜一碟" : 3 === b ? "评定: 有点挑战" : 2 === b ? "评定: 非常困难!" : "评定: 难如登天!";
-    if (this.Bs !== c) {
-      this.Bs = c;
+    if (this.cachedAssessmentText !== c) {
+      this.cachedAssessmentText = c;
       this.descriptionElement.innerHTML = c;
     }
   };
@@ -1248,25 +1248,25 @@ export function initializeViewsUpgradeDetails() {
     b.style.textAlign = "right";
     d.style.width = "100px";
     d.style.textAlign = "right";
-    this.Zm = createElement("img", f, null, null);
-    this.Zm.className = "characterImage";
-    this.Zm.src = "images/Transparent.gif";
-    this.Zm.style.height = "30px";
-    this.Zm.style.width = "30px";
-    this.kr = createElement("span", b, null, null);
-    this.kr.style.marginLeft = "3px";
-    this.Sq = createElement("span", d, null, null);
-    this.Sq.style.marginLeft = "15px";
+    this.monsterPreviewImage = createElement("img", f, null, null);
+    this.monsterPreviewImage.className = "characterImage";
+    this.monsterPreviewImage.src = "images/Transparent.gif";
+    this.monsterPreviewImage.style.height = "30px";
+    this.monsterPreviewImage.style.width = "30px";
+    this.monsterDamageLabel = createElement("span", b, null, null);
+    this.monsterDamageLabel.style.marginLeft = "3px";
+    this.monsterAttackLabel = createElement("span", d, null, null);
+    this.monsterAttackLabel.style.marginLeft = "15px";
     d = c.insertCell(0);
     c = c.insertCell(1);
     d.style.width = "100px";
     d.style.textAlign = "right";
     c.style.width = "100px";
     c.style.textAlign = "right";
-    this.Rq = createElement("span", d, null, null);
-    this.Rq.style.marginLeft = "3px";
-    this.lr = createElement("span", c, null, null);
-    this.lr.style.marginLeft = "15px";
+    this.monsterArmorLabel = createElement("span", d, null, null);
+    this.monsterArmorLabel.style.marginLeft = "3px";
+    this.monsterDefenceLabel = createElement("span", c, null, null);
+    this.monsterDefenceLabel.style.marginLeft = "15px";
   };
   AchievementClaimDetails.prototype.getUpgradeType = function () {
     return 14;
@@ -1400,7 +1400,7 @@ export function initializeViewsUpgradeDetails() {
     for (a = 0; a < this.buttons.length; a++) {
       (/** @type {UpgradeButtonView & ActiveUpgradeButton} */ (/** @type {unknown} */ (this.buttons[a]))).reset();
     }
-    var b = this.py.upgrades;
+    var b = this.upgradeCollection.upgrades;
     for (a = 0; a < this.buttons.length; a++) {
       (/** @type {UpgradeButtonView & ActiveUpgradeButton} */ (/** @type {unknown} */ (this.buttons[a]))).attachUpgrade(b[a]);
     }
@@ -1408,10 +1408,10 @@ export function initializeViewsUpgradeDetails() {
   };
   UpgradeListView.prototype.update = function () {
     var a;
-    a = this.py.updateCounter;
+    a = this.upgradeCollection.updateCounter;
     if (this.cachedUpdateCounter !== a) {
       this.cachedUpdateCounter = a;
-      var b = this.py.upgrades;
+      var b = this.upgradeCollection.upgrades;
       for (a = 0; a < this.buttons.length; a++) {
         (/** @type {UpgradeButtonView & ActiveUpgradeButton} */ (/** @type {unknown} */ (this.buttons[a]))).attachUpgrade(b[a]);
       }
