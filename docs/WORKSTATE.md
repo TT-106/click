@@ -5,6 +5,7 @@
 
 ## 当前轮次状态（2026-09-26，M13 文档与验收收尾）
 
+- U65 目的地瓦片与金币掉落（2026-09-26，一笔提交，六门禁全绿，混淆清单 810 → 806）：Rn/Sn→destTileColumn/destTileRow（setWorldDestination 的世界目的地瓦片，大地图寻路终点判断 f===destTileColumn 等全量消费）、Xl→goldAmount（金币掉落金额：addGold 入账、recordGoldFromMonsters 统计、scene 掉落拾取判定三处消费）、Km→discovered（走廊/房间发现旗标：party 寻路读它决定门口路径代价，game-save 可见性恢复）。
 - U64 城堡世界像素坐标收尾（2026-09-26，一笔提交，六门禁全绿，混淆清单 812 → 810）：dm/em→worldPixelX/worldPixelY 补齐 terrain.js 残留 2 处——terrain 装饰城堡地块时经 findCastle(...).dm/em 读城堡像素位置；残留扫描强制闭环的价值再次体现。
 - U63 法术缓存收尾与队伍世界目的地（2026-09-26，一笔提交，六门禁全绿，混淆清单 815 → 812）：Wm→learnedSpell（LootChestBehavior 类别 14 法术缓存，7 处）、Om/Nm→worldDestRow/worldDestColumn（队伍世界旅行目的地瓦片行/列：findNearestWorldColumn/Row 生成、calculateWorldCosts 计算代价、与当前位置差值判断到达；跨 party/game/initialization 三文件）。
 - U62 潜行旗标与强制目的地（2026-09-26，一笔提交，六门禁全绿，混淆清单 817 → 815）：Gn→hasStealthEffect（状态效果 type 10 旗标——**首次误名 isStealthed 与 CharacterEffects 既有 isStealthed 碰撞**：type 10 置 Gn、type 11 置 isStealthed 是两个不同旗标，重置路径分别置 false；发现后立即回退改用 hasStealthEffect）；gn→forcedDestinationRoom（forcePartyDestination 设置的强制目的地房间，到达后清除，runtime/game.js 与 tick.js 清理点由残留扫描补齐）。
