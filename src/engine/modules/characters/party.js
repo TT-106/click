@@ -350,7 +350,7 @@ export function initializeCharactersParty() {
         g,
         h;
       for (h = 0; h < a.castleList.length; h++) {
-        if (f = a.castleList[h], !f.regionLocked && !f.conquered && (g = distanceSquaredToPoint(b, game.world.tileToPixelX(f.dm), game.world.tileToPixelY(f.em)), !c || g < d)) {
+        if (f = a.castleList[h], !f.regionLocked && !f.conquered && (g = distanceSquaredToPoint(b, game.world.tileToPixelX(f.worldPixelX), game.world.tileToPixelY(f.worldPixelY)), !c || g < d)) {
           c = f;
           d = g;
         }
@@ -410,7 +410,7 @@ export function initializeCharactersParty() {
         d = game.state.leader.position.worldPosition;
         f = null;
         for (n = g = 0; n < c.scheduledCastles.length; n++) {
-          if (h = c.scheduledCastles[n], l = distanceSquaredToPoint(d, game.world.tileToPixelX(h.dm), game.world.tileToPixelY(h.em)), !f || l < g) {
+          if (h = c.scheduledCastles[n], l = distanceSquaredToPoint(d, game.world.tileToPixelX(h.worldPixelX), game.world.tileToPixelY(h.worldPixelY)), !f || l < g) {
             f = h;
             g = l;
           }
@@ -490,8 +490,8 @@ export function initializeCharactersParty() {
         c = this.targetShop.iq;
         d = this.targetShop.jq;
       } else if (this.activeCastle) {
-        c = this.activeCastle.dm;
-        d = this.activeCastle.em;
+        c = this.activeCastle.worldPixelX;
+        d = this.activeCastle.worldPixelY;
       } else if (this.targetDungeon) {
         c = this.targetDungeon.getWorldColumn();
         d = this.targetDungeon.getWorldRow();

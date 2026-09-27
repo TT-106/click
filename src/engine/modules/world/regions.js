@@ -65,8 +65,8 @@ export function Castle(a, b, c, d, f, g) {
   this.castleName = b;
   this.ZC = c;
   this.$C = d;
-  this.dm = f;
-  this.em = g;
+  this.worldPixelX = f;
+  this.worldPixelY = g;
   this.dungeonsConquered = this.conquered = false;
   this.regionLocked = true;
   this.attackScheduled = false;

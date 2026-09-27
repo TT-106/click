@@ -245,7 +245,7 @@ export function initializeAiBehaviors() {
             return;
           }
         } else if (d) {
-          if (b = d.dm, c = d.em, d = game.world.getTileAtPixel(b, c)) {
+          if (b = d.worldPixelX, c = d.worldPixelY, d = game.world.getTileAtPixel(b, c)) {
             b = a.position;
             if (game.world.getTileAtPixel(game.world.pixelToTileColumn(b.getWorldPositionX()), game.world.pixelToTileRow(b.getWorldPositionY())) === d) {
               a.actionType = 11;
