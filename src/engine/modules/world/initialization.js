@@ -85,7 +85,7 @@ export function initializeRegionsAndCastles() {
     var qb = jb,
       wb = game.regions.byKey[ob];
     qb.regions.push(wb);
-    wb.cu = qb;
+    wb.castle = qb;
     Sb++;
   }
   for (var Ib, Ec = 0; Sb < zb;) {
@@ -104,8 +104,8 @@ export function initializeRegionsAndCastles() {
         var Tb = jb,
           qc = Ib;
         Tb.regions.push(qc);
-        qc.cu = Tb;
-        vb[Ib.io] = true;
+        qc.castle = Tb;
+        vb[Ib.regionKey] = true;
         Sb++;
       }
     }
@@ -115,10 +115,10 @@ export function initializeRegionsAndCastles() {
   var Fc, Cb, kb, Ra;
   for (Fc = 0; Fc < ha.castleList.length; Fc++) {
     for (kb = ha.castleList[Fc], ha.castleRegistry[kb.castleId] && console.log("duplicate castle id: " + kb.castleId), ha.castleRegistry[kb.castleId] = kb, Ra = kb.regions, Cb = 0; Cb < Ra.length; Cb++) {
-      if (ha.ju[Ra[Cb].io]) {
-        console.log("duplicate castle owner: " + Ra[Cb].io);
+      if (ha.ju[Ra[Cb].regionKey]) {
+        console.log("duplicate castle owner: " + Ra[Cb].regionKey);
       }
-      ha.ju[Ra[Cb].io] = kb;
+      ha.ju[Ra[Cb].regionKey] = kb;
     }
   }
   var Ja = game.dungeons;

@@ -12,9 +12,9 @@ export function getCastleStatusColor(a) {
 export function CastleMapView() {
   this.elementId = "castleMapContainer";
   this.visible = true;
-  this.ws = null;
-  this.vs = [];
-  this.Fu = -1;
+  this.tableElement = null;
+  this.mapCells = [];
+  this.cachedRevision = -1;
 }
 export function CastleTableView() {
   this.elementId = "castleTableContainer";
@@ -25,17 +25,17 @@ export function CastleTableView() {
 export function CastleRowView(a) {
   this.rowElement = a;
   this.progressTextElement = this.progressFillElement = this.progressCell = this.nameCell = this.castle = null;
-  this.Us = 120;
-  this.Rv = this.Cu = this.cachedDescriptionText = "";
-  this.Kv = 0;
+  this.progressWidth = 120;
+  this.cachedStatusText = this.cachedStatusColor = this.cachedDescriptionText = "";
+  this.cachedProgressWidth = 0;
   /** @type {{createRowCells: () => void}} */ (/** @type {unknown} */ (this)).createRowCells();
 }
 export function setCastleRowModel(a, b) {
   a.castle = b;
-  a.Cu = "";
-  a.Rv = "";
-  a.Kv = 0;
-  a.fb = "";
+  a.cachedStatusColor = "";
+  a.cachedStatusText = "";
+  a.cachedProgressWidth = 0;
+  a.unusedCachedText = "";
 }
 export function CastlesView(a) {
   this.elementId = "castlesTabContent";
@@ -46,19 +46,19 @@ export function CastlesView(a) {
 export function initializeViewsCastles() {
   CastleMapView.prototype = new View();
   CastleMapView.prototype.reset = function () {
-    this.Fu = -1;
+    this.cachedRevision = -1;
     clearElementById(this.elementId);
-    this.ws = null;
-    this.vs.length = 0;
+    this.tableElement = null;
+    this.mapCells.length = 0;
   };
   CastleMapView.prototype.update = function () {
-    if (!this.ws) {
+    if (!this.tableElement) {
       /** @type {{createDomElements: () => void}} */ (/** @type {unknown} */ (this)).createDomElements();
     }
     var a;
     a = game.castles.revision;
-    if (this.Fu != a) {
-      this.Fu = a;
+    if (this.cachedRevision != a) {
+      this.cachedRevision = a;
       a = game.regions;
       var b,
         c,
@@ -68,8 +68,8 @@ export function initializeViewsCastles() {
         h;
       for (c = 0; c < f; c++) {
         for (b = 0; b < d; b++) {
-          if (g = this.vs[b][c], h = a.Mr[b][c]) {
-            h = h.cu;
+          if (g = this.mapCells[b][c], h = a.Mr[b][c]) {
+            h = h.castle;
             h = getCastleStatusColor(h);
             if (g.style.backgroundColor != h) {
               g.style.backgroundColor = h;
@@ -88,21 +88,21 @@ export function initializeViewsCastles() {
       f = b.regionGridOriginColumn + b.regionGridSpan,
       g = b.regionGridOriginRow + b.regionGridSpan,
       h;
-    this.ws = createElement("table", getElement(containerId), null, null);
+    this.tableElement = createElement("table", getElement(containerId), null, null);
     var a = f - c,
       l;
     d = g - d;
     for (g = 0; g < a; g++) {
-      this.vs.push([]);
+      this.mapCells.push([]);
     }
     for (c = 0; c < d; c++) {
-      for (f = this.ws.insertRow(c), g = 0; g < a; g++) {
+      for (f = this.tableElement.insertRow(c), g = 0; g < a; g++) {
         l = f.insertCell(g);
         l = createElement("div", l, null, null);
         l.style.width = "39px";
         l.style.height = "39px";
         if (h = b.Mr[g][c]) {
-          if (h = findCastle(h.io)) {
+          if (h = findCastle(h.regionKey)) {
             h = createElement("img", l, null, null);
             h.src = "images/Transparent.gif";
             h.style.width = "35px";
@@ -111,7 +111,7 @@ export function initializeViewsCastles() {
             h.style.background = "url('spritesheet/items.png') -" + n.sourceX + "px -" + n.sourceY + "px";
           }
         }
-        this.vs[g].push(l);
+        this.mapCells[g].push(l);
       }
     }
   };
@@ -169,14 +169,14 @@ export function initializeViewsCastles() {
     this.nameCell = a.insertCell(0);
     this.nameCell.style.width = "240px";
     this.progressCell = a.insertCell(1);
-    this.progressCell.style.width = this.Us + "px";
+    this.progressCell.style.width = this.progressWidth + "px";
     this.progressCell.style.paddingLeft = "5px";
     this.progressCell.style.paddingRight = "5px";
     a = createElement("div", this.progressCell, null, null);
     a.style.position = "relative";
     a.style.border = "1px solid #2c2c50";
     a.style.height = "15px";
-    a.style.width = this.Us + "px";
+    a.style.width = this.progressWidth + "px";
     this.progressFillElement = createElement("div", a, null, null);
     this.progressFillElement.style.position = "absolute";
     this.progressFillElement.style.top = "0";
@@ -201,29 +201,29 @@ export function initializeViewsCastles() {
         this.nameCell.innerHTML = a;
       }
       a = getCastleStatusColor(this.castle);
-      if (this.Cu != a) {
-        this.Cu = a;
+      if (this.cachedStatusColor != a) {
+        this.cachedStatusColor = a;
         this.progressFillElement.style.backgroundColor = a;
       }
       a = this.castle;
       a = a.regionLocked ? "未解锁" : a.conquered ? "已征服" : canAttackCastle(a) ? game.monsterCatalog.maxUnlockedLevel >= a.requiredMonsterLevel ? "准备攻击" : "怪物等级" + a.requiredMonsterLevel : a.attackScheduled ? "计划攻击" : "地牢" + a.conqueredDungeonCount + " / " + a.dungeonList.length;
-      if (this.Rv != a) {
-        this.Rv = a;
+      if (this.cachedStatusText != a) {
+        this.cachedStatusText = a;
         this.progressTextElement.innerHTML = a;
       }
       a = this.castle;
       if (a.regionLocked) {
         a = 0;
       } else if (a.conquered || canAttackCastle(a) || a.attackScheduled || a.dungeonsConquered) {
-        a = this.Us;
+        a = this.progressWidth;
       } else {
         a = this.castle.conqueredDungeonCount;
         var b = this.castle.dungeonList;
         a = 0 === b.length ? 1 : Math.min(1, a / b.length);
-        a = this.Us * a | 0;
+        a = this.progressWidth * a | 0;
       }
-      if (this.Kv != a) {
-        this.Kv = a;
+      if (this.cachedProgressWidth != a) {
+        this.cachedProgressWidth = a;
         this.progressFillElement.style.width = a + "px";
       }
     }

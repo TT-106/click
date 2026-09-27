@@ -1,0 +1,12 @@
+[
+  { "old": "io", "new": "regionKey", "files": ["src/engine/modules/views/castles.js", "src/engine/modules/world/initialization.js", "src/engine/modules/world/regions.js"], "expect": "auto" },
+  { "old": "cu", "new": "castle", "files": ["src/engine/modules/views/castles.js", "src/engine/modules/world/initialization.js", "src/engine/modules/world/regions.js"], "expect": "auto" },
+  { "old": "ws", "new": "tableElement", "files": ["src/engine/modules/views/castles.js"], "expect": "auto" },
+  { "old": "vs", "new": "mapCells", "files": ["src/engine/modules/views/castles.js"], "expect": "auto" },
+  { "old": "Us", "new": "progressWidth", "files": ["src/engine/modules/views/castles.js"], "expect": "auto" },
+  { "old": "Fu", "new": "cachedRevision", "files": ["src/engine/modules/views/castles.js"], "expect": "auto" },
+  { "old": "Rv", "new": "cachedStatusText", "files": ["src/engine/modules/views/castles.js"], "expect": "auto" },
+  { "old": "Cu", "new": "cachedStatusColor", "files": ["src/engine/modules/views/castles.js"], "expect": "auto" },
+  { "old": "Kv", "new": "cachedProgressWidth", "files": ["src/engine/modules/views/castles.js"], "expect": "auto" },
+  { "old": "fb", "new": "unusedCachedText", "files": ["src/engine/modules/views/castles.js"], "expect": "auto" }
+]

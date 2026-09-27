@@ -55,10 +55,10 @@ export function getDungeonNoun(a, b) {
   }
 }
 export function WorldRegion(a, b, c) {
-  this.io = a;
+  this.regionKey = a;
   this.regionColumn = b;
   this.regionRow = c;
-  this.cu = null;
+  this.castle = null;
 }
 export function Castle(a, b, c, d, f, g) {
   this.castleId = a;
