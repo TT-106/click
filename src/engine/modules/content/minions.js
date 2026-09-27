@@ -134,7 +134,7 @@ export function initializeContentMinions() {
       statType: 6
     }],
     statMultipliers: minionStatMultipliers,
-    jl: [barbarianSpellDefinitions.wB],
+    innateSpells: [barbarianSpellDefinitions.wB],
     Bp: [],
     createBehaviors: function () {
       return [new AreaDamageBehavior(MELEE_ATTACK_RANGE, 100), new MeleeAttackBehavior(MELEE_ATTACK_RANGE, 90, 2, false), new ChangeFloorBehavior(), new TravelWorldBehavior(60, 10), new EnterDungeonBehavior(60, 10), new EnterCastleBehavior(60, 10), new UseShopBehavior(60, 10), new WaitBehavior()];
@@ -168,7 +168,7 @@ export function initializeContentMinions() {
       statType: 6
     }],
     statMultipliers: minionStatMultipliers,
-    jl: [ninjaSpellDefinitions.Hx],
+    innateSpells: [ninjaSpellDefinitions.Hx],
     Bp: [{
       statBonusValue: 1,
       statType: 28
@@ -205,7 +205,7 @@ export function initializeContentMinions() {
       statType: 6
     }],
     statMultipliers: minionStatMultipliers,
-    jl: [rogueSpellDefinitions.IB],
+    innateSpells: [rogueSpellDefinitions.IB],
     Bp: [],
     createBehaviors: function () {
       return [new LootItemBehavior(100), new GuardRangedBehavior(RANGED_MIN_DISTANCE, RANGED_ATTACK_RANGE, 95), new OpportunisticAttackBehavior(95), new ChangeFloorBehavior(), new TravelWorldBehavior(60, 10), new EnterDungeonBehavior(60, 10), new EnterCastleBehavior(60, 10), new UseShopBehavior(60, 10), new WaitBehavior()];
@@ -277,7 +277,7 @@ export function initializeContentMinions() {
     }],
     statMultipliers: casterStatMultipliers,
     spellDefinitions: null,
-    jl: [electricSpellDefinitions.br, poisonCloudSpell],
+    innateSpells: [electricSpellDefinitions.br, poisonCloudSpell],
     Bp: [{
       statBonusValue: 3,
       statType: 21
@@ -316,7 +316,7 @@ export function initializeContentMinions() {
     }],
     statMultipliers: guardianStatMultipliers,
     spellDefinitions: null,
-    jl: [priestSpellDefinitions.$z, priestSpellDefinitions.Zz],
+    innateSpells: [priestSpellDefinitions.$z, priestSpellDefinitions.Zz],
     createBehaviors: function () {
       return [new CooldownBehavior(160, 100), new SpecialAttackBehavior(MELEE_ATTACK_RANGE, 160, 90, 2), new PartyBuffBehavior(RANGED_ATTACK_RANGE, 8, 35), new PartyBuffBehavior(RANGED_ATTACK_RANGE, 5, 30), new ChangeFloorBehavior(), new TravelWorldBehavior(60, 10), new EnterDungeonBehavior(60, 10), new EnterCastleBehavior(60, 10), new UseShopBehavior(60, 10), new WaitBehavior()];
     }

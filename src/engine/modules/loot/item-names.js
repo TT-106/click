@@ -41,15 +41,15 @@ export function formatItemName(a, b) {
     case 0:
       return a;
     case ITEM_NAME_PREFIX:
-      return b.Tk() + "" + a;
+      return b.randomPrefix() + "" + a;
     case ITEM_NAME_SUFFIX:
       return b.Fm() + "之" + a;
     case ITEM_NAME_TITLE:
       return b.Gm() + "之" + a;
     case ITEM_NAME_PREFIX_SUFFIX:
-      return b.Fm() + "之" + b.Tk() + a;
+      return b.Fm() + "之" + b.randomPrefix() + a;
     case ITEM_NAME_PREFIX_TITLE:
-      return b.Gm() + "之" + b.Tk() + a;
+      return b.Gm() + "之" + b.randomPrefix() + a;
     default:
       return a;
   }
@@ -59,7 +59,7 @@ export function initializeLootItemNames() {
     var a = Math.random();
     return 0.3 > a ? ITEM_NAME_PREFIX : 0.6 > a ? 0.5 > Math.random() ? ITEM_NAME_SUFFIX : ITEM_NAME_TITLE : 0.5 > Math.random() ? ITEM_NAME_PREFIX_SUFFIX : ITEM_NAME_PREFIX_TITLE;
   };
-  CommonItemNames.prototype.Tk = function () {
+  CommonItemNames.prototype.randomPrefix = function () {
     return this.prefixAdjectives[randomInt(this.prefixAdjectives.length)];
   };
   CommonItemNames.prototype.Fm = function () {
@@ -72,7 +72,7 @@ export function initializeLootItemNames() {
     var a = Math.random();
     return 0.25 > a ? ITEM_NAME_PREFIX : 0.5 > a ? 0.5 > Math.random() ? ITEM_NAME_SUFFIX : ITEM_NAME_TITLE : 0.5 > Math.random() ? ITEM_NAME_PREFIX_SUFFIX : ITEM_NAME_PREFIX_TITLE;
   };
-  HistoricItemNames.prototype.Tk = function () {
+  HistoricItemNames.prototype.randomPrefix = function () {
     return this.prefixAdjectives[randomInt(this.prefixAdjectives.length)];
   };
   HistoricItemNames.prototype.Fm = function () {
@@ -85,7 +85,7 @@ export function initializeLootItemNames() {
     var a = Math.random();
     return 0.25 > a ? ITEM_NAME_PREFIX : 0.5 > a ? 0.5 > Math.random() ? ITEM_NAME_SUFFIX : ITEM_NAME_TITLE : 0.5 > Math.random() ? ITEM_NAME_PREFIX_SUFFIX : ITEM_NAME_PREFIX_TITLE;
   };
-  RareItemNames.prototype.Tk = function () {
+  RareItemNames.prototype.randomPrefix = function () {
     return this.prefixAdjectives[randomInt(this.prefixAdjectives.length)];
   };
   RareItemNames.prototype.Fm = function () {
@@ -98,7 +98,7 @@ export function initializeLootItemNames() {
     var a = Math.random();
     return 0.3 > a ? ITEM_NAME_PREFIX : 0.5 > a ? 0.5 > Math.random() ? ITEM_NAME_SUFFIX : ITEM_NAME_TITLE : 0.5 > Math.random() ? ITEM_NAME_PREFIX_SUFFIX : ITEM_NAME_PREFIX_TITLE;
   };
-  UncommonItemNames.prototype.Tk = function () {
+  UncommonItemNames.prototype.randomPrefix = function () {
     return this.prefixAdjectives[randomInt(this.prefixAdjectives.length)];
   };
   UncommonItemNames.prototype.Fm = function () {
@@ -110,7 +110,7 @@ export function initializeLootItemNames() {
   AncientItemNames.prototype.Uo = function () {
     return ITEM_NAME_PREFIX_SUFFIX;
   };
-  AncientItemNames.prototype.Tk = function () {
+  AncientItemNames.prototype.randomPrefix = function () {
     return this.prefixAdjectives[randomInt(this.prefixAdjectives.length)];
   };
   AncientItemNames.prototype.Fm = function () {

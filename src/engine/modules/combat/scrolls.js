@@ -121,7 +121,7 @@ export function castScroll(a, b) {
           p,
           s = -1;
         for (h = 0; h < d.length; h++) {
-          if (!(g = d[h], c === g || g.isDead || g.position.room !== f || (p = g.effects, p.isStealthed || p.isDisabled || p.isConverted || -1 < a.eq.yl.indexOf(g) || (p = l.squaredDistanceTo(g.position.levelPosition), !(0 > s || p < s))))) {
+          if (!(g = d[h], c === g || g.isDead || g.position.room !== f || (p = g.effects, p.isStealthed || p.isDisabled || p.isConverted || -1 < a.eq.recentTargets.indexOf(g) || (p = l.squaredDistanceTo(g.position.levelPosition), !(0 > s || p < s))))) {
             n = g;
             s = p;
           }
@@ -140,10 +140,10 @@ export function castScroll(a, b) {
     }
     if (c) {
       d = a.eq;
-      if (0 > d.yl.indexOf(c)) {
-        d.yl.push(c);
-        if (4 <= d.yl.length) {
-          d.yl.shift();
+      if (0 > d.recentTargets.indexOf(c)) {
+        d.recentTargets.push(c);
+        if (4 <= d.recentTargets.length) {
+          d.recentTargets.shift();
         }
       }
       d = game.state.scrollCaster.position;
@@ -170,8 +170,8 @@ export function castScroll(a, b) {
 }
 export function clearScrollTargets() {
   var a = game.scrollTargets;
-  if (0 < a.yl.length) {
-    a.yl.length = 0;
+  if (0 < a.recentTargets.length) {
+    a.recentTargets.length = 0;
   }
 }
 export function ScrollDrop(a, b, c, d) {

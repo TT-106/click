@@ -112,7 +112,7 @@ export function initializeRuntimeGame() {
     scrolls: new ScrollInventory(),
     potions: new PotionInventory(),
     scrollTargets: new function () {
-      this.yl = [];
+      this.recentTargets = [];
     }(),
     monsterNames: new function () {
       this.dn = new MonsterNameGenerator();

@@ -164,7 +164,7 @@ export function SkillsTabView(a, b, c) {
   this.elementId = b;
   this.tabState = a;
   this.adventurerIndex = c;
-  this.ry = this.qy = this.Rl = this.skillCollection = this.Ax = null;
+  this.ry = this.qy = this.skillTreeCollection = this.skillCollection = this.Ax = null;
   this.firstColumnButtons = [];
   this.secondColumnButtons = [];
   this.buttons = [];
@@ -661,7 +661,7 @@ export function initializeViewsCharacter() {
       if (this.skillCollection) {
         this.Ax = createElement("table", b, null, "adventurerSkillTreeTable");
         var skillUpgrades = this.skillCollection.upgrades,
-          c = this.Rl.upgrades,
+          c = this.skillTreeCollection.upgrades,
           d = this.qy.upgrades,
           f = this.ry.upgrades,
           g = Math.max(skillUpgrades.length, Math.max(c.length, Math.max(d.length, f.length))),
@@ -716,11 +716,11 @@ export function initializeViewsCharacter() {
   };
   SkillsTabView.prototype.Zn = function () {
     if (0 > this.adventurerIndex || this.adventurerIndex >= game.state.adventurers.length) {
-      this.ry = this.qy = this.Rl = this.skillCollection = null;
+      this.ry = this.qy = this.skillTreeCollection = this.skillCollection = null;
     } else {
       var a = game.state.adventurers[this.adventurerIndex];
       this.skillCollection = a.skillTree1;
-      this.Rl = a.skillTree2;
+      this.skillTreeCollection = a.skillTree2;
       this.qy = a.skillTree3;
       this.ry = a.skillTree4;
     }

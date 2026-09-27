@@ -39,8 +39,8 @@ export function CharacterLifecycle() {
   this.cw = 0;
   this.PC = 4;
   this.Qt = 0;
-  this.TC = 2;
-  this.rk = this.bu = 0;
+  this.autoScrollInterval = 2;
+  this.autoScrollIndex = this.autoScrollTurnCounter = 0;
 }
 export function refreshUnspentSkillFlags() {
   var a, b;
@@ -77,9 +77,9 @@ export function spawnMinion(a, b, c) {
   initializeCharacterSkills(d, level);
   f.characterLevel = level;
   applyLevelStats(f, level, a.statMultipliers);
-  if (a.jl) {
-    for (b = 0; b < a.jl.length; b++) {
-      learnSpell(d, new Spell(a.jl[b]));
+  if (a.innateSpells) {
+    for (b = 0; b < a.innateSpells.length; b++) {
+      learnSpell(d, new Spell(a.innateSpells[b]));
     }
   }
   b = d.summoner;

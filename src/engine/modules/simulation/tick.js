@@ -127,17 +127,17 @@ export function advanceSimulation(a) {
         }
       }
     }
-    if (autoScrollsModifier.currentValue && 0 < getMonsters().length && (b.bu++, b.bu >= b.TC)) {
-      b.bu = 0;
+    if (autoScrollsModifier.currentValue && 0 < getMonsters().length && (b.autoScrollTurnCounter++, b.autoScrollTurnCounter >= b.autoScrollInterval)) {
+      b.autoScrollTurnCounter = 0;
       var na = game.scrolls.unlockedScrolls;
-      if (b.rk >= na.length) {
-        b.rk = 0;
+      if (b.autoScrollIndex >= na.length) {
+        b.autoScrollIndex = 0;
       }
-      positionScrollCaster(b.rk);
-      castScroll(na[b.rk], true);
-      b.rk++;
-      if (b.rk >= na.length) {
-        b.rk = 0;
+      positionScrollCaster(b.autoScrollIndex);
+      castScroll(na[b.autoScrollIndex], true);
+      b.autoScrollIndex++;
+      if (b.autoScrollIndex >= na.length) {
+        b.autoScrollIndex = 0;
       }
     }
     b.cw++;
