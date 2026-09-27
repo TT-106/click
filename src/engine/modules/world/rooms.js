@@ -133,16 +133,16 @@ export function revealRoom(a) {
       }
     }
     if (a.stairs) {
-      h = a.tileGrid[a.stairs.Ex][a.stairs.Fx];
+      h = a.tileGrid[a.stairs.tileColumn][a.stairs.tileRow];
       h.setBackgroundSprite(p);
-      if (a.stairs.Fq) {
-        if (a.stairs.sq) {
+      if (a.stairs.isVerticalStairs) {
+        if (a.stairs.showsStairs) {
           h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.stairs.stairsDownNSSprite));
         } else {
           h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.stairs.stairDoorASprite));
         }
       } else {
-        if (a.stairs.sq) {
+        if (a.stairs.showsStairs) {
           h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.stairs.stairsDownEWSprite));
         } else {
           h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.stairs.stairDoorBSprite));
@@ -248,7 +248,7 @@ export function canPlaceRoomObject(a, b) {
       return false;
     }
   }
-  return a.stairs && c === a.stairs.Ex && d === a.stairs.Fx ? false : true;
+  return a.stairs && c === a.stairs.tileColumn && d === a.stairs.tileRow ? false : true;
 }
 export function DungeonDoor(a) {
   this.pixelRow = this.pixelColumn = this.tileRow = this.tileColumn = 0;
@@ -259,12 +259,12 @@ export function DungeonDoor(a) {
 }
 export function DungeonStairs(a) {
   this.leadsTo = a;
-  this.pixelRow = this.pixelColumn = this.Fx = this.Ex = 0;
-  this.sq = this.Fq = true;
+  this.pixelRow = this.pixelColumn = this.tileRow = this.tileColumn = 0;
+  this.showsStairs = this.isVerticalStairs = true;
 }
 export function positionStairs(a, b, c) {
-  a.Ex = b;
-  a.Fx = c;
+  a.tileColumn = b;
+  a.tileRow = c;
   a.pixelColumn = b * game.tileSize;
   a.pixelRow = c * game.tileSize;
 }

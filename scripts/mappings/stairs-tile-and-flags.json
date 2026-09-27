@@ -1,0 +1,35 @@
+[
+  {
+    "_note": "DungeonStairs.Ex/Fx：楼梯所在瓦片列/行。证据：positionStairs(a,b,c) 中 Ex=b、Fx=c（瓦片），tq/uq 为 tileSize 乘积的像素；消费点为 tileGrid[Ex][Fx] 索引与瓦片坐标比较（world/rooms.js:136/251）。命名复用 DungeonDoor 既有的 tileColumn/tileRow。",
+    "old": "Ex",
+    "new": "tileColumn",
+    "files": ["src/engine/modules/world/rooms.js"],
+    "expect": "auto"
+  },
+  {
+    "old": "Fx",
+    "new": "tileRow",
+    "files": ["src/engine/modules/world/rooms.js"],
+    "expect": "auto"
+  },
+  {
+    "_note": "DungeonStairs.Fq：楼梯朝向是否为纵向（南北向）。placeVerticalStairs 置 true、placeHorizontalStairs 置 false（world/generation.js:34-75），城堡生成器同构（:466-488）；rooms.js:138-149 据此在 stairsDownNS/EW 贴纸间二选一。",
+    "old": "Fq",
+    "new": "isVerticalStairs",
+    "files": [
+      "src/engine/modules/world/generation.js",
+      "src/engine/modules/world/rooms.js"
+    ],
+    "expect": "auto"
+  },
+  {
+    "_note": "DungeonStairs.sq：该楼梯是否渲染为下行楼梯（true）而非门（false）。由布局生成器 to(room, flag) 的第二参传入，入口用 !hasSecondEntrance、出口用 secondEntrance（world/generation.js:342-343/463-464）；rooms.js:138-149 据此在 stairsDown*/stairDoor* 贴纸间二选一。",
+    "old": "sq",
+    "new": "showsStairs",
+    "files": [
+      "src/engine/modules/world/generation.js",
+      "src/engine/modules/world/rooms.js"
+    ],
+    "expect": "auto"
+  }
+]

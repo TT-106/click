@@ -7906,7 +7906,11 @@
     "iq": "worldColumn",
     "jq": "worldRow",
     "tq": "pixelColumn",
-    "uq": "pixelRow"
+    "uq": "pixelRow",
+    "Ex": "tileColumn",
+    "Fx": "tileRow",
+    "Fq": "isVerticalStairs",
+    "sq": "showsStairs"
   },
   "gameFields": {
     "B": "tileSize",

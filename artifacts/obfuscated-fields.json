@@ -2357,54 +2357,6 @@
     ]
   },
   {
-    "name": "Fq",
-    "reads": 1,
-    "writes": 5,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\world\\generation.js:50",
-        "code": "a.Fq"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\generation.js:71",
-        "code": "a.Fq"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\generation.js:477",
-        "code": "c.Fq"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\world\\generation.js",
-      "src\\engine\\modules\\world\\rooms.js"
-    ]
-  },
-  {
-    "name": "sq",
-    "reads": 2,
-    "writes": 4,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\world\\generation.js:52",
-        "code": "a.sq"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\generation.js:73",
-        "code": "a.sq"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\generation.js:486",
-        "code": "c.sq"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\world\\generation.js",
-      "src\\engine\\modules\\world\\rooms.js"
-    ]
-  },
-  {
     "name": "ro",
     "reads": 5,
     "writes": 1,
@@ -7981,52 +7933,6 @@
     "fileCount": 1,
     "files": [
       "src\\engine\\modules\\world\\generation.js"
-    ]
-  },
-  {
-    "name": "Ex",
-    "reads": 2,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\world\\rooms.js:136",
-        "code": "a.stairs.Ex"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\rooms.js:251",
-        "code": "a.stairs.Ex"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\rooms.js:262",
-        "code": "this.Ex"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\world\\rooms.js"
-    ]
-  },
-  {
-    "name": "Fx",
-    "reads": 2,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\world\\rooms.js:136",
-        "code": "a.stairs.Fx"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\rooms.js:251",
-        "code": "a.stairs.Fx"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\rooms.js:262",
-        "code": "this.Fx"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\world\\rooms.js"
     ]
   },
   {

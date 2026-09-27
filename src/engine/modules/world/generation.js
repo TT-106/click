@@ -47,9 +47,9 @@ export function placeHorizontalStairs(a, b, c) {
     return null;
   }
   a = new DungeonStairs(b);
-  a.Fq = false;
+  a.isVerticalStairs = false;
   positionStairs(a, h, l);
-  a.sq = c;
+  a.showsStairs = c;
   return a;
 }
 export function placeVerticalStairs(a, b, c) {
@@ -68,9 +68,9 @@ export function placeVerticalStairs(a, b, c) {
     return null;
   }
   a = new DungeonStairs(b);
-  a.Fq = true;
+  a.isVerticalStairs = true;
   positionStairs(a, h, l);
-  a.sq = c;
+  a.showsStairs = c;
   return a;
 }
 export function findNearestConnectedRoom(a, b, c, d) {
@@ -474,16 +474,16 @@ export function initializeWorldGeneration() {
       for (g = a.tileRow + randomIntFrom(this.seededRandom, a.heightInTiles); methods.canPlaceDoorAt(d, f, g);) {
         g = a.tileRow + randomIntFrom(this.seededRandom, a.heightInTiles);
       }
-      c.Fq = true;
+      c.isVerticalStairs = true;
     } else {
       g = a.tileRow - 1;
       for (f = a.tileColumn + randomIntFrom(this.seededRandom, a.widthInTiles); methods.canPlaceDoorAt(d, f, g);) {
         f = a.tileColumn + randomIntFrom(this.seededRandom, a.widthInTiles);
       }
-      c.Fq = false;
+      c.isVerticalStairs = false;
     }
     positionStairs(c, f, g);
-    c.sq = b;
+    c.showsStairs = b;
     return a.stairs = c;
   };
   CastleLayoutGenerator.prototype.canPlaceDoorAt = function (a, b, c) {
