@@ -5,6 +5,7 @@
 
 ## 当前轮次状态（2026-09-26，M13 文档与验收收尾）
 
+- U63 法术缓存收尾与队伍世界目的地（2026-09-26，一笔提交，六门禁全绿，混淆清单 815 → 812）：Wm→learnedSpell（LootChestBehavior 类别 14 法术缓存，7 处）、Om/Nm→worldDestRow/worldDestColumn（队伍世界旅行目的地瓦片行/列：findNearestWorldColumn/Row 生成、calculateWorldCosts 计算代价、与当前位置差值判断到达；跨 party/game/initialization 三文件）。
 - U62 潜行旗标与强制目的地（2026-09-26，一笔提交，六门禁全绿，混淆清单 817 → 815）：Gn→hasStealthEffect（状态效果 type 10 旗标——**首次误名 isStealthed 与 CharacterEffects 既有 isStealthed 碰撞**：type 10 置 Gn、type 11 置 isStealthed 是两个不同旗标，重置路径分别置 false；发现后立即回退改用 hasStealthEffect）；gn→forcedDestinationRoom（forcePartyDestination 设置的强制目的地房间，到达后清除，runtime/game.js 与 tick.js 清理点由残留扫描补齐）。
 - U61 拾取行为法术缓存收尾（2026-09-26，一笔提交，六门禁全绿，混淆清单 822 → 817）：Hn/Dn/In/Lm/pn→learnedSpell（LootGold/LootItem/LootPotion/LootScroll/Revive 五行为的 notifySpellLearned 缓存，统一 isSpellReady 门控模式）。
 - U59 远程攻击与拾取法术缓存（2026-09-26，一笔提交，六门禁全绿，混淆清单 828 → 822）：co→consecutiveAttackTurns（RangedAttackBehavior 风筝：同目标连续攻击回合数，>2 归零重选）；pm/gm/Zl/fm/on→learnedSpell（召唤幽灵骷髅 15/范围伤害 13/连锁伤害 32/治疗系 10/召唤类 16 五个 notifySpellLearned 缓存，统一为学到的法术缓存并按 isSpellReady 门控）。执行器 --expect 探数流程再次生效（pm 实际 7 处而非 3）。
