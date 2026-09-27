@@ -3217,31 +3217,6 @@
     ]
   },
   {
-    "name": "ew",
-    "reads": 1,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:613",
-        "code": "Db.ew"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\character.js:674",
-        "code": "Y.ew"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:690",
-        "code": "Wa.ew"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\characters\\character.js",
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\rendering\\sprites.js"
-    ]
-  },
-  {
     "name": "vt",
     "reads": 1,
     "writes": 3,
@@ -3949,31 +3924,6 @@
       "src\\engine\\modules\\loot\\treasure.js",
       "src\\engine\\modules\\world\\generation.js",
       "src\\engine\\modules\\world\\rooms.js"
-    ]
-  },
-  {
-    "name": "ty",
-    "reads": 1,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:72",
-        "code": "C.ty"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:352",
-        "code": "game.world.ty"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\terrain.js:374",
-        "code": "this.ty"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\world\\terrain.js"
     ]
   },
   {
@@ -6598,54 +6548,6 @@
     ]
   },
   {
-    "name": "gB",
-    "reads": 1,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:227",
-        "code": "this.gB"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:349",
-        "code": "this.gB"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:754",
-        "code": "this.gB"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\rendering\\scene.js"
-    ]
-  },
-  {
-    "name": "dz",
-    "reads": 1,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:740",
-        "code": "game.state.dz"
-      },
-      {
-        "loc": "src\\engine\\modules\\runtime\\game.js:149",
-        "code": "dz: 0"
-      },
-      {
-        "loc": "src\\engine\\modules\\simulation\\loop.js:84",
-        "code": "game.state.dz"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\runtime\\game.js",
-      "src\\engine\\modules\\simulation\\loop.js"
-    ]
-  },
-  {
     "name": "FB",
     "reads": 2,
     "writes": 1,
@@ -8570,44 +8472,6 @@
     "fileCount": 1,
     "files": [
       "src\\engine\\modules\\rendering\\floating-text.js"
-    ]
-  },
-  {
-    "name": "uE",
-    "reads": 1,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:78",
-        "code": "this.uE"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:350",
-        "code": "a.uE"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\rendering\\scene.js"
-    ]
-  },
-  {
-    "name": "DD",
-    "reads": 1,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:79",
-        "code": "this.DD"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:350",
-        "code": "a.DD"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\rendering\\scene.js"
     ]
   },
   {

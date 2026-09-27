@@ -146,7 +146,7 @@ export function initializeRuntimeGame() {
     state: {
       turnNumber: 0,
       frameNumber: 0,
-      dz: 0,
+      fps: 0,
       encounter: new EncounterState(),
       party: new PartyState(),
       adventurers: [],

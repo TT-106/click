@@ -1,0 +1,20 @@
+{
+  "_comment": "VisualEffect.ew→room（scene.js 取出后按 tileColumn/tileRow/widthInTiles/heightInTiles 画房间高亮，character.js 生成定向效果时绑定房间）；GameCanvasView.gB→renderer 与其两个渲染后端 uE/DD→depthSortedRenderer/immediateRenderer（update 按 options.depthSortSprites 二选一）；WorldMap.ty→hasPartyPlaced（placePartyInWorld 置 true、存档载入置 true、渲染前判断）；game.state.dz→fps（loop.js 由帧计数/耗时算出，scene.js 显示「帧数」）。",
+  "files": [
+    "src/engine/modules/rendering/scene.js",
+    "src/engine/modules/rendering/sprites.js",
+    "src/engine/modules/characters/character.js",
+    "src/engine/modules/world/terrain.js",
+    "src/engine/modules/persistence/game-save.js",
+    "src/engine/modules/runtime/game.js",
+    "src/engine/modules/simulation/loop.js"
+  ],
+  "map": {
+    "ew": "room",
+    "gB": "renderer",
+    "uE": "depthSortedRenderer",
+    "DD": "immediateRenderer",
+    "ty": "hasPartyPlaced",
+    "dz": "fps"
+  }
+}

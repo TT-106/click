@@ -8036,7 +8036,13 @@
     "wD": "largeGoldSprite",
     "xt": "screenX",
     "yt": "screenY",
-    "SE": "color"
+    "SE": "color",
+    "ew": "room",
+    "gB": "renderer",
+    "uE": "depthSortedRenderer",
+    "DD": "immediateRenderer",
+    "ty": "hasPartyPlaced",
+    "dz": "fps"
   },
   "gameFields": {
     "B": "tileSize",

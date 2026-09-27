@@ -81,7 +81,7 @@ export function initializeSimulationLoop() {
         this.fpsFrameCount++;
         this.fpsElapsed += b;
         if (60 <= this.fpsFrameCount) {
-          game.state.dz = this.fpsFrameCount / (this.fpsElapsed / 1E3) | 0;
+          game.state.fps = this.fpsFrameCount / (this.fpsElapsed / 1E3) | 0;
           this.fpsElapsed = this.fpsFrameCount = 0;
         }
         if (!game.processingOffline) {

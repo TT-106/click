@@ -610,7 +610,7 @@ export function updateCharacter(a, b) {
                       sa.remainingDamage = Ja;
                       Db = new VisualEffect(Fc, Cb, Ra, false, TARGETED_EFFECT);
                       Db.boundCharacter = a;
-                      Db.ew = kb;
+                      Db.room = kb;
                       Db.remainingEffectDamage = Ja;
                       sa.impactEffect = Db;
                       var gb = Qa.position,
@@ -671,7 +671,7 @@ export function updateCharacter(a, b) {
                     var Y = new VisualEffect(Td, me, tc, false, TARGETED_EFFECT),
                       nf = xb.position.room;
                     Y.boundCharacter = a;
-                    Y.ew = nf;
+                    Y.room = nf;
                     Y.remainingEffectDamage = oe;
                     Ya.impactEffect = Y;
                     var Nc = a.stats.ho + 1,

@@ -69,7 +69,7 @@ export function restoreGameState(a, b) {
           refreshWorldBlocks(C);
           C.worldCenterX = u;
           C.worldCenterY = y;
-          C.ty = true;
+          C.hasPartyPlaced = true;
           var v = d.dungeonManagerState,
             D = v.farmedKills,
             N = v.dungeonCostLevel,

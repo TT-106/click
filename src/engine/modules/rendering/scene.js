@@ -75,8 +75,8 @@ export function acquireImmediateCommand(a) {
 export function SceneRenderer(a) {
   this.context = a;
   this.spriteRenderer = null;
-  this.uE = new DepthSortedRenderer();
-  this.DD = new ImmediateRenderer();
+  this.depthSortedRenderer = new DepthSortedRenderer();
+  this.immediateRenderer = new ImmediateRenderer();
 }
 export function drawWorldTileRow(a, b, c, d) {
   for (; c < d; c++) {
@@ -224,7 +224,7 @@ export function randomLightningOffset() {
 export function GameCanvasView() {
   this.kE = "gameTabContent";
   this.elementId = "gameCanvas";
-  this.gB = null;
+  this.renderer = null;
 }
 export function initializeRenderingScene() {
   RenderCommand.prototype.getRenderSortKey = function () {
@@ -346,10 +346,10 @@ export function initializeRenderingScene() {
     (/** @type {GameCanvasView & { createDomElements: () => void }} */ (/** @type {unknown} */ (this))).createDomElements();
   };
   GameCanvasView.prototype.update = function () {
-    var a = this.gB;
-    a.spriteRenderer = game.options.depthSortSprites ? a.uE : a.DD;
+    var a = this.renderer;
+    a.spriteRenderer = game.options.depthSortSprites ? a.depthSortedRenderer : a.immediateRenderer;
     a.spriteRenderer.setContext(a.context);
-    if (game.world.ty) {
+    if (game.world.hasPartyPlaced) {
       if (a.context.fillStyle = "#000000", a.context.fillRect(0, 0, game.viewportWidth, game.viewportHeight), game.worldActive) {
         var b = game.world.pixelToTileColumn(game.world.worldCenterX),
           c = game.world.pixelToTileRow(game.world.worldCenterY) - 18;
@@ -687,7 +687,7 @@ export function initializeRenderingScene() {
                 sa.context.stroke();
               } else {
                 if (cc === TARGETED_EFFECT) {
-                  Qa = Wa.ew;
+                  Qa = Wa.room;
                   nc = true;
                 }
               }
@@ -737,7 +737,7 @@ export function initializeRenderingScene() {
     if (game.options.showFps) {
       a.context.font = "12px Georgia";
       a.context.fillStyle = "white";
-      a.context.fillText("帧数: " + game.state.dz, 10, 20);
+      a.context.fillText("帧数: " + game.state.fps, 10, 20);
     }
   };
   GameCanvasView.prototype.createDomElements = function () {
@@ -751,7 +751,7 @@ export function initializeRenderingScene() {
         c.height = game.viewportHeight;
         c.innerHTML = "你的浏览器不支持Html5.请升级你的浏览器.";
       }
-      this.gB = new SceneRenderer(c.getContext("2d"));
+      this.renderer = new SceneRenderer(c.getContext("2d"));
       (/** @type {GameCanvasView & { visible: boolean }} */ (/** @type {unknown} */ (this))).visible = true;
     }
   };

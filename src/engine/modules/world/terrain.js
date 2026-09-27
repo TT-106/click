@@ -371,7 +371,7 @@ export function WorldMap() {
   this.blockOriginColumn = WORLD_ORIGIN_COLUMN;
   this.blockOriginRow = WORLD_ORIGIN_ROW;
   this.worldBlocks = [];
-  this.ty = false;
+  this.hasPartyPlaced = false;
 }
 export function createWorldBlocks(a) {
   var b = [],
@@ -399,7 +399,7 @@ export function placePartyInWorld() {
       d = a.worldCenterY + randomInt(30);
     setVector(game.state.adventurers[b].position.worldPosition, c, d);
   }
-  a.ty = true;
+  a.hasPartyPlaced = true;
 }
 export function refreshWorldBlocks(a) {
   var b, c;
