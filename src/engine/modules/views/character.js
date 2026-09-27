@@ -421,7 +421,7 @@ export function initializeViewsCharacter() {
   EquipAllView.prototype.reset = function () {};
   EquipAllView.prototype.update = function () {
     if (!(0 > this.adventurerIndex || this.adventurerIndex >= game.state.adventurers.length)) {
-      if ((/** @type {EquipAllView & { Wt: () => boolean }} */ (/** @type {unknown} */ (this))).Wt()) {
+      if ((/** @type {EquipAllView & { hasImprovement: () => boolean }} */ (/** @type {unknown} */ (this))).hasImprovement()) {
         if (!this.equipAllEnabled) {
           this.equipAllEnabled = true;
           this.equipImprovementsButton.className = "upgradeButton";
@@ -437,8 +437,8 @@ export function initializeViewsCharacter() {
   EquipAllView.prototype.equipBestForCharacter = function () {
     game.inventories.equipBestForCharacter(game.state.adventurers[this.adventurerIndex]);
   };
-  EquipAllView.prototype.Wt = function () {
-    return game.inventories.Wt(game.state.adventurers[this.adventurerIndex]);
+  EquipAllView.prototype.hasImprovement = function () {
+    return game.inventories.hasImprovement(game.state.adventurers[this.adventurerIndex]);
   };
   InventoryTabView.prototype = new TabView();
   CharacterTabsView.prototype = new CompositeView();

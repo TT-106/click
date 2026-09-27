@@ -653,7 +653,7 @@ const scenarios = [
   },
   {
     name: 'potions-activated',
-    // U7：三瓶未激活药水入库 → 推进 → 直接驱动 Potion.aw（视图层唯一入口）→ 再推进差分。
+    // U7：三瓶未激活药水入库 → 推进 → 直接驱动 Potion.activate（视图层唯一入口）→ 再推进差分。
     make: () => withPotions(base, ['doubleGold', 'doubleKills', 'walkingSpeed']),
     steps: [
       { turns: 300, activatePotions: 3, check: potionWasUsed },

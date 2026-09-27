@@ -52,13 +52,13 @@ export function removeInventoryItemAt(a, b) {
 }
 export function InventoryRegistry() {
   this.list = [];
-  this.IE = function (a, b) {
+  this.compareByItemGold = function (a, b) {
     return b.itemGold - a.itemGold;
   };
 }
 export function sortInventory(a, b) {
   if (!(!b || 2 > b.length)) {
-    b.sort(a.IE);
+    b.sort(a.compareByItemGold);
   }
 }
 export function initializeLootInventory() {
@@ -82,7 +82,7 @@ export function initializeLootInventory() {
       }
     }
   };
-  InventoryRegistry.prototype.Wt = function (a) {
+  InventoryRegistry.prototype.hasImprovement = function (a) {
     var b = a.inventory.items;
     if (!b || 0 === b.length) {
       return false;

@@ -1,0 +1,8 @@
+[
+  { "old": "aw", "new": "activate", "expect": 4, "files": ["src/engine/modules/combat/potions.js", "src/engine/modules/views/expedition.js"] },
+  { "old": "bw", "new": "removePotion", "expect": 4, "files": ["src/engine/modules/combat/potions.js", "src/engine/modules/views/expedition.js"] },
+  { "old": "hw", "new": "slotItems", "expect": 4, "files": ["src/engine/modules/characters/movement.js"] },
+  { "old": "fz", "new": "effectItem", "expect": 3, "files": ["src/engine/modules/characters/movement.js"] },
+  { "old": "IE", "new": "compareByItemGold", "expect": 2, "files": ["src/engine/modules/loot/inventory.js"] },
+  { "old": "Wt", "new": "hasImprovement", "expect": 5, "files": ["src/engine/modules/loot/inventory.js", "src/engine/modules/views/character.js"] }
+]

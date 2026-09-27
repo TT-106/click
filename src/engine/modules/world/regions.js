@@ -100,21 +100,21 @@ export function refreshCastleConquest(a) {
   }
 }
 export function RegionLayout() {
-  this.BA = game.regions.regionGridOriginColumn;
-  this.EA = game.regions.regionGridOriginRow;
+  this.minRegionColumn = game.regions.regionGridOriginColumn;
+  this.minRegionRow = game.regions.regionGridOriginRow;
   var a = game.regions;
   this.maxRegionColumn = a.regionGridOriginColumn + a.regionGridSpan;
   a = game.regions;
   this.maxRegionRow = a.regionGridOriginRow + a.regionGridSpan;
 }
 export function getWestRegion(a, b, c, d) {
-  return b - 1 >= a.BA && (a = b - 1 + "_" + c, !d[a]) ? game.regions.byKey[a] : null;
+  return b - 1 >= a.minRegionColumn && (a = b - 1 + "_" + c, !d[a]) ? game.regions.byKey[a] : null;
 }
 export function getEastRegion(a, b, c, d) {
   return b + 1 < a.maxRegionColumn && (a = b + 1 + "_" + c, !d[a]) ? game.regions.byKey[a] : null;
 }
 export function getNorthRegion(a, b, c, d) {
-  return c - 1 >= a.EA && (a = b + "_" + (c - 1), !d[a]) ? game.regions.byKey[a] : null;
+  return c - 1 >= a.minRegionRow && (a = b + "_" + (c - 1), !d[a]) ? game.regions.byKey[a] : null;
 }
 export function getSouthRegion(a, b, c, d) {
   return c + 1 < a.maxRegionRow && (a = b + "_" + (c + 1), !d[a]) ? game.regions.byKey[a] : null;

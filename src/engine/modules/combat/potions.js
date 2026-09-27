@@ -236,7 +236,7 @@ export function initializeCombatPotions() {
     potionSprite: "PotionTallBrown.PNG",
     modifierId: 20
   }];
-  Potion.prototype.aw = function () {
+  Potion.prototype.activate = function () {
     if (!(this.active || !this.active && isPotionModifierActive(this))) {
       this.active = true;
       this.activationTurn = game.state.turnNumber;
@@ -265,7 +265,7 @@ export function initializeCombatPotions() {
       this.drops[a].setClaimDistance(0);
     }
   };
-  PotionInventory.prototype.bw = function (a) {
+  PotionInventory.prototype.removePotion = function (a) {
     if (a) {
       var b = this.potionList.indexOf(a);
       if (-1 < b) {

@@ -196,7 +196,7 @@ export function mountPotionButton(a) {
   a.potionImage = createElement("img", d, null, "itemImage");
   a.potionImage.src = "images/Transparent.gif";
   a.contentContainer.onmouseup = function () {
-    a.aw();
+    a.activate();
     return false;
   };
   a.progressFillElement = createElement("div", a.contentContainer, null, "potionButtonProgressSlider");
@@ -207,7 +207,7 @@ export function mountPotionButton(a) {
   a.dropPotionButton.style.display = "none";
   a.dropButtonShown = false;
   a.dropPotionButton.onmouseup = function () {
-    a.bw();
+    a.removePotion();
     return false;
   };
 }
@@ -730,16 +730,16 @@ export function initializeViewsExpedition() {
       }
     }
   };
-  PotionButtonView.prototype.aw = function () {
+  PotionButtonView.prototype.activate = function () {
     if (this.potion) {
       if (!(this.potion.active || !this.potion.active && isPotionModifierActive(this.potion))) {
-        this.potion.aw();
+        this.potion.activate();
       }
     }
   };
-  PotionButtonView.prototype.bw = function () {
+  PotionButtonView.prototype.removePotion = function () {
     if (this.potion) {
-      game.potions.bw(this.potion);
+      game.potions.removePotion(this.potion);
       this.potion = null;
     }
   };

@@ -343,7 +343,7 @@ export function initializeContentClasses() {
     characterClass: 1,
     className: "野蛮人",
     shortName: "野蛮人",
-    eF: false,
+    unusedClassFlag: false,
     spriteName: "BarbarianFighter4.PNG",
     defaultName: "拉戈尔",
     descriptionText: "坦克角色.能力:愤怒,猛锤.",
@@ -600,10 +600,10 @@ export function initializeContentClasses() {
   monsterClass = {
     characterClass: 12,
     className: "Monster",
-    bF: 50,
-    cF: 160,
+    unusedClassValue1: 50,
+    unusedClassValue2: 160,
     spellDefinitions: null,
-    tb: null,
+    slotStatBonusList: null,
     statMultipliers: null
   };
   scrollCasterClass = {

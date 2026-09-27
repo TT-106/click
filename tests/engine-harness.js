@@ -510,9 +510,10 @@ window.harness = {
     }
     return { selected, spawned, looted: snapshot().statistics[statKey] - before, snapshot: snapshot() };
   },
-  // U7：药水激活也没有非视图入口（Potion.aw 只由药水按钮调用），激活会在存档里
+  // U7：药水激活也没有非视图入口（Potion.activate 只由药水按钮调用），激活会在存档里
   // 记 statistics.potionsUsed，因此两端各自断言计数增长，再照常做完整存档差分。
-  // aw / 库存数组字段 re 两端同名（尚未重命名），只有 Game 上的容器字段不同名。
+  // 重构侧 Potion.activate 已语义化，原版侧仍是 aw（archive 不可改）→ 双端分支；
+  // 库存数组字段 potionList/re 仍两端同名，只有 Game 上的容器字段不同名。
   activatePotions({ turns = 0, limit = 3 } = {}) {
     for (let i = 0; i < turns; i++) advance();
     const inventory = original ? window.Game.Yj : game.potions;
@@ -521,7 +522,7 @@ window.harness = {
     let attempted = 0;
     for (const potion of list) {
       if (attempted >= limit) break;
-      potion.aw();
+      if (original) potion.aw(); else potion.activate();
       attempted++;
     }
     return { attempted, snapshot: snapshot() };

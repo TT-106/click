@@ -1,0 +1,6 @@
+[
+  { "old": "tb", "new": "slotStatBonusList", "expect": 1, "files": ["src/engine/modules/content/classes.js"] },
+  { "old": "eF", "new": "unusedClassFlag", "expect": 1, "files": ["src/engine/modules/content/classes.js"] },
+  { "old": "bF", "new": "unusedClassValue1", "expect": 1, "files": ["src/engine/modules/content/classes.js"] },
+  { "old": "cF", "new": "unusedClassValue2", "expect": 1, "files": ["src/engine/modules/content/classes.js"] }
+]

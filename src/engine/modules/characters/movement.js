@@ -6,12 +6,12 @@ import { game } from "../runtime/game.js";
 import { getAllies, getMonsters } from "../combat/encounters.js";
 export function Equipment(a, b) {
   this.characterClass = b;
-  this.hw = {};
+  this.slotItems = {};
   this.slotList = a;
-  this.projectileWeapon = this.fz = null;
+  this.projectileWeapon = this.effectItem = null;
   var c;
   for (c = 0; c < a.length; c++) {
-    this.hw[a[c]] = null;
+    this.slotItems[a[c]] = null;
   }
 }
 export function CharacterPosition(a, b) {
@@ -189,18 +189,18 @@ export function separateWorldCharacters(a) {
 }
 export function initializeCharactersMovement() {
   Equipment.prototype.getSlotItem = function (a) {
-    return this.hw[a];
+    return this.slotItems[a];
   };
   Equipment.prototype.getEffectItem = function () {
-    return this.fz;
+    return this.effectItem;
   };
   Equipment.prototype.equipItem = function (a) {
-    this.hw[a.slot] = a;
+    this.slotItems[a.slot] = a;
     if (a.isProjectileWeapon()) {
       this.projectileWeapon = a;
     }
     if (1 === a.characteristic) {
-      this.fz = a;
+      this.effectItem = a;
     }
   };
   CharacterPosition.prototype.getWorldPositionX = function () {

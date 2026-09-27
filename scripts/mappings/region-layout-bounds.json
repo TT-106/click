@@ -1,0 +1,4 @@
+[
+  { "old": "BA", "new": "minRegionColumn", "expect": 3, "files": ["src/engine/modules/world/regions.js", "src/engine/modules/world/initialization.js"] },
+  { "old": "EA", "new": "minRegionRow", "expect": 3, "files": ["src/engine/modules/world/regions.js", "src/engine/modules/world/initialization.js"] }
+]
