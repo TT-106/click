@@ -85,10 +85,10 @@ export function drawWorldTileRow(a, b, c, d) {
     if (g) {
       var h;
       h = game.camera;
-      h = game.viewportHalfWidth + (c - h.vk - (b - h.wk)) * game.tileSize - h.zt;
+      h = game.viewportHalfWidth + (c - h.tileColumn - (b - h.tileRow)) * game.tileSize - h.zt;
       var l;
       l = game.camera;
-      l = game.viewportHalfHeight + (c - l.vk + (b - l.wk)) * game.halfTileSize - l.At;
+      l = game.viewportHalfHeight + (c - l.tileColumn + (b - l.tileRow)) * game.halfTileSize - l.At;
       f.drawSprite(g.backgroundSprite, h, l);
       var n = g.decorationSprite;
       if (n) {
@@ -104,10 +104,10 @@ export function drawDungeonTileRow(a, b, c, d) {
     if (g && g.floorType !== EMPTY_TILE) {
       var h;
       h = game.camera;
-      h = game.viewportHalfWidth + (c - h.vk - (b - h.wk)) * game.tileSize - h.zt;
+      h = game.viewportHalfWidth + (c - h.tileColumn - (b - h.tileRow)) * game.tileSize - h.zt;
       var l;
       l = game.camera;
-      l = game.viewportHalfHeight + (c - l.vk + (b - l.wk)) * game.halfTileSize - l.At;
+      l = game.viewportHalfHeight + (c - l.tileColumn + (b - l.tileRow)) * game.halfTileSize - l.At;
       f.drawSprite(g.backgroundSprite, h, l);
       var n = g.decorationSprite;
       if (n) {

@@ -10,7 +10,7 @@ import { resetAchievements } from "../progression/achievements.js";
 import { bindStatistics } from "../progression/statistics.js";
 export function initializeRegionsAndCastles() {
   var eb = game.regions;
-  eb.sk = {};
+  eb.byKey = {};
   eb.Mr.length = 0;
   var Gb = eb.regionGridSpan,
     Da,
@@ -28,7 +28,7 @@ export function initializeRegionsAndCastles() {
       wa = Ea + "_" + La;
       Fa = new WorldRegion(wa, Ea, La);
       mb.push(Fa);
-      eb.sk[wa] = Fa;
+      eb.byKey[wa] = Fa;
     }
     eb.Mr.push(mb);
   }
@@ -83,7 +83,7 @@ export function initializeRegionsAndCastles() {
     jb = new Castle(ob, Ha, Hb, ac, nb, fb);
     Bb.push(jb);
     var qb = jb,
-      wb = game.regions.sk[ob];
+      wb = game.regions.byKey[ob];
     qb.regions.push(wb);
     wb.cu = qb;
     Sb++;

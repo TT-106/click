@@ -127,7 +127,7 @@ export function initializeViewsCastles() {
     }
     var a = game.castles.castleList;
     if (a.length !== this.rowViews.length) {
-      /** @type {{mk: (count: number) => void}} */ (/** @type {unknown} */ (this)).mk(a.length);
+      /** @type {{setRowCount: (count: number) => void}} */ (/** @type {unknown} */ (this)).setRowCount(a.length);
     }
     var b;
     for (b = 0; b < this.rowViews.length; b++) {
@@ -137,7 +137,7 @@ export function initializeViewsCastles() {
       this.rowViews[b].render();
     }
   };
-  CastleTableView.prototype.mk = function (a) {
+  CastleTableView.prototype.setRowCount = function (a) {
     for (; this.rowViews.length > a;) {
       this.tableElement.deleteRow(-1);
       this.rowViews.splice(this.rowViews.length - 1, 1);
@@ -206,7 +206,7 @@ export function initializeViewsCastles() {
         this.progressFillElement.style.backgroundColor = a;
       }
       a = this.castle;
-      a = a.regionLocked ? "未解锁" : a.conquered ? "已征服" : canAttackCastle(a) ? game.monsterCatalog.maxUnlockedLevel >= a.requiredMonsterLevel ? "准备攻击" : "怪物等级" + a.requiredMonsterLevel : a.attackScheduled ? "计划攻击" : "地牢" + a.yk + " / " + a.dungeonList.length;
+      a = a.regionLocked ? "未解锁" : a.conquered ? "已征服" : canAttackCastle(a) ? game.monsterCatalog.maxUnlockedLevel >= a.requiredMonsterLevel ? "准备攻击" : "怪物等级" + a.requiredMonsterLevel : a.attackScheduled ? "计划攻击" : "地牢" + a.conqueredDungeonCount + " / " + a.dungeonList.length;
       if (this.Rv != a) {
         this.Rv = a;
         this.progressTextElement.innerHTML = a;
@@ -217,7 +217,7 @@ export function initializeViewsCastles() {
       } else if (a.conquered || canAttackCastle(a) || a.attackScheduled || a.dungeonsConquered) {
         a = this.Us;
       } else {
-        a = this.castle.yk;
+        a = this.castle.conqueredDungeonCount;
         var b = this.castle.dungeonList;
         a = 0 === b.length ? 1 : Math.min(1, a / b.length);
         a = this.Us * a | 0;

@@ -50,7 +50,7 @@ export function initializeRuntimeGame() {
     itemSprites: new SpriteSheet("spritesheet/items.png", 32, itemsAtlas),
     animations: createAnimationCatalog(),
     camera: new function () {
-      this.At = this.zt = this.wk = this.vk = 0;
+      this.At = this.zt = this.tileRow = this.tileColumn = 0;
     }(),
     lifecycle: new CharacterLifecycle(),
     world: new WorldMap(),
@@ -64,7 +64,7 @@ export function initializeRuntimeGame() {
       this.regionGridSpan = 16;
       this.regionGridOriginColumn = a;
       this.regionGridOriginRow = b;
-      this.sk = {};
+      this.byKey = {};
       this.Mr = [];
     }(),
     castles: new function () {

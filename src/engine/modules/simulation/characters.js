@@ -26,11 +26,11 @@ export function projectDungeonY(a, b) {
 }
 export function projectWorldX(a, b) {
   var c = game.camera;
-  return game.viewportHalfWidth + ((a / game.tileSize | 0) - c.vk - ((b / game.tileSize | 0) - c.wk)) * game.tileSize + ((a % game.tileSize | 0) - (b % game.tileSize | 0)) - c.zt;
+  return game.viewportHalfWidth + ((a / game.tileSize | 0) - c.tileColumn - ((b / game.tileSize | 0) - c.tileRow)) * game.tileSize + ((a % game.tileSize | 0) - (b % game.tileSize | 0)) - c.zt;
 }
 export function projectWorldY(a, b) {
   var c = game.camera;
-  return game.viewportHalfHeight + ((a / game.tileSize | 0) - c.vk + ((b / game.tileSize | 0) - c.wk)) * game.halfTileSize + (((a % game.tileSize | 0) + (b % game.tileSize | 0)) / 2 | 0) - c.At;
+  return game.viewportHalfHeight + ((a / game.tileSize | 0) - c.tileColumn + ((b / game.tileSize | 0) - c.tileRow)) * game.halfTileSize + (((a % game.tileSize | 0) + (b % game.tileSize | 0)) / 2 | 0) - c.At;
 }
 export function CharacterLifecycle() {
   this.yw = this.Jo = 0;

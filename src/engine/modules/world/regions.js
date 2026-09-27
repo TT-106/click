@@ -70,7 +70,7 @@ export function Castle(a, b, c, d, f, g) {
   this.dungeonsConquered = this.conquered = false;
   this.regionLocked = true;
   this.attackScheduled = false;
-  this.requiredMonsterLevel = this.yk = 0;
+  this.requiredMonsterLevel = this.conqueredDungeonCount = 0;
   this.regions = [];
   this.dungeonList = [];
 }
@@ -79,15 +79,15 @@ export function canAttackCastle(a) {
 }
 export function refreshCastleConquest(a) {
   if (a.dungeonsConquered || a.conquered) {
-    a.yk = a.dungeonList.length;
+    a.conqueredDungeonCount = a.dungeonList.length;
   } else {
     var b;
-    for (b = a.yk = 0; b < a.dungeonList.length; b++) {
+    for (b = a.conqueredDungeonCount = 0; b < a.dungeonList.length; b++) {
       if (a.dungeonList[b].conquered) {
-        a.yk++;
+        a.conqueredDungeonCount++;
       }
     }
-    if (a.yk === a.dungeonList.length) {
+    if (a.conqueredDungeonCount === a.dungeonList.length) {
       a.dungeonsConquered = true;
       b = game.castles;
       b.nextRequiredMonsterLevel++;
@@ -108,16 +108,16 @@ export function RegionLayout() {
   this.bE = a.regionGridOriginRow + a.regionGridSpan;
 }
 export function getWestRegion(a, b, c, d) {
-  return b - 1 >= a.BA && (a = b - 1 + "_" + c, !d[a]) ? game.regions.sk[a] : null;
+  return b - 1 >= a.BA && (a = b - 1 + "_" + c, !d[a]) ? game.regions.byKey[a] : null;
 }
 export function getEastRegion(a, b, c, d) {
-  return b + 1 < a.$D && (a = b + 1 + "_" + c, !d[a]) ? game.regions.sk[a] : null;
+  return b + 1 < a.$D && (a = b + 1 + "_" + c, !d[a]) ? game.regions.byKey[a] : null;
 }
 export function getNorthRegion(a, b, c, d) {
-  return c - 1 >= a.EA && (a = b + "_" + (c - 1), !d[a]) ? game.regions.sk[a] : null;
+  return c - 1 >= a.EA && (a = b + "_" + (c - 1), !d[a]) ? game.regions.byKey[a] : null;
 }
 export function getSouthRegion(a, b, c, d) {
-  return c + 1 < a.bE && (a = b + "_" + (c + 1), !d[a]) ? game.regions.sk[a] : null;
+  return c + 1 < a.bE && (a = b + "_" + (c + 1), !d[a]) ? game.regions.byKey[a] : null;
 }
 export function chooseAdjacentRegion(a, b, c, d) {
   var f = b.regionColumn;
@@ -161,7 +161,7 @@ export function resetCastles() {
     c.conquered = false;
     c.regionLocked = true;
     c.attackScheduled = false;
-    c.yk = 0;
+    c.conqueredDungeonCount = 0;
     c.requiredMonsterLevel = 0;
     c.dungeonsConquered = 0 === c.dungeonList.length;
   }

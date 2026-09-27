@@ -71,83 +71,6 @@
     ]
   },
   {
-    "name": "vk",
-    "reads": 6,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:88",
-        "code": "h.vk"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:91",
-        "code": "l.vk"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:107",
-        "code": "h.vk"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\runtime\\game.js",
-      "src\\engine\\modules\\simulation\\characters.js",
-      "src\\engine\\modules\\simulation\\loop.js"
-    ]
-  },
-  {
-    "name": "wk",
-    "reads": 6,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:88",
-        "code": "h.wk"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:91",
-        "code": "l.wk"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:107",
-        "code": "h.wk"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\runtime\\game.js",
-      "src\\engine\\modules\\simulation\\characters.js",
-      "src\\engine\\modules\\simulation\\loop.js"
-    ]
-  },
-  {
-    "name": "sk",
-    "reads": 6,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\runtime\\game.js:67",
-        "code": "this.sk"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\initialization.js:13",
-        "code": "eb.sk"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\initialization.js:31",
-        "code": "eb.sk"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\runtime\\game.js",
-      "src\\engine\\modules\\world\\initialization.js",
-      "src\\engine\\modules\\world\\regions.js"
-    ]
-  },
-  {
     "name": "rk",
     "reads": 4,
     "writes": 4,
@@ -193,55 +116,6 @@
     "files": [
       "src\\engine\\modules\\views\\achievements.js",
       "src\\engine\\modules\\views\\character.js"
-    ]
-  },
-  {
-    "name": "mk",
-    "reads": 4,
-    "writes": 4,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\castles.js:130",
-        "code": "(/** @type {unknown} */this).mk"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\castles.js:140",
-        "code": "CastleTableView.prototype.mk"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\character.js:256",
-        "code": "(/** @type {InventoryTableView & TableLifecycle} */ /** @type {unknown} */this).mk"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\views\\castles.js",
-      "src\\engine\\modules\\views\\character.js",
-      "src\\engine\\modules\\views\\dungeons.js"
-    ]
-  },
-  {
-    "name": "yk",
-    "reads": 3,
-    "writes": 5,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\views\\castles.js:209",
-        "code": "a.yk"
-      },
-      {
-        "loc": "src\\engine\\modules\\views\\castles.js:220",
-        "code": "this.castle.yk"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\regions.js:73",
-        "code": "this.yk"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\views\\castles.js",
-      "src\\engine\\modules\\world\\regions.js"
     ]
   },
   {

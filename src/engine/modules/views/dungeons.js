@@ -315,7 +315,7 @@ export function initializeViewsDungeons() {
     }
     var a = getDungeonList(this);
     if (a.length !== this.rowViews.length) {
-      /** @type {{mk: (count: number) => void}} */ (/** @type {unknown} */ (this)).mk(a.length);
+      /** @type {{setRowCount: (count: number) => void}} */ (/** @type {unknown} */ (this)).setRowCount(a.length);
     }
     var b;
     for (b = 0; b < this.rowViews.length; b++) {
@@ -325,7 +325,7 @@ export function initializeViewsDungeons() {
       this.rowViews[b].render();
     }
   };
-  DungeonListView.prototype.mk = function (a) {
+  DungeonListView.prototype.setRowCount = function (a) {
     for (; this.rowViews.length > a;) {
       this.tableElement.deleteRow(-1);
       this.rowViews.splice(this.rowViews.length - 1, 1);

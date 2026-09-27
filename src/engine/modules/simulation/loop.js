@@ -67,8 +67,8 @@ export function initializeSimulationLoop() {
             h = Math.round(f % game.tileSize);
             c.zt = g - h;
             c.At = Math.round((g + h) / 2);
-            c.vk = d / game.tileSize | 0;
-            c.wk = f / game.tileSize | 0;
+            c.tileColumn = d / game.tileSize | 0;
+            c.tileRow = f / game.tileSize | 0;
           }
         }
         if (game.renderEnabled) {

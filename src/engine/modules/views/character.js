@@ -12,7 +12,7 @@ import { getAttackCooldown, statValue } from "../characters/stats.js";
 import { characterLevelUpgrades, healthRegenerationBonus, spiritRegenerationBonus } from "../content/balance.js";
 import { UpgradeCollection } from "../progression/upgrades.js";
 /** @typedef {{ reset: () => void, render: () => void }} ViewLifecycle */
-/** @typedef {{ createDomElements: () => void, mk: (rowCount: number) => void, createHeaderRow: (row: HTMLTableRowElement) => void }} TableLifecycle */
+/** @typedef {{ createDomElements: () => void, setRowCount: (rowCount: number) => void, createHeaderRow: (row: HTMLTableRowElement) => void }} TableLifecycle */
 export function ItemRowBase() {}
 export function InventoryItemView(a, b) {
   this.rowElement = a;
@@ -253,7 +253,7 @@ export function initializeViewsCharacter() {
       }
       var a = game.state.adventurers[this.adventurerIndex].inventory.items;
       if (a.length !== this.rowViews.length) {
-        (/** @type {InventoryTableView & TableLifecycle} */ (/** @type {unknown} */ (this))).mk(a.length);
+        (/** @type {InventoryTableView & TableLifecycle} */ (/** @type {unknown} */ (this))).setRowCount(a.length);
       }
       var b;
       for (b = 0; b < this.rowViews.length; b++) {
@@ -263,7 +263,7 @@ export function initializeViewsCharacter() {
       }
     }
   };
-  InventoryTableView.prototype.mk = function (a) {
+  InventoryTableView.prototype.setRowCount = function (a) {
     for (; this.rowViews.length > a;) {
       this.inventoryTable.deleteRow(-1);
       this.rowViews.splice(this.rowViews.length - 1, 1);
@@ -369,7 +369,7 @@ export function initializeViewsCharacter() {
       var a = game.state.adventurers[this.adventurerIndex],
         b = a.slotList;
       if (b.length !== this.rowViews.length) {
-        (/** @type {EquipmentTableView & TableLifecycle} */ (/** @type {unknown} */ (this))).mk(b.length);
+        (/** @type {EquipmentTableView & TableLifecycle} */ (/** @type {unknown} */ (this))).setRowCount(b.length);
       }
       var c, d;
       for (c = 0; c < this.rowViews.length; c++) {
@@ -380,7 +380,7 @@ export function initializeViewsCharacter() {
       }
     }
   };
-  EquipmentTableView.prototype.mk = function (a) {
+  EquipmentTableView.prototype.setRowCount = function (a) {
     for (; this.rowViews.length > a;) {
       this.zm.deleteRow(-1);
       this.rowViews.splice(this.rowViews.length - 1, 1);
