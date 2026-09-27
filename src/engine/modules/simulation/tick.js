@@ -88,12 +88,12 @@ export function advanceSimulation(a) {
     game.state.statisticsRecorder.recordTurn();
     var I = game.state.party;
     if (game.worldActive) {
-      I.ou();
+      I.updateWorldMode();
     } else {
       I.Ks = false;
       I.forcedDestinationRoom = null;
       I.Mp = false;
-      I.nu();
+      I.updateDungeonMode();
     }
     if (!game.worldActive) {
       game.goldDrops.releaseClaims();

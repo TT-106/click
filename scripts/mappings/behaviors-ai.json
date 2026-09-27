@@ -1,0 +1,23 @@
+[
+  { "old": "fo", "new": "behaviorList", "files": ["src/engine/modules/ai/behaviors.js", "src/engine/modules/simulation/characters.js"], "expect": "auto" },
+  { "old": "eo", "new": "priorityWeight", "files": ["src/engine/modules/ai/behaviors.js"], "expect": "auto" },
+  { "old": "Uq", "new": "threatTarget", "files": ["src/engine/modules/ai/behaviors.js"], "expect": "auto" },
+  { "old": "Vq", "new": "delegateBehavior", "files": ["src/engine/modules/ai/behaviors.js"], "expect": "auto" },
+  { "old": "Vs", "new": "isEnraged", "files": ["src/engine/modules/ai/behaviors.js", "src/engine/modules/characters/effects.js"], "expect": "auto" },
+  { "old": "et", "new": "setTargetDoor", "files": ["src/engine/modules/ai/behaviors.js", "src/engine/modules/characters/movement.js", "src/engine/modules/characters/party.js", "src/engine/modules/characters/character.js"], "expect": "auto" },
+  { "old": "Yt", "new": "canActWithoutAttack", "files": ["src/engine/modules/ai/behaviors.js"], "expect": "auto" },
+  { "old": "ax", "new": "lastAttackTurn", "files": ["src/engine/modules/ai/behaviors.js"], "expect": "auto" },
+  { "old": "ou", "new": "updateWorldMode", "files": ["src/engine/modules/ai/behaviors.js", "src/engine/modules/characters/party.js", "src/engine/modules/simulation/tick.js"], "expect": "auto" },
+  { "old": "nu", "new": "updateDungeonMode", "files": ["src/engine/modules/ai/behaviors.js", "src/engine/modules/characters/party.js", "src/engine/modules/simulation/tick.js"], "expect": "auto" },
+  { "old": "kB", "new": "priorityWeight", "files": ["src/engine/modules/ai/behaviors.js"], "expect": "auto" },
+  { "old": "SB", "new": "targetDistance", "files": ["src/engine/modules/ai/behaviors.js"], "expect": "auto" },
+  { "old": "CA", "new": "engagementDistance", "files": ["src/engine/modules/ai/behaviors.js"], "expect": "auto" },
+  { "old": "zE", "new": "threatDistance", "files": ["src/engine/modules/ai/behaviors.js"], "expect": "auto" },
+  { "old": "AD", "new": "fleeHealthRatio", "files": ["src/engine/modules/ai/behaviors.js"], "expect": "auto" },
+  { "old": "YD", "new": "preferNearbyOpponent", "files": ["src/engine/modules/ai/behaviors.js"], "expect": "auto" },
+  { "old": "KE", "new": "expectedSpellCategoryId", "files": ["src/engine/modules/ai/behaviors.js"], "expect": "auto" },
+  { "old": "vD", "new": "room", "files": ["src/engine/modules/ai/behaviors.js", "src/engine/modules/loot/treasure.js"], "expect": "auto" },
+  { "old": "BE", "new": "room", "files": ["src/engine/modules/ai/behaviors.js", "src/engine/modules/combat/scrolls.js"], "expect": "auto" },
+  { "old": "oE", "new": "room", "files": ["src/engine/modules/ai/behaviors.js", "src/engine/modules/combat/potions.js"], "expect": "auto" },
+  { "old": "PD", "new": "room", "files": ["src/engine/modules/ai/behaviors.js", "src/engine/modules/loot/items.js"], "expect": "auto" }
+]

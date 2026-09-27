@@ -19,7 +19,7 @@ export function isDisablingEffect(a) {
 }
 export function CharacterEffects(a) {
   this.no = a;
-  this.isStunned = this.isStealthed = this.isConverted = this.Vs = this.hasStealthEffect = this.isDisabled = false;
+  this.isStunned = this.isStealthed = this.isConverted = this.isEnraged = this.hasStealthEffect = this.isDisabled = false;
   this.activeEffects = [];
 }
 export function updateCharacterEffects(a, b) {
@@ -31,7 +31,7 @@ export function updateCharacterEffects(a, b) {
     l = a.isStunned;
   a.isDisabled = false;
   a.hasStealthEffect = false;
-  a.Vs = false;
+  a.isEnraged = false;
   a.isConverted = false;
   a.isStealthed = false;
   a.isStunned = false;
@@ -74,7 +74,7 @@ export function updateCharacterEffects(a, b) {
                   addSpellStatBonus(u, f.potencyMultiplier);
                 } else {
                   if (12 === h) {
-                    a.Vs = true;
+                    a.isEnraged = true;
                     addSpellStatBonus(p, f.potencyMultiplier);
                   } else {
                     if (4 === h) {
@@ -132,7 +132,7 @@ export function hasStatusEffect(a, b) {
     case 10:
       return a.hasStealthEffect;
     case 12:
-      return a.Vs;
+      return a.isEnraged;
   }
   return false;
 }

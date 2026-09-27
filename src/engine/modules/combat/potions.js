@@ -80,7 +80,7 @@ export function PotionDrop(a, b, c, d) {
   this.potion = a;
   this.levelPositionX = b;
   this.levelPositionY = c;
-  this.oE = d;
+  this.room = d;
   this.collected = false;
   this.claimedBy = null;
   this.claimDistance = 0;

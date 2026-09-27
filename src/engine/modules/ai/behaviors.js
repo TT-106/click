@@ -20,34 +20,34 @@ import { getRoomTreasure } from "../loot/treasure.js";
 /** @typedef {{ performOnArrival: (character: unknown) => void, canExecute: (character: unknown) => boolean, selectTarget: (character: unknown) => any, getActionTarget: () => any, getFinalScore: (character: unknown) => number }} DungeonBehaviorMethods */
 /** @typedef {{ resetBehaviorState: () => void, execute: (character: unknown) => void, getBehaviorScore: (character: unknown) => number, getPriority: () => number }} RangedBehaviorMethods */
 export function BehaviorQueue() {
-  this.fo = [];
+  this.behaviorList = [];
 }
 export function IdleBehavior(a) {
-  this.kB = a;
+  this.priorityWeight = a;
   this.lastWanderRoom = null;
 }
 export function ExploreDungeonBehavior() {
   this.priorityWeight = 10;
   this.selectedTarget = null;
-  this.SB = 0;
+  this.targetDistance = 0;
   this.actionTarget = null;
   this.actionRange = 100;
-  this.Yt = false;
+  this.canActWithoutAttack = false;
 }
 export function FollowLeaderBehavior() {
   this.priorityWeight = 100;
-  this.zE = RANGED_MIN_DISTANCE;
-  this.AD = 0.8;
-  this.Uq = null;
+  this.threatDistance = RANGED_MIN_DISTANCE;
+  this.fleeHealthRatio = 0.8;
+  this.threatTarget = null;
 }
 export function RangedAttackBehavior(a, b, c) {
   this.priorityWeight = c;
   this.targetCharacter = null;
-  this.CA = a;
+  this.engagementDistance = a;
   this.actionRange = b;
   this.fleeDirection = new Vector2();
   this.kiteVector = new Vector2();
-  this.consecutiveAttackTurns = this.ax = 0;
+  this.consecutiveAttackTurns = this.lastAttackTurn = 0;
 }
 export function MeleeAttackBehavior(a, b, c, d) {
   this.priorityWeight = b;
@@ -55,7 +55,7 @@ export function MeleeAttackBehavior(a, b, c, d) {
   this.targetDistance = 0;
   this.actionRange = a;
   this.behaviorActionType = c;
-  this.YD = d;
+  this.preferNearbyOpponent = d;
 }
 export function LootGoldBehavior(a) {
   this.learnedSpell = null;
@@ -80,7 +80,7 @@ export function LootScrollBehavior(a) {
   this.actionRange = 10;
 }
 export function GuardRangedBehavior(a, b, c) {
-  this.Vq = new RangedAttackBehavior(a, b, c);
+  this.delegateBehavior = new RangedAttackBehavior(a, b, c);
 }
 export function TargetSpellBehavior(a, b) {
   this.priorityWeight = b;
@@ -132,7 +132,7 @@ export function PartyBuffBehavior(a, b, c) {
   this.spell = null;
 }
 export function WaitBehavior() {
-  this.eo = 2;
+  this.priorityWeight = 2;
 }
 export function hasForcedDestination(a) {
   var b;
@@ -141,7 +141,7 @@ export function hasForcedDestination(a) {
 export function LootChestBehavior(a) {
   this.learnedSpell = null;
   this.priorityWeight = a;
-  this.Yt = true;
+  this.canActWithoutAttack = true;
   this.actionRange = 10;
 }
 export function hasPendingLoot() {
@@ -150,7 +150,7 @@ export function hasPendingLoot() {
 export function LootPotionBehavior(a) {
   this.learnedSpell = null;
   this.priorityWeight = a;
-  this.Yt = true;
+  this.canActWithoutAttack = true;
   this.actionRange = 10;
 }
 export function UseShopBehavior(a, b) {
@@ -193,7 +193,7 @@ export function SelfSpellBehavior(a) {
 }
 export function AreaSpellBehavior(a, b, c) {
   this.spell = null;
-  this.KE = c;
+  this.expectedSpellCategoryId = c;
   this.priorityWeight = b;
   this.actionRange = a;
 }
@@ -204,28 +204,28 @@ export function CompanionSpellBehavior(a, b) {
 }
 export function CooldownBehavior(a, b) {
   this.priorityWeight = b;
-  this.Uw = a;
+  this.leashDistance = a;
 }
 export function SpecialAttackBehavior(a, b, c, d) {
   this.priorityWeight = c;
   this.targetCharacter = null;
   this.targetDistance = 0;
   this.actionRange = a;
-  this.Uw = b;
+  this.maxEngageDistance = b;
   this.behaviorActionType = d;
 }
 export function StunnedBehavior(a) {
-  this.eo = a;
+  this.priorityWeight = a;
 }
 export function initializeAiBehaviors() {
   BehaviorQueue.prototype.updateBehaviors = function (a) {
     if (game.worldActive) {
-      (/** @type {BehaviorQueue & { ou: (character: unknown) => void }} */ (/** @type {unknown} */ (this))).ou(a);
+      (/** @type {BehaviorQueue & { updateWorldMode: (character: unknown) => void }} */ (/** @type {unknown} */ (this))).updateWorldMode(a);
     } else {
-      (/** @type {BehaviorQueue & { nu: (character: unknown) => void }} */ (/** @type {unknown} */ (this))).nu(a);
+      (/** @type {BehaviorQueue & { updateDungeonMode: (character: unknown) => void }} */ (/** @type {unknown} */ (this))).updateDungeonMode(a);
     }
   };
-  BehaviorQueue.prototype.ou = function (a) {
+  BehaviorQueue.prototype.updateWorldMode = function (a) {
     var b, c;
     b = game.state.party;
     c = b.targetShop;
@@ -282,7 +282,7 @@ export function initializeAiBehaviors() {
       a.actionType = IDLE_ACTION;
     }
   };
-  BehaviorQueue.prototype.nu = function (a) {
+  BehaviorQueue.prototype.updateDungeonMode = function (a) {
     a.actionType = IDLE_ACTION;
     a.targetGoldDrop = null;
     a.combatTarget = null;
@@ -296,15 +296,15 @@ export function initializeAiBehaviors() {
       d,
       f = null,
       g;
-    for (b = 0; b < this.fo.length && !(d = this.fo[b], d.getPriority() > c && (g = d.getBehaviorScore(a), g > c && (c = g, f = d), 100 <= c)); b++) {}
+    for (b = 0; b < this.behaviorList.length && !(d = this.behaviorList[b], d.getPriority() > c && (g = d.getBehaviorScore(a), g > c && (c = g, f = d), 100 <= c)); b++) {}
     if (f) {
       f.execute(a);
     }
   };
   BehaviorQueue.prototype.notifySpellLearned = function (a) {
     var b;
-    for (b = 0; b < this.fo.length; b++) {
-      this.fo[b].notifySpellLearned(a);
+    for (b = 0; b < this.behaviorList.length; b++) {
+      this.behaviorList[b].notifySpellLearned(a);
     }
   };
   IdleBehavior.prototype.resetBehaviorState = function () {};
@@ -324,10 +324,10 @@ export function initializeAiBehaviors() {
     }
   };
   IdleBehavior.prototype.getBehaviorScore = function (a) {
-    return a.position.room ? this.kB : 0;
+    return a.position.room ? this.priorityWeight : 0;
   };
   IdleBehavior.prototype.getPriority = function () {
-    return this.kB;
+    return this.priorityWeight;
   };
   ExploreDungeonBehavior.prototype.resetBehaviorState = function () {
     this.selectedTarget = this.actionTarget = null;
@@ -337,9 +337,9 @@ export function initializeAiBehaviors() {
     if (this.selectedTarget && this.actionTarget) {
       a.setCombatTarget(this.selectedTarget);
       var b = a.position;
-      this.SB = a === this.selectedTarget ? 0 : b.levelPosition.distanceTo(this.selectedTarget.position.levelPosition);
-      if (this.SB <= this.actionRange) {
-        if (!this.Yt && !canAttack(a)) {
+      this.targetDistance = a === this.selectedTarget ? 0 : b.levelPosition.distanceTo(this.selectedTarget.position.levelPosition);
+      if (this.targetDistance <= this.actionRange) {
+        if (!this.canActWithoutAttack && !canAttack(a)) {
           return;
         }
         markAttackTurn(a);
@@ -392,7 +392,7 @@ export function initializeAiBehaviors() {
   FollowLeaderBehavior.prototype.resetBehaviorState = function () {};
   FollowLeaderBehavior.prototype.notifySpellLearned = function () {};
   FollowLeaderBehavior.prototype.execute = function (a) {
-    if (this.Uq) {
+    if (this.threatTarget) {
       var b = a.position.room;
       if (a.position.movementTargetCleared) {
         if (!b) {
@@ -434,7 +434,7 @@ export function initializeAiBehaviors() {
   };
   FollowLeaderBehavior.prototype.getBehaviorScore = function (a) {
     var b = a.stats.health / statValue(a.stats.maxHealth);
-    if (b > this.AD) {
+    if (b > this.fleeHealthRatio) {
       return 0;
     }
     var c;
@@ -449,25 +449,25 @@ export function initializeAiBehaviors() {
       }
       c = null;
     }
-    this.Uq = c;
-    return !this.Uq || a.position.levelPosition.distanceTo(this.Uq.position.levelPosition) > this.zE ? 0 : (1 - b) * this.priorityWeight;
+    this.threatTarget = c;
+    return !this.threatTarget || a.position.levelPosition.distanceTo(this.threatTarget.position.levelPosition) > this.threatDistance ? 0 : (1 - b) * this.priorityWeight;
   };
   FollowLeaderBehavior.prototype.getPriority = function () {
     return this.priorityWeight;
   };
   RangedAttackBehavior.prototype.resetBehaviorState = function () {
-    this.consecutiveAttackTurns = this.ax = 0;
+    this.consecutiveAttackTurns = this.lastAttackTurn = 0;
     this.targetCharacter = null;
   };
   RangedAttackBehavior.prototype.notifySpellLearned = function () {};
   RangedAttackBehavior.prototype.execute = function (a) {
-    if (this.ax == game.state.turnNumber - 1) {
+    if (this.lastAttackTurn == game.state.turnNumber - 1) {
       this.consecutiveAttackTurns++;
     } else {
       this.consecutiveAttackTurns = 0;
     }
     if (this.targetCharacter && !(this.targetCharacter.isDead || this.targetCharacter.effects.isDisabled || this.targetCharacter.effects.isConverted) && (/** @type {MovingBehavior} */ (/** @type {unknown} */ (this))).repositionInsideRoom(a)) {
-      this.ax = game.state.turnNumber;
+      this.lastAttackTurn = game.state.turnNumber;
       var b = a.position.room;
       if (b && isAdventurerOrMinion(a)) {
         forcePartyDestination(b);
@@ -496,7 +496,7 @@ export function initializeAiBehaviors() {
       if (!(n.isDead || n.effects.isDisabled || n.effects.isConverted || n.position.room != d)) {
         p = n.position.levelPosition;
         n = c.distanceTo(p);
-        if (!(n > this.CA)) {
+        if (!(n > this.engagementDistance)) {
           if (0 === n) {
             setVector(this.fleeDirection, Math.random(), Math.random());
           } else {
@@ -536,7 +536,7 @@ export function initializeAiBehaviors() {
   };
   RangedAttackBehavior.prototype.getBehaviorScore = function (a) {
     this.targetCharacter = findNearestVisibleOpponent(a);
-    return this.targetCharacter ? 2 < this.consecutiveAttackTurns ? this.consecutiveAttackTurns = 0 : a.position.levelPosition.distanceTo(this.targetCharacter.position.levelPosition) > this.CA ? 0 : this.priorityWeight : 0;
+    return this.targetCharacter ? 2 < this.consecutiveAttackTurns ? this.consecutiveAttackTurns = 0 : a.position.levelPosition.distanceTo(this.targetCharacter.position.levelPosition) > this.engagementDistance ? 0 : this.priorityWeight : 0;
   };
   RangedAttackBehavior.prototype.getPriority = function () {
     return this.priorityWeight;
@@ -567,7 +567,7 @@ export function initializeAiBehaviors() {
     if (!a.position.room) {
       return 0;
     }
-    this.targetCharacter = this.YD ? findNearbyOpponent(a) : selectScrollTarget(a);
+    this.targetCharacter = this.preferNearbyOpponent ? findNearbyOpponent(a) : selectScrollTarget(a);
     if (!this.targetCharacter) {
       return 0;
     }
@@ -744,20 +744,20 @@ export function initializeAiBehaviors() {
     return this.learnedSpell;
   };
   LootScrollBehavior.prototype.selectTarget = function (a) {
-    return a.effects.Vs || !hasOpponentsInRoom(a, a.position.room) ? null : a;
+    return a.effects.isEnraged || !hasOpponentsInRoom(a, a.position.room) ? null : a;
   };
   GuardRangedBehavior.prototype.resetBehaviorState = function () {
-    (/** @type {RangedAttackBehavior & RangedBehaviorMethods} */ (/** @type {unknown} */ (this.Vq))).resetBehaviorState();
+    (/** @type {RangedAttackBehavior & RangedBehaviorMethods} */ (/** @type {unknown} */ (this.delegateBehavior))).resetBehaviorState();
   };
   GuardRangedBehavior.prototype.notifySpellLearned = function () {};
   GuardRangedBehavior.prototype.execute = function (a) {
-    (/** @type {RangedAttackBehavior & RangedBehaviorMethods} */ (/** @type {unknown} */ (this.Vq))).execute(a);
+    (/** @type {RangedAttackBehavior & RangedBehaviorMethods} */ (/** @type {unknown} */ (this.delegateBehavior))).execute(a);
   };
   GuardRangedBehavior.prototype.getBehaviorScore = function (a) {
-    return a.effects.isStealthed ? 0 : (/** @type {RangedAttackBehavior & RangedBehaviorMethods} */ (/** @type {unknown} */ (this.Vq))).getBehaviorScore(a);
+    return a.effects.isStealthed ? 0 : (/** @type {RangedAttackBehavior & RangedBehaviorMethods} */ (/** @type {unknown} */ (this.delegateBehavior))).getBehaviorScore(a);
   };
   GuardRangedBehavior.prototype.getPriority = function () {
-    return (/** @type {RangedAttackBehavior & RangedBehaviorMethods} */ (/** @type {unknown} */ (this.Vq))).getPriority();
+    return (/** @type {RangedAttackBehavior & RangedBehaviorMethods} */ (/** @type {unknown} */ (this.delegateBehavior))).getPriority();
   };
   TargetSpellBehavior.prototype.resetBehaviorState = function () {
     this.learnedSpell = null;
@@ -1020,7 +1020,7 @@ export function initializeAiBehaviors() {
           }
         }
       }
-      f.et(d);
+      f.setTargetDoor(d);
       f.destinationRoom = c;
       f.setTargetRoom(b);
       if (d) {
@@ -1043,10 +1043,10 @@ export function initializeAiBehaviors() {
       return 0;
     }
     var b = getOpponents(a);
-    return 0 < b.length && a.position.room === b[0].position.room ? 0 : this.eo;
+    return 0 < b.length && a.position.room === b[0].position.room ? 0 : this.priorityWeight;
   };
   WaitBehavior.prototype.getPriority = function () {
-    return this.eo;
+    return this.priorityWeight;
   };
   LootChestBehavior.prototype = new ExploreDungeonBehavior();
   LootChestBehavior.prototype.resetBehaviorState = function () {
@@ -1139,7 +1139,7 @@ export function initializeAiBehaviors() {
     if (l) {
       for (d = 0; d < b.length; d++) {
         c = b[d];
-        if (!(c.collected || c.vD !== l)) {
+        if (!(c.collected || c.room !== l)) {
           h = distanceSquaredToPoint(f, c.levelPositionX, c.levelPositionY);
           if (!(c.claimedBy && h > c.getClaimDistance() || !(0 > n || h < n))) {
             g = c;
@@ -1202,7 +1202,7 @@ export function initializeAiBehaviors() {
     if (l) {
       for (d = 0; d < b.length; d++) {
         c = b[d];
-        if (!(c.collected || c.BE !== l)) {
+        if (!(c.collected || c.room !== l)) {
           h = distanceSquaredToPoint(f, c.levelPositionX, c.levelPositionY);
           if (!(c.claimedBy && h > c.getClaimDistance() || !(0 > n || h < n))) {
             g = c;
@@ -1265,7 +1265,7 @@ export function initializeAiBehaviors() {
     if (l) {
       for (d = 0; d < b.length; d++) {
         c = b[d];
-        if (!(c.collected || c.oE !== l)) {
+        if (!(c.collected || c.room !== l)) {
           h = distanceSquaredToPoint(f, c.levelPositionX, c.levelPositionY);
           if (!(c.claimedBy && h > c.getClaimDistance() || !(0 > n || h < n))) {
             g = c;
@@ -1328,7 +1328,7 @@ export function initializeAiBehaviors() {
     if (l) {
       for (d = 0; d < b.length; d++) {
         c = b[d];
-        if (!(c.collected || c.PD !== l)) {
+        if (!(c.collected || c.room !== l)) {
           h = distanceSquaredToPoint(f, c.levelPositionX, c.levelPositionY);
           if (!(c.claimedBy && h > c.getClaimDistance() || !(0 > n || h < n))) {
             g = c;
@@ -1407,7 +1407,7 @@ export function initializeAiBehaviors() {
     this.spell = null;
   };
   AreaSpellBehavior.prototype.notifySpellLearned = function (a) {
-    if (!(this.spell || a.spellCategoryId !== this.KE)) {
+    if (!(this.spell || a.spellCategoryId !== this.expectedSpellCategoryId)) {
       this.spell = a;
     }
   };
@@ -1503,7 +1503,7 @@ export function initializeAiBehaviors() {
     }
     var b = a.position;
     a = a.summoner.position;
-    return !b.room || !a.room || b.room !== a.room || b.levelPosition.distanceTo(a.levelPosition) < this.Uw ? 0 : this.priorityWeight;
+    return !b.room || !a.room || b.room !== a.room || b.levelPosition.distanceTo(a.levelPosition) < this.leashDistance ? 0 : this.priorityWeight;
   };
   CooldownBehavior.prototype.getPriority = function () {
     return this.priorityWeight;
@@ -1545,7 +1545,7 @@ export function initializeAiBehaviors() {
       return 0;
     }
     b = this.targetCharacter.position.levelPosition;
-    if (c.levelPosition.distanceTo(b) > this.Uw) {
+    if (c.levelPosition.distanceTo(b) > this.maxEngageDistance) {
       return 0;
     }
     this.targetDistance = a.levelPosition.distanceTo(b);
@@ -1581,9 +1581,9 @@ export function initializeAiBehaviors() {
       return 0;
     }
     b = b.levelPosition;
-    return isPointNearDoor(a, b) || a.stairs && distanceToPoint(b, a.stairs.pixelColumn, a.stairs.pixelRow) < game.tileSize ? this.eo : 0;
+    return isPointNearDoor(a, b) || a.stairs && distanceToPoint(b, a.stairs.pixelColumn, a.stairs.pixelRow) < game.tileSize ? this.priorityWeight : 0;
   };
   StunnedBehavior.prototype.getPriority = function () {
-    return this.eo;
+    return this.priorityWeight;
   };
 }

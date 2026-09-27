@@ -215,7 +215,7 @@ export function initializeCharactersMovement() {
   CharacterPosition.prototype.getLevelPositionY = function () {
     return this.levelPosition.y;
   };
-  CharacterPosition.prototype.et = function (a) {
+  CharacterPosition.prototype.setTargetDoor = function (a) {
     this.targetDoor = a;
   };
   CharacterPosition.prototype.setTargetRoom = function (a) {

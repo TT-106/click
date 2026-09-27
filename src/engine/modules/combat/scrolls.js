@@ -178,7 +178,7 @@ export function ScrollDrop(a, b, c, d) {
   this.scroll = a;
   this.levelPositionX = b;
   this.levelPositionY = c;
-  this.BE = d;
+  this.room = d;
   this.collected = false;
   this.claimedBy = null;
   this.claimDistance = 0;

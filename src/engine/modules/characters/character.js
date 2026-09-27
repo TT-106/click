@@ -322,7 +322,7 @@ export function updateCharacter(a, b) {
                       revealHallway(na, true);
                       var K = getOppositeDoor(na, Q);
                       if (!K.isOpen) {
-                        V.et(K);
+                        V.setTargetDoor(K);
                         V.destinationRoom = K.leadsTo;
                         break a;
                       }

@@ -10,7 +10,7 @@ export function GoldDrop(a, b, c, d) {
   this.goldAmount = a;
   this.levelPositionX = b;
   this.levelPositionY = c;
-  this.vD = d;
+  this.room = d;
   this.collected = false;
   this.claimedBy = null;
   this.claimDistance = 0;

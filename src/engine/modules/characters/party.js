@@ -331,13 +331,13 @@ export function initializeCharactersParty() {
       }
     }
   };
-  PartyState.prototype.et = function (a) {
+  PartyState.prototype.setTargetDoor = function (a) {
     this.targetDoor = a;
   };
   PartyState.prototype.setTargetRoom = function (a) {
     this.targetRoom = a;
   };
-  PartyState.prototype.ou = function () {
+  PartyState.prototype.updateWorldMode = function () {
     if (this.targetCastle && this.targetCastle.conquered) {
       this.targetCastle = null;
     }
@@ -528,7 +528,7 @@ export function initializeCharactersParty() {
       }
     }
   };
-  PartyState.prototype.nu = function () {
+  PartyState.prototype.updateDungeonMode = function () {
     a: {
       var a,
         b = getAllies(),
@@ -558,7 +558,7 @@ export function initializeCharactersParty() {
             return;
           }
         }
-        (/** @type {any} */ (this)).et(findNextUnopenedDoor());
+        (/** @type {any} */ (this)).setTargetDoor(findNextUnopenedDoor());
         this.destinationRoom = this.targetDoor ? this.targetDoor ? this.targetDoor.leadsTo : null : (this.targetRoom = game.level.exitDoor) ? this.targetRoom.leadsTo : null;
       }
     }

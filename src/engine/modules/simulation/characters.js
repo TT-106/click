@@ -159,7 +159,7 @@ export function createBehaviorQueue(a) {
   for (d = 0; d < a.length; d++) {
     c = a[d];
     c.resetBehaviorState();
-    b.fo.push(c);
+    b.behaviorList.push(c);
   }
   return b;
 }

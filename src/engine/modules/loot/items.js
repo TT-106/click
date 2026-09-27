@@ -10,7 +10,7 @@ export function ItemDrop(a, b, c, d) {
   this.item = a;
   this.levelPositionX = b;
   this.levelPositionY = c;
-  this.PD = d;
+  this.room = d;
   this.collected = false;
   this.claimedBy = null;
   this.claimDistance = 0;
