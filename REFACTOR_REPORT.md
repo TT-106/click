@@ -1,7 +1,23 @@
 # REFACTOR REPORT — Clickpocalypse II 语义恢复与现代化工程
 
-> 执行窗口：2026-09-25（首次恢复）→ 2026-09-26（本次会话）。
-> 配套文档：`MIGRATION_MAP.md`、`COMPATIBILITY_REPORT.md`、`PERFORMANCE_REPORT.md`、`docs/architecture.md`、`docs/WORKSTATE.md`（续跑入口）、`docs/reverse-engineering/facts.md`（事实库）。
+> 执行窗口：2026-09-25（首次恢复）→ 2026-09-26（主体重构）→ **2026-09-27（语义恢复收官 + 验证收尾）**。
+> 配套文档：`MIGRATION_MAP.md`、`COMPATIBILITY_REPORT.md`、`PERFORMANCE_REPORT.md`、`docs/architecture.md`、`docs/WORKSTATE.md`（续跑入口）、`docs/m10-type-debt.md`（类型债务台账）、`docs/m13-exhaustion-audit.md`（残留项审计）、`docs/reverse-engineering/facts.md`（事实库）。
+
+## 0. 2026-09-27 会话摘要（本轮改了什么）
+
+| 项 | 前 → 后 | 证据 |
+|---|---|---|
+| 混淆属性名 | **41 → 0** | `npm run analyze` 报 0；`npm run lint` 把它固化为不变量 |
+| `symbol-map` 的 fields 段 | 1,010 → **1,047** | `docs/symbol-map.json` |
+| 验收矩阵 | 51 PASS / 0 PARTIAL → **44 PASS / 7 PARTIAL / 0 未覆盖** | 附录 A（把"证据格里已写明缺口却标 PASS"的 7 行按矩阵自身口径改判） |
+| 隐形文件名垃圾文件 | 38 个（已被 git 跟踪） → **0** | `scripts/find-invisible-name-files.mjs`；`check` 语法文件数回落 |
+| 文档 `file:line` 引用 | 越界 4 → **0**（934 条引用解析不到 0 条） | `scripts/verify-doc-refs.mjs` |
+| 文档内嵌代码片段 | 漂移 64/76 → **15/76**（残留为节选/伪码型，已在文首声明） | `scripts/check-doc-snippets.mjs` |
+| 文档内旧标识符（fields 命中） | 66 → **0** | `scripts/fix-doc-identifiers.mjs` |
+| `@type {any}` 强制转换 | 50 → **43** | `docs/m10-type-debt.md` |
+| 门禁 | 6 门 → **10 门**（新增 `lint`，并把 soak/perf/perf:frames 纳入最终扫描） | §5 末行；`output/s-*.log` |
+
+新增的可复用工具（全部零第三方依赖）：`scripts/lint-invariants.mjs`（不变量守卫）、`record-field-names.mjs`、`rename-atlas-schema.mjs`、`find/remove-invisible-name-files.mjs`、`verify-doc-refs.mjs`、`check-doc-snippets.mjs`、`fix-doc-identifiers.mjs`、`find-unused-modules.mjs`。
 
 ## 1. 原始问题
 
@@ -59,9 +75,9 @@ archive/original/c2.js  ──AST 机械恢复──▶  src/engine/（77 模块
 
 ## 8. 剩余风险与未完成
 
-1. ✅ **字段重命名已收官**（2026-09-27）：`node scripts/analyze-fields.mjs` 现报「**混淆属性总数: 0**」。U66–U120 共 55 批把清单从 806 逐批降到 0，工作清单 `artifacts/obfuscated-fields.json` 现为空数组。流程已固化为四个工具：`scripts/rename-field.mjs`（单字段）、`rename-fields-batch.mjs`（多字段事务批，带命中数/行数/缩进/字符串字面量四重校验）、`rename-atlas-schema.mjs`（带引号的 JSON 键）、`record-field-names.mjs`（回写 symbol-map 的 fields 段，现 1,047 条）。每批证据链与踩坑见 `docs/WORKSTATE.md` 顶部。
+1. ✅ **字段重命名已收官**（2026-09-27）：`node scripts/analyze-fields.mjs` 现报「**混淆属性总数: 0**」。U66–U122 共 57 批把清单从 806 逐批降到 0（U113–U120 是最后 8 批、33 个字段，收尾于贴纸图集 schema），工作清单 `artifacts/obfuscated-fields.json` 现为空数组。流程已固化为四个工具：`scripts/rename-field.mjs`（单字段）、`rename-fields-batch.mjs`（多字段事务批，带命中数/行数/缩进/字符串字面量四重校验）、`rename-atlas-schema.mjs`（带引号的 JSON 键）、`record-field-names.mjs`（回写 symbol-map 的 fields 段，现 1,047 条）。每批证据链与踩坑见 `docs/WORKSTATE.md` 顶部。
 2. **UI 独占路径仍有差分缺口**（U7）：三种财宝房目标物搜索与金币/卷轴/药水/物品四类地面掉落拾取已分别有专项断言；农场全生命周期（购买/推演成熟收获/休耕再侵袭/二次成熟）已有专项断言；卷轴全 6 类战斗施放与后台行为关闭态已闭环。`upgrades-purchased` 已驱动全局升级、角色升级、技能树与法术学习（type=6）购买，`monster-level-unlocked` 已驱动怪物等级解锁，`adventure-points-spent` 已驱动一项冒险点升级，`achievement-claimed` 已驱动一次成就领取，`auto-equipped` 已驱动自动装备，`scroll-cast-in-combat` 已驱动全部 6 类卷轴施放，`dungeon-farm-purchased` / `dungeon-row-farm-purchased` 已驱动两条购买入口，`potions-activated` 已驱动药水激活。
-3. **验收口径分层**：16 类法术分支靠"唯一注入法术 + 两端各自施法计数增长"归因，只有 cat=2 的三种状态与 cat=17 有专属可观测量；渲染等价只在一条场景、一种视口下比对指纹。
+3. **验收口径分层（对应附录 A 的 7 行 PARTIAL）**：16 类法术分支靠"唯一注入法术 + 两端各自施法计数增长"归因，只有 cat=2 的三种状态与 cat=17 有专属可观测量；渲染等价只在 **2 条场景 × 2 种视口**下比对逐像素指纹；soak 是加速等价回合而非真机帧循环。这三条已在附录 A 对应行内以"**缺口（写明）**"标注，不得读作 PASS。
 4. 双主字母 `Cb`/`Qc` 已按所有者拆开；`oc` 的四种所有者已由原版帧数组构造链证明同为 `frameIndex`；`$c` 已改为 `itemDrop`（见 semantic-map）。
 5. ✅ **38 个"隐形文件名"垃圾文件已清除**（2026-09-27）：仓库里存在成对的 `X.js` 与 `X.js\uF00D`（尾随 U+F00D，不可见），后者一律 99 字节、内容仅一行 `// @ts-nocheck -- M10 渐进类型化…`，是历史脚本误写留下的残渣且已被 commit 跟踪。因为名字尾随不可见字符，`*.js` 类匹配（`check.mjs`、`analyze-fields.mjs`、人工 `ls`）都看不见它们——这正是早前"审计报告称 38 个垃圾文件、随后实测为 0"矛盾的根因（两次检查用的匹配方式不同）。工具：`scripts/find-invisible-name-files.mjs`（盘点）与 `scripts/remove-invisible-name-files.mjs`（三条安全断言：≤200B、含 `@ts-nocheck`、存在同名正常文件，任一不符即整批中止）。删除后 `check` 语法文件数由 121 回落，dist 亦不再被拷入垃圾。
 6. ✅ **文档↔代码一致性已机械校验**（2026-09-27）：57 批改名后，`docs/formulas/*` 的片段与散文仍在用改名前的标识符。新增三个可复现工具并据此修正：`check-doc-snippets.mjs`（76 条内嵌片段中 **61 条**已与源码重同步，含 ref 行号重定位）、`fix-doc-identifiers.mjs`（三份文档 71 行标识符更新，fields 命中 **66 → 0**）、`verify-doc-refs.mjs`（14 份文档 **934 条 `file:line` 引用**：解析不到 **0**、行号越界 **0**，同名歧义 24 条按文档声明的缩写约定接受）。四份报告引用的场景名与 59 条场景清单逐一对账全部命中。**仍未闭合**：15 条"节选/伪码"型片段（含 `...`）的行号不逐字对应，已在三份公式文档文首如实声明——判读时以片段上方的 `file:line` 与当前源码为准。
