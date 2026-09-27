@@ -8279,7 +8279,17 @@
     "Ss": "buffDefenceRatingPotency",
     "ku": "barbarianChickenChance",
     "lu": "ninjaChickenChance",
-    "mu": "rogueChickenChance"
+    "mu": "rogueChickenChance",
+    "Ix": "progressBarCell",
+    "Gu": "cachedCastleName",
+    "Qv": "cachedStatusText",
+    "mw": "cachedFarmProgress",
+    "pu": "cachedInvasionProgress",
+    "Bt": "showsProgress",
+    "Hz": "cachedFarmCount",
+    "Uy": "cachedClearedCount",
+    "aA": "cachedAttackableCount",
+    "nz": "cachedDiscoveredCount"
   },
   "gameFields": {
     "B": "tileSize",

@@ -1,9 +1,11 @@
 # WORKSTATE — Clickpocalypse II 语义恢复与现代化工程
 
 > 本文件是长程自治任务的**唯一续跑入口**。上下文压缩或中断后，先读本文件 + `git log --oneline`，再继续。
-> 最后更新：2026-09-27（U66-U101 共 36 批落地后，混淆清单 806 → 165；fields 段 267 → 896；59 场景矩阵全绿）
+> 最后更新：2026-09-27（U66-U102 共 37 批落地后，混淆清单 806 → 154；fields 段 267 → 906；59 场景矩阵全绿）
 
 ## 当前轮次状态（2026-09-27，M12 长尾重命名 + 命名修正）
+
+- U102 地牢视图批 B（2026-09-27，混淆清单 165 → 154，fields 段 896 → 906）：`views/dungeons.js` 11 项全部落地，文件清空。DungeonRowView：`Ix`→progressBarCell（insertCell(5) 内的进度条容器，注意同文件已有名为 progressCell 的**历史死字段**未用，故不与 castles/monsters 的同名格冲突）、`Gu/Qv`→cachedCastleName/cachedStatusText、`mw/pu`→cachedFarmProgress/cachedInvasionProgress（收获/再侵袭两条进度分支）、`Bt`→showsProgress、`pB`→actionCellId（"secureCell_" 前缀的 DOM id）。DungeonsView 四个页签计数缓存 `nz/aA/Uy/Hz`→cachedDiscoveredCount/cachedAttackableCount/cachedClearedCount/cachedFarmCount。**注意**：`pB` 因 `tests/engine-harness.js:23` 的 `window.pB(15)`（原版全局函数）而不入全局表，analyze-fields 仍会列出该 1 项（同 `Hq` 类）。
 
 - U101 战斗属性增益收尾（2026-09-27，混淆清单 176 → 165，fields 段 886 → 896）：`characters/stats.js` 11 项全部落地，文件清空（+actions/skill-effects/views 消费点）。按 `applyStatBonus` 的 statType 与技能定义标题定名：`lm`→critChance（statType 17「暴击几率」，`calculateAttackDamage/calculateSpellDamage` 的 `Math.random() < c/100` 暴击判定，views 写入 critChanceCell）、`wo`→damageResistance（statType 1，`g - floorNumber(d/100*g)` 减伤，views 写入 damageResistanceCell）、`Ts`→healPotency（statType 11「治疗提高法术 效果翻倍」，spellCategoryId 1 治疗分支 `h*n`）、`Rs/Ps/Qs/Ss`→buffDamage/Armor/AttackRating/DefenceRatingPotency（statType 12/13/14/15，`applySpellEffect` 按 statusEffectTypeId 6/5/7/8 取用为 buff 强度倍率）、`ku/lu/mu`→barbarian/ninja/rogueChickenChance（statType 30/31/32「小鸡几率:野蛮人/忍者/盗贼」，cats 17 召唤分支）。**同文件异主手工拆分**：`Ir` 在 CharacterStats 为 rollChainCount（按 chainChance 逐次掷骰得链击次数）、在 CombatAction 为 getChainCount（读 `this.Ys`），手改 5 处后再跑批；`Ir` 不入全局表。
 
