@@ -1,9 +1,12 @@
 # WORKSTATE — Clickpocalypse II 语义恢复与现代化工程
 
 > 本文件是长程自治任务的**唯一续跑入口**。上下文压缩或中断后，先读本文件 + `git log --oneline`，再继续。
-> 最后更新：2026-09-27（U66-U96 共 31 批落地后，混淆清单 806 → 242；fields 段 267 → 821；59 场景矩阵全绿）
+> 最后更新：2026-09-27（U66-U97 共 32 批落地后，混淆清单 806 → 225；fields 段 267 → 838；59 场景矩阵全绿）
 
 ## 当前轮次状态（2026-09-27，M12 长尾重命名 + 命名修正）
+
+- U97 遭遇战与怪物命名（2026-09-27，混淆清单 242 → 225，fields 段 821 → 838）：`combat/encounters.js` 17 项全部落地，文件清空。EncounterState：`Ar`→encounterCount、`fw`→encounterName、`du`→isBossEncounter（+expedition 视图与 harness）。DungeonRoom：`Yp`→encounterType（0 普通/1 城堡守卫/2 首领/3 宝箱房；rooms.js 与 treasure.js 同步）。monsterCatalog：`n`→monsterTemplates（+game.js 载入 monsterDefinitions）、`HE`→compareMonsterTypes（getName 字典序比较）、`dn`→nameGenerator。bossClass：`eu`→innateSpells（**修正**：首轮误判为 spellDefinitions，与同类既有 `spellDefinitions: null` 撞键，tsc TS1117 暴露后按 minions.js 同名键改 innateSpells）、`WC`→statBonusList。MonsterNameGenerator 四组词表 `Pw`→adjectives、`XC`→bossTitles、`oD`→bossAdjectives、`mE`→bossLocations，及 `mn`→pickWord。MonsterType：`dE`→baseName（getName）、`nE`→pluralName（复数化）。MonsterRegistry：`aE`→maxDefeatedMonsters。
+- **新踩坑（重要）**：差分 harness 同时读取**原版**与重构版同一对象，字段改名后原版分支仍用旧名。`du`/`fw` 改名后 `castle-victory` 失败（原版 encounter.isBossEncounter 恒 undefined）。修法：harness 内按 `isOriginal ? enc.du : enc.isBossEncounter` 分支取值（与既有的 `m.zb===4 / m.characterType===4` 同款处理）。另：`scripts/test-scenarios.mjs` 里断言消息模板串含 `encounter.du`，会触发批处理"字符串字面量多重集"校验，需先手工改提示文本再入批。
 
 - U96 角色核心与战斗技能字段命名（2026-09-27，混淆清单 260 → 242，fields 段 804 → 821）：`characters/character.js` 18 项全部落地，文件清空。跨文件：`no`→owner（StatComponent/CharacterStats/CharacterEffects 三类的宿主角色回引）、`Bw`→owner（Inventory 宿主）、`au`→lastAttackTurn（`markAttackTurn` 写入、`canAttack` 比较；game.js 重置点同步）、`sx`→bindCharacter（Upgrade 绑定所属角色，`bindSkillTree` 逐条调用）、`KD`→slotStatTypes（槽位→属性类型映射，generateItem 消费）、`er`→levelSeed（Dungeon/Castle 的地牢哈希种子）、`ut`→returns / `Xs`→chains（CombatAction 回旋弹道与链式弹道标志，`advanceCombatAction` 据此生成返回/链式动作）、`MC`→worldWalkSpeed / `Jw`→dungeonWalkSpeed（CharacterPosition 构造 `(WORLD_WALK_SPEED=1.5, DUNGEON_WALK_SPEED=1.3)`，世界分支用 MC、地牢分支用 Jw）。**CharacterStats 七个技能计数**（按 `applyStatBonus` 的 statType 与技能定义标题定名）：`ar`→chainArcBonus（cat21「链形闪电提高/闪电弧+2」）、`mr`→controlTargetBonus（cat20「睡眠提高/蛛网提高」，状态效果 0/1 分支）、`Ft`→transformTargetBonus（cat27「转变怪物提高」，效果 4 分支）、`Qq`→rainAreaBonus（cat22「火雨/闪电雨提高 法术面积扩大」）、`ho`→areaRadiusBonus（cat25「改进大锤 大面积效果」，tick.js 换算为像素半径）、`vt`→swiftStrikeTargetBonus（cat28「快速打击 额外受害者」，cat12 返回打击）、`nt`→ricochetCountBonus（cat29「绿色死亡 更多绿色死亡」，cat13 弹射）。**同文件异主手工拆分**：`iw` 在 Dungeon 为 advanceLevel（currentLevelIndex++ 并重建关卡）、在 PartyState 为 completeLevel（清目标后委托，另含城堡征服分支），手改 4 处后再跑批；`iw` 因此不入全局表。
 
