@@ -181,7 +181,7 @@ export function initializeViewsMonsters() {
   };
   MonsterRowView.prototype.createRowCells = function () {
     var a = this.rowElement,
-      b = this.monsterType.ll,
+      b = this.monsterType.sprite,
       c = a.insertCell(0);
     c.style.width = "50px";
     c.style.padding = "0";
@@ -192,7 +192,7 @@ export function initializeViewsMonsters() {
     this.Cp.style.height = "30px";
     this.Es = a.insertCell(1);
     this.Es.style.width = "200px";
-    this.Es.innerHTML = this.monsterType.Vk();
+    this.Es.innerHTML = this.monsterType.getName();
     this.Mo = a.insertCell(2);
     this.Mo.style.width = "80px";
     this.Mo.style.textAlign = "right";
@@ -255,7 +255,7 @@ export function initializeViewsMonsters() {
   };
   MonsterRowView.prototype.render = function () {
     var a = this.monsterType.ml,
-      b = this.monsterType.ek,
+      b = this.monsterType.rankKillThreshold,
       c = this.monsterType.xq,
       d = Math.min(1, a / b),
       d = this.dx * d | 0;
@@ -268,8 +268,8 @@ export function initializeViewsMonsters() {
       this.xo.innerHTML = formatAmount(this.monsterType.Hp);
       this.wq.innerHTML = formatAmount(this.monsterType.rank);
       if (this.cachedLevel != this.monsterType.level) {
-        this.Es.innerHTML = this.monsterType.Vk();
-        var f = this.monsterType.ll;
+        this.Es.innerHTML = this.monsterType.getName();
+        var f = this.monsterType.sprite;
         this.Cp.style.background = "url('spritesheet/monsters.png') -" + f.sourceX + "px -" + (f.sourceY + 10) + "px";
       }
       this.cachedLevel = this.monsterType.level;

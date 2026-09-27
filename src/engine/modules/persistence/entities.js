@@ -188,8 +188,8 @@ export function serializeMonsterLevel(a, b) {
 }
 export function serializeMonsterType(a) {
   return {
-    name: a.Vk(),
-    sprite: a.ll.getName(),
+    name: a.getName(),
+    sprite: a.sprite.getName(),
     kills: a.xq
   };
 }
@@ -206,10 +206,10 @@ export function restoreMonsterType(a, b) {
   d.Hp = 0;
   d.No = 0;
   d.$o = 0;
-  d.ek = 0;
+  d.rankKillThreshold = 0;
   advanceMonsterTypeRank(d);
-  for (d.xq = c; c > d.ek;) {
-    c -= d.ek;
+  for (d.xq = c; c > d.rankKillThreshold;) {
+    c -= d.rankKillThreshold;
     advanceMonsterTypeRank(d);
   }
   d.ml = c;

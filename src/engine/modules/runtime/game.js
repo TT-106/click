@@ -97,8 +97,8 @@ export function initializeRuntimeGame() {
       this.maxUnlockedLevel = this.minUnlockedLevel = 1;
       this.en = {};
       this.HE = function (a, b) {
-        var c = a.Vk(),
-          d = b.Vk();
+        var c = a.getName(),
+          d = b.getName();
         return c < d ? -1 : c > d ? 1 : 0;
       };
     }(),

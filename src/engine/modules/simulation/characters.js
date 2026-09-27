@@ -104,7 +104,7 @@ export function createCastleGuardian(a, b, c) {
     f = new Character(a.defaultName, 3, a.characterClass, a, null),
     g = f.stats;
   /** @type {{gq: (monster: MonsterType) => void}} */ (/** @type {unknown} */ (f)).gq(d);
-  f.sprite = d.ll;
+  f.sprite = d.sprite;
   const behaviorQueue = createBehaviorQueue(a.createBehaviors());
   f.behaviors = behaviorQueue;
   initializeCharacterSkills(f, b);

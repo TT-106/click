@@ -55,13 +55,13 @@ export function populateEncounter(a) {
             monsterLevel = catalog.minUnlockedLevel + randomInt(1 + catalog.maxUnlockedLevel - catalog.minUnlockedLevel),
             monsterTypes = getMonsterTypesForLevel(catalog, monsterLevel),
             monsterType = monsterTypes[randomInt(monsterTypes.length)],
-            encounterName = b.dn.Vk(monsterType.nE) + " (等级." + monsterType.level + ")";
+            encounterName = b.dn.generateName(monsterType.nE) + " (等级." + monsterType.level + ")";
           for (var monsterIndex = 0; monsterIndex < monsterCount; monsterIndex++) {
             var registry = game.monsters,
               room = a,
               monster = new Character("Monster", MONSTER_TYPE, 12, monsterClass, null),
               stats = monster.stats;
-            monster.sprite = monsterType.ll;
+            monster.sprite = monsterType.sprite;
             (/** @type {TypedMonster} */ (monster)).gq(monsterType);
             stats.characterLevel = monsterType.level;
             monster.behaviors = new AttackBehavior(room, MELEE_ATTACK_RANGE);
@@ -121,7 +121,7 @@ export function spawnDungeonBoss(a, b) {
     boss = new Character(bossClass.defaultName, 4, bossClass.characterClass, bossClass, null),
     l = boss.stats;
   (/** @type {TypedMonster} */ (boss)).gq(bossType);
-  boss.sprite = bossType.ll;
+  boss.sprite = bossType.sprite;
   boss.behaviors = createBehaviorQueue(bossClass.createBehaviors());
   initializeCharacterSkills(boss, c);
   l.characterLevel = c;
@@ -185,22 +185,22 @@ export function MonsterType(a, b, c) {
   this.nE = endsWithText(a, "y") ? a.substring(0, a.length - 1) + "" : endsWithText(a, "Man") ? a.substring(0, a.length - 3) + "Men" : endsWithText(a, "fish") ? a : a + "";
   this.spriteName = b;
   this.level = c;
-  this.ll = game.monsterSprites.getSprite(b);
-  this.$o = this.rank = this.Hp = this.Fp = this.Ep = this.Gp = this.No = this.ek = this.ml = this.xq = 0;
+  this.sprite = game.monsterSprites.getSprite(b);
+  this.$o = this.rank = this.Hp = this.Fp = this.Ep = this.Gp = this.No = this.rankKillThreshold = this.ml = this.xq = 0;
   advanceMonsterTypeRank(this);
 }
 export function recordMonsterTypeKill(a) {
   a.xq++;
   a.ml++;
-  if (a.ml >= a.ek && 5 > a.rank) {
-    a.ml -= a.ek;
+  if (a.ml >= a.rankKillThreshold && 5 > a.rank) {
+    a.ml -= a.rankKillThreshold;
     advanceMonsterTypeRank(a);
   }
 }
 export function advanceMonsterTypeRank(a) {
   if (!(5 <= a.rank)) {
     a.rank++;
-    a.ek += MONSTER_RANK_KILL_STEP;
+    a.rankKillThreshold += MONSTER_RANK_KILL_STEP;
     var b = 10 * (a.level - 1) + a.rank;
     a.$o = scaleByLevel(b, monsterDamageCurve, 1);
     a.No = scaleByLevel(b, monsterArmorCurve, 1);
@@ -294,13 +294,13 @@ export function initializeCombatEncounters() {
   AllyRegistry.prototype.Tt = function (a) {
     this.allies.push(a);
   };
-  MonsterType.prototype.Vk = function () {
+  MonsterType.prototype.getName = function () {
     return this.dE;
   };
   MonsterNameGenerator.prototype.mn = function (a) {
     return a[randomInt(a.length)];
   };
-  MonsterNameGenerator.prototype.Vk = function (a) {
+  MonsterNameGenerator.prototype.generateName = function (a) {
     var nameGenerator = /** @type {NamedMonsterGenerator} */ (/** @type {unknown} */ (this));
     return 0.5 > Math.random() ? nameGenerator.mn(this.Pw) + "" + a : nameGenerator.mn(this.oD) + "" + nameGenerator.mn(this.mE) + "的" + a;
   };

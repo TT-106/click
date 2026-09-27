@@ -1161,7 +1161,7 @@ export function initializeViewsUpgradeDetails() {
       this.Sq.innerHTML = formatAmount(this.an) + " 攻击";
       this.lr.innerHTML = formatAmount(this.cn) + " 防御";
       c = getMonsterTypesForLevel(game.monsterCatalog, c);
-      c = c[randomInt(c.length)].ll;
+      c = c[randomInt(c.length)].sprite;
       this.Zm.style.background = "url('spritesheet/monsters.png') -" + (c.sourceX + 10) + "px -" + (c.sourceY + 12) + "px";
     }
     for (var d, f = 0, g = 0, h = 0, l = 0, c = getPartyMinLevel(), a = this.upgrade.Kr(), adventurerIndex = 0; adventurerIndex < game.state.adventurers.length; adventurerIndex++) {
