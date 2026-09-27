@@ -65,7 +65,7 @@ export function AnimationCatalog(a) {
 }
 export function VisualEffect(a, b, c, d, f) {
   this.impactEffectName = a;
-  this.Io = f;
+  this.effectType = f;
   this.ew = this.boundCharacter = null;
   this.remainingEffectDamage = 0;
   if (d) {

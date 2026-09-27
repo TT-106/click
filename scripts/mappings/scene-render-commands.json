@@ -1,0 +1,21 @@
+{
+  "_comment": "scene.js 批：RenderCommand（vr/ur/pt/Zq/$q/am → 抬升值/排序键/已设置/目标屏幕坐标/渲染尺寸，由 setSpriteRenderCommand 与 setAnimationRenderCommand 的参数顺序定名）、DepthSortedRenderer（FE 比较器、ko 临时向量、Bn 命令索引）、ImmediateRenderer（uB 单命令）；VisualEffect.Io→effectType（scene.js 中按 1/2 分支渲染、tick.js 与 TARGETED_EFFECT 比较）。",
+  "files": [
+    "src/engine/modules/rendering/scene.js",
+    "src/engine/modules/rendering/sprites.js",
+    "src/engine/modules/simulation/tick.js"
+  ],
+  "map": {
+    "vr": "raiseOffset",
+    "ur": "sortKey",
+    "pt": "isSet",
+    "Zq": "screenX",
+    "$q": "screenY",
+    "am": "renderSize",
+    "FE": "compareRenderSortKey",
+    "ko": "scratchVector",
+    "Bn": "commandIndex",
+    "uB": "command",
+    "Io": "effectType"
+  }
+}

@@ -277,7 +277,7 @@ export function advanceSimulation(a) {
     za,
     nb = false;
   for (ha = 0; ha < Fa.queue.length; ha++) {
-    if (ja = Fa.queue[ha], Ga = ja.attacker, (za = ja.impactEffect) && za.Io === TARGETED_EFFECT) {
+    if (ja = Fa.queue[ha], Ga = ja.attacker, (za = ja.impactEffect) && za.effectType === TARGETED_EFFECT) {
       var fb;
       a: {
         var cb = ja,
@@ -443,7 +443,7 @@ export function advanceSimulation(a) {
     var ka = Ub.pool[sb],
       Eb = a;
     ka.hasSpawned = true;
-    if (1 === ka.Io) {
+    if (1 === ka.effectType) {
       if (ka.projectileEffect && !ka.reachedTarget) {
         assignVector(directionScratchVector, ka.targetPosition);
         subtractVector(directionScratchVector, ka.currentPosition);
@@ -466,10 +466,10 @@ export function advanceSimulation(a) {
         advanceEffectFrame(ka, Eb);
       }
     } else {
-      if (ka.Io === TARGETED_EFFECT) {
+      if (ka.effectType === TARGETED_EFFECT) {
         advanceEffectFrame(ka, Eb);
       } else {
-        if (2 === ka.Io) {
+        if (2 === ka.effectType) {
           ka.elapsedMs += Eb * FRAME_DURATION_MS;
           if (400 <= ka.elapsedMs) {
             ka.finished = true;

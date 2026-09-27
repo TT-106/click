@@ -8018,7 +8018,18 @@
     "Qp": "levelPositionX",
     "Rp": "levelPositionY",
     "zt": "viewportOffsetX",
-    "At": "viewportOffsetY"
+    "At": "viewportOffsetY",
+    "vr": "raiseOffset",
+    "ur": "sortKey",
+    "pt": "isSet",
+    "Zq": "screenX",
+    "$q": "screenY",
+    "am": "renderSize",
+    "FE": "compareRenderSortKey",
+    "ko": "scratchVector",
+    "Bn": "commandIndex",
+    "uB": "command",
+    "Io": "effectType"
   },
   "gameFields": {
     "B": "tileSize",

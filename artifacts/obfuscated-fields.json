@@ -212,52 +212,6 @@
     ]
   },
   {
-    "name": "am",
-    "reads": 4,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:19",
-        "code": "this.am"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:33",
-        "code": "a.am"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:43",
-        "code": "a.am"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\rendering\\scene.js"
-    ]
-  },
-  {
-    "name": "Bn",
-    "reads": 4,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:53",
-        "code": "this.Bn"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:58",
-        "code": "a.Bn"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:62",
-        "code": "a.Bn"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\rendering\\scene.js"
-    ]
-  },
-  {
     "name": "zm",
     "reads": 4,
     "writes": 3,
@@ -925,54 +879,6 @@
     "files": [
       "src\\engine\\modules\\progression\\upgrades.js",
       "src\\engine\\modules\\views\\upgrade-details.js"
-    ]
-  },
-  {
-    "name": "ko",
-    "reads": 5,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:51",
-        "code": "this.ko"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:267",
-        "code": "this.ko"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:271",
-        "code": "this.ko"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\rendering\\scene.js"
-    ]
-  },
-  {
-    "name": "Io",
-    "reads": 5,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:640",
-        "code": "Wa.Io"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\sprites.js:68",
-        "code": "this.Io"
-      },
-      {
-        "loc": "src\\engine\\modules\\simulation\\tick.js:280",
-        "code": "za.Io"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\rendering\\scene.js",
-      "src\\engine\\modules\\rendering\\sprites.js",
-      "src\\engine\\modules\\simulation\\tick.js"
     ]
   },
   {
@@ -2292,121 +2198,6 @@
     "files": [
       "src\\engine\\modules\\progression\\upgrades.js",
       "src\\engine\\modules\\views\\dungeons.js"
-    ]
-  },
-  {
-    "name": "vr",
-    "reads": 1,
-    "writes": 4,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:17",
-        "code": "this.vr"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:26",
-        "code": "a.vr"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:231",
-        "code": "this.vr"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\rendering\\scene.js"
-    ]
-  },
-  {
-    "name": "ur",
-    "reads": 1,
-    "writes": 4,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:17",
-        "code": "this.ur"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:25",
-        "code": "a.ur"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:30",
-        "code": "a.ur"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\rendering\\scene.js"
-    ]
-  },
-  {
-    "name": "pt",
-    "reads": 1,
-    "writes": 4,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:18",
-        "code": "this.pt"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:22",
-        "code": "a.pt"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:35",
-        "code": "a.pt"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\rendering\\scene.js"
-    ]
-  },
-  {
-    "name": "$q",
-    "reads": 2,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:19",
-        "code": "this.$q"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:32",
-        "code": "a.$q"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:42",
-        "code": "a.$q"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\rendering\\scene.js"
-    ]
-  },
-  {
-    "name": "Zq",
-    "reads": 2,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:19",
-        "code": "this.Zq"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:31",
-        "code": "a.Zq"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:41",
-        "code": "a.Zq"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\rendering\\scene.js"
     ]
   },
   {
@@ -6930,29 +6721,6 @@
     ]
   },
   {
-    "name": "uB",
-    "reads": 2,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:69",
-        "code": "this.uB"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:72",
-        "code": "a.uB"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:73",
-        "code": "a.uB"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\rendering\\scene.js"
-    ]
-  },
-  {
     "name": "gB",
     "reads": 1,
     "writes": 2,
@@ -8945,25 +8713,6 @@
     "fileCount": 1,
     "files": [
       "src\\engine\\modules\\rendering\\floating-text.js"
-    ]
-  },
-  {
-    "name": "FE",
-    "reads": 1,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:48",
-        "code": "this.FE"
-      },
-      {
-        "loc": "src\\engine\\modules\\rendering\\scene.js:299",
-        "code": "this.FE"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\rendering\\scene.js"
     ]
   },
   {

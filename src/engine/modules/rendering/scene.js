@@ -14,63 +14,63 @@ import { TARGETED_EFFECT } from "./sprites.js";
 import { createElement, getElement } from "../views/dom.js";
 export function RenderCommand() {
   this.animation = this.sprite = null;
-  this.vr = this.ur = this.frameIndex = 0;
-  this.pt = false;
-  this.alpha = this.am = this.$q = this.Zq = 0;
+  this.raiseOffset = this.sortKey = this.frameIndex = 0;
+  this.isSet = false;
+  this.alpha = this.renderSize = this.screenY = this.screenX = 0;
 }
 export function resetRenderCommand(a) {
-  a.pt = false;
+  a.isSet = false;
   a.sprite = null;
   a.animation = null;
-  a.ur = 1E5;
-  a.vr = 0;
+  a.sortKey = 1E5;
+  a.raiseOffset = 0;
 }
 export function setSpriteRenderCommand(a, b, c, d, f, g, h) {
   a.sprite = b;
-  a.ur = c;
-  a.Zq = d;
-  a.$q = f;
-  a.am = g;
+  a.sortKey = c;
+  a.screenX = d;
+  a.screenY = f;
+  a.renderSize = g;
   a.alpha = h;
-  a.pt = true;
+  a.isSet = true;
 }
 export function setAnimationRenderCommand(a, b, c, d, f, g, h, l) {
   a.animation = b;
   a.frameIndex = c;
-  a.ur = d;
-  a.Zq = f;
-  a.$q = g;
-  a.am = h;
+  a.sortKey = d;
+  a.screenX = f;
+  a.screenY = g;
+  a.renderSize = h;
   a.alpha = l;
-  a.pt = true;
+  a.isSet = true;
 }
 export function DepthSortedRenderer() {
-  this.FE = function (a, b) {
+  this.compareRenderSortKey = function (a, b) {
     return a.getRenderSortKey() - b.getRenderSortKey();
   };
-  this.ko = new Vector2();
+  this.scratchVector = new Vector2();
   this.renderCommands = [];
-  this.Bn = 0;
+  this.commandIndex = 0;
   this.context = null;
 }
 export function acquireRenderCommand(a) {
   var b;
-  if (a.Bn >= a.renderCommands.length) {
+  if (a.commandIndex >= a.renderCommands.length) {
     b = new RenderCommand();
     a.renderCommands.push(b);
   } else {
-    b = a.renderCommands[a.Bn];
+    b = a.renderCommands[a.commandIndex];
   }
-  a.Bn++;
+  a.commandIndex++;
   return b;
 }
 export function ImmediateRenderer() {
   this.context = null;
-  this.uB = new RenderCommand();
+  this.command = new RenderCommand();
 }
 export function acquireImmediateCommand(a) {
-  resetRenderCommand(a.uB);
-  return a.uB;
+  resetRenderCommand(a.command);
+  return a.command;
 }
 export function SceneRenderer(a) {
   this.context = a;
@@ -228,10 +228,10 @@ export function GameCanvasView() {
 }
 export function initializeRenderingScene() {
   RenderCommand.prototype.getRenderSortKey = function () {
-    return this.ur - this.vr;
+    return this.sortKey - this.raiseOffset;
   };
   RenderCommand.prototype.draw = function (a) {
-    if (this.pt) {
+    if (this.isSet) {
       if (0 < this.alpha) {
         a.save();
         a.globalAlpha = 0.4;
@@ -239,11 +239,11 @@ export function initializeRenderingScene() {
       var b;
       if (this.sprite) {
         b = this.sprite.spriteSheet.spriteSize;
-        a.drawImage(this.sprite.getSheetImage(), this.sprite.sourceX, this.sprite.sourceY, b, b, this.Zq, this.$q, this.am, this.am);
+        a.drawImage(this.sprite.getSheetImage(), this.sprite.sourceX, this.sprite.sourceY, b, b, this.screenX, this.screenY, this.renderSize, this.renderSize);
       } else if (this.animation) {
         var c = this.animation.frames[this.frameIndex];
         b = this.animation.spriteSheet.spriteSize;
-        a.drawImage(this.animation.getSheetImage(), c.frameSourceX, c.frameSourceY, b, b, this.Zq, this.$q, this.am, this.am);
+        a.drawImage(this.animation.getSheetImage(), c.frameSourceX, c.frameSourceY, b, b, this.screenX, this.screenY, this.renderSize, this.renderSize);
       }
       if (0 < this.alpha) {
         a.restore();
@@ -252,7 +252,7 @@ export function initializeRenderingScene() {
   };
   DepthSortedRenderer.prototype.setContext = function (a) {
     this.context = a;
-    for (a = this.Bn = 0; a < this.renderCommands.length; a++) {
+    for (a = this.commandIndex = 0; a < this.renderCommands.length; a++) {
       resetRenderCommand(this.renderCommands[a]);
     }
     var b = game.viewportWidth / 2,
@@ -264,42 +264,42 @@ export function initializeRenderingScene() {
       a = game.level.centerX + (0.5 * (b - game.viewportHalfWidth) + (c - game.viewportHalfHeight)) | 0;
       b = game.level.centerY + (c - game.viewportHalfHeight - 0.5 * (b - game.viewportHalfWidth)) | 0;
     }
-    setVector(this.ko, a, b);
+    setVector(this.scratchVector, a, b);
   };
   DepthSortedRenderer.prototype.drawSpriteDepth = function (a, b, c, d, f, g, h) {
     if (a) {
-      b = distanceToPoint(this.ko, b, c);
+      b = distanceToPoint(this.scratchVector, b, c);
       setSpriteRenderCommand(acquireRenderCommand(this), a, b, d, f, g, h);
     }
   };
   DepthSortedRenderer.prototype.drawSpriteDepthRaised = function (a, b, c, d, f, g, h) {
     if (a) {
-      b = distanceToPoint(this.ko, b, c);
+      b = distanceToPoint(this.scratchVector, b, c);
       c = acquireRenderCommand(this);
       setSpriteRenderCommand(c, a, b, d, f, g, h);
-      c.vr = 0.1;
+      c.raiseOffset = 0.1;
     }
   };
   DepthSortedRenderer.prototype.drawAnimation = function (a, b, c, d, f, g, h, l) {
     if (a) {
-      c = distanceToPoint(this.ko, c, d);
+      c = distanceToPoint(this.scratchVector, c, d);
       setAnimationRenderCommand(acquireRenderCommand(this), a, b, c, f, g, h, l);
     }
   };
   DepthSortedRenderer.prototype.drawAnimationRaised = function (a, b, c, d, f, g, h, l) {
     if (a) {
-      c = distanceToPoint(this.ko, c, d);
+      c = distanceToPoint(this.scratchVector, c, d);
       d = acquireRenderCommand(this);
       setAnimationRenderCommand(d, a, b, c, f, g, h, l);
-      d.vr = 0.1;
+      d.raiseOffset = 0.1;
     }
   };
   DepthSortedRenderer.prototype.sortCommands = function () {
-    if (!(2 > this.Bn)) {
-      this.renderCommands.sort(this.FE);
+    if (!(2 > this.commandIndex)) {
+      this.renderCommands.sort(this.compareRenderSortKey);
     }
     var a;
-    for (a = this.Bn - 1; 0 <= a; a--) {
+    for (a = this.commandIndex - 1; 0 <= a; a--) {
       this.renderCommands[a].draw(this.context);
     }
   };
@@ -637,7 +637,7 @@ export function initializeRenderingScene() {
               Qa = null,
               nc = false;
             for (jb = 0; jb < Ha.length; jb++) {
-              if (Wa = Ha[jb], cc = Wa.Io, 1 === cc) {
+              if (Wa = Ha[jb], cc = Wa.effectType, 1 === cc) {
                 Ab = Wa.getAnimation();
                 Bb = Wa.currentPosition;
                 bc = Wa.frameIndex;
