@@ -73,7 +73,7 @@ export function initializeContentGuardians() {
     createBehaviors: function () {
       return [new RangedAttackBehavior(RANGED_MIN_DISTANCE, RANGED_ATTACK_RANGE, 95), new HealBehavior(RANGED_ATTACK_RANGE, 90), new SummonBehavior(RANGED_ATTACK_RANGE, 85, 4), new IdleBehavior(1)];
     },
-    Jm: [electricSpellDefinitions.br, poisonCloudSpell],
+    Jm: [electricSpellDefinitions.chainLightningSpell, poisonCloudSpell],
     Nr: [{
       statBonusValue: 1,
       statType: 21

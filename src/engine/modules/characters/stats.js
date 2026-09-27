@@ -18,7 +18,7 @@ export function statValue(a) {
 export function CharacterStats(a) {
   this.no = a;
   this.characterLevel = 0;
-  this.Am = 100;
+  this.experienceToLevelUp = 100;
   this.lm = this.spellSpiritCost = this.spirit = this.health = 0;
   this.baseHealthRegenPercent = 1;
   this.baseSpiritRegenPercent = 4;

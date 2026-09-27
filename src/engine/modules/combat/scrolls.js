@@ -307,7 +307,7 @@ export function initializeCombatScrolls() {
     scrollId: "chainedLightningScroll",
     baseName: "闪电",
     spriteName: "Scroll0034.PNG",
-    spellDefinition: electricSpellDefinitions.br,
+    spellDefinition: electricSpellDefinitions.chainLightningSpell,
     baseCapacity: 12,
     capacityIncrement: 4,
     maxCharges: 3,

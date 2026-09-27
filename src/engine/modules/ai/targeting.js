@@ -400,7 +400,7 @@ export function initializeAiTargeting() {
   };
   chainedLightningSpellDefinition = {
     id: "chainedLightningSpell",
-    spellDefinition: electricSpellDefinitions.br
+    spellDefinition: electricSpellDefinitions.chainLightningSpell
   };
   fireBlastSpellDefinition = {
     id: "fireBlastSpell",

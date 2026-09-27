@@ -407,7 +407,7 @@ export function initializeViewsUpgradeDetails() {
           d = a.classDefinition.statMultipliers;
         this.hm.style.background = "url('spritesheet/monsters.png') -" + (c.sourceX + 10) + "px -" + (c.sourceY + 12) + "px";
         this.Ty.innerHTML = this.upgrade.getDescription();
-        this.aD.innerHTML = formatAmount(a.stats.Am) + " XP";
+        this.aD.innerHTML = formatAmount(a.stats.experienceToLevelUp) + " XP";
         this.Ry.innerHTML = "等级 " + (b + 1);
         this.Py.innerHTML = ", " + formatAmount(scaleByLevel(b + 1, healthCurve, d.maxHealthMultiplier)) + " HP";
         this.Sy.innerHTML = ", " + formatAmount(scaleByLevel(b + 1, spiritCurve, d.maxSpiritMultiplier)) + " SP";

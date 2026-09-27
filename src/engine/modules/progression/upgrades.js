@@ -534,7 +534,7 @@ export function initializeProgressionUpgrades() {
       this.canPurchase = false;
       var a = game.state.adventurers[this.adventurerIndex],
         b = a.stats,
-        c = b.Am,
+        c = b.experienceToLevelUp,
         d = getPartyMinLevel();
       if (!(game.state.party.experiencePoints < c)) {
         var f = game.state.party;
@@ -574,7 +574,7 @@ export function initializeProgressionUpgrades() {
   };
   LevelUpUpgrade.prototype.isNearlyAffordable = function () {
     var a = game.state.party.experiencePoints,
-      b = game.state.adventurers[this.adventurerIndex].stats.Am;
+      b = game.state.adventurers[this.adventurerIndex].stats.experienceToLevelUp;
     if (a >= b) {
       return false;
     }
@@ -598,7 +598,7 @@ export function initializeProgressionUpgrades() {
       if (!this.descriptionLabel) {
         this.descriptionLabel = "升级" + a.adventurerName;
       }
-      this.Lo = a.stats.Am;
+      this.Lo = a.stats.experienceToLevelUp;
       this.canPurchase = game.state.party.experiencePoints >= this.Lo;
       this.affordableSoon = !this.canPurchase && (/** @type {UpgradeMethods} */ (/** @type {unknown} */ (this))).isNearlyAffordable();
       a = this.ZA !== this.canPurchase || this.Up !== this.affordableSoon || this.WA !== this.Lo;

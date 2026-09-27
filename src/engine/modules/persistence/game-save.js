@@ -509,7 +509,7 @@ export function restoreGameState(a, b) {
                 xd = gc.damageReceived;
               Sa.characterLevel = bd ? bd : 1;
               var sl = scaleByLevel(Sa.characterLevel, experienceCurve, 1);
-              Sa.Am = sl;
+              Sa.experienceToLevelUp = sl;
               var Kh = scaleByLevel(Sa.characterLevel, damageCurve, 1);
               Sa.spellSpiritCost = Kh;
               Sa.health = floorNumber(Fh ? Fh : Sa.health);

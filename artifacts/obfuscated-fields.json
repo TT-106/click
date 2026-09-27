@@ -77,33 +77,6 @@
     ]
   },
   {
-    "name": "Am",
-    "reads": 4,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\characters\\stats.js:21",
-        "code": "this.Am"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:512",
-        "code": "Sa.Am"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\upgrades.js:537",
-        "code": "b.Am"
-      }
-    ],
-    "fileCount": 5,
-    "files": [
-      "src\\engine\\modules\\characters\\stats.js",
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\progression\\upgrades.js",
-      "src\\engine\\modules\\simulation\\characters.js",
-      "src\\engine\\modules\\views\\upgrade-details.js"
-    ]
-  },
-  {
     "name": "dn",
     "reads": 6,
     "writes": 1,
@@ -260,7 +233,7 @@
       },
       {
         "loc": "src\\engine\\modules\\content\\guardians.js:76",
-        "code": "Jm: [electricSpellDefinitions.br, poisonCloudSpell]"
+        "code": "Jm: [electricSpellDefinitions.chainLightningSpell, poisonCloudSpell]"
       },
       {
         "loc": "src\\engine\\modules\\content\\guardians.js:111",
@@ -3137,33 +3110,6 @@
       "src\\engine\\modules\\characters\\character.js",
       "src\\engine\\modules\\characters\\movement.js",
       "src\\engine\\modules\\characters\\party.js"
-    ]
-  },
-  {
-    "name": "br",
-    "reads": 4,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\targeting.js:403",
-        "code": "electricSpellDefinitions.br"
-      },
-      {
-        "loc": "src\\engine\\modules\\combat\\scrolls.js:310",
-        "code": "electricSpellDefinitions.br"
-      },
-      {
-        "loc": "src\\engine\\modules\\content\\guardians.js:76",
-        "code": "electricSpellDefinitions.br"
-      }
-    ],
-    "fileCount": 5,
-    "files": [
-      "src\\engine\\modules\\ai\\targeting.js",
-      "src\\engine\\modules\\combat\\scrolls.js",
-      "src\\engine\\modules\\content\\guardians.js",
-      "src\\engine\\modules\\content\\minions.js",
-      "src\\engine\\modules\\content\\spells.js"
     ]
   },
   {

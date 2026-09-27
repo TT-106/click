@@ -47,7 +47,7 @@ export function initializeContentSpells() {
       potencyPercent: 0,
       cooldownTurns: 30
     },
-    br: {
+    chainLightningSpell: {
       name: "连锁闪电",
       description: "伤害多个敌人",
       impactEffectName: "Gold Sparkles",

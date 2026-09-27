@@ -1,0 +1,28 @@
+[
+  {
+    "_note": "CharacterStats.Am：升级所需经验值。证据：stats.js 初值 100；game-save.js 载入时按 experienceCurve 重算；LevelUpUpgrade.purchase 读它并从 party.experiencePoints 扣除；views/upgrade-details.js 显示为 'XP'。",
+    "old": "Am",
+    "new": "experienceToLevelUp",
+    "files": [
+      "src/engine/modules/characters/stats.js",
+      "src/engine/modules/persistence/game-save.js",
+      "src/engine/modules/progression/upgrades.js",
+      "src/engine/modules/simulation/characters.js",
+      "src/engine/modules/views/upgrade-details.js"
+    ],
+    "expect": "auto"
+  },
+  {
+    "_note": "electricSpellDefinitions 表的「连锁闪电」条目键（spellCategoryId=5），四个引用点（targeting/scrolls/guardians/minions）取它作法术定义。",
+    "old": "br",
+    "new": "chainLightningSpell",
+    "files": [
+      "src/engine/modules/ai/targeting.js",
+      "src/engine/modules/combat/scrolls.js",
+      "src/engine/modules/content/guardians.js",
+      "src/engine/modules/content/minions.js",
+      "src/engine/modules/content/spells.js"
+    ],
+    "expect": "auto"
+  }
+]

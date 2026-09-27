@@ -165,7 +165,7 @@ export function createBehaviorQueue(a) {
 }
 export function applyLevelStats(a, b, c) {
   var d = scaleByLevel(b, experienceCurve, 1);
-  a.Am = d;
+  a.experienceToLevelUp = d;
   d = scaleByLevel(b, armorCurve, c.armorMultiplier);
   a.armor.levelValue = d;
   d = scaleByLevel(b, armorCurve, c.attackRatingMultiplier);

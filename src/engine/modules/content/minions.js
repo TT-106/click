@@ -277,7 +277,7 @@ export function initializeContentMinions() {
     }],
     statMultipliers: casterStatMultipliers,
     spellDefinitions: null,
-    innateSpells: [electricSpellDefinitions.br, poisonCloudSpell],
+    innateSpells: [electricSpellDefinitions.chainLightningSpell, poisonCloudSpell],
     Bp: [{
       statBonusValue: 3,
       statType: 21
