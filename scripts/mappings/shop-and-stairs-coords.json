@@ -1,0 +1,48 @@
+[
+  {
+    "_note": "Shop.iq/jq：商店在世界地图上的瓦片列/行。证据：创建点由块行列与随机偏移算出瓦片坐标（world/terrain.js:584-588）；party.js:390 用 world.tileToPixelX/Y 转换它（瓦片语义）；party.js:489-491 与 activeCastle.worldPixelX（像素）并列，而 getTileAtPixel 实际接收瓦片（terrain.js:623-631 以 /WORLD_BLOCK_COLUMNS 计算块索引），与 targetDungeon.getWorldColumn() 分支一致。命名复用仓库既有的 worldColumn/worldRow（Dungeon/WorldTile 同义）。",
+    "old": "iq",
+    "new": "worldColumn",
+    "files": [
+      "src/engine/modules/ai/behaviors.js",
+      "src/engine/modules/characters/party.js",
+      "src/engine/modules/world/dungeons.js",
+      "src/engine/modules/world/terrain.js"
+    ],
+    "expect": "auto"
+  },
+  {
+    "old": "jq",
+    "new": "worldRow",
+    "files": [
+      "src/engine/modules/ai/behaviors.js",
+      "src/engine/modules/characters/party.js",
+      "src/engine/modules/world/dungeons.js",
+      "src/engine/modules/world/terrain.js"
+    ],
+    "expect": "auto"
+  },
+  {
+    "_note": "DungeonStairs.tq/uq：楼梯的像素列/行。证据：positionStairs(a,b,c) 中 Ex=b/Fx=c 为瓦片，tq=b*tileSize、uq=c*tileSize 为像素（world/rooms.js:265-270）；消费点为 setVector(moveTargetPoint/levelPosition) 与 distanceToPoint。命名复用 DungeonDoor 既有的 pixelColumn/pixelRow。",
+    "old": "tq",
+    "new": "pixelColumn",
+    "files": [
+      "src/engine/modules/ai/behaviors.js",
+      "src/engine/modules/characters/character.js",
+      "src/engine/modules/world/generation.js",
+      "src/engine/modules/world/rooms.js"
+    ],
+    "expect": "auto"
+  },
+  {
+    "old": "uq",
+    "new": "pixelRow",
+    "files": [
+      "src/engine/modules/ai/behaviors.js",
+      "src/engine/modules/characters/character.js",
+      "src/engine/modules/world/generation.js",
+      "src/engine/modules/world/rooms.js"
+    ],
+    "expect": "auto"
+  }
+]

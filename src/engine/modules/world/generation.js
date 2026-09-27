@@ -217,7 +217,7 @@ export function generateDungeonLevel(a, b, c, d) {
       ally.actionType = IDLE_ACTION;
       clearMovementTarget(a);
       var stairs = h.stairs;
-      setVector(a.levelPosition, stairs.tq, stairs.uq);
+      setVector(a.levelPosition, stairs.pixelColumn, stairs.pixelRow);
     }
     populateEncounter(d);
     spawnRoomTreasure(f.entranceDoor.leadsTo);

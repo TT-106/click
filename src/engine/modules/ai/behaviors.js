@@ -234,7 +234,7 @@ export function initializeAiBehaviors() {
     if (c || f || d) {
       if (a === game.state.leader) {
         if (c) {
-          if (b = c.iq, c = c.jq, d = game.world.getTileAtPixel(b, c)) {
+          if (b = c.worldColumn, c = c.worldRow, d = game.world.getTileAtPixel(b, c)) {
             b = a.position;
             if (game.world.getTileAtPixel(game.world.pixelToTileColumn(b.getWorldPositionX()), game.world.pixelToTileRow(b.getWorldPositionY())) === d) {
               a.actionType = 10;
@@ -1028,7 +1028,7 @@ export function initializeAiBehaviors() {
         a.actionType = 1;
       } else {
         if (b) {
-          setVector(f.moveTargetPoint, b.tq, b.uq);
+          setVector(f.moveTargetPoint, b.pixelColumn, b.pixelRow);
           a.actionType = 1;
         } else {
           if (c) {
@@ -1581,7 +1581,7 @@ export function initializeAiBehaviors() {
       return 0;
     }
     b = b.levelPosition;
-    return isPointNearDoor(a, b) || a.stairs && distanceToPoint(b, a.stairs.tq, a.stairs.uq) < game.tileSize ? this.eo : 0;
+    return isPointNearDoor(a, b) || a.stairs && distanceToPoint(b, a.stairs.pixelColumn, a.stairs.pixelRow) < game.tileSize ? this.eo : 0;
   };
   StunnedBehavior.prototype.getPriority = function () {
     return this.eo;

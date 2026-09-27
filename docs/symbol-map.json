@@ -7902,7 +7902,11 @@
     "lq": "soloClassVictories",
     "en": "monsterTypesByLevelCache",
     "bm": "castleRegistry",
-    "cm": "revision"
+    "cm": "revision",
+    "iq": "worldColumn",
+    "jq": "worldRow",
+    "tq": "pixelColumn",
+    "uq": "pixelRow"
   },
   "gameFields": {
     "B": "tileSize",

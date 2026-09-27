@@ -387,7 +387,7 @@ export function initializeCharactersParty() {
         b = game.state.leader.position.worldPosition;
         c = null;
         for (h = d = 0; h < a.ht.length; h++) {
-          if (f = a.ht[h], g = distanceSquaredToPoint(b, game.world.tileToPixelX(f.iq), game.world.tileToPixelY(f.jq)), !c || g < d) {
+          if (f = a.ht[h], g = distanceSquaredToPoint(b, game.world.tileToPixelX(f.worldColumn), game.world.tileToPixelY(f.worldRow)), !c || g < d) {
             c = f;
             d = g;
           }
@@ -487,8 +487,8 @@ export function initializeCharactersParty() {
         f = c;
       }
       if (this.targetShop) {
-        c = this.targetShop.iq;
-        d = this.targetShop.jq;
+        c = this.targetShop.worldColumn;
+        d = this.targetShop.worldRow;
       } else if (this.activeCastle) {
         c = this.activeCastle.worldPixelX;
         d = this.activeCastle.worldPixelY;

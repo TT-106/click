@@ -575,7 +575,7 @@ export function initializeWorldTerrain() {
   WorldGenerator.prototype.Ut = function (a) {
     var b;
     if (b = game.shops.zx[a.dungeonId]) {
-      if (a = game.world.getTileAtPixel(b.iq, b.jq)) {
+      if (a = game.world.getTileAtPixel(b.worldColumn, b.worldRow)) {
         b = game.terrainSprites.getSprite(randomShopSprite(game.shops));
         a.setDecorationSprite(b);
       }

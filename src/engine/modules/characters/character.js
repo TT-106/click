@@ -424,7 +424,7 @@ export function updateCharacter(a, b) {
                 ea = p.levelPosition,
                 va = game.halfTileSize;
               if (ea) {
-                if (!(isPointNearDoor(ia, ea) || ia.stairs && distanceToPoint(ea, ia.stairs.tq, ia.stairs.uq) < game.tileSize)) {
+                if (!(isPointNearDoor(ia, ea) || ia.stairs && distanceToPoint(ea, ia.stairs.pixelColumn, ia.stairs.pixelRow) < game.tileSize)) {
                   clampPointToRoom(ia, ea, va);
                 }
               }

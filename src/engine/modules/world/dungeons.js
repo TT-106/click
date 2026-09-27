@@ -165,8 +165,8 @@ export function registerFarm(a, b) {
 }
 export function Shop(a, b, c) {
   this.dungeonId = a;
-  this.iq = b;
-  this.jq = c;
+  this.worldColumn = b;
+  this.worldRow = c;
 }
 export function ShopRegistry() {
   this.ht = [];
@@ -261,7 +261,7 @@ export function initializeWorldDungeons() {
   ShopRegistry.prototype.Ut = function (a) {
     this.ht.push(a);
     this.zx[a.dungeonId] = a;
-    if (a = game.world.getTileAtPixel(a.iq, a.jq)) {
+    if (a = game.world.getTileAtPixel(a.worldColumn, a.worldRow)) {
       var b = game.terrainSprites.getSprite(randomShopSprite(this));
       a.setDecorationSprite(b);
     }

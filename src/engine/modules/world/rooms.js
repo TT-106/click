@@ -259,14 +259,14 @@ export function DungeonDoor(a) {
 }
 export function DungeonStairs(a) {
   this.leadsTo = a;
-  this.uq = this.tq = this.Fx = this.Ex = 0;
+  this.pixelRow = this.pixelColumn = this.Fx = this.Ex = 0;
   this.sq = this.Fq = true;
 }
 export function positionStairs(a, b, c) {
   a.Ex = b;
   a.Fx = c;
-  a.tq = b * game.tileSize;
-  a.uq = c * game.tileSize;
+  a.pixelColumn = b * game.tileSize;
+  a.pixelRow = c * game.tileSize;
 }
 export function DungeonHallway(a, b, c, d) {
   this.hallwayId = 0;
