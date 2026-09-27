@@ -5,6 +5,7 @@
 
 ## 当前轮次状态（2026-09-26，M13 文档与验收收尾）
 
+- U55 属性格/信息统计格字段（2026-09-26，一笔提交，六门禁全绿，混淆清单 844 → 841）：Kk→killsCell（角色表"杀死"行）、Ik 按属主拆名——character→petKillsCell（"宠物杀死"行）vs information→monsterKillsCell（信息页怪物击杀统计格）、Gk 按属主拆名——character→spiritRegenCell（"法力回复"行）vs upgrade-details→cachedRequiredLevel（解锁升级缓存需求等级）、Jk→cooldownCell（"冷却回合"行）+ expedition→cachedMonsterKills（远征视图击杀缓存）。
 - U54 卷轴目标/物品命名/自动施放字段（2026-09-26，一笔提交，六门禁全绿，混淆清单 851 → 844）：yl→recentTargets（卷轴目标历史环形缓冲，上限 4，链类法术避免重复目标）、jl→innateSpells（随从定义召唤自带法术列表，含野蛮鸡 wB）、Tk→randomPrefix（物品命名前缀选取器）、rk→autoScrollIndex/bu→autoScrollTurnCounter/TC→autoScrollInterval（自动施放卷轴轮换：索引、回合计数、间隔——**near-miss：rk 首次误名 unspentSkillPoints，重读 tick 轮换循环后纠正**）、Rl→skillTreeCollection（成就/角色页技能树集合视图）。
 - U53 相机瓦片/区域映射/行计数（2026-09-26，一笔提交，六门禁全绿，混淆清单 856 → 851）：vk/wk→tileColumn/tileRow（相机所在瓦片坐标：runtime/game.js 相机对象声明 + loop 每帧回写 + simulation 等距投影 + scene 绘制，跨 5 文件）、sk→byKey（regions 注册表按 "col_row" 键映射，getRegion/chooseAdjacentRegion 消费）、mk→setRowCount（TableLifecycle 行数调整器：castles/character/dungeons 三视图 + typedef 与内联标注，8 处）、yk→conqueredDungeonCount（城堡已征服地牢数，进度条 "地牢 x / y" 显示）。
 - U52 渲染/动画/浮动文字字段（2026-09-26，一笔提交，六门禁全绿，混淆清单 868 → 856）：Uk→getIconSprite（ItemType 图标贴纸，物品详情/掉落名显示消费）、zl→releaseClaims（四类掉落注册表声明释放，此前漏了 counts 差异）、al→texts（浮动文字层条目，**harness countFloatingText/trackBossEncounter 双端分支同步**——否则伤害数字/暴击/首领三组场景全灭）、Hl→renderCommands（渲染命令池）、Il→image（SpriteSheet/AnimationSheet 表 Image）、Pk→reachedTarget（投射物到达目标）、yi→elapsedMs（type-2 特效 400ms 累计器）、cl→isLoaded（贴纸表加载完成，loop resourcesReady 门）、vk/wk→tileColumnOffset/tileRowOffset（相机瓦片偏移，等距投影用）。
