@@ -58,7 +58,7 @@ export function MeleeAttackBehavior(a, b, c, d) {
   this.YD = d;
 }
 export function LootGoldBehavior(a) {
-  this.Hn = null;
+  this.learnedSpell = null;
   this.priorityWeight = a;
   this.actionRange = 10;
 }
@@ -70,7 +70,7 @@ export function OpportunisticAttackBehavior(a) {
   this.behaviorActionType = MELEE_ACTION_TYPE;
 }
 export function LootItemBehavior(a) {
-  this.Dn = null;
+  this.learnedSpell = null;
   this.priorityWeight = a;
   this.actionRange = 10;
 }
@@ -105,7 +105,7 @@ export function AreaDamageBehavior(a, b) {
   this.actionRange = a;
 }
 export function ChainDamageBehavior(a, b) {
-  this.In = null;
+  this.learnedSpell = null;
   this.priorityWeight = b;
   this.actionRange = a;
 }
@@ -118,12 +118,12 @@ export function SummonBehavior(a, b, c) {
 export function LifeDrainBehavior(a, b) {
   this.priorityWeight = b;
   this.actionRange = a;
-  this.Lm = null;
+  this.learnedSpell = null;
 }
 export function ReviveBehavior(a, b) {
   this.priorityWeight = b;
   this.actionRange = a;
-  this.pn = null;
+  this.learnedSpell = null;
 }
 export function PartyBuffBehavior(a, b, c) {
   this.priorityWeight = c;
@@ -579,11 +579,11 @@ export function initializeAiBehaviors() {
   };
   LootGoldBehavior.prototype = new ExploreDungeonBehavior();
   LootGoldBehavior.prototype.resetBehaviorState = function () {
-    this.Hn = null;
+    this.learnedSpell = null;
   };
   LootGoldBehavior.prototype.notifySpellLearned = function (a) {
-    if (!(this.Hn || 10 !== a.statusEffectTypeId)) {
-      this.Hn = a;
+    if (!(this.learnedSpell || 10 !== a.statusEffectTypeId)) {
+      this.learnedSpell = a;
     }
   };
   LootGoldBehavior.prototype.performOnArrival = function (a) {
@@ -616,13 +616,13 @@ export function initializeAiBehaviors() {
     showFloatingText(game.floatingText, a, b, "white");
   };
   LootGoldBehavior.prototype.canExecute = function () {
-    return this.Hn && isSpellReady(this.Hn);
+    return this.learnedSpell && isSpellReady(this.learnedSpell);
   };
   LootGoldBehavior.prototype.getFinalScore = function () {
     return (/** @type {PrioritizedBehavior} */ (/** @type {unknown} */ (this))).getPriority();
   };
   LootGoldBehavior.prototype.getActionTarget = function () {
-    return this.Hn;
+    return this.learnedSpell;
   };
   LootGoldBehavior.prototype.selectTarget = function (a) {
     if (a.effects.Gn || !hasOpponentsInRoom(a, a.position.room)) {
@@ -676,22 +676,22 @@ export function initializeAiBehaviors() {
   };
   LootItemBehavior.prototype = new ExploreDungeonBehavior();
   LootItemBehavior.prototype.resetBehaviorState = function () {
-    this.Dn = null;
+    this.learnedSpell = null;
   };
   LootItemBehavior.prototype.notifySpellLearned = function (a) {
-    if (!(this.Dn || 11 !== a.statusEffectTypeId)) {
-      this.Dn = a;
+    if (!(this.learnedSpell || 11 !== a.statusEffectTypeId)) {
+      this.learnedSpell = a;
     }
   };
   LootItemBehavior.prototype.performOnArrival = function () {};
   LootItemBehavior.prototype.canExecute = function () {
-    return this.Dn && isSpellReady(this.Dn);
+    return this.learnedSpell && isSpellReady(this.learnedSpell);
   };
   LootItemBehavior.prototype.getFinalScore = function () {
     return (/** @type {PrioritizedBehavior} */ (/** @type {unknown} */ (this))).getPriority();
   };
   LootItemBehavior.prototype.getActionTarget = function () {
-    return this.Dn;
+    return this.learnedSpell;
   };
   LootItemBehavior.prototype.selectTarget = function (a) {
     return a.effects.isStealthed || !hasOpponentsInRoom(a, a.position.room) ? null : a;
@@ -870,18 +870,18 @@ export function initializeAiBehaviors() {
   };
   ChainDamageBehavior.prototype = new ExploreDungeonBehavior();
   ChainDamageBehavior.prototype.resetBehaviorState = function () {
-    this.In = null;
+    this.learnedSpell = null;
   };
   ChainDamageBehavior.prototype.notifySpellLearned = function (a) {
-    if (!(this.In || 12 !== a.spellCategoryId)) {
-      this.In = a;
+    if (!(this.learnedSpell || 12 !== a.spellCategoryId)) {
+      this.learnedSpell = a;
     }
   };
   ChainDamageBehavior.prototype.canExecute = function () {
-    return this.In && isSpellReady(this.In);
+    return this.learnedSpell && isSpellReady(this.learnedSpell);
   };
   ChainDamageBehavior.prototype.getActionTarget = function () {
-    return this.In;
+    return this.learnedSpell;
   };
   ChainDamageBehavior.prototype.getFinalScore = function () {
     return (/** @type {PrioritizedBehavior} */ (/** @type {unknown} */ (this))).getPriority();
@@ -912,11 +912,11 @@ export function initializeAiBehaviors() {
   };
   LifeDrainBehavior.prototype = new ExploreDungeonBehavior();
   LifeDrainBehavior.prototype.resetBehaviorState = function () {
-    this.Lm = null;
+    this.learnedSpell = null;
   };
   LifeDrainBehavior.prototype.notifySpellLearned = function (a) {
-    if (!(this.Lm || 1 !== a.spellCategoryId)) {
-      this.Lm = a;
+    if (!(this.learnedSpell || 1 !== a.spellCategoryId)) {
+      this.learnedSpell = a;
     }
   };
   LifeDrainBehavior.prototype.getFinalScore = function () {
@@ -924,10 +924,10 @@ export function initializeAiBehaviors() {
     return Math.max(0, (1 - a.stats.health / statValue(a.stats.maxHealth)) * (/** @type {PrioritizedBehavior} */ (/** @type {unknown} */ (this))).getPriority());
   };
   LifeDrainBehavior.prototype.canExecute = function () {
-    return this.Lm && isSpellReady(this.Lm);
+    return this.learnedSpell && isSpellReady(this.learnedSpell);
   };
   LifeDrainBehavior.prototype.getActionTarget = function () {
-    return this.Lm;
+    return this.learnedSpell;
   };
   LifeDrainBehavior.prototype.selectTarget = function (a) {
     var b = null,
@@ -946,21 +946,21 @@ export function initializeAiBehaviors() {
   };
   ReviveBehavior.prototype = new ExploreDungeonBehavior();
   ReviveBehavior.prototype.resetBehaviorState = function () {
-    this.pn = null;
+    this.learnedSpell = null;
   };
   ReviveBehavior.prototype.notifySpellLearned = function (a) {
-    if (!(this.pn || 16 !== a.spellCategoryId)) {
-      this.pn = a;
+    if (!(this.learnedSpell || 16 !== a.spellCategoryId)) {
+      this.learnedSpell = a;
     }
   };
   ReviveBehavior.prototype.getFinalScore = function () {
     return (/** @type {PrioritizedBehavior} */ (/** @type {unknown} */ (this))).getPriority();
   };
   ReviveBehavior.prototype.canExecute = function () {
-    return this.pn && isSpellReady(this.pn);
+    return this.learnedSpell && isSpellReady(this.learnedSpell);
   };
   ReviveBehavior.prototype.getActionTarget = function () {
-    return this.pn;
+    return this.learnedSpell;
   };
   ReviveBehavior.prototype.selectTarget = function (a) {
     var b,
