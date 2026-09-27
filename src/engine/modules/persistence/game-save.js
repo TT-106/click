@@ -810,7 +810,7 @@ export function createSaveState(a) {
       var qa = game.level,
         ta = qa.centerX,
         eb = qa.centerY,
-        Gb = qa.sp,
+        Gb = qa.levelSeed,
         Da = qa.roomList,
         ub = [],
         mb;

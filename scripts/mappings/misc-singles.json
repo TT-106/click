@@ -1,0 +1,9 @@
+[
+  { "old": "YE", "new": "unusedClassValue", "expect": 1, "files": ["src/engine/modules/content/guardians.js"] },
+  { "old": "bo", "new": "unusedSpellFlag", "expect": 6, "files": ["src/engine/modules/content/spells.js"] },
+  { "old": "HB", "new": "sqrt3", "expect": 3, "files": ["src/engine/modules/core/math.js", "src/engine/modules/world/terrain.js"] },
+  { "old": "VC", "new": "unreachableCost", "expect": 2, "files": ["src/engine/modules/world/travel-costs.js"] },
+  { "old": "uD", "new": "amountElementId", "expect": 2, "files": ["src/engine/modules/views/resources.js"] },
+  { "old": "ss", "new": "tile", "expect": 5, "files": ["src/engine/modules/world/pathfinding.js"] },
+  { "old": "oB", "new": "nodePool", "expect": 3, "files": ["src/engine/modules/world/pathfinding.js"] }
+]

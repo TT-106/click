@@ -44,10 +44,10 @@ export function sampleNoise(a, b, c) {
       N = undefined,
       I = undefined,
       x = undefined;
-    y = 0.5 * (n + p) * (l.HB - 1);
+    y = 0.5 * (n + p) * (l.sqrt3 - 1);
     A = Math.floor(n + y);
     C = Math.floor(p + y);
-    v = (3 - l.HB) / 6;
+    v = (3 - l.sqrt3) / 6;
     u = (A + C) * v;
     y = A - u;
     u = C - u;

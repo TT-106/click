@@ -26,13 +26,13 @@ import { IDLE_ACTION } from "../ai/targeting.js";
 import { spendGold } from "../characters/party.js";
 export function advanceSimulation(a) {
   var b = game.lifecycle;
-  b.Jo += a;
-  if (15 <= b.Jo) {
+  b.turnTimeAccumulator += a;
+  if (15 <= b.turnTimeAccumulator) {
     game.state.turnNumber++;
-    b.Jo -= 15;
-    b.yw++;
-    if (b.yw >= b.zD) {
-      b.yw = 0;
+    b.turnTimeAccumulator -= 15;
+    b.regenTurnCounter++;
+    if (b.regenTurnCounter >= b.regenIntervalTurns) {
+      b.regenTurnCounter = 0;
       var c,
         d = getAllies();
       for (c = 0; c < d.length; c++) {
@@ -140,9 +140,9 @@ export function advanceSimulation(a) {
         b.autoScrollIndex = 0;
       }
     }
-    b.cw++;
-    if (b.cw >= b.gD) {
-      b.cw = 0;
+    b.dungeonRespawnTurnCounter++;
+    if (b.dungeonRespawnTurnCounter >= b.dungeonRespawnIntervalTurns) {
+      b.dungeonRespawnTurnCounter = 0;
       var K = game.dungeons,
         H,
         S,
@@ -211,9 +211,9 @@ export function advanceSimulation(a) {
         }
       }
     }
-    b.Qt++;
-    if (b.Qt >= b.PC) {
-      b.Qt = 0;
+    b.achievementCheckTurnCounter++;
+    if (b.achievementCheckTurnCounter >= b.achievementCheckIntervalTurns) {
+      b.achievementCheckTurnCounter = 0;
       var T = game.state.achievements,
         X,
         Ca;
@@ -414,7 +414,7 @@ export function advanceSimulation(a) {
         if (lb.isFinished()) {
           setTileEffect(hb, null);
         } else if (lb.previousFrameIndex !== lb.frameIndex && (sc = hb.remainingEffectDamage, 0 !== sc && (Aa = randomInt(sc + 1), 0 !== Aa))) {
-          hb.qB(Math.max(0, sc - Aa));
+          hb.setRemainingEffectDamage(Math.max(0, sc - Aa));
           var ec = rc = rb.stats;
           ec.health -= floorNumber(Aa);
           if (0 > ec.health) {
@@ -491,9 +491,9 @@ export function advanceSimulation(a) {
     Le = false;
   for (tc = 0; tc < game.state.adventurers.length; tc++) {
     me = game.state.adventurers[tc].inventory;
-    if (me.ip) {
+    if (me.dirty) {
       Le = true;
-      me.ip = false;
+      me.dirty = false;
     }
   }
   if (Le) {

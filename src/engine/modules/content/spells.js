@@ -24,7 +24,7 @@ export function initializeContentSpells() {
       spellCategoryId: 4,
       potencyPercent: 0,
       cooldownTurns: 13,
-      bo: true
+      unusedSpellFlag: true
     },
     spiderWebSpell: {
       name: "蛛网",
@@ -68,7 +68,7 @@ export function initializeContentSpells() {
       spellCategoryId: 4,
       potencyPercent: 0,
       cooldownTurns: 13,
-      bo: true
+      unusedSpellFlag: true
     },
     fireRainSpell: {
       name: "火雨",
@@ -111,7 +111,7 @@ export function initializeContentSpells() {
     spellCategoryId: 4,
     potencyPercent: 10,
     cooldownTurns: 13,
-    bo: true
+    unusedSpellFlag: true
   };
   priestSpellDefinitions = {
     healSpell: {
@@ -261,7 +261,7 @@ export function initializeContentSpells() {
       spellCategoryId: 4,
       potencyPercent: 0,
       cooldownTurns: 13,
-      bo: true
+      unusedSpellFlag: true
     },
     greenDeathSpell: {
       name: "绿色死亡",
@@ -304,7 +304,7 @@ export function initializeContentSpells() {
       spellCategoryId: 10,
       potencyPercent: 1,
       cooldownTurns: 25,
-      bo: true
+      unusedSpellFlag: true
     },
     dogGuardianSpell: {
       name: "狗狗守卫",
@@ -361,7 +361,7 @@ export function initializeContentSpells() {
       spellCategoryId: 17,
       potencyPercent: 1,
       cooldownTurns: 25,
-      bo: true
+      unusedSpellFlag: true
     },
     chickenGuardianSpell: {
       name: "小鸡守卫",

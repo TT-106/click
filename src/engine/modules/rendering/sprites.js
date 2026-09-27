@@ -18,7 +18,7 @@ export function SpriteSheet(a, b, c) {
   var d = this;
   this.image = new Image();
   this.image.onload = function () {
-    (/** @type {any} */ (d)).$w(c);
+    (/** @type {any} */ (d)).registerDefinitions(c);
     d.loaded = true;
   };
   this.image.src = a;
@@ -50,18 +50,18 @@ export function AnimationSheet(a, b, c, d) {
   this.fileName = a;
   this.spriteSize = b;
   this.animationMap = {};
-  this.FB = [];
+  this.animationNames = [];
   var f = this;
   this.image = new Image();
   this.image.onload = function () {
-    (/** @type {any} */ (f)).$w(c, d);
+    (/** @type {any} */ (f)).registerDefinitions(c, d);
     f.loaded = true;
   };
   this.image.src = a;
 }
 export function AnimationCatalog(a) {
   this.animationMap = null;
-  this.Zt = a;
+  this.sheets = a;
 }
 export function VisualEffect(a, b, c, d, f) {
   this.impactEffectName = a;
@@ -79,7 +79,7 @@ export function VisualEffect(a, b, c, d, f) {
       f = c;
     }
   }
-  this.iD = b;
+  this.startPosition = b;
   this.currentPosition = f;
   this.targetPosition = c;
   this.reachedTarget = false;
@@ -183,11 +183,11 @@ export function initializeRenderingSprites() {
   Sprite.prototype.getSheetImage = function () {
     return this.spriteSheet.getSheetImage();
   };
-  SpriteSheet.prototype.$w = function (a) {
+  SpriteSheet.prototype.registerDefinitions = function (a) {
     var b, c;
     for (b = 0; b < a.length; b++) {
       c = a[b];
-      this.animationMap[c.a] = new Sprite(this, c.b.x, c.b.y, c.a);
+      this.animationMap[c.name] = new Sprite(this, c.position.x, c.position.y, c.name);
     }
   };
   SpriteSheet.prototype.getSprite = function (a) {
@@ -205,11 +205,11 @@ export function initializeRenderingSprites() {
   SpriteAnimation.prototype.getFrameCount = function () {
     return this.frames.length;
   };
-  AnimationSheet.prototype.$w = function (a, b) {
+  AnimationSheet.prototype.registerDefinitions = function (a, b) {
     var c, d;
     for (c = 0; c < a.length; c++) {
       d = a[c];
-      this.FB.push(d.animationName);
+      this.animationNames.push(d.animationName);
       this.animationMap[d.animationName] = new SpriteAnimation(this, d.animationName, d.firstFrameColumn, d.firstFrameRow, d.lastRowFrameCount, d.lastFrameRow, b, d.isDirectional);
     }
   };
@@ -228,20 +228,20 @@ export function initializeRenderingSprites() {
   };
   AnimationCatalog.prototype.isLoaded = function () {
     var a;
-    for (a = 0; a < this.Zt.length; a++) {
-      if (!this.Zt[a].isLoaded()) {
+    for (a = 0; a < this.sheets.length; a++) {
+      if (!this.sheets[a].isLoaded()) {
         return false;
       }
     }
     if (!this.animationMap) {
-      a = this.Zt;
+      a = this.sheets;
       var b,
         c,
         d,
         f,
         g = {};
       for (b = 0; b < a.length; b++) {
-        for (d = a[b], f = d.FB, c = 0; c < f.length; c++) {
+        for (d = a[b], f = d.animationNames, c = 0; c < f.length; c++) {
           if (g[f[c]]) {
             console.log("effect name already defined: " + f[c]);
           }
@@ -257,7 +257,7 @@ export function initializeRenderingSprites() {
   VisualEffect.prototype.getAnimation = function () {
     return this.animation;
   };
-  VisualEffect.prototype.qB = function (a) {
+  VisualEffect.prototype.setRemainingEffectDamage = function (a) {
     this.remainingEffectDamage = a;
   };
   VisualEffect.prototype.isFinished = function () {

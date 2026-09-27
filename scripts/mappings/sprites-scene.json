@@ -1,0 +1,7 @@
+[
+  { "old": "$w", "new": "registerDefinitions", "expect": 4, "files": ["src/engine/modules/rendering/sprites.js"] },
+  { "old": "Zt", "new": "sheets", "expect": 4, "files": ["src/engine/modules/rendering/sprites.js"] },
+  { "old": "FB", "new": "animationNames", "expect": 3, "files": ["src/engine/modules/rendering/sprites.js"] },
+  { "old": "iD", "new": "startPosition", "expect": 2, "files": ["src/engine/modules/rendering/sprites.js", "src/engine/modules/rendering/scene.js"] },
+  { "old": "kE", "new": "containerElementId", "expect": 2, "files": ["src/engine/modules/rendering/scene.js"] }
+]

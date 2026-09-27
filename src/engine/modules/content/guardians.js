@@ -104,7 +104,7 @@ export function initializeContentGuardians() {
     }],
     statMultipliers: guardianStatMultipliers,
     spellDefinitions: null,
-    YE: null,
+    unusedClassValue: null,
     createBehaviors: function () {
       return [new RangedAttackBehavior(RANGED_MIN_DISTANCE, RANGED_ATTACK_RANGE, 95), new MeleeAttackBehavior(RANGED_ATTACK_RANGE, 90, MELEE_ACTION_TYPE, false), new IdleBehavior(1)];
     },

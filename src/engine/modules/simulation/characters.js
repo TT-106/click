@@ -33,12 +33,12 @@ export function projectWorldY(a, b) {
   return game.viewportHalfHeight + ((a / game.tileSize | 0) - c.tileColumn + ((b / game.tileSize | 0) - c.tileRow)) * game.halfTileSize + (((a % game.tileSize | 0) + (b % game.tileSize | 0)) / 2 | 0) - c.viewportOffsetY;
 }
 export function CharacterLifecycle() {
-  this.yw = this.Jo = 0;
-  this.zD = 3;
-  this.gD = 2;
-  this.cw = 0;
-  this.PC = 4;
-  this.Qt = 0;
+  this.regenTurnCounter = this.turnTimeAccumulator = 0;
+  this.regenIntervalTurns = 3;
+  this.dungeonRespawnIntervalTurns = 2;
+  this.dungeonRespawnTurnCounter = 0;
+  this.achievementCheckIntervalTurns = 4;
+  this.achievementCheckTurnCounter = 0;
   this.autoScrollInterval = 2;
   this.autoScrollIndex = this.autoScrollTurnCounter = 0;
 }

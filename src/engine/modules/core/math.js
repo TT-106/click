@@ -33,7 +33,7 @@ export function randomIntFrom(a, b) {
 export function SimplexNoise() {
   this.gradients = [[1, 1, 0], [-1, 1, 0], [1, -1, 0], [-1, -1, 0], [1, 0, 1], [-1, 0, 1], [1, 0, -1], [-1, 0, -1], [0, 1, 1], [0, -1, 1], [0, 1, -1], [0, -1, -1]];
   this.permutation = [];
-  this.HB = Math.sqrt(3);
+  this.sqrt3 = Math.sqrt(3);
 }
 /**
  * [0, a) 随机整数。注意：走全局 Math.random（与 SeededRandom 是两条独立随机源），

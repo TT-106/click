@@ -69,7 +69,7 @@ export function spawnRoomTreasure(a) {
       g;
     f = false;
     for (var h = 0; !f && 10 > h;) {
-      g = d ? b.Zw(a) : b.Xw(a);
+      g = d ? b.pickWestWallPoint(a) : b.pickNorthWallPoint(a);
       if (!(f = canPlaceRoomObject(a, g))) {
         g = null;
       }
@@ -116,13 +116,13 @@ export function initializeLootTreasure() {
       this.drops[a].setClaimDistance(0);
     }
   };
-  TreasureRegistry.prototype.Xw = function (a) {
+  TreasureRegistry.prototype.pickNorthWallPoint = function (a) {
     var b = a.tileRow;
     a = a.tileColumn + randomInt(a.widthInTiles);
     setVector(this.spawnPointScratch, a, b - 1);
     return this.spawnPointScratch;
   };
-  TreasureRegistry.prototype.Zw = function (a) {
+  TreasureRegistry.prototype.pickWestWallPoint = function (a) {
     var b = a.tileColumn;
     a = a.tileRow + randomInt(a.heightInTiles);
     setVector(this.spawnPointScratch, b - 1, a);

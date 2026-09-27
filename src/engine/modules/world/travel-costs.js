@@ -3,10 +3,10 @@
  */
 import { game } from "../runtime/game.js";
 export function WorldPathfinder() {
-  this.VC = 1E8;
+  this.unreachableCost = 1E8;
 }
 export function calculateWorldCosts(a, b, c) {
-  a = a.VC;
+  a = a.unreachableCost;
   var d = game.world.worldBlocks,
     f,
     g,

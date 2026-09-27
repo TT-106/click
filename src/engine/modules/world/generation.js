@@ -144,11 +144,11 @@ export function DungeonLevel() {
   this.roomList = [];
   this.hallwayList = [];
   this.exitDoor = this.entranceDoor = null;
-  this.sp = 0;
+  this.levelSeed = 0;
 }
 export function generateDungeonLevel(a, b, c, d) {
   var f = game.level;
-  f.sp = a;
+  f.levelSeed = a;
   var seededRandom = new SeededRandom(a);
   f.roomList.length = 0;
   f.hallwayList.length = 0;
@@ -164,10 +164,10 @@ export function generateDungeonLevel(a, b, c, d) {
     c.generate();
   } else {
     for (a = 0, c = new DungeonLayoutGenerator(f.widthInTiles, f.heightInTiles, f.tileGrid, seededRandom, c); !c.generate();) {
-      console.log("Level generation failed for seed: " + f.sp + " attempt: " + a);
+      console.log("Level generation failed for seed: " + f.levelSeed + " attempt: " + a);
       a++;
-      f.sp++;
-      new SeededRandom(f.sp);
+      f.levelSeed++;
+      new SeededRandom(f.levelSeed);
       clearDungeonTiles(f);
     }
   }
@@ -495,14 +495,14 @@ export function initializeWorldGeneration() {
     }
     return false;
   };
-  DungeonDecorationGenerator.prototype.Xw = function (a) {
+  DungeonDecorationGenerator.prototype.pickNorthWallPoint = function (a) {
     var b = a.tileColumn,
       c = a.tileRow - 1;
     a = b + 1 + randomIntFrom(this.seededRandom, b + a.widthInTiles - 1 - b - 2);
     setVector(this.spawnPointScratch, a, c);
     return this.spawnPointScratch;
   };
-  DungeonDecorationGenerator.prototype.Zw = function (a) {
+  DungeonDecorationGenerator.prototype.pickWestWallPoint = function (a) {
     var b = a.tileColumn - 1,
       c = a.tileRow;
     a = c + 1 + randomIntFrom(this.seededRandom, c + a.heightInTiles - 1 - c - 2);

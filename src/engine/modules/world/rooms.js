@@ -167,10 +167,10 @@ export function revealRoom(a) {
         }
       }
       if (0.5 > b.seededRandom.random()) {
-        d = b.Xw(a);
+        d = b.pickNorthWallPoint(a);
         p = p.horizontalWallDecorations;
       } else {
-        d = b.Zw(a);
+        d = b.pickWestWallPoint(a);
         p = p.verticalWallDecorations;
       }
       if (d && p && 0 !== p.length && canPlaceRoomObject(a, d)) {
@@ -555,7 +555,7 @@ export function initializeWorldRooms() {
   DungeonTile.prototype.setDecorationSprite = function (a) {
     this.decorationSprite = a;
   };
-  DungeonTile.prototype.qB = function (a) {
+  DungeonTile.prototype.setRemainingEffectDamage = function (a) {
     this.remainingEffectDamage = a;
   };
   EMPTY_TILE = 0;
@@ -582,7 +582,7 @@ export function initializeWorldRooms() {
     }
   };
   DungeonRoom.prototype.paintTiles = function (a) {
-    /** @type {{Lw: (grid: unknown) => void}} */ (/** @type {unknown} */ (this)).Lw(a);
+    /** @type {{paintFloor: (grid: unknown) => void}} */ (/** @type {unknown} */ (this)).paintFloor(a);
     var b, c;
     c = this.tileRow - 1;
     for (b = this.tileColumn - 1; b < this.tileColumn + this.widthInTiles + 1; b++) {
@@ -603,7 +603,7 @@ export function initializeWorldRooms() {
       b[c].floorType = 2;
     }
   };
-  DungeonRoom.prototype.Lw = function (a) {
+  DungeonRoom.prototype.paintFloor = function (a) {
     var b,
       c,
       d = this.tileColumn + this.widthInTiles,
@@ -643,9 +643,9 @@ export function initializeWorldRooms() {
       d[b].floorType = 2;
       d[b + 1].floorType = 2;
     }
-    /** @type {{Lw: (grid: unknown) => void}} */ (/** @type {unknown} */ (this)).Lw(a);
+    /** @type {{paintFloor: (grid: unknown) => void}} */ (/** @type {unknown} */ (this)).paintFloor(a);
   };
-  DungeonHallway.prototype.Lw = function (a) {
+  DungeonHallway.prototype.paintFloor = function (a) {
     var b, c;
     for (c = 0; c < this.pathTiles.length; c++) {
       b = this.pathTiles[c];

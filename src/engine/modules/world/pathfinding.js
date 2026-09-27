@@ -8,7 +8,7 @@ export function PathfindingGrid(a, b, c) {
   this.widthInTiles = a;
   this.heightInTiles = b;
   this.tileGrid = c;
-  this.oB = new PathNodePool();
+  this.nodePool = new PathNodePool();
   this.usedNodes = [];
   this.usedTiles = [];
   this.toRoom = this.fromRoom = null;
@@ -19,11 +19,11 @@ export function getPathNode(a, b) {
   if (-1 < d) {
     d = a.usedNodes[d];
   } else {
-    d = a.oB;
+    d = a.nodePool;
     if (0 < d.pooledNodes.length) {
       var f = d = d.pooledNodes.shift();
       f.grid = a;
-      f.ss = b;
+      f.tile = b;
       f.costSoFar = 0;
       f.heuristicScore = -1;
       f.parent = null;
@@ -50,7 +50,7 @@ export function isNearRoomCorner(a, b, c) {
 }
 export function PathNode(a, b) {
   this.grid = a;
-  this.ss = b;
+  this.tile = b;
   this.costSoFar = 0;
   this.heuristicScore = -1;
   this.parent = null;
@@ -103,7 +103,7 @@ export function findHallwayPath(a, b, c) {
         break a;
       }
       g = a.open.pop();
-      if (g.ss === f.ss) {
+      if (g.tile === f.tile) {
         f = reconstructPath(g);
         break a;
       }
@@ -111,7 +111,7 @@ export function findHallwayPath(a, b, c) {
       h = g;
       if (0 === h.neighbors.length) {
         l = h.grid;
-        n = h.ss;
+        n = h.tile;
         p = h.neighbors;
         s = n.getTileColumn();
         n = n.getTileRow();
@@ -153,7 +153,7 @@ export function findHallwayPath(a, b, c) {
   }
   a = a.grid;
   for (d = 0; d < a.usedNodes.length; d++) {
-    a.oB.pooledNodes.push(a.usedNodes[d]);
+    a.nodePool.pooledNodes.push(a.usedNodes[d]);
   }
   a.usedNodes.length = 0;
   a.usedTiles.length = 0;

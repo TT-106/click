@@ -8,13 +8,13 @@ export function Inventory() {
   this.items = [];
   this.capacity = BASE_INVENTORY_CAPACITY + Math.min(MAX_PRESTIGE_INVENTORY_BONUS, game.state.victoryCount);
   this.owner = null;
-  this.ip = false;
+  this.dirty = false;
 }
 export function addInventoryItem(a, b) {
   if (a.items.length < a.capacity) {
     b.inventory = a.owner;
     a.items.push(b);
-    a.ip = true;
+    a.dirty = true;
     sortInventory(game.inventories, a.items);
   } else {
     var c,
@@ -38,7 +38,7 @@ export function addInventoryItem(a, b) {
       removeInventoryItemAt(a, c);
       b.inventory = a.owner;
       a.items.push(b);
-      a.ip = true;
+      a.dirty = true;
       sortInventory(game.inventories, a.items);
     }
   }
@@ -47,7 +47,7 @@ export function removeInventoryItemAt(a, b) {
   if (-1 !== b) {
     a.items[b].inventory = null;
     a.items.splice(b, 1);
-    a.ip = true;
+    a.dirty = true;
   }
 }
 export function InventoryRegistry() {

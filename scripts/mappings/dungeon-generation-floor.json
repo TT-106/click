@@ -1,0 +1,6 @@
+[
+  { "old": "sp", "new": "levelSeed", "expect": 6, "files": ["src/engine/modules/world/generation.js", "src/engine/modules/persistence/game-save.js"] },
+  { "old": "Lw", "new": "paintFloor", "expect": 6, "files": ["src/engine/modules/world/rooms.js"] },
+  { "old": "Xw", "new": "pickNorthWallPoint", "expect": 4, "files": ["src/engine/modules/loot/treasure.js", "src/engine/modules/world/generation.js", "src/engine/modules/world/rooms.js"] },
+  { "old": "Zw", "new": "pickWestWallPoint", "expect": 4, "files": ["src/engine/modules/loot/treasure.js", "src/engine/modules/world/generation.js", "src/engine/modules/world/rooms.js"] }
+]

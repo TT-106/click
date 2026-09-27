@@ -8,7 +8,7 @@ import { formatGroupedAmount } from "../core/math.js";
 export function GoldView() {
   this.elementId = "goldContainer";
   this.visible = true;
-  this.uD = "partyGoldPanel";
+  this.amountElementId = "partyGoldPanel";
   this.cachedResourceCount = -1;
 }
 export function initializeViewsResources() {
@@ -20,7 +20,7 @@ export function initializeViewsResources() {
     var a = game.state.party.gold;
     if (a !== this.cachedResourceCount) {
       this.cachedResourceCount = a;
-      setElementHtml(this.uD, "" + formatGroupedAmount(a));
+      setElementHtml(this.amountElementId, "" + formatGroupedAmount(a));
     }
   };
 }

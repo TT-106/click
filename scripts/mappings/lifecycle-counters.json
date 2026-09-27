@@ -1,0 +1,11 @@
+[
+  { "old": "Jo", "new": "turnTimeAccumulator", "expect": 4, "files": ["src/engine/modules/simulation/characters.js", "src/engine/modules/simulation/tick.js"] },
+  { "old": "yw", "new": "regenTurnCounter", "expect": 4, "files": ["src/engine/modules/simulation/characters.js", "src/engine/modules/simulation/tick.js"] },
+  { "old": "zD", "new": "regenIntervalTurns", "expect": 2, "files": ["src/engine/modules/simulation/characters.js", "src/engine/modules/simulation/tick.js"] },
+  { "old": "cw", "new": "dungeonRespawnTurnCounter", "expect": 4, "files": ["src/engine/modules/simulation/characters.js", "src/engine/modules/simulation/tick.js"] },
+  { "old": "gD", "new": "dungeonRespawnIntervalTurns", "expect": 2, "files": ["src/engine/modules/simulation/characters.js", "src/engine/modules/simulation/tick.js"] },
+  { "old": "Qt", "new": "achievementCheckTurnCounter", "expect": 4, "files": ["src/engine/modules/simulation/characters.js", "src/engine/modules/simulation/tick.js"] },
+  { "old": "PC", "new": "achievementCheckIntervalTurns", "expect": 2, "files": ["src/engine/modules/simulation/characters.js", "src/engine/modules/simulation/tick.js"] },
+  { "old": "ip", "new": "dirty", "expect": 6, "files": ["src/engine/modules/loot/inventory.js", "src/engine/modules/simulation/tick.js"] },
+  { "old": "qB", "new": "setRemainingEffectDamage", "expect": 3, "files": ["src/engine/modules/world/rooms.js", "src/engine/modules/rendering/sprites.js", "src/engine/modules/simulation/tick.js"] }
+]

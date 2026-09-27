@@ -222,7 +222,7 @@ export function randomLightningOffset() {
   return 0.5 > Math.random() ? -a : a;
 }
 export function GameCanvasView() {
-  this.kE = "gameTabContent";
+  this.containerElementId = "gameTabContent";
   this.elementId = "gameCanvas";
   this.renderer = null;
 }
@@ -661,7 +661,7 @@ export function initializeRenderingScene() {
                   dc = undefined;
                 sa.context.lineWidth = 1;
                 sa.context.strokeStyle = "#FFD700";
-                Ja = Tb.iD;
+                Ja = Tb.startPosition;
                 Db = Ja.x;
                 gb = Ja.y;
                 rb = projectDungeonX(Db, gb) + game.tileSize;
@@ -741,7 +741,7 @@ export function initializeRenderingScene() {
     }
   };
   GameCanvasView.prototype.createDomElements = function () {
-    var a = getElement(this.kE);
+    var a = getElement(this.containerElementId);
     if (a) {
       var b = this.elementId,
         c = /** @type {HTMLCanvasElement | null} */ (getElement(b));
