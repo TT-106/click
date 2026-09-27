@@ -8333,7 +8333,17 @@
     "os": "itemTypesById",
     "ps": "itemTypesBySlot",
     "Jr": "getUpgradeDefinition",
-    "ND": "itemEffectGenerator"
+    "ND": "itemEffectGenerator",
+    "lt": "sortingEnabled",
+    "tx": "setConquered",
+    "nw": "farmList",
+    "Gz": "farmSpriteName",
+    "tB": "shopSpriteNames",
+    "WE": "regionColumn",
+    "XE": "regionRow",
+    "EE": "compareByFarmCost",
+    "Yw": "jitterCoordinate",
+    "$r": "recordLevelCleared"
   },
   "gameFields": {
     "B": "tileSize",

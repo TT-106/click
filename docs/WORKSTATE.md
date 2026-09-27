@@ -1,9 +1,14 @@
 # WORKSTATE — Clickpocalypse II 语义恢复与现代化工程
 
 > 本文件是长程自治任务的**唯一续跑入口**。上下文压缩或中断后，先读本文件 + `git log --oneline`，再继续。
-> 最后更新：2026-09-27（U66-U107 共 42 批落地后，混淆清单 806 → 107；fields 段 267 → 950；59 场景矩阵全绿）
+> 最后更新：2026-09-27（U66-U108 共 43 批落地后，混淆清单 806 → 93；fields 段 267 → 960；59 场景矩阵全绿）
 
 ## 当前轮次状态（2026-09-27，M12 长尾重命名 + 命名修正）
+
+- U108 地牢/农场/商店注册表与区域坐标（2026-09-27，混淆清单 107 → 93，fields 段 950 → 960）：`world/dungeons.js` 14 项全部落地，文件清空（+`world/regions.js`、`world/terrain.js`、`persistence/game-save.js`、`simulation/tick.js`、`progression/statistics.js`）。
+  - **单主可入表 10 项**：`lt`→sortingEnabled（DungeonRegistry **自动排序开关**：载入期间 game-save:78 置 false、:124 恢复 true 后 :126 才批量 sortDungeons 五视图——旧文档称"排序脏标记"是错的，本批已更正 `docs/game-state-schema.md`）、`Is`→registerClearedDungeon（push cleared + 排序 + 从 attackable 摘除 + refreshFarmableDungeons）、`EE`→compareByFarmCost（`floorNumber(farmCost*dungeonCostBonus.currentValue)` 升序，五视图共用）、`tx`→setConquered（Dungeon 与 Castle 两宿主同体 `this.conquered = a`，存档以 DTO 键 `conquered` 反解调用，故共用一名）、`nw`→farmList（序列化 `farms[]` 顺序即列表顺序，不可重排）、`Gz`→farmSpriteName（农场地块装饰 "L2_Town01.PNG"）、`tB`→shopSpriteNames（9 个候选贴纸，`[randomInt(length)]` 抽取——**重复项 L2_Terrain077 是权重不是笔误，禁止去重**）、`WE/XE`→regionColumn/regionRow（`initialization.js:153-154` 逐参核对，与 Castle/Region 同名概念对齐）、`Yw`→jitterCoordinate（±1..2 坐标抖动，tick:813-814 建农场时消费；ShopRegistry 那份同名方法原版即 0 调用点，属死方法）、`$r`→recordLevelCleared（`levelsCleared++`，与 recordRoomCleared/recordDungeonCleared 同族）。
+  - **双主字母按属主拆分（4 个，不入全局表）**：`Is` 的 Castle 侧→refreshConquest（`Castle.prototype.Is(){refreshCastleConquest(this)}`；dungeons.js:224 `this.region.Is()` 走的是 Castle）；`vw/ww` 的 Dungeon 侧→getRegionColumn/getRegionRow（零参返回 WE/XE）vs WorldMap 侧→pixelToBlockColumn/pixelToBlockRow（像素入参、`/WORLD_BLOCK_COLUMNS|0` 出块索引，tick:748-749 消费）；`Ut` 的 ShopRegistry 侧→addShop（push + shopsById + 铺装饰贴纸，terrain:588 消费）vs WorldGenerator 侧→ensureShopForDungeon（无商店的地牢就地补建，terrain:270 消费）。**terrain.js 一行之内两个宿主同名**，只能按接收者逐处手改，批处理按文件粒度无法区分。
+  - 拆分脚本这次用 `split(from).join(to)`（to 为**字符串**）并带"逐条命中数断言 + 字面量多重集 + 行数 + 事后 `node --check`"，13/13 命中、5 文件全通过；U107 的两条教训（join 传函数、`| tail` 吞退出码）已写入 USER 记忆。
 
 - U107 守卫/随从定义表与物品池与随从生命周期（2026-09-27，混淆清单 117 → 107，fields 段 942 → 950）：定义表簇 `content/guardians.js`+`content/minions.js`+`loot/items.js`+`content/equipment.js` 落地（+`simulation/characters.js`、`persistence/entities.js`、`combat/skill-effects.js`、`progression/upgrades.js`、`combat/actions.js`、`combat/encounters.js`、`characters/minions.js`、`simulation/tick.js`）。
   - **定义表键**：`Jm`→innateSpells（守卫定义自带法术，读点 `simulation/characters.js:113-115` 与随从表同款 `learnSpell(f, new Spell(...))` 循环逐字同构；bossClass 早已是该名，U97 证据）；`Nr`→statBonusList（`applyBonusList(f, a.Nr)`，与 bossClass.statBonusList 同位同形）；`Bp`→statBonusList（随从定义同概念、异字母，按"多字母同义并名"先例合并）；`Ws`→**unusedClassFlag**（4 条守卫定义 + bossClass 共 5 处写入，**src 与 archive/original/c2.js 的 `.Ws` 读取点均为 0**，属原版死字段，按"不臆造语义"原则与 `unusedCachedText` 同款诚实命名）。

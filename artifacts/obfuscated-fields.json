@@ -239,79 +239,6 @@
     ]
   },
   {
-    "name": "lt",
-    "reads": 2,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:78",
-        "code": "game.dungeons.lt"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:124",
-        "code": "game.dungeons.lt"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:126",
-        "code": "ea.lt"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\world\\dungeons.js"
-    ]
-  },
-  {
-    "name": "Is",
-    "reads": 3,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:114",
-        "code": "game.dungeons.Is"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\dungeons.js:223",
-        "code": "game.dungeons.Is"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\dungeons.js:224",
-        "code": "this.region.Is"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\world\\dungeons.js",
-      "src\\engine\\modules\\world\\regions.js"
-    ]
-  },
-  {
-    "name": "$r",
-    "reads": 3,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:39",
-        "code": "RunStatistics.prototype.$r"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:143",
-        "code": "StatisticsRecorder.prototype.$r"
-      },
-      {
-        "loc": "src\\engine\\modules\\progression\\statistics.js:144",
-        "code": "this.statisticsRecorder.$r"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\progression\\statistics.js",
-      "src\\engine\\modules\\world\\dungeons.js"
-    ]
-  },
-  {
     "name": "us",
     "reads": 1,
     "writes": 4,
@@ -791,31 +718,6 @@
     ]
   },
   {
-    "name": "tx",
-    "reads": 2,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:100",
-        "code": "W.tx"
-      },
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:168",
-        "code": "Ea.tx"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\dungeons.js:187",
-        "code": "Dungeon.prototype.tx"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\world\\dungeons.js",
-      "src\\engine\\modules\\world\\regions.js"
-    ]
-  },
-  {
     "name": "Lt",
     "reads": 3,
     "writes": 1,
@@ -837,30 +739,6 @@
     "files": [
       "src\\engine\\modules\\persistence\\game-save.js",
       "src\\engine\\modules\\runtime\\game.js"
-    ]
-  },
-  {
-    "name": "nw",
-    "reads": 3,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\persistence\\game-save.js:783",
-        "code": "game.farms.nw"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\dungeons.js:149",
-        "code": "this.nw"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\dungeons.js:155",
-        "code": "a.nw"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\persistence\\game-save.js",
-      "src\\engine\\modules\\world\\dungeons.js"
     ]
   },
   {
@@ -1078,80 +956,6 @@
     ]
   },
   {
-    "name": "vw",
-    "reads": 2,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\simulation\\tick.js:748",
-        "code": "q.vw"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\dungeons.js:202",
-        "code": "Dungeon.prototype.vw"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\terrain.js:584",
-        "code": "a.vw"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\simulation\\tick.js",
-      "src\\engine\\modules\\world\\dungeons.js",
-      "src\\engine\\modules\\world\\terrain.js"
-    ]
-  },
-  {
-    "name": "ww",
-    "reads": 2,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\simulation\\tick.js:749",
-        "code": "q.ww"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\dungeons.js:205",
-        "code": "Dungeon.prototype.ww"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\terrain.js:584",
-        "code": "a.ww"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\simulation\\tick.js",
-      "src\\engine\\modules\\world\\dungeons.js",
-      "src\\engine\\modules\\world\\terrain.js"
-    ]
-  },
-  {
-    "name": "Yw",
-    "reads": 2,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\simulation\\tick.js:813",
-        "code": "c.Yw"
-      },
-      {
-        "loc": "src\\engine\\modules\\simulation\\tick.js:814",
-        "code": "c.Yw"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\dungeons.js:257",
-        "code": "FarmRegistry.prototype.Yw"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\simulation\\tick.js",
-      "src\\engine\\modules\\world\\dungeons.js"
-    ]
-  },
-  {
     "name": "rx",
     "reads": 2,
     "writes": 2,
@@ -1195,30 +999,6 @@
     "fileCount": 1,
     "files": [
       "src\\engine\\modules\\views\\party-creation.js"
-    ]
-  },
-  {
-    "name": "Ut",
-    "reads": 2,
-    "writes": 2,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\world\\dungeons.js:261",
-        "code": "ShopRegistry.prototype.Ut"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\terrain.js:270",
-        "code": "a.Ut"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\terrain.js:575",
-        "code": "WorldGenerator.prototype.Ut"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\world\\dungeons.js",
-      "src\\engine\\modules\\world\\terrain.js"
     ]
   },
   {
@@ -1759,53 +1539,6 @@
     ]
   },
   {
-    "name": "Gz",
-    "reads": 2,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\world\\dungeons.js:151",
-        "code": "this.Gz"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\dungeons.js:163",
-        "code": "a.Gz"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\terrain.js:270",
-        "code": "game.farms.Gz"
-      }
-    ],
-    "fileCount": 2,
-    "files": [
-      "src\\engine\\modules\\world\\dungeons.js",
-      "src\\engine\\modules\\world\\terrain.js"
-    ]
-  },
-  {
-    "name": "tB",
-    "reads": 2,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\world\\dungeons.js:175",
-        "code": "this.tB"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\dungeons.js:184",
-        "code": "a.tB"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\dungeons.js:184",
-        "code": "a.tB"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\world\\dungeons.js"
-    ]
-  },
-  {
     "name": "BA",
     "reads": 2,
     "writes": 1,
@@ -2225,63 +1958,6 @@
     "fileCount": 1,
     "files": [
       "src\\engine\\modules\\views\\resources.js"
-    ]
-  },
-  {
-    "name": "WE",
-    "reads": 1,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\world\\dungeons.js:25",
-        "code": "this.WE"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\dungeons.js:203",
-        "code": "this.WE"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\world\\dungeons.js"
-    ]
-  },
-  {
-    "name": "XE",
-    "reads": 1,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\world\\dungeons.js:26",
-        "code": "this.XE"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\dungeons.js:206",
-        "code": "this.XE"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\world\\dungeons.js"
-    ]
-  },
-  {
-    "name": "EE",
-    "reads": 1,
-    "writes": 1,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\world\\dungeons.js:73",
-        "code": "this.EE"
-      },
-      {
-        "loc": "src\\engine\\modules\\world\\dungeons.js:140",
-        "code": "a.EE"
-      }
-    ],
-    "fileCount": 1,
-    "files": [
-      "src\\engine\\modules\\world\\dungeons.js"
     ]
   },
   {
