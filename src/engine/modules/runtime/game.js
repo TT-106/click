@@ -429,7 +429,7 @@ export function initializeRuntimeGame() {
       a.targetDoor = null;
       a.targetRoom = null;
       a.Ks = false;
-      a.gn = null;
+      a.forcedDestinationRoom = null;
       a.Mp = false;
       a.hp = false;
       a.Nm = 0;

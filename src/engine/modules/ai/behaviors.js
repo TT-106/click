@@ -136,7 +136,7 @@ export function WaitBehavior() {
 }
 export function hasForcedDestination(a) {
   var b;
-  return (b = game.state.party.gn) ? a.position.destinationRoom === b ? false : true : false;
+  return (b = game.state.party.forcedDestinationRoom) ? a.position.destinationRoom === b ? false : true : false;
 }
 export function LootChestBehavior(a) {
   this.Wm = null;
@@ -625,7 +625,7 @@ export function initializeAiBehaviors() {
     return this.learnedSpell;
   };
   LootGoldBehavior.prototype.selectTarget = function (a) {
-    if (a.effects.Gn || !hasOpponentsInRoom(a, a.position.room)) {
+    if (a.effects.hasStealthEffect || !hasOpponentsInRoom(a, a.position.room)) {
       return null;
     }
     var b = a.stats;

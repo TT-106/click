@@ -96,32 +96,6 @@
     ]
   },
   {
-    "name": "gn",
-    "reads": 3,
-    "writes": 4,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:139",
-        "code": "game.state.party.gn"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\party.js:21",
-        "code": "this.gn"
-      },
-      {
-        "loc": "src\\engine\\modules\\characters\\party.js:33",
-        "code": "a.gn"
-      }
-    ],
-    "fileCount": 4,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js",
-      "src\\engine\\modules\\characters\\party.js",
-      "src\\engine\\modules\\runtime\\game.js",
-      "src\\engine\\modules\\simulation\\tick.js"
-    ]
-  },
-  {
     "name": "Wm",
     "reads": 4,
     "writes": 3,
@@ -196,31 +170,6 @@
       "src\\engine\\modules\\world\\initialization.js",
       "src\\engine\\modules\\world\\regions.js",
       "src\\engine\\modules\\world\\terrain.js"
-    ]
-  },
-  {
-    "name": "Gn",
-    "reads": 4,
-    "writes": 3,
-    "samples": [
-      {
-        "loc": "src\\engine\\modules\\ai\\behaviors.js:628",
-        "code": "a.effects.Gn"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\targeting.js:266",
-        "code": "c.effects.Gn"
-      },
-      {
-        "loc": "src\\engine\\modules\\ai\\targeting.js:270",
-        "code": "h.Gn"
-      }
-    ],
-    "fileCount": 3,
-    "files": [
-      "src\\engine\\modules\\ai\\behaviors.js",
-      "src\\engine\\modules\\ai\\targeting.js",
-      "src\\engine\\modules\\characters\\effects.js"
     ]
   },
   {

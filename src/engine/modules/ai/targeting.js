@@ -263,11 +263,11 @@ export function respondToTaunt(a, b) {
     c = null;
     b.setCombatTarget(null);
   }
-  if (c && c.effects.Gn) {
+  if (c && c.effects.hasStealthEffect) {
     return attackTauntingTarget(a, b), true;
   }
   for (var d = getOpponents(b), f, g = b.position.levelPosition, h, l = null, n = -1, c = /** @type {any} */ (0); c < d.length; c++) {
-    if (f = d[c], b !== f && (h = f.effects, h.Gn && !h.isDisabled && (h = g.squaredDistanceTo(f.position.levelPosition), 0 > n || h < n))) {
+    if (f = d[c], b !== f && (h = f.effects, h.hasStealthEffect && !h.isDisabled && (h = g.squaredDistanceTo(f.position.levelPosition), 0 > n || h < n))) {
       l = f;
       n = h;
     }

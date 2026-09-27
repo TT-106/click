@@ -91,7 +91,7 @@ export function advanceSimulation(a) {
       I.ou();
     } else {
       I.Ks = false;
-      I.gn = null;
+      I.forcedDestinationRoom = null;
       I.Mp = false;
       I.nu();
     }

@@ -18,7 +18,7 @@ export function PartyState() {
   this.zs = this.xs = -1;
   this.targetRoom = this.targetDoor = this.destinationRoom = this.targetTreasureChest = this.targetCastle = this.targetShop = this.activeCastle = this.targetDungeon = null;
   this.Ks = false;
-  this.gn = null;
+  this.forcedDestinationRoom = null;
   this.Mp = false;
   this.Ht = new WorldPathfinder();
   this.hp = false;
@@ -30,9 +30,9 @@ export function forcePartyDestination(a) {
   b.Ks = true;
 }
 export function setPartyDestination(a, b) {
-  a.gn = b;
-  if (a.gn) {
-    a.destinationRoom = a.gn;
+  a.forcedDestinationRoom = b;
+  if (a.forcedDestinationRoom) {
+    a.destinationRoom = a.forcedDestinationRoom;
     a.targetRoom = null;
     a.targetDoor = null;
   }
