@@ -7890,7 +7890,16 @@
     "Am": "experienceToLevelUp",
     "br": "chainLightningSpell",
     "No": "experienceReward",
-    "Fo": "mapSprite"
+    "Fo": "mapSprite",
+    "hn": "partySize1Victories",
+    "jn": "partySize2Victories",
+    "kn": "partySize3Victories",
+    "vn": "singleClassVictories",
+    "mm": "currentContinuationVictories",
+    "Xm": "maxContinuationVictories",
+    "nm": "currentContinueCount",
+    "qo": "classVictories",
+    "lq": "soloClassVictories"
   },
   "gameFields": {
     "B": "tileSize",

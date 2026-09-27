@@ -360,22 +360,22 @@ export function restoreGameState(a, b) {
               Y = Na.classVictories,
               nf = Na.soloClassVictories,
               Nc = Na.currentContinueCount;
-            Ya.hn = tc ? tc : 0;
-            Ya.jn = me ? me : 0;
-            Ya.kn = ne ? ne : 0;
-            Ya.Xm = Le ? Le : 0;
-            Ya.mm = Td ? Td : 0;
-            Ya.vn = oe ? oe : 0;
+            Ya.partySize1Victories = tc ? tc : 0;
+            Ya.partySize2Victories = me ? me : 0;
+            Ya.partySize3Victories = ne ? ne : 0;
+            Ya.maxContinuationVictories = Le ? Le : 0;
+            Ya.currentContinuationVictories = Td ? Td : 0;
+            Ya.singleClassVictories = oe ? oe : 0;
             if (undefined === Nc) {
-              Nc = Ya.mm;
+              Nc = Ya.currentContinuationVictories;
             }
-            Ya.nm = Nc;
+            Ya.currentContinueCount = Nc;
             if (Y) {
               var gd, uc, U;
               for (U = 0; U < adventurerClasses.length; U++) {
                 gd = adventurerClasses[U].characterClass;
                 if (uc = Y[gd]) {
-                  game.state.victoryStatistics.qo[gd] = uc;
+                  game.state.victoryStatistics.classVictories[gd] = uc;
                 }
               }
             }
@@ -384,7 +384,7 @@ export function restoreGameState(a, b) {
               for (ba = 0; ba < adventurerClasses.length; ba++) {
                 Z = adventurerClasses[ba].characterClass;
                 if ($ = nf[Z]) {
-                  game.state.victoryStatistics.lq[Z] = $;
+                  game.state.victoryStatistics.soloClassVictories[Z] = $;
                 }
               }
             }
@@ -915,15 +915,15 @@ export function createSaveState(a) {
       }
     }
     ob = {
-      partySize1Victories: pb.hn,
-      partySize2Victories: pb.jn,
-      partySize3Victories: pb.kn,
-      maxContinuationVictories: pb.Xm,
-      currentContinuationVictories: pb.mm,
-      singleClassVictories: pb.vn,
+      partySize1Victories: pb.partySize1Victories,
+      partySize2Victories: pb.partySize2Victories,
+      partySize3Victories: pb.partySize3Victories,
+      maxContinuationVictories: pb.maxContinuationVictories,
+      currentContinuationVictories: pb.currentContinuationVictories,
+      singleClassVictories: pb.singleClassVictories,
       classVictories: Ib,
       soloClassVictories: jb,
-      currentContinueCount: pb.nm
+      currentContinueCount: pb.currentContinueCount
     };
     var cc = [],
       Qa;

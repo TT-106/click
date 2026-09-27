@@ -58,7 +58,7 @@ export function mountGameOver(a) {
     game.gameWon = false;
     recordGameEvent("Victory", "Decision: Continue");
     game.resetContinuation();
-    game.state.victoryStatistics.nm++;
+    game.state.victoryStatistics.currentContinueCount++;
     placePartyInWorld();
     unlockStartingRegion();
     game.allies.reset();

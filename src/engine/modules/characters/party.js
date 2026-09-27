@@ -276,35 +276,35 @@ export function initializeCharactersParty() {
         b = game.state.adventurers.length;
         if (4 > b) {
           if (1 === b) {
-            a.hn += 1;
+            a.partySize1Victories += 1;
             c = game.state.adventurers[0].characterClass;
-            if (!(d = a.lq[c])) {
+            if (!(d = a.soloClassVictories[c])) {
               d = 0;
             }
-            a.lq[c] = d + 1;
+            a.soloClassVictories[c] = d + 1;
           } else {
             if (2 === b) {
-              a.jn += 1;
+              a.partySize2Victories += 1;
             } else {
               if (3 === b) {
-                a.kn += 1;
+                a.partySize3Victories += 1;
               }
             }
           }
         }
         for (c = 0; c < b; c++) {
           d = game.state.adventurers[c].characterClass;
-          if (!(f = a.qo[d])) {
+          if (!(f = a.classVictories[d])) {
             f = 0;
           }
-          a.qo[d] = f + 1;
+          a.classVictories[d] = f + 1;
         }
-        c = a.nm;
+        c = a.currentContinueCount;
         if (0 < c) {
-          if (c > a.Xm) {
-            a.Xm = c;
+          if (c > a.maxContinuationVictories) {
+            a.maxContinuationVictories = c;
           }
-          a.mm = c;
+          a.currentContinuationVictories = c;
         }
         if (4 <= b) {
           d = true;
@@ -316,7 +316,7 @@ export function initializeCharactersParty() {
             }
           }
           if (d) {
-            a.vn += 1;
+            a.singleClassVictories += 1;
           }
         }
         c = game.state.runStatistics.playedMillis;

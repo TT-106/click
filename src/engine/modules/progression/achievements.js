@@ -49,13 +49,13 @@ export function hasVictoryAchievement(a) {
   var b = game.state.victoryStatistics;
   switch (a.requirementType) {
     case 23:
-      return 1 === a.requiredCount ? 0 < b.hn : 2 === a.requiredCount ? 0 < b.jn : 3 === a.requiredCount ? 0 < b.kn : false;
+      return 1 === a.requiredCount ? 0 < b.partySize1Victories : 2 === a.requiredCount ? 0 < b.partySize2Victories : 3 === a.requiredCount ? 0 < b.partySize3Victories : false;
     case 24:
-      return 0 < b.vn;
+      return 0 < b.singleClassVictories;
     case 25:
       return 0 < getClassVictories(b, a.characterClass);
     case 26:
-      return b.Xm >= a.requiredCount;
+      return b.maxContinuationVictories >= a.requiredCount;
     case 27:
       return 0 < getSoloClassVictories(b, a.characterClass);
     default:

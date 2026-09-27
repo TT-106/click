@@ -7,11 +7,11 @@ export function RunStatistics() {
 }
 export function LifetimeStatistics() {}
 export function getClassVictories(a, b) {
-  var c = a.qo[b];
+  var c = a.classVictories[b];
   return c ? c : 0;
 }
 export function getSoloClassVictories(a, b) {
-  var c = a.lq[b];
+  var c = a.soloClassVictories[b];
   return c ? c : 0;
 }
 export function StatisticsRecorder() {

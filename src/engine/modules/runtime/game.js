@@ -182,10 +182,10 @@ export function initializeRuntimeGame() {
       lifetimeStatistics: new LifetimeStatistics(),
       statisticsRecorder: new StatisticsRecorder(),
       victoryStatistics: new function () {
-        this.vn = this.mm = this.Xm = this.kn = this.jn = this.hn = 0;
-        this.qo = {};
-        this.lq = {};
-        this.nm = 0;
+        this.singleClassVictories = this.currentContinuationVictories = this.maxContinuationVictories = this.partySize3Victories = this.partySize2Victories = this.partySize1Victories = 0;
+        this.classVictories = {};
+        this.soloClassVictories = {};
+        this.currentContinueCount = 0;
       }(),
       victoryCount: 0
     },
@@ -362,15 +362,15 @@ export function initializeRuntimeGame() {
         game.state.lifetimeStatistics = new LifetimeStatistics();
         bindStatistics();
         var b = game.state.victoryStatistics;
-        b.hn = 0;
-        b.jn = 0;
-        b.kn = 0;
-        b.Xm = 0;
-        b.mm = 0;
-        b.vn = 0;
-        b.qo = {};
-        b.lq = {};
-        b.nm = 0;
+        b.partySize1Victories = 0;
+        b.partySize2Victories = 0;
+        b.partySize3Victories = 0;
+        b.maxContinuationVictories = 0;
+        b.currentContinuationVictories = 0;
+        b.singleClassVictories = 0;
+        b.classVictories = {};
+        b.soloClassVictories = {};
+        b.currentContinueCount = 0;
         resetAdventurePoints();
         resetAchievements();
       }
@@ -511,8 +511,8 @@ export function initializeRuntimeGame() {
       saveProgress(game.saves);
     },
     restartRun: function () {
-      game.state.victoryStatistics.nm = 0;
-      game.state.victoryStatistics.mm = 0;
+      game.state.victoryStatistics.currentContinueCount = 0;
+      game.state.victoryStatistics.currentContinuationVictories = 0;
       game.resetRun(false);
       deleteStoredSave();
       saveProgress(game.saves);

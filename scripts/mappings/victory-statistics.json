@@ -1,0 +1,102 @@
+[
+  {
+    "_note": "victoryStatistics 组：命名直接采用 game-save.js 序列化端的 DTO 键（:917-927），反序列化端 :363-388 成对。",
+    "old": "hn",
+    "new": "partySize1Victories",
+    "files": [
+      "src/engine/modules/characters/party.js",
+      "src/engine/modules/persistence/game-save.js",
+      "src/engine/modules/progression/achievements.js",
+      "src/engine/modules/runtime/game.js"
+    ],
+    "expect": "auto"
+  },
+  {
+    "old": "jn",
+    "new": "partySize2Victories",
+    "files": [
+      "src/engine/modules/characters/party.js",
+      "src/engine/modules/persistence/game-save.js",
+      "src/engine/modules/progression/achievements.js",
+      "src/engine/modules/runtime/game.js"
+    ],
+    "expect": "auto"
+  },
+  {
+    "old": "kn",
+    "new": "partySize3Victories",
+    "files": [
+      "src/engine/modules/characters/party.js",
+      "src/engine/modules/persistence/game-save.js",
+      "src/engine/modules/progression/achievements.js",
+      "src/engine/modules/runtime/game.js"
+    ],
+    "expect": "auto"
+  },
+  {
+    "old": "vn",
+    "new": "singleClassVictories",
+    "files": [
+      "src/engine/modules/characters/party.js",
+      "src/engine/modules/persistence/game-save.js",
+      "src/engine/modules/progression/achievements.js",
+      "src/engine/modules/runtime/game.js"
+    ],
+    "expect": "auto"
+  },
+  {
+    "old": "mm",
+    "new": "currentContinuationVictories",
+    "files": [
+      "src/engine/modules/characters/party.js",
+      "src/engine/modules/persistence/game-save.js",
+      "src/engine/modules/runtime/game.js"
+    ],
+    "expect": "auto"
+  },
+  {
+    "old": "Xm",
+    "new": "maxContinuationVictories",
+    "files": [
+      "src/engine/modules/characters/party.js",
+      "src/engine/modules/persistence/game-save.js",
+      "src/engine/modules/progression/achievements.js",
+      "src/engine/modules/runtime/game.js",
+      "src/engine/modules/views/results.js"
+    ],
+    "expect": "auto"
+  },
+  {
+    "old": "nm",
+    "new": "currentContinueCount",
+    "files": [
+      "src/engine/modules/characters/party.js",
+      "src/engine/modules/persistence/game-save.js",
+      "src/engine/modules/runtime/game.js",
+      "src/engine/modules/views/results.js"
+    ],
+    "expect": "auto"
+  },
+  {
+    "old": "qo",
+    "new": "classVictories",
+    "files": [
+      "src/engine/modules/characters/party.js",
+      "src/engine/modules/persistence/game-save.js",
+      "src/engine/modules/progression/statistics.js",
+      "src/engine/modules/runtime/game.js"
+    ],
+    "expect": "auto"
+  },
+  {
+    "old": "lq",
+    "new": "soloClassVictories",
+    "files": [
+      "src/engine/modules/characters/party.js",
+      "src/engine/modules/persistence/game-save.js",
+      "src/engine/modules/progression/statistics.js",
+      "src/engine/modules/runtime/game.js"
+    ],
+    "expect": "auto"
+  }
+]
