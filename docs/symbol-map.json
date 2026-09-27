@@ -8318,7 +8318,14 @@
     "kx": "scrollsById",
     "eq": "scrollTargets",
     "mB": "scrollSpell",
-    "Kw": "restoreMonsterTypes"
+    "Kw": "restoreMonsterTypes",
+    "Mp": "travellingToDisabledAlly",
+    "Ks": "forcedTravelActive",
+    "hp": "destinationOffWorld",
+    "Ht": "worldPathfinder",
+    "zs": "cachedMinLevel",
+    "xs": "cachedMaxLevel",
+    "ht": "shopList"
   },
   "gameFields": {
     "B": "tileSize",
