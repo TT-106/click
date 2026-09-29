@@ -62,9 +62,41 @@
 - **门禁（R25 后对最终工作树逐项回显，`output/goal-r25/f-*.log`）**：lint=0 build=0 typecheck=0 check=0 parity=0 scenarios=0（89/89）e2e=0 soak=0 perf=0 perf:frames=0；`git diff --check`=0。文档可数指标同步：单测 19→**24**、语法文件 136→**137**、类型债台账 **41 `any`**/146 `unknown`（lint 口径实测）。
 - **累计指标**（R22 起）：单字母绑定 2,833 → **1,602**（累计归零 behaviors 264/scene 196/upgrade-details 152/terrain 131/generation 130/actions 116/rooms 116/upgrades 110）；game 直连 49 → **37**；最大 SCC 55 → **41**。下一热点：`views/character.js`（98）、`persistence/entities.js`（94）、`ai/targeting.js`（89）、`views/expedition.js`（84）；解耦候选以 `npm run audit:arch` 实测为准（`persistence/entities.js` 6 处）。
 
+## 2026-09-29 R26（基线复验 + 布局常量解耦 + 指标棘轮 + 改名工具固化）
+
+本轮开局先做**状态复验**而非继续加码：`docs/modernization-status.md` 与 `docs/REMAINING-WORK.md` 描述
+的 R22–R25 成果此前散在 66 个未提交文件里，一旦后续批次覆盖就无从恢复。先在实测全绿后固化为提交
+`0459879`（6 门禁 + 89/89 场景 + e2e + perf 逐项回显退出码 = 0），此后工作树可回退。
+
+- **画面布局常量退出组合根**：`tileSize: 27`/`halfTileSize: 13`/`viewport*` 六个值原先是
+  `runtime/game.js` 单例字面量里的硬编码常量，实测**从未被写过**（全库仅 1 处局部变量重算
+  `game.tileSize / 2 | 0`，非对 game 的赋值），也不在任何外部契约上（`tests/`、`scripts/`、
+  `index.html` 均无读取点），却要求每个用到格子尺寸的模块反向依赖整个组合根。现集中到零依赖的
+  `src/engine/modules/core/screen-layout.js` 作唯一来源，`game` 上的六个字段改为由常量赋值
+  （**对外对象形状不变**）。`world/pathfinding.js` 只用到 `game.tileSize`，因此整条 game 依赖消失：
+  **直连模块 37 → 36**（`npm run audit:arch` 实测），产品边界导入随之减少。证据：
+  `node --check` 全过、`npm run test:parity` = 0（0/1/99/900 回合完整存档逐字节一致）、
+  `SCENARIO_FILTER=party-creation-differential npm run test:scenarios` = 0。
+  剩余 14 个模块共 149 个布局常量读取点仍混用其它 game 成员，属可机械推进的后续批次。
+- **指标棘轮（防回退）**：`scripts/audit-architecture.mjs` 新增第 9 节，与受版本管理的
+  `artifacts/architecture-baseline.json` 对比——总数、`game` 直连模块数、最大强连通分量，
+  外加 **39 个文件各自的单字母绑定数逐项对账**，任何一项变差即退出码 1。
+  这样并行批次不可能悄悄把命名债或依赖加回来（单文件维度是必要的：只比总数会让"消 A 处加 B 处"蒙混过关）。
+  **反向验证**：把基线里 `singleLetterBindings` 与 `views/character.js` 各调小 1，命令立刻
+  退出码 1 并指名 `单字母绑定 views/character.js: 97 -> 98 (+1)`；恢复基线后通过
+  （`output/r26-ratchet-negative.log` / `output/r26-ratchet-restored.log`）。
+- **改名工具固化为受版本管理资产**：R22/R25 的作用域感知改名脚本都留在被忽略的 `output/` 里，
+  每轮重新发明一遍。新增 `scripts/rename-bindings-auto.mjs`：`--report` 按函数键输出单字母绑定
+  工作表（形态、出现次数、行区间、重赋值次数），`--table` 按表落地，内置断言 = 函数键必须命中、
+  旧名绑定必须存在、一名多义拆分的行区间必须**穷尽且不重叠**、写盘前重新解析、
+  行数不变、字符串+数字+正则字面量多重集不变、导出集合不变。口径与审计一致
+  （实测该工具对 `views/character.js` 报 98、对全库报 1,602，与 `audit:arch` 完全相同）。
+  匿名作用域（内联 `new function(){}`、块作用域、对象方法）里的同名绑定彼此独立，
+  报表与表统一用 `名@声明行` 寻址，避免按名查表静默命中最后一个绑定。
+
 ## 尚未完成的主要工作
 
-1. **拆开中心状态与循环依赖**：最新 `npm run audit:arch -- --json` 实测 37 个模块直接导入 `runtime/game.js`，一个强连通分量仍包含 41 个模块；74 个初始化调用仍依赖固定顺序。装备目录、物品生成、角色属性、状态效果、内容参数、冒险点数、特效动画目录与背包已退出该循环，但整个领域图仍需继续拆分。应按领域建立明确输入与组合根，再逐个移动依赖方向，避免只增加转发包装。
+1. **拆开中心状态与循环依赖**：R26 实测 36 个模块直接导入 `runtime/game.js`（`world/pathfinding.js` 已退出），一个强连通分量仍包含 41 个模块；74 个初始化调用仍依赖固定顺序。装备目录、物品生成、角色属性、状态效果、内容参数、冒险点数、特效动画目录与背包已退出该循环，但整个领域图仍需继续拆分。应按领域建立明确输入与组合根，再逐个移动依赖方向，避免只增加转发包装。
 2. **清理恢复期命名与原型装配**：77 个引擎模块中仍有 39 个模块包含合计 1,602 个单字母局部绑定（`ai/behaviors.js`、`views/upgrade-details.js`、`rendering/scene.js`、`world/terrain.js`、`world/generation.js`、`combat/actions.js`、`world/rooms.js`、`progression/upgrades.js` 已于 R22–R25 归零）。优先处理 `views/character.js`（98）、`persistence/entities.js`（94）、`ai/targeting.js`（89）、`views/expedition.js`（84）等热点，并逐项判断哪些是有意义的坐标。大量运行方法仍在 `initialize*()` 内挂到原型上；改装配方式必须保住初始化时序与存档构造行为。
 3. **继续证明功能保真**：U134 的 P-1、P-5、P-6、P-7 维持 PARTIAL。真实多版本存档、未剥离的原版页面、真机帧时间和第二浏览器依赖外部材料；在现有环境内仍可扩展玩法与 UI 的差分覆盖，但不得把模拟数据称为真实样本。
 4. ~~**构建快照的遗留文件**~~ — ✅ **已闭合（本轮）**：`build.mjs` 拷贝后按源清单清理 dist/ 陈旧文件（带拷贝根归属 + 单轮上限双重护栏），38 个 U+F00D 垃圾产物已清除，dist 136 文件与源清单一致，重复构建 0 回写/0 清理。
