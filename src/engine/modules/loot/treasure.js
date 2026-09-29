@@ -50,11 +50,11 @@ export function GoldDropRegistry() {
   this.drops = [];
   this.mediumGoldSprite = this.mediumGoldSprite = this.smallGoldSprite = null;
 }
-export function removeGoldDrop(a) {
+export function removeGoldDrop(goldDrop) {
   var goldDropRegistry = goldDropRegistryRef();
-  a = goldDropRegistry.drops.indexOf(a);
-  if (-1 < a) {
-    goldDropRegistry.drops.splice(a, 1);
+  var dropIndex = goldDropRegistry.drops.indexOf(goldDrop);
+  if (-1 < dropIndex) {
+    goldDropRegistry.drops.splice(dropIndex, 1);
   }
 }
 export function TreasureChest(levelX, levelY, room, definition, isWestWall) {
@@ -81,12 +81,12 @@ export function TreasureRegistry() {
   this.targetDefinitions = [];
   this.spawnPointScratch = new Vector2();
 }
-export function spawnRoomTreasure(a) {
+export function spawnRoomTreasure(room) {
   var treasureRegistry = treasureRegistryRef();
     var hasMonsters = 0 < getMonsters().length;
-  if (!getRoomTreasure(treasureRegistry, a)) {
-    if (3 != a.encounterType) {
-      if (!hasMonsters && 2 > a.doorList.length) {
+  if (!getRoomTreasure(treasureRegistry, room)) {
+    if (3 != room.encounterType) {
+      if (!hasMonsters && 2 > room.doorList.length) {
         return;
       }
       var treasureSpawnChance = globalUpgradeDefinitions.treasureChance.currentValue / 100;
@@ -96,29 +96,29 @@ export function spawnRoomTreasure(a) {
     }
     var chestDefinition = treasureRegistry.targetDefinitions[randomInt(treasureRegistry.targetDefinitions.length)],
       isWestWall = 0.5 > Math.random(),
-      f,
+      hasWallPoint,
       wallPoint;
-    f = false;
-    for (var attemptCount = 0; !f && 10 > attemptCount;) {
-      wallPoint = isWestWall ? treasureRegistry.pickWestWallPoint(a) : treasureRegistry.pickNorthWallPoint(a);
-      if (!(f = canPlaceRoomObject(a, wallPoint))) {
+    hasWallPoint = false;
+    for (var attemptCount = 0; !hasWallPoint && 10 > attemptCount;) {
+      wallPoint = isWestWall ? treasureRegistry.pickWestWallPoint(room) : treasureRegistry.pickNorthWallPoint(room);
+      if (!(hasWallPoint = canPlaceRoomObject(room, wallPoint))) {
         wallPoint = null;
       }
       attemptCount++;
     }
-    if (f = wallPoint) {
-      var chestLevelX = f.x * TILE_SIZE;
-      f = f.y * TILE_SIZE;
+    if (wallPoint) {
+      var chestLevelX = wallPoint.x * TILE_SIZE;
+      var chestLevelY = wallPoint.y * TILE_SIZE;
       if (!chestDefinition.flushPlacement) {
         if (isWestWall) {
           chestLevelX += TILE_SIZE;
         } else {
-          f += TILE_SIZE;
+          chestLevelY += TILE_SIZE;
         }
       }
-      a = new TreasureChest(chestLevelX, f, a, chestDefinition, isWestWall);
-      treasureRegistry.targets.push(a);
-      treasureRegistry.targetByRoomId[a.room.roomId] = a;
+      var chest = new TreasureChest(chestLevelX, chestLevelY, room, chestDefinition, isWestWall);
+      treasureRegistry.targets.push(chest);
+      treasureRegistry.targetByRoomId[chest.room.roomId] = chest;
     } else {
       console.log("failed to find treasure chest location.");
     }
@@ -147,16 +147,16 @@ export function initializeLootTreasure() {
       this.drops[dropIndex].setClaimDistance(0);
     }
   };
-  TreasureRegistry.prototype.pickNorthWallPoint = function (a) {
-    var roomTileRow = a.tileRow;
-    a = a.tileColumn + randomInt(a.widthInTiles);
-    setVector(this.spawnPointScratch, a, roomTileRow - 1);
+  TreasureRegistry.prototype.pickNorthWallPoint = function (room) {
+    var roomTileRow = room.tileRow;
+    var tileColumn = room.tileColumn + randomInt(room.widthInTiles);
+    setVector(this.spawnPointScratch, tileColumn, roomTileRow - 1);
     return this.spawnPointScratch;
   };
-  TreasureRegistry.prototype.pickWestWallPoint = function (a) {
-    var roomTileColumn = a.tileColumn;
-    a = a.tileRow + randomInt(a.heightInTiles);
-    setVector(this.spawnPointScratch, roomTileColumn - 1, a);
+  TreasureRegistry.prototype.pickWestWallPoint = function (room) {
+    var roomTileColumn = room.tileColumn;
+    var tileRow = room.tileRow + randomInt(room.heightInTiles);
+    setVector(this.spawnPointScratch, roomTileColumn - 1, tileRow);
     return this.spawnPointScratch;
   };
 }

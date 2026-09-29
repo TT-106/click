@@ -7,13 +7,83 @@ import { SKILL_UPGRADE_TYPE } from "../progression/upgrades.js";
 import { floorNumber, formatAmount, formatGroupedAmount, randomInt, scaleByLevel } from "../core/math.js";
 import { healthCurve, monsterAttackCurve, monsterDefenceCurve, monsterDamageCurve, monsterArmorCurve, spiritCurve } from "../content/balance.js";
 import { getHighlightedItemName, getItemRarityLabel, getItemStatLabel } from "../loot/items.js";
-import { game } from "../runtime/game.js";
 import { minionsBySpell } from "../content/minions.js";
 import { getMonsterTypesForLevel } from "../combat/encounters.js";
 import { getPartyMinLevel } from "../characters/party.js";
 import { statValue } from "../characters/stats.js";
 /** @typedef {{ createDomElements: () => void }} DomDetails */
 /** @typedef {{ reset: () => void, render: () => void, attachUpgrade: (upgrade: unknown) => void }} ActiveUpgradeButton */
+/** 升级详情视图所需的八个依赖由组合根注入。state / terrainSprites / monsterSprites / monsterCatalog /
+ *  shops / dungeons / castles / animations 八个容器对象都在 runtime 的 game 模块对象字面量里只构造一次、
+ *  从不整体重新赋值（src/ 内 0 处 `game.X =`，判据见 docs/reverse-engineering/facts.md），所以按引用绑安全；
+ *  字段值（adventurers、collectedGold、pendingFarmKills、castleSpriteName 等）随游戏进程变化，读的始终是同一对象。
+ *  未绑定就用到会立刻抛，避免"装配漏一步"退化成静默的 undefined 读取。 */
+var boundState = null;
+var boundTerrainSprites = null;
+var boundMonsterSprites = null;
+var boundMonsterCatalog = null;
+var boundShops = null;
+var boundDungeons = null;
+var boundCastles = null;
+var boundAnimations = null;
+export function bindUpgradeDetailViews(state, terrainSprites, monsterSprites, monsterCatalog, shops, dungeons, castles, animations) {
+  boundState = state;
+  boundTerrainSprites = terrainSprites;
+  boundMonsterSprites = monsterSprites;
+  boundMonsterCatalog = monsterCatalog;
+  boundShops = shops;
+  boundDungeons = dungeons;
+  boundCastles = castles;
+  boundAnimations = animations;
+}
+function stateRef() {
+  if (!boundState) {
+    throw new Error('升级详情视图尚未绑定游戏状态：请在组合根调用 bindUpgradeDetailViews(game.state, game.terrainSprites, game.monsterSprites, game.monsterCatalog, game.shops, game.dungeons, game.castles, game.animations)');
+  }
+  return boundState;
+}
+function terrainSpritesRef() {
+  if (!boundTerrainSprites) {
+    throw new Error('升级详情视图尚未绑定地形精灵表：请在组合根调用 bindUpgradeDetailViews(game.state, game.terrainSprites, game.monsterSprites, game.monsterCatalog, game.shops, game.dungeons, game.castles, game.animations)');
+  }
+  return boundTerrainSprites;
+}
+function monsterSpritesRef() {
+  if (!boundMonsterSprites) {
+    throw new Error('升级详情视图尚未绑定怪物精灵表：请在组合根调用 bindUpgradeDetailViews(game.state, game.terrainSprites, game.monsterSprites, game.monsterCatalog, game.shops, game.dungeons, game.castles, game.animations)');
+  }
+  return boundMonsterSprites;
+}
+function monsterCatalogRef() {
+  if (!boundMonsterCatalog) {
+    throw new Error('升级详情视图尚未绑定怪物目录：请在组合根调用 bindUpgradeDetailViews(game.state, game.terrainSprites, game.monsterSprites, game.monsterCatalog, game.shops, game.dungeons, game.castles, game.animations)');
+  }
+  return boundMonsterCatalog;
+}
+function shopsRef() {
+  if (!boundShops) {
+    throw new Error('升级详情视图尚未绑定商店注册表：请在组合根调用 bindUpgradeDetailViews(game.state, game.terrainSprites, game.monsterSprites, game.monsterCatalog, game.shops, game.dungeons, game.castles, game.animations)');
+  }
+  return boundShops;
+}
+function dungeonsRef() {
+  if (!boundDungeons) {
+    throw new Error('升级详情视图尚未绑定地牢注册表：请在组合根调用 bindUpgradeDetailViews(game.state, game.terrainSprites, game.monsterSprites, game.monsterCatalog, game.shops, game.dungeons, game.castles, game.animations)');
+  }
+  return boundDungeons;
+}
+function castlesRef() {
+  if (!boundCastles) {
+    throw new Error('升级详情视图尚未绑定城堡管理器：请在组合根调用 bindUpgradeDetailViews(game.state, game.terrainSprites, game.monsterSprites, game.monsterCatalog, game.shops, game.dungeons, game.castles, game.animations)');
+  }
+  return boundCastles;
+}
+function animationsRef() {
+  if (!boundAnimations) {
+    throw new Error('升级详情视图尚未绑定动画目录：请在组合根调用 bindUpgradeDetailViews(game.state, game.terrainSprites, game.monsterSprites, game.monsterCatalog, game.shops, game.dungeons, game.castles, game.animations)');
+  }
+  return boundAnimations;
+}
 export function UpgradeButtonView(baseElementId, upgrade, buttonIndex, alwaysVisible) {
   this.elementId = baseElementId + "_" + buttonIndex;
   this.visible = true;
@@ -567,7 +637,7 @@ export function initializeViewsUpgradeDetails() {
     this.previewImage.src = "images/Transparent.gif";
     this.previewImage.style.width = "50px";
     this.previewImage.style.height = "50px";
-    var castleSprite = game.terrainSprites.getSprite(game.castles.castleSpriteName);
+    var castleSprite = terrainSpritesRef().getSprite(castlesRef().castleSpriteName);
     this.previewImage.style.background = "url('spritesheet/terrain.png') -" + castleSprite.sourceX + "px -" + castleSprite.sourceY + "px";
     var titleCell = titleRow.insertCell(1);
     titleCell.style.textAlign = "left";
@@ -706,14 +776,14 @@ export function initializeViewsUpgradeDetails() {
       var spellCategoryId = spell.spellCategoryId;
       if (10 === spellCategoryId || 9 === spellCategoryId || 17 === spellCategoryId || 11 === spellCategoryId) {
         var minionSpriteName = minionsBySpell[spell.name].spriteName;
-        this.assetSource = game.monsterSprites;
-        this.asset = game.monsterSprites.getSprite(minionSpriteName);
+        this.assetSource = monsterSpritesRef();
+        this.asset = monsterSpritesRef().getSprite(minionSpriteName);
         this.isAnimated = false;
         this.spellImage.style.background = "url('spritesheet/monsters.png') -" + (this.asset.sourceX + 10) + "px -" + (this.asset.sourceY + 12) + "px";
       } else {
         var effectName = spell.impactEffectName;
-        this.assetSource = game.animations.animationMap[effectName];
-        this.asset = game.animations.getAnimation(effectName);
+        this.assetSource = animationsRef().animationMap[effectName];
+        this.asset = animationsRef().getAnimation(effectName);
         this.frameAge = this.frameIndex = 0;
         this.isAnimated = true;
       }
@@ -867,7 +937,7 @@ export function initializeViewsUpgradeDetails() {
       this.costElement.innerHTML = formatAmount(cost);
     }
     if (this.selectedDungeon !== dungeon && (this.selectedDungeon = dungeon)) {
-      var mapSprite = game.terrainSprites.getSprite(dungeon.mapSprite);
+      var mapSprite = terrainSpritesRef().getSprite(dungeon.mapSprite);
       this.previewImageElement.style.background = "url('spritesheet/terrain.png') -" + mapSprite.sourceX + "px -" + mapSprite.sourceY + "px";
       this.labelCell.innerHTML = dungeon.dungeonName;
     }
@@ -1004,7 +1074,7 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   CastlePurchaseDetails.prototype.update = function () {
-    var pendingFarmKills = game.dungeons.pendingFarmKills;
+    var pendingFarmKills = dungeonsRef().pendingFarmKills;
     if (this.cachedRequiredLevel !== pendingFarmKills) {
       this.cachedRequiredLevel = pendingFarmKills;
       this.bonusLabel.innerHTML = "+" + formatAmount(pendingFarmKills);
@@ -1024,7 +1094,7 @@ export function initializeViewsUpgradeDetails() {
     this.previewImageElement.src = "images/Transparent.gif";
     this.previewImageElement.style.width = "50px";
     this.previewImageElement.style.height = "50px";
-    var dungeonSprite = game.terrainSprites.getSprite("L2_DungeonE.PNG");
+    var dungeonSprite = terrainSpritesRef().getSprite("L2_DungeonE.PNG");
     this.previewImageElement.style.background = "url('spritesheet/terrain.png') -" + dungeonSprite.sourceX + "px -" + dungeonSprite.sourceY + "px";
     var titleCell = headerRow.insertCell(1);
     titleCell.style.textAlign = "left";
@@ -1068,7 +1138,7 @@ export function initializeViewsUpgradeDetails() {
     }
   };
   FarmUpgradeDetails.prototype.update = function () {
-    var collectedGold = game.shops.collectedGold;
+    var collectedGold = shopsRef().collectedGold;
     if (this.cachedBonus !== collectedGold) {
       this.cachedBonus = collectedGold;
       this.bonusLabel.innerHTML = "+" + formatAmount(collectedGold);
@@ -1088,7 +1158,7 @@ export function initializeViewsUpgradeDetails() {
     this.previewImageElement.src = "images/Transparent.gif";
     this.previewImageElement.style.width = "50px";
     this.previewImageElement.style.height = "50px";
-    var farmSprite = game.terrainSprites.getSprite("L2_Terrain077.PNG");
+    var farmSprite = terrainSpritesRef().getSprite("L2_Terrain077.PNG");
     this.previewImageElement.style.background = "url('spritesheet/terrain.png') -" + farmSprite.sourceX + "px -" + farmSprite.sourceY + "px";
     var titleCell = headerRow.insertCell(1);
     titleCell.style.textAlign = "left";
@@ -1161,7 +1231,7 @@ export function initializeViewsUpgradeDetails() {
       this.monsterArmorLabel.innerHTML = formatAmount(this.monsterSpirit) + " 护甲";
       this.monsterAttackLabel.innerHTML = formatAmount(this.monsterAttack) + " 攻击";
       this.monsterDefenceLabel.innerHTML = formatAmount(this.monsterDefence) + " 防御";
-      var monsterTypes = getMonsterTypesForLevel(game.monsterCatalog, monsterLevel);
+      var monsterTypes = getMonsterTypesForLevel(monsterCatalogRef(), monsterLevel);
       var monsterSprite = monsterTypes[randomInt(monsterTypes.length)].sprite;
       this.monsterPreviewImage.style.background = "url('spritesheet/monsters.png') -" + (monsterSprite.sourceX + 10) + "px -" + (monsterSprite.sourceY + 12) + "px";
     }
@@ -1172,17 +1242,17 @@ export function initializeViewsUpgradeDetails() {
       partyMinLevel = getPartyMinLevel(),
       requiredMonsterLevel = this.upgrade.getMonsterLevel(),
       adventurerStats;
-    for (var adventurerIndex = 0; adventurerIndex < game.state.adventurers.length; adventurerIndex++) {
-      adventurerStats = game.state.adventurers[adventurerIndex].stats;
+    for (var adventurerIndex = 0; adventurerIndex < stateRef().adventurers.length; adventurerIndex++) {
+      adventurerStats = stateRef().adventurers[adventurerIndex].stats;
       totalDamage += statValue(adventurerStats.damage);
       totalArmor += statValue(adventurerStats.armor);
       totalAttackRating += statValue(adventurerStats.attackRating);
       totalDefenceRating += statValue(adventurerStats.defenceRating);
     }
-    var averageDamage = floorNumber(totalDamage / game.state.adventurers.length);
-    var averageArmor = floorNumber(totalArmor / game.state.adventurers.length);
-    var averageAttackRating = floorNumber(totalAttackRating / game.state.adventurers.length);
-    var averageDefenceRating = floorNumber(totalDefenceRating / game.state.adventurers.length);
+    var averageDamage = floorNumber(totalDamage / stateRef().adventurers.length);
+    var averageArmor = floorNumber(totalArmor / stateRef().adventurers.length);
+    var averageAttackRating = floorNumber(totalAttackRating / stateRef().adventurers.length);
+    var averageDefenceRating = floorNumber(totalDefenceRating / stateRef().adventurers.length);
     if (this.cachedPartyDamage !== averageDamage) {
       this.monsterArmorLabel.style.color = this.monsterSpirit >= averageDamage ? "#F00" : "#0A0";
       this.cachedPartyDamage = averageDamage;

@@ -54,12 +54,19 @@ export function findNearestOpponent(character) {
     opponentIndex,
     characterLevelPosition = character.position.levelPosition,
     nearestOpponent = null,
-    l,
+    effects,
     bestDistanceSquared = -1;
   for (opponentIndex = 0; opponentIndex < opponents.length; opponentIndex++) {
-    if (!(candidate = opponents[opponentIndex], character === candidate || candidate.isDead || candidate.position.room != searchRoom || (l = candidate.effects, l.isStealthed || candidate.characterType === ADVENTURER_TYPE && l.isDisabled || (l = characterLevelPosition.squaredDistanceTo(candidate.position.levelPosition), !(0 > bestDistanceSquared || l < bestDistanceSquared))))) {
-      nearestOpponent = candidate;
-      bestDistanceSquared = l;
+    candidate = opponents[opponentIndex];
+    if (!(character === candidate || candidate.isDead || candidate.position.room != searchRoom)) {
+      effects = candidate.effects;
+      if (!(effects.isStealthed || candidate.characterType === ADVENTURER_TYPE && effects.isDisabled)) {
+        var distanceSquared = characterLevelPosition.squaredDistanceTo(candidate.position.levelPosition);
+        if (0 > bestDistanceSquared || distanceSquared < bestDistanceSquared) {
+          nearestOpponent = candidate;
+          bestDistanceSquared = distanceSquared;
+        }
+      }
     }
   }
   return nearestOpponent;
@@ -77,12 +84,19 @@ export function findNearestVisibleOpponent(character) {
     opponentIndex,
     characterLevelPosition = character.position.levelPosition,
     nearestOpponent = null,
-    l,
+    effects,
     bestDistanceSquared = -1;
   for (opponentIndex = 0; opponentIndex < opponents.length; opponentIndex++) {
-    if (!(candidate = opponents[opponentIndex], character === candidate || candidate.isDead || candidate.position.room != searchRoom || (l = candidate.effects, l.isStealthed || l.isDisabled || l.isConverted || (l = characterLevelPosition.squaredDistanceTo(candidate.position.levelPosition), !(0 > bestDistanceSquared || l < bestDistanceSquared))))) {
-      nearestOpponent = candidate;
-      bestDistanceSquared = l;
+    candidate = opponents[opponentIndex];
+    if (!(character === candidate || candidate.isDead || candidate.position.room != searchRoom)) {
+      effects = candidate.effects;
+      if (!(effects.isStealthed || effects.isDisabled || effects.isConverted)) {
+        var distanceSquared = characterLevelPosition.squaredDistanceTo(candidate.position.levelPosition);
+        if (0 > bestDistanceSquared || distanceSquared < bestDistanceSquared) {
+          nearestOpponent = candidate;
+          bestDistanceSquared = distanceSquared;
+        }
+      }
     }
   }
   return nearestOpponent;
@@ -103,12 +117,19 @@ export function findChainTarget(sourceCharacter) {
         candidateIndex,
         sourcePosition = sourceCharacter.position.levelPosition,
         nearestTarget = null,
-        l,
+        effects,
         bestDistanceSquared = -1;
       for (candidateIndex = 0; candidateIndex < friendlyTargets.length; candidateIndex++) {
-        if (!(candidate = friendlyTargets[candidateIndex], sourceCharacter === candidate || candidate.isDead || candidate.position.room != searchRoom || (l = candidate.effects, l.isStealthed || l.isDisabled || l.isConverted || (l = sourcePosition.squaredDistanceTo(candidate.position.levelPosition), !(0 > bestDistanceSquared || l < bestDistanceSquared))))) {
-          nearestTarget = candidate;
-          bestDistanceSquared = l;
+        candidate = friendlyTargets[candidateIndex];
+        if (!(sourceCharacter === candidate || candidate.isDead || candidate.position.room != searchRoom)) {
+          effects = candidate.effects;
+          if (!(effects.isStealthed || effects.isDisabled || effects.isConverted)) {
+            var distanceSquared = sourcePosition.squaredDistanceTo(candidate.position.levelPosition);
+            if (0 > bestDistanceSquared || distanceSquared < bestDistanceSquared) {
+              nearestTarget = candidate;
+              bestDistanceSquared = distanceSquared;
+            }
+          }
         }
       }
       var chainTarget = nearestTarget;
@@ -159,18 +180,19 @@ export function findRouteToDoor(character, targetDoor) {
   if (!targetDoor) {
     return null;
   }
-  var d = character.position.room,
+  var currentRoom = character.position.room,
     visitedDoors = [];
-  if (d) {
-    var doorSource = d.doorList,
+  if (currentRoom) {
+    var doorSource = currentRoom.doorList,
       doorIndex;
     for (doorIndex = 0; doorIndex < doorSource.length; doorIndex++) {
-      if (d = searchDoorRoute(pathfinder, targetDoor, doorSource[doorIndex], visitedDoors, true)) {
-        return d;
+      var doorRoute = searchDoorRoute(pathfinder, targetDoor, doorSource[doorIndex], visitedDoors, true);
+      if (doorRoute) {
+        return doorRoute;
       }
     }
-  } else if (doorSource = character.position.currentHallway, (d = searchDoorRoute(pathfinder, targetDoor, doorSource.doorA, visitedDoors, false)) || (d = searchDoorRoute(pathfinder, targetDoor, doorSource.doorB, visitedDoors, false))) {
-    return d;
+  } else if (doorSource = character.position.currentHallway, (doorRoute = searchDoorRoute(pathfinder, targetDoor, doorSource.doorA, visitedDoors, false)) || (doorRoute = searchDoorRoute(pathfinder, targetDoor, doorSource.doorB, visitedDoors, false))) {
+    return doorRoute;
   }
   return null;
 }
@@ -179,28 +201,31 @@ export function findRouteToRoom(character, targetRoom) {
   if (!targetRoom) {
     return null;
   }
-  var d = character.position.room,
+  var currentRoom = character.position.room,
     visitedDoors = [];
-  if (d === targetRoom) {
+  if (currentRoom === targetRoom) {
     return null;
   }
-  if (d) {
-    var doorSource = d.doorList,
+  if (currentRoom) {
+    var doorSource = currentRoom.doorList,
       doorIndex;
     for (doorIndex = 0; doorIndex < doorSource.length; doorIndex++) {
-      if (d = searchRoomRoute(pathfinder, targetRoom, doorSource[doorIndex], visitedDoors, true)) {
-        return d;
+      var roomRoute = searchRoomRoute(pathfinder, targetRoom, doorSource[doorIndex], visitedDoors, true);
+      if (roomRoute) {
+        return roomRoute;
       }
     }
-  } else if (doorSource = character.position.currentHallway, (d = searchRoomRoute(pathfinder, targetRoom, doorSource.doorA, visitedDoors, false)) || (d = searchRoomRoute(pathfinder, targetRoom, doorSource.doorB, visitedDoors, false))) {
-    return d;
+  } else if (doorSource = character.position.currentHallway, (roomRoute = searchRoomRoute(pathfinder, targetRoom, doorSource.doorA, visitedDoors, false)) || (roomRoute = searchRoomRoute(pathfinder, targetRoom, doorSource.doorB, visitedDoors, false))) {
+    return roomRoute;
   }
   return null;
 }
-export function searchDoorRoute(pathfinder, targetDoor, currentDoor, visitedDoors, f) {
-  var g;
+export function searchDoorRoute(pathfinder, targetDoor, currentDoor, visitedDoors, enteredFromRoom) {
+  var doorRoute;
   if (currentDoor === targetDoor) {
-    return g = [], g.push(currentDoor), g;
+    doorRoute = [];
+    doorRoute.push(currentDoor);
+    return doorRoute;
   }
   if (!currentDoor.isOpen) {
     return null;
@@ -209,28 +234,36 @@ export function searchDoorRoute(pathfinder, targetDoor, currentDoor, visitedDoor
     return console.log("reached a door that we already checked."), null;
   }
   visitedDoors.push(currentDoor);
-  if (f) {
-    if (f = getOppositeDoor(currentDoor.hallway, currentDoor), g = searchDoorRoute(pathfinder, targetDoor, f, visitedDoors, false)) {
-      return g.unshift(currentDoor), g;
+  if (enteredFromRoom) {
+    var oppositeDoor = getOppositeDoor(currentDoor.hallway, currentDoor);
+    doorRoute = searchDoorRoute(pathfinder, targetDoor, oppositeDoor, visitedDoors, false);
+    if (doorRoute) {
+      return doorRoute.unshift(currentDoor), doorRoute;
     }
   } else {
     var leadsToRoom = currentDoor.leadsTo;
-    f = leadsToRoom.doorList;
+    var roomDoorList = leadsToRoom.doorList;
     if (!leadsToRoom.discovered) {
       return null;
     }
-    for (var doorIndex = 0; doorIndex < f.length; doorIndex++) {
-      if (g = f[doorIndex], g !== currentDoor && (g = searchDoorRoute(pathfinder, targetDoor, g, visitedDoors, true))) {
-        return g.unshift(currentDoor), g;
+    for (var doorIndex = 0; doorIndex < roomDoorList.length; doorIndex++) {
+      var candidateDoor = roomDoorList[doorIndex];
+      if (candidateDoor !== currentDoor) {
+        doorRoute = searchDoorRoute(pathfinder, targetDoor, candidateDoor, visitedDoors, true);
+        if (doorRoute) {
+          return doorRoute.unshift(currentDoor), doorRoute;
+        }
       }
     }
   }
   return null;
 }
-export function searchRoomRoute(pathfinder, targetRoom, currentDoor, visitedDoors, f) {
-  var g;
+export function searchRoomRoute(pathfinder, targetRoom, currentDoor, visitedDoors, enteredFromRoom) {
+  var roomRoute;
   if (currentDoor.leadsTo === targetRoom) {
-    return g = [], g.push(currentDoor), g;
+    roomRoute = [];
+    roomRoute.push(currentDoor);
+    return roomRoute;
   }
   if (!currentDoor.isOpen) {
     return null;
@@ -239,19 +272,25 @@ export function searchRoomRoute(pathfinder, targetRoom, currentDoor, visitedDoor
     return console.log("reached a door that we already checked [path to room]."), null;
   }
   visitedDoors.push(currentDoor);
-  if (f) {
-    if (f = getOppositeDoor(currentDoor.hallway, currentDoor), g = searchRoomRoute(pathfinder, targetRoom, f, visitedDoors, false)) {
-      return g.unshift(currentDoor), g;
+  if (enteredFromRoom) {
+    var oppositeDoor = getOppositeDoor(currentDoor.hallway, currentDoor);
+    roomRoute = searchRoomRoute(pathfinder, targetRoom, oppositeDoor, visitedDoors, false);
+    if (roomRoute) {
+      return roomRoute.unshift(currentDoor), roomRoute;
     }
   } else {
     var leadsToRoom = currentDoor.leadsTo;
-    f = leadsToRoom.doorList;
+    var roomDoorList = leadsToRoom.doorList;
     if (!leadsToRoom.discovered) {
       return null;
     }
-    for (var doorIndex = 0; doorIndex < f.length; doorIndex++) {
-      if (g = f[doorIndex], g !== currentDoor && (g = searchRoomRoute(pathfinder, targetRoom, g, visitedDoors, true))) {
-        return g.unshift(currentDoor), g;
+    for (var doorIndex = 0; doorIndex < roomDoorList.length; doorIndex++) {
+      var candidateDoor = roomDoorList[doorIndex];
+      if (candidateDoor !== currentDoor) {
+        roomRoute = searchRoomRoute(pathfinder, targetRoom, candidateDoor, visitedDoors, true);
+        if (roomRoute) {
+          return roomRoute.unshift(currentDoor), roomRoute;
+        }
       }
     }
   }
@@ -265,29 +304,37 @@ export function respondToTaunt(attackBehavior, character) {
   if (docileMonstersModifier.currentValue) {
     return false;
   }
-  var c = character.combatTarget;
-  if (c && c.isDead) {
-    c = null;
+  var combatTarget = character.combatTarget;
+  if (combatTarget && combatTarget.isDead) {
+    combatTarget = null;
     character.setCombatTarget(null);
   }
-  if (c && c.effects.isStunned) {
-    c = null;
+  if (combatTarget && combatTarget.effects.isStunned) {
+    combatTarget = null;
     character.setCombatTarget(null);
   }
-  if (c && c.effects.isStealthed) {
-    c = null;
+  if (combatTarget && combatTarget.effects.isStealthed) {
+    combatTarget = null;
     character.setCombatTarget(null);
   }
-  if (c && c.effects.hasStealthEffect) {
+  if (combatTarget && combatTarget.effects.hasStealthEffect) {
     return attackTauntingTarget(attackBehavior, character), true;
   }
-  for (var opponents = getOpponents(character), candidate, characterLevelPosition = character.position.levelPosition, h, nearestTauntingOpponent = null, bestDistanceSquared = -1, c = /** @type {any} */ (0); c < opponents.length; c++) {
-    if (candidate = opponents[c], character !== candidate && (h = candidate.effects, h.hasStealthEffect && !h.isDisabled && (h = characterLevelPosition.squaredDistanceTo(candidate.position.levelPosition), 0 > bestDistanceSquared || h < bestDistanceSquared))) {
-      nearestTauntingOpponent = candidate;
-      bestDistanceSquared = h;
+  for (var opponents = getOpponents(character), candidate, characterLevelPosition = character.position.levelPosition, effects, nearestTauntingOpponent = null, bestDistanceSquared = -1, opponentIndex = /** @type {any} */ (0); opponentIndex < opponents.length; opponentIndex++) {
+    candidate = opponents[opponentIndex];
+    if (character !== candidate) {
+      effects = candidate.effects;
+      if (effects.hasStealthEffect && !effects.isDisabled) {
+        var distanceSquared = characterLevelPosition.squaredDistanceTo(candidate.position.levelPosition);
+        if (0 > bestDistanceSquared || distanceSquared < bestDistanceSquared) {
+          nearestTauntingOpponent = candidate;
+          bestDistanceSquared = distanceSquared;
+        }
+      }
     }
   }
-  return (c = nearestTauntingOpponent) || (c = findNearbyOpponent(character)) ? (character.setCombatTarget(c), attackTauntingTarget(attackBehavior, character), true) : false;
+  var tauntTarget = nearestTauntingOpponent || findNearbyOpponent(character);
+  return tauntTarget ? (character.setCombatTarget(tauntTarget), attackTauntingTarget(attackBehavior, character), true) : false;
 }
 export function attackTauntingTarget(attackBehavior, character) {
   var targetPosition = character.combatTarget.position,

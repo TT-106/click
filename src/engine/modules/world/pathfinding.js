@@ -15,13 +15,13 @@ export function PathfindingGrid(widthInTiles, heightInTiles, tileGrid) {
 }
 export function getPathNode(grid, tile) {
   var tileKey = "" + (tile.getTileColumn() * grid.heightInTiles + tile.getTileRow()),
-    d = grid.usedTiles.indexOf(tileKey);
-  if (-1 < d) {
-    d = grid.usedNodes[d];
+    tileIndex = grid.usedTiles.indexOf(tileKey);
+  if (-1 < tileIndex) {
+    var node = grid.usedNodes[tileIndex];
   } else {
-    d = grid.nodePool;
-    if (0 < d.pooledNodes.length) {
-      var pooledNode = d = d.pooledNodes.shift();
+    var nodePool = grid.nodePool;
+    if (0 < nodePool.pooledNodes.length) {
+      var pooledNode = node = nodePool.pooledNodes.shift();
       pooledNode.grid = grid;
       pooledNode.tile = tile;
       pooledNode.costSoFar = 0;
@@ -32,12 +32,12 @@ export function getPathNode(grid, tile) {
       setVector(pooledNode.position, tile.getTileColumn(), tile.getTileRow());
       pooledNode.neighbors.length = 0;
     } else {
-      d = new PathNode(grid, tile);
+      node = new PathNode(grid, tile);
     }
-    grid.usedNodes.push(d);
+    grid.usedNodes.push(node);
     grid.usedTiles.push(tileKey);
   }
-  return d;
+  return node;
 }
 export function isHallwayWalkable(grid, tileColumn, tileRow, fromTileIsDoorway, directionId) {
   return 0 > tileColumn - 1 || 0 > tileRow - 1 || tileColumn + 1 >= grid.widthInTiles || tileRow + 1 >= grid.heightInTiles ? false : roomContainsTile(grid.fromRoom, tileColumn, tileRow) ? !isNearRoomCorner(tileColumn, tileRow, grid.fromRoom) : roomContainsTile(grid.toRoom, tileColumn, tileRow) ? !isNearRoomCorner(tileColumn, tileRow, grid.toRoom) : isRoomBorder(grid.fromRoom, tileColumn, tileRow) || isRoomBorder(grid.toRoom, tileColumn, tileRow) ? !fromTileIsDoorway : 0 === directionId || 2 === directionId ? grid.tileGrid[tileColumn - 1][tileRow].floorType === EMPTY_TILE && grid.tileGrid[tileColumn + 1][tileRow].floorType === EMPTY_TILE : grid.tileGrid[tileColumn][tileRow - 1].floorType === EMPTY_TILE && grid.tileGrid[tileColumn][tileRow + 1].floorType === EMPTY_TILE;
@@ -86,78 +86,85 @@ export function findHallwayPath(pathfinder, fromRoom, toRoom) {
   grid.toRoom = toRoom;
   a: {
     var startNode = getPathNode(pathfinder.grid, fromCenterTile),
-      f = getPathNode(pathfinder.grid, toCenterTile),
-      h,
-      l,
-      n,
-      p,
+      goalNode = getPathNode(pathfinder.grid, toCenterTile),
+      expandedNode,
+      nodeGrid,
+      nodeTile,
+      neighborList,
       nodeTileColumn,
-      d = /** @type {any} */ (0);
+      foundPath,
+      alreadyVisited,
+      candidateCost,
+      grandparentNode,
+      searchStep = /** @type {any} */ (0);
     pathfinder.open.nodes.length = 0;
     pathfinder.open.push(startNode);
     for (startNode.visited = true; 0 < pathfinder.open.nodes.length;) {
-      d++;
-      if (500 < d) {
+      searchStep++;
+      if (500 < searchStep) {
         console.log("path finding failure. too many iterations");
-        f = null;
+        foundPath = null;
         break a;
       }
       var currentNode = pathfinder.open.pop();
-      if (currentNode.tile === f.tile) {
-        f = reconstructPath(currentNode);
+      if (currentNode.tile === goalNode.tile) {
+        foundPath = reconstructPath(currentNode);
         break a;
       }
       currentNode.closed = true;
-      h = currentNode;
-      if (0 === h.neighbors.length) {
-        l = h.grid;
-        n = h.tile;
-        p = h.neighbors;
-        nodeTileColumn = n.getTileColumn();
-        n = n.getTileRow();
-        var nodeTileIsDoorway = !(roomContainsTile(l.fromRoom, nodeTileColumn, n) || roomContainsTile(l.toRoom, nodeTileColumn, n)) && (isRoomBorder(l.fromRoom, nodeTileColumn, n) || isRoomBorder(l.toRoom, nodeTileColumn, n));
-        if (isHallwayWalkable(l, nodeTileColumn, n - 1, nodeTileIsDoorway, 0)) {
-          p.push(getPathNode(l, l.tileGrid[nodeTileColumn][n - 1]));
+      expandedNode = currentNode;
+      if (0 === expandedNode.neighbors.length) {
+        nodeGrid = expandedNode.grid;
+        nodeTile = expandedNode.tile;
+        neighborList = expandedNode.neighbors;
+        nodeTileColumn = nodeTile.getTileColumn();
+        var nodeTileRow = expandedNode.tile.getTileRow();
+        var nodeTileIsDoorway = !(roomContainsTile(nodeGrid.fromRoom, nodeTileColumn, nodeTileRow) || roomContainsTile(nodeGrid.toRoom, nodeTileColumn, nodeTileRow)) && (isRoomBorder(nodeGrid.fromRoom, nodeTileColumn, nodeTileRow) || isRoomBorder(nodeGrid.toRoom, nodeTileColumn, nodeTileRow));
+        if (isHallwayWalkable(nodeGrid, nodeTileColumn, nodeTileRow - 1, nodeTileIsDoorway, 0)) {
+          neighborList.push(getPathNode(nodeGrid, nodeGrid.tileGrid[nodeTileColumn][nodeTileRow - 1]));
         }
-        if (isHallwayWalkable(l, nodeTileColumn - 1, n, nodeTileIsDoorway, 3)) {
-          p.push(getPathNode(l, l.tileGrid[nodeTileColumn - 1][n]));
+        if (isHallwayWalkable(nodeGrid, nodeTileColumn - 1, nodeTileRow, nodeTileIsDoorway, 3)) {
+          neighborList.push(getPathNode(nodeGrid, nodeGrid.tileGrid[nodeTileColumn - 1][nodeTileRow]));
         }
-        if (isHallwayWalkable(l, nodeTileColumn + 1, n, nodeTileIsDoorway, 1)) {
-          p.push(getPathNode(l, l.tileGrid[nodeTileColumn + 1][n]));
+        if (isHallwayWalkable(nodeGrid, nodeTileColumn + 1, nodeTileRow, nodeTileIsDoorway, 1)) {
+          neighborList.push(getPathNode(nodeGrid, nodeGrid.tileGrid[nodeTileColumn + 1][nodeTileRow]));
         }
-        if (isHallwayWalkable(l, nodeTileColumn, n + 1, nodeTileIsDoorway, 2)) {
-          p.push(getPathNode(l, l.tileGrid[nodeTileColumn][n + 1]));
+        if (isHallwayWalkable(nodeGrid, nodeTileColumn, nodeTileRow + 1, nodeTileIsDoorway, 2)) {
+          neighborList.push(getPathNode(nodeGrid, nodeGrid.tileGrid[nodeTileColumn][nodeTileRow + 1]));
         }
       }
-      h = h.neighbors;
-      for (var neighborIndex = 0; neighborIndex < h.length; neighborIndex++) {
-        if (l = h[neighborIndex], !l.closed && (p = currentNode.costSoFar + l.position.distanceTo(currentNode.position), n = l.visited, !n || p < l.costSoFar)) {
-          l.parent = currentNode;
-          if (n) {
-            pathfinder.open.remove(l);
-            l.costSoFar = p;
+      var neighbors = currentNode.neighbors;
+      for (var neighborIndex = 0; neighborIndex < neighbors.length; neighborIndex++) {
+        var neighbor = neighbors[neighborIndex];
+        if (!neighbor.closed && (candidateCost = currentNode.costSoFar + neighbor.position.distanceTo(currentNode.position), alreadyVisited = neighbor.visited, !alreadyVisited || candidateCost < neighbor.costSoFar)) {
+          neighbor.parent = currentNode;
+          if (alreadyVisited) {
+            pathfinder.open.remove(neighbor);
+            neighbor.costSoFar = candidateCost;
           } else {
-            if (0 > l.heuristicScore) {
-              n = l.parent ? (n = l.parent.parent) && l.position.x !== n.position.x && l.position.y !== n.position.y ? 1.3 : 1 : 1;
-              l.heuristicScore = l.position.distanceTo(f.position) * n;
+            if (0 > neighbor.heuristicScore) {
+              var heuristicFactor = neighbor.parent ? (grandparentNode = neighbor.parent.parent) && neighbor.position.x !== grandparentNode.position.x && neighbor.position.y !== grandparentNode.position.y ? 1.3 : 1 : 1;
+              neighbor.heuristicScore = neighbor.position.distanceTo(goalNode.position) * heuristicFactor;
             }
-            l.costSoFar = p;
-            l.visited = true;
+            neighbor.costSoFar = candidateCost;
+            neighbor.visited = true;
           }
-          pathfinder.open.push(l);
+          pathfinder.open.push(neighbor);
         }
       }
     }
     console.log("ran out of open nodes before finding path");
-    f = null;
+    foundPath = null;
   }
-  var a = pathfinder.grid;
-  for (d = 0; d < a.usedNodes.length; d++) {
-    a.nodePool.pooledNodes.push(a.usedNodes[d]);
+  var pathGrid = pathfinder.grid;
+  var nodeIndex = 0;
+  for (; nodeIndex < pathGrid.usedNodes.length; nodeIndex++) {
+    pathGrid.nodePool.pooledNodes.push(pathGrid.usedNodes[nodeIndex]);
   }
-  a.usedNodes.length = 0;
-  a.usedTiles.length = 0;
-  if (a = f) {
+  pathGrid.usedNodes.length = 0;
+  pathGrid.usedTiles.length = 0;
+  var pathTiles = foundPath;
+  if (pathTiles) {
     var doorFrom = new DungeonDoor(fromRoom);
     var doorTo = new DungeonDoor(toRoom);
     var builtHallway = new DungeonHallway(fromRoom, doorFrom, toRoom, doorTo);
@@ -165,33 +172,35 @@ export function findHallwayPath(pathfinder, fromRoom, toRoom) {
     toRoom.doorList.push(doorTo);
     doorFrom.hallway = builtHallway;
     doorTo.hallway = builtHallway;
-    for (f = 0; f < a.length; f++) {
-      if (d = a[f], !roomContainsTile(fromRoom, d.x, d.y) && !roomContainsTile(toRoom, d.x, d.y)) {
-        if (roomContainsTile(toRoom, d.x, d.y)) {
+    var pathIndex = 0;
+    for (; pathIndex < pathTiles.length; pathIndex++) {
+      var pathTile = pathTiles[pathIndex];
+      if (!roomContainsTile(fromRoom, pathTile.x, pathTile.y) && !roomContainsTile(toRoom, pathTile.x, pathTile.y)) {
+        if (roomContainsTile(toRoom, pathTile.x, pathTile.y)) {
           break;
         }
-        if (isRoomBorder(fromRoom, d.x, d.y)) {
+        if (isRoomBorder(fromRoom, pathTile.x, pathTile.y)) {
           var positionedDoor = doorFrom;
-          var doorTileColumn = d.x;
-          n = d.y;
+          var doorTileColumn = pathTile.x;
+          var doorTileRow = pathTile.y;
           positionedDoor.tileColumn = doorTileColumn;
-          positionedDoor.tileRow = n;
+          positionedDoor.tileRow = doorTileRow;
           positionedDoor.pixelColumn = doorTileColumn * TILE_SIZE;
-          positionedDoor.pixelRow = n * TILE_SIZE;
-          doorFrom.horizontalPassage = d.x != a[f + 1].x;
+          positionedDoor.pixelRow = doorTileRow * TILE_SIZE;
+          doorFrom.horizontalPassage = pathTile.x != pathTiles[pathIndex + 1].x;
         } else {
-          if (isRoomBorder(toRoom, d.x, d.y)) {
+          if (isRoomBorder(toRoom, pathTile.x, pathTile.y)) {
             positionedDoor = doorTo;
-            doorTileColumn = d.x;
-            n = d.y;
+            doorTileColumn = pathTile.x;
+            doorTileRow = pathTile.y;
             positionedDoor.tileColumn = doorTileColumn;
-            positionedDoor.tileRow = n;
+            positionedDoor.tileRow = doorTileRow;
             positionedDoor.pixelColumn = doorTileColumn * TILE_SIZE;
-            positionedDoor.pixelRow = n * TILE_SIZE;
-            doorTo.horizontalPassage = d.x != a[f - 1].x;
+            positionedDoor.pixelRow = doorTileRow * TILE_SIZE;
+            doorTo.horizontalPassage = pathTile.x != pathTiles[pathIndex - 1].x;
           }
         }
-        builtHallway.pathTiles.push(d);
+        builtHallway.pathTiles.push(pathTile);
       }
     }
     var hallway = builtHallway;
