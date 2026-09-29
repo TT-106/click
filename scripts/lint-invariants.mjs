@@ -56,12 +56,17 @@ function walk(dir, out = [], skip = new Set(['node_modules', '.git', 'dist', 'ou
   else notes.push('src/engine/modules 无 @ts-nocheck ✓');
 }
 
-// 4) 源码里不得出现 TODO/FIXME/HACK/@ts-ignore/eslint-disable
+// 4) 源码里不得出现 TODO/FIXME/HACK/@ts-ignore/eslint-disable，也不得残留"反向验证探针"
+//    探针词尾（tileRowTYPO 这类大写破坏标记）并入同一条检查的动因：R27 的检查点提交
+//    7a2c981 把一个仍在运行的智能体的探针一起收了进去，loop.js 多出一行
+//    `camera.tileRowTYPO = centerY / game.tileSize | 0;`。那是**写给不存在属性的死写**，
+//    存档差分、89 条场景、像素指纹、e2e、typecheck 全部照绿（它确实不改变可观测行为），
+//    只有静态名字检查能发现。流程侧的配套纪律：检查点提交只收已交回的智能体文件。
 {
-  const re = /\b(TODO|FIXME|HACK)\b|@ts-ignore|eslint-disable/;
+  const re = /\b(TODO|FIXME|HACK)\b|@ts-ignore|eslint-disable|\b[A-Za-z_$][\w$]*(TYPO|SABOTAGE|DELETEME|BROKENBY)[A-Za-z_$]*\b/;
   const offenders = walk('src').filter((f) => f.endsWith('.js') && re.test(fs.readFileSync(f, 'utf8')));
-  if (offenders.length) problems.push(`源码含 TODO/FIXME/HACK/@ts-ignore/eslint-disable：${offenders.join(', ')}`);
-  else notes.push('源码无待办标记与规则豁免 ✓');
+  if (offenders.length) problems.push(`源码含 TODO/FIXME/HACK/规则豁免或残留破坏探针：${offenders.join(', ')}`);
+  else notes.push('源码无待办标记、规则豁免与残留探针 ✓');
 }
 
 // 5) 文档 file:line 引用不得越界

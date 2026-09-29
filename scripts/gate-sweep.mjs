@@ -14,6 +14,17 @@ const stamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
 const dir = path.join(ROOT, 'output', 'gate-sweep', stamp);
 fs.mkdirSync(dir, { recursive: true });
 
+function runCmd(cmd, args, opts = {}) {
+  return new Promise((resolve) => {
+    const logPath = path.join(dir, `${opts.log || String(cmd).replace(/[^a-z0-9]+/gi, '-')}.log`);
+    const out = fs.createWriteStream(logPath);
+    const child = spawn(cmd, args, { cwd: ROOT, stdio: ['ignore', 'pipe', 'pipe'], env: { ...process.env, ...opts.env } });
+    child.stdout.pipe(out, { end: false });
+    child.stderr.pipe(out, { end: false });
+    child.on('close', (code) => { out.end(); resolve({ name: opts.log || cmd, code, log: path.relative(ROOT, logPath).split(path.sep).join('/') }); });
+  });
+}
+// 用 node 跑工程内脚本
 function run(name, args, opts = {}) {
   return new Promise((resolve) => {
     const logPath = path.join(dir, `${name.replace(/[^a-z0-9]+/gi, '-')}.log`);
@@ -62,7 +73,11 @@ for (const [name, args, slow] of gates) {
 
 // 工作树卫生 + 数据流/命名指标（这些不是"门"，是随附证据）
 const extra = [];
-extra.push(await run('git-diff-check', ['-c', 'core.automismatch=true', 'diff', '--check']));
+// 注意：必须用真正的 git 可执行文件。早期版本把 git 的参数交给 process.execPath（node），
+// node 将 "-c core.automismatch=true" 当成入口脚本路径，报 MODULE_NOT_FOUND 并以 1 退出——
+// 一条永远红的假失败门，看起来像"工作树有空白问题"，其实检查器根本没跑 git。
+extra.push(await runCmd('git', ['diff', '--check'], { log: 'git-diff-check' }));
+extra.push(await runCmd('git', ['diff', '--cached', '--check'], { log: 'git-diff-cached-check' }));
 extra.push(await run('naming-metrics', ['scripts/audit-architecture.mjs']));
 
 const lines = [];

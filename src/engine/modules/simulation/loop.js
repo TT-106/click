@@ -68,7 +68,6 @@ export function initializeSimulationLoop() {
             camera.viewportOffsetX = centerRemainderX - centerRemainderY;
             camera.viewportOffsetY = Math.round((centerRemainderX + centerRemainderY) / 2);
             camera.tileColumn = centerX / game.tileSize | 0;
-            camera.tileRowTYPO = centerY / game.tileSize | 0;
             camera.tileRow = centerY / game.tileSize | 0;
           }
         }
