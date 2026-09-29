@@ -1,92 +1,116 @@
 [
   {
-    "file": "src/engine/modules/progression/achievements.js",
-    "line": "var I = null;",
-    "max": 1,
-    "reason": "R27 解耦：组合根注入用的绑定槽 boundSessionState（初值 null，未绑定即抛）"
-  },
-  {
-    "file": "src/engine/modules/progression/achievements.js",
-    "line": "export function I(I) {",
-    "max": 1,
-    "reason": "R27 解耦：bindAchievementProgress(state) 的 setter 头"
-  },
-  {
-    "file": "src/engine/modules/progression/achievements.js",
+    "file": "src/engine/modules/views/monsters.js",
     "line": "I = I;",
-    "max": 1,
-    "reason": "R27 解耦：setter 体内单赋值 boundSessionState = state"
+    "max": 2,
+    "reason": "R27 解耦：bindMonsterViews(catalog, state) 的两个模块级槽赋值"
   },
   {
-    "file": "src/engine/modules/progression/achievements.js",
+    "file": "src/engine/modules/views/monsters.js",
     "line": "function I() {",
-    "max": 1,
-    "reason": "R27 解耦：achievementProgressState() 读访问器头"
+    "max": 2,
+    "reason": "R27 解耦：monsterCatalogRef() 与 monsterViewsState() 两个读访问器头"
   },
   {
-    "file": "src/engine/modules/progression/achievements.js",
+    "file": "src/engine/modules/views/monsters.js",
     "line": "if (!I) {",
-    "max": 1,
-    "reason": "R27 解耦：未绑定即抛的守卫（与 views/achievements.js 的 achievementViewsState() 同形）"
+    "max": 2,
+    "reason": "R27 解耦：两个未绑定即抛的守卫"
   },
   {
-    "file": "src/engine/modules/progression/achievements.js",
-    "line": "throw new I( '成就进度尚未绑定会话状态：请在组合根调用 I(I.I)' );",
+    "file": "src/engine/modules/views/monsters.js",
+    "line": "throw new I( '怪物图鉴尚未绑定怪物目录：请在组合根调用 I(I.I, I.I)' );",
     "max": 1,
-    "reason": "R27 解耦：fail-loud 错误文本，字符串已核对"
+    "reason": "R27 解耦：fail-loud 文本，字符串已核对"
   },
   {
-    "file": "src/engine/modules/progression/achievements.js",
+    "file": "src/engine/modules/views/monsters.js",
+    "line": "throw new I( '怪物图鉴尚未绑定会话状态：请在组合根调用 I(I.I, I.I)' );",
+    "max": 1,
+    "reason": "R27 解耦：fail-loud 文本，字符串已核对"
+  },
+  {
+    "file": "src/engine/modules/views/monsters.js",
     "line": "return I;",
-    "max": 1,
-    "reason": "R27 解耦：读访问器返回绑定槽"
-  },
-  {
-    "file": "src/engine/modules/progression/achievements.js",
-    "line": "var I = I().I,",
     "max": 2,
-    "reason": "R27 解耦：game.state.achievements -> achievementProgressState().achievements（applyAchievementBonus 与 resetAchievements 各一处）"
+    "reason": "R27 解耦：两个访问器返回绑定槽"
   },
   {
-    "file": "src/engine/modules/progression/achievements.js",
-    "line": "var I = I.I.I,",
+    "file": "src/engine/modules/runtime/index.js",
+    "line": "I(I.I, I.I);",
+    "max": 1,
+    "reason": "R27 解耦：组合根 bindMonsterViews(game.monsterCatalog, game.state) 一处装配调用"
+  },
+  {
+    "file": "src/engine/modules/views/monsters.js",
+    "line": "var I = null;",
     "max": 2,
-    "reason": "R27 解耦：上一项的被替换侧（game.state.achievements）"
+    "reason": "R27 解耦：boundMonsterCatalog / boundSessionState 两个模块级注入槽"
   },
   {
-    "file": "src/engine/modules/progression/achievements.js",
-    "line": "I: I().I,",
-    "max": 2,
-    "reason": "R27 解耦：getAchievementCheckData() 里 lifetimeStatistics/victoryStatistics 两行"
-  },
-  {
-    "file": "src/engine/modules/progression/achievements.js",
-    "line": "I: I.I.I,",
-    "max": 2,
-    "reason": "R27 解耦：上一项的被替换侧"
-  },
-  {
-    "file": "src/engine/modules/progression/achievements.js",
-    "line": "return I(I().I);",
+    "file": "src/engine/modules/views/monsters.js",
+    "line": "export function I(I, I) {",
     "max": 1,
-    "reason": "R27 解耦：partyMaxLevel 惰性 getter 内 getPartyMaxLevel(achievementProgressState().party)"
+    "reason": "R27 解耦：bindMonsterViews(catalog, state) 的 setter 头"
   },
   {
-    "file": "src/engine/modules/progression/achievements.js",
-    "line": "return I(I.I.I);",
+    "file": "src/engine/modules/views/monsters.js",
+    "line": "I = I.I.I,",
     "max": 1,
-    "reason": "R27 解耦：上一项的被替换侧（getPartyMaxLevel(game.state.party)）"
+    "reason": "R27 解耦：tabLevel = game.monsterCatalog.minUnlockedLevel 的被替换侧"
   },
   {
-    "file": "src/engine/modules/runtime/game.js",
-    "line": "I(I.I);",
+    "file": "src/engine/modules/views/monsters.js",
+    "line": "I = I().I,",
     "max": 1,
-    "reason": "R27 解耦：组合根里 bindAchievementProgress(game.state) 一处注入调用；同文件若再出现同形插入必须重新人工判定"
+    "reason": "R27 解耦：同一行替换后（读注入的目录对象）"
   },
   {
-    "file": "src/engine/modules/world/initialization.js",
-    "line": "I(I.I);",
+    "file": "src/engine/modules/views/monsters.js",
+    "line": "var I = I.I,",
     "max": 1,
-    "reason": "R27 解耦：initializeRegionsAndCastles() 里 bindAchievementProgress(game.state) 一处注入调用（必须在 resetAchievements() 之前）"
+    "reason": "R27 解耦：var monsterCatalog = game.monsterCatalog 的被替换侧"
+  },
+  {
+    "file": "src/engine/modules/views/monsters.js",
+    "line": "var I = I(),",
+    "max": 1,
+    "reason": "R27 解耦：同一行替换后"
+  },
+  {
+    "file": "src/engine/modules/views/monsters.js",
+    "line": "var I = I.I.I.I;",
+    "max": 1,
+    "reason": "R27 解耦：var killCount = game.state.party.kills 的被替换侧"
+  },
+  {
+    "file": "src/engine/modules/views/monsters.js",
+    "line": "var I = I().I.I;",
+    "max": 1,
+    "reason": "R27 解耦：同一行替换后"
+  },
+  {
+    "file": "src/engine/modules/views/monsters.js",
+    "line": "var I = I(I.I, this.I),",
+    "max": 1,
+    "reason": "R27 解耦：getMonsterTypesForLevel(game.monsterCatalog, this.level) 的被替换侧"
+  },
+  {
+    "file": "src/engine/modules/views/monsters.js",
+    "line": "var I = I(I(), this.I),",
+    "max": 1,
+    "reason": "R27 解耦：同一行替换后"
+  },
+  {
+    "file": "src/engine/modules/views/monsters.js",
+    "line": "I = I(I.I, this.I);",
+    "max": 1,
+    "reason": "R27 解耦：同上第二处（赋值形态）的被替换侧"
+  },
+  {
+    "file": "src/engine/modules/views/monsters.js",
+    "line": "I = I(I(), this.I);",
+    "max": 1,
+    "reason": "R27 解耦：同一行替换后"
   }
 ]

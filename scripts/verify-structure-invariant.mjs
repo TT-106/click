@@ -53,7 +53,7 @@ function skeleton(src) {
   return out;
 }
 
-const IMPORT_LINE = /^import (?:\{[^}]*\}|\*) from "[^"]*" ;$/;
+const IMPORT_LINE = /^import (?:\{[^}]*\}|\*) from (?:"[^"]*"|'[^']*') ;$/;
 
 // 逐条授权清单：artifacts/structure-allowlist.json
 //   [{ "file": "src/engine/modules/...", "line": "<骨架文本（标识符已抹平）>", "reason": "为什么这不是破坏" }]

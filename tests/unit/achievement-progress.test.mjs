@@ -9,6 +9,8 @@
 //   1) 28 个 requirementType 的字段映射（规格表写在测试里，与实现分开维护）；
 //   2) 未知 requirementType 的原版怪癖：progress → undefined、victory → false；
 //   3) partyMaxLevel 的惰性求值：只有 requirementType 16 会读它。
+//   4) R27 起的组合根注入契约：未绑定会话状态时三个入口都点名报错；绑定后省略 data 的
+//      入口读的就是注入的那个对象（换的是数据来源，不是判定逻辑）。
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
@@ -17,6 +19,7 @@ import {
   getAchievementProgress,
   hasVictoryAchievement,
   getAchievementCheckData,
+  bindAchievementProgress,
 } from '../../src/engine/modules/progression/achievements.js';
 
 initializeProgressionAchievements();
@@ -120,10 +123,29 @@ test('partyMaxLevel 惰性求值：只有 requirementType 16 会读它', () => {
   assert.equal(reads, 1);
 });
 
-test('兼容入口：省略 data 时从全局 game 现取（因此未启动引擎时必须抛错）', () => {
-  // 这是"原调用路径保持兼容"的代价，也是本切片要缩小的耦合：省略 data 就要求 game 已初始化。
-  // 单元测试环境不启动 runtime/index.js，故此处断言它确实会去读那个尚未存在的全局对象。
-  assert.throws(() => getAchievementCheckData(), TypeError);
-  assert.throws(() => getAchievementProgress(definitionOfType(1)), TypeError);
-  assert.throws(() => hasVictoryAchievement(definitionOfType(23)), TypeError);
+test('未绑定会话状态时三个入口都必须抛错（R27 起改为组合根注入，不再读全局 game）', () => {
+  // 原断言是 assert.throws(..., TypeError)：那时省略 data 会去读尚未存在的 game 对象，
+  // 由 undefined 的属性访问抛 TypeError——报错信息毫无意义。本切片把 game.state 的读取
+  // 换成 bindAchievementProgress(game.state) 注入后，未装配改由显式守卫抛带名字的错误。
+  // 断言意图不变（"装配漏了必须炸"），但契约更明确：错误文案点名该调哪个组合根函数。
+  assert.throws(() => getAchievementCheckData(), /成就进度尚未绑定会话状态/);
+  assert.throws(() => getAchievementProgress(definitionOfType(1)), /成就进度尚未绑定会话状态/);
+  assert.throws(() => hasVictoryAchievement(definitionOfType(23)), /成就进度尚未绑定会话状态/);
+});
+
+test('组合根绑定后，省略 data 的入口读的就是注入的那个状态对象', () => {
+  // 正向补一条：绑定只换数据来源，不换判定逻辑——同样两份统计，注入前后结果必须一致。
+  const lifetimeStatistics = {};
+  for (const field of Object.values(TYPE_FIELDS)) if (field) lifetimeStatistics[field] = 5;
+  const injected = {
+    achievements: { achievementList: [], obtainedList: [], claimQueue: [] },
+    lifetimeStatistics,
+    victoryStatistics: { partySize1Victories: 3, partySize2Victories: 0, partySize3Victories: 0, singleClassVictories: 0, maxContinuationVictories: 0, classVictories: {}, soloClassVictories: {} },
+    party: {},
+  };
+  bindAchievementProgress(injected);
+  const data = getAchievementCheckData();
+  assert.equal(data.lifetimeStatistics, injected.lifetimeStatistics, '注入的累计统计对象被原样取用');
+  assert.equal(data.victoryStatistics, injected.victoryStatistics, '注入的胜利统计对象被原样取用');
+  assert.equal(getAchievementProgress(definitionOfType(1), data), 5);
 });

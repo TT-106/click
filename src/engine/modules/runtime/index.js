@@ -60,7 +60,7 @@ import { initializeViewsExpedition } from '../views/expedition.js';
 import { initializeViewsInformation } from '../views/information.js';
 import { initializeViewsPartyCreation } from '../views/party-creation.js';
 import { initializeViewsCharacter } from '../views/character.js';
-import { initializeViewsMonsters } from '../views/monsters.js';
+import { bindMonsterViews, initializeViewsMonsters } from '../views/monsters.js';
 import { initializeViewsCastles } from '../views/castles.js';
 import { initializeViewsResources } from '../views/resources.js';
 import { initializeViewsDungeons } from '../views/dungeons.js';
@@ -71,7 +71,7 @@ import { initializePersistenceGameSave } from '../persistence/game-save.js';
 import { initializeSimulationCharacters } from '../simulation/characters.js';
 import { initializeSimulationTick } from '../simulation/tick.js';
 import { initializeSimulationLoop } from '../simulation/loop.js';
-import { initializeRuntimeGame } from './game.js';
+import { game, initializeRuntimeGame } from './game.js';
 
 // 模块初始化阶段只有这里拥有调用顺序；函数提升和原版初始值保持一致。
 initializeContentAnimations();
@@ -162,5 +162,9 @@ initializePersistenceGameSave();
 initializeSimulationCharacters();
 initializeSimulationTick();
 initializeSimulationLoop();
+// 组合根装配：怪物图鉴视图原先直接读 game.monsterCatalog 与 game.state，现在由根注入两个引用。
+// 绑的是**容器对象**本身（不是 state.party 这类会被整体重置的子对象），所以后续 reset 换掉
+// party 也照样读得到；视图首次 update 必然发生在本文件全部 initialize/bind 之后，位置安全。
 initializeRuntimeGame();
+bindMonsterViews(game.monsterCatalog, game.state);
 export { game } from './game.js';

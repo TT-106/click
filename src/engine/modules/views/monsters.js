@@ -2,13 +2,35 @@
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
 import { View, addChildView, resetChildViews, updateChildViews } from "./base.js";
-import { game } from "../runtime/game.js";
 import { appendHeaderCell, clearElement, clearElementById, createElement, getElement, hideElement, setElementHtml } from "./dom.js";
 import { formatAmount, formatGroupedAmount } from "../core/math.js";
 import { VISIBLE_MONSTER_LEVELS, globalUpgradeDefinitions, monsterUpgradeCollection } from "../content/balance.js";
 import { TabBar, TabState, TabView, addTab } from "./navigation.js";
 import { getMonsterTypesForLevel } from "../combat/encounters.js";
 import { UpgradeListView } from "./upgrade-details.js";
+/** 怪物图鉴视图所需的两个依赖由组合根注入（statistics / points / progression.achievements /
+ *  views.achievements 已是同一形状）：目录对象 game.monsterCatalog 在 runtime/game.js 里
+ *  只构造一次、从不整体重新赋值（.monsterCatalog = 在 src/ 内 0 处），会话状态同理，
+ *  所以按引用绑定是安全的；字段值（minUnlockedLevel 等）随游戏进程变化，读的始终是同一对象。
+ *  未绑定就用到会立刻抛，避免"装配漏一步"退化成静默的 undefined 读取。 */
+var boundMonsterCatalog = null;
+var boundSessionState = null;
+export function bindMonsterViews(monsterCatalog, state) {
+  boundMonsterCatalog = monsterCatalog;
+  boundSessionState = state;
+}
+function monsterCatalogRef() {
+  if (!boundMonsterCatalog) {
+    throw new Error('怪物图鉴尚未绑定怪物目录：请在组合根调用 bindMonsterViews(game.monsterCatalog, game.state)');
+  }
+  return boundMonsterCatalog;
+}
+function monsterViewsState() {
+  if (!boundSessionState) {
+    throw new Error('怪物图鉴尚未绑定会话状态：请在组合根调用 bindMonsterViews(game.monsterCatalog, game.state)');
+  }
+  return boundSessionState;
+}
 export function MonsterUpgradeSummaryView() {
   this.elementId = "monsterKillCountContainer";
   this.visible = true;
@@ -78,7 +100,7 @@ export function mountMonsterTable(tableIndex, monsterLevel) {
 }
 export function updateMonsterTabLabels(monsterView) {
   var displayedLevel,
-    tabLevel = game.monsterCatalog.minUnlockedLevel,
+    tabLevel = monsterCatalogRef().minUnlockedLevel,
     levelTable,
     levelTableIndex;
   for (levelTableIndex = 0; levelTableIndex < monsterView.levelTables.length; levelTableIndex++) {
@@ -92,7 +114,7 @@ export function updateMonsterTabLabels(monsterView) {
   }
 }
 export function refreshMonsterTabVisibility(monsterView) {
-  var monsterCatalog = game.monsterCatalog,
+  var monsterCatalog = monsterCatalogRef(),
     levelTableIndex,
     d,
     levelTable,
@@ -122,7 +144,7 @@ export function initializeViewsMonsters() {
     this.cachedKills = -1;
   };
   MonsterUpgradeSummaryView.prototype.update = function () {
-    var killCount = game.state.party.kills;
+    var killCount = monsterViewsState().party.kills;
     if (killCount !== this.cachedKills) {
       this.cachedKills = killCount;
       setElementHtml(this.killCountPanelId, "" + formatGroupedAmount(killCount));
@@ -302,7 +324,7 @@ export function initializeViewsMonsters() {
     } else {
       if (this.tableElement) {
         if (this.cachedLevel !== this.level) {
-          var monsterTypes = getMonsterTypesForLevel(game.monsterCatalog, this.level),
+          var monsterTypes = getMonsterTypesForLevel(monsterCatalogRef(), this.level),
             rowIndex;
           if (monsterTypes.length !== this.rowViews.length) {
             console.log("MonsterTableView.updateMonsterLevelRows length mismatch");
@@ -325,7 +347,7 @@ export function initializeViewsMonsters() {
     var a = this.elementId;
     clearElementById(a);
     var containerElement = getElement(a),
-      a = getMonsterTypesForLevel(game.monsterCatalog, this.level);
+      a = getMonsterTypesForLevel(monsterCatalogRef(), this.level);
     this.tableElement = createElement("table", containerElement, null, "monsterTable");
     (/** @type {any} */ (this)).createHeaderRow(this.tableElement.insertRow(0));
     for (var rowIndex = 0; rowIndex < a.length; rowIndex++) {

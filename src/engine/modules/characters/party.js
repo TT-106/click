@@ -95,16 +95,16 @@ export function calculatePartyMaxLevel() {
   }
   return maxLevel;
 }
-export function calculatePartyMinLevel(a) {
-  a = getPartyMaxLevel(a);
+export function calculatePartyMinLevel(party) {
+  var minLevel = getPartyMaxLevel(party);
   var adventurerLevel, adventurerIndex;
   for (adventurerIndex = 0; adventurerIndex < game.state.adventurers.length; adventurerIndex++) {
     adventurerLevel = game.state.adventurers[adventurerIndex].stats.characterLevel;
-    if (a > adventurerLevel) {
-      a = adventurerLevel;
+    if (minLevel > adventurerLevel) {
+      minLevel = adventurerLevel;
     }
   }
-  return a;
+  return minLevel;
 }
 export function findNextUnopenedDoor() {
   var leader = game.state.leader,
