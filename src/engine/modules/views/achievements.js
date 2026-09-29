@@ -4,7 +4,22 @@
 import { View, addChildView, resetChildViews } from "./base.js";
 import { appendHeaderCell, clearElementById, createElement, getElement, setElementHtml } from "./dom.js";
 import { UpgradeButtonView } from "./upgrade-details.js";
-import { game } from "../runtime/game.js";
+/**
+ * 本模块只看会话状态，不再反向依赖组合根 runtime/game.js。
+ * 绑的是 game.state 本身（本文件同时读 achievements 与 adventurePoints 两个子对象），
+ * 与 bindStatistics / bindAdventurePoints 同一约定：state 身份在会话内稳定，
+ * 存档恢复走原位更新，所以绑一次即可。未绑定就取用一律抛错，不静默读 undefined。
+ */
+var boundState = null;
+export function bindAchievementViews(state) {
+  boundState = state;
+}
+function achievementViewsState() {
+  if (!boundState) {
+    throw new Error('achievements 视图尚未绑定会话状态：请在组合根调用 bindAchievementViews(game.state)');
+  }
+  return boundState;
+}
 import { AchievementUpgrade, UpgradeCollection, refreshUpgradeCollection } from "../progression/upgrades.js";
 import { pointEventDefinitions, pointEventsById } from "../progression/points.js";
 import { formatAmount, formatGroupedAmount } from "../core/math.js";
@@ -131,7 +146,7 @@ export function initializeViewsAchievements() {
     }
   };
   AchievementListView.prototype.refreshCollections = function () {
-    var achievementList = game.state.achievements.achievementList,
+    var achievementList = achievementViewsState().achievements.achievementList,
       firstColumnAchievements = [],
       secondColumnAchievements = [],
       thirdColumnAchievements = [],
@@ -166,7 +181,7 @@ export function initializeViewsAchievements() {
     for (buttonIndex = 0; buttonIndex < this.buttons.length; buttonIndex++) {
       this.buttons[buttonIndex].render();
     }
-    var b = game.state.achievements;
+    var b = achievementViewsState().achievements;
     var achievementTotal = b.achievementList.length;
     b = b.claimQueue.length + (achievementTotal - b.obtainedList.length);
     if (this.cachedAchievementCount != b) {
@@ -201,7 +216,7 @@ export function initializeViewsAchievements() {
       eventCount,
       cachedPointReward,
       currentPointReward,
-      adventurePoints = game.state.adventurePoints;
+      adventurePoints = achievementViewsState().adventurePoints;
     for (eventIndex = 0; eventIndex < pointEventDefinitions.length; eventIndex++) {
       b = pointEventDefinitions[eventIndex].pointEventTypeId;
       cachedPoints = this.cachedPointsByEventType[b];
@@ -286,7 +301,7 @@ export function initializeViewsAchievements() {
     }
   };
   PointUpgradeListView.prototype.refreshCollections = function () {
-    var pointUpgrades = game.state.adventurePoints.pointUpgrades,
+    var pointUpgrades = achievementViewsState().adventurePoints.pointUpgrades,
       firstColumnUpgrades = [],
       secondColumnUpgrades = [],
       rowStartIndex;

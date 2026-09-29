@@ -411,6 +411,7 @@ const current = {
   singleLetterBindings: out.naming.singleLetterBindings,
   filesWithSingleLetterBindings: out.naming.filesWithSingleLetterBindings,
   crypticBindings: out.naming.crypticBindings,
+  allowListedBindings: out.naming.allowListedBindings,
   gameImporters: out.gameImporters.total,
   largestScc: cycles[0]?.length ?? 0,
   perFile,

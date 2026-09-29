@@ -37,6 +37,7 @@ import { recalculateCharacterSkills } from "../combat/skill-effects.js";
 import { deleteStoredSave, restoreGameState, saveProgress } from "../persistence/game-save.js";
 import terrainAtlas from "../../../data/terrain-atlas.js";
 import itemsAtlas from "../../../data/items-atlas.js";
+import { bindAchievementViews } from "../views/achievements.js";
 export var game;
 export function initializeRuntimeGame() {
   game = {
@@ -372,6 +373,7 @@ export function initializeRuntimeGame() {
         game.state.lifetimeStatistics = new LifetimeStatistics();
         bindStatistics(game.state);
         bindAdventurePoints(game.state);
+        bindAchievementViews(game.state);
         var victoryStatistics = game.state.victoryStatistics;
         victoryStatistics.partySize1Victories = 0;
         victoryStatistics.partySize2Victories = 0;

@@ -8,6 +8,7 @@ import { Dungeon, randomDungeonType, resetFarms, resetShops, sortDungeons } from
 import { bindAdventurePoints, resetAdventurePoints } from "../progression/points.js";
 import { resetAchievements } from "../progression/achievements.js";
 import { bindStatistics } from "../progression/statistics.js";
+import { bindAchievementViews } from "../views/achievements.js";
 export function initializeRegionsAndCastles() {
   var regionManager = game.regions;
   regionManager.byKey = {};
@@ -187,5 +188,6 @@ export function initializeRegionsAndCastles() {
   game.paused = false;
   game.initialized = true;
   bindStatistics(game.state);
+  bindAchievementViews(game.state);
 }
 export function initializeWorldInitialization() {}
