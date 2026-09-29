@@ -6,7 +6,7 @@
 
 | 目标 | 当前证据 | 判定 |
 |---|---|---|
-| 产品与原版反编译文件分离 | `index.html` 只加载 `src/app.js`；`npm run build` 现审计全部 93 个源码模块的 551 条导入及实际 `dist/`，原版档案依赖 0；隔离注入 `c2.js` 会使审计报错。原版仅作为差分测试 oracle。 | 产品运行路径已分离；以后每次构建继续守护。 |
+| 产品与原版反编译文件分离 | `index.html` 只加载 `src/app.js`；`npm run build` 现审计全部源码模块的导入及实际 `dist/`，原版档案依赖 0。**R26 重新做越界注入反向验证**：临时在 `src/app.js` 加一行 `import "../archive/original/c2.js"`，审计立刻以 `导入越过 src 或目标不存在：src\app.js -> ../archive/original/c2.js` 退出码 1；撤掉后恢复通过且计数回到 94 模块 / 549 导入 / 136 产物（`git diff` 对 `src/app.js` 为空，确认逐字节还原）。原版仅作为差分测试 oracle。 | 产品运行路径已分离；守卫本身经过破坏性验证，不是只跑一次的成功路径。 |
 | 行为与功能保真 | 本轮 0/1/99/900 回合完整存档对照、89/89 差分场景、浏览器端到端测试通过；U134 验收矩阵仍为 47 PASS / 4 PARTIAL。 | 已覆盖的行为通过；全功能等价尚不能宣称。 |
 | 现代命名与架构 | `statistics.js`、`stats.js`、`effects.js` 的局部语义命名与显式输入已落地；装备目录 39 个类型名和 903 处关联引用已语义化；物品生成与掉落显式接收依赖；黄金视图经只读函数取状态；R22–R25 已把全库八大热点（behaviors 264、scene 196、upgrade-details 152、terrain 131、generation 130、actions 116、rooms 116、upgrades 110）全部语义化归零，inventory.js 退出 game 依赖。 | 仍有 39 个模块合计 1,602 个单字母局部绑定与 37 个 game 直连模块，未完成。 |
 
