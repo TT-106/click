@@ -322,7 +322,7 @@ export function initializeWorldGeneration() {
       hallwayId = this.nextHallwayId++;
       hallway.hallwayId = hallwayId;
       this.hallwayList.push(hallway);
-      hallway.paintTiles(this.tileGrid);
+      /** @type {{paintTiles: (grid: unknown) => void}} */ (/** @type unknown */ (hallway)).paintTiles(this.tileGrid);
       connectedRoom.connectedRooms.push(room);
       room.connectedRooms.push(connectedRoom);
     }
@@ -455,7 +455,7 @@ export function initializeWorldGeneration() {
         var hallwayId = this.nextHallwayId++;
         hallway.hallwayId = hallwayId;
         this.hallwayList.push(hallway);
-        hallway.paintTiles(this.tileGrid);
+        /** @type {{paintTiles: (grid: unknown) => void}} */ (/** @type unknown */ (hallway)).paintTiles(this.tileGrid);
         room.connectedRooms.push(previousRoom);
         previousRoom.connectedRooms.push(room);
       } else {
