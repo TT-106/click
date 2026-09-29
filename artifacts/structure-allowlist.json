@@ -1,116 +1,194 @@
 [
   {
-    "file": "src/engine/modules/views/monsters.js",
+    "file": "src/engine/modules/views/character.js",
     "line": "I = I;",
     "max": 2,
-    "reason": "R27 解耦：bindMonsterViews(catalog, state) 的两个模块级槽赋值"
+    "reason": "R27 解耦：game.state.X / game.inventories.X 读取改为注入访问器 characterViewState()/characterInventories()（本文件内该形状出现 2 次）"
   },
   {
-    "file": "src/engine/modules/views/monsters.js",
-    "line": "function I() {",
-    "max": 2,
-    "reason": "R27 解耦：monsterCatalogRef() 与 monsterViewsState() 两个读访问器头"
-  },
-  {
-    "file": "src/engine/modules/views/monsters.js",
-    "line": "if (!I) {",
-    "max": 2,
-    "reason": "R27 解耦：两个未绑定即抛的守卫"
-  },
-  {
-    "file": "src/engine/modules/views/monsters.js",
-    "line": "throw new I( '怪物图鉴尚未绑定怪物目录：请在组合根调用 I(I.I, I.I)' );",
+    "file": "src/engine/modules/views/character.js",
+    "line": "I().I(I().I[this.I]);",
     "max": 1,
-    "reason": "R27 解耦：fail-loud 文本，字符串已核对"
+    "reason": "R27 解耦：bindCharacterViews 注入块（setter/访问器/守卫/抛出）（本文件内该形状出现 1 次）"
   },
   {
-    "file": "src/engine/modules/views/monsters.js",
-    "line": "throw new I( '怪物图鉴尚未绑定会话状态：请在组合根调用 I(I.I, I.I)' );",
-    "max": 1,
-    "reason": "R27 解耦：fail-loud 文本，字符串已核对"
-  },
-  {
-    "file": "src/engine/modules/views/monsters.js",
-    "line": "return I;",
-    "max": 2,
-    "reason": "R27 解耦：两个访问器返回绑定槽"
-  },
-  {
-    "file": "src/engine/modules/runtime/index.js",
-    "line": "I(I.I, I.I);",
-    "max": 1,
-    "reason": "R27 解耦：组合根 bindMonsterViews(game.monsterCatalog, game.state) 一处装配调用"
-  },
-  {
-    "file": "src/engine/modules/views/monsters.js",
-    "line": "var I = null;",
-    "max": 2,
-    "reason": "R27 解耦：boundMonsterCatalog / boundSessionState 两个模块级注入槽"
-  },
-  {
-    "file": "src/engine/modules/views/monsters.js",
+    "file": "src/engine/modules/views/character.js",
     "line": "export function I(I, I) {",
     "max": 1,
-    "reason": "R27 解耦：bindMonsterViews(catalog, state) 的 setter 头"
+    "reason": "R27 解耦：bindCharacterViews 注入块（setter/访问器/守卫/抛出）（本文件内该形状出现 1 次）"
   },
   {
-    "file": "src/engine/modules/views/monsters.js",
-    "line": "I = I.I.I,",
-    "max": 1,
-    "reason": "R27 解耦：tabLevel = game.monsterCatalog.minUnlockedLevel 的被替换侧"
+    "file": "src/engine/modules/views/character.js",
+    "line": "function I() {",
+    "max": 2,
+    "reason": "R27 解耦：bindCharacterViews 注入块（setter/访问器/守卫/抛出）（本文件内该形状出现 2 次）"
   },
   {
-    "file": "src/engine/modules/views/monsters.js",
-    "line": "I = I().I,",
-    "max": 1,
-    "reason": "R27 解耦：同一行替换后（读注入的目录对象）"
+    "file": "src/engine/modules/views/character.js",
+    "line": "if (!(0 > this.I || this.I >= I().I.I)) {",
+    "max": 5,
+    "reason": "R27 解耦：bindCharacterViews 注入块（setter/访问器/守卫/抛出）（本文件内该形状出现 5 次）"
   },
   {
-    "file": "src/engine/modules/views/monsters.js",
-    "line": "var I = I.I,",
-    "max": 1,
-    "reason": "R27 解耦：var monsterCatalog = game.monsterCatalog 的被替换侧"
+    "file": "src/engine/modules/views/character.js",
+    "line": "if (!I) {",
+    "max": 2,
+    "reason": "R27 解耦：bindCharacterViews 注入块（setter/访问器/守卫/抛出）（本文件内该形状出现 2 次）"
   },
   {
-    "file": "src/engine/modules/views/monsters.js",
-    "line": "var I = I(),",
+    "file": "src/engine/modules/views/character.js",
+    "line": "if (0 > this.I || this.I >= I().I.I) {",
     "max": 1,
-    "reason": "R27 解耦：同一行替换后"
+    "reason": "R27 解耦：bindCharacterViews 注入块（setter/访问器/守卫/抛出）（本文件内该形状出现 1 次）"
   },
   {
-    "file": "src/engine/modules/views/monsters.js",
-    "line": "var I = I.I.I.I;",
+    "file": "src/engine/modules/views/character.js",
+    "line": "if (I && !(0 > this.I || this.I >= I().I.I)) {",
     "max": 1,
-    "reason": "R27 解耦：var killCount = game.state.party.kills 的被替换侧"
+    "reason": "R27 解耦：bindCharacterViews 注入块（setter/访问器/守卫/抛出）（本文件内该形状出现 1 次）"
   },
   {
-    "file": "src/engine/modules/views/monsters.js",
-    "line": "var I = I().I.I;",
+    "file": "src/engine/modules/views/character.js",
+    "line": "return I().I(I().I[this.I]);",
     "max": 1,
-    "reason": "R27 解耦：同一行替换后"
+    "reason": "R27 解耦：bindCharacterViews 注入块（setter/访问器/守卫/抛出）（本文件内该形状出现 1 次）"
   },
   {
-    "file": "src/engine/modules/views/monsters.js",
-    "line": "var I = I(I.I, this.I),",
-    "max": 1,
-    "reason": "R27 解耦：getMonsterTypesForLevel(game.monsterCatalog, this.level) 的被替换侧"
+    "file": "src/engine/modules/views/character.js",
+    "line": "return I;",
+    "max": 2,
+    "reason": "R27 解耦：bindCharacterViews 注入块（setter/访问器/守卫/抛出）（本文件内该形状出现 2 次）"
   },
   {
-    "file": "src/engine/modules/views/monsters.js",
-    "line": "var I = I(I(), this.I),",
+    "file": "src/engine/modules/views/character.js",
+    "line": "throw new I( '角色面板尚未绑定会话状态：请在组合根调用 I(I.I, I.I)' );",
     "max": 1,
-    "reason": "R27 解耦：同一行替换后"
+    "reason": "R27 解耦：bindCharacterViews 注入块（setter/访问器/守卫/抛出）（本文件内该形状出现 1 次）"
   },
   {
-    "file": "src/engine/modules/views/monsters.js",
-    "line": "I = I(I.I, this.I);",
+    "file": "src/engine/modules/views/character.js",
+    "line": "throw new I( '角色面板尚未绑定背包管理器：请在组合根调用 I(I.I, I.I)' );",
     "max": 1,
-    "reason": "R27 解耦：同上第二处（赋值形态）的被替换侧"
+    "reason": "R27 解耦：bindCharacterViews 注入块（setter/访问器/守卫/抛出）（本文件内该形状出现 1 次）"
   },
   {
-    "file": "src/engine/modules/views/monsters.js",
-    "line": "I = I(I(), this.I);",
+    "file": "src/engine/modules/views/character.js",
+    "line": "var I = I().I[I.I];",
     "max": 1,
-    "reason": "R27 解耦：同一行替换后"
+    "reason": "R27 解耦：bindCharacterViews 注入块（setter/访问器/守卫/抛出）（本文件内该形状出现 1 次）"
+  },
+  {
+    "file": "src/engine/modules/views/character.js",
+    "line": "var I = I().I[this.I],",
+    "max": 3,
+    "reason": "R27 解耦：bindCharacterViews 注入块（setter/访问器/守卫/抛出）（本文件内该形状出现 3 次）"
+  },
+  {
+    "file": "src/engine/modules/views/character.js",
+    "line": "var I = I().I[this.I].I,",
+    "max": 1,
+    "reason": "R27 解耦：bindCharacterViews 注入块（setter/访问器/守卫/抛出）（本文件内该形状出现 1 次）"
+  },
+  {
+    "file": "src/engine/modules/views/character.js",
+    "line": "var I = I().I[this.I].I.I;",
+    "max": 1,
+    "reason": "R27 解耦：bindCharacterViews 注入块（setter/访问器/守卫/抛出）（本文件内该形状出现 1 次）"
+  },
+  {
+    "file": "src/engine/modules/views/character.js",
+    "line": "var I = I().I[this.I];",
+    "max": 1,
+    "reason": "R27 解耦：bindCharacterViews 注入块（setter/访问器/守卫/抛出）（本文件内该形状出现 1 次）"
+  },
+  {
+    "file": "src/engine/modules/views/character.js",
+    "line": "var I = I(I().I[this.I].I, this.I),",
+    "max": 1,
+    "reason": "R27 解耦：bindCharacterViews 注入块（setter/访问器/守卫/抛出）（本文件内该形状出现 1 次）"
+  },
+  {
+    "file": "src/engine/modules/views/character.js",
+    "line": "var I = I.I < I().I.I,",
+    "max": 1,
+    "reason": "R27 解耦：bindCharacterViews 注入块（setter/访问器/守卫/抛出）（本文件内该形状出现 1 次）"
+  },
+  {
+    "file": "src/engine/modules/views/character.js",
+    "line": "var I = null;",
+    "max": 2,
+    "reason": "R27 解耦：bindCharacterViews 注入块（setter/访问器/守卫/抛出）（本文件内该形状出现 2 次）"
+  },
+  {
+    "file": "src/engine/modules/views/character.js",
+    "line": "I.I.I(I.I.I[this.I]);",
+    "max": 1,
+    "reason": "R27 解耦：game.state.X / game.inventories.X 读取改为注入访问器 characterViewState()/characterInventories()（本文件内该形状出现 1 次）"
+  },
+  {
+    "file": "src/engine/modules/views/character.js",
+    "line": "if (!(0 > this.I || this.I >= I.I.I.I)) {",
+    "max": 5,
+    "reason": "R27 解耦：game.state.X / game.inventories.X 读取改为注入访问器 characterViewState()/characterInventories()（本文件内该形状出现 5 次）"
+  },
+  {
+    "file": "src/engine/modules/views/character.js",
+    "line": "if (0 > this.I || this.I >= I.I.I.I) {",
+    "max": 1,
+    "reason": "R27 解耦：game.state.X / game.inventories.X 读取改为注入访问器 characterViewState()/characterInventories()（本文件内该形状出现 1 次）"
+  },
+  {
+    "file": "src/engine/modules/views/character.js",
+    "line": "if (I && !(0 > this.I || this.I >= I.I.I.I)) {",
+    "max": 1,
+    "reason": "R27 解耦：game.state.X / game.inventories.X 读取改为注入访问器 characterViewState()/characterInventories()（本文件内该形状出现 1 次）"
+  },
+  {
+    "file": "src/engine/modules/views/character.js",
+    "line": "return I.I.I(I.I.I[this.I]);",
+    "max": 1,
+    "reason": "R27 解耦：game.state.X / game.inventories.X 读取改为注入访问器 characterViewState()/characterInventories()（本文件内该形状出现 1 次）"
+  },
+  {
+    "file": "src/engine/modules/views/character.js",
+    "line": "var I = I(I.I.I[this.I].I, this.I),",
+    "max": 1,
+    "reason": "R27 解耦：game.state.X / game.inventories.X 读取改为注入访问器 characterViewState()/characterInventories()（本文件内该形状出现 1 次）"
+  },
+  {
+    "file": "src/engine/modules/views/character.js",
+    "line": "var I = I.I < I.I.I.I,",
+    "max": 1,
+    "reason": "R27 解耦：game.state.X / game.inventories.X 读取改为注入访问器 characterViewState()/characterInventories()（本文件内该形状出现 1 次）"
+  },
+  {
+    "file": "src/engine/modules/views/character.js",
+    "line": "var I = I.I.I[I.I];",
+    "max": 1,
+    "reason": "R27 解耦：game.state.X / game.inventories.X 读取改为注入访问器 characterViewState()/characterInventories()（本文件内该形状出现 1 次）"
+  },
+  {
+    "file": "src/engine/modules/views/character.js",
+    "line": "var I = I.I.I[this.I],",
+    "max": 3,
+    "reason": "R27 解耦：game.state.X / game.inventories.X 读取改为注入访问器 characterViewState()/characterInventories()（本文件内该形状出现 3 次）"
+  },
+  {
+    "file": "src/engine/modules/views/character.js",
+    "line": "var I = I.I.I[this.I].I,",
+    "max": 1,
+    "reason": "R27 解耦：game.state.X / game.inventories.X 读取改为注入访问器 characterViewState()/characterInventories()（本文件内该形状出现 1 次）"
+  },
+  {
+    "file": "src/engine/modules/views/character.js",
+    "line": "var I = I.I.I[this.I].I.I;",
+    "max": 1,
+    "reason": "R27 解耦：game.state.X / game.inventories.X 读取改为注入访问器 characterViewState()/characterInventories()（本文件内该形状出现 1 次）"
+  },
+  {
+    "file": "src/engine/modules/views/character.js",
+    "line": "var I = I.I.I[this.I];",
+    "max": 1,
+    "reason": "R27 解耦：game.state.X / game.inventories.X 读取改为注入访问器 characterViewState()/characterInventories()（本文件内该形状出现 1 次）"
   }
 ]

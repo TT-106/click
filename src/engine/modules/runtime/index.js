@@ -59,7 +59,7 @@ import { initializeRenderingScene } from '../rendering/scene.js';
 import { initializeViewsExpedition } from '../views/expedition.js';
 import { initializeViewsInformation } from '../views/information.js';
 import { initializeViewsPartyCreation } from '../views/party-creation.js';
-import { initializeViewsCharacter } from '../views/character.js';
+import { bindCharacterViews, initializeViewsCharacter } from '../views/character.js';
 import { bindMonsterViews, initializeViewsMonsters } from '../views/monsters.js';
 import { initializeViewsCastles } from '../views/castles.js';
 import { initializeViewsResources } from '../views/resources.js';
@@ -167,4 +167,5 @@ initializeSimulationLoop();
 // party 也照样读得到；视图首次 update 必然发生在本文件全部 initialize/bind 之后，位置安全。
 initializeRuntimeGame();
 bindMonsterViews(game.monsterCatalog, game.state);
+bindCharacterViews(game.state, game.inventories);
 export { game } from './game.js';

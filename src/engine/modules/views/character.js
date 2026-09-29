@@ -3,7 +3,6 @@
  */
 import { getHighlightedItemName, getItemRarityLabel, getItemStatLabel } from "../loot/items.js";
 import { formatAmount } from "../core/math.js";
-import { game } from "../runtime/game.js";
 import { UpgradeButtonView, UpgradeListView, getRarityClass } from "./upgrade-details.js";
 import { appendAttributeRow, appendHeaderCell, clearElementById, createElement, getElement } from "./dom.js";
 import { CompositeView, View, addChildView, resetChildViews, updateChildViews } from "./base.js";
@@ -142,13 +141,35 @@ export function CharacterView(tabState, elementId, adventurerIndex) {
   addChildView(this, new UpgradeListView("characterLevelUpButtonContainer" + adventurerIndex, levelUpgradeCollection, true));
   addChildView(this, new CharacterTabsView("characterTabContainer" + adventurerIndex, adventurerIndex));
 }
+/** 角色面板所需的两个依赖由组合根注入（statistics / points / progression.achievements / views.monsters 已是同一形状）。
+ *  绑的是 game.state 与 game.inventories 这两个**容器对象本身**：它们在 runtime/game.js 里只构造一次，
+ *  src/ 内没有任何 `game.state =` 或 `.inventories =` 的整对象重赋值；字段级重置（adventurers.length 清零、装备改写）
+ *  不影响容器身份，所以按引用绑定不会读到过期快照。未绑定就用到会立刻抛，装配漏一步不会退化成 undefined 属性读取。 */
+var boundSessionState = null;
+var boundInventories = null;
+export function bindCharacterViews(state, inventories) {
+  boundSessionState = state;
+  boundInventories = inventories;
+}
+function characterViewState() {
+  if (!boundSessionState) {
+    throw new Error('角色面板尚未绑定会话状态：请在组合根调用 bindCharacterViews(game.state, game.inventories)');
+  }
+  return boundSessionState;
+}
+function characterInventories() {
+  if (!boundInventories) {
+    throw new Error('角色面板尚未绑定背包管理器：请在组合根调用 bindCharacterViews(game.state, game.inventories)');
+  }
+  return boundInventories;
+}
 export function mountCharacterView(a) {
-  var hasAdventurer = a.adventurerIndex < game.state.adventurers.length,
+  var hasAdventurer = a.adventurerIndex < characterViewState().adventurers.length,
     tabState = a.tabState;
   tabState.enabled = hasAdventurer;
   tabState.selected = false;
   if (hasAdventurer) {
-    var adventurer = game.state.adventurers[a.adventurerIndex];
+    var adventurer = characterViewState().adventurers[a.adventurerIndex];
     a = a.getAvailableSkillPoints(adventurer);
     var className = adventurer.classDefinition.shortName;
     if (0 < a) {
@@ -185,7 +206,7 @@ export function initializeViewsCharacter() {
       this.levelCell.innerHTML = this.item.itemLevel + "";
       this.goldCell.innerHTML = formatAmount(this.item.itemGold);
       this.valueCell.innerHTML = formatAmount(this.item.itemValue) + " " + getItemStatLabel(this.item);
-      var adventurer = game.state.adventurers[this.adventurerIndex],
+      var adventurer = characterViewState().adventurers[this.adventurerIndex],
         equippedItem = adventurer.getSlotItem(item.slot);
       this.valueCell.className = equippedItem ? this.item.itemValue > equippedItem.itemValue ? "itemValueBetter" : this.item.itemValue < equippedItem.itemValue ? "itemValueWorse" : "" : "itemValueBetter";
       this.goldCell.className = equippedItem ? item.itemGold > equippedItem.itemGold ? "itemValueBetter" : item.itemGold < equippedItem.itemGold ? "itemValueWorse" : "" : "itemValueBetter";
@@ -247,11 +268,11 @@ export function initializeViewsCharacter() {
     this.inventoryTable = null;
   };
   InventoryTableView.prototype.update = function () {
-    if (!(0 > this.adventurerIndex || this.adventurerIndex >= game.state.adventurers.length)) {
+    if (!(0 > this.adventurerIndex || this.adventurerIndex >= characterViewState().adventurers.length)) {
       if (!this.inventoryTable) {
         (/** @type {InventoryTableView & TableLifecycle} */ (/** @type {unknown} */ (this))).createDomElements();
       }
-      var items = game.state.adventurers[this.adventurerIndex].inventory.items;
+      var items = characterViewState().adventurers[this.adventurerIndex].inventory.items;
       if (items.length !== this.rowViews.length) {
         (/** @type {InventoryTableView & TableLifecycle} */ (/** @type {unknown} */ (this))).setRowCount(items.length);
       }
@@ -362,11 +383,11 @@ export function initializeViewsCharacter() {
     this.equipmentTable = null;
   };
   EquipmentTableView.prototype.update = function () {
-    if (!(0 > this.adventurerIndex || this.adventurerIndex >= game.state.adventurers.length)) {
+    if (!(0 > this.adventurerIndex || this.adventurerIndex >= characterViewState().adventurers.length)) {
       if (!this.equipmentTable) {
         (/** @type {EquipmentTableView & TableLifecycle} */ (/** @type {unknown} */ (this))).createDomElements();
       }
-      var adventurer = game.state.adventurers[this.adventurerIndex],
+      var adventurer = characterViewState().adventurers[this.adventurerIndex],
         slotList = adventurer.slotList;
       if (slotList.length !== this.rowViews.length) {
         (/** @type {EquipmentTableView & TableLifecycle} */ (/** @type {unknown} */ (this))).setRowCount(slotList.length);
@@ -420,7 +441,7 @@ export function initializeViewsCharacter() {
   EquipAllView.prototype = new View();
   EquipAllView.prototype.reset = function () {};
   EquipAllView.prototype.update = function () {
-    if (!(0 > this.adventurerIndex || this.adventurerIndex >= game.state.adventurers.length)) {
+    if (!(0 > this.adventurerIndex || this.adventurerIndex >= characterViewState().adventurers.length)) {
       if ((/** @type {EquipAllView & { hasImprovement: () => boolean }} */ (/** @type {unknown} */ (this))).hasImprovement()) {
         if (!this.equipAllEnabled) {
           this.equipAllEnabled = true;
@@ -435,15 +456,15 @@ export function initializeViewsCharacter() {
     }
   };
   EquipAllView.prototype.equipBestForCharacter = function () {
-    game.inventories.equipBestForCharacter(game.state.adventurers[this.adventurerIndex]);
+    characterInventories().equipBestForCharacter(characterViewState().adventurers[this.adventurerIndex]);
   };
   EquipAllView.prototype.hasImprovement = function () {
-    return game.inventories.hasImprovement(game.state.adventurers[this.adventurerIndex]);
+    return characterInventories().hasImprovement(characterViewState().adventurers[this.adventurerIndex]);
   };
   InventoryTabView.prototype = new TabView();
   CharacterTabsView.prototype = new CompositeView();
   CharacterTabsView.prototype.update = function () {
-    var a = game.state.adventurers[this.adventurerIndex],
+    var a = characterViewState().adventurers[this.adventurerIndex],
       a = 0 < a.skillPoints && a.hasUnspentSkills;
     if (this.cachedHasUnspentSkills !== a) {
       this.cachedHasUnspentSkills = a;
@@ -474,7 +495,7 @@ export function initializeViewsCharacter() {
     this.extraAttackCell = appendAttributeRow(this.tableElement, "额外攻击:", rowIndex);
   };
   CharacterSummaryView.prototype.update = function () {
-    var a = game.state.adventurers[this.adventurerIndex].stats,
+    var a = characterViewState().adventurers[this.adventurerIndex].stats,
       characterLevel = a.characterLevel,
       health = a.health,
       spirit = a.spirit,
@@ -576,7 +597,7 @@ export function initializeViewsCharacter() {
     this.spellBonusCell = appendAttributeRow(this.tableElement, "法术加成:", 4);
   };
   StatBreakdownView.prototype.update = function () {
-    var a = getStatByIndex(game.state.adventurers[this.adventurerIndex].stats, this.statIndex),
+    var a = getStatByIndex(characterViewState().adventurers[this.adventurerIndex].stats, this.statIndex),
       totalStatValue = statValue(a),
       itemValue = a.itemValue,
       levelValue = a.levelValue,
@@ -606,7 +627,7 @@ export function initializeViewsCharacter() {
   CharacterAttributesView.prototype = new View();
   CharacterAttributesView.prototype.reset = function () {
     clearElementById(this.elementId);
-    if (!(0 > this.adventurerIndex || this.adventurerIndex >= game.state.adventurers.length)) {
+    if (!(0 > this.adventurerIndex || this.adventurerIndex >= characterViewState().adventurers.length)) {
       this.summaryView.reset();
       this.damageView.reset();
       this.armorView.reset();
@@ -617,7 +638,7 @@ export function initializeViewsCharacter() {
     }
   };
   CharacterAttributesView.prototype.update = function () {
-    if (!(0 > this.adventurerIndex || this.adventurerIndex >= game.state.adventurers.length)) {
+    if (!(0 > this.adventurerIndex || this.adventurerIndex >= characterViewState().adventurers.length)) {
       this.summaryView.render();
       this.damageView.render();
       this.armorView.render();
@@ -657,7 +678,7 @@ export function initializeViewsCharacter() {
     (/** @type {SkillsTabView & { refreshCollections: () => void }} */ (/** @type {unknown} */ (this))).refreshCollections();
     var baseElementId = this.elementId,
       container = getElement(baseElementId);
-    if (container && !(0 > this.adventurerIndex || this.adventurerIndex >= game.state.adventurers.length)) {
+    if (container && !(0 > this.adventurerIndex || this.adventurerIndex >= characterViewState().adventurers.length)) {
       if (this.skillCollection) {
         this.skillTreeTableElement = createElement("table", container, null, "adventurerSkillTreeTable");
         var skillUpgrades = this.skillCollection.upgrades,
@@ -715,10 +736,10 @@ export function initializeViewsCharacter() {
     }
   };
   SkillsTabView.prototype.refreshCollections = function () {
-    if (0 > this.adventurerIndex || this.adventurerIndex >= game.state.adventurers.length) {
+    if (0 > this.adventurerIndex || this.adventurerIndex >= characterViewState().adventurers.length) {
       this.fourthSkillTree = this.thirdSkillTree = this.skillTreeCollection = this.skillCollection = null;
     } else {
-      var adventurer = game.state.adventurers[this.adventurerIndex];
+      var adventurer = characterViewState().adventurers[this.adventurerIndex];
       this.skillCollection = adventurer.skillTree1;
       this.skillTreeCollection = adventurer.skillTree2;
       this.thirdSkillTree = adventurer.skillTree3;

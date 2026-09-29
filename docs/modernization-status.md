@@ -111,6 +111,21 @@
 - **由此确定的下一步形状**：命名残量现在卡在"表达式位置的赋值"这一类，不是工具能力问题，而是"只改绑定名"的授权边界问题。要继续推进必须先定义并单独授权一类**语句拆分改写**（把 `if (x = f())` 的赋值提成前置独立语句），逐处对齐求值顺序与副作用，并由差分场景 + 存档 parity + 结构对账三重兜底。
 
 
+## 2026-09-29 R28（角色面板退出 game 直连：一次批量注入的授权成本记账）
+
+- `views/character.js` 的 18 处 `game.state.*` 与 2 处 `game.inventories.*` 改为组合根注入
+  `bindCharacterViews(game.state, game.inventories)`，绑定点在 `runtime/index.js`（该文件本来就已 import
+  这个视图模块，无新增依赖边）。替换前验证过两个前提：`^\s*game\.state\s*=` 在 src/ 内 0 处、
+  `\.inventories\s*=` 也 0 处，即两个都是"只构造一次的容器对象"，所以按引用绑定不会读到过期快照；
+  字段级重置（`adventurers.length` 清零、装备改写）不影响容器身份。功能探针 `output/probe-character-views.mjs`
+  实证未绑定时 `mountCharacterView` 抛点名错误、绑定后走 `hasAdventurer=false` 分支正常返回。
+  `npm run audit:arch` 实测 game 直连 33 → 32。
+- 这一片给"结构对账授权清单"的规模提了个醒：一次机械的 20 点替换产生了 32 条授权条目（每个不同的
+  骨架形状一条，含被替换侧）。做法上是让门禁自己吐出形状清单、按形状去重加计数上限，而不是手抄——
+  手抄会漏、漏了就倾向"干脆放宽归一化"，那正是本文件头明令拒绝的路子。条目随切片落地即删（本轮剪掉
+  已提交的 monsters/index 19 条）。
+
+
 ## 尚未完成的主要工作
 
 1. **拆开中心状态与循环依赖**：R27 续实测 33 个模块直接导入 `runtime/game.js`（`world/pathfinding.js`、`world/travel-costs.js`、`progression/achievements.js`、`views/monsters.js` 已退出），一个强连通分量仍包含 41 个模块；74 个初始化调用仍依赖固定顺序。装备目录、物品生成、角色属性、状态效果、内容参数、冒险点数、特效动画目录、背包与旅行代价已退出该循环，但整个领域图仍需继续拆分。应按领域建立明确输入与组合根，再逐个移动依赖方向，避免只增加转发包装。
