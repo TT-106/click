@@ -24,12 +24,27 @@ const branches = [];
 traverse(ast, {
   FunctionDeclaration(p) {
     if (p.node.id?.name !== 'createSaveState') return;
+    // 先找出"这个函数最终 return 的是哪个变量"，再按数据流收集它的对象字面量赋值。
+    // 早期版本硬编码 `left.name !== 'b'`（因为当时那个局部变量恰好叫 b），
+    // 于是检查器的正确性绑在了恢复期的混淆名上：改名一落地它就静默收集到 0 个分支，
+    // 报"已初始化 0 键"——检查器跟着改名变红，说明检查的是名字而不是结构。现在按 return 目标推导。
+    const returnedNames = new Set();
+    p.traverse({
+      ReturnStatement(inner) {
+        const arg = inner.node.argument;
+        if (arg?.type === 'Identifier') returnedNames.add(arg.name);
+      },
+    });
+    if (returnedNames.size !== 1) {
+      throw new Error(`createSaveState 的 return 目标应唯一，实得 ${[...returnedNames].join(', ') || '（无标识符 return）'}——请人工核对结构`);
+    }
+    const carrier = [...returnedNames][0];
     p.traverse({
       AssignmentExpression(inner) {
-        // 只取 createSaveState 最终 return 的那个变量（本文件是 b）的两个分支对象，
+        // 只取最终被 return 的那个变量（当前名为 ${carrier}）的两个分支对象，
         // 否则会把循环里的 achievements 条目等中间对象也算进来
         const left = inner.node.left;
-        if (left.type !== 'Identifier' || left.name !== 'b') return;
+        if (left.type !== 'Identifier' || left.name !== carrier) return;
         const right = inner.node.right;
         if (right.type !== 'ObjectExpression') return;
         const keys = right.properties
