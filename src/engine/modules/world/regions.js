@@ -119,31 +119,31 @@ export function getNorthRegion(a, regionColumn, regionRow, occupiedRegionKeys) {
 export function getSouthRegion(a, regionColumn, regionRow, occupiedRegionKeys) {
   return regionRow + 1 < a.maxRegionRow && (a = regionColumn + "_" + (regionRow + 1), !occupiedRegionKeys[a]) ? game.regions.byKey[a] : null;
 }
-export function chooseAdjacentRegion(regionLayout, b, occupiedRegionKeys, d) {
-  var regionColumn = b.regionColumn;
-  b = b.regionRow;
+export function chooseAdjacentRegion(regionLayout, sourceRegion, occupiedRegionKeys, d) {
+  var regionColumn = sourceRegion.regionColumn;
+  var regionRow = sourceRegion.regionRow;
   if (0.5 > d.random()) {
     if (0.5 > d.random()) {
-      if ((d = getWestRegion(regionLayout, regionColumn, b, occupiedRegionKeys)) || (d = getEastRegion(regionLayout, regionColumn, b, occupiedRegionKeys)) || (d = getSouthRegion(regionLayout, regionColumn, b, occupiedRegionKeys))) {
+      if ((d = getWestRegion(regionLayout, regionColumn, regionRow, occupiedRegionKeys)) || (d = getEastRegion(regionLayout, regionColumn, regionRow, occupiedRegionKeys)) || (d = getSouthRegion(regionLayout, regionColumn, regionRow, occupiedRegionKeys))) {
         return d;
       }
-      d = getNorthRegion(regionLayout, regionColumn, b, occupiedRegionKeys);
+      d = getNorthRegion(regionLayout, regionColumn, regionRow, occupiedRegionKeys);
     } else {
-      if ((d = getEastRegion(regionLayout, regionColumn, b, occupiedRegionKeys)) || (d = getWestRegion(regionLayout, regionColumn, b, occupiedRegionKeys)) || (d = getNorthRegion(regionLayout, regionColumn, b, occupiedRegionKeys))) {
+      if ((d = getEastRegion(regionLayout, regionColumn, regionRow, occupiedRegionKeys)) || (d = getWestRegion(regionLayout, regionColumn, regionRow, occupiedRegionKeys)) || (d = getNorthRegion(regionLayout, regionColumn, regionRow, occupiedRegionKeys))) {
         return d;
       }
-      d = getSouthRegion(regionLayout, regionColumn, b, occupiedRegionKeys);
+      d = getSouthRegion(regionLayout, regionColumn, regionRow, occupiedRegionKeys);
     }
   } else if (0.5 > d.random()) {
-    if ((d = getNorthRegion(regionLayout, regionColumn, b, occupiedRegionKeys)) || (d = getSouthRegion(regionLayout, regionColumn, b, occupiedRegionKeys)) || (d = getEastRegion(regionLayout, regionColumn, b, occupiedRegionKeys))) {
+    if ((d = getNorthRegion(regionLayout, regionColumn, regionRow, occupiedRegionKeys)) || (d = getSouthRegion(regionLayout, regionColumn, regionRow, occupiedRegionKeys)) || (d = getEastRegion(regionLayout, regionColumn, regionRow, occupiedRegionKeys))) {
       return d;
     }
-    d = getWestRegion(regionLayout, regionColumn, b, occupiedRegionKeys);
+    d = getWestRegion(regionLayout, regionColumn, regionRow, occupiedRegionKeys);
   } else {
-    if ((d = getSouthRegion(regionLayout, regionColumn, b, occupiedRegionKeys)) || (d = getNorthRegion(regionLayout, regionColumn, b, occupiedRegionKeys)) || (d = getWestRegion(regionLayout, regionColumn, b, occupiedRegionKeys))) {
+    if ((d = getSouthRegion(regionLayout, regionColumn, regionRow, occupiedRegionKeys)) || (d = getNorthRegion(regionLayout, regionColumn, regionRow, occupiedRegionKeys)) || (d = getWestRegion(regionLayout, regionColumn, regionRow, occupiedRegionKeys))) {
       return d;
     }
-    d = getEastRegion(regionLayout, regionColumn, b, occupiedRegionKeys);
+    d = getEastRegion(regionLayout, regionColumn, regionRow, occupiedRegionKeys);
   }
   if (d) {
     return d;
@@ -168,14 +168,14 @@ export function resetCastles() {
 }
 export function unlockStartingRegion() {
   /** @type {any} */
-  var a = game.world.worldBlocks[1][1];
-  a = a.regionColumn + "_" + a.regionRow;
-  var ownerCastle = findCastleByRegion(a);
+  var startingWorldBlock = game.world.worldBlocks[1][1];
+  var startingRegionKey = startingWorldBlock.regionColumn + "_" + startingWorldBlock.regionRow;
+  var ownerCastle = findCastleByRegion(startingRegionKey);
   if (ownerCastle) {
     ownerCastle.regionLocked = false;
     refreshWorldBlocks(game.world);
   } else {
-    console.log("failed to find world block owner castle: " + a);
+    console.log("failed to find world block owner castle: " + startingRegionKey);
   }
 }
 export function findCastle(a) {

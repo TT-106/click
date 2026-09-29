@@ -1,7 +1,7 @@
 // 单字母局部绑定语义化改名工具（作用域感知，只改绑定标识符本身）。
 //
-//   node scripts/rename-bindings-auto.mjs --file <rel> --report
-//   node scripts/rename-bindings-auto.mjs --file <rel> --table <json> [--dry]
+//   node scripts/rename-bindings-v2.mjs --file <rel> --report
+//   node scripts/rename-bindings-v2.mjs --file <rel> --table <json> [--dry]
 //
 // 表：{ "<函数键|@module>": { "<旧名>": "<新名>" } }
 // 一名多义用行区间拆分：{ "<旧名>": [{name,fromLine,toLine}, ...] }
