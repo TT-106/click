@@ -46,7 +46,7 @@
 | `actionDefinition` | 指向 `Spell` 实例；**null 表示这是一次普通攻击** | `actions.js:67-70`、`actions.js:86-114` |
 | `impactEffect` / `projectileEffect` | 两个 `VisualEffect`；impact 的动画剩余帧数同时充当"本动作还剩几帧可结算" | `actions.js:84`、`sprites.js:64-93` |
 
-字段速查 C —— 角色类型常量：`ADVENTURER_TYPE = 0`、`MONSTER_TYPE = 2`（`ai/targeting.js:295-296`）。实际出现 6 种：0 冒险者、1 随从、2 普通怪、3 城堡守卫、4 首领、5 卷轴施法者。敌我判定见 C-30。
+字段速查 C —— 角色类型常量：`ADVENTURER_TYPE = 0`、`MONSTER_TYPE = 2`（`ai/targeting.js:357-358`）。实际出现 6 种：0 冒险者、1 随从、2 普通怪、3 城堡守卫、4 首领、5 卷轴施法者。敌我判定见 C-30。
 
 ---
 
@@ -167,7 +167,7 @@ export function performMultiAttack(attacker, isRangedAttack) {
         }
 ```
 
-动作类型常量：`IDLE_ACTION = 0`、`1 = 移动`、`2 = 近战`、`MELEE_ACTION_TYPE = 3`（**实为"远程攻击"动作**）、`CAST_ACTION_TYPE = 4`（`ai/targeting.js:421-423`）。`MELEE_ACTION_TYPE` 这个名字与实际语义相反，是恢复期沿用原符号位置的结果，本文一律按消费点称其为"远程攻击"。
+动作类型常量：`IDLE_ACTION = 0`、`1 = 移动`、`2 = 近战`、`MELEE_ACTION_TYPE = 3`（**实为"远程攻击"动作**）、`CAST_ACTION_TYPE = 4`（`ai/targeting.js:483-485`）。`MELEE_ACTION_TYPE` 这个名字与实际语义相反，是恢复期沿用原符号位置的结果，本文一律按消费点称其为"远程攻击"。
 
 ### C-4 目标挑选半径
 
@@ -1168,7 +1168,7 @@ export function findNearestOpponent(a) {
   return h;
 ```
 
-`src/engine/modules/ai/targeting.js:68`（`findNearestVisibleOpponent` 的判定行）
+`src/engine/modules/ai/targeting.js:74-103`（`findNearestVisibleOpponent` 的判定行）
 
 ```js
     if (!(d = c[f], a === d || d.isDead || d.position.room != b || (l = d.effects, l.isStealthed || l.Kd || l.isConverted || (l = g.Ud(d.position.levelPosition), !(0 > n || l < n))))) {
@@ -1186,36 +1186,44 @@ export function findNearestOpponent(a) {
 
 ### C-32 嘲讽处理
 
-`src/engine/modules/ai/targeting.js:264-291`
+`src/engine/modules/ai/targeting.js:303-338`
 
 ```js
 export function respondToTaunt(attackBehavior, character) {
   if (docileMonstersModifier.currentValue) {
     return false;
   }
-  var c = character.combatTarget;
-  if (c && c.isDead) {
-    c = null;
+  var combatTarget = character.combatTarget;
+  if (combatTarget && combatTarget.isDead) {
+    combatTarget = null;
     character.setCombatTarget(null);
   }
-  if (c && c.effects.isStunned) {
-    c = null;
+  if (combatTarget && combatTarget.effects.isStunned) {
+    combatTarget = null;
     character.setCombatTarget(null);
   }
-  if (c && c.effects.isStealthed) {
-    c = null;
+  if (combatTarget && combatTarget.effects.isStealthed) {
+    combatTarget = null;
     character.setCombatTarget(null);
   }
-  if (c && c.effects.hasStealthEffect) {
+  if (combatTarget && combatTarget.effects.hasStealthEffect) {
     return attackTauntingTarget(attackBehavior, character), true;
   }
-  for (var opponents = getOpponents(character), candidate, characterLevelPosition = character.position.levelPosition, h, nearestTauntingOpponent = null, bestDistanceSquared = -1, c = /** @type {any} */ (0); c < opponents.length; c++) {
-    if (candidate = opponents[c], character !== candidate && (h = candidate.effects, h.hasStealthEffect && !h.isDisabled && (h = characterLevelPosition.squaredDistanceTo(candidate.position.levelPosition), 0 > bestDistanceSquared || h < bestDistanceSquared))) {
-      nearestTauntingOpponent = candidate;
-      bestDistanceSquared = h;
+  for (var opponents = getOpponents(character), candidate, characterLevelPosition = character.position.levelPosition, effects, nearestTauntingOpponent = null, bestDistanceSquared = -1, opponentIndex = /** @type {any} */ (0); opponentIndex < opponents.length; opponentIndex++) {
+    candidate = opponents[opponentIndex];
+    if (character !== candidate) {
+      effects = candidate.effects;
+      if (effects.hasStealthEffect && !effects.isDisabled) {
+        var distanceSquared = characterLevelPosition.squaredDistanceTo(candidate.position.levelPosition);
+        if (0 > bestDistanceSquared || distanceSquared < bestDistanceSquared) {
+          nearestTauntingOpponent = candidate;
+          bestDistanceSquared = distanceSquared;
+        }
+      }
     }
   }
-  return (c = nearestTauntingOpponent) || (c = findNearbyOpponent(character)) ? (character.setCombatTarget(c), attackTauntingTarget(attackBehavior, character), true) : false;
+  var tauntTarget = nearestTauntingOpponent || findNearbyOpponent(character);
+  return tauntTarget ? (character.setCombatTarget(tauntTarget), attackTauntingTarget(attackBehavior, character), true) : false;
 }
 ```
 

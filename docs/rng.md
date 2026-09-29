@@ -39,9 +39,9 @@ MT19937 结构参数全部保留在 `math.js`：624 个状态字（`stateSize`�
 按 grep `randomInt` / `Math.random()` 在 `src/engine` 的调用方分类（完整 file:line 清单见 §4）：
 
 - **战斗数值**：伤害浮动（`combat/actions.js:305`）、命中（`actions.js:587`）、暴击（`actions.js:590, 602`）、护甲减伤浮动（`actions.js:594, 606`）、多重攻击触发（`actions.js:174-182, 423`）、连击数（`characters/stats.js:102-114`）。
-- **怪物与遭遇**：遭遇怪物数量与 boss 概率（`combat/encounters.js:44`）、城堡守卫生成分组与选型（`encounters.js:151-155`）、怪物名前后缀（`encounters.js:298`）、随机目标选取（`ai/targeting.js:112-113`）。
+- **怪物与遭遇**：遭遇怪物数量与 boss 概率（`combat/encounters.js:44`）、城堡守卫生成分组与选型（`encounters.js:151-155`）、怪物名前后缀（`encounters.js:298`）、随机目标选取（`ai/targeting.js:144-149`）。
 - **掉落与宝箱**：杀怪四类掉落判定（`simulation/characters.js:298-332`）、击杀奖励爆发（`combat/actions.js:372-398`）、宝箱开箱奖励（`characters/character.js:1079-1120`）、宝箱生成概率与位置（`loot/treasure.js:62-67, 121-127`）、物品类型/稀有度/等级/特效（`loot/items.js:148, 169-173, 226-230, 333`）、物品命名（`loot/item-names.js:59-120`）、金币区间（`content/balance.js:8-13 rollGoldDrop`）。
-- **表现层与文案**（仍消耗**全局流**，不可删）：伤害/治疗浮动文字偏移（`rendering/floating-text.js:11-13, 49`）、场景抖动（`rendering/scene.js:221-222`）、闲逛目标（`characters/movement.js:108, 125, 143, 174`；`ai/behaviors.js:497`）、目标点抖动（`ai/targeting.js:129-134`）、闲聊文案（`ai/behaviors.js:587, 706`；`simulation/characters.js:201, 332`）、旅行尸体 sprite（`simulation/characters.js:187`）、商店 sprite（`world/dungeons.js:184`）、结算画面怪物 sprite（`views/results.js:103`）、升级提示示例（`views/upgrade-details.js:1161`）。
+- **表现层与文案**（仍消耗**全局流**，不可删）：伤害/治疗浮动文字偏移（`rendering/floating-text.js:11-13, 49`）、场景抖动（`rendering/scene.js:221-222`）、闲逛目标（`characters/movement.js:108, 125, 143, 174`；`ai/behaviors.js:497`）、目标点抖动（`ai/targeting.js:129-134`）、闲聊文案（`ai/behaviors.js:587, 706`；`simulation/characters.js:201, 332`）、旅行尸体 sprite（`simulation/characters.js:187`）、商店 sprite（`world/dungeons.js:184`）、结算画面怪物 sprite（`views/results.js:103`）、升级提示示例（`views/upgrade-details.js:1235`）。
 
 ## 2. JS 浮点变体 MT 与 C 标准的差异（facts.md 第 1 条，直接引用）
 
@@ -122,9 +122,9 @@ Date.now = () => fixedNow;
 
 | 位置 | 内容 |
 |---|---|
-| `src/engine/modules/ai/targeting.js:112-113` [M] | 随机友方目标选取 |
-| `src/engine/modules/ai/targeting.js:129-134` [M] | 目标点抖动（半格内 + 0.5 方向） |
-| `src/engine/modules/ai/targeting.js:429` [M] | 追踪特效目标点 |
+| `src/engine/modules/ai/targeting.js:144-149` [M] | 随机友方目标选取 |
+| `src/engine/modules/ai/targeting.js:164-176` [M] | 目标点抖动（半格内 + 0.5 方向） |
+| `src/engine/modules/ai/targeting.js:350` [M] | 追踪特效目标点 |
 | `src/engine/modules/ai/behaviors.js:316` [M] | 游走目标位置 |
 | `src/engine/modules/ai/behaviors.js:410` [M] | 跟随行为偏移 `randomInt(3)` |
 | `src/engine/modules/ai/behaviors.js:497` [M] | 闲逛目标 `Math.random()` 坐标 |
@@ -161,5 +161,5 @@ Date.now = () => fixedNow;
 | `src/engine/modules/rendering/scene.js:221-222` [M] | 场景装饰抖动 |
 | `src/engine/modules/world/dungeons.js:184` [M] | 商店 sprite `randomShopSprite` |
 | `src/engine/modules/views/results.js:103` [M] | 结算画面随机怪物 sprite |
-| `src/engine/modules/views/upgrade-details.js:1161` [M] | 升级详情示例选取 |
+| `src/engine/modules/views/upgrade-details.js:1235` [M] | 升级详情示例选取 |
 | `src/engine/modules/core/math.js:29-31,56-60` [M] | randomInt 与 randomizeScaledValue 本体 |

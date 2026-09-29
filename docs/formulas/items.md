@@ -132,7 +132,7 @@ AA = Op.uf(zA),
 - `itemRarityTiers` 按 `tierId` 值查表，**数组顺序不承重**（仅"查不到时回落 `[0]`"依赖顺序）。
 - `itemRarityProbabilities` 的**索引本身即稀有度 ID**，顺序承重：
   - 存档字段 `itemRarity` 直接写 `a.uf()`（`persistence/entities.js:53,60`）；
-  - UI 文案 `getItemRarityLabel`（`loot/items.js:112-127`）、CSS 类 `getRarityClass`（`views/upgrade-details.js:228-240`）、统计分档 `recordItemFound`（`progression/statistics.js:104-119`）、冒险点分档 `awardAdventurePoints(13/14/15/16)`（`characters/character.js:1036-1049`、`combat/actions.js:235-249`）全部按 `0..4` 硬编码 switch。
+  - UI 文案 `getItemRarityLabel`（`loot/items.js:112-127`）、CSS 类 `getRarityClass`（`views/upgrade-details.js:298`）、统计分档 `recordItemFound`（`progression/statistics.js:104-119`）、冒险点分档 `awardAdventurePoints(13/14/15/16)`（`characters/character.js:1036-1049`、`combat/actions.js:235-249`）全部按 `0..4` 硬编码 switch。
   - 越界值走 `"BUG FOUND: " + item.getRarity()`（`loot/items.js:125`）。
 - **另一处顺序承重**：槽位池 `itemTypesBySlot[slot]` 是注册序数组，`itemType = availableTypes[randomInt(availableTypes.length)]`（`loot/items.js:150`）按下标取模板；`content/equipment.js:324+` 的 `registerItemType(...)` 调用顺序改变，同一次随机数会取出不同贴图/基底名，差分立即分叉。`itemTypeId` 是 `baseName + spriteFileName` 的字符串哈希（`loot/items.js:235-247`），与注册顺序无关。
 
@@ -535,9 +535,9 @@ export function spawnItemDrop(dropRegistry, x, y, room, monsterLevel, generator,
 ```js
   var treasureRegistry = treasureRegistryRef();
     var hasMonsters = 0 < getMonsters().length;
-  if (!getRoomTreasure(treasureRegistry, a)) {
-    if (3 != a.encounterType) {
-      if (!hasMonsters && 2 > a.doorList.length) {
+  if (!getRoomTreasure(treasureRegistry, room)) {
+    if (3 != room.encounterType) {
+      if (!hasMonsters && 2 > room.doorList.length) {
         return;
       }
       var treasureSpawnChance = globalUpgradeDefinitions.treasureChance.currentValue / 100;
@@ -549,7 +549,7 @@ export function spawnItemDrop(dropRegistry, x, y, room, monsterLevel, generator,
 
 - 门前置：房内已无怪物且房门数 `<2` → 不放宝箱。
 - 概率门：`treasureChance` 基础 5 / +2 / 上限 20（`content/balance.js:429-441`）；连续比较 `Math.random() > v/100` → P = v/100。
-- `room.Yp === 3`（财宝房）跳过前置与概率门，必定放箱。财宝房由 `randomTreasureRoom` 药水在揭示房间时以 25% 概率就地改写房型：`world/rooms.js:57-58`。财宝房内每个内圈格子 80% 概率生成 `2 · rollGoldDrop()` 的金堆：`world/rooms.js:190-201`。
+- `room.encounterType === 3`（财宝房）跳过前置与概率门，必定放箱。财宝房由 `randomTreasureRoom` 药水在揭示房间时以 25% 概率就地改写房型：`world/rooms.js:57-58`。财宝房内每个内圈格子 80% 概率生成 `2 · rollGoldDrop()` 的金堆：`world/rooms.js:190-201`。
 - 开箱产出（`characters/character.js:1081-1127`）由 `Mf` 分类：`1`=财宝箱（金 10+U[0,9] 份 + 道具 7+U[0,7] + 卷轴 2+U[0,4] + 药水 U[0,1]）、`2`=武器架（道具 + 卷轴）、`3`=书架（仅卷轴）。道具用等级/品质加成 `CHEST_ITEM_LEVEL_BONUS=10`、`CHEST_ITEM_QUALITY_BONUS=15`（`content/balance.js:293-294`），见 I-2、I-4。`Mf` 与 `ve` 表条目的对应见 `runtime/game.js:219-348`。
 
 ### I-20 卷轴掉落的取样池

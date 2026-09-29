@@ -103,7 +103,7 @@ var Kh = scaleByLevel(Sa.characterLevel, damageCurve, 1);
 Sa.spellSpiritCost = Kh;
 ```
 
-`experienceToLevelUp` 字段名未语义化。含义 = **"从当前等级晋升一级所需的 XP"**，证据：`LevelUpUpgrade.purchase` 以 `stats.Am` 为价格扣除队伍 XP（`progression/upgrades.js:537-544`），UI 亦按 `"… XP"` 显示（`views/upgrade-details.js:410`）。置信度高。
+`experienceToLevelUp` 字段名未语义化。含义 = **"从当前等级晋升一级所需的 XP"**，证据：`LevelUpUpgrade.purchase` 以 `stats.Am` 为价格扣除队伍 XP（`progression/upgrades.js:537-544`），UI 亦按 `"… XP"` 显示（`views/upgrade-details.js:480`）。置信度高。
 
 **代入 `b = 当前等级`**（不是 `等级+1`），配合 §0 的 `x−1` 位移：
 
@@ -720,7 +720,7 @@ export function applyAchievementReward(a) {
 | `itemsFound` + `uncommon/rare/historic/ancientItemsFound` | `recordItemFound(item)` | `characters/character.js:1034`、`combat/actions.js:232`；分档见 `progression/statistics.js:104-119` |
 | `treasureChestsLooted` / `weaponRacksLooted` / `bookcasesLooted` | 三个 `record…Looted` | `characters/character.js:1130/1134/1138`（按宝箱 `Mf` 1/2/3 分派） |
 
-`[疑似遗留怪癖]` `MELEE_ACTION_TYPE = 3`（`ai/targeting.js:422`）却走 `recordRangedAttack`，`actionType === 2` 走 `recordMeleeAttack`（`characters/character.js:440,454`）。存档键语义以键名为准，已在 `docs/reverse-engineering/unresolved.md` 第 5 条记为"误名、落地时勿顺手纠正"。
+`[疑似遗留怪癖]` `MELEE_ACTION_TYPE = 3`（`ai/targeting.js:484`）却走 `recordRangedAttack`，`actionType === 2` 走 `recordMeleeAttack`（`characters/character.js:440,454`）。存档键语义以键名为准，已在 `docs/reverse-engineering/unresolved.md` 第 5 条记为"误名、落地时勿顺手纠正"。
 
 ### 5.3 回读侧的两处特殊映射
 
@@ -1039,7 +1039,7 @@ if (15 <= b.turnTimeAccumulator) {
 | 9 | `combat/scrolls.js:61-63` + `progression/upgrades.js:1100` | 卷轴的价格档位与等级门槛是同一个表达式；`sg = 0` 的 `shockScroll` 开局即解锁 |
 | 10 | `runtime/game.js:448-450` | "继续"路径把地牢定价计数器 `Mk` 重置为**农场数量** |
 | 11 | `progression/statistics.js:39,69` | `levelsCleared`/`minionKills` 的记录方法仍是混淆名 `recordLevelCleared`/`$k`（与 `docs/reverse-engineering/unresolved.md` 第七批一致，未落地改名） |
-| 12 | `characters/character.js:440,454` + `ai/targeting.js:422` | `MELEE_ACTION_TYPE = 3` 记账为 `rangedAttackCount`（存档键为准，勿顺手纠正） |
+| 12 | `characters/character.js:440,454` + `ai/targeting.js:484` | `MELEE_ACTION_TYPE = 3` 记账为 `rangedAttackCount`（存档键为准，勿顺手纠正） |
 | 13 | `progression/achievements.js:98-99` | `requirementType 16` 读实时队伍等级，进度可随重生回退；函数无 `default` |
 | 14 | `persistence/entities.js:330-331` | `farmsPurchased` 缺失时用"当前农场数"补值，"0 农场"与"从未买农场"不可区分 |
 | 15 | `persistence/entities.js:327-328,362-363` | `weaponRacksLooted` 取 `weaponRacksLooted/weaponsRacksLooted` 两键最大值，`bookcasesLooted` 只取一键 |
