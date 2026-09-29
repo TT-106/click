@@ -18,65 +18,65 @@ export function PauseView() {
   this.elementId = "pauseButtonContainer";
   this.visible = true;
 }
-export function bindPauseButton(a) {
-  a.pauseButton = getElement("pauseButton");
-  a.pauseButton.onmouseup = function () {
+export function bindPauseButton(pauseView) {
+  pauseView.pauseButton = getElement("pauseButton");
+  pauseView.pauseButton.onmouseup = function () {
     game.paused = !game.paused;
     return false;
   };
 }
-export function TabState(a, b) {
-  this.label = a;
-  this.enabled = this.initiallyEnabled = b;
+export function TabState(label, initiallyEnabled) {
+  this.label = label;
+  this.enabled = this.initiallyEnabled = initiallyEnabled;
   this.highlighted = this.selected = false;
 }
-export function TabButtonView(a) {
-  this.tabState = a;
+export function TabButtonView(tabState) {
+  this.tabState = tabState;
   this.labelElement = this.tabListItem = null;
-  this.enabled = !a.initiallyEnabled;
-  this.selected = !a.selected;
-  this.highlighted = !a.highlighted;
+  this.enabled = !tabState.initiallyEnabled;
+  this.selected = !tabState.selected;
+  this.highlighted = !tabState.highlighted;
   this.cachedLabel = null;
 }
-export function mountTabButton(a, b, c) {
-  a.tabListItem = createElement("li", b, null, null);
-  if (!a.enabled) {
-    hideElement(a.tabListItem);
+export function mountTabButton(tabButtonView, tabListElement, tabBar) {
+  tabButtonView.tabListItem = createElement("li", tabListElement, null, null);
+  if (!tabButtonView.enabled) {
+    hideElement(tabButtonView.tabListItem);
   }
-  a.tabListItem.className = a.selected ? "selectedTab" : "";
-  a.labelElement = createElement("a", a.tabListItem, null, null);
-  a.labelElement.innerHTML = a.tabState.label;
-  a.labelElement.onclick = function () {
-    var b = a.tabState,
-      f;
-    for (f = 0; f < c.tabs.length; f++) {
-      c.tabs[f].selected = c.tabs[f] === b;
+  tabButtonView.tabListItem.className = tabButtonView.selected ? "selectedTab" : "";
+  tabButtonView.labelElement = createElement("a", tabButtonView.tabListItem, null, null);
+  tabButtonView.labelElement.innerHTML = tabButtonView.tabState.label;
+  tabButtonView.labelElement.onclick = function () {
+    var clickedTabState = tabButtonView.tabState,
+      tabIndex;
+    for (tabIndex = 0; tabIndex < tabBar.tabs.length; tabIndex++) {
+      tabBar.tabs[tabIndex].selected = tabBar.tabs[tabIndex] === clickedTabState;
     }
     return false;
   };
 }
-export function TabBar(a) {
-  this.elementId = a;
+export function TabBar(elementId) {
+  this.elementId = elementId;
   this.tabs = [];
   this.tabBarContainer = [];
 }
-export function addTab(a, b) {
-  a.tabs.push(b);
+export function addTab(tabBar, tabState) {
+  tabBar.tabs.push(tabState);
 }
-export function mountTabBar(a) {
-  clearElementById(a.elementId);
-  var b = getElement(a.elementId);
+export function mountTabBar(tabBar) {
+  clearElementById(tabBar.elementId);
+  var b = getElement(tabBar.elementId);
   if (b) {
     b = createElement("ul", /** @type {any} */ (b), null, null);
-    var c;
-    var d;
-    if (0 < a.tabBarContainer.length) {
-      a.tabBarContainer.length = 0;
+    var tabButtonView;
+    var tabIndex;
+    if (0 < tabBar.tabBarContainer.length) {
+      tabBar.tabBarContainer.length = 0;
     }
-    for (d = 0; d < a.tabs.length; d++) {
-      c = new TabButtonView(a.tabs[d]);
-      mountTabButton(c, b, a);
-      a.tabBarContainer.push(c);
+    for (tabIndex = 0; tabIndex < tabBar.tabs.length; tabIndex++) {
+      tabButtonView = new TabButtonView(tabBar.tabs[tabIndex]);
+      mountTabButton(tabButtonView, b, tabBar);
+      tabBar.tabBarContainer.push(tabButtonView);
     }
   }
 }
@@ -86,62 +86,62 @@ export function TabView() {
 export function initializeViewsNavigation() {
   GameView.prototype = new CompositeView();
   GameView.prototype.onGameWon = function () {
-    var a;
-    for (a = 0; a < this.panels.length; a++) {
-      this.panels[a].onGameWon();
+    var panelIndex;
+    for (panelIndex = 0; panelIndex < this.panels.length; panelIndex++) {
+      this.panels[panelIndex].onGameWon();
     }
   };
   GameView.prototype.onOfflineStart = function () {
     if (!game.gameWon && game.partyCreated) {
-      var a;
-      for (a = 0; a < this.panels.length; a++) {
-        this.panels[a].onOfflineStart();
+      var panelIndex;
+      for (panelIndex = 0; panelIndex < this.panels.length; panelIndex++) {
+        this.panels[panelIndex].onOfflineStart();
       }
     }
   };
   GameView.prototype.onOfflineFinish = function () {
     if (!game.gameWon && game.partyCreated) {
-      var a;
-      for (a = 0; a < this.panels.length; a++) {
-        this.panels[a].onOfflineFinish();
+      var panelIndex;
+      for (panelIndex = 0; panelIndex < this.panels.length; panelIndex++) {
+        this.panels[panelIndex].onOfflineFinish();
       }
     }
   };
   GameView.prototype.resetTabs = function () {
     this.tabBar.resetTabs();
-    var a;
-    for (a = 0; a < this.cachedSkillPoints.length; a++) {
-      this.cachedSkillPoints[a] = 0;
+    var adventurerIndex;
+    for (adventurerIndex = 0; adventurerIndex < this.cachedSkillPoints.length; adventurerIndex++) {
+      this.cachedSkillPoints[adventurerIndex] = 0;
     }
   };
   GameView.prototype.reset = function () {
-    var a;
-    for (a = 0; a < this.cachedSkillPoints.length; a++) {
-      this.cachedSkillPoints[a] = 0;
+    var adventurerIndex;
+    for (adventurerIndex = 0; adventurerIndex < this.cachedSkillPoints.length; adventurerIndex++) {
+      this.cachedSkillPoints[adventurerIndex] = 0;
     }
     resetChildViews(this);
   };
   GameView.prototype.update = function () {
-    var a, b, c;
-    for (a = 0; a < game.state.adventurers.length; a++) {
-      b = game.state.adventurers[a];
-      c = (/** @type {any} */ (this)).getAvailableSkillPoints(b);
-      if (this.cachedSkillPoints[a] !== c) {
-        this.cachedSkillPoints[a] = c;
+    var adventurerIndex, b, availableSkillPoints;
+    for (adventurerIndex = 0; adventurerIndex < game.state.adventurers.length; adventurerIndex++) {
+      b = game.state.adventurers[adventurerIndex];
+      availableSkillPoints = (/** @type {any} */ (this)).getAvailableSkillPoints(b);
+      if (this.cachedSkillPoints[adventurerIndex] !== availableSkillPoints) {
+        this.cachedSkillPoints[adventurerIndex] = availableSkillPoints;
         b = b.classDefinition.shortName;
-        if (0 < c) {
-          this.tabStates[a].label = b + " " + c;
-          this.tabStates[a].highlighted = true;
+        if (0 < availableSkillPoints) {
+          this.tabStates[adventurerIndex].label = b + " " + availableSkillPoints;
+          this.tabStates[adventurerIndex].highlighted = true;
         } else {
-          this.tabStates[a].label = b;
-          this.tabStates[a].highlighted = false;
+          this.tabStates[adventurerIndex].label = b;
+          this.tabStates[adventurerIndex].highlighted = false;
         }
       }
     }
     updateChildViews(this);
   };
-  GameView.prototype.getAvailableSkillPoints = function (a) {
-    return a.hasUnspentSkills ? a.skillPoints + a.initialSpellSkillPoint : 0;
+  GameView.prototype.getAvailableSkillPoints = function (adventurer) {
+    return adventurer.hasUnspentSkills ? adventurer.skillPoints + adventurer.initialSpellSkillPoint : 0;
   };
   PauseView.prototype = new View();
   PauseView.prototype.update = function () {
@@ -177,11 +177,11 @@ export function initializeViewsNavigation() {
         this.labelElement.innerHTML = a;
       }
       var a = this.tabState.selected,
-        b = this.tabState.highlighted;
-      if (this.selected != a || this.highlighted != b) {
+        highlighted = this.tabState.highlighted;
+      if (this.selected != a || this.highlighted != highlighted) {
         this.selected = a;
-        this.highlighted = b;
-        this.tabListItem.className = a ? b ? "selectedTab tabHighlighted" : "selectedTab" : b ? "tabHighlighted" : "";
+        this.highlighted = highlighted;
+        this.tabListItem.className = a ? highlighted ? "selectedTab tabHighlighted" : "selectedTab" : highlighted ? "tabHighlighted" : "";
       }
     }
   };
@@ -189,18 +189,18 @@ export function initializeViewsNavigation() {
     mountTabBar(this);
   };
   TabBar.prototype.render = function () {
-    var a;
-    for (a = 0; a < this.tabBarContainer.length; a++) {
-      this.tabBarContainer[a].render();
+    var tabButtonIndex;
+    for (tabButtonIndex = 0; tabButtonIndex < this.tabBarContainer.length; tabButtonIndex++) {
+      this.tabBarContainer[tabButtonIndex].render();
     }
   };
   TabBar.prototype.resetTabs = function () {
-    var a, b;
-    for (a = 0; a < this.tabBarContainer.length; a++) {
-      b = this.tabBarContainer[a].tabState;
-      b.enabled = b.initiallyEnabled;
-      b.highlighted = false;
-      b.selected = 0 === a;
+    var tabButtonIndex, tabState;
+    for (tabButtonIndex = 0; tabButtonIndex < this.tabBarContainer.length; tabButtonIndex++) {
+      tabState = this.tabBarContainer[tabButtonIndex].tabState;
+      tabState.enabled = tabState.initiallyEnabled;
+      tabState.highlighted = false;
+      tabState.selected = 0 === tabButtonIndex;
     }
   };
   TabView.prototype = new CompositeView();

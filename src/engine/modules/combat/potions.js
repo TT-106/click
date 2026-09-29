@@ -13,21 +13,21 @@ export function Potion(definition, itemSprites) {
   this.activationTurn = 0;
   this.modifier = getPotionModifier(this.modifierId);
 }
-export function setPotionActive(a, b) {
-  var c = a.active;
-  a.active = b;
-  if (a.active && !c) {
-    if (a.modifier) {
-      a.modifier.currentValue = a.modifier.activeValue;
+export function setPotionActive(potion, active) {
+  var wasActive = potion.active;
+  potion.active = active;
+  if (potion.active && !wasActive) {
+    if (potion.modifier) {
+      potion.modifier.currentValue = potion.modifier.activeValue;
     }
   } else {
-    if (!a.active && c && a.modifier) {
-      a.modifier.currentValue = a.modifier.defaultValue;
+    if (!potion.active && wasActive && potion.modifier) {
+      potion.modifier.currentValue = potion.modifier.defaultValue;
     }
   }
 }
-export function getPotionModifier(a) {
-  switch (a) {
+export function getPotionModifier(modifierId) {
+  switch (modifierId) {
     case 2:
       return doubleGoldModifier;
     case 1:
@@ -69,17 +69,17 @@ export function getPotionModifier(a) {
     case 20:
       return bossEncounterModifier;
   }
-  console.log("potion type error: " + a);
+  console.log("potion type error: " + modifierId);
   return null;
 }
-export function isPotionModifierActive(a) {
-  return a.modifier && a.modifier.currentValue === a.modifier.activeValue;
+export function isPotionModifierActive(potion) {
+  return potion.modifier && potion.modifier.currentValue === potion.modifier.activeValue;
 }
-export function PotionDrop(a, b, c, d) {
-  this.potion = a;
-  this.levelPositionX = b;
-  this.levelPositionY = c;
-  this.room = d;
+export function PotionDrop(potion, x, y, room) {
+  this.potion = potion;
+  this.levelPositionX = x;
+  this.levelPositionY = y;
+  this.room = room;
   this.collected = false;
   this.claimedBy = null;
   this.claimDistance = 0;
@@ -241,33 +241,33 @@ export function initializeCombatPotions() {
       runtimeState.statisticsRecorder.recordPotionUsed();
     }
   };
-  PotionDrop.prototype.setCollected = function (a) {
-    this.collected = a;
+  PotionDrop.prototype.setCollected = function (collected) {
+    this.collected = collected;
   };
-  PotionDrop.prototype.setClaimedBy = function (a) {
-    this.claimedBy = a;
+  PotionDrop.prototype.setClaimedBy = function (character) {
+    this.claimedBy = character;
   };
   PotionDrop.prototype.getClaimDistance = function () {
     return this.claimDistance;
   };
-  PotionDrop.prototype.setClaimDistance = function (a) {
-    this.claimDistance = a;
+  PotionDrop.prototype.setClaimDistance = function (distance) {
+    this.claimDistance = distance;
   };
   PotionDropRegistry.prototype.releaseClaims = function () {
-    var a;
-    for (a = 0; a < this.drops.length; a++) {
-      this.drops[a].setClaimedBy(null);
-      this.drops[a].setClaimDistance(0);
+    var dropIndex;
+    for (dropIndex = 0; dropIndex < this.drops.length; dropIndex++) {
+      this.drops[dropIndex].setClaimedBy(null);
+      this.drops[dropIndex].setClaimDistance(0);
     }
   };
-  PotionInventory.prototype.removePotion = function (a) {
-    if (a) {
-      var b = this.potionList.indexOf(a);
-      if (-1 < b) {
-        this.potionList.splice(b, 1);
+  PotionInventory.prototype.removePotion = function (potion) {
+    if (potion) {
+      var potionIndex = this.potionList.indexOf(potion);
+      if (-1 < potionIndex) {
+        this.potionList.splice(potionIndex, 1);
       }
-      if (a.active) {
-        setPotionActive(a, false);
+      if (potion.active) {
+        setPotionActive(potion, false);
       }
     }
   };

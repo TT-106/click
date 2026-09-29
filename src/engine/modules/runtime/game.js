@@ -60,11 +60,11 @@ export function initializeRuntimeGame() {
     allies: new AllyRegistry(),
     dungeons: new DungeonRegistry(),
     regions: new function () {
-      var a = WORLD_ORIGIN_COLUMN,
-        b = WORLD_ORIGIN_ROW;
+      var originColumn = WORLD_ORIGIN_COLUMN,
+        originRow = WORLD_ORIGIN_ROW;
       this.regionGridSpan = 16;
-      this.regionGridOriginColumn = a;
-      this.regionGridOriginRow = b;
+      this.regionGridOriginColumn = originColumn;
+      this.regionGridOriginRow = originRow;
       this.byKey = {};
       this.regionGrid = [];
     }(),
@@ -77,8 +77,8 @@ export function initializeRuntimeGame() {
       this.byRegionKey = {};
       this.nextRequiredMonsterLevel = 1;
       this.revision = 0;
-      this.compareCastles = function (a, b) {
-        return a.requiredMonsterLevel < b.requiredMonsterLevel ? -1 : 1;
+      this.compareCastles = function (leftCastle, rightCastle) {
+        return leftCastle.requiredMonsterLevel < rightCastle.requiredMonsterLevel ? -1 : 1;
       };
     }(),
     farms: new FarmRegistry(),
@@ -97,10 +97,10 @@ export function initializeRuntimeGame() {
       this.monsterTemplates = [];
       this.maxUnlockedLevel = this.minUnlockedLevel = 1;
       this.monsterTypesByLevelCache = {};
-      this.compareMonsterTypes = function (a, b) {
-        var c = a.getName(),
-          d = b.getName();
-        return c < d ? -1 : c > d ? 1 : 0;
+      this.compareMonsterTypes = function (leftMonsterType, rightMonsterType) {
+        var leftName = leftMonsterType.getName(),
+          rightName = rightMonsterType.getName();
+        return leftName < rightName ? -1 : leftName > rightName ? 1 : 0;
       };
     }(),
     goldDrops: new GoldDropRegistry(),
@@ -166,26 +166,26 @@ export function initializeRuntimeGame() {
         this.spentPoints = this.availablePoints = 0;
         this.pointsByEventType = {};
         this.countsByEventType = {};
-        var a,
-          b = [];
-        for (a = 0; a < pointUpgradeDefinitions.length; a++) {
-          b.push(new AdventurePointUpgrade(pointUpgradeDefinitions[a]));
+        var definitionIndex,
+          pointUpgrades = [];
+        for (definitionIndex = 0; definitionIndex < pointUpgradeDefinitions.length; definitionIndex++) {
+          pointUpgrades.push(new AdventurePointUpgrade(pointUpgradeDefinitions[definitionIndex]));
         }
-        this.pointUpgrades = b;
+        this.pointUpgrades = pointUpgrades;
       }(),
       achievements: new function () {
         this.achievementList = [];
         this.byId = {};
         this.obtainedList = [];
         this.claimQueue = [];
-        var a, b;
-        for (a = 0; a < achievementDefinitions.length; a++) {
-          b = new Achievement(achievementDefinitions[a]);
-          this.achievementList.push(b);
-          if (this.byId[b.id]) {
-            console.log("Error. Duplicate achievement id: " + b.id);
+        var definitionIndex, achievement;
+        for (definitionIndex = 0; definitionIndex < achievementDefinitions.length; definitionIndex++) {
+          achievement = new Achievement(achievementDefinitions[definitionIndex]);
+          this.achievementList.push(achievement);
+          if (this.byId[achievement.id]) {
+            console.log("Error. Duplicate achievement id: " + achievement.id);
           }
-          this.byId[b.id] = b;
+          this.byId[achievement.id] = achievement;
         }
       }(),
       runStatistics: new RunStatistics(),
@@ -212,21 +212,21 @@ export function initializeRuntimeGame() {
       game.loop.tick();
     },
     initializeWorld: function () {
-      var a = game.monsterCatalog;
-      a.monsterTypesByLevelCache = {};
-      a.minUnlockedLevel = 1;
-      a.maxUnlockedLevel = 1;
-      a.monsterTemplates.length = 0;
-      a.monsterTemplates.push(...monsterDefinitions);
+      var monsterCatalog = game.monsterCatalog;
+      monsterCatalog.monsterTypesByLevelCache = {};
+      monsterCatalog.minUnlockedLevel = 1;
+      monsterCatalog.maxUnlockedLevel = 1;
+      monsterCatalog.monsterTemplates.length = 0;
+      monsterCatalog.monsterTemplates.push(...monsterDefinitions);
       initializeItemCatalog(game.itemGenerator, game.itemSprites);
-      var qa = game.goldDrops;
-      qa.smallGoldSprite = game.itemSprites.getSprite("CoinsGoldSmall.PNG");
-      qa.mediumGoldSprite = game.itemSprites.getSprite("CoinsGoldMedium.PNG");
-      qa.largeGoldSprite = game.itemSprites.getSprite("CoinsGoldLarge.PNG");
+      var goldDrops = game.goldDrops;
+      goldDrops.smallGoldSprite = game.itemSprites.getSprite("CoinsGoldSmall.PNG");
+      goldDrops.mediumGoldSprite = game.itemSprites.getSprite("CoinsGoldMedium.PNG");
+      goldDrops.largeGoldSprite = game.itemSprites.getSprite("CoinsGoldLarge.PNG");
       resetScrollInventory();
       resetPotionInventory(game.potions);
-      var ta = game.treasure;
-      ta.targetDefinitions.push({
+      var treasure = game.treasure;
+      treasure.targetDefinitions.push({
         settingsId: "chest1",
         kind: 1,
         flushPlacement: false,
@@ -239,7 +239,7 @@ export function initializeRuntimeGame() {
           closed: game.terrainSprites.getSprite("L2_Chest03.PNG")
         }
       });
-      ta.targetDefinitions.push({
+      treasure.targetDefinitions.push({
         settingsId: "chest2",
         kind: 1,
         flushPlacement: false,
@@ -252,7 +252,7 @@ export function initializeRuntimeGame() {
           closed: game.terrainSprites.getSprite("L2_Chest07.PNG")
         }
       });
-      ta.targetDefinitions.push({
+      treasure.targetDefinitions.push({
         settingsId: "chest3",
         kind: 1,
         flushPlacement: false,
@@ -265,7 +265,7 @@ export function initializeRuntimeGame() {
           closed: game.terrainSprites.getSprite("L2_Chest11.PNG")
         }
       });
-      ta.targetDefinitions.push({
+      treasure.targetDefinitions.push({
         settingsId: "chest4",
         kind: 1,
         flushPlacement: false,
@@ -278,7 +278,7 @@ export function initializeRuntimeGame() {
           closed: game.terrainSprites.getSprite("L2_Chest15.PNG")
         }
       });
-      ta.targetDefinitions.push({
+      treasure.targetDefinitions.push({
         settingsId: "rack1",
         kind: 2,
         flushPlacement: true,
@@ -291,7 +291,7 @@ export function initializeRuntimeGame() {
           closed: game.terrainSprites.getSprite("L3_Wall_WeapRack2_NS.PNG")
         }
       });
-      ta.targetDefinitions.push({
+      treasure.targetDefinitions.push({
         settingsId: "rack2",
         kind: 2,
         flushPlacement: true,
@@ -304,7 +304,7 @@ export function initializeRuntimeGame() {
           closed: game.terrainSprites.getSprite("L3_Wall_WeapRack3_NS.PNG")
         }
       });
-      ta.targetDefinitions.push({
+      treasure.targetDefinitions.push({
         settingsId: "rack3",
         kind: 2,
         flushPlacement: true,
@@ -317,7 +317,7 @@ export function initializeRuntimeGame() {
           closed: game.terrainSprites.getSprite("L3_Wall_WeapRack4_NS.PNG")
         }
       });
-      ta.targetDefinitions.push({
+      treasure.targetDefinitions.push({
         settingsId: "rack4",
         kind: 2,
         flushPlacement: true,
@@ -330,7 +330,7 @@ export function initializeRuntimeGame() {
           closed: game.terrainSprites.getSprite("L3_Wall_WeapRack6_NS.PNG")
         }
       });
-      ta.targetDefinitions.push({
+      treasure.targetDefinitions.push({
         settingsId: "case1",
         kind: 3,
         flushPlacement: true,
@@ -343,7 +343,7 @@ export function initializeRuntimeGame() {
           closed: game.terrainSprites.getSprite("L3_WallDeco03.PNG")
         }
       });
-      ta.targetDefinitions.push({
+      treasure.targetDefinitions.push({
         settingsId: "case2",
         kind: 3,
         flushPlacement: true,
@@ -358,7 +358,7 @@ export function initializeRuntimeGame() {
       });
       initializeRegionsAndCastles();
     },
-    resetRun: function (a) {
+    resetRun: function (isFullReset) {
       game.state.turnNumber = 0;
       resetEncounter();
       game.state.party = new PartyState();
@@ -367,21 +367,21 @@ export function initializeRuntimeGame() {
       game.state.scrollCaster = null;
       game.partyCreated = false;
       game.gameWon = false;
-      if (a) {
+      if (isFullReset) {
         game.state.runStatistics = new RunStatistics();
         game.state.lifetimeStatistics = new LifetimeStatistics();
         bindStatistics(game.state);
         bindAdventurePoints(game.state);
-        var b = game.state.victoryStatistics;
-        b.partySize1Victories = 0;
-        b.partySize2Victories = 0;
-        b.partySize3Victories = 0;
-        b.maxContinuationVictories = 0;
-        b.currentContinuationVictories = 0;
-        b.singleClassVictories = 0;
-        b.classVictories = {};
-        b.soloClassVictories = {};
-        b.currentContinueCount = 0;
+        var victoryStatistics = game.state.victoryStatistics;
+        victoryStatistics.partySize1Victories = 0;
+        victoryStatistics.partySize2Victories = 0;
+        victoryStatistics.partySize3Victories = 0;
+        victoryStatistics.maxContinuationVictories = 0;
+        victoryStatistics.currentContinuationVictories = 0;
+        victoryStatistics.singleClassVictories = 0;
+        victoryStatistics.classVictories = {};
+        victoryStatistics.soloClassVictories = {};
+        victoryStatistics.currentContinueCount = 0;
         resetAdventurePoints();
         resetAchievements();
       }
@@ -393,9 +393,9 @@ export function initializeRuntimeGame() {
       game.currentDungeon = null;
       game.currentCastle = null;
       clearItemDrops(game.itemDrops);
-      b = game.inventories;
-      if (0 < b.list.length) {
-        b.list.length = 0;
+      var inventories = game.inventories;
+      if (0 < inventories.list.length) {
+        inventories.list.length = 0;
       }
       resetScrollInventory();
       resetPotionInventory(game.potions);
@@ -406,45 +406,45 @@ export function initializeRuntimeGame() {
       resetShops();
       clearCombatQueue();
       clearVisualEffects(game.effects);
-      for (b = 0; b < upgradeCollections.length; b++) {
-        resetUpgradeCollection(upgradeCollections[b]);
+      for (var collectionIndex = 0; collectionIndex < upgradeCollections.length; collectionIndex++) {
+        resetUpgradeCollection(upgradeCollections[collectionIndex]);
       }
-      for (var c, b = /** @type {any} */ (0); b < game.state.adventurers.length; b++) {
-        c = game.state.adventurers[b];
-        resetUpgradeCollection(c.skillTree1);
-        resetUpgradeCollection(c.skillTree2);
-        resetUpgradeCollection(c.skillTree3);
-        resetUpgradeCollection(c.skillTree4);
+      for (var adventurer, adventurerIndex = /** @type {any} */ (0); adventurerIndex < game.state.adventurers.length; adventurerIndex++) {
+        adventurer = game.state.adventurers[adventurerIndex];
+        resetUpgradeCollection(adventurer.skillTree1);
+        resetUpgradeCollection(adventurer.skillTree2);
+        resetUpgradeCollection(adventurer.skillTree3);
+        resetUpgradeCollection(adventurer.skillTree4);
       }
       game.allies.allies.length = 0;
       clearMonsters();
       clearMinions(game.minions);
-      b = game.monsterCatalog;
-      b.minUnlockedLevel = 1;
-      b.maxUnlockedLevel = 1;
-      b.monsterTypesByLevelCache = {};
-      if (a) {
+      var monsterCatalog = game.monsterCatalog;
+      monsterCatalog.minUnlockedLevel = 1;
+      monsterCatalog.maxUnlockedLevel = 1;
+      monsterCatalog.monsterTypesByLevelCache = {};
+      if (isFullReset) {
         game.state.victoryCount = 0;
       }
     },
     resetContinuation: function () {
       game.state.turnNumber = 0;
       resetEncounter();
-      var a = game.state.party;
-      a.targetDungeon = null;
-      a.activeCastle = null;
-      a.targetShop = null;
-      a.targetCastle = null;
-      a.targetTreasureChest = null;
-      a.destinationRoom = null;
-      a.targetDoor = null;
-      a.targetRoom = null;
-      a.forcedTravelActive = false;
-      a.forcedDestinationRoom = null;
-      a.travellingToDisabledAlly = false;
-      a.destinationOffWorld = false;
-      a.worldDestColumn = 0;
-      a.worldDestRow = 0;
+      var party = game.state.party;
+      party.targetDungeon = null;
+      party.activeCastle = null;
+      party.targetShop = null;
+      party.targetCastle = null;
+      party.targetTreasureChest = null;
+      party.destinationRoom = null;
+      party.targetDoor = null;
+      party.targetRoom = null;
+      party.forcedTravelActive = false;
+      party.forcedDestinationRoom = null;
+      party.travellingToDisabledAlly = false;
+      party.destinationOffWorld = false;
+      party.worldDestColumn = 0;
+      party.worldDestRow = 0;
       game.gameWon = false;
       game.state.runStatistics.resetRunStatistics();
       game.paused = false;
@@ -456,12 +456,12 @@ export function initializeRuntimeGame() {
       resetPotionInventory(game.potions);
       clearItemDrops(game.itemDrops);
       clearScrollTargets();
-      a = game.dungeons.farms.length;
+      var preservedDiscoveredDungeonCount = game.dungeons.farms.length;
       resetDungeons();
-      game.dungeons.discoveredDungeonCount = a;
-      a = game.castles.nextRequiredMonsterLevel;
+      game.dungeons.discoveredDungeonCount = preservedDiscoveredDungeonCount;
+      var preservedNextRequiredMonsterLevel = game.castles.nextRequiredMonsterLevel;
       resetCastles();
-      game.castles.nextRequiredMonsterLevel = a;
+      game.castles.nextRequiredMonsterLevel = preservedNextRequiredMonsterLevel;
       resetFarms();
       resetShops();
       clearCombatQueue();
@@ -469,10 +469,10 @@ export function initializeRuntimeGame() {
       game.allies.allies.length = 0;
       clearMonsters();
       clearMinions(game.minions);
-      for (var b, a = /** @type {any} */ (0); a < game.state.adventurers.length; a++) {
-        if (b = game.state.adventurers[a], b.summonedMinions = null, b.companion = null, b.combatTarget = null, b.targetGoldDrop = null, b.targetScrollDrop = null, b.targetPotionDrop = null, b.targetItemDrop = null, b.targetTreasureChest = null, b.spellToCast = null, b.lastAttackTurn = -3 * getAttackCooldown(b.stats, true), b.spells && 0 < b.spells.length) {
-          for (var c = 0; c < b.spells.length; c++) {
-            resetSpellCooldown(b.spells[c]);
+      for (var adventurer, adventurerIndex = /** @type {any} */ (0); adventurerIndex < game.state.adventurers.length; adventurerIndex++) {
+        if (adventurer = game.state.adventurers[adventurerIndex], adventurer.summonedMinions = null, adventurer.companion = null, adventurer.combatTarget = null, adventurer.targetGoldDrop = null, adventurer.targetScrollDrop = null, adventurer.targetPotionDrop = null, adventurer.targetItemDrop = null, adventurer.targetTreasureChest = null, adventurer.spellToCast = null, adventurer.lastAttackTurn = -3 * getAttackCooldown(adventurer.stats, true), adventurer.spells && 0 < adventurer.spells.length) {
+          for (var spellIndex = 0; spellIndex < adventurer.spells.length; spellIndex++) {
+            resetSpellCooldown(adventurer.spells[spellIndex]);
           }
         }
       }
@@ -491,20 +491,20 @@ export function initializeRuntimeGame() {
       game.view.onOfflineFinish();
     },
     restoreRuntimeState: function () {
-      var a;
-      for (a = 0; a < upgradeCollections.length; a++) {
-        restoreUpgradeCollection(upgradeCollections[a]);
+      var collectionIndex;
+      for (collectionIndex = 0; collectionIndex < upgradeCollections.length; collectionIndex++) {
+        restoreUpgradeCollection(upgradeCollections[collectionIndex]);
       }
-      var b;
-      for (a = 0; a < game.state.adventurers.length; a++) {
-        b = game.state.adventurers[a];
-        restoreUpgradeCollection(b.skillTree1);
-        restoreUpgradeCollection(b.skillTree2);
-        restoreUpgradeCollection(b.skillTree3);
-        restoreUpgradeCollection(b.skillTree4);
+      var adventurer;
+      for (var adventurerIndex = 0; adventurerIndex < game.state.adventurers.length; adventurerIndex++) {
+        adventurer = game.state.adventurers[adventurerIndex];
+        restoreUpgradeCollection(adventurer.skillTree1);
+        restoreUpgradeCollection(adventurer.skillTree2);
+        restoreUpgradeCollection(adventurer.skillTree3);
+        restoreUpgradeCollection(adventurer.skillTree4);
       }
-      for (a = 0; a < game.state.adventurers.length; a++) {
-        recalculateCharacterSkills(game.state.adventurers[a]);
+      for (adventurerIndex = 0; adventurerIndex < game.state.adventurers.length; adventurerIndex++) {
+        recalculateCharacterSkills(game.state.adventurers[adventurerIndex]);
       }
       if (game.options.allowOfflineProgress && game.lastActiveAt) {
         game.offlineDuration = Date.now() - game.lastActiveAt;
@@ -513,10 +513,10 @@ export function initializeRuntimeGame() {
         }
       }
     },
-    importSave: function (a) {
-      var b = game.saves;
+    importSave: function (saveText) {
+      var saveManager = game.saves;
       recordGameEvent("SaveManager", "Import");
-      return restoreGameState(b, a) ? (game.partyCreated && game.view.reset(), game.processingOffline && game.view.onOfflineStart(), game.gameWon && game.view.onGameWon(), saveProgress(game.saves), true) : false;
+      return restoreGameState(saveManager, saveText) ? (game.partyCreated && game.view.reset(), game.processingOffline && game.view.onOfflineStart(), game.gameWon && game.view.onGameWon(), saveProgress(game.saves), true) : false;
     },
     saveNow: function () {
       saveProgress(game.saves);

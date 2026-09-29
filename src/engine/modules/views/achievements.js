@@ -10,8 +10,8 @@ import { pointEventDefinitions, pointEventsById } from "../progression/points.js
 import { formatAmount, formatGroupedAmount } from "../core/math.js";
 import { AdventurePointsView } from "./expedition.js";
 import { TabView } from "./navigation.js";
-export function AchievementListView(a) {
-  this.elementId = a;
+export function AchievementListView(elementId) {
+  this.elementId = elementId;
   this.visible = true;
   this.thirdColumnCollection = this.secondColumnCollection = this.firstColumnCollection = this.tableElement = null;
   this.firstColumnButtons = [];
@@ -31,44 +31,44 @@ export function AdventurePointBreakdownView() {
   this.countCells = {};
   this.rewardCells = {};
 }
-export function mountPointBreakdown(a) {
-  clearElementById(a.elementId);
-  a.tableElement = createElement("table", getElement(a.elementId), null, "pointsTable");
-  var b = 0;
-  a.createHeaderRow(b++);
-  var c;
-  for (c = 0; c < pointEventDefinitions.length; c++) {
-    var d = a,
-      f = pointEventDefinitions[c].pointEventTypeId,
-      rowIndex = b++,
-      g = d.tableElement.insertRow(rowIndex),
-      h = g.insertCell(0);
-    h.style.textAlign = "right";
-    h.style.width = "120px";
-    h.innerHTML = pointEventsById[f].shortEventLabel;
-    h = g.insertCell(1);
-    h.style.textAlign = "right";
-    h.style.width = "60px";
-    d.countCells[f] = h;
-    h = g.insertCell(2);
-    h.style.textAlign = "right";
-    h.style.width = "60px";
-    d.rewardCells[f] = h;
+export function mountPointBreakdown(breakdownView) {
+  clearElementById(breakdownView.elementId);
+  breakdownView.tableElement = createElement("table", getElement(breakdownView.elementId), null, "pointsTable");
+  var nextRowIndex = 0;
+  breakdownView.createHeaderRow(nextRowIndex++);
+  var eventIndex;
+  for (eventIndex = 0; eventIndex < pointEventDefinitions.length; eventIndex++) {
+    var self = breakdownView,
+      pointEventTypeId = pointEventDefinitions[eventIndex].pointEventTypeId,
+      rowIndex = nextRowIndex++,
+      g = self.tableElement.insertRow(rowIndex),
+      labelCell = g.insertCell(0);
+    labelCell.style.textAlign = "right";
+    labelCell.style.width = "120px";
+    labelCell.innerHTML = pointEventsById[pointEventTypeId].shortEventLabel;
+    var countCell = g.insertCell(1);
+    countCell.style.textAlign = "right";
+    countCell.style.width = "60px";
+    self.countCells[pointEventTypeId] = countCell;
+    var rewardCell = g.insertCell(2);
+    rewardCell.style.textAlign = "right";
+    rewardCell.style.width = "60px";
+    self.rewardCells[pointEventTypeId] = rewardCell;
     g = g.insertCell(3);
     g.style.textAlign = "right";
-    d.pointsCells[f] = g;
+    self.pointsCells[pointEventTypeId] = g;
   }
 }
-export function PointUpgradeListView(a) {
-  this.elementId = a;
+export function PointUpgradeListView(elementId) {
+  this.elementId = elementId;
   this.visible = true;
   this.skillTreeCollection = this.skillCollection = this.tableElement = null;
   this.firstColumnButtons = [];
   this.secondColumnButtons = [];
 }
-export function PointsView(a) {
+export function PointsView(tabState) {
   this.elementId = "pointsTabContent";
-  this.tabState = a;
+  this.tabState = tabState;
   addChildView(this, new AdventurePointsView("achievementsTabAdventurePointsPanel"));
   addChildView(this, new AdventurePointBreakdownView());
   addChildView(this, new PointUpgradeListView("pointUpgradesContainer"));
@@ -86,68 +86,68 @@ export function initializeViewsAchievements() {
     this.secondColumnButtons.length = 0;
     this.buttons.length = 0;
     /** @type {{refreshCollections: () => void}} */ (/** @type {unknown} */ (this)).refreshCollections();
-    var a = this.elementId,
-      container = getElement(a);
+    var elementId = this.elementId,
+      container = getElement(elementId);
     if (container) {
       this.tableElement = createElement("table", container, null, "adventurerSkillTreeTable");
-      var b = this.firstColumnCollection.upgrades,
-        c = this.secondColumnCollection.upgrades,
-        d = this.thirdColumnCollection.upgrades,
-        f = Math.max(b.length, Math.max(c.length, d.length)),
-        g,
+      var firstColumnUpgrades = this.firstColumnCollection.upgrades,
+        secondColumnUpgrades = this.secondColumnCollection.upgrades,
+        thirdColumnUpgrades = this.thirdColumnCollection.upgrades,
+        rowCount = Math.max(firstColumnUpgrades.length, Math.max(secondColumnUpgrades.length, thirdColumnUpgrades.length)),
+        rowIndex,
         h,
-        l,
-        n;
-      for (g = 0; g < f; g++) {
-        h = this.tableElement.insertRow(g);
-        l = h.insertCell(0);
-        n = h.insertCell(1);
+        firstColumnCell,
+        secondColumnCell;
+      for (rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+        h = this.tableElement.insertRow(rowIndex);
+        firstColumnCell = h.insertCell(0);
+        secondColumnCell = h.insertCell(1);
         h = h.insertCell(2);
-        l.id = a + "_" + g + "_0";
-        n.id = a + "_" + g + "_1";
-        h.id = a + "_" + g + "_2";
-        l.width = 150;
-        n.width = 150;
+        firstColumnCell.id = elementId + "_" + rowIndex + "_0";
+        secondColumnCell.id = elementId + "_" + rowIndex + "_1";
+        h.id = elementId + "_" + rowIndex + "_2";
+        firstColumnCell.width = 150;
+        secondColumnCell.width = 150;
         h.width = 150;
-        if (g < b.length) {
-          this.firstColumnButtons.push(new UpgradeButtonView(l.id, b[g], g, true));
+        if (rowIndex < firstColumnUpgrades.length) {
+          this.firstColumnButtons.push(new UpgradeButtonView(firstColumnCell.id, firstColumnUpgrades[rowIndex], rowIndex, true));
         }
-        if (g < c.length) {
-          this.secondColumnButtons.push(new UpgradeButtonView(n.id, c[g], g, true));
+        if (rowIndex < secondColumnUpgrades.length) {
+          this.secondColumnButtons.push(new UpgradeButtonView(secondColumnCell.id, secondColumnUpgrades[rowIndex], rowIndex, true));
         }
-        if (g < d.length) {
-          this.buttons.push(new UpgradeButtonView(h.id, d[g], g, true));
+        if (rowIndex < thirdColumnUpgrades.length) {
+          this.buttons.push(new UpgradeButtonView(h.id, thirdColumnUpgrades[rowIndex], rowIndex, true));
         }
       }
     }
-    for (a = 0; a < this.firstColumnButtons.length; a++) {
-      this.firstColumnButtons[a].reset();
+    for (var buttonIndex = 0; buttonIndex < this.firstColumnButtons.length; buttonIndex++) {
+      this.firstColumnButtons[buttonIndex].reset();
     }
-    for (a = 0; a < this.secondColumnButtons.length; a++) {
-      this.secondColumnButtons[a].reset();
+    for (buttonIndex = 0; buttonIndex < this.secondColumnButtons.length; buttonIndex++) {
+      this.secondColumnButtons[buttonIndex].reset();
     }
-    for (a = 0; a < this.buttons.length; a++) {
-      this.buttons[a].reset();
+    for (buttonIndex = 0; buttonIndex < this.buttons.length; buttonIndex++) {
+      this.buttons[buttonIndex].reset();
     }
   };
   AchievementListView.prototype.refreshCollections = function () {
-    var a = game.state.achievements.achievementList,
-      b = [],
-      c = [],
-      d = [],
-      f;
-    for (f = 0; f < a.length; f += 3) {
-      b.push(new AchievementUpgrade(a[f]));
-      if (f + 1 < a.length) {
-        c.push(new AchievementUpgrade(a[f + 1]));
-        if (f + 2 < a.length) {
-          d.push(new AchievementUpgrade(a[f + 2]));
+    var achievementList = game.state.achievements.achievementList,
+      firstColumnAchievements = [],
+      secondColumnAchievements = [],
+      thirdColumnAchievements = [],
+      rowStartIndex;
+    for (rowStartIndex = 0; rowStartIndex < achievementList.length; rowStartIndex += 3) {
+      firstColumnAchievements.push(new AchievementUpgrade(achievementList[rowStartIndex]));
+      if (rowStartIndex + 1 < achievementList.length) {
+        secondColumnAchievements.push(new AchievementUpgrade(achievementList[rowStartIndex + 1]));
+        if (rowStartIndex + 2 < achievementList.length) {
+          thirdColumnAchievements.push(new AchievementUpgrade(achievementList[rowStartIndex + 2]));
         }
       }
     }
-    this.firstColumnCollection = new UpgradeCollection([b], false);
-    this.secondColumnCollection = new UpgradeCollection([c], false);
-    this.thirdColumnCollection = new UpgradeCollection([d], false);
+    this.firstColumnCollection = new UpgradeCollection([firstColumnAchievements], false);
+    this.secondColumnCollection = new UpgradeCollection([secondColumnAchievements], false);
+    this.thirdColumnCollection = new UpgradeCollection([thirdColumnAchievements], false);
   };
   AchievementListView.prototype.update = function () {
     if (!(this.firstColumnCollection && this.tableElement)) {
@@ -156,22 +156,22 @@ export function initializeViewsAchievements() {
     refreshUpgradeCollection(this.firstColumnCollection);
     refreshUpgradeCollection(this.secondColumnCollection);
     refreshUpgradeCollection(this.thirdColumnCollection);
-    var a;
-    for (a = 0; a < this.firstColumnButtons.length; a++) {
-      this.firstColumnButtons[a].render();
+    var buttonIndex;
+    for (buttonIndex = 0; buttonIndex < this.firstColumnButtons.length; buttonIndex++) {
+      this.firstColumnButtons[buttonIndex].render();
     }
-    for (a = 0; a < this.secondColumnButtons.length; a++) {
-      this.secondColumnButtons[a].render();
+    for (buttonIndex = 0; buttonIndex < this.secondColumnButtons.length; buttonIndex++) {
+      this.secondColumnButtons[buttonIndex].render();
     }
-    for (a = 0; a < this.buttons.length; a++) {
-      this.buttons[a].render();
+    for (buttonIndex = 0; buttonIndex < this.buttons.length; buttonIndex++) {
+      this.buttons[buttonIndex].render();
     }
     var b = game.state.achievements;
-    a = b.achievementList.length;
-    b = b.claimQueue.length + (a - b.obtainedList.length);
+    var achievementTotal = b.achievementList.length;
+    b = b.claimQueue.length + (achievementTotal - b.obtainedList.length);
     if (this.cachedAchievementCount != b) {
       this.cachedAchievementCount = b;
-      setElementHtml(this.headerElementId, "成就(" + b + "/" + a + ")");
+      setElementHtml(this.headerElementId, "成就(" + b + "/" + achievementTotal + ")");
     }
   };
   AdventurePointBreakdownView.prototype = new View();
@@ -180,12 +180,12 @@ export function initializeViewsAchievements() {
     this.pointsCells = {};
     this.countCells = {};
     this.rewardCells = {};
-    var a, b;
-    for (a = 0; a < pointEventDefinitions.length; a++) {
-      b = pointEventDefinitions[a].pointEventTypeId;
-      this.cachedPointsByEventType[b] = -1;
-      this.cachedCountsByEventType[b] = -1;
-      this.cachedPointReward[b] = -1;
+    var eventIndex, pointEventTypeId;
+    for (eventIndex = 0; eventIndex < pointEventDefinitions.length; eventIndex++) {
+      pointEventTypeId = pointEventDefinitions[eventIndex].pointEventTypeId;
+      this.cachedPointsByEventType[pointEventTypeId] = -1;
+      this.cachedCountsByEventType[pointEventTypeId] = -1;
+      this.cachedPointReward[pointEventTypeId] = -1;
     }
     mountPointBreakdown(this);
   };
@@ -193,51 +193,51 @@ export function initializeViewsAchievements() {
     if (!this.tableElement) {
       mountPointBreakdown(this);
     }
-    var a,
+    var eventIndex,
       b,
-      c,
-      d,
-      f,
-      g,
-      h,
-      l,
-      n = game.state.adventurePoints;
-    for (a = 0; a < pointEventDefinitions.length; a++) {
-      b = pointEventDefinitions[a].pointEventTypeId;
-      c = this.cachedPointsByEventType[b];
-      d = n.pointsByEventType[b];
-      f = this.cachedPointsByEventType[b];
-      g = n.countsByEventType[b];
-      h = this.cachedPointReward[b];
-      l = pointEventDefinitions[a].currentPointReward;
-      if (c != d) {
-        this.cachedPointsByEventType[b] = d;
-        c = this.pointsCells[b];
-        c.innerHTML = formatGroupedAmount(d);
+      cachedPoints,
+      eventPoints,
+      cachedPointsReread,
+      eventCount,
+      cachedPointReward,
+      currentPointReward,
+      adventurePoints = game.state.adventurePoints;
+    for (eventIndex = 0; eventIndex < pointEventDefinitions.length; eventIndex++) {
+      b = pointEventDefinitions[eventIndex].pointEventTypeId;
+      cachedPoints = this.cachedPointsByEventType[b];
+      eventPoints = adventurePoints.pointsByEventType[b];
+      cachedPointsReread = this.cachedPointsByEventType[b];
+      eventCount = adventurePoints.countsByEventType[b];
+      cachedPointReward = this.cachedPointReward[b];
+      currentPointReward = pointEventDefinitions[eventIndex].currentPointReward;
+      if (cachedPoints != eventPoints) {
+        this.cachedPointsByEventType[b] = eventPoints;
+        var pointsCell = this.pointsCells[b];
+        pointsCell.innerHTML = formatGroupedAmount(eventPoints);
       }
-      if (f != g) {
-        this.cachedCountsByEventType[b] = g;
-        d = this.countCells[b];
-        d.innerHTML = formatAmount(g);
+      if (cachedPointsReread != eventCount) {
+        this.cachedCountsByEventType[b] = eventCount;
+        var countCell = this.countCells[b];
+        countCell.innerHTML = formatAmount(eventCount);
       }
-      if (h != l) {
-        this.cachedPointReward[b] = l;
+      if (cachedPointReward != currentPointReward) {
+        this.cachedPointReward[b] = currentPointReward;
         b = this.rewardCells[b];
-        b.innerHTML = formatAmount(l);
+        b.innerHTML = formatAmount(currentPointReward);
       }
     }
   };
   AdventurePointBreakdownView.prototype.createHeaderRow = function (a) {
     a = this.tableElement.insertRow(a);
-    var b = appendHeaderCell(a);
-    b.style.textAlign = "right";
-    b.innerHTML = "冒险行动";
-    b = appendHeaderCell(a);
-    b.style.textAlign = "right";
-    b.innerHTML = "计数";
-    b = appendHeaderCell(a);
-    b.style.textAlign = "right";
-    b.innerHTML = "AP/行动";
+    var labelHeaderCell = appendHeaderCell(a);
+    labelHeaderCell.style.textAlign = "right";
+    labelHeaderCell.innerHTML = "冒险行动";
+    var countHeaderCell = appendHeaderCell(a);
+    countHeaderCell.style.textAlign = "right";
+    countHeaderCell.innerHTML = "计数";
+    var rewardHeaderCell = appendHeaderCell(a);
+    rewardHeaderCell.style.textAlign = "right";
+    rewardHeaderCell.innerHTML = "AP/行动";
     a = appendHeaderCell(a);
     a.style.textAlign = "right";
     a.innerHTML = "冒险点数";
@@ -252,52 +252,52 @@ export function initializeViewsAchievements() {
     this.firstColumnButtons.length = 0;
     this.secondColumnButtons.length = 0;
     /** @type {{refreshCollections: () => void}} */ (/** @type {unknown} */ (this)).refreshCollections();
-    var a = this.elementId,
-      container = getElement(a);
+    var elementId = this.elementId,
+      container = getElement(elementId);
     if (container) {
       this.tableElement = createElement("table", container, null, "adventurerSkillTreeTable");
-      var b = this.skillCollection.upgrades,
-        c = this.skillTreeCollection.upgrades,
-        d = Math.max(b.length, c.length),
-        f,
+      var skillUpgrades = this.skillCollection.upgrades,
+        skillTreeUpgrades = this.skillTreeCollection.upgrades,
+        rowCount = Math.max(skillUpgrades.length, skillTreeUpgrades.length),
+        rowIndex,
         g,
-        h;
-      for (f = 0; f < d; f++) {
-        g = this.tableElement.insertRow(f);
-        h = g.insertCell(0);
+        firstColumnCell;
+      for (rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+        g = this.tableElement.insertRow(rowIndex);
+        firstColumnCell = g.insertCell(0);
         g = g.insertCell(1);
-        h.id = a + "_" + f + "_0";
-        g.id = a + "_" + f + "_1";
-        h.width = 150;
+        firstColumnCell.id = elementId + "_" + rowIndex + "_0";
+        g.id = elementId + "_" + rowIndex + "_1";
+        firstColumnCell.width = 150;
         g.width = 150;
-        if (f < b.length) {
-          this.firstColumnButtons.push(new UpgradeButtonView(h.id, b[f], f, true));
+        if (rowIndex < skillUpgrades.length) {
+          this.firstColumnButtons.push(new UpgradeButtonView(firstColumnCell.id, skillUpgrades[rowIndex], rowIndex, true));
         }
-        if (f < c.length) {
-          this.secondColumnButtons.push(new UpgradeButtonView(g.id, c[f], f, true));
+        if (rowIndex < skillTreeUpgrades.length) {
+          this.secondColumnButtons.push(new UpgradeButtonView(g.id, skillTreeUpgrades[rowIndex], rowIndex, true));
         }
       }
     }
-    for (a = 0; a < this.firstColumnButtons.length; a++) {
-      this.firstColumnButtons[a].reset();
+    for (var buttonIndex = 0; buttonIndex < this.firstColumnButtons.length; buttonIndex++) {
+      this.firstColumnButtons[buttonIndex].reset();
     }
-    for (a = 0; a < this.secondColumnButtons.length; a++) {
-      this.secondColumnButtons[a].reset();
+    for (buttonIndex = 0; buttonIndex < this.secondColumnButtons.length; buttonIndex++) {
+      this.secondColumnButtons[buttonIndex].reset();
     }
   };
   PointUpgradeListView.prototype.refreshCollections = function () {
-    var a = game.state.adventurePoints.pointUpgrades,
-      b = [],
-      c = [],
-      d;
-    for (d = 0; d < a.length; d += 2) {
-      b.push(a[d]);
-      if (d + 1 < a.length) {
-        c.push(a[d + 1]);
+    var pointUpgrades = game.state.adventurePoints.pointUpgrades,
+      firstColumnUpgrades = [],
+      secondColumnUpgrades = [],
+      rowStartIndex;
+    for (rowStartIndex = 0; rowStartIndex < pointUpgrades.length; rowStartIndex += 2) {
+      firstColumnUpgrades.push(pointUpgrades[rowStartIndex]);
+      if (rowStartIndex + 1 < pointUpgrades.length) {
+        secondColumnUpgrades.push(pointUpgrades[rowStartIndex + 1]);
       }
     }
-    this.skillCollection = new UpgradeCollection([b], false);
-    this.skillTreeCollection = new UpgradeCollection([c], false);
+    this.skillCollection = new UpgradeCollection([firstColumnUpgrades], false);
+    this.skillTreeCollection = new UpgradeCollection([secondColumnUpgrades], false);
   };
   PointUpgradeListView.prototype.update = function () {
     if (!(this.skillCollection && this.tableElement)) {
@@ -305,12 +305,12 @@ export function initializeViewsAchievements() {
     }
     refreshUpgradeCollection(this.skillCollection);
     refreshUpgradeCollection(this.skillTreeCollection);
-    var a;
-    for (a = 0; a < this.firstColumnButtons.length; a++) {
-      this.firstColumnButtons[a].render();
+    var buttonIndex;
+    for (buttonIndex = 0; buttonIndex < this.firstColumnButtons.length; buttonIndex++) {
+      this.firstColumnButtons[buttonIndex].render();
     }
-    for (a = 0; a < this.secondColumnButtons.length; a++) {
-      this.secondColumnButtons[a].render();
+    for (buttonIndex = 0; buttonIndex < this.secondColumnButtons.length; buttonIndex++) {
+      this.secondColumnButtons[buttonIndex].render();
     }
   };
   PointsView.prototype = new TabView();

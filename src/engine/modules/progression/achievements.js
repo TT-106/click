@@ -7,42 +7,42 @@ import { recordGameEvent } from "../core/math.js";
 import { getClassVictories, getSoloClassVictories } from "./statistics.js";
 import { getPartyMaxLevel } from "../characters/party.js";
 export var achievementDefinitions;
-export function Achievement(a) {
+export function Achievement(definition) {
   this.applied = this.obtained = false;
-  this.id = a.id;
-  this.name = a.name;
-  this.requirementType = a.requirementType;
-  this.requiredCount = a.requiredCount;
-  this.characterClass = a.characterClass;
-  this.pointEventTypeId = a.pointEventTypeId;
-  this.pointRewardBonus = pointEventsById[a.pointEventTypeId].achievementPointBonus;
-  this.isVictoryAchievement = !!a.isVictoryAchievement;
+  this.id = definition.id;
+  this.name = definition.name;
+  this.requirementType = definition.requirementType;
+  this.requiredCount = definition.requiredCount;
+  this.characterClass = definition.characterClass;
+  this.pointEventTypeId = definition.pointEventTypeId;
+  this.pointRewardBonus = pointEventsById[definition.pointEventTypeId].achievementPointBonus;
+  this.isVictoryAchievement = !!definition.isVictoryAchievement;
   this.cachedRequirementLabel = this.cachedRewardLabel = null;
 }
-export function getAchievementRewardLabel(a) {
-  if (!a.cachedRewardLabel) {
-    a.cachedRewardLabel = "+" + a.pointRewardBonus + "成就点每" + pointEventsById[a.pointEventTypeId].fullEventLabel;
+export function getAchievementRewardLabel(achievement) {
+  if (!achievement.cachedRewardLabel) {
+    achievement.cachedRewardLabel = "+" + achievement.pointRewardBonus + "成就点每" + pointEventsById[achievement.pointEventTypeId].fullEventLabel;
   }
-  return a.cachedRewardLabel;
+  return achievement.cachedRewardLabel;
 }
-export function getAchievementRequirementLabel(a) {
-  if (!a.cachedRequirementLabel) {
-    a.cachedRequirementLabel = describeAchievementRequirement(a);
+export function getAchievementRequirementLabel(achievement) {
+  if (!achievement.cachedRequirementLabel) {
+    achievement.cachedRequirementLabel = describeAchievementRequirement(achievement);
   }
-  return a.cachedRequirementLabel;
+  return achievement.cachedRequirementLabel;
 }
-export function applyAchievementReward(a) {
-  if (!a.obtained || a.applied) {
-    console.log("not applying achievement bonus. obtained=" + a.obtained + " applied=" + a.applied);
+export function applyAchievementReward(achievement) {
+  if (!achievement.obtained || achievement.applied) {
+    console.log("not applying achievement bonus. obtained=" + achievement.obtained + " applied=" + achievement.applied);
   } else {
-    increasePointEventReward(a.pointEventTypeId, a.pointRewardBonus);
-    a.applied = true;
-    var b = game.state.achievements,
-      c = b.claimQueue.indexOf(a);
-    if (-1 < c) {
-      b.claimQueue.splice(c, 1);
+    increasePointEventReward(achievement.pointEventTypeId, achievement.pointRewardBonus);
+    achievement.applied = true;
+    var achievements = game.state.achievements,
+      claimIndex = achievements.claimQueue.indexOf(achievement);
+    if (-1 < claimIndex) {
+      achievements.claimQueue.splice(claimIndex, 1);
     }
-    recordGameEvent("Achievement", a.name);
+    recordGameEvent("Achievement", achievement.name);
   }
 }
 /** 成就判定所需的全部输入数据。
@@ -67,78 +67,78 @@ export function getAchievementCheckData() {
     },
   };
 }
-export function hasVictoryAchievement(a, data) {
+export function hasVictoryAchievement(achievement, data) {
   data = data || getAchievementCheckData();
-  var b = data.victoryStatistics;
-  switch (a.requirementType) {
+  var victoryStatistics = data.victoryStatistics;
+  switch (achievement.requirementType) {
     case 23:
-      return 1 === a.requiredCount ? 0 < b.partySize1Victories : 2 === a.requiredCount ? 0 < b.partySize2Victories : 3 === a.requiredCount ? 0 < b.partySize3Victories : false;
+      return 1 === achievement.requiredCount ? 0 < victoryStatistics.partySize1Victories : 2 === achievement.requiredCount ? 0 < victoryStatistics.partySize2Victories : 3 === achievement.requiredCount ? 0 < victoryStatistics.partySize3Victories : false;
     case 24:
-      return 0 < b.singleClassVictories;
+      return 0 < victoryStatistics.singleClassVictories;
     case 25:
-      return 0 < getClassVictories(b, a.characterClass);
+      return 0 < getClassVictories(victoryStatistics, achievement.characterClass);
     case 26:
-      return b.maxContinuationVictories >= a.requiredCount;
+      return victoryStatistics.maxContinuationVictories >= achievement.requiredCount;
     case 27:
-      return 0 < getSoloClassVictories(b, a.characterClass);
+      return 0 < getSoloClassVictories(victoryStatistics, achievement.characterClass);
     default:
       return false;
   }
 }
-export function getAchievementProgress(a, data) {
+export function getAchievementProgress(achievement, data) {
   data = data || getAchievementCheckData();
-  var b = data.lifetimeStatistics;
-  switch (a.requirementType) {
+  var lifetimeStatistics = data.lifetimeStatistics;
+  switch (achievement.requirementType) {
     case 1:
-      return b.directKills;
+      return lifetimeStatistics.directKills;
     case 2:
-      return b.scrollKills;
+      return lifetimeStatistics.scrollKills;
     case 3:
-      return b.scrollsUsed;
+      return lifetimeStatistics.scrollsUsed;
     case 4:
-      return b.potionsUsed;
+      return lifetimeStatistics.potionsUsed;
     case 5:
-      return b.treasureChestsLooted;
+      return lifetimeStatistics.treasureChestsLooted;
     case 6:
-      return b.weaponRacksLooted;
+      return lifetimeStatistics.weaponRacksLooted;
     case 7:
-      return b.bookcasesLooted;
+      return lifetimeStatistics.bookcasesLooted;
     case 8:
-      return b.itemsSold;
+      return lifetimeStatistics.itemsSold;
     case 9:
-      return b.farmsPurchased;
+      return lifetimeStatistics.farmsPurchased;
     case 10:
-      return b.dungeonsCleared;
+      return lifetimeStatistics.dungeonsCleared;
     case 11:
-      return b.castlesConquered;
+      return lifetimeStatistics.castlesConquered;
     case 12:
-      return b.spellCastCount;
+      return lifetimeStatistics.spellCastCount;
     case 13:
-      return b.meleeAttackCount;
+      return lifetimeStatistics.meleeAttackCount;
     case 14:
-      return b.rangedAttackCount;
+      return lifetimeStatistics.rangedAttackCount;
     case 15:
-      return b.minionsSummoned;
+      return lifetimeStatistics.minionsSummoned;
     case 16:
       return data.partyMaxLevel;
     case 17:
-      return b.doorsOpened;
+      return lifetimeStatistics.doorsOpened;
     case 18:
-      return b.itemsFound;
+      return lifetimeStatistics.itemsFound;
     case 19:
-      return b.uncommonItemsFound;
+      return lifetimeStatistics.uncommonItemsFound;
     case 20:
-      return b.rareItemsFound;
+      return lifetimeStatistics.rareItemsFound;
     case 21:
-      return b.historicItemsFound;
+      return lifetimeStatistics.historicItemsFound;
     case 22:
-      return b.ancientItemsFound;
+      return lifetimeStatistics.ancientItemsFound;
     case 28:
-      return b.minionKills;
+      return lifetimeStatistics.minionKills;
   }
 }
-export function describeAchievementRequirement(a) {
-  switch (a.requirementType) {
+export function describeAchievementRequirement(achievement) {
+  switch (achievement.requirementType) {
     case 1:
       return "杀点什么";
     case 2:
@@ -198,15 +198,15 @@ export function describeAchievementRequirement(a) {
   }
 }
 export function resetAchievements() {
-  var a = game.state.achievements,
-    b;
-  for (b = 0; b < a.achievementList.length; b++) {
-    var c = a.achievementList[b];
-    c.applied = false;
-    c.obtained = false;
+  var achievements = game.state.achievements,
+    achievementIndex;
+  for (achievementIndex = 0; achievementIndex < achievements.achievementList.length; achievementIndex++) {
+    var achievement = achievements.achievementList[achievementIndex];
+    achievement.applied = false;
+    achievement.obtained = false;
   }
-  a.obtainedList.length = 0;
-  a.claimQueue.length = 0;
+  achievements.obtainedList.length = 0;
+  achievements.claimQueue.length = 0;
 }
 export function initializeProgressionAchievements() {
   achievementDefinitions = [{

@@ -6,10 +6,10 @@ import { randomInt } from "../core/math.js";
 // 数值与内容定义不再反向导入玩法模块。
 export var experienceCurve, healthCurve, spiritCurve, damageCurve, armorCurve, monsterDamageCurve, monsterArmorCurve, monsterAttackCurve, monsterDefenceCurve, monsterHealthCurve, monsterExperienceCurve, itemStatCurve, itemGoldCurve, dungeonPriceCurve, monsterUnlockPriceCurve, scrollPriceCurve, globalUpgradePriceCurve, MONSTER_RANK_KILL_STEP, DUNGEON_WALK_SPEED, WORLD_WALK_SPEED, DEFAULT_MULTI_ATTACK_CHANCE, DEFAULT_CHAIN_CHANCE, DEFAULT_MINION_LIMIT, BASE_INVENTORY_CAPACITY, RETREAT_HEALTH_RATIO, RETREAT_SPIRIT_RATIO, MAX_PRESTIGE_INVENTORY_BONUS, walkingSpeedBonus, dungeonCostBonus, itemCostBonus, scrollCapacityBonus, potionCapacityBonus, partyCapacityBonus, potionDurationBonus, potionPowerBonus, offlineTimeBonus, equipmentQualityBonus, attackCooldownBonus, healthRegenerationBonus, spiritRegenerationBonus, BASE_POTION_CAPACITY, doubleKillsModifier, doubleGoldModifier, doubleExperienceModifier, walkingSpeedModifier, fasterFarmingModifier, fasterInfestationModifier, infiniteScrollsModifier, extraMonstersModifier, guaranteedItemDropsModifier, potionDurationModifier, freeSpellsModifier, farmKillsModifier, docileMonstersModifier, itemGoldModifier, frailMonstersModifier, autoScrollsModifier, doubleGoldDropsModifier, doubleItemDropsModifier, treasureRoomModifier, bossEncounterModifier, CHEST_ITEM_QUALITY_BONUS, CHEST_ITEM_LEVEL_BONUS, MIN_ROOM_DIMENSION, MAX_ROOM_SIZE, ROOM_SPACING, globalUpgradeDefinitions, VISIBLE_MONSTER_LEVELS, BASE_HIGHER_ITEM_CHANCE, LOWER_ITEM_LEVEL_CHANCE, itemRarityProbabilities, itemRarityTiers, EFFECT_FRAME_DURATION_MS, PROJECTILE_FRAME_DURATION_MS, globalUpgradesById, globalUpgradesToIndex, upgradeIndexKey, upgradeIndexEntry, characterLevelUpgrades, equipmentUpgrades, globalUpgrades, scrollUpgradeIndex, scrollUpgrades, monsterLevelUpgrades, castleUpgrades, itemPurchaseUpgrades, achievementClaimUpgrades, farmAndDungeonUpgrades, monsterUpgradeCollection, characterUpgradeCollection, quickUpgradeCollection, upgradeCollections;
 export function rollGoldDrop() {
-  var a = globalUpgradeDefinitions.minGoldPerDrop.currentValue,
-    b = Math.max(0, globalUpgradeDefinitions.maxGoldPerDrop.currentValue - a),
-    c = doubleGoldModifier.currentValue;
-  return (a + randomInt(b)) * c;
+  var minGold = globalUpgradeDefinitions.minGoldPerDrop.currentValue,
+    goldRollSpan = Math.max(0, globalUpgradeDefinitions.maxGoldPerDrop.currentValue - minGold),
+    goldMultiplier = doubleGoldModifier.currentValue;
+  return (minGold + randomInt(goldRollSpan)) * goldMultiplier;
 }
 export function initializeContentBalance(dependencies) {
   experienceCurve = {

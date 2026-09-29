@@ -6,11 +6,11 @@ import { Vector2, randomInt, setVector } from "../core/math.js";
 import { getMonsters } from "../combat/encounters.js";
 import { globalUpgradeDefinitions } from "../content/balance.js";
 import { canPlaceRoomObject } from "../world/rooms.js";
-export function GoldDrop(a, b, c, d) {
-  this.goldAmount = a;
-  this.levelPositionX = b;
-  this.levelPositionY = c;
-  this.room = d;
+export function GoldDrop(goldAmount, levelPositionX, levelPositionY, room) {
+  this.goldAmount = goldAmount;
+  this.levelPositionX = levelPositionX;
+  this.levelPositionY = levelPositionY;
+  this.room = room;
   this.collected = false;
   this.claimedBy = null;
   this.claimDistance = 0;
@@ -20,27 +20,27 @@ export function GoldDropRegistry() {
   this.mediumGoldSprite = this.mediumGoldSprite = this.smallGoldSprite = null;
 }
 export function removeGoldDrop(a) {
-  var b = game.goldDrops;
-  a = b.drops.indexOf(a);
+  var goldDropRegistry = game.goldDrops;
+  a = goldDropRegistry.drops.indexOf(a);
   if (-1 < a) {
-    b.drops.splice(a, 1);
+    goldDropRegistry.drops.splice(a, 1);
   }
 }
-export function TreasureChest(a, b, c, d, f) {
-  this.levelX = a;
-  this.levelY = b;
-  this.room = c;
+export function TreasureChest(levelX, levelY, room, definition, isWestWall) {
+  this.levelX = levelX;
+  this.levelY = levelY;
+  this.room = room;
   this.opened = false;
-  this.closedSpriteName = f ? d.westWallVariants.closed : d.standardVariants.closed;
-  this.openedSpriteName = f ? d.westWallVariants.opened : d.standardVariants.opened;
-  this.kind = d.kind;
-  this.westWall = f;
-  this.definition = d;
+  this.closedSpriteName = isWestWall ? definition.westWallVariants.closed : definition.standardVariants.closed;
+  this.openedSpriteName = isWestWall ? definition.westWallVariants.opened : definition.standardVariants.opened;
+  this.kind = definition.kind;
+  this.westWall = isWestWall;
+  this.definition = definition;
   this.selected = false;
 }
-export function setChestOpened(a, b) {
-  if (a.opened = b) {
-    a.selected = false;
+export function setChestOpened(chest, isOpened) {
+  if (chest.opened = isOpened) {
+    chest.selected = false;
     game.state.party.setTargetTreasureChest(null);
   }
 }
@@ -51,81 +51,81 @@ export function TreasureRegistry() {
   this.spawnPointScratch = new Vector2();
 }
 export function spawnRoomTreasure(a) {
-  var b = game.treasure;
-    c = 0 < getMonsters().length;
-  if (!getRoomTreasure(b, a)) {
+  var treasureRegistry = game.treasure;
+    var hasMonsters = 0 < getMonsters().length;
+  if (!getRoomTreasure(treasureRegistry, a)) {
     if (3 != a.encounterType) {
-      if (!c && 2 > a.doorList.length) {
+      if (!hasMonsters && 2 > a.doorList.length) {
         return;
       }
-      c = globalUpgradeDefinitions.treasureChance.currentValue / 100;
-      if (Math.random() > c) {
+      var treasureSpawnChance = globalUpgradeDefinitions.treasureChance.currentValue / 100;
+      if (Math.random() > treasureSpawnChance) {
         return;
       }
     }
-    var c = b.targetDefinitions[randomInt(b.targetDefinitions.length)],
-      d = 0.5 > Math.random(),
+    var chestDefinition = treasureRegistry.targetDefinitions[randomInt(treasureRegistry.targetDefinitions.length)],
+      isWestWall = 0.5 > Math.random(),
       f,
-      g;
+      wallPoint;
     f = false;
-    for (var h = 0; !f && 10 > h;) {
-      g = d ? b.pickWestWallPoint(a) : b.pickNorthWallPoint(a);
-      if (!(f = canPlaceRoomObject(a, g))) {
-        g = null;
+    for (var attemptCount = 0; !f && 10 > attemptCount;) {
+      wallPoint = isWestWall ? treasureRegistry.pickWestWallPoint(a) : treasureRegistry.pickNorthWallPoint(a);
+      if (!(f = canPlaceRoomObject(a, wallPoint))) {
+        wallPoint = null;
       }
-      h++;
+      attemptCount++;
     }
-    if (f = g) {
-      g = f.x * game.tileSize;
+    if (f = wallPoint) {
+      var chestLevelX = f.x * game.tileSize;
       f = f.y * game.tileSize;
-      if (!c.flushPlacement) {
-        if (d) {
-          g += game.tileSize;
+      if (!chestDefinition.flushPlacement) {
+        if (isWestWall) {
+          chestLevelX += game.tileSize;
         } else {
           f += game.tileSize;
         }
       }
-      a = new TreasureChest(g, f, a, c, d);
-      b.targets.push(a);
-      b.targetByRoomId[a.room.roomId] = a;
+      a = new TreasureChest(chestLevelX, f, a, chestDefinition, isWestWall);
+      treasureRegistry.targets.push(a);
+      treasureRegistry.targetByRoomId[a.room.roomId] = a;
     } else {
       console.log("failed to find treasure chest location.");
     }
   }
 }
-export function getRoomTreasure(a, b) {
-  return b ? a.targetByRoomId[b.roomId] : null;
+export function getRoomTreasure(treasureRegistry, room) {
+  return room ? treasureRegistry.targetByRoomId[room.roomId] : null;
 }
 export function initializeLootTreasure() {
-  GoldDrop.prototype.setCollected = function (a) {
-    this.collected = a;
+  GoldDrop.prototype.setCollected = function (collected) {
+    this.collected = collected;
   };
-  GoldDrop.prototype.setClaimedBy = function (a) {
-    this.claimedBy = a;
+  GoldDrop.prototype.setClaimedBy = function (character) {
+    this.claimedBy = character;
   };
   GoldDrop.prototype.getClaimDistance = function () {
     return this.claimDistance;
   };
-  GoldDrop.prototype.setClaimDistance = function (a) {
-    this.claimDistance = a;
+  GoldDrop.prototype.setClaimDistance = function (distance) {
+    this.claimDistance = distance;
   };
   GoldDropRegistry.prototype.releaseClaims = function () {
-    var a;
-    for (a = 0; a < this.drops.length; a++) {
-      this.drops[a].setClaimedBy(null);
-      this.drops[a].setClaimDistance(0);
+    var dropIndex;
+    for (dropIndex = 0; dropIndex < this.drops.length; dropIndex++) {
+      this.drops[dropIndex].setClaimedBy(null);
+      this.drops[dropIndex].setClaimDistance(0);
     }
   };
   TreasureRegistry.prototype.pickNorthWallPoint = function (a) {
-    var b = a.tileRow;
+    var roomTileRow = a.tileRow;
     a = a.tileColumn + randomInt(a.widthInTiles);
-    setVector(this.spawnPointScratch, a, b - 1);
+    setVector(this.spawnPointScratch, a, roomTileRow - 1);
     return this.spawnPointScratch;
   };
   TreasureRegistry.prototype.pickWestWallPoint = function (a) {
-    var b = a.tileColumn;
+    var roomTileColumn = a.tileColumn;
     a = a.tileRow + randomInt(a.heightInTiles);
-    setVector(this.spawnPointScratch, b - 1, a);
+    setVector(this.spawnPointScratch, roomTileColumn - 1, a);
     return this.spawnPointScratch;
   };
 }

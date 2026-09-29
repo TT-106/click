@@ -36,28 +36,28 @@ export function ItemNameGenerator() {
   this.historicNames = new HistoricItemNames();
   this.ancientNames = new AncientItemNames();
 }
-export function formatItemName(a, b) {
-  switch (b.pickNameFormat()) {
+export function formatItemName(baseName, nameList) {
+  switch (nameList.pickNameFormat()) {
     case 0:
-      return a;
+      return baseName;
     case ITEM_NAME_PREFIX:
-      return b.randomPrefix() + "" + a;
+      return nameList.randomPrefix() + "" + baseName;
     case ITEM_NAME_SUFFIX:
-      return b.randomSuffix() + "之" + a;
+      return nameList.randomSuffix() + "之" + baseName;
     case ITEM_NAME_TITLE:
-      return b.randomTitle() + "之" + a;
+      return nameList.randomTitle() + "之" + baseName;
     case ITEM_NAME_PREFIX_SUFFIX:
-      return b.randomSuffix() + "之" + b.randomPrefix() + a;
+      return nameList.randomSuffix() + "之" + nameList.randomPrefix() + baseName;
     case ITEM_NAME_PREFIX_TITLE:
-      return b.randomTitle() + "之" + b.randomPrefix() + a;
+      return nameList.randomTitle() + "之" + nameList.randomPrefix() + baseName;
     default:
-      return a;
+      return baseName;
   }
 }
 export function initializeLootItemNames() {
   CommonItemNames.prototype.pickNameFormat = function () {
-    var a = Math.random();
-    return 0.3 > a ? ITEM_NAME_PREFIX : 0.6 > a ? 0.5 > Math.random() ? ITEM_NAME_SUFFIX : ITEM_NAME_TITLE : 0.5 > Math.random() ? ITEM_NAME_PREFIX_SUFFIX : ITEM_NAME_PREFIX_TITLE;
+    var formatRoll = Math.random();
+    return 0.3 > formatRoll ? ITEM_NAME_PREFIX : 0.6 > formatRoll ? 0.5 > Math.random() ? ITEM_NAME_SUFFIX : ITEM_NAME_TITLE : 0.5 > Math.random() ? ITEM_NAME_PREFIX_SUFFIX : ITEM_NAME_PREFIX_TITLE;
   };
   CommonItemNames.prototype.randomPrefix = function () {
     return this.prefixAdjectives[randomInt(this.prefixAdjectives.length)];
@@ -69,8 +69,8 @@ export function initializeLootItemNames() {
     return this.titlePool[randomInt(this.titlePool.length)];
   };
   HistoricItemNames.prototype.pickNameFormat = function () {
-    var a = Math.random();
-    return 0.25 > a ? ITEM_NAME_PREFIX : 0.5 > a ? 0.5 > Math.random() ? ITEM_NAME_SUFFIX : ITEM_NAME_TITLE : 0.5 > Math.random() ? ITEM_NAME_PREFIX_SUFFIX : ITEM_NAME_PREFIX_TITLE;
+    var formatRoll = Math.random();
+    return 0.25 > formatRoll ? ITEM_NAME_PREFIX : 0.5 > formatRoll ? 0.5 > Math.random() ? ITEM_NAME_SUFFIX : ITEM_NAME_TITLE : 0.5 > Math.random() ? ITEM_NAME_PREFIX_SUFFIX : ITEM_NAME_PREFIX_TITLE;
   };
   HistoricItemNames.prototype.randomPrefix = function () {
     return this.prefixAdjectives[randomInt(this.prefixAdjectives.length)];
@@ -82,8 +82,8 @@ export function initializeLootItemNames() {
     return this.titlePool[randomInt(this.titlePool.length)];
   };
   RareItemNames.prototype.pickNameFormat = function () {
-    var a = Math.random();
-    return 0.25 > a ? ITEM_NAME_PREFIX : 0.5 > a ? 0.5 > Math.random() ? ITEM_NAME_SUFFIX : ITEM_NAME_TITLE : 0.5 > Math.random() ? ITEM_NAME_PREFIX_SUFFIX : ITEM_NAME_PREFIX_TITLE;
+    var formatRoll = Math.random();
+    return 0.25 > formatRoll ? ITEM_NAME_PREFIX : 0.5 > formatRoll ? 0.5 > Math.random() ? ITEM_NAME_SUFFIX : ITEM_NAME_TITLE : 0.5 > Math.random() ? ITEM_NAME_PREFIX_SUFFIX : ITEM_NAME_PREFIX_TITLE;
   };
   RareItemNames.prototype.randomPrefix = function () {
     return this.prefixAdjectives[randomInt(this.prefixAdjectives.length)];
@@ -95,8 +95,8 @@ export function initializeLootItemNames() {
     return this.titlePool[randomInt(this.titlePool.length)];
   };
   UncommonItemNames.prototype.pickNameFormat = function () {
-    var a = Math.random();
-    return 0.3 > a ? ITEM_NAME_PREFIX : 0.5 > a ? 0.5 > Math.random() ? ITEM_NAME_SUFFIX : ITEM_NAME_TITLE : 0.5 > Math.random() ? ITEM_NAME_PREFIX_SUFFIX : ITEM_NAME_PREFIX_TITLE;
+    var formatRoll = Math.random();
+    return 0.3 > formatRoll ? ITEM_NAME_PREFIX : 0.5 > formatRoll ? 0.5 > Math.random() ? ITEM_NAME_SUFFIX : ITEM_NAME_TITLE : 0.5 > Math.random() ? ITEM_NAME_PREFIX_SUFFIX : ITEM_NAME_PREFIX_TITLE;
   };
   UncommonItemNames.prototype.randomPrefix = function () {
     return this.prefixAdjectives[randomInt(this.prefixAdjectives.length)];

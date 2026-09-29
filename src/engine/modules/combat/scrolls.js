@@ -12,173 +12,173 @@ import { VisualEffect, addVisualEffect } from "../rendering/sprites.js";
 import { updateCharacter } from "../characters/character.js";
 import { electricSpellDefinitions, fireSpellDefinitions } from "../content/spells.js";
 export var scrollDefinitions;
-export function Spell(a) {
-  this.name = a.name;
-  this.spellCategoryId = a.spellCategoryId;
-  this.impactEffectName = a.impactEffectName;
-  this.projectileEffectName = a.projectileEffectName;
-  this.statusEffectTypeId = a.statusEffectTypeId;
-  this.potencyPercent = a.potencyPercent;
-  this.cooldownTurns = a.cooldownTurns;
+export function Spell(spellDefinition) {
+  this.name = spellDefinition.name;
+  this.spellCategoryId = spellDefinition.spellCategoryId;
+  this.impactEffectName = spellDefinition.impactEffectName;
+  this.projectileEffectName = spellDefinition.projectileEffectName;
+  this.statusEffectTypeId = spellDefinition.statusEffectTypeId;
+  this.potencyPercent = spellDefinition.potencyPercent;
+  this.cooldownTurns = spellDefinition.cooldownTurns;
   this.lastCastTurn = game.state.turnNumber - 3 * this.cooldownTurns;
-  this.applyEffectOnImpact = a.applyEffectOnImpact;
+  this.applyEffectOnImpact = spellDefinition.applyEffectOnImpact;
 }
-export function resetSpellCooldown(a) {
-  a.lastCastTurn = game.state.turnNumber - 3 * a.cooldownTurns;
+export function resetSpellCooldown(spell) {
+  spell.lastCastTurn = game.state.turnNumber - 3 * spell.cooldownTurns;
 }
-export function isSpellReady(a) {
-  if (a.lastCastTurn > game.state.turnNumber) {
-    resetSpellCooldown(a);
+export function isSpellReady(spell) {
+  if (spell.lastCastTurn > game.state.turnNumber) {
+    resetSpellCooldown(spell);
   }
-  return game.state.turnNumber - a.lastCastTurn >= a.cooldownTurns;
+  return game.state.turnNumber - spell.lastCastTurn >= spell.cooldownTurns;
 }
-export function Scroll(a, b) {
-  this.scrollTargets = b;
-  this.scrollId = a.scrollId;
-  this.spriteName = game.itemSprites.getSprite(a.spriteName);
-  this.baseName = a.baseName;
-  this.baseCapacity = a.baseCapacity;
-  this.capacityIncrement = a.capacityIncrement;
-  this.maxCharges = a.maxCharges;
-  this.scrollSpell = a.spellDefinition ? new Spell(a.spellDefinition) : null;
-  this.statBonusPerUpgrade = a.statBonusPerUpgrade;
+export function Scroll(scrollDefinition, scrollTargets) {
+  this.scrollTargets = scrollTargets;
+  this.scrollId = scrollDefinition.scrollId;
+  this.spriteName = game.itemSprites.getSprite(scrollDefinition.spriteName);
+  this.baseName = scrollDefinition.baseName;
+  this.baseCapacity = scrollDefinition.baseCapacity;
+  this.capacityIncrement = scrollDefinition.capacityIncrement;
+  this.maxCharges = scrollDefinition.maxCharges;
+  this.scrollSpell = scrollDefinition.spellDefinition ? new Spell(scrollDefinition.spellDefinition) : null;
+  this.statBonusPerUpgrade = scrollDefinition.statBonusPerUpgrade;
   this.locked = true;
   this.quantity = this.upgradeCount = 0;
   this.upgradeCost = getScrollUpgradeCost(this);
   this.label = getScrollLabel(this);
   this.nextLabel = getNextScrollLabel(this);
 }
-export function getScrollSprite(a) {
-  return a.spriteName;
+export function getScrollSprite(scroll) {
+  return scroll.spriteName;
 }
-export function addScrollCharge(a) {
-  a.quantity++;
-  var b = 30 + scrollCapacityBonus.currentValue;
-  if (a.quantity > b) {
-    a.quantity = b;
+export function addScrollCharge(scroll) {
+  scroll.quantity++;
+  var scrollCapacity = 30 + scrollCapacityBonus.currentValue;
+  if (scroll.quantity > scrollCapacity) {
+    scroll.quantity = scrollCapacity;
   }
 }
-export function getScrollUpgradeCost(a) {
-  return scaleByLevel(a.locked ? a.baseCapacity : a.baseCapacity + (a.upgradeCount + 1) * a.capacityIncrement, scrollPriceCurve, 1);
+export function getScrollUpgradeCost(scroll) {
+  return scaleByLevel(scroll.locked ? scroll.baseCapacity : scroll.baseCapacity + (scroll.upgradeCount + 1) * scroll.capacityIncrement, scrollPriceCurve, 1);
 }
-export function getScrollLabel(a) {
-  if (a.locked) {
+export function getScrollLabel(scroll) {
+  if (scroll.locked) {
     return "未解锁";
   }
-  switch (a.upgradeCount) {
+  switch (scroll.upgradeCount) {
     case 1:
-      return a.baseName + " II";
+      return scroll.baseName + " II";
     case 2:
-      return a.baseName + " III";
+      return scroll.baseName + " III";
     case 3:
-      return a.baseName + " IV";
+      return scroll.baseName + " IV";
     case 4:
-      return a.baseName + " V";
+      return scroll.baseName + " V";
     case 5:
-      return a.baseName + " VI";
+      return scroll.baseName + " VI";
     case 6:
-      return a.baseName + " VII";
+      return scroll.baseName + " VII";
     case 7:
-      return a.baseName + " VIII";
+      return scroll.baseName + " VIII";
   }
-  return a.baseName;
+  return scroll.baseName;
 }
-export function getNextScrollLabel(a) {
-  if (!a.locked) {
-    switch (a.upgradeCount) {
+export function getNextScrollLabel(scroll) {
+  if (!scroll.locked) {
+    switch (scroll.upgradeCount) {
       case 0:
-        return a.baseName + " II";
+        return scroll.baseName + " II";
       case 1:
-        return a.baseName + " III";
+        return scroll.baseName + " III";
       case 2:
-        return a.baseName + " IV";
+        return scroll.baseName + " IV";
       case 3:
-        return a.baseName + " V";
+        return scroll.baseName + " V";
       case 4:
-        return a.baseName + " VI";
+        return scroll.baseName + " VI";
       case 5:
-        return a.baseName + " VII";
+        return scroll.baseName + " VII";
       case 6:
-        return a.baseName + " VIII";
+        return scroll.baseName + " VIII";
     }
   }
-  return a.baseName;
+  return scroll.baseName;
 }
-export function castScroll(a, b) {
-  if (!a.locked && (0 < a.quantity || b)) {
-    var c;
-    c = game.state.adventurers[randomInt(game.state.adventurers.length)];
-    var d = getOpponents(c);
-    if (0 === d.length) {
-      c = null;
+export function castScroll(scroll, hasInfiniteScrolls) {
+  if (!scroll.locked && (0 < scroll.quantity || hasInfiniteScrolls)) {
+    var randomAdventurer;
+    randomAdventurer = game.state.adventurers[randomInt(game.state.adventurers.length)];
+    var opponents = getOpponents(randomAdventurer);
+    if (0 === opponents.length) {
+      randomAdventurer = null;
     } else {
-      var f = c.position.room;
-      if (f) {
-        var g,
-          h,
-          l = c.position.levelPosition,
-          n = null,
+      var searchRoom = randomAdventurer.position.room;
+      if (searchRoom) {
+        var candidate,
+          opponentIndex,
+          adventurerLevelPosition = randomAdventurer.position.levelPosition,
+          nearestOpponent = null,
           p,
-          s = -1;
-        for (h = 0; h < d.length; h++) {
-          if (!(g = d[h], c === g || g.isDead || g.position.room !== f || (p = g.effects, p.isStealthed || p.isDisabled || p.isConverted || -1 < a.scrollTargets.recentTargets.indexOf(g) || (p = l.squaredDistanceTo(g.position.levelPosition), !(0 > s || p < s))))) {
-            n = g;
-            s = p;
+          bestDistanceSquared = -1;
+        for (opponentIndex = 0; opponentIndex < opponents.length; opponentIndex++) {
+          if (!(candidate = opponents[opponentIndex], randomAdventurer === candidate || candidate.isDead || candidate.position.room !== searchRoom || (p = candidate.effects, p.isStealthed || p.isDisabled || p.isConverted || -1 < scroll.scrollTargets.recentTargets.indexOf(candidate) || (p = adventurerLevelPosition.squaredDistanceTo(candidate.position.levelPosition), !(0 > bestDistanceSquared || p < bestDistanceSquared))))) {
+            nearestOpponent = candidate;
+            bestDistanceSquared = p;
           }
         }
-        c = n;
+        var castTarget = nearestOpponent;
       } else {
-        c = null;
+        castTarget = null;
       }
     }
-    if (!c) {
-      c = selectScrollTarget(game.state.adventurers[randomInt(game.state.adventurers.length)]);
-      if (!c) {
-        c = getMonsters();
-        c = 0 === c.length ? null : c[randomInt(c.length)];
+    if (!castTarget) {
+      castTarget = selectScrollTarget(game.state.adventurers[randomInt(game.state.adventurers.length)]);
+      if (!castTarget) {
+        castTarget = getMonsters();
+        castTarget = 0 === castTarget.length ? null : castTarget[randomInt(castTarget.length)];
       }
     }
-    if (c) {
-      d = a.scrollTargets;
-      if (0 > d.recentTargets.indexOf(c)) {
-        d.recentTargets.push(c);
-        if (4 <= d.recentTargets.length) {
-          d.recentTargets.shift();
+    if (castTarget) {
+      var scrollTargets = scroll.scrollTargets;
+      if (0 > scrollTargets.recentTargets.indexOf(castTarget)) {
+        scrollTargets.recentTargets.push(castTarget);
+        if (4 <= scrollTargets.recentTargets.length) {
+          scrollTargets.recentTargets.shift();
         }
       }
-      d = game.state.scrollCaster.position;
-      d.room = c.position.room;
-      game.state.scrollCaster.setCombatTarget(c);
-      if (a.scrollSpell) {
-        game.state.scrollCaster.spellToCast = a.scrollSpell;
+      var casterPosition = game.state.scrollCaster.position;
+      casterPosition.room = castTarget.position.room;
+      game.state.scrollCaster.setCombatTarget(castTarget);
+      if (scroll.scrollSpell) {
+        game.state.scrollCaster.spellToCast = scroll.scrollSpell;
         game.state.scrollCaster.actionType = CAST_ACTION_TYPE;
       } else {
         game.state.scrollCaster.actionType = MELEE_ACTION_TYPE;
       }
-      c = new VisualEffect("Red Damage", d.levelPosition, d.levelPosition, false, 1);
-      addVisualEffect(game.effects, c);
+      var impactVisual = new VisualEffect("Red Damage", casterPosition.levelPosition, casterPosition.levelPosition, false, 1);
+      addVisualEffect(game.effects, impactVisual);
       updateCharacter(game.state.scrollCaster, 1);
       game.state.statisticsRecorder.recordScrollUsed();
-      if (!b) {
-        a.quantity--;
-        if (0 > a.quantity) {
-          a.quantity = 0;
+      if (!hasInfiniteScrolls) {
+        scroll.quantity--;
+        if (0 > scroll.quantity) {
+          scroll.quantity = 0;
         }
       }
     }
   }
 }
 export function clearScrollTargets() {
-  var a = game.scrollTargets;
-  if (0 < a.recentTargets.length) {
-    a.recentTargets.length = 0;
+  var scrollTargets = game.scrollTargets;
+  if (0 < scrollTargets.recentTargets.length) {
+    scrollTargets.recentTargets.length = 0;
   }
 }
-export function ScrollDrop(a, b, c, d) {
-  this.scroll = a;
-  this.levelPositionX = b;
-  this.levelPositionY = c;
-  this.room = d;
+export function ScrollDrop(scroll, x, y, room) {
+  this.scroll = scroll;
+  this.levelPositionX = x;
+  this.levelPositionY = y;
+  this.room = room;
   this.collected = false;
   this.claimedBy = null;
   this.claimDistance = 0;
@@ -187,10 +187,10 @@ export function ScrollDropRegistry() {
   this.drops = [];
 }
 export function removeScrollDrop(a) {
-  var b = game.scrollDrops;
-  a = b.drops.indexOf(a);
+  var dropRegistry = game.scrollDrops;
+  a = dropRegistry.drops.indexOf(a);
   if (-1 < a) {
-    b.drops.splice(a, 1);
+    dropRegistry.drops.splice(a, 1);
   }
 }
 export function ScrollInventory() {
@@ -199,24 +199,24 @@ export function ScrollInventory() {
   this.unlockedScrolls = [];
 }
 export function resetScrollInventory() {
-  var a = game.scrolls;
-  a.scrollsById = {};
-  a.scrollList.length = 0;
-  a.unlockedScrolls.length = 0;
-  var b, c;
-  for (b = 0; b < scrollDefinitions.length; b++) {
-    c = new Scroll(scrollDefinitions[b], game.scrollTargets);
-    (/** @type {any} */ (c)).applyLockedAndUpgradeState(0 < scrollDefinitions[b].baseCapacity, 0);
-    a.scrollList.push(c);
-    a.scrollsById[c.scrollId] = c;
-    if (!c.locked) {
-      registerUnlockedScroll(a, c);
+  var scrollInventory = game.scrolls;
+  scrollInventory.scrollsById = {};
+  scrollInventory.scrollList.length = 0;
+  scrollInventory.unlockedScrolls.length = 0;
+  var definitionIndex, scroll;
+  for (definitionIndex = 0; definitionIndex < scrollDefinitions.length; definitionIndex++) {
+    scroll = new Scroll(scrollDefinitions[definitionIndex], game.scrollTargets);
+    (/** @type {any} */ (scroll)).applyLockedAndUpgradeState(0 < scrollDefinitions[definitionIndex].baseCapacity, 0);
+    scrollInventory.scrollList.push(scroll);
+    scrollInventory.scrollsById[scroll.scrollId] = scroll;
+    if (!scroll.locked) {
+      registerUnlockedScroll(scrollInventory, scroll);
     }
   }
 }
-export function registerUnlockedScroll(a, b) {
-  if (0 > a.unlockedScrolls.indexOf(b)) {
-    a.unlockedScrolls.push(b);
+export function registerUnlockedScroll(scrollInventory, scroll) {
+  if (0 > scrollInventory.unlockedScrolls.indexOf(scroll)) {
+    scrollInventory.unlockedScrolls.push(scroll);
   }
 }
 export function initializeCombatScrolls() {
@@ -240,23 +240,23 @@ export function initializeCombatScrolls() {
   ScrollDrop.prototype.getScroll = function () {
     return this.scroll;
   };
-  ScrollDrop.prototype.setCollected = function (a) {
-    this.collected = a;
+  ScrollDrop.prototype.setCollected = function (collected) {
+    this.collected = collected;
   };
-  ScrollDrop.prototype.setClaimedBy = function (a) {
-    this.claimedBy = a;
+  ScrollDrop.prototype.setClaimedBy = function (character) {
+    this.claimedBy = character;
   };
   ScrollDrop.prototype.getClaimDistance = function () {
     return this.claimDistance;
   };
-  ScrollDrop.prototype.setClaimDistance = function (a) {
-    this.claimDistance = a;
+  ScrollDrop.prototype.setClaimDistance = function (distance) {
+    this.claimDistance = distance;
   };
   ScrollDropRegistry.prototype.releaseClaims = function () {
-    var a;
-    for (a = 0; a < this.drops.length; a++) {
-      this.drops[a].setClaimedBy(null);
-      this.drops[a].setClaimDistance(0);
+    var dropIndex;
+    for (dropIndex = 0; dropIndex < this.drops.length; dropIndex++) {
+      this.drops[dropIndex].setClaimedBy(null);
+      this.drops[dropIndex].setClaimDistance(0);
     }
   };
   scrollDefinitions = [{
@@ -328,7 +328,7 @@ export function initializeCombatScrolls() {
       statBonusValue: 1
     }
   }];
-  ScrollInventory.prototype.getScrollById = function (a) {
-    return this.scrollsById[a];
+  ScrollInventory.prototype.getScrollById = function (scrollId) {
+    return this.scrollsById[scrollId];
   };
 }

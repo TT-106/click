@@ -1,19 +1,19 @@
 /** 旧面板 DOM 操作。
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
-export function getElement(a) {
-  return document.getElementById(a);
+export function getElement(elementId) {
+  return document.getElementById(elementId);
 }
-export function createElement(a, b, c, d) {
+export function createElement(a, parentElement, elementId, className) {
   a = document.createElement(a);
-  if (d) {
-    a.className = d;
+  if (className) {
+    a.className = className;
   }
-  if (c) {
-    a.id = c;
+  if (elementId) {
+    a.id = elementId;
   }
-  if (b) {
-    b.appendChild(a);
+  if (parentElement) {
+    parentElement.appendChild(a);
   }
   return a;
 }
@@ -24,45 +24,45 @@ export function clearElementById(a) {
     }
   }
 }
-export function clearElement(a) {
-  if (a) {
-    for (; a.firstChild;) {
-      a.removeChild(a.firstChild);
+export function clearElement(element) {
+  if (element) {
+    for (; element.firstChild;) {
+      element.removeChild(element.firstChild);
     }
   }
 }
-export function hideElement(a) {
-  if (a) {
-    a.style.display = "none";
+export function hideElement(element) {
+  if (element) {
+    element.style.display = "none";
   }
 }
-export function showElement(a) {
-  if (a) {
-    a.style.display = "block";
+export function showElement(element) {
+  if (element) {
+    element.style.display = "block";
   }
 }
-export function hideElementById(a) {
-  hideElement(getElement(a));
+export function hideElementById(elementId) {
+  hideElement(getElement(elementId));
 }
-export function showElementById(a) {
-  showElement(getElement(a));
+export function showElementById(elementId) {
+  showElement(getElement(elementId));
 }
-export function setElementHtml(a, b) {
-  var c = getElement(a);
-  if (c) {
-    c.innerHTML = b;
+export function setElementHtml(elementId, html) {
+  var element = getElement(elementId);
+  if (element) {
+    element.innerHTML = html;
   }
 }
-export function appendHeaderCell(a) {
-  var b = document.createElement("th");
-  a.appendChild(b);
-  return b;
+export function appendHeaderCell(headerRow) {
+  var headerCell = document.createElement("th");
+  headerRow.appendChild(headerCell);
+  return headerCell;
 }
-export function appendAttributeRow(a, b, c) {
-  a = a.insertRow(c);
-  c = a.insertCell(0);
-  c.className = "characteristicsTableLabel";
-  c.innerHTML = b;
+export function appendAttributeRow(a, labelHtml, rowIndex) {
+  a = a.insertRow(rowIndex);
+  var labelCell = a.insertCell(0);
+  labelCell.className = "characteristicsTableLabel";
+  labelCell.innerHTML = labelHtml;
   return a.insertCell(1);
 }
 export function initializeViewsDom() {}

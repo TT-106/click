@@ -24,183 +24,183 @@ export function PartyState() {
   this.destinationOffWorld = false;
   this.worldDestRow = this.worldDestColumn = 0;
 }
-export function forcePartyDestination(a) {
-  var b = game.state.party;
-  setPartyDestination(b, a);
-  b.forcedTravelActive = true;
+export function forcePartyDestination(forcedDestinationRoom) {
+  var party = game.state.party;
+  setPartyDestination(party, forcedDestinationRoom);
+  party.forcedTravelActive = true;
 }
-export function setPartyDestination(a, b) {
-  a.forcedDestinationRoom = b;
-  if (a.forcedDestinationRoom) {
-    a.destinationRoom = a.forcedDestinationRoom;
-    a.targetRoom = null;
-    a.targetDoor = null;
+export function setPartyDestination(party, forcedDestinationRoom) {
+  party.forcedDestinationRoom = forcedDestinationRoom;
+  if (party.forcedDestinationRoom) {
+    party.destinationRoom = party.forcedDestinationRoom;
+    party.targetRoom = null;
+    party.targetDoor = null;
   }
 }
-export function isPartyTravelling(a) {
-  return a.travellingToDisabledAlly || a.forcedTravelActive;
+export function isPartyTravelling(party) {
+  return party.travellingToDisabledAlly || party.forcedTravelActive;
 }
-export function addKills(a) {
-  var b = game.state.party;
-  b.kills += a;
+export function addKills(killsToAdd) {
+  var party = game.state.party;
+  party.kills += killsToAdd;
 }
-export function spendKills(a, b) {
-  a.kills -= b;
-  if (0 > a.kills) {
-    a.kills = 0;
+export function spendKills(party, killsToSpend) {
+  party.kills -= killsToSpend;
+  if (0 > party.kills) {
+    party.kills = 0;
   }
 }
-export function addExperience(a) {
-  var b = game.state.party;
-  b.experiencePoints += a;
+export function addExperience(experiencePointsToAdd) {
+  var party = game.state.party;
+  party.experiencePoints += experiencePointsToAdd;
 }
-export function addGold(a) {
-  var b = game.state.party;
-  b.gold += a;
+export function addGold(goldToAdd) {
+  var party = game.state.party;
+  party.gold += goldToAdd;
 }
-export function spendGold(a) {
-  var b = game.state.party;
-  b.gold -= a;
-  if (0 > b.gold) {
-    b.gold = 0;
+export function spendGold(goldToSpend) {
+  var party = game.state.party;
+  party.gold -= goldToSpend;
+  if (0 > party.gold) {
+    party.gold = 0;
   }
 }
-export function getPartyMaxLevel(a) {
-  if (0 > a.cachedMaxLevel) {
-    a.cachedMaxLevel = calculatePartyMaxLevel();
+export function getPartyMaxLevel(party) {
+  if (0 > party.cachedMaxLevel) {
+    party.cachedMaxLevel = calculatePartyMaxLevel();
   }
-  return a.cachedMaxLevel;
+  return party.cachedMaxLevel;
 }
 export function getPartyMinLevel() {
-  var a = game.state.party;
-  if (0 > a.cachedMinLevel) {
-    a.cachedMinLevel = calculatePartyMinLevel(a);
+  var party = game.state.party;
+  if (0 > party.cachedMinLevel) {
+    party.cachedMinLevel = calculatePartyMinLevel(party);
   }
-  return a.cachedMinLevel;
+  return party.cachedMinLevel;
 }
 export function refreshPartyLevels() {
-  var a = game.state.party;
-  a.cachedMaxLevel = calculatePartyMaxLevel();
-  a.cachedMinLevel = calculatePartyMinLevel(a);
+  var party = game.state.party;
+  party.cachedMaxLevel = calculatePartyMaxLevel();
+  party.cachedMinLevel = calculatePartyMinLevel(party);
 }
 export function calculatePartyMaxLevel() {
-  var a = -1,
-    b,
-    c;
-  for (c = 0; c < game.state.adventurers.length; c++) {
-    b = game.state.adventurers[c].stats.characterLevel;
-    if (a < b) {
-      a = b;
+  var maxLevel = -1,
+    adventurerLevel,
+    adventurerIndex;
+  for (adventurerIndex = 0; adventurerIndex < game.state.adventurers.length; adventurerIndex++) {
+    adventurerLevel = game.state.adventurers[adventurerIndex].stats.characterLevel;
+    if (maxLevel < adventurerLevel) {
+      maxLevel = adventurerLevel;
     }
   }
-  return a;
+  return maxLevel;
 }
 export function calculatePartyMinLevel(a) {
   a = getPartyMaxLevel(a);
-  var b, c;
-  for (c = 0; c < game.state.adventurers.length; c++) {
-    b = game.state.adventurers[c].stats.characterLevel;
-    if (a > b) {
-      a = b;
+  var adventurerLevel, adventurerIndex;
+  for (adventurerIndex = 0; adventurerIndex < game.state.adventurers.length; adventurerIndex++) {
+    adventurerLevel = game.state.adventurers[adventurerIndex].stats.characterLevel;
+    if (a > adventurerLevel) {
+      a = adventurerLevel;
     }
   }
   return a;
 }
 export function findNextUnopenedDoor() {
-  var a = game.state.leader,
-    b,
-    c,
+  var leader = game.state.leader,
+    currentHallway,
+    doorIndex,
     d,
-    f,
-    g = null,
-    h = a.position.levelPosition,
-    l = game.level.roomList,
-    n = game.level.hallwayList,
-    p = 1E5;
-  if (b = a.position.currentHallway) {
-    if (!b.doorA.isOpen) {
-      return b.doorA;
+    doorDistance,
+    nearestUnopenedDoor = null,
+    leaderLevelPosition = leader.position.levelPosition,
+    roomList = game.level.roomList,
+    hallwayList = game.level.hallwayList,
+    bestDistanceSquared = 1E5;
+  if (currentHallway = leader.position.currentHallway) {
+    if (!currentHallway.doorA.isOpen) {
+      return currentHallway.doorA;
     }
-    if (!b.doorB.isOpen) {
-      return b.doorB;
+    if (!currentHallway.doorB.isOpen) {
+      return currentHallway.doorB;
     }
   }
-  if (d = a.position.room) {
-    b = d.doorList;
-    for (c = 0; c < b.length; c++) {
-      d = b[c];
+  if (d = leader.position.room) {
+    var doorList = d.doorList;
+    for (doorIndex = 0; doorIndex < doorList.length; doorIndex++) {
+      d = doorList[doorIndex];
       if (!d.isOpen) {
-        if (g) {
-          f = distanceSquaredToPoint(h, d.pixelColumn, d.pixelRow);
-          if (f < p) {
-            g = d;
-            p = f;
+        if (nearestUnopenedDoor) {
+          doorDistance = distanceSquaredToPoint(leaderLevelPosition, d.pixelColumn, d.pixelRow);
+          if (doorDistance < bestDistanceSquared) {
+            nearestUnopenedDoor = d;
+            bestDistanceSquared = doorDistance;
           }
         } else {
-          g = d;
-          p = distanceSquaredToPoint(h, d.pixelColumn, d.pixelRow);
+          nearestUnopenedDoor = d;
+          bestDistanceSquared = distanceSquaredToPoint(leaderLevelPosition, d.pixelColumn, d.pixelRow);
         }
       }
     }
-    if (g) {
-      return g;
+    if (nearestUnopenedDoor) {
+      return nearestUnopenedDoor;
     }
   }
-  for (a = 0; a < l.length; a++) {
-    if (d = l[a], d.discovered) {
-      for (b = d.doorList, c = 0; c < b.length; c++) {
-        d = b[c];
+  for (var roomIndex = 0; roomIndex < roomList.length; roomIndex++) {
+    if (d = roomList[roomIndex], d.discovered) {
+      for (doorList = d.doorList, doorIndex = 0; doorIndex < doorList.length; doorIndex++) {
+        d = doorList[doorIndex];
         if (!d.isOpen) {
-          if (g) {
-            f = distanceSquaredToPoint(h, d.pixelColumn, d.pixelRow);
-            if (f < p) {
-              g = d;
-              p = f;
+          if (nearestUnopenedDoor) {
+            doorDistance = distanceSquaredToPoint(leaderLevelPosition, d.pixelColumn, d.pixelRow);
+            if (doorDistance < bestDistanceSquared) {
+              nearestUnopenedDoor = d;
+              bestDistanceSquared = doorDistance;
             }
           } else {
-            g = d;
-            p = distanceSquaredToPoint(h, d.pixelColumn, d.pixelRow);
+            nearestUnopenedDoor = d;
+            bestDistanceSquared = distanceSquaredToPoint(leaderLevelPosition, d.pixelColumn, d.pixelRow);
           }
         }
       }
     }
   }
-  for (a = 0; a < n.length; a++) {
-    b = n[a];
-    if (b.discovered) {
-      d = b.doorA;
+  for (var hallwayIndex = 0; hallwayIndex < hallwayList.length; hallwayIndex++) {
+    var hallway = hallwayList[hallwayIndex];
+    if (hallway.discovered) {
+      d = hallway.doorA;
       if (!d.isOpen) {
-        if (g) {
-          f = distanceSquaredToPoint(h, d.pixelColumn, d.pixelRow);
-          if (f < p) {
-            g = d;
-            p = f;
+        if (nearestUnopenedDoor) {
+          doorDistance = distanceSquaredToPoint(leaderLevelPosition, d.pixelColumn, d.pixelRow);
+          if (doorDistance < bestDistanceSquared) {
+            nearestUnopenedDoor = d;
+            bestDistanceSquared = doorDistance;
           }
         } else {
-          g = d;
-          p = distanceSquaredToPoint(h, d.pixelColumn, d.pixelRow);
+          nearestUnopenedDoor = d;
+          bestDistanceSquared = distanceSquaredToPoint(leaderLevelPosition, d.pixelColumn, d.pixelRow);
         }
       }
-      d = b.doorB;
+      d = hallway.doorB;
       if (!d.isOpen) {
-        if (g) {
-          f = distanceSquaredToPoint(h, d.pixelColumn, d.pixelRow);
-          if (f < p) {
-            g = d;
-            p = f;
+        if (nearestUnopenedDoor) {
+          doorDistance = distanceSquaredToPoint(leaderLevelPosition, d.pixelColumn, d.pixelRow);
+          if (doorDistance < bestDistanceSquared) {
+            nearestUnopenedDoor = d;
+            bestDistanceSquared = doorDistance;
           }
         } else {
-          g = d;
-          p = distanceSquaredToPoint(h, d.pixelColumn, d.pixelRow);
+          nearestUnopenedDoor = d;
+          bestDistanceSquared = distanceSquaredToPoint(leaderLevelPosition, d.pixelColumn, d.pixelRow);
         }
       }
     }
   }
-  return g;
+  return nearestUnopenedDoor;
 }
 export function initializeCharactersParty() {
-  PartyState.prototype.setTargetTreasureChest = function (a) {
-    this.targetTreasureChest = a;
+  PartyState.prototype.setTargetTreasureChest = function (treasureChest) {
+    this.targetTreasureChest = treasureChest;
   };
   PartyState.prototype.completeLevel = function () {
     this.targetTreasureChest = this.targetRoom = this.targetDoor = this.destinationRoom = null;
@@ -227,22 +227,22 @@ export function initializeCharactersParty() {
       invalidateCastleRevision();
       a.conquered = true;
       b = [];
-      var g;
+      var adjacentLockedCastle;
       for (d = 0; d < a.regions.length; d++) {
         f = a.regions[d];
         c = f.regionColumn;
         f = f.regionRow;
-        if ((g = findCastleByRegion(c - 1 + "_" + f)) && g !== a && g.regionLocked && 0 > b.indexOf(g)) {
-          b.push(g);
+        if ((adjacentLockedCastle = findCastleByRegion(c - 1 + "_" + f)) && adjacentLockedCastle !== a && adjacentLockedCastle.regionLocked && 0 > b.indexOf(adjacentLockedCastle)) {
+          b.push(adjacentLockedCastle);
         }
-        if ((g = findCastleByRegion(c + 1 + "_" + f)) && g !== a && g.regionLocked && 0 > b.indexOf(g)) {
-          b.push(g);
+        if ((adjacentLockedCastle = findCastleByRegion(c + 1 + "_" + f)) && adjacentLockedCastle !== a && adjacentLockedCastle.regionLocked && 0 > b.indexOf(adjacentLockedCastle)) {
+          b.push(adjacentLockedCastle);
         }
-        if ((g = findCastleByRegion(c + "_" + (f - 1))) && g !== a && g.regionLocked && 0 > b.indexOf(g)) {
-          b.push(g);
+        if ((adjacentLockedCastle = findCastleByRegion(c + "_" + (f - 1))) && adjacentLockedCastle !== a && adjacentLockedCastle.regionLocked && 0 > b.indexOf(adjacentLockedCastle)) {
+          b.push(adjacentLockedCastle);
         }
-        if ((g = findCastleByRegion(c + "_" + (f + 1))) && g !== a && g.regionLocked && 0 > b.indexOf(g)) {
-          b.push(g);
+        if ((adjacentLockedCastle = findCastleByRegion(c + "_" + (f + 1))) && adjacentLockedCastle !== a && adjacentLockedCastle.regionLocked && 0 > b.indexOf(adjacentLockedCastle)) {
+          b.push(adjacentLockedCastle);
         }
       }
       for (c = 0; c < b.length; c++) {
@@ -331,11 +331,11 @@ export function initializeCharactersParty() {
       }
     }
   };
-  PartyState.prototype.setTargetDoor = function (a) {
-    this.targetDoor = a;
+  PartyState.prototype.setTargetDoor = function (targetDoor) {
+    this.targetDoor = targetDoor;
   };
-  PartyState.prototype.setTargetRoom = function (a) {
-    this.targetRoom = a;
+  PartyState.prototype.setTargetRoom = function (targetRoom) {
+    this.targetRoom = targetRoom;
   };
   PartyState.prototype.updateWorldMode = function () {
     if (this.targetCastle && this.targetCastle.conquered) {
@@ -439,9 +439,9 @@ export function initializeCharactersParty() {
           f = null;
           g = 0;
           const castleDungeons = this.targetCastle.dungeonList;
-          var p;
-          for (p = 0; p < castleDungeons.length; p++) {
-            if (h = castleDungeons[p], !h.conquered && (l = distanceSquaredToPoint(d, h.getPixelX(), h.getPixelY()), !f || l < g)) {
+          var dungeonIndex;
+          for (dungeonIndex = 0; dungeonIndex < castleDungeons.length; dungeonIndex++) {
+            if (h = castleDungeons[dungeonIndex], !h.conquered && (l = distanceSquaredToPoint(d, h.getPixelX(), h.getPixelY()), !f || l < g)) {
               f = h;
               g = l;
             }
@@ -450,8 +450,8 @@ export function initializeCharactersParty() {
           if (!this.targetDungeon) {
             f = game.dungeons;
             g = null;
-            for (p = h = 0; p < f.dungeonList.length; p++) {
-              if (!(l = f.dungeonList[p], l.isFarm || l.region.regionLocked || l.conquered || (n = distanceSquaredToPoint(d, l.getPixelX(), l.getPixelY()), g && !(n < h)))) {
+            for (dungeonIndex = h = 0; dungeonIndex < f.dungeonList.length; dungeonIndex++) {
+              if (!(l = f.dungeonList[dungeonIndex], l.isFarm || l.region.regionLocked || l.conquered || (n = distanceSquaredToPoint(d, l.getPixelX(), l.getPixelY()), g && !(n < h)))) {
                 g = l;
                 h = n;
               }
@@ -460,8 +460,8 @@ export function initializeCharactersParty() {
             if (!this.targetDungeon) {
               f = game.dungeons;
               g = null;
-              for (p = h = 0; p < f.dungeonList.length; p++) {
-                if (!(l = f.dungeonList[p], l.isFarm || l.region.regionLocked || l.discovered && (!l.discovered || l.cleared) || (n = distanceSquaredToPoint(d, l.getPixelX(), l.getPixelY()), g && !(n < h)))) {
+              for (dungeonIndex = h = 0; dungeonIndex < f.dungeonList.length; dungeonIndex++) {
+                if (!(l = f.dungeonList[dungeonIndex], l.isFarm || l.region.regionLocked || l.discovered && (!l.discovered || l.cleared) || (n = distanceSquaredToPoint(d, l.getPixelX(), l.getPixelY()), g && !(n < h)))) {
                   g = l;
                   h = n;
                 }
@@ -470,8 +470,8 @@ export function initializeCharactersParty() {
               if (!this.targetDungeon) {
                 f = game.dungeons;
                 g = null;
-                for (p = h = 0; p < f.dungeonList.length; p++) {
-                  if (l = f.dungeonList[p], !l.isFarm && !l.region.regionLocked && (n = distanceSquaredToPoint(d, l.getPixelX(), l.getPixelY()), !g || n < h)) {
+                for (dungeonIndex = h = 0; dungeonIndex < f.dungeonList.length; dungeonIndex++) {
+                  if (l = f.dungeonList[dungeonIndex], !l.isFarm && !l.region.regionLocked && (n = distanceSquaredToPoint(d, l.getPixelX(), l.getPixelY()), !g || n < h)) {
                     g = l;
                     h = n;
                   }
@@ -531,12 +531,12 @@ export function initializeCharactersParty() {
   PartyState.prototype.updateDungeonMode = function () {
     a: {
       var a,
-        b = getAllies(),
-        c;
-      for (a = 0; a < b.length; a++) {
-        if (c = b[a], c.position.room && c.effects.isDisabled) {
+        allies = getAllies(),
+        disabledAlly;
+      for (a = 0; a < allies.length; a++) {
+        if (disabledAlly = allies[a], disabledAlly.position.room && disabledAlly.effects.isDisabled) {
           this.travellingToDisabledAlly = true;
-          setPartyDestination(this, c.position.room);
+          setPartyDestination(this, disabledAlly.position.room);
           break a;
         }
       }

@@ -11,28 +11,28 @@ import { clearMovementTarget } from "../characters/movement.js";
 import { IDLE_ACTION } from "../ai/targeting.js";
 import { clearItemDrops } from "../loot/items.js";
 import { dungeonCostBonus } from "../content/balance.js";
-export function Dungeon(a, b, c, d, f, g, h, l, n) {
-  this.dungeonId = a;
-  this.dungeonName = b;
-  this.dungeonType = c;
+export function Dungeon(dungeonId, dungeonName, dungeonType, worldColumn, worldRow, regionColumn, regionRow, levelCount, ownerCastle) {
+  this.dungeonId = dungeonId;
+  this.dungeonName = dungeonName;
+  this.dungeonType = dungeonType;
   this.farmCost = 0;
-  this.hasSecondEntrance = !(4 === c || 5 === c || 7 === c || 8 === c);
-  this.mapSprite = getDungeonMapSprite(c);
+  this.hasSecondEntrance = !(4 === dungeonType || 5 === dungeonType || 7 === dungeonType || 8 === dungeonType);
+  this.mapSprite = getDungeonMapSprite(dungeonType);
   this.conquered = this.isFarm = this.cleared = this.discovered = false;
   this.farmStartTurn = this.clearedTurn = 0;
-  this.worldColumn = d;
-  this.worldRow = f;
-  this.regionColumn = g;
-  this.regionRow = h;
-  this.levelCount = l;
+  this.worldColumn = worldColumn;
+  this.worldRow = worldRow;
+  this.regionColumn = regionColumn;
+  this.regionRow = regionRow;
+  this.levelCount = levelCount;
   this.currentLevelIndex = 0;
-  this.region = n;
+  this.region = ownerCastle;
 }
-export function canFarmDungeon(a) {
-  return a.discovered && a.conquered && !a.isFarm && a.region.conquered;
+export function canFarmDungeon(dungeon) {
+  return dungeon.discovered && dungeon.conquered && !dungeon.isFarm && dungeon.region.conquered;
 }
-export function randomDungeonType(a) {
-  switch (randomIntFrom(a, 11)) {
+export function randomDungeonType(seededRandom) {
+  switch (randomIntFrom(seededRandom, 11)) {
     case 0:
       return 0;
     case 1:
@@ -70,80 +70,80 @@ export function DungeonRegistry() {
   this.farmable = [];
   this.sortingEnabled = true;
   this.pendingFarmKills = 0;
-  this.compareByFarmCost = function (a, b) {
-    return floorNumber(a.farmCost * dungeonCostBonus.currentValue) < floorNumber(b.farmCost * dungeonCostBonus.currentValue) ? -1 : 1;
+  this.compareByFarmCost = function (leftDungeon, rightDungeon) {
+    return floorNumber(leftDungeon.farmCost * dungeonCostBonus.currentValue) < floorNumber(rightDungeon.farmCost * dungeonCostBonus.currentValue) ? -1 : 1;
   };
 }
 export function resetDungeons() {
-  var a = game.dungeons;
-  a.discovered.length = 0;
-  a.attackable.length = 0;
-  a.cleared.length = 0;
-  a.farms.length = 0;
-  a.farmable.length = 0;
-  a.discoveredDungeonCount = 0;
-  a.pendingFarmKills = 0;
-  var b;
-  for (b = 0; b < a.dungeonList.length; b++) {
-    var c = a.dungeonList[b];
-    c.discovered = false;
-    c.cleared = false;
-    c.conquered = false;
-    c.isFarm = false;
-    c.farmStartTurn = 0;
-    c.clearedTurn = 0;
+  var dungeonManager = game.dungeons;
+  dungeonManager.discovered.length = 0;
+  dungeonManager.attackable.length = 0;
+  dungeonManager.cleared.length = 0;
+  dungeonManager.farms.length = 0;
+  dungeonManager.farmable.length = 0;
+  dungeonManager.discoveredDungeonCount = 0;
+  dungeonManager.pendingFarmKills = 0;
+  var dungeonIndex;
+  for (dungeonIndex = 0; dungeonIndex < dungeonManager.dungeonList.length; dungeonIndex++) {
+    var dungeon = dungeonManager.dungeonList[dungeonIndex];
+    dungeon.discovered = false;
+    dungeon.cleared = false;
+    dungeon.conquered = false;
+    dungeon.isFarm = false;
+    dungeon.farmStartTurn = 0;
+    dungeon.clearedTurn = 0;
   }
 }
-export function discoverDungeon(a) {
-  var b = game.dungeons;
-  if (0 > b.discovered.indexOf(a)) {
-    b.discovered.push(a);
-    b.discoveredDungeonCount++;
+export function discoverDungeon(dungeon) {
+  var dungeonManager = game.dungeons;
+  if (0 > dungeonManager.discovered.indexOf(dungeon)) {
+    dungeonManager.discovered.push(dungeon);
+    dungeonManager.discoveredDungeonCount++;
   }
-  if (a.discovered && !a.cleared && !a.isFarm && 0 > b.attackable.indexOf(a)) {
-    b.attackable.push(a);
-    sortDungeons(b, b.attackable);
+  if (dungeon.discovered && !dungeon.cleared && !dungeon.isFarm && 0 > dungeonManager.attackable.indexOf(dungeon)) {
+    dungeonManager.attackable.push(dungeon);
+    sortDungeons(dungeonManager, dungeonManager.attackable);
   }
-  refreshFarmableDungeons(b, a);
+  refreshFarmableDungeons(dungeonManager, dungeon);
 }
-export function refreshFarmableDungeons(a, b) {
-  var c = a.farmable.indexOf(b);
-  if (canFarmDungeon(b)) {
-    if (0 > c) {
-      a.farmable.push(b);
-      sortDungeons(a, a.farmable);
+export function refreshFarmableDungeons(dungeonManager, dungeon) {
+  var farmableIndex = dungeonManager.farmable.indexOf(dungeon);
+  if (canFarmDungeon(dungeon)) {
+    if (0 > farmableIndex) {
+      dungeonManager.farmable.push(dungeon);
+      sortDungeons(dungeonManager, dungeonManager.farmable);
     }
   } else {
-    if (-1 < c) {
-      a.farmable.splice(c, 1);
+    if (-1 < farmableIndex) {
+      dungeonManager.farmable.splice(farmableIndex, 1);
     }
   }
 }
-export function registerDungeonFarm(a) {
-  var b = game.dungeons;
-  if (0 > b.farms.indexOf(a)) {
-    b.farms.push(a);
-    sortDungeons(b, b.farms);
+export function registerDungeonFarm(dungeon) {
+  var dungeonManager = game.dungeons;
+  if (0 > dungeonManager.farms.indexOf(dungeon)) {
+    dungeonManager.farms.push(dungeon);
+    sortDungeons(dungeonManager, dungeonManager.farms);
   }
-  var c = b.attackable.indexOf(a);
-  if (-1 < c) {
-    b.attackable.splice(c, 1);
+  var attackableIndex = dungeonManager.attackable.indexOf(dungeon);
+  if (-1 < attackableIndex) {
+    dungeonManager.attackable.splice(attackableIndex, 1);
   }
-  c = b.cleared.indexOf(a);
-  if (-1 < c) {
-    b.cleared.splice(c, 1);
+  var clearedIndex = dungeonManager.cleared.indexOf(dungeon);
+  if (-1 < clearedIndex) {
+    dungeonManager.cleared.splice(clearedIndex, 1);
   }
-  refreshFarmableDungeons(b, a);
+  refreshFarmableDungeons(dungeonManager, dungeon);
 }
-export function sortDungeons(a, b) {
-  if (!(!a.sortingEnabled || !b || 2 > b.length)) {
-    b.sort(a.compareByFarmCost);
+export function sortDungeons(dungeonManager, dungeonList) {
+  if (!(!dungeonManager.sortingEnabled || !dungeonList || 2 > dungeonList.length)) {
+    dungeonList.sort(dungeonManager.compareByFarmCost);
   }
 }
-export function Farm(a, b, c) {
-  this.dungeonId = a;
-  this.farmColumn = b;
-  this.farmRow = c;
+export function Farm(dungeonId, farmColumn, farmRow) {
+  this.dungeonId = dungeonId;
+  this.farmColumn = farmColumn;
+  this.farmRow = farmRow;
 }
 export function FarmRegistry() {
   this.farmList = [];
@@ -151,22 +151,22 @@ export function FarmRegistry() {
   this.farmSpriteName = "L2_Town01.PNG";
 }
 export function resetFarms() {
-  var a = game.farms;
-  a.farmList.length = 0;
-  a.farmsById = {};
+  var farmRegistry = game.farms;
+  farmRegistry.farmList.length = 0;
+  farmRegistry.farmsById = {};
 }
-export function registerFarm(a, b) {
-  a.farmList.push(b);
-  a.farmsById[b.dungeonId] = b;
-  var c = game.world.getTileAtPixel(b.farmColumn, b.farmRow);
-  if (c) {
-    c.setDecorationSprite(game.terrainSprites.getSprite(a.farmSpriteName));
+export function registerFarm(farmRegistry, farm) {
+  farmRegistry.farmList.push(farm);
+  farmRegistry.farmsById[farm.dungeonId] = farm;
+  var farmTile = game.world.getTileAtPixel(farm.farmColumn, farm.farmRow);
+  if (farmTile) {
+    farmTile.setDecorationSprite(game.terrainSprites.getSprite(farmRegistry.farmSpriteName));
   }
 }
-export function Shop(a, b, c) {
-  this.dungeonId = a;
-  this.worldColumn = b;
-  this.worldRow = c;
+export function Shop(dungeonId, worldColumn, worldRow) {
+  this.dungeonId = dungeonId;
+  this.worldColumn = worldColumn;
+  this.worldRow = worldRow;
 }
 export function ShopRegistry() {
   this.shopList = [];
@@ -175,17 +175,17 @@ export function ShopRegistry() {
   this.shopSpriteNames = "L2_Terrain089.PNG L2_Terrain077.PNG L2_Terrain077.PNG L2_Terrain076.PNG L2_Terrain078.PNG L2_Terrain079.PNG L2_Terrain083.PNG L2_Terrain084.PNG L2_Terrain085.PNG".split(" ");
 }
 export function resetShops() {
-  var a = game.shops;
-  a.shopList.length = 0;
-  a.collectedGold = 0;
-  a.shopsById = {};
+  var shopRegistry = game.shops;
+  shopRegistry.shopList.length = 0;
+  shopRegistry.collectedGold = 0;
+  shopRegistry.shopsById = {};
 }
-export function randomShopSprite(a) {
-  return a.shopSpriteNames[randomInt(a.shopSpriteNames.length)];
+export function randomShopSprite(shopRegistry) {
+  return shopRegistry.shopSpriteNames[randomInt(shopRegistry.shopSpriteNames.length)];
 }
 export function initializeWorldDungeons() {
-  Dungeon.prototype.setConquered = function (a) {
-    this.conquered = a;
+  Dungeon.prototype.setConquered = function (isConquered) {
+    this.conquered = isConquered;
   };
   Dungeon.prototype.getPixelX = function () {
     return game.world.tileToPixelX(this.worldColumn);
@@ -225,48 +225,48 @@ export function initializeWorldDungeons() {
       game.state.statisticsRecorder.recordDungeonCleared();
       awardAdventurePoints(POINT_EVENT_DUNGEON_CLEARED);
       recordGameEvent("Dungeon", "Dungeon Cleared");
-      var a,
-        b,
-        c = getAllies(),
-        d;
-      for (a = 0; a < c.length; a++) {
-        d = c[a];
-        b = d.position;
-        clearMovementTarget(b);
-        b.currentHallway = null;
-        b.room = null;
-        d.actionType = IDLE_ACTION;
+      var allyIndex,
+        allyPosition,
+        allyList = getAllies(),
+        ally;
+      for (allyIndex = 0; allyIndex < allyList.length; allyIndex++) {
+        ally = allyList[allyIndex];
+        allyPosition = ally.position;
+        clearMovementTarget(allyPosition);
+        allyPosition.currentHallway = null;
+        allyPosition.room = null;
+        ally.actionType = IDLE_ACTION;
       }
       clearItemDrops(game.itemDrops);
     }
   };
-  DungeonRegistry.prototype.setFarmedKills = function (a) {
-    this.pendingFarmKills = a;
+  DungeonRegistry.prototype.setFarmedKills = function (farmedKills) {
+    this.pendingFarmKills = farmedKills;
   };
-  DungeonRegistry.prototype.registerClearedDungeon = function (a) {
-    if (0 > this.cleared.indexOf(a)) {
-      this.cleared.push(a);
+  DungeonRegistry.prototype.registerClearedDungeon = function (dungeon) {
+    if (0 > this.cleared.indexOf(dungeon)) {
+      this.cleared.push(dungeon);
       sortDungeons(this, this.cleared);
     }
-    var b = this.attackable.indexOf(a);
-    if (-1 < b) {
-      this.attackable.splice(b, 1);
+    var attackableIndex = this.attackable.indexOf(dungeon);
+    if (-1 < attackableIndex) {
+      this.attackable.splice(attackableIndex, 1);
     }
-    refreshFarmableDungeons(this, a);
+    refreshFarmableDungeons(this, dungeon);
   };
-  FarmRegistry.prototype.jitterCoordinate = function (a) {
-    var b = 1 + randomInt(2);
-    return 0.5 > Math.random() ? a - b : a + b;
+  FarmRegistry.prototype.jitterCoordinate = function (coordinate) {
+    var jitterAmount = 1 + randomInt(2);
+    return 0.5 > Math.random() ? coordinate - jitterAmount : coordinate + jitterAmount;
   };
   ShopRegistry.prototype.addShop = function (a) {
     this.shopList.push(a);
     this.shopsById[a.dungeonId] = a;
     if (a = game.world.getTileAtPixel(a.worldColumn, a.worldRow)) {
-      var b = game.terrainSprites.getSprite(randomShopSprite(this));
-      a.setDecorationSprite(b);
+      var shopSprite = game.terrainSprites.getSprite(randomShopSprite(this));
+      a.setDecorationSprite(shopSprite);
     }
   };
-  ShopRegistry.prototype.jitterCoordinate = function (a) {
-    return 0.5 > Math.random() ? a - 4 : a + 4;
+  ShopRegistry.prototype.jitterCoordinate = function (coordinate) {
+    return 0.5 > Math.random() ? coordinate - 4 : coordinate + 4;
   };
 }

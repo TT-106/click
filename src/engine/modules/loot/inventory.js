@@ -11,86 +11,86 @@ export function Inventory(victoryCount) {
   this.owner = null;
   this.dirty = false;
 }
-export function addInventoryItem(a, b, inventories) {
-  if (a.items.length < a.capacity) {
-    b.inventory = a.owner;
-    a.items.push(b);
-    a.dirty = true;
-    sortInventory(inventories, a.items);
+export function addInventoryItem(inventory, item, inventories) {
+  if (inventory.items.length < inventory.capacity) {
+    item.inventory = inventory.owner;
+    inventory.items.push(item);
+    inventory.dirty = true;
+    sortInventory(inventories, inventory.items);
   } else {
-    var c,
-      d = -1,
-      f = 0,
-      g;
-    for (c = 0; c < a.items.length; c++) {
-      g = a.items[c];
-      if (0 > d) {
-        d = 0;
-        f = g.itemGold;
+    var itemCursor,
+      lowestGoldIndex = -1,
+      lowestGold = 0,
+      currentItem;
+    for (itemCursor = 0; itemCursor < inventory.items.length; itemCursor++) {
+      currentItem = inventory.items[itemCursor];
+      if (0 > lowestGoldIndex) {
+        lowestGoldIndex = 0;
+        lowestGold = currentItem.itemGold;
       } else {
-        if (f > g.itemGold) {
-          d = c;
-          f = g.itemGold;
+        if (lowestGold > currentItem.itemGold) {
+          lowestGoldIndex = itemCursor;
+          lowestGold = currentItem.itemGold;
         }
       }
     }
-    c = d;
-    if (-1 < c && isBetterItem(b, a.items[c])) {
-      removeInventoryItemAt(a, c);
-      b.inventory = a.owner;
-      a.items.push(b);
-      a.dirty = true;
-      sortInventory(inventories, a.items);
+    var replaceIndex = lowestGoldIndex;
+    if (-1 < replaceIndex && isBetterItem(item, inventory.items[replaceIndex])) {
+      removeInventoryItemAt(inventory, replaceIndex);
+      item.inventory = inventory.owner;
+      inventory.items.push(item);
+      inventory.dirty = true;
+      sortInventory(inventories, inventory.items);
     }
   }
 }
-export function removeInventoryItemAt(a, b) {
-  if (-1 !== b) {
-    a.items[b].inventory = null;
-    a.items.splice(b, 1);
-    a.dirty = true;
+export function removeInventoryItemAt(inventory, itemIndex) {
+  if (-1 !== itemIndex) {
+    inventory.items[itemIndex].inventory = null;
+    inventory.items.splice(itemIndex, 1);
+    inventory.dirty = true;
   }
 }
 export function InventoryRegistry() {
   this.list = [];
-  this.compareByItemGold = function (a, b) {
-    return b.itemGold - a.itemGold;
+  this.compareByItemGold = function (leftItem, rightItem) {
+    return rightItem.itemGold - leftItem.itemGold;
   };
 }
-export function sortInventory(a, b) {
-  if (!(!b || 2 > b.length)) {
-    b.sort(a.compareByItemGold);
+export function sortInventory(inventories, items) {
+  if (!(!items || 2 > items.length)) {
+    items.sort(inventories.compareByItemGold);
   }
 }
 export function initializeLootInventory() {
-  Inventory.prototype.removeItem = function (a) {
-    removeInventoryItemAt(this, this.items.indexOf(a));
+  Inventory.prototype.removeItem = function (item) {
+    removeInventoryItemAt(this, this.items.indexOf(item));
   };
-  InventoryRegistry.prototype.equipBestForCharacter = function (a) {
-    var b = a.inventory.items;
-    if (b && 0 !== b.length) {
-      var c,
-        d,
-        f = [];
-      for (c = 0; c < b.length; c++) {
-        f.push(b[c]);
+  InventoryRegistry.prototype.equipBestForCharacter = function (character) {
+    var inventoryItems = character.inventory.items;
+    if (inventoryItems && 0 !== inventoryItems.length) {
+      var itemIndex,
+        equippedItem,
+        copiedItems = [];
+      for (itemIndex = 0; itemIndex < inventoryItems.length; itemIndex++) {
+        copiedItems.push(inventoryItems[itemIndex]);
       }
-      for (c = 0; c < f.length; c++) {
-        b = f[c];
-        if (!((d = a.getSlotItem(b.slot)) && !isBetterItem(b, d))) {
-          a.equipItem(b);
+      for (itemIndex = 0; itemIndex < copiedItems.length; itemIndex++) {
+        var item = copiedItems[itemIndex];
+        if (!((equippedItem = character.getSlotItem(item.slot)) && !isBetterItem(item, equippedItem))) {
+          character.equipItem(item);
         }
       }
     }
   };
-  InventoryRegistry.prototype.hasImprovement = function (a) {
-    var b = a.inventory.items;
-    if (!b || 0 === b.length) {
+  InventoryRegistry.prototype.hasImprovement = function (character) {
+    var inventoryItems = character.inventory.items;
+    if (!inventoryItems || 0 === inventoryItems.length) {
       return false;
     }
-    var c, d, f;
-    for (c = 0; c < b.length; c++) {
-      if (d = b[c], f = a.getSlotItem(d.slot), !f || isBetterItem(d, f)) {
+    var itemIndex, item, equippedItem;
+    for (itemIndex = 0; itemIndex < inventoryItems.length; itemIndex++) {
+      if (item = inventoryItems[itemIndex], equippedItem = character.getSlotItem(item.slot), !equippedItem || isBetterItem(item, equippedItem)) {
         return true;
       }
     }

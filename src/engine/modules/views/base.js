@@ -9,27 +9,27 @@ export function View() {
 export function CompositeView() {
   this.childViews = null;
 }
-export function addChildView(a, b) {
-  if (b) {
-    if (!a.childViews) {
-      a.childViews = [];
+export function addChildView(parentView, childView) {
+  if (childView) {
+    if (!parentView.childViews) {
+      parentView.childViews = [];
     }
-    a.childViews.push(b);
+    parentView.childViews.push(childView);
   }
 }
-export function resetChildViews(a) {
-  if (a.childViews) {
-    var b;
-    for (b = 0; b < a.childViews.length; b++) {
-      a.childViews[b].reset();
+export function resetChildViews(parentView) {
+  if (parentView.childViews) {
+    var childIndex;
+    for (childIndex = 0; childIndex < parentView.childViews.length; childIndex++) {
+      parentView.childViews[childIndex].reset();
     }
   }
 }
-export function updateChildViews(a) {
-  if (a.childViews) {
-    var b;
-    for (b = 0; b < a.childViews.length; b++) {
-      a.childViews[b].render();
+export function updateChildViews(parentView) {
+  if (parentView.childViews) {
+    var childIndex;
+    for (childIndex = 0; childIndex < parentView.childViews.length; childIndex++) {
+      parentView.childViews[childIndex].render();
     }
   }
 }
@@ -40,15 +40,15 @@ export function initializeViewsBase() {
   View.prototype.reset = function () {};
   View.prototype.render = function () {
     if (this.elementId) {
-      var a = (/** @type {any} */ (this)).isVisible();
-      if (this.cachedVisible != a) {
-        if (this.cachedVisible = a) {
+      var visible = (/** @type {any} */ (this)).isVisible();
+      if (this.cachedVisible != visible) {
+        if (this.cachedVisible = visible) {
           showElementById(this.elementId);
         } else {
           hideElementById(this.elementId);
         }
       }
-      if (a) {
+      if (visible) {
         (/** @type {any} */ (this)).update();
       }
     }

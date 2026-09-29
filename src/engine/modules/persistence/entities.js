@@ -7,58 +7,58 @@
 import { Item, ItemEffect } from "../loot/items.js";
 import { game } from "../runtime/game.js";
 import { MonsterType, advanceMonsterTypeRank } from "../combat/encounters.js";
-export function serializeItem(a) {
-  var b = a.itemType.itemTypeId,
-    c = a.slot,
-    d = a.characterClass,
-    f = a.itemName,
-    g = a.getRarity(),
-    h = a.itemEffect;
+export function serializeItem(item) {
+  var itemTypeId = item.itemType.itemTypeId,
+    slot = item.slot,
+    characterClass = item.characterClass,
+    itemName = item.itemName,
+    itemRarity = item.getRarity(),
+    itemEffect = item.itemEffect;
   return {
-    itemTypeId: b,
-    itemSlot: c,
-    characterClass: d,
-    itemName: f,
-    itemRarity: g,
-    itemLevel: a.itemLevel,
-    itemGold: a.itemGold,
-    itemValue: a.itemValue,
-    itemCharacteristic: a.characteristic,
-    itemEffect: h ? {
-      itemEffectType: h.itemEffectType,
-      itemEffectAmount: h.itemEffectAmount,
-      itemEffectDescription: h.itemEffectDescription,
-      itemEffectName: h.itemEffectName
+    itemTypeId: itemTypeId,
+    itemSlot: slot,
+    characterClass: characterClass,
+    itemName: itemName,
+    itemRarity: itemRarity,
+    itemLevel: item.itemLevel,
+    itemGold: item.itemGold,
+    itemValue: item.itemValue,
+    itemCharacteristic: item.characteristic,
+    itemEffect: itemEffect ? {
+      itemEffectType: itemEffect.itemEffectType,
+      itemEffectAmount: itemEffect.itemEffectAmount,
+      itemEffectDescription: itemEffect.itemEffectDescription,
+      itemEffectName: itemEffect.itemEffectName
     } : null
   };
 }
 export function restoreItem(a) {
-  var b = a.itemSlot,
-    c = a.characterClass,
-    d = a.itemName,
-    f = a.itemRarity,
-    g = a.itemLevel,
-    h = a.itemGold,
-    l = a.itemValue,
-    n = a.itemCharacteristic,
-    p;
-  if (p = a.itemEffect) {
-    var s = p.itemEffectType,
-      u = p.itemEffectDescription;
-    p = s && u ? new ItemEffect(s, p.itemEffectAmount, u, p.itemEffectName) : null;
+  var itemSlot = a.itemSlot,
+    characterClass = a.characterClass,
+    itemName = a.itemName,
+    itemRarity = a.itemRarity,
+    itemLevel = a.itemLevel,
+    itemGold = a.itemGold,
+    itemValue = a.itemValue,
+    itemCharacteristic = a.itemCharacteristic,
+    itemEffect;
+  if (itemEffect = a.itemEffect) {
+    var itemEffectType = itemEffect.itemEffectType,
+      itemEffectDescription = itemEffect.itemEffectDescription;
+    itemEffect = itemEffectType && itemEffectDescription ? new ItemEffect(itemEffectType, itemEffect.itemEffectAmount, itemEffectDescription, itemEffect.itemEffectName) : null;
   } else {
-    p = null;
+    itemEffect = null;
   }
   a = game.itemGenerator.itemTypesById[a.itemTypeId];
-  return a ? new Item(a, b, c, d ? d : "Error", g ? g : 1, f ? f : 0, h ? h : 0, l ? l : 0, n ? n : 1, p) : (console.log("failed to lookup item type"), null);
+  return a ? new Item(a, itemSlot, characterClass, itemName ? itemName : "Error", itemLevel ? itemLevel : 1, itemRarity ? itemRarity : 0, itemGold ? itemGold : 0, itemValue ? itemValue : 0, itemCharacteristic ? itemCharacteristic : 1, itemEffect) : (console.log("failed to lookup item type"), null);
 }
-export function serializeCharacter(a) {
-  var b = a.adventurerName,
-    c = a.characterClass,
-    d = a.characterType,
-    f = a.getSprite().getName(),
+export function serializeCharacter(character) {
+  var adventurerName = character.adventurerName,
+    characterClass = character.characterClass,
+    characterType = character.characterType,
+    spriteName = character.getSprite().getName(),
     g;
-  g = a.stats;
+  g = character.stats;
   g = {
     characterLevel: g.characterLevel,
     characterHealth: g.health,
@@ -76,268 +76,268 @@ export function serializeCharacter(a) {
     damageReceived: g.damageReceived
   };
   var h;
-  h = a.position;
-  var l = h.room,
+  h = character.position;
+  var room = h.room,
     n = h.currentHallway;
   h = {
     levelX: h.getLevelPositionX(),
     levelY: h.getLevelPositionY(),
     worldX: h.getWorldPositionX(),
     worldY: h.getWorldPositionY(),
-    roomId: l ? l.roomId : -1,
+    roomId: room ? room.roomId : -1,
     floorPositionIndex: h.floorPositionIndex,
     hallwayId: n ? n.hallwayId : -1
   };
-  var n = a.spells,
-    l = /** @type {any} */ ([]),
-    p;
+  var n = character.spells,
+    spellStateList = /** @type {any} */ ([]),
+    spellIndex;
   if (n) {
-    for (p = 0; p < n.length; p++) {
-      l.push({
-        spellName: n[p].name
+    for (spellIndex = 0; spellIndex < n.length; spellIndex++) {
+      spellStateList.push({
+        spellName: n[spellIndex].name
       });
     }
   }
-  p = a.inventory;
+  var inventory = character.inventory;
   n = [];
-  if (p) {
-    p = p.items;
-    var s;
-    for (s = 0; s < p.length; s++) {
-      n.push(serializeItem(p[s]));
+  if (inventory) {
+    inventory = inventory.items;
+    var itemIndex;
+    for (itemIndex = 0; itemIndex < inventory.length; itemIndex++) {
+      n.push(serializeItem(inventory[itemIndex]));
     }
   }
-  p = a.slotList;
-  s = a.equipment;
-  var u = [];
-  if (s && p) {
-    var y, A;
-    for (A = 0; A < p.length; A++) {
-      if (y = s.getSlotItem(p[A])) {
-        u.push(serializeItem(y));
+  var slotList = character.slotList;
+  var equipment = character.equipment;
+  var equippedItemList = [];
+  if (equipment && slotList) {
+    var slotItem, slotIndex;
+    for (slotIndex = 0; slotIndex < slotList.length; slotIndex++) {
+      if (slotItem = equipment.getSlotItem(slotList[slotIndex])) {
+        equippedItemList.push(serializeItem(slotItem));
       }
     }
   } else {
     console.log("failed to generate equipped item state array");
   }
   return {
-    adventurerName: b,
-    characterClass: c,
-    characterType: d,
-    spriteName: f,
+    adventurerName: adventurerName,
+    characterClass: characterClass,
+    characterType: characterType,
+    spriteName: spriteName,
     characteristicsComponent: g,
     positionComponent: h,
-    spells: l,
+    spells: spellStateList,
     inventory: n,
-    equippedItemCollection: u,
-    skillPoints: a.skillPoints,
-    initialSpellSkillPoint: a.initialSpellSkillPoint,
-    upgrades1: serializeUpgradeFlags(a.skillTree1.upgrades),
-    upgrades2: serializeUpgradeFlags(a.skillTree2.upgrades),
-    upgrades3: serializeUpgradeFlags(a.skillTree3.upgrades),
-    upgrades4: serializeUpgradeFlags(a.skillTree4.upgrades)
+    equippedItemCollection: equippedItemList,
+    skillPoints: character.skillPoints,
+    initialSpellSkillPoint: character.initialSpellSkillPoint,
+    upgrades1: serializeUpgradeFlags(character.skillTree1.upgrades),
+    upgrades2: serializeUpgradeFlags(character.skillTree2.upgrades),
+    upgrades3: serializeUpgradeFlags(character.skillTree3.upgrades),
+    upgrades4: serializeUpgradeFlags(character.skillTree4.upgrades)
   };
 }
-export function serializeUpgradeFlags(a) {
-  var b = {},
-    c,
-    d;
-  for (d = 0; d < a.length; d++) {
-    c = a[d];
-    b[c.getUpgradeDefinition().id] = c.isOwned();
+export function serializeUpgradeFlags(upgradeList) {
+  var ownedFlagsById = {},
+    upgrade,
+    upgradeIndex;
+  for (upgradeIndex = 0; upgradeIndex < upgradeList.length; upgradeIndex++) {
+    upgrade = upgradeList[upgradeIndex];
+    ownedFlagsById[upgrade.getUpgradeDefinition().id] = upgrade.isOwned();
   }
-  return b;
+  return ownedFlagsById;
 }
-export function restoreUpgradeFlags(a, b) {
-  var c, d, f;
-  for (c = 0; c < a.length; c++) {
-    f = a[c];
-    d = a[c].getUpgradeDefinition();
-    d = b[d.id];
-    f.setPurchased(d);
+export function restoreUpgradeFlags(upgradeList, ownedFlagsById) {
+  var upgradeIndex, d, upgrade;
+  for (upgradeIndex = 0; upgradeIndex < upgradeList.length; upgradeIndex++) {
+    upgrade = upgradeList[upgradeIndex];
+    d = upgradeList[upgradeIndex].getUpgradeDefinition();
+    d = ownedFlagsById[d.id];
+    upgrade.setPurchased(d);
   }
 }
-export function serializeStatComponent(a) {
-  return a ? {
-    itemValue: a.itemValue,
-    levelValue: a.levelValue,
-    spellBonusPercent: a.spellBonusPercent,
-    skillBonusPercent: a.skillBonusPercent
+export function serializeStatComponent(statComponent) {
+  return statComponent ? {
+    itemValue: statComponent.itemValue,
+    levelValue: statComponent.levelValue,
+    spellBonusPercent: statComponent.spellBonusPercent,
+    skillBonusPercent: statComponent.skillBonusPercent
   } : null;
 }
-export function restoreStatComponent(a, b) {
-  if (a && b) {
-    var c = b.itemValue,
-      d = b.levelValue,
-      f = b.spellBonusPercent,
-      g = b.skillBonusPercent;
-    a.itemValue = c ? c : 0;
-    a.levelValue = d ? d : 0;
-    a.spellBonusPercent = f ? f : 0;
-    a.skillBonusPercent = g ? g : 0;
+export function restoreStatComponent(statComponent, savedStatComponent) {
+  if (statComponent && savedStatComponent) {
+    var itemValue = savedStatComponent.itemValue,
+      levelValue = savedStatComponent.levelValue,
+      spellBonusPercent = savedStatComponent.spellBonusPercent,
+      skillBonusPercent = savedStatComponent.skillBonusPercent;
+    statComponent.itemValue = itemValue ? itemValue : 0;
+    statComponent.levelValue = levelValue ? levelValue : 0;
+    statComponent.spellBonusPercent = spellBonusPercent ? spellBonusPercent : 0;
+    statComponent.skillBonusPercent = skillBonusPercent ? skillBonusPercent : 0;
   }
 }
 export function MonsterSaveAdapter() {}
 /** @returns {SaveMonsterTypeState} U134：序列化器接进 save-dto.js——写出侧键名/缺失由 tsc 对账 */
-export function serializeMonsterLevel(a, b) {
-  var c = [],
-    d;
-  for (d = 0; d < b.length; d++) {
-    c.push(serializeMonsterType(b[d]));
+export function serializeMonsterLevel(monsterLevel, monsterTypeList) {
+  var monsterTypeEntryList = [],
+    monsterTypeIndex;
+  for (monsterTypeIndex = 0; monsterTypeIndex < monsterTypeList.length; monsterTypeIndex++) {
+    monsterTypeEntryList.push(serializeMonsterType(monsterTypeList[monsterTypeIndex]));
   }
   return {
-    level: a,
-    monsterTypes: c
+    level: monsterLevel,
+    monsterTypes: monsterTypeEntryList
   };
 }
 /** @returns {SaveMonsterTypeEntry} U134：写出侧多键/少键（如 nameTypo）由 tsc TS2322/2741 报出 */
-export function serializeMonsterType(a) {
+export function serializeMonsterType(monsterType) {
   return {
-    name: a.getName(),
-    sprite: a.sprite.getName(),
-    kills: a.killCount
+    name: monsterType.getName(),
+    sprite: monsterType.sprite.getName(),
+    kills: monsterType.killCount
   };
 }
-/** @param {SaveMonsterTypeEntry} a 存档里的怪物种类行 @param {number} b 怪物等级 */
-export function restoreMonsterType(a, b) {
-  var c = a.kills,
-    d = new MonsterType(a.name, a.sprite, b),
-    c = c ? c : 0;
-  d.killCount = 0;
-  d.rankProgressKills = 0;
-  d.rank = 0;
-  d.armor = 0;
-  d.damage = 0;
-  d.attackRating = 0;
-  d.defenceRating = 0;
-  d.experienceReward = 0;
-  d.maxHealth = 0;
-  d.rankKillThreshold = 0;
-  advanceMonsterTypeRank(d);
-  for (d.killCount = c; c > d.rankKillThreshold;) {
-    c -= d.rankKillThreshold;
-    advanceMonsterTypeRank(d);
+/** @param {SaveMonsterTypeEntry} monsterTypeEntry 存档里的怪物种类行 @param {number} monsterLevel 怪物等级 */
+export function restoreMonsterType(monsterTypeEntry, monsterLevel) {
+  var savedKillCount = monsterTypeEntry.kills,
+    monsterType = new MonsterType(monsterTypeEntry.name, monsterTypeEntry.sprite, monsterLevel),
+    savedKillCount = savedKillCount ? savedKillCount : 0;
+  monsterType.killCount = 0;
+  monsterType.rankProgressKills = 0;
+  monsterType.rank = 0;
+  monsterType.armor = 0;
+  monsterType.damage = 0;
+  monsterType.attackRating = 0;
+  monsterType.defenceRating = 0;
+  monsterType.experienceReward = 0;
+  monsterType.maxHealth = 0;
+  monsterType.rankKillThreshold = 0;
+  advanceMonsterTypeRank(monsterType);
+  for (monsterType.killCount = savedKillCount; savedKillCount > monsterType.rankKillThreshold;) {
+    savedKillCount -= monsterType.rankKillThreshold;
+    advanceMonsterTypeRank(monsterType);
   }
-  d.rankProgressKills = c;
-  return d;
+  monsterType.rankProgressKills = savedKillCount;
+  return monsterType;
 }
 export function StatisticsSaveAdapter() {}
-export function serializeStatistics(a) {
+export function serializeStatistics(statistics) {
   return {
-    playedMillis: a.playedMillis,
-    turnCount: a.turnCount,
-    doorsOpened: a.doorsOpened,
-    roomsCleared: a.roomsCleared,
-    levelsCleared: a.levelsCleared,
-    dungeonsCleared: a.dungeonsCleared,
-    castlesConquered: a.castlesConquered,
-    farmsPurchased: a.farmsPurchased,
-    totalGoldFromMonsters: a.totalGoldFromMonsters,
-    totalGoldFromItems: a.totalGoldFromItems,
-    directKills: a.directKills,
-    scrollKills: a.scrollKills,
-    minionKills: a.minionKills,
-    farmedKills: a.farmedKills,
-    characterStunnedCount: a.characterStunnedCount,
-    meleeAttackCount: a.meleeAttackCount,
-    rangedAttackCount: a.rangedAttackCount,
-    spellCastCount: a.spellCastCount,
-    potionsUsed: a.potionsUsed,
-    scrollsUsed: a.scrollsUsed,
-    minionsSummoned: a.minionsSummoned,
-    itemsSold: a.itemsSold,
-    itemsFound: a.itemsFound,
-    uncommonItemsFound: a.uncommonItemsFound,
-    rareItemsFound: a.rareItemsFound,
-    historicItemsFound: a.historicItemsFound,
-    ancientItemsFound: a.ancientItemsFound,
-    treasureChestsLooted: a.treasureChestsLooted,
-    weaponRacksLooted: a.weaponRacksLooted,
-    bookcasesLooted: a.bookcasesLooted
+    playedMillis: statistics.playedMillis,
+    turnCount: statistics.turnCount,
+    doorsOpened: statistics.doorsOpened,
+    roomsCleared: statistics.roomsCleared,
+    levelsCleared: statistics.levelsCleared,
+    dungeonsCleared: statistics.dungeonsCleared,
+    castlesConquered: statistics.castlesConquered,
+    farmsPurchased: statistics.farmsPurchased,
+    totalGoldFromMonsters: statistics.totalGoldFromMonsters,
+    totalGoldFromItems: statistics.totalGoldFromItems,
+    directKills: statistics.directKills,
+    scrollKills: statistics.scrollKills,
+    minionKills: statistics.minionKills,
+    farmedKills: statistics.farmedKills,
+    characterStunnedCount: statistics.characterStunnedCount,
+    meleeAttackCount: statistics.meleeAttackCount,
+    rangedAttackCount: statistics.rangedAttackCount,
+    spellCastCount: statistics.spellCastCount,
+    potionsUsed: statistics.potionsUsed,
+    scrollsUsed: statistics.scrollsUsed,
+    minionsSummoned: statistics.minionsSummoned,
+    itemsSold: statistics.itemsSold,
+    itemsFound: statistics.itemsFound,
+    uncommonItemsFound: statistics.uncommonItemsFound,
+    rareItemsFound: statistics.rareItemsFound,
+    historicItemsFound: statistics.historicItemsFound,
+    ancientItemsFound: statistics.ancientItemsFound,
+    treasureChestsLooted: statistics.treasureChestsLooted,
+    weaponRacksLooted: statistics.weaponRacksLooted,
+    bookcasesLooted: statistics.bookcasesLooted
   };
 }
-export function restoreStatistics(a, b, c) {
-  var d = a.totalPlayedMillis,
-    f = a.playedMillis,
-    g = a.turnCount,
-    h = a.doorsOpened,
-    l = a.roomsCleared,
-    n = a.levelsCleared,
-    p = a.dungeonsCleared,
-    s = a.castlesConquered,
-    u = a.farmsPurchased,
-    y = a.totalGoldFromMonsters,
-    A = a.totalGoldFromItems,
-    C = a.directKills,
-    v = a.scrollKills,
-    D = a.minionKills,
-    N = a.farmedKills,
-    I = a.characterStunnedCount,
-    x = a.meleeAttackCount,
-    z = a.rangedAttackCount,
-    O = a.spellCastCount,
-    J = a.potionsUsed,
-    la = a.scrollsUsed,
-    Q = a.minionsSummoned,
-    V = a.itemsSold,
-    na = a.itemsFound,
-    K = a.uncommonItemsFound,
-    H = a.rareItemsFound,
-    S = a.historicItemsFound,
-    da = a.ancientItemsFound,
-    W = a.treasureChestsLooted,
-    ia = a.weaponRacksLooted,
-    ea = a.weaponsRacksLooted;
+export function restoreStatistics(a, statistics, isLifetime) {
+  var totalPlayedMillis = a.totalPlayedMillis,
+    playedMillis = a.playedMillis,
+    turnCount = a.turnCount,
+    doorsOpened = a.doorsOpened,
+    roomsCleared = a.roomsCleared,
+    levelsCleared = a.levelsCleared,
+    dungeonsCleared = a.dungeonsCleared,
+    castlesConquered = a.castlesConquered,
+    farmsPurchased = a.farmsPurchased,
+    totalGoldFromMonsters = a.totalGoldFromMonsters,
+    totalGoldFromItems = a.totalGoldFromItems,
+    directKills = a.directKills,
+    scrollKills = a.scrollKills,
+    minionKills = a.minionKills,
+    farmedKills = a.farmedKills,
+    characterStunnedCount = a.characterStunnedCount,
+    meleeAttackCount = a.meleeAttackCount,
+    rangedAttackCount = a.rangedAttackCount,
+    spellCastCount = a.spellCastCount,
+    potionsUsed = a.potionsUsed,
+    scrollsUsed = a.scrollsUsed,
+    minionsSummoned = a.minionsSummoned,
+    itemsSold = a.itemsSold,
+    itemsFound = a.itemsFound,
+    uncommonItemsFound = a.uncommonItemsFound,
+    rareItemsFound = a.rareItemsFound,
+    historicItemsFound = a.historicItemsFound,
+    ancientItemsFound = a.ancientItemsFound,
+    treasureChestsLooted = a.treasureChestsLooted,
+    weaponRacksLooted = a.weaponRacksLooted,
+    legacyWeaponsRacksLooted = a.weaponsRacksLooted;
   a = a.bookcasesLooted;
-  if (!u) {
-    u = game.dungeons.farms.length;
+  if (!farmsPurchased) {
+    farmsPurchased = game.dungeons.farms.length;
   }
-  b.playedMillis = c ? Math.max(0, d ? d : f) : Math.max(0, f ? f : 0);
-  b.turnCount = g ? g : 0;
-  b.doorsOpened = h ? h : 0;
-  b.roomsCleared = l ? l : 0;
-  b.levelsCleared = n ? n : 0;
-  b.dungeonsCleared = p ? p : 0;
-  b.castlesConquered = s ? s : 0;
-  b.farmsPurchased = u;
-  b.totalGoldFromMonsters = y ? y : 0;
-  b.totalGoldFromItems = A ? A : 0;
-  b.directKills = C ? C : 0;
-  b.scrollKills = v ? v : 0;
-  b.setMinionKills(D ? D : 0);
-  b.setFarmedKills(N ? N : 0);
-  b.characterStunnedCount = I ? I : 0;
-  b.meleeAttackCount = x ? x : 0;
-  b.rangedAttackCount = z ? z : 0;
-  b.spellCastCount = O ? O : 0;
-  b.potionsUsed = J ? J : 0;
-  b.scrollsUsed = la ? la : 0;
-  b.minionsSummoned = Q ? Q : 0;
-  b.itemsSold = V ? V : 0;
-  b.itemsFound = na ? na : 0;
-  b.uncommonItemsFound = K ? K : 0;
-  b.rareItemsFound = H ? H : 0;
-  b.historicItemsFound = S ? S : 0;
-  b.ancientItemsFound = da ? da : 0;
-  b.treasureChestsLooted = W ? W : 0;
-  b.bookcasesLooted = a ? a : 0;
-  c = Math.max(ia ? ia : 0, ea ? ea : 0);
-  b.weaponRacksLooted = c;
+  statistics.playedMillis = isLifetime ? Math.max(0, totalPlayedMillis ? totalPlayedMillis : playedMillis) : Math.max(0, playedMillis ? playedMillis : 0);
+  statistics.turnCount = turnCount ? turnCount : 0;
+  statistics.doorsOpened = doorsOpened ? doorsOpened : 0;
+  statistics.roomsCleared = roomsCleared ? roomsCleared : 0;
+  statistics.levelsCleared = levelsCleared ? levelsCleared : 0;
+  statistics.dungeonsCleared = dungeonsCleared ? dungeonsCleared : 0;
+  statistics.castlesConquered = castlesConquered ? castlesConquered : 0;
+  statistics.farmsPurchased = farmsPurchased;
+  statistics.totalGoldFromMonsters = totalGoldFromMonsters ? totalGoldFromMonsters : 0;
+  statistics.totalGoldFromItems = totalGoldFromItems ? totalGoldFromItems : 0;
+  statistics.directKills = directKills ? directKills : 0;
+  statistics.scrollKills = scrollKills ? scrollKills : 0;
+  statistics.setMinionKills(minionKills ? minionKills : 0);
+  statistics.setFarmedKills(farmedKills ? farmedKills : 0);
+  statistics.characterStunnedCount = characterStunnedCount ? characterStunnedCount : 0;
+  statistics.meleeAttackCount = meleeAttackCount ? meleeAttackCount : 0;
+  statistics.rangedAttackCount = rangedAttackCount ? rangedAttackCount : 0;
+  statistics.spellCastCount = spellCastCount ? spellCastCount : 0;
+  statistics.potionsUsed = potionsUsed ? potionsUsed : 0;
+  statistics.scrollsUsed = scrollsUsed ? scrollsUsed : 0;
+  statistics.minionsSummoned = minionsSummoned ? minionsSummoned : 0;
+  statistics.itemsSold = itemsSold ? itemsSold : 0;
+  statistics.itemsFound = itemsFound ? itemsFound : 0;
+  statistics.uncommonItemsFound = uncommonItemsFound ? uncommonItemsFound : 0;
+  statistics.rareItemsFound = rareItemsFound ? rareItemsFound : 0;
+  statistics.historicItemsFound = historicItemsFound ? historicItemsFound : 0;
+  statistics.ancientItemsFound = ancientItemsFound ? ancientItemsFound : 0;
+  statistics.treasureChestsLooted = treasureChestsLooted ? treasureChestsLooted : 0;
+  statistics.bookcasesLooted = a ? a : 0;
+  var maxWeaponRacksLooted = Math.max(weaponRacksLooted ? weaponRacksLooted : 0, legacyWeaponsRacksLooted ? legacyWeaponsRacksLooted : 0);
+  statistics.weaponRacksLooted = maxWeaponRacksLooted;
 }
 export function initializePersistenceEntities() {
   // U134：顶层键读取用行内 cast 守卫（SaveMonsterTypesState 已进 SaveData；JS 里 JSDoc
   // 参数标注不被赋值收窄覆盖——参数 a 在下方被复用为 levelStates 数组，属 AST 恢复期
   // 写法，勿重排、勿改复用形态，故不给参数标注而给读取点 cast，负向验证 TS2339 红/还原绿）。
   MonsterSaveAdapter.prototype.restoreMonsterTypes = function (a) {
-    var b = game.monsterCatalog;
-    b.minUnlockedLevel = (/** @type {SaveMonsterTypesState} */ (a)).minUnlockedLevel;
-    b.maxUnlockedLevel = (/** @type {SaveMonsterTypesState} */ (a)).maxUnlockedLevel;
+    var monsterCatalog = game.monsterCatalog;
+    monsterCatalog.minUnlockedLevel = (/** @type {SaveMonsterTypesState} */ (a)).minUnlockedLevel;
+    monsterCatalog.maxUnlockedLevel = (/** @type {SaveMonsterTypesState} */ (a)).maxUnlockedLevel;
     a = a.monsterLevelStates;
-    for (b = 0; b < a.length; b++) {
-      for (var c = a[b], d = c.level, c = c.monsterTypes, f = [], g = undefined, g = /** @type {any} */ (0); g < c.length; g++) {
-        f.push(restoreMonsterType(c[g], d));
+    for (var levelStateIndex = 0; levelStateIndex < a.length; levelStateIndex++) {
+      for (var c = a[levelStateIndex], monsterLevel = c.level, c = c.monsterTypes, restoredMonsterTypes = [], monsterTypeIndex = undefined, monsterTypeIndex = /** @type {any} */ (0); monsterTypeIndex < c.length; monsterTypeIndex++) {
+        restoredMonsterTypes.push(restoreMonsterType(c[monsterTypeIndex], monsterLevel));
       }
-      game.monsterCatalog.monsterTypesByLevelCache[d + ""] = f;
+      game.monsterCatalog.monsterTypesByLevelCache[monsterLevel + ""] = restoredMonsterTypes;
     }
   };
   StatisticsSaveAdapter.prototype.restoreScroll = function (entry) {

@@ -27,37 +27,37 @@ import { generateDungeonLevel } from "../world/generation.js";
 import { discoverDungeon } from "../world/dungeons.js";
 /** CombatAction.setTargetCharacter 由 combat/actions.js 后挂到原型，调用点窄签名。 @typedef {CombatAction & { setTargetCharacter: (target: unknown) => void }} TargetedCombatAction */
 /** Equipment.getSlotItem/So 由 characters/movement.js 后挂到原型，调用点窄签名。 @typedef {Equipment & { getSlotItem: (slot: unknown) => unknown, getEffectItem: () => unknown }} SlotEquipment */
-export function Character(a, b, c, d, f) {
+export function Character(a, characterType, characterClass, d, inventory) {
   this.adventurerName = a;
-  this.characterType = b;
+  this.characterType = characterType;
   this.classDefinition = d;
-  this.characterClass = c;
+  this.characterClass = characterClass;
   if ((a = d.slotStatBonusList) && 0 !== a.length) {
-    c = [];
-    var g;
-    for (g = 0; g < a.length; g++) {
-      c.push(a[g].slot);
+    var slotNameList = [];
+    var slotBonusIndex;
+    for (slotBonusIndex = 0; slotBonusIndex < a.length; slotBonusIndex++) {
+      slotNameList.push(a[slotBonusIndex].slot);
     }
-    a = c;
+    a = slotNameList;
   } else {
     a = null;
   }
   this.slotList = a;
   if (d = d.slotStatBonusList) {
     a = {};
-    for (c = 0; c < d.length; c++) {
-      a[d[c].slot] = d[c].statType;
+    for (var slotStatBonusIndex = 0; slotStatBonusIndex < d.length; slotStatBonusIndex++) {
+      a[d[slotStatBonusIndex].slot] = d[slotStatBonusIndex].statType;
     }
     d = a;
   } else {
     d = null;
   }
   this.slotStatTypes = d;
-  this.equipment = b != MONSTER_TYPE ? new Equipment(this.slotList, this.characterClass) : null;
+  this.equipment = characterType != MONSTER_TYPE ? new Equipment(this.slotList, this.characterClass) : null;
   this.monsterType = this.sprite = null;
   this.position = new CharacterPosition(WORLD_WALK_SPEED, DUNGEON_WALK_SPEED);
   this.effects = new CharacterEffects(this);
-  if (this.inventory = f) {
+  if (this.inventory = inventory) {
     this.inventory.owner = this;
   }
   this.actionType = IDLE_ACTION;
@@ -73,968 +73,968 @@ export function Character(a, b, c, d, f) {
   this.hasUnspentSkills = false;
   this.skillTree4 = this.skillTree3 = this.skillTree2 = this.skillTree1 = null;
   if (this.characterType === ADVENTURER_TYPE) {
-    b = this.classDefinition.buildSkillTree1();
-    f = this.classDefinition.buildSkillTree2();
+    var skillTree1Upgrades = this.classDefinition.buildSkillTree1();
+    var skillTree2Upgrades = this.classDefinition.buildSkillTree2();
     d = this.classDefinition.buildSkillTree3();
     a = this.classDefinition.buildSkillTree4();
-    bindSkillTree(this, b);
-    bindSkillTree(this, f);
+    bindSkillTree(this, skillTree1Upgrades);
+    bindSkillTree(this, skillTree2Upgrades);
     bindSkillTree(this, d);
     bindSkillTree(this, a);
-    this.skillTree1 = new UpgradeCollection([b], false);
-    this.skillTree2 = new UpgradeCollection([f], false);
+    this.skillTree1 = new UpgradeCollection([skillTree1Upgrades], false);
+    this.skillTree2 = new UpgradeCollection([skillTree2Upgrades], false);
     this.skillTree3 = new UpgradeCollection([d], false);
     this.skillTree4 = new UpgradeCollection([a], false);
   }
 }
-export function bindSkillTree(a, b) {
-  if (b) {
-    var c, d;
-    for (c = 0; c < b.length; c++) {
-      d = b[c];
-      d.resetState();
-      d.bindCharacter(a);
-      if (0 < c) {
-        d.prerequisite = b[c - 1];
+export function bindSkillTree(character, skillTreeUpgrades) {
+  if (skillTreeUpgrades) {
+    var upgradeIndex, upgrade;
+    for (upgradeIndex = 0; upgradeIndex < skillTreeUpgrades.length; upgradeIndex++) {
+      upgrade = skillTreeUpgrades[upgradeIndex];
+      upgrade.resetState();
+      upgrade.bindCharacter(character);
+      if (0 < upgradeIndex) {
+        upgrade.prerequisite = skillTreeUpgrades[upgradeIndex - 1];
       }
     }
   }
 }
-export function learnSpell(a, b) {
-  if (!a.spells) {
-    a.spells = [];
+export function learnSpell(character, spell) {
+  if (!character.spells) {
+    character.spells = [];
   }
-  resetSpellCooldown(b);
-  a.spells.push(b);
-  if (a.behaviors) {
-    a.behaviors.notifySpellLearned(b);
+  resetSpellCooldown(spell);
+  character.spells.push(spell);
+  if (character.behaviors) {
+    character.behaviors.notifySpellLearned(spell);
   }
 }
-export function hasUnpurchasedUpgrade(a) {
-  if (a) {
-    var b;
-    for (b = 0; b < a.length; b++) {
-      if (!a[b].isOwned()) {
+export function hasUnpurchasedUpgrade(upgrades) {
+  if (upgrades) {
+    var upgradeIndex;
+    for (upgradeIndex = 0; upgradeIndex < upgrades.length; upgradeIndex++) {
+      if (!upgrades[upgradeIndex].isOwned()) {
         return true;
       }
     }
   }
   return false;
 }
-export function hasUnspentSkills(a) {
-  return hasUnpurchasedUpgrade(a.skillTree1.upgrades) || hasUnpurchasedUpgrade(a.skillTree2.upgrades) || hasUnpurchasedUpgrade(a.skillTree3.upgrades) || hasUnpurchasedUpgrade(a.skillTree4.upgrades);
+export function hasUnspentSkills(character) {
+  return hasUnpurchasedUpgrade(character.skillTree1.upgrades) || hasUnpurchasedUpgrade(character.skillTree2.upgrades) || hasUnpurchasedUpgrade(character.skillTree3.upgrades) || hasUnpurchasedUpgrade(character.skillTree4.upgrades);
 }
-export function countSummonedMinions(a) {
-  return a.summonedMinions && 0 !== a.summonedMinions.length ? a.companion ? Math.max(0, a.summonedMinions.length - 1) : a.summonedMinions.length : 0;
+export function countSummonedMinions(character) {
+  return character.summonedMinions && 0 !== character.summonedMinions.length ? character.companion ? Math.max(0, character.summonedMinions.length - 1) : character.summonedMinions.length : 0;
 }
-export function markAttackTurn(a) {
-  a.lastAttackTurn = game.state.turnNumber;
+export function markAttackTurn(character) {
+  character.lastAttackTurn = game.state.turnNumber;
 }
-export function canAttack(a) {
-  return game.state.turnNumber - a.lastAttackTurn >= getAttackCooldown(a.stats, isAdventurerOrMinion(a));
+export function canAttack(character) {
+  return game.state.turnNumber - character.lastAttackTurn >= getAttackCooldown(character.stats, isAdventurerOrMinion(character));
 }
-export function isAdventurerOrMinion(a) {
-  return a.characterType === ADVENTURER_TYPE || 1 === a.characterType || 5 === a.characterType;
+export function isAdventurerOrMinion(character) {
+  return character.characterType === ADVENTURER_TYPE || 1 === character.characterType || 5 === character.characterType;
 }
-export function isHostile(a) {
-  return a.characterType === MONSTER_TYPE || 3 === a.characterType || 4 === a.characterType;
+export function isHostile(character) {
+  return character.characterType === MONSTER_TYPE || 3 === character.characterType || 4 === character.characterType;
 }
-export function equipItem(a, b) {
-  if (b.characterClass !== a.characterClass) {
-    console.log("failed to equip non-equipable item. itemSlot=" + b.slot + " charClass=" + a.characterClass);
-  } else if (a.equipment) {
-    var c = a.equipment.getSlotItem(b.slot);
-    a.equipment.equipItem(b);
-    if (a.inventory) {
-      a.inventory.removeItem(b);
-      if (c) {
-        addInventoryItem(a.inventory, c, game.inventories);
+export function equipItem(character, item) {
+  if (item.characterClass !== character.characterClass) {
+    console.log("failed to equip non-equipable item. itemSlot=" + item.slot + " charClass=" + character.characterClass);
+  } else if (character.equipment) {
+    var replacedItem = character.equipment.getSlotItem(item.slot);
+    character.equipment.equipItem(item);
+    if (character.inventory) {
+      character.inventory.removeItem(item);
+      if (replacedItem) {
+        addInventoryItem(character.inventory, replacedItem, game.inventories);
       }
     }
-    var c = a.stats,
-      d,
-      f;
-    c.attackRating.itemValue = 0;
-    c.defenceRating.itemValue = 0;
-    c.armor.itemValue = 0;
-    c.damage.itemValue = 0;
-    c.maxHealth.itemValue = 0;
-    c.maxSpirit.itemValue = 0;
-    var g = c.owner.slotList,
-      h = c.owner.equipment;
-    for (d = 0; d < g.length; d++) {
-      if (f = h.getSlotItem(g[d])) {
-        var l = c.damage;
-        l.itemValue += 1 === f.characteristic ? f.itemValue : 0;
-        l = c.armor;
-        l.itemValue += 2 === f.characteristic ? f.itemValue : 0;
-        l = c.attackRating;
-        l.itemValue += 3 === f.characteristic ? f.itemValue : 0;
-        l = c.defenceRating;
-        l.itemValue += 4 === f.characteristic ? f.itemValue : 0;
-        l = c.maxHealth;
-        l.itemValue += 5 === f.characteristic ? f.itemValue : 0;
-        l = c.maxSpirit;
-        l.itemValue += 6 === f.characteristic ? f.itemValue : 0;
+    var stats = character.stats,
+      slotIndex,
+      equippedItem;
+    stats.attackRating.itemValue = 0;
+    stats.defenceRating.itemValue = 0;
+    stats.armor.itemValue = 0;
+    stats.damage.itemValue = 0;
+    stats.maxHealth.itemValue = 0;
+    stats.maxSpirit.itemValue = 0;
+    var slotList = stats.owner.slotList,
+      equipment = stats.owner.equipment;
+    for (slotIndex = 0; slotIndex < slotList.length; slotIndex++) {
+      if (equippedItem = equipment.getSlotItem(slotList[slotIndex])) {
+        var damageStat = stats.damage;
+        damageStat.itemValue += 1 === equippedItem.characteristic ? equippedItem.itemValue : 0;
+        var armorStat = stats.armor;
+        armorStat.itemValue += 2 === equippedItem.characteristic ? equippedItem.itemValue : 0;
+        var attackRatingStat = stats.attackRating;
+        attackRatingStat.itemValue += 3 === equippedItem.characteristic ? equippedItem.itemValue : 0;
+        var defenceRatingStat = stats.defenceRating;
+        defenceRatingStat.itemValue += 4 === equippedItem.characteristic ? equippedItem.itemValue : 0;
+        var maxHealthStat = stats.maxHealth;
+        maxHealthStat.itemValue += 5 === equippedItem.characteristic ? equippedItem.itemValue : 0;
+        var maxSpiritStat = stats.maxSpirit;
+        maxSpiritStat.itemValue += 6 === equippedItem.characteristic ? equippedItem.itemValue : 0;
       }
     }
-    c.health = Math.min(c.health, statValue(c.maxHealth));
-    c.spirit = Math.min(c.spirit, statValue(c.maxSpirit));
+    stats.health = Math.min(stats.health, statValue(stats.maxHealth));
+    stats.spirit = Math.min(stats.spirit, statValue(stats.maxSpirit));
   }
 }
-export function updateCharacter(a, b) {
-  if (!a.isDead && a.actionType !== IDLE_ACTION) {
-    if (1 === a.actionType) {
+export function updateCharacter(character, simulationUnits) {
+  if (!character.isDead && character.actionType !== IDLE_ACTION) {
+    if (1 === character.actionType) {
       if (game.worldActive) {
-        var c = a.position;
-        if (a === game.state.leader) {
+        var position = character.position;
+        if (character === game.state.leader) {
           a: {
-            assignVector(c.velocity, c.worldDestinationPoint);
-            subtractVector(c.velocity, c.worldPosition);
-            var d = b * c.worldWalkSpeed * walkingSpeedBonus.currentValue * walkingSpeedModifier.currentValue,
-              f = game.world.pixelToTileColumn(c.worldPosition.x),
-              g = game.world.pixelToTileRow(c.worldPosition.y);
-            if (vectorLength(c.velocity) <= d) {
-              assignVector(c.worldPosition, c.worldDestinationPoint);
-              c.movementTargetCleared = true;
-            } else if (f === c.destTileColumn && g === c.destTileRow) {
-              c.movementTargetCleared = true;
+            assignVector(position.velocity, position.worldDestinationPoint);
+            subtractVector(position.velocity, position.worldPosition);
+            var leaderStepDistance = simulationUnits * position.worldWalkSpeed * walkingSpeedBonus.currentValue * walkingSpeedModifier.currentValue,
+              leaderWorldTileColumn = game.world.pixelToTileColumn(position.worldPosition.x),
+              leaderWorldTileRow = game.world.pixelToTileRow(position.worldPosition.y);
+            if (vectorLength(position.velocity) <= leaderStepDistance) {
+              assignVector(position.worldPosition, position.worldDestinationPoint);
+              position.movementTargetCleared = true;
+            } else if (leaderWorldTileColumn === position.destTileColumn && leaderWorldTileRow === position.destTileRow) {
+              position.movementTargetCleared = true;
             } else {
-              if (!c.nextWorldTile || !c.currentWorldTile || c.currentWorldTile.getWorldColumn() !== f || c.currentWorldTile.getWorldRow() !== g) {
-                c.previousWorldTile = c.currentWorldTile;
-                c.currentWorldTile = game.world.getTileAtPixel(f, g);
-                if (!c.currentWorldTile) {
+              if (!position.nextWorldTile || !position.currentWorldTile || position.currentWorldTile.getWorldColumn() !== leaderWorldTileColumn || position.currentWorldTile.getWorldRow() !== leaderWorldTileRow) {
+                position.previousWorldTile = position.currentWorldTile;
+                position.currentWorldTile = game.world.getTileAtPixel(leaderWorldTileColumn, leaderWorldTileRow);
+                if (!position.currentWorldTile) {
                   console.log("no current world tile!");
                   break a;
                 }
-                if (1 >= Math.abs(f - c.destTileColumn) && 1 >= Math.abs(g - c.destTileRow)) {
-                  c.nextWorldTile = game.world.getTileAtPixel(c.destTileColumn, c.destTileRow);
+                if (1 >= Math.abs(leaderWorldTileColumn - position.destTileColumn) && 1 >= Math.abs(leaderWorldTileRow - position.destTileRow)) {
+                  position.nextWorldTile = game.world.getTileAtPixel(position.destTileColumn, position.destTileRow);
                 } else {
-                  c.nextWorldTile = findCheapestNeighbor(c.currentWorldTile, c.previousWorldTile);
-                  if (c.nextWorldTile && c.nextWorldTile.getWorldColumn() !== c.destTileColumn && c.nextWorldTile.getWorldRow() !== c.destTileRow) {
-                    c.nextWorldTile = findCheapestNeighbor(c.nextWorldTile, c.currentWorldTile);
+                  position.nextWorldTile = findCheapestNeighbor(position.currentWorldTile, position.previousWorldTile);
+                  if (position.nextWorldTile && position.nextWorldTile.getWorldColumn() !== position.destTileColumn && position.nextWorldTile.getWorldRow() !== position.destTileRow) {
+                    position.nextWorldTile = findCheapestNeighbor(position.nextWorldTile, position.currentWorldTile);
                   }
                 }
               }
-              setVector(c.velocity, c.nextWorldTile.getPixelX() + 1, c.nextWorldTile.getPixelY() + 1);
-              subtractVector(c.velocity, c.worldPosition);
-              if (separateWorldCharacters(c)) {
-                normalizeVector(c.velocity);
-                multiplyVector(c.worldSeparationVector, 0.5);
-                addVector(c.velocity, c.worldSeparationVector);
+              setVector(position.velocity, position.nextWorldTile.getPixelX() + 1, position.nextWorldTile.getPixelY() + 1);
+              subtractVector(position.velocity, position.worldPosition);
+              if (separateWorldCharacters(position)) {
+                normalizeVector(position.velocity);
+                multiplyVector(position.worldSeparationVector, 0.5);
+                addVector(position.velocity, position.worldSeparationVector);
               }
-              normalizeVector(c.velocity);
-              multiplyVector(c.velocity, d);
-              addVector(c.worldPosition, c.velocity);
+              normalizeVector(position.velocity);
+              multiplyVector(position.velocity, leaderStepDistance);
+              addVector(position.worldPosition, position.velocity);
             }
           }
         } else {
-          assignVector(c.velocity, c.worldDestinationPoint);
-          subtractVector(c.velocity, c.worldPosition);
-          var h = b * c.worldWalkSpeed * walkingSpeedBonus.currentValue * walkingSpeedModifier.currentValue,
-            l = game.world.pixelToTileColumn(c.worldPosition.x),
-            n = game.world.pixelToTileRow(c.worldPosition.y);
-          if (vectorLength(c.velocity) <= h) {
-            assignVector(c.worldPosition, c.worldDestinationPoint);
-            c.movementTargetCleared = true;
+          assignVector(position.velocity, position.worldDestinationPoint);
+          subtractVector(position.velocity, position.worldPosition);
+          var memberStepDistance = simulationUnits * position.worldWalkSpeed * walkingSpeedBonus.currentValue * walkingSpeedModifier.currentValue,
+            memberWorldTileColumn = game.world.pixelToTileColumn(position.worldPosition.x),
+            memberWorldTileRow = game.world.pixelToTileRow(position.worldPosition.y);
+          if (vectorLength(position.velocity) <= memberStepDistance) {
+            assignVector(position.worldPosition, position.worldDestinationPoint);
+            position.movementTargetCleared = true;
           } else {
-            if (l === c.destTileColumn && n === c.destTileRow) {
-              c.movementTargetCleared = true;
+            if (memberWorldTileColumn === position.destTileColumn && memberWorldTileRow === position.destTileRow) {
+              position.movementTargetCleared = true;
             } else {
-              setVector(c.velocity, c.worldDestinationPoint.x + 1, c.worldDestinationPoint.y + 1);
-              subtractVector(c.velocity, c.worldPosition);
-              if (separateWorldCharacters(c)) {
-                normalizeVector(c.velocity);
-                multiplyVector(c.worldSeparationVector, 0.5);
-                addVector(c.velocity, c.worldSeparationVector);
+              setVector(position.velocity, position.worldDestinationPoint.x + 1, position.worldDestinationPoint.y + 1);
+              subtractVector(position.velocity, position.worldPosition);
+              if (separateWorldCharacters(position)) {
+                normalizeVector(position.velocity);
+                multiplyVector(position.worldSeparationVector, 0.5);
+                addVector(position.velocity, position.worldSeparationVector);
               }
-              normalizeVector(c.velocity);
-              multiplyVector(c.velocity, h);
-              addVector(c.worldPosition, c.velocity);
+              normalizeVector(position.velocity);
+              multiplyVector(position.velocity, memberStepDistance);
+              addVector(position.worldPosition, position.velocity);
             }
           }
         }
       } else {
-        var p = a.position,
-          s;
-        s = isAdventurerOrMinion(a) ? b * p.dungeonWalkSpeed * walkingSpeedBonus.currentValue * walkingSpeedModifier.currentValue : p.dungeonWalkSpeed * b;
-        if (null != p.routeQueue && 0 < p.routeQueue.length) {
-          var u = p.routeQueue[0];
-          setVector(p.velocity, u.pixelColumn, u.pixelRow);
-          subtractVector(p.velocity, p.levelPosition);
-          if (vectorLength(p.velocity) <= s) {
-            var y;
-            if (!(y = u.isOpen)) {
-              var A;
+        var dungeonPosition = character.position,
+          dungeonStepDistance;
+        dungeonStepDistance = isAdventurerOrMinion(character) ? simulationUnits * dungeonPosition.dungeonWalkSpeed * walkingSpeedBonus.currentValue * walkingSpeedModifier.currentValue : dungeonPosition.dungeonWalkSpeed * simulationUnits;
+        if (null != dungeonPosition.routeQueue && 0 < dungeonPosition.routeQueue.length) {
+          var nextRouteDoor = dungeonPosition.routeQueue[0];
+          setVector(dungeonPosition.velocity, nextRouteDoor.pixelColumn, nextRouteDoor.pixelRow);
+          subtractVector(dungeonPosition.velocity, dungeonPosition.levelPosition);
+          if (vectorLength(dungeonPosition.velocity) <= dungeonStepDistance) {
+            var canPassRouteDoor;
+            if (!(canPassRouteDoor = nextRouteDoor.isOpen)) {
+              var isPartyAtSameLocation;
               a: {
-                var C,
-                  v = getAllies(),
-                  D = v[0].position,
-                  N = D.room,
-                  I = D.currentHallway;
-                for (C = 1; C < v.length; C++) {
-                  if (D = v[C].position, D.currentHallway != I || D.room != N) {
-                    A = false;
+                var locationAllyIndex,
+                  locationAllies = getAllies(),
+                  allyPosition = locationAllies[0].position,
+                  firstAllyRoom = allyPosition.room,
+                  firstAllyHallway = allyPosition.currentHallway;
+                for (locationAllyIndex = 1; locationAllyIndex < locationAllies.length; locationAllyIndex++) {
+                  if (allyPosition = locationAllies[locationAllyIndex].position, allyPosition.currentHallway != firstAllyHallway || allyPosition.room != firstAllyRoom) {
+                    isPartyAtSameLocation = false;
                     break a;
                   }
                 }
-                A = true;
+                isPartyAtSameLocation = true;
               }
-              var x;
-              if (x = A) {
+              var isPartyFitToPassDoor;
+              if (isPartyFitToPassDoor = isPartyAtSameLocation) {
                 a: {
-                  var z,
-                    O = getAllies(),
-                    J,
-                    la = u.hallway.discovered;
-                  for (z = 0; z < O.length; z++) {
-                    if (O[z].effects.isDisabled) {
-                      x = false;
+                  var fitnessAllyIndex,
+                    fitnessAllies = getAllies(),
+                    allyStats,
+                    routeHallwayDiscovered = nextRouteDoor.hallway.discovered;
+                  for (fitnessAllyIndex = 0; fitnessAllyIndex < fitnessAllies.length; fitnessAllyIndex++) {
+                    if (fitnessAllies[fitnessAllyIndex].effects.isDisabled) {
+                      isPartyFitToPassDoor = false;
                       break a;
                     }
-                    if (la && (J = O[z].stats, O[z].characterType === ADVENTURER_TYPE && (J.health / statValue(J.maxHealth) < RETREAT_HEALTH_RATIO || J.spirit / statValue(J.maxSpirit) < RETREAT_SPIRIT_RATIO))) {
-                      x = false;
+                    if (routeHallwayDiscovered && (allyStats = fitnessAllies[fitnessAllyIndex].stats, fitnessAllies[fitnessAllyIndex].characterType === ADVENTURER_TYPE && (allyStats.health / statValue(allyStats.maxHealth) < RETREAT_HEALTH_RATIO || allyStats.spirit / statValue(allyStats.maxSpirit) < RETREAT_SPIRIT_RATIO))) {
+                      isPartyFitToPassDoor = false;
                       break a;
                     }
                   }
-                  x = true;
+                  isPartyFitToPassDoor = true;
                 }
               }
-              y = x;
+              canPassRouteDoor = isPartyFitToPassDoor;
             }
-            if (y) {
-              setVector(p.levelPosition, u.pixelColumn | 0, u.pixelRow | 0);
-              var Q = p.routeQueue.shift();
-              if (!Q.isOpen) {
+            if (canPassRouteDoor) {
+              setVector(dungeonPosition.levelPosition, nextRouteDoor.pixelColumn | 0, nextRouteDoor.pixelRow | 0);
+              var reachedRouteDoor = dungeonPosition.routeQueue.shift();
+              if (!reachedRouteDoor.isOpen) {
                 a: {
-                  var V = game.state.party;
-                  if (!Q.isOpen) {
-                    Q.isOpen = true;
+                  var party = game.state.party;
+                  if (!reachedRouteDoor.isOpen) {
+                    reachedRouteDoor.isOpen = true;
                     game.state.statisticsRecorder.recordDoorOpened();
                     awardAdventurePoints(2);
-                    if (!Q.leadsTo.discovered) {
-                      populateEncounter(Q.leadsTo);
-                      revealRoom(Q.leadsTo);
-                      spawnRoomTreasure(Q.leadsTo);
+                    if (!reachedRouteDoor.leadsTo.discovered) {
+                      populateEncounter(reachedRouteDoor.leadsTo);
+                      revealRoom(reachedRouteDoor.leadsTo);
+                      spawnRoomTreasure(reachedRouteDoor.leadsTo);
                     }
-                    var na = Q.hallway;
-                    if (!na.discovered) {
-                      revealHallway(na, true);
-                      var K = getOppositeDoor(na, Q);
-                      if (!K.isOpen) {
-                        V.setTargetDoor(K);
-                        V.destinationRoom = K.leadsTo;
+                    var reachedDoorHallway = reachedRouteDoor.hallway;
+                    if (!reachedDoorHallway.discovered) {
+                      revealHallway(reachedDoorHallway, true);
+                      var oppositeDoor = getOppositeDoor(reachedDoorHallway, reachedRouteDoor);
+                      if (!oppositeDoor.isOpen) {
+                        party.setTargetDoor(oppositeDoor);
+                        party.destinationRoom = oppositeDoor.leadsTo;
                         break a;
                       }
                     }
-                    if (Q === V.targetDoor) {
-                      V.destinationRoom = V.targetDoor.leadsTo;
-                      V.targetDoor = null;
+                    if (reachedRouteDoor === party.targetDoor) {
+                      party.destinationRoom = party.targetDoor.leadsTo;
+                      party.targetDoor = null;
                     }
                   }
                 }
               }
-              if (p.room) {
-                p.currentHallway = Q.hallway;
-                p.room = null;
+              if (dungeonPosition.room) {
+                dungeonPosition.currentHallway = reachedRouteDoor.hallway;
+                dungeonPosition.room = null;
               } else {
-                p.currentHallway = null;
-                p.room = Q.leadsTo;
+                dungeonPosition.currentHallway = null;
+                dungeonPosition.room = reachedRouteDoor.leadsTo;
               }
-              p.floorPositionIndex = -1;
-              if (0 === p.routeQueue.length) {
-                if (!p.targetRoom) {
-                  clearMovementTarget(p);
+              dungeonPosition.floorPositionIndex = -1;
+              if (0 === dungeonPosition.routeQueue.length) {
+                if (!dungeonPosition.targetRoom) {
+                  clearMovementTarget(dungeonPosition);
                 }
               }
             }
-          } else if (p.currentHallway) {
-            var H = p.currentHallway.pathTiles,
-              S = u === p.currentHallway.doorB;
-            if (-1 === p.floorPositionIndex) {
-              p.floorPositionIndex = S ? 0 : H.length - 1;
+          } else if (dungeonPosition.currentHallway) {
+            var pathTiles = dungeonPosition.currentHallway.pathTiles,
+              nextDoorIsDoorB = nextRouteDoor === dungeonPosition.currentHallway.doorB;
+            if (-1 === dungeonPosition.floorPositionIndex) {
+              dungeonPosition.floorPositionIndex = nextDoorIsDoorB ? 0 : pathTiles.length - 1;
             }
-            var da = null,
-              W;
-            if (S) {
-              if (p.floorPositionIndex < H.length - 1) {
-                W = H[p.floorPositionIndex + 1];
-                da = game.level.getTileAt(W.x, W.y);
+            var nextPathLevelTile = null,
+              nextPathTile;
+            if (nextDoorIsDoorB) {
+              if (dungeonPosition.floorPositionIndex < pathTiles.length - 1) {
+                nextPathTile = pathTiles[dungeonPosition.floorPositionIndex + 1];
+                nextPathLevelTile = game.level.getTileAt(nextPathTile.x, nextPathTile.y);
               }
             } else {
-              if (0 < p.floorPositionIndex) {
-                W = H[p.floorPositionIndex - 1];
-                da = game.level.getTileAt(W.x, W.y);
+              if (0 < dungeonPosition.floorPositionIndex) {
+                nextPathTile = pathTiles[dungeonPosition.floorPositionIndex - 1];
+                nextPathLevelTile = game.level.getTileAt(nextPathTile.x, nextPathTile.y);
               }
             }
-            if (da) {
-              setVector(p.velocity, da.getPixelX(), da.getPixelY());
+            if (nextPathLevelTile) {
+              setVector(dungeonPosition.velocity, nextPathLevelTile.getPixelX(), nextPathLevelTile.getPixelY());
             } else {
-              setVector(p.velocity, u.pixelColumn, u.pixelRow);
+              setVector(dungeonPosition.velocity, nextRouteDoor.pixelColumn, nextRouteDoor.pixelRow);
             }
-            subtractVector(p.velocity, p.levelPosition);
-            if (vectorLength(p.velocity) <= s) {
-              if (da) {
-                setVector(p.levelPosition, da.getPixelX() | 0, da.getPixelY() | 0);
+            subtractVector(dungeonPosition.velocity, dungeonPosition.levelPosition);
+            if (vectorLength(dungeonPosition.velocity) <= dungeonStepDistance) {
+              if (nextPathLevelTile) {
+                setVector(dungeonPosition.levelPosition, nextPathLevelTile.getPixelX() | 0, nextPathLevelTile.getPixelY() | 0);
               } else {
-                setVector(p.levelPosition, u.pixelColumn | 0, u.pixelRow | 0);
+                setVector(dungeonPosition.levelPosition, nextRouteDoor.pixelColumn | 0, nextRouteDoor.pixelRow | 0);
               }
-              if (S) {
-                p.floorPositionIndex++;
+              if (nextDoorIsDoorB) {
+                dungeonPosition.floorPositionIndex++;
               } else {
-                p.floorPositionIndex--;
+                dungeonPosition.floorPositionIndex--;
               }
             } else {
-              normalizeVector(p.velocity);
-              multiplyVector(p.velocity, s);
-              addVector(p.levelPosition, p.velocity);
+              normalizeVector(dungeonPosition.velocity);
+              multiplyVector(dungeonPosition.velocity, dungeonStepDistance);
+              addVector(dungeonPosition.levelPosition, dungeonPosition.velocity);
             }
           } else {
-            if (separateDungeonCharacters(p)) {
-              normalizeVector(p.velocity);
-              addVector(p.velocity, p.separationVector);
+            if (separateDungeonCharacters(dungeonPosition)) {
+              normalizeVector(dungeonPosition.velocity);
+              addVector(dungeonPosition.velocity, dungeonPosition.separationVector);
             }
-            normalizeVector(p.velocity);
-            multiplyVector(p.velocity, s);
-            addVector(p.levelPosition, p.velocity);
+            normalizeVector(dungeonPosition.velocity);
+            multiplyVector(dungeonPosition.velocity, dungeonStepDistance);
+            addVector(dungeonPosition.levelPosition, dungeonPosition.velocity);
           }
         } else {
-          assignVector(p.velocity, p.moveTargetPoint);
-          subtractVector(p.velocity, p.levelPosition);
-          if (vectorLength(p.velocity) <= s) {
-            assignVector(p.levelPosition, p.moveTargetPoint);
-            if (p.targetRoom) {
+          assignVector(dungeonPosition.velocity, dungeonPosition.moveTargetPoint);
+          subtractVector(dungeonPosition.velocity, dungeonPosition.levelPosition);
+          if (vectorLength(dungeonPosition.velocity) <= dungeonStepDistance) {
+            assignVector(dungeonPosition.levelPosition, dungeonPosition.moveTargetPoint);
+            if (dungeonPosition.targetRoom) {
               game.state.party.completeLevel();
             }
-            clearMovementTarget(p);
+            clearMovementTarget(dungeonPosition);
           } else {
-            if (separateDungeonCharacters(p)) {
-              normalizeVector(p.velocity);
-              addVector(p.velocity, p.separationVector);
+            if (separateDungeonCharacters(dungeonPosition)) {
+              normalizeVector(dungeonPosition.velocity);
+              addVector(dungeonPosition.velocity, dungeonPosition.separationVector);
             }
-            normalizeVector(p.velocity);
-            multiplyVector(p.velocity, s);
-            addVector(p.levelPosition, p.velocity);
+            normalizeVector(dungeonPosition.velocity);
+            multiplyVector(dungeonPosition.velocity, dungeonStepDistance);
+            addVector(dungeonPosition.levelPosition, dungeonPosition.velocity);
           }
         }
-        if (p.room) {
-          if (isAdventurerOrMinion(a)) {
-            if (p.room) {
-              var ia = p.room,
-                ea = p.levelPosition,
-                va = game.halfTileSize;
-              if (ea) {
-                if (!(isPointNearDoor(ia, ea) || ia.stairs && distanceToPoint(ea, ia.stairs.pixelColumn, ia.stairs.pixelRow) < game.tileSize)) {
-                  clampPointToRoom(ia, ea, va);
+        if (dungeonPosition.room) {
+          if (isAdventurerOrMinion(character)) {
+            if (dungeonPosition.room) {
+              var clampRoom = dungeonPosition.room,
+                clampPosition = dungeonPosition.levelPosition,
+                clampPadding = game.halfTileSize;
+              if (clampPosition) {
+                if (!(isPointNearDoor(clampRoom, clampPosition) || clampRoom.stairs && distanceToPoint(clampPosition, clampRoom.stairs.pixelColumn, clampRoom.stairs.pixelRow) < game.tileSize)) {
+                  clampPointToRoom(clampRoom, clampPosition, clampPadding);
                 }
               }
             }
           } else {
-            if (p.room) {
-              clampPointToRoom(p.room, p.levelPosition, game.halfTileSize);
+            if (dungeonPosition.room) {
+              clampPointToRoom(dungeonPosition.room, dungeonPosition.levelPosition, game.halfTileSize);
             }
           }
         }
       }
     } else {
-      if (2 === a.actionType) {
-        if (a.combatTarget && !a.combatTarget.isDead) {
-          if (0 < a.stats.extraAttackCount) {
-            performMultiAttack(a, false);
+      if (2 === character.actionType) {
+        if (character.combatTarget && !character.combatTarget.isDead) {
+          if (0 < character.stats.extraAttackCount) {
+            performMultiAttack(character, false);
           } else {
-            var yb = a.combatTarget;
-            if (yb) {
-              createAttackAction(a, yb, false);
+            var meleeAttackTarget = character.combatTarget;
+            if (meleeAttackTarget) {
+              createAttackAction(character, meleeAttackTarget, false);
             }
           }
-          if (isAdventurerOrMinion(a)) {
+          if (isAdventurerOrMinion(character)) {
             game.state.statisticsRecorder.recordMeleeAttack();
           }
         }
-      } else if (a.actionType === MELEE_ACTION_TYPE) {
-        if (a.combatTarget && !a.combatTarget.isDead) {
-          if (0 < a.stats.extraAttackCount) {
-            performMultiAttack(a, true);
+      } else if (character.actionType === MELEE_ACTION_TYPE) {
+        if (character.combatTarget && !character.combatTarget.isDead) {
+          if (0 < character.stats.extraAttackCount) {
+            performMultiAttack(character, true);
           } else {
-            var Fb = a.combatTarget;
-            if (Fb) {
-              createAttackAction(a, Fb, true);
+            var rangedAttackTarget = character.combatTarget;
+            if (rangedAttackTarget) {
+              createAttackAction(character, rangedAttackTarget, true);
             }
           }
-          if (isAdventurerOrMinion(a)) {
+          if (isAdventurerOrMinion(character)) {
             game.state.statisticsRecorder.recordRangedAttack();
           }
         }
-      } else if (a.actionType === CAST_ACTION_TYPE) {
-        if (a.spellToCast) {
-          var pa = a.spellToCast.spellCategoryId,
-            T = a.spellToCast.statusEffectTypeId;
-          if (2 !== pa || 4 !== T && 1 !== T && 0 !== T) {
-            if (3 === pa) {
-              var X = a.spellToCast;
-              if (X) {
-                var Ca,
-                  qa,
-                  ta,
-                  eb,
-                  Gb,
-                  Da = X.projectileEffectName,
-                  ub = X.impactEffectName,
-                  mb = a.position.levelPosition,
-                  Ea = getFriendlyTargets(a);
-                for (Ca = 0; Ca < Ea.length; Ca++) {
-                  qa = Ea[Ca];
-                  ta = new CombatAction();
-                  ta.attacker = a;
-                  (/** @type {TargetedCombatAction} */ (ta)).setTargetCharacter(qa);
-                  ta.actionDefinition = X;
-                  ta.hasProjectilePhase = true;
-                  eb = qa.position.levelPosition;
-                  if (Da) {
-                    Gb = new VisualEffect(Da, mb, eb, true, 1);
-                    Gb.boundCharacter = a;
-                    ta.projectileEffect = Gb;
+      } else if (character.actionType === CAST_ACTION_TYPE) {
+        if (character.spellToCast) {
+          var spellCategoryId = character.spellToCast.spellCategoryId,
+            statusEffectTypeId = character.spellToCast.statusEffectTypeId;
+          if (2 !== spellCategoryId || 4 !== statusEffectTypeId && 1 !== statusEffectTypeId && 0 !== statusEffectTypeId) {
+            if (3 === spellCategoryId) {
+              var spellToCast = character.spellToCast;
+              if (spellToCast) {
+                var friendlyTargetIndex,
+                  friendlyTarget,
+                  friendlySpellAction,
+                  friendlyTargetPosition,
+                  friendlyProjectileVisual,
+                  friendlyProjectileEffectName = spellToCast.projectileEffectName,
+                  friendlyImpactEffectName = spellToCast.impactEffectName,
+                  casterLevelPosition = character.position.levelPosition,
+                  friendlyTargets = getFriendlyTargets(character);
+                for (friendlyTargetIndex = 0; friendlyTargetIndex < friendlyTargets.length; friendlyTargetIndex++) {
+                  friendlyTarget = friendlyTargets[friendlyTargetIndex];
+                  friendlySpellAction = new CombatAction();
+                  friendlySpellAction.attacker = character;
+                  (/** @type {TargetedCombatAction} */ (friendlySpellAction)).setTargetCharacter(friendlyTarget);
+                  friendlySpellAction.actionDefinition = spellToCast;
+                  friendlySpellAction.hasProjectilePhase = true;
+                  friendlyTargetPosition = friendlyTarget.position.levelPosition;
+                  if (friendlyProjectileEffectName) {
+                    friendlyProjectileVisual = new VisualEffect(friendlyProjectileEffectName, casterLevelPosition, friendlyTargetPosition, true, 1);
+                    friendlyProjectileVisual.boundCharacter = character;
+                    friendlySpellAction.projectileEffect = friendlyProjectileVisual;
                   }
-                  if (ub) {
-                    var La = new VisualEffect(ub, mb, eb, false, 1);
-                    ta.impactEffect = La;
+                  if (friendlyImpactEffectName) {
+                    var friendlyImpactVisual = new VisualEffect(friendlyImpactEffectName, casterLevelPosition, friendlyTargetPosition, false, 1);
+                    friendlySpellAction.impactEffect = friendlyImpactVisual;
                   }
-                  enqueueCombatAction(game.combatQueue, ta);
+                  enqueueCombatAction(game.combatQueue, friendlySpellAction);
                 }
-                var wa = a.stats,
-                  Fa = getSpellSpiritCost(wa);
-                spendSpirit(wa, Fa);
+                var buffCasterStats = character.stats,
+                  buffSpiritCost = getSpellSpiritCost(buffCasterStats);
+                spendSpirit(buffCasterStats, buffSpiritCost);
               }
-            } else if (5 === pa) {
-              var ha = a.spellToCast;
-              if (ha) {
-                var ja = a.combatTarget;
-                if (ja && !ja.isDead) {
-                  var Ga = 1 + (a.stats.chainArcBonus + 1),
-                    bb = null,
-                    za = null,
-                    nb = null,
-                    fb = null,
-                    cb = null,
-                    Ua,
-                    Va,
-                    mc,
-                    vb = ha.impactEffectName,
-                    Sb,
-                    Ma,
-                    zb = a.position.levelPosition;
-                  for (Ua = 0; Ua < Ga && ja; Ua++) {
-                    Va = new CombatAction();
-                    Va.attacker = a;
-                    (/** @type {TargetedCombatAction} */ (Va)).setTargetCharacter(ja);
-                    Va.actionDefinition = ha;
-                    Va.hasProjectilePhase = true;
-                    mc = ja.position.levelPosition;
-                    Sb = new VisualEffect(null, zb, mc, true, 2);
-                    Sb.boundCharacter = a;
-                    Va.projectileEffect = Sb;
-                    var Hb = new VisualEffect(vb, mc, mc, false, 1);
-                    Va.impactEffect = Hb;
-                    zb = mc;
-                    Ma = Math.max(1, calculateAttackDamage(a, ja));
-                    Va.noDamage = 0 === Ma;
-                    Va.remainingDamage = Ma;
-                    enqueueCombatAction(game.combatQueue, Va);
-                    var ac = RANGED_ATTACK_RANGE,
-                      ob = getFriendlyTargets(ja);
-                    if (0 === ob.length) {
-                      bb = null;
+            } else if (5 === spellCategoryId) {
+              var chainLightningSpell = character.spellToCast;
+              if (chainLightningSpell) {
+                var currentChainTarget = character.combatTarget;
+                if (currentChainTarget && !currentChainTarget.isDead) {
+                  var chainArcLimit = 1 + (character.stats.chainArcBonus + 1),
+                    nextChainTarget = null,
+                    previousArcTarget1 = null,
+                    previousArcTarget2 = null,
+                    previousArcTarget3 = null,
+                    previousArcTarget4 = null,
+                    arcIndex,
+                    arcSpellAction,
+                    arcTargetPosition,
+                    arcImpactEffectName = chainLightningSpell.impactEffectName,
+                    arcProjectileVisual,
+                    arcDamage,
+                    arcOriginPosition = character.position.levelPosition;
+                  for (arcIndex = 0; arcIndex < chainArcLimit && currentChainTarget; arcIndex++) {
+                    arcSpellAction = new CombatAction();
+                    arcSpellAction.attacker = character;
+                    (/** @type {TargetedCombatAction} */ (arcSpellAction)).setTargetCharacter(currentChainTarget);
+                    arcSpellAction.actionDefinition = chainLightningSpell;
+                    arcSpellAction.hasProjectilePhase = true;
+                    arcTargetPosition = currentChainTarget.position.levelPosition;
+                    arcProjectileVisual = new VisualEffect(null, arcOriginPosition, arcTargetPosition, true, 2);
+                    arcProjectileVisual.boundCharacter = character;
+                    arcSpellAction.projectileEffect = arcProjectileVisual;
+                    var arcImpactVisual = new VisualEffect(arcImpactEffectName, arcTargetPosition, arcTargetPosition, false, 1);
+                    arcSpellAction.impactEffect = arcImpactVisual;
+                    arcOriginPosition = arcTargetPosition;
+                    arcDamage = Math.max(1, calculateAttackDamage(character, currentChainTarget));
+                    arcSpellAction.noDamage = 0 === arcDamage;
+                    arcSpellAction.remainingDamage = arcDamage;
+                    enqueueCombatAction(game.combatQueue, arcSpellAction);
+                    var arcRange = RANGED_ATTACK_RANGE,
+                      arcCandidateTargets = getFriendlyTargets(currentChainTarget);
+                    if (0 === arcCandidateTargets.length) {
+                      nextChainTarget = null;
                     } else {
-                      var pb = ja.position.room;
-                      if (pb) {
-                        for (var Ha = undefined, Ab = ja.position.levelPosition, Bb = null, qb = null, wb = undefined, Ib = undefined, Ec = -1, jb = 0; jb < ob.length; jb++) {
-                          Ha = ob[jb];
-                          if (!(Ha === ja || Ha === za || Ha === nb || Ha === fb || Ha === cb || Ha.isDead || Ha.position.room !== pb)) {
-                            wb = Ab.distanceTo(Ha.position.levelPosition);
-                            if (wb <= ac && (0 > Ec || wb < Ec)) {
-                              Ib = Ha.effects;
-                              if (Ib.isStealthed || Ib.isDisabled || Ib.isConverted) {
-                                qb = Ha;
+                      var arcCandidateRoom = currentChainTarget.position.room;
+                      if (arcCandidateRoom) {
+                        for (var arcCandidate = undefined, arcDistanceOrigin = currentChainTarget.position.levelPosition, nearestArcCandidate = null, debuffedArcCandidate = null, arcCandidateDistance = undefined, arcCandidateEffects = undefined, bestArcCandidateDistance = -1, arcCandidateIndex = 0; arcCandidateIndex < arcCandidateTargets.length; arcCandidateIndex++) {
+                          arcCandidate = arcCandidateTargets[arcCandidateIndex];
+                          if (!(arcCandidate === currentChainTarget || arcCandidate === previousArcTarget1 || arcCandidate === previousArcTarget2 || arcCandidate === previousArcTarget3 || arcCandidate === previousArcTarget4 || arcCandidate.isDead || arcCandidate.position.room !== arcCandidateRoom)) {
+                            arcCandidateDistance = arcDistanceOrigin.distanceTo(arcCandidate.position.levelPosition);
+                            if (arcCandidateDistance <= arcRange && (0 > bestArcCandidateDistance || arcCandidateDistance < bestArcCandidateDistance)) {
+                              arcCandidateEffects = arcCandidate.effects;
+                              if (arcCandidateEffects.isStealthed || arcCandidateEffects.isDisabled || arcCandidateEffects.isConverted) {
+                                debuffedArcCandidate = arcCandidate;
                               } else {
-                                Bb = Ha;
-                                Ec = wb;
+                                nearestArcCandidate = arcCandidate;
+                                bestArcCandidateDistance = arcCandidateDistance;
                               }
                             }
                           }
                         }
-                        bb = Bb ? Bb : qb;
+                        nextChainTarget = nearestArcCandidate ? nearestArcCandidate : debuffedArcCandidate;
                       } else {
-                        bb = null;
+                        nextChainTarget = null;
                       }
                     }
-                    cb = fb;
-                    fb = nb;
-                    nb = za;
-                    za = ja;
-                    ja = bb;
+                    previousArcTarget4 = previousArcTarget3;
+                    previousArcTarget3 = previousArcTarget2;
+                    previousArcTarget2 = previousArcTarget1;
+                    previousArcTarget1 = currentChainTarget;
+                    currentChainTarget = nextChainTarget;
                   }
-                  var bc = a.stats,
-                    Wa = getSpellSpiritCost(bc);
-                  spendSpirit(bc, Wa);
+                  var chainCasterStats = character.stats,
+                    chainSpiritCost = getSpellSpiritCost(chainCasterStats);
+                  spendSpirit(chainCasterStats, chainSpiritCost);
                 }
               }
-            } else if (6 === pa) {
-              var cc = a.spellToCast;
-              if (cc) {
-                var Qa = a.combatTarget;
-                if (Qa && !Qa.isDead) {
-                  var nc = a.stats.rainAreaBonus + 1,
-                    sa,
-                    Tb,
-                    qc = cc.projectileEffectName,
-                    Fc = cc.impactEffectName,
-                    Cb = a.position.levelPosition,
-                    kb = a.position.room,
-                    Ra = Qa.position.levelPosition,
-                    Ja,
-                    Db;
-                  if (kb) {
-                    if (Fc) {
-                      sa = new CombatAction();
-                      sa.attacker = a;
-                      (/** @type {TargetedCombatAction} */ (sa)).setTargetCharacter(Qa);
-                      sa.actionDefinition = cc;
-                      sa.hasProjectilePhase = true;
-                      if (qc) {
-                        Tb = new VisualEffect(qc, Cb, Ra, true, 1);
-                        Tb.boundCharacter = a;
-                        sa.projectileEffect = Tb;
+            } else if (6 === spellCategoryId) {
+              var rainSpellDefinition = character.spellToCast;
+              if (rainSpellDefinition) {
+                var rainTarget = character.combatTarget;
+                if (rainTarget && !rainTarget.isDead) {
+                  var rainAreaRadius = character.stats.rainAreaBonus + 1,
+                    rainSpellAction,
+                    rainProjectileVisual,
+                    rainProjectileEffectName = rainSpellDefinition.projectileEffectName,
+                    rainImpactEffectName = rainSpellDefinition.impactEffectName,
+                    rainCasterPosition = character.position.levelPosition,
+                    rainCasterRoom = character.position.room,
+                    rainTargetPosition = rainTarget.position.levelPosition,
+                    rainDamage,
+                    rainImpactVisual;
+                  if (rainCasterRoom) {
+                    if (rainImpactEffectName) {
+                      rainSpellAction = new CombatAction();
+                      rainSpellAction.attacker = character;
+                      (/** @type {TargetedCombatAction} */ (rainSpellAction)).setTargetCharacter(rainTarget);
+                      rainSpellAction.actionDefinition = rainSpellDefinition;
+                      rainSpellAction.hasProjectilePhase = true;
+                      if (rainProjectileEffectName) {
+                        rainProjectileVisual = new VisualEffect(rainProjectileEffectName, rainCasterPosition, rainTargetPosition, true, 1);
+                        rainProjectileVisual.boundCharacter = character;
+                        rainSpellAction.projectileEffect = rainProjectileVisual;
                       }
-                      Ja = statValue(a.stats.damage);
-                      sa.noDamage = false;
-                      sa.remainingDamage = Ja;
-                      Db = new VisualEffect(Fc, Cb, Ra, false, TARGETED_EFFECT);
-                      Db.boundCharacter = a;
-                      Db.room = kb;
-                      Db.remainingEffectDamage = Ja;
-                      sa.impactEffect = Db;
-                      var gb = Qa.position,
-                        rb = gb.room,
-                        dc = game.level.pixelToTileColumn(gb.getLevelPositionX()),
-                        Ka = game.level.pixelToTileRow(gb.getLevelPositionY()),
-                        Xa,
-                        hb = rb.tileColumn,
-                        lb = rb.tileRow,
-                        rc = hb + rb.widthInTiles,
-                        sc = lb + rb.heightInTiles,
-                        Aa,
+                      rainDamage = statValue(character.stats.damage);
+                      rainSpellAction.noDamage = false;
+                      rainSpellAction.remainingDamage = rainDamage;
+                      rainImpactVisual = new VisualEffect(rainImpactEffectName, rainCasterPosition, rainTargetPosition, false, TARGETED_EFFECT);
+                      rainImpactVisual.boundCharacter = character;
+                      rainImpactVisual.room = rainCasterRoom;
+                      rainImpactVisual.remainingEffectDamage = rainDamage;
+                      rainSpellAction.impactEffect = rainImpactVisual;
+                      var rainTargetCharacterPosition = rainTarget.position,
+                        rainTargetRoom = rainTargetCharacterPosition.room,
+                        rainTargetTileColumn = game.level.pixelToTileColumn(rainTargetCharacterPosition.getLevelPositionX()),
+                        rainTargetTileRow = game.level.pixelToTileRow(rainTargetCharacterPosition.getLevelPositionY()),
+                        rainAreaTile,
+                        rainRoomLeftTileColumn = rainTargetRoom.tileColumn,
+                        rainRoomTopTileRow = rainTargetRoom.tileRow,
+                        rainRoomRightTileColumn = rainRoomLeftTileColumn + rainTargetRoom.widthInTiles,
+                        rainRoomBottomTileRow = rainRoomTopTileRow + rainTargetRoom.heightInTiles,
+                        rainTileColumnCursor,
                         db,
-                        Mc = Math.max(hb, dc - nc),
-                        ec = Math.min(rc, dc + nc),
-                        Ub = Math.max(lb, Ka - nc),
-                        sb = Math.min(sc, Ka + nc);
-                      for (Aa = Mc; Aa <= ec; Aa++) {
-                        for (db = Ub; db <= sb; db++) {
-                          if ((Xa = game.level.getTileAt(Aa, db)) && 0.5 > Math.random()) {
-                            setTileEffect(Xa, Db);
+                        rainAreaMinTileColumn = Math.max(rainRoomLeftTileColumn, rainTargetTileColumn - rainAreaRadius),
+                        rainAreaMaxTileColumn = Math.min(rainRoomRightTileColumn, rainTargetTileColumn + rainAreaRadius),
+                        rainAreaMinTileRow = Math.max(rainRoomTopTileRow, rainTargetTileRow - rainAreaRadius),
+                        rainAreaMaxTileRow = Math.min(rainRoomBottomTileRow, rainTargetTileRow + rainAreaRadius);
+                      for (rainTileColumnCursor = rainAreaMinTileColumn; rainTileColumnCursor <= rainAreaMaxTileColumn; rainTileColumnCursor++) {
+                        for (db = rainAreaMinTileRow; db <= rainAreaMaxTileRow; db++) {
+                          if ((rainAreaTile = game.level.getTileAt(rainTileColumnCursor, db)) && 0.5 > Math.random()) {
+                            setTileEffect(rainAreaTile, rainImpactVisual);
                           }
                         }
                       }
-                      enqueueCombatAction(game.combatQueue, sa);
-                      var ka = a.stats,
-                        Eb = getSpellSpiritCost(ka);
-                      spendSpirit(ka, Eb);
+                      enqueueCombatAction(game.combatQueue, rainSpellAction);
+                      var rainCasterStats = character.stats,
+                        rainSpiritCost = getSpellSpiritCost(rainCasterStats);
+                      spendSpirit(rainCasterStats, rainSpiritCost);
                     } else {
                       console.log("no effect name for rain damage spell");
                     }
                   }
                 }
               }
-            } else if (8 === pa) {
-              var xb = a.combatTarget;
-              if (xb && !xb.isDead) {
-                var Na = a.spellToCast;
-                if (Na) {
-                  var Ya = new CombatAction();
-                  Ya.attacker = a;
-                  (/** @type {TargetedCombatAction} */ (Ya)).setTargetCharacter(xb);
-                  var tc = xb.position.levelPosition,
-                    me = a.position.levelPosition;
-                  Ya.actionDefinition = Na;
-                  Ya.hasProjectilePhase = true;
-                  var ne = Na.projectileEffectName;
-                  if (ne) {
-                    var Le = new VisualEffect(ne, me, tc, true, 1);
-                    Le.boundCharacter = a;
-                    Ya.projectileEffect = Le;
+            } else if (8 === spellCategoryId) {
+              var blastTarget = character.combatTarget;
+              if (blastTarget && !blastTarget.isDead) {
+                var blastSpellDefinition = character.spellToCast;
+                if (blastSpellDefinition) {
+                  var blastSpellAction = new CombatAction();
+                  blastSpellAction.attacker = character;
+                  (/** @type {TargetedCombatAction} */ (blastSpellAction)).setTargetCharacter(blastTarget);
+                  var blastTargetPosition = blastTarget.position.levelPosition,
+                    blastCasterPosition = character.position.levelPosition;
+                  blastSpellAction.actionDefinition = blastSpellDefinition;
+                  blastSpellAction.hasProjectilePhase = true;
+                  var blastProjectileEffectName = blastSpellDefinition.projectileEffectName;
+                  if (blastProjectileEffectName) {
+                    var blastProjectileVisual = new VisualEffect(blastProjectileEffectName, blastCasterPosition, blastTargetPosition, true, 1);
+                    blastProjectileVisual.boundCharacter = character;
+                    blastSpellAction.projectileEffect = blastProjectileVisual;
                   }
-                  var Td = Na.impactEffectName;
-                  if (Td) {
-                    var oe = statValue(a.stats.damage);
-                    Ya.noDamage = false;
-                    Ya.remainingDamage = oe;
-                    var Y = new VisualEffect(Td, me, tc, false, TARGETED_EFFECT),
-                      nf = xb.position.room;
-                    Y.boundCharacter = a;
-                    Y.room = nf;
-                    Y.remainingEffectDamage = oe;
-                    Ya.impactEffect = Y;
-                    var Nc = a.stats.areaRadiusBonus + 1,
-                      gd = xb.position,
-                      uc = gd.room,
-                      U = game.level.pixelToTileColumn(gd.getLevelPositionX()),
-                      Z = game.level.pixelToTileRow(gd.getLevelPositionY()),
-                      $ = uc.tileColumn,
-                      ba = uc.tileRow,
-                      ca = $ + uc.widthInTiles,
-                      q = ba + uc.heightInTiles;
-                    applyAreaTileEffect(U, Z, $, ca, ba, q, Y);
-                    if (0 < Nc) {
-                      applyAreaTileEffect(U, Z - 1, $, ca, ba, q, Y);
-                      applyAreaTileEffect(U, Z + 1, $, ca, ba, q, Y);
-                      applyAreaTileEffect(U - 1, Z, $, ca, ba, q, Y);
-                      applyAreaTileEffect(U + 1, Z, $, ca, ba, q, Y);
-                      applyAreaTileEffect(U - 1, Z - 1, $, ca, ba, q, Y);
-                      applyAreaTileEffect(U - 1, Z + 1, $, ca, ba, q, Y);
-                      applyAreaTileEffect(U + 1, Z - 1, $, ca, ba, q, Y);
-                      applyAreaTileEffect(U + 1, Z + 1, $, ca, ba, q, Y);
-                      if (1 < Nc) {
-                        applyAreaTileEffect(U, Z - 2, $, ca, ba, q, Y);
-                        applyAreaTileEffect(U, Z + 2, $, ca, ba, q, Y);
-                        applyAreaTileEffect(U - 2, Z, $, ca, ba, q, Y);
-                        applyAreaTileEffect(U + 2, Z, $, ca, ba, q, Y);
-                        applyAreaTileEffect(U - 2, Z - 1, $, ca, ba, q, Y);
-                        applyAreaTileEffect(U - 2, Z + 1, $, ca, ba, q, Y);
-                        applyAreaTileEffect(U + 2, Z - 1, $, ca, ba, q, Y);
-                        applyAreaTileEffect(U + 2, Z + 1, $, ca, ba, q, Y);
-                        applyAreaTileEffect(U - 1, Z - 2, $, ca, ba, q, Y);
-                        applyAreaTileEffect(U - 1, Z + 2, $, ca, ba, q, Y);
-                        applyAreaTileEffect(U + 1, Z - 2, $, ca, ba, q, Y);
-                        applyAreaTileEffect(U + 1, Z + 2, $, ca, ba, q, Y);
-                        if (2 < Nc) {
-                          applyAreaTileEffect(U - 2, Z - 2, $, ca, ba, q, Y);
-                          applyAreaTileEffect(U - 2, Z + 2, $, ca, ba, q, Y);
-                          applyAreaTileEffect(U + 2, Z - 2, $, ca, ba, q, Y);
-                          applyAreaTileEffect(U + 2, Z + 2, $, ca, ba, q, Y);
-                          applyAreaTileEffect(U - 3, Z - 1, $, ca, ba, q, Y);
-                          applyAreaTileEffect(U - 3, Z, $, ca, ba, q, Y);
-                          applyAreaTileEffect(U - 3, Z + 1, $, ca, ba, q, Y);
-                          applyAreaTileEffect(U + 3, Z - 1, $, ca, ba, q, Y);
-                          applyAreaTileEffect(U + 3, Z, $, ca, ba, q, Y);
-                          applyAreaTileEffect(U + 3, Z + 1, $, ca, ba, q, Y);
-                          applyAreaTileEffect(U - 1, Z - 3, $, ca, ba, q, Y);
-                          applyAreaTileEffect(U, Z - 3, $, ca, ba, q, Y);
-                          applyAreaTileEffect(U + 1, Z - 3, $, ca, ba, q, Y);
-                          applyAreaTileEffect(U - 1, Z + 3, $, ca, ba, q, Y);
-                          applyAreaTileEffect(U, Z + 3, $, ca, ba, q, Y);
-                          applyAreaTileEffect(U + 1, Z + 3, $, ca, ba, q, Y);
+                  var blastImpactEffectName = blastSpellDefinition.impactEffectName;
+                  if (blastImpactEffectName) {
+                    var blastDamage = statValue(character.stats.damage);
+                    blastSpellAction.noDamage = false;
+                    blastSpellAction.remainingDamage = blastDamage;
+                    var impactEffect = new VisualEffect(blastImpactEffectName, blastCasterPosition, blastTargetPosition, false, TARGETED_EFFECT),
+                      blastImpactEffectRoom = blastTarget.position.room;
+                    impactEffect.boundCharacter = character;
+                    impactEffect.room = blastImpactEffectRoom;
+                    impactEffect.remainingEffectDamage = blastDamage;
+                    blastSpellAction.impactEffect = impactEffect;
+                    var blastAreaRadius = character.stats.areaRadiusBonus + 1,
+                      blastTargetCharacterPosition = blastTarget.position,
+                      blastTargetRoom = blastTargetCharacterPosition.room,
+                      targetTileColumn = game.level.pixelToTileColumn(blastTargetCharacterPosition.getLevelPositionX()),
+                      targetTileRow = game.level.pixelToTileRow(blastTargetCharacterPosition.getLevelPositionY()),
+                      blastRoomLeftTileColumn = blastTargetRoom.tileColumn,
+                      blastRoomTopTileRow = blastTargetRoom.tileRow,
+                      blastRoomRightTileColumn = blastRoomLeftTileColumn + blastTargetRoom.widthInTiles,
+                      roomBottomTileRow = blastRoomTopTileRow + blastTargetRoom.heightInTiles;
+                    applyAreaTileEffect(targetTileColumn, targetTileRow, blastRoomLeftTileColumn, blastRoomRightTileColumn, blastRoomTopTileRow, roomBottomTileRow, impactEffect);
+                    if (0 < blastAreaRadius) {
+                      applyAreaTileEffect(targetTileColumn, targetTileRow - 1, blastRoomLeftTileColumn, blastRoomRightTileColumn, blastRoomTopTileRow, roomBottomTileRow, impactEffect);
+                      applyAreaTileEffect(targetTileColumn, targetTileRow + 1, blastRoomLeftTileColumn, blastRoomRightTileColumn, blastRoomTopTileRow, roomBottomTileRow, impactEffect);
+                      applyAreaTileEffect(targetTileColumn - 1, targetTileRow, blastRoomLeftTileColumn, blastRoomRightTileColumn, blastRoomTopTileRow, roomBottomTileRow, impactEffect);
+                      applyAreaTileEffect(targetTileColumn + 1, targetTileRow, blastRoomLeftTileColumn, blastRoomRightTileColumn, blastRoomTopTileRow, roomBottomTileRow, impactEffect);
+                      applyAreaTileEffect(targetTileColumn - 1, targetTileRow - 1, blastRoomLeftTileColumn, blastRoomRightTileColumn, blastRoomTopTileRow, roomBottomTileRow, impactEffect);
+                      applyAreaTileEffect(targetTileColumn - 1, targetTileRow + 1, blastRoomLeftTileColumn, blastRoomRightTileColumn, blastRoomTopTileRow, roomBottomTileRow, impactEffect);
+                      applyAreaTileEffect(targetTileColumn + 1, targetTileRow - 1, blastRoomLeftTileColumn, blastRoomRightTileColumn, blastRoomTopTileRow, roomBottomTileRow, impactEffect);
+                      applyAreaTileEffect(targetTileColumn + 1, targetTileRow + 1, blastRoomLeftTileColumn, blastRoomRightTileColumn, blastRoomTopTileRow, roomBottomTileRow, impactEffect);
+                      if (1 < blastAreaRadius) {
+                        applyAreaTileEffect(targetTileColumn, targetTileRow - 2, blastRoomLeftTileColumn, blastRoomRightTileColumn, blastRoomTopTileRow, roomBottomTileRow, impactEffect);
+                        applyAreaTileEffect(targetTileColumn, targetTileRow + 2, blastRoomLeftTileColumn, blastRoomRightTileColumn, blastRoomTopTileRow, roomBottomTileRow, impactEffect);
+                        applyAreaTileEffect(targetTileColumn - 2, targetTileRow, blastRoomLeftTileColumn, blastRoomRightTileColumn, blastRoomTopTileRow, roomBottomTileRow, impactEffect);
+                        applyAreaTileEffect(targetTileColumn + 2, targetTileRow, blastRoomLeftTileColumn, blastRoomRightTileColumn, blastRoomTopTileRow, roomBottomTileRow, impactEffect);
+                        applyAreaTileEffect(targetTileColumn - 2, targetTileRow - 1, blastRoomLeftTileColumn, blastRoomRightTileColumn, blastRoomTopTileRow, roomBottomTileRow, impactEffect);
+                        applyAreaTileEffect(targetTileColumn - 2, targetTileRow + 1, blastRoomLeftTileColumn, blastRoomRightTileColumn, blastRoomTopTileRow, roomBottomTileRow, impactEffect);
+                        applyAreaTileEffect(targetTileColumn + 2, targetTileRow - 1, blastRoomLeftTileColumn, blastRoomRightTileColumn, blastRoomTopTileRow, roomBottomTileRow, impactEffect);
+                        applyAreaTileEffect(targetTileColumn + 2, targetTileRow + 1, blastRoomLeftTileColumn, blastRoomRightTileColumn, blastRoomTopTileRow, roomBottomTileRow, impactEffect);
+                        applyAreaTileEffect(targetTileColumn - 1, targetTileRow - 2, blastRoomLeftTileColumn, blastRoomRightTileColumn, blastRoomTopTileRow, roomBottomTileRow, impactEffect);
+                        applyAreaTileEffect(targetTileColumn - 1, targetTileRow + 2, blastRoomLeftTileColumn, blastRoomRightTileColumn, blastRoomTopTileRow, roomBottomTileRow, impactEffect);
+                        applyAreaTileEffect(targetTileColumn + 1, targetTileRow - 2, blastRoomLeftTileColumn, blastRoomRightTileColumn, blastRoomTopTileRow, roomBottomTileRow, impactEffect);
+                        applyAreaTileEffect(targetTileColumn + 1, targetTileRow + 2, blastRoomLeftTileColumn, blastRoomRightTileColumn, blastRoomTopTileRow, roomBottomTileRow, impactEffect);
+                        if (2 < blastAreaRadius) {
+                          applyAreaTileEffect(targetTileColumn - 2, targetTileRow - 2, blastRoomLeftTileColumn, blastRoomRightTileColumn, blastRoomTopTileRow, roomBottomTileRow, impactEffect);
+                          applyAreaTileEffect(targetTileColumn - 2, targetTileRow + 2, blastRoomLeftTileColumn, blastRoomRightTileColumn, blastRoomTopTileRow, roomBottomTileRow, impactEffect);
+                          applyAreaTileEffect(targetTileColumn + 2, targetTileRow - 2, blastRoomLeftTileColumn, blastRoomRightTileColumn, blastRoomTopTileRow, roomBottomTileRow, impactEffect);
+                          applyAreaTileEffect(targetTileColumn + 2, targetTileRow + 2, blastRoomLeftTileColumn, blastRoomRightTileColumn, blastRoomTopTileRow, roomBottomTileRow, impactEffect);
+                          applyAreaTileEffect(targetTileColumn - 3, targetTileRow - 1, blastRoomLeftTileColumn, blastRoomRightTileColumn, blastRoomTopTileRow, roomBottomTileRow, impactEffect);
+                          applyAreaTileEffect(targetTileColumn - 3, targetTileRow, blastRoomLeftTileColumn, blastRoomRightTileColumn, blastRoomTopTileRow, roomBottomTileRow, impactEffect);
+                          applyAreaTileEffect(targetTileColumn - 3, targetTileRow + 1, blastRoomLeftTileColumn, blastRoomRightTileColumn, blastRoomTopTileRow, roomBottomTileRow, impactEffect);
+                          applyAreaTileEffect(targetTileColumn + 3, targetTileRow - 1, blastRoomLeftTileColumn, blastRoomRightTileColumn, blastRoomTopTileRow, roomBottomTileRow, impactEffect);
+                          applyAreaTileEffect(targetTileColumn + 3, targetTileRow, blastRoomLeftTileColumn, blastRoomRightTileColumn, blastRoomTopTileRow, roomBottomTileRow, impactEffect);
+                          applyAreaTileEffect(targetTileColumn + 3, targetTileRow + 1, blastRoomLeftTileColumn, blastRoomRightTileColumn, blastRoomTopTileRow, roomBottomTileRow, impactEffect);
+                          applyAreaTileEffect(targetTileColumn - 1, targetTileRow - 3, blastRoomLeftTileColumn, blastRoomRightTileColumn, blastRoomTopTileRow, roomBottomTileRow, impactEffect);
+                          applyAreaTileEffect(targetTileColumn, targetTileRow - 3, blastRoomLeftTileColumn, blastRoomRightTileColumn, blastRoomTopTileRow, roomBottomTileRow, impactEffect);
+                          applyAreaTileEffect(targetTileColumn + 1, targetTileRow - 3, blastRoomLeftTileColumn, blastRoomRightTileColumn, blastRoomTopTileRow, roomBottomTileRow, impactEffect);
+                          applyAreaTileEffect(targetTileColumn - 1, targetTileRow + 3, blastRoomLeftTileColumn, blastRoomRightTileColumn, blastRoomTopTileRow, roomBottomTileRow, impactEffect);
+                          applyAreaTileEffect(targetTileColumn, targetTileRow + 3, blastRoomLeftTileColumn, blastRoomRightTileColumn, blastRoomTopTileRow, roomBottomTileRow, impactEffect);
+                          applyAreaTileEffect(targetTileColumn + 1, targetTileRow + 3, blastRoomLeftTileColumn, blastRoomRightTileColumn, blastRoomTopTileRow, roomBottomTileRow, impactEffect);
                         }
                       }
                     }
-                    var pe = a.stats,
-                      fc = getSpellSpiritCost(pe);
-                    spendSpirit(pe, fc);
-                    enqueueCombatAction(game.combatQueue, Ya);
+                    var blastCasterStats = character.stats,
+                      blastSpiritCost = getSpellSpiritCost(blastCasterStats);
+                    spendSpirit(blastCasterStats, blastSpiritCost);
+                    enqueueCombatAction(game.combatQueue, blastSpellAction);
                   } else {
                     console.log("error: blast spell has no effect name!");
                   }
                 }
               }
-            } else if (10 === pa || 17 === pa) {
-              if (a.spellToCast) {
-                var vd = a.stats,
-                  qe = vd.maxSummonedMinions,
-                  gc = countSummonedMinions(a),
-                  vc = Math.max(0, qe - gc);
-                if (!(1 > vc)) {
-                  var $c;
-                  for ($c = 0; $c < vc; $c++) {
-                    var Gc = a,
-                      ad = Gc.spellToCast,
-                      Vb = new CombatAction();
-                    Vb.attacker = Gc;
-                    (/** @type {TargetedCombatAction} */ (Vb)).setTargetCharacter(Gc);
-                    Vb.noDamage = false;
-                    Vb.remainingDamage = 0;
-                    Vb.actionDefinition = ad;
-                    Vb.hasProjectilePhase = false;
-                    var Tc = Gc.position.levelPosition,
-                      hd = randomPointInRoom(Tc, Gc.position.room),
-                      id = ad.projectileEffectName;
+            } else if (10 === spellCategoryId || 17 === spellCategoryId) {
+              if (character.spellToCast) {
+                var summonCasterStats = character.stats,
+                  summonLimit = summonCasterStats.maxSummonedMinions,
+                  activeMinionCount = countSummonedMinions(character),
+                  remainingSummonSlots = Math.max(0, summonLimit - activeMinionCount);
+                if (!(1 > remainingSummonSlots)) {
+                  var summonSlotIndex;
+                  for (summonSlotIndex = 0; summonSlotIndex < remainingSummonSlots; summonSlotIndex++) {
+                    var summoningCharacter = character,
+                      summonSpellDefinition = summoningCharacter.spellToCast,
+                      summonSpellAction = new CombatAction();
+                    summonSpellAction.attacker = summoningCharacter;
+                    (/** @type {TargetedCombatAction} */ (summonSpellAction)).setTargetCharacter(summoningCharacter);
+                    summonSpellAction.noDamage = false;
+                    summonSpellAction.remainingDamage = 0;
+                    summonSpellAction.actionDefinition = summonSpellDefinition;
+                    summonSpellAction.hasProjectilePhase = false;
+                    var summonOriginPosition = summoningCharacter.position.levelPosition,
+                      summonSpawnPosition = randomPointInRoom(summonOriginPosition, summoningCharacter.position.room),
+                      id = summonSpellDefinition.projectileEffectName;
                     if (id) {
-                      var jd = new VisualEffect(id, Tc, hd, true, 1);
-                      jd.boundCharacter = Gc;
-                      Vb.projectileEffect = jd;
+                      var summonProjectileVisual = new VisualEffect(id, summonOriginPosition, summonSpawnPosition, true, 1);
+                      summonProjectileVisual.boundCharacter = summoningCharacter;
+                      summonSpellAction.projectileEffect = summonProjectileVisual;
                     }
-                    var kd = ad.impactEffectName;
-                    if (kd) {
-                      var eg = new VisualEffect(kd, Tc, hd, false, 1);
-                      Vb.impactEffect = eg;
-                      enqueueCombatAction(game.combatQueue, Vb);
+                    var summonImpactEffectName = summonSpellDefinition.impactEffectName;
+                    if (summonImpactEffectName) {
+                      var summonImpactVisual = new VisualEffect(summonImpactEffectName, summonOriginPosition, summonSpawnPosition, false, 1);
+                      summonSpellAction.impactEffect = summonImpactVisual;
+                      enqueueCombatAction(game.combatQueue, summonSpellAction);
                     } else {
                       console.log("error: summon spell has no effect name!");
                     }
                   }
-                  spendSpirit(vd, getSpellSpiritCost(vd));
+                  spendSpirit(summonCasterStats, getSpellSpiritCost(summonCasterStats));
                 }
               }
-            } else if (11 === pa) {
-              if (a.spellToCast) {
-                var hc = a.stats,
-                  re = hc.maxSummonedMinions,
-                  of = countSummonedMinions(a),
-                  wd = game.monsters.defeatedMonsters,
-                  rl = Math.max(0, re - of),
-                  cj = Math.min(rl, wd.length),
-                  Ah = 0,
-                  dj = a.position.room,
-                  Bh;
-                if (!(0 >= cj)) {
-                  var Me;
-                  for (Me = 0; Me < wd.length && Ah < cj; Me++) {
-                    if (Bh = wd[Me], Bh.position.room === dj) {
-                      var Ne = a,
-                        Oe = Bh,
-                        fg = Ne.spellToCast,
-                        ld = new CombatAction();
-                      ld.attacker = Ne;
-                      (/** @type {TargetedCombatAction} */ (ld)).setTargetCharacter(Oe);
-                      ld.noDamage = false;
-                      ld.remainingDamage = 0;
-                      ld.actionDefinition = fg;
-                      ld.hasProjectilePhase = true;
-                      var pf = Ne.position.levelPosition,
-                        qf = Oe.position.levelPosition,
-                        rf = fg.projectileEffectName;
-                      if (rf) {
-                        var sf = new VisualEffect(rf, pf, qf, true, 1);
-                        sf.boundCharacter = Ne;
-                        ld.projectileEffect = sf;
+            } else if (11 === spellCategoryId) {
+              if (character.spellToCast) {
+                var raiseCasterStats = character.stats,
+                  raiseSummonLimit = raiseCasterStats.maxSummonedMinions,
+                  of = countSummonedMinions(character),
+                  defeatedMonsters = game.monsters.defeatedMonsters,
+                  raiseRemainingSlots = Math.max(0, raiseSummonLimit - of),
+                  maxRaiseableCount = Math.min(raiseRemainingSlots, defeatedMonsters.length),
+                  raisedCount = 0,
+                  raiseRoom = character.position.room,
+                  defeatedMonsterCandidate;
+                if (!(0 >= maxRaiseableCount)) {
+                  var defeatedMonsterIndex;
+                  for (defeatedMonsterIndex = 0; defeatedMonsterIndex < defeatedMonsters.length && raisedCount < maxRaiseableCount; defeatedMonsterIndex++) {
+                    if (defeatedMonsterCandidate = defeatedMonsters[defeatedMonsterIndex], defeatedMonsterCandidate.position.room === raiseRoom) {
+                      var raisingCharacter = character,
+                        raisedMonster = defeatedMonsterCandidate,
+                        raiseSpellDefinition = raisingCharacter.spellToCast,
+                        raiseSpellAction = new CombatAction();
+                      raiseSpellAction.attacker = raisingCharacter;
+                      (/** @type {TargetedCombatAction} */ (raiseSpellAction)).setTargetCharacter(raisedMonster);
+                      raiseSpellAction.noDamage = false;
+                      raiseSpellAction.remainingDamage = 0;
+                      raiseSpellAction.actionDefinition = raiseSpellDefinition;
+                      raiseSpellAction.hasProjectilePhase = true;
+                      var raiseOriginPosition = raisingCharacter.position.levelPosition,
+                        raiseTargetPosition = raisedMonster.position.levelPosition,
+                        raiseProjectileEffectName = raiseSpellDefinition.projectileEffectName;
+                      if (raiseProjectileEffectName) {
+                        var raiseProjectileVisual = new VisualEffect(raiseProjectileEffectName, raiseOriginPosition, raiseTargetPosition, true, 1);
+                        raiseProjectileVisual.boundCharacter = raisingCharacter;
+                        raiseSpellAction.projectileEffect = raiseProjectileVisual;
                       }
-                      var Ch = fg.impactEffectName;
-                      if (Ch) {
-                        var gg = new VisualEffect(Ch, pf, qf, false, 1);
-                        ld.impactEffect = gg;
-                        enqueueCombatAction(game.combatQueue, ld);
+                      var raiseImpactEffectName = raiseSpellDefinition.impactEffectName;
+                      if (raiseImpactEffectName) {
+                        var raiseImpactVisual = new VisualEffect(raiseImpactEffectName, raiseOriginPosition, raiseTargetPosition, false, 1);
+                        raiseSpellAction.impactEffect = raiseImpactVisual;
+                        enqueueCombatAction(game.combatQueue, raiseSpellAction);
                       } else {
                         console.log("error: summon spell has no effect name!");
                       }
-                      Ah++;
+                      raisedCount++;
                     }
                   }
-                  spendSpirit(hc, getSpellSpiritCost(hc));
+                  spendSpirit(raiseCasterStats, getSpellSpiritCost(raiseCasterStats));
                 }
               }
-            } else if (9 === pa) {
-              var se = a.spellToCast;
-              if (se) {
-                var Md = new CombatAction();
-                Md.attacker = a;
-                (/** @type {TargetedCombatAction} */ (Md)).setTargetCharacter(a);
-                Md.noDamage = false;
-                Md.remainingDamage = 0;
-                Md.actionDefinition = se;
-                Md.hasProjectilePhase = false;
-                var tf = a.position.levelPosition,
-                  uf = randomPointInRoom(tf, a.position.room),
-                  Dh = se.projectileEffectName;
-                if (Dh) {
-                  var ej = new VisualEffect(Dh, tf, uf, true, 1);
-                  ej.boundCharacter = a;
-                  Md.projectileEffect = ej;
+            } else if (9 === spellCategoryId) {
+              var selfSummonSpellDefinition = character.spellToCast;
+              if (selfSummonSpellDefinition) {
+                var selfSummonSpellAction = new CombatAction();
+                selfSummonSpellAction.attacker = character;
+                (/** @type {TargetedCombatAction} */ (selfSummonSpellAction)).setTargetCharacter(character);
+                selfSummonSpellAction.noDamage = false;
+                selfSummonSpellAction.remainingDamage = 0;
+                selfSummonSpellAction.actionDefinition = selfSummonSpellDefinition;
+                selfSummonSpellAction.hasProjectilePhase = false;
+                var selfSummonOriginPosition = character.position.levelPosition,
+                  selfSummonSpawnPosition = randomPointInRoom(selfSummonOriginPosition, character.position.room),
+                  selfSummonProjectileEffectName = selfSummonSpellDefinition.projectileEffectName;
+                if (selfSummonProjectileEffectName) {
+                  var selfSummonProjectileVisual = new VisualEffect(selfSummonProjectileEffectName, selfSummonOriginPosition, selfSummonSpawnPosition, true, 1);
+                  selfSummonProjectileVisual.boundCharacter = character;
+                  selfSummonSpellAction.projectileEffect = selfSummonProjectileVisual;
                 }
-                var hg = se.impactEffectName;
-                if (hg) {
-                  var ig = new VisualEffect(hg, tf, uf, false, 1);
-                  Md.impactEffect = ig;
-                  var Eh = a.stats,
-                    Sa = getSpellSpiritCost(Eh);
-                  spendSpirit(Eh, Sa);
-                  enqueueCombatAction(game.combatQueue, Md);
+                var selfSummonImpactEffectName = selfSummonSpellDefinition.impactEffectName;
+                if (selfSummonImpactEffectName) {
+                  var selfSummonImpactVisual = new VisualEffect(selfSummonImpactEffectName, selfSummonOriginPosition, selfSummonSpawnPosition, false, 1);
+                  selfSummonSpellAction.impactEffect = selfSummonImpactVisual;
+                  var selfSummonCasterStats = character.stats,
+                    selfSummonSpiritCost = getSpellSpiritCost(selfSummonCasterStats);
+                  spendSpirit(selfSummonCasterStats, selfSummonSpiritCost);
+                  enqueueCombatAction(game.combatQueue, selfSummonSpellAction);
                 } else {
                   console.log("error: summon spell has no effect name!");
                 }
               }
-            } else if (12 === pa) {
-              var bd = createSpellAction(a);
-              if (bd) {
-                bd.returns = true;
-                bd.chainCount = a.stats.swiftStrikeTargetBonus + 1;
-                var Fh = a.position.levelPosition;
-                if (Fh) {
-                  if (!bd.returnOriginPosition) {
-                    bd.returnOriginPosition = new Vector2();
+            } else if (12 === spellCategoryId) {
+              var swiftStrikeAction = createSpellAction(character);
+              if (swiftStrikeAction) {
+                swiftStrikeAction.returns = true;
+                swiftStrikeAction.chainCount = character.stats.swiftStrikeTargetBonus + 1;
+                var swiftStrikeCasterPosition = character.position.levelPosition;
+                if (swiftStrikeCasterPosition) {
+                  if (!swiftStrikeAction.returnOriginPosition) {
+                    swiftStrikeAction.returnOriginPosition = new Vector2();
                   }
-                  assignVector(bd.returnOriginPosition, Fh);
+                  assignVector(swiftStrikeAction.returnOriginPosition, swiftStrikeCasterPosition);
                 } else {
-                  bd.returnOriginPosition = null;
+                  swiftStrikeAction.returnOriginPosition = null;
                 }
-                var Gh = calculateSpellDamage(a, bd.targetCharacter);
-                bd.remainingDamage = Gh;
-                bd.noDamage = 0 === Gh;
-                var Hh = bd.projectileEffect;
-                if (Hh) {
-                  Hh.isReturning = true;
+                var swiftStrikeDamage = calculateSpellDamage(character, swiftStrikeAction.targetCharacter);
+                swiftStrikeAction.remainingDamage = swiftStrikeDamage;
+                swiftStrikeAction.noDamage = 0 === swiftStrikeDamage;
+                var swiftStrikeProjectileVisual = swiftStrikeAction.projectileEffect;
+                if (swiftStrikeProjectileVisual) {
+                  swiftStrikeProjectileVisual.isReturning = true;
                 }
               }
-            } else if (13 === pa) {
-              var Ih = createSpellAction(a);
-              if (Ih) {
-                var fj = a.stats.ricochetCountBonus + 1;
-                if (0 < fj) {
-                  Ih.chains = true;
-                  Ih.chainCount = fj;
+            } else if (13 === spellCategoryId) {
+              var ricochetAction = createSpellAction(character);
+              if (ricochetAction) {
+                var ricochetCount = character.stats.ricochetCountBonus + 1;
+                if (0 < ricochetCount) {
+                  ricochetAction.chains = true;
+                  ricochetAction.chainCount = ricochetCount;
                 }
               }
             } else {
-              createSpellAction(a);
+              createSpellAction(character);
             }
           } else {
             a: {
-              var vf = a.spellToCast;
-              if (vf) {
-                var wf = a.combatTarget;
-                if (!wf || wf.isDead) {
-                  if (wf = selectScrollTarget(a), !wf) {
+              var statusSpellDefinition = character.spellToCast;
+              if (statusSpellDefinition) {
+                var statusSpellTarget = character.combatTarget;
+                if (!statusSpellTarget || statusSpellTarget.isDead) {
+                  if (statusSpellTarget = selectScrollTarget(character), !statusSpellTarget) {
                     break a;
                   }
                 }
-                var Jh,
-                  te = vf.statusEffectTypeId;
-                if (1 === te || 0 === te) {
-                  Jh = a.stats.controlTargetBonus + 1;
-                } else if (4 === te) {
-                  Jh = a.stats.transformTargetBonus + 1;
+                var allowedStatusTargetCount,
+                  statusSpellEffectTypeId = statusSpellDefinition.statusEffectTypeId;
+                if (1 === statusSpellEffectTypeId || 0 === statusSpellEffectTypeId) {
+                  allowedStatusTargetCount = character.stats.controlTargetBonus + 1;
+                } else if (4 === statusSpellEffectTypeId) {
+                  allowedStatusTargetCount = character.stats.transformTargetBonus + 1;
                 } else {
-                  console.log("wrong effect type: " + te);
+                  console.log("wrong effect type: " + statusSpellEffectTypeId);
                   break a;
                 }
-                var Ud;
-                var xf = wf,
-                  yf = Jh,
-                  xd;
-                var sl = RANGED_ATTACK_RANGE,
-                  Kh = getOpponents(a);
-                if (0 === Kh.length) {
-                  xd = null;
+                var selectedStatusTargets;
+                var primaryStatusTarget = statusSpellTarget,
+                  requestedStatusTargetCount = allowedStatusTargetCount,
+                  statusTargetCandidates;
+                var statusSpellRange = RANGED_ATTACK_RANGE,
+                  opponentList = getOpponents(character);
+                if (0 === opponentList.length) {
+                  statusTargetCandidates = null;
                 } else {
-                  var jg = xf.position.room;
-                  if (jg) {
-                    var Vd,
-                      Nd,
-                      tl = xf.position.levelPosition,
-                      kg,
-                      ue = [];
-                    for (Vd = 0; Vd < Kh.length && (Nd = Kh[Vd], Nd.isDead || Nd.position.room !== jg || hasStatusEffect(Nd.effects, te) || (Nd === xf ? ue.push(Nd) : (kg = tl.distanceTo(Nd.position.levelPosition), kg <= sl && ue.push(Nd)), !(1E3 <= ue.length))); Vd++) {}
-                    xd = ue;
+                  var primaryTargetRoom = primaryStatusTarget.position.room;
+                  if (primaryTargetRoom) {
+                    var opponentIndex,
+                      opponentCandidate,
+                      primaryTargetPosition = primaryStatusTarget.position.levelPosition,
+                      opponentCandidateDistance,
+                      collectedStatusCandidates = [];
+                    for (opponentIndex = 0; opponentIndex < opponentList.length && (opponentCandidate = opponentList[opponentIndex], opponentCandidate.isDead || opponentCandidate.position.room !== primaryTargetRoom || hasStatusEffect(opponentCandidate.effects, statusSpellEffectTypeId) || (opponentCandidate === primaryStatusTarget ? collectedStatusCandidates.push(opponentCandidate) : (opponentCandidateDistance = primaryTargetPosition.distanceTo(opponentCandidate.position.levelPosition), opponentCandidateDistance <= statusSpellRange && collectedStatusCandidates.push(opponentCandidate)), !(1E3 <= collectedStatusCandidates.length))); opponentIndex++) {}
+                    statusTargetCandidates = collectedStatusCandidates;
                   } else {
-                    xd = null;
+                    statusTargetCandidates = null;
                   }
                 }
-                if (xd) {
-                  if (xd.length < yf) {
-                    Ud = xd;
+                if (statusTargetCandidates) {
+                  if (statusTargetCandidates.length < requestedStatusTargetCount) {
+                    selectedStatusTargets = statusTargetCandidates;
                   } else {
-                    var Uc = [],
-                      ve,
-                      zf = 0;
-                    for (Uc.push(xf); Uc.length < yf && 10 > zf;) {
-                      ve = xd[randomInt(Uc.length)];
-                      if (0 > Uc.indexOf(ve)) {
-                        Uc.push(ve);
+                    var randomlyChosenStatusTargets = [],
+                      pendingStatusCandidate,
+                      duplicatePickAttempts = 0;
+                    for (randomlyChosenStatusTargets.push(primaryStatusTarget); randomlyChosenStatusTargets.length < requestedStatusTargetCount && 10 > duplicatePickAttempts;) {
+                      pendingStatusCandidate = statusTargetCandidates[randomInt(randomlyChosenStatusTargets.length)];
+                      if (0 > randomlyChosenStatusTargets.indexOf(pendingStatusCandidate)) {
+                        randomlyChosenStatusTargets.push(pendingStatusCandidate);
                       } else {
-                        zf++;
+                        duplicatePickAttempts++;
                       }
                     }
-                    if (Uc.length < yf) {
-                      var we;
-                      for (we = 0; we < xd.length && !(ve = xd[we], 0 > Uc.indexOf(ve) && (Uc.push(ve), Uc.length >= yf)); we++) {}
+                    if (randomlyChosenStatusTargets.length < requestedStatusTargetCount) {
+                      var fillCandidateIndex;
+                      for (fillCandidateIndex = 0; fillCandidateIndex < statusTargetCandidates.length && !(pendingStatusCandidate = statusTargetCandidates[fillCandidateIndex], 0 > randomlyChosenStatusTargets.indexOf(pendingStatusCandidate) && (randomlyChosenStatusTargets.push(pendingStatusCandidate), randomlyChosenStatusTargets.length >= requestedStatusTargetCount)); fillCandidateIndex++) {}
                     }
-                    Ud = Uc;
+                    selectedStatusTargets = randomlyChosenStatusTargets;
                   }
                 } else {
-                  Ud = null;
+                  selectedStatusTargets = null;
                 }
-                if (Ud && 0 !== Ud.length) {
-                  var xe,
-                    Wd,
+                if (selectedStatusTargets && 0 !== selectedStatusTargets.length) {
+                  var statusTargetIndex,
+                    statusTarget,
                     spellAction,
-                    lg,
-                    mg,
-                    Af = vf.projectileEffectName,
-                    ng = vf.impactEffectName,
-                    Lh = a.position.levelPosition;
-                  for (xe = 0; xe < Ud.length; xe++) {
-                    if (Wd = Ud[xe], 4 !== Wd.characterType || 1 !== te && 0 !== te) {
+                    statusTargetPosition,
+                    statusProjectileVisual,
+                    statusProjectileEffectName = statusSpellDefinition.projectileEffectName,
+                    statusImpactEffectName = statusSpellDefinition.impactEffectName,
+                    statusCasterPosition = character.position.levelPosition;
+                  for (statusTargetIndex = 0; statusTargetIndex < selectedStatusTargets.length; statusTargetIndex++) {
+                    if (statusTarget = selectedStatusTargets[statusTargetIndex], 4 !== statusTarget.characterType || 1 !== statusSpellEffectTypeId && 0 !== statusSpellEffectTypeId) {
                       spellAction = new CombatAction();
-                      spellAction.attacker = a;
-                      (/** @type {TargetedCombatAction} */ (spellAction)).setTargetCharacter(Wd);
-                      spellAction.actionDefinition = vf;
+                      spellAction.attacker = character;
+                      (/** @type {TargetedCombatAction} */ (spellAction)).setTargetCharacter(statusTarget);
+                      spellAction.actionDefinition = statusSpellDefinition;
                       spellAction.hasProjectilePhase = true;
-                      lg = Wd.position.levelPosition;
-                      if (Af) {
-                        mg = new VisualEffect(Af, Lh, lg, true, 1);
-                        mg.boundCharacter = a;
-                        spellAction.projectileEffect = mg;
+                      statusTargetPosition = statusTarget.position.levelPosition;
+                      if (statusProjectileEffectName) {
+                        statusProjectileVisual = new VisualEffect(statusProjectileEffectName, statusCasterPosition, statusTargetPosition, true, 1);
+                        statusProjectileVisual.boundCharacter = character;
+                        spellAction.projectileEffect = statusProjectileVisual;
                       }
-                      if (ng) {
-                        var ul = new VisualEffect(ng, Lh, lg, false, 1);
-                        spellAction.impactEffect = ul;
+                      if (statusImpactEffectName) {
+                        var statusImpactVisual = new VisualEffect(statusImpactEffectName, statusCasterPosition, statusTargetPosition, false, 1);
+                        spellAction.impactEffect = statusImpactVisual;
                       }
                       enqueueCombatAction(game.combatQueue, spellAction);
                     } else {
-                      showFloatingText(game.floatingText, Wd, "免疫!", "white");
+                      showFloatingText(game.floatingText, statusTarget, "免疫!", "white");
                     }
                   }
-                  var Bf = a.stats,
-                    Mh = getSpellSpiritCost(Bf);
-                  spendSpirit(Bf, Mh);
+                  var statusCasterStats = character.stats,
+                    statusSpiritCost = getSpellSpiritCost(statusCasterStats);
+                  spendSpirit(statusCasterStats, statusSpiritCost);
                 }
               }
             }
           }
-          if (isAdventurerOrMinion(a)) {
+          if (isAdventurerOrMinion(character)) {
             game.state.statisticsRecorder.recordSpellCast();
           }
         }
-      } else if (5 === a.actionType) {
-        if (a.targetGoldDrop && !a.targetGoldDrop.collected) {
-          var Pe = a.targetGoldDrop.goldAmount,
-            gj = game.floatingText;
-          if (0 < Pe) {
-            showFloatingText(gj, a, Pe + "黄金", "yellow");
+      } else if (5 === character.actionType) {
+        if (character.targetGoldDrop && !character.targetGoldDrop.collected) {
+          var collectedGoldAmount = character.targetGoldDrop.goldAmount,
+            floatingTextLayer = game.floatingText;
+          if (0 < collectedGoldAmount) {
+            showFloatingText(floatingTextLayer, character, collectedGoldAmount + "黄金", "yellow");
           }
-          addGold(a.targetGoldDrop.goldAmount);
-          game.state.statisticsRecorder.recordGoldFromMonsters(a.targetGoldDrop.goldAmount);
-          a.targetGoldDrop.setCollected(true);
-          removeGoldDrop(a.targetGoldDrop);
-          a.targetGoldDrop = null;
+          addGold(character.targetGoldDrop.goldAmount);
+          game.state.statisticsRecorder.recordGoldFromMonsters(character.targetGoldDrop.goldAmount);
+          character.targetGoldDrop.setCollected(true);
+          removeGoldDrop(character.targetGoldDrop);
+          character.targetGoldDrop = null;
           awardAdventurePoints(9);
         }
-      } else if (7 === a.actionType) {
-        if (a.targetScrollDrop && !a.targetScrollDrop.collected) {
-          showFloatingText(game.floatingText, a, "卷轴!", "white");
-          addScrollCharge(a.targetScrollDrop.getScroll());
-          a.targetScrollDrop.setCollected(true);
-          removeScrollDrop(a.targetScrollDrop);
-          a.targetScrollDrop = null;
+      } else if (7 === character.actionType) {
+        if (character.targetScrollDrop && !character.targetScrollDrop.collected) {
+          showFloatingText(game.floatingText, character, "卷轴!", "white");
+          addScrollCharge(character.targetScrollDrop.getScroll());
+          character.targetScrollDrop.setCollected(true);
+          removeScrollDrop(character.targetScrollDrop);
+          character.targetScrollDrop = null;
           awardAdventurePoints(10);
         }
-      } else if (8 === a.actionType) {
-        if (a.targetPotionDrop && !a.targetPotionDrop.collected) {
-          showFloatingText(game.floatingText, a, "药剂!", "white");
-          a.targetPotionDrop.setCollected(true);
-          removePotionDrop(a.targetPotionDrop, game.potionDrops);
-          addPotion(a.targetPotionDrop.potion, game.potions);
-          a.targetScrollDrop = null;
+      } else if (8 === character.actionType) {
+        if (character.targetPotionDrop && !character.targetPotionDrop.collected) {
+          showFloatingText(game.floatingText, character, "药剂!", "white");
+          character.targetPotionDrop.setCollected(true);
+          removePotionDrop(character.targetPotionDrop, game.potionDrops);
+          addPotion(character.targetPotionDrop.potion, game.potions);
+          character.targetScrollDrop = null;
           awardAdventurePoints(11);
         }
-      } else if (6 === a.actionType) {
-        if (a.targetItemDrop && !a.targetItemDrop.collected) {
-          a.targetItemDrop.setCollected(true);
-          removeItemDrop(a.targetItemDrop, game.itemDrops);
-          var Qe = a.targetItemDrop.getItem(),
-            Cf = Qe.getRarity();
-          addInventoryItem(Qe.inventory.inventory, Qe, game.inventories);
-          game.state.statisticsRecorder.recordItemFound(Qe);
+      } else if (6 === character.actionType) {
+        if (character.targetItemDrop && !character.targetItemDrop.collected) {
+          character.targetItemDrop.setCollected(true);
+          removeItemDrop(character.targetItemDrop, game.itemDrops);
+          var droppedItem = character.targetItemDrop.getItem(),
+            droppedItemRarity = droppedItem.getRarity();
+          addInventoryItem(droppedItem.inventory.inventory, droppedItem, game.inventories);
+          game.state.statisticsRecorder.recordItemFound(droppedItem);
           awardAdventurePoints(12);
-          if (0 != Cf) {
-            switch (Cf) {
+          if (0 != droppedItemRarity) {
+            switch (droppedItemRarity) {
               case 1:
                 awardAdventurePoints(13);
                 break;
@@ -1048,84 +1048,84 @@ export function updateCharacter(a, b) {
                 awardAdventurePoints(16);
             }
           }
-          a.targetItemDrop = null;
+          character.targetItemDrop = null;
         }
-      } else if (12 === a.actionType) {
-        if (a.targetTreasureChest && !a.targetTreasureChest.opened) {
-          var Xd = a.targetTreasureChest,
-            Oc,
-            Yd = Xd.room,
-            Re = roomLeftPixels(Yd) + game.tileSize,
-            Zd = roomRightPixels(Yd) - game.tileSize,
-            Vc = roomTopPixels(Yd) + game.tileSize,
-            Od = roomBottomPixels(Yd) - game.tileSize,
-            wc = Xd.levelX,
-            zd = Xd.levelY,
-            Ad = Xd.kind;
-          if (wc < Re) {
-            wc = Re;
+      } else if (12 === character.actionType) {
+        if (character.targetTreasureChest && !character.targetTreasureChest.opened) {
+          var targetChest = character.targetTreasureChest,
+            chestLootIndex,
+            chestRoom = targetChest.room,
+            chestSpawnMinX = roomLeftPixels(chestRoom) + game.tileSize,
+            chestSpawnMaxX = roomRightPixels(chestRoom) - game.tileSize,
+            chestSpawnMinY = roomTopPixels(chestRoom) + game.tileSize,
+            chestSpawnMaxY = roomBottomPixels(chestRoom) - game.tileSize,
+            chestSpawnX = targetChest.levelX,
+            chestSpawnY = targetChest.levelY,
+            chestKind = targetChest.kind;
+          if (chestSpawnX < chestSpawnMinX) {
+            chestSpawnX = chestSpawnMinX;
           } else {
-            if (wc > Zd) {
-              wc = Zd;
+            if (chestSpawnX > chestSpawnMaxX) {
+              chestSpawnX = chestSpawnMaxX;
             }
           }
-          if (zd < Vc) {
-            zd = Vc;
+          if (chestSpawnY < chestSpawnMinY) {
+            chestSpawnY = chestSpawnMinY;
           } else {
-            if (zd > Od) {
-              zd = Od;
+            if (chestSpawnY > chestSpawnMaxY) {
+              chestSpawnY = chestSpawnMaxY;
             }
           }
-          setChestOpened(Xd, true);
-          if (1 === Ad) {
-            var Nh = 10 + randomInt(10),
-              hj;
-            for (Oc = 0; Oc < Nh; Oc++) {
-              hj = 1 + rollGoldDrop();
-              var vl = new GoldDrop(hj, tickCharacterTurn(wc, Re, Zd), tickCharacterTurn(zd, Vc, Od), Yd);
-              game.goldDrops.drops.push(vl);
+          setChestOpened(targetChest, true);
+          if (1 === chestKind) {
+            var goldDropCount = 10 + randomInt(10),
+              rolledGoldAmount;
+            for (chestLootIndex = 0; chestLootIndex < goldDropCount; chestLootIndex++) {
+              rolledGoldAmount = 1 + rollGoldDrop();
+              var spawnedGoldDrop = new GoldDrop(rolledGoldAmount, tickCharacterTurn(chestSpawnX, chestSpawnMinX, chestSpawnMaxX), tickCharacterTurn(chestSpawnY, chestSpawnMinY, chestSpawnMaxY), chestRoom);
+              game.goldDrops.drops.push(spawnedGoldDrop);
             }
           }
-          if (1 === Ad || 2 === Ad) {
-            var og = 7 + randomInt(8);
-            for (Oc = 0; Oc < og; Oc++) {
-              var ij = game.itemDrops,
-                Df = tickCharacterTurn(wc, Re, Zd),
-                Oh = tickCharacterTurn(zd, Vc, Od),
-                wA = Yd,
-                Np,
-                Op = game.itemGenerator,
-                wl = game.state.adventurers[randomInt(game.state.adventurers.length)],
-                Pp = wl.slotList,
-                xA = Pp[randomInt(Pp.length)],
-                zA = (100 - Math.min(90, globalUpgradeDefinitions.itemQualityChance.currentValue + CHEST_ITEM_QUALITY_BONUS)) / 100,
-                AA = Op.rollRarity(zA),
-                CA = (100 - Math.min(90, globalUpgradeDefinitions.higherLevelItemChance.currentValue + CHEST_ITEM_LEVEL_BONUS)) / 100,
-                DA = randomizeItemLevel(wl.stats.characterLevel, CA, game.itemGenerator.rules);
-              if (Np = generateItem(Op, xA, wl, DA, AA)) {
-                ij.drops.push(new ItemDrop(Np, Df, Oh, wA));
+          if (1 === chestKind || 2 === chestKind) {
+            var itemDropCount = 7 + randomInt(8);
+            for (chestLootIndex = 0; chestLootIndex < itemDropCount; chestLootIndex++) {
+              var itemDropRegistry = game.itemDrops,
+                itemDropX = tickCharacterTurn(chestSpawnX, chestSpawnMinX, chestSpawnMaxX),
+                itemDropY = tickCharacterTurn(chestSpawnY, chestSpawnMinY, chestSpawnMaxY),
+                itemDropRoom = chestRoom,
+                generatedItem,
+                itemGenerator = game.itemGenerator,
+                randomAdventurer = game.state.adventurers[randomInt(game.state.adventurers.length)],
+                randomAdventurerSlotList = randomAdventurer.slotList,
+                randomItemSlot = randomAdventurerSlotList[randomInt(randomAdventurerSlotList.length)],
+                chestRarityChanceScale = (100 - Math.min(90, globalUpgradeDefinitions.itemQualityChance.currentValue + CHEST_ITEM_QUALITY_BONUS)) / 100,
+                chestRolledRarity = itemGenerator.rollRarity(chestRarityChanceScale),
+                chestItemLevelChanceScale = (100 - Math.min(90, globalUpgradeDefinitions.higherLevelItemChance.currentValue + CHEST_ITEM_LEVEL_BONUS)) / 100,
+                chestRolledItemLevel = randomizeItemLevel(randomAdventurer.stats.characterLevel, chestItemLevelChanceScale, game.itemGenerator.rules);
+              if (generatedItem = generateItem(itemGenerator, randomItemSlot, randomAdventurer, chestRolledItemLevel, chestRolledRarity)) {
+                itemDropRegistry.drops.push(new ItemDrop(generatedItem, itemDropX, itemDropY, itemDropRoom));
               }
             }
           }
-          if (1 === Ad || 3 === Ad) {
-            var EA = 2 + randomInt(5);
-            for (Oc = 0; Oc < EA; Oc++) {
-              var Qp = game.scrolls.unlockedScrolls,
-                FA = Qp[randomInt(Qp.length)],
-                GA = new ScrollDrop(FA, tickCharacterTurn(wc, Re, Zd), tickCharacterTurn(zd, Vc, Od), Yd);
-              game.scrollDrops.drops.push(GA);
+          if (1 === chestKind || 3 === chestKind) {
+            var scrollDropCount = 2 + randomInt(5);
+            for (chestLootIndex = 0; chestLootIndex < scrollDropCount; chestLootIndex++) {
+              var unlockedScrolls = game.scrolls.unlockedScrolls,
+                randomScroll = unlockedScrolls[randomInt(unlockedScrolls.length)],
+                spawnedScrollDrop = new ScrollDrop(randomScroll, tickCharacterTurn(chestSpawnX, chestSpawnMinX, chestSpawnMaxX), tickCharacterTurn(chestSpawnY, chestSpawnMinY, chestSpawnMaxY), chestRoom);
+              game.scrollDrops.drops.push(spawnedScrollDrop);
             }
           }
-          if (1 === Ad) {
-            var HA = 0 + randomInt(2);
-            for (Oc = 0; Oc < HA && game.potions.potionList.length < BASE_POTION_CAPACITY + potionCapacityBonus.currentValue; Oc++) {
-              var IA = new Potion(potionDefinitions[randomInt(potionDefinitions.length)], game.itemSprites),
-                JA = new PotionDrop(IA, tickCharacterTurn(wc, Re, Zd), tickCharacterTurn(zd, Vc, Od), Yd);
-              game.potionDrops.drops.push(JA);
+          if (1 === chestKind) {
+            var potionDropCount = 0 + randomInt(2);
+            for (chestLootIndex = 0; chestLootIndex < potionDropCount && game.potions.potionList.length < BASE_POTION_CAPACITY + potionCapacityBonus.currentValue; chestLootIndex++) {
+              var spawnedPotion = new Potion(potionDefinitions[randomInt(potionDefinitions.length)], game.itemSprites),
+                spawnedPotionDrop = new PotionDrop(spawnedPotion, tickCharacterTurn(chestSpawnX, chestSpawnMinX, chestSpawnMaxX), tickCharacterTurn(chestSpawnY, chestSpawnMinY, chestSpawnMaxY), chestRoom);
+              game.potionDrops.drops.push(spawnedPotionDrop);
             }
           }
-          showFloatingText(game.floatingText, a, "搜索!!!", "#FFF");
-          switch (Ad) {
+          showFloatingText(game.floatingText, character, "搜索!!!", "#FFF");
+          switch (chestKind) {
             case 1:
               game.state.statisticsRecorder.recordTreasureChestLooted();
               awardAdventurePoints(6);
@@ -1139,106 +1139,106 @@ export function updateCharacter(a, b) {
               awardAdventurePoints(8);
           }
           recordGameEvent("Treasure Chest", "Looted");
-          a.targetTreasureChest = null;
+          character.targetTreasureChest = null;
         }
-      } else if (9 === a.actionType) {
+      } else if (9 === character.actionType) {
         if (game.state.party.targetDungeon) {
-          var Ef = game.state.party;
-          if (Ef.targetDungeon && !Ef.targetDungeon.isFarm) {
-            Ef.destinationRoom = null;
-            Ef.targetDoor = null;
-            Ef.targetRoom = null;
-            Ef.targetTreasureChest = null;
-            var ye = Ef.targetDungeon;
-            game.currentDungeon = ye;
-            ye.currentLevelIndex = 0;
-            generateDungeonLevel(ye.levelSeed(), ye.dungeonType, ye.hasSecondEntrance, true);
+          var partyEnteringDungeon = game.state.party;
+          if (partyEnteringDungeon.targetDungeon && !partyEnteringDungeon.targetDungeon.isFarm) {
+            partyEnteringDungeon.destinationRoom = null;
+            partyEnteringDungeon.targetDoor = null;
+            partyEnteringDungeon.targetRoom = null;
+            partyEnteringDungeon.targetTreasureChest = null;
+            var targetDungeon = partyEnteringDungeon.targetDungeon;
+            game.currentDungeon = targetDungeon;
+            targetDungeon.currentLevelIndex = 0;
+            generateDungeonLevel(targetDungeon.levelSeed(), targetDungeon.dungeonType, targetDungeon.hasSecondEntrance, true);
             game.worldActive = false;
-            if (ye.discovered) {
+            if (targetDungeon.discovered) {
               recordGameEvent("Dungeon", "Entering Dungeon Again");
             } else {
-              ye.discovered = true;
-              ye.farmCost = scaleByLevel(game.dungeons.discoveredDungeonCount + 1, dungeonPriceCurve, 1);
-              discoverDungeon(ye);
+              targetDungeon.discovered = true;
+              targetDungeon.farmCost = scaleByLevel(game.dungeons.discoveredDungeonCount + 1, dungeonPriceCurve, 1);
+              discoverDungeon(targetDungeon);
               recordGameEvent("Dungeon", "Discovered Dungeon");
             }
           }
         }
-      } else if (11 === a.actionType) {
+      } else if (11 === character.actionType) {
         if (game.state.party.activeCastle) {
-          var Se = game.state.party;
-          if (Se.activeCastle) {
-            if (Se.activeCastle.conquered) {
-              Se.activeCastle = null;
+          var partyEnteringCastle = game.state.party;
+          if (partyEnteringCastle.activeCastle) {
+            if (partyEnteringCastle.activeCastle.conquered) {
+              partyEnteringCastle.activeCastle = null;
             } else {
-              Se.destinationRoom = null;
-              Se.targetDoor = null;
-              Se.targetRoom = null;
-              Se.targetTreasureChest = null;
-              var xl = Se.activeCastle;
-              game.currentCastle = xl;
-              generateDungeonLevel(xl.levelSeed(), 11, false, true);
+              partyEnteringCastle.destinationRoom = null;
+              partyEnteringCastle.targetDoor = null;
+              partyEnteringCastle.targetRoom = null;
+              partyEnteringCastle.targetTreasureChest = null;
+              var targetCastle = partyEnteringCastle.activeCastle;
+              game.currentCastle = targetCastle;
+              generateDungeonLevel(targetCastle.levelSeed(), 11, false, true);
               game.worldActive = false;
-              recordGameEvent("Castle", "正在进入城堡:" + xl.castleName);
+              recordGameEvent("Castle", "正在进入城堡:" + targetCastle.castleName);
             }
           }
         }
-      } else if (10 === a.actionType && game.state.party.targetShop) {
-        var Rp = game.state.party;
-        if (Rp.targetShop) {
-          var jj;
-          for (jj = 0; jj < game.state.adventurers.length; jj++) {
-            var yl = game.state.adventurers[jj],
-              Sp = yl.inventory,
-              zl = Sp.items;
-            if (0 !== zl.length) {
-              for (var kj = undefined, Tp = 0, Up = undefined, Al = 0, LA = 0.1 + equipmentQualityBonus.currentValue, Ph = zl.length - 1; 0 <= Ph; Ph--) {
-                kj = zl[Ph];
-                if ((Up = yl.getSlotItem(kj.slot)) && !isBetterItem(kj, Up)) {
-                  Al += kj.itemGold * LA;
-                  Tp++;
+      } else if (10 === character.actionType && game.state.party.targetShop) {
+        var partyAtShop = game.state.party;
+        if (partyAtShop.targetShop) {
+          var shopAdventurerIndex;
+          for (shopAdventurerIndex = 0; shopAdventurerIndex < game.state.adventurers.length; shopAdventurerIndex++) {
+            var shopAdventurer = game.state.adventurers[shopAdventurerIndex],
+              shopAdventurerInventory = shopAdventurer.inventory,
+              shopInventoryItems = shopAdventurerInventory.items;
+            if (0 !== shopInventoryItems.length) {
+              for (var inventoryItemToSell = undefined, soldItemCount = 0, equippedItemForSlot = undefined, soldItemGoldTotal = 0, goldRecoveryRate = 0.1 + equipmentQualityBonus.currentValue, inventorySellIndex = shopInventoryItems.length - 1; 0 <= inventorySellIndex; inventorySellIndex--) {
+                inventoryItemToSell = shopInventoryItems[inventorySellIndex];
+                if ((equippedItemForSlot = shopAdventurer.getSlotItem(inventoryItemToSell.slot)) && !isBetterItem(inventoryItemToSell, equippedItemForSlot)) {
+                  soldItemGoldTotal += inventoryItemToSell.itemGold * goldRecoveryRate;
+                  soldItemCount++;
                   awardAdventurePoints(17);
-                  removeInventoryItemAt(Sp, Ph);
+                  removeInventoryItemAt(shopAdventurerInventory, inventorySellIndex);
                 }
               }
-              game.state.statisticsRecorder.recordItemsSold(Tp);
-              showFloatingText(game.floatingText, yl, "黄金!", "yellow");
-              var Vp = game.shops;
-              Vp.collectedGold += floorNumber(Al);
+              game.state.statisticsRecorder.recordItemsSold(soldItemCount);
+              showFloatingText(game.floatingText, shopAdventurer, "黄金!", "yellow");
+              var shopRegistry = game.shops;
+              shopRegistry.collectedGold += floorNumber(soldItemGoldTotal);
             }
           }
           recordGameEvent("Shop", "卖出所有道具");
-          Rp.targetShop = null;
+          partyAtShop.targetShop = null;
         }
       }
-      a.actionType = IDLE_ACTION;
+      character.actionType = IDLE_ACTION;
     }
   }
 }
 export function initializeCharactersCharacter() {
-  Character.prototype.getSlotItem = function (a) {
-    return this.equipment ? (/** @type {SlotEquipment} */ (this.equipment)).getSlotItem(a) : null;
+  Character.prototype.getSlotItem = function (slot) {
+    return this.equipment ? (/** @type {SlotEquipment} */ (this.equipment)).getSlotItem(slot) : null;
   };
   Character.prototype.getEffectItem = function () {
     return this.equipment ? (/** @type {SlotEquipment} */ (this.equipment)).getEffectItem() : null;
   };
-  Character.prototype.equipItem = function (a) {
-    equipItem(this, a);
+  Character.prototype.equipItem = function (item) {
+    equipItem(this, item);
     if (this.characterType === ADVENTURER_TYPE) {
       awardAdventurePoints(21);
     }
   };
-  Character.prototype.setMonsterType = function (a) {
-    this.monsterType = a;
+  Character.prototype.setMonsterType = function (monsterType) {
+    this.monsterType = monsterType;
   };
   Character.prototype.getSprite = function () {
     return this.sprite;
   };
-  Character.prototype.setCombatTarget = function (a) {
-    this.combatTarget = a;
+  Character.prototype.setCombatTarget = function (targetCharacter) {
+    this.combatTarget = targetCharacter;
   };
-  Character.prototype.setTargetTreasureChest = function (a) {
-    this.targetTreasureChest = a;
+  Character.prototype.setTargetTreasureChest = function (treasureChest) {
+    this.targetTreasureChest = treasureChest;
   };
   Character.prototype.updateBehaviors = function () {
     if (this.behaviors && !this.isDead) {

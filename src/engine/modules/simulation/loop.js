@@ -23,9 +23,9 @@ export function GameLoop() {
   this.lastFrameAt = nowMilliseconds();
   this.frameDuration = 1E3 / 60;
   this.turnDuration = 250;
-  var a = this;
+  var self = this;
   this.requestTick = function () {
-    (/** @type {GameLoop & { tick: () => void }} */ (/** @type {unknown} */ (a))).tick();
+    (/** @type {GameLoop & { tick: () => void }} */ (/** @type {unknown} */ (self))).tick();
   };
   this.fpsElapsed = this.fpsFrameCount = 0;
 }
@@ -34,52 +34,53 @@ export function initializeSimulationLoop() {
     if (this.resourcesReady) {
       if (game.initialized) {
         var a = nowMilliseconds(),
-          b = a - this.lastFrameAt,
+          frameDeltaMs = a - this.lastFrameAt,
           a = Math.max(0, a - this.lastTickAt),
-          c;
+          offlineTurnCount;
         this.lastFrameAt = nowMilliseconds();
         if (game.partyCreated && !game.gameWon && !game.paused) {
           if (1E3 < a && game.options.allowBackgroundProgress && (game.processingOffline || (game.processingOffline = true, game.offlineProcessed = 0, game.offlineDuration = 0, game.view.onOfflineStart()), game.offlineDuration += a), game.processingOffline) {
-            for (c = 0; 200 > c && game.offlineProcessed < game.offlineDuration && !game.gameWon && game.processingOffline;) {
+            for (offlineTurnCount = 0; 200 > offlineTurnCount && game.offlineProcessed < game.offlineDuration && !game.gameWon && game.processingOffline;) {
               advanceSimulation(15);
               game.offlineProcessed += this.turnDuration;
               game.state.statisticsRecorder.recordPlayedMilliseconds(this.turnDuration);
-              c++;
+              offlineTurnCount++;
             }
             if (game.offlineProcessed >= game.offlineDuration) {
               game.finishOfflineProgress();
             }
           } else {
-            c = a / this.frameDuration;
-            if (0 < c) {
-              advanceSimulation(c);
+            var frameSimulationUnits = a / this.frameDuration;
+            if (0 < frameSimulationUnits) {
+              advanceSimulation(frameSimulationUnits);
             }
-            c = game.camera;
-            var d, f, g, h;
+            var camera = game.camera;
+            var centerX, centerY, centerRemainderX, centerRemainderY;
             if (game.worldActive) {
-              d = game.world.worldCenterX;
-              f = game.world.worldCenterY;
+              centerX = game.world.worldCenterX;
+              centerY = game.world.worldCenterY;
             } else {
-              d = game.level.centerX;
-              f = game.level.centerY;
+              centerX = game.level.centerX;
+              centerY = game.level.centerY;
             }
-            g = Math.round(d % game.tileSize);
-            h = Math.round(f % game.tileSize);
-            c.viewportOffsetX = g - h;
-            c.viewportOffsetY = Math.round((g + h) / 2);
-            c.tileColumn = d / game.tileSize | 0;
-            c.tileRow = f / game.tileSize | 0;
+            centerRemainderX = Math.round(centerX % game.tileSize);
+            centerRemainderY = Math.round(centerY % game.tileSize);
+            camera.viewportOffsetX = centerRemainderX - centerRemainderY;
+            camera.viewportOffsetY = Math.round((centerRemainderX + centerRemainderY) / 2);
+            camera.tileColumn = centerX / game.tileSize | 0;
+            camera.tileRowTYPO = centerY / game.tileSize | 0;
+            camera.tileRow = centerY / game.tileSize | 0;
           }
         }
         if (game.renderEnabled) {
           try {
             game.view.render();
-          } catch (l) {
-            console.log("Caught error. name: " + l.name + " message: " + l.message + " exception: " + l);
+          } catch (renderError) {
+            console.log("Caught error. name: " + renderError.name + " message: " + renderError.message + " exception: " + renderError);
           }
         }
         this.fpsFrameCount++;
-        this.fpsElapsed += b;
+        this.fpsElapsed += frameDeltaMs;
         if (60 <= this.fpsFrameCount) {
           game.state.fps = this.fpsFrameCount / (this.fpsElapsed / 1E3) | 0;
           this.fpsElapsed = this.fpsFrameCount = 0;

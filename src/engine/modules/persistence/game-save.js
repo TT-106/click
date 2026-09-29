@@ -24,590 +24,590 @@ import { getMonsterTypesForLevel } from "../combat/encounters.js";
 import saveCodec from "../../save-codec.js";
 import { persistence } from "../runtime/storage-port.js";
 export function deleteStoredSave() {
-  var a = game.saves;
+  var saveManager = game.saves;
   persistence.remove();
-  a.lastSavedAt = nowMilliseconds();
+  saveManager.lastSavedAt = nowMilliseconds();
   recordGameEvent("SaveManager", "Delete");
 }
-export function saveProgress(a) {
-  var b = serializeGame(a);
-  if (b) {
-    persistence.write(b);
-    a.lastSavedAt = nowMilliseconds();
+export function saveProgress(saveManager) {
+  var compressedSave = serializeGame(saveManager);
+  if (compressedSave) {
+    persistence.write(compressedSave);
+    saveManager.lastSavedAt = nowMilliseconds();
   }
 }
-export function restoreGameState(a, b) {
-  if (b) {
-    var c = saveCodec.decompress(b);
-    if (c) {
-      /** 存档 DTO 的**恢复侧**类型接入：d 上每个被读的键都必须存在于 SaveData，
+export function restoreGameState(saveManager, compressedSave) {
+  if (compressedSave) {
+    var saveJsonText = saveCodec.decompress(compressedSave);
+    if (saveJsonText) {
+      /** 存档 DTO 的**恢复侧**类型接入：saveData 上每个被读的键都必须存在于 SaveData，
        *  读错键（改名时漏改映射行）会由 `npm run typecheck` 直接报出来。
        *  注意：这里只标已初始化形态——空白档只有 4 个键，而 `if (game.initialized)`
        *  分支保证了其余键只在已开局时才被读；**空白档形态本身由
        *  scripts/audit-save-schema.mjs 机械比对**（四种形态的键集逐一核对），
        *  不靠这条注解假装覆盖。
        *  @type {SaveData} */
-      var d = JSON.parse(c);
-      if (d) {
+      var saveData = JSON.parse(saveJsonText);
+      if (saveData) {
         game.resetRun(true);
-        game.initialized = d.gameInitialized;
+        game.initialized = saveData.gameInitialized;
         if (game.initialized) {
-          game.worldActive = d.worldActive;
-          game.partyCreated = d.partyCreated;
-          game.gameWon = d.gameWon;
-          var f = d.gameTimestamp;
-          game.lastActiveAt = f ? f : Date.now();
-          var g = d.turnNumber,
-            h = d.frameNumber,
-            l = d.victoryCount;
-          game.state.turnNumber = g ? g : 0;
-          game.state.frameNumber = h ? h : 0;
-          game.state.victoryCount = l ? l : 0;
-          var n = d.statistics,
-            p = d.totalStatistics,
-            s = d.world,
-            u = s.worldCenterX,
-            y = s.worldCenterY,
-            A = s.blockShiftRow,
-            C = game.world;
-          C.blockOriginColumn = s.blockShiftCol;
-          C.blockOriginRow = A;
-          C.worldBlocks = createWorldBlocks(C);
-          refreshWorldBlocks(C);
-          C.worldCenterX = u;
-          C.worldCenterY = y;
-          C.hasPartyPlaced = true;
-          var v = d.dungeonManagerState,
-            D = v.farmedKills,
-            N = v.dungeonCostLevel,
-            I = v.dungeonStates;
-          if (I) {
+          game.worldActive = saveData.worldActive;
+          game.partyCreated = saveData.partyCreated;
+          game.gameWon = saveData.gameWon;
+          var savedGameTimestamp = saveData.gameTimestamp;
+          game.lastActiveAt = savedGameTimestamp ? savedGameTimestamp : Date.now();
+          var savedTurnNumber = saveData.turnNumber,
+            savedFrameNumber = saveData.frameNumber,
+            savedVictoryCount = saveData.victoryCount;
+          game.state.turnNumber = savedTurnNumber ? savedTurnNumber : 0;
+          game.state.frameNumber = savedFrameNumber ? savedFrameNumber : 0;
+          game.state.victoryCount = savedVictoryCount ? savedVictoryCount : 0;
+          var savedStatistics = saveData.statistics,
+            savedTotalStatistics = saveData.totalStatistics,
+            worldDto = saveData.world,
+            worldCenterX = worldDto.worldCenterX,
+            worldCenterY = worldDto.worldCenterY,
+            blockShiftRow = worldDto.blockShiftRow,
+            worldMap = game.world;
+          worldMap.blockOriginColumn = worldDto.blockShiftCol;
+          worldMap.blockOriginRow = blockShiftRow;
+          worldMap.worldBlocks = createWorldBlocks(worldMap);
+          refreshWorldBlocks(worldMap);
+          worldMap.worldCenterX = worldCenterX;
+          worldMap.worldCenterY = worldCenterY;
+          worldMap.hasPartyPlaced = true;
+          var dungeonManagerDto = saveData.dungeonManagerState,
+            savedFarmedKills = dungeonManagerDto.farmedKills,
+            savedDungeonCostLevel = dungeonManagerDto.dungeonCostLevel,
+            dungeonStates = dungeonManagerDto.dungeonStates;
+          if (dungeonStates) {
             game.dungeons.sortingEnabled = false;
-            var x;
-            for (x = 0; x < I.length; x++) {
-              var z = I[x];
-              if (z) {
-                var O = z.dungeonId,
-                  J = z.discovered,
-                  la = z.cleared,
-                  Q = z.conquered,
-                  V = z.clearedTurn,
-                  na = z.dungeonFarm,
-                  K = z.farmStartTurn,
-                  H = z.dungeonFarmCost,
-                  S = z.dungeonType,
-                  da = z.levelCount;
-                if (O) {
-                  var W = game.dungeons.dungeonRegistry[O];
-                  if (W) {
-                    W.cleared = la ? true : false;
-                    W.clearedTurn = V ? V : 0;
-                    W.discovered = J ? true : false;
-                    W.isFarm = na ? true : false;
-                    W.setConquered(Q ? true : false);
-                    W.farmStartTurn = K ? K : 0;
-                    W.farmCost = H;
-                    var ia = S ? S : 0;
-                    W.dungeonType = ia;
-                    W.hasSecondEntrance = !(4 === ia || 5 === ia || 7 === ia || 8 === ia);
-                    W.mapSprite = getDungeonMapSprite(ia);
-                    W.levelCount = da;
-                    if (J) {
-                      discoverDungeon(W);
-                      if (na) {
-                        registerDungeonFarm(W);
+            var dungeonStateIndex;
+            for (dungeonStateIndex = 0; dungeonStateIndex < dungeonStates.length; dungeonStateIndex++) {
+              var dungeonStateDto = dungeonStates[dungeonStateIndex];
+              if (dungeonStateDto) {
+                var dungeonId = dungeonStateDto.dungeonId,
+                  discovered = dungeonStateDto.discovered,
+                  cleared = dungeonStateDto.cleared,
+                  conquered = dungeonStateDto.conquered,
+                  clearedTurn = dungeonStateDto.clearedTurn,
+                  dungeonFarm = dungeonStateDto.dungeonFarm,
+                  farmStartTurn = dungeonStateDto.farmStartTurn,
+                  dungeonFarmCost = dungeonStateDto.dungeonFarmCost,
+                  dungeonType = dungeonStateDto.dungeonType,
+                  levelCount = dungeonStateDto.levelCount;
+                if (dungeonId) {
+                  var dungeon = game.dungeons.dungeonRegistry[dungeonId];
+                  if (dungeon) {
+                    dungeon.cleared = cleared ? true : false;
+                    dungeon.clearedTurn = clearedTurn ? clearedTurn : 0;
+                    dungeon.discovered = discovered ? true : false;
+                    dungeon.isFarm = dungeonFarm ? true : false;
+                    dungeon.setConquered(conquered ? true : false);
+                    dungeon.farmStartTurn = farmStartTurn ? farmStartTurn : 0;
+                    dungeon.farmCost = dungeonFarmCost;
+                    var normalizedDungeonType = dungeonType ? dungeonType : 0;
+                    dungeon.dungeonType = normalizedDungeonType;
+                    dungeon.hasSecondEntrance = !(4 === normalizedDungeonType || 5 === normalizedDungeonType || 7 === normalizedDungeonType || 8 === normalizedDungeonType);
+                    dungeon.mapSprite = getDungeonMapSprite(normalizedDungeonType);
+                    dungeon.levelCount = levelCount;
+                    if (discovered) {
+                      discoverDungeon(dungeon);
+                      if (dungeonFarm) {
+                        registerDungeonFarm(dungeon);
                       } else {
-                        if (la) {
-                          game.dungeons.registerClearedDungeon(W);
+                        if (cleared) {
+                          game.dungeons.registerClearedDungeon(dungeon);
                         }
                       }
                     }
                   } else {
-                    console.log("Failed to load dungeon state for: " + O);
+                    console.log("Failed to load dungeon state for: " + dungeonId);
                   }
                 }
               }
             }
             game.dungeons.sortingEnabled = true;
-            var ea = game.dungeons;
-            if (ea.sortingEnabled) {
-              sortDungeons(ea, ea.discovered);
-              sortDungeons(ea, ea.attackable);
-              sortDungeons(ea, ea.cleared);
-              sortDungeons(ea, ea.farms);
-              sortDungeons(ea, ea.farmable);
+            var dungeons = game.dungeons;
+            if (dungeons.sortingEnabled) {
+              sortDungeons(dungeons, dungeons.discovered);
+              sortDungeons(dungeons, dungeons.attackable);
+              sortDungeons(dungeons, dungeons.cleared);
+              sortDungeons(dungeons, dungeons.farms);
+              sortDungeons(dungeons, dungeons.farmable);
             }
           }
-          game.dungeons.setFarmedKills(D ? D : 0);
-          game.dungeons.discoveredDungeonCount = N ? N : 0;
-          var va = d.currentDungeon;
-          if (va) {
-            var yb = va.dungeonId,
-              Fb = va.currentLevelIndex,
-              pa = game.dungeons.dungeonRegistry[yb];
-            if (pa) {
-              pa.currentLevelIndex = Fb;
-              game.currentDungeon = pa;
+          game.dungeons.setFarmedKills(savedFarmedKills ? savedFarmedKills : 0);
+          game.dungeons.discoveredDungeonCount = savedDungeonCostLevel ? savedDungeonCostLevel : 0;
+          var currentDungeonDto = saveData.currentDungeon;
+          if (currentDungeonDto) {
+            var currentDungeonId = currentDungeonDto.dungeonId,
+              savedCurrentLevelIndex = currentDungeonDto.currentLevelIndex,
+              currentDungeon = game.dungeons.dungeonRegistry[currentDungeonId];
+            if (currentDungeon) {
+              currentDungeon.currentLevelIndex = savedCurrentLevelIndex;
+              game.currentDungeon = currentDungeon;
             } else {
-              console.log("Failed to lookup dungeon by id: " + yb);
+              console.log("Failed to lookup dungeon by id: " + currentDungeonId);
               game.currentDungeon = null;
             }
           } else {
             game.currentDungeon = null;
           }
-          var T = d.castleManager;
-          if (T) {
-            var X = T.castleStates;
-            game.castles.nextRequiredMonsterLevel = T.nextRequiredMonsterLevel;
-            var Ca;
-            for (Ca = 0; Ca < X.length; Ca++) {
-              var qa = X[Ca];
-              if (qa) {
-                var ta = qa.castleId,
-                  eb = qa.conquered,
-                  Gb = qa.dungeonsConquered,
-                  Da = qa.castleRegionLocked,
-                  ub = qa.attackScheduled,
-                  mb = qa.requiredMonsterLevel;
-                if (ta) {
-                  var Ea = game.castles.castleRegistry[ta];
-                  if (Ea) {
-                    Ea.setConquered(eb ? true : false);
-                    Ea.dungeonsConquered = Gb ? true : false;
-                    Ea.regionLocked = Da ? true : false;
-                    Ea.attackScheduled = ub ? true : false;
+          var castleManagerDto = saveData.castleManager;
+          if (castleManagerDto) {
+            var castleStates = castleManagerDto.castleStates;
+            game.castles.nextRequiredMonsterLevel = castleManagerDto.nextRequiredMonsterLevel;
+            var castleStateIndex;
+            for (castleStateIndex = 0; castleStateIndex < castleStates.length; castleStateIndex++) {
+              var castleStateDto = castleStates[castleStateIndex];
+              if (castleStateDto) {
+                var castleId = castleStateDto.castleId,
+                  castleConquered = castleStateDto.conquered,
+                  castleDungeonsConquered = castleStateDto.dungeonsConquered,
+                  castleRegionLocked = castleStateDto.castleRegionLocked,
+                  castleAttackScheduled = castleStateDto.attackScheduled,
+                  castleRequiredMonsterLevel = castleStateDto.requiredMonsterLevel;
+                if (castleId) {
+                  var castle = game.castles.castleRegistry[castleId];
+                  if (castle) {
+                    castle.setConquered(castleConquered ? true : false);
+                    castle.dungeonsConquered = castleDungeonsConquered ? true : false;
+                    castle.regionLocked = castleRegionLocked ? true : false;
+                    castle.attackScheduled = castleAttackScheduled ? true : false;
                     invalidateCastleRevision();
-                    Ea.requiredMonsterLevel = mb ? mb : 0;
+                    castle.requiredMonsterLevel = castleRequiredMonsterLevel ? castleRequiredMonsterLevel : 0;
                   } else {
-                    console.log("Failed to load castle state for: " + ta);
+                    console.log("Failed to load castle state for: " + castleId);
                   }
                 }
               }
             }
-            var La = game.castles,
-              wa,
-              Fa;
-            for (wa = 0; wa < La.castleList.length; wa++) {
-              Fa = La.castleList[wa];
-              if (canAttackCastle(Fa)) {
-                La.attackableCastles.push(Fa);
+            var castles = game.castles,
+              castleIndex,
+              castleFromList;
+            for (castleIndex = 0; castleIndex < castles.castleList.length; castleIndex++) {
+              castleFromList = castles.castleList[castleIndex];
+              if (canAttackCastle(castleFromList)) {
+                castles.attackableCastles.push(castleFromList);
               }
-              if (Fa.attackScheduled && !Fa.conquered) {
-                La.scheduledCastles.push(Fa);
+              if (castleFromList.attackScheduled && !castleFromList.conquered) {
+                castles.scheduledCastles.push(castleFromList);
               }
-              refreshCastleConquest(Fa);
+              refreshCastleConquest(castleFromList);
             }
-            sortCastles(La, La.scheduledCastles);
-            sortCastles(La, La.attackableCastles);
-            var ha = game.dungeons,
-              ja;
-            for (ja = 0; ja < ha.dungeonList.length; ja++) {
-              refreshFarmableDungeons(ha, ha.dungeonList[ja]);
+            sortCastles(castles, castles.scheduledCastles);
+            sortCastles(castles, castles.attackableCastles);
+            var dungeonRegistry = game.dungeons,
+              dungeonListIndex;
+            for (dungeonListIndex = 0; dungeonListIndex < dungeonRegistry.dungeonList.length; dungeonListIndex++) {
+              refreshFarmableDungeons(dungeonRegistry, dungeonRegistry.dungeonList[dungeonListIndex]);
             }
           }
-          var Ga = d.currentCastle;
-          if (Ga) {
-            var bb = Ga.castleId,
-              za = game.castles.castleRegistry[bb];
-            if (za) {
-              game.currentCastle = za;
+          var currentCastleDto = saveData.currentCastle;
+          if (currentCastleDto) {
+            var currentCastleId = currentCastleDto.castleId,
+              currentCastle = game.castles.castleRegistry[currentCastleId];
+            if (currentCastle) {
+              game.currentCastle = currentCastle;
             } else {
-              console.log("Failed to lookup castle by id: " + bb);
+              console.log("Failed to lookup castle by id: " + currentCastleId);
               game.currentCastle = null;
             }
           } else {
             game.currentCastle = null;
           }
-          var nb = d.shopManager,
-            fb = 0;
-          if (nb) {
-            fb = nb.collectedGold;
+          var shopManagerDto = saveData.shopManager,
+            collectedGold = 0;
+          if (shopManagerDto) {
+            collectedGold = shopManagerDto.collectedGold;
           }
-          game.shops.collectedGold = fb ? fb : 0;
-          var cb = d.farms;
-          if (cb) {
-            var Ua;
-            for (Ua = 0; Ua < cb.length; Ua++) {
-              var Va = cb[Ua];
-              if (Va) {
-                var mc = Va.dungeonId,
-                  vb = Va.farmCol,
-                  Sb = Va.farmRow;
-                if (mc) {
-                  registerFarm(game.farms, new Farm(mc, vb, Sb));
+          game.shops.collectedGold = collectedGold ? collectedGold : 0;
+          var farmEntries = saveData.farms;
+          if (farmEntries) {
+            var farmIndex;
+            for (farmIndex = 0; farmIndex < farmEntries.length; farmIndex++) {
+              var farmEntry = farmEntries[farmIndex];
+              if (farmEntry) {
+                var farmDungeonId = farmEntry.dungeonId,
+                  farmCol = farmEntry.farmCol,
+                  farmRow = farmEntry.farmRow;
+                if (farmDungeonId) {
+                  registerFarm(game.farms, new Farm(farmDungeonId, farmCol, farmRow));
                 }
               }
             }
           }
-          var Ma = d.level;
-          if (Ma && !game.worldActive) {
-            var zb, Hb;
+          var levelDto = saveData.level;
+          if (levelDto && !game.worldActive) {
+            var levelDungeonType, levelHasSecondEntrance;
             if (game.currentDungeon) {
-              zb = game.currentDungeon.dungeonType;
-              Hb = game.currentDungeon.hasSecondEntrance;
+              levelDungeonType = game.currentDungeon.dungeonType;
+              levelHasSecondEntrance = game.currentDungeon.hasSecondEntrance;
             } else {
-              zb = 11;
-              Hb = false;
+              levelDungeonType = 11;
+              levelHasSecondEntrance = false;
             }
-            var ac = Ma.levelCenterX,
-              ob = Ma.levelCenterY,
-              pb = Ma.roomVisibility,
-              Ha = Ma.hallways;
-            generateDungeonLevel(Ma.levelSeed, zb, Hb, false);
-            var jb = game.level;
-            jb.centerX = ac;
-            jb.centerY = ob;
-            var Ab,
-              Bb = game.level.hallwayList;
-            if (Bb.length !== Ha.length) {
-              console.log("hallway array length mismatch. state=" + Ha.length + " hallways=" + Bb.length);
+            var levelCenterX = levelDto.levelCenterX,
+              levelCenterY = levelDto.levelCenterY,
+              roomVisibility = levelDto.roomVisibility,
+              hallwayStates = levelDto.hallways;
+            generateDungeonLevel(levelDto.levelSeed, levelDungeonType, levelHasSecondEntrance, false);
+            var level = game.level;
+            level.centerX = levelCenterX;
+            level.centerY = levelCenterY;
+            var hallwayIndex,
+              hallwayList = game.level.hallwayList;
+            if (hallwayList.length !== hallwayStates.length) {
+              console.log("hallway array length mismatch. state=" + hallwayStates.length + " hallways=" + hallwayList.length);
             } else {
-              for (Ab = 0; Ab < Ha.length; Ab++) {
-                var qb = Bb[Ab],
-                  wb = Ha[Ab],
-                  Ib = wb.doorAOpen,
-                  Ec = wb.doorBOpen;
-                revealHallway(qb, wb.visible);
-                qb.doorA.isOpen = Ib;
-                qb.doorB.isOpen = Ec;
+              for (hallwayIndex = 0; hallwayIndex < hallwayStates.length; hallwayIndex++) {
+                var hallway = hallwayList[hallwayIndex],
+                  hallwayState = hallwayStates[hallwayIndex],
+                  doorAOpen = hallwayState.doorAOpen,
+                  doorBOpen = hallwayState.doorBOpen;
+                revealHallway(hallway, hallwayState.visible);
+                hallway.doorA.isOpen = doorAOpen;
+                hallway.doorB.isOpen = doorBOpen;
               }
             }
-            var bc,
-              Wa = game.level.roomList;
-            if (Wa.length !== pb.length) {
+            var roomIndex,
+              roomList = game.level.roomList;
+            if (roomList.length !== roomVisibility.length) {
               console.log("room array length mismatch");
             } else {
-              for (bc = 0; bc < pb.length; bc++) {
-                if (pb[bc]) {
-                  revealRoom(Wa[bc]);
+              for (roomIndex = 0; roomIndex < roomVisibility.length; roomIndex++) {
+                if (roomVisibility[roomIndex]) {
+                  revealRoom(roomList[roomIndex]);
                 }
               }
             }
           }
-          var cc = d.treasureChestManager;
-          if (cc) {
-            var Qa, nc;
-            for (Qa = 0; Qa < cc.length; Qa++) {
-              var sa = cc[Qa],
-                Tb = sa.levelX,
-                qc = sa.levelY,
-                Fc = sa.opened,
-                Cb = sa.westWall,
-                kb = sa.roomId,
-                Ra;
+          var treasureChestStates = saveData.treasureChestManager;
+          if (treasureChestStates) {
+            var chestIndex, chestInstance;
+            for (chestIndex = 0; chestIndex < treasureChestStates.length; chestIndex++) {
+              var chestStateDto = treasureChestStates[chestIndex],
+                chestLevelX = chestStateDto.levelX,
+                chestLevelY = chestStateDto.levelY,
+                chestOpened = chestStateDto.opened,
+                chestWestWall = chestStateDto.westWall,
+                chestRoomId = chestStateDto.roomId,
+                chestDefinition;
               b: {
-                for (var Ja = sa.settingsId, Db = game.treasure, gb = 0; gb < Db.targetDefinitions.length; gb++) {
-                  if (Db.targetDefinitions[gb].settingsId === Ja) {
-                    Ra = Db.targetDefinitions[gb];
+                for (var chestSettingsId = chestStateDto.settingsId, treasureRegistry = game.treasure, chestDefinitionIndex = 0; chestDefinitionIndex < treasureRegistry.targetDefinitions.length; chestDefinitionIndex++) {
+                  if (treasureRegistry.targetDefinitions[chestDefinitionIndex].settingsId === chestSettingsId) {
+                    chestDefinition = treasureRegistry.targetDefinitions[chestDefinitionIndex];
                     break b;
                   }
                 }
-                console.log("failed to find treasure chest settings: " + Ja);
-                Ra = Db.targetDefinitions[0];
+                console.log("failed to find treasure chest settings: " + chestSettingsId);
+                chestDefinition = treasureRegistry.targetDefinitions[0];
               }
-              var rb = new TreasureChest(Tb, qc, findRoom(kb), Ra, Cb);
-              setChestOpened(rb, Fc);
-              if (nc = rb) {
-                var dc = game.treasure,
-                  Ka = nc;
-                dc.targets.push(Ka);
-                dc.targetByRoomId[Ka.room.roomId] = Ka;
+              var chest = new TreasureChest(chestLevelX, chestLevelY, findRoom(chestRoomId), chestDefinition, chestWestWall);
+              setChestOpened(chest, chestOpened);
+              if (chestInstance = chest) {
+                var chestTargetRegistry = game.treasure,
+                  chestTarget = chestInstance;
+                chestTargetRegistry.targets.push(chestTarget);
+                chestTargetRegistry.targetByRoomId[chestTarget.room.roomId] = chestTarget;
               }
             }
           }
-          var Xa = d.party;
-          if (Xa) {
-            var hb = game.state.party,
-              lb = Xa.gold,
-              rc = Xa.kills,
-              sc = Xa.experiencePoints;
-            hb.gold = lb ? lb : 0;
-            hb.kills = rc ? rc : 0;
-            hb.experiencePoints = sc ? sc : 0;
+          var partyDto = saveData.party;
+          if (partyDto) {
+            var partyState = game.state.party,
+              savedPartyGold = partyDto.gold,
+              savedPartyKills = partyDto.kills,
+              savedPartyExperiencePoints = partyDto.experiencePoints;
+            partyState.gold = savedPartyGold ? savedPartyGold : 0;
+            partyState.kills = savedPartyKills ? savedPartyKills : 0;
+            partyState.experiencePoints = savedPartyExperiencePoints ? savedPartyExperiencePoints : 0;
           }
-          var Aa = d.gameOptions;
-          if (Aa) {
+          var gameOptionsDto = saveData.gameOptions;
+          if (gameOptionsDto) {
             var db = game.options,
-              Mc = Aa.infoTextVisible,
-              ec = Aa.spellEffectsVisible,
-              Ub = Aa.mapOverlayVisible,
-              sb = Aa.offlineProcessingEnabled,
-              ka = Aa.fpsVisible,
-              Eb;
-            Eb = undefined === Aa.inactiveTabProcessingEnabled ? true : Aa.inactiveTabProcessingEnabled;
-            var xb;
-            xb = undefined === Aa.spriteRenderOrderEnabled ? true : Aa.spriteRenderOrderEnabled;
-            db.showCombatText = !!Mc;
-            db.showSpellEffects = !!ec;
-            db.showMapOverlay = !!Ub;
-            db.allowOfflineProgress = !!sb;
-            db.allowBackgroundProgress = !!Eb;
-            db.depthSortSprites = !!xb;
-            db.showFps = !!ka;
+              infoTextVisible = gameOptionsDto.infoTextVisible,
+              spellEffectsVisible = gameOptionsDto.spellEffectsVisible,
+              mapOverlayVisible = gameOptionsDto.mapOverlayVisible,
+              offlineProcessingEnabled = gameOptionsDto.offlineProcessingEnabled,
+              fpsVisible = gameOptionsDto.fpsVisible,
+              inactiveTabProcessingEnabled;
+            inactiveTabProcessingEnabled = undefined === gameOptionsDto.inactiveTabProcessingEnabled ? true : gameOptionsDto.inactiveTabProcessingEnabled;
+            var spriteRenderOrderEnabled;
+            spriteRenderOrderEnabled = undefined === gameOptionsDto.spriteRenderOrderEnabled ? true : gameOptionsDto.spriteRenderOrderEnabled;
+            db.showCombatText = !!infoTextVisible;
+            db.showSpellEffects = !!spellEffectsVisible;
+            db.showMapOverlay = !!mapOverlayVisible;
+            db.allowOfflineProgress = !!offlineProcessingEnabled;
+            db.allowBackgroundProgress = !!inactiveTabProcessingEnabled;
+            db.depthSortSprites = !!spriteRenderOrderEnabled;
+            db.showFps = !!fpsVisible;
           }
-          if (n) {
-            restoreStatistics(n, game.state.runStatistics, false);
+          if (savedStatistics) {
+            restoreStatistics(savedStatistics, game.state.runStatistics, false);
           }
-          if (p) {
-            restoreStatistics(p, game.state.lifetimeStatistics, false);
+          if (savedTotalStatistics) {
+            restoreStatistics(savedTotalStatistics, game.state.lifetimeStatistics, false);
           } else {
-            if (n) {
-              restoreStatistics(n, game.state.lifetimeStatistics, true);
+            if (savedStatistics) {
+              restoreStatistics(savedStatistics, game.state.lifetimeStatistics, true);
             }
           }
-          var Na = d.victoryStatistics;
-          if (Na) {
-            var Ya = game.state.victoryStatistics,
-              tc = Na.partySize1Victories,
-              me = Na.partySize2Victories,
-              ne = Na.partySize3Victories,
-              Le = Na.maxContinuationVictories,
-              Td = Na.currentContinuationVictories,
-              oe = Na.singleClassVictories,
-              Y = Na.classVictories,
-              nf = Na.soloClassVictories,
-              Nc = Na.currentContinueCount;
-            Ya.partySize1Victories = tc ? tc : 0;
-            Ya.partySize2Victories = me ? me : 0;
-            Ya.partySize3Victories = ne ? ne : 0;
-            Ya.maxContinuationVictories = Le ? Le : 0;
-            Ya.currentContinuationVictories = Td ? Td : 0;
-            Ya.singleClassVictories = oe ? oe : 0;
-            if (undefined === Nc) {
-              Nc = Ya.currentContinuationVictories;
+          var victoryStatisticsDto = saveData.victoryStatistics;
+          if (victoryStatisticsDto) {
+            var victoryStatistics = game.state.victoryStatistics,
+              savedPartySize1Victories = victoryStatisticsDto.partySize1Victories,
+              savedPartySize2Victories = victoryStatisticsDto.partySize2Victories,
+              savedPartySize3Victories = victoryStatisticsDto.partySize3Victories,
+              savedMaxContinuationVictories = victoryStatisticsDto.maxContinuationVictories,
+              savedCurrentContinuationVictories = victoryStatisticsDto.currentContinuationVictories,
+              savedSingleClassVictories = victoryStatisticsDto.singleClassVictories,
+              classVictories = victoryStatisticsDto.classVictories,
+              savedSoloClassVictories = victoryStatisticsDto.soloClassVictories,
+              savedCurrentContinueCount = victoryStatisticsDto.currentContinueCount;
+            victoryStatistics.partySize1Victories = savedPartySize1Victories ? savedPartySize1Victories : 0;
+            victoryStatistics.partySize2Victories = savedPartySize2Victories ? savedPartySize2Victories : 0;
+            victoryStatistics.partySize3Victories = savedPartySize3Victories ? savedPartySize3Victories : 0;
+            victoryStatistics.maxContinuationVictories = savedMaxContinuationVictories ? savedMaxContinuationVictories : 0;
+            victoryStatistics.currentContinuationVictories = savedCurrentContinuationVictories ? savedCurrentContinuationVictories : 0;
+            victoryStatistics.singleClassVictories = savedSingleClassVictories ? savedSingleClassVictories : 0;
+            if (undefined === savedCurrentContinueCount) {
+              savedCurrentContinueCount = victoryStatistics.currentContinuationVictories;
             }
-            Ya.currentContinueCount = Nc;
-            if (Y) {
-              var gd, uc, U;
-              for (U = 0; U < adventurerClasses.length; U++) {
-                gd = adventurerClasses[U].characterClass;
-                if (uc = Y[gd]) {
-                  game.state.victoryStatistics.classVictories[gd] = uc;
+            victoryStatistics.currentContinueCount = savedCurrentContinueCount;
+            if (classVictories) {
+              var classKey, classVictoryCount, adventurerClassIndex;
+              for (adventurerClassIndex = 0; adventurerClassIndex < adventurerClasses.length; adventurerClassIndex++) {
+                classKey = adventurerClasses[adventurerClassIndex].characterClass;
+                if (classVictoryCount = classVictories[classKey]) {
+                  game.state.victoryStatistics.classVictories[classKey] = classVictoryCount;
                 }
               }
             }
-            if (nf) {
-              var Z, $, ba;
-              for (ba = 0; ba < adventurerClasses.length; ba++) {
-                Z = adventurerClasses[ba].characterClass;
-                if ($ = nf[Z]) {
-                  game.state.victoryStatistics.soloClassVictories[Z] = $;
+            if (savedSoloClassVictories) {
+              var classId, $, soloClassIndex;
+              for (soloClassIndex = 0; soloClassIndex < adventurerClasses.length; soloClassIndex++) {
+                classId = adventurerClasses[soloClassIndex].characterClass;
+                if ($ = savedSoloClassVictories[classId]) {
+                  game.state.victoryStatistics.soloClassVictories[classId] = $;
                 }
               }
             }
           }
-          var ca = d.adventurers;
-          if (ca) {
-            var q, pe;
-            for (q = 0; q < ca.length; q++) {
-              var fc = ca[q],
-                vd = fc.characterClass,
-                qe = fc.spriteName,
-                gc = fc.characteristicsComponent,
-                vc = fc.positionComponent,
-                $c = fc.spells,
-                Gc = fc.inventory,
-                ad = fc.equippedItemCollection,
-                Vb = fc.skillPoints,
-                Tc = fc.initialSpellSkillPoint,
-                hd = fc.upgrades1,
-                id = fc.upgrades2,
-                jd = fc.upgrades3,
-                kd = fc.upgrades4,
-                eg = classesById[vd],
-                hc = new Character(fc.adventurerName, fc.characterType, vd, eg, new Inventory(game.state.victoryCount)),
-                re = createBehaviorQueue(eg.createBehaviors());
-              hc.behaviors = re;
-              hc.sprite = game.monsterSprites.getSprite(qe);
-              var of = hc;
-              of.skillPoints = Vb ? Vb : 0;
+          var savedAdventurers = saveData.adventurers;
+          if (savedAdventurers) {
+            var adventurerIndex, adventurerToRegister;
+            for (adventurerIndex = 0; adventurerIndex < savedAdventurers.length; adventurerIndex++) {
+              var adventurerDto = savedAdventurers[adventurerIndex],
+                savedCharacterClass = adventurerDto.characterClass,
+                savedSpriteName = adventurerDto.spriteName,
+                characteristicsComponent = adventurerDto.characteristicsComponent,
+                positionComponent = adventurerDto.positionComponent,
+                $c = adventurerDto.spells,
+                inventoryDto = adventurerDto.inventory,
+                equippedItemsDto = adventurerDto.equippedItemCollection,
+                savedSkillPoints = adventurerDto.skillPoints,
+                savedInitialSpellSkillPoint = adventurerDto.initialSpellSkillPoint,
+                upgrades1 = adventurerDto.upgrades1,
+                id = adventurerDto.upgrades2,
+                upgrades3 = adventurerDto.upgrades3,
+                upgrades4 = adventurerDto.upgrades4,
+                classDefinition = classesById[savedCharacterClass],
+                character = new Character(adventurerDto.adventurerName, adventurerDto.characterType, savedCharacterClass, classDefinition, new Inventory(game.state.victoryCount)),
+                behaviors = createBehaviorQueue(classDefinition.createBehaviors());
+              character.behaviors = behaviors;
+              character.sprite = game.monsterSprites.getSprite(savedSpriteName);
+              var of = character;
+              of.skillPoints = savedSkillPoints ? savedSkillPoints : 0;
               of.hasUnspentSkills = hasUnspentSkills(of);
-              hc.initialSpellSkillPoint = Tc ? Tc : 0;
-              var wd = hc.position,
-                rl = vc.worldX,
-                cj = vc.worldY,
-                Ah = vc.roomId,
-                dj = vc.hallwayId,
-                Bh = vc.floorPositionIndex;
-              setVector(wd.levelPosition, vc.levelX, vc.levelY);
-              setVector(wd.worldPosition, rl, cj);
-              if (-1 < Ah) {
-                wd.room = findRoom(Ah);
+              character.initialSpellSkillPoint = savedInitialSpellSkillPoint ? savedInitialSpellSkillPoint : 0;
+              var position = character.position,
+                savedWorldX = positionComponent.worldX,
+                savedWorldY = positionComponent.worldY,
+                savedRoomId = positionComponent.roomId,
+                savedHallwayId = positionComponent.hallwayId,
+                savedFloorPositionIndex = positionComponent.floorPositionIndex;
+              setVector(position.levelPosition, positionComponent.levelX, positionComponent.levelY);
+              setVector(position.worldPosition, savedWorldX, savedWorldY);
+              if (-1 < savedRoomId) {
+                position.room = findRoom(savedRoomId);
               }
-              if (-1 < dj) {
-                var Me;
+              if (-1 < savedHallwayId) {
+                var matchedHallway;
                 b: {
-                  for (var Ne = game.level, Oe = 0; Oe < Ne.hallwayList.length; Oe++) {
-                    if (Ne.hallwayList[Oe].hallwayId === dj) {
-                      Me = Ne.hallwayList[Oe];
+                  for (var hallwayLevel = game.level, hallwayLookupIndex = 0; hallwayLookupIndex < hallwayLevel.hallwayList.length; hallwayLookupIndex++) {
+                    if (hallwayLevel.hallwayList[hallwayLookupIndex].hallwayId === savedHallwayId) {
+                      matchedHallway = hallwayLevel.hallwayList[hallwayLookupIndex];
                       break b;
                     }
                   }
-                  Me = null;
+                  matchedHallway = null;
                 }
-                wd.currentHallway = Me;
-                wd.floorPositionIndex = Bh;
+                position.currentHallway = matchedHallway;
+                position.floorPositionIndex = savedFloorPositionIndex;
               }
-              var fg = hc,
-                ld = $c;
-              if (ld) {
-                for (var qf = undefined, pf = 0; pf < ld.length; pf++) {
-                  var rf = fg.classDefinition.spellDefinitions,
-                    sf = undefined;
-                  if (rf) {
+              var spellLearner = character,
+                savedSpells = $c;
+              if (savedSpells) {
+                for (var restoredSpell = undefined, spellIndex = 0; spellIndex < savedSpells.length; spellIndex++) {
+                  var spellDefinitions = spellLearner.classDefinition.spellDefinitions,
+                    matchedSpellDefinition = undefined;
+                  if (spellDefinitions) {
                     c: {
-                      var Ch = ld[pf].spellName,
-                        gg = undefined,
-                        se = undefined;
-                      for (se in rf) {
-                        if (Object.prototype.hasOwnProperty.call(rf, se)) {
-                          if (gg = rf[se], !gg) {
-                            console.log("spell lookup failure for key: " + se);
-                          } else if (gg.name === Ch) {
-                            sf = gg;
+                      var spellName = savedSpells[spellIndex].spellName,
+                        lookedUpSpellDefinition = undefined,
+                        spellKey = undefined;
+                      for (spellKey in spellDefinitions) {
+                        if (Object.prototype.hasOwnProperty.call(spellDefinitions, spellKey)) {
+                          if (lookedUpSpellDefinition = spellDefinitions[spellKey], !lookedUpSpellDefinition) {
+                            console.log("spell lookup failure for key: " + spellKey);
+                          } else if (lookedUpSpellDefinition.name === spellName) {
+                            matchedSpellDefinition = lookedUpSpellDefinition;
                             break c;
                           }
                         }
                       }
-                      console.log("failed to lookup spell: " + Ch);
-                      sf = null;
+                      console.log("failed to lookup spell: " + spellName);
+                      matchedSpellDefinition = null;
                     }
-                    qf = sf ? new Spell(sf) : null;
+                    restoredSpell = matchedSpellDefinition ? new Spell(matchedSpellDefinition) : null;
                   } else {
-                    qf = null;
+                    restoredSpell = null;
                   }
-                  if (qf) {
-                    learnSpell(fg, qf);
-                  }
-                }
-              }
-              var Md = hc.inventory,
-                tf = Gc;
-              if (tf) {
-                for (var Dh = undefined, uf = 0; uf < tf.length; uf++) {
-                  if (Dh = restoreItem(tf[uf])) {
-                    addInventoryItem(Md, Dh, game.inventories);
+                  if (restoredSpell) {
+                    learnSpell(spellLearner, restoredSpell);
                   }
                 }
               }
-              var ej = hc,
-                hg = ad;
-              if (hg) {
-                for (var Eh = undefined, ig = 0; ig < hg.length; ig++) {
-                  if (Eh = restoreItem(hg[ig])) {
-                    equipItem(ej, Eh);
+              var characterInventory = character.inventory,
+                savedInventoryItems = inventoryDto;
+              if (savedInventoryItems) {
+                for (var restoredItem = undefined, inventoryItemIndex = 0; inventoryItemIndex < savedInventoryItems.length; inventoryItemIndex++) {
+                  if (restoredItem = restoreItem(savedInventoryItems[inventoryItemIndex])) {
+                    addInventoryItem(characterInventory, restoredItem, game.inventories);
                   }
                 }
               }
-              var Sa = hc.stats,
-                bd = gc.characterLevel,
-                Fh = gc.characterHealth,
-                Gh = gc.characterSpirit,
-                Hh = gc.kills,
-                Ih = gc.damageComponent,
-                fj = gc.armorComponent,
-                vf = gc.attackRatingComponent,
-                wf = gc.defenceRatingComponent,
-                Jh = gc.maxHealthComponent,
-                te = gc.maxSpiritComponent,
-                Ud = gc.stunCount,
-                xf = gc.minionKills,
-                yf = gc.damageGiven,
-                xd = gc.damageReceived;
-              Sa.characterLevel = bd ? bd : 1;
-              var sl = scaleByLevel(Sa.characterLevel, experienceCurve, 1);
-              Sa.experienceToLevelUp = sl;
-              var Kh = scaleByLevel(Sa.characterLevel, damageCurve, 1);
-              Sa.spellSpiritCost = Kh;
-              Sa.health = floorNumber(Fh ? Fh : Sa.health);
-              Sa.spirit = Gh ? Gh : Sa.spirit;
-              Sa.kills = Hh ? Hh : Sa.kills;
-              /** @type {{setMinionKills: (count: number) => void}} */ (/** @type {unknown} */ (Sa)).setMinionKills(xf ? xf : Sa.minionKills);
-              Sa.stunCount = Ud ? Ud : Sa.stunCount;
-              Sa.damageGiven = yf ? yf : Sa.damageGiven;
-              Sa.damageReceived = xd ? xd : Sa.damageReceived;
-              restoreStatComponent(Sa.damage, Ih);
-              restoreStatComponent(Sa.armor, fj);
-              restoreStatComponent(Sa.attackRating, vf);
-              restoreStatComponent(Sa.defenceRating, wf);
-              restoreStatComponent(Sa.maxHealth, Jh);
-              restoreStatComponent(Sa.maxSpirit, te);
-              Sa.baseAttackCooldown = 12;
-              Sa.baseHealthRegenPercent = 2;
-              Sa.baseSpiritRegenPercent = 3;
-              restoreUpgradeFlags(hc.skillTree1.upgrades, hd);
-              restoreUpgradeFlags(hc.skillTree2.upgrades, id);
-              restoreUpgradeFlags(hc.skillTree3.upgrades, jd);
-              restoreUpgradeFlags(hc.skillTree4.upgrades, kd);
-              if (pe = hc) {
-                game.state.adventurers.push(pe);
+              var equipTarget = character,
+                savedEquippedItems = equippedItemsDto;
+              if (savedEquippedItems) {
+                for (var equippedItem = undefined, equippedItemIndex = 0; equippedItemIndex < savedEquippedItems.length; equippedItemIndex++) {
+                  if (equippedItem = restoreItem(savedEquippedItems[equippedItemIndex])) {
+                    equipItem(equipTarget, equippedItem);
+                  }
+                }
+              }
+              var characterStats = character.stats,
+                savedCharacterLevel = characteristicsComponent.characterLevel,
+                savedHealth = characteristicsComponent.characterHealth,
+                savedSpirit = characteristicsComponent.characterSpirit,
+                savedKills = characteristicsComponent.kills,
+                savedDamageComponent = characteristicsComponent.damageComponent,
+                savedArmorComponent = characteristicsComponent.armorComponent,
+                savedAttackRatingComponent = characteristicsComponent.attackRatingComponent,
+                savedDefenceRatingComponent = characteristicsComponent.defenceRatingComponent,
+                savedMaxHealthComponent = characteristicsComponent.maxHealthComponent,
+                savedMaxSpiritComponent = characteristicsComponent.maxSpiritComponent,
+                savedStunCount = characteristicsComponent.stunCount,
+                savedMinionKills = characteristicsComponent.minionKills,
+                savedDamageGiven = characteristicsComponent.damageGiven,
+                savedDamageReceived = characteristicsComponent.damageReceived;
+              characterStats.characterLevel = savedCharacterLevel ? savedCharacterLevel : 1;
+              var experienceToLevelUp = scaleByLevel(characterStats.characterLevel, experienceCurve, 1);
+              characterStats.experienceToLevelUp = experienceToLevelUp;
+              var spellSpiritCost = scaleByLevel(characterStats.characterLevel, damageCurve, 1);
+              characterStats.spellSpiritCost = spellSpiritCost;
+              characterStats.health = floorNumber(savedHealth ? savedHealth : characterStats.health);
+              characterStats.spirit = savedSpirit ? savedSpirit : characterStats.spirit;
+              characterStats.kills = savedKills ? savedKills : characterStats.kills;
+              /** @type {{setMinionKills: (count: number) => void}} */ (/** @type {unknown} */ (characterStats)).setMinionKills(savedMinionKills ? savedMinionKills : characterStats.minionKills);
+              characterStats.stunCount = savedStunCount ? savedStunCount : characterStats.stunCount;
+              characterStats.damageGiven = savedDamageGiven ? savedDamageGiven : characterStats.damageGiven;
+              characterStats.damageReceived = savedDamageReceived ? savedDamageReceived : characterStats.damageReceived;
+              restoreStatComponent(characterStats.damage, savedDamageComponent);
+              restoreStatComponent(characterStats.armor, savedArmorComponent);
+              restoreStatComponent(characterStats.attackRating, savedAttackRatingComponent);
+              restoreStatComponent(characterStats.defenceRating, savedDefenceRatingComponent);
+              restoreStatComponent(characterStats.maxHealth, savedMaxHealthComponent);
+              restoreStatComponent(characterStats.maxSpirit, savedMaxSpiritComponent);
+              characterStats.baseAttackCooldown = 12;
+              characterStats.baseHealthRegenPercent = 2;
+              characterStats.baseSpiritRegenPercent = 3;
+              restoreUpgradeFlags(character.skillTree1.upgrades, upgrades1);
+              restoreUpgradeFlags(character.skillTree2.upgrades, id);
+              restoreUpgradeFlags(character.skillTree3.upgrades, upgrades3);
+              restoreUpgradeFlags(character.skillTree4.upgrades, upgrades4);
+              if (adventurerToRegister = character) {
+                game.state.adventurers.push(adventurerToRegister);
               }
             }
             game.state.leader = game.state.adventurers[0];
             game.state.scrollCaster = chooseScrollCaster();
           }
-          a.monsterAdapter.restoreMonsterTypes(d.monsterTypes);
-          var jg = d.settings.upgrades,
-            Vd,
-            Nd;
-          for (Vd in jg) {
-            if (Object.prototype.hasOwnProperty.call(jg, Vd)) {
-              if (Nd = globalUpgradesById[Vd]) {
-                Nd.purchasedLevels = jg[Vd];
+          saveManager.monsterAdapter.restoreMonsterTypes(saveData.monsterTypes);
+          var purchasedLevelsBySetting = saveData.settings.upgrades,
+            settingId,
+            upgradeDefinition;
+          for (settingId in purchasedLevelsBySetting) {
+            if (Object.prototype.hasOwnProperty.call(purchasedLevelsBySetting, settingId)) {
+              if (upgradeDefinition = globalUpgradesById[settingId]) {
+                upgradeDefinition.purchasedLevels = purchasedLevelsBySetting[settingId];
               } else {
-                console.log("failed to lookup settingsId: " + Vd);
+                console.log("failed to lookup settingsId: " + settingId);
               }
             }
           }
-          var tl = a.statisticsAdapter,
-            kg = d.scrollInventory;
-          if (kg) {
-            var ue;
-            for (ue = 0; ue < kg.length; ue++) {
-              tl.restoreScroll(kg[ue]);
+          var statisticsAdapter = saveManager.statisticsAdapter,
+            scrollInventoryDto = saveData.scrollInventory;
+          if (scrollInventoryDto) {
+            var scrollIndex;
+            for (scrollIndex = 0; scrollIndex < scrollInventoryDto.length; scrollIndex++) {
+              statisticsAdapter.restoreScroll(scrollInventoryDto[scrollIndex]);
             }
           }
-          var Uc = d.pointManagerState;
-          if (Uc) {
-            var ve = Uc.spentAdventurePoints,
-              zf = Uc.pointsByType,
-              we = Uc.pointUpgrades;
-            game.state.adventurePoints.spentPoints = ve ? ve : 0;
-            if (zf && 0 !== zf.length) {
-              var xe;
-              for (xe = 0; xe < zf.length; xe++) {
-                var Wd = zf[xe];
-                if (Wd) {
-                  var yd = Wd.pointEventType,
-                    lg = Wd.points,
-                    mg = Wd.count;
-                  if (yd) {
-                    game.state.adventurePoints.pointsByEventType[yd] = lg ? lg : 0;
-                    game.state.adventurePoints.countsByEventType[yd] = mg ? mg : 0;
+          var pointManagerDto = saveData.pointManagerState;
+          if (pointManagerDto) {
+            var savedSpentPoints = pointManagerDto.spentAdventurePoints,
+              pointsByTypeDto = pointManagerDto.pointsByType,
+              pointUpgradesDto = pointManagerDto.pointUpgrades;
+            game.state.adventurePoints.spentPoints = savedSpentPoints ? savedSpentPoints : 0;
+            if (pointsByTypeDto && 0 !== pointsByTypeDto.length) {
+              var pointEventIndex;
+              for (pointEventIndex = 0; pointEventIndex < pointsByTypeDto.length; pointEventIndex++) {
+                var pointEventDto = pointsByTypeDto[pointEventIndex];
+                if (pointEventDto) {
+                  var pointEventType = pointEventDto.pointEventType,
+                    savedPoints = pointEventDto.points,
+                    savedCount = pointEventDto.count;
+                  if (pointEventType) {
+                    game.state.adventurePoints.pointsByEventType[pointEventType] = savedPoints ? savedPoints : 0;
+                    game.state.adventurePoints.countsByEventType[pointEventType] = savedCount ? savedCount : 0;
                   }
                 }
               }
             }
-            if (we && 0 !== we.length) {
-              var Af;
-              for (Af = 0; Af < we.length; Af++) {
-                var ng = we[Af];
-                if (ng) {
-                  var Lh = ng.upgradeId;
-                  if (Lh) {
-                    var ul = !!ng.upgradePurchased,
-                      Bf = undefined;
+            if (pointUpgradesDto && 0 !== pointUpgradesDto.length) {
+              var pointUpgradeIndex;
+              for (pointUpgradeIndex = 0; pointUpgradeIndex < pointUpgradesDto.length; pointUpgradeIndex++) {
+                var pointUpgradeDto = pointUpgradesDto[pointUpgradeIndex];
+                if (pointUpgradeDto) {
+                  var upgradeId = pointUpgradeDto.upgradeId;
+                  if (upgradeId) {
+                    var isPurchased = !!pointUpgradeDto.upgradePurchased,
+                      matchedPointUpgrade = undefined;
                     b: {
-                      for (var Mh = game.state.adventurePoints, Pe = 0; Pe < Mh.pointUpgrades.length; Pe++) {
-                        if (Mh.pointUpgrades[Pe].definition.upgradeId === Lh) {
-                          Bf = Mh.pointUpgrades[Pe];
+                      for (var adventurePoints = game.state.adventurePoints, pointUpgradeLookupIndex = 0; pointUpgradeLookupIndex < adventurePoints.pointUpgrades.length; pointUpgradeLookupIndex++) {
+                        if (adventurePoints.pointUpgrades[pointUpgradeLookupIndex].definition.upgradeId === upgradeId) {
+                          matchedPointUpgrade = adventurePoints.pointUpgrades[pointUpgradeLookupIndex];
                           break b;
                         }
                       }
-                      Bf = null;
+                      matchedPointUpgrade = null;
                     }
-                    if (Bf) {
-                      Bf.setPurchased(ul);
+                    if (matchedPointUpgrade) {
+                      matchedPointUpgrade.setPurchased(isPurchased);
                     }
                   }
                 }
@@ -615,75 +615,75 @@ export function restoreGameState(a, b) {
             }
             recalculateAdventurePoints(game.state.adventurePoints);
           }
-          var gj = d.achievementManager;
-          if (gj) {
-            var Qe = gj.achievements;
-            if (Qe) {
-              var Cf;
-              for (Cf = 0; Cf < Qe.length; Cf++) {
-                var Xd = Qe[Cf];
-                if (Xd) {
-                  var Oc = Xd.achievementId,
-                    Yd = Xd.obtained,
-                    Re = Xd.applied;
-                  if (Oc) {
-                    var Zd = game.state.achievements.byId[Oc];
-                    if (Zd) {
-                      Zd.obtained = Yd ? true : false;
-                      Zd.applied = Re ? true : false;
+          var achievementManagerDto = saveData.achievementManager;
+          if (achievementManagerDto) {
+            var achievementsDto = achievementManagerDto.achievements;
+            if (achievementsDto) {
+              var achievementIndex;
+              for (achievementIndex = 0; achievementIndex < achievementsDto.length; achievementIndex++) {
+                var achievementDto = achievementsDto[achievementIndex];
+                if (achievementDto) {
+                  var achievementId = achievementDto.achievementId,
+                    savedObtained = achievementDto.obtained,
+                    savedApplied = achievementDto.applied;
+                  if (achievementId) {
+                    var storedAchievement = game.state.achievements.byId[achievementId];
+                    if (storedAchievement) {
+                      storedAchievement.obtained = savedObtained ? true : false;
+                      storedAchievement.applied = savedApplied ? true : false;
                     } else {
-                      console.log("Failed to find achievement: " + Oc);
+                      console.log("Failed to find achievement: " + achievementId);
                     }
                   }
                 }
               }
             }
           }
-          var Vc = game.state.achievements;
-          if (0 != Vc.obtainedList.length) {
-            Vc.obtainedList.length = 0;
+          var achievements = game.state.achievements;
+          if (0 != achievements.obtainedList.length) {
+            achievements.obtainedList.length = 0;
           }
-          if (0 != Vc.claimQueue.length) {
-            Vc.claimQueue.length = 0;
+          if (0 != achievements.claimQueue.length) {
+            achievements.claimQueue.length = 0;
           }
-          var Od, wc;
-          for (Od = 0; Od < Vc.achievementList.length; Od++) {
-            wc = Vc.achievementList[Od];
-            if (wc.obtained) {
-              if (wc.applied) {
-                if (wc.obtained && wc.applied) {
-                  increasePointEventReward(wc.pointEventTypeId, wc.pointRewardBonus);
+          var achievementListIndex, achievement;
+          for (achievementListIndex = 0; achievementListIndex < achievements.achievementList.length; achievementListIndex++) {
+            achievement = achievements.achievementList[achievementListIndex];
+            if (achievement.obtained) {
+              if (achievement.applied) {
+                if (achievement.obtained && achievement.applied) {
+                  increasePointEventReward(achievement.pointEventTypeId, achievement.pointRewardBonus);
                 }
               } else {
-                Vc.claimQueue.push(wc);
+                achievements.claimQueue.push(achievement);
               }
             } else {
-              Vc.obtainedList.push(wc);
+              achievements.obtainedList.push(achievement);
             }
           }
-          var zd = d.potionInventory;
-          if (zd) {
-            var Ad;
-            for (Ad = 0; Ad < zd.length; Ad++) {
-              var Nh = zd[Ad],
-                hj = Nh.active,
-                vl = Nh.activeStartTurn,
-                og;
+          var potionInventoryDto = saveData.potionInventory;
+          if (potionInventoryDto) {
+            var potionIndex;
+            for (potionIndex = 0; potionIndex < potionInventoryDto.length; potionIndex++) {
+              var potionDto = potionInventoryDto[potionIndex],
+                savedPotionActive = potionDto.active,
+                savedActivationTurn = potionDto.activeStartTurn,
+                matchedPotionDefinition;
               b: {
-                for (var ij = Nh.potionId, Df = 0; Df < potionDefinitions.length; Df++) {
-                  if (ij === potionDefinitions[Df].potionId) {
-                    og = potionDefinitions[Df];
+                for (var potionId = potionDto.potionId, potionDefinitionIndex = 0; potionDefinitionIndex < potionDefinitions.length; potionDefinitionIndex++) {
+                  if (potionId === potionDefinitions[potionDefinitionIndex].potionId) {
+                    matchedPotionDefinition = potionDefinitions[potionDefinitionIndex];
                     break b;
                   }
                 }
-                console.log("failed to find potion by id: " + ij);
-                og = null;
+                console.log("failed to find potion by id: " + potionId);
+                matchedPotionDefinition = null;
               }
-              if (og) {
-                var Oh = new Potion(og, game.itemSprites);
-                setPotionActive(Oh, hj);
-                Oh.activationTurn = vl;
-                addPotion(Oh, game.potions);
+              if (matchedPotionDefinition) {
+                var potion = new Potion(matchedPotionDefinition, game.itemSprites);
+                setPotionActive(potion, savedPotionActive);
+                potion.activationTurn = savedActivationTurn;
+                addPotion(potion, game.potions);
               }
             }
           }
@@ -704,8 +704,8 @@ export function restoreGameState(a, b) {
 /** @typedef {import('./save-dto.js').SaveData} SaveData */
 /** @typedef {import('./save-dto.js').SaveDataUninitialized} SaveDataUninitialized */
 
-export function serializeGame(a) {
-  return (a = JSON.stringify(createSaveState(a))) ? saveCodec.compress(a) : null;
+export function serializeGame(saveManager) {
+  return (saveManager = JSON.stringify(createSaveState(saveManager))) ? saveCodec.compress(saveManager) : null;
 }
 /**
  * 内存 → 存档 DTO。返回类型接上 `SaveData`（或空白档形态 `SaveDataUninitialized`）后，
@@ -713,357 +713,357 @@ export function serializeGame(a) {
  * 只有差分测试兜底。
  * @returns {SaveData|SaveDataUninitialized}
  */
-export function createSaveState(a) {
-  var b;
+export function createSaveState(saveManager) {
+  var saveData;
   if (game.initialized) {
-    var c = a.saveKey,
-      d = Date.now(),
-      f = game.initialized,
-      g = game.state.turnNumber,
-      h = game.state.frameNumber,
-      l = game.worldActive,
-      n = game.partyCreated,
-      p = game.gameWon,
-      s = game.state.victoryCount,
-      u,
-      y = game.world;
-    u = {
-      worldCenterX: y.worldCenterX,
-      worldCenterY: y.worldCenterY,
-      blockShiftCol: y.blockOriginColumn,
-      blockShiftRow: y.blockOriginRow
+    var saveKey = saveManager.saveKey,
+      gameTimestamp = Date.now(),
+      gameInitialized = game.initialized,
+      turnNumber = game.state.turnNumber,
+      frameNumber = game.state.frameNumber,
+      worldActive = game.worldActive,
+      partyCreated = game.partyCreated,
+      gameWon = game.gameWon,
+      victoryCount = game.state.victoryCount,
+      worldDto,
+      worldMap = game.world;
+    worldDto = {
+      worldCenterX: worldMap.worldCenterX,
+      worldCenterY: worldMap.worldCenterY,
+      blockShiftCol: worldMap.blockOriginColumn,
+      blockShiftRow: worldMap.blockOriginRow
     };
-    var A,
-      C = game.options;
-    A = {
-      infoTextVisible: C.showCombatText,
-      spellEffectsVisible: C.showSpellEffects,
-      mapOverlayVisible: C.showMapOverlay,
-      offlineProcessingEnabled: C.allowOfflineProgress,
-      inactiveTabProcessingEnabled: C.allowBackgroundProgress,
-      spriteRenderOrderEnabled: C.depthSortSprites,
-      fpsVisible: C.showFps
+    var gameOptionsDto,
+      gameOptions = game.options;
+    gameOptionsDto = {
+      infoTextVisible: gameOptions.showCombatText,
+      spellEffectsVisible: gameOptions.showSpellEffects,
+      mapOverlayVisible: gameOptions.showMapOverlay,
+      offlineProcessingEnabled: gameOptions.allowOfflineProgress,
+      inactiveTabProcessingEnabled: gameOptions.allowBackgroundProgress,
+      spriteRenderOrderEnabled: gameOptions.depthSortSprites,
+      fpsVisible: gameOptions.showFps
     };
-    var v = game.dungeons.pendingFarmKills,
-      D = game.dungeons.discoveredDungeonCount,
-      N = [],
-      I = game.dungeons.dungeonList,
-      x,
-      z;
-    for (z = 0; z < I.length; z++) {
-      var O = I[z];
-      x = {
-        dungeonId: O.dungeonId,
-        discovered: O.discovered,
-        conquered: O.conquered,
-        cleared: O.cleared,
-        clearedTurn: O.clearedTurn,
-        dungeonFarm: O.isFarm,
-        farmStartTurn: O.farmStartTurn,
-        dungeonFarmCost: O.farmCost,
-        dungeonType: O.dungeonType,
-        levelCount: O.levelCount
+    var pendingFarmKills = game.dungeons.pendingFarmKills,
+      discoveredDungeonCount = game.dungeons.discoveredDungeonCount,
+      dungeonStates = [],
+      dungeonList = game.dungeons.dungeonList,
+      dungeonStateDto,
+      dungeonIndex;
+    for (dungeonIndex = 0; dungeonIndex < dungeonList.length; dungeonIndex++) {
+      var dungeon = dungeonList[dungeonIndex];
+      dungeonStateDto = {
+        dungeonId: dungeon.dungeonId,
+        discovered: dungeon.discovered,
+        conquered: dungeon.conquered,
+        cleared: dungeon.cleared,
+        clearedTurn: dungeon.clearedTurn,
+        dungeonFarm: dungeon.isFarm,
+        farmStartTurn: dungeon.farmStartTurn,
+        dungeonFarmCost: dungeon.farmCost,
+        dungeonType: dungeon.dungeonType,
+        levelCount: dungeon.levelCount
       };
-      N.push(x);
+      dungeonStates.push(dungeonStateDto);
     }
-    var J = {
-        farmedKills: v,
-        dungeonCostLevel: D,
-        dungeonStates: N
+    var dungeonManagerDto = {
+        farmedKills: pendingFarmKills,
+        dungeonCostLevel: discoveredDungeonCount,
+        dungeonStates: dungeonStates
       },
-      la = {
+      shopManagerDto = {
         collectedGold: game.shops.collectedGold
       },
-      Q = game.castles.nextRequiredMonsterLevel,
-      V = [],
-      na = game.castles.castleList,
-      K,
-      H;
-    for (H = 0; H < na.length; H++) {
-      var S = na[H];
-      K = {
-        castleId: S.castleId,
-        conquered: S.conquered,
-        dungeonsConquered: S.dungeonsConquered,
-        castleRegionLocked: S.regionLocked,
-        attackScheduled: S.attackScheduled,
-        requiredMonsterLevel: S.requiredMonsterLevel
+      nextRequiredMonsterLevel = game.castles.nextRequiredMonsterLevel,
+      castleStates = [],
+      castleList = game.castles.castleList,
+      castleStateDto,
+      castleIndex;
+    for (castleIndex = 0; castleIndex < castleList.length; castleIndex++) {
+      var castle = castleList[castleIndex];
+      castleStateDto = {
+        castleId: castle.castleId,
+        conquered: castle.conquered,
+        dungeonsConquered: castle.dungeonsConquered,
+        castleRegionLocked: castle.regionLocked,
+        attackScheduled: castle.attackScheduled,
+        requiredMonsterLevel: castle.requiredMonsterLevel
       };
-      V.push(K);
+      castleStates.push(castleStateDto);
     }
-    var da = {
-        nextRequiredMonsterLevel: Q,
-        castleStates: V
+    var castleManagerDto = {
+        nextRequiredMonsterLevel: nextRequiredMonsterLevel,
+        castleStates: castleStates
       },
-      W = [],
-      ia = game.farms.farmList,
-      ea,
-      va;
-    for (va = 0; va < ia.length; va++) {
-      var yb = ia[va];
-      ea = {
-        dungeonId: yb.dungeonId,
-        farmCol: yb.farmColumn,
-        farmRow: yb.farmRow
+      farmEntries = [],
+      farmList = game.farms.farmList,
+      farmEntry,
+      farmIndex;
+    for (farmIndex = 0; farmIndex < farmList.length; farmIndex++) {
+      var farm = farmList[farmIndex];
+      farmEntry = {
+        dungeonId: farm.dungeonId,
+        farmCol: farm.farmColumn,
+        farmRow: farm.farmRow
       };
-      W.push(ea);
+      farmEntries.push(farmEntry);
     }
-    var Fb,
-      pa = game.currentDungeon;
-    Fb = pa ? {
-      dungeonId: pa.dungeonId,
-      currentLevelIndex: pa.currentLevelIndex
+    var currentDungeonDto,
+      currentDungeon = game.currentDungeon;
+    currentDungeonDto = currentDungeon ? {
+      dungeonId: currentDungeon.dungeonId,
+      currentLevelIndex: currentDungeon.currentLevelIndex
     } : null;
-    var T,
-      X = game.currentCastle;
-    T = X ? {
-      castleId: X.castleId
+    var currentCastleDto,
+      currentCastle = game.currentCastle;
+    currentCastleDto = currentCastle ? {
+      castleId: currentCastle.castleId
     } : null;
-    var Ca;
+    var levelState;
     if (game.worldActive) {
-      Ca = null;
+      levelState = null;
     } else {
-      var qa = game.level,
-        ta = qa.centerX,
-        eb = qa.centerY,
-        Gb = qa.levelSeed,
-        Da = qa.roomList,
-        ub = [],
-        mb;
-      for (mb = 0; mb < Da.length; mb++) {
-        ub.push(Da[mb].discovered);
+      var level = game.level,
+        levelCenterX = level.centerX,
+        levelCenterY = level.centerY,
+        levelSeed = level.levelSeed,
+        roomList = level.roomList,
+        roomVisibility = [],
+        roomIndex;
+      for (roomIndex = 0; roomIndex < roomList.length; roomIndex++) {
+        roomVisibility.push(roomList[roomIndex].discovered);
       }
-      var Ea = qa.hallwayList,
-        La = [],
-        wa;
-      for (wa = 0; wa < Ea.length; wa++) {
-        var Fa = Ea[wa];
-        La.push({
-          visible: Fa.discovered,
-          doorAOpen: Fa.doorA.isOpen,
-          doorBOpen: Fa.doorB.isOpen
+      var hallwayList = level.hallwayList,
+        hallwayStates = [],
+        hallwayIndex;
+      for (hallwayIndex = 0; hallwayIndex < hallwayList.length; hallwayIndex++) {
+        var hallway = hallwayList[hallwayIndex];
+        hallwayStates.push({
+          visible: hallway.discovered,
+          doorAOpen: hallway.doorA.isOpen,
+          doorBOpen: hallway.doorB.isOpen
         });
       }
-      Ca = {
-        levelCenterX: ta,
-        levelCenterY: eb,
-        levelSeed: Gb,
-        roomVisibility: ub,
-        hallways: La
+      levelState = {
+        levelCenterX: levelCenterX,
+        levelCenterY: levelCenterY,
+        levelSeed: levelSeed,
+        roomVisibility: roomVisibility,
+        hallways: hallwayStates
       };
     }
-    var ha;
+    var chestStates;
     if (game.worldActive) {
-      ha = null;
+      chestStates = null;
     } else {
-      var ja = game.treasure.targets,
-        Ga = [],
-        bb;
-      for (bb = 0; bb < ja.length; bb++) {
-        var za = ja[bb];
-        Ga.push({
-          levelX: za.levelX,
-          levelY: za.levelY,
-          opened: za.opened,
-          settingsId: za.definition.settingsId,
-          westWall: za.westWall,
-          roomId: za.room.roomId
+      var chestTargets = game.treasure.targets,
+        chestEntries = [],
+        chestIndex;
+      for (chestIndex = 0; chestIndex < chestTargets.length; chestIndex++) {
+        var chest = chestTargets[chestIndex];
+        chestEntries.push({
+          levelX: chest.levelX,
+          levelY: chest.levelY,
+          opened: chest.opened,
+          settingsId: chest.definition.settingsId,
+          westWall: chest.westWall,
+          roomId: chest.room.roomId
         });
       }
-      ha = Ga;
+      chestStates = chestEntries;
     }
-    var nb = game.scrolls.scrollList,
-      fb = [],
-      cb;
-    for (cb = 0; cb < nb.length; cb++) {
-      var Ua = nb[cb];
-      fb.push({
-        scrollId: Ua.scrollId,
-        count: Ua.quantity,
-        locked: Ua.locked,
-        upgradeCount: Ua.upgradeCount
+    var scrollList = game.scrolls.scrollList,
+      scrollInventory = [],
+      scrollIndex;
+    for (scrollIndex = 0; scrollIndex < scrollList.length; scrollIndex++) {
+      var scroll = scrollList[scrollIndex];
+      scrollInventory.push({
+        scrollId: scroll.scrollId,
+        count: scroll.quantity,
+        locked: scroll.locked,
+        upgradeCount: scroll.upgradeCount
       });
     }
-    var Va = game.potions.potionList,
-      mc = [],
-      vb;
-    for (vb = 0; vb < Va.length; vb++) {
-      var Sb = Va[vb];
-      mc.push({
-        potionId: Sb.potionId,
-        active: Sb.active,
-        activeStartTurn: Sb.activationTurn
+    var potionList = game.potions.potionList,
+      potionInventory = [],
+      potionIndex;
+    for (potionIndex = 0; potionIndex < potionList.length; potionIndex++) {
+      var potion = potionList[potionIndex];
+      potionInventory.push({
+        potionId: potion.potionId,
+        active: potion.active,
+        activeStartTurn: potion.activationTurn
       });
     }
-    var Ma,
-      zb = game.state.party;
-    Ma = {
-      gold: zb.gold,
-      kills: zb.kills,
-      experiencePoints: zb.experiencePoints
+    var partyDto,
+      partyState = game.state.party;
+    partyDto = {
+      gold: partyState.gold,
+      kills: partyState.kills,
+      experiencePoints: partyState.experiencePoints
     };
-    var Hb = serializeStatistics(game.state.runStatistics),
-      ac = serializeStatistics(game.state.lifetimeStatistics),
-      ob,
-      pb = game.state.victoryStatistics,
-      Ha = game.state.victoryStatistics,
-      jb = {},
-      Ab,
-      Bb,
-      qb;
-    for (qb = 0; qb < adventurerClasses.length; qb++) {
-      Ab = adventurerClasses[qb].characterClass;
-      Bb = getSoloClassVictories(Ha, Ab);
-      if (0 < Bb) {
-        jb[Ab] = Bb;
+    var serializedStatistics = serializeStatistics(game.state.runStatistics),
+      serializedLifetimeStatistics = serializeStatistics(game.state.lifetimeStatistics),
+      victoryStatisticsDto,
+      victoryStatistics = game.state.victoryStatistics,
+      soloVictoryStatistics = game.state.victoryStatistics,
+      soloClassVictories = {},
+      soloClassId,
+      soloVictoryCount,
+      soloClassIndex;
+    for (soloClassIndex = 0; soloClassIndex < adventurerClasses.length; soloClassIndex++) {
+      soloClassId = adventurerClasses[soloClassIndex].characterClass;
+      soloVictoryCount = getSoloClassVictories(soloVictoryStatistics, soloClassId);
+      if (0 < soloVictoryCount) {
+        soloClassVictories[soloClassId] = soloVictoryCount;
       }
     }
-    var wb = game.state.victoryStatistics,
-      Ib = {},
-      Ec,
-      bc,
-      Wa;
-    for (Wa = 0; Wa < adventurerClasses.length; Wa++) {
-      Ec = adventurerClasses[Wa].characterClass;
-      bc = getClassVictories(wb, Ec);
-      if (0 < bc) {
-        Ib[Ec] = bc;
+    var classVictoryStatistics = game.state.victoryStatistics,
+      classVictories = {},
+      classId,
+      classVictoryCount,
+      classIndex;
+    for (classIndex = 0; classIndex < adventurerClasses.length; classIndex++) {
+      classId = adventurerClasses[classIndex].characterClass;
+      classVictoryCount = getClassVictories(classVictoryStatistics, classId);
+      if (0 < classVictoryCount) {
+        classVictories[classId] = classVictoryCount;
       }
     }
-    ob = {
-      partySize1Victories: pb.partySize1Victories,
-      partySize2Victories: pb.partySize2Victories,
-      partySize3Victories: pb.partySize3Victories,
-      maxContinuationVictories: pb.maxContinuationVictories,
-      currentContinuationVictories: pb.currentContinuationVictories,
-      singleClassVictories: pb.singleClassVictories,
-      classVictories: Ib,
-      soloClassVictories: jb,
-      currentContinueCount: pb.currentContinueCount
+    victoryStatisticsDto = {
+      partySize1Victories: victoryStatistics.partySize1Victories,
+      partySize2Victories: victoryStatistics.partySize2Victories,
+      partySize3Victories: victoryStatistics.partySize3Victories,
+      maxContinuationVictories: victoryStatistics.maxContinuationVictories,
+      currentContinuationVictories: victoryStatistics.currentContinuationVictories,
+      singleClassVictories: victoryStatistics.singleClassVictories,
+      classVictories: classVictories,
+      soloClassVictories: soloClassVictories,
+      currentContinueCount: victoryStatistics.currentContinueCount
     };
-    var cc = [],
-      Qa;
-    for (Qa = 0; Qa < game.state.adventurers.length; Qa++) {
-      cc.push(serializeCharacter(game.state.adventurers[Qa]));
+    var serializedAdventurers = [],
+      adventurerIndex;
+    for (adventurerIndex = 0; adventurerIndex < game.state.adventurers.length; adventurerIndex++) {
+      serializedAdventurers.push(serializeCharacter(game.state.adventurers[adventurerIndex]));
     }
-    var nc,
-      sa = game.monsterCatalog,
-      Tb = [],
-      qc = game.monsterCatalog,
-      Fc = qc.maxUnlockedLevel,
-      Cb;
-    for (Cb = qc.minUnlockedLevel; Cb <= Fc; Cb++) {
-      Tb.push(serializeMonsterLevel(Cb, getMonsterTypesForLevel(qc, Cb)));
+    var monsterTypesDto,
+      monsterCatalog = game.monsterCatalog,
+      monsterLevelStates = [],
+      catalog = game.monsterCatalog,
+      maxUnlockedLevel = catalog.maxUnlockedLevel,
+      monsterLevel;
+    for (monsterLevel = catalog.minUnlockedLevel; monsterLevel <= maxUnlockedLevel; monsterLevel++) {
+      monsterLevelStates.push(serializeMonsterLevel(monsterLevel, getMonsterTypesForLevel(catalog, monsterLevel)));
     }
-    nc = {
-      monsterLevelStates: Tb,
-      minUnlockedLevel: sa.minUnlockedLevel,
-      maxUnlockedLevel: sa.maxUnlockedLevel
+    monsterTypesDto = {
+      monsterLevelStates: monsterLevelStates,
+      minUnlockedLevel: monsterCatalog.minUnlockedLevel,
+      maxUnlockedLevel: monsterCatalog.maxUnlockedLevel
     };
-    var kb,
-      Ra,
+    var definitionKey,
+      upgradeDefinition,
       // 键是 settingId、值是已购级数（存档 DTO: settings.upgrades）。
       // 类型只标注，不改运行时行为；少了这条注解，createSaveState 的 SaveData 返回类型会不成立。
       /** @type {Object<string, number>} */
-      Ja = {};
-    for (kb in globalUpgradeDefinitions) {
-      if (Object.prototype.hasOwnProperty.call(globalUpgradeDefinitions, kb)) {
-        Ra = globalUpgradeDefinitions[kb];
-        Ja[Ra.settingId] = Ra.purchasedLevels;
+      purchasedLevelsBySetting = {};
+    for (definitionKey in globalUpgradeDefinitions) {
+      if (Object.prototype.hasOwnProperty.call(globalUpgradeDefinitions, definitionKey)) {
+        upgradeDefinition = globalUpgradeDefinitions[definitionKey];
+        purchasedLevelsBySetting[upgradeDefinition.settingId] = upgradeDefinition.purchasedLevels;
       }
     }
-    var Db = {
-        upgrades: Ja
+    var settingsDto = {
+        upgrades: purchasedLevelsBySetting
       },
-      gb = game.state.adventurePoints.spentPoints,
-      rb = game.state.adventurePoints,
-      dc = [],
-      Ka,
-      Xa,
-      hb,
-      lb;
-    for (lb = 0; lb < pointEventDefinitions.length; lb++) {
-      Ka = pointEventDefinitions[lb].pointEventTypeId;
-      Xa = rb.pointsByEventType[Ka];
-      hb = rb.countsByEventType[Ka];
-      dc.push({
-        pointEventType: Ka,
-        points: Xa,
-        count: hb
+      spentPoints = game.state.adventurePoints.spentPoints,
+      adventurePoints = game.state.adventurePoints,
+      pointEventStates = [],
+      pointEventTypeId,
+      eventTypePoints,
+      eventTypeCount,
+      pointEventIndex;
+    for (pointEventIndex = 0; pointEventIndex < pointEventDefinitions.length; pointEventIndex++) {
+      pointEventTypeId = pointEventDefinitions[pointEventIndex].pointEventTypeId;
+      eventTypePoints = adventurePoints.pointsByEventType[pointEventTypeId];
+      eventTypeCount = adventurePoints.countsByEventType[pointEventTypeId];
+      pointEventStates.push({
+        pointEventType: pointEventTypeId,
+        points: eventTypePoints,
+        count: eventTypeCount
       });
     }
-    var rc = [],
-      sc = game.state.adventurePoints.pointUpgrades,
-      Aa;
-    for (Aa = 0; Aa < sc.length; Aa++) {
-      var db = sc[Aa];
-      rc.push({
+    var pointUpgradeStates = [],
+      pointUpgrades = game.state.adventurePoints.pointUpgrades,
+      pointUpgradeIndex;
+    for (pointUpgradeIndex = 0; pointUpgradeIndex < pointUpgrades.length; pointUpgradeIndex++) {
+      var db = pointUpgrades[pointUpgradeIndex];
+      pointUpgradeStates.push({
         upgradeId: db.definition.upgradeId,
         upgradePurchased: db.isOwned()
       });
     }
-    var Mc = Ca,
-      ec = ha,
-      Ub = {
-        spentAdventurePoints: gb,
-        pointsByType: dc,
-        pointUpgrades: rc
+    var levelDto = levelState,
+      treasureChestStates = chestStates,
+      pointManagerDto = {
+        spentAdventurePoints: spentPoints,
+        pointsByType: pointEventStates,
+        pointUpgrades: pointUpgradeStates
       },
-      sb = [],
-      ka = game.state.achievements.achievementList,
-      Eb,
-      xb;
-    for (xb = 0; xb < ka.length; xb++) {
-      var Na = ka[xb];
-      Eb = {
-        achievementId: Na.id,
-        obtained: Na.obtained,
-        applied: Na.applied
+      achievementStates = [],
+      achievementList = game.state.achievements.achievementList,
+      achievementDto,
+      achievementIndex;
+    for (achievementIndex = 0; achievementIndex < achievementList.length; achievementIndex++) {
+      var achievement = achievementList[achievementIndex];
+      achievementDto = {
+        achievementId: achievement.id,
+        obtained: achievement.obtained,
+        applied: achievement.applied
       };
-      sb.push(Eb);
+      achievementStates.push(achievementDto);
     }
-    b = {
-      saveKey: c,
-      gameTimestamp: d,
-      gameInitialized: f,
-      turnNumber: g,
-      frameNumber: h,
-      worldActive: l,
-      partyCreated: n,
-      gameWon: p,
-      victoryCount: s,
-      world: u,
-      gameOptions: A,
-      dungeonManagerState: J,
-      shopManager: la,
-      castleManager: da,
-      farms: W,
-      currentDungeon: Fb,
-      currentCastle: T,
-      level: Mc,
-      treasureChestManager: ec,
-      scrollInventory: fb,
-      potionInventory: mc,
-      party: Ma,
-      statistics: Hb,
-      totalStatistics: ac,
-      victoryStatistics: ob,
-      adventurers: cc,
-      monsterTypes: nc,
-      settings: Db,
-      pointManagerState: Ub,
+    saveData = {
+      saveKey: saveKey,
+      gameTimestamp: gameTimestamp,
+      gameInitialized: gameInitialized,
+      turnNumber: turnNumber,
+      frameNumber: frameNumber,
+      worldActive: worldActive,
+      partyCreated: partyCreated,
+      gameWon: gameWon,
+      victoryCount: victoryCount,
+      world: worldDto,
+      gameOptions: gameOptionsDto,
+      dungeonManagerState: dungeonManagerDto,
+      shopManager: shopManagerDto,
+      castleManager: castleManagerDto,
+      farms: farmEntries,
+      currentDungeon: currentDungeonDto,
+      currentCastle: currentCastleDto,
+      level: levelDto,
+      treasureChestManager: treasureChestStates,
+      scrollInventory: scrollInventory,
+      potionInventory: potionInventory,
+      party: partyDto,
+      statistics: serializedStatistics,
+      totalStatistics: serializedLifetimeStatistics,
+      victoryStatistics: victoryStatisticsDto,
+      adventurers: serializedAdventurers,
+      monsterTypes: monsterTypesDto,
+      settings: settingsDto,
+      pointManagerState: pointManagerDto,
       achievementManager: {
-        achievements: sb
+        achievements: achievementStates
       }
     };
   } else {
-    b = {
-      saveKey: a.saveKey,
+    saveData = {
+      saveKey: saveManager.saveKey,
       gameInitialized: false,
       partyCreated: false,
       gameWon: false
     };
   }
-  return b;
+  return saveData;
 }
 export function initializePersistenceGameSave() {}

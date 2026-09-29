@@ -9,176 +9,176 @@ import { bindAdventurePoints, resetAdventurePoints } from "../progression/points
 import { resetAchievements } from "../progression/achievements.js";
 import { bindStatistics } from "../progression/statistics.js";
 export function initializeRegionsAndCastles() {
-  var eb = game.regions;
-  eb.byKey = {};
-  eb.regionGrid.length = 0;
-  var Gb = eb.regionGridSpan,
-    Da,
-    ub,
-    mb,
-    Ea,
-    La,
-    wa,
-    Fa;
-  Ea = eb.regionGridOriginColumn;
-  for (Da = 0; Da < Gb; Da++, Ea++) {
-    mb = [];
-    La = eb.regionGridOriginRow;
-    for (ub = 0; ub < Gb; ub++, La++) {
-      wa = Ea + "_" + La;
-      Fa = new WorldRegion(wa, Ea, La);
-      mb.push(Fa);
-      eb.byKey[wa] = Fa;
+  var regionManager = game.regions;
+  regionManager.byKey = {};
+  regionManager.regionGrid.length = 0;
+  var regionGridSpan = regionManager.regionGridSpan,
+    columnIndex,
+    rowIndex,
+    regionColumnList,
+    regionColumn,
+    regionRow,
+    regionKey,
+    worldRegion;
+  regionColumn = regionManager.regionGridOriginColumn;
+  for (columnIndex = 0; columnIndex < regionGridSpan; columnIndex++, regionColumn++) {
+    regionColumnList = [];
+    regionRow = regionManager.regionGridOriginRow;
+    for (rowIndex = 0; rowIndex < regionGridSpan; rowIndex++, regionRow++) {
+      regionKey = regionColumn + "_" + regionRow;
+      worldRegion = new WorldRegion(regionKey, regionColumn, regionRow);
+      regionColumnList.push(worldRegion);
+      regionManager.byKey[regionKey] = worldRegion;
     }
-    eb.regionGrid.push(mb);
+    regionManager.regionGrid.push(regionColumnList);
   }
-  var ha = game.castles;
-  ha.castleList.length = 0;
-  ha.attackableCastles.length = 0;
-  ha.scheduledCastles.length = 0;
-  ha.castleRegistry = {};
-  ha.revision = 0;
-  ha.nextRequiredMonsterLevel = 1;
-  var ja = new RegionLayout(),
-    Ga = new SeededRandom(11),
-    bb = new DungeonNameGenerator(Ga),
-    za,
-    nb,
-    fb,
-    cb = ja.minRegionColumn,
-    Ua = ja.minRegionRow,
-    Va = WORLD_BLOCK_COLUMNS / 2 | 0,
-    mc = WORLD_BLOCK_ROWS / 2 | 0,
-    vb = {},
-    Sb = 0,
-    Ma = game.regions.regionGridSpan,
-    zb = Ma * Ma,
-    Hb,
-    ac,
-    ob,
-    pb,
-    Ha,
-    jb,
-    Ab = {},
-    Bb = [];
-  for (za = 0; 35 > za; za++) {
-    pb = 1;
-    Hb = cb + randomIntFrom(Ga, Ma);
-    ac = Ua + randomIntFrom(Ga, Ma);
-    for (ob = Hb + "_" + ac; vb[ob];) {
-      pb++;
-      Hb = cb + randomIntFrom(Ga, Ma);
-      ac = Ua + randomIntFrom(Ga, Ma);
-      ob = Hb + "_" + ac;
+  var castleManager = game.castles;
+  castleManager.castleList.length = 0;
+  castleManager.attackableCastles.length = 0;
+  castleManager.scheduledCastles.length = 0;
+  castleManager.castleRegistry = {};
+  castleManager.revision = 0;
+  castleManager.nextRequiredMonsterLevel = 1;
+  var regionLayout = new RegionLayout(),
+    castleSeededRandom = new SeededRandom(11),
+    castleNameGenerator = new DungeonNameGenerator(castleSeededRandom),
+    castleSeedIndex,
+    castlePixelX,
+    castlePixelY,
+    minRegionColumn = regionLayout.minRegionColumn,
+    minRegionRow = regionLayout.minRegionRow,
+    halfBlockColumns = WORLD_BLOCK_COLUMNS / 2 | 0,
+    halfBlockRows = WORLD_BLOCK_ROWS / 2 | 0,
+    occupiedRegionKeys = {},
+    claimedRegionCount = 0,
+    gridSpan = game.regions.regionGridSpan,
+    totalRegionCount = gridSpan * gridSpan,
+    homeRegionColumn,
+    homeRegionRow,
+    homeRegionKey,
+    regionKeyAttempts,
+    castleName,
+    castle,
+    usedCastleNames = {},
+    castleList = [];
+  for (castleSeedIndex = 0; 35 > castleSeedIndex; castleSeedIndex++) {
+    regionKeyAttempts = 1;
+    homeRegionColumn = minRegionColumn + randomIntFrom(castleSeededRandom, gridSpan);
+    homeRegionRow = minRegionRow + randomIntFrom(castleSeededRandom, gridSpan);
+    for (homeRegionKey = homeRegionColumn + "_" + homeRegionRow; occupiedRegionKeys[homeRegionKey];) {
+      regionKeyAttempts++;
+      homeRegionColumn = minRegionColumn + randomIntFrom(castleSeededRandom, gridSpan);
+      homeRegionRow = minRegionRow + randomIntFrom(castleSeededRandom, gridSpan);
+      homeRegionKey = homeRegionColumn + "_" + homeRegionRow;
     }
-    vb[ob] = true;
-    for (Ha = generateDungeonName(bb, 11); Ab[Ha];) {
-      Ha = generateDungeonName(bb, 11);
+    occupiedRegionKeys[homeRegionKey] = true;
+    for (castleName = generateDungeonName(castleNameGenerator, 11); usedCastleNames[castleName];) {
+      castleName = generateDungeonName(castleNameGenerator, 11);
     }
-    Ab[Ha] = true;
-    nb = Hb * WORLD_BLOCK_COLUMNS + Va;
-    fb = ac * WORLD_BLOCK_ROWS + mc;
-    nb += randomIntFrom(Ga, 6) - 3;
-    fb += randomIntFrom(Ga, 6) - 3;
-    jb = new Castle(ob, Ha, Hb, ac, nb, fb);
-    Bb.push(jb);
-    var qb = jb,
-      wb = game.regions.byKey[ob];
-    qb.regions.push(wb);
-    wb.castle = qb;
-    Sb++;
+    usedCastleNames[castleName] = true;
+    castlePixelX = homeRegionColumn * WORLD_BLOCK_COLUMNS + halfBlockColumns;
+    castlePixelY = homeRegionRow * WORLD_BLOCK_ROWS + halfBlockRows;
+    castlePixelX += randomIntFrom(castleSeededRandom, 6) - 3;
+    castlePixelY += randomIntFrom(castleSeededRandom, 6) - 3;
+    castle = new Castle(homeRegionKey, castleName, homeRegionColumn, homeRegionRow, castlePixelX, castlePixelY);
+    castleList.push(castle);
+    var homeCastle = castle,
+      homeRegion = game.regions.byKey[homeRegionKey];
+    homeCastle.regions.push(homeRegion);
+    homeRegion.castle = homeCastle;
+    claimedRegionCount++;
   }
-  for (var Ib, Ec = 0; Sb < zb;) {
-    for (za = 0; za < Bb.length; za++) {
-      jb = Bb[za];
+  for (var adjacentRegion, expansionPassCount = 0; claimedRegionCount < totalRegionCount;) {
+    for (var castleScanIndex = 0; castleScanIndex < castleList.length; castleScanIndex++) {
+      castle = castleList[castleScanIndex];
       a: {
-        for (var bc = ja, Wa = vb, cc = Ga, Qa = jb.regions, nc = undefined, sa = undefined, sa = /** @type {any} */ (0); sa < Qa.length; sa++) {
-          if (nc = chooseAdjacentRegion(bc, Qa[sa], Wa, cc)) {
-            Ib = nc;
+        for (var layout = regionLayout, occupiedKeys = occupiedRegionKeys, regionChoiceRandom = castleSeededRandom, castleRegions = castle.regions, candidateRegion = undefined, castleRegionIndex = undefined, castleRegionIndex = /** @type {any} */ (0); castleRegionIndex < castleRegions.length; castleRegionIndex++) {
+          if (candidateRegion = chooseAdjacentRegion(layout, castleRegions[castleRegionIndex], occupiedKeys, regionChoiceRandom)) {
+            adjacentRegion = candidateRegion;
             break a;
           }
         }
-        Ib = null;
+        adjacentRegion = null;
       }
-      if (Ib) {
-        var Tb = jb,
-          qc = Ib;
-        Tb.regions.push(qc);
-        qc.castle = Tb;
-        vb[Ib.regionKey] = true;
-        Sb++;
+      if (adjacentRegion) {
+        var expandingCastle = castle,
+          claimedRegion = adjacentRegion;
+        expandingCastle.regions.push(claimedRegion);
+        claimedRegion.castle = expandingCastle;
+        occupiedRegionKeys[adjacentRegion.regionKey] = true;
+        claimedRegionCount++;
       }
     }
-    Ec++;
+    expansionPassCount++;
   }
-  ha.castleList = Bb;
-  var Fc, Cb, kb, Ra;
-  for (Fc = 0; Fc < ha.castleList.length; Fc++) {
-    for (kb = ha.castleList[Fc], ha.castleRegistry[kb.castleId] && console.log("duplicate castle id: " + kb.castleId), ha.castleRegistry[kb.castleId] = kb, Ra = kb.regions, Cb = 0; Cb < Ra.length; Cb++) {
-      if (ha.byRegionKey[Ra[Cb].regionKey]) {
-        console.log("duplicate castle owner: " + Ra[Cb].regionKey);
+  castleManager.castleList = castleList;
+  var castleIndex, registryRegionIndex, registeredCastle, registeredCastleRegions;
+  for (castleIndex = 0; castleIndex < castleManager.castleList.length; castleIndex++) {
+    for (registeredCastle = castleManager.castleList[castleIndex], castleManager.castleRegistry[registeredCastle.castleId] && console.log("duplicate castle id: " + registeredCastle.castleId), castleManager.castleRegistry[registeredCastle.castleId] = registeredCastle, registeredCastleRegions = registeredCastle.regions, registryRegionIndex = 0; registryRegionIndex < registeredCastleRegions.length; registryRegionIndex++) {
+      if (castleManager.byRegionKey[registeredCastleRegions[registryRegionIndex].regionKey]) {
+        console.log("duplicate castle owner: " + registeredCastleRegions[registryRegionIndex].regionKey);
       }
-      ha.byRegionKey[Ra[Cb].regionKey] = kb;
+      castleManager.byRegionKey[registeredCastleRegions[registryRegionIndex].regionKey] = registeredCastle;
     }
   }
-  var Ja = game.dungeons;
-  Ja.dungeonList.length = 0;
-  Ja.discovered.length = 0;
-  Ja.attackable.length = 0;
-  Ja.cleared.length = 0;
-  Ja.farms.length = 0;
-  Ja.discoveredDungeonCount = 0;
-  Ja.farmable.length = 0;
-  Ja.pendingFarmKills = 0;
-  Ja.dungeonRegistry = {};
-  var Db,
-    gb = new SeededRandom(1),
-    rb = new DungeonNameGenerator(gb),
-    dc = game.castles.castleList,
-    Ka,
-    Xa,
-    hb,
-    lb,
-    rc,
-    sc,
-    Aa,
+  var dungeonManager = game.dungeons;
+  dungeonManager.dungeonList.length = 0;
+  dungeonManager.discovered.length = 0;
+  dungeonManager.attackable.length = 0;
+  dungeonManager.cleared.length = 0;
+  dungeonManager.farms.length = 0;
+  dungeonManager.discoveredDungeonCount = 0;
+  dungeonManager.farmable.length = 0;
+  dungeonManager.pendingFarmKills = 0;
+  dungeonManager.dungeonRegistry = {};
+  var dungeonId,
+    dungeonSeededRandom = new SeededRandom(1),
+    dungeonNameGenerator = new DungeonNameGenerator(dungeonSeededRandom),
+    allCastles = game.castles.castleList,
+    ownerCastle,
+    ownerCastleRegions,
+    dungeonName,
+    dungeonType,
+    dungeonLevelCount,
+    ownerCastlePixelX,
+    ownerCastlePixelY,
     db,
-    Mc,
-    ec,
-    Ub,
-    sb,
-    ka,
-    Eb,
-    xb = {},
-    Na = [];
-  for (ka = 0; ka < dc.length; ka++) {
-    for (Ka = dc[ka], Xa = Ka.regions, sc = Ka.worldPixelX, Aa = Ka.worldPixelY, Eb = 0; Eb < Xa.length; Eb++) {
-      if (db = Xa[Eb].regionColumn, Mc = Xa[Eb].regionRow, !(0.7 < (/** @type {any} */ (gb)).random())) {
-        ec = 1 + db * WORLD_BLOCK_COLUMNS + randomIntFrom(gb, WORLD_BLOCK_COLUMNS - 1);
-        for (Ub = 1 + Mc * WORLD_BLOCK_ROWS + randomIntFrom(gb, WORLD_BLOCK_ROWS - 1); ec === sc && Ub === Aa;) {
-          ec = 1 + db * WORLD_BLOCK_COLUMNS + randomIntFrom(gb, WORLD_BLOCK_COLUMNS - 1);
-          Ub = 1 + Mc * WORLD_BLOCK_ROWS + randomIntFrom(gb, WORLD_BLOCK_ROWS - 1);
+    castleRegionRow,
+    dungeonWorldColumn,
+    dungeonWorldRow,
+    dungeon,
+    ownerCastleIndex,
+    ownerRegionIndex,
+    usedDungeonNames = {},
+    generatedDungeons = [];
+  for (ownerCastleIndex = 0; ownerCastleIndex < allCastles.length; ownerCastleIndex++) {
+    for (ownerCastle = allCastles[ownerCastleIndex], ownerCastleRegions = ownerCastle.regions, ownerCastlePixelX = ownerCastle.worldPixelX, ownerCastlePixelY = ownerCastle.worldPixelY, ownerRegionIndex = 0; ownerRegionIndex < ownerCastleRegions.length; ownerRegionIndex++) {
+      if (db = ownerCastleRegions[ownerRegionIndex].regionColumn, castleRegionRow = ownerCastleRegions[ownerRegionIndex].regionRow, !(0.7 < (/** @type {any} */ (dungeonSeededRandom)).random())) {
+        dungeonWorldColumn = 1 + db * WORLD_BLOCK_COLUMNS + randomIntFrom(dungeonSeededRandom, WORLD_BLOCK_COLUMNS - 1);
+        for (dungeonWorldRow = 1 + castleRegionRow * WORLD_BLOCK_ROWS + randomIntFrom(dungeonSeededRandom, WORLD_BLOCK_ROWS - 1); dungeonWorldColumn === ownerCastlePixelX && dungeonWorldRow === ownerCastlePixelY;) {
+          dungeonWorldColumn = 1 + db * WORLD_BLOCK_COLUMNS + randomIntFrom(dungeonSeededRandom, WORLD_BLOCK_COLUMNS - 1);
+          dungeonWorldRow = 1 + castleRegionRow * WORLD_BLOCK_ROWS + randomIntFrom(dungeonSeededRandom, WORLD_BLOCK_ROWS - 1);
         }
-        lb = randomDungeonType(gb);
-        for (hb = generateDungeonName(rb, lb); xb[hb];) {
-          hb = generateDungeonName(rb, lb);
+        dungeonType = randomDungeonType(dungeonSeededRandom);
+        for (dungeonName = generateDungeonName(dungeonNameGenerator, dungeonType); usedDungeonNames[dungeonName];) {
+          dungeonName = generateDungeonName(dungeonNameGenerator, dungeonType);
         }
-        xb[hb] = true;
-        Db = db + "_" + Mc;
-        rc = 3 + randomIntFrom(gb, 4);
-        sb = new Dungeon(Db, hb, lb, ec, Ub, db, Mc, rc, Ka);
-        Na.push(sb);
-        Ka.dungeonList.push(sb);
+        usedDungeonNames[dungeonName] = true;
+        dungeonId = db + "_" + castleRegionRow;
+        dungeonLevelCount = 3 + randomIntFrom(dungeonSeededRandom, 4);
+        dungeon = new Dungeon(dungeonId, dungeonName, dungeonType, dungeonWorldColumn, dungeonWorldRow, db, castleRegionRow, dungeonLevelCount, ownerCastle);
+        generatedDungeons.push(dungeon);
+        ownerCastle.dungeonList.push(dungeon);
       }
     }
   }
-  Ja.dungeonList = Na;
-  var Ya, tc;
-  for (Ya = 0; Ya < Ja.dungeonList.length; Ya++) {
-    tc = Ja.dungeonList[Ya];
-    Ja.dungeonRegistry[tc.dungeonId] = tc;
+  dungeonManager.dungeonList = generatedDungeons;
+  var dungeonIndex, registeredDungeon;
+  for (dungeonIndex = 0; dungeonIndex < dungeonManager.dungeonList.length; dungeonIndex++) {
+    registeredDungeon = dungeonManager.dungeonList[dungeonIndex];
+    dungeonManager.dungeonRegistry[registeredDungeon.dungeonId] = registeredDungeon;
   }
-  sortDungeons(Ja, Ja.dungeonList);
+  sortDungeons(dungeonManager, dungeonManager.dungeonList);
   resetFarms();
   resetShops();
   bindAdventurePoints(game.state);

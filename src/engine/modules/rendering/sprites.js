@@ -13,89 +13,89 @@ var effectAnimationsCatalog = null;
 export function bindEffectAnimations(catalog) {
   effectAnimationsCatalog = catalog;
 }
-export function Sprite(a, b, c, d) {
-  this.spriteSheet = a;
-  this.sourceX = b;
-  this.sourceY = c;
-  this.name = d;
+export function Sprite(spriteSheet, sourceX, sourceY, spriteName) {
+  this.spriteSheet = spriteSheet;
+  this.sourceX = sourceX;
+  this.sourceY = sourceY;
+  this.name = spriteName;
 }
-export function SpriteSheet(a, b, c) {
+export function SpriteSheet(imageUrl, spriteSize, spriteDefinitions) {
   this.loaded = false;
-  this.spriteSize = b;
+  this.spriteSize = spriteSize;
   this.animationMap = {};
-  var d = this;
+  var sheet = this;
   this.image = new Image();
   this.image.onload = function () {
-    (/** @type {any} */ (d)).registerDefinitions(c);
-    d.loaded = true;
+    (/** @type {any} */ (sheet)).registerDefinitions(spriteDefinitions);
+    sheet.loaded = true;
   };
-  this.image.src = a;
+  this.image.src = imageUrl;
 }
-export function SpriteAnimation(a, b, c, d, f, g, h, l) {
-  this.spriteSheet = a;
-  this.animationName = b;
-  this.isDirectional = l;
-  a = [];
-  var n, p, s;
-  b = 0;
-  var u;
-  l = this.spriteSheet.spriteSize;
-  for (n = d; n <= g; n++) {
-    for (s = n * l, u = n < g ? h : Math.min(f, h), d = c; d <= u; d++) {
-      p = d * l;
-      a.push(new AnimationFrame(b++, p, s));
+export function SpriteAnimation(spriteSheet, animationName, firstFrameColumn, d, lastRowFrameCount, lastFrameRow, lastFrameColumnIndex, isDirectional) {
+  this.spriteSheet = spriteSheet;
+  this.animationName = animationName;
+  this.isDirectional = isDirectional;
+  var frameList = [];
+  var frameRow, frameSourceX, frameSourceY;
+  var frameCounter = 0;
+  var rowLastColumnIndex;
+  var spriteSize = this.spriteSheet.spriteSize;
+  for (frameRow = d; frameRow <= lastFrameRow; frameRow++) {
+    for (frameSourceY = frameRow * spriteSize, rowLastColumnIndex = frameRow < lastFrameRow ? lastFrameColumnIndex : Math.min(lastRowFrameCount, lastFrameColumnIndex), d = firstFrameColumn; d <= rowLastColumnIndex; d++) {
+      frameSourceX = d * spriteSize;
+      frameList.push(new AnimationFrame(frameCounter++, frameSourceX, frameSourceY));
     }
   }
-  this.frames = a;
+  this.frames = frameList;
 }
-export function AnimationFrame(a, b, c) {
-  this.frameIndex = a;
-  this.frameSourceX = b;
-  this.frameSourceY = c;
+export function AnimationFrame(frameIndex, frameSourceX, frameSourceY) {
+  this.frameIndex = frameIndex;
+  this.frameSourceX = frameSourceX;
+  this.frameSourceY = frameSourceY;
 }
-export function AnimationSheet(a, b, c, d) {
+export function AnimationSheet(fileName, spriteSize, animationDefinitions, lastFrameColumnIndex) {
   this.loaded = false;
-  this.fileName = a;
-  this.spriteSize = b;
+  this.fileName = fileName;
+  this.spriteSize = spriteSize;
   this.animationMap = {};
   this.animationNames = [];
-  var f = this;
+  var sheet = this;
   this.image = new Image();
   this.image.onload = function () {
-    (/** @type {any} */ (f)).registerDefinitions(c, d);
-    f.loaded = true;
+    (/** @type {any} */ (sheet)).registerDefinitions(animationDefinitions, lastFrameColumnIndex);
+    sheet.loaded = true;
   };
-  this.image.src = a;
+  this.image.src = fileName;
 }
-export function AnimationCatalog(a) {
+export function AnimationCatalog(sheets) {
   this.animationMap = null;
-  this.sheets = a;
+  this.sheets = sheets;
 }
-export function VisualEffect(a, b, c, d, f) {
-  this.impactEffectName = a;
+export function VisualEffect(impactEffectName, startPosition, targetPosition, projectileEffect, f) {
+  this.impactEffectName = impactEffectName;
   this.effectType = f;
   this.room = this.boundCharacter = null;
   this.remainingEffectDamage = 0;
-  if (d) {
+  if (projectileEffect) {
     f = new Vector2();
-    copyVector(f, b);
+    copyVector(f, startPosition);
   } else {
     if (f === TARGETED_EFFECT) {
       f = new Vector2();
-      copyVector(f, c);
+      copyVector(f, targetPosition);
     } else {
-      f = c;
+      f = targetPosition;
     }
   }
-  this.startPosition = b;
+  this.startPosition = startPosition;
   this.currentPosition = f;
-  this.targetPosition = c;
+  this.targetPosition = targetPosition;
   this.reachedTarget = false;
-  this.projectileEffect = d;
+  this.projectileEffect = projectileEffect;
   this.finished = this.hasSpawned = this.isReturning = false;
-  this.animation = a ? effectAnimationsCatalog.getAnimation(a) : null;
-  if (a && !this.animation) {
-    console.log("Failed to find animated sprite: " + a);
+  this.animation = impactEffectName ? effectAnimationsCatalog.getAnimation(impactEffectName) : null;
+  if (impactEffectName && !this.animation) {
+    console.log("Failed to find animated sprite: " + impactEffectName);
   }
   this.frameCount = this.animation ? this.animation.getFrameCount() : 0;
   this.previousFrameIndex = -1;
@@ -106,62 +106,62 @@ export function VisualEffect(a, b, c, d, f) {
   this.elapsedMs = 0;
   this.loopsWhileStunned = false;
 }
-export function getEffectDirection(a) {
-  assignVector(directionScratchVector, a.targetPosition);
-  subtractVector(directionScratchVector, a.currentPosition);
+export function getEffectDirection(visualEffect) {
+  assignVector(directionScratchVector, visualEffect.targetPosition);
+  subtractVector(directionScratchVector, visualEffect.currentPosition);
   normalizeVector(directionScratchVector);
-  a = directionScratchVector.x;
-  var b = directionScratchVector.y,
-    c = 180 * -Math.atan2(b, a) / Math.PI;
-  if (0 > c) {
-    c += 360;
+  var directionX = directionScratchVector.x;
+  var directionY = directionScratchVector.y,
+    angleDegrees = 180 * -Math.atan2(directionY, directionX) / Math.PI;
+  if (0 > angleDegrees) {
+    angleDegrees += 360;
   }
-  if (337.5 <= c || 22.5 > c) {
+  if (337.5 <= angleDegrees || 22.5 > angleDegrees) {
     return 3;
   }
-  if (22.5 <= c && 67.5 > c) {
+  if (22.5 <= angleDegrees && 67.5 > angleDegrees) {
     return 2;
   }
-  if (67.5 <= c && 112.5 > c) {
+  if (67.5 <= angleDegrees && 112.5 > angleDegrees) {
     return 1;
   }
-  if (112.5 <= c && 157.5 > c) {
+  if (112.5 <= angleDegrees && 157.5 > angleDegrees) {
     return 0;
   }
-  if (157.5 <= c && 202.5 > c) {
+  if (157.5 <= angleDegrees && 202.5 > angleDegrees) {
     return 7;
   }
-  if (202.5 <= c && 247.5 > c) {
+  if (202.5 <= angleDegrees && 247.5 > angleDegrees) {
     return 6;
   }
-  if (247.5 <= c && 292.5 > c) {
+  if (247.5 <= angleDegrees && 292.5 > angleDegrees) {
     return 5;
   }
-  if (292.5 <= c && 337.5 > c) {
+  if (292.5 <= angleDegrees && 337.5 > angleDegrees) {
     return 4;
   }
-  console.log("direction fail x=" + a + " y=" + b + " angle=" + c);
+  console.log("direction fail x=" + directionX + " y=" + directionY + " angle=" + angleDegrees);
 }
-export function advanceEffectFrame(a, b) {
-  a.elapsedMs += b * FRAME_DURATION_MS;
-  var c = a.projectileEffect ? PROJECTILE_FRAME_DURATION_MS : EFFECT_FRAME_DURATION_MS;
-  a.previousFrameIndex = a.frameIndex;
-  if (a.elapsedMs >= c) {
-    var d = Math.min(1, floorNumber(a.elapsedMs / c));
-    a.elapsedMs = Math.max(0, floorNumber(a.elapsedMs % c));
-    a.frameIndex += d;
-    if (a.frameIndex >= a.frameCount) {
-      if (a.loopsWhileStunned) {
-        if (a.boundCharacter.effects.isStunned) {
-          a.frameIndex = 0;
+export function advanceEffectFrame(visualEffect, elapsedUnits) {
+  visualEffect.elapsedMs += elapsedUnits * FRAME_DURATION_MS;
+  var frameDurationMs = visualEffect.projectileEffect ? PROJECTILE_FRAME_DURATION_MS : EFFECT_FRAME_DURATION_MS;
+  visualEffect.previousFrameIndex = visualEffect.frameIndex;
+  if (visualEffect.elapsedMs >= frameDurationMs) {
+    var framesToAdvance = Math.min(1, floorNumber(visualEffect.elapsedMs / frameDurationMs));
+    visualEffect.elapsedMs = Math.max(0, floorNumber(visualEffect.elapsedMs % frameDurationMs));
+    visualEffect.frameIndex += framesToAdvance;
+    if (visualEffect.frameIndex >= visualEffect.frameCount) {
+      if (visualEffect.loopsWhileStunned) {
+        if (visualEffect.boundCharacter.effects.isStunned) {
+          visualEffect.frameIndex = 0;
         } else {
-          a.finished = true;
+          visualEffect.finished = true;
         }
       } else {
-        if (a.projectileEffect) {
-          a.frameIndex = 0;
+        if (visualEffect.projectileEffect) {
+          visualEffect.frameIndex = 0;
         } else {
-          a.finished = true;
+          visualEffect.finished = true;
         }
       }
     }
@@ -178,9 +178,9 @@ export function clearVisualEffects(effects) {
     effects.pool.length = 0;
   }
 }
-export function addVisualEffect(a, b) {
-  if (b) {
-    a.pool.push(b);
+export function addVisualEffect(visualEffects, visualEffect) {
+  if (visualEffect) {
+    visualEffects.pool.push(visualEffect);
   }
 }
 export function initializeRenderingSprites() {
@@ -190,15 +190,15 @@ export function initializeRenderingSprites() {
   Sprite.prototype.getSheetImage = function () {
     return this.spriteSheet.getSheetImage();
   };
-  SpriteSheet.prototype.registerDefinitions = function (a) {
-    var b, c;
-    for (b = 0; b < a.length; b++) {
-      c = a[b];
-      this.animationMap[c.name] = new Sprite(this, c.position.x, c.position.y, c.name);
+  SpriteSheet.prototype.registerDefinitions = function (spriteDefinitions) {
+    var definitionIndex, definition;
+    for (definitionIndex = 0; definitionIndex < spriteDefinitions.length; definitionIndex++) {
+      definition = spriteDefinitions[definitionIndex];
+      this.animationMap[definition.name] = new Sprite(this, definition.position.x, definition.position.y, definition.name);
     }
   };
-  SpriteSheet.prototype.getSprite = function (a) {
-    return this.animationMap[a];
+  SpriteSheet.prototype.getSprite = function (spriteName) {
+    return this.animationMap[spriteName];
   };
   SpriteSheet.prototype.getSheetImage = function () {
     return this.image;
@@ -212,16 +212,16 @@ export function initializeRenderingSprites() {
   SpriteAnimation.prototype.getFrameCount = function () {
     return this.frames.length;
   };
-  AnimationSheet.prototype.registerDefinitions = function (a, b) {
-    var c, d;
-    for (c = 0; c < a.length; c++) {
-      d = a[c];
-      this.animationNames.push(d.animationName);
-      this.animationMap[d.animationName] = new SpriteAnimation(this, d.animationName, d.firstFrameColumn, d.firstFrameRow, d.lastRowFrameCount, d.lastFrameRow, b, d.isDirectional);
+  AnimationSheet.prototype.registerDefinitions = function (animationDefinitions, lastFrameColumnIndex) {
+    var definitionIndex, definition;
+    for (definitionIndex = 0; definitionIndex < animationDefinitions.length; definitionIndex++) {
+      definition = animationDefinitions[definitionIndex];
+      this.animationNames.push(definition.animationName);
+      this.animationMap[definition.animationName] = new SpriteAnimation(this, definition.animationName, definition.firstFrameColumn, definition.firstFrameRow, definition.lastRowFrameCount, definition.lastFrameRow, lastFrameColumnIndex, definition.isDirectional);
     }
   };
-  AnimationSheet.prototype.getAnimation = function (a) {
-    return this.animationMap[a];
+  AnimationSheet.prototype.getAnimation = function (animationName) {
+    return this.animationMap[animationName];
   };
   AnimationSheet.prototype.getSheetImage = function () {
     return this.image;
@@ -229,33 +229,33 @@ export function initializeRenderingSprites() {
   AnimationSheet.prototype.isLoaded = function () {
     return this.loaded;
   };
-  AnimationCatalog.prototype.getAnimation = function (a) {
-    var b = this.animationMap[a];
-    return b ? b.getAnimation(a) : null;
+  AnimationCatalog.prototype.getAnimation = function (animationName) {
+    var ownerSheet = this.animationMap[animationName];
+    return ownerSheet ? ownerSheet.getAnimation(animationName) : null;
   };
   AnimationCatalog.prototype.isLoaded = function () {
-    var a;
-    for (a = 0; a < this.sheets.length; a++) {
-      if (!this.sheets[a].isLoaded()) {
+    var checkIndex;
+    for (checkIndex = 0; checkIndex < this.sheets.length; checkIndex++) {
+      if (!this.sheets[checkIndex].isLoaded()) {
         return false;
       }
     }
     if (!this.animationMap) {
-      a = this.sheets;
-      var b,
-        c,
-        d,
-        f,
-        g = {};
-      for (b = 0; b < a.length; b++) {
-        for (d = a[b], f = d.animationNames, c = 0; c < f.length; c++) {
-          if (g[f[c]]) {
-            console.log("effect name already defined: " + f[c]);
+      var sheets = this.sheets;
+      var sheetIndex,
+        nameIndex,
+        sheet,
+        animationNames,
+        sheetByAnimationName = {};
+      for (sheetIndex = 0; sheetIndex < sheets.length; sheetIndex++) {
+        for (sheet = sheets[sheetIndex], animationNames = sheet.animationNames, nameIndex = 0; nameIndex < animationNames.length; nameIndex++) {
+          if (sheetByAnimationName[animationNames[nameIndex]]) {
+            console.log("effect name already defined: " + animationNames[nameIndex]);
           }
-          g[f[c]] = d;
+          sheetByAnimationName[animationNames[nameIndex]] = sheet;
         }
       }
-      this.animationMap = g;
+      this.animationMap = sheetByAnimationName;
     }
     return true;
   };
@@ -264,8 +264,8 @@ export function initializeRenderingSprites() {
   VisualEffect.prototype.getAnimation = function () {
     return this.animation;
   };
-  VisualEffect.prototype.setRemainingEffectDamage = function (a) {
-    this.remainingEffectDamage = a;
+  VisualEffect.prototype.setRemainingEffectDamage = function (remainingEffectDamage) {
+    this.remainingEffectDamage = remainingEffectDamage;
   };
   VisualEffect.prototype.isFinished = function () {
     return this.finished || this.reachedTarget;

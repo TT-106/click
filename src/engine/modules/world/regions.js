@@ -6,8 +6,8 @@ import { game } from "../runtime/game.js";
 import { refreshWorldBlocks } from "./terrain.js";
 import { castleTheme, caveTheme, chamberTheme, dungeonTheme, iceDungeonTheme, ironMineTheme, stoneDungeonTheme, templeTheme, towerTheme, woodenMineTheme } from "../content/dungeon-themes.js";
 export var WORLD_BLOCK_COLUMNS, WORLD_BLOCK_ROWS, WORLD_ORIGIN_COLUMN, WORLD_ORIGIN_ROW;
-export function DungeonNameGenerator(a) {
-  this.seededRandom = a;
+export function DungeonNameGenerator(seededRandom) {
+  this.seededRandom = seededRandom;
   this.dungeonAdjectives = "可恶的 遗弃的 讨厌的 诅咒的 有害的 血腥的 痛苦的 诅咒的 毁坏的 矛盾的 爬行的 该死的 破旧的 厌恶的 黑暗的 昏暗的 遗弃的 发狂的 死亡的 深渊的 积灰的 不安的 荒凉的 潮湿的 粗短的 恶心的 不安的 害怕的 犯规的 禁止的 不好的 遗忘的 肮脏的 可怕的 灰暗的 地狱的 可恨的 可怕的 潮湿的 感染的 感染的 地狱的 有害的 诽谤的 可憎的 厌恶的 失去的 发霉的 神秘的 无情的 雾霾的 下流的 不好的 崩坏的 恶心的 调皮的 正常的 恶臭的 讨厌的 可憎的 厌恶的 反对的 有毒的 苍白的 污染的 腐坏的 毁灭的 糟糕的 腐臭的 驱蚊的 敌对的 发散的 恶心的 恶臭的 腐臭的 破碎的 恶心的 笼罩的 悲伤的 秘密的 阴影的 折磨的 折磨的 邪恶的 未知的 无名的 邪恶的 低语的 邪恶的".split(" ");
   this.dungeonNouns = "地洞 地窖 洞穴 窑洞 空洞 兽穴 深洞 迷宫 陵墓 墓穴 迷宫 沼泽 矿坑 通道 矿井 地道 底层 地穴 水坑 隧道".split(" ");
   this.cryptNouns = "地下墓穴 地窖 膛室 窄小通道 停尸房 土窖 坟墓 石窟 地狱 阴间 陵墓 太平间 墓地 藏骨堂 神圣庇护所 埋葬所 坟墓 拱顶".split(" ");
@@ -18,55 +18,55 @@ export function DungeonNameGenerator(a) {
   this.castleNouns = "城堡 堡垒 城塞 城堡 酒庄 房产 堡垒 要塞 防务 边塞 军防 礼堂 防务 舱室 保管室 宅邸 庄园 宫殿 大厦 大本营 别墅".split(" ");
   this.iceAdjectives = "北极的;敏锐的;痛苦的;寒冷的;冷冻的;严寒的;冰冻的;霜冻的;冻结的;寒冬的;冰寒的;冰川的;冰镇的;冰冷的;冻僵的;霜降的;雪白的;刺骨的;麻木的;颤抖的;下雪的".split(";");
 }
-export function generateDungeonName(a, b) {
-  var c;
-  a: switch (b) {
+export function generateDungeonName(nameGenerator, dungeonType) {
+  var adjective;
+  a: switch (dungeonType) {
     case 3:
-      c = a.iceAdjectives[randomIntFrom(a.seededRandom, a.iceAdjectives.length)];
+      adjective = nameGenerator.iceAdjectives[randomIntFrom(nameGenerator.seededRandom, nameGenerator.iceAdjectives.length)];
       break a;
     default:
-      c = a.dungeonAdjectives[randomIntFrom(a.seededRandom, a.dungeonAdjectives.length)];
+      adjective = nameGenerator.dungeonAdjectives[randomIntFrom(nameGenerator.seededRandom, nameGenerator.dungeonAdjectives.length)];
   }
-  return "" + c + "" + getDungeonNoun(a, b);
+  return "" + adjective + "" + getDungeonNoun(nameGenerator, dungeonType);
 }
-export function getDungeonNoun(a, b) {
-  switch (b) {
+export function getDungeonNoun(nameGenerator, dungeonType) {
+  switch (dungeonType) {
     case 0:
     case 2:
     case 3:
     case 1:
-      return a.dungeonNouns[randomIntFrom(a.seededRandom, a.dungeonNouns.length)];
+      return nameGenerator.dungeonNouns[randomIntFrom(nameGenerator.seededRandom, nameGenerator.dungeonNouns.length)];
     case 4:
     case 5:
-      return a.towerNouns[randomIntFrom(a.seededRandom, a.towerNouns.length)];
+      return nameGenerator.towerNouns[randomIntFrom(nameGenerator.seededRandom, nameGenerator.towerNouns.length)];
     case 6:
-      return a.lairNouns[randomIntFrom(a.seededRandom, a.lairNouns.length)];
+      return nameGenerator.lairNouns[randomIntFrom(nameGenerator.seededRandom, nameGenerator.lairNouns.length)];
     case 7:
     case 8:
-      return a.monumentNouns[randomIntFrom(a.seededRandom, a.monumentNouns.length)];
+      return nameGenerator.monumentNouns[randomIntFrom(nameGenerator.seededRandom, nameGenerator.monumentNouns.length)];
     case 9:
-      return a.cryptNouns[randomIntFrom(a.seededRandom, a.cryptNouns.length)];
+      return nameGenerator.cryptNouns[randomIntFrom(nameGenerator.seededRandom, nameGenerator.cryptNouns.length)];
     case 10:
-      return a.templeNouns[randomIntFrom(a.seededRandom, a.templeNouns.length)];
+      return nameGenerator.templeNouns[randomIntFrom(nameGenerator.seededRandom, nameGenerator.templeNouns.length)];
     case 11:
-      return a.castleNouns[randomIntFrom(a.seededRandom, a.castleNouns.length)];
+      return nameGenerator.castleNouns[randomIntFrom(nameGenerator.seededRandom, nameGenerator.castleNouns.length)];
     default:
-      return a.lairNouns[randomIntFrom(a.seededRandom, a.lairNouns.length)];
+      return nameGenerator.lairNouns[randomIntFrom(nameGenerator.seededRandom, nameGenerator.lairNouns.length)];
   }
 }
-export function WorldRegion(a, b, c) {
-  this.regionKey = a;
-  this.regionColumn = b;
-  this.regionRow = c;
+export function WorldRegion(regionKey, regionColumn, regionRow) {
+  this.regionKey = regionKey;
+  this.regionColumn = regionColumn;
+  this.regionRow = regionRow;
   this.castle = null;
 }
-export function Castle(a, b, c, d, f, g) {
-  this.castleId = a;
-  this.castleName = b;
-  this.regionColumn = c;
-  this.regionRow = d;
-  this.worldPixelX = f;
-  this.worldPixelY = g;
+export function Castle(castleId, castleName, regionColumn, regionRow, worldPixelX, worldPixelY) {
+  this.castleId = castleId;
+  this.castleName = castleName;
+  this.regionColumn = regionColumn;
+  this.regionRow = regionRow;
+  this.worldPixelX = worldPixelX;
+  this.worldPixelY = worldPixelY;
   this.dungeonsConquered = this.conquered = false;
   this.regionLocked = true;
   this.attackScheduled = false;
@@ -74,105 +74,105 @@ export function Castle(a, b, c, d, f, g) {
   this.regions = [];
   this.dungeonList = [];
 }
-export function canAttackCastle(a) {
-  return !a.regionLocked && !a.conquered && a.dungeonsConquered && !a.attackScheduled;
+export function canAttackCastle(castle) {
+  return !castle.regionLocked && !castle.conquered && castle.dungeonsConquered && !castle.attackScheduled;
 }
-export function refreshCastleConquest(a) {
-  if (a.dungeonsConquered || a.conquered) {
-    a.conqueredDungeonCount = a.dungeonList.length;
+export function refreshCastleConquest(castle) {
+  if (castle.dungeonsConquered || castle.conquered) {
+    castle.conqueredDungeonCount = castle.dungeonList.length;
   } else {
-    var b;
-    for (b = a.conqueredDungeonCount = 0; b < a.dungeonList.length; b++) {
-      if (a.dungeonList[b].conquered) {
-        a.conqueredDungeonCount++;
+    var dungeonIndex;
+    for (dungeonIndex = castle.conqueredDungeonCount = 0; dungeonIndex < castle.dungeonList.length; dungeonIndex++) {
+      if (castle.dungeonList[dungeonIndex].conquered) {
+        castle.conqueredDungeonCount++;
       }
     }
-    if (a.conqueredDungeonCount === a.dungeonList.length) {
-      a.dungeonsConquered = true;
-      b = game.castles;
-      b.nextRequiredMonsterLevel++;
-      a.requiredMonsterLevel = b.nextRequiredMonsterLevel;
+    if (castle.conqueredDungeonCount === castle.dungeonList.length) {
+      castle.dungeonsConquered = true;
+      var castleManager = game.castles;
+      castleManager.nextRequiredMonsterLevel++;
+      castle.requiredMonsterLevel = castleManager.nextRequiredMonsterLevel;
       invalidateCastleRevision();
     }
-    if (canAttackCastle(a)) {
-      refreshAttackableCastles(a);
+    if (canAttackCastle(castle)) {
+      refreshAttackableCastles(castle);
     }
   }
 }
 export function RegionLayout() {
   this.minRegionColumn = game.regions.regionGridOriginColumn;
   this.minRegionRow = game.regions.regionGridOriginRow;
-  var a = game.regions;
-  this.maxRegionColumn = a.regionGridOriginColumn + a.regionGridSpan;
-  a = game.regions;
-  this.maxRegionRow = a.regionGridOriginRow + a.regionGridSpan;
+  var regionManager = game.regions;
+  this.maxRegionColumn = regionManager.regionGridOriginColumn + regionManager.regionGridSpan;
+  regionManager = game.regions;
+  this.maxRegionRow = regionManager.regionGridOriginRow + regionManager.regionGridSpan;
 }
-export function getWestRegion(a, b, c, d) {
-  return b - 1 >= a.minRegionColumn && (a = b - 1 + "_" + c, !d[a]) ? game.regions.byKey[a] : null;
+export function getWestRegion(a, regionColumn, regionRow, occupiedRegionKeys) {
+  return regionColumn - 1 >= a.minRegionColumn && (a = regionColumn - 1 + "_" + regionRow, !occupiedRegionKeys[a]) ? game.regions.byKey[a] : null;
 }
-export function getEastRegion(a, b, c, d) {
-  return b + 1 < a.maxRegionColumn && (a = b + 1 + "_" + c, !d[a]) ? game.regions.byKey[a] : null;
+export function getEastRegion(a, regionColumn, regionRow, occupiedRegionKeys) {
+  return regionColumn + 1 < a.maxRegionColumn && (a = regionColumn + 1 + "_" + regionRow, !occupiedRegionKeys[a]) ? game.regions.byKey[a] : null;
 }
-export function getNorthRegion(a, b, c, d) {
-  return c - 1 >= a.minRegionRow && (a = b + "_" + (c - 1), !d[a]) ? game.regions.byKey[a] : null;
+export function getNorthRegion(a, regionColumn, regionRow, occupiedRegionKeys) {
+  return regionRow - 1 >= a.minRegionRow && (a = regionColumn + "_" + (regionRow - 1), !occupiedRegionKeys[a]) ? game.regions.byKey[a] : null;
 }
-export function getSouthRegion(a, b, c, d) {
-  return c + 1 < a.maxRegionRow && (a = b + "_" + (c + 1), !d[a]) ? game.regions.byKey[a] : null;
+export function getSouthRegion(a, regionColumn, regionRow, occupiedRegionKeys) {
+  return regionRow + 1 < a.maxRegionRow && (a = regionColumn + "_" + (regionRow + 1), !occupiedRegionKeys[a]) ? game.regions.byKey[a] : null;
 }
-export function chooseAdjacentRegion(a, b, c, d) {
-  var f = b.regionColumn;
+export function chooseAdjacentRegion(regionLayout, b, occupiedRegionKeys, d) {
+  var regionColumn = b.regionColumn;
   b = b.regionRow;
   if (0.5 > d.random()) {
     if (0.5 > d.random()) {
-      if ((d = getWestRegion(a, f, b, c)) || (d = getEastRegion(a, f, b, c)) || (d = getSouthRegion(a, f, b, c))) {
+      if ((d = getWestRegion(regionLayout, regionColumn, b, occupiedRegionKeys)) || (d = getEastRegion(regionLayout, regionColumn, b, occupiedRegionKeys)) || (d = getSouthRegion(regionLayout, regionColumn, b, occupiedRegionKeys))) {
         return d;
       }
-      d = getNorthRegion(a, f, b, c);
+      d = getNorthRegion(regionLayout, regionColumn, b, occupiedRegionKeys);
     } else {
-      if ((d = getEastRegion(a, f, b, c)) || (d = getWestRegion(a, f, b, c)) || (d = getNorthRegion(a, f, b, c))) {
+      if ((d = getEastRegion(regionLayout, regionColumn, b, occupiedRegionKeys)) || (d = getWestRegion(regionLayout, regionColumn, b, occupiedRegionKeys)) || (d = getNorthRegion(regionLayout, regionColumn, b, occupiedRegionKeys))) {
         return d;
       }
-      d = getSouthRegion(a, f, b, c);
+      d = getSouthRegion(regionLayout, regionColumn, b, occupiedRegionKeys);
     }
   } else if (0.5 > d.random()) {
-    if ((d = getNorthRegion(a, f, b, c)) || (d = getSouthRegion(a, f, b, c)) || (d = getEastRegion(a, f, b, c))) {
+    if ((d = getNorthRegion(regionLayout, regionColumn, b, occupiedRegionKeys)) || (d = getSouthRegion(regionLayout, regionColumn, b, occupiedRegionKeys)) || (d = getEastRegion(regionLayout, regionColumn, b, occupiedRegionKeys))) {
       return d;
     }
-    d = getWestRegion(a, f, b, c);
+    d = getWestRegion(regionLayout, regionColumn, b, occupiedRegionKeys);
   } else {
-    if ((d = getSouthRegion(a, f, b, c)) || (d = getNorthRegion(a, f, b, c)) || (d = getWestRegion(a, f, b, c))) {
+    if ((d = getSouthRegion(regionLayout, regionColumn, b, occupiedRegionKeys)) || (d = getNorthRegion(regionLayout, regionColumn, b, occupiedRegionKeys)) || (d = getWestRegion(regionLayout, regionColumn, b, occupiedRegionKeys))) {
       return d;
     }
-    d = getEastRegion(a, f, b, c);
+    d = getEastRegion(regionLayout, regionColumn, b, occupiedRegionKeys);
   }
   if (d) {
     return d;
   }
 }
 export function resetCastles() {
-  var a = game.castles;
-  a.attackableCastles.length = 0;
-  a.scheduledCastles.length = 0;
-  a.revision = 0;
-  a.nextRequiredMonsterLevel = 1;
-  var b;
-  for (b = 0; b < a.castleList.length; b++) {
-    var c = a.castleList[b];
-    c.conquered = false;
-    c.regionLocked = true;
-    c.attackScheduled = false;
-    c.conqueredDungeonCount = 0;
-    c.requiredMonsterLevel = 0;
-    c.dungeonsConquered = 0 === c.dungeonList.length;
+  var castleManager = game.castles;
+  castleManager.attackableCastles.length = 0;
+  castleManager.scheduledCastles.length = 0;
+  castleManager.revision = 0;
+  castleManager.nextRequiredMonsterLevel = 1;
+  var castleIndex;
+  for (castleIndex = 0; castleIndex < castleManager.castleList.length; castleIndex++) {
+    var castle = castleManager.castleList[castleIndex];
+    castle.conquered = false;
+    castle.regionLocked = true;
+    castle.attackScheduled = false;
+    castle.conqueredDungeonCount = 0;
+    castle.requiredMonsterLevel = 0;
+    castle.dungeonsConquered = 0 === castle.dungeonList.length;
   }
 }
 export function unlockStartingRegion() {
   /** @type {any} */
   var a = game.world.worldBlocks[1][1];
   a = a.regionColumn + "_" + a.regionRow;
-  var b = findCastleByRegion(a);
-  if (b) {
-    b.regionLocked = false;
+  var ownerCastle = findCastleByRegion(a);
+  if (ownerCastle) {
+    ownerCastle.regionLocked = false;
     refreshWorldBlocks(game.world);
   } else {
     console.log("failed to find world block owner castle: " + a);
@@ -184,46 +184,46 @@ export function findCastle(a) {
 export function findCastleByRegion(a) {
   return (a = game.castles.byRegionKey[a]) ? a : null;
 }
-export function refreshAttackableCastles(a) {
-  var b = game.castles;
-  b.revision++;
-  var c = b.attackableCastles.indexOf(a);
-  if (canAttackCastle(a)) {
-    if (0 > c) {
-      b.attackableCastles.push(a);
-      sortCastles(b, b.attackableCastles);
+export function refreshAttackableCastles(castle) {
+  var castleManager = game.castles;
+  castleManager.revision++;
+  var attackableIndex = castleManager.attackableCastles.indexOf(castle);
+  if (canAttackCastle(castle)) {
+    if (0 > attackableIndex) {
+      castleManager.attackableCastles.push(castle);
+      sortCastles(castleManager, castleManager.attackableCastles);
     }
   } else {
-    if (-1 < c) {
-      b.attackableCastles.splice(c, 1);
+    if (-1 < attackableIndex) {
+      castleManager.attackableCastles.splice(attackableIndex, 1);
     }
   }
 }
-export function refreshScheduledCastles(a) {
-  var b = game.castles;
-  b.revision++;
-  var c = b.scheduledCastles.indexOf(a);
-  if (a.attackScheduled) {
-    if (0 > c) {
-      b.scheduledCastles.push(a);
-      sortCastles(b, b.scheduledCastles);
+export function refreshScheduledCastles(castle) {
+  var castleManager = game.castles;
+  castleManager.revision++;
+  var scheduledIndex = castleManager.scheduledCastles.indexOf(castle);
+  if (castle.attackScheduled) {
+    if (0 > scheduledIndex) {
+      castleManager.scheduledCastles.push(castle);
+      sortCastles(castleManager, castleManager.scheduledCastles);
     }
   } else {
-    if (-1 < c) {
-      b.scheduledCastles.splice(c, 1);
+    if (-1 < scheduledIndex) {
+      castleManager.scheduledCastles.splice(scheduledIndex, 1);
     }
   }
 }
 export function invalidateCastleRevision() {
   game.castles.revision++;
 }
-export function sortCastles(a, b) {
-  if (!(!b || 2 > b.length)) {
-    b.sort(a.compareCastles);
+export function sortCastles(castleManager, castleList) {
+  if (!(!castleList || 2 > castleList.length)) {
+    castleList.sort(castleManager.compareCastles);
   }
 }
-export function getDungeonTheme(a) {
-  switch (a) {
+export function getDungeonTheme(dungeonType) {
+  switch (dungeonType) {
     case 0:
       return stoneDungeonTheme;
     case 1:
@@ -252,8 +252,8 @@ export function getDungeonTheme(a) {
       return dungeonTheme;
   }
 }
-export function getDungeonMapSprite(a) {
-  switch (a) {
+export function getDungeonMapSprite(dungeonType) {
+  switch (dungeonType) {
     case 0:
       return "L2_Terrain068.PNG";
     case 1:
@@ -285,8 +285,8 @@ export function initializeWorldRegions() {
   WORLD_BLOCK_ROWS = 18;
   WORLD_ORIGIN_COLUMN = 100;
   WORLD_ORIGIN_ROW = 100;
-  Castle.prototype.setConquered = function (a) {
-    this.conquered = a;
+  Castle.prototype.setConquered = function (isConquered) {
+    this.conquered = isConquered;
   };
   Castle.prototype.refreshConquest = function () {
     refreshCastleConquest(this);

@@ -16,21 +16,21 @@ import { GameCanvasView } from "../rendering/scene.js";
 import { UpgradeListView } from "./upgrade-details.js";
 import { TreasureLootView } from "./dungeons.js";
 import { TabView } from "./navigation.js";
-export function AdventurerSummaryView(a) {
-  this.elementId = "gameTabAdventurerInfo" + a;
+export function AdventurerSummaryView(adventurerIndex) {
+  this.elementId = "gameTabAdventurerInfo" + adventurerIndex;
   this.visible = true;
-  this.adventurerIndex = a;
+  this.adventurerIndex = adventurerIndex;
   this.summaryTable = null;
-  this.effectIconIds = ["adventurerEffectIconA" + a, "adventurerEffectIconB" + a, "adventurerEffectIconC" + a, "adventurerEffectIconD" + a, "adventurerEffectIconE" + a, "adventurerEffectIconF" + a];
-  this.healthSliderId = "adventurerHealthSlider" + a;
-  this.healthTextId = "adventurerHealth" + a;
-  this.damageTextId = "adventurerDamage" + a;
-  this.armorTextId = "adventurerArmor" + a;
-  this.attackRatingTextId = "adventurerAR" + a;
-  this.defenceRatingTextId = "adventurerDR" + a;
-  this.levelClassTextId = "adventurerLevelClass" + a;
-  this.spiritSliderId = "adventurerSpiritPowerSlider" + a;
-  this.spiritTextId = "adventurerSpiritPower" + a;
+  this.effectIconIds = ["adventurerEffectIconA" + adventurerIndex, "adventurerEffectIconB" + adventurerIndex, "adventurerEffectIconC" + adventurerIndex, "adventurerEffectIconD" + adventurerIndex, "adventurerEffectIconE" + adventurerIndex, "adventurerEffectIconF" + adventurerIndex];
+  this.healthSliderId = "adventurerHealthSlider" + adventurerIndex;
+  this.healthTextId = "adventurerHealth" + adventurerIndex;
+  this.damageTextId = "adventurerDamage" + adventurerIndex;
+  this.armorTextId = "adventurerArmor" + adventurerIndex;
+  this.attackRatingTextId = "adventurerAR" + adventurerIndex;
+  this.defenceRatingTextId = "adventurerDR" + adventurerIndex;
+  this.levelClassTextId = "adventurerLevelClass" + adventurerIndex;
+  this.spiritSliderId = "adventurerSpiritPowerSlider" + adventurerIndex;
+  this.spiritTextId = "adventurerSpiritPower" + adventurerIndex;
   this.vacantOverlay = this.defenceHeaderCell = this.attackRatingHeaderCell = this.potionButton = this.damageHeaderCell = null;
   this.cachedMonsterDefenceRating = this.cachedMonsterAttackRating = this.cachedMonsterDamage = this.cachedMonsterArmor = this.cachedLevel = this.cachedDefenceRating = this.cachedAttackRating = this.cachedArmor = this.cachedDamage = this.cachedMaxSpirit = this.cachedSpirit = this.cachedMaxHealth = this.cachedHealth = -1;
   this.shownEffectTypeIds = [null, null, null, null, null, null];
@@ -41,18 +41,18 @@ export function AdventurerSummaryView(a) {
   this.comparisonEncounterIndex = -1;
   this.isLocked = false;
 }
-export function colorComparedStats(a, b, c, d, f, g) {
-  if (b != d || c != f) {
-    if (b < c) {
-      getElement(a).style.color = "#F00";
-      g.style.color = "#F00";
+export function colorComparedStats(statTextId, adventurerValue, monsterValue, cachedAdventurerValue, cachedMonsterValue, headerCell) {
+  if (adventurerValue != cachedAdventurerValue || monsterValue != cachedMonsterValue) {
+    if (adventurerValue < monsterValue) {
+      getElement(statTextId).style.color = "#F00";
+      headerCell.style.color = "#F00";
     } else {
-      if (b > c) {
-        getElement(a).style.color = "#0A0";
-        g.style.color = "#0A0";
+      if (adventurerValue > monsterValue) {
+        getElement(statTextId).style.color = "#0A0";
+        headerCell.style.color = "#0A0";
       } else {
-        getElement(a).style.color = "#FFF";
-        g.style.color = "#FFF";
+        getElement(statTextId).style.color = "#FFF";
+        headerCell.style.color = "#FFF";
       }
     }
   }
@@ -79,51 +79,51 @@ export function CurrencyView() {
   this.killsCellId = "killsCountCell";
   this.cachedKills = this.cachedGold = this.cachedExperience = -1;
 }
-export function AdventurePointsView(a) {
-  this.elementId = a;
+export function AdventurePointsView(elementId) {
+  this.elementId = elementId;
   this.visible = true;
   this.pointsCell = null;
   this.cachedPoints = -1;
 }
-export function mountAdventurePoints(a) {
-  var b = createElement("table", getElement(a.elementId), null, null);
+export function mountAdventurePoints(view) {
+  var b = createElement("table", getElement(view.elementId), null, null);
   b.style.width = "100%";
   b = b.insertRow(0);
-  a.pointsCell = b.insertCell(0);
+  view.pointsCell = b.insertCell(0);
   b = b.insertCell(1);
-  a.pointsCell.style.textAlign = "right";
-  a.pointsCell.style.paddingTop = "5px";
+  view.pointsCell.style.textAlign = "right";
+  view.pointsCell.style.paddingTop = "5px";
   b.style.width = "30px";
   b.style.paddingTop = "5px";
   b.style.textAlign = "left";
   b.title = "冒险点数";
   b.innerHTML = "AP";
 }
-export function ScrollButtonCollection(a) {
+export function ScrollButtonCollection(keyBindings) {
   this.keyStates = {};
   this.buttons = [];
-  var b, c, d;
-  for (b = 0; b < (/** @type {any} */ (a)).length; b++) {
-    for (d = a[b], c = 0; c < d.length; c++) {
-      this.buttons.push(d[c]);
+  var buttonIndex, keyIndex, buttonKeyCodes;
+  for (buttonIndex = 0; buttonIndex < (/** @type {any} */ (keyBindings)).length; buttonIndex++) {
+    for (buttonKeyCodes = keyBindings[buttonIndex], keyIndex = 0; keyIndex < buttonKeyCodes.length; keyIndex++) {
+      this.buttons.push(buttonKeyCodes[keyIndex]);
     }
   }
   scrollButtonsChanged(this);
   clearScrollButtons(this);
 }
-export function clearScrollButtons(a) {
-  document.onkeyup = function (b) {
-    a.keyStates[b.keyCode] = true;
+export function clearScrollButtons(collection) {
+  document.onkeyup = function (event) {
+    collection.keyStates[event.keyCode] = true;
   };
 }
-export function scrollButtonsChanged(a) {
-  var b;
-  for (b = 0; b < a.buttons.length; b++) {
-    a.keyStates[a.buttons[b]] = false;
+export function scrollButtonsChanged(collection) {
+  var buttonIndex;
+  for (buttonIndex = 0; buttonIndex < collection.buttons.length; buttonIndex++) {
+    collection.keyStates[collection.buttons[buttonIndex]] = false;
   }
 }
-export function ScrollButtonView(a, b, c, d) {
-  this.elementId = a;
+export function ScrollButtonView(elementId, casterIndex, collection, keyBindings) {
+  this.elementId = elementId;
   this.visible = true;
   this.itemImage = this.quantityCell = this.nameCell = this.buttonElement = this.cachedScroll = this.scroll = null;
   this.isEnabled = false;
@@ -131,33 +131,33 @@ export function ScrollButtonView(a, b, c, d) {
   this.cachedQuantity = -1;
   this.cachedLabel = null;
   this.cachedLocked = true;
-  this.casterIndex = b;
-  this.collection = c;
-  this.keyBindings = d;
+  this.casterIndex = casterIndex;
+  this.collection = collection;
+  this.keyBindings = keyBindings;
 }
-export function getScrollButtonClass(a) {
-  if (a.scroll && (0 < a.scroll.quantity || infiniteScrollsModifier.currentValue)) {
-    positionScrollCaster(a.casterIndex);
-    castScroll(a.scroll, infiniteScrollsModifier.currentValue);
+export function getScrollButtonClass(view) {
+  if (view.scroll && (0 < view.scroll.quantity || infiniteScrollsModifier.currentValue)) {
+    positionScrollCaster(view.casterIndex);
+    castScroll(view.scroll, infiniteScrollsModifier.currentValue);
   }
 }
-export function mountScrollButton(a) {
-  a.buttonElement = createElement("div", getElement(a.elementId), null, "scrollButtonDisabled");
-  a.wasEnabled = false;
-  var b = createElement("table", a.buttonElement, null, null),
-    c = b.insertRow(0),
-    b = b.insertRow(1),
-    d = c.insertCell(0);
-  d.rowSpan = 2;
-  a.nameCell = c.insertCell(1);
-  a.quantityCell = b.insertCell(0);
-  a.nameCell.style.textAlign = "left";
-  a.quantityCell.style.textAlign = "left";
-  a.itemImage = createElement("img", d, null, "itemImage");
-  a.itemImage.style.height = "30px";
-  a.itemImage.src = "images/Transparent.gif";
-  a.buttonElement.onmouseup = function () {
-    getScrollButtonClass(a);
+export function mountScrollButton(view) {
+  view.buttonElement = createElement("div", getElement(view.elementId), null, "scrollButtonDisabled");
+  view.wasEnabled = false;
+  var buttonTable = createElement("table", view.buttonElement, null, null),
+    nameRow = buttonTable.insertRow(0),
+    quantityRow = buttonTable.insertRow(1),
+    iconCell = nameRow.insertCell(0);
+  iconCell.rowSpan = 2;
+  view.nameCell = nameRow.insertCell(1);
+  view.quantityCell = quantityRow.insertCell(0);
+  view.nameCell.style.textAlign = "left";
+  view.quantityCell.style.textAlign = "left";
+  view.itemImage = createElement("img", iconCell, null, "itemImage");
+  view.itemImage.style.height = "30px";
+  view.itemImage.src = "images/Transparent.gif";
+  view.buttonElement.onmouseup = function () {
+    getScrollButtonClass(view);
     return false;
   };
 }
@@ -169,11 +169,11 @@ export function ScrollBarView() {
   this.keyBindings = [[49, 35, 97], [50, 40, 98], [51, 34, 99], [52, 37, 100], [53, 12, 101], [54, 39, 102]];
   this.collection = new ScrollButtonCollection(this.keyBindings);
 }
-export function PotionButtonView(a, b) {
-  this.elementId = a;
+export function PotionButtonView(elementId, slotIndex) {
+  this.elementId = elementId;
   this.visible = true;
   this.potion = null;
-  this.slotIndex = b;
+  this.slotIndex = slotIndex;
   this.cachedButtonClass = this.cachedPotion = null;
   this.progressBarWidth = 192;
   this.potionImage = this.effectLabelCell = this.nameCell = this.dropPotionButton = this.tableElement = this.progressFillElement = this.contentContainer = null;
@@ -181,33 +181,33 @@ export function PotionButtonView(a, b) {
   this.cachedFillWidth = -1;
   this.isLocked = this.dropButtonShown = false;
 }
-export function mountPotionButton(a) {
-  a.contentContainer = createElement("div", getElement(a.elementId), null, "potionContentContainer");
-  a.isLocked = a.slotIndex >= BASE_POTION_CAPACITY + potionCapacityBonus.currentValue;
-  a.tableElement = createElement("table", a.contentContainer, null, a.isLocked ? "potionButtonLocked" : "potionButtonDisabled");
-  var b = a.tableElement.insertRow(0),
-    c = a.tableElement.insertRow(1),
-    d = b.insertCell(0);
-  d.rowSpan = 2;
-  a.nameCell = b.insertCell(1);
-  a.effectLabelCell = c.insertCell(0);
-  a.nameCell.style.textAlign = "left";
-  a.effectLabelCell.style.textAlign = "left";
-  a.potionImage = createElement("img", d, null, "itemImage");
-  a.potionImage.src = "images/Transparent.gif";
-  a.contentContainer.onmouseup = function () {
-    a.activate();
+export function mountPotionButton(view) {
+  view.contentContainer = createElement("div", getElement(view.elementId), null, "potionContentContainer");
+  view.isLocked = view.slotIndex >= BASE_POTION_CAPACITY + potionCapacityBonus.currentValue;
+  view.tableElement = createElement("table", view.contentContainer, null, view.isLocked ? "potionButtonLocked" : "potionButtonDisabled");
+  var nameRow = view.tableElement.insertRow(0),
+    effectLabelRow = view.tableElement.insertRow(1),
+    iconCell = nameRow.insertCell(0);
+  iconCell.rowSpan = 2;
+  view.nameCell = nameRow.insertCell(1);
+  view.effectLabelCell = effectLabelRow.insertCell(0);
+  view.nameCell.style.textAlign = "left";
+  view.effectLabelCell.style.textAlign = "left";
+  view.potionImage = createElement("img", iconCell, null, "itemImage");
+  view.potionImage.src = "images/Transparent.gif";
+  view.contentContainer.onmouseup = function () {
+    view.activate();
     return false;
   };
-  a.progressFillElement = createElement("div", a.contentContainer, null, "potionButtonProgressSlider");
-  a.dropButtonVisible = false;
-  a.dropPotionButton = createElement("div", a.contentContainer, null, "dropPotionButton");
-  a.dropPotionButton.title = "丢弃药剂";
-  a.dropPotionButton.innerHTML = "X";
-  a.dropPotionButton.style.display = "none";
-  a.dropButtonShown = false;
-  a.dropPotionButton.onmouseup = function () {
-    a.removePotion();
+  view.progressFillElement = createElement("div", view.contentContainer, null, "potionButtonProgressSlider");
+  view.dropButtonVisible = false;
+  view.dropPotionButton = createElement("div", view.contentContainer, null, "dropPotionButton");
+  view.dropPotionButton.title = "丢弃药剂";
+  view.dropPotionButton.innerHTML = "X";
+  view.dropPotionButton.style.display = "none";
+  view.dropButtonShown = false;
+  view.dropPotionButton.onmouseup = function () {
+    view.removePotion();
     return false;
   };
 }
@@ -217,9 +217,9 @@ export function PotionBarView() {
   this.mounted = false;
   this.buttonViews = [];
 }
-export function ExpeditionView(a) {
+export function ExpeditionView(tabState) {
   this.elementId = "gameTabContent";
-  this.tabState = a;
+  this.tabState = tabState;
   addChildView(this, new GameCanvasView());
   addChildView(this, new DungeonNotificationView());
   addChildView(this, new EncounterNotificationView());
@@ -252,98 +252,98 @@ export function initializeViewsExpedition() {
       }
     } else {
       this.comparisonEncounterIndex = this.cachedDefenceRating = this.cachedAttackRating = this.cachedArmor = this.cachedDamage = this.cachedMaxSpirit = this.cachedSpirit = this.cachedMaxHealth = this.cachedHealth = this.cachedLevel = -1;
-      var a;
-      for (a = 0; a < this.shownEffectTypeIds.length; a++) {
-        this.shownEffectTypeIds[a] = null;
-        this.potionSlots[a] = null;
-        this.effectFrameIndices[a] = 0;
+      var effectSlotIndex;
+      for (effectSlotIndex = 0; effectSlotIndex < this.shownEffectTypeIds.length; effectSlotIndex++) {
+        this.shownEffectTypeIds[effectSlotIndex] = null;
+        this.potionSlots[effectSlotIndex] = null;
+        this.effectFrameIndices[effectSlotIndex] = 0;
       }
       this.summaryTable = createElement("table", getElement(this.elementId), null, "adventurerInfoTable");
-      a = this.summaryTable.insertRow(0);
-      var b = a.insertCell(0);
-      b.className = "gameTabAdventurerIconCell";
-      b.rowSpan = 2;
-      var c = game.state.adventurers[this.adventurerIndex],
-        d = c.getSprite(),
-        b = createElement("img", b, null, "characterImage");
-      b.src = "images/Transparent.gif";
-      b.style.height = "35px";
-      b.style.background = "url('spritesheet/monsters.png') -" + d.sourceX + "px -" + (d.sourceY + 8) + "px";
-      d = a.insertCell(1);
-      d.style.width = "123px";
-      d.innerHTML = c.adventurerName;
-      c = a.insertCell(2);
-      c.className = "gameTabAdventurerSliderCell";
-      c.title = "生命值";
-      d = createElement("div", c, null, null);
-      d.className = "gameTabAdventurerSliderDiv";
-      createElement("div", d, this.healthSliderId, "gameTabAdventurerHealthSlider");
-      createElement("div", c, this.healthTextId, "gameTabAdventurerSliderOverlay");
-      c = a.insertCell(3);
-      c.style.width = "30px";
-      c.style.textAlign = "left";
-      c.style.paddingLeft = "4px";
-      c.title = "生命值";
-      c.innerHTML = "HP";
-      c = a.insertCell(4);
-      c.id = this.damageTextId;
-      c.title = "伤害:提高攻击伤害";
-      c.className = "gameTabAdventurerInfoHpAc";
-      this.damageHeaderCell = a.insertCell(5);
+      var healthRow = this.summaryTable.insertRow(0);
+      var portraitElement = healthRow.insertCell(0);
+      portraitElement.className = "gameTabAdventurerIconCell";
+      portraitElement.rowSpan = 2;
+      var adventurer = game.state.adventurers[this.adventurerIndex],
+        sprite = adventurer.getSprite(),
+        portraitElement = createElement("img", portraitElement, null, "characterImage");
+      portraitElement.src = "images/Transparent.gif";
+      portraitElement.style.height = "35px";
+      portraitElement.style.background = "url('spritesheet/monsters.png') -" + sprite.sourceX + "px -" + (sprite.sourceY + 8) + "px";
+      var nameCell = healthRow.insertCell(1);
+      nameCell.style.width = "123px";
+      nameCell.innerHTML = adventurer.adventurerName;
+      var healthSliderCell = healthRow.insertCell(2);
+      healthSliderCell.className = "gameTabAdventurerSliderCell";
+      healthSliderCell.title = "生命值";
+      var healthSliderDiv = createElement("div", healthSliderCell, null, null);
+      healthSliderDiv.className = "gameTabAdventurerSliderDiv";
+      createElement("div", healthSliderDiv, this.healthSliderId, "gameTabAdventurerHealthSlider");
+      createElement("div", healthSliderCell, this.healthTextId, "gameTabAdventurerSliderOverlay");
+      var healthLabelCell = healthRow.insertCell(3);
+      healthLabelCell.style.width = "30px";
+      healthLabelCell.style.textAlign = "left";
+      healthLabelCell.style.paddingLeft = "4px";
+      healthLabelCell.title = "生命值";
+      healthLabelCell.innerHTML = "HP";
+      var damageTextCell = healthRow.insertCell(4);
+      damageTextCell.id = this.damageTextId;
+      damageTextCell.title = "伤害:提高攻击伤害";
+      damageTextCell.className = "gameTabAdventurerInfoHpAc";
+      this.damageHeaderCell = healthRow.insertCell(5);
       this.damageHeaderCell.style.width = "30px";
       this.damageHeaderCell.style.textAlign = "left";
       this.damageHeaderCell.title = "伤害:提高攻击伤害";
       this.damageHeaderCell.innerHTML = "伤害";
-      c = a.insertCell(6);
-      c.id = this.attackRatingTextId;
-      c.className = "gameTabAdventurerInfoHpAc";
-      c.title = "攻击率：增加成功攻击的机会，可以理解为命中属性";
-      this.attackRatingHeaderCell = a.insertCell(7);
+      var attackRatingTextCell = healthRow.insertCell(6);
+      attackRatingTextCell.id = this.attackRatingTextId;
+      attackRatingTextCell.className = "gameTabAdventurerInfoHpAc";
+      attackRatingTextCell.title = "攻击率：增加成功攻击的机会，可以理解为命中属性";
+      this.attackRatingHeaderCell = healthRow.insertCell(7);
       this.attackRatingHeaderCell.style.width = "30px";
       this.attackRatingHeaderCell.style.textAlign = "left";
       this.attackRatingHeaderCell.title = "攻击率：增加成功攻击的机会，可以理解为命中属性";
       this.attackRatingHeaderCell.innerHTML = "攻击";
-      d = 8;
-      for (c = 0; c < this.effectIconIds.length; c++) {
-        b = a.insertCell(d++);
-        b.rowSpan = 2;
-        b = createElement("div", b, null, "gameTabAdventurerInfoEffect");
-        b = createElement("img", b, this.effectIconIds[c], "itemImage");
-        b.src = "images/Transparent.gif";
-        b.style.width = "30px";
-        b.style.height = "30px";
-        b.style.display = "none";
+      var columnIndex = 8;
+      for (var effectIconIndex = 0; effectIconIndex < this.effectIconIds.length; effectIconIndex++) {
+        var effectIconElement = healthRow.insertCell(columnIndex++);
+        effectIconElement.rowSpan = 2;
+        effectIconElement = createElement("div", effectIconElement, null, "gameTabAdventurerInfoEffect");
+        effectIconElement = createElement("img", effectIconElement, this.effectIconIds[effectIconIndex], "itemImage");
+        effectIconElement.src = "images/Transparent.gif";
+        effectIconElement.style.width = "30px";
+        effectIconElement.style.height = "30px";
+        effectIconElement.style.display = "none";
       }
-      a = this.summaryTable.insertRow(1);
-      c = a.insertCell(0);
-      c.id = this.levelClassTextId;
-      c.style.width = "120px";
-      c = a.insertCell(1);
-      c.className = "gameTabAdventurerSliderCell";
-      c.title = "法力值";
-      d = createElement("div", c, null, "gameTabAdventurerSliderDiv");
-      createElement("div", d, this.spiritSliderId, "gameTabAdventurerSpiritPointsSlider");
-      createElement("div", c, this.spiritTextId, "gameTabAdventurerSliderOverlay");
-      c = a.insertCell(2);
-      c.style.width = "30px";
-      c.style.textAlign = "left";
-      c.style.paddingLeft = "4px";
-      c.title = "法力值";
-      c.innerHTML = "SP";
-      c = a.insertCell(3);
-      c.id = this.armorTextId;
-      c.className = "gameTabAdventurerInfoHpAc";
-      c.title = "护甲:降低受到的伤害";
-      this.potionButton = a.insertCell(4);
+      var spiritRow = this.summaryTable.insertRow(1);
+      var levelClassCell = spiritRow.insertCell(0);
+      levelClassCell.id = this.levelClassTextId;
+      levelClassCell.style.width = "120px";
+      var spiritSliderCell = spiritRow.insertCell(1);
+      spiritSliderCell.className = "gameTabAdventurerSliderCell";
+      spiritSliderCell.title = "法力值";
+      var spiritSliderDiv = createElement("div", spiritSliderCell, null, "gameTabAdventurerSliderDiv");
+      createElement("div", spiritSliderDiv, this.spiritSliderId, "gameTabAdventurerSpiritPointsSlider");
+      createElement("div", spiritSliderCell, this.spiritTextId, "gameTabAdventurerSliderOverlay");
+      var spiritLabelCell = spiritRow.insertCell(2);
+      spiritLabelCell.style.width = "30px";
+      spiritLabelCell.style.textAlign = "left";
+      spiritLabelCell.style.paddingLeft = "4px";
+      spiritLabelCell.title = "法力值";
+      spiritLabelCell.innerHTML = "SP";
+      var armorTextCell = spiritRow.insertCell(3);
+      armorTextCell.id = this.armorTextId;
+      armorTextCell.className = "gameTabAdventurerInfoHpAc";
+      armorTextCell.title = "护甲:降低受到的伤害";
+      this.potionButton = spiritRow.insertCell(4);
       this.potionButton.style.width = "30px";
       this.potionButton.style.textAlign = "left";
       this.potionButton.title = "护甲:降低受到的伤害";
       this.potionButton.innerHTML = "护甲";
-      c = a.insertCell(5);
-      c.id = this.defenceRatingTextId;
-      c.className = "gameTabAdventurerInfoHpAc";
-      c.title = "防御率：防止敌人成功攻击，可以理解为闪避属性";
-      this.defenceHeaderCell = a.insertCell(6);
+      var defenceRatingTextCell = spiritRow.insertCell(5);
+      defenceRatingTextCell.id = this.defenceRatingTextId;
+      defenceRatingTextCell.className = "gameTabAdventurerInfoHpAc";
+      defenceRatingTextCell.title = "防御率：防止敌人成功攻击，可以理解为闪避属性";
+      this.defenceHeaderCell = spiritRow.insertCell(6);
       this.defenceHeaderCell.style.width = "30px";
       this.defenceHeaderCell.style.textAlign = "left";
       this.defenceHeaderCell.title = "防御率：防止敌人成功攻击，可以理解为闪避属性";
@@ -359,102 +359,102 @@ export function initializeViewsExpedition() {
           clearElement(this.vacantOverlay);
         }
       } else {
-        var a = game.state.adventurers[this.adventurerIndex],
-          b = a.stats,
+        var adventurer = game.state.adventurers[this.adventurerIndex],
+          b = adventurer.stats,
           c = b.health,
           d = statValue(b.maxHealth),
-          f = b.spirit,
+          spirit = b.spirit,
           g = statValue(b.maxSpirit),
-          h = statValue(b.damage),
-          l = statValue(b.armor),
-          n = statValue(b.attackRating),
-          p = statValue(b.defenceRating),
+          damage = statValue(b.damage),
+          armor = statValue(b.armor),
+          attackRating = statValue(b.attackRating),
+          defenceRating = statValue(b.defenceRating),
           b = b.characterLevel;
         if (this.cachedHealth !== c || this.cachedMaxHealth !== d) {
           setElementHtml(this.healthTextId, formatAmount(c) + "/" + formatAmount(d));
-          var s = Math.min(100, floorNumber(100 * c / d));
-          getElement(this.healthSliderId).style.width = s + "%";
+          var healthSliderPercent = Math.min(100, floorNumber(100 * c / d));
+          getElement(this.healthSliderId).style.width = healthSliderPercent + "%";
           this.cachedHealth = c;
           this.cachedMaxHealth = d;
         }
-        if (this.cachedSpirit !== f || this.cachedMaxSpirit !== g) {
-          setElementHtml(this.spiritTextId, formatAmount(f) + "/" + formatAmount(g));
-          c = Math.min(100, floorNumber(100 * f / g));
+        if (this.cachedSpirit !== spirit || this.cachedMaxSpirit !== g) {
+          setElementHtml(this.spiritTextId, formatAmount(spirit) + "/" + formatAmount(g));
+          c = Math.min(100, floorNumber(100 * spirit / g));
           getElement(this.spiritSliderId).style.width = c + "%";
-          this.cachedSpirit = f;
+          this.cachedSpirit = spirit;
           this.cachedMaxSpirit = g;
         }
         if (this.cachedLevel !== b) {
           this.cachedLevel = b;
           setElementHtml(this.levelClassTextId, "等级" + b + " " + game.state.adventurers[this.adventurerIndex].classDefinition.className);
         }
-        if (this.cachedDamage !== h) {
-          setElementHtml(this.damageTextId, formatAmount(h));
+        if (this.cachedDamage !== damage) {
+          setElementHtml(this.damageTextId, formatAmount(damage));
         }
-        if (this.cachedArmor !== l) {
-          setElementHtml(this.armorTextId, formatAmount(l));
+        if (this.cachedArmor !== armor) {
+          setElementHtml(this.armorTextId, formatAmount(armor));
         }
-        if (this.cachedAttackRating !== n) {
-          setElementHtml(this.attackRatingTextId, formatAmount(n));
+        if (this.cachedAttackRating !== attackRating) {
+          setElementHtml(this.attackRatingTextId, formatAmount(attackRating));
         }
-        if (this.cachedDefenceRating !== p) {
-          setElementHtml(this.defenceRatingTextId, formatAmount(p));
+        if (this.cachedDefenceRating !== defenceRating) {
+          setElementHtml(this.defenceRatingTextId, formatAmount(defenceRating));
         }
-        c = a.effects.activeEffects;
-        f = false;
+        c = adventurer.effects.activeEffects;
+        var shouldAdvanceEffectFrame = false;
         this.frameAge++;
         if (this.frameAge >= this.effectFrameInterval) {
           this.frameAge = 0;
-          f = true;
+          shouldAdvanceEffectFrame = true;
         }
-        for (a = 0; a < this.potionSlots.length; a++) {
-          this.potionSlots[a] = null;
+        for (var potionSlotIndex = 0; potionSlotIndex < this.potionSlots.length; potionSlotIndex++) {
+          this.potionSlots[potionSlotIndex] = null;
         }
-        for (a = d = 0; a < c.length; a++) {
-          g = c[a].statusEffectTypeId;
+        for (var activeEffectIndex = d = 0; activeEffectIndex < c.length; activeEffectIndex++) {
+          g = c[activeEffectIndex].statusEffectTypeId;
           b = this.potionSlots.indexOf(g);
           if (0 > b && d < this.potionSlots.length) {
             this.potionSlots[d] = g;
             d++;
           }
         }
-        for (a = 0; a < this.shownEffectTypeIds.length; a++) {
-          if (g = a < this.potionSlots.length ? this.potionSlots[a] : null, c = this.shownEffectTypeIds[a], g) {
+        for (var effectIconIndex = 0; effectIconIndex < this.shownEffectTypeIds.length; effectIconIndex++) {
+          if (g = effectIconIndex < this.potionSlots.length ? this.potionSlots[effectIconIndex] : null, c = this.shownEffectTypeIds[effectIconIndex], g) {
             if (c && c === g) {
-              if (f) {
+              if (shouldAdvanceEffectFrame) {
                 g = statusEffectDefinitions[c];
                 c = g.spritesheetPath;
                 d = game.animations.getAnimation(g.animationName);
-                this.effectFrameIndices[a]++;
-                if (this.effectFrameIndices[a] >= d.getFrameCount()) {
-                  this.effectFrameIndices[a] = 0;
+                this.effectFrameIndices[effectIconIndex]++;
+                if (this.effectFrameIndices[effectIconIndex] >= d.getFrameCount()) {
+                  this.effectFrameIndices[effectIconIndex] = 0;
                 }
-                d = d.frames[this.effectFrameIndices[a]];
-                b = getElement(this.effectIconIds[a]);
+                d = d.frames[this.effectFrameIndices[effectIconIndex]];
+                b = getElement(this.effectIconIds[effectIconIndex]);
                 b.style.background = "url('" + c + "') -" + d.frameSourceX + "px -" + d.frameSourceY + "px";
               }
             } else {
               c = g;
-              this.shownEffectTypeIds[a] = c;
+              this.shownEffectTypeIds[effectIconIndex] = c;
               g = statusEffectDefinitions[c];
               c = g.spritesheetPath;
               d = game.animations.getAnimation(g.animationName);
-              this.effectFrameIndices[a] = 0;
+              this.effectFrameIndices[effectIconIndex] = 0;
               d = d.frames[0];
-              b = getElement(this.effectIconIds[a]);
+              b = getElement(this.effectIconIds[effectIconIndex]);
               b.style.background = "url('" + c + "') -" + d.frameSourceX + "px -" + d.frameSourceY + "px";
               b.title = g.tooltipLabel;
-              showElementById(this.effectIconIds[a]);
+              showElementById(this.effectIconIds[effectIconIndex]);
             }
           } else {
             if (c) {
-              hideElementById(this.effectIconIds[a]);
-              this.shownEffectTypeIds[a] = null;
+              hideElementById(this.effectIconIds[effectIconIndex]);
+              this.shownEffectTypeIds[effectIconIndex] = null;
             }
           }
         }
-        a = getMonsters();
-        if (0 === a.length) {
+        var monsters = getMonsters();
+        if (0 === monsters.length) {
           if (-1 < this.comparisonEncounterIndex) {
             getElement(this.damageTextId).style.color = "#FFF";
             getElement(this.armorTextId).style.color = "#FFF";
@@ -467,25 +467,25 @@ export function initializeViewsExpedition() {
             this.cachedMonsterDefenceRating = this.cachedMonsterAttackRating = this.cachedMonsterArmor = this.cachedMonsterDamage = this.comparisonEncounterIndex = -1;
           }
         } else {
-          c = a[0].stats;
-          a = statValue(c.damage);
-          f = statValue(c.armor);
+          c = monsters[0].stats;
+          var monsterDamage = statValue(c.damage);
+          var monsterArmor = statValue(c.armor);
           g = statValue(c.attackRating);
           c = statValue(c.defenceRating);
           this.comparisonEncounterIndex = game.state.encounter.encounterCount;
-          colorComparedStats(this.damageTextId, h, f, this.cachedDamage, this.cachedMonsterDamage, this.damageHeaderCell);
-          colorComparedStats(this.armorTextId, l, a, this.cachedArmor, this.cachedMonsterArmor, this.potionButton);
-          colorComparedStats(this.attackRatingTextId, n, c, this.cachedAttackRating, this.cachedMonsterDefenceRating, this.attackRatingHeaderCell);
-          colorComparedStats(this.defenceRatingTextId, p, g, this.cachedDefenceRating, this.cachedMonsterAttackRating, this.defenceHeaderCell);
-          this.cachedMonsterDamage = f;
-          this.cachedMonsterArmor = a;
+          colorComparedStats(this.damageTextId, damage, monsterArmor, this.cachedDamage, this.cachedMonsterDamage, this.damageHeaderCell);
+          colorComparedStats(this.armorTextId, armor, monsterDamage, this.cachedArmor, this.cachedMonsterArmor, this.potionButton);
+          colorComparedStats(this.attackRatingTextId, attackRating, c, this.cachedAttackRating, this.cachedMonsterDefenceRating, this.attackRatingHeaderCell);
+          colorComparedStats(this.defenceRatingTextId, defenceRating, g, this.cachedDefenceRating, this.cachedMonsterAttackRating, this.defenceHeaderCell);
+          this.cachedMonsterDamage = monsterArmor;
+          this.cachedMonsterArmor = monsterDamage;
           this.cachedMonsterAttackRating = g;
           this.cachedMonsterDefenceRating = c;
         }
-        this.cachedDamage = h;
-        this.cachedArmor = l;
-        this.cachedAttackRating = n;
-        this.cachedDefenceRating = p;
+        this.cachedDamage = damage;
+        this.cachedArmor = armor;
+        this.cachedAttackRating = attackRating;
+        this.cachedDefenceRating = defenceRating;
       }
     }
   };
@@ -493,27 +493,27 @@ export function initializeViewsExpedition() {
   DungeonNotificationView.prototype.reset = function () {
     clearElementById(this.elementId);
     this.cachedDungeonLevel = this.cachedDungeonName = "";
-    var a = getElement(this.elementId);
-    this.notificationElement = createElement("div", a, null, "dungeonNotificationDiv");
-    hideElement(a);
+    var panelElement = getElement(this.elementId);
+    this.notificationElement = createElement("div", panelElement, null, "dungeonNotificationDiv");
+    hideElement(panelElement);
     (/** @type {any} */ (this)).cachedVisible = false;
   };
   DungeonNotificationView.prototype.isVisible = function () {
     return !game.worldActive;
   };
   DungeonNotificationView.prototype.update = function () {
-    var a, b;
+    var dungeonName, dungeonLevel;
     if (game.currentDungeon) {
-      a = game.currentDungeon.dungeonName;
-      b = game.currentDungeon.currentLevelIndex + 1;
+      dungeonName = game.currentDungeon.dungeonName;
+      dungeonLevel = game.currentDungeon.currentLevelIndex + 1;
     } else {
-      a = game.currentCastle.castleName;
-      b = 0;
+      dungeonName = game.currentCastle.castleName;
+      dungeonLevel = 0;
     }
-    if (b !== this.cachedDungeonLevel || a !== this.cachedDungeonName) {
-      this.cachedDungeonLevel = b;
-      this.cachedDungeonName = a;
-      this.notificationElement.innerHTML = 0 < b ? a + " (等级." + b + ")" : a;
+    if (dungeonLevel !== this.cachedDungeonLevel || dungeonName !== this.cachedDungeonName) {
+      this.cachedDungeonLevel = dungeonLevel;
+      this.cachedDungeonName = dungeonName;
+      this.notificationElement.innerHTML = 0 < dungeonLevel ? dungeonName + " (等级." + dungeonLevel + ")" : dungeonName;
     }
   };
   EncounterNotificationView.prototype = new View();
@@ -526,41 +526,41 @@ export function initializeViewsExpedition() {
     return !game.state.encounter.noMonstersLeft;
   };
   EncounterNotificationView.prototype.update = function () {
-    var a = game.state.encounter.encounterCount,
-      b = getMonsters().length;
-    if (this.cachedEncounterIndex !== a || this.cachedMonsterCount != b) {
-      if (this.cachedEncounterIndex !== a) {
-        this.encounterTotalMonsters = b;
+    var encounterCount = game.state.encounter.encounterCount,
+      monsterCount = getMonsters().length;
+    if (this.cachedEncounterIndex !== encounterCount || this.cachedMonsterCount != monsterCount) {
+      if (this.cachedEncounterIndex !== encounterCount) {
+        this.encounterTotalMonsters = monsterCount;
       }
-      this.cachedEncounterIndex = a;
-      this.cachedMonsterCount = b;
-      var c;
-      c = game.state.encounter.encounterName;
-      a = game.state.encounter.isBossEncounter;
-      this.notificationElement.innerHTML = a ? "遭遇首领!<br/> " + c : "一场遭遇战!<br/>" + b + "/" + this.encounterTotalMonsters + " " + c;
-      if (this.isBossEncounter != a) {
-        this.isBossEncounter = a;
-        this.notificationElement.className = a ? "bossEncounterNotificationDiv" : "encounterNotificationDiv";
+      this.cachedEncounterIndex = encounterCount;
+      this.cachedMonsterCount = monsterCount;
+      var encounterName;
+      encounterName = game.state.encounter.encounterName;
+      var isBossEncounter = game.state.encounter.isBossEncounter;
+      this.notificationElement.innerHTML = isBossEncounter ? "遭遇首领!<br/> " + encounterName : "一场遭遇战!<br/>" + monsterCount + "/" + this.encounterTotalMonsters + " " + encounterName;
+      if (this.isBossEncounter != isBossEncounter) {
+        this.isBossEncounter = isBossEncounter;
+        this.notificationElement.className = isBossEncounter ? "bossEncounterNotificationDiv" : "encounterNotificationDiv";
       }
     }
   };
   CurrencyView.prototype = new View();
   CurrencyView.prototype.reset = function () {};
   CurrencyView.prototype.update = function () {
-    var a = game.state.party.experiencePoints,
-      b = game.state.party.gold,
-      c = game.state.party.kills;
-    if (a !== this.cachedExperience) {
-      this.cachedExperience = a;
-      setElementHtml(this.experienceCellId, "" + formatAmount(a));
+    var experiencePoints = game.state.party.experiencePoints,
+      gold = game.state.party.gold,
+      kills = game.state.party.kills;
+    if (experiencePoints !== this.cachedExperience) {
+      this.cachedExperience = experiencePoints;
+      setElementHtml(this.experienceCellId, "" + formatAmount(experiencePoints));
     }
-    if (b !== this.cachedGold) {
-      this.cachedGold = b;
-      setElementHtml(this.goldCellId, "" + formatAmount(b));
+    if (gold !== this.cachedGold) {
+      this.cachedGold = gold;
+      setElementHtml(this.goldCellId, "" + formatAmount(gold));
     }
-    if (c !== this.cachedKills) {
-      this.cachedKills = c;
-      setElementHtml(this.killsCellId, "" + formatAmount(c));
+    if (kills !== this.cachedKills) {
+      this.cachedKills = kills;
+      setElementHtml(this.killsCellId, "" + formatAmount(kills));
     }
   };
   AdventurePointsView.prototype = new View();
@@ -572,10 +572,10 @@ export function initializeViewsExpedition() {
     if (!this.pointsCell) {
       mountAdventurePoints(this);
     }
-    var a = game.state.adventurePoints.availablePoints;
-    if (a !== this.cachedPoints) {
-      this.cachedPoints = a;
-      this.pointsCell.innerHTML = formatGroupedAmount(a);
+    var availablePoints = game.state.adventurePoints.availablePoints;
+    if (availablePoints !== this.cachedPoints) {
+      this.cachedPoints = availablePoints;
+      this.pointsCell.innerHTML = formatGroupedAmount(availablePoints);
     }
   };
   ScrollButtonView.prototype = new View();
@@ -584,43 +584,43 @@ export function initializeViewsExpedition() {
     if (!this.buttonElement) {
       mountScrollButton(this);
     }
-    var a = false;
-    if (this.scroll != this.cachedScroll && (this.cachedScroll = this.scroll, a = true, this.scroll)) {
-      var b = this.scroll.spriteName;
-      this.itemImage.style.background = "url('spritesheet/items.png') -" + b.sourceX + "px -" + b.sourceY + "px";
+    var scrollChanged = false;
+    if (this.scroll != this.cachedScroll && (this.cachedScroll = this.scroll, scrollChanged = true, this.scroll)) {
+      var scrollSprite = this.scroll.spriteName;
+      this.itemImage.style.background = "url('spritesheet/items.png') -" + scrollSprite.sourceX + "px -" + scrollSprite.sourceY + "px";
     }
-    b = this.scroll.label;
-    if (this.cachedLabel !== b) {
-      this.cachedLabel = b;
-      this.nameCell.innerHTML = b;
+    var scrollLabel = this.scroll.label;
+    if (this.cachedLabel !== scrollLabel) {
+      this.cachedLabel = scrollLabel;
+      this.nameCell.innerHTML = scrollLabel;
     }
-    b = this.scroll ? this.scroll.quantity : -1;
+    var scrollQuantity = this.scroll ? this.scroll.quantity : -1;
     if (infiniteScrollsModifier.currentValue) {
-      b = -2;
+      scrollQuantity = -2;
     }
-    var c = 0 < b || infiniteScrollsModifier.currentValue;
-    this.isEnabled = !this.scroll.locked && c && !game.worldActive && 0 < getMonsters().length;
-    if (a || this.wasEnabled != this.isEnabled) {
+    var hasQuantity = 0 < scrollQuantity || infiniteScrollsModifier.currentValue;
+    this.isEnabled = !this.scroll.locked && hasQuantity && !game.worldActive && 0 < getMonsters().length;
+    if (scrollChanged || this.wasEnabled != this.isEnabled) {
       this.wasEnabled = this.isEnabled;
       this.buttonElement.className = this.isEnabled ? "scrollButton" : "scrollButtonDisabled";
     }
-    a = this.scroll.locked;
-    if (this.cachedQuantity !== b || this.cachedLocked != a) {
-      this.cachedQuantity = b;
-      this.cachedLocked = a;
-      this.quantityCell.innerHTML = a ? "" : infiniteScrollsModifier.currentValue ? "无限" : "x" + b;
+    var isScrollLocked = this.scroll.locked;
+    if (this.cachedQuantity !== scrollQuantity || this.cachedLocked != isScrollLocked) {
+      this.cachedQuantity = scrollQuantity;
+      this.cachedLocked = isScrollLocked;
+      this.quantityCell.innerHTML = isScrollLocked ? "" : infiniteScrollsModifier.currentValue ? "无限" : "x" + scrollQuantity;
     }
     a: {
-      a = this.keyBindings;
-      for (b = 0; b < (/** @type {any} */ (a)).length; b++) {
-        if (this.collection.keyStates[a[b]]) {
-          a = true;
+      var keyBindings = this.keyBindings;
+      for (var keyIndex = 0; keyIndex < (/** @type {any} */ (keyBindings)).length; keyIndex++) {
+        if (this.collection.keyStates[keyBindings[keyIndex]]) {
+          var hasReleasedKey = true;
           break a;
         }
       }
-      a = false;
+      hasReleasedKey = false;
     }
-    if (a) {
+    if (hasReleasedKey) {
       getScrollButtonClass(this);
     }
   };
@@ -634,29 +634,29 @@ export function initializeViewsExpedition() {
     if (!this.tableElement) {
       (/** @type {any} */ (this)).createDomElements();
     }
-    var a,
-      b = game.scrolls.scrollList,
-      c,
-      d;
-    for (a = 0; a < this.buttonViews.length; a++) {
-      d = b.length > a ? b[a] : null;
-      c = this.buttonViews[a];
-      c.scroll = d;
-      c.render();
+    var buttonIndex,
+      scrollList = game.scrolls.scrollList,
+      buttonView,
+      scroll;
+    for (buttonIndex = 0; buttonIndex < this.buttonViews.length; buttonIndex++) {
+      scroll = scrollList.length > buttonIndex ? scrollList[buttonIndex] : null;
+      buttonView = this.buttonViews[buttonIndex];
+      buttonView.scroll = scroll;
+      buttonView.render();
     }
     scrollButtonsChanged(this.collection);
   };
   ScrollBarView.prototype.createDomElements = function () {
     this.tableElement = createElement("table", getElement(this.elementId), null, null);
-    var a = this.tableElement.insertRow(0),
-      b,
-      c,
-      d;
-    for (d = 0; 6 > d; d++) {
-      c = a.insertCell(d);
-      b = "scrollButtonCell" + d;
-      createElement("div", c, b, null);
-      this.buttonViews.push(new ScrollButtonView(b, d, this.collection, this.keyBindings[d]));
+    var buttonRow = this.tableElement.insertRow(0),
+      cellElementId,
+      buttonCell,
+      buttonIndex;
+    for (buttonIndex = 0; 6 > buttonIndex; buttonIndex++) {
+      buttonCell = buttonRow.insertCell(buttonIndex);
+      cellElementId = "scrollButtonCell" + buttonIndex;
+      createElement("div", buttonCell, cellElementId, null);
+      this.buttonViews.push(new ScrollButtonView(cellElementId, buttonIndex, this.collection, this.keyBindings[buttonIndex]));
     }
   };
   PotionButtonView.prototype = new View();
@@ -686,8 +686,8 @@ export function initializeViewsExpedition() {
       if (this.potion != this.cachedPotion) {
         this.nameCell.innerHTML = this.potion.displayName;
         this.effectLabelCell.innerHTML = this.potion.effectLabel;
-        a = this.potion.potionSprite;
-        this.potionImage.style.background = "url('spritesheet/items.png') -" + a.sourceX + "px -" + a.sourceY + "px";
+        var potionSprite = this.potion.potionSprite;
+        this.potionImage.style.background = "url('spritesheet/items.png') -" + potionSprite.sourceX + "px -" + potionSprite.sourceY + "px";
       }
       this.cachedPotion = this.potion;
       if (this.potion.active) {
@@ -695,11 +695,11 @@ export function initializeViewsExpedition() {
           showElement(this.progressFillElement);
           this.dropButtonVisible = true;
         }
-        a = Math.min(1, (game.state.turnNumber - this.potion.activationTurn) / (800 + potionDurationBonus.currentValue));
-        a *= this.progressBarWidth;
-        if (this.cachedFillWidth !== a) {
-          this.cachedFillWidth = a;
-          this.progressFillElement.style.width = a + "px";
+        var fillWidth = Math.min(1, (game.state.turnNumber - this.potion.activationTurn) / (800 + potionDurationBonus.currentValue));
+        fillWidth *= this.progressBarWidth;
+        if (this.cachedFillWidth !== fillWidth) {
+          this.cachedFillWidth = fillWidth;
+          this.progressFillElement.style.width = fillWidth + "px";
         }
       } else {
         if (this.dropButtonVisible) {
@@ -754,34 +754,34 @@ export function initializeViewsExpedition() {
     if (!this.mounted) {
       (/** @type {any} */ (this)).createDomElements();
     }
-    var a,
-      b = game.potions.potionList,
-      c,
-      d;
-    for (a = 0; a < this.buttonViews.length; a++) {
-      d = a < b.length ? b[a] : null;
-      c = this.buttonViews[a];
-      c.potion = d;
-      c.render();
+    var buttonIndex,
+      potionList = game.potions.potionList,
+      buttonView,
+      potion;
+    for (buttonIndex = 0; buttonIndex < this.buttonViews.length; buttonIndex++) {
+      potion = buttonIndex < potionList.length ? potionList[buttonIndex] : null;
+      buttonView = this.buttonViews[buttonIndex];
+      buttonView.potion = potion;
+      buttonView.render();
     }
   };
   PotionBarView.prototype.createDomElements = function () {
-    var a = getElement(this.elementId);
+    var containerElement = getElement(this.elementId);
     this.mounted = true;
-    var b,
-      c,
-      d = 0;
-    for (b = 0; 4 > b; b++) {
-      for (c = 0; 2 > c; c++) {
-        var f = c,
-          g = b,
-          h = d++,
-          l = "potionButton_Row" + g + "_Col" + f,
-          n = createElement("div", a, null, "potionCellDiv");
-        n.id = l;
-        n.style.left = 196 * f + "px";
-        n.style.top = 47 * g + "px";
-        this.buttonViews.push(new PotionButtonView(l, h));
+    var rowIndex,
+      columnIndex,
+      slotCounter = 0;
+    for (rowIndex = 0; 4 > rowIndex; rowIndex++) {
+      for (columnIndex = 0; 2 > columnIndex; columnIndex++) {
+        var column = columnIndex,
+          row = rowIndex,
+          slotIndex = slotCounter++,
+          elementId = "potionButton_Row" + row + "_Col" + column,
+          cellElement = createElement("div", containerElement, null, "potionCellDiv");
+        cellElement.id = elementId;
+        cellElement.style.left = 196 * column + "px";
+        cellElement.style.top = 47 * row + "px";
+        this.buttonViews.push(new PotionButtonView(elementId, slotIndex));
       }
     }
   };

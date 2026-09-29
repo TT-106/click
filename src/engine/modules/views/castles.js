@@ -6,8 +6,8 @@ import { game } from "../runtime/game.js";
 import { View, addChildView, resetChildViews } from "./base.js";
 import { appendHeaderCell, clearElementById, createElement, getElement } from "./dom.js";
 import { TabView } from "./navigation.js";
-export function getCastleStatusColor(a) {
-  return a.regionLocked ? "#222" : a.conquered ? "#080" : canAttackCastle(a) ? game.monsterCatalog.maxUnlockedLevel >= a.requiredMonsterLevel ? "#850" : "#A30" : a.attackScheduled ? "#A80" : "#AAA";
+export function getCastleStatusColor(castle) {
+  return castle.regionLocked ? "#222" : castle.conquered ? "#080" : canAttackCastle(castle) ? game.monsterCatalog.maxUnlockedLevel >= castle.requiredMonsterLevel ? "#850" : "#A30" : castle.attackScheduled ? "#A80" : "#AAA";
 }
 export function CastleMapView() {
   this.elementId = "castleMapContainer";
@@ -22,24 +22,24 @@ export function CastleTableView() {
   this.tableElement = null;
   this.rowViews = [];
 }
-export function CastleRowView(a) {
-  this.rowElement = a;
+export function CastleRowView(rowElement) {
+  this.rowElement = rowElement;
   this.progressTextElement = this.progressFillElement = this.progressCell = this.nameCell = this.castle = null;
   this.progressWidth = 120;
   this.cachedStatusText = this.cachedStatusColor = this.cachedDescriptionText = "";
   this.cachedProgressWidth = 0;
   /** @type {{createRowCells: () => void}} */ (/** @type {unknown} */ (this)).createRowCells();
 }
-export function setCastleRowModel(a, b) {
-  a.castle = b;
-  a.cachedStatusColor = "";
-  a.cachedStatusText = "";
-  a.cachedProgressWidth = 0;
-  a.unusedCachedText = "";
+export function setCastleRowModel(rowView, castle) {
+  rowView.castle = castle;
+  rowView.cachedStatusColor = "";
+  rowView.cachedStatusText = "";
+  rowView.cachedProgressWidth = 0;
+  rowView.unusedCachedText = "";
 }
-export function CastlesView(a) {
+export function CastlesView(tabState) {
   this.elementId = "castlesTabContent";
-  this.tabState = a;
+  this.tabState = tabState;
   addChildView(this, new CastleTableView());
   addChildView(this, new CastleMapView());
 }
@@ -55,24 +55,24 @@ export function initializeViewsCastles() {
     if (!this.tableElement) {
       /** @type {{createDomElements: () => void}} */ (/** @type {unknown} */ (this)).createDomElements();
     }
-    var a;
-    a = game.castles.revision;
-    if (this.cachedRevision != a) {
-      this.cachedRevision = a;
-      a = game.regions;
-      var b,
-        c,
-        d = a.regionGridOriginColumn + a.regionGridSpan - a.regionGridOriginColumn,
-        f = a.regionGridOriginRow + a.regionGridSpan - a.regionGridOriginRow,
-        g,
+    var castleRevision;
+    castleRevision = game.castles.revision;
+    if (this.cachedRevision != castleRevision) {
+      this.cachedRevision = castleRevision;
+      var regionManager = game.regions;
+      var columnIndex,
+        rowIndex,
+        columnCount = regionManager.regionGridOriginColumn + regionManager.regionGridSpan - regionManager.regionGridOriginColumn,
+        rowCount = regionManager.regionGridOriginRow + regionManager.regionGridSpan - regionManager.regionGridOriginRow,
+        mapCell,
         h;
-      for (c = 0; c < f; c++) {
-        for (b = 0; b < d; b++) {
-          if (g = this.mapCells[b][c], h = a.regionGrid[b][c]) {
+      for (rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+        for (columnIndex = 0; columnIndex < columnCount; columnIndex++) {
+          if (mapCell = this.mapCells[columnIndex][rowIndex], h = regionManager.regionGrid[columnIndex][rowIndex]) {
             h = h.castle;
             h = getCastleStatusColor(h);
-            if (g.style.backgroundColor != h) {
-              g.style.backgroundColor = h;
+            if (mapCell.style.backgroundColor != h) {
+              mapCell.style.backgroundColor = h;
             }
           }
         }
@@ -82,36 +82,36 @@ export function initializeViewsCastles() {
   CastleMapView.prototype.createDomElements = function () {
     var containerId = this.elementId;
     clearElementById(containerId);
-    var b = game.regions,
-      c = b.regionGridOriginColumn,
-      d = b.regionGridOriginRow,
-      f = b.regionGridOriginColumn + b.regionGridSpan,
-      g = b.regionGridOriginRow + b.regionGridSpan,
+    var regionManager = game.regions,
+      originColumn = regionManager.regionGridOriginColumn,
+      d = regionManager.regionGridOriginRow,
+      maxRegionColumn = regionManager.regionGridOriginColumn + regionManager.regionGridSpan,
+      maxRegionRow = regionManager.regionGridOriginRow + regionManager.regionGridSpan,
       h;
     this.tableElement = createElement("table", getElement(containerId), null, null);
-    var a = f - c,
+    var columnCount = maxRegionColumn - originColumn,
       l;
-    d = g - d;
-    for (g = 0; g < a; g++) {
+    d = maxRegionRow - d;
+    for (var columnIndex = 0; columnIndex < columnCount; columnIndex++) {
       this.mapCells.push([]);
     }
-    for (c = 0; c < d; c++) {
-      for (f = this.tableElement.insertRow(c), g = 0; g < a; g++) {
-        l = f.insertCell(g);
+    for (var rowIndex = 0; rowIndex < d; rowIndex++) {
+      for (var tableRow = this.tableElement.insertRow(rowIndex), columnIndex = 0; columnIndex < columnCount; columnIndex++) {
+        l = tableRow.insertCell(columnIndex);
         l = createElement("div", l, null, null);
         l.style.width = "39px";
         l.style.height = "39px";
-        if (h = b.regionGrid[g][c]) {
+        if (h = regionManager.regionGrid[columnIndex][rowIndex]) {
           if (h = findCastle(h.regionKey)) {
-            h = createElement("img", l, null, null);
-            h.src = "images/Transparent.gif";
-            h.style.width = "35px";
-            h.style.height = "35px";
-            var n = game.itemSprites.getSprite("CrownGolden.PNG");
-            h.style.background = "url('spritesheet/items.png') -" + n.sourceX + "px -" + n.sourceY + "px";
+            var crownImage = createElement("img", l, null, null);
+            crownImage.src = "images/Transparent.gif";
+            crownImage.style.width = "35px";
+            crownImage.style.height = "35px";
+            var crownSprite = game.itemSprites.getSprite("CrownGolden.PNG");
+            crownImage.style.background = "url('spritesheet/items.png') -" + crownSprite.sourceX + "px -" + crownSprite.sourceY + "px";
           }
         }
-        this.mapCells[g].push(l);
+        this.mapCells[columnIndex].push(l);
       }
     }
   };
@@ -125,66 +125,66 @@ export function initializeViewsCastles() {
     if (!this.tableElement) {
       /** @type {{createDomElements: () => void}} */ (/** @type {unknown} */ (this)).createDomElements();
     }
-    var a = game.castles.castleList;
-    if (a.length !== this.rowViews.length) {
-      /** @type {{setRowCount: (count: number) => void}} */ (/** @type {unknown} */ (this)).setRowCount(a.length);
+    var castleList = game.castles.castleList;
+    if (castleList.length !== this.rowViews.length) {
+      /** @type {{setRowCount: (count: number) => void}} */ (/** @type {unknown} */ (this)).setRowCount(castleList.length);
     }
-    var b;
-    for (b = 0; b < this.rowViews.length; b++) {
-      if (this.rowViews[b].castle !== a[b]) {
-        setCastleRowModel(this.rowViews[b], a[b]);
+    var rowIndex;
+    for (rowIndex = 0; rowIndex < this.rowViews.length; rowIndex++) {
+      if (this.rowViews[rowIndex].castle !== castleList[rowIndex]) {
+        setCastleRowModel(this.rowViews[rowIndex], castleList[rowIndex]);
       }
-      this.rowViews[b].render();
+      this.rowViews[rowIndex].render();
     }
   };
-  CastleTableView.prototype.setRowCount = function (a) {
-    for (; this.rowViews.length > a;) {
+  CastleTableView.prototype.setRowCount = function (rowCount) {
+    for (; this.rowViews.length > rowCount;) {
       this.tableElement.deleteRow(-1);
       this.rowViews.splice(this.rowViews.length - 1, 1);
     }
-    for (; this.rowViews.length < a;) {
+    for (; this.rowViews.length < rowCount;) {
       this.rowViews.push(new CastleRowView(this.tableElement.insertRow(this.rowViews.length + 1)));
     }
   };
   CastleTableView.prototype.createDomElements = function () {
-    var a = this.elementId;
-    clearElementById(a);
-    var b = game.castles.castleList,
-      c;
-    this.tableElement = createElement("table", getElement(a), null, "monsterTable");
+    var elementId = this.elementId;
+    clearElementById(elementId);
+    var castleList = game.castles.castleList,
+      castleIndex;
+    this.tableElement = createElement("table", getElement(elementId), null, "monsterTable");
     /** @type {{createHeaderRow: (row: HTMLTableRowElement) => void}} */ (/** @type {unknown} */ (this)).createHeaderRow(this.tableElement.insertRow(0));
-    for (c = 0; c < b.length; c++) {
-      var rowView = new CastleRowView(this.tableElement.insertRow(c + 1));
-      setCastleRowModel(rowView, b[c]);
+    for (castleIndex = 0; castleIndex < castleList.length; castleIndex++) {
+      var rowView = new CastleRowView(this.tableElement.insertRow(castleIndex + 1));
+      setCastleRowModel(rowView, castleList[castleIndex]);
       this.rowViews.push(rowView);
     }
   };
-  CastleTableView.prototype.createHeaderRow = function (a) {
-    appendHeaderCell(a).innerHTML = "名称";
-    appendHeaderCell(a).innerHTML = "状态";
+  CastleTableView.prototype.createHeaderRow = function (headerRow) {
+    appendHeaderCell(headerRow).innerHTML = "名称";
+    appendHeaderCell(headerRow).innerHTML = "状态";
   };
   CastleRowView.prototype.reset = function () {};
   CastleRowView.prototype.createRowCells = function () {
-    var a = this.rowElement;
-    this.nameCell = a.insertCell(0);
+    var rowElement = this.rowElement;
+    this.nameCell = rowElement.insertCell(0);
     this.nameCell.style.width = "240px";
-    this.progressCell = a.insertCell(1);
+    this.progressCell = rowElement.insertCell(1);
     this.progressCell.style.width = this.progressWidth + "px";
     this.progressCell.style.paddingLeft = "5px";
     this.progressCell.style.paddingRight = "5px";
-    a = createElement("div", this.progressCell, null, null);
-    a.style.position = "relative";
-    a.style.border = "1px solid #2c2c50";
-    a.style.height = "15px";
-    a.style.width = this.progressWidth + "px";
-    this.progressFillElement = createElement("div", a, null, null);
+    var progressContainer = createElement("div", this.progressCell, null, null);
+    progressContainer.style.position = "relative";
+    progressContainer.style.border = "1px solid #2c2c50";
+    progressContainer.style.height = "15px";
+    progressContainer.style.width = this.progressWidth + "px";
+    this.progressFillElement = createElement("div", progressContainer, null, null);
     this.progressFillElement.style.position = "absolute";
     this.progressFillElement.style.top = "0";
     this.progressFillElement.style.left = "0";
     this.progressFillElement.style.backgroundColor = "#F00";
     this.progressFillElement.style.height = "15px";
     this.progressFillElement.style.width = "0px";
-    this.progressTextElement = createElement("div", a, null, null);
+    this.progressTextElement = createElement("div", progressContainer, null, null);
     this.progressTextElement.style.position = "absolute";
     this.progressTextElement.style.textAlign = "center";
     this.progressTextElement.style.top = "0";
@@ -195,17 +195,17 @@ export function initializeViewsCastles() {
   };
   CastleRowView.prototype.render = function () {
     if (this.castle) {
-      var a = this.castle.castleName;
-      if (this.cachedDescriptionText !== a) {
-        this.cachedDescriptionText = a;
-        this.nameCell.innerHTML = a;
+      var castleName = this.castle.castleName;
+      if (this.cachedDescriptionText !== castleName) {
+        this.cachedDescriptionText = castleName;
+        this.nameCell.innerHTML = castleName;
       }
-      a = getCastleStatusColor(this.castle);
-      if (this.cachedStatusColor != a) {
-        this.cachedStatusColor = a;
-        this.progressFillElement.style.backgroundColor = a;
+      var statusColor = getCastleStatusColor(this.castle);
+      if (this.cachedStatusColor != statusColor) {
+        this.cachedStatusColor = statusColor;
+        this.progressFillElement.style.backgroundColor = statusColor;
       }
-      a = this.castle;
+      var a = this.castle;
       a = a.regionLocked ? "未解锁" : a.conquered ? "已征服" : canAttackCastle(a) ? game.monsterCatalog.maxUnlockedLevel >= a.requiredMonsterLevel ? "准备攻击" : "怪物等级" + a.requiredMonsterLevel : a.attackScheduled ? "计划攻击" : "地牢" + a.conqueredDungeonCount + " / " + a.dungeonList.length;
       if (this.cachedStatusText != a) {
         this.cachedStatusText = a;
@@ -218,8 +218,8 @@ export function initializeViewsCastles() {
         a = this.progressWidth;
       } else {
         a = this.castle.conqueredDungeonCount;
-        var b = this.castle.dungeonList;
-        a = 0 === b.length ? 1 : Math.min(1, a / b.length);
+        var dungeonList = this.castle.dungeonList;
+        a = 0 === dungeonList.length ? 1 : Math.min(1, a / dungeonList.length);
         a = this.progressWidth * a | 0;
       }
       if (this.cachedProgressWidth != a) {

@@ -15,9 +15,9 @@ import { placePartyInWorld } from "../world/terrain.js";
 import { unlockStartingRegion } from "../world/regions.js";
 import { recordGameEvent } from "../core/math.js";
 import { partyCapacityBonus } from "../content/balance.js";
-export function PartyCreationView(a) {
+export function PartyCreationView(tabState) {
   this.elementId = "partyCreationTabContent";
-  this.tabState = a;
+  this.tabState = tabState;
   this.selectedCharacters = [];
   this.characterSelectionButtons = [];
   this.validParty = false;
@@ -26,69 +26,69 @@ export function PartyCreationView(a) {
   this.startButton = this.nameWarningElement = null;
   this.victoryOptionsApplied = false;
 }
-export function mountPartyCreation(a) {
-  var b = getElement(a.elementId);
-  clearElement(b);
-  mountPartyIntroduction(b);
-  mountClassChoices(a, b);
-  mountSelectedParty(a, b);
-  b = createElement("div", b, null, "partyConfirmationPanel");
-  a.startButton = createElement("div", b, "startQuestButton", "disabledUpgradeButton");
-  a.startButton.style.padding = "15px";
-  a.startButton.style.textAlign = "center";
-  a.startButton.innerHTML = getPartyCapacityLabel();
-  a.startButton.onclick = function () {
-    createAdventurerPartyFromSelection(a);
+export function mountPartyCreation(view) {
+  var containerElement = getElement(view.elementId);
+  clearElement(containerElement);
+  mountPartyIntroduction(containerElement);
+  mountClassChoices(view, containerElement);
+  mountSelectedParty(view, containerElement);
+  containerElement = createElement("div", containerElement, null, "partyConfirmationPanel");
+  view.startButton = createElement("div", containerElement, "startQuestButton", "disabledUpgradeButton");
+  view.startButton.style.padding = "15px";
+  view.startButton.style.textAlign = "center";
+  view.startButton.innerHTML = getPartyCapacityLabel();
+  view.startButton.onclick = function () {
+    createAdventurerPartyFromSelection(view);
   };
 }
 /** 创建小队的真实引擎入口（U132 自 startButton.onclick 闭包逐字提取，随机消费顺序不变）：
  *  遗留按钮与产品壳 adapter.startParty 经 PartyCreationView.prototype.startParty 共用本函数，
  *  两边不再各自驱动开局。守卫（非空选择 + validParty）与函数体保持原语义。 */
-function createAdventurerPartyFromSelection(a) {
-  if (!(1 > a.selectedCharacters.length) && a.validParty) {
-    var b = a.selectedCharacters,
-      d,
+function createAdventurerPartyFromSelection(view) {
+  if (!(1 > view.selectedCharacters.length) && view.validParty) {
+    var selectedCharacters = view.selectedCharacters,
+      selectionIndex,
       f,
-      g,
-      h = "";
-    for (d = 0; d < b.length; d++) {
-      f = b[d].classIndex;
+      newAdventurer,
+      classNamesSummary = "";
+    for (selectionIndex = 0; selectionIndex < selectedCharacters.length; selectionIndex++) {
+      f = selectedCharacters[selectionIndex].classIndex;
       f = adventurerClasses[f];
-      g = b[d].defaultName;
-      var l = f.spriteName;
-      g = new Character(g, ADVENTURER_TYPE, f.characterClass, f, new Inventory(game.state.victoryCount));
-      var n = g.stats;
-      g.sprite = game.monsterSprites.getSprite(l);
-      l = createBehaviorQueue(f.createBehaviors());
-      g.behaviors = l;
-      n.baseAttackCooldown = 12;
-      n.baseHealthRegenPercent = 2;
-      n.baseSpiritRegenPercent = 3;
-      n.characterLevel = 1;
-      l = Math.min(40, game.state.victoryCount);
-      if (0 < l) {
-        var p = g;
-        p.skillPoints = l;
-        p.hasUnspentSkills = hasUnspentSkills(p);
+      newAdventurer = selectedCharacters[selectionIndex].defaultName;
+      var spriteName = f.spriteName;
+      newAdventurer = new Character(newAdventurer, ADVENTURER_TYPE, f.characterClass, f, new Inventory(game.state.victoryCount));
+      var characterStats = newAdventurer.stats;
+      newAdventurer.sprite = game.monsterSprites.getSprite(spriteName);
+      var behaviorQueue = createBehaviorQueue(f.createBehaviors());
+      newAdventurer.behaviors = behaviorQueue;
+      characterStats.baseAttackCooldown = 12;
+      characterStats.baseHealthRegenPercent = 2;
+      characterStats.baseSpiritRegenPercent = 3;
+      characterStats.characterLevel = 1;
+      var startingSkillPoints = Math.min(40, game.state.victoryCount);
+      if (0 < startingSkillPoints) {
+        var skillPointAdventurer = newAdventurer;
+        skillPointAdventurer.skillPoints = startingSkillPoints;
+        skillPointAdventurer.hasUnspentSkills = hasUnspentSkills(skillPointAdventurer);
       }
       if (f.startsWithSpell) {
-        g.initialSpellSkillPoint = 1;
+        newAdventurer.initialSpellSkillPoint = 1;
       }
       refreshPartyLevels();
-      const startingSlots = g.slotList;
+      const startingSlots = newAdventurer.slotList;
       for (let slotIndex = 0; slotIndex < startingSlots.length; slotIndex++) {
-        const startingItem = generateItem(game.itemGenerator, startingSlots[slotIndex], g, 1, 0);
+        const startingItem = generateItem(game.itemGenerator, startingSlots[slotIndex], newAdventurer, 1, 0);
         if (startingItem) {
-          (/** @type {any} */ (g)).equipItem(startingItem);
+          (/** @type {any} */ (newAdventurer)).equipItem(startingItem);
         }
       }
-      applyLevelStats(n, 1, f.statMultipliers);
-      f = g;
+      applyLevelStats(characterStats, 1, f.statMultipliers);
+      f = newAdventurer;
       game.state.adventurers.push(f);
-      if (0 < d) {
-        h += ", ";
+      if (0 < selectionIndex) {
+        classNamesSummary += ", ";
       }
-      h += f.classDefinition.className;
+      classNamesSummary += f.classDefinition.className;
     }
     game.state.leader = game.state.adventurers[0];
     game.state.scrollCaster = chooseScrollCaster();
@@ -98,296 +98,296 @@ function createAdventurerPartyFromSelection(a) {
     refreshUnspentSkillFlags();
     game.allies.reset();
     game.view.reset();
-    recordGameEvent("Party Creation", h);
+    recordGameEvent("Party Creation", classNamesSummary);
   }
 }
 export function mountPartyIntroduction(a) {
   a = createElement("div", a, "partyCreationHeader", "partyCreationIntroductionPanel");
-  var b = createElement("div", a, null, "sectionTitle");
-  b.style.fontSize = "14px";
-  b.innerHTML = "末日大陆需要你的力量!";
-  b = createElement("p", a, null, null);
-  b.style.fontSize = "13px";
-  b.innerHTML = "所有地牢,被遗忘的神庙,封禁的高塔,黑暗矿洞,拷问室,和幽闭的洞穴,那些曾经一片美好的地方,环境优美宜人,都陷入怪物的蹂躏之下,你要做的只有杀戮.";
+  var textElement = createElement("div", a, null, "sectionTitle");
+  textElement.style.fontSize = "14px";
+  textElement.innerHTML = "末日大陆需要你的力量!";
+  textElement = createElement("p", a, null, null);
+  textElement.style.fontSize = "13px";
+  textElement.innerHTML = "所有地牢,被遗忘的神庙,封禁的高塔,黑暗矿洞,拷问室,和幽闭的洞穴,那些曾经一片美好的地方,环境优美宜人,都陷入怪物的蹂躏之下,你要做的只有杀戮.";
   a = createElement("p", a, null, null);
   a.style.fontSize = "13px";
   a.innerHTML = "只有你有这个能力让一切回归旧貌,选择你的队友,杀光大陆上所有的怪物.";
 }
 export function getPartyCapacityLabel() {
-  var a = 4 + partyCapacityBonus.currentValue;
-  if (4 === a) {
+  var partyCapacity = 4 + partyCapacityBonus.currentValue;
+  if (4 === partyCapacity) {
     return "最多选择4名队员";
   }
-  if (5 === a) {
+  if (5 === partyCapacity) {
     return "最多选择5名队员";
   }
 }
-export function mountClassChoices(a, b) {
-  var c = createElement("div", b, null, "partySelectionHeaderContainer");
-  createElement("span", c, null, "partySelectionHeaderSpan").innerHTML = getPartyCapacityLabel();
-  var c = createElement("div", b, null, "partySelectionPanel"),
-    c = createElement("table", c, null, "partySelectionTable"),
+export function mountClassChoices(view, tabContentElement) {
+  var headerContainer = createElement("div", tabContentElement, null, "partySelectionHeaderContainer");
+  createElement("span", headerContainer, null, "partySelectionHeaderSpan").innerHTML = getPartyCapacityLabel();
+  var selectionPanelTable = createElement("div", tabContentElement, null, "partySelectionPanel"),
+    selectionPanelTable = createElement("table", selectionPanelTable, null, "partySelectionTable"),
     d = null,
-    f = 0,
-    g,
-    h;
-  for (h = 0; h < adventurerClasses.length; h++) {
-    if (d = c.insertRow(f), f++, g = d.insertCell(0), d = game.state.victoryCount < adventurerClasses[h].requiredVictories) {
-      var d = a,
-        l = h;
-      g = createElement("table", g, null, "lockedCharacterSelectionTable").insertRow(0).insertCell(0);
-      var n = game.monsterSprites.getSprite(adventurerClasses[l].spriteName),
-        p = createElement("img", g, null, "characterImage");
-      p.src = "images/Transparent.gif";
-      p.style.height = "35px";
-      p.style.width = "35px";
-      p.style.background = "url('spritesheet/monsters.png') -" + (n.sourceX + 10) + "px -" + (n.sourceY + 12) + "px";
-      g = createElement("div", g, null, null);
-      n = undefined;
-      switch (adventurerClasses[l].requiredVictories) {
+    rowIndex = 0,
+    classCell,
+    classIndex;
+  for (classIndex = 0; classIndex < adventurerClasses.length; classIndex++) {
+    if (d = selectionPanelTable.insertRow(rowIndex), rowIndex++, classCell = d.insertCell(0), d = game.state.victoryCount < adventurerClasses[classIndex].requiredVictories) {
+      var d = view,
+        lockedClassIndex = classIndex;
+      classCell = createElement("table", classCell, null, "lockedCharacterSelectionTable").insertRow(0).insertCell(0);
+      var classSprite = game.monsterSprites.getSprite(adventurerClasses[lockedClassIndex].spriteName),
+        characterImage = createElement("img", classCell, null, "characterImage");
+      characterImage.src = "images/Transparent.gif";
+      characterImage.style.height = "35px";
+      characterImage.style.width = "35px";
+      characterImage.style.background = "url('spritesheet/monsters.png') -" + (classSprite.sourceX + 10) + "px -" + (classSprite.sourceY + 12) + "px";
+      classCell = createElement("div", classCell, null, null);
+      var lockMessageText = undefined;
+      switch (adventurerClasses[lockedClassIndex].requiredVictories) {
         case 0:
-          n = "角色已经解锁了(bug?)";
+          lockMessageText = "角色已经解锁了(bug?)";
           break;
         case 1:
-          n = "二周目时解锁该角色";
+          lockMessageText = "二周目时解锁该角色";
           break;
         case 2:
-          n = "三周目时解锁该角色";
+          lockMessageText = "三周目时解锁该角色";
           break;
         case 3:
-          n = "四周目时解锁该角色";
+          lockMessageText = "四周目时解锁该角色";
           break;
         case 4:
-          n = "五周目时解锁该角色";
+          lockMessageText = "五周目时解锁该角色";
           break;
         case 5:
-          n = "六周目时解锁该角色";
+          lockMessageText = "六周目时解锁该角色";
           break;
         case 6:
-          n = "七周目时解锁该角色";
+          lockMessageText = "七周目时解锁该角色";
           break;
         default:
-          n = "稍后解锁该角色";
+          lockMessageText = "稍后解锁该角色";
       }
-      g.innerHTML = n;
+      classCell.innerHTML = lockMessageText;
       d.characterSelectionButtons.push(null);
     } else {
-      mountClassChoice(a, g, h);
+      mountClassChoice(view, classCell, classIndex);
     }
   }
 }
-export function mountSelectedParty(a, b) {
-  var c = createElement("div", b, null, "selectedCharactersHeaderContainer");
-  createElement("span", c, null, "partySelectionHeaderSpan").innerHTML = "已选择角色";
-  c = createElement("div", b, null, "selectedCharactersPanel");
-  a.selectedCharactersTable = createElement("table", c, null, "partySelectionTable");
-  a.nameWarningElement = createElement("div", c, null, "partySelectionNameWarning");
-  a.nameWarningElement.innerHTML = "给你的角色取个独特的名字.";
-  a.nameWarningElement.style.display = "none";
+export function mountSelectedParty(view, tabContentElement) {
+  var sectionContainer = createElement("div", tabContentElement, null, "selectedCharactersHeaderContainer");
+  createElement("span", sectionContainer, null, "partySelectionHeaderSpan").innerHTML = "已选择角色";
+  sectionContainer = createElement("div", tabContentElement, null, "selectedCharactersPanel");
+  view.selectedCharactersTable = createElement("table", sectionContainer, null, "partySelectionTable");
+  view.nameWarningElement = createElement("div", sectionContainer, null, "partySelectionNameWarning");
+  view.nameWarningElement.innerHTML = "给你的角色取个独特的名字.";
+  view.nameWarningElement.style.display = "none";
 }
-export function mountClassChoice(a, b, c) {
-  var d = adventurerClasses[c],
+export function mountClassChoice(view, b, classIndex) {
+  var classDefinition = adventurerClasses[classIndex],
     f,
-    g,
-    h;
+    portraitElement,
+    classSprite;
   b = createElement("table", b, null, "characterSelectionButton");
-  a.characterSelectionButtons.push(b);
+  view.characterSelectionButtons.push(b);
   b.onclick = function () {
-    if (!(a.selectedCharacters.length >= 4 + partyCapacityBonus.currentValue)) {
-      a.selectedCharacters.push({
-        classIndex: c,
-        defaultName: adventurerClasses[c].defaultName
+    if (!(view.selectedCharacters.length >= 4 + partyCapacityBonus.currentValue)) {
+      view.selectedCharacters.push({
+        classIndex: classIndex,
+        defaultName: adventurerClasses[classIndex].defaultName
       });
-      a.selectedPartyDirty = true;
-      validateSelectedParty(a);
+      view.selectedPartyDirty = true;
+      validateSelectedParty(view);
     }
   };
   f = b.insertRow(0);
   b = b.insertRow(1);
-  g = f.insertCell(0);
-  g.style.width = "35px";
-  g.style.textAlign = "center";
-  h = game.monsterSprites.getSprite(d.spriteName);
-  g = createElement("img", g, null, "characterImage");
-  g.src = "images/Transparent.gif";
-  g.style.height = "35px";
-  g.style.width = "35px";
-  g.style.background = "url('spritesheet/monsters.png') -" + (h.sourceX + 10) + "px -" + (h.sourceY + 12) + "px";
+  portraitElement = f.insertCell(0);
+  portraitElement.style.width = "35px";
+  portraitElement.style.textAlign = "center";
+  classSprite = game.monsterSprites.getSprite(classDefinition.spriteName);
+  portraitElement = createElement("img", portraitElement, null, "characterImage");
+  portraitElement.src = "images/Transparent.gif";
+  portraitElement.style.height = "35px";
+  portraitElement.style.width = "35px";
+  portraitElement.style.background = "url('spritesheet/monsters.png') -" + (classSprite.sourceX + 10) + "px -" + (classSprite.sourceY + 12) + "px";
   f = f.insertCell(1);
   f.style.width = "410px";
   f.style.textAlign = "left";
   f = createElement("span", f, null, null);
   f.style.fontWeight = "bold";
   f.style.fontSize = "13px";
-  f.innerHTML = d.className;
+  f.innerHTML = classDefinition.className;
   b = b.insertCell(0);
   b.colSpan = 2;
-  b.innerHTML = d.descriptionText;
+  b.innerHTML = classDefinition.descriptionText;
 }
-export function mountSelectedCharacter(a, b, c, d) {
-  var f = adventurerClasses[c.classIndex],
-    g,
+export function mountSelectedCharacter(view, b, selectedCharacter, selectionIndex) {
+  var classDefinition = adventurerClasses[selectedCharacter.classIndex],
+    selectionTable,
     h,
-    l,
-    n,
-    p,
-    s;
+    descriptionElement,
+    portraitElement,
+    classSprite,
+    nameInput;
   b = createElement("div", b, null, "selectedCharacterContainer");
-  g = createElement("table", b, null, "selectedCharacterSelectionTable");
-  if (!(c.defaultName && "" !== c.defaultName)) {
-    g.className = "errorSelectedCharacterSelectionTable";
+  selectionTable = createElement("table", b, null, "selectedCharacterSelectionTable");
+  if (!(selectedCharacter.defaultName && "" !== selectedCharacter.defaultName)) {
+    selectionTable.className = "errorSelectedCharacterSelectionTable";
   }
-  h = g.insertRow(0);
-  l = g.insertRow(1);
-  n = h.insertCell(0);
-  n.style.width = "35px";
-  n.style.textAlign = "center";
-  p = game.monsterSprites.getSprite(f.spriteName);
-  n = createElement("img", n, null, "characterImage");
-  n.src = "images/Transparent.gif";
-  n.style.height = "35px";
-  n.style.width = "35px";
-  n.style.background = "url('spritesheet/monsters.png') -" + (p.sourceX + 10) + "px -" + (p.sourceY + 12) + "px";
+  h = selectionTable.insertRow(0);
+  descriptionElement = selectionTable.insertRow(1);
+  portraitElement = h.insertCell(0);
+  portraitElement.style.width = "35px";
+  portraitElement.style.textAlign = "center";
+  classSprite = game.monsterSprites.getSprite(classDefinition.spriteName);
+  portraitElement = createElement("img", portraitElement, null, "characterImage");
+  portraitElement.src = "images/Transparent.gif";
+  portraitElement.style.height = "35px";
+  portraitElement.style.width = "35px";
+  portraitElement.style.background = "url('spritesheet/monsters.png') -" + (classSprite.sourceX + 10) + "px -" + (classSprite.sourceY + 12) + "px";
   h = h.insertCell(1);
   h.style.width = "400px";
   h.style.textAlign = "left";
-  s = createElement("input", h, null, null);
-  s.type = "text";
-  s.size = 15;
-  s.maxLength = 15;
-  s.value = c.defaultName;
-  s.onkeyup = function () {
-    renameSelectedCharacter(a, c, s.value, g);
+  nameInput = createElement("input", h, null, null);
+  nameInput.type = "text";
+  nameInput.size = 15;
+  nameInput.maxLength = 15;
+  nameInput.value = selectedCharacter.defaultName;
+  nameInput.onkeyup = function () {
+    renameSelectedCharacter(view, selectedCharacter, nameInput.value, selectionTable);
   };
-  s.onchange = function () {
-    renameSelectedCharacter(a, c, s.value, g);
+  nameInput.onchange = function () {
+    renameSelectedCharacter(view, selectedCharacter, nameInput.value, selectionTable);
   };
   h = createElement("span", h, null, null);
   h.style.fontWeight = "bold";
   h.style.fontSize = "13px";
   h.style.marginLeft = "5px";
-  h.innerHTML = " " + f.className;
-  l = l.insertCell(0);
-  l.colSpan = 2;
-  l.innerHTML = f.descriptionText;
-  f = createElement("div", b, null, "deselectCharacterButton");
-  f.title = "移除角色";
-  f.innerHTML = "X";
-  f.onmouseup = function () {
-    if (!(0 > d || d >= a.selectedCharacters.length)) {
-      a.selectedCharacters.splice(d, 1);
-      a.selectedPartyDirty = true;
-      validateSelectedParty(a);
+  h.innerHTML = " " + classDefinition.className;
+  descriptionElement = descriptionElement.insertCell(0);
+  descriptionElement.colSpan = 2;
+  descriptionElement.innerHTML = classDefinition.descriptionText;
+  var deselectButton = createElement("div", b, null, "deselectCharacterButton");
+  deselectButton.title = "移除角色";
+  deselectButton.innerHTML = "X";
+  deselectButton.onmouseup = function () {
+    if (!(0 > selectionIndex || selectionIndex >= view.selectedCharacters.length)) {
+      view.selectedCharacters.splice(selectionIndex, 1);
+      view.selectedPartyDirty = true;
+      validateSelectedParty(view);
     }
     return false;
   };
-  f = 0 < d;
-  l = createElement("div", b, null, f ? "moveUpButton" : "disabledMoveUpButton");
-  l.title = "上移";
-  l.innerHTML = "&#9650";
-  if (f) {
-    l.onmouseup = function () {
-      if (0 !== d) {
-        var b = a.selectedCharacters[d - 1];
-        a.selectedCharacters[d - 1] = a.selectedCharacters[d];
-        a.selectedCharacters[d] = b;
-        a.selectedPartyDirty = true;
-        validateSelectedParty(a);
+  var canMoveUp = 0 < selectionIndex;
+  var moveUpButton = createElement("div", b, null, canMoveUp ? "moveUpButton" : "disabledMoveUpButton");
+  moveUpButton.title = "上移";
+  moveUpButton.innerHTML = "&#9650";
+  if (canMoveUp) {
+    moveUpButton.onmouseup = function () {
+      if (0 !== selectionIndex) {
+        var previousEntry = view.selectedCharacters[selectionIndex - 1];
+        view.selectedCharacters[selectionIndex - 1] = view.selectedCharacters[selectionIndex];
+        view.selectedCharacters[selectionIndex] = previousEntry;
+        view.selectedPartyDirty = true;
+        validateSelectedParty(view);
       }
       return false;
     };
   }
-  f = d < a.selectedCharacters.length - 1;
-  b = createElement("div", b, null, f ? "moveDownButton" : "disabledMoveDownButton");
+  var canMoveDown = selectionIndex < view.selectedCharacters.length - 1;
+  b = createElement("div", b, null, canMoveDown ? "moveDownButton" : "disabledMoveDownButton");
   b.title = "下移";
   b.innerHTML = "&#9660;";
-  if (f) {
+  if (canMoveDown) {
     b.onmouseup = function () {
-      if (!(d >= a.selectedCharacters.length - 1)) {
-        var b = a.selectedCharacters[d + 1];
-        a.selectedCharacters[d + 1] = a.selectedCharacters[d];
-        a.selectedCharacters[d] = b;
-        a.selectedPartyDirty = true;
-        validateSelectedParty(a);
+      if (!(selectionIndex >= view.selectedCharacters.length - 1)) {
+        var nextEntry = view.selectedCharacters[selectionIndex + 1];
+        view.selectedCharacters[selectionIndex + 1] = view.selectedCharacters[selectionIndex];
+        view.selectedCharacters[selectionIndex] = nextEntry;
+        view.selectedPartyDirty = true;
+        validateSelectedParty(view);
       }
       return false;
     };
   }
 }
-export function renameSelectedCharacter(a, b, c, d) {
-  var f = null != b.defaultName && "" != b.defaultName;
-  if (c) {
-    c = c.replace("&", "&amp;");
-    c = c.replace("<", "&lt;");
-    c = c.replace(">", "&gt;");
-    c = c.replace('"', "&quot;");
-    c = c.replace("'", "&#x27;");
-    c = c.replace("/", "&#x2F;");
+export function renameSelectedCharacter(view, b, newName, selectionTable) {
+  var hadName = null != b.defaultName && "" != b.defaultName;
+  if (newName) {
+    newName = newName.replace("&", "&amp;");
+    newName = newName.replace("<", "&lt;");
+    newName = newName.replace(">", "&gt;");
+    newName = newName.replace('"', "&quot;");
+    newName = newName.replace("'", "&#x27;");
+    newName = newName.replace("/", "&#x2F;");
   } else {
-    c = "";
+    newName = "";
   }
-  b.defaultName = c;
+  b.defaultName = newName;
   b = null != b.defaultName && "" != b.defaultName;
-  if (f && !b) {
-    d.className = "errorSelectedCharacterSelectionTable";
+  if (hadName && !b) {
+    selectionTable.className = "errorSelectedCharacterSelectionTable";
   } else {
-    if (!f && b) {
-      d.className = "selectedCharacterSelectionTable";
+    if (!hadName && b) {
+      selectionTable.className = "selectedCharacterSelectionTable";
     }
   }
-  validateSelectedParty(a);
+  validateSelectedParty(view);
 }
-export function validateSelectedParty(a) {
-  var b = true,
-    c,
-    d,
-    f = 4 + partyCapacityBonus.currentValue,
-    g = [],
-    h = false;
-  for (d = 0; d < a.selectedCharacters.length; d++) {
-    if (!((c = a.selectedCharacters[d].defaultName) && "" !== c)) {
-      b = false;
+export function validateSelectedParty(view) {
+  var isPartyValid = true,
+    selectedName,
+    selectionIndex,
+    partyCapacity = 4 + partyCapacityBonus.currentValue,
+    collectedNames = [],
+    hasDuplicateName = false;
+  for (selectionIndex = 0; selectionIndex < view.selectedCharacters.length; selectionIndex++) {
+    if (!((selectedName = view.selectedCharacters[selectionIndex].defaultName) && "" !== selectedName)) {
+      isPartyValid = false;
     }
-    if (-1 < g.indexOf(c)) {
-      h = true;
-      b = false;
+    if (-1 < collectedNames.indexOf(selectedName)) {
+      hasDuplicateName = true;
+      isPartyValid = false;
     }
-    g.push(c);
+    collectedNames.push(selectedName);
   }
-  for (d = 0; d < adventurerClasses.length; d++) {
-    c = game.state.victoryCount < adventurerClasses[d].requiredVictories;
-    if (!c) {
-      a.characterSelectionButtons[d].className = a.selectedCharacters.length === f ? "disabledCharacterSelectionButton" : "characterSelectionButton";
+  for (var classIndex = 0; classIndex < adventurerClasses.length; classIndex++) {
+    var isClassLocked = game.state.victoryCount < adventurerClasses[classIndex].requiredVictories;
+    if (!isClassLocked) {
+      view.characterSelectionButtons[classIndex].className = view.selectedCharacters.length === partyCapacity ? "disabledCharacterSelectionButton" : "characterSelectionButton";
     }
   }
-  if (0 === a.selectedCharacters.length) {
-    b = false;
+  if (0 === view.selectedCharacters.length) {
+    isPartyValid = false;
   }
-  d = f - a.selectedCharacters.length;
-  f = getPartyCapacityLabel();
-  if (b) {
-    switch (a.startButton.className = "upgradeButton", d) {
+  var remainingSlots = partyCapacity - view.selectedCharacters.length;
+  var startButtonLabel = getPartyCapacityLabel();
+  if (isPartyValid) {
+    switch (view.startButton.className = "upgradeButton", remainingSlots) {
       case 1:
-        f = "你还可以添加1个角色,或是直接开始游戏.";
+        startButtonLabel = "你还可以添加1个角色,或是直接开始游戏.";
         break;
       case 2:
-        f = "你还可以添加2个角色,或是直接开始游戏.";
+        startButtonLabel = "你还可以添加2个角色,或是直接开始游戏.";
         break;
       case 3:
-        f = "你还可以添加3个角色,或是直接开始游戏.";
+        startButtonLabel = "你还可以添加3个角色,或是直接开始游戏.";
         break;
       case 4:
-        f = "你还可以添加4个角色,或是直接开始游戏.";
+        startButtonLabel = "你还可以添加4个角色,或是直接开始游戏.";
         break;
       default:
-        f = "开始冒险!";
+        startButtonLabel = "开始冒险!";
     }
   } else {
-    a.startButton.className = "disabledUpgradeButton";
+    view.startButton.className = "disabledUpgradeButton";
   }
-  a.startButton.innerHTML = f;
-  a.hasDuplicateName = h;
-  a.validParty = b;
+  view.startButton.innerHTML = startButtonLabel;
+  view.hasDuplicateName = hasDuplicateName;
+  view.validParty = isPartyValid;
 }
 export function initializeViewsPartyCreation() {
   PartyCreationView.prototype = new TabView();
@@ -417,8 +417,8 @@ export function initializeViewsPartyCreation() {
    *  两个视图私有字段，也不必调用 startButton.onclick 这个 DOM 回调。
    *  语义：写自身选择状态（update 据此渲染已选表）→ 按视图同一条校验（重名/空名/容量，
    *  结果写 validParty 并刷新按钮文案）→ 共用创建函数。守卫不过时静默不创建（与原按钮一致）。 */
-  PartyCreationView.prototype.startParty = function (a) {
-    this.selectedCharacters = a;
+  PartyCreationView.prototype.startParty = function (selectedCharacters) {
+    this.selectedCharacters = selectedCharacters;
     validateSelectedParty(this);
     createAdventurerPartyFromSelection(this);
   };
@@ -430,20 +430,20 @@ export function initializeViewsPartyCreation() {
       }
       if (this.selectedPartyDirty) {
         this.selectedPartyDirty = false;
-        var a = this.selectedCharactersTable;
-        if (a) {
-          for (; 0 < a.rows.length;) {
-            a.deleteRow(0);
+        var selectedCharactersTable = this.selectedCharactersTable;
+        if (selectedCharactersTable) {
+          for (; 0 < selectedCharactersTable.rows.length;) {
+            selectedCharactersTable.deleteRow(0);
           }
         }
         var b = null,
-          a = /** @type {any} */ (0),
-          c;
-        for (c = 0; c < this.selectedCharacters.length; c++) {
-          b = this.selectedCharactersTable.insertRow(a);
-          a++;
+          rowIndex = /** @type {any} */ (0),
+          selectionIndex;
+        for (selectionIndex = 0; selectionIndex < this.selectedCharacters.length; selectionIndex++) {
+          b = this.selectedCharactersTable.insertRow(rowIndex);
+          rowIndex++;
           b = b.insertCell(0);
-          mountSelectedCharacter(this, b, this.selectedCharacters[c], c);
+          mountSelectedCharacter(this, b, this.selectedCharacters[selectionIndex], selectionIndex);
         }
       }
       if (this.cachedHasDuplicateName != this.hasDuplicateName) {

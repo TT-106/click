@@ -4,142 +4,142 @@
 import { resetSkillStatBonuses } from "../characters/stats.js";
 import { SKILL_UPGRADE_TYPE } from "../progression/upgrades.js";
 export var stunEffectDefinition, statusEffectDefinitions;
-export function recalculateCharacterSkills(a) {
-  resetSkillStatBonuses(a.stats);
-  applySkillTreeBonuses(a, a.skillTree1);
-  applySkillTreeBonuses(a, a.skillTree2);
-  applySkillTreeBonuses(a, a.skillTree3);
-  applySkillTreeBonuses(a, a.skillTree4);
+export function recalculateCharacterSkills(character) {
+  resetSkillStatBonuses(character.stats);
+  applySkillTreeBonuses(character, character.skillTree1);
+  applySkillTreeBonuses(character, character.skillTree2);
+  applySkillTreeBonuses(character, character.skillTree3);
+  applySkillTreeBonuses(character, character.skillTree4);
 }
-export function applySkillTreeBonuses(a, b) {
-  var c = b.upgrades,
+export function applySkillTreeBonuses(character, skillTree) {
+  var skillTreeUpgrades = skillTree.upgrades,
     d,
-    f;
-  for (f = 0; f < c.length; f++) {
-    d = c[f];
+    upgradeIndex;
+  for (upgradeIndex = 0; upgradeIndex < skillTreeUpgrades.length; upgradeIndex++) {
+    d = skillTreeUpgrades[upgradeIndex];
     if (d.getUpgradeType() === SKILL_UPGRADE_TYPE && d.isOwned()) {
       d = d.getUpgradeDefinition();
-      applyStatBonus(a, d.statType, d.statBonusValue);
+      applyStatBonus(character, d.statType, d.statBonusValue);
     }
   }
 }
-export function applyBonusList(a, b) {
-  if (b && 0 !== b.length) {
-    var c, d;
-    resetSkillStatBonuses(a.stats);
-    for (d = 0; d < b.length; d++) {
-      c = b[d];
-      applyStatBonus(a, c.statType, c.statBonusValue);
+export function applyBonusList(character, statBonusList) {
+  if (statBonusList && 0 !== statBonusList.length) {
+    var statBonus, statBonusIndex;
+    resetSkillStatBonuses(character.stats);
+    for (statBonusIndex = 0; statBonusIndex < statBonusList.length; statBonusIndex++) {
+      statBonus = statBonusList[statBonusIndex];
+      applyStatBonus(character, statBonus.statType, statBonus.statBonusValue);
     }
   }
 }
-export function applyStatBonus(a, b, c) {
+export function applyStatBonus(a, statType, statBonusValue) {
   a = a.stats;
-  switch (b) {
+  switch (statType) {
     case 1:
-      a.damageResistance += c;
+      a.damageResistance += statBonusValue;
       break;
     case 2:
-      b = a.damage;
-      b.skillBonusPercent += c;
+      var statComponent = a.damage;
+      statComponent.skillBonusPercent += statBonusValue;
       break;
     case 3:
-      b = a.armor;
-      b.skillBonusPercent += c;
+      statComponent = a.armor;
+      statComponent.skillBonusPercent += statBonusValue;
       break;
     case 4:
-      b = a.attackRating;
-      b.skillBonusPercent += c;
+      statComponent = a.attackRating;
+      statComponent.skillBonusPercent += statBonusValue;
       break;
     case 5:
-      b = a.defenceRating;
-      b.skillBonusPercent += c;
+      statComponent = a.defenceRating;
+      statComponent.skillBonusPercent += statBonusValue;
       break;
     case 6:
-      b = a.maxHealth;
-      b.skillBonusPercent += c;
+      statComponent = a.maxHealth;
+      statComponent.skillBonusPercent += statBonusValue;
       break;
     case 7:
-      b = a.maxSpirit;
-      b.skillBonusPercent += c;
+      statComponent = a.maxSpirit;
+      statComponent.skillBonusPercent += statBonusValue;
       break;
     case 8:
-      a.healthRegenBonus += c;
+      a.healthRegenBonus += statBonusValue;
       break;
     case 9:
-      a.spiritRegenBonus += c;
+      a.spiritRegenBonus += statBonusValue;
       break;
     case 10:
-      a.attackCooldownReduction += c;
+      a.attackCooldownReduction += statBonusValue;
       break;
     case 11:
-      a.healPotency += c;
+      a.healPotency += statBonusValue;
       break;
     case 13:
-      a.buffArmorPotency += c;
+      a.buffArmorPotency += statBonusValue;
       break;
     case 12:
-      a.buffDamagePotency += c;
+      a.buffDamagePotency += statBonusValue;
       break;
     case 14:
-      a.buffAttackRatingPotency += c;
+      a.buffAttackRatingPotency += statBonusValue;
       break;
     case 15:
-      a.buffDefenceRatingPotency += c;
+      a.buffDefenceRatingPotency += statBonusValue;
       break;
     case 16:
-      a.spellCostReduction += c;
+      a.spellCostReduction += statBonusValue;
       break;
     case 17:
-      a.critChance += c;
+      a.critChance += statBonusValue;
       break;
     case 18:
-      a.extraAttackCount += c;
+      a.extraAttackCount += statBonusValue;
       break;
     case 19:
-      a.extraAttackChance += c;
+      a.extraAttackChance += statBonusValue;
       break;
     case 21:
-      a.chainArcBonus += c;
+      a.chainArcBonus += statBonusValue;
       break;
     case 20:
-      a.controlTargetBonus += c;
+      a.controlTargetBonus += statBonusValue;
       break;
     case 27:
-      a.transformTargetBonus += c;
+      a.transformTargetBonus += statBonusValue;
       break;
     case 22:
-      a.rainAreaBonus += c;
+      a.rainAreaBonus += statBonusValue;
       break;
     case 25:
       a.areaRadiusBonus += 1;
       break;
     case 23:
-      a.chainCount += c;
+      a.chainCount += statBonusValue;
       break;
     case 24:
-      a.chainChance += c;
+      a.chainChance += statBonusValue;
       if (100 < a.chainChance) {
         a.chainChance = 100;
       }
       break;
     case 26:
-      a.maxSummonedMinions += c;
+      a.maxSummonedMinions += statBonusValue;
       break;
     case 28:
-      a.swiftStrikeTargetBonus += c;
+      a.swiftStrikeTargetBonus += statBonusValue;
       break;
     case 29:
-      a.ricochetCountBonus += c;
+      a.ricochetCountBonus += statBonusValue;
       break;
     case 30:
-      a.barbarianChickenChance = c;
+      a.barbarianChickenChance = statBonusValue;
       break;
     case 31:
-      a.ninjaChickenChance = c;
+      a.ninjaChickenChance = statBonusValue;
       break;
     case 32:
-      a.rogueChickenChance = c;
+      a.rogueChickenChance = statBonusValue;
   }
 }
 export function initializeCombatSkillEffects() {

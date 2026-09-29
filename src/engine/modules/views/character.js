@@ -14,156 +14,156 @@ import { UpgradeCollection } from "../progression/upgrades.js";
 /** @typedef {{ reset: () => void, render: () => void }} ViewLifecycle */
 /** @typedef {{ createDomElements: () => void, setRowCount: (rowCount: number) => void, createHeaderRow: (row: HTMLTableRowElement) => void }} TableLifecycle */
 export function ItemRowBase() {}
-export function InventoryItemView(a, b) {
-  this.rowElement = a;
-  this.adventurerIndex = b;
+export function InventoryItemView(rowElement, adventurerIndex) {
+  this.rowElement = rowElement;
+  this.adventurerIndex = adventurerIndex;
   this.equipButtonDiv = this.equipCell = this.goldCell = this.valueCell = this.levelCell = this.rarityCell = this.nameLabel = this.descriptionLabel = this.item = null;
   (/** @type {InventoryItemView & { createRowCells: () => void }} */ (/** @type {unknown} */ (this))).createRowCells();
 }
-export function InventoryTableView(a, b) {
-  this.elementId = a;
+export function InventoryTableView(elementId, adventurerIndex) {
+  this.elementId = elementId;
   this.visible = true;
-  this.adventurerIndex = b;
+  this.adventurerIndex = adventurerIndex;
   this.inventoryTable = null;
   this.rowViews = [];
 }
-export function EquipmentItemRowView(a, b) {
-  this.rowElement = a;
-  this.adventurerIndex = b;
+export function EquipmentItemRowView(rowElement, adventurerIndex) {
+  this.rowElement = rowElement;
+  this.adventurerIndex = adventurerIndex;
   this.equipCell = this.goldCell = this.valueCell = this.levelCell = this.rarityCell = this.nameLabel = this.descriptionLabel = this.item = null;
   (/** @type {EquipmentItemRowView & { createRowCells: () => void }} */ (/** @type {unknown} */ (this))).createRowCells();
 }
-export function EquipmentTableView(a, b) {
-  this.elementId = a;
+export function EquipmentTableView(elementId, adventurerIndex) {
+  this.elementId = elementId;
   this.visible = true;
-  this.adventurerIndex = b;
+  this.adventurerIndex = adventurerIndex;
   this.equipmentTable = null;
   this.rowViews = [];
 }
-export function EquipAllView(a) {
-  this.elementId = "equipAllButtonContainer" + a;
+export function EquipAllView(adventurerIndex) {
+  this.elementId = "equipAllButtonContainer" + adventurerIndex;
   this.visible = true;
-  this.adventurerIndex = a;
+  this.adventurerIndex = adventurerIndex;
   this.equipAllEnabled = false;
-  this.equipImprovementsButton = getElement("equipImprovements" + a);
-  var b = this;
+  this.equipImprovementsButton = getElement("equipImprovements" + adventurerIndex);
+  var self = this;
   this.equipImprovementsButton.onclick = function () {
-    (/** @type {EquipAllView & { equipBestForCharacter: () => void }} */ (/** @type {unknown} */ (b))).equipBestForCharacter();
+    (/** @type {EquipAllView & { equipBestForCharacter: () => void }} */ (/** @type {unknown} */ (self))).equipBestForCharacter();
     return false;
   };
 }
-export function InventoryTabView(a, b, c) {
-  this.elementId = b;
-  this.tabState = a;
-  this.adventurerIndex = c;
-  this.inventoryTableElementId = "itemTableAdventurer" + c;
-  this.equipmentTableElementId = "adventurerEquippedItems" + c;
-  this.equipmentTableView = new EquipmentTableView(this.equipmentTableElementId, c);
-  this.inventoryTable = new InventoryTableView(this.inventoryTableElementId, c);
+export function InventoryTabView(tabState, elementId, adventurerIndex) {
+  this.elementId = elementId;
+  this.tabState = tabState;
+  this.adventurerIndex = adventurerIndex;
+  this.inventoryTableElementId = "itemTableAdventurer" + adventurerIndex;
+  this.equipmentTableElementId = "adventurerEquippedItems" + adventurerIndex;
+  this.equipmentTableView = new EquipmentTableView(this.equipmentTableElementId, adventurerIndex);
+  this.inventoryTable = new InventoryTableView(this.inventoryTableElementId, adventurerIndex);
   addChildView(this, this.equipmentTableView);
-  addChildView(this, new EquipAllView(c));
+  addChildView(this, new EquipAllView(adventurerIndex));
   addChildView(this, this.inventoryTable);
 }
-export function CharacterTabsView(a, b) {
-  this.elementId = a;
+export function CharacterTabsView(elementId, adventurerIndex) {
+  this.elementId = elementId;
   this.visible = true;
-  this.adventurerIndex = b;
+  this.adventurerIndex = adventurerIndex;
   this.skillsTab = new TabState("技能", true);
   this.inventoryTab = new TabState("背包", true);
   this.skillsTab.selected = true;
   this.cachedHasUnspentSkills = false;
-  var c = new TabBar("characterTabMenu" + this.adventurerIndex),
-    d = new SkillsTabView(this.skillsTab, "characterSkillsContainer" + this.adventurerIndex, this.adventurerIndex),
-    f = new InventoryTabView(this.inventoryTab, "characterInventoryContainer" + this.adventurerIndex, this.adventurerIndex);
-  addTab(c, this.skillsTab);
-  addTab(c, this.inventoryTab);
-  addChildView(this, c);
-  addChildView(this, d);
-  addChildView(this, f);
+  var tabBar = new TabBar("characterTabMenu" + this.adventurerIndex),
+    skillsTabView = new SkillsTabView(this.skillsTab, "characterSkillsContainer" + this.adventurerIndex, this.adventurerIndex),
+    inventoryTabView = new InventoryTabView(this.inventoryTab, "characterInventoryContainer" + this.adventurerIndex, this.adventurerIndex);
+  addTab(tabBar, this.skillsTab);
+  addTab(tabBar, this.inventoryTab);
+  addChildView(this, tabBar);
+  addChildView(this, skillsTabView);
+  addChildView(this, inventoryTabView);
 }
-export function CharacterSummaryView(a, b) {
-  this.elementId = a;
+export function CharacterSummaryView(elementId, adventurerIndex) {
+  this.elementId = elementId;
   this.visible = true;
-  this.adventurerIndex = b;
+  this.adventurerIndex = adventurerIndex;
   this.critChanceCell = this.extraAttackCell = this.attacksPerTurnCell = this.spellPenetrationCell = this.damageResistanceCell = this.damageReceivedCell = this.damageGivenCell = this.stunCountCell = this.petKillsCell = this.killsCell = this.spiritRegenCell = this.healthRegenCell = this.attackCooldownCell = this.spiritCell = this.healthCell = this.levelCell = this.tableElement = null;
   this.cachedExtraAttackChance = this.cachedAttacksPerTurn = this.cachedCritChance = this.cachedSpellCostReduction = this.cachedDamageResistance = this.cachedDamageReceived = this.cachedDamageGiven = this.cachedStunCount = this.cachedMinionKills = this.cachedKills = this.cachedSpiritRegenPercent = this.cachedHealthRegenPercent = this.cachedAttackCooldown = this.cachedSpirit = this.cachedHealth = this.cachedLevel = -1;
 }
-export function StatBreakdownView(a, b, c, d) {
-  this.elementId = a;
+export function StatBreakdownView(elementId, adventurerIndex, statLabel, statIndex) {
+  this.elementId = elementId;
   this.visible = true;
-  this.statLabel = c;
-  this.statIndex = d;
-  this.adventurerIndex = b;
+  this.statLabel = statLabel;
+  this.statIndex = statIndex;
+  this.adventurerIndex = adventurerIndex;
   this.spellBonusCell = this.skillBonusCell = this.levelValueCell = this.itemValueCell = this.statValueCell = this.tableElement = null;
   this.cachedSpellBonusPercent = this.cachedSkillBonusPercent = this.cachedLevelValue = this.cachedItemValue = this.cachedStatValue = -1;
 }
-export function getStatByIndex(a, b) {
-  switch (b) {
+export function getStatByIndex(stats, statIndex) {
+  switch (statIndex) {
     case 0:
-      return a.damage;
+      return stats.damage;
     case 1:
-      return a.armor;
+      return stats.armor;
     case 2:
-      return a.attackRating;
+      return stats.attackRating;
     case 3:
-      return a.defenceRating;
+      return stats.defenceRating;
     case 4:
-      return a.maxHealth;
+      return stats.maxHealth;
     case 5:
-      return a.maxSpirit;
+      return stats.maxSpirit;
   }
   return null;
 }
-export function CharacterAttributesView(a, b) {
-  this.elementId = a;
+export function CharacterAttributesView(elementId, adventurerIndex) {
+  this.elementId = elementId;
   this.visible = true;
-  this.adventurerIndex = b;
+  this.adventurerIndex = adventurerIndex;
   /** @type {CharacterSummaryView & ViewLifecycle} */
-  this.summaryView = /** @type {CharacterSummaryView & ViewLifecycle} */ (/** @type {unknown} */ (new CharacterSummaryView(a, b)));
+  this.summaryView = /** @type {CharacterSummaryView & ViewLifecycle} */ (/** @type {unknown} */ (new CharacterSummaryView(elementId, adventurerIndex)));
   /** @type {StatBreakdownView & ViewLifecycle} */
-  this.damageView = /** @type {StatBreakdownView & ViewLifecycle} */ (/** @type {unknown} */ (new StatBreakdownView(a, b, "伤害", 0)));
+  this.damageView = /** @type {StatBreakdownView & ViewLifecycle} */ (/** @type {unknown} */ (new StatBreakdownView(elementId, adventurerIndex, "伤害", 0)));
   /** @type {StatBreakdownView & ViewLifecycle} */
-  this.armorView = /** @type {StatBreakdownView & ViewLifecycle} */ (/** @type {unknown} */ (new StatBreakdownView(a, b, "护甲", 1)));
+  this.armorView = /** @type {StatBreakdownView & ViewLifecycle} */ (/** @type {unknown} */ (new StatBreakdownView(elementId, adventurerIndex, "护甲", 1)));
   /** @type {StatBreakdownView & ViewLifecycle} */
-  this.attackRatingView = /** @type {StatBreakdownView & ViewLifecycle} */ (/** @type {unknown} */ (new StatBreakdownView(a, b, "攻击等级", 2)));
+  this.attackRatingView = /** @type {StatBreakdownView & ViewLifecycle} */ (/** @type {unknown} */ (new StatBreakdownView(elementId, adventurerIndex, "攻击等级", 2)));
   /** @type {StatBreakdownView & ViewLifecycle} */
-  this.defenceRatingView = /** @type {StatBreakdownView & ViewLifecycle} */ (/** @type {unknown} */ (new StatBreakdownView(a, b, "防御等级", 3)));
+  this.defenceRatingView = /** @type {StatBreakdownView & ViewLifecycle} */ (/** @type {unknown} */ (new StatBreakdownView(elementId, adventurerIndex, "防御等级", 3)));
   /** @type {StatBreakdownView & ViewLifecycle} */
-  this.maxHealthView = /** @type {StatBreakdownView & ViewLifecycle} */ (/** @type {unknown} */ (new StatBreakdownView(a, b, "最大生命", 4)));
+  this.maxHealthView = /** @type {StatBreakdownView & ViewLifecycle} */ (/** @type {unknown} */ (new StatBreakdownView(elementId, adventurerIndex, "最大生命", 4)));
   /** @type {StatBreakdownView & ViewLifecycle} */
-  this.maxSpiritView = /** @type {StatBreakdownView & ViewLifecycle} */ (/** @type {unknown} */ (new StatBreakdownView(a, b, "最大法力", 5)));
+  this.maxSpiritView = /** @type {StatBreakdownView & ViewLifecycle} */ (/** @type {unknown} */ (new StatBreakdownView(elementId, adventurerIndex, "最大法力", 5)));
 }
-export function CharacterView(a, b, c) {
-  this.elementId = b;
-  this.tabState = a;
-  this.adventurerIndex = c;
-  a = new UpgradeCollection([[characterLevelUpgrades[c]]], false);
-  addChildView(this, new CharacterAttributesView("characterPropertiesContainer" + c, c));
-  addChildView(this, new UpgradeListView("characterLevelUpButtonContainer" + c, a, true));
-  addChildView(this, new CharacterTabsView("characterTabContainer" + c, c));
+export function CharacterView(tabState, elementId, adventurerIndex) {
+  this.elementId = elementId;
+  this.tabState = tabState;
+  this.adventurerIndex = adventurerIndex;
+  var levelUpgradeCollection = new UpgradeCollection([[characterLevelUpgrades[adventurerIndex]]], false);
+  addChildView(this, new CharacterAttributesView("characterPropertiesContainer" + adventurerIndex, adventurerIndex));
+  addChildView(this, new UpgradeListView("characterLevelUpButtonContainer" + adventurerIndex, levelUpgradeCollection, true));
+  addChildView(this, new CharacterTabsView("characterTabContainer" + adventurerIndex, adventurerIndex));
 }
 export function mountCharacterView(a) {
   var hasAdventurer = a.adventurerIndex < game.state.adventurers.length,
-    c = a.tabState;
-  c.enabled = hasAdventurer;
-  c.selected = false;
+    tabState = a.tabState;
+  tabState.enabled = hasAdventurer;
+  tabState.selected = false;
   if (hasAdventurer) {
     var adventurer = game.state.adventurers[a.adventurerIndex];
     a = a.getAvailableSkillPoints(adventurer);
     var className = adventurer.classDefinition.shortName;
     if (0 < a) {
-      c.label = className + " " + a;
-      c.highlighted = true;
+      tabState.label = className + " " + a;
+      tabState.highlighted = true;
     } else {
-      c.label = className;
-      c.highlighted = false;
+      tabState.label = className;
+      tabState.highlighted = false;
     }
   }
 }
-export function SkillsTabView(a, b, c) {
-  this.elementId = b;
-  this.tabState = a;
-  this.adventurerIndex = c;
+export function SkillsTabView(tabState, elementId, adventurerIndex) {
+  this.elementId = elementId;
+  this.tabState = tabState;
+  this.adventurerIndex = adventurerIndex;
   this.fourthSkillTree = this.thirdSkillTree = this.skillTreeCollection = this.skillCollection = this.skillTreeTableElement = null;
   this.firstColumnButtons = [];
   this.secondColumnButtons = [];
@@ -176,24 +176,24 @@ export function initializeViewsCharacter() {
   InventoryItemView.prototype.render = function () {};
   InventoryItemView.prototype.onOfflineFinish = function () {};
   InventoryItemView.prototype.onOfflineStart = function () {};
-  InventoryItemView.prototype.setItem = function (a) {
-    if (this.item = a) {
-      var b = this.item.getIconSprite();
-      this.descriptionLabel.style.background = "url('spritesheet/items.png') -" + b.sourceX + "px -" + b.sourceY + "px";
+  InventoryItemView.prototype.setItem = function (item) {
+    if (this.item = item) {
+      var iconSprite = this.item.getIconSprite();
+      this.descriptionLabel.style.background = "url('spritesheet/items.png') -" + iconSprite.sourceX + "px -" + iconSprite.sourceY + "px";
       this.nameLabel.innerHTML = getHighlightedItemName(this.item);
       this.rarityCell.innerHTML = getItemRarityLabel(this.item);
       this.levelCell.innerHTML = this.item.itemLevel + "";
       this.goldCell.innerHTML = formatAmount(this.item.itemGold);
       this.valueCell.innerHTML = formatAmount(this.item.itemValue) + " " + getItemStatLabel(this.item);
-      var c = game.state.adventurers[this.adventurerIndex],
-        b = c.getSlotItem(a.slot);
-      this.valueCell.className = b ? this.item.itemValue > b.itemValue ? "itemValueBetter" : this.item.itemValue < b.itemValue ? "itemValueWorse" : "" : "itemValueBetter";
-      this.goldCell.className = b ? a.itemGold > b.itemGold ? "itemValueBetter" : a.itemGold < b.itemGold ? "itemValueWorse" : "" : "itemValueBetter";
+      var adventurer = game.state.adventurers[this.adventurerIndex],
+        equippedItem = adventurer.getSlotItem(item.slot);
+      this.valueCell.className = equippedItem ? this.item.itemValue > equippedItem.itemValue ? "itemValueBetter" : this.item.itemValue < equippedItem.itemValue ? "itemValueWorse" : "" : "itemValueBetter";
+      this.goldCell.className = equippedItem ? item.itemGold > equippedItem.itemGold ? "itemValueBetter" : item.itemGold < equippedItem.itemGold ? "itemValueWorse" : "" : "itemValueBetter";
       this.rarityCell.className = getRarityClass(this.item.getRarity());
-      if (!b || this.item.itemValue > b.itemValue) {
+      if (!equippedItem || this.item.itemValue > equippedItem.itemValue) {
         this.equipButtonDiv.style.display = "block";
         this.equipButtonDiv.onclick = function () {
-          c.equipItem(a);
+          adventurer.equipItem(item);
           return false;
         };
       } else {
@@ -212,29 +212,29 @@ export function initializeViewsCharacter() {
     }
   };
   InventoryItemView.prototype.createRowCells = function () {
-    var a = this.rowElement,
-      b = a.insertCell(0);
-    b.style.width = "50px";
-    b.style.padding = "0";
-    b.style.textAlign = "center";
-    this.descriptionLabel = createElement("img", b, null, "itemImage");
+    var rowElement = this.rowElement,
+      iconCell = rowElement.insertCell(0);
+    iconCell.style.width = "50px";
+    iconCell.style.padding = "0";
+    iconCell.style.textAlign = "center";
+    this.descriptionLabel = createElement("img", iconCell, null, "itemImage");
     this.descriptionLabel.src = "images/Transparent.gif";
-    this.nameLabel = a.insertCell(1);
+    this.nameLabel = rowElement.insertCell(1);
     this.nameLabel.style.width = "250px";
-    this.rarityCell = a.insertCell(2);
+    this.rarityCell = rowElement.insertCell(2);
     this.rarityCell.style.width = "110px";
     this.rarityCell.style.textAlign = "center";
-    this.levelCell = a.insertCell(3);
+    this.levelCell = rowElement.insertCell(3);
     this.levelCell.style.textAlign = "right";
     this.levelCell.style.paddingRight = "5px";
     this.levelCell.style.width = "60px";
-    this.valueCell = a.insertCell(4);
+    this.valueCell = rowElement.insertCell(4);
     this.valueCell.style.width = "120px";
-    this.goldCell = a.insertCell(5);
+    this.goldCell = rowElement.insertCell(5);
     this.goldCell.style.textAlign = "right";
     this.goldCell.style.paddingRight = "5px";
     this.goldCell.style.width = "70px";
-    this.equipCell = a.insertCell(6);
+    this.equipCell = rowElement.insertCell(6);
     this.equipCell.style.width = "100px";
     this.equipButtonDiv = createElement("div", this.equipCell, null, "equipButtonDiv");
     this.equipButtonDiv.innerHTML = "装备";
@@ -251,54 +251,54 @@ export function initializeViewsCharacter() {
       if (!this.inventoryTable) {
         (/** @type {InventoryTableView & TableLifecycle} */ (/** @type {unknown} */ (this))).createDomElements();
       }
-      var a = game.state.adventurers[this.adventurerIndex].inventory.items;
-      if (a.length !== this.rowViews.length) {
-        (/** @type {InventoryTableView & TableLifecycle} */ (/** @type {unknown} */ (this))).setRowCount(a.length);
+      var items = game.state.adventurers[this.adventurerIndex].inventory.items;
+      if (items.length !== this.rowViews.length) {
+        (/** @type {InventoryTableView & TableLifecycle} */ (/** @type {unknown} */ (this))).setRowCount(items.length);
       }
-      var b;
-      for (b = 0; b < this.rowViews.length; b++) {
-        if (a[b] !== this.rowViews[b].item) {
-          this.rowViews[b].setItem(a[b]);
+      var rowIndex;
+      for (rowIndex = 0; rowIndex < this.rowViews.length; rowIndex++) {
+        if (items[rowIndex] !== this.rowViews[rowIndex].item) {
+          this.rowViews[rowIndex].setItem(items[rowIndex]);
         }
       }
     }
   };
-  InventoryTableView.prototype.setRowCount = function (a) {
-    for (; this.rowViews.length > a;) {
+  InventoryTableView.prototype.setRowCount = function (rowCount) {
+    for (; this.rowViews.length > rowCount;) {
       this.inventoryTable.deleteRow(-1);
       this.rowViews.splice(this.rowViews.length - 1, 1);
     }
-    for (; this.rowViews.length < a;) {
+    for (; this.rowViews.length < rowCount;) {
       this.rowViews.push(new InventoryItemView(this.inventoryTable.insertRow(this.rowViews.length + 1), this.adventurerIndex));
     }
   };
   InventoryTableView.prototype.createDomElements = function () {
-    var a = this.elementId;
-    clearElementById(a);
-    this.inventoryTable = createElement("table", getElement(a), null, "monsterTable");
+    var elementId = this.elementId;
+    clearElementById(elementId);
+    this.inventoryTable = createElement("table", getElement(elementId), null, "monsterTable");
     (/** @type {InventoryTableView & TableLifecycle} */ (/** @type {unknown} */ (this))).createHeaderRow(this.inventoryTable.insertRow(0));
   };
   InventoryTableView.prototype.createHeaderRow = function (a) {
-    var b = appendHeaderCell(a);
-    b.style.textAlign = "center";
-    b.style.padding = "0";
-    b.innerHTML = "图标";
+    var iconHeaderCell = appendHeaderCell(a);
+    iconHeaderCell.style.textAlign = "center";
+    iconHeaderCell.style.padding = "0";
+    iconHeaderCell.innerHTML = "图标";
     appendHeaderCell(a).innerHTML = "道具名称";
-    b = appendHeaderCell(a);
-    b.style.textAlign = "center";
-    b.innerHTML = "稀有度";
-    b = appendHeaderCell(a);
-    b.style.textAlign = "right";
-    b.style.paddingRight = "5px";
-    b.innerHTML = "等级";
-    b = appendHeaderCell(a);
-    b.style.textAlign = "left";
-    b.style.paddingRight = "5px";
-    b.innerHTML = "效果";
-    b = appendHeaderCell(a);
-    b.style.textAlign = "right";
-    b.style.paddingRight = "5px";
-    b.innerHTML = "黄金";
+    var rarityHeaderCell = appendHeaderCell(a);
+    rarityHeaderCell.style.textAlign = "center";
+    rarityHeaderCell.innerHTML = "稀有度";
+    var levelHeaderCell = appendHeaderCell(a);
+    levelHeaderCell.style.textAlign = "right";
+    levelHeaderCell.style.paddingRight = "5px";
+    levelHeaderCell.innerHTML = "等级";
+    var effectHeaderCell = appendHeaderCell(a);
+    effectHeaderCell.style.textAlign = "left";
+    effectHeaderCell.style.paddingRight = "5px";
+    effectHeaderCell.innerHTML = "效果";
+    var goldHeaderCell = appendHeaderCell(a);
+    goldHeaderCell.style.textAlign = "right";
+    goldHeaderCell.style.paddingRight = "5px";
+    goldHeaderCell.innerHTML = "黄金";
     a = appendHeaderCell(a);
     a.style.textAlign = "center";
     a.innerHTML = "装备";
@@ -307,10 +307,10 @@ export function initializeViewsCharacter() {
   EquipmentItemRowView.prototype.render = function () {};
   EquipmentItemRowView.prototype.onOfflineFinish = function () {};
   EquipmentItemRowView.prototype.onOfflineStart = function () {};
-  EquipmentItemRowView.prototype.setItem = function (a) {
-    if (this.item = a) {
-      a = this.item.getIconSprite();
-      this.descriptionLabel.style.background = "url('spritesheet/items.png') -" + a.sourceX + "px -" + a.sourceY + "px";
+  EquipmentItemRowView.prototype.setItem = function (item) {
+    if (this.item = item) {
+      var iconSprite = this.item.getIconSprite();
+      this.descriptionLabel.style.background = "url('spritesheet/items.png') -" + iconSprite.sourceX + "px -" + iconSprite.sourceY + "px";
       this.nameLabel.innerHTML = getHighlightedItemName(this.item);
       this.rarityCell.innerHTML = getItemRarityLabel(this.item);
       this.levelCell.innerHTML = this.item.itemLevel + "";
@@ -328,34 +328,34 @@ export function initializeViewsCharacter() {
     }
   };
   EquipmentItemRowView.prototype.createRowCells = function () {
-    var a = this.rowElement,
-      b = a.insertCell(0);
-    b.style.width = "50px";
-    b.style.padding = "0";
-    b.style.textAlign = "center";
-    this.descriptionLabel = createElement("img", b, null, "itemImage");
+    var rowElement = this.rowElement,
+      iconCell = rowElement.insertCell(0);
+    iconCell.style.width = "50px";
+    iconCell.style.padding = "0";
+    iconCell.style.textAlign = "center";
+    this.descriptionLabel = createElement("img", iconCell, null, "itemImage");
     this.descriptionLabel.src = "images/Transparent.gif";
-    this.nameLabel = a.insertCell(1);
+    this.nameLabel = rowElement.insertCell(1);
     this.nameLabel.style.width = "280px";
-    this.rarityCell = a.insertCell(2);
+    this.rarityCell = rowElement.insertCell(2);
     this.rarityCell.style.width = "110px";
     this.rarityCell.style.textAlign = "center";
-    this.levelCell = a.insertCell(3);
+    this.levelCell = rowElement.insertCell(3);
     this.levelCell.style.textAlign = "right";
     this.levelCell.style.paddingRight = "5px";
     this.levelCell.style.width = "70px";
-    this.valueCell = a.insertCell(4);
+    this.valueCell = rowElement.insertCell(4);
     this.valueCell.style.width = "120px";
-    this.goldCell = a.insertCell(5);
+    this.goldCell = rowElement.insertCell(5);
     this.goldCell.style.textAlign = "right";
     this.goldCell.style.paddingRight = "5px";
     this.goldCell.style.width = "80px";
   };
   EquipmentTableView.prototype = new View();
   EquipmentTableView.prototype.reset = function () {
-    var a;
-    for (a = 0; a < this.rowViews.length; a++) {
-      this.rowViews[a].reset();
+    var rowIndex;
+    for (rowIndex = 0; rowIndex < this.rowViews.length; rowIndex++) {
+      this.rowViews[rowIndex].reset();
     }
     this.rowViews.length = 0;
     clearElementById(this.elementId);
@@ -366,52 +366,52 @@ export function initializeViewsCharacter() {
       if (!this.equipmentTable) {
         (/** @type {EquipmentTableView & TableLifecycle} */ (/** @type {unknown} */ (this))).createDomElements();
       }
-      var a = game.state.adventurers[this.adventurerIndex],
-        b = a.slotList;
-      if (b.length !== this.rowViews.length) {
-        (/** @type {EquipmentTableView & TableLifecycle} */ (/** @type {unknown} */ (this))).setRowCount(b.length);
+      var adventurer = game.state.adventurers[this.adventurerIndex],
+        slotList = adventurer.slotList;
+      if (slotList.length !== this.rowViews.length) {
+        (/** @type {EquipmentTableView & TableLifecycle} */ (/** @type {unknown} */ (this))).setRowCount(slotList.length);
       }
-      var c, d;
-      for (c = 0; c < this.rowViews.length; c++) {
-        d = a.getSlotItem(b[c]);
-        if (d !== this.rowViews[c].item) {
-          this.rowViews[c].setItem(d);
+      var rowIndex, equippedItem;
+      for (rowIndex = 0; rowIndex < this.rowViews.length; rowIndex++) {
+        equippedItem = adventurer.getSlotItem(slotList[rowIndex]);
+        if (equippedItem !== this.rowViews[rowIndex].item) {
+          this.rowViews[rowIndex].setItem(equippedItem);
         }
       }
     }
   };
-  EquipmentTableView.prototype.setRowCount = function (a) {
-    for (; this.rowViews.length > a;) {
+  EquipmentTableView.prototype.setRowCount = function (rowCount) {
+    for (; this.rowViews.length > rowCount;) {
       this.equipmentTable.deleteRow(-1);
       this.rowViews.splice(this.rowViews.length - 1, 1);
     }
-    for (; this.rowViews.length < a;) {
+    for (; this.rowViews.length < rowCount;) {
       this.rowViews.push(new EquipmentItemRowView(this.equipmentTable.insertRow(this.rowViews.length + 1), this.adventurerIndex));
     }
   };
   EquipmentTableView.prototype.createDomElements = function () {
-    var a = this.elementId;
-    clearElementById(a);
-    this.equipmentTable = createElement("table", getElement(a), null, "monsterTable");
+    var elementId = this.elementId;
+    clearElementById(elementId);
+    this.equipmentTable = createElement("table", getElement(elementId), null, "monsterTable");
     (/** @type {EquipmentTableView & TableLifecycle} */ (/** @type {unknown} */ (this))).createHeaderRow(this.equipmentTable.insertRow(0));
   };
   EquipmentTableView.prototype.createHeaderRow = function (a) {
-    var b = appendHeaderCell(a);
-    b.style.textAlign = "center";
-    b.style.padding = "0";
-    b.innerHTML = "图标";
+    var iconHeaderCell = appendHeaderCell(a);
+    iconHeaderCell.style.textAlign = "center";
+    iconHeaderCell.style.padding = "0";
+    iconHeaderCell.innerHTML = "图标";
     appendHeaderCell(a).innerHTML = "道具名称";
-    b = appendHeaderCell(a);
-    b.style.textAlign = "center";
-    b.innerHTML = "稀有度";
-    b = appendHeaderCell(a);
-    b.style.textAlign = "right";
-    b.style.paddingRight = "5px";
-    b.innerHTML = "等级";
-    b = appendHeaderCell(a);
-    b.style.textAlign = "left";
-    b.style.paddingRight = "5px";
-    b.innerHTML = "效果";
+    var rarityHeaderCell = appendHeaderCell(a);
+    rarityHeaderCell.style.textAlign = "center";
+    rarityHeaderCell.innerHTML = "稀有度";
+    var levelHeaderCell = appendHeaderCell(a);
+    levelHeaderCell.style.textAlign = "right";
+    levelHeaderCell.style.paddingRight = "5px";
+    levelHeaderCell.innerHTML = "等级";
+    var effectHeaderCell = appendHeaderCell(a);
+    effectHeaderCell.style.textAlign = "left";
+    effectHeaderCell.style.paddingRight = "5px";
+    effectHeaderCell.innerHTML = "效果";
     a = appendHeaderCell(a);
     a.style.textAlign = "right";
     a.style.paddingRight = "5px";
@@ -454,102 +454,102 @@ export function initializeViewsCharacter() {
   CharacterSummaryView.prototype = new View();
   CharacterSummaryView.prototype.reset = function () {
     this.cachedExtraAttackChance = this.cachedAttacksPerTurn = this.cachedCritChance = this.cachedSpellCostReduction = this.cachedDamageResistance = this.cachedDamageReceived = this.cachedDamageGiven = this.cachedStunCount = this.cachedMinionKills = this.cachedKills = this.cachedSpiritRegenPercent = this.cachedHealthRegenPercent = this.cachedAttackCooldown = this.cachedSpirit = this.cachedHealth = this.cachedLevel = -1;
-    var a = 0;
+    var rowIndex = 0;
     this.tableElement = createElement("table", getElement(this.elementId), null, "characteristicsTable");
-    this.levelCell = appendAttributeRow(this.tableElement, "等级:", a++);
-    this.healthCell = appendAttributeRow(this.tableElement, "生命:", a++);
-    this.spiritCell = appendAttributeRow(this.tableElement, "法力:", a++);
-    this.healthRegenCell = appendAttributeRow(this.tableElement, "生命回复:", a++);
-    this.spiritRegenCell = appendAttributeRow(this.tableElement, "法力回复:", a++);
-    this.killsCell = appendAttributeRow(this.tableElement, "杀死:", a++);
-    this.petKillsCell = appendAttributeRow(this.tableElement, "宠物杀死:", a++);
-    this.stunCountCell = appendAttributeRow(this.tableElement, "昏迷次数:", a++);
-    this.damageGivenCell = appendAttributeRow(this.tableElement, "输出伤害:", a++);
-    this.damageReceivedCell = appendAttributeRow(this.tableElement, "受到伤害:", a++);
-    this.damageResistanceCell = appendAttributeRow(this.tableElement, "伤害抵抗:", a++);
-    this.spellPenetrationCell = appendAttributeRow(this.tableElement, "法术忽视:", a++);
-    this.critChanceCell = appendAttributeRow(this.tableElement, "暴击几率:", a++);
-    this.attackCooldownCell = appendAttributeRow(this.tableElement, "冷却回合:", a++);
-    this.attacksPerTurnCell = appendAttributeRow(this.tableElement, "每回合攻击次数:", a++);
-    this.extraAttackCell = appendAttributeRow(this.tableElement, "额外攻击:", a);
+    this.levelCell = appendAttributeRow(this.tableElement, "等级:", rowIndex++);
+    this.healthCell = appendAttributeRow(this.tableElement, "生命:", rowIndex++);
+    this.spiritCell = appendAttributeRow(this.tableElement, "法力:", rowIndex++);
+    this.healthRegenCell = appendAttributeRow(this.tableElement, "生命回复:", rowIndex++);
+    this.spiritRegenCell = appendAttributeRow(this.tableElement, "法力回复:", rowIndex++);
+    this.killsCell = appendAttributeRow(this.tableElement, "杀死:", rowIndex++);
+    this.petKillsCell = appendAttributeRow(this.tableElement, "宠物杀死:", rowIndex++);
+    this.stunCountCell = appendAttributeRow(this.tableElement, "昏迷次数:", rowIndex++);
+    this.damageGivenCell = appendAttributeRow(this.tableElement, "输出伤害:", rowIndex++);
+    this.damageReceivedCell = appendAttributeRow(this.tableElement, "受到伤害:", rowIndex++);
+    this.damageResistanceCell = appendAttributeRow(this.tableElement, "伤害抵抗:", rowIndex++);
+    this.spellPenetrationCell = appendAttributeRow(this.tableElement, "法术忽视:", rowIndex++);
+    this.critChanceCell = appendAttributeRow(this.tableElement, "暴击几率:", rowIndex++);
+    this.attackCooldownCell = appendAttributeRow(this.tableElement, "冷却回合:", rowIndex++);
+    this.attacksPerTurnCell = appendAttributeRow(this.tableElement, "每回合攻击次数:", rowIndex++);
+    this.extraAttackCell = appendAttributeRow(this.tableElement, "额外攻击:", rowIndex);
   };
   CharacterSummaryView.prototype.update = function () {
     var a = game.state.adventurers[this.adventurerIndex].stats,
-      b = a.characterLevel,
-      c = a.health,
-      d = a.spirit,
-      f = getAttackCooldown(a, true),
-      g = a.baseHealthRegenPercent + a.healthRegenBonus + healthRegenerationBonus.currentValue,
-      h = a.baseSpiritRegenPercent + a.spiritRegenBonus + spiritRegenerationBonus.currentValue,
-      l = a.kills,
-      n = a.minionKills,
-      p = a.stunCount,
-      s = a.damageGiven,
-      u = a.damageReceived,
-      y = a.damageResistance,
-      A = a.spellCostReduction,
-      C = a.critChance,
-      v = 1 + a.extraAttackCount,
+      characterLevel = a.characterLevel,
+      health = a.health,
+      spirit = a.spirit,
+      attackCooldown = getAttackCooldown(a, true),
+      healthRegenPercent = a.baseHealthRegenPercent + a.healthRegenBonus + healthRegenerationBonus.currentValue,
+      spiritRegenPercent = a.baseSpiritRegenPercent + a.spiritRegenBonus + spiritRegenerationBonus.currentValue,
+      kills = a.kills,
+      minionKills = a.minionKills,
+      stunCount = a.stunCount,
+      damageGiven = a.damageGiven,
+      damageReceived = a.damageReceived,
+      damageResistance = a.damageResistance,
+      spellCostReduction = a.spellCostReduction,
+      critChance = a.critChance,
+      attacksPerTurn = 1 + a.extraAttackCount,
       a = 0 < a.extraAttackCount ? a.extraAttackChance : 0;
-    if (this.cachedLevel !== b) {
-      this.cachedLevel = b;
-      this.levelCell.innerHTML = b + "";
+    if (this.cachedLevel !== characterLevel) {
+      this.cachedLevel = characterLevel;
+      this.levelCell.innerHTML = characterLevel + "";
     }
-    if (this.cachedHealth !== c) {
-      this.cachedHealth = c;
-      this.healthCell.innerHTML = formatAmount(c);
+    if (this.cachedHealth !== health) {
+      this.cachedHealth = health;
+      this.healthCell.innerHTML = formatAmount(health);
     }
-    if (this.cachedSpirit !== d) {
-      this.cachedSpirit = d;
-      this.spiritCell.innerHTML = formatAmount(d);
+    if (this.cachedSpirit !== spirit) {
+      this.cachedSpirit = spirit;
+      this.spiritCell.innerHTML = formatAmount(spirit);
     }
-    if (this.cachedAttackCooldown !== f) {
-      this.cachedAttackCooldown = f;
-      this.attackCooldownCell.innerHTML = f + "";
+    if (this.cachedAttackCooldown !== attackCooldown) {
+      this.cachedAttackCooldown = attackCooldown;
+      this.attackCooldownCell.innerHTML = attackCooldown + "";
     }
-    if (this.cachedHealthRegenPercent !== g) {
-      this.cachedHealthRegenPercent = g;
-      this.healthRegenCell.innerHTML = g + "%";
+    if (this.cachedHealthRegenPercent !== healthRegenPercent) {
+      this.cachedHealthRegenPercent = healthRegenPercent;
+      this.healthRegenCell.innerHTML = healthRegenPercent + "%";
     }
-    if (this.cachedSpiritRegenPercent !== h) {
-      this.cachedSpiritRegenPercent = h;
-      this.spiritRegenCell.innerHTML = h + "%";
+    if (this.cachedSpiritRegenPercent !== spiritRegenPercent) {
+      this.cachedSpiritRegenPercent = spiritRegenPercent;
+      this.spiritRegenCell.innerHTML = spiritRegenPercent + "%";
     }
-    if (this.cachedKills !== l) {
-      this.cachedKills = l;
-      this.killsCell.innerHTML = formatAmount(l);
+    if (this.cachedKills !== kills) {
+      this.cachedKills = kills;
+      this.killsCell.innerHTML = formatAmount(kills);
     }
-    if (this.cachedMinionKills !== n) {
-      this.cachedMinionKills = n;
-      this.petKillsCell.innerHTML = formatAmount(n);
+    if (this.cachedMinionKills !== minionKills) {
+      this.cachedMinionKills = minionKills;
+      this.petKillsCell.innerHTML = formatAmount(minionKills);
     }
-    if (this.cachedStunCount !== p) {
-      this.cachedStunCount = p;
-      this.stunCountCell.innerHTML = formatAmount(p);
+    if (this.cachedStunCount !== stunCount) {
+      this.cachedStunCount = stunCount;
+      this.stunCountCell.innerHTML = formatAmount(stunCount);
     }
-    if (this.cachedDamageGiven !== s) {
-      this.cachedDamageGiven = s;
-      this.damageGivenCell.innerHTML = formatAmount(s);
+    if (this.cachedDamageGiven !== damageGiven) {
+      this.cachedDamageGiven = damageGiven;
+      this.damageGivenCell.innerHTML = formatAmount(damageGiven);
     }
-    if (this.cachedDamageReceived !== u) {
-      this.cachedDamageReceived = u;
-      this.damageReceivedCell.innerHTML = formatAmount(u);
+    if (this.cachedDamageReceived !== damageReceived) {
+      this.cachedDamageReceived = damageReceived;
+      this.damageReceivedCell.innerHTML = formatAmount(damageReceived);
     }
-    if (this.cachedDamageResistance !== y) {
-      this.cachedDamageResistance = y;
-      this.damageResistanceCell.innerHTML = y + "%";
+    if (this.cachedDamageResistance !== damageResistance) {
+      this.cachedDamageResistance = damageResistance;
+      this.damageResistanceCell.innerHTML = damageResistance + "%";
     }
-    if (this.cachedSpellCostReduction !== A) {
-      this.cachedSpellCostReduction = A;
-      this.spellPenetrationCell.innerHTML = A + "%";
+    if (this.cachedSpellCostReduction !== spellCostReduction) {
+      this.cachedSpellCostReduction = spellCostReduction;
+      this.spellPenetrationCell.innerHTML = spellCostReduction + "%";
     }
-    if (this.cachedCritChance !== C) {
-      this.cachedCritChance = C;
-      this.critChanceCell.innerHTML = C + "%";
+    if (this.cachedCritChance !== critChance) {
+      this.cachedCritChance = critChance;
+      this.critChanceCell.innerHTML = critChance + "%";
     }
-    if (this.cachedAttacksPerTurn != v) {
-      this.cachedAttacksPerTurn = v;
-      this.attacksPerTurnCell.innerHTML = v + "";
+    if (this.cachedAttacksPerTurn != attacksPerTurn) {
+      this.cachedAttacksPerTurn = attacksPerTurn;
+      this.attacksPerTurnCell.innerHTML = attacksPerTurn + "";
     }
     if (this.cachedExtraAttackChance != a) {
       this.cachedExtraAttackChance = a;
@@ -561,14 +561,14 @@ export function initializeViewsCharacter() {
     this.cachedSpellBonusPercent = this.cachedSkillBonusPercent = this.cachedLevelValue = this.cachedItemValue = this.cachedStatValue = -1;
     this.tableElement = createElement("table", getElement(this.elementId), null, "characteristicsTable");
     var label = this.statLabel + ":",
-      b = this.tableElement.insertRow(0),
-      c = document.createElement("th");
-    c.className = "characteristicsTableLabel";
-    b.appendChild(c);
-    c.innerHTML = label;
+      headerRow = this.tableElement.insertRow(0),
+      labelCell = document.createElement("th");
+    labelCell.className = "characteristicsTableLabel";
+    headerRow.appendChild(labelCell);
+    labelCell.innerHTML = label;
     var valueCell = document.createElement("th");
     valueCell.style.textAlign = "left";
-    b.appendChild(valueCell);
+    headerRow.appendChild(valueCell);
     this.statValueCell = valueCell;
     this.itemValueCell = appendAttributeRow(this.tableElement, "道具加成:", 1);
     this.levelValueCell = appendAttributeRow(this.tableElement, "等级加成:", 2);
@@ -577,26 +577,26 @@ export function initializeViewsCharacter() {
   };
   StatBreakdownView.prototype.update = function () {
     var a = getStatByIndex(game.state.adventurers[this.adventurerIndex].stats, this.statIndex),
-      b = statValue(a),
-      c = a.itemValue,
-      d = a.levelValue,
-      f = a.spellBonusPercent,
+      totalStatValue = statValue(a),
+      itemValue = a.itemValue,
+      levelValue = a.levelValue,
+      spellBonusPercent = a.spellBonusPercent,
       a = a.skillBonusPercent;
-    if (this.cachedStatValue !== b) {
-      this.cachedStatValue = b;
-      this.statValueCell.innerHTML = formatAmount(b);
+    if (this.cachedStatValue !== totalStatValue) {
+      this.cachedStatValue = totalStatValue;
+      this.statValueCell.innerHTML = formatAmount(totalStatValue);
     }
-    if (this.cachedItemValue !== c) {
-      this.cachedItemValue = c;
-      this.itemValueCell.innerHTML = formatAmount(c);
+    if (this.cachedItemValue !== itemValue) {
+      this.cachedItemValue = itemValue;
+      this.itemValueCell.innerHTML = formatAmount(itemValue);
     }
-    if (this.cachedLevelValue !== d) {
-      this.cachedLevelValue = d;
-      this.levelValueCell.innerHTML = formatAmount(d);
+    if (this.cachedLevelValue !== levelValue) {
+      this.cachedLevelValue = levelValue;
+      this.levelValueCell.innerHTML = formatAmount(levelValue);
     }
-    if (this.cachedSpellBonusPercent !== f) {
-      this.cachedSpellBonusPercent = f;
-      this.spellBonusCell.innerHTML = formatAmount(f) + "%";
+    if (this.cachedSpellBonusPercent !== spellBonusPercent) {
+      this.cachedSpellBonusPercent = spellBonusPercent;
+      this.spellBonusCell.innerHTML = formatAmount(spellBonusPercent) + "%";
     }
     if (this.cachedSkillBonusPercent !== a) {
       this.cachedSkillBonusPercent = a;
@@ -643,8 +643,8 @@ export function initializeViewsCharacter() {
     resetChildViews(this);
     mountCharacterView(this);
   };
-  CharacterView.prototype.getAvailableSkillPoints = function (a) {
-    return a.hasUnspentSkills ? a.skillPoints + a.initialSpellSkillPoint : 0;
+  CharacterView.prototype.getAvailableSkillPoints = function (adventurer) {
+    return adventurer.hasUnspentSkills ? adventurer.skillPoints + adventurer.initialSpellSkillPoint : 0;
   };
   SkillsTabView.prototype = new TabView();
   SkillsTabView.prototype.reset = function () {
@@ -655,89 +655,89 @@ export function initializeViewsCharacter() {
     this.buttons.length = 0;
     this.fourthColumnButtons.length = 0;
     (/** @type {SkillsTabView & { refreshCollections: () => void }} */ (/** @type {unknown} */ (this))).refreshCollections();
-    var a = this.elementId,
-      b = getElement(a);
-    if (b && !(0 > this.adventurerIndex || this.adventurerIndex >= game.state.adventurers.length)) {
+    var baseElementId = this.elementId,
+      container = getElement(baseElementId);
+    if (container && !(0 > this.adventurerIndex || this.adventurerIndex >= game.state.adventurers.length)) {
       if (this.skillCollection) {
-        this.skillTreeTableElement = createElement("table", b, null, "adventurerSkillTreeTable");
+        this.skillTreeTableElement = createElement("table", container, null, "adventurerSkillTreeTable");
         var skillUpgrades = this.skillCollection.upgrades,
-          c = this.skillTreeCollection.upgrades,
-          d = this.thirdSkillTree.upgrades,
-          f = this.fourthSkillTree.upgrades,
-          g = Math.max(skillUpgrades.length, Math.max(c.length, Math.max(d.length, f.length))),
-          h,
+          secondColumnUpgrades = this.skillTreeCollection.upgrades,
+          thirdColumnUpgrades = this.thirdSkillTree.upgrades,
+          fourthColumnUpgrades = this.fourthSkillTree.upgrades,
+          rowCount = Math.max(skillUpgrades.length, Math.max(secondColumnUpgrades.length, Math.max(thirdColumnUpgrades.length, fourthColumnUpgrades.length))),
+          rowIndex,
           l,
-          n,
-          p,
-          s;
-        for (h = 0; h < g; h++) {
-          l = this.skillTreeTableElement.insertRow(h);
-          n = l.insertCell(0);
-          p = l.insertCell(1);
-          s = l.insertCell(2);
+          firstColumnCell,
+          secondColumnCell,
+          thirdColumnCell;
+        for (rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+          l = this.skillTreeTableElement.insertRow(rowIndex);
+          firstColumnCell = l.insertCell(0);
+          secondColumnCell = l.insertCell(1);
+          thirdColumnCell = l.insertCell(2);
           l = l.insertCell(3);
-          n.id = a + "_" + h + "_0";
-          p.id = a + "_" + h + "_1";
-          s.id = a + "_" + h + "_2";
-          l.id = a + "_" + h + "_3";
-          n.width = 150;
-          p.width = 150;
-          s.width = 150;
+          firstColumnCell.id = baseElementId + "_" + rowIndex + "_0";
+          secondColumnCell.id = baseElementId + "_" + rowIndex + "_1";
+          thirdColumnCell.id = baseElementId + "_" + rowIndex + "_2";
+          l.id = baseElementId + "_" + rowIndex + "_3";
+          firstColumnCell.width = 150;
+          secondColumnCell.width = 150;
+          thirdColumnCell.width = 150;
           l.width = 150;
-          if (h < skillUpgrades.length) {
-            this.firstColumnButtons.push(new UpgradeButtonView(n.id, skillUpgrades[h], h, true));
+          if (rowIndex < skillUpgrades.length) {
+            this.firstColumnButtons.push(new UpgradeButtonView(firstColumnCell.id, skillUpgrades[rowIndex], rowIndex, true));
           }
-          if (h < c.length) {
-            this.secondColumnButtons.push(new UpgradeButtonView(p.id, c[h], h, true));
+          if (rowIndex < secondColumnUpgrades.length) {
+            this.secondColumnButtons.push(new UpgradeButtonView(secondColumnCell.id, secondColumnUpgrades[rowIndex], rowIndex, true));
           }
-          if (h < d.length) {
-            this.buttons.push(new UpgradeButtonView(s.id, d[h], h, true));
+          if (rowIndex < thirdColumnUpgrades.length) {
+            this.buttons.push(new UpgradeButtonView(thirdColumnCell.id, thirdColumnUpgrades[rowIndex], rowIndex, true));
           }
-          if (h < f.length) {
-            this.fourthColumnButtons.push(new UpgradeButtonView(l.id, f[h], h, true));
+          if (rowIndex < fourthColumnUpgrades.length) {
+            this.fourthColumnButtons.push(new UpgradeButtonView(l.id, fourthColumnUpgrades[rowIndex], rowIndex, true));
           }
         }
       } else {
         console.log("no upgrades configured for character");
       }
     }
-    for (a = 0; a < this.firstColumnButtons.length; a++) {
-      this.firstColumnButtons[a].reset();
+    for (var buttonIndex = 0; buttonIndex < this.firstColumnButtons.length; buttonIndex++) {
+      this.firstColumnButtons[buttonIndex].reset();
     }
-    for (a = 0; a < this.secondColumnButtons.length; a++) {
-      this.secondColumnButtons[a].reset();
+    for (buttonIndex = 0; buttonIndex < this.secondColumnButtons.length; buttonIndex++) {
+      this.secondColumnButtons[buttonIndex].reset();
     }
-    for (a = 0; a < this.buttons.length; a++) {
-      this.buttons[a].reset();
+    for (buttonIndex = 0; buttonIndex < this.buttons.length; buttonIndex++) {
+      this.buttons[buttonIndex].reset();
     }
-    for (a = 0; a < this.fourthColumnButtons.length; a++) {
-      this.fourthColumnButtons[a].reset();
+    for (buttonIndex = 0; buttonIndex < this.fourthColumnButtons.length; buttonIndex++) {
+      this.fourthColumnButtons[buttonIndex].reset();
     }
   };
   SkillsTabView.prototype.refreshCollections = function () {
     if (0 > this.adventurerIndex || this.adventurerIndex >= game.state.adventurers.length) {
       this.fourthSkillTree = this.thirdSkillTree = this.skillTreeCollection = this.skillCollection = null;
     } else {
-      var a = game.state.adventurers[this.adventurerIndex];
-      this.skillCollection = a.skillTree1;
-      this.skillTreeCollection = a.skillTree2;
-      this.thirdSkillTree = a.skillTree3;
-      this.fourthSkillTree = a.skillTree4;
+      var adventurer = game.state.adventurers[this.adventurerIndex];
+      this.skillCollection = adventurer.skillTree1;
+      this.skillTreeCollection = adventurer.skillTree2;
+      this.thirdSkillTree = adventurer.skillTree3;
+      this.fourthSkillTree = adventurer.skillTree4;
     }
   };
   SkillsTabView.prototype.update = function () {
-    var a;
-    for (a = 0; a < this.firstColumnButtons.length; a++) {
-      this.firstColumnButtons[a].render();
+    var buttonIndex;
+    for (buttonIndex = 0; buttonIndex < this.firstColumnButtons.length; buttonIndex++) {
+      this.firstColumnButtons[buttonIndex].render();
     }
-    for (a = 0; a < this.secondColumnButtons.length; a++) {
-      this.secondColumnButtons[a].render();
+    for (buttonIndex = 0; buttonIndex < this.secondColumnButtons.length; buttonIndex++) {
+      this.secondColumnButtons[buttonIndex].render();
     }
-    for (a = 0; a < this.buttons.length; a++) {
-      this.buttons[a].render();
+    for (buttonIndex = 0; buttonIndex < this.buttons.length; buttonIndex++) {
+      this.buttons[buttonIndex].render();
     }
-    for (a = 0; a < this.fourthColumnButtons.length; a++) {
-      this.fourthColumnButtons[a].render();
+    for (buttonIndex = 0; buttonIndex < this.fourthColumnButtons.length; buttonIndex++) {
+      this.fourthColumnButtons[buttonIndex].render();
     }
   };
 }

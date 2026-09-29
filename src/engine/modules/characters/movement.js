@@ -4,24 +4,24 @@
 import { Vector2, addVector, assignVector, copyVector, multiplyVector, normalizeVector, setVector, subtractVector, vectorLength } from "../core/math.js";
 import { game } from "../runtime/game.js";
 import { getAllies, getMonsters } from "../combat/encounters.js";
-export function Equipment(a, b) {
-  this.characterClass = b;
+export function Equipment(slotList, characterClass) {
+  this.characterClass = characterClass;
   this.slotItems = {};
-  this.slotList = a;
+  this.slotList = slotList;
   this.projectileWeapon = this.effectItem = null;
-  var c;
-  for (c = 0; c < a.length; c++) {
-    this.slotItems[a[c]] = null;
+  var slotIndex;
+  for (slotIndex = 0; slotIndex < slotList.length; slotIndex++) {
+    this.slotItems[slotList[slotIndex]] = null;
   }
 }
-export function CharacterPosition(a, b) {
+export function CharacterPosition(worldWalkSpeed, dungeonWalkSpeed) {
   this.velocity = new Vector2();
   this.steeringVector = null;
   this.separationVector = new Vector2();
   this.worldSeparationVector = new Vector2();
   this.separationDelta = new Vector2();
-  this.dungeonWalkSpeed = b;
-  this.worldWalkSpeed = a;
+  this.dungeonWalkSpeed = dungeonWalkSpeed;
+  this.worldWalkSpeed = worldWalkSpeed;
   this.levelPosition = new Vector2();
   this.worldPosition = new Vector2();
   this.room = this.currentHallway = null;
@@ -34,173 +34,173 @@ export function CharacterPosition(a, b) {
   this.floorPositionIndex = -1;
   this.nextWorldTile = this.previousWorldTile = this.currentWorldTile = null;
 }
-export function clearMovementTarget(a) {
-  a.movementTargetCleared = true;
-  a.targetDoor = null;
-  a.destinationRoom = null;
-  a.targetRoom = null;
-  a.routeQueue = null;
-  a.floorPositionIndex = -1;
+export function clearMovementTarget(characterPosition) {
+  characterPosition.movementTargetCleared = true;
+  characterPosition.targetDoor = null;
+  characterPosition.destinationRoom = null;
+  characterPosition.targetRoom = null;
+  characterPosition.routeQueue = null;
+  characterPosition.floorPositionIndex = -1;
 }
-export function applySeparationForce(a, b, c, d) {
-  if (!a.steeringVector) {
-    a.steeringVector = new Vector2();
+export function applySeparationForce(characterPosition, attackerLevelPosition, blastCenterLevelPosition, blastRadius) {
+  if (!characterPosition.steeringVector) {
+    characterPosition.steeringVector = new Vector2();
   }
-  if (a.levelPosition === c) {
-    assignVector(a.steeringVector, a.levelPosition);
-    subtractVector(a.steeringVector, b);
-    normalizeVector(a.steeringVector);
-    multiplyVector(a.steeringVector, d);
+  if (characterPosition.levelPosition === blastCenterLevelPosition) {
+    assignVector(characterPosition.steeringVector, characterPosition.levelPosition);
+    subtractVector(characterPosition.steeringVector, attackerLevelPosition);
+    normalizeVector(characterPosition.steeringVector);
+    multiplyVector(characterPosition.steeringVector, blastRadius);
   } else {
-    assignVector(a.steeringVector, a.levelPosition);
-    subtractVector(a.steeringVector, c);
-    b = vectorLength(a.steeringVector);
-    if (0 !== b) {
-      normalizeVector(a.steeringVector);
-      multiplyVector(a.steeringVector, d * (1 - b / d));
+    assignVector(characterPosition.steeringVector, characterPosition.levelPosition);
+    subtractVector(characterPosition.steeringVector, blastCenterLevelPosition);
+    var distanceFromBlastCenter = vectorLength(characterPosition.steeringVector);
+    if (0 !== distanceFromBlastCenter) {
+      normalizeVector(characterPosition.steeringVector);
+      multiplyVector(characterPosition.steeringVector, blastRadius * (1 - distanceFromBlastCenter / blastRadius));
     }
   }
 }
-export function setWorldDestination(a, b, c) {
-  a.destTileColumn = b;
-  a.destTileRow = c;
-  setVector(a.worldDestinationPoint, game.world.tileToPixelX(b), game.world.tileToPixelY(c));
+export function setWorldDestination(characterPosition, destinationColumn, destinationRow) {
+  characterPosition.destTileColumn = destinationColumn;
+  characterPosition.destTileRow = destinationRow;
+  setVector(characterPosition.worldDestinationPoint, game.world.tileToPixelX(destinationColumn), game.world.tileToPixelY(destinationRow));
 }
-export function findCheapestNeighbor(a, b) {
-  var c = a.getWorldColumn(),
-    d = a.getWorldRow(),
-    f,
-    g,
-    h = 1E9,
-    l = null,
-    n,
-    p;
-  for (n = -1; 1 >= n; n++) {
-    for (p = -1; 1 >= p; p++) {
-      if ((0 !== n || 0 !== p) && (f = game.world.getTileAtPixel(c + n, d + p)) && f !== b && (g = f.pathDistanceToDestination, !l || h > g)) {
-        l = f;
-        h = g;
+export function findCheapestNeighbor(originTile, excludedTile) {
+  var originWorldColumn = originTile.getWorldColumn(),
+    originWorldRow = originTile.getWorldRow(),
+    neighborTile,
+    neighborPathDistance,
+    cheapestPathDistance = 1E9,
+    cheapestNeighborTile = null,
+    columnOffset,
+    rowOffset;
+  for (columnOffset = -1; 1 >= columnOffset; columnOffset++) {
+    for (rowOffset = -1; 1 >= rowOffset; rowOffset++) {
+      if ((0 !== columnOffset || 0 !== rowOffset) && (neighborTile = game.world.getTileAtPixel(originWorldColumn + columnOffset, originWorldRow + rowOffset)) && neighborTile !== excludedTile && (neighborPathDistance = neighborTile.pathDistanceToDestination, !cheapestNeighborTile || cheapestPathDistance > neighborPathDistance)) {
+        cheapestNeighborTile = neighborTile;
+        cheapestPathDistance = neighborPathDistance;
       }
     }
   }
-  if (!l) {
+  if (!cheapestNeighborTile) {
     console.log("failed to find cheapest neighbor");
   }
-  return l;
+  return cheapestNeighborTile;
 }
-export function separateDungeonCharacters(a) {
-  setVector(a.separationVector, 0, 0);
+export function separateDungeonCharacters(characterPosition) {
+  setVector(characterPosition.separationVector, 0, 0);
   var b,
-    c,
-    d = false,
-    f = getMonsters(),
-    g = game.minions.minionList,
-    h;
-  for (c = 0; c < game.state.adventurers.length; c++) {
-    b = game.state.adventurers[c];
+    characterIndex,
+    hasSeparationVector = false,
+    monsterList = getMonsters(),
+    minionList = game.minions.minionList,
+    levelDistance;
+  for (characterIndex = 0; characterIndex < game.state.adventurers.length; characterIndex++) {
+    b = game.state.adventurers[characterIndex];
     b = b.position;
-    if (b === a) {
+    if (b === characterPosition) {
       break;
     }
-    h = a.levelPosition.distanceTo(b.levelPosition);
-    if (40 > h) {
-      if (0 === h) {
-        setVector(a.separationDelta, Math.random(), Math.random());
+    levelDistance = characterPosition.levelPosition.distanceTo(b.levelPosition);
+    if (40 > levelDistance) {
+      if (0 === levelDistance) {
+        setVector(characterPosition.separationDelta, Math.random(), Math.random());
       } else {
-        copyVector(a.separationDelta, a.levelPosition);
-        subtractVector(a.separationDelta, b.levelPosition);
+        copyVector(characterPosition.separationDelta, characterPosition.levelPosition);
+        subtractVector(characterPosition.separationDelta, b.levelPosition);
       }
-      normalizeVector(a.separationDelta);
-      addVector(a.separationVector, a.separationDelta);
-      d = true;
+      normalizeVector(characterPosition.separationDelta);
+      addVector(characterPosition.separationVector, characterPosition.separationDelta);
+      hasSeparationVector = true;
     }
   }
-  for (c = 0; c < g.length; c++) {
-    b = g[c];
+  for (characterIndex = 0; characterIndex < minionList.length; characterIndex++) {
+    b = minionList[characterIndex];
     b = b.position;
-    if (b !== a) {
-      h = a.levelPosition.distanceTo(b.levelPosition);
-      if (50 > h) {
-        if (0 === h) {
-          setVector(a.separationDelta, Math.random(), Math.random());
+    if (b !== characterPosition) {
+      levelDistance = characterPosition.levelPosition.distanceTo(b.levelPosition);
+      if (50 > levelDistance) {
+        if (0 === levelDistance) {
+          setVector(characterPosition.separationDelta, Math.random(), Math.random());
         } else {
-          copyVector(a.separationDelta, a.levelPosition);
-          subtractVector(a.separationDelta, b.levelPosition);
+          copyVector(characterPosition.separationDelta, characterPosition.levelPosition);
+          subtractVector(characterPosition.separationDelta, b.levelPosition);
         }
-        normalizeVector(a.separationDelta);
-        addVector(a.separationVector, a.separationDelta);
-        d = true;
+        normalizeVector(characterPosition.separationDelta);
+        addVector(characterPosition.separationVector, characterPosition.separationDelta);
+        hasSeparationVector = true;
       }
     }
   }
-  for (c = 0; c < f.length; c++) {
-    b = f[c];
+  for (characterIndex = 0; characterIndex < monsterList.length; characterIndex++) {
+    b = monsterList[characterIndex];
     b = b.position;
-    if (b !== a) {
-      h = a.levelPosition.distanceTo(b.levelPosition);
-      if (50 > h) {
-        if (0 === h) {
-          setVector(a.separationDelta, Math.random(), Math.random());
+    if (b !== characterPosition) {
+      levelDistance = characterPosition.levelPosition.distanceTo(b.levelPosition);
+      if (50 > levelDistance) {
+        if (0 === levelDistance) {
+          setVector(characterPosition.separationDelta, Math.random(), Math.random());
         } else {
-          copyVector(a.separationDelta, a.levelPosition);
-          subtractVector(a.separationDelta, b.levelPosition);
+          copyVector(characterPosition.separationDelta, characterPosition.levelPosition);
+          subtractVector(characterPosition.separationDelta, b.levelPosition);
         }
-        normalizeVector(a.separationDelta);
-        addVector(a.separationVector, a.separationDelta);
-        d = true;
+        normalizeVector(characterPosition.separationDelta);
+        addVector(characterPosition.separationVector, characterPosition.separationDelta);
+        hasSeparationVector = true;
       }
     }
   }
-  if (d) {
-    normalizeVector(a.separationVector);
-    multiplyVector(a.separationVector, 0.5);
+  if (hasSeparationVector) {
+    normalizeVector(characterPosition.separationVector);
+    multiplyVector(characterPosition.separationVector, 0.5);
   }
-  return d;
+  return hasSeparationVector;
 }
-export function separateWorldCharacters(a) {
-  setVector(a.worldSeparationVector, 0, 0);
+export function separateWorldCharacters(characterPosition) {
+  setVector(characterPosition.worldSeparationVector, 0, 0);
   var b,
-    c,
-    d = false,
-    f = getAllies(),
-    g;
-  for (c = 0; c < f.length; c++) {
-    b = f[c];
+    characterIndex,
+    hasSeparationVector = false,
+    allyList = getAllies(),
+    worldDistance;
+  for (characterIndex = 0; characterIndex < allyList.length; characterIndex++) {
+    b = allyList[characterIndex];
     b = b.position;
-    if (b !== a) {
-      g = a.worldPosition.distanceTo(b.worldPosition);
-      if (40 > g) {
-        if (0 === g) {
-          setVector(a.separationDelta, Math.random(), Math.random());
+    if (b !== characterPosition) {
+      worldDistance = characterPosition.worldPosition.distanceTo(b.worldPosition);
+      if (40 > worldDistance) {
+        if (0 === worldDistance) {
+          setVector(characterPosition.separationDelta, Math.random(), Math.random());
         } else {
-          copyVector(a.separationDelta, a.worldPosition);
-          subtractVector(a.separationDelta, b.worldPosition);
+          copyVector(characterPosition.separationDelta, characterPosition.worldPosition);
+          subtractVector(characterPosition.separationDelta, b.worldPosition);
         }
-        normalizeVector(a.separationDelta);
-        addVector(a.worldSeparationVector, a.separationDelta);
-        d = true;
+        normalizeVector(characterPosition.separationDelta);
+        addVector(characterPosition.worldSeparationVector, characterPosition.separationDelta);
+        hasSeparationVector = true;
       }
     }
   }
-  if (d) {
-    normalizeVector(a.worldSeparationVector);
+  if (hasSeparationVector) {
+    normalizeVector(characterPosition.worldSeparationVector);
   }
-  return d;
+  return hasSeparationVector;
 }
 export function initializeCharactersMovement() {
-  Equipment.prototype.getSlotItem = function (a) {
-    return this.slotItems[a];
+  Equipment.prototype.getSlotItem = function (slot) {
+    return this.slotItems[slot];
   };
   Equipment.prototype.getEffectItem = function () {
     return this.effectItem;
   };
-  Equipment.prototype.equipItem = function (a) {
-    this.slotItems[a.slot] = a;
-    if (a.isProjectileWeapon()) {
-      this.projectileWeapon = a;
+  Equipment.prototype.equipItem = function (item) {
+    this.slotItems[item.slot] = item;
+    if (item.isProjectileWeapon()) {
+      this.projectileWeapon = item;
     }
-    if (1 === a.characteristic) {
-      this.effectItem = a;
+    if (1 === item.characteristic) {
+      this.effectItem = item;
     }
   };
   CharacterPosition.prototype.getWorldPositionX = function () {
@@ -215,10 +215,10 @@ export function initializeCharactersMovement() {
   CharacterPosition.prototype.getLevelPositionY = function () {
     return this.levelPosition.y;
   };
-  CharacterPosition.prototype.setTargetDoor = function (a) {
-    this.targetDoor = a;
+  CharacterPosition.prototype.setTargetDoor = function (targetDoor) {
+    this.targetDoor = targetDoor;
   };
-  CharacterPosition.prototype.setTargetRoom = function (a) {
-    this.targetRoom = a;
+  CharacterPosition.prototype.setTargetRoom = function (targetRoom) {
+    this.targetRoom = targetRoom;
   };
 }

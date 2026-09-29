@@ -20,97 +20,97 @@ export function MonsterLevelView() {
   this.visible = true;
   this.cachedMinGoldPerDrop = this.cachedMaxGoldPerDrop = this.cachedTreasureChance = this.cachedPotionDropChance = this.cachedScrollDropChance = this.cachedGoldDropChance = this.cachedHigherLevelItemChance = this.cachedItemQualityChance = this.cachedMinMonsters = this.cachedMaxMonsters = this.cachedItemDropChance = -1;
 }
-export function MonsterRowView(a, b) {
-  this.rowElement = a;
-  this.monsterType = b;
+export function MonsterRowView(rowElement, monsterType) {
+  this.rowElement = rowElement;
+  this.monsterType = monsterType;
   this.progressTextElement = this.progressFillElement = this.progressCell = this.defenceRatingCell = this.attackRatingCell = this.armorCell = this.damageCell = this.healthCell = this.experienceCell = this.rankCell = this.killCountCell = this.nameCell = null;
   this.cachedRank = this.cachedLevel = this.cachedFillWidth = this.cachedKills = -1;
   this.progressBarWidth = 80;
   this.spriteImage = null;
   (/** @type {any} */ (this)).createRowCells();
 }
-export function MonsterLevelTabView(a, b) {
-  this.elementId = b;
-  this.tabState = a;
+export function MonsterLevelTabView(tabState, elementId) {
+  this.elementId = elementId;
+  this.tabState = tabState;
   this.tableElement = null;
   this.cachedLevel = this.level = -1;
   this.rowViews = [];
 }
-export function MonsterView(a) {
+export function MonsterView(tabState) {
   this.elementId = "monstersTabContent";
-  this.tabState = a;
+  this.tabState = tabState;
   this.levelTables = [];
-  for (a = 0; a < VISIBLE_MONSTER_LEVELS; a++) {
-    this.levelTables.push(mountMonsterTable(a, a + 1));
+  for (var levelTableIndex = 0; levelTableIndex < VISIBLE_MONSTER_LEVELS; levelTableIndex++) {
+    this.levelTables.push(mountMonsterTable(levelTableIndex, levelTableIndex + 1));
   }
-  var b = new TabBar("monsterTabMenu");
-  for (a = 0; a < this.levelTables.length; a++) {
-    addTab(b, this.levelTables[a].tabState);
+  var monsterTabBar = new TabBar("monsterTabMenu");
+  for (levelTableIndex = 0; levelTableIndex < this.levelTables.length; levelTableIndex++) {
+    addTab(monsterTabBar, this.levelTables[levelTableIndex].tabState);
   }
   addChildView(this, new MonsterUpgradeSummaryView());
   addChildView(this, new MonsterLevelView());
   addChildView(this, new UpgradeListView("monsterUpgradeButtonsContainer", monsterUpgradeCollection, false));
-  addChildView(this, b);
-  for (a = 0; a < this.levelTables.length; a++) {
-    addChildView(this, this.levelTables[a].view);
+  addChildView(this, monsterTabBar);
+  for (levelTableIndex = 0; levelTableIndex < this.levelTables.length; levelTableIndex++) {
+    addChildView(this, this.levelTables[levelTableIndex].view);
   }
 }
-export function mountMonsterTable(a, b) {
-  var c = {},
-    d = 1 === b;
-  c.tabState = new TabState("等级 " + b, d);
-  if (d) {
-    c.tabState.selected = true;
+export function mountMonsterTable(tableIndex, monsterLevel) {
+  var levelTable = {},
+    isDefaultLevelTab = 1 === monsterLevel;
+  levelTable.tabState = new TabState("等级 " + monsterLevel, isDefaultLevelTab);
+  if (isDefaultLevelTab) {
+    levelTable.tabState.selected = true;
   }
-  var f = "monstersTabContainer" + a,
-    g = getElement(f);
-  if (g) {
-    clearElement(g);
+  var containerElementId = "monstersTabContainer" + tableIndex,
+    containerElement = getElement(containerElementId);
+  if (containerElement) {
+    clearElement(containerElement);
   } else {
-    g = createElement("div", getElement("monsterTabContainerParent"), f, "tabContainer scrollingContainer");
-    if (!d) {
-      hideElement(g);
+    containerElement = createElement("div", getElement("monsterTabContainerParent"), containerElementId, "tabContainer scrollingContainer");
+    if (!isDefaultLevelTab) {
+      hideElement(containerElement);
     }
   }
-  c.view = new MonsterLevelTabView(c.tabState, f);
-  c.view.level = b;
-  return c;
+  levelTable.view = new MonsterLevelTabView(levelTable.tabState, containerElementId);
+  levelTable.view.level = monsterLevel;
+  return levelTable;
 }
-export function updateMonsterTabLabels(a) {
-  var b,
-    c = game.monsterCatalog.minUnlockedLevel,
-    d,
-    f;
-  for (f = 0; f < a.levelTables.length; f++) {
-    d = a.levelTables[f];
-    b = d.view.level;
-    if (b !== c) {
-      d.tabState.label = "等级 " + c;
-      d.view.level = c;
+export function updateMonsterTabLabels(monsterView) {
+  var displayedLevel,
+    tabLevel = game.monsterCatalog.minUnlockedLevel,
+    levelTable,
+    levelTableIndex;
+  for (levelTableIndex = 0; levelTableIndex < monsterView.levelTables.length; levelTableIndex++) {
+    levelTable = monsterView.levelTables[levelTableIndex];
+    displayedLevel = levelTable.view.level;
+    if (displayedLevel !== tabLevel) {
+      levelTable.tabState.label = "等级 " + tabLevel;
+      levelTable.view.level = tabLevel;
     }
-    c++;
+    tabLevel++;
   }
 }
-export function refreshMonsterTabVisibility(a) {
-  var b = game.monsterCatalog,
-    c,
+export function refreshMonsterTabVisibility(monsterView) {
+  var monsterCatalog = game.monsterCatalog,
+    levelTableIndex,
     d,
-    f,
-    g = false;
-  for (c = 0; c < a.levelTables.length; c++) {
-    f = a.levelTables[c];
-    d = f.view.level;
-    d = b.minUnlockedLevel <= d && d <= b.maxUnlockedLevel;
-    f.tabState.enabled = d;
-    if (!d && f.tabState.selected) {
-      f.tabState.selected = false;
-      g = true;
+    levelTable,
+    needsNewSelection = false;
+  for (levelTableIndex = 0; levelTableIndex < monsterView.levelTables.length; levelTableIndex++) {
+    levelTable = monsterView.levelTables[levelTableIndex];
+    d = levelTable.view.level;
+    d = monsterCatalog.minUnlockedLevel <= d && d <= monsterCatalog.maxUnlockedLevel;
+    levelTable.tabState.enabled = d;
+    if (!d && levelTable.tabState.selected) {
+      levelTable.tabState.selected = false;
+      needsNewSelection = true;
     }
   }
-  if (g) {
-    for (c = 0; c < a.levelTables.length; c++) {
-      if (a.levelTables[c].tabState.enabled) {
-        a.levelTables[c].tabState.selected = true;
+  if (needsNewSelection) {
+    for (levelTableIndex = 0; levelTableIndex < monsterView.levelTables.length; levelTableIndex++) {
+      if (monsterView.levelTables[levelTableIndex].tabState.enabled) {
+        monsterView.levelTables[levelTableIndex].tabState.selected = true;
         break;
       }
     }
@@ -122,10 +122,10 @@ export function initializeViewsMonsters() {
     this.cachedKills = -1;
   };
   MonsterUpgradeSummaryView.prototype.update = function () {
-    var a = game.state.party.kills;
-    if (a !== this.cachedKills) {
-      this.cachedKills = a;
-      setElementHtml(this.killCountPanelId, "" + formatGroupedAmount(a));
+    var killCount = game.state.party.kills;
+    if (killCount !== this.cachedKills) {
+      this.cachedKills = killCount;
+      setElementHtml(this.killCountPanelId, "" + formatGroupedAmount(killCount));
     }
   };
   MonsterLevelView.prototype = new View();
@@ -176,72 +176,72 @@ export function initializeViewsMonsters() {
       setElementHtml("minMonstersPerRoom", this.cachedMinMonsters + "");
     }
   };
-  MonsterRowView.prototype.setMonsterType = function (a) {
-    this.monsterType = a;
+  MonsterRowView.prototype.setMonsterType = function (monsterType) {
+    this.monsterType = monsterType;
   };
   MonsterRowView.prototype.createRowCells = function () {
-    var a = this.rowElement,
-      b = this.monsterType.sprite,
-      c = a.insertCell(0);
-    c.style.width = "50px";
-    c.style.padding = "0";
-    c.style.textAlign = "center";
-    this.spriteImage = createElement("img", c, null, "characterImage");
+    var rowElement = this.rowElement,
+      monsterSprite = this.monsterType.sprite,
+      iconCell = rowElement.insertCell(0);
+    iconCell.style.width = "50px";
+    iconCell.style.padding = "0";
+    iconCell.style.textAlign = "center";
+    this.spriteImage = createElement("img", iconCell, null, "characterImage");
     this.spriteImage.src = "images/Transparent.gif";
-    this.spriteImage.style.background = "url('spritesheet/monsters.png') -" + b.sourceX + "px -" + (b.sourceY + 10) + "px";
+    this.spriteImage.style.background = "url('spritesheet/monsters.png') -" + monsterSprite.sourceX + "px -" + (monsterSprite.sourceY + 10) + "px";
     this.spriteImage.style.height = "30px";
-    this.nameCell = a.insertCell(1);
+    this.nameCell = rowElement.insertCell(1);
     this.nameCell.style.width = "200px";
     this.nameCell.innerHTML = this.monsterType.getName();
-    this.experienceCell = a.insertCell(2);
+    this.experienceCell = rowElement.insertCell(2);
     this.experienceCell.style.width = "80px";
     this.experienceCell.style.textAlign = "right";
     this.experienceCell.style.paddingRight = "5px";
-    this.healthCell = a.insertCell(3);
+    this.healthCell = rowElement.insertCell(3);
     this.healthCell.style.width = "80px";
     this.healthCell.style.textAlign = "right";
     this.healthCell.style.paddingRight = "5px";
-    this.damageCell = a.insertCell(4);
+    this.damageCell = rowElement.insertCell(4);
     this.damageCell.style.width = "80px";
     this.damageCell.style.textAlign = "right";
     this.damageCell.style.paddingRight = "5px";
-    this.armorCell = a.insertCell(5);
+    this.armorCell = rowElement.insertCell(5);
     this.armorCell.style.width = "80px";
     this.armorCell.style.textAlign = "right";
     this.armorCell.style.paddingRight = "5px";
-    this.attackRatingCell = a.insertCell(6);
+    this.attackRatingCell = rowElement.insertCell(6);
     this.attackRatingCell.style.width = "80px";
     this.attackRatingCell.style.textAlign = "right";
     this.attackRatingCell.style.paddingRight = "5px";
-    this.defenceRatingCell = a.insertCell(7);
+    this.defenceRatingCell = rowElement.insertCell(7);
     this.defenceRatingCell.style.width = "80px";
     this.defenceRatingCell.style.textAlign = "right";
     this.defenceRatingCell.style.paddingRight = "5px";
-    this.killCountCell = a.insertCell(8);
+    this.killCountCell = rowElement.insertCell(8);
     this.killCountCell.style.width = "80px";
     this.killCountCell.style.textAlign = "right";
     this.killCountCell.style.paddingRight = "5px";
-    this.rankCell = a.insertCell(9);
+    this.rankCell = rowElement.insertCell(9);
     this.rankCell.style.width = "80px";
     this.rankCell.style.textAlign = "right";
     this.rankCell.style.paddingRight = "5px";
-    this.progressCell = a.insertCell(10);
+    this.progressCell = rowElement.insertCell(10);
     this.progressCell.style.width = this.progressBarWidth + "px";
     this.progressCell.style.paddingLeft = "5px";
     this.progressCell.style.paddingRight = "5px";
-    a = createElement("div", this.progressCell, null, null);
-    a.style.position = "relative";
-    a.style.border = "1px solid #2c2c50";
-    a.style.height = "15px";
-    a.style.width = this.progressBarWidth + "px";
-    this.progressFillElement = createElement("div", a, null, null);
+    var progressBarElement = createElement("div", this.progressCell, null, null);
+    progressBarElement.style.position = "relative";
+    progressBarElement.style.border = "1px solid #2c2c50";
+    progressBarElement.style.height = "15px";
+    progressBarElement.style.width = this.progressBarWidth + "px";
+    this.progressFillElement = createElement("div", progressBarElement, null, null);
     this.progressFillElement.style.position = "absolute";
     this.progressFillElement.style.top = "0";
     this.progressFillElement.style.left = "0";
     this.progressFillElement.style.backgroundColor = "#F00";
     this.progressFillElement.style.height = "15px";
     this.progressFillElement.style.width = "0px";
-    this.progressTextElement = createElement("div", a, null, null);
+    this.progressTextElement = createElement("div", progressBarElement, null, null);
     this.progressTextElement.style.position = "absolute";
     this.progressTextElement.style.textAlign = "center";
     this.progressTextElement.style.top = "0";
@@ -254,10 +254,10 @@ export function initializeViewsMonsters() {
     this.cachedFillWidth = this.cachedKills = this.cachedLevel = this.cachedRank = -1;
   };
   MonsterRowView.prototype.render = function () {
-    var a = this.monsterType.rankProgressKills,
-      b = this.monsterType.rankKillThreshold,
-      c = this.monsterType.killCount,
-      d = Math.min(1, a / b),
+    var rankProgressKills = this.monsterType.rankProgressKills,
+      rankKillThreshold = this.monsterType.rankKillThreshold,
+      killCount = this.monsterType.killCount,
+      d = Math.min(1, rankProgressKills / rankKillThreshold),
       d = this.progressBarWidth * d | 0;
     if (this.cachedLevel != this.monsterType.level || this.cachedRank != this.monsterType.rank) {
       this.experienceCell.innerHTML = formatAmount(this.monsterType.experienceReward);
@@ -269,28 +269,28 @@ export function initializeViewsMonsters() {
       this.rankCell.innerHTML = formatAmount(this.monsterType.rank);
       if (this.cachedLevel != this.monsterType.level) {
         this.nameCell.innerHTML = this.monsterType.getName();
-        var f = this.monsterType.sprite;
-        this.spriteImage.style.background = "url('spritesheet/monsters.png') -" + f.sourceX + "px -" + (f.sourceY + 10) + "px";
+        var monsterSprite = this.monsterType.sprite;
+        this.spriteImage.style.background = "url('spritesheet/monsters.png') -" + monsterSprite.sourceX + "px -" + (monsterSprite.sourceY + 10) + "px";
       }
       this.cachedLevel = this.monsterType.level;
       this.cachedRank = this.monsterType.rank;
     }
-    if (this.cachedKills !== c) {
-      this.cachedKills = c;
-      this.killCountCell.innerHTML = formatAmount(c);
+    if (this.cachedKills !== killCount) {
+      this.cachedKills = killCount;
+      this.killCountCell.innerHTML = formatAmount(killCount);
     }
     if (this.cachedFillWidth !== d) {
       this.cachedFillWidth = d;
       this.progressFillElement.style.width = d + "px";
-      this.progressTextElement.innerHTML = a > b ? "最大" : formatAmount(a) + " / " + formatAmount(b);
+      this.progressTextElement.innerHTML = rankProgressKills > rankKillThreshold ? "最大" : formatAmount(rankProgressKills) + " / " + formatAmount(rankKillThreshold);
     }
   };
   MonsterLevelTabView.prototype = new TabView();
   MonsterLevelTabView.prototype.reset = function () {
     if (this.tableElement) {
-      var a;
-      for (a = 0; a < this.rowViews.length; a++) {
-        this.rowViews[a].reset();
+      var rowIndex;
+      for (rowIndex = 0; rowIndex < this.rowViews.length; rowIndex++) {
+        this.rowViews[rowIndex].reset();
       }
     }
     this.level = -1;
@@ -302,13 +302,13 @@ export function initializeViewsMonsters() {
     } else {
       if (this.tableElement) {
         if (this.cachedLevel !== this.level) {
-          var a = getMonsterTypesForLevel(game.monsterCatalog, this.level),
-            b;
-          if (a.length !== this.rowViews.length) {
+          var monsterTypes = getMonsterTypesForLevel(game.monsterCatalog, this.level),
+            rowIndex;
+          if (monsterTypes.length !== this.rowViews.length) {
             console.log("MonsterTableView.updateMonsterLevelRows length mismatch");
           } else {
-            for (b = 0; b < this.rowViews.length; b++) {
-              this.rowViews[b].setMonsterType(a[b]);
+            for (rowIndex = 0; rowIndex < this.rowViews.length; rowIndex++) {
+              this.rowViews[rowIndex].setMonsterType(monsterTypes[rowIndex]);
             }
           }
         }
@@ -316,61 +316,61 @@ export function initializeViewsMonsters() {
         (/** @type {any} */ (this)).createDomElements();
       }
       this.cachedLevel = this.level;
-      for (a = 0; a < this.rowViews.length; a++) {
-        this.rowViews[a].render();
+      for (var renderRowIndex = 0; renderRowIndex < this.rowViews.length; renderRowIndex++) {
+        this.rowViews[renderRowIndex].render();
       }
     }
   };
   MonsterLevelTabView.prototype.createDomElements = function () {
     var a = this.elementId;
     clearElementById(a);
-    var b = getElement(a),
+    var containerElement = getElement(a),
       a = getMonsterTypesForLevel(game.monsterCatalog, this.level);
-    this.tableElement = createElement("table", b, null, "monsterTable");
+    this.tableElement = createElement("table", containerElement, null, "monsterTable");
     (/** @type {any} */ (this)).createHeaderRow(this.tableElement.insertRow(0));
-    for (var bi = 0; bi < a.length; bi++) {
-      this.rowViews.push(new MonsterRowView(this.tableElement.insertRow(bi + 1), a[bi]));
+    for (var rowIndex = 0; rowIndex < a.length; rowIndex++) {
+      this.rowViews.push(new MonsterRowView(this.tableElement.insertRow(rowIndex + 1), a[rowIndex]));
     }
   };
-  MonsterLevelTabView.prototype.createHeaderRow = function (a) {
-    var b = appendHeaderCell(a);
-    b.style.textAlign = "center";
-    b.style.padding = "0";
-    b.innerHTML = "图标";
-    appendHeaderCell(a).innerHTML = "怪物类型";
-    b = appendHeaderCell(a);
-    b.style.textAlign = "right";
-    b.style.paddingRight = "5px";
-    b.innerHTML = "经验";
-    b = appendHeaderCell(a);
-    b.style.textAlign = "right";
-    b.style.paddingRight = "5px";
-    b.innerHTML = "生命";
-    b = appendHeaderCell(a);
-    b.style.textAlign = "right";
-    b.style.paddingRight = "5px";
-    b.innerHTML = "伤害";
-    b = appendHeaderCell(a);
-    b.style.textAlign = "right";
-    b.style.paddingRight = "5px";
-    b.innerHTML = "护甲";
-    b = appendHeaderCell(a);
-    b.style.textAlign = "right";
-    b.style.paddingRight = "5px";
-    b.innerHTML = "攻击";
-    b = appendHeaderCell(a);
-    b.style.textAlign = "right";
-    b.style.paddingRight = "5px";
-    b.innerHTML = "防御";
-    b = appendHeaderCell(a);
-    b.style.textAlign = "right";
-    b.style.paddingRight = "5px";
-    b.innerHTML = "总计杀死";
-    b = appendHeaderCell(a);
-    b.style.textAlign = "right";
-    b.style.paddingRight = "5px";
-    b.innerHTML = "怪物等级";
-    appendHeaderCell(a).innerHTML = "进度";
+  MonsterLevelTabView.prototype.createHeaderRow = function (headerRow) {
+    var iconHeaderCell = appendHeaderCell(headerRow);
+    iconHeaderCell.style.textAlign = "center";
+    iconHeaderCell.style.padding = "0";
+    iconHeaderCell.innerHTML = "图标";
+    appendHeaderCell(headerRow).innerHTML = "怪物类型";
+    var experienceHeaderCell = appendHeaderCell(headerRow);
+    experienceHeaderCell.style.textAlign = "right";
+    experienceHeaderCell.style.paddingRight = "5px";
+    experienceHeaderCell.innerHTML = "经验";
+    var healthHeaderCell = appendHeaderCell(headerRow);
+    healthHeaderCell.style.textAlign = "right";
+    healthHeaderCell.style.paddingRight = "5px";
+    healthHeaderCell.innerHTML = "生命";
+    var damageHeaderCell = appendHeaderCell(headerRow);
+    damageHeaderCell.style.textAlign = "right";
+    damageHeaderCell.style.paddingRight = "5px";
+    damageHeaderCell.innerHTML = "伤害";
+    var armorHeaderCell = appendHeaderCell(headerRow);
+    armorHeaderCell.style.textAlign = "right";
+    armorHeaderCell.style.paddingRight = "5px";
+    armorHeaderCell.innerHTML = "护甲";
+    var attackRatingHeaderCell = appendHeaderCell(headerRow);
+    attackRatingHeaderCell.style.textAlign = "right";
+    attackRatingHeaderCell.style.paddingRight = "5px";
+    attackRatingHeaderCell.innerHTML = "攻击";
+    var defenceRatingHeaderCell = appendHeaderCell(headerRow);
+    defenceRatingHeaderCell.style.textAlign = "right";
+    defenceRatingHeaderCell.style.paddingRight = "5px";
+    defenceRatingHeaderCell.innerHTML = "防御";
+    var killCountHeaderCell = appendHeaderCell(headerRow);
+    killCountHeaderCell.style.textAlign = "right";
+    killCountHeaderCell.style.paddingRight = "5px";
+    killCountHeaderCell.innerHTML = "总计杀死";
+    var rankHeaderCell = appendHeaderCell(headerRow);
+    rankHeaderCell.style.textAlign = "right";
+    rankHeaderCell.style.paddingRight = "5px";
+    rankHeaderCell.innerHTML = "怪物等级";
+    appendHeaderCell(headerRow).innerHTML = "进度";
   };
   MonsterView.prototype = new TabView();
   MonsterView.prototype.onGameWon = function () {
