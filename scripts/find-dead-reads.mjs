@@ -82,3 +82,37 @@ for (const [name, sites] of rows) {
   console.log(`\n${name}  ×${sites.length}`);
   for (const s of sites.slice(0, 4)) console.log(`    ${s.file.split(path.sep).join('/')}:${s.line}  ${s.text}`);
 }
+
+// 棘轮：把"读了一个从未写入的属性"钉成护栏。
+// 动因：改名波次里最危险的一类错误是**成员属性拼写**——实测 `stats.attackRaiting`、
+// `position.worldWalkSped` 都能过 tsc（属性不存在时 tsc 在这些未标注对象上放行），
+// 差分和单测也看不见（读到的就是 undefined）。本脚本是目前唯一能抓它的工具。
+// 做法与架构指标一致：**不给这 17 条编理由**（大多是宿主 API、跨模块绑定与原版怪癖，
+// 逐条判定需要单独取证），而是记下当前实况当基线；出现"新名字"或"既有名字变多"才变红。
+//   node scripts/find-dead-reads.mjs --update-baseline
+const BASELINE = path.join(process.cwd(), 'artifacts', 'dead-reads-baseline.json');
+const current = Object.fromEntries(rows.map(([name, sites]) => [name, sites.length]).sort());
+if (process.argv.includes('--update-baseline')) {
+  fs.mkdirSync(path.dirname(BASELINE), { recursive: true });
+  fs.writeFileSync(BASELINE, JSON.stringify(current, null, 2));
+  console.log(`\n死读基线已重写：artifacts/dead-reads-baseline.json（${Object.keys(current).length} 个名字）`);
+  process.exit(0);
+}
+if (fs.existsSync(BASELINE)) {
+  const base = JSON.parse(fs.readFileSync(BASELINE, 'utf8'));
+  const regress = [];
+  for (const [name, count] of Object.entries(current)) {
+    const allowed = base[name] ?? 0;
+    if (count > allowed) regress.push(`${name}: ${allowed} -> ${count}${allowed === 0 ? '（新出现的死读名）' : ''}`);
+  }
+  if (regress.length) {
+    console.log(`\n✗ 死读回退 ${regress.length} 项（拼错/漏写的属性名会在运行时静默变 undefined）：`);
+    for (const r of regress) console.log(`  - ${r}`);
+    process.exitCode = 1;
+  } else {
+    const removed = Object.keys(base).filter((n) => !(n in current));
+    console.log(`\n棘轮通过：无新增死读${removed.length ? `（已消掉旧项 ${removed.length} 个：${removed.join(', ')}）` : ''}`);
+  }
+} else {
+  console.log('\n（死读基线缺失，本次只报告不判定；--update-baseline 生成）');
+}
