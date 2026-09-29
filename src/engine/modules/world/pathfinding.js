@@ -3,7 +3,7 @@
  */
 import { Vector2, copyVector, setVector } from "../core/math.js";
 import { DungeonDoor, DungeonHallway, EMPTY_TILE, isRoomBorder, roomContainsTile } from "./rooms.js";
-import { game } from "../runtime/game.js";
+import { TILE_SIZE } from "../core/screen-layout.js";
 export function PathfindingGrid(a, b, c) {
   this.widthInTiles = a;
   this.heightInTiles = b;
@@ -176,8 +176,8 @@ export function findHallwayPath(a, b, c) {
           n = d.y;
           p.tileColumn = s;
           p.tileRow = n;
-          p.pixelColumn = s * game.tileSize;
-          p.pixelRow = n * game.tileSize;
+          p.pixelColumn = s * TILE_SIZE;
+          p.pixelRow = n * TILE_SIZE;
           g.horizontalPassage = d.x != a[f + 1].x;
         } else {
           if (isRoomBorder(c, d.x, d.y)) {
@@ -186,8 +186,8 @@ export function findHallwayPath(a, b, c) {
             n = d.y;
             p.tileColumn = s;
             p.tileRow = n;
-            p.pixelColumn = s * game.tileSize;
-            p.pixelRow = n * game.tileSize;
+            p.pixelColumn = s * TILE_SIZE;
+            p.pixelRow = n * TILE_SIZE;
             h.horizontalPassage = d.x != a[f - 1].x;
           }
         }

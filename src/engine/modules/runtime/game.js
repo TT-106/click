@@ -2,6 +2,7 @@
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
 import { AnimationCatalog, AnimationSheet, SpriteSheet, bindEffectAnimations, clearVisualEffects } from "../rendering/sprites.js";
+import { HALF_TILE_SIZE, TILE_SIZE, VIEWPORT_HALF_HEIGHT, VIEWPORT_HALF_WIDTH, VIEWPORT_HEIGHT, VIEWPORT_WIDTH } from "../core/screen-layout.js";
 import { monsterSpriteDefinitions } from "../core/bootstrap-data.js";
 import { createAnimationCatalog } from "../content/animations.js";
 import { CharacterLifecycle } from "../simulation/characters.js";
@@ -39,12 +40,12 @@ import itemsAtlas from "../../../data/items-atlas.js";
 export var game;
 export function initializeRuntimeGame() {
   game = {
-    tileSize: 27,
-    halfTileSize: 13,
-    viewportWidth: 740,
-    viewportHeight: 450,
-    viewportHalfWidth: 370,
-    viewportHalfHeight: 225,
+    tileSize: TILE_SIZE,
+    halfTileSize: HALF_TILE_SIZE,
+    viewportWidth: VIEWPORT_WIDTH,
+    viewportHeight: VIEWPORT_HEIGHT,
+    viewportHalfWidth: VIEWPORT_HALF_WIDTH,
+    viewportHalfHeight: VIEWPORT_HALF_HEIGHT,
     monsterSprites: new SpriteSheet("spritesheet/monsters.png", 54, monsterSpriteDefinitions),
     terrainSprites: new SpriteSheet("spritesheet/terrain.png", 54, terrainAtlas),
     itemSprites: new SpriteSheet("spritesheet/items.png", 32, itemsAtlas),

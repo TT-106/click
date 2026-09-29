@@ -366,6 +366,52 @@ console.log(`\n=== 8) 单字母局部绑定（人工语义命名的审计线索�
 console.log(`合计 ${out.naming.singleLetterBindings} 个，分布于 ${out.naming.filesWithSingleLetterBindings} 个 engine/modules 文件`);
 for (const { file, count } of out.naming.topFiles.slice(0, 10)) console.log(`  ${String(count).padStart(3)}  ${file.replace('src/engine/modules/', '')}`);
 
+// === 9) 指标棘轮（ratchet）===
+// 现代化是"只许变好"的方向性工程：把当前实测值钉进仓库，任何变差都直接让本命令退出码非 0，
+// 这样后续批次（含并行子智能体）不可能悄悄把命名债或 game 依赖加回来。
+// 允许变差只有一种情形：确有理由的重构，用 --update-baseline 重写基线，并在 diff 里接受审查。
+const BASELINE = path.join(ROOT, 'artifacts', 'architecture-baseline.json');
+const perFile = Object.fromEntries([...singleLetterBindingsByFile.entries()].sort((a, b) => b[1] - a[1]));
+const current = {
+  singleLetterBindings: out.naming.singleLetterBindings,
+  filesWithSingleLetterBindings: out.naming.filesWithSingleLetterBindings,
+  gameImporters: out.gameImporters.total,
+  largestScc: cycles[0]?.length ?? 0,
+  perFile,
+};
+
+if (process.argv.includes('--update-baseline')) {
+  fs.mkdirSync(path.dirname(BASELINE), { recursive: true });
+  fs.writeFileSync(BASELINE, JSON.stringify(current, null, 2));
+  console.log(`\n=== 9) 指标棘轮 ===\n基线已重写：${path.relative(ROOT, BASELINE).split(path.sep).join('/')}`);
+  process.exit(0);
+}
+
+console.log(`\n=== 9) 指标棘轮 ===`);
+if (!fs.existsSync(BASELINE)) {
+  console.log('基线缺失（artifacts/architecture-baseline.json）：本次不判定，可用 --update-baseline 生成。');
+} else {
+  const base = JSON.parse(fs.readFileSync(BASELINE, 'utf8'));
+  const regressions = [];
+  for (const key of ['singleLetterBindings', 'gameImporters', 'largestScc']) {
+    if (current[key] > base[key]) regressions.push(`${key}: ${base[key]} -> ${current[key]} (+${current[key] - base[key]})`);
+    else console.log(`  ${String(key).padEnd(22)} ${base[key]} -> ${current[key]}  ${current[key] < base[key] ? '改善' : '持平'}`);
+  }
+  for (const [file, count] of Object.entries(base.perFile || {})) {
+    const now = current.perFile[file] ?? 0;
+    if (now > count) regressions.push(`单字母绑定 ${file.replace('src/engine/modules/', '')}: ${count} -> ${now} (+${now - count})`);
+  }
+  if (regressions.length) {
+    console.log(`回退 ${regressions.length} 项：`);
+    for (const r of regressions) console.log(`  ✗ ${r}`);
+    console.log('修复这些改动，或确有理由时用 --update-baseline 重写基线并在提交里说明。');
+    process.exitCode = 1;
+  } else {
+    console.log('  单文件维度        无回退（39 个文件逐项对比）');
+    console.log('棘轮通过：命名债与 game 依赖均未增加。');
+  }
+}
+
 if (jsonOut) {
   fs.mkdirSync(path.join(ROOT, 'artifacts'), { recursive: true });
   const p = path.join(ROOT, 'artifacts', 'architecture-audit.json');
