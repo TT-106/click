@@ -137,17 +137,33 @@ function worldNow() {
   }
   return boundWorldProvider();
 }
-export function getWestRegion(a, regionColumn, regionRow, occupiedRegionKeys) {
-  return regionColumn - 1 >= a.minRegionColumn && (a = regionColumn - 1 + "_" + regionRow, !occupiedRegionKeys[a]) ? regionManagerRef().byKey[a] : null;
+export function getWestRegion(regionLayout, regionColumn, regionRow, occupiedRegionKeys) {
+  if (regionColumn - 1 < regionLayout.minRegionColumn) {
+    return null;
+  }
+  var regionKey = regionColumn - 1 + "_" + regionRow;
+  return !occupiedRegionKeys[regionKey] ? regionManagerRef().byKey[regionKey] : null;
 }
-export function getEastRegion(a, regionColumn, regionRow, occupiedRegionKeys) {
-  return regionColumn + 1 < a.maxRegionColumn && (a = regionColumn + 1 + "_" + regionRow, !occupiedRegionKeys[a]) ? regionManagerRef().byKey[a] : null;
+export function getEastRegion(regionLayout, regionColumn, regionRow, occupiedRegionKeys) {
+  if (regionColumn + 1 >= regionLayout.maxRegionColumn) {
+    return null;
+  }
+  var regionKey = regionColumn + 1 + "_" + regionRow;
+  return !occupiedRegionKeys[regionKey] ? regionManagerRef().byKey[regionKey] : null;
 }
-export function getNorthRegion(a, regionColumn, regionRow, occupiedRegionKeys) {
-  return regionRow - 1 >= a.minRegionRow && (a = regionColumn + "_" + (regionRow - 1), !occupiedRegionKeys[a]) ? regionManagerRef().byKey[a] : null;
+export function getNorthRegion(regionLayout, regionColumn, regionRow, occupiedRegionKeys) {
+  if (regionRow - 1 < regionLayout.minRegionRow) {
+    return null;
+  }
+  var regionKey = regionColumn + "_" + (regionRow - 1);
+  return !occupiedRegionKeys[regionKey] ? regionManagerRef().byKey[regionKey] : null;
 }
-export function getSouthRegion(a, regionColumn, regionRow, occupiedRegionKeys) {
-  return regionRow + 1 < a.maxRegionRow && (a = regionColumn + "_" + (regionRow + 1), !occupiedRegionKeys[a]) ? regionManagerRef().byKey[a] : null;
+export function getSouthRegion(regionLayout, regionColumn, regionRow, occupiedRegionKeys) {
+  if (regionRow + 1 >= regionLayout.maxRegionRow) {
+    return null;
+  }
+  var regionKey = regionColumn + "_" + (regionRow + 1);
+  return !occupiedRegionKeys[regionKey] ? regionManagerRef().byKey[regionKey] : null;
 }
 export function chooseAdjacentRegion(regionLayout, sourceRegion, occupiedRegionKeys, d) {
   var regionColumn = sourceRegion.regionColumn;
@@ -208,11 +224,13 @@ export function unlockStartingRegion() {
     console.log("failed to find world block owner castle: " + startingRegionKey);
   }
 }
-export function findCastle(a) {
-  return (a = regionCastles().castleRegistry[a]) ? a : null;
+export function findCastle(castleId) {
+  var castle = regionCastles().castleRegistry[castleId];
+  return castle ? castle : null;
 }
-export function findCastleByRegion(a) {
-  return (a = regionCastles().byRegionKey[a]) ? a : null;
+export function findCastleByRegion(regionKey) {
+  var castle = regionCastles().byRegionKey[regionKey];
+  return castle ? castle : null;
 }
 export function refreshAttackableCastles(castle) {
   var castleManager = regionCastles();

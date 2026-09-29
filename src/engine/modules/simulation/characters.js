@@ -60,10 +60,10 @@ export function spawnMinion(minionDefinition, summoner, targetPosition) {
   position.room = summoner.position.room;
   position.currentHallway = summoner.position.currentHallway;
   setVector(position.levelPosition, targetPosition.x, targetPosition.y);
-  var h = summoner.position.worldPosition;
-  var spawnX = h.x + floorNumber(-10 + 20 * Math.random());
-  h = h.y + floorNumber(-10 + 20 * Math.random());
-  setVector(position.worldPosition, spawnX, h);
+  var worldPosition = summoner.position.worldPosition;
+  var spawnX = worldPosition.x + floorNumber(-10 + 20 * Math.random());
+  var spawnY = worldPosition.y + floorNumber(-10 + 20 * Math.random());
+  setVector(position.worldPosition, spawnX, spawnY);
   var level = summoner.stats.characterLevel;
   minion.summoner = summoner;
   if (!summoner.summonedMinions) {
@@ -100,7 +100,7 @@ export function spawnMinion(minionDefinition, summoner, targetPosition) {
   game.state.statisticsRecorder.recordMinionSummoned();
   awardAdventurePoints(18);
 }
-export function createCastleGuardian(guardianClass, guardianLevel, c) {
+export function createCastleGuardian(guardianClass, guardianLevel, room) {
   var monsterType = new MonsterType(guardianClass.className, guardianClass.spriteName, guardianLevel),
     guardian = new Character(guardianClass.defaultName, 3, guardianClass.characterClass, guardianClass, null),
     guardianStats = guardian.stats;
@@ -117,14 +117,14 @@ export function createCastleGuardian(guardianClass, guardianLevel, c) {
     }
   }
   var position = guardian.position;
-  position.room = c;
+  position.room = room;
   position.currentHallway = null;
-  var left = roomLeftPixels(c) + TILE_SIZE,
-    top = roomTopPixels(c) + TILE_SIZE,
-    bottom = roomBottomPixels(c) - TILE_SIZE;
-  c = left + randomInt(roomRightPixels(c) - TILE_SIZE - left);
+  var left = roomLeftPixels(room) + TILE_SIZE,
+    top = roomTopPixels(room) + TILE_SIZE,
+    bottom = roomBottomPixels(room) - TILE_SIZE;
+  var spawnX = left + randomInt(roomRightPixels(room) - TILE_SIZE - left);
   top += randomInt(bottom - top);
-  setVector(position.levelPosition, c, top);
+  setVector(position.levelPosition, spawnX, top);
   applyBonusList(guardian, guardianClass.statBonusList);
   return guardian;
 }
@@ -164,25 +164,25 @@ export function createBehaviorQueue(behaviors) {
   }
   return behaviorQueue;
 }
-export function applyLevelStats(stats, b, c) {
-  var scaledLevelValue = scaleByLevel(b, experienceCurve, 1);
+export function applyLevelStats(stats, level, statMultipliers) {
+  var scaledLevelValue = scaleByLevel(level, experienceCurve, 1);
   stats.experienceToLevelUp = scaledLevelValue;
-  scaledLevelValue = scaleByLevel(b, armorCurve, c.armorMultiplier);
+  scaledLevelValue = scaleByLevel(level, armorCurve, statMultipliers.armorMultiplier);
   stats.armor.levelValue = scaledLevelValue;
-  scaledLevelValue = scaleByLevel(b, armorCurve, c.attackRatingMultiplier);
+  scaledLevelValue = scaleByLevel(level, armorCurve, statMultipliers.attackRatingMultiplier);
   stats.attackRating.levelValue = scaledLevelValue;
-  scaledLevelValue = scaleByLevel(b, armorCurve, c.defenceRatingMultiplier);
+  scaledLevelValue = scaleByLevel(level, armorCurve, statMultipliers.defenceRatingMultiplier);
   stats.defenceRating.levelValue = scaledLevelValue;
-  scaledLevelValue = scaleByLevel(b, armorCurve, c.damageMultiplier);
+  scaledLevelValue = scaleByLevel(level, armorCurve, statMultipliers.damageMultiplier);
   stats.damage.levelValue = scaledLevelValue;
-  scaledLevelValue = scaleByLevel(b, healthCurve, c.maxHealthMultiplier);
+  scaledLevelValue = scaleByLevel(level, healthCurve, statMultipliers.maxHealthMultiplier);
   stats.maxHealth.levelValue = scaledLevelValue;
-  c = scaleByLevel(b, spiritCurve, c.maxSpiritMultiplier);
-  stats.maxSpirit.levelValue = c;
+  var maxSpiritValue = scaleByLevel(level, spiritCurve, statMultipliers.maxSpiritMultiplier);
+  stats.maxSpirit.levelValue = maxSpiritValue;
   stats.health = floorNumber(statValue(stats.maxHealth));
   stats.spirit = statValue(stats.maxSpirit);
-  b = scaleByLevel(b, damageCurve, 1);
-  stats.spellSpiritCost = b;
+  var spellSpiritCost = scaleByLevel(level, damageCurve, 1);
+  stats.spellSpiritCost = spellSpiritCost;
 }
 export function updateWorldTravel() {
   switch (randomInt(3)) {
@@ -235,13 +235,13 @@ export function updateDungeonTravel() {
   }
 }
 export function tickCharacterTurn(coordinate, minBound, maxBound) {
-  var d = 3 * TILE_SIZE,
-    lowerTarget = Math.max(minBound, coordinate - d),
-    d = Math.min(coordinate + d, maxBound);
-  if (lowerTarget >= d) {
+  var maxStepPixels = 3 * TILE_SIZE,
+    lowerTarget = Math.max(minBound, coordinate - maxStepPixels),
+    upperBound = Math.min(coordinate + maxStepPixels, maxBound);
+  if (lowerTarget >= upperBound) {
     return coordinate < minBound ? minBound : coordinate > maxBound ? maxBound : coordinate;
   }
-  coordinate = lowerTarget + randomInt(d - lowerTarget);
+  coordinate = lowerTarget + randomInt(upperBound - lowerTarget);
   return coordinate < minBound ? minBound : coordinate > maxBound ? maxBound : coordinate;
 }
 export function updateCharacterFrames(coordinate, minBound, maxBound) {

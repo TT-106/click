@@ -1,20 +1,20 @@
 {
-  "generatedAt": "2026-09-29T06:11:31.105Z",
+  "generatedAt": "2026-09-29T07:40:35.505Z",
   "counts": {
     "srcJsFiles": 94,
     "engineModules": 78,
-    "totalEdges": 554
+    "totalEdges": 553
   },
   "gameImporters": {
-    "total": 26,
-    "withGameBinding": 26,
+    "total": 25,
+    "withGameBinding": 25,
     "byDir": {
       "engine/modules/ai": 1,
       "engine/modules/characters": 2,
       "engine/modules/combat": 3,
       "engine/modules/persistence": 1,
       "engine/modules/progression": 1,
-      "engine/modules/rendering": 2,
+      "engine/modules/rendering": 1,
       "engine/modules/runtime": 1,
       "engine/modules/simulation": 3,
       "engine/modules/views": 7,
@@ -29,7 +29,6 @@
       "src/engine/modules/combat/scrolls.js",
       "src/engine/modules/persistence/game-save.js",
       "src/engine/modules/progression/upgrades.js",
-      "src/engine/modules/rendering/floating-text.js",
       "src/engine/modules/rendering/scene.js",
       "src/engine/modules/runtime/index.js",
       "src/engine/modules/simulation/characters.js",
@@ -600,6 +599,7 @@
         "engine/modules/characters",
         "engine/modules/persistence",
         "engine/modules/rendering",
+        "engine/modules/runtime",
         "engine/modules/simulation",
         "engine/modules/views",
         "engine/modules/world"
@@ -616,20 +616,6 @@
         "engine/modules/persistence",
         "engine/modules/simulation",
         "engine/modules/views",
-        "engine/modules/world"
-      ]
-    },
-    {
-      "path": "game.world",
-      "readFiles": 11,
-      "writeFiles": 0,
-      "dirs": [
-        "engine/modules/ai",
-        "engine/modules/characters",
-        "engine/modules/persistence",
-        "engine/modules/rendering",
-        "engine/modules/runtime",
-        "engine/modules/simulation",
         "engine/modules/world"
       ]
     },
@@ -659,6 +645,20 @@
         "engine/modules/progression",
         "engine/modules/simulation",
         "engine/modules/views"
+      ]
+    },
+    {
+      "path": "game.world",
+      "readFiles": 10,
+      "writeFiles": 0,
+      "dirs": [
+        "engine/modules/ai",
+        "engine/modules/characters",
+        "engine/modules/persistence",
+        "engine/modules/rendering",
+        "engine/modules/runtime",
+        "engine/modules/simulation",
+        "engine/modules/world"
       ]
     },
     {
@@ -787,6 +787,7 @@
         "engine/modules/characters",
         "engine/modules/combat",
         "engine/modules/rendering",
+        "engine/modules/runtime",
         "engine/modules/simulation"
       ]
     },
@@ -1104,8 +1105,8 @@
     }
   },
   "naming": {
-    "singleLetterBindings": 152,
-    "filesWithSingleLetterBindings": 29,
+    "singleLetterBindings": 126,
+    "filesWithSingleLetterBindings": 27,
     "topFiles": [
       {
         "file": "src/engine/modules/characters/party.js",
@@ -1124,10 +1125,6 @@
         "count": 9
       },
       {
-        "file": "src/engine/modules/views/party-creation.js",
-        "count": 9
-      },
-      {
         "file": "src/engine/modules/persistence/entities.js",
         "count": 8
       },
@@ -1138,18 +1135,6 @@
       {
         "file": "src/engine/modules/views/character.js",
         "count": 7
-      },
-      {
-        "file": "src/engine/modules/world/regions.js",
-        "count": 7
-      },
-      {
-        "file": "src/engine/modules/simulation/characters.js",
-        "count": 6
-      },
-      {
-        "file": "src/engine/modules/views/achievements.js",
-        "count": 6
       },
       {
         "file": "src/engine/modules/views/expedition.js",
@@ -1186,10 +1171,26 @@
       {
         "file": "src/engine/modules/views/monsters.js",
         "count": 3
+      },
+      {
+        "file": "src/engine/modules/views/navigation.js",
+        "count": 3
+      },
+      {
+        "file": "src/engine/modules/characters/character.js",
+        "count": 2
+      },
+      {
+        "file": "src/engine/modules/characters/movement.js",
+        "count": 2
+      },
+      {
+        "file": "src/engine/modules/combat/encounters.js",
+        "count": 2
       }
     ],
-    "crypticBindings": 138,
-    "filesWithCrypticBindings": 28,
+    "crypticBindings": 112,
+    "filesWithCrypticBindings": 26,
     "allowListedBindings": 29,
     "allowListedByFile": {
       "src/engine/modules/simulation/tick.js": 6,
@@ -1212,10 +1213,6 @@
         "count": 11
       },
       {
-        "file": "src/engine/modules/views/party-creation.js",
-        "count": 9
-      },
-      {
         "file": "src/engine/modules/core/math.js",
         "count": 8
       },
@@ -1230,18 +1227,6 @@
       {
         "file": "src/engine/modules/views/character.js",
         "count": 7
-      },
-      {
-        "file": "src/engine/modules/world/regions.js",
-        "count": 7
-      },
-      {
-        "file": "src/engine/modules/simulation/characters.js",
-        "count": 6
-      },
-      {
-        "file": "src/engine/modules/views/achievements.js",
-        "count": 6
       },
       {
         "file": "src/engine/modules/views/expedition.js",
@@ -1281,6 +1266,22 @@
       },
       {
         "file": "src/engine/modules/characters/movement.js",
+        "count": 2
+      },
+      {
+        "file": "src/engine/modules/combat/encounters.js",
+        "count": 2
+      },
+      {
+        "file": "src/engine/modules/combat/scrolls.js",
+        "count": 2
+      },
+      {
+        "file": "src/engine/modules/combat/skill-effects.js",
+        "count": 2
+      },
+      {
+        "file": "src/engine/modules/persistence/game-save.js",
         "count": 2
       }
     ]

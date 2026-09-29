@@ -48,18 +48,18 @@ function createAdventurerPartyFromSelection(view) {
   if (!(1 > view.selectedCharacters.length) && view.validParty) {
     var selectedCharacters = view.selectedCharacters,
       selectionIndex,
-      f,
+      classDefinition,
       newAdventurer,
       classNamesSummary = "";
     for (selectionIndex = 0; selectionIndex < selectedCharacters.length; selectionIndex++) {
-      f = selectedCharacters[selectionIndex].classIndex;
-      f = adventurerClasses[f];
+      classDefinition = selectedCharacters[selectionIndex].classIndex;
+      classDefinition = adventurerClasses[classDefinition];
       newAdventurer = selectedCharacters[selectionIndex].defaultName;
-      var spriteName = f.spriteName;
-      newAdventurer = new Character(newAdventurer, ADVENTURER_TYPE, f.characterClass, f, new Inventory(game.state.victoryCount));
+      var spriteName = classDefinition.spriteName;
+      newAdventurer = new Character(newAdventurer, ADVENTURER_TYPE, classDefinition.characterClass, classDefinition, new Inventory(game.state.victoryCount));
       var characterStats = newAdventurer.stats;
       newAdventurer.sprite = game.monsterSprites.getSprite(spriteName);
-      var behaviorQueue = createBehaviorQueue(f.createBehaviors());
+      var behaviorQueue = createBehaviorQueue(classDefinition.createBehaviors());
       newAdventurer.behaviors = behaviorQueue;
       characterStats.baseAttackCooldown = 12;
       characterStats.baseHealthRegenPercent = 2;
@@ -71,7 +71,7 @@ function createAdventurerPartyFromSelection(view) {
         skillPointAdventurer.skillPoints = startingSkillPoints;
         skillPointAdventurer.hasUnspentSkills = hasUnspentSkills(skillPointAdventurer);
       }
-      if (f.startsWithSpell) {
+      if (classDefinition.startsWithSpell) {
         newAdventurer.initialSpellSkillPoint = 1;
       }
       refreshPartyLevels();
@@ -82,13 +82,13 @@ function createAdventurerPartyFromSelection(view) {
           (/** @type {any} */ (newAdventurer)).equipItem(startingItem);
         }
       }
-      applyLevelStats(characterStats, 1, f.statMultipliers);
-      f = newAdventurer;
-      game.state.adventurers.push(f);
+      applyLevelStats(characterStats, 1, classDefinition.statMultipliers);
+      var adventurer = newAdventurer;
+      game.state.adventurers.push(adventurer);
       if (0 < selectionIndex) {
         classNamesSummary += ", ";
       }
-      classNamesSummary += f.classDefinition.className;
+      classNamesSummary += adventurer.classDefinition.className;
     }
     game.state.leader = game.state.adventurers[0];
     game.state.scrollCaster = chooseScrollCaster();
@@ -101,17 +101,17 @@ function createAdventurerPartyFromSelection(view) {
     recordGameEvent("Party Creation", classNamesSummary);
   }
 }
-export function mountPartyIntroduction(a) {
-  a = createElement("div", a, "partyCreationHeader", "partyCreationIntroductionPanel");
-  var textElement = createElement("div", a, null, "sectionTitle");
+export function mountPartyIntroduction(containerElement) {
+  var headerElement = createElement("div", containerElement, "partyCreationHeader", "partyCreationIntroductionPanel");
+  var textElement = createElement("div", headerElement, null, "sectionTitle");
   textElement.style.fontSize = "14px";
   textElement.innerHTML = "末日大陆需要你的力量!";
-  textElement = createElement("p", a, null, null);
+  textElement = createElement("p", headerElement, null, null);
   textElement.style.fontSize = "13px";
   textElement.innerHTML = "所有地牢,被遗忘的神庙,封禁的高塔,黑暗矿洞,拷问室,和幽闭的洞穴,那些曾经一片美好的地方,环境优美宜人,都陷入怪物的蹂躏之下,你要做的只有杀戮.";
-  a = createElement("p", a, null, null);
-  a.style.fontSize = "13px";
-  a.innerHTML = "只有你有这个能力让一切回归旧貌,选择你的队友,杀光大陆上所有的怪物.";
+  var paragraphElement = createElement("p", headerElement, null, null);
+  paragraphElement.style.fontSize = "13px";
+  paragraphElement.innerHTML = "只有你有这个能力让一切回归旧貌,选择你的队友,杀光大陆上所有的怪物.";
 }
 export function getPartyCapacityLabel() {
   var partyCapacity = 4 + partyCapacityBonus.currentValue;
@@ -127,13 +127,15 @@ export function mountClassChoices(view, tabContentElement) {
   createElement("span", headerContainer, null, "partySelectionHeaderSpan").innerHTML = getPartyCapacityLabel();
   var selectionPanelTable = createElement("div", tabContentElement, null, "partySelectionPanel"),
     selectionPanelTable = createElement("table", selectionPanelTable, null, "partySelectionTable"),
-    d = null,
     rowIndex = 0,
     classCell,
     classIndex;
   for (classIndex = 0; classIndex < adventurerClasses.length; classIndex++) {
-    if (d = selectionPanelTable.insertRow(rowIndex), rowIndex++, classCell = d.insertCell(0), d = game.state.victoryCount < adventurerClasses[classIndex].requiredVictories) {
-      var d = view,
+    var currentRow = selectionPanelTable.insertRow(rowIndex);
+    rowIndex++;
+    classCell = currentRow.insertCell(0);
+    if (game.state.victoryCount < adventurerClasses[classIndex].requiredVictories) {
+      var viewRef = view,
         lockedClassIndex = classIndex;
       classCell = createElement("table", classCell, null, "lockedCharacterSelectionTable").insertRow(0).insertCell(0);
       var classSprite = game.monsterSprites.getSprite(adventurerClasses[lockedClassIndex].spriteName),
@@ -170,7 +172,7 @@ export function mountClassChoices(view, tabContentElement) {
           lockMessageText = "稍后解锁该角色";
       }
       classCell.innerHTML = lockMessageText;
-      d.characterSelectionButtons.push(null);
+      viewRef.characterSelectionButtons.push(null);
     } else {
       mountClassChoice(view, classCell, classIndex);
     }
@@ -185,14 +187,14 @@ export function mountSelectedParty(view, tabContentElement) {
   view.nameWarningElement.innerHTML = "给你的角色取个独特的名字.";
   view.nameWarningElement.style.display = "none";
 }
-export function mountClassChoice(view, b, classIndex) {
+export function mountClassChoice(view, containerElement, classIndex) {
   var classDefinition = adventurerClasses[classIndex],
-    f,
+    portraitRow,
     portraitElement,
     classSprite;
-  b = createElement("table", b, null, "characterSelectionButton");
-  view.characterSelectionButtons.push(b);
-  b.onclick = function () {
+  var buttonTable = createElement("table", containerElement, null, "characterSelectionButton");
+  view.characterSelectionButtons.push(buttonTable);
+  buttonTable.onclick = function () {
     if (!(view.selectedCharacters.length >= 4 + partyCapacityBonus.currentValue)) {
       view.selectedCharacters.push({
         classIndex: classIndex,
@@ -202,9 +204,9 @@ export function mountClassChoice(view, b, classIndex) {
       validateSelectedParty(view);
     }
   };
-  f = b.insertRow(0);
-  b = b.insertRow(1);
-  portraitElement = f.insertCell(0);
+  portraitRow = buttonTable.insertRow(0);
+  var row = buttonTable.insertRow(1);
+  portraitElement = portraitRow.insertCell(0);
   portraitElement.style.width = "35px";
   portraitElement.style.textAlign = "center";
   classSprite = game.monsterSprites.getSprite(classDefinition.spriteName);
@@ -213,33 +215,33 @@ export function mountClassChoice(view, b, classIndex) {
   portraitElement.style.height = "35px";
   portraitElement.style.width = "35px";
   portraitElement.style.background = "url('spritesheet/monsters.png') -" + (classSprite.sourceX + 10) + "px -" + (classSprite.sourceY + 12) + "px";
-  f = f.insertCell(1);
-  f.style.width = "410px";
-  f.style.textAlign = "left";
-  f = createElement("span", f, null, null);
-  f.style.fontWeight = "bold";
-  f.style.fontSize = "13px";
-  f.innerHTML = classDefinition.className;
-  b = b.insertCell(0);
-  b.colSpan = 2;
-  b.innerHTML = classDefinition.descriptionText;
+  var nameCell = portraitRow.insertCell(1);
+  nameCell.style.width = "410px";
+  nameCell.style.textAlign = "left";
+  var nameSpan = createElement("span", nameCell, null, null);
+  nameSpan.style.fontWeight = "bold";
+  nameSpan.style.fontSize = "13px";
+  nameSpan.innerHTML = classDefinition.className;
+  var cell = row.insertCell(0);
+  cell.colSpan = 2;
+  cell.innerHTML = classDefinition.descriptionText;
 }
-export function mountSelectedCharacter(view, b, selectedCharacter, selectionIndex) {
+export function mountSelectedCharacter(view, selectionCell, selectedCharacter, selectionIndex) {
   var classDefinition = adventurerClasses[selectedCharacter.classIndex],
     selectionTable,
-    h,
+    portraitRow,
     descriptionElement,
     portraitElement,
     classSprite,
     nameInput;
-  b = createElement("div", b, null, "selectedCharacterContainer");
-  selectionTable = createElement("table", b, null, "selectedCharacterSelectionTable");
+  var containerElement = createElement("div", selectionCell, null, "selectedCharacterContainer");
+  selectionTable = createElement("table", containerElement, null, "selectedCharacterSelectionTable");
   if (!(selectedCharacter.defaultName && "" !== selectedCharacter.defaultName)) {
     selectionTable.className = "errorSelectedCharacterSelectionTable";
   }
-  h = selectionTable.insertRow(0);
+  portraitRow = selectionTable.insertRow(0);
   descriptionElement = selectionTable.insertRow(1);
-  portraitElement = h.insertCell(0);
+  portraitElement = portraitRow.insertCell(0);
   portraitElement.style.width = "35px";
   portraitElement.style.textAlign = "center";
   classSprite = game.monsterSprites.getSprite(classDefinition.spriteName);
@@ -248,10 +250,10 @@ export function mountSelectedCharacter(view, b, selectedCharacter, selectionInde
   portraitElement.style.height = "35px";
   portraitElement.style.width = "35px";
   portraitElement.style.background = "url('spritesheet/monsters.png') -" + (classSprite.sourceX + 10) + "px -" + (classSprite.sourceY + 12) + "px";
-  h = h.insertCell(1);
-  h.style.width = "400px";
-  h.style.textAlign = "left";
-  nameInput = createElement("input", h, null, null);
+  var nameCell = portraitRow.insertCell(1);
+  nameCell.style.width = "400px";
+  nameCell.style.textAlign = "left";
+  nameInput = createElement("input", nameCell, null, null);
   nameInput.type = "text";
   nameInput.size = 15;
   nameInput.maxLength = 15;
@@ -262,15 +264,15 @@ export function mountSelectedCharacter(view, b, selectedCharacter, selectionInde
   nameInput.onchange = function () {
     renameSelectedCharacter(view, selectedCharacter, nameInput.value, selectionTable);
   };
-  h = createElement("span", h, null, null);
-  h.style.fontWeight = "bold";
-  h.style.fontSize = "13px";
-  h.style.marginLeft = "5px";
-  h.innerHTML = " " + classDefinition.className;
+  var nameSpan = createElement("span", nameCell, null, null);
+  nameSpan.style.fontWeight = "bold";
+  nameSpan.style.fontSize = "13px";
+  nameSpan.style.marginLeft = "5px";
+  nameSpan.innerHTML = " " + classDefinition.className;
   descriptionElement = descriptionElement.insertCell(0);
   descriptionElement.colSpan = 2;
   descriptionElement.innerHTML = classDefinition.descriptionText;
-  var deselectButton = createElement("div", b, null, "deselectCharacterButton");
+  var deselectButton = createElement("div", containerElement, null, "deselectCharacterButton");
   deselectButton.title = "移除角色";
   deselectButton.innerHTML = "X";
   deselectButton.onmouseup = function () {
@@ -282,7 +284,7 @@ export function mountSelectedCharacter(view, b, selectedCharacter, selectionInde
     return false;
   };
   var canMoveUp = 0 < selectionIndex;
-  var moveUpButton = createElement("div", b, null, canMoveUp ? "moveUpButton" : "disabledMoveUpButton");
+  var moveUpButton = createElement("div", containerElement, null, canMoveUp ? "moveUpButton" : "disabledMoveUpButton");
   moveUpButton.title = "上移";
   moveUpButton.innerHTML = "&#9650";
   if (canMoveUp) {
@@ -298,11 +300,11 @@ export function mountSelectedCharacter(view, b, selectedCharacter, selectionInde
     };
   }
   var canMoveDown = selectionIndex < view.selectedCharacters.length - 1;
-  b = createElement("div", b, null, canMoveDown ? "moveDownButton" : "disabledMoveDownButton");
-  b.title = "下移";
-  b.innerHTML = "&#9660;";
+  var moveDownButton = createElement("div", containerElement, null, canMoveDown ? "moveDownButton" : "disabledMoveDownButton");
+  moveDownButton.title = "下移";
+  moveDownButton.innerHTML = "&#9660;";
   if (canMoveDown) {
-    b.onmouseup = function () {
+    moveDownButton.onmouseup = function () {
       if (!(selectionIndex >= view.selectedCharacters.length - 1)) {
         var nextEntry = view.selectedCharacters[selectionIndex + 1];
         view.selectedCharacters[selectionIndex + 1] = view.selectedCharacters[selectionIndex];
@@ -314,8 +316,8 @@ export function mountSelectedCharacter(view, b, selectedCharacter, selectionInde
     };
   }
 }
-export function renameSelectedCharacter(view, b, newName, selectionTable) {
-  var hadName = null != b.defaultName && "" != b.defaultName;
+export function renameSelectedCharacter(view, selectedCharacter, newName, selectionTable) {
+  var hadName = null != selectedCharacter.defaultName && "" != selectedCharacter.defaultName;
   if (newName) {
     newName = newName.replace("&", "&amp;");
     newName = newName.replace("<", "&lt;");
@@ -326,12 +328,12 @@ export function renameSelectedCharacter(view, b, newName, selectionTable) {
   } else {
     newName = "";
   }
-  b.defaultName = newName;
-  b = null != b.defaultName && "" != b.defaultName;
-  if (hadName && !b) {
+  selectedCharacter.defaultName = newName;
+  var hasName = null != selectedCharacter.defaultName && "" != selectedCharacter.defaultName;
+  if (hadName && !hasName) {
     selectionTable.className = "errorSelectedCharacterSelectionTable";
   } else {
-    if (!hadName && b) {
+    if (!hadName && hasName) {
       selectionTable.className = "selectedCharacterSelectionTable";
     }
   }
@@ -436,14 +438,13 @@ export function initializeViewsPartyCreation() {
             selectedCharactersTable.deleteRow(0);
           }
         }
-        var b = null,
-          rowIndex = /** @type {any} */ (0),
+        var rowIndex = /** @type {any} */ (0),
           selectionIndex;
         for (selectionIndex = 0; selectionIndex < this.selectedCharacters.length; selectionIndex++) {
-          b = this.selectedCharactersTable.insertRow(rowIndex);
+          var row = this.selectedCharactersTable.insertRow(rowIndex);
           rowIndex++;
-          b = b.insertCell(0);
-          mountSelectedCharacter(this, b, this.selectedCharacters[selectionIndex], selectionIndex);
+          var rowCell = row.insertCell(0);
+          mountSelectedCharacter(this, rowCell, this.selectedCharacters[selectionIndex], selectionIndex);
         }
       }
       if (this.cachedHasDuplicateName != this.hasDuplicateName) {
