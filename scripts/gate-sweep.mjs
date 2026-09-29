@@ -49,6 +49,7 @@ const gates = [
   ['dead-reads-ratchet', ['scripts/find-dead-reads.mjs']],
   ['doc-mappings', ['scripts/check-doc-mappings.mjs']],
   ['doc-snippets', ['scripts/check-doc-snippets.mjs']],
+  ['doc-anchors', ['scripts/check-doc-ref-anchors.mjs']],
   ['doc-refs', ['scripts/verify-doc-refs.mjs']],
   ['spell-coverage', ['scripts/check-spell-coverage.mjs']],
   ['achievements', ['scripts/check-achievement-requirements.mjs']],

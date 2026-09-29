@@ -36,7 +36,7 @@
 npm install && npm run dev        # 开发服务器（部分门禁需要它）
 npm run lint                      # 11 条不变量守卫（零依赖）
 npm run typecheck                 # tsc，当前 0 错误
-npm run check                     # 150 文件语法 + 25 单测
+npm run check                     # 151 文件语法 + 25 单测
 npm run test:parity               # 0/1/99/900 回合完整 DTO 相等
 npm run test:scenarios            # 89 场景差分（可用 SCENARIO_FILTER=a,b 单跑）
 npm run test:e2e                  # 浏览器 E2E
@@ -291,7 +291,8 @@ node scripts/find-field-refs.mjs <owner> <names>
 | `spawnSync`/`execFileSync` 用管道 stdio 必抛 `EBUSY` | 本机环境限制 | 用 `stdio:'inherit'` 或异步 `spawn`（`scripts/check.mjs` 已如此） |
 | 一轮内批量删除超过 ~50 个文件失败 | 注入的 `node-safe-delete-shim` 按"每 agent 轮次 50 次删除"限额 | 分批删；`fs.cp` 整目录覆盖也会假红，`scripts/build.mjs` 已改**增量拷贝** |
 | 内联 `node -e "…"` 里的 `${}` 或反引号被 shell 吃掉 | shell 展开 | 复杂脚本写成文件再跑（`output/` 已 gitignore，可放临时脚本） |
-| `git add` 报 LF/CRLF warning | 仓库多为 CRLF | 噪音，忽略 |
+| `git add` 报 LF/CRLF warning | 仓库是**混合**行尾（`characters/party.js` 566 行全 CRLF、`characters/movement.js` 224 行全 LF、`docs/formulas/combat.md` 全 LF） | 噪音，忽略；但别据此推断某个文件是 CRLF |
+| 用 `grep -c $'\r$' 文件` 验行尾 | Git Bash 下这个模式对**纯 LF 文件也逐行命中**（movement.js 实测 0 个 CRLF，仍报 224/224），据此写进提交信息的"CRLF 保持"是假的 | 按字节量：`python -c "b=open(p,'rb').read(); print(b.count(b'\r\n'), b.count(b'\n')-b.count(b'\r\n'))"`，或直接采信改名工具自己的"行尾保持"断言 |
 | 后台跑长命令（soak/perf）时前台门禁超时 | 命令耗时长 | 用 `run_in_background`，完成后会收到通知，**不要轮询** |
 
 ---

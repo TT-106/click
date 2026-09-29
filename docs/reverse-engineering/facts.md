@@ -142,3 +142,26 @@ id 字段，而调用点按直觉写的是 `(射程, 小整数, 较大的 id)`�
 方法论：结构对账（标识符抹平后的骨架比对）看不见这一类，因为它只改成员名/参数名的**语义指向**、
 不改形状；能抓住它的只有"读一遍赋值流向"。所以改名之后的复核必须包含一次人工读，
 而不是只看门禁绿灯。
+
+## 哪些 game 字段会被整体重赋值（组合根注入的前置判据，2026-09-29 R28 实测）
+
+按引用注入（`bindXxx(game.someContainer)`）只在"该容器一生只构造一次"时安全。
+`grep -rnE '^\s*game\.[A-Za-z_$][\w$]*\s*=[^=]' src` 全量实测结论：
+
+- **会被整体替换，禁止按引用绑**：`game.world = new WorldMap()`（runtime/game.js:394、455 两条重置路径）、
+  `game.level = new DungeonLevel()`（同处 395、456）、以及 `game.currentDungeon` / `game.currentCastle`
+  （在存档恢复 world/game-save.js:150,213 与角色移动 characters/character.js:1154,1180 里被指到新对象）。
+  绑这些名字会拿到重置前的旧对象，字段级差分看不出来，只有跨重置的功能路径会炸。
+- **子对象里也有会被整体替换的**：`game.state.party = new PartyState()`（runtime/game.js:365，resetRun 里）。
+  绑 `game.state` 容器、每次现读 `.party` 是安全的；直接绑 `party` 会在重开后拿旧队伍对象。
+  同一条判据适用于任何"绑嵌套字段"的冲动——先问这个字段本身会不会被整体换掉。
+- **只构造一次、可以按引用绑**（同一 grep 里没有任何整对象赋值）：`game.state`、`game.inventories`、
+  `game.monsterCatalog`、`game.animations`、`game.pathfinder`、`game.goldDrops`、`game.treasure`、
+  `game.minions`、`game.effects`、`game.potions`、`game.terrainSprites`、`game.farms`、`game.shops`、
+  `game.regions`、`game.castles`、`game.dungeons`。字段级改写（`game.state.adventurers.length = 0`、
+  `minionList` 重建等）不影响容器身份，读发生在调用时刻，因此安全。
+- 标量/布尔（`game.paused`、`game.worldActive`、`game.gameWon`、`game.offlineDuration`…）经常被整字段赋值，
+  需要的是"每次读都取当前值"，绝不能把值拷进绑定参数里。
+
+方法论：注入之前先跑这条 grep，把证据贴在提交信息里；已经落地的四个 bind
+（statistics/points/progression.achievements/views.monsters/views.character）都按此复核过，无一命中禁止清单。

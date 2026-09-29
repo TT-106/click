@@ -29,7 +29,22 @@ for (const f of files) {
   const rel = path.relative(ROOT, f).split(path.sep).join('/');
   if (rel.endsWith('runtime/game.js')) continue;
   const src = fs.readFileSync(f, 'utf8');
-  if (!/from\s+['"][^'"]*runtime\/game\.js['"]/.test(src)) continue;
+  // 判定"是否依赖 game.js"必须解析说明符，不能按字面路径匹配：runtime/ 目录内的模块写的是
+  // from './game.js'，字面量里没有 runtime/ 这一段（本会话正是这样漏掉了 runtime/index.js，
+  // 于是 audit:arch 报 32 而本工单报 31，两个口径并存迟早误导下一刀）。
+  {
+    let depends = false;
+    const specRe = /from\s+['"]([^'"]+)['"]/g;
+    let mm;
+    const gameAbs = path.resolve(ROOT, 'src/engine/modules/runtime/game.js').split(path.sep).join('/');
+    while ((mm = specRe.exec(src))) {
+      const spec = mm[1];
+      if (!spec.startsWith('.')) continue;
+      const abs = path.resolve(path.dirname(f), spec).split(path.sep).join('/');
+      if (abs === gameAbs || abs.endsWith('/runtime/game.js')) { depends = true; break; }
+    }
+    if (!depends) continue;
+  }
   const members = new Map();
   const re = /\bgame\.([A-Za-z_$][\w$]*)/g;
   let m;

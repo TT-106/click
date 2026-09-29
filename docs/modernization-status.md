@@ -126,6 +126,41 @@
   已提交的 monsters/index 19 条）。
 
 
+### 注入形状备忘：容器按引用绑、会被整体替换的走取现值回调
+
+- 注入之前必须先跑 `grep -rnE '^\s*game\.[A-Za-z_$][\w$]*\s*=[^=]' src`。实测只有
+  `game.world = new WorldMap()`、`game.level = new DungeonLevel()`（runtime/game.js:394-397、455-458 两条重置路径）
+  与 `game.currentDungeon` / `game.currentCastle`（存档恢复、角色移动里指向新对象）会被整体替换；
+  `game.state`、`game.inventories`、`game.minions`、`game.monsterCatalog`、`game.animations`、`game.pathfinder`、
+  `game.goldDrops`、`game.treasure` 等在 src/ 内没有任何整对象赋值，按引用绑安全。全量清单与判据写在
+  `docs/reverse-engineering/facts.md`。
+- 因此 `characters/movement.js` 的 `bindCharacterMovement(game.state, game.minions, () => game.world)` 里
+  第三个参数是**提供者回调**而不是引用。功能探针 `output/probe-movement-world.mjs` 直接演示差别：
+  绑 `() => current`，先把 current 换成 WORLD-A 再换成 WORLD-B，两次 `setWorldDestination` 读到的
+  分别是 WORLD-A 与 WORLD-B；若按引用绑定，第二次仍会拿到 WORLD-A（移动逻辑朝已被丢弃的旧地图走，
+  而字段级差分看不见这件事）。
+- 行尾判据也修了：`grep -c $$` 这类写法在 Git Bash 下对**纯 LF 文件也逐行命中**
+  （movement.js 实为 0 个 CRLF，却报 224/224），本仓库行尾是混合的（party.js 全 CRLF、movement.js 全 LF、
+  docs/formulas/combat.md 全 LF），要按字节量或采信改名工具自己的"行尾保持"断言。
+
+
+### R28 第二组：targeting / treasure / movement 退出 game 直连，并新增"正文引用锚点"检查
+
+- `ai/targeting.js`（`game.pathfinder` 2 处）、`loot/treasure.js`（`game.goldDrops` / `game.state.party` /
+  `game.treasure`）、`characters/movement.js`（`game.world` 3 / `game.state` 2 / `game.minions` 1）三个模块
+  去掉 `import { game }`，改由组合根注入。`npm run audit:arch` 实测 game 直连模块 **33 → 30**（plan 口径同为 30）。
+- movement 的 world 用 **`() => game.world` 回调**而不是引用，因为 `game.world = new WorldMap()` 在两条重置路径上
+  整体换对象；treasure 反过来证明"绑 state 容器 + 每次现读 `.party`"是足够的——`game.state.party = new PartyState()`
+  只换子对象，容器身份不变。两个判据都写进 `docs/reverse-engineering/facts.md`。
+- 新增 `scripts/check-doc-ref-anchors.mjs`（`npm run audit:doc-anchors`，已进 gate-sweep）：`verify-doc-refs`
+  只能判断引用是否**越界**，而本会话的切片一律让文件**变长**，于是所有旧行号仍然界内却指向别的代码——
+  这是静默的"文档与代码矛盾"。新检查用引用所在文档行里反引号包住的标识符当锚点，看被引用区间（±4 行缓冲）
+  里有没有出现任意一个；一个都没有就进待复核清单，并按基线棘轮只在**增加**时失败。
+  敏感性已被真实场景验证：写基线之后紧接着的 targeting/treasure 改动就让它 +1 报红。
+  实测 597 条带锚点引用 / 206 条待复核（历史欠账，非本轮制造；本轮 5 个模块直接相关的引用已单独列出、尚未逐条搬正（写在下面的待办里））。
+  反向验证：把 movement 模块里 `effectItem` 赋值的旧行号（搬到注入块之前是 202 至 204 行，现在是 232 至 233 行）故意写成引用留在文档里，检查器会把它报进待复核清单；这条已从文档里改写掉，以免文档自身制造假阳性。
+
+
 ## 尚未完成的主要工作
 
 1. **拆开中心状态与循环依赖**：R27 续实测 33 个模块直接导入 `runtime/game.js`（`world/pathfinding.js`、`world/travel-costs.js`、`progression/achievements.js`、`views/monsters.js` 已退出），一个强连通分量仍包含 41 个模块；74 个初始化调用仍依赖固定顺序。装备目录、物品生成、角色属性、状态效果、内容参数、冒险点数、特效动画目录、背包与旅行代价已退出该循环，但整个领域图仍需继续拆分。应按领域建立明确输入与组合根，再逐个移动依赖方向，避免只增加转发包装。

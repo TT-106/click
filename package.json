@@ -28,6 +28,7 @@
     "audit:dead-reads": "node scripts/find-dead-reads.mjs",
     "audit:doc-refs": "node scripts/verify-doc-refs.mjs",
     "audit:doc-snippets": "node scripts/check-doc-snippets.mjs",
+  "audit:doc-anchors": "node scripts/check-doc-ref-anchors.mjs",
     "audit:doc-counts": "node scripts/check-doc-counts.mjs",
     "audit:arch": "node scripts/audit-architecture.mjs",
     "audit:production-boundary": "node scripts/audit-production-boundary.mjs",

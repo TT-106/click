@@ -5,7 +5,7 @@
 
 ## 0. 单例的创建与五类状态
 
-`game` 是模块级导出变量（game.js:39），由 `initializeRuntimeGame()` 在模块初始化序列末尾一次性赋值（runtime/index.js:150，序列顺序 runtime/index.js:77-150）。整个引擎共享这一个对象；产品层唯一入口 `src/engine/adapter.js` 只通过命令与只读快照访问它（adapter.js:18-19）。
+`game` 是模块级导出变量（game.js:39），由 `initializeRuntimeGame()` 在模块初始化序列末尾一次性赋值（runtime/index.js:168，序列顺序 runtime/index.js:77-168）。整个引擎共享这一个对象；产品层唯一入口 `src/engine/adapter.js` 只通过命令与只读快照访问它（adapter.js:18-19）。
 
 本文用五类标签区分每个字段的角色：
 

@@ -26,7 +26,7 @@
 - **`tsconfig.json` 补 `"lib": ["ES2022", "DOM"]`**：这是浏览器项目本就该有的配置（此前无 DOM 类型，`document`/`HTMLElement` 一律不可用，也是大量 `any` 的诱因之一）。补齐后 `tsc` 仍 **0 错误**。
 - **`views/results.js` 的 9 处 `@type {any}` → 1 个交叉类型 typedef**：`buildOfflineProgressTable` 的 8 次 `getOfflineProgressCell` 调用改用
   `@typedef {OfflineProgressView & { getOfflineProgressCell: (table: HTMLTableElement, label: string, rowIndex: number) => HTMLTableCellElement }} OfflineProgressViewWithCells`
-  ——既去掉 `any`，也让参数/返回值误用能被 tsc 抓到（与 `views/character.js:424` 的 `EquipAllView & { Wt: ... }` 同一手法）。该文件 `@type {any}` 从 9 降到 1（剩下的是 `views/results.js:222` 对 `b.characterStunnedCount - this.stunnedCountBaseline` 的数值表达式 cast）。
+  ——既去掉 `any`，也让参数/返回值误用能被 tsc 抓到（与 `views/character.js:445` 的 `EquipAllView & { hasImprovement: ... }` 同一手法）。该文件 `@type {any}` 从 9 降到 1（剩下的是 `views/results.js:222` 对 `b.characterStunnedCount - this.stunnedCountBaseline` 的数值表达式 cast）。
 
 ## 4. 继续收窄的配方（未做，按需推进）
 
