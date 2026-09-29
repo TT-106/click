@@ -16,6 +16,18 @@ import traverseModule from '@babel/traverse';
 
 const traverse = traverseModule.default ?? traverseModule;
 const SINGLE = /^[A-Za-z]$/;
+// --cryptic：把混淆器风格的两位短名（qa / la / Gb / Ua 这类）一并纳入改名范围。
+// 默认口径保持不变（只名单字母），避免影响正在并行使用本工具的任务；
+// 白名单外的短名才算债，新增白名单项必须在 review 里说明理由。
+const CRYPTIC_ALLOW = new Set([
+  'x', 'y', 'z',
+  'id', 'to', 'on', 'in', 'at', 'if', 'no', 'ok', 'is', 'of',
+  'xp', 'ui', 'db', 'hq',
+]);
+const WANT_CRYPTIC = process.argv.includes('--cryptic');
+const MATCH = WANT_CRYPTIC
+  ? (name) => /^[A-Za-z]{1,2}$/.test(name) && !CRYPTIC_ALLOW.has(name)
+  : (name) => SINGLE.test(name);
 const arg = (n, f = null) => {
   const i = process.argv.indexOf('--' + n);
   if (i === -1) return f;
@@ -87,19 +99,19 @@ traverse(parse(src, { sourceType: 'module' }), {
     const key = fnKeyFor(p);
     if (!key) return;
     for (const b of Object.values(p.scope.bindings)) {
-      if (!SINGLE.test(b.identifier.name)) continue;
+      if (!MATCH(b.identifier.name)) continue;
       if (b.scope !== p.scope && !(b.kind === 'var' && b.scope.parent === p.scope)) continue;
       push(key, b);
     }
   },
   Program(p) {
     for (const b of Object.values(p.scope.bindings)) {
-      if (SINGLE.test(b.identifier.name) && b.scope === p.scope) push('@module', b);
+      if (MATCH(b.identifier.name) && b.scope === p.scope) push('@module', b);
     }
   },
   Scope(p) {
     for (const b of Object.values(p.scope.bindings)) {
-      if (SINGLE.test(b.identifier.name) && !seenStarts.has(b.identifier.start)) push('@other', b);
+      if (MATCH(b.identifier.name) && !seenStarts.has(b.identifier.start)) push('@other', b);
     }
   },
 });
@@ -141,7 +153,7 @@ function literalMultiset(text) {
 
 if (arg('report')) {
   const rows = scanBindings();
-  console.log(fileRel + ': 单字母绑定 ' + rows.length + ' 个，函数键 ' + new Set(rows.map((r) => r.key)).size + ' 个');
+  console.log(`${fileRel}: ${WANT_CRYPTIC ? '短名（1–2 字母，白名单外）' : '单字母'}绑定 ${rows.length} 个，函数键 ${new Set(rows.map((r) => r.key)).size} 个`);
   for (const r of rows) {
     const where = (r.toLine > r.fromLine || r.violations > 0)
       ? '行 ' + r.fromLine + '-' + r.toLine + ' 重赋值 ' + r.violations
@@ -233,7 +245,7 @@ const left = scanBindingsOf(out);
 function scanBindingsOf(text) {
   let n = 0;
   traverse(parse(text, { sourceType: 'module' }), {
-    Scope(p) { for (const b of Object.values(p.scope.bindings)) if (SINGLE.test(b.identifier.name)) n += 1; },
+    Scope(p) { for (const b of Object.values(p.scope.bindings)) if (MATCH(b.identifier.name)) n += 1; },
   });
   return n;
 }
