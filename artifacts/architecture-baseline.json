@@ -3,7 +3,7 @@
   "filesWithSingleLetterBindings": 31,
   "crypticBindings": 154,
   "allowListedBindings": 29,
-  "gameImporters": 33,
+  "gameImporters": 28,
   "largestScc": 41,
   "perFile": {
     "src/engine/modules/characters/party.js": 16,

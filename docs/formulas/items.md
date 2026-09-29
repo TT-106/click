@@ -192,14 +192,14 @@ P(不变)   = 0.85 · (1 − min(1, 0.1 + b))
 `src/engine/modules/core/math.js:72-80`
 
 ```js
-export function scaleByLevel(a, b, c) {
-  a = Math.max(0, a - 1);
-  return floorNumber(c * (b.base + b.coefficient * Math.pow(a, b.power) * Math.pow(b.growth, a)));
+export function scaleByLevel(level, curve, multiplier) {
+  level = Math.max(0, level - 1);
+  return floorNumber(multiplier * (curve.base + curve.coefficient * Math.pow(level, curve.power) * Math.pow(curve.growth, level)));
 }
-export function randomizeScaledValue(a, b, c) {
-  a = scaleByLevel(a, b, c);
-  b = 1.1 - 0.2 * Math.random();
-  return floorNumber(a * b);
+export function randomizeScaledValue(a, curve, multiplier) {
+  a = scaleByLevel(a, curve, multiplier);
+  var jitterFactor = 1.1 - 0.2 * Math.random();
+  return floorNumber(a * jitterFactor);
 }
 ```
 
@@ -209,7 +209,7 @@ value(level, curve, mult) = floor( floor( mult · (base + coef·(level−1)^powe
 
 - 等级先 `−1` 再求幂：`level=1` 时曲线值恰为 `floor(mult·base)`。
 - 抖动区间 `[0.9, 1.1)`，**两次 floor**（曲线一次、抖动一次）。
-- `floorNumber` 在 `< 2^31` 时用 `a | 0`（向零截断），否则 `Math.floor`：`core/math.js:66-68`。
+- `floorNumber` 在 `< 2^31` 时用 `value | 0`（向零截断），否则 `Math.floor`：`core/math.js:66-68`。
 
 ### I-6 `itemStatCurve` 的具体参数与实算
 
@@ -300,13 +300,13 @@ export function getItemStatLabel(a) {
 
 ### I-10 槽位 → 属性类型：来自职业定义，不来自道具
 
-`src/engine/modules/characters/character.js:46-55`
+`src/engine/modules/characters/character.js:47-56`
 
 ```js
   if (d = d.slotStatBonusList) {
     a = {};
-    for (c = 0; c < d.length; c++) {
-      a[d[c].slot] = d[c].statType;
+    for (var slotStatBonusIndex = 0; slotStatBonusIndex < d.length; slotStatBonusIndex++) {
+      a[d[slotStatBonusIndex].slot] = d[slotStatBonusIndex].statType;
     }
     d = a;
   } else {
@@ -530,18 +530,18 @@ export function spawnItemDrop(dropRegistry, x, y, room, monsterLevel, generator,
 
 ### I-19 宝箱/武器架/书架（房间侧内容）
 
-`src/engine/modules/loot/treasure.js:54-65`
+`src/engine/modules/loot/treasure.js:85-96`
 
 ```js
-  var b = game.treasure;
-    c = 0 < getMonsters().length;
-  if (!getRoomTreasure(b, a)) {
+  var treasureRegistry = treasureRegistryRef();
+    var hasMonsters = 0 < getMonsters().length;
+  if (!getRoomTreasure(treasureRegistry, a)) {
     if (3 != a.encounterType) {
-      if (!c && 2 > a.doorList.length) {
+      if (!hasMonsters && 2 > a.doorList.length) {
         return;
       }
-      c = globalUpgradeDefinitions.treasureChance.currentValue / 100;
-      if (Math.random() > c) {
+      var treasureSpawnChance = globalUpgradeDefinitions.treasureChance.currentValue / 100;
+      if (Math.random() > treasureSpawnChance) {
         return;
       }
     }
@@ -550,7 +550,7 @@ export function spawnItemDrop(dropRegistry, x, y, room, monsterLevel, generator,
 - 门前置：房内已无怪物且房门数 `<2` → 不放宝箱。
 - 概率门：`treasureChance` 基础 5 / +2 / 上限 20（`content/balance.js:429-441`）；连续比较 `Math.random() > v/100` → P = v/100。
 - `room.Yp === 3`（财宝房）跳过前置与概率门，必定放箱。财宝房由 `randomTreasureRoom` 药水在揭示房间时以 25% 概率就地改写房型：`world/rooms.js:57-58`。财宝房内每个内圈格子 80% 概率生成 `2 · rollGoldDrop()` 的金堆：`world/rooms.js:190-201`。
-- 开箱产出（`characters/character.js:1080-1126`）由 `Mf` 分类：`1`=财宝箱（金 10+U[0,9] 份 + 道具 7+U[0,7] + 卷轴 2+U[0,4] + 药水 U[0,1]）、`2`=武器架（道具 + 卷轴）、`3`=书架（仅卷轴）。道具用等级/品质加成 `CHEST_ITEM_LEVEL_BONUS=10`、`CHEST_ITEM_QUALITY_BONUS=15`（`content/balance.js:293-294`），见 I-2、I-4。`Mf` 与 `ve` 表条目的对应见 `runtime/game.js:219-348`。
+- 开箱产出（`characters/character.js:1081-1127`）由 `Mf` 分类：`1`=财宝箱（金 10+U[0,9] 份 + 道具 7+U[0,7] + 卷轴 2+U[0,4] + 药水 U[0,1]）、`2`=武器架（道具 + 卷轴）、`3`=书架（仅卷轴）。道具用等级/品质加成 `CHEST_ITEM_LEVEL_BONUS=10`、`CHEST_ITEM_QUALITY_BONUS=15`（`content/balance.js:293-294`），见 I-2、I-4。`Mf` 与 `ve` 表条目的对应见 `runtime/game.js:219-348`。
 
 ### I-20 卷轴掉落的取样池
 

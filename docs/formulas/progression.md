@@ -15,14 +15,14 @@
 `src/engine/modules/core/math.js:72-80`
 
 ```js
-export function scaleByLevel(a, b, c) {
-  a = Math.max(0, a - 1);
-  return floorNumber(c * (b.base + b.coefficient * Math.pow(a, b.power) * Math.pow(b.growth, a)));
+export function scaleByLevel(level, curve, multiplier) {
+  level = Math.max(0, level - 1);
+  return floorNumber(multiplier * (curve.base + curve.coefficient * Math.pow(level, curve.power) * Math.pow(curve.growth, level)));
 }
-export function randomizeScaledValue(a, b, c) {
-  a = scaleByLevel(a, b, c);
-  b = 1.1 - 0.2 * Math.random();
-  return floorNumber(a * b);
+export function randomizeScaledValue(a, curve, multiplier) {
+  a = scaleByLevel(a, curve, multiplier);
+  var jitterFactor = 1.1 - 0.2 * Math.random();
+  return floorNumber(a * jitterFactor);
 }
 ```
 
@@ -33,7 +33,7 @@ scaleByLevel(x, curve, mult) = floor( mult · (curve.base + curve.coefficient ·
 三条全局性质（后文所有曲线公式都隐含）：
 
 1. **先 `x−1` 再求幂**：`x ≤ 1` 一律被 `Math.max(0, …)` 钳到 0，此时结果 = `floor(mult · base)`。
-2. **单次向下取整**：`floorNumber` 在 `< 2^31` 时用 `a | 0`（向零截断），否则 `Math.floor`（`core/math.js:66-68`）。
+2. **单次向下取整**：`floorNumber` 在 `< 2^31` 时用 `value | 0`（向零截断），否则 `Math.floor`（`core/math.js:66-68`）。
 3. **无上限**：不存在任何"最高等级/最高价"钳制；钳制由调用方的 `maxValue`/`if` 完成。
 4. `randomizeScaledValue` 的 ±10% 抖动只被道具与怪物掉落使用；**所有价格/经验曲线都不抖动**。
 
@@ -48,19 +48,19 @@ scaleByLevel(x, curve, mult) = floor( mult · (curve.base + curve.coefficient ·
 | `spiritCurve` | 1.5 | 15 | 1.017 | 85 | `maxSpirit.levelValue` |
 | `damageCurve` | 1.6 | 25 | 1.017 | 22 | `spellSpiritCost` |
 | `armorCurve` | 1.8 | 15 | 1.015 | 15 | `armor / attackRating / defenceRating / damage` 四条 `levelValue` |
-| `monsterHealthCurve` | 1.7 | 1 | 1.0017 | 30 | → `damage` → 怪物 `damage.levelValue` |
-| `monsterSpiritCurve` | 1.7 | 1 | 1.0017 | 25 | → `armor` → 怪物 `armor.levelValue` |
+| `monsterDamageCurve` | 1.7 | 1 | 1.0017 | 30 | → `damage` → 怪物 `damage.levelValue` |
+| `monsterArmorCurve` | 1.7 | 1 | 1.0017 | 25 | → `armor` → 怪物 `armor.levelValue` |
 | `monsterAttackCurve` | 1.7 | 1 | 1.0017 | 30 | → `attackRating` → 怪物 `attackRating.levelValue` |
 | `monsterDefenceCurve` | 1.7 | 1 | 1.0017 | 25 | → `defenceRating` → 怪物 `defenceRating.levelValue` |
-| `monsterDamageCurve` | 1.7 | 1 | 1.0018 | 15 | → `maxHealth` → 怪物 `maxHealth.levelValue` |
-| `monsterArmorCurve` | 1.24 | 1 | 1.0002 | 4 | → `experienceReward` = 每杀经验 |
+| `monsterHealthCurve` | 1.7 | 1 | 1.0018 | 15 | → `maxHealth` → 怪物 `maxHealth.levelValue` |
+| `monsterExperienceCurve` | 1.24 | 1 | 1.0002 | 4 | → `experienceReward` = 每杀经验 |
 | `itemStatCurve` / `itemGoldCurve` | 1.8 | 15 | 1.015 | 15 | 道具属性/金价 |
 | `dungeonPriceCurve` | 1.7 | 120 | 1.018 | 100 | 地牢农场价 |
 | `monsterUnlockPriceCurve` | 1.02 | 100 | 1.01 | 100 | 怪物等级解锁/退休价 |
 | `scrollPriceCurve` | 1.4 | 250 | 1.018 | 100 | 卷轴解锁/升级价 |
 | `globalUpgradePriceCurve` | 1.02 | 50 | 1.01 | 100 | 全局升级价（杀戮支付） |
 
-`monster*Curve` 的名字与它最终喂给哪个属性**是错位的**（`damage ← monsterHealthCurve`、`maxHealth ← monsterDamageCurve`），见 §7。曲线字段名含义未在代码内命名，上表"用途"列由赋值点反推，置信度高。
+`monster*Curve` 的名字与它喂给的属性**一致**（`damage ← monsterDamageCurve`、`maxHealth ← monsterHealthCurve`、`armor ← monsterArmorCurve`、经验 ← `monsterExperienceCurve`）；本文旧版把它记成"错位"（并有源码里不存在的 `monsterSpiritCurve`），那是早期改名批的命名，见 §7 与 `docs/formulas/combat.md` C-15 的同条更正——**每个槽位拿到的 power/coefficient/growth/base 与旧版逐字相同**，只是常数名换了。曲线字段名含义未在代码内命名，上表"用途"列由赋值点反推，置信度高。
 
 ---
 
@@ -68,28 +68,28 @@ scaleByLevel(x, curve, mult) = floor( mult · (curve.base + curve.coefficient ·
 
 ### P-1 需求 XP 的求值点
 
-`src/engine/modules/simulation/characters.js:166-185`
+`src/engine/modules/simulation/characters.js:167-186`
 
 ```js
-export function applyLevelStats(a, b, c) {
-  var d = scaleByLevel(b, experienceCurve, 1);
-  a.experienceToLevelUp = d;
-  d = scaleByLevel(b, armorCurve, c.armorMultiplier);
-  a.armor.levelValue = d;
-  d = scaleByLevel(b, armorCurve, c.attackRatingMultiplier);
-  a.attackRating.levelValue = d;
-  d = scaleByLevel(b, armorCurve, c.defenceRatingMultiplier);
-  a.defenceRating.levelValue = d;
-  d = scaleByLevel(b, armorCurve, c.damageMultiplier);
-  a.damage.levelValue = d;
-  d = scaleByLevel(b, healthCurve, c.maxHealthMultiplier);
-  a.maxHealth.levelValue = d;
+export function applyLevelStats(stats, b, c) {
+  var scaledLevelValue = scaleByLevel(b, experienceCurve, 1);
+  stats.experienceToLevelUp = scaledLevelValue;
+  scaledLevelValue = scaleByLevel(b, armorCurve, c.armorMultiplier);
+  stats.armor.levelValue = scaledLevelValue;
+  scaledLevelValue = scaleByLevel(b, armorCurve, c.attackRatingMultiplier);
+  stats.attackRating.levelValue = scaledLevelValue;
+  scaledLevelValue = scaleByLevel(b, armorCurve, c.defenceRatingMultiplier);
+  stats.defenceRating.levelValue = scaledLevelValue;
+  scaledLevelValue = scaleByLevel(b, armorCurve, c.damageMultiplier);
+  stats.damage.levelValue = scaledLevelValue;
+  scaledLevelValue = scaleByLevel(b, healthCurve, c.maxHealthMultiplier);
+  stats.maxHealth.levelValue = scaledLevelValue;
   c = scaleByLevel(b, spiritCurve, c.maxSpiritMultiplier);
-  a.maxSpirit.levelValue = c;
-  a.health = floorNumber(statValue(a.maxHealth));
-  a.spirit = statValue(a.maxSpirit);
+  stats.maxSpirit.levelValue = c;
+  stats.health = floorNumber(statValue(stats.maxHealth));
+  stats.spirit = statValue(stats.maxSpirit);
   b = scaleByLevel(b, damageCurve, 1);
-  a.spellSpiritCost = b;
+  stats.spellSpiritCost = b;
 }
 ```
 
@@ -126,9 +126,9 @@ XP 侧只做累加，**不检查阈值**：
 `src/engine/modules/characters/party.js:53-56`
 
 ```js
-export function addExperience(a) {
-  var b = game.state.party;
-  b.experiencePoints += a;
+export function addExperience(experiencePointsToAdd) {
+  var party = game.state.party;
+  party.experiencePoints += experiencePointsToAdd;
 }
 ```
 
@@ -517,21 +517,21 @@ if (c = game.state.party.kills >= (…).getCost()) {
 
 即"杀戮够 + **队伍最低等级** ≥ 目标怪物等级 + 已解锁窗口未满 5 级"。`VISIBLE_MONSTER_LEVELS = 5`（`content/balance.js:443`）：含义未在代码内命名，推断为"同时可遇到的怪物等级带宽上限（滑动窗口）"，依据是它只与 `1 + maxUnlockedLevel − minUnlockedLevel` 比较；置信中。
 
-退休（`progression/upgrades.js:735-751`）用**同一条曲线**，但下标是退休线 `minUnlockedLevel` 本身：`Cs = scaleByLevel(Yd, monsterUnlockPriceCurve, 1)`（`Yd` 为 `game.monsterCatalog.minUnlockedLevel` 的快照），`实付 = floor(Cs · itemCostBonus)`，门为 `Yd < getPartyMinLevel() && Yd < maxUnlockedLevel − 1`。退休后 `minUnlockedLevel++` 且 `delete en[Yd]`（`:713-718`）——等级组缓存被丢弃，下次进该等级重新随机生成 20 个怪类（`combat/encounters.js:225-248`）。
+退休（`progression/upgrades.js:735-751`）用**同一条曲线**，但下标是退休线 `minUnlockedLevel` 本身：`Cs = scaleByLevel(Yd, monsterUnlockPriceCurve, 1)`（`Yd` 为 `game.monsterCatalog.minUnlockedLevel` 的快照），`实付 = floor(Cs · itemCostBonus)`，门为 `Yd < getPartyMinLevel() && Yd < maxUnlockedLevel − 1`。退休后 `minUnlockedLevel++` 且 `delete en[Yd]`（`:713-718`）——等级组缓存被丢弃，下次进该等级重新随机生成 20 个怪类（`combat/encounters.js:226-249`）。
 
 ### P-7 卷轴解锁 / 升级价（金币）
 
 `src/engine/modules/combat/scrolls.js:61-63`
 
 ```js
-export function getScrollUpgradeCost(a) {
-  return scaleByLevel(a.locked ? a.baseCapacity : a.baseCapacity + (a.upgradeCount + 1) * a.capacityIncrement, scrollPriceCurve, 1);
+export function getScrollUpgradeCost(scroll) {
+  return scaleByLevel(scroll.locked ? scroll.baseCapacity : scroll.baseCapacity + (scroll.upgradeCount + 1) * scroll.capacityIncrement, scrollPriceCurve, 1);
 }
 ```
 
 ```
 价 = floor( 100 + 250 · (idx − 1)^1.4 · 1.018^(idx − 1) ),
-idx = 未解锁 ? sg : sg + (upgradeCount + 1)·Yi          // Yi = 4（全部 6 条）
+idx = 未解锁 ? baseCapacity : baseCapacity + (upgradeCount + 1)·capacityIncrement   // capacityIncrement = 4（全部 6 条）
 ```
 
 `[关键结构]` 同一个 `idx` **既当价格档位又当等级门槛**（`progression/upgrades.js:1096-1107`）：
@@ -545,9 +545,9 @@ if (a.locked) {
   this.canPurchase = a.upgradeCount < a.Qh && c >= d && game.state.party.gold >= a.upgradeCost;
 ```
 
-`c` = `scrollCaster.stats.characterLevel`（= 队伍最低等级，§P-2）。`sg` 为"解锁等级"、`Qh` 为"最大升级次数"（含义由 `getScrollLabel` 的 `II…VIII` 上限 `:64-85` 与 `upgradeCount < Qh` 反推，置信高）。实算档位价：`idx 0 → 100`、`3 → 783`、`6 → 2701`、`9 → 5399`、`12 → 8832`、`15 → 13011`。
+`c` = `scrollCaster.stats.characterLevel`（= 队伍最低等级，§P-2）。上方示意里的 `sg`/`Qh` 即源码的 `baseCapacity`/`maxCharges`：`baseCapacity` 为"解锁等级"、`maxCharges` 为"最大升级次数"（含义由 `getScrollLabel` 的 `II…VIII` 上限 `:64-85` 与 `upgradeCount < maxCharges` 反推，置信高）。实算档位价：`idx 0 → 100`、`3 → 783`、`6 → 2701`、`9 → 5399`、`12 → 8832`、`15 → 13011`。
 购买执行：`progression/upgrades.js:1067-1095`（`spendGold(rn)` → 解锁或 `upgradeCount++` → 重算 `rn/rg/lx`）。
-`[疑似遗留怪癖]` `scaleByLevel(0, …)` 走 `Math.max(0, −1) = 0` → `shockScroll`（`sg:0`）的"解锁价"与"1 级升级价"同为 100，且开局已被视为解锁（`combat/scrolls.js:209` `ts(0 < sg, 0)`，`a=false` 才解锁）。
+`[疑似遗留怪癖]` `scaleByLevel(0, …)` 走 `Math.max(0, −1) = 0` → `shockScroll`（`baseCapacity: 0`）的"解锁价"与"1 级升级价"同为 100，且开局已被视为解锁（`combat/scrolls.js:209` `applyLockedAndUpgradeState(0 < …baseCapacity, 0)`，`locked` 传 `false` 才解锁）。
 
 ### P-8 成就领取
 
@@ -888,43 +888,43 @@ l = Math.min(40, game.state.victoryCount); if (0 < l) { p.skillPoints = l; … }
 
 ## 7. 怪物侧成长（等级 × 阶位）
 
-`src/engine/modules/combat/encounters.js:200-212`
+`src/engine/modules/combat/encounters.js:201-213`
 
 ```js
-export function advanceMonsterTypeRank(a) {
-  if (!(5 <= a.rank)) {
-    a.rank++;
-    a.rankKillThreshold += MONSTER_RANK_KILL_STEP;
-    var b = 10 * (a.level - 1) + a.rank;
-    a.maxHealth = scaleByLevel(b, monsterHealthCurve, 1);
-    a.experienceReward = scaleByLevel(b, monsterExperienceCurve, 1);
-    a.damage = scaleByLevel(b, monsterDamageCurve, 1);
-    a.armor = scaleByLevel(b, monsterArmorCurve, 1);
-    a.attackRating = scaleByLevel(b, monsterAttackCurve, 1);
-    a.defenceRating = scaleByLevel(b, monsterDefenceCurve, 1);
+export function advanceMonsterTypeRank(monsterType) {
+  if (!(5 <= monsterType.rank)) {
+    monsterType.rank++;
+    monsterType.rankKillThreshold += MONSTER_RANK_KILL_STEP;
+    var effectiveLevel = 10 * (monsterType.level - 1) + monsterType.rank;
+    monsterType.maxHealth = scaleByLevel(effectiveLevel, monsterHealthCurve, 1);
+    monsterType.experienceReward = scaleByLevel(effectiveLevel, monsterExperienceCurve, 1);
+    monsterType.damage = scaleByLevel(effectiveLevel, monsterDamageCurve, 1);
+    monsterType.armor = scaleByLevel(effectiveLevel, monsterArmorCurve, 1);
+    monsterType.attackRating = scaleByLevel(effectiveLevel, monsterAttackCurve, 1);
+    monsterType.defenceRating = scaleByLevel(effectiveLevel, monsterDefenceCurve, 1);
   }
 }
 ```
 
-`src/engine/modules/combat/encounters.js:192-199`
+`src/engine/modules/combat/encounters.js:193-200`
 
 ```js
-export function recordMonsterTypeKill(a) {
-  a.killCount++;
-  a.rankProgressKills++;
-  if (a.rankProgressKills >= a.rankKillThreshold && 5 > a.rank) {
-    a.rankProgressKills -= a.rankKillThreshold;
-    advanceMonsterTypeRank(a);
+export function recordMonsterTypeKill(monsterType) {
+  monsterType.killCount++;
+  monsterType.rankProgressKills++;
+  if (monsterType.rankProgressKills >= monsterType.rankKillThreshold && 5 > monsterType.rank) {
+    monsterType.rankProgressKills -= monsterType.rankKillThreshold;
+    advanceMonsterTypeRank(monsterType);
   }
 }
 ```
 
-- 曲线输入 `b = 10·(怪物等级 − 1) + 阶位`，阶位 `Sj ∈ [1,5]`，`MONSTER_RANK_KILL_STEP = 20`（`content/balance.js:117`）。`Sj` 与 `ek` 同步增长（构造即 `advanceMonsterTypeRank`：`Sj 0→1`、`ek 0→20`，`combat/encounters.js:189-190`），故**处于阶位 `Sj` 时升下一阶还需 `20·Sj` 次**（20 → 40 → 60 → 80 → 100，累进而非固定步长），`rankProgressKills` 是"自上次升阶以来"的余数计数器（升阶时 `ml -= ek` 保留余数）。`Sj = 5` 后不再推进但 `ml/xq` 继续累加。`killCount` = 该怪类历史总杀（存档字段 `kills`，`persistence/entities.js:189-195`）。
-- `experienceReward`（`monsterArmorCurve`，power 1.24 / growth 1.0002）是**每杀经验**（§P-3），其增长明显慢于战斗属性曲线。含义未在代码内命名，由唯一读者 `addExperience(….No × doubleExperienceModifier.currentValue)`（`simulation/characters.js:290` 变量名 `f.No`、`combat/actions.js:364` 变量名 `d.No`）反推，置信高。
-- 曲线→属性映射错位（`combat/encounters.js:76-83`）：`damage ← Gp(monsterHealthCurve)`、`armor ← Ep(monsterSpiritCurve)`、`attackRating ← Fp(monsterAttackCurve)`、`defenceRating ← Hp(monsterDefenceCurve)`、`maxHealth ← $o(monsterDamageCurve)`。`[疑似遗留怪癖]` 伤害与生命取了对方名字的曲线；数值按原样记录。
-- 脆弱怪物药水把 5 条 levelValue 统一乘 0.7（`combat/encounters.js:69-75`）。
-- 遭遇规模：`minMonsters + randomInt(max(min, maxMonsters) − minMonsters) + extraMonstersModifier`（`combat/encounters.js:49-52`，首领房另有 `maxMonsters.baseValue` 作下限，`combat/encounters.js:145-148`）。
-- 怪物等级取自滑动窗口：`catalog.minUnlockedLevel + randomInt(1 + catalog.maxUnlockedLevel − catalog.minUnlockedLevel)`（`combat/encounters.js:55`）。
+- 曲线输入 `effectiveLevel = 10·(怪物等级 − 1) + rank`，`rank ∈ [1,5]`，`MONSTER_RANK_KILL_STEP = 20`（`content/balance.js:117`）。`rank` 与 `rankKillThreshold` 同步增长（构造即 `advanceMonsterTypeRank`：`rank 0→1`、`rankKillThreshold 0→20`，`combat/encounters.js:190-191`），故**处于阶位 `rank` 时升下一阶还需 `20·rank` 次**（20 → 40 → 60 → 80 → 100，累进而非固定步长），`rankProgressKills` 是"自上次升阶以来"的余数计数器（升阶时 `rankProgressKills -= rankKillThreshold` 保留余数）。`rank = 5` 后不再推进但 `rankProgressKills`/`killCount` 继续累加。`killCount` = 该怪类历史总杀（存档字段 `kills`，`persistence/entities.js:189-195`）。
+- `experienceReward`（`monsterExperienceCurve`，power 1.24 / growth 1.0002）是**每杀经验**（§P-3），其增长明显慢于战斗属性曲线。含义未在代码内命名，由唯一读者 `addExperience(….experienceReward × doubleExperienceModifier.currentValue)`（`simulation/characters.js:291` 变量名 `monsterType.experienceReward`、`combat/actions.js:365` 变量名 `defeatedMonsterType.experienceReward`）反推，置信高。
+- 曲线→属性映射（`combat/encounters.js:77-84` 把 `monsterType.*` 写进 `stats.*.levelValue`；曲线取用点见 `encounters.js:206-211`）：`maxHealth ← monsterHealthCurve`、`damage ← monsterDamageCurve`、`armor ← monsterArmorCurve`、`attackRating ← monsterAttackCurve`、`defenceRating ← monsterDefenceCurve`。旧版本条记为"映射错位"（伤害与生命取了对方名字的曲线），那是早期改名批的命名，当前源码名实一致；**每个槽位拿到的曲线参数与实算数值与旧版逐字相同**，详见 `docs/formulas/combat.md` C-15 的同条更正。
+- 脆弱怪物药水把 5 条 levelValue 统一乘 0.7（`combat/encounters.js:70-76`）。
+- 遭遇规模：`minMonsters + randomInt(max(min, maxMonsters) − minMonsters) + extraMonstersModifier`（`combat/encounters.js:50-53`，首领房另有 `maxMonsters.baseValue` 作下限，`combat/encounters.js:146-149`）。
+- 怪物等级取自滑动窗口：`catalog.minUnlockedLevel + randomInt(1 + catalog.maxUnlockedLevel − catalog.minUnlockedLevel)`（`combat/encounters.js:56`）。
 
 ---
 

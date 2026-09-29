@@ -161,6 +161,21 @@
   反向验证：把 movement 模块里 `effectItem` 赋值的旧行号（搬到注入块之前是 202 至 204 行，现在是 232 至 233 行）故意写成引用留在文档里，检查器会把它报进待复核清单；这条已从文档里改写掉，以免文档自身制造假阳性。
 
 
+## 2026-09-29 R29（regions 退出直连 + 上一提交数字的自纠）
+
+- `world/regions.js` 的 17 处 `game.regions` / `game.castles` / `game.world` 读取改为
+  `bindWorldRegions(game.regions, game.castles, () => game.world)`：前两者按引用绑（只构造一次、
+  无整对象重赋值），`world` 必须走回调（`game.world = new WorldMap()` 在两条重置路径上换容器本身）。
+  探针实测：未绑定时抛点名错误；连续两次调用之间把 provider 的返回值换掉，provider 计数随之从 1 到 2，
+  证明"每次现读当前 world"——按引用绑做不到这一点。
+- `npm run audit:arch` 实测 game 直连 **29 → 28**；本轮整波合计 33 → 28。
+- 自纠：d4c25da 的提交信息写"33 → 30"，那个 30 取自当时还没修好说明符解析的 plan 工具（漏 `./game.js`）。
+  在 d4c25da 自己的快照上重测得 **29**。历史提交不去改写，以这条记录和 docs 为准；
+  教训是"引用别处的数字必须先在自己脚下的树上复量一次"——尤其当那个工具的已知缺陷正是我本轮刚修的那个。
+- 结构对账授权清单随落地清空（0 条），`artifacts/architecture-baseline.json` 按当前实测重写，
+  这样"退回 33 个直连"不再被门禁当作允许范围。
+
+
 ## 尚未完成的主要工作
 
 1. **拆开中心状态与循环依赖**：R27 续实测 33 个模块直接导入 `runtime/game.js`（`world/pathfinding.js`、`world/travel-costs.js`、`progression/achievements.js`、`views/monsters.js` 已退出），一个强连通分量仍包含 41 个模块；74 个初始化调用仍依赖固定顺序。装备目录、物品生成、角色属性、状态效果、内容参数、冒险点数、特效动画目录、背包与旅行代价已退出该循环，但整个领域图仍需继续拆分。应按领域建立明确输入与组合根，再逐个移动依赖方向，避免只增加转发包装。

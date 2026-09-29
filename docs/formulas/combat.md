@@ -54,23 +54,23 @@
 
 ### C-1 回合推进（战斗所见的时间单位）
 
-`src/engine/modules/simulation/tick.js:27-33`
+`src/engine/modules/simulation/tick.js:28-34`
 
 ```js
-export function advanceSimulation(a) {
-  var b = game.lifecycle;
-  b.turnTimeAccumulator += a;
-  if (15 <= b.turnTimeAccumulator) {
+export function advanceSimulation(simulationUnits) {
+  var lifecycle = game.lifecycle;
+  lifecycle.turnTimeAccumulator += simulationUnits;
+  if (15 <= lifecycle.turnTimeAccumulator) {
     game.state.turnNumber++;
-    b.turnTimeAccumulator -= 15;
-    b.regenTurnCounter++;
+    lifecycle.turnTimeAccumulator -= 15;
+    lifecycle.regenTurnCounter++;
 ```
 
-入参 `a` 是"60Hz 帧当量"（`simulation/loop.js:53` `c = a / this.frameDuration;`，`frameDuration = 1E3 / 60`，`loop.js:24`）。15 个帧当量 = 1 回合 = 250ms（`loop.js:25` `this.turnDuration = 250;`，与离线结算口径一致）。
+入参 `simulationUnits` 是"60Hz 帧当量"（`simulation/loop.js:54` `var frameSimulationUnits = a / this.frameDuration;`，`frameDuration = 1E3 / 60`，`loop.js:25`）。15 个帧当量 = 1 回合 = 250ms（`loop.js:26` `this.turnDuration = 250;`，与离线结算口径一致）。
 
 **所有战斗冷却/持续时间都以 `turnNumber` 计**，与墙钟无关；离线补算按每回合 250ms 记账（`docs/time-model.md` 第 10 条）。
 
-`[疑似遗留怪癖]` `Jo -= 15` 而非 `Jo = 0`：一帧内帧差超过 15 单位时余量结转，所以掉帧后一帧可推进多个回合，`b.Jo` 恒 < 15。
+`[疑似遗留怪癖]` `turnTimeAccumulator -= 15` 而非 `= 0`：一帧内帧差超过 15 单位时余量结转，所以掉帧后一帧可推进多个回合，`lifecycle.turnTimeAccumulator` 恒 < 15。
 
 ### C-2 攻击冷却（含 `attackCooldownBonus` 的确切作用域）
 
@@ -82,17 +82,17 @@ export function getAttackCooldown(stats, includeUpgradeBonus) {
 }
 ```
 
-`src/engine/modules/characters/character.js:130-138`
+`src/engine/modules/characters/character.js:131-139`
 
 ```js
-export function markAttackTurn(a) {
-  a.lastAttackTurn = game.state.turnNumber;
+export function markAttackTurn(character) {
+  character.lastAttackTurn = game.state.turnNumber;
 }
-export function canAttack(a) {
-  return game.state.turnNumber - a.lastAttackTurn >= getAttackCooldown(a.stats, isAdventurerOrMinion(a));
+export function canAttack(character) {
+  return game.state.turnNumber - character.lastAttackTurn >= getAttackCooldown(character.stats, isAdventurerOrMinion(character));
 }
-export function isAdventurerOrMinion(a) {
-  return a.characterType === ADVENTURER_TYPE || 1 === a.characterType || 5 === a.characterType;
+export function isAdventurerOrMinion(character) {
+  return character.characterType === ADVENTURER_TYPE || 1 === character.characterType || 5 === character.characterType;
 }
 ```
 
@@ -101,7 +101,7 @@ export function isAdventurerOrMinion(a) {
 - `attackCooldownBonus.currentValue` **只作用于第二参数为真的三类**（0 冒险者、1 随从、5 卷轴施法者）。怪物(2)/守卫(3)/首领(4) 走 `Math.max(4, 12 - attackCooldownReduction)`，不吃该加成。
 - 来源：冒险点升级 `bonusIndex 11`「永久快速攻击」，`levelIncrement: -1`，目录里有 `coolDownTurn1`/`coolDownTurn2` 两条（`progression/upgrades.js:177-181,243-244`；`progression/points.js:372-383`，各 `pointCost: 11E6`）。
 - 技能减免：`statType 10` → `attackCooldownReduction += c`（`combat/skill-effects.js:72-74`），野蛮人「快速攻击 I/II/III」各 2（`content/skills/barbarian.js:90-110`）。首领固定 `+3`（`content/guardians.js:340-342`）→ 首领冷却 9 回合。
-- 初始上次攻击回合：`character.js:67` `this.au = -3 * getAttackCooldown(this.stats, true);` → 建角即为 `-36`（含 bonus 时随之变化），保证开局第一击不被冷却挡住。
+- 初始上次攻击回合：`character.js:68` `this.lastAttackTurn = -3 * getAttackCooldown(this.stats, true);` → 建角即为 `-36`（含 bonus 时随之变化），保证开局第一击不被冷却挡住。
 
 ### C-3 一次攻击出手时"打几个目标"（多重攻击不是多次攻击）
 
@@ -132,36 +132,36 @@ export function performMultiAttack(attacker, isRangedAttack) {
 - `extraAttackCount`/`extraAttackChance` 默认 0 / `DEFAULT_MULTI_ATTACK_CHANCE = 25`（`stats.js:29-30`、`balance.js:120`）。
 - 分裂出的是**同一帧内的多个独立 `CombatAction`**，各自重掷命中/暴击/护甲（`createAttackAction` 内部各调一次 `calculateAttackDamage`）。
 - 卷轴施法者的射程被写成 `100 * RANGED_ATTACK_RANGE` = **14000 px**，即全房间无衰减。`100` 未在代码内命名，语义为"任意远"，置信度高（同函数另一分支用的是正常 140）。
-- 只有 `extraAttackCount > 0` 才走这条路径（`character.js:442-443`、`:456-457`）；否则单体直攻：
+- 只有 `extraAttackCount > 0` 才走这条路径（`character.js:443-444`、`:457-458`）；否则单体直攻：
 
-`src/engine/modules/characters/character.js:440-467`
+`src/engine/modules/characters/character.js:441-468`
 
 ```js
-      if (2 === a.actionType) {
-        if (a.combatTarget && !a.combatTarget.isDead) {
-          if (0 < a.stats.extraAttackCount) {
-            performMultiAttack(a, false);
+      if (2 === character.actionType) {
+        if (character.combatTarget && !character.combatTarget.isDead) {
+          if (0 < character.stats.extraAttackCount) {
+            performMultiAttack(character, false);
           } else {
-            var yb = a.combatTarget;
-            if (yb) {
-              createAttackAction(a, yb, false);
+            var meleeAttackTarget = character.combatTarget;
+            if (meleeAttackTarget) {
+              createAttackAction(character, meleeAttackTarget, false);
             }
           }
-          if (isAdventurerOrMinion(a)) {
+          if (isAdventurerOrMinion(character)) {
             game.state.statisticsRecorder.recordMeleeAttack();
           }
         }
-      } else if (a.actionType === MELEE_ACTION_TYPE) {
-        if (a.combatTarget && !a.combatTarget.isDead) {
-          if (0 < a.stats.extraAttackCount) {
-            performMultiAttack(a, true);
+      } else if (character.actionType === MELEE_ACTION_TYPE) {
+        if (character.combatTarget && !character.combatTarget.isDead) {
+          if (0 < character.stats.extraAttackCount) {
+            performMultiAttack(character, true);
           } else {
-            var Fb = a.combatTarget;
-            if (Fb) {
-              createAttackAction(a, Fb, true);
+            var rangedAttackTarget = character.combatTarget;
+            if (rangedAttackTarget) {
+              createAttackAction(character, rangedAttackTarget, true);
             }
           }
-          if (isAdventurerOrMinion(a)) {
+          if (isAdventurerOrMinion(character)) {
             game.state.statisticsRecorder.recordRangedAttack();
           }
         }
@@ -251,19 +251,19 @@ export function statValue(stat) {
 
 **没有独立的"base"分量。** 底座 = `itemValue + levelValue`（装备求和 + 等级曲线），技能与法术加成**先相加再统一取整**，且百分比只作用于底座（不复合）。取整次数：`statValue` 全程**一次** `floorNumber`，且只截掉加成部分的余数。
 
-`itemValue` 由 `equipItem` 按槽位重算（`character.js:157-179`）；`levelValue` 由 `applyLevelStats` 写（`simulation/characters.js:166-185`）。
+`itemValue` 由 `equipItem` 按槽位重算（`character.js:158-180`）；`levelValue` 由 `applyLevelStats` 写（`simulation/characters.js:167-186`）。
 
 ### C-8 `floorNumber` 的真实语义（负数会翻向）
 
 `src/engine/modules/core/math.js:66-68`
 
 ```js
-export function floorNumber(a) {
-  return 2147483648 > a ? a | 0 : Math.floor(a);
+export function floorNumber(value) {
+  return 2147483648 > value ? value | 0 : Math.floor(value);
 }
 ```
 
-`a | 0` 是 **int32 向零截断**，不是向下取整：`floorNumber(-0.5) === 0`（真 `Math.floor` 会给 `-1`）。同时 `a >= 2^31` 时才走真 `Math.floor`。这条差异在下面所有含减法的位置都可能显现。
+`value | 0` 是 **int32 向零截断**，不是向下取整：`floorNumber(-0.5) === 0`（真 `Math.floor` 会给 `-1`）。同时 `value >= 2^31` 时才走真 `Math.floor`。这条差异在下面所有含减法的位置都可能显现。
 
 `randomInt`（`core/math.js:44-46`）：
 
@@ -475,25 +475,25 @@ export function calculateSpellDamage(attacker, defender) {
 
 `0.7`（脆弱怪物药水 `modifierId 15`）连乘两次到 `health`（先入 `levelValue` 再入当前血），是当前实现的口径，不是笔误。
 
-`src/engine/modules/combat/encounters.js:200-212`
+`src/engine/modules/combat/encounters.js:201-213`
 
 ```js
-export function advanceMonsterTypeRank(a) {
-  if (!(5 <= a.rank)) {
-    a.rank++;
-    a.rankKillThreshold += MONSTER_RANK_KILL_STEP;
-    var b = 10 * (a.level - 1) + a.rank;
-    a.maxHealth = scaleByLevel(b, monsterHealthCurve, 1);
-    a.experienceReward = scaleByLevel(b, monsterExperienceCurve, 1);
-    a.damage = scaleByLevel(b, monsterDamageCurve, 1);
-    a.armor = scaleByLevel(b, monsterArmorCurve, 1);
-    a.attackRating = scaleByLevel(b, monsterAttackCurve, 1);
-    a.defenceRating = scaleByLevel(b, monsterDefenceCurve, 1);
+export function advanceMonsterTypeRank(monsterType) {
+  if (!(5 <= monsterType.rank)) {
+    monsterType.rank++;
+    monsterType.rankKillThreshold += MONSTER_RANK_KILL_STEP;
+    var effectiveLevel = 10 * (monsterType.level - 1) + monsterType.rank;
+    monsterType.maxHealth = scaleByLevel(effectiveLevel, monsterHealthCurve, 1);
+    monsterType.experienceReward = scaleByLevel(effectiveLevel, monsterExperienceCurve, 1);
+    monsterType.damage = scaleByLevel(effectiveLevel, monsterDamageCurve, 1);
+    monsterType.armor = scaleByLevel(effectiveLevel, monsterArmorCurve, 1);
+    monsterType.attackRating = scaleByLevel(effectiveLevel, monsterAttackCurve, 1);
+    monsterType.defenceRating = scaleByLevel(effectiveLevel, monsterDefenceCurve, 1);
   }
 }
 ```
 
-- 有效等级 `b = 10 * (怪物表等级 - 1) + 阶级`，阶级 1–5，每 `MONSTER_RANK_KILL_STEP = 20` 次击杀升一阶（`encounters.js:192-199`、`balance.js:117`）。
+- 有效等级 `effectiveLevel = 10 * (怪物表等级 - 1) + 阶级`，阶级 1–5，每 `MONSTER_RANK_KILL_STEP = 20` 次击杀升一阶（`encounters.js:193-200`、`balance.js:117`）。
 - 通用曲线式：`core/math.js:72-75`
 
 ```js
@@ -507,17 +507,17 @@ export function scaleByLevel(a, b, c) {
 
 | 曲线 | power | coefficient | growth | base | 实际喂给 |
 |---|---|---|---|---|---|
-| `monsterDamageCurve` | 1.7 | 1 | 1.0018 | 15 | **`maxHealth`**（`maxHealth`） |
-| `monsterHealthCurve` | 1.7 | 1 | 1.0017 | 30 | **`damage`**（`damage`） |
-| `monsterSpiritCurve` | 1.7 | 1 | 1.0017 | 25 | **`armor`**（`armor`） |
+| `monsterHealthCurve` | 1.7 | 1 | 1.0018 | 15 | **`maxHealth`**（`maxHealth`） |
+| `monsterDamageCurve` | 1.7 | 1 | 1.0017 | 30 | **`damage`**（`damage`） |
+| `monsterArmorCurve` | 1.7 | 1 | 1.0017 | 25 | **`armor`**（`armor`） |
 | `monsterAttackCurve` | 1.7 | 1 | 1.0017 | 30 | `attackRating`（`attackRating`） |
 | `monsterDefenceCurve` | 1.7 | 1 | 1.0017 | 25 | `defenceRating`（`defenceRating`） |
-| `monsterArmorCurve` | 1.24 | 1 | 1.0002 | 4 | **经验值 `experienceReward`** |
+| `monsterExperienceCurve` | 1.24 | 1 | 1.0002 | 4 | **经验值 `experienceReward`** |
 
-`[疑似遗留怪癖]` 曲线**名字与用途交叉**（"HealthCurve" 喂 damage、"DamageCurve" 喂血量、"ArmorCurve" 喂经验）。赋值关系本身与原版逐字一致（`archive/original/c2.js:9577-9580` 的 `$o←wi`、`No←xi`、`Gp←yi`、`Ep←zi`），已核；但 `monsterHealthCurve`/`monsterAttackCurve` 与 `monsterSpiritCurve`/`monsterDefenceCurve` 两组参数**完全相同**，因此这两个名字谁对应 `farmStartTurn` 谁对应 `Bi` 无法从数值上区分——改名不影响行为，本文只保证"槽位↔参数"的映射正确。定论需要原始未混淆源或按名取用曲线的第二处消费点。
+`[更正]` 本节旧版把曲线记为**名字与用途交叉**（"HealthCurve 喂 damage、DamageCurve 喂血量、ArmorCurve 喂经验"，并写作 `monsterSpiritCurve`）。当前源码不是这样：`balance.js:45-80` 每条 `monster*Curve` 的名字与 `advanceMonsterTypeRank`（`encounters.js:201-213`）实际喂给的属性**一致**，且源码里根本没有 `monsterSpiritCurve`（`armor` 用的是 `monsterArmorCurve`，经验用的是 `monsterExperienceCurve`）。旧的"交叉"说法是早期改名批的命名，不是原版行为——原版逐字关系为 `archive/original/c2.js:9573-9582` 的 `$o←wi`、`No←xi`、`Gp←yi`、`Ep←zi`，而曲线字面量在 `c2.js:22955-22987`：`wi{1.0018, 15}`、`xi{1.24, 1.0002, 4}`、`yi{1.0017, 30}`、`zi{1.0017, 25}`。**槽位↔参数从未改变**，故本表的 power/coefficient/growth/base 与旧版逐字相同，只有常数名换了。仍不可从数值区分的是：`monsterDamageCurve`/`monsterAttackCurve` 参数完全相同（1.0017/30），`monsterArmorCurve`/`monsterDefenceCurve` 完全相同（1.0017/25）——改名不影响行为，本文只保证"槽位↔参数"的映射正确。
 - 1 级 1 阶普通怪实算：`maxHealth 15`、`damage 30`、`armor 25`、`AR 30`、`DR 25`、`xp 4`。
 
-`src/engine/modules/simulation/characters.js:166-185`（冒险者/随从/首领/卷轴施法者的同一装配口）
+`src/engine/modules/simulation/characters.js:167-186`（冒险者/随从/首领/卷轴施法者的同一装配口）
 
 ```js
 export function applyLevelStats(a, b, c) {
@@ -1036,7 +1036,7 @@ export function getSpellSpiritCost(stats) {
 }
 ```
 
-`spellSpiritCost = scaleByLevel(level, damageCurve, 1)`（`simulation/characters.js:183-184`；`damageCurve` = power 1.6, coefficient 25, growth 1.017, base 22，`balance.js:33-38`）——**耗蓝与伤害共用同一条曲线**。
+`spellSpiritCost = scaleByLevel(level, damageCurve, 1)`（`simulation/characters.js:184-185`；`damageCurve` = power 1.6, coefficient 25, growth 1.017, base 22，`balance.js:33-38`）——**耗蓝与伤害共用同一条曲线**。
 
 - 上限 `Math.min(…, statValue(maxSpirit))` 保证满蓝也够付（若 `maxSpirit < 折后价`，则实际花费被压到 `maxSpirit`，永远不可能"付不起"）。
 - `freeSpellsModifier`（药水 `modifierId 11`，`combat/potions.js:52-53`）为真时**完全免耗**。
@@ -1078,34 +1078,34 @@ export function getSpellSpiritCost(stats) {
 
 ### C-34 回合再生
 
-`src/engine/modules/simulation/tick.js:38-50`
+`src/engine/modules/simulation/tick.js:39-51`
 
 ```js
-      for (c = 0; c < d.length; c++) {
-        var f = d[c].stats,
-          g = statValue(f.maxHealth);
-        if (f.health < g) {
-          var h = Math.max(1, floorNumber(g * (f.baseHealthRegenPercent + f.healthRegenBonus + healthRegenerationBonus.currentValue) / 100));
-          f.health = Math.min(g, f.health + h);
+      for (allyIndex = 0; allyIndex < allies.length; allyIndex++) {
+        var allyStats = allies[allyIndex].stats,
+          maxHealth = statValue(allyStats.maxHealth);
+        if (allyStats.health < maxHealth) {
+          var healthRegen = Math.max(1, floorNumber(maxHealth * (allyStats.baseHealthRegenPercent + allyStats.healthRegenBonus + healthRegenerationBonus.currentValue) / 100));
+          allyStats.health = Math.min(maxHealth, allyStats.health + healthRegen);
         }
-        var l = statValue(f.maxSpirit);
-        if (f.spirit < l) {
-          var n = Math.max(1, floorNumber(l * (f.baseSpiritRegenPercent + f.spiritRegenBonus + spiritRegenerationBonus.currentValue) / 100));
-          f.spirit = Math.min(l, f.spirit + n);
+        var maxSpirit = statValue(allyStats.maxSpirit);
+        if (allyStats.spirit < maxSpirit) {
+          var spiritRegen = Math.max(1, floorNumber(maxSpirit * (allyStats.baseSpiritRegenPercent + allyStats.spiritRegenBonus + spiritRegenerationBonus.currentValue) / 100));
+          allyStats.spirit = Math.min(maxSpirit, allyStats.spirit + spiritRegen);
         }
       }
 ```
 
-- 节律：每 `zD = 3` 回合一次（`tick.js:33-34`、`characters.js:37`）→ 3×250ms = **每 0.75 秒回复一跳**。
+- 节律：每 `regenIntervalTurns = 3` 回合一次（`tick.js:35-36`、`simulation/characters.js:38`）→ 3×250ms = **每 0.75 秒回复一跳**。
 - 基准：`baseHealthRegenPercent = 1`、`baseSpiritRegenPercent = 4`（`stats.js:22-23`）→ 默认每跳回 1% 最大生命、4% 最大法力。
 - 加项：技能 `statType 8/9` → `healthRegenBonus/spiritRegenBonus`；冒险点升级 `bonusIndex 12/13`（各 `+1%`/级，`upgrades.js:245-248`、`balance.js:182-191`）。
 - `Math.max(1, …)` → 任何角色每跳至少回 1 点，**包括 0 血倒地的冒险者**。倒地者因此会自行爬出 0 血状态，但仍 `Kd` 直到 13 号效果过期。
-- **只有友方回血**：`d = getAllies()`（`tick.js:37`）。怪物/守卫/首领**完全没有再生**——`frailMonsters/docileMonsters` 之外没有任何怪物回血口。
+- **只有友方回血**：`allies = getAllies()`（`tick.js:38`）。怪物/守卫/首领**完全没有再生**——`frailMonsters/docileMonsters` 之外没有任何怪物回血口。
 
 ### C-35 其他回复口
 
 - **醒来全回复**：C-25（仅自然到期）。
-- **药水不治疗**：20 种药水定义全部是全局修饰器开关（`combat/potions.js:118-238` + `getPotionModifier` `:30-75`），没有一条直接改 `health`；持续时间 `800 + potionDurationBonus.currentValue` 回合（`simulation/tick.js:112,121`）。
+- **药水不治疗**：20 种药水定义全部是全局修饰器开关（`combat/potions.js:118-238` + `getPotionModifier` `:30-75`），没有一条直接改 `health`；持续时间 `800 + potionDurationBonus.currentValue` 回合（`simulation/tick.js:113,122`）。
 - **战斗中没有"撤退治疗"/ resting**：`RETREAT_HEALTH_RATIO = 0.4`、`RETREAT_SPIRIT_RATIO = 0.3`（`balance.js:124-125`）只用于过门前的撤退判定（`character.js:295`），不产生治疗。
 
 ---
@@ -1114,34 +1114,34 @@ export function getSpellSpiritCost(stats) {
 
 ### C-30 敌我集合（阵营翻转的唯一开关）
 
-`src/engine/modules/combat/encounters.js:175-182`
+`src/engine/modules/combat/encounters.js:176-183`
 
 ```js
-export function getOpponents(a) {
-  var b = game.allies;
-  return a.effects.isConverted ? isHostile(a) ? getMonsters() : b.allies : isHostile(a) ? b.allies : getMonsters();
+export function getOpponents(character) {
+  var allyRegistry = game.allies;
+  return character.effects.isConverted ? isHostile(character) ? getMonsters() : allyRegistry.allies : isHostile(character) ? allyRegistry.allies : getMonsters();
 }
-export function getFriendlyTargets(a) {
-  var b = game.allies;
-  return isHostile(a) ? getMonsters() : b.allies;
+export function getFriendlyTargets(character) {
+  var allyRegistry = game.allies;
+  return isHostile(character) ? getMonsters() : allyRegistry.allies;
 }
 ```
 
-`isHostile`：`character.js:139-141` `return a.characterType === MONSTER_TYPE || 3 === a.characterType || 4 === a.characterType;`
+`isHostile`：`character.js:140-142` `return character.characterType === MONSTER_TYPE || 3 === character.characterType || 4 === character.characterType;`
 
 真值表（`isConverted` 为 `statusEffectTypeId 4` 的产物，`effects.js:70-71`）：
 
 | 未转变 | 对手 | 友方 |
 |---|---|---|
-| 冒险者/随从/卷轴人（0,1,5） | `getMonsters()`（2,3,4） | `game.allies.Pf` |
-| 怪物/守卫/首领（2,3,4） | `game.allies.Pf` | `getMonsters()` |
+| 冒险者/随从/卷轴人（0,1,5） | `getMonsters()`（2,3,4） | `game.allies.allies` |
+| 怪物/守卫/首领（2,3,4） | `game.allies.allies` | `getMonsters()` |
 
 | 已转变（id 4） | 对手 | 友方 |
 |---|---|---|
 | 怪物/守卫/首领 | `getMonsters()`（**同阵营互殴**） | `getMonsters()` |
-| 冒险者/随从 | `game.allies.Pf`（**打自己队**） | `game.allies.Pf` |
+| 冒险者/随从 | `game.allies.allies`（**打自己队**） | `game.allies.allies` |
 
-`game.allies.Pf` 由 `AllyRegistry.reset` 建队时填入全部冒险者（`encounters.js:283-293`），随从在 `spawnMinion` 末尾 `game.minions.Tt(d)` 追加（`characters.js:98` → `encounters.js:294-296`）。`getMonsters()` 返回 `game.monsters.Pi`，`MonsterRegistry.ol` 删除时同时 push 进尸体表 `Og`（`encounters.js:307-317`）。
+`game.allies.allies` 由 `AllyRegistry.reset` 建队时填入全部冒险者（`encounters.js:284-294`），随从在 `spawnMinion` 末尾 `game.minions.Tt(d)` 追加（`characters.js:98` → `encounters.js:295-297`）。`getMonsters()` 返回 `game.monsters.Pi`，`MonsterRegistry.ol` 删除时同时 push 进尸体表 `Og`（`encounters.js:308-318`）。
 
 ### C-31 最近可见对手 / 最近对手（潜行、倒地、转变的过滤差异）
 
@@ -1186,61 +1186,61 @@ export function findNearestOpponent(a) {
 
 ### C-32 嘲讽处理
 
-`src/engine/modules/ai/targeting.js:249-276`
+`src/engine/modules/ai/targeting.js:264-291`
 
 ```js
-export function respondToTaunt(a, b) {
+export function respondToTaunt(attackBehavior, character) {
   if (docileMonstersModifier.currentValue) {
     return false;
   }
-  var c = b.combatTarget;
+  var c = character.combatTarget;
   if (c && c.isDead) {
     c = null;
-    b.setCombatTarget(null);
+    character.setCombatTarget(null);
   }
   if (c && c.effects.isStunned) {
     c = null;
-    b.setCombatTarget(null);
+    character.setCombatTarget(null);
   }
   if (c && c.effects.isStealthed) {
     c = null;
-    b.setCombatTarget(null);
+    character.setCombatTarget(null);
   }
   if (c && c.effects.hasStealthEffect) {
-    return attackTauntingTarget(a, b), true;
+    return attackTauntingTarget(attackBehavior, character), true;
   }
-  for (var d = getOpponents(b), f, g = b.position.levelPosition, h, l = null, n = -1, c = /** @type {any} */ (0); c < d.length; c++) {
-    if (f = d[c], b !== f && (h = f.effects, h.hasStealthEffect && !h.isDisabled && (h = g.squaredDistanceTo(f.position.levelPosition), 0 > n || h < n))) {
-      l = f;
-      n = h;
+  for (var opponents = getOpponents(character), candidate, characterLevelPosition = character.position.levelPosition, h, nearestTauntingOpponent = null, bestDistanceSquared = -1, c = /** @type {any} */ (0); c < opponents.length; c++) {
+    if (candidate = opponents[c], character !== candidate && (h = candidate.effects, h.hasStealthEffect && !h.isDisabled && (h = characterLevelPosition.squaredDistanceTo(candidate.position.levelPosition), 0 > bestDistanceSquared || h < bestDistanceSquared))) {
+      nearestTauntingOpponent = candidate;
+      bestDistanceSquared = h;
     }
   }
-  return (c = l) || (c = findNearbyOpponent(b)) ? (b.setCombatTarget(c), attackTauntingTarget(a, b), true) : false;
+  return (c = nearestTauntingOpponent) || (c = findNearbyOpponent(character)) ? (character.setCombatTarget(c), attackTauntingTarget(attackBehavior, character), true) : false;
 }
 ```
 
-怪物唯一的行为就是 `AttackBehavior`（`encounters.js:67` `monster.behaviors = new AttackBehavior(room, MELEE_ATTACK_RANGE);`），其 `updateBehaviors`（`targeting.js:425-433`）是：
+怪物唯一的行为就是 `AttackBehavior`（`encounters.js:68` `monster.behaviors = new AttackBehavior(room, MELEE_ATTACK_RANGE);`），其 `updateBehaviors`（`targeting.js:440-448`）是：
 
 ```js
-  AttackBehavior.prototype.updateBehaviors = function (a) {
-    if (!respondToTaunt(this, a) && (a.position.movementTargetCleared || a.actionType === IDLE_ACTION)) {
-      var b = (this.Al.tileRow + 1) * game.tileSize,
-        c = (this.Al.heightInTiles - 1) * game.tileSize;
-      setVector(a.position.moveTargetPoint, (this.Al.tileColumn + 1) * game.tileSize + randomInt((this.Al.widthInTiles - 1) * game.tileSize), b + randomInt(c));
-      a.actionType = 1;
-      a.position.movementTargetCleared = false;
+  AttackBehavior.prototype.updateBehaviors = function (character) {
+    if (!respondToTaunt(this, character) && (character.position.movementTargetCleared || character.actionType === IDLE_ACTION)) {
+      var wanderMinY = (this.patrolRoom.tileRow + 1) * TILE_SIZE,
+        wanderSpanY = (this.patrolRoom.heightInTiles - 1) * TILE_SIZE;
+      setVector(character.position.moveTargetPoint, (this.patrolRoom.tileColumn + 1) * TILE_SIZE + randomInt((this.patrolRoom.widthInTiles - 1) * TILE_SIZE), wanderMinY + randomInt(wanderSpanY));
+      character.actionType = 1;
+      character.position.movementTargetCleared = false;
     }
   };
 ```
 
 要点：
 
-1. **优先级**：当前目标仍活着且带 `Gn`（嘲讽）→ 继续打它（不清）。当前目标死了 / `isStunned` / `isStealthed` → 清空目标。
-2. 随后：找**最近的带 `Gn` 且未 `Kd` 的对手**（无视 100px 接敌门），否则退回 `findNearbyOpponent`（100px 内、非潜行、非倒地冒险者、非排除转变）。
+1. **优先级**：当前目标仍活着且带 `hasStealthEffect`（嘲讽位，源码字段名如此；旧文记作 `Gn`）→ 继续打它（不清）。当前目标死了 / `isStunned` / `isStealthed` → 清空目标。
+2. 随后：找**最近的带 `hasStealthEffect` 且未 `Kd` 的对手**（无视 100px 接敌门），否则退回 `findNearbyOpponent`（100px 内、非潜行、非倒地冒险者、非排除转变）。
 3. `docileMonstersModifier`（药水 `modifierId 13`「驯养怪物」）**只关掉仇恨与接敌**——`respondToTaunt` 直接返回 false，怪物转为房内随机游走，但已经排定的动作不被撤销。
-4. 嘲讽的 `Gn` 位由 `statusEffectTypeId 10` 置（`effects.js:61-63`），同时给被嘲讽者 `defenceRating.spellBonusPercent += 50`（`spells.js:183-194` 的 `potencyPercent: 50`）。
-5. 出手与追击：`attackTauntingTarget`（`targeting.js:277-293`）用 `a.actionRange`（= `MELEE_ATTACK_RANGE` 50）判距，够近则 `canAttack` → `markAttackTurn` → `actionType = 2`；否则 `choosePointNearTarget`（`:128-141`，目标 ±`halfTileSize`(13) 内随机点，再 `clampPointToRoom(..., 0)`）→ `actionType = 1`。
-6. `[疑似遗留怪癖]` 第 2 步的循环只找 `Gn`，但 `findNearbyOpponent` 的返回值赋给的是 `c` 而不是 `l`，最后 `(c = l) || (c = findNearbyOpponent(b))` 里的短路赋值语义与原版逐字一致（`c2.js` 同结构）——不影响结果，只是变量复用。
+4. 嘲讽的 `hasStealthEffect` 位由 `statusEffectTypeId 10` 置（`effects.js:61-63`），同时给被嘲讽者 `defenceRating.spellBonusPercent += 50`（`spells.js:183-194` 的 `potencyPercent: 50`）。
+5. 出手与追击：`attackTauntingTarget`（`targeting.js:292-308`）用 `attackBehavior.actionRange`（= `MELEE_ATTACK_RANGE` 50）判距，够近则 `canAttack` → `markAttackTurn` → `actionType = 2`；否则 `choosePointNearTarget`（`:143-156`，目标 ±`halfTileSize`(13) 内随机点，再 `clampPointToRoom(..., 0)`）→ `actionType = 1`。
+6. `[疑似遗留怪癖]` 第 2 步的循环只找 `hasStealthEffect`，但 `findNearbyOpponent` 的返回值赋给的是 `c` 而不是 `nearestTauntingOpponent`，最后 `(c = nearestTauntingOpponent) || (c = findNearbyOpponent(character))` 里的短路赋值语义与原版逐字一致（`c2.js` 同结构）——不影响结果，只是变量复用。
 
 ### C-33 玩家侧行为优先级如何被选出（唯一仲裁口）
 
@@ -1401,22 +1401,22 @@ export function createChainAction(previousAction) {
 ```
 
 - **判据 = 怪物注册表 `Pi` 长度为 0**（含首领、守卫）。随从/冒险者全倒不会结束遭遇。
-- `ym = true` 是"该房未开过怪"标记，`populateEncounter` 的唯一闸门（`encounters.js:43`）。
+- `ym = true` 是"该房未开过怪"标记，`populateEncounter` 的唯一闸门（`encounters.js:44`）。
 - `removeStunEffects` 只删 `statusEffectTypeId === 13`（`effects.js:89-98`），**不删 14**；也不清 `Kd`——`Kd` 要等下一个回合边界由 `updateCharacterEffects` 重算，因此**清场当回合内倒地者仍不能动**。
 - 结合 C-25：清场/复活术把 `isStunned` 直接改 false，导致下一次 `updateCharacterEffects` 的 `l` 已是 false → **不给全回复**，角色以 0 血状态回到可行动集合，直到 C-34 的每 3 回合 +1% 回复把他抬出 0 血。
 
 ### C-38 遭遇如何开始（房间类型决定对手构成）
 
-`src/engine/modules/combat/encounters.js:41-58`
+`src/engine/modules/combat/encounters.js:42-59`
 
 ```js
 export function populateEncounter(a) {
-  var b = game.monsterNames;
+  var monsterNames = game.monsterNames;
   if (game.state.encounter.noMonstersLeft) {
-    var c = a.encounterType;
-    if (0 === c) {
+    var encounterType = a.encounterType;
+    if (0 === encounterType) {
       if (bossEncounterModifier.currentValue && 0.2 > Math.random()) {
-        spawnDungeonBoss(b, a);
+        spawnDungeonBoss(monsterNames, a);
       } else {
         var minMonsters = globalUpgradeDefinitions.minMonsters.currentValue,
           maxMonsters = Math.max(globalUpgradeDefinitions.maxMonsters.currentValue, minMonsters),
@@ -1427,20 +1427,20 @@ export function populateEncounter(a) {
             monsterLevel = catalog.minUnlockedLevel + randomInt(1 + catalog.maxUnlockedLevel - catalog.minUnlockedLevel),
             monsterTypes = getMonsterTypesForLevel(catalog, monsterLevel),
             monsterType = monsterTypes[randomInt(monsterTypes.length)],
-            encounterName = b.nameGenerator.generateName(monsterType.pluralName) + " (等级." + monsterType.level + ")";
+            encounterName = monsterNames.nameGenerator.generateName(monsterType.pluralName) + " (等级." + monsterType.level + ")";
 ```
 
 - 房间类别字段 `DungeonRoom.Yp`（`world/rooms.js:29`）：0 地牢普通房、1 城堡房、2 首领房、3 财宝房（由 `treasureRoomModifier` 药水在 `revealRoom` 时以 `0.25 > Math.random()` 概率改写 0→3，`rooms.js:53-59`）。
-- 怪物数：`minMonsters + randomInt(max(8,0) − minMonsters)`，再加 `extraMonstersModifier`（更多怪物药水 +10）。默认 `min = 0, max = 8` → **0 只时整段跳过、不 beginEncounter**（`encounters.js:53`）。
-- 怪物等级：`catalog.hd + randomInt(1 + catalog.maxUnlockedLevel - catalog.hd)`，再 `getMonsterTypesForLevel` 取该等级的 20 个随机怪种并按 `a.HE` 排序后抽一个（`encounters.js:54-57,225-248`）；**同名单次生成后缓存**，所以一个等级的怪物名册是固定的。
-- 首领房/城堡房额外必带一批守卫：`spawnCastleGuardians(g, b)`（`encounters.js:149`），`spawnCastleGuardians` 以 50% 概率决定"混合种类"还是"清一色"（`encounters.js:152-168`）。首领等级 = **队伍最高等级**（`getPartyMaxLevel`，`encounters.js:114`）；守卫等级 = **已解锁怪物最高等级**（`encounters.js:154`）。
-- 触发时机：开门时。`character.js:315-319`
+- 怪物数：`minMonsters + randomInt(max(8,0) − minMonsters)`，再加 `extraMonstersModifier`（更多怪物药水 +10）。默认 `min = 0, max = 8` → **0 只时整段跳过、不 beginEncounter**（`encounters.js:54`）。
+- 怪物等级：`catalog.minUnlockedLevel + randomInt(1 + catalog.maxUnlockedLevel - catalog.minUnlockedLevel)`，再 `getMonsterTypesForLevel` 取该等级的 20 个随机怪种并按 `monsterCatalog.compareMonsterTypes` 排序后抽一个（`encounters.js:55-58,226-249`）；**同名单次生成后缓存**，所以一个等级的怪物名册是固定的。
+- 首领房/城堡房额外必带一批守卫：`spawnCastleGuardians(guardianCount, dungeonRoom)`（`encounters.js:150`），`spawnCastleGuardians` 以 50% 概率决定"混合种类"还是"清一色"（`encounters.js:153-169`）。首领等级 = **队伍最高等级**（`getPartyMaxLevel`，`encounters.js:115`）；守卫等级 = **已解锁怪物最高等级**（`encounters.js:155`）。
+- 触发时机：开门时。`character.js:316-320`
 
 ```js
-                    if (!Q.$d.Xi) {
-                      populateEncounter(Q.$d);
-                      revealRoom(Q.$d);
-                      spawnRoomTreasure(Q.$d);
+                    if (!reachedRouteDoor.leadsTo.discovered) {
+                      populateEncounter(reachedRouteDoor.leadsTo);
+                      revealRoom(reachedRouteDoor.leadsTo);
+                      spawnRoomTreasure(reachedRouteDoor.leadsTo);
                     }
 ```
 
@@ -1468,7 +1468,7 @@ export function populateEncounter(a) {
 | 12 | `combat/scrolls.js:22-34` + `combat/actions.js:533-534` | cat 4 法术命中掷点失败（`Rd`）时，**蓝已在 `createSpellAction` 内扣掉**，动作被 `advanceCombatAction:63` 静默丢弃：无视觉、无飘字、无效果，玩家只看到蓝变少 | 原版同流程 |
 | 13 | `ai/behaviors.js:1571-1585` | `StunnedBehavior`（权重 99）与 `effects.Kd` 无任何交叉引用；`Kd` 为真的角色在 `tick.js:793` 已被强制 `IDLE_ACTION`，永远进不到这个行为。名字与触发条件（"站在门/楼梯边"）也对不上 | 原版同结构；**语义置信度低** |
 | 14 | `simulation/tick.js:411` vs `:427` | 地面伤害的 `damageGiven` 记在**队列最后一个动作的攻击者**（`Ga` 为循环泄漏变量）名下，而致死 `resolveCharacterDefeat` 用的是 `lb.ud`（真实施法者）→ 两个归属可能不同人 | 原版同结构 |
-| 15 | `combat/encounters.js:200-212` | 六条怪物曲线**名称与用途交叉**（见 C-15），且 `monsterHealthCurve`/`monsterAttackCurve` 与 `monsterSpiritCurve`/`monsterDefenceCurve` 两对参数完全相同，无法从数值反推命名是否互换。赋值关系已对 `c2.js:9577-9580` 核实 | 赋值关系正确；**名字归属置信度低** |
+| 15 | `combat/encounters.js:201-213` | 旧版此处记为"六条怪物曲线名称与用途交叉"（并用了源码里不存在的 `monsterSpiritCurve`）；按 C-15 的更正，当前每条 `monster*Curve` 的名字与所喂属性一致，原版赋值关系对 `c2.js:9573-9582`、曲线字面量对 `c2.js:22955-22987` 已核。仍无法从数值区分的只有两对同参数曲线：`monsterDamageCurve`/`monsterAttackCurve`（同为 1.0017/30）、`monsterArmorCurve`/`monsterDefenceCurve`（同为 1.0017/25） | 槽位↔参数正确（与旧版逐字相同）；**两对同参数曲线的名字归属置信度低** |
 | 16 | `content/classes.js:639` | 卷轴施法者 `attackRatingMultiplier: 500` 未命名，按 C-9 推断为"卷轴不失手" | 原版同值；**语义置信度中** |
 | 17 | `simulation/characters.js:236` | `tickCharacterTurn` 是**位置抖动**函数（±3 格内取随机点并夹到房间内），与"回合"无关；名字会误导读者 | 原版符号 `vw`（`c2.js:29816`），实现逐字一致；纯命名问题 |
 | 18 | **`combat/actions.js:452-467` 的 `So()`/`itemEffect` 支为死代码** | `Equipment.prototype.So()` 返回 `this.fz`，而 `effectItem` 只在 `movement.js:202` 的 `if (1 === a.statType)` 下赋值，`Item` 上没有 `statType` 字段（只有 `characteristic`，`items.js:70`）→ `So()` 恒 `null` → `if (h)`（`:459`）与近战支 `if (b && (f = b.ms))`（`:484`）永不进入 → 元素特效武器**永远拿不到自己的弹道与命中标签**，远程投射物一律 `"Red Arrow"`、impact 一律 `"Red Splat"` | 原版同样读 `a.statType`（不存在）→ 同样死支。**原版行为，非迁移引入**。已在 `docs/formulas/items.md` 记为怪癖 #4；`"Ninja Star"` 支不受影响（走 `projectileWeapon` 而非 `effectItem`） |
