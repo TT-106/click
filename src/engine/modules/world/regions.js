@@ -2,7 +2,6 @@
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
 import { hashCoordinates, randomIntFrom } from "../core/math.js";
-import { game } from "../runtime/game.js";
 import { refreshWorldBlocks } from "./terrain.js";
 import { castleTheme, caveTheme, chamberTheme, dungeonTheme, iceDungeonTheme, ironMineTheme, stoneDungeonTheme, templeTheme, towerTheme, woodenMineTheme } from "../content/dungeon-themes.js";
 export var WORLD_BLOCK_COLUMNS, WORLD_BLOCK_ROWS, WORLD_ORIGIN_COLUMN, WORLD_ORIGIN_ROW;
@@ -89,7 +88,7 @@ export function refreshCastleConquest(castle) {
     }
     if (castle.conqueredDungeonCount === castle.dungeonList.length) {
       castle.dungeonsConquered = true;
-      var castleManager = game.castles;
+      var castleManager = regionCastles();
       castleManager.nextRequiredMonsterLevel++;
       castle.requiredMonsterLevel = castleManager.nextRequiredMonsterLevel;
       invalidateCastleRevision();
@@ -100,24 +99,55 @@ export function refreshCastleConquest(castle) {
   }
 }
 export function RegionLayout() {
-  this.minRegionColumn = game.regions.regionGridOriginColumn;
-  this.minRegionRow = game.regions.regionGridOriginRow;
-  var regionManager = game.regions;
+  this.minRegionColumn = regionManagerRef().regionGridOriginColumn;
+  this.minRegionRow = regionManagerRef().regionGridOriginRow;
+  var regionManager = regionManagerRef();
   this.maxRegionColumn = regionManager.regionGridOriginColumn + regionManager.regionGridSpan;
-  regionManager = game.regions;
+  regionManager = regionManagerRef();
   this.maxRegionRow = regionManager.regionGridOriginRow + regionManager.regionGridSpan;
 }
+/** 区域图所需的三个依赖由组合根注入；判据见 docs/reverse-engineering/facts.md。
+ *  regions 与 castles 两个管理器在 runtime/game.js 的对象字面量里只构造一次，src/ 内没有整对象重赋值，
+ *  按引用绑安全（revision++ 是字段级写，不改容器身份）。
+ *  world 必须走回调：game.world = new WorldMap() 在两条重置路径上整体换对象（runtime/game.js:394、455），
+ *  按引用绑会让"取初始世界块 / 刷新世界块"落在已被丢弃的旧地图上。未绑定就用到一律立刻抛。 */
+var boundRegionManager = null;
+var boundCastleManager = null;
+var boundWorldProvider = null;
+export function bindWorldRegions(regions, castles, worldProvider) {
+  boundRegionManager = regions;
+  boundCastleManager = castles;
+  boundWorldProvider = worldProvider;
+}
+function regionManagerRef() {
+  if (!boundRegionManager) {
+    throw new Error('区域图尚未绑定区域管理器：请在组合根调用 bindWorldRegions(game.regions, game.castles, () => game.world)');
+  }
+  return boundRegionManager;
+}
+function regionCastles() {
+  if (!boundCastleManager) {
+    throw new Error('区域图尚未绑定城堡管理器：请在组合根调用 bindWorldRegions(game.regions, game.castles, () => game.world)');
+  }
+  return boundCastleManager;
+}
+function worldNow() {
+  if (!boundWorldProvider) {
+    throw new Error('区域图尚未绑定世界提供者：请在组合根调用 bindWorldRegions(game.regions, game.castles, () => game.world)');
+  }
+  return boundWorldProvider();
+}
 export function getWestRegion(a, regionColumn, regionRow, occupiedRegionKeys) {
-  return regionColumn - 1 >= a.minRegionColumn && (a = regionColumn - 1 + "_" + regionRow, !occupiedRegionKeys[a]) ? game.regions.byKey[a] : null;
+  return regionColumn - 1 >= a.minRegionColumn && (a = regionColumn - 1 + "_" + regionRow, !occupiedRegionKeys[a]) ? regionManagerRef().byKey[a] : null;
 }
 export function getEastRegion(a, regionColumn, regionRow, occupiedRegionKeys) {
-  return regionColumn + 1 < a.maxRegionColumn && (a = regionColumn + 1 + "_" + regionRow, !occupiedRegionKeys[a]) ? game.regions.byKey[a] : null;
+  return regionColumn + 1 < a.maxRegionColumn && (a = regionColumn + 1 + "_" + regionRow, !occupiedRegionKeys[a]) ? regionManagerRef().byKey[a] : null;
 }
 export function getNorthRegion(a, regionColumn, regionRow, occupiedRegionKeys) {
-  return regionRow - 1 >= a.minRegionRow && (a = regionColumn + "_" + (regionRow - 1), !occupiedRegionKeys[a]) ? game.regions.byKey[a] : null;
+  return regionRow - 1 >= a.minRegionRow && (a = regionColumn + "_" + (regionRow - 1), !occupiedRegionKeys[a]) ? regionManagerRef().byKey[a] : null;
 }
 export function getSouthRegion(a, regionColumn, regionRow, occupiedRegionKeys) {
-  return regionRow + 1 < a.maxRegionRow && (a = regionColumn + "_" + (regionRow + 1), !occupiedRegionKeys[a]) ? game.regions.byKey[a] : null;
+  return regionRow + 1 < a.maxRegionRow && (a = regionColumn + "_" + (regionRow + 1), !occupiedRegionKeys[a]) ? regionManagerRef().byKey[a] : null;
 }
 export function chooseAdjacentRegion(regionLayout, sourceRegion, occupiedRegionKeys, d) {
   var regionColumn = sourceRegion.regionColumn;
@@ -150,7 +180,7 @@ export function chooseAdjacentRegion(regionLayout, sourceRegion, occupiedRegionK
   }
 }
 export function resetCastles() {
-  var castleManager = game.castles;
+  var castleManager = regionCastles();
   castleManager.attackableCastles.length = 0;
   castleManager.scheduledCastles.length = 0;
   castleManager.revision = 0;
@@ -168,24 +198,24 @@ export function resetCastles() {
 }
 export function unlockStartingRegion() {
   /** @type {any} */
-  var startingWorldBlock = game.world.worldBlocks[1][1];
+  var startingWorldBlock = worldNow().worldBlocks[1][1];
   var startingRegionKey = startingWorldBlock.regionColumn + "_" + startingWorldBlock.regionRow;
   var ownerCastle = findCastleByRegion(startingRegionKey);
   if (ownerCastle) {
     ownerCastle.regionLocked = false;
-    refreshWorldBlocks(game.world);
+    refreshWorldBlocks(worldNow());
   } else {
     console.log("failed to find world block owner castle: " + startingRegionKey);
   }
 }
 export function findCastle(a) {
-  return (a = game.castles.castleRegistry[a]) ? a : null;
+  return (a = regionCastles().castleRegistry[a]) ? a : null;
 }
 export function findCastleByRegion(a) {
-  return (a = game.castles.byRegionKey[a]) ? a : null;
+  return (a = regionCastles().byRegionKey[a]) ? a : null;
 }
 export function refreshAttackableCastles(castle) {
-  var castleManager = game.castles;
+  var castleManager = regionCastles();
   castleManager.revision++;
   var attackableIndex = castleManager.attackableCastles.indexOf(castle);
   if (canAttackCastle(castle)) {
@@ -200,7 +230,7 @@ export function refreshAttackableCastles(castle) {
   }
 }
 export function refreshScheduledCastles(castle) {
-  var castleManager = game.castles;
+  var castleManager = regionCastles();
   castleManager.revision++;
   var scheduledIndex = castleManager.scheduledCastles.indexOf(castle);
   if (castle.attackScheduled) {
@@ -215,7 +245,7 @@ export function refreshScheduledCastles(castle) {
   }
 }
 export function invalidateCastleRevision() {
-  game.castles.revision++;
+  regionCastles().revision++;
 }
 export function sortCastles(castleManager, castleList) {
   if (!(!castleList || 2 > castleList.length)) {
