@@ -78,37 +78,37 @@ export function HallwayPathfinder(widthInTiles, heightInTiles, tileGrid) {
   this.grid = new PathfindingGrid(widthInTiles, heightInTiles, tileGrid);
   this.open = new PathOpenSet();
 }
-export function findHallwayPath(a, fromRoom, toRoom) {
-  var d = a.tileGrid[fromRoom.tileColumn + fromRoom.widthInTiles / 2 | 0][fromRoom.tileRow + fromRoom.heightInTiles / 2 | 0],
-    f = a.tileGrid[toRoom.tileColumn + toRoom.widthInTiles / 2 | 0][toRoom.tileRow + toRoom.heightInTiles / 2 | 0],
-    g = a.grid;
-  g.fromRoom = fromRoom;
-  g.toRoom = toRoom;
+export function findHallwayPath(pathfinder, fromRoom, toRoom) {
+  var fromCenterTile = pathfinder.tileGrid[fromRoom.tileColumn + fromRoom.widthInTiles / 2 | 0][fromRoom.tileRow + fromRoom.heightInTiles / 2 | 0],
+    toCenterTile = pathfinder.tileGrid[toRoom.tileColumn + toRoom.widthInTiles / 2 | 0][toRoom.tileRow + toRoom.heightInTiles / 2 | 0],
+    grid = pathfinder.grid;
+  grid.fromRoom = fromRoom;
+  grid.toRoom = toRoom;
   a: {
-    var g = getPathNode(a.grid, d),
-      f = getPathNode(a.grid, f),
+    var startNode = getPathNode(pathfinder.grid, fromCenterTile),
+      f = getPathNode(pathfinder.grid, toCenterTile),
       h,
       l,
       n,
       p,
       nodeTileColumn,
       d = /** @type {any} */ (0);
-    a.open.nodes.length = 0;
-    a.open.push(g);
-    for (g.visited = true; 0 < a.open.nodes.length;) {
+    pathfinder.open.nodes.length = 0;
+    pathfinder.open.push(startNode);
+    for (startNode.visited = true; 0 < pathfinder.open.nodes.length;) {
       d++;
       if (500 < d) {
         console.log("path finding failure. too many iterations");
         f = null;
         break a;
       }
-      g = a.open.pop();
-      if (g.tile === f.tile) {
-        f = reconstructPath(g);
+      var currentNode = pathfinder.open.pop();
+      if (currentNode.tile === f.tile) {
+        f = reconstructPath(currentNode);
         break a;
       }
-      g.closed = true;
-      h = g;
+      currentNode.closed = true;
+      h = currentNode;
       if (0 === h.neighbors.length) {
         l = h.grid;
         n = h.tile;
@@ -131,10 +131,10 @@ export function findHallwayPath(a, fromRoom, toRoom) {
       }
       h = h.neighbors;
       for (var neighborIndex = 0; neighborIndex < h.length; neighborIndex++) {
-        if (l = h[neighborIndex], !l.closed && (p = g.costSoFar + l.position.distanceTo(g.position), n = l.visited, !n || p < l.costSoFar)) {
-          l.parent = g;
+        if (l = h[neighborIndex], !l.closed && (p = currentNode.costSoFar + l.position.distanceTo(currentNode.position), n = l.visited, !n || p < l.costSoFar)) {
+          l.parent = currentNode;
           if (n) {
-            a.open.remove(l);
+            pathfinder.open.remove(l);
             l.costSoFar = p;
           } else {
             if (0 > l.heuristicScore) {
@@ -144,57 +144,57 @@ export function findHallwayPath(a, fromRoom, toRoom) {
             l.costSoFar = p;
             l.visited = true;
           }
-          a.open.push(l);
+          pathfinder.open.push(l);
         }
       }
     }
     console.log("ran out of open nodes before finding path");
     f = null;
   }
-  a = a.grid;
+  var a = pathfinder.grid;
   for (d = 0; d < a.usedNodes.length; d++) {
     a.nodePool.pooledNodes.push(a.usedNodes[d]);
   }
   a.usedNodes.length = 0;
   a.usedTiles.length = 0;
   if (a = f) {
-    g = new DungeonDoor(fromRoom);
-    h = new DungeonDoor(toRoom);
-    l = new DungeonHallway(fromRoom, g, toRoom, h);
-    fromRoom.doorList.push(g);
-    toRoom.doorList.push(h);
-    g.hallway = l;
-    h.hallway = l;
+    var doorFrom = new DungeonDoor(fromRoom);
+    var doorTo = new DungeonDoor(toRoom);
+    var builtHallway = new DungeonHallway(fromRoom, doorFrom, toRoom, doorTo);
+    fromRoom.doorList.push(doorFrom);
+    toRoom.doorList.push(doorTo);
+    doorFrom.hallway = builtHallway;
+    doorTo.hallway = builtHallway;
     for (f = 0; f < a.length; f++) {
       if (d = a[f], !roomContainsTile(fromRoom, d.x, d.y) && !roomContainsTile(toRoom, d.x, d.y)) {
         if (roomContainsTile(toRoom, d.x, d.y)) {
           break;
         }
         if (isRoomBorder(fromRoom, d.x, d.y)) {
-          p = g;
+          var positionedDoor = doorFrom;
           var doorTileColumn = d.x;
           n = d.y;
-          p.tileColumn = doorTileColumn;
-          p.tileRow = n;
-          p.pixelColumn = doorTileColumn * TILE_SIZE;
-          p.pixelRow = n * TILE_SIZE;
-          g.horizontalPassage = d.x != a[f + 1].x;
+          positionedDoor.tileColumn = doorTileColumn;
+          positionedDoor.tileRow = n;
+          positionedDoor.pixelColumn = doorTileColumn * TILE_SIZE;
+          positionedDoor.pixelRow = n * TILE_SIZE;
+          doorFrom.horizontalPassage = d.x != a[f + 1].x;
         } else {
           if (isRoomBorder(toRoom, d.x, d.y)) {
-            p = h;
+            positionedDoor = doorTo;
             doorTileColumn = d.x;
             n = d.y;
-            p.tileColumn = doorTileColumn;
-            p.tileRow = n;
-            p.pixelColumn = doorTileColumn * TILE_SIZE;
-            p.pixelRow = n * TILE_SIZE;
-            h.horizontalPassage = d.x != a[f - 1].x;
+            positionedDoor.tileColumn = doorTileColumn;
+            positionedDoor.tileRow = n;
+            positionedDoor.pixelColumn = doorTileColumn * TILE_SIZE;
+            positionedDoor.pixelRow = n * TILE_SIZE;
+            doorTo.horizontalPassage = d.x != a[f - 1].x;
           }
         }
-        l.pathTiles.push(d);
+        builtHallway.pathTiles.push(d);
       }
     }
-    var hallway = l;
+    var hallway = builtHallway;
   } else {
     hallway = null;
   }
@@ -216,10 +216,10 @@ export function initializeWorldPathfinding() {
   PathOpenSet.prototype.pop = function () {
     return this.nodes.shift();
   };
-  PathOpenSet.prototype.remove = function (a) {
-    a = this.nodes.indexOf(a);
-    if (-1 !== a) {
-      this.nodes.splice(a, 1);
+  PathOpenSet.prototype.remove = function (node) {
+    var nodeIndex = this.nodes.indexOf(node);
+    if (-1 !== nodeIndex) {
+      this.nodes.splice(nodeIndex, 1);
     } else {
       console.log("failed to find node in queue for removal!!!!!!!!!!");
     }
