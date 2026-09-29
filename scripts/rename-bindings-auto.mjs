@@ -25,9 +25,11 @@ const CRYPTIC_ALLOW = new Set([
   'xp', 'ui', 'db', 'hq',
 ]);
 const WANT_CRYPTIC = process.argv.includes('--cryptic');
+// 短名口径含 `$` 前缀（实测 src/engine/modules 里有 `$` x3、`$c` x3 共 6 个纯混淆名）；
+// 不纳入的话这 6 个永远不进指标、也永远没人改。
 const MATCH = WANT_CRYPTIC
-  ? (name) => /^[A-Za-z]{1,2}$/.test(name) && !CRYPTIC_ALLOW.has(name)
-  : (name) => SINGLE.test(name);
+  ? (name) => /^[$A-Za-z]{1,2}$/.test(name) && !CRYPTIC_ALLOW.has(name)
+  : (name) => SINGLE.test(name) || name === '$';
 const arg = (n, f = null) => {
   const i = process.argv.indexOf('--' + n);
   if (i === -1) return f;
@@ -110,6 +112,10 @@ function collectEntries(b, onError) {
       });
     } else if (n.type === 'UpdateExpression') entries.push({ node: n.argument, role: 'update' });
     else if (n.type === 'VariableDeclarator') entries.push({ node: n.id, role: 'declarator' });
+    // for-in / for-of 的头既是"写"也是绑定本身的赋值点。
+    // 缺这一支时，`for (se in spells)` 这类改名的自检会报"未支持的赋值形态"，
+    // 整表被拒（R27 game-save 切片实测，被迫手工改 3 处）。
+    else if (n.type === 'ForInStatement' || n.type === 'ForOfStatement') entries.push({ node: n.left, role: 'forhead' });
     else if (n.type === 'Identifier') entries.push({ node: n, role: 'other' });
     else onError(b.identifier.name + ': 未支持的赋值形态 ' + n.type);
   }

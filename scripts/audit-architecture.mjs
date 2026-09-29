@@ -59,6 +59,11 @@ const singleLetterBindingsByFile = new Map();
  *  只数单字母会漏掉一大批——反编译恢复期的短名多半是两位。合法短名走显式白名单，
  *  新增白名单项要在 review 里说明理由，否则等于把债改名成"合规"。 */
 const crypticBindingsByFile = new Map();
+/** 白名单命中的短名：它们是"合法短词"的例外口子，但实测这个口子在撒谎的名字上也在生效
+ *  （tick.js 里 `var x = game.potions`、`z = 0 === turnNumber % 3`）。
+ *  不并入短名债（会把 ItemDrop(item, x, y, room) 这种真坐标逼成怪名字），
+ *  但必须单独报数并纳入棘轮，否则这 21 处永远不进任何指标、也没人去看。 */
+const allowListedBindingsByFile = new Map();
 const CRYPTIC_ALLOWLIST = new Set([
   'x', 'y', 'z', // 数学/坐标参数（core/math.js 等）
   'id', 'to', 'on', 'in', 'at', 'if', 'no', 'ok', 'is', 'of',
@@ -69,12 +74,14 @@ for (const file of files) {
   const ast = parseOrDie(file);
   const shortBindings = new Set();
   const cryptic = new Set();
+  const allowListed = new Set();
   traverse(ast, {
     Scope(p) {
       for (const binding of Object.values(p.scope.bindings)) {
         const identifier = binding.identifier;
         if (/^[A-Za-z]$/.test(identifier.name)) shortBindings.add(identifier.start);
-        if (/^[A-Za-z]{1,2}$/.test(identifier.name) && !CRYPTIC_ALLOWLIST.has(identifier.name)) cryptic.add(identifier.start);
+        if (/^[$A-Za-z]{1,2}$/.test(identifier.name) && !CRYPTIC_ALLOWLIST.has(identifier.name)) cryptic.add(identifier.start);
+        if (CRYPTIC_ALLOWLIST.has(identifier.name)) allowListed.add(identifier.start);
       }
     },
     ImportDeclaration(p) {
@@ -111,6 +118,9 @@ for (const file of files) {
   }
   if (file.startsWith('src/engine/modules/') && cryptic.size) {
     crypticBindingsByFile.set(file, cryptic.size);
+  }
+  if (file.startsWith('src/engine/modules/') && allowListed.size) {
+    allowListedBindingsByFile.set(file, allowListed.size);
   }
 }
 
@@ -353,6 +363,8 @@ const out = {
     topFiles: [...singleLetterBindingsByFile.entries()].sort((a, b) => b[1] - a[1]).slice(0, 20).map(([file, count]) => ({ file, count })),
     crypticBindings: [...crypticBindingsByFile.values()].reduce((sum, count) => sum + count, 0),
     filesWithCrypticBindings: crypticBindingsByFile.size,
+    allowListedBindings: [...allowListedBindingsByFile.values()].reduce((sum, count) => sum + count, 0),
+    allowListedByFile: Object.fromEntries([...allowListedBindingsByFile.entries()].sort((a, b) => b[1] - a[1])),
     crypticTopFiles: [...crypticBindingsByFile.entries()].sort((a, b) => b[1] - a[1]).slice(0, 20).map(([file, count]) => ({ file, count })),
   },
 };
@@ -382,8 +394,10 @@ for (const [name, users] of Object.entries(dtoUsage)) if (users.length) console.
 console.log(`\n=== 8) 恢复期短名绑定（人工语义命名的审计线索） ===`);
 console.log(`单字母合计 ${out.naming.singleLetterBindings} 个，分布于 ${out.naming.filesWithSingleLetterBindings} 个 engine/modules 文件`);
 for (const { file, count } of out.naming.topFiles.slice(0, 10)) console.log(`  ${String(count).padStart(3)}  ${file.replace('src/engine/modules/', '')}`);
-console.log(`混淆器风格短名（1–2 字母，白名单外）合计 ${out.naming.crypticBindings} 个，分布于 ${out.naming.filesWithCrypticBindings} 个文件`);
+console.log(`混淆器风格短名（1–2 字母含 $ 前缀，白名单外）合计 ${out.naming.crypticBindings} 个，分布于 ${out.naming.filesWithCrypticBindings} 个文件`);
 for (const { file, count } of out.naming.crypticTopFiles.slice(0, 10)) console.log(`  ${String(count).padStart(3)}  ${file.replace('src/engine/modules/', '')}`);
+console.log(`白名单命中短名（需逐条判断是否撒谎，如 tick.js 的 var x = game.potions）合计 ${out.naming.allowListedBindings} 个`);
+for (const [file, count] of Object.entries(out.naming.allowListedByFile).slice(0, 8)) console.log(`  ${String(count).padStart(3)}  ${file.replace('src/engine/modules/', '')}`);
 
 // === 9) 指标棘轮（ratchet）===
 // 现代化是"只许变好"的方向性工程：把当前实测值钉进仓库，任何变差都直接让本命令退出码非 0，
@@ -392,6 +406,7 @@ for (const { file, count } of out.naming.crypticTopFiles.slice(0, 10)) console.l
 const BASELINE = path.join(ROOT, 'artifacts', 'architecture-baseline.json');
 const perFile = Object.fromEntries([...singleLetterBindingsByFile.entries()].sort((a, b) => b[1] - a[1]));
 const perFileCryptic = Object.fromEntries([...crypticBindingsByFile.entries()].sort((a, b) => b[1] - a[1]));
+const perFileAllowListed = Object.fromEntries([...allowListedBindingsByFile.entries()].sort((a, b) => b[1] - a[1]));
 const current = {
   singleLetterBindings: out.naming.singleLetterBindings,
   filesWithSingleLetterBindings: out.naming.filesWithSingleLetterBindings,
@@ -400,6 +415,7 @@ const current = {
   largestScc: cycles[0]?.length ?? 0,
   perFile,
   perFileCryptic,
+  perFileAllowListed,
 };
 
 if (process.argv.includes('--update-baseline')) {
@@ -415,7 +431,7 @@ if (!fs.existsSync(BASELINE)) {
 } else {
   const base = JSON.parse(fs.readFileSync(BASELINE, 'utf8'));
   const regressions = [];
-  for (const key of ['singleLetterBindings', 'crypticBindings', 'gameImporters', 'largestScc']) {
+  for (const key of ['singleLetterBindings', 'crypticBindings', 'allowListedBindings', 'gameImporters', 'largestScc']) {
     if (base[key] === undefined) { console.log(`  ${key.padEnd(22)} 基线无此项，本次开始记录：${current[key]}`); continue; }
     if (current[key] > base[key]) regressions.push(`${key}: ${base[key]} -> ${current[key]} (+${current[key] - base[key]})`);
     else console.log(`  ${String(key).padEnd(22)} ${base[key]} -> ${current[key]}  ${current[key] < base[key] ? '改善' : '持平'}`);
@@ -427,6 +443,10 @@ if (!fs.existsSync(BASELINE)) {
   for (const [file, count] of Object.entries(base.perFileCryptic || {})) {
     const now = current.perFileCryptic[file] ?? 0;
     if (now > count) regressions.push(`混淆短名 ${file.replace('src/engine/modules/', '')}: ${count} -> ${now} (+${now - count})`);
+  }
+  for (const [file, count] of Object.entries(base.perFileAllowListed || {})) {
+    const now = current.perFileAllowListed[file] ?? 0;
+    if (now > count) regressions.push(`白名单短名 ${file.replace('src/engine/modules/', '')}: ${count} -> ${now} (+${now - count})`);
   }
   if (regressions.length) {
     console.log(`回退 ${regressions.length} 项：`);
