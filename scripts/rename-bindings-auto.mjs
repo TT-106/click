@@ -122,19 +122,38 @@ function collectNodes(b, onError) {
   return collectEntries(b, onError).map((e) => e.node);
 }
 
-const seenStarts = new Set();
+const seenStarts = new Map();
 const byKey = new Map();
+const scopeNamesByKey = new Map(); // 函数键 -> 该作用域内**全部**绑定名（含非短名），用于新名冲突检测
 const push = (key, b) => {
   if (seenStarts.has(b.identifier.start)) return;
-  seenStarts.add(b.identifier.start);
+  seenStarts.set(b.identifier.start, true);
   if (!byKey.has(key)) byKey.set(key, []);
   byKey.get(key).push(b);
+};
+/** 把作用域里的所有名字（不只是短名）登记为该键的"已占用名"。
+ *  缺了这一步，把一个字母拆/改成函数里已存在的语义名会写出重复 var——
+ *  `var view = "existing"` 之后再落一条 `var view = 2` 是合法 JS，
+ *  后者直接覆盖前者的值，tsc 与四条自检都不报错（R26 party-creation 切片实测）。 */
+const registerScopeNames = (key, scope) => {
+  const set = scopeNamesByKey.get(key) || new Set();
+  // 只下钻块/try/catch 这类"同一个函数体内"的作用域：
+  // 函数级 `var item` 与块内 `let item` 同名是硬语法错误（already declared），必须看见；
+  // 嵌套函数自己的形参只是合法遮蔽，不下钻，否则常见名字（item/view/row）全被误判成冲突。
+  const FUNCTIONISH = new Set(['function', 'arrow-function', 'class-method', 'method', 'module']);
+  const add = (s) => {
+    for (const name of Object.keys(s.bindings)) set.add(name);
+    for (const child of s.childScopes || []) if (!FUNCTIONISH.has(child.type)) add(child);
+  };
+  add(scope);
+  scopeNamesByKey.set(key, set);
 };
 
 traverse(parse(src, { sourceType: 'module' }), {
   'FunctionDeclaration|FunctionExpression'(p) {
     const key = fnKeyFor(p);
     if (!key) return;
+    registerScopeNames(key, p.scope);
     for (const b of Object.values(p.scope.bindings)) {
       if (!MATCH(b.identifier.name)) continue;
       if (b.scope !== p.scope && !(b.kind === 'var' && b.scope.parent === p.scope)) continue;
@@ -142,6 +161,7 @@ traverse(parse(src, { sourceType: 'module' }), {
     }
   },
   Program(p) {
+    registerScopeNames('@module', p.scope);
     for (const b of Object.values(p.scope.bindings)) {
       if (MATCH(b.identifier.name) && b.scope === p.scope) push('@module', b);
     }
@@ -233,8 +253,17 @@ for (const [key, entries] of Object.entries(table)) {
     if (windows.find((w) => !w || !w.name || !/^[A-Za-z_$][\w$]*$/.test(w.name))) {
       errors.push(key + '.' + oldName + ': 新名不合法'); continue;
     }
-    if (windows.some((w) => w.name !== oldName && m.has(w.name))) {
-      errors.push(key + '.' + oldName + ': 新名与该函数已有语义名冲突'); continue;
+    const occupied = scopeNamesByKey.get(key) || new Set();
+    const clash = windows.find((w) => w.name !== oldName && occupied.has(w.name));
+    if (clash) {
+      errors.push(`${key}.${oldName}: 新名 "${clash.name}" 在该函数作用域里已被占用——`
+        + '改名会写出重复声明（var 重声明会覆盖既有值；块级 let 同名直接 SyntaxError）。换一个名字。');
+      continue;
+    }
+    const dupWindow = windows.map((w) => w.name).filter((n, i, arr) => arr.indexOf(n) !== i);
+    if (dupWindow.length) {
+      errors.push(`${key}.${oldName}: 同一绑定的多个区间用了相同新名 ${[...new Set(dupWindow)].join(',')}（等于没拆）`);
+      continue;
     }
     const covered = nodes.map((n) => {
       const ln = lineOf(n.start);
