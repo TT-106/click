@@ -65,7 +65,7 @@ archive/original/c2.js  ──AST 机械恢复──▶  src/engine/（77 模块
 | L6 浏览器 E2E | 建队/自动战斗/暂停/五类面板/**c2c.user.js 外部 DOM 契约**/设置/导出导入/非法存档/刷新恢复/键盘/三种视口 |
 | L7 长跑 soak | `test:soak`：115,200 与 345,600 等价回合（8h/24h），两端完整存档相等 + CDP 主动 GC 后堆增量样本 |
 | 渲染等价 | `rendered-scene` / `autosave-payload`：真实帧循环 1,300 帧后比对主画布逐像素 FNV-1a 指纹（两端相同）与落盘存档解码内容 |
-| 工程门 | `npm run check`（当前 150 文件语法 + 单测）、`npm run typecheck`（tsc 覆盖 77/78 引擎模块，经 import 图传递；`src/engine/modules` 下 `@ts-nocheck` 已清零）、`npm run build`（增量拷贝到 dist）、`npm run lint`（10 条不变量守卫，见 §9）；每切片一 commit。**2026-09-27 最终回归扫描（10 门全绿，退出码逐条回显）**：`lint=0 build=0 typecheck=0 check=0 parity=0 scenarios=0 e2e=0 soak=0 perf=0 perf:frames=0` |
+| 工程门 | `npm run check`（当前 150 文件语法 + 单测）、`npm run typecheck`（tsc 覆盖 77/78 引擎模块，经 import 图传递；`src/engine/modules` 下 `@ts-nocheck` 已清零）、`npm run build`（增量拷贝到 dist）、`npm run lint`（11 条不变量守卫，见 §9）；每切片一 commit。**2026-09-27 最终回归扫描（10 门全绿，退出码逐条回显）**：`lint=0 build=0 typecheck=0 check=0 parity=0 scenarios=0 e2e=0 soak=0 perf=0 perf:frames=0` |
 
 方法论实证：差分矩阵三次抓到人工没看到的真实缺陷——guardians/minions 数据键漏改导致城堡守卫生成崩溃；金堆房对 DungeonTile 误调角色坐标接口；以及本轮由新场景暴露的**自动保存间隔 3E4 vs 原版 3E5**（10 倍频率，改动前无任何测试能看到）。
 
@@ -105,8 +105,15 @@ npm run lint                        # 一条命令守住不变量（见下）
 | 源码无 `TODO`/`FIXME`/`HACK`/`@ts-ignore`/`eslint-disable` | 防止待办与规则豁免堆积 |
 | 文档 `file:line` 引用无越界 | 防止文档与代码脱节（934 条引用） |
 | 原版存档 fixture 无单字母键 | 守住"4,477 键全语义化"的存档契约 |
+| 每个 spellCategoryId 都有差分场景 | 防止新法术只靠计数归因、没有可观测行为 |
+| 成就定义表与判定实现一致 | 328 条定义 × 28 种 requirementType，判定漏分支即失败 |
+| 存档 DTO schema 与四种形态一致 | 顶层 30 键在声明 / fixture / 序列化器两分支 / 嵌套 typedef 四处对齐 |
+| 当前态文档可数指标与源码实况一致 | 场景数、单测数、语法检查文件数、本条数——数字只能有一个来源 |
+| 工作树无"改名之外且未逐条授权"的结构变动 | 标识符抹平后的骨架对账；本会话的检查点事故（探针进了 HEAD、所有行为门禁全绿）就是它要防的那一类 |
 
-已做**反向验证**：故意插入一个 `// TODO` 后 `npm run lint` 退出码为 1 并指名文件，移除后恢复 0。
+已做**反向验证**：故意插入一个 `// TODO` 后 `npm run lint` 退出码为 1 并指名文件，移除后恢复 0；
+故意插入 `var sampleTYPOmarker = 1` 同样被第 4 条点名；结构对账那条用真实的历史提交验过——
+在 7a2c981 的工作树里以 `7a2c981^` 为基线跑，报出 `simulation/loop.js:72` 的孤立插入并 exit 1。
 
 其余命令：`npm run test:parity`（差分）、`npm run test:scenarios`（60 场景）、`npm run test:e2e`（浏览器）、`npm run test:soak`（8h/24h）、`npm run build`、`npm run analyze`、`npm run audit:doc-refs` / `audit:doc-snippets` / `audit:dead-reads`。
 - 找战斗：`src/engine/modules/combat/`；物品：`loot/`；地牢：`world/`；存档：`persistence/`；随机：`core/math.js`；渲染：`rendering/`。

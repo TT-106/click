@@ -2,10 +2,22 @@
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
 import { POINT_EVENT_DUNGEON_CLEARED, POINT_EVENT_ENCOUNTER, POINT_EVENT_LEVEL_CLEARED, increasePointEventReward, pointEventsById } from "./points.js";
-import { game } from "../runtime/game.js";
 import { recordGameEvent } from "../core/math.js";
 import { getClassVictories, getSoloClassVictories } from "./statistics.js";
 import { getPartyMaxLevel } from "../characters/party.js";
+/** 会话状态由组合根注入（statistics / points / views.achievements 已是同一形状）。
+ *  本模块原先直接读 game.state；现在只认这个绑定，未绑定就用到会立刻抛——
+ *  静默回落到别处会让"装配漏了一步"在差分测试里看不出来。 */
+var boundSessionState = null;
+export function bindAchievementProgress(state) {
+  boundSessionState = state;
+}
+function achievementProgressState() {
+  if (!boundSessionState) {
+    throw new Error('成就进度尚未绑定会话状态：请在组合根调用 bindAchievementProgress(game.state)');
+  }
+  return boundSessionState;
+}
 export var achievementDefinitions;
 export function Achievement(definition) {
   this.applied = this.obtained = false;
@@ -37,7 +49,7 @@ export function applyAchievementReward(achievement) {
   } else {
     increasePointEventReward(achievement.pointEventTypeId, achievement.pointRewardBonus);
     achievement.applied = true;
-    var achievements = game.state.achievements,
+    var achievements = achievementProgressState().achievements,
       claimIndex = achievements.claimQueue.indexOf(achievement);
     if (-1 < claimIndex) {
       achievements.claimQueue.splice(claimIndex, 1);
@@ -48,7 +60,7 @@ export function applyAchievementReward(achievement) {
 /** 成就判定所需的全部输入数据。
  * 有了它，判定逻辑（getAchievementProgress / hasVictoryAchievement）可以在不启动
  * runtime/index.js、也不借用全局 game 的前提下被直接构造与测试；
- * 唯一的"从 game 现取"位置是 getAchievementCheckData()。
+ * 唯一的取数位置是 getAchievementCheckData()，它读的是组合根注入的会话状态。
  * @typedef {Object} AchievementCheckData
  * @property {Object} lifetimeStatistics 累计统计（requirementType 1-22、28 读它）
  * @property {Object} victoryStatistics 胜利统计（requirementType 23-27 读它）
@@ -60,10 +72,10 @@ export function applyAchievementReward(achievement) {
  * 会写 party.cachedMaxLevel；提前求值会改变"哪些回合写入缓存"的时序（行为变更），故保持按需。 */
 export function getAchievementCheckData() {
   return {
-    lifetimeStatistics: game.state.lifetimeStatistics,
-    victoryStatistics: game.state.victoryStatistics,
+    lifetimeStatistics: achievementProgressState().lifetimeStatistics,
+    victoryStatistics: achievementProgressState().victoryStatistics,
     get partyMaxLevel() {
-      return getPartyMaxLevel(game.state.party);
+      return getPartyMaxLevel(achievementProgressState().party);
     },
   };
 }
@@ -198,7 +210,7 @@ export function describeAchievementRequirement(achievement) {
   }
 }
 export function resetAchievements() {
-  var achievements = game.state.achievements,
+  var achievements = achievementProgressState().achievements,
     achievementIndex;
   for (achievementIndex = 0; achievementIndex < achievements.achievementList.length; achievementIndex++) {
     var achievement = achievements.achievementList[achievementIndex];

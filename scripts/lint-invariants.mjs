@@ -147,6 +147,21 @@ function walk(dir, out = [], skip = new Set(['node_modules', '.git', 'dist', 'ou
   }
 }
 
+// 11) 未提交改动里不得有"改名之外且未逐条授权"的结构变动
+// 存在理由：本会话的检查点提交把某智能体的探针 camera.tileRowTYPO = centerY / game.tileSize | 0
+// 收进了历史（7a2c981），parity / 89 个差分场景 / 像素指纹 / e2e / typecheck 全绿——只有结构对账能看见它。
+{
+  const r = await run(process.execPath, ['scripts/verify-structure-invariant.mjs', 'HEAD']);
+  const m = (r.stdout || '').match(/待人工判定 (\d+) 行/);
+  if (r.status !== 0 || !m || Number(m[1]) !== 0) {
+    problems.push(`未提交改动含 ${m ? m[1] : '?'} 处无法归入授权模式的结构变动（见 verify-structure-invariant 输出；`
+      + '确需新增语句就把它加进 artifacts/structure-allowlist.json 并写清理由）');
+  } else {
+    const s = (r.stdout || '').match(/已授权结构变动 (\d+) 行/);
+    notes.push(`工作树无改名之外的未授权结构变动 ✓（已授权 ${s ? s[1] : '0'} 行）`);
+  }
+}
+
 // 报告：类型债务的当前规模（只报告，不失败——它是"债"，不是"违规"；防止数字只存在于某次对话里）
 {
   const files = walk('src').filter((f) => f.endsWith('.js'));

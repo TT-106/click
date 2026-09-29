@@ -120,3 +120,25 @@
    选择器 0 个 → 契约全部满足"的**假绿灯**——在 jQuery 脚本里找原生 API 自然一个也找不到。
    检查器的口径必须匹配语料，否则它的"通过"毫无含义（同一批里它也把 55 个拼接 id 误判成缺失，
    假红灯与假绿灯同时出现）。
+
+## 构造参数与字段的交叉：PartyBuffBehavior（2026-09-29 R27 实测）
+
+原版 `PartyBuffBehavior` 的构造函数把**第三个**实存档进优先级字段、把**第二个**实存档进状态效果
+id 字段，而调用点按直觉写的是 `(射程, 小整数, 较大的 id)`：
+
+- 原版构造：`archive/original/c2.js` 里 `function tu(a,b,c){ this.ka=c; this.bb=a; this.X=b; ... }`，
+  其中 `ka` 就是同族行为共用的优先级字段（同文件另有 `this.ka = 10`、`this.ka = 100`、`return this.ka`
+  等同族赋值/读取，优先级语义确证）。
+- 调用点：`src/engine/modules/content/classes.js:151` 的
+  `new PartyBuffBehavior(RANGED_ATTACK_RANGE, 6, 81)` 与 `content/minions.js:321` 的
+  `new PartyBuffBehavior(RANGED_ATTACK_RANGE, 8, 35)` —— 按字段流向，6 进 statusEffectTypeId、
+  81 进 priorityWeight。
+- 结论：这是原版的形状，按 R4 原样保留。恢复期曾把它改名成 `(actionRange, priorityWeight,
+  statusEffectTypeId)`，名字与自身赋值流向相反，属于**命名撒谎**（行为没变，但下一个读代码的人
+  会照着名字去"修"，那时才会真的改行为）。本轮按数据流把参数名改成
+  `(actionRange, statusEffectTypeId, priorityWeight)`，赋值语句一个字节未动，差分场景 89/89 与
+  typecheck 全绿。
+
+方法论：结构对账（标识符抹平后的骨架比对）看不见这一类，因为它只改成员名/参数名的**语义指向**、
+不改形状；能抓住它的只有"读一遍赋值流向"。所以改名之后的复核必须包含一次人工读，
+而不是只看门禁绿灯。

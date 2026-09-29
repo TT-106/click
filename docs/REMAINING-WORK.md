@@ -34,7 +34,7 @@
 
 ```bash
 npm install && npm run dev        # 开发服务器（部分门禁需要它）
-npm run lint                      # 10 条不变量守卫（零依赖）
+npm run lint                      # 11 条不变量守卫（零依赖）
 npm run typecheck                 # tsc，当前 0 错误
 npm run check                     # 150 文件语法 + 24 单测
 npm run test:parity               # 0/1/99/900 回合完整 DTO 相等

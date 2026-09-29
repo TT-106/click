@@ -26,7 +26,7 @@ import { MonsterSaveAdapter, StatisticsSaveAdapter } from "../persistence/entiti
 import { PartyState } from "../characters/party.js";
 import { bindAdventurePoints, pointUpgradeDefinitions, resetAdventurePoints } from "../progression/points.js";
 import { AdventurePointUpgrade, resetUpgradeCollection, restoreUpgradeCollection } from "../progression/upgrades.js";
-import { Achievement, achievementDefinitions, resetAchievements } from "../progression/achievements.js";
+import { Achievement, achievementDefinitions, bindAchievementProgress, resetAchievements } from "../progression/achievements.js";
 import { LifetimeStatistics, RunStatistics, StatisticsRecorder, bindStatistics } from "../progression/statistics.js";
 import { monsterDefinitions } from "../content/monsters.js";
 import { initializeItemCatalog } from "../content/equipment.js";
@@ -373,6 +373,7 @@ export function initializeRuntimeGame() {
         game.state.lifetimeStatistics = new LifetimeStatistics();
         bindStatistics(game.state);
         bindAdventurePoints(game.state);
+        bindAchievementProgress(game.state);
         bindAchievementViews(game.state);
         var victoryStatistics = game.state.victoryStatistics;
         victoryStatistics.partySize1Victories = 0;

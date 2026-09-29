@@ -6,7 +6,7 @@ import { Castle, DungeonNameGenerator, RegionLayout, WORLD_BLOCK_COLUMNS, WORLD_
 import { SeededRandom, randomIntFrom } from "../core/math.js";
 import { Dungeon, randomDungeonType, resetFarms, resetShops, sortDungeons } from "./dungeons.js";
 import { bindAdventurePoints, resetAdventurePoints } from "../progression/points.js";
-import { resetAchievements } from "../progression/achievements.js";
+import { bindAchievementProgress, resetAchievements } from "../progression/achievements.js";
 import { bindStatistics } from "../progression/statistics.js";
 import { bindAchievementViews } from "../views/achievements.js";
 export function initializeRegionsAndCastles() {
@@ -183,6 +183,9 @@ export function initializeRegionsAndCastles() {
   resetFarms();
   resetShops();
   bindAdventurePoints(game.state);
+  // 成就进度的会话状态必须在这里绑定：下面第 187 行的 resetAchievements() 就要用它，
+  // 而本文件末尾的 bindStatistics/bindAchievementViews 都排在它之后（视图层绑定不参与重置）。
+  bindAchievementProgress(game.state);
   resetAdventurePoints();
   resetAchievements();
   game.paused = false;

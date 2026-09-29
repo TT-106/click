@@ -10,7 +10,13 @@
 //   1. import 行增删改 —— 解耦切片把常量/依赖注入进来；
 //   2. `x.y` 成员深度变化 —— 解耦切片把 game.tileSize 换成裸常量 TILE_SIZE；
 //   3. `var` 关键字位置 —— 改名工具把原声明拆给另一段名字时，在段首重赋值处补声明
-//      （函数作用域 var，与原声明同 extent；此模式已用 --file 逐处人工读过）。
+//      （函数作用域，与原声明同 extent；此模式已用 --file 逐处人工读过）；
+//   4. 纯括号/标点行 —— 且本文件变动行上的 { } 收支为 0（完整块的骨架；多塞一个 } 或少一个 {
+//      会让收支不为 0，照样报红）；
+//   5. artifacts/structure-allowlist.json 里逐条列出的插入/删除行 —— 键是**抹平后的骨架文本**
+//      加计数上限，只能人工读过那一处之后加，diff 里看得见理由。注入 bind setter 这类
+//      合法的新语句走这条，而不是放宽归一化（把 I() 折成 I 会让"插一个函数调用"的破坏隐身，
+//      而插调用正是本文件要防的那一类）。
 // 已知盲区（诚实声明）：归一化把成员深度抹平，所以"把 this.a 换成 this.b 之类
 // 只改成员名的破坏"这条看不见——那种破坏由 typecheck、audit:dead-reads 和
 // lint 的标记词检查负责；本检查负责的是**形状**：多一行、少一行、改运算符、改字面量。
@@ -48,6 +54,23 @@ function skeleton(src) {
 }
 
 const IMPORT_LINE = /^import (?:\{[^}]*\}|\*) from "[^"]*" ;$/;
+
+// 逐条授权清单：artifacts/structure-allowlist.json
+//   [{ "file": "src/engine/modules/...", "line": "<骨架文本（标识符已抹平）>", "reason": "为什么这不是破坏" }]
+// 键是**抹平后的骨架文本**，不是标识符名——改名不会让授权失效（这条踩过：门禁按局部名找代码，
+// 重构一改名就瞎了）。新增条目只能在读过那一处之后手工加，diff 里看得见。
+let allowList = [];
+try {
+  allowList = JSON.parse(fs.readFileSync(path.join(ROOT, 'artifacts', 'structure-allowlist.json'), 'utf8'))
+    .map((e) => ({ file: e.file, line: e.line.replace(/\s+/g, ' ').trim(), reason: e.reason }));
+} catch { allowList = []; }
+function allowlisted(rel, line) {
+  const hit = allowList.find((e) => (e.file === rel || rel.endsWith(e.file))
+    && e.line === line && (!e.max || (e.used || 0) < e.max));
+  if (!hit) return null;
+  hit.used = (hit.used || 0) + 1;
+  return hit.reason;
+}
 
 /** 归一化：把三条已授权模式抹平（成员深度、var 关键字、import 行） */
 function normalize(line) {
@@ -120,6 +143,22 @@ for (const rel of files) {
     continue;
   }
   let fileUn = 0;
+  // 括号脚手架判定：一段完整的新块（或整块搬移）在变动行上的 { } 收支必然为 0；
+  // 多塞一个 } 或少一个 { 的破坏会让收支不为 0，所以只有一行纯括号、且本文件收支为 0 时
+  // 才把纯括号行当作已授权块的骨架放行，其余情况照旧进人工判定。
+  let braceDelta = 0;
+  const signedBraces = (line) => (line.match(/\{/g) || []).length - (line.match(/\}/g) || []).length;
+  for (const [kind, ai, bi] of ops) {
+    if (kind === 'same') {
+      const dl = a[ai], cl = b[bi];
+      if (dl === cl) continue;
+      braceDelta += signedBraces(cl) - signedBraces(dl);
+      continue;
+    }
+    braceDelta += (kind === 'add' ? 1 : -1) * signedBraces(kind === 'del' ? a[ai] : b[bi]);
+  }
+  const bracesBalanced = braceDelta === 0;
+  const isBraceOnly = (line) => /^[[\]{}();,]+$/.test(line);
   for (let oi = 0; oi < ops.length; oi++) {
     const [kind, ai, bi] = ops[oi];
     if (kind === 'same') {
@@ -135,6 +174,9 @@ for (const rel of files) {
     // 插入/删除整行：只有 import 行是授权的（解耦切片新增依赖；删 import 由 build 兜）
     if (kind === 'add' && IMPORT_LINE.test(b[bi])) { count('新增 import 行（解耦切片）', 1); continue; }
     if (kind === 'del' && IMPORT_LINE.test(a[ai])) { count('删除 import 行（解耦切片）', 1); continue; }
+    const whyAllowed = allowlisted(rel, kind === 'add' ? b[bi] : a[ai]);
+    if (whyAllowed) { count('逐条授权的插入/删除', 1); continue; }
+    if (bracesBalanced && isBraceOnly(kind === 'add' ? b[bi] : a[ai])) { count('纯括号脚手架（本文件变动行括号收支为 0）', 1); continue; }
     unexplainedTotal++; fileUn++;
     const line = kind === 'del' ? a[ai] : b[bi];
     const srcLine = kind === 'del' ? aRows[ai][0] : bRows[bi][0];
@@ -157,6 +199,9 @@ if (EXPLAIN) {
 }
 const sanctionedTotal = [...tally.values()].reduce((x, y) => x + y, 0);
 console.log(`结构对账：${compared} 个文件（base=${BASE}）；已授权结构变动 ${sanctionedTotal} 行，待人工判定 ${unexplainedTotal} 行（涉及 ${filesChanged + overflowFiles} 个文件），其中无配对插入/删除 ${loneOps} 行`);
+const idle = allowList.filter((e) => !e.used);
+if (idle.length) console.log(`提示：授权清单里有 ${idle.length} 条本次未被用到（可能是历史条目，删掉或留着都行，但它不再保护任何东西）：`);
+for (const e of idle) console.log(`  闲置 ${e.file} :: ${e.line.slice(0, 70)}`);
 if (unexplained.length) {
   console.log('\n待人工判定的变动（最多列 60 条）:');
   for (const u of unexplained) console.log('  ' + u);
