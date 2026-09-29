@@ -86,18 +86,18 @@ export function AdventurePointsView(elementId) {
   this.cachedPoints = -1;
 }
 export function mountAdventurePoints(view) {
-  var b = createElement("table", getElement(view.elementId), null, null);
-  b.style.width = "100%";
-  b = b.insertRow(0);
-  view.pointsCell = b.insertCell(0);
-  b = b.insertCell(1);
+  var pointsTable = createElement("table", getElement(view.elementId), null, null);
+  pointsTable.style.width = "100%";
+  var pointsRow = pointsTable.insertRow(0);
+  view.pointsCell = pointsRow.insertCell(0);
+  var apLabelCell = pointsRow.insertCell(1);
   view.pointsCell.style.textAlign = "right";
   view.pointsCell.style.paddingTop = "5px";
-  b.style.width = "30px";
-  b.style.paddingTop = "5px";
-  b.style.textAlign = "left";
-  b.title = "冒险点数";
-  b.innerHTML = "AP";
+  apLabelCell.style.width = "30px";
+  apLabelCell.style.paddingTop = "5px";
+  apLabelCell.style.textAlign = "left";
+  apLabelCell.title = "冒险点数";
+  apLabelCell.innerHTML = "AP";
 }
 export function ScrollButtonCollection(keyBindings) {
   this.keyStates = {};
@@ -360,33 +360,33 @@ export function initializeViewsExpedition() {
         }
       } else {
         var adventurer = game.state.adventurers[this.adventurerIndex],
-          b = adventurer.stats,
-          c = b.health,
-          d = statValue(b.maxHealth),
-          spirit = b.spirit,
-          g = statValue(b.maxSpirit),
-          damage = statValue(b.damage),
-          armor = statValue(b.armor),
-          attackRating = statValue(b.attackRating),
-          defenceRating = statValue(b.defenceRating),
-          b = b.characterLevel;
-        if (this.cachedHealth !== c || this.cachedMaxHealth !== d) {
-          setElementHtml(this.healthTextId, formatAmount(c) + "/" + formatAmount(d));
-          var healthSliderPercent = Math.min(100, floorNumber(100 * c / d));
+          stats = adventurer.stats,
+          health = stats.health,
+          maxHealth = statValue(stats.maxHealth),
+          spirit = stats.spirit,
+          maxSpirit = statValue(stats.maxSpirit),
+          damage = statValue(stats.damage),
+          armor = statValue(stats.armor),
+          attackRating = statValue(stats.attackRating),
+          defenceRating = statValue(stats.defenceRating),
+          characterLevel = stats.characterLevel;
+        if (this.cachedHealth !== health || this.cachedMaxHealth !== maxHealth) {
+          setElementHtml(this.healthTextId, formatAmount(health) + "/" + formatAmount(maxHealth));
+          var healthSliderPercent = Math.min(100, floorNumber(100 * health / maxHealth));
           getElement(this.healthSliderId).style.width = healthSliderPercent + "%";
-          this.cachedHealth = c;
-          this.cachedMaxHealth = d;
+          this.cachedHealth = health;
+          this.cachedMaxHealth = maxHealth;
         }
-        if (this.cachedSpirit !== spirit || this.cachedMaxSpirit !== g) {
-          setElementHtml(this.spiritTextId, formatAmount(spirit) + "/" + formatAmount(g));
-          c = Math.min(100, floorNumber(100 * spirit / g));
-          getElement(this.spiritSliderId).style.width = c + "%";
+        if (this.cachedSpirit !== spirit || this.cachedMaxSpirit !== maxSpirit) {
+          setElementHtml(this.spiritTextId, formatAmount(spirit) + "/" + formatAmount(maxSpirit));
+          var spiritSliderPercent = Math.min(100, floorNumber(100 * spirit / maxSpirit));
+          getElement(this.spiritSliderId).style.width = spiritSliderPercent + "%";
           this.cachedSpirit = spirit;
-          this.cachedMaxSpirit = g;
+          this.cachedMaxSpirit = maxSpirit;
         }
-        if (this.cachedLevel !== b) {
-          this.cachedLevel = b;
-          setElementHtml(this.levelClassTextId, "等级" + b + " " + game.state.adventurers[this.adventurerIndex].classDefinition.className);
+        if (this.cachedLevel !== characterLevel) {
+          this.cachedLevel = characterLevel;
+          setElementHtml(this.levelClassTextId, "等级" + characterLevel + " " + game.state.adventurers[this.adventurerIndex].classDefinition.className);
         }
         if (this.cachedDamage !== damage) {
           setElementHtml(this.damageTextId, formatAmount(damage));
@@ -400,7 +400,7 @@ export function initializeViewsExpedition() {
         if (this.cachedDefenceRating !== defenceRating) {
           setElementHtml(this.defenceRatingTextId, formatAmount(defenceRating));
         }
-        c = adventurer.effects.activeEffects;
+        var activeEffects = adventurer.effects.activeEffects;
         var shouldAdvanceEffectFrame = false;
         this.frameAge++;
         if (this.frameAge >= this.effectFrameInterval) {
@@ -410,44 +410,47 @@ export function initializeViewsExpedition() {
         for (var potionSlotIndex = 0; potionSlotIndex < this.potionSlots.length; potionSlotIndex++) {
           this.potionSlots[potionSlotIndex] = null;
         }
-        for (var activeEffectIndex = d = 0; activeEffectIndex < c.length; activeEffectIndex++) {
-          g = c[activeEffectIndex].statusEffectTypeId;
-          b = this.potionSlots.indexOf(g);
-          if (0 > b && d < this.potionSlots.length) {
-            this.potionSlots[d] = g;
-            d++;
+        var potionSlotCounter = 0;
+        for (var activeEffectIndex = 0; activeEffectIndex < activeEffects.length; activeEffectIndex++) {
+          var statusEffectTypeId = activeEffects[activeEffectIndex].statusEffectTypeId;
+          var potionSlotPosition = this.potionSlots.indexOf(statusEffectTypeId);
+          if (0 > potionSlotPosition && potionSlotCounter < this.potionSlots.length) {
+            this.potionSlots[potionSlotCounter] = statusEffectTypeId;
+            potionSlotCounter++;
           }
         }
         for (var effectIconIndex = 0; effectIconIndex < this.shownEffectTypeIds.length; effectIconIndex++) {
-          if (g = effectIconIndex < this.potionSlots.length ? this.potionSlots[effectIconIndex] : null, c = this.shownEffectTypeIds[effectIconIndex], g) {
-            if (c && c === g) {
+          var potionSlotTypeId = effectIconIndex < this.potionSlots.length ? this.potionSlots[effectIconIndex] : null;
+          var shownEffectTypeId = this.shownEffectTypeIds[effectIconIndex];
+          if (potionSlotTypeId) {
+            if (shownEffectTypeId && shownEffectTypeId === potionSlotTypeId) {
               if (shouldAdvanceEffectFrame) {
-                g = statusEffectDefinitions[c];
-                c = g.spritesheetPath;
-                d = game.animations.getAnimation(g.animationName);
+                var currentEffectDefinition = statusEffectDefinitions[shownEffectTypeId];
+                var currentSpritesheetPath = currentEffectDefinition.spritesheetPath;
+                var currentEffectAnimation = game.animations.getAnimation(currentEffectDefinition.animationName);
                 this.effectFrameIndices[effectIconIndex]++;
-                if (this.effectFrameIndices[effectIconIndex] >= d.getFrameCount()) {
+                if (this.effectFrameIndices[effectIconIndex] >= currentEffectAnimation.getFrameCount()) {
                   this.effectFrameIndices[effectIconIndex] = 0;
                 }
-                d = d.frames[this.effectFrameIndices[effectIconIndex]];
-                b = getElement(this.effectIconIds[effectIconIndex]);
-                b.style.background = "url('" + c + "') -" + d.frameSourceX + "px -" + d.frameSourceY + "px";
+                var currentEffectFrame = currentEffectAnimation.frames[this.effectFrameIndices[effectIconIndex]];
+                var effectIconElement = getElement(this.effectIconIds[effectIconIndex]);
+                effectIconElement.style.background = "url('" + currentSpritesheetPath + "') -" + currentEffectFrame.frameSourceX + "px -" + currentEffectFrame.frameSourceY + "px";
               }
             } else {
-              c = g;
-              this.shownEffectTypeIds[effectIconIndex] = c;
-              g = statusEffectDefinitions[c];
-              c = g.spritesheetPath;
-              d = game.animations.getAnimation(g.animationName);
+              var adoptedEffectTypeId = potionSlotTypeId;
+              this.shownEffectTypeIds[effectIconIndex] = adoptedEffectTypeId;
+              var newEffectDefinition = statusEffectDefinitions[adoptedEffectTypeId];
+              var newSpritesheetPath = newEffectDefinition.spritesheetPath;
+              var newEffectAnimation = game.animations.getAnimation(newEffectDefinition.animationName);
               this.effectFrameIndices[effectIconIndex] = 0;
-              d = d.frames[0];
-              b = getElement(this.effectIconIds[effectIconIndex]);
-              b.style.background = "url('" + c + "') -" + d.frameSourceX + "px -" + d.frameSourceY + "px";
-              b.title = g.tooltipLabel;
+              var newEffectFrame = newEffectAnimation.frames[0];
+              var newEffectIconElement = getElement(this.effectIconIds[effectIconIndex]);
+              newEffectIconElement.style.background = "url('" + newSpritesheetPath + "') -" + newEffectFrame.frameSourceX + "px -" + newEffectFrame.frameSourceY + "px";
+              newEffectIconElement.title = newEffectDefinition.tooltipLabel;
               showElementById(this.effectIconIds[effectIconIndex]);
             }
           } else {
-            if (c) {
+            if (shownEffectTypeId) {
               hideElementById(this.effectIconIds[effectIconIndex]);
               this.shownEffectTypeIds[effectIconIndex] = null;
             }
@@ -467,20 +470,20 @@ export function initializeViewsExpedition() {
             this.cachedMonsterDefenceRating = this.cachedMonsterAttackRating = this.cachedMonsterArmor = this.cachedMonsterDamage = this.comparisonEncounterIndex = -1;
           }
         } else {
-          c = monsters[0].stats;
-          var monsterDamage = statValue(c.damage);
-          var monsterArmor = statValue(c.armor);
-          g = statValue(c.attackRating);
-          c = statValue(c.defenceRating);
+          var monsterStats = monsters[0].stats;
+          var monsterDamage = statValue(monsterStats.damage);
+          var monsterArmor = statValue(monsterStats.armor);
+          var monsterAttackRating = statValue(monsterStats.attackRating);
+          var monsterDefenceRating = statValue(monsterStats.defenceRating);
           this.comparisonEncounterIndex = game.state.encounter.encounterCount;
           colorComparedStats(this.damageTextId, damage, monsterArmor, this.cachedDamage, this.cachedMonsterDamage, this.damageHeaderCell);
           colorComparedStats(this.armorTextId, armor, monsterDamage, this.cachedArmor, this.cachedMonsterArmor, this.potionButton);
-          colorComparedStats(this.attackRatingTextId, attackRating, c, this.cachedAttackRating, this.cachedMonsterDefenceRating, this.attackRatingHeaderCell);
-          colorComparedStats(this.defenceRatingTextId, defenceRating, g, this.cachedDefenceRating, this.cachedMonsterAttackRating, this.defenceHeaderCell);
+          colorComparedStats(this.attackRatingTextId, attackRating, monsterDefenceRating, this.cachedAttackRating, this.cachedMonsterDefenceRating, this.attackRatingHeaderCell);
+          colorComparedStats(this.defenceRatingTextId, defenceRating, monsterAttackRating, this.cachedDefenceRating, this.cachedMonsterAttackRating, this.defenceHeaderCell);
           this.cachedMonsterDamage = monsterArmor;
           this.cachedMonsterArmor = monsterDamage;
-          this.cachedMonsterAttackRating = g;
-          this.cachedMonsterDefenceRating = c;
+          this.cachedMonsterAttackRating = monsterAttackRating;
+          this.cachedMonsterDefenceRating = monsterDefenceRating;
         }
         this.cachedDamage = damage;
         this.cachedArmor = armor;
@@ -677,11 +680,11 @@ export function initializeViewsExpedition() {
       if (!this.cachedPotion) {
         showElement(this.tableElement);
       }
-      var a;
-      a = (a = this.potion) ? !a.active && isPotionModifierActive(a) ? "potionButtonDisabled" : a.active ? "potionButtonActive" : "potionButton" : "potionButtonDisabled";
-      if (this.cachedButtonClass != a) {
-        this.cachedButtonClass = a;
-        this.tableElement.className = a;
+      var buttonClass;
+      buttonClass = (buttonClass = this.potion) ? !buttonClass.active && isPotionModifierActive(buttonClass) ? "potionButtonDisabled" : buttonClass.active ? "potionButtonActive" : "potionButton" : "potionButtonDisabled";
+      if (this.cachedButtonClass != buttonClass) {
+        this.cachedButtonClass = buttonClass;
+        this.tableElement.className = buttonClass;
       }
       if (this.potion != this.cachedPotion) {
         this.nameCell.innerHTML = this.potion.displayName;

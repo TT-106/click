@@ -1,1 +1,698 @@
-[]
+[
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "if (I = I[I], I.I) {",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "var I = I[I];",
+    "max": 2,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "if (I.I) {",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "for (I = 0; I < I.I.I; I++) {",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "var I = 0;",
+    "max": 16,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "for (; I < I.I.I; I++) {",
+    "max": 7,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "I = I.I;",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "var I = I.I[I].I;",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "for (I = 0; I < I.I; I++) {",
+    "max": 2,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "for (; I < I.I; I++) {",
+    "max": 2,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "if (I = I.I) {",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "var I = I.I;",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "if (I) {",
+    "max": 4,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "for (I = I = 0; I < I.I.I; I++) {",
+    "max": 6,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "if (!(I = I.I[I])) {",
+    "max": 2,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "var I = I.I[I];",
+    "max": 7,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "if (!I) {",
+    "max": 2,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "for (I = 0; I < I; I++) {",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "for (; I < I; I++) {",
+    "max": 2,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "for (I = 1; I < I; I++) {",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "var I = 1;",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "for (I = 0; I < I.I.I.I; I++) {",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "for (; I < I.I.I.I; I++) {",
+    "max": 2,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "if (I = I.I[I], !I.I && !I.I && (I = I(I, I.I.I(I.I), I.I.I(I.I)), !I || I < I)) {",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "I = I.I[I];",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "if (!I.I && !I.I) {",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "I = I(I, I.I.I(I.I), I.I.I(I.I));",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "if (!I || I < I) {",
+    "max": 7,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "for (I = I = 0; I < I.I.I.I; I++) {",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "var I = I = I = I,",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "var I = I;",
+    "max": 3,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "var I = I,",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "if ((I = ( (I)).I(I.I)) && !I(I, I)) {",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "I = ( (I)).I(I.I);",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "if (I && !I(I, I)) {",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "if (I = I.I[I], I = I(I, I.I.I(I.I), I.I.I(I.I)), !I || I < I) {",
+    "max": 2,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "var I = I(I, I.I.I(I.I), I.I.I(I.I));",
+    "max": 2,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "var I = false;",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "I = false;",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "} else if (I = false, this.I) {",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "} else if (this.I) {",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "if (I = I) {",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "if (I = I[I], !I.I && (I = I(I, I.I(), I.I()), !I || I < I)) {",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "if (!I.I) {",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "var I = I(I, I.I(), I.I());",
+    "max": 4,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "if (!(I = I.I[I], I.I || I.I.I || I.I || (I = I(I, I.I(), I.I()), I && !(I < I)))) {",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "I = 0;",
+    "max": 3,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "if (!(I.I || I.I.I || I.I)) {",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "if (!(I = I.I[I], I.I || I.I.I || I.I && (!I.I || I.I) || (I = I(I, I.I(), I.I()), I && !(I < I)))) {",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "if (!(I.I || I.I.I || I.I && (!I.I || I.I))) {",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "if (I = I.I[I], !I.I && !I.I.I && (I = I(I, I.I(), I.I()), !I || I < I)) {",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "if (!I.I && !I.I.I) {",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "if (I = this.I) {",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "var I = this.I;",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "if (I = this.I.I) {",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/characters/party.js",
+    "line": "var I = this.I.I;",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/combat/scrolls.js",
+    "line": "var I = null;",
+    "max": 6,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/combat/scrolls.js",
+    "line": "export function I(I, I, I, I, I, I) {",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/combat/scrolls.js",
+    "line": "I = I;",
+    "max": 6,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/combat/scrolls.js",
+    "line": "function I() {",
+    "max": 6,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/combat/scrolls.js",
+    "line": "if (!I) {",
+    "max": 6,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/combat/scrolls.js",
+    "line": "throw new I( '卷轴系统尚未绑定游戏状态：请在组合根调用 I(I.I, I.I, I.I, I.I, I.I, I.I)' );",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/combat/scrolls.js",
+    "line": "return I;",
+    "max": 6,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/combat/scrolls.js",
+    "line": "throw new I( '卷轴系统尚未绑定卷轴库存：请在组合根调用 I(I.I, I.I, I.I, I.I, I.I, I.I)' );",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/combat/scrolls.js",
+    "line": "throw new I( '卷轴系统尚未绑定卷轴目标注册表：请在组合根调用 I(I.I, I.I, I.I, I.I, I.I, I.I)' );",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/combat/scrolls.js",
+    "line": "throw new I( '卷轴系统尚未绑定卷轴掉落注册表：请在组合根调用 I(I.I, I.I, I.I, I.I, I.I, I.I)' );",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/combat/scrolls.js",
+    "line": "throw new I( '卷轴系统尚未绑定物品精灵表：请在组合根调用 I(I.I, I.I, I.I, I.I, I.I, I.I)' );",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/combat/scrolls.js",
+    "line": "throw new I( '卷轴系统尚未绑定视觉效果容器：请在组合根调用 I(I.I, I.I, I.I, I.I, I.I, I.I)' );",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/combat/scrolls.js",
+    "line": "this.I = I.I.I - 3 * this.I;",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/combat/scrolls.js",
+    "line": "this.I = I().I - 3 * this.I;",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/combat/scrolls.js",
+    "line": "I.I = I.I.I - 3 * I.I;",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/combat/scrolls.js",
+    "line": "I.I = I().I - 3 * I.I;",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/combat/scrolls.js",
+    "line": "if (I.I > I.I.I) {",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/combat/scrolls.js",
+    "line": "if (I.I > I().I) {",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/combat/scrolls.js",
+    "line": "return I.I.I - I.I >= I.I;",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/combat/scrolls.js",
+    "line": "return I().I - I.I >= I.I;",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/combat/scrolls.js",
+    "line": "this.I = I.I.I(I.I);",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/combat/scrolls.js",
+    "line": "this.I = I().I(I.I);",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/combat/scrolls.js",
+    "line": "I = I.I.I[I(I.I.I.I)];",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/combat/scrolls.js",
+    "line": "I = I().I[I(I().I.I)];",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/combat/scrolls.js",
+    "line": "I = I(I.I.I[I(I.I.I.I)]);",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/combat/scrolls.js",
+    "line": "I = I(I().I[I(I().I.I)]);",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/combat/scrolls.js",
+    "line": "var I = I.I.I.I;",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/combat/scrolls.js",
+    "line": "var I = I().I.I;",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/combat/scrolls.js",
+    "line": "I.I.I.I(I);",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/combat/scrolls.js",
+    "line": "I().I.I(I);",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/combat/scrolls.js",
+    "line": "I.I.I.I = I.I;",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/combat/scrolls.js",
+    "line": "I.I.I.I = I;",
+    "max": 2,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/combat/scrolls.js",
+    "line": "I().I.I = I.I;",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/combat/scrolls.js",
+    "line": "I().I.I = I;",
+    "max": 2,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/combat/scrolls.js",
+    "line": "I(I.I, I);",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/combat/scrolls.js",
+    "line": "I(I.I.I, 1);",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/combat/scrolls.js",
+    "line": "I.I.I.I();",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/combat/scrolls.js",
+    "line": "I(I(), I);",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/combat/scrolls.js",
+    "line": "I(I().I, 1);",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/combat/scrolls.js",
+    "line": "I().I.I();",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/combat/scrolls.js",
+    "line": "var I = I.I;",
+    "max": 3,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/combat/scrolls.js",
+    "line": "var I = I();",
+    "max": 3,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/combat/scrolls.js",
+    "line": "I = new I(I[I], I.I);",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/combat/scrolls.js",
+    "line": "I = new I(I[I], I());",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/combat/scrolls.js",
+    "line": "I(I.I, this);",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/combat/scrolls.js",
+    "line": "I(I(), this);",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/combat/scrolls.js",
+    "line": "I(I.I.I, this.I.I, this.I.I);",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/combat/scrolls.js",
+    "line": "I(I().I, this.I.I, this.I.I);",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/combat/scrolls.js",
+    "line": "I(I.I.I.I);",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/combat/scrolls.js",
+    "line": "I(I().I.I);",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/persistence/entities.js",
+    "line": "var I, I, I;",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/persistence/entities.js",
+    "line": "var I, I, I, I;",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/runtime/index.js",
+    "line": "I(I.I, I.I, I.I, I.I, I.I, I.I);",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/views/expedition.js",
+    "line": "for (var I = I = 0; I < I.I; I++) {",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/views/expedition.js",
+    "line": "var I = 0;",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/views/expedition.js",
+    "line": "for (var I = 0; I < I.I; I++) {",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/views/expedition.js",
+    "line": "if (I = I < this.I.I ? this.I[I] : null, I = this.I[I], I) {",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/views/expedition.js",
+    "line": "var I = I < this.I.I ? this.I[I] : null;",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/views/expedition.js",
+    "line": "var I = this.I[I];",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  },
+  {
+    "file": "src/engine/modules/views/expedition.js",
+    "line": "if (I) {",
+    "max": 1,
+    "reason": "R33 切片：组合根注入脚手架 / 已授权的语句拆分改写（逐处核对求值顺序，verify-call-order 调用序列比对通过）"
+  }
+]

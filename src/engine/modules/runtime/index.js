@@ -28,7 +28,7 @@ import { initializeContentSkillsNecromancer } from '../content/skills/necromance
 import { initializeContentSkillsDruid } from '../content/skills/druid.js';
 import { initializeContentSkillsChickenKing } from '../content/skills/chicken-king.js';
 import { initializeContentSpells } from '../content/spells.js';
-import { initializeCombatScrolls, scrollDefinitions } from '../combat/scrolls.js';
+import { bindCombatScrolls, initializeCombatScrolls, scrollDefinitions } from '../combat/scrolls.js';
 import { initializeCombatPotions } from '../combat/potions.js';
 import { initializeProgressionPoints } from '../progression/points.js';
 import { initializeProgressionAchievements } from '../progression/achievements.js';
@@ -176,4 +176,5 @@ bindCastleViews(game.monsterCatalog, game.castles, game.regions, game.itemSprite
 bindPersistenceEntities(game.itemGenerator, game.dungeons, game.monsterCatalog, game.scrolls);
 bindUpgradeDetailViews(game.state, game.terrainSprites, game.monsterSprites, game.monsterCatalog, game.shops, game.dungeons, game.castles, game.animations);
 bindFloatingTextRender(game.floatingText, () => game.processingOffline, () => game.worldActive, () => game.world);
+bindCombatScrolls(game.state, game.scrolls, game.scrollTargets, game.scrollDrops, game.itemSprites, game.effects);
 export { game } from './game.js';

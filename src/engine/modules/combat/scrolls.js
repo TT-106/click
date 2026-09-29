@@ -1,7 +1,6 @@
 /** 卷轴库存、冷却、升级与施放。
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
-import { game } from "../runtime/game.js";
 import { scrollCapacityBonus, scrollPriceCurve } from "../content/balance.js";
 import { randomInt, scaleByLevel } from "../core/math.js";
 import { applyStatBonus } from "./skill-effects.js";
@@ -11,6 +10,64 @@ import { CAST_ACTION_TYPE, MELEE_ACTION_TYPE, selectScrollTarget } from "../ai/t
 import { VisualEffect, addVisualEffect } from "../rendering/sprites.js";
 import { updateCharacter } from "../characters/character.js";
 import { electricSpellDefinitions, fireSpellDefinitions } from "../content/spells.js";
+/** 卷轴系统所需的六个依赖由组合根注入。state / scrolls / scrollTargets / scrollDrops /
+ *  itemSprites / effects 六个容器对象都在 runtime 的 game 模块对象字面量里只构造一次、
+ *  从不整体重新赋值（src/ 内 0 处 `game.X =`，判据见 docs/reverse-engineering/facts.md），
+ *  所以按引用绑安全。注意 game.scrolls 就是本模块定义的 ScrollInventory 在组合根里的单例实例，
+ *  绑定它只是把"模块从全局找自己"改成"由根注入"，字段值（scrollsById、scrollList、recentTargets、
+ *  drops 等）随游戏进程变化，读的始终是同一对象；而 game.state.scrollCaster / game.state.adventurers
+ *  这类**子对象**会被整体替换（存档恢复、移动），但绑的是 game.state 容器本身，每次现读子字段安全。
+ *  未绑定就用到会立刻抛，避免"装配漏一步"退化成静默的 undefined 读取。 */
+var boundState = null;
+var boundScrolls = null;
+var boundScrollTargets = null;
+var boundScrollDrops = null;
+var boundItemSprites = null;
+var boundEffects = null;
+export function bindCombatScrolls(state, scrolls, scrollTargets, scrollDrops, itemSprites, effects) {
+  boundState = state;
+  boundScrolls = scrolls;
+  boundScrollTargets = scrollTargets;
+  boundScrollDrops = scrollDrops;
+  boundItemSprites = itemSprites;
+  boundEffects = effects;
+}
+function stateRef() {
+  if (!boundState) {
+    throw new Error('卷轴系统尚未绑定游戏状态：请在组合根调用 bindCombatScrolls(game.state, game.scrolls, game.scrollTargets, game.scrollDrops, game.itemSprites, game.effects)');
+  }
+  return boundState;
+}
+function scrollsRef() {
+  if (!boundScrolls) {
+    throw new Error('卷轴系统尚未绑定卷轴库存：请在组合根调用 bindCombatScrolls(game.state, game.scrolls, game.scrollTargets, game.scrollDrops, game.itemSprites, game.effects)');
+  }
+  return boundScrolls;
+}
+function scrollTargetsRef() {
+  if (!boundScrollTargets) {
+    throw new Error('卷轴系统尚未绑定卷轴目标注册表：请在组合根调用 bindCombatScrolls(game.state, game.scrolls, game.scrollTargets, game.scrollDrops, game.itemSprites, game.effects)');
+  }
+  return boundScrollTargets;
+}
+function scrollDropsRef() {
+  if (!boundScrollDrops) {
+    throw new Error('卷轴系统尚未绑定卷轴掉落注册表：请在组合根调用 bindCombatScrolls(game.state, game.scrolls, game.scrollTargets, game.scrollDrops, game.itemSprites, game.effects)');
+  }
+  return boundScrollDrops;
+}
+function itemSpritesRef() {
+  if (!boundItemSprites) {
+    throw new Error('卷轴系统尚未绑定物品精灵表：请在组合根调用 bindCombatScrolls(game.state, game.scrolls, game.scrollTargets, game.scrollDrops, game.itemSprites, game.effects)');
+  }
+  return boundItemSprites;
+}
+function effectsRef() {
+  if (!boundEffects) {
+    throw new Error('卷轴系统尚未绑定视觉效果容器：请在组合根调用 bindCombatScrolls(game.state, game.scrolls, game.scrollTargets, game.scrollDrops, game.itemSprites, game.effects)');
+  }
+  return boundEffects;
+}
 export var scrollDefinitions;
 export function Spell(spellDefinition) {
   this.name = spellDefinition.name;
@@ -20,22 +77,22 @@ export function Spell(spellDefinition) {
   this.statusEffectTypeId = spellDefinition.statusEffectTypeId;
   this.potencyPercent = spellDefinition.potencyPercent;
   this.cooldownTurns = spellDefinition.cooldownTurns;
-  this.lastCastTurn = game.state.turnNumber - 3 * this.cooldownTurns;
+  this.lastCastTurn = stateRef().turnNumber - 3 * this.cooldownTurns;
   this.applyEffectOnImpact = spellDefinition.applyEffectOnImpact;
 }
 export function resetSpellCooldown(spell) {
-  spell.lastCastTurn = game.state.turnNumber - 3 * spell.cooldownTurns;
+  spell.lastCastTurn = stateRef().turnNumber - 3 * spell.cooldownTurns;
 }
 export function isSpellReady(spell) {
-  if (spell.lastCastTurn > game.state.turnNumber) {
+  if (spell.lastCastTurn > stateRef().turnNumber) {
     resetSpellCooldown(spell);
   }
-  return game.state.turnNumber - spell.lastCastTurn >= spell.cooldownTurns;
+  return stateRef().turnNumber - spell.lastCastTurn >= spell.cooldownTurns;
 }
 export function Scroll(scrollDefinition, scrollTargets) {
   this.scrollTargets = scrollTargets;
   this.scrollId = scrollDefinition.scrollId;
-  this.spriteName = game.itemSprites.getSprite(scrollDefinition.spriteName);
+  this.spriteName = itemSpritesRef().getSprite(scrollDefinition.spriteName);
   this.baseName = scrollDefinition.baseName;
   this.baseCapacity = scrollDefinition.baseCapacity;
   this.capacityIncrement = scrollDefinition.capacityIncrement;
@@ -107,7 +164,7 @@ export function getNextScrollLabel(scroll) {
 export function castScroll(scroll, hasInfiniteScrolls) {
   if (!scroll.locked && (0 < scroll.quantity || hasInfiniteScrolls)) {
     var randomAdventurer;
-    randomAdventurer = game.state.adventurers[randomInt(game.state.adventurers.length)];
+    randomAdventurer = stateRef().adventurers[randomInt(stateRef().adventurers.length)];
     var opponents = getOpponents(randomAdventurer);
     if (0 === opponents.length) {
       randomAdventurer = null;
@@ -132,7 +189,7 @@ export function castScroll(scroll, hasInfiniteScrolls) {
       }
     }
     if (!castTarget) {
-      castTarget = selectScrollTarget(game.state.adventurers[randomInt(game.state.adventurers.length)]);
+      castTarget = selectScrollTarget(stateRef().adventurers[randomInt(stateRef().adventurers.length)]);
       if (!castTarget) {
         castTarget = getMonsters();
         castTarget = 0 === castTarget.length ? null : castTarget[randomInt(castTarget.length)];
@@ -146,19 +203,19 @@ export function castScroll(scroll, hasInfiniteScrolls) {
           scrollTargets.recentTargets.shift();
         }
       }
-      var casterPosition = game.state.scrollCaster.position;
+      var casterPosition = stateRef().scrollCaster.position;
       casterPosition.room = castTarget.position.room;
-      game.state.scrollCaster.setCombatTarget(castTarget);
+      stateRef().scrollCaster.setCombatTarget(castTarget);
       if (scroll.scrollSpell) {
-        game.state.scrollCaster.spellToCast = scroll.scrollSpell;
-        game.state.scrollCaster.actionType = CAST_ACTION_TYPE;
+        stateRef().scrollCaster.spellToCast = scroll.scrollSpell;
+        stateRef().scrollCaster.actionType = CAST_ACTION_TYPE;
       } else {
-        game.state.scrollCaster.actionType = MELEE_ACTION_TYPE;
+        stateRef().scrollCaster.actionType = MELEE_ACTION_TYPE;
       }
       var impactVisual = new VisualEffect("Red Damage", casterPosition.levelPosition, casterPosition.levelPosition, false, 1);
-      addVisualEffect(game.effects, impactVisual);
-      updateCharacter(game.state.scrollCaster, 1);
-      game.state.statisticsRecorder.recordScrollUsed();
+      addVisualEffect(effectsRef(), impactVisual);
+      updateCharacter(stateRef().scrollCaster, 1);
+      stateRef().statisticsRecorder.recordScrollUsed();
       if (!hasInfiniteScrolls) {
         scroll.quantity--;
         if (0 > scroll.quantity) {
@@ -169,7 +226,7 @@ export function castScroll(scroll, hasInfiniteScrolls) {
   }
 }
 export function clearScrollTargets() {
-  var scrollTargets = game.scrollTargets;
+  var scrollTargets = scrollTargetsRef();
   if (0 < scrollTargets.recentTargets.length) {
     scrollTargets.recentTargets.length = 0;
   }
@@ -187,7 +244,7 @@ export function ScrollDropRegistry() {
   this.drops = [];
 }
 export function removeScrollDrop(a) {
-  var dropRegistry = game.scrollDrops;
+  var dropRegistry = scrollDropsRef();
   a = dropRegistry.drops.indexOf(a);
   if (-1 < a) {
     dropRegistry.drops.splice(a, 1);
@@ -199,13 +256,13 @@ export function ScrollInventory() {
   this.unlockedScrolls = [];
 }
 export function resetScrollInventory() {
-  var scrollInventory = game.scrolls;
+  var scrollInventory = scrollsRef();
   scrollInventory.scrollsById = {};
   scrollInventory.scrollList.length = 0;
   scrollInventory.unlockedScrolls.length = 0;
   var definitionIndex, scroll;
   for (definitionIndex = 0; definitionIndex < scrollDefinitions.length; definitionIndex++) {
-    scroll = new Scroll(scrollDefinitions[definitionIndex], game.scrollTargets);
+    scroll = new Scroll(scrollDefinitions[definitionIndex], scrollTargetsRef());
     (/** @type {any} */ (scroll)).applyLockedAndUpgradeState(0 < scrollDefinitions[definitionIndex].baseCapacity, 0);
     scrollInventory.scrollList.push(scroll);
     scrollInventory.scrollsById[scroll.scrollId] = scroll;
@@ -223,15 +280,15 @@ export function initializeCombatScrolls() {
   Scroll.prototype.applyLockedAndUpgradeState = function (locked, upgradeCount) {
     if (this.locked && !locked) {
       this.locked = false;
-      registerUnlockedScroll(game.scrolls, this);
+      registerUnlockedScroll(scrollsRef(), this);
     }
     this.upgradeCount = upgradeCount;
     if (0 < upgradeCount && this.statBonusPerUpgrade) {
       var level;
       for (level = 0; level < this.upgradeCount; level++) {
-        applyStatBonus(game.state.scrollCaster, this.statBonusPerUpgrade.statType, this.statBonusPerUpgrade.statBonusValue);
+        applyStatBonus(stateRef().scrollCaster, this.statBonusPerUpgrade.statType, this.statBonusPerUpgrade.statBonusValue);
       }
-      updateScrollAccuracy(game.state.scrollCaster.stats);
+      updateScrollAccuracy(stateRef().scrollCaster.stats);
     }
     this.label = getScrollLabel(this);
     this.nextLabel = getNextScrollLabel(this);

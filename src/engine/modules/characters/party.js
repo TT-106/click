@@ -110,7 +110,7 @@ export function findNextUnopenedDoor() {
   var leader = game.state.leader,
     currentHallway,
     doorIndex,
-    d,
+    leaderRoom,
     doorDistance,
     nearestUnopenedDoor = null,
     leaderLevelPosition = leader.position.levelPosition,
@@ -125,20 +125,20 @@ export function findNextUnopenedDoor() {
       return currentHallway.doorB;
     }
   }
-  if (d = leader.position.room) {
-    var doorList = d.doorList;
+  if (leaderRoom = leader.position.room) {
+    var doorList = leaderRoom.doorList;
     for (doorIndex = 0; doorIndex < doorList.length; doorIndex++) {
-      d = doorList[doorIndex];
-      if (!d.isOpen) {
+      var leaderRoomDoor = doorList[doorIndex];
+      if (!leaderRoomDoor.isOpen) {
         if (nearestUnopenedDoor) {
-          doorDistance = distanceSquaredToPoint(leaderLevelPosition, d.pixelColumn, d.pixelRow);
+          doorDistance = distanceSquaredToPoint(leaderLevelPosition, leaderRoomDoor.pixelColumn, leaderRoomDoor.pixelRow);
           if (doorDistance < bestDistanceSquared) {
-            nearestUnopenedDoor = d;
+            nearestUnopenedDoor = leaderRoomDoor;
             bestDistanceSquared = doorDistance;
           }
         } else {
-          nearestUnopenedDoor = d;
-          bestDistanceSquared = distanceSquaredToPoint(leaderLevelPosition, d.pixelColumn, d.pixelRow);
+          nearestUnopenedDoor = leaderRoomDoor;
+          bestDistanceSquared = distanceSquaredToPoint(leaderLevelPosition, leaderRoomDoor.pixelColumn, leaderRoomDoor.pixelRow);
         }
       }
     }
@@ -147,19 +147,20 @@ export function findNextUnopenedDoor() {
     }
   }
   for (var roomIndex = 0; roomIndex < roomList.length; roomIndex++) {
-    if (d = roomList[roomIndex], d.discovered) {
-      for (doorList = d.doorList, doorIndex = 0; doorIndex < doorList.length; doorIndex++) {
-        d = doorList[doorIndex];
-        if (!d.isOpen) {
+    var discoveredRoom = roomList[roomIndex];
+    if (discoveredRoom.discovered) {
+      for (doorList = discoveredRoom.doorList, doorIndex = 0; doorIndex < doorList.length; doorIndex++) {
+        var discoveredRoomDoor = doorList[doorIndex];
+        if (!discoveredRoomDoor.isOpen) {
           if (nearestUnopenedDoor) {
-            doorDistance = distanceSquaredToPoint(leaderLevelPosition, d.pixelColumn, d.pixelRow);
+            doorDistance = distanceSquaredToPoint(leaderLevelPosition, discoveredRoomDoor.pixelColumn, discoveredRoomDoor.pixelRow);
             if (doorDistance < bestDistanceSquared) {
-              nearestUnopenedDoor = d;
+              nearestUnopenedDoor = discoveredRoomDoor;
               bestDistanceSquared = doorDistance;
             }
           } else {
-            nearestUnopenedDoor = d;
-            bestDistanceSquared = distanceSquaredToPoint(leaderLevelPosition, d.pixelColumn, d.pixelRow);
+            nearestUnopenedDoor = discoveredRoomDoor;
+            bestDistanceSquared = distanceSquaredToPoint(leaderLevelPosition, discoveredRoomDoor.pixelColumn, discoveredRoomDoor.pixelRow);
           }
         }
       }
@@ -168,30 +169,30 @@ export function findNextUnopenedDoor() {
   for (var hallwayIndex = 0; hallwayIndex < hallwayList.length; hallwayIndex++) {
     var hallway = hallwayList[hallwayIndex];
     if (hallway.discovered) {
-      d = hallway.doorA;
-      if (!d.isOpen) {
+      var hallwayDoor = hallway.doorA;
+      if (!hallwayDoor.isOpen) {
         if (nearestUnopenedDoor) {
-          doorDistance = distanceSquaredToPoint(leaderLevelPosition, d.pixelColumn, d.pixelRow);
+          doorDistance = distanceSquaredToPoint(leaderLevelPosition, hallwayDoor.pixelColumn, hallwayDoor.pixelRow);
           if (doorDistance < bestDistanceSquared) {
-            nearestUnopenedDoor = d;
+            nearestUnopenedDoor = hallwayDoor;
             bestDistanceSquared = doorDistance;
           }
         } else {
-          nearestUnopenedDoor = d;
-          bestDistanceSquared = distanceSquaredToPoint(leaderLevelPosition, d.pixelColumn, d.pixelRow);
+          nearestUnopenedDoor = hallwayDoor;
+          bestDistanceSquared = distanceSquaredToPoint(leaderLevelPosition, hallwayDoor.pixelColumn, hallwayDoor.pixelRow);
         }
       }
-      d = hallway.doorB;
-      if (!d.isOpen) {
+      hallwayDoor = hallway.doorB;
+      if (!hallwayDoor.isOpen) {
         if (nearestUnopenedDoor) {
-          doorDistance = distanceSquaredToPoint(leaderLevelPosition, d.pixelColumn, d.pixelRow);
+          doorDistance = distanceSquaredToPoint(leaderLevelPosition, hallwayDoor.pixelColumn, hallwayDoor.pixelRow);
           if (doorDistance < bestDistanceSquared) {
-            nearestUnopenedDoor = d;
+            nearestUnopenedDoor = hallwayDoor;
             bestDistanceSquared = doorDistance;
           }
         } else {
-          nearestUnopenedDoor = d;
-          bestDistanceSquared = distanceSquaredToPoint(leaderLevelPosition, d.pixelColumn, d.pixelRow);
+          nearestUnopenedDoor = hallwayDoor;
+          bestDistanceSquared = distanceSquaredToPoint(leaderLevelPosition, hallwayDoor.pixelColumn, hallwayDoor.pixelRow);
         }
       }
     }
@@ -207,127 +208,138 @@ export function initializeCharactersParty() {
     if (game.currentDungeon) {
       game.currentDungeon.advanceLevel();
     } else if (game.currentCastle) {
-      var a = game.currentCastle;
+      var conqueredCastle = game.currentCastle;
       game.currentCastle = null;
       game.worldActive = true;
-      var b,
-        c = getAllies(),
-        d,
-        f;
-      for (f = 0; f < c.length; f++) {
-        d = c[f];
-        b = d.position;
-        clearMovementTarget(b);
-        b.currentHallway = null;
-        b.room = null;
-        d.actionType = IDLE_ACTION;
+      var allyPosition,
+        allies = getAllies(),
+        idleAlly,
+        allyIndex;
+      for (allyIndex = 0; allyIndex < allies.length; allyIndex++) {
+        idleAlly = allies[allyIndex];
+        allyPosition = idleAlly.position;
+        clearMovementTarget(allyPosition);
+        allyPosition.currentHallway = null;
+        allyPosition.room = null;
+        idleAlly.actionType = IDLE_ACTION;
       }
       clearItemDrops(game.itemDrops);
-      a.attackScheduled = false;
+      conqueredCastle.attackScheduled = false;
       invalidateCastleRevision();
-      a.conquered = true;
-      b = [];
+      conqueredCastle.conquered = true;
+      var adjacentLockedCastles = [];
       var adjacentLockedCastle;
-      for (d = 0; d < a.regions.length; d++) {
-        f = a.regions[d];
-        c = f.regionColumn;
-        f = f.regionRow;
-        if ((adjacentLockedCastle = findCastleByRegion(c - 1 + "_" + f)) && adjacentLockedCastle !== a && adjacentLockedCastle.regionLocked && 0 > b.indexOf(adjacentLockedCastle)) {
-          b.push(adjacentLockedCastle);
+      var castleRegionIndex = 0;
+      for (; castleRegionIndex < conqueredCastle.regions.length; castleRegionIndex++) {
+        var castleRegion = conqueredCastle.regions[castleRegionIndex];
+        var regionColumn = castleRegion.regionColumn;
+        var regionRow = conqueredCastle.regions[castleRegionIndex].regionRow;
+        if ((adjacentLockedCastle = findCastleByRegion(regionColumn - 1 + "_" + regionRow)) && adjacentLockedCastle !== conqueredCastle && adjacentLockedCastle.regionLocked && 0 > adjacentLockedCastles.indexOf(adjacentLockedCastle)) {
+          adjacentLockedCastles.push(adjacentLockedCastle);
         }
-        if ((adjacentLockedCastle = findCastleByRegion(c + 1 + "_" + f)) && adjacentLockedCastle !== a && adjacentLockedCastle.regionLocked && 0 > b.indexOf(adjacentLockedCastle)) {
-          b.push(adjacentLockedCastle);
+        if ((adjacentLockedCastle = findCastleByRegion(regionColumn + 1 + "_" + regionRow)) && adjacentLockedCastle !== conqueredCastle && adjacentLockedCastle.regionLocked && 0 > adjacentLockedCastles.indexOf(adjacentLockedCastle)) {
+          adjacentLockedCastles.push(adjacentLockedCastle);
         }
-        if ((adjacentLockedCastle = findCastleByRegion(c + "_" + (f - 1))) && adjacentLockedCastle !== a && adjacentLockedCastle.regionLocked && 0 > b.indexOf(adjacentLockedCastle)) {
-          b.push(adjacentLockedCastle);
+        if ((adjacentLockedCastle = findCastleByRegion(regionColumn + "_" + (regionRow - 1))) && adjacentLockedCastle !== conqueredCastle && adjacentLockedCastle.regionLocked && 0 > adjacentLockedCastles.indexOf(adjacentLockedCastle)) {
+          adjacentLockedCastles.push(adjacentLockedCastle);
         }
-        if ((adjacentLockedCastle = findCastleByRegion(c + "_" + (f + 1))) && adjacentLockedCastle !== a && adjacentLockedCastle.regionLocked && 0 > b.indexOf(adjacentLockedCastle)) {
-          b.push(adjacentLockedCastle);
+        if ((adjacentLockedCastle = findCastleByRegion(regionColumn + "_" + (regionRow + 1))) && adjacentLockedCastle !== conqueredCastle && adjacentLockedCastle.regionLocked && 0 > adjacentLockedCastles.indexOf(adjacentLockedCastle)) {
+          adjacentLockedCastles.push(adjacentLockedCastle);
         }
       }
-      for (c = 0; c < b.length; c++) {
-        b[c].regionLocked = false;
+      var lockedCastleIndex = 0;
+      for (; lockedCastleIndex < adjacentLockedCastles.length; lockedCastleIndex++) {
+        adjacentLockedCastles[lockedCastleIndex].regionLocked = false;
       }
       invalidateCastleRevision();
       refreshWorldBlocks(game.world);
-      recordGameEvent("Castle", "已清空:" + a.castleName);
+      recordGameEvent("Castle", "已清空:" + conqueredCastle.castleName);
       game.state.statisticsRecorder.recordCastleConquered();
-      refreshAttackableCastles(a);
-      refreshScheduledCastles(a);
+      refreshAttackableCastles(conqueredCastle);
+      refreshScheduledCastles(conqueredCastle);
       awardAdventurePoints(19);
-      if (a = a.dungeonList) {
-        for (c = 0; c < a.length; c++) {
-          refreshFarmableDungeons(game.dungeons, a[c]);
+      var castleDungeonList = conqueredCastle.dungeonList;
+      if (castleDungeonList) {
+        var castleDungeonIndex = 0;
+        for (; castleDungeonIndex < castleDungeonList.length; castleDungeonIndex++) {
+          refreshFarmableDungeons(game.dungeons, castleDungeonList[castleDungeonIndex]);
         }
       }
-      a = game.castles;
-      for (b = c = 0; b < a.castleList.length; b++) {
-        if (!a.castleList[b].conquered) {
-          c++;
+      var castles = game.castles;
+      var unconqueredCastleIndex = 0;
+      var castleIndex = 0;
+      for (; castleIndex < castles.castleList.length; castleIndex++) {
+        if (!castles.castleList[castleIndex].conquered) {
+          unconqueredCastleIndex++;
         }
       }
-      if (0 === c) {
+      if (0 === unconqueredCastleIndex) {
         game.state.victoryCount++;
         game.gameWon = true;
         game.finishOfflineProgress();
         saveProgress(game.saves);
         game.view.onGameWon();
-        a = game.state.victoryStatistics;
-        b = game.state.adventurers.length;
-        if (4 > b) {
-          if (1 === b) {
-            a.partySize1Victories += 1;
-            c = game.state.adventurers[0].characterClass;
-            if (!(d = a.soloClassVictories[c])) {
-              d = 0;
+        var victoryStatistics = game.state.victoryStatistics;
+        var partySize = game.state.adventurers.length;
+        if (4 > partySize) {
+          if (1 === partySize) {
+            victoryStatistics.partySize1Victories += 1;
+            var soloAdventurerClass = game.state.adventurers[0].characterClass;
+            var soloClassWinCount = victoryStatistics.soloClassVictories[soloAdventurerClass];
+            if (!soloClassWinCount) {
+              soloClassWinCount = 0;
             }
-            a.soloClassVictories[c] = d + 1;
+            victoryStatistics.soloClassVictories[soloAdventurerClass] = soloClassWinCount + 1;
           } else {
-            if (2 === b) {
-              a.partySize2Victories += 1;
+            if (2 === partySize) {
+              victoryStatistics.partySize2Victories += 1;
             } else {
-              if (3 === b) {
-                a.partySize3Victories += 1;
+              if (3 === partySize) {
+                victoryStatistics.partySize3Victories += 1;
               }
             }
           }
         }
-        for (c = 0; c < b; c++) {
-          d = game.state.adventurers[c].characterClass;
-          if (!(f = a.classVictories[d])) {
-            f = 0;
+        var classTallyIndex = 0;
+        for (; classTallyIndex < partySize; classTallyIndex++) {
+          var allyClass = game.state.adventurers[classTallyIndex].characterClass;
+          var classWinCount = victoryStatistics.classVictories[allyClass];
+          if (!classWinCount) {
+            classWinCount = 0;
           }
-          a.classVictories[d] = f + 1;
+          victoryStatistics.classVictories[allyClass] = classWinCount + 1;
         }
-        c = a.currentContinueCount;
-        if (0 < c) {
-          if (c > a.maxContinuationVictories) {
-            a.maxContinuationVictories = c;
+        var continueCount = victoryStatistics.currentContinueCount;
+        if (0 < continueCount) {
+          if (continueCount > victoryStatistics.maxContinuationVictories) {
+            victoryStatistics.maxContinuationVictories = continueCount;
           }
-          a.currentContinuationVictories = c;
+          victoryStatistics.currentContinuationVictories = continueCount;
         }
-        if (4 <= b) {
-          d = true;
-          f = game.state.adventurers[0].characterClass;
-          for (c = 1; c < b; c++) {
-            if (f != game.state.adventurers[c].characterClass) {
-              d = false;
+        if (4 <= partySize) {
+          var allAdventurersSameClass = true;
+          var firstAllyClass = game.state.adventurers[0].characterClass;
+          var sameClassCheckIndex = 1;
+          for (; sameClassCheckIndex < partySize; sameClassCheckIndex++) {
+            if (firstAllyClass != game.state.adventurers[sameClassCheckIndex].characterClass) {
+              allAdventurersSameClass = false;
               break;
             }
           }
-          if (d) {
-            a.singleClassVictories += 1;
+          if (allAdventurersSameClass) {
+            victoryStatistics.singleClassVictories += 1;
           }
         }
-        c = game.state.runStatistics.playedMillis;
-        a = floorNumber(c / 36E5);
-        b = floorNumber(c / 6E4 % 60);
-        c = floorNumber(c / 1E3 % 60);
-        b = "Time: " + ((10 > a ? "0" : "") + a + ":" + (10 > b ? "0" : "") + b + ":" + (10 > c ? "0" : "") + c) + ",胜利:" + game.state.victoryCount;
-        for (a = 0; a < game.state.adventurers.length; a++) {
-          b += ", " + game.state.adventurers[a].classDefinition.className + " (" + game.state.adventurers[a].stats.characterLevel + ")";
+        var playedMillis = game.state.runStatistics.playedMillis;
+        var elapsedHours = floorNumber(playedMillis / 36E5);
+        var elapsedMinutes = floorNumber(playedMillis / 6E4 % 60);
+        var elapsedSeconds = floorNumber(playedMillis / 1E3 % 60);
+        var victoryLabel = "Time: " + ((10 > elapsedHours ? "0" : "") + elapsedHours + ":" + (10 > elapsedMinutes ? "0" : "") + elapsedMinutes + ":" + (10 > elapsedSeconds ? "0" : "") + elapsedSeconds) + ",胜利:" + game.state.victoryCount;
+        var adventurerIndex = 0;
+        for (; adventurerIndex < game.state.adventurers.length; adventurerIndex++) {
+          victoryLabel += ", " + game.state.adventurers[adventurerIndex].classDefinition.className + " (" + game.state.adventurers[adventurerIndex].stats.characterLevel + ")";
         }
-        recordGameEvent("Victory", b);
+        recordGameEvent("Victory", victoryLabel);
       }
     }
   };
@@ -342,89 +354,107 @@ export function initializeCharactersParty() {
       this.targetCastle = null;
     }
     if (!this.targetCastle) {
-      var a = game.castles,
-        b = game.state.leader.position.worldPosition,
-        c = null,
-        d = 0,
-        f,
-        g,
-        h;
-      for (h = 0; h < a.castleList.length; h++) {
-        if (f = a.castleList[h], !f.regionLocked && !f.conquered && (g = distanceSquaredToPoint(b, game.world.tileToPixelX(f.worldPixelX), game.world.tileToPixelY(f.worldPixelY)), !c || g < d)) {
-          c = f;
-          d = g;
+      var castles = game.castles,
+        leaderWorldPosition = game.state.leader.position.worldPosition,
+        nearestCastleCandidate = null,
+        nearestCastleDistanceSquared = 0,
+        scannedCastle,
+        scannedCastleDistanceSquared,
+        castleScanIndex;
+      for (castleScanIndex = 0; castleScanIndex < castles.castleList.length; castleScanIndex++) {
+        scannedCastle = castles.castleList[castleScanIndex];
+        if (!scannedCastle.regionLocked && !scannedCastle.conquered) {
+          scannedCastleDistanceSquared = distanceSquaredToPoint(leaderWorldPosition, game.world.tileToPixelX(scannedCastle.worldPixelX), game.world.tileToPixelY(scannedCastle.worldPixelY));
+          if (!nearestCastleCandidate || scannedCastleDistanceSquared < nearestCastleDistanceSquared) {
+            nearestCastleCandidate = scannedCastle;
+            nearestCastleDistanceSquared = scannedCastleDistanceSquared;
+          }
         }
       }
-      this.targetCastle = c;
+      this.targetCastle = nearestCastleCandidate;
     }
     if (this.targetCastle) {
-      a = false;
-      for (b = c = 0; b < game.state.adventurers.length; b++) {
-        d = game.state.adventurers[b];
-        f = (/** @type {any} */ (d)).inventory.items;
-        if (0 === f.length) {
-          d = 0;
+      var shopTargetChosen = false;
+      var unfitItemTotal = 0;
+      var adventurerIndex = 0;
+      for (; adventurerIndex < game.state.adventurers.length; adventurerIndex++) {
+        var scannedAdventurer = game.state.adventurers[adventurerIndex];
+        var adventurerItems = (/** @type {any} */ (scannedAdventurer)).inventory.items;
+        if (0 === adventurerItems.length) {
+          scannedAdventurer = 0;
         } else {
-          var l = h = g = undefined,
-            n = 0;
-          for (g = 0; g < f.length; g++) {
-            h = f[g];
-            if ((l = (/** @type {any} */ (d)).getSlotItem(h.slot)) && !isBetterItem(h, l)) {
-              n++;
+          var itemScanIndex = undefined;
+          var scannedInventoryItem = undefined;
+          var equippedItem = undefined,
+            unfitItemCount = 0;
+          for (itemScanIndex = 0; itemScanIndex < adventurerItems.length; itemScanIndex++) {
+            scannedInventoryItem = adventurerItems[itemScanIndex];
+            equippedItem = (/** @type {any} */ (scannedAdventurer)).getSlotItem(scannedInventoryItem.slot);
+            if (equippedItem && !isBetterItem(scannedInventoryItem, equippedItem)) {
+              unfitItemCount++;
             }
           }
-          d = n;
+          scannedAdventurer = unfitItemCount;
         }
-        c += d;
+        unfitItemTotal += scannedAdventurer;
       }
-      b = c;
+      var unfitItemSum = unfitItemTotal;
       if (this.targetShop) {
-        if (0 === b) {
+        if (0 === unfitItemSum) {
           this.targetShop = null;
         }
-      } else if (0 < b) {
-        a = game.shops;
-        b = game.state.leader.position.worldPosition;
-        c = null;
-        for (h = d = 0; h < a.shopList.length; h++) {
-          if (f = a.shopList[h], g = distanceSquaredToPoint(b, game.world.tileToPixelX(f.worldColumn), game.world.tileToPixelY(f.worldRow)), !c || g < d) {
-            c = f;
-            d = g;
+      } else if (0 < unfitItemSum) {
+        var shops = game.shops;
+        var shopSearchOrigin = game.state.leader.position.worldPosition;
+        var nearestShopCandidate = null;
+        var shopBestDistanceSquared = 0;
+        var shopScanIndex = 0;
+        for (; shopScanIndex < shops.shopList.length; shopScanIndex++) {
+          var scannedShop = shops.shopList[shopScanIndex];
+          var shopDistanceSquared = distanceSquaredToPoint(shopSearchOrigin, game.world.tileToPixelX(scannedShop.worldColumn), game.world.tileToPixelY(scannedShop.worldRow));
+          if (!nearestShopCandidate || shopDistanceSquared < shopBestDistanceSquared) {
+            nearestShopCandidate = scannedShop;
+            shopBestDistanceSquared = shopDistanceSquared;
           }
         }
-        this.targetShop = c;
-        a = true;
+        this.targetShop = nearestShopCandidate;
+        shopTargetChosen = true;
       }
+      var castleAttackChosen = false;
       if (this.targetShop) {
         this.activeCastle = null;
-        b = false;
-      } else if (b = false, this.activeCastle) {
+      } else if (this.activeCastle) {
         if (!this.activeCastle.dungeonsConquered) {
           this.activeCastle = null;
         }
       } else if (this.targetCastle.attackScheduled && !this.targetCastle.conquered) {
         this.activeCastle = this.targetCastle;
-        b = true;
+        castleAttackChosen = true;
       } else {
-        c = game.castles;
-        d = game.state.leader.position.worldPosition;
-        f = null;
-        for (n = g = 0; n < c.scheduledCastles.length; n++) {
-          if (h = c.scheduledCastles[n], l = distanceSquaredToPoint(d, game.world.tileToPixelX(h.worldPixelX), game.world.tileToPixelY(h.worldPixelY)), !f || l < g) {
-            f = h;
-            g = l;
+        var scheduledCastleCollection = game.castles;
+        var leaderWorldPositionForScheduled = game.state.leader.position.worldPosition;
+        var nearestScheduledCastle = null;
+        var scheduledCastleBestDistance = 0;
+        var scheduledCastleIndex = 0;
+        for (; scheduledCastleIndex < scheduledCastleCollection.scheduledCastles.length; scheduledCastleIndex++) {
+          var scannedScheduledCastle = scheduledCastleCollection.scheduledCastles[scheduledCastleIndex];
+          var scheduledCastleDistanceSquared = distanceSquaredToPoint(leaderWorldPositionForScheduled, game.world.tileToPixelX(scannedScheduledCastle.worldPixelX), game.world.tileToPixelY(scannedScheduledCastle.worldPixelY));
+          if (!nearestScheduledCastle || scheduledCastleDistanceSquared < scheduledCastleBestDistance) {
+            nearestScheduledCastle = scannedScheduledCastle;
+            scheduledCastleBestDistance = scheduledCastleDistanceSquared;
           }
         }
-        if (c = f) {
-          this.targetCastle = this.activeCastle = c;
-          b = true;
+        var scheduledCastleChosen = nearestScheduledCastle;
+        if (scheduledCastleChosen) {
+          this.targetCastle = this.activeCastle = scheduledCastleChosen;
+          castleAttackChosen = true;
         }
       }
       if (this.targetShop || this.activeCastle) {
         this.targetDungeon = null;
-        f = false;
+        var dungeonTargetFound = false;
       } else {
-        c = false;
+        var dungeonTargetChosen = false;
         if (this.targetDungeon) {
           if (this.targetDungeon.isFarm) {
             this.targetDungeon = null;
@@ -435,93 +465,116 @@ export function initializeCharactersParty() {
           }
         }
         if (!this.targetDungeon) {
-          d = game.state.leader.position.worldPosition;
-          f = null;
-          g = 0;
+          var dungeonSearchOrigin = game.state.leader.position.worldPosition;
+          var nearestCastleDungeon = null;
+          var castleDungeonBestDistance = 0;
           const castleDungeons = this.targetCastle.dungeonList;
           var dungeonIndex;
           for (dungeonIndex = 0; dungeonIndex < castleDungeons.length; dungeonIndex++) {
-            if (h = castleDungeons[dungeonIndex], !h.conquered && (l = distanceSquaredToPoint(d, h.getPixelX(), h.getPixelY()), !f || l < g)) {
-              f = h;
-              g = l;
+            var scannedCastleDungeon = castleDungeons[dungeonIndex];
+            if (!scannedCastleDungeon.conquered) {
+              var castleDungeonDistanceSquared = distanceSquaredToPoint(dungeonSearchOrigin, scannedCastleDungeon.getPixelX(), scannedCastleDungeon.getPixelY());
+              if (!nearestCastleDungeon || castleDungeonDistanceSquared < castleDungeonBestDistance) {
+                nearestCastleDungeon = scannedCastleDungeon;
+                castleDungeonBestDistance = castleDungeonDistanceSquared;
+              }
             }
           }
-          this.targetDungeon = f;
+          this.targetDungeon = nearestCastleDungeon;
           if (!this.targetDungeon) {
-            f = game.dungeons;
-            g = null;
-            for (dungeonIndex = h = 0; dungeonIndex < f.dungeonList.length; dungeonIndex++) {
-              if (!(l = f.dungeonList[dungeonIndex], l.isFarm || l.region.regionLocked || l.conquered || (n = distanceSquaredToPoint(d, l.getPixelX(), l.getPixelY()), g && !(n < h)))) {
-                g = l;
-                h = n;
+            var farmableDungeons = game.dungeons;
+            var farmableDungeon = null;
+            var farmableDungeonBestDistance = 0;
+            dungeonIndex = 0;
+            for (; dungeonIndex < farmableDungeons.dungeonList.length; dungeonIndex++) {
+              var scannedDungeon = farmableDungeons.dungeonList[dungeonIndex];
+              if (!(scannedDungeon.isFarm || scannedDungeon.region.regionLocked || scannedDungeon.conquered)) {
+                var farmableDungeonDistanceSquared = distanceSquaredToPoint(dungeonSearchOrigin, scannedDungeon.getPixelX(), scannedDungeon.getPixelY());
+                if (!farmableDungeon || farmableDungeonDistanceSquared < farmableDungeonBestDistance) {
+                  farmableDungeon = scannedDungeon;
+                  farmableDungeonBestDistance = farmableDungeonDistanceSquared;
+                }
               }
             }
-            this.targetDungeon = g;
+            this.targetDungeon = farmableDungeon;
             if (!this.targetDungeon) {
-              f = game.dungeons;
-              g = null;
-              for (dungeonIndex = h = 0; dungeonIndex < f.dungeonList.length; dungeonIndex++) {
-                if (!(l = f.dungeonList[dungeonIndex], l.isFarm || l.region.regionLocked || l.discovered && (!l.discovered || l.cleared) || (n = distanceSquaredToPoint(d, l.getPixelX(), l.getPixelY()), g && !(n < h)))) {
-                  g = l;
-                  h = n;
-                }
-              }
-              this.targetDungeon = g;
-              if (!this.targetDungeon) {
-                f = game.dungeons;
-                g = null;
-                for (dungeonIndex = h = 0; dungeonIndex < f.dungeonList.length; dungeonIndex++) {
-                  if (l = f.dungeonList[dungeonIndex], !l.isFarm && !l.region.regionLocked && (n = distanceSquaredToPoint(d, l.getPixelX(), l.getPixelY()), !g || n < h)) {
-                    g = l;
-                    h = n;
+              var unlockedDungeons = game.dungeons;
+              var unlockedDungeon = null;
+              var unlockedDungeonBestDistance = 0;
+              dungeonIndex = 0;
+              for (; dungeonIndex < unlockedDungeons.dungeonList.length; dungeonIndex++) {
+                var unlockedDungeonScan = unlockedDungeons.dungeonList[dungeonIndex];
+                if (!(unlockedDungeonScan.isFarm || unlockedDungeonScan.region.regionLocked || unlockedDungeonScan.discovered && (!unlockedDungeonScan.discovered || unlockedDungeonScan.cleared))) {
+                  var unlockedDungeonDistanceSquared = distanceSquaredToPoint(dungeonSearchOrigin, unlockedDungeonScan.getPixelX(), unlockedDungeonScan.getPixelY());
+                  if (!unlockedDungeon || unlockedDungeonDistanceSquared < unlockedDungeonBestDistance) {
+                    unlockedDungeon = unlockedDungeonScan;
+                    unlockedDungeonBestDistance = unlockedDungeonDistanceSquared;
                   }
                 }
-                this.targetDungeon = g;
+              }
+              this.targetDungeon = unlockedDungeon;
+              if (!this.targetDungeon) {
+                var allDungeons = game.dungeons;
+                var allDungeonCandidate = null;
+                var allDungeonBestDistance = 0;
+                dungeonIndex = 0;
+                for (; dungeonIndex < allDungeons.dungeonList.length; dungeonIndex++) {
+                  var openDungeonScan = allDungeons.dungeonList[dungeonIndex];
+                  if (!openDungeonScan.isFarm && !openDungeonScan.region.regionLocked) {
+                    var openDungeonDistanceSquared = distanceSquaredToPoint(dungeonSearchOrigin, openDungeonScan.getPixelX(), openDungeonScan.getPixelY());
+                    if (!allDungeonCandidate || openDungeonDistanceSquared < allDungeonBestDistance) {
+                      allDungeonCandidate = openDungeonScan;
+                      allDungeonBestDistance = openDungeonDistanceSquared;
+                    }
+                  }
+                }
+                this.targetDungeon = allDungeonCandidate;
               }
             }
           }
           if (this.targetDungeon) {
-            c = true;
+            dungeonTargetChosen = true;
           }
         }
-        f = c;
+        dungeonTargetFound = dungeonTargetChosen;
       }
       if (this.targetShop) {
-        c = this.targetShop.worldColumn;
-        d = this.targetShop.worldRow;
+        var destinationColumn = this.targetShop.worldColumn;
+        var destinationRow = this.targetShop.worldRow;
       } else if (this.activeCastle) {
-        c = this.activeCastle.worldPixelX;
-        d = this.activeCastle.worldPixelY;
+        destinationColumn = this.activeCastle.worldPixelX;
+        destinationRow = this.activeCastle.worldPixelY;
       } else if (this.targetDungeon) {
-        c = this.targetDungeon.getWorldColumn();
-        d = this.targetDungeon.getWorldRow();
+        destinationColumn = this.targetDungeon.getWorldColumn();
+        destinationRow = this.targetDungeon.getWorldRow();
       } else {
         return;
       }
-      if (a || f || b) {
-        if (game.world.getTileAtPixel(c, d)) {
-          calculateWorldCosts(this.worldPathfinder, c, d, game.world);
+      if (shopTargetChosen || dungeonTargetFound || castleAttackChosen) {
+        if (game.world.getTileAtPixel(destinationColumn, destinationRow)) {
+          calculateWorldCosts(this.worldPathfinder, destinationColumn, destinationRow, game.world);
           this.destinationOffWorld = false;
         } else {
           this.destinationOffWorld = true;
-          this.worldDestColumn = findNearestWorldColumn(c);
-          this.worldDestRow = findNearestWorldRow(d);
+          this.worldDestColumn = findNearestWorldColumn(destinationColumn);
+          this.worldDestRow = findNearestWorldRow(destinationRow);
           calculateWorldCosts(this.worldPathfinder, this.worldDestColumn, this.worldDestRow, game.world);
         }
       } else {
-        if (a = this.destinationOffWorld) {
-          b = game.state.leader.position;
-          a = this.worldDestColumn - game.world.pixelToTileColumn(b.getWorldPositionX());
-          b = this.worldDestRow - game.world.pixelToTileRow(b.getWorldPositionY());
-          a = 8 > Math.sqrt(a * a + b * b);
+        var offWorldDestination = this.destinationOffWorld;
+        if (offWorldDestination) {
+          var leaderPosition = game.state.leader.position;
+          var destColumnDelta = this.worldDestColumn - game.world.pixelToTileColumn(leaderPosition.getWorldPositionX());
+          var destRowDelta = this.worldDestRow - game.world.pixelToTileRow(leaderPosition.getWorldPositionY());
+          var withinRecalcRange = 8 > Math.sqrt(destColumnDelta * destColumnDelta + destRowDelta * destRowDelta);
         }
-        if (a) {
-          if (game.world.getTileAtPixel(c, d)) {
-            calculateWorldCosts(this.worldPathfinder, c, d, game.world);
+        if (withinRecalcRange) {
+          if (game.world.getTileAtPixel(destinationColumn, destinationRow)) {
+            calculateWorldCosts(this.worldPathfinder, destinationColumn, destinationRow, game.world);
             this.destinationOffWorld = false;
           } else {
-            this.worldDestColumn = findNearestWorldColumn(c);
-            this.worldDestRow = findNearestWorldRow(d);
+            this.worldDestColumn = findNearestWorldColumn(destinationColumn);
+            this.worldDestRow = findNearestWorldRow(destinationRow);
             calculateWorldCosts(this.worldPathfinder, this.worldDestColumn, this.worldDestRow, game.world);
           }
         }
@@ -530,11 +583,11 @@ export function initializeCharactersParty() {
   };
   PartyState.prototype.updateDungeonMode = function () {
     a: {
-      var a,
+      var allyIndex,
         allies = getAllies(),
         disabledAlly;
-      for (a = 0; a < allies.length; a++) {
-        if (disabledAlly = allies[a], disabledAlly.position.room && disabledAlly.effects.isDisabled) {
+      for (allyIndex = 0; allyIndex < allies.length; allyIndex++) {
+        if (disabledAlly = allies[allyIndex], disabledAlly.position.room && disabledAlly.effects.isDisabled) {
           this.travellingToDisabledAlly = true;
           setPartyDestination(this, disabledAlly.position.room);
           break a;
@@ -548,11 +601,12 @@ export function initializeCharactersParty() {
         this.targetDoor = this.targetRoom = null;
       } else if (!this.targetRoom && (!this.targetDoor || this.targetDoor.isOpen)) {
         if (this.destinationRoom) {
-          if (a = this.destinationRoom.discovered) {
-            a = getMonsters();
-            a = 0 === a.length ? true : this.destinationRoom !== a[0].position.room;
+          var destinationRoomDiscovered = this.destinationRoom.discovered;
+          if (destinationRoomDiscovered) {
+            var destinationRoomMonsters = getMonsters();
+            var noMonstersInDestination = 0 === destinationRoomMonsters.length ? true : this.destinationRoom !== destinationRoomMonsters[0].position.room;
           }
-          if (a) {
+          if (noMonstersInDestination) {
             this.destinationRoom = null;
           } else {
             return;

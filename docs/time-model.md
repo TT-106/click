@@ -79,7 +79,7 @@ if (game.partyCreated && !game.gameWon && !game.paused) { ...推进模拟... }
 
 即：未建队、已通关、暂停中三者任一成立时，`advanceSimulation` 完全不被调用。关键推论：
 
-- **暂停时帧差照样积累**（`lastTickAt` 在每次 tick 末尾统一刷新，`loop.js:96`）。恢复瞬间会有一大笔帧差进入 `c = a / frameDuration` 一次性补推进——这是原版行为，差分两端一致，不得"修复"。
+- **持续运行的手动暂停不会积累待补回合**：每次 tick 末尾仍刷新 `lastTickAt`（`loop.js:97`），恢复时只按最近一次 tick 的帧差推进。仅当 tick 实际被节流或停止后，下一次 tick 才可能看到大时间间隙，并按后台进度开关进入对应分支。
 - 渲染不受暂停影响（`loop.js:74-80`），自动存档节流也不受影响（`loop.js:87-92`）。
 - 玩法时间统计在暂停/离线时冻结：`if (!(game.paused || game.processingOffline)) game.state.aa.fp(a)`（`loop.js:93-95`）。
 
@@ -110,7 +110,7 @@ E2E 覆盖：点击暂停后 700ms 内 turn 不变（`scripts/test-browser.mjs:2
 药水一管 = 800 回合（+升级） ≈ 3 分 20 秒（wall，60Hz 满帧）
 离线阈值 = 120s；离线上限 = 12h（432E5ms）+ offlineTimeBonus×2h
 后台判定阈值 = 帧差 1E3ms
-自动存档间隔 = 3E4ms = 30s（runtime/game.js:132）
+自动存档间隔 = 3E5ms = 5 分钟（runtime/game.js:141-145）
 ```
 
 注意"≈"：前台帧差是墙钟实值换算（`a / frameDuration`），掉帧时模拟按帧当量补齐，turn 与 wall time 的对应在长窗口下才成立；**离线/后台补结算一律按每回合 250ms 计**（`offlineProcessed += turnDuration`），与真实帧率无关。

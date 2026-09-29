@@ -111,12 +111,12 @@ export function StatisticsView() {
   this.lifetimeAncientItemsFoundCell = this.runAncientItemsFoundCell = this.lifetimeHistoricItemsFoundCell = this.runHistoricItemsFoundCell = this.lifetimeRareItemsFoundCell = this.runRareItemsFoundCell = this.lifetimeUncommonItemsFoundCell = this.runUncommonItemsFoundCell = this.lifetimeItemsFoundCell = this.runItemsFoundCell = this.lifetimeItemsSoldCell = this.runItemsSoldCell = this.lifetimeScrollsUsedCell = this.runScrollsUsedCell = this.lifetimePotionsUsedCell = this.runPotionsUsedCell = this.lifetimeSpellCastsCell = this.runSpellCastsCell = this.lifetimeRangedAttacksCell = this.runRangedAttacksCell = this.lifetimeMeleeAttacksCell = this.runMeleeAttacksCell = this.lifetimeStunnedCountCell = this.runStunnedCountCell = this.lifetimeFarmedKillsCell = this.runFarmedKillsCell = this.lifetimeMinionKillsCell = this.runMinionKillsCell = this.lifetimeScrollKillsCell = this.runScrollKillsCell = this.lifetimeDirectKillsCell = this.runDirectKillsCell = this.lifetimeGoldFromItemsCell = this.runGoldFromItemsCell = this.lifetimeGoldFromMonstersCell = this.runGoldFromMonstersCell = this.lifetimeBookcasesLootedCell = this.runBookcasesLootedCell = this.lifetimeWeaponRacksLootedCell = this.runWeaponRacksLootedCell = this.lifetimeTreasureChestsLootedCell = this.runTreasureChestsLootedCell = this.lifetimeMinionsSummonedCell = this.runMinionsSummonedCell = this.lifetimeFarmsPurchasedCell = this.runFarmsPurchasedCell = this.lifetimeCastlesConqueredCell = this.runCastlesConqueredCell = this.lifetimeDungeonsClearedCell = this.runDungeonsClearedCell = this.lifetimeLevelsClearedCell = this.runLevelsClearedCell = this.lifetimeDoorsOpenedCell = this.runDoorsOpenedCell = this.lifetimeRoomsClearedCell = this.runRoomsClearedCell = this.lifetimeTurnCountCell = this.runTurnCountCell = this.runPlayTimeCell = this.lifetimePlayTimeCell = this.victoryCountCell = null;
   this.millisecondsPerHour = 36E5;
 }
-export function appendStatisticsRow(a, label, rowIndex) {
-  a = a.tableElement.insertRow(rowIndex);
-  var labelCell = a.insertCell(0);
+export function appendStatisticsRow(statisticsView, label, rowIndex) {
+  var statisticsRow = statisticsView.tableElement.insertRow(rowIndex);
+  var labelCell = statisticsRow.insertCell(0);
   labelCell.className = "statisticsTableLabel";
   labelCell.innerHTML = label;
-  return a;
+  return statisticsRow;
 }
 export function OptionsView() {
   this.elementId = "gameOptionsContainer";
@@ -163,69 +163,69 @@ export function initializeViewsInformation() {
     if (!this.tableElement) {
       this.buildStatisticsTable();
     }
-    var a = game.state.runStatistics,
-      b = game.state.lifetimeStatistics,
+    var runStatistics = game.state.runStatistics,
+      lifetimeStatistics = game.state.lifetimeStatistics,
       victoryCount = game.state.victoryCount,
-      d = b.playedMillis,
-      f = a.playedMillis,
-      lifetimeTurnCount = b.turnCount,
-      runTurnCount = a.turnCount,
-      lifetimeRoomsCleared = b.roomsCleared,
-      runRoomsCleared = a.roomsCleared,
-      lifetimeDoorsOpened = b.doorsOpened,
-      runDoorsOpened = a.doorsOpened,
-      lifetimeLevelsCleared = b.levelsCleared,
-      y = a.levelsCleared,
-      lifetimeDungeonsCleared = b.dungeonsCleared,
-      runDungeonsCleared = a.dungeonsCleared,
-      lifetimeCastlesConquered = b.castlesConquered,
-      runCastlesConquered = a.castlesConquered,
-      lifetimeFarmsPurchased = b.farmsPurchased,
-      runFarmsPurchased = a.farmsPurchased,
-      x = b.minionsSummoned,
-      z = a.minionsSummoned,
-      lifetimeTreasureChestsLooted = b.treasureChestsLooted,
-      runTreasureChestsLooted = a.treasureChestsLooted,
-      lifetimeWeaponRacksLooted = b.weaponRacksLooted,
-      runWeaponRacksLooted = a.weaponRacksLooted,
-      lifetimeBookcasesLooted = b.bookcasesLooted,
-      runBookcasesLooted = a.bookcasesLooted,
-      lifetimeGoldFromMonsters = b.totalGoldFromMonsters,
-      runGoldFromMonsters = a.totalGoldFromMonsters,
-      lifetimeGoldFromItems = b.totalGoldFromItems,
-      runGoldFromItems = a.totalGoldFromItems,
-      lifetimeDirectKills = b.directKills,
-      runDirectKills = a.directKills,
-      lifetimeScrollKills = b.scrollKills,
-      runScrollKills = a.scrollKills,
-      lifetimeMinionKills = b.minionKills,
-      runMinionKills = a.minionKills,
-      lifetimeFarmedKills = b.farmedKills,
-      runFarmedKills = a.farmedKills,
-      lifetimeStunnedCount = b.characterStunnedCount,
-      runStunnedCount = a.characterStunnedCount,
-      lifetimeMeleeAttacks = b.meleeAttackCount,
-      runMeleeAttacks = a.meleeAttackCount,
-      lifetimeRangedAttacks = b.rangedAttackCount,
-      runRangedAttacks = a.rangedAttackCount,
-      lifetimeSpellCasts = b.spellCastCount,
-      runSpellCasts = a.spellCastCount,
-      lifetimePotionsUsed = b.potionsUsed,
-      runPotionsUsed = a.potionsUsed,
-      lifetimeScrollsUsed = b.scrollsUsed,
-      runScrollsUsed = a.scrollsUsed,
-      lifetimeItemsSold = b.itemsSold,
-      runItemsSold = a.itemsSold,
-      lifetimeItemsFound = b.itemsFound,
-      runItemsFound = a.itemsFound,
-      lifetimeUncommonItemsFound = b.uncommonItemsFound,
-      runUncommonItemsFound = a.uncommonItemsFound,
-      lifetimeRareItemsFound = b.rareItemsFound,
-      runRareItemsFound = a.rareItemsFound,
-      lifetimeHistoricItemsFound = b.historicItemsFound,
-      runHistoricItemsFound = a.historicItemsFound,
-      b = b.ancientItemsFound,
-      a = a.ancientItemsFound;
+      lifetimePlayedMillis = lifetimeStatistics.playedMillis,
+      runPlayedMillis = runStatistics.playedMillis,
+      lifetimeTurnCount = lifetimeStatistics.turnCount,
+      runTurnCount = runStatistics.turnCount,
+      lifetimeRoomsCleared = lifetimeStatistics.roomsCleared,
+      runRoomsCleared = runStatistics.roomsCleared,
+      lifetimeDoorsOpened = lifetimeStatistics.doorsOpened,
+      runDoorsOpened = runStatistics.doorsOpened,
+      lifetimeLevelsCleared = lifetimeStatistics.levelsCleared,
+      runLevelsCleared = runStatistics.levelsCleared,
+      lifetimeDungeonsCleared = lifetimeStatistics.dungeonsCleared,
+      runDungeonsCleared = runStatistics.dungeonsCleared,
+      lifetimeCastlesConquered = lifetimeStatistics.castlesConquered,
+      runCastlesConquered = runStatistics.castlesConquered,
+      lifetimeFarmsPurchased = lifetimeStatistics.farmsPurchased,
+      runFarmsPurchased = runStatistics.farmsPurchased,
+      lifetimeMinionsSummoned = lifetimeStatistics.minionsSummoned,
+      runMinionsSummoned = runStatistics.minionsSummoned,
+      lifetimeTreasureChestsLooted = lifetimeStatistics.treasureChestsLooted,
+      runTreasureChestsLooted = runStatistics.treasureChestsLooted,
+      lifetimeWeaponRacksLooted = lifetimeStatistics.weaponRacksLooted,
+      runWeaponRacksLooted = runStatistics.weaponRacksLooted,
+      lifetimeBookcasesLooted = lifetimeStatistics.bookcasesLooted,
+      runBookcasesLooted = runStatistics.bookcasesLooted,
+      lifetimeGoldFromMonsters = lifetimeStatistics.totalGoldFromMonsters,
+      runGoldFromMonsters = runStatistics.totalGoldFromMonsters,
+      lifetimeGoldFromItems = lifetimeStatistics.totalGoldFromItems,
+      runGoldFromItems = runStatistics.totalGoldFromItems,
+      lifetimeDirectKills = lifetimeStatistics.directKills,
+      runDirectKills = runStatistics.directKills,
+      lifetimeScrollKills = lifetimeStatistics.scrollKills,
+      runScrollKills = runStatistics.scrollKills,
+      lifetimeMinionKills = lifetimeStatistics.minionKills,
+      runMinionKills = runStatistics.minionKills,
+      lifetimeFarmedKills = lifetimeStatistics.farmedKills,
+      runFarmedKills = runStatistics.farmedKills,
+      lifetimeStunnedCount = lifetimeStatistics.characterStunnedCount,
+      runStunnedCount = runStatistics.characterStunnedCount,
+      lifetimeMeleeAttacks = lifetimeStatistics.meleeAttackCount,
+      runMeleeAttacks = runStatistics.meleeAttackCount,
+      lifetimeRangedAttacks = lifetimeStatistics.rangedAttackCount,
+      runRangedAttacks = runStatistics.rangedAttackCount,
+      lifetimeSpellCasts = lifetimeStatistics.spellCastCount,
+      runSpellCasts = runStatistics.spellCastCount,
+      lifetimePotionsUsed = lifetimeStatistics.potionsUsed,
+      runPotionsUsed = runStatistics.potionsUsed,
+      lifetimeScrollsUsed = lifetimeStatistics.scrollsUsed,
+      runScrollsUsed = runStatistics.scrollsUsed,
+      lifetimeItemsSold = lifetimeStatistics.itemsSold,
+      runItemsSold = runStatistics.itemsSold,
+      lifetimeItemsFound = lifetimeStatistics.itemsFound,
+      runItemsFound = runStatistics.itemsFound,
+      lifetimeUncommonItemsFound = lifetimeStatistics.uncommonItemsFound,
+      runUncommonItemsFound = runStatistics.uncommonItemsFound,
+      lifetimeRareItemsFound = lifetimeStatistics.rareItemsFound,
+      runRareItemsFound = runStatistics.rareItemsFound,
+      lifetimeHistoricItemsFound = lifetimeStatistics.historicItemsFound,
+      runHistoricItemsFound = runStatistics.historicItemsFound,
+      lifetimeAncientItemsFound = lifetimeStatistics.ancientItemsFound,
+      runAncientItemsFound = runStatistics.ancientItemsFound;
     if (this.cachedVictoryCount != victoryCount) {
       this.cachedVictoryCount = victoryCount;
       this.victoryCountCell.innerHTML = formatAmount(victoryCount);
@@ -254,9 +254,9 @@ export function initializeViewsInformation() {
       this.cachedLifetimeDoorsOpened = lifetimeDoorsOpened;
       this.lifetimeDoorsOpenedCell.innerHTML = formatAmount(lifetimeDoorsOpened);
     }
-    if (this.cachedRunLevelsCleared != y) {
-      this.cachedRunLevelsCleared = y;
-      this.runLevelsClearedCell.innerHTML = formatAmount(y);
+    if (this.cachedRunLevelsCleared != runLevelsCleared) {
+      this.cachedRunLevelsCleared = runLevelsCleared;
+      this.runLevelsClearedCell.innerHTML = formatAmount(runLevelsCleared);
     }
     if (this.cachedLifetimeLevelsCleared != lifetimeLevelsCleared) {
       this.cachedLifetimeLevelsCleared = lifetimeLevelsCleared;
@@ -286,13 +286,13 @@ export function initializeViewsInformation() {
       this.cachedLifetimeFarmsPurchased = lifetimeFarmsPurchased;
       this.lifetimeFarmsPurchasedCell.innerHTML = formatAmount(lifetimeFarmsPurchased);
     }
-    if (this.cachedRunMinionsSummoned != z) {
-      this.cachedRunMinionsSummoned = z;
-      this.runMinionsSummonedCell.innerHTML = formatAmount(z);
+    if (this.cachedRunMinionsSummoned != runMinionsSummoned) {
+      this.cachedRunMinionsSummoned = runMinionsSummoned;
+      this.runMinionsSummonedCell.innerHTML = formatAmount(runMinionsSummoned);
     }
-    if (this.cachedLifetimeMinionsSummoned != x) {
-      this.cachedLifetimeMinionsSummoned = x;
-      this.lifetimeMinionsSummonedCell.innerHTML = formatAmount(x);
+    if (this.cachedLifetimeMinionsSummoned != lifetimeMinionsSummoned) {
+      this.cachedLifetimeMinionsSummoned = lifetimeMinionsSummoned;
+      this.lifetimeMinionsSummonedCell.innerHTML = formatAmount(lifetimeMinionsSummoned);
     }
     if (this.cachedRunTreasureChestsLooted != runTreasureChestsLooted) {
       this.cachedRunTreasureChestsLooted = runTreasureChestsLooted;
@@ -454,31 +454,31 @@ export function initializeViewsInformation() {
       this.cachedLifetimeHistoricItemsFound = lifetimeHistoricItemsFound;
       this.lifetimeHistoricItemsFoundCell.innerHTML = formatAmount(lifetimeHistoricItemsFound);
     }
-    if (this.cachedRunAncientItemsFound != a) {
-      this.cachedRunAncientItemsFound = a;
-      this.runAncientItemsFoundCell.innerHTML = formatAmount(a);
+    if (this.cachedRunAncientItemsFound != runAncientItemsFound) {
+      this.cachedRunAncientItemsFound = runAncientItemsFound;
+      this.runAncientItemsFoundCell.innerHTML = formatAmount(runAncientItemsFound);
     }
-    if (this.cachedLifetimeAncientItemsFound != b) {
-      this.cachedLifetimeAncientItemsFound = b;
-      this.lifetimeAncientItemsFoundCell.innerHTML = formatAmount(b);
+    if (this.cachedLifetimeAncientItemsFound != lifetimeAncientItemsFound) {
+      this.cachedLifetimeAncientItemsFound = lifetimeAncientItemsFound;
+      this.lifetimeAncientItemsFoundCell.innerHTML = formatAmount(lifetimeAncientItemsFound);
     }
-    var lifetimePlayHours = floorNumber(d / this.millisecondsPerHour);
-    var lifetimePlayMinutes = floorNumber(d / 6E4 % 60);
-    d = floorNumber(d / 1E3 % 60);
-    var runPlayHours = floorNumber(f / this.millisecondsPerHour);
-    var runPlayMinutes = floorNumber(f / 6E4 % 60);
-    f = floorNumber(f / 1E3 % 60);
-    if (this.cachedLifetimePlayHours != lifetimePlayHours || this.cachedLifetimePlayMinutes != lifetimePlayMinutes || this.cachedLifetimePlaySeconds != d) {
+    var lifetimePlayHours = floorNumber(lifetimePlayedMillis / this.millisecondsPerHour);
+    var lifetimePlayMinutes = floorNumber(lifetimePlayedMillis / 6E4 % 60);
+    var lifetimePlaySeconds = floorNumber(lifetimePlayedMillis / 1E3 % 60);
+    var runPlayHours = floorNumber(runPlayedMillis / this.millisecondsPerHour);
+    var runPlayMinutes = floorNumber(runPlayedMillis / 6E4 % 60);
+    var runPlaySeconds = floorNumber(runPlayedMillis / 1E3 % 60);
+    if (this.cachedLifetimePlayHours != lifetimePlayHours || this.cachedLifetimePlayMinutes != lifetimePlayMinutes || this.cachedLifetimePlaySeconds != lifetimePlaySeconds) {
       this.cachedLifetimePlayHours = lifetimePlayHours;
       this.cachedLifetimePlayMinutes = lifetimePlayMinutes;
-      this.cachedLifetimePlaySeconds = d;
-      this.lifetimePlayTimeCell.innerHTML = this.formatHoursMinutesSeconds(lifetimePlayHours, lifetimePlayMinutes, d);
+      this.cachedLifetimePlaySeconds = lifetimePlaySeconds;
+      this.lifetimePlayTimeCell.innerHTML = this.formatHoursMinutesSeconds(lifetimePlayHours, lifetimePlayMinutes, lifetimePlaySeconds);
     }
-    if (this.cachedRunPlayHours != runPlayHours || this.cachedRunPlayMinutes != runPlayMinutes || this.cachedRunPlaySeconds != f) {
+    if (this.cachedRunPlayHours != runPlayHours || this.cachedRunPlayMinutes != runPlayMinutes || this.cachedRunPlaySeconds != runPlaySeconds) {
       this.cachedRunPlayHours = runPlayHours;
       this.cachedRunPlayMinutes = runPlayMinutes;
-      this.cachedRunPlaySeconds = f;
-      this.runPlayTimeCell.innerHTML = this.formatHoursMinutesSeconds(runPlayHours, runPlayMinutes, f);
+      this.cachedRunPlaySeconds = runPlaySeconds;
+      this.runPlayTimeCell.innerHTML = this.formatHoursMinutesSeconds(runPlayHours, runPlayMinutes, runPlaySeconds);
     }
   };
   StatisticsView.prototype.formatHoursMinutesSeconds = function (hours, minutes, seconds) {
@@ -585,15 +585,15 @@ export function initializeViewsInformation() {
     this.runAncientItemsFoundCell = this.getStatisticCell(row, 1);
     this.lifetimeAncientItemsFoundCell = this.getStatisticCell(row, 2);
   };
-  StatisticsView.prototype.createHeaderRow = function (a) {
-    a = this.tableElement.insertRow(a);
-    appendHeaderCell(a).innerHTML = "";
-    var runHeaderCell = appendHeaderCell(a);
+  StatisticsView.prototype.createHeaderRow = function (rowIndex) {
+    var headerRow = this.tableElement.insertRow(rowIndex);
+    appendHeaderCell(headerRow).innerHTML = "";
+    var runHeaderCell = appendHeaderCell(headerRow);
     runHeaderCell.style.textAlign = "right";
     runHeaderCell.innerHTML = "当前";
-    a = appendHeaderCell(a);
-    a.style.textAlign = "right";
-    a.innerHTML = "总计";
+    var totalHeaderCell = appendHeaderCell(headerRow);
+    totalHeaderCell.style.textAlign = "right";
+    totalHeaderCell.innerHTML = "总计";
   };
   StatisticsView.prototype.getStatisticCell = function (row, columnIndex) {
     var statisticCell = row.insertCell(columnIndex);

@@ -70,79 +70,79 @@ export function serializeItem(item) {
     } : null
   };
 }
-export function restoreItem(a) {
-  var itemSlot = a.itemSlot,
-    characterClass = a.characterClass,
-    itemName = a.itemName,
-    itemRarity = a.itemRarity,
-    itemLevel = a.itemLevel,
-    itemGold = a.itemGold,
-    itemValue = a.itemValue,
-    itemCharacteristic = a.itemCharacteristic,
+export function restoreItem(savedItemRecord) {
+  var itemSlot = savedItemRecord.itemSlot,
+    characterClass = savedItemRecord.characterClass,
+    itemName = savedItemRecord.itemName,
+    itemRarity = savedItemRecord.itemRarity,
+    itemLevel = savedItemRecord.itemLevel,
+    itemGold = savedItemRecord.itemGold,
+    itemValue = savedItemRecord.itemValue,
+    itemCharacteristic = savedItemRecord.itemCharacteristic,
     itemEffect;
-  if (itemEffect = a.itemEffect) {
+  if (itemEffect = savedItemRecord.itemEffect) {
     var itemEffectType = itemEffect.itemEffectType,
       itemEffectDescription = itemEffect.itemEffectDescription;
     itemEffect = itemEffectType && itemEffectDescription ? new ItemEffect(itemEffectType, itemEffect.itemEffectAmount, itemEffectDescription, itemEffect.itemEffectName) : null;
   } else {
     itemEffect = null;
   }
-  a = itemGeneratorRef().itemTypesById[a.itemTypeId];
-  return a ? new Item(a, itemSlot, characterClass, itemName ? itemName : "Error", itemLevel ? itemLevel : 1, itemRarity ? itemRarity : 0, itemGold ? itemGold : 0, itemValue ? itemValue : 0, itemCharacteristic ? itemCharacteristic : 1, itemEffect) : (console.log("failed to lookup item type"), null);
+  var itemType = itemGeneratorRef().itemTypesById[savedItemRecord.itemTypeId];
+  return itemType ? new Item(itemType, itemSlot, characterClass, itemName ? itemName : "Error", itemLevel ? itemLevel : 1, itemRarity ? itemRarity : 0, itemGold ? itemGold : 0, itemValue ? itemValue : 0, itemCharacteristic ? itemCharacteristic : 1, itemEffect) : (console.log("failed to lookup item type"), null);
 }
 export function serializeCharacter(character) {
   var adventurerName = character.adventurerName,
     characterClass = character.characterClass,
     characterType = character.characterType,
     spriteName = character.getSprite().getName(),
-    g;
-  g = character.stats;
-  g = {
-    characterLevel: g.characterLevel,
-    characterHealth: g.health,
-    characterSpirit: g.spirit,
-    kills: g.kills,
-    damageComponent: serializeStatComponent(g.damage),
-    armorComponent: serializeStatComponent(g.armor),
-    attackRatingComponent: serializeStatComponent(g.attackRating),
-    defenceRatingComponent: serializeStatComponent(g.defenceRating),
-    maxHealthComponent: serializeStatComponent(g.maxHealth),
-    maxSpiritComponent: serializeStatComponent(g.maxSpirit),
-    stunCount: g.stunCount,
-    minionKills: g.minionKills,
-    damageGiven: g.damageGiven,
-    damageReceived: g.damageReceived
+    characterStats;
+  characterStats = character.stats;
+  var serializedStats = {
+    characterLevel: characterStats.characterLevel,
+    characterHealth: characterStats.health,
+    characterSpirit: characterStats.spirit,
+    kills: characterStats.kills,
+    damageComponent: serializeStatComponent(characterStats.damage),
+    armorComponent: serializeStatComponent(characterStats.armor),
+    attackRatingComponent: serializeStatComponent(characterStats.attackRating),
+    defenceRatingComponent: serializeStatComponent(characterStats.defenceRating),
+    maxHealthComponent: serializeStatComponent(characterStats.maxHealth),
+    maxSpiritComponent: serializeStatComponent(characterStats.maxSpirit),
+    stunCount: characterStats.stunCount,
+    minionKills: characterStats.minionKills,
+    damageGiven: characterStats.damageGiven,
+    damageReceived: characterStats.damageReceived
   };
-  var h;
-  h = character.position;
-  var room = h.room,
-    n = h.currentHallway;
-  h = {
-    levelX: h.getLevelPositionX(),
-    levelY: h.getLevelPositionY(),
-    worldX: h.getWorldPositionX(),
-    worldY: h.getWorldPositionY(),
+  var characterPosition;
+  characterPosition = character.position;
+  var room = characterPosition.room,
+    currentHallway = characterPosition.currentHallway;
+  var serializedPosition = {
+    levelX: characterPosition.getLevelPositionX(),
+    levelY: characterPosition.getLevelPositionY(),
+    worldX: characterPosition.getWorldPositionX(),
+    worldY: characterPosition.getWorldPositionY(),
     roomId: room ? room.roomId : -1,
-    floorPositionIndex: h.floorPositionIndex,
-    hallwayId: n ? n.hallwayId : -1
+    floorPositionIndex: characterPosition.floorPositionIndex,
+    hallwayId: currentHallway ? currentHallway.hallwayId : -1
   };
-  var n = character.spells,
+  var spellList = character.spells,
     spellStateList = /** @type {any} */ ([]),
     spellIndex;
-  if (n) {
-    for (spellIndex = 0; spellIndex < n.length; spellIndex++) {
+  if (spellList) {
+    for (spellIndex = 0; spellIndex < spellList.length; spellIndex++) {
       spellStateList.push({
-        spellName: n[spellIndex].name
+        spellName: spellList[spellIndex].name
       });
     }
   }
   var inventory = character.inventory;
-  n = [];
+  var serializedInventory = [];
   if (inventory) {
     inventory = inventory.items;
     var itemIndex;
     for (itemIndex = 0; itemIndex < inventory.length; itemIndex++) {
-      n.push(serializeItem(inventory[itemIndex]));
+      serializedInventory.push(serializeItem(inventory[itemIndex]));
     }
   }
   var slotList = character.slotList;
@@ -163,10 +163,10 @@ export function serializeCharacter(character) {
     characterClass: characterClass,
     characterType: characterType,
     spriteName: spriteName,
-    characteristicsComponent: g,
-    positionComponent: h,
+    characteristicsComponent: serializedStats,
+    positionComponent: serializedPosition,
     spells: spellStateList,
-    inventory: n,
+    inventory: serializedInventory,
     equippedItemCollection: equippedItemList,
     skillPoints: character.skillPoints,
     initialSpellSkillPoint: character.initialSpellSkillPoint,
@@ -187,12 +187,12 @@ export function serializeUpgradeFlags(upgradeList) {
   return ownedFlagsById;
 }
 export function restoreUpgradeFlags(upgradeList, ownedFlagsById) {
-  var upgradeIndex, d, upgrade;
+  var upgradeIndex, upgradeDefinition, ownedFlag, upgrade;
   for (upgradeIndex = 0; upgradeIndex < upgradeList.length; upgradeIndex++) {
     upgrade = upgradeList[upgradeIndex];
-    d = upgradeList[upgradeIndex].getUpgradeDefinition();
-    d = ownedFlagsById[d.id];
-    upgrade.setPurchased(d);
+    upgradeDefinition = upgradeList[upgradeIndex].getUpgradeDefinition();
+    ownedFlag = ownedFlagsById[upgradeDefinition.id];
+    upgrade.setPurchased(ownedFlag);
   }
 }
 export function serializeStatComponent(statComponent) {
@@ -294,39 +294,39 @@ export function serializeStatistics(statistics) {
     bookcasesLooted: statistics.bookcasesLooted
   };
 }
-export function restoreStatistics(a, statistics, isLifetime) {
-  var totalPlayedMillis = a.totalPlayedMillis,
-    playedMillis = a.playedMillis,
-    turnCount = a.turnCount,
-    doorsOpened = a.doorsOpened,
-    roomsCleared = a.roomsCleared,
-    levelsCleared = a.levelsCleared,
-    dungeonsCleared = a.dungeonsCleared,
-    castlesConquered = a.castlesConquered,
-    farmsPurchased = a.farmsPurchased,
-    totalGoldFromMonsters = a.totalGoldFromMonsters,
-    totalGoldFromItems = a.totalGoldFromItems,
-    directKills = a.directKills,
-    scrollKills = a.scrollKills,
-    minionKills = a.minionKills,
-    farmedKills = a.farmedKills,
-    characterStunnedCount = a.characterStunnedCount,
-    meleeAttackCount = a.meleeAttackCount,
-    rangedAttackCount = a.rangedAttackCount,
-    spellCastCount = a.spellCastCount,
-    potionsUsed = a.potionsUsed,
-    scrollsUsed = a.scrollsUsed,
-    minionsSummoned = a.minionsSummoned,
-    itemsSold = a.itemsSold,
-    itemsFound = a.itemsFound,
-    uncommonItemsFound = a.uncommonItemsFound,
-    rareItemsFound = a.rareItemsFound,
-    historicItemsFound = a.historicItemsFound,
-    ancientItemsFound = a.ancientItemsFound,
-    treasureChestsLooted = a.treasureChestsLooted,
-    weaponRacksLooted = a.weaponRacksLooted,
-    legacyWeaponsRacksLooted = a.weaponsRacksLooted;
-  a = a.bookcasesLooted;
+export function restoreStatistics(savedStatistics, statistics, isLifetime) {
+  var totalPlayedMillis = savedStatistics.totalPlayedMillis,
+    playedMillis = savedStatistics.playedMillis,
+    turnCount = savedStatistics.turnCount,
+    doorsOpened = savedStatistics.doorsOpened,
+    roomsCleared = savedStatistics.roomsCleared,
+    levelsCleared = savedStatistics.levelsCleared,
+    dungeonsCleared = savedStatistics.dungeonsCleared,
+    castlesConquered = savedStatistics.castlesConquered,
+    farmsPurchased = savedStatistics.farmsPurchased,
+    totalGoldFromMonsters = savedStatistics.totalGoldFromMonsters,
+    totalGoldFromItems = savedStatistics.totalGoldFromItems,
+    directKills = savedStatistics.directKills,
+    scrollKills = savedStatistics.scrollKills,
+    minionKills = savedStatistics.minionKills,
+    farmedKills = savedStatistics.farmedKills,
+    characterStunnedCount = savedStatistics.characterStunnedCount,
+    meleeAttackCount = savedStatistics.meleeAttackCount,
+    rangedAttackCount = savedStatistics.rangedAttackCount,
+    spellCastCount = savedStatistics.spellCastCount,
+    potionsUsed = savedStatistics.potionsUsed,
+    scrollsUsed = savedStatistics.scrollsUsed,
+    minionsSummoned = savedStatistics.minionsSummoned,
+    itemsSold = savedStatistics.itemsSold,
+    itemsFound = savedStatistics.itemsFound,
+    uncommonItemsFound = savedStatistics.uncommonItemsFound,
+    rareItemsFound = savedStatistics.rareItemsFound,
+    historicItemsFound = savedStatistics.historicItemsFound,
+    ancientItemsFound = savedStatistics.ancientItemsFound,
+    treasureChestsLooted = savedStatistics.treasureChestsLooted,
+    weaponRacksLooted = savedStatistics.weaponRacksLooted,
+    legacyWeaponsRacksLooted = savedStatistics.weaponsRacksLooted;
+  var bookcasesLootedCount = savedStatistics.bookcasesLooted;
   if (!farmsPurchased) {
     farmsPurchased = dungeonsRef().farms.length;
   }
@@ -358,7 +358,7 @@ export function restoreStatistics(a, statistics, isLifetime) {
   statistics.historicItemsFound = historicItemsFound ? historicItemsFound : 0;
   statistics.ancientItemsFound = ancientItemsFound ? ancientItemsFound : 0;
   statistics.treasureChestsLooted = treasureChestsLooted ? treasureChestsLooted : 0;
-  statistics.bookcasesLooted = a ? a : 0;
+  statistics.bookcasesLooted = bookcasesLootedCount ? bookcasesLootedCount : 0;
   var maxWeaponRacksLooted = Math.max(weaponRacksLooted ? weaponRacksLooted : 0, legacyWeaponsRacksLooted ? legacyWeaponsRacksLooted : 0);
   statistics.weaponRacksLooted = maxWeaponRacksLooted;
 }
@@ -372,8 +372,8 @@ export function initializePersistenceEntities() {
     monsterCatalog.maxUnlockedLevel = (/** @type {SaveMonsterTypesState} */ (a)).maxUnlockedLevel;
     a = a.monsterLevelStates;
     for (var levelStateIndex = 0; levelStateIndex < a.length; levelStateIndex++) {
-      for (var c = a[levelStateIndex], monsterLevel = c.level, c = c.monsterTypes, restoredMonsterTypes = [], monsterTypeIndex = undefined, monsterTypeIndex = /** @type {any} */ (0); monsterTypeIndex < c.length; monsterTypeIndex++) {
-        restoredMonsterTypes.push(restoreMonsterType(c[monsterTypeIndex], monsterLevel));
+      for (var levelState = a[levelStateIndex], monsterLevel = levelState.level, monsterTypes = levelState.monsterTypes, restoredMonsterTypes = [], monsterTypeIndex = undefined, monsterTypeIndex = /** @type {any} */ (0); monsterTypeIndex < monsterTypes.length; monsterTypeIndex++) {
+        restoredMonsterTypes.push(restoreMonsterType(monsterTypes[monsterTypeIndex], monsterLevel));
       }
       monsterCatalogRef().monsterTypesByLevelCache[monsterLevel + ""] = restoredMonsterTypes;
     }
