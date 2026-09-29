@@ -4,12 +4,26 @@
 import { barbarianSpellDefinitions, chickenSpellDefinitions, druidSpellDefinitions, electricSpellDefinitions, fighterSpellDefinitions, fireSpellDefinitions, necromancerSpellDefinitions, ninjaSpellDefinitions, priestSpellDefinitions, rogueSpellDefinitions } from "../content/spells.js";
 import { getFriendlyTargets, getOpponents } from "../combat/encounters.js";
 import { randomInt, setVector } from "../core/math.js";
-import { game } from "../runtime/game.js";
 import { clampPointToRoom, getOppositeDoor } from "../world/rooms.js";
 import { docileMonstersModifier } from "../content/balance.js";
 import { canAttack, markAttackTurn } from "../characters/character.js";
 import { clearMovementTarget } from "../characters/movement.js";
 import { HALF_TILE_SIZE, TILE_SIZE } from "../core/screen-layout.js";
+/** 房间寻路所需的 game.pathfinder 由组合根注入（与 views.monsters / views.character 同一形状）。
+ *  绑的是寻路器容器对象本身：它在 runtime/game.js 的对象字面量里只构造一次
+ *  （pathfinder: new function () {}()），src/ 内 `.pathfinder =` 整对象重赋值 0 处，字段级改动不影响
+ *  容器身份，所以按引用绑定读到的永远是同一个对象；未绑定就用到会立刻抛——静默回落到别处会让
+ *  "装配漏了一步"在差分测试里看不出来。 */
+var boundPathfinder = null;
+export function bindTargetingPathfinder(pathfinder) {
+  boundPathfinder = pathfinder;
+}
+function targetingPathfinder() {
+  if (!boundPathfinder) {
+    throw new Error('AI 寻路尚未绑定寻路器：请在组合根调用 bindTargetingPathfinder(game.pathfinder)');
+  }
+  return boundPathfinder;
+}
 export var ADVENTURER_TYPE, MONSTER_TYPE, summonDogSpellDefinition, summonWolfPackSpellDefinition, minorHealSpellDefinition, sleepSpellDefinition, summonChickensSpellDefinition, summonGuardChickenSpellDefinition, swiftStrikeSpellDefinition, hurtSpellDefinition, greenDeathSpellDefinition, summonSkeletonArmySpellDefinition, summonPhantomSkullSpellDefinition, tauntSpellDefinition, rageSpellDefinition, sledgeHammerSpellDefinition, stealthSpellDefinition, instantLootSpellDefinition, detectTreasureChestSpellDefinition, healSpellDefinition, armorSpellDefinition, damageSpellDefinition, attackRatingSpellDefinition, defenseRatingSpellDefinition, reviveSpellDefinition, shockSpellDefinition, spiderWebSpellDefinition, lightningRainSpellDefinition, chainedLightningSpellDefinition, fireBlastSpellDefinition, fireBallSpellDefinition, fireRainSpellDefinition, turnMonsterSpellDefinition, IDLE_ACTION, MELEE_ACTION_TYPE, CAST_ACTION_TYPE;
 export function hasOpponentsInRoom(character, room) {
   if (!room) {
@@ -141,7 +155,7 @@ export function choosePointNearTarget(moveTargetPoint, targetLevelPosition, room
   }
 }
 export function findRouteToDoor(character, targetDoor) {
-  var pathfinder = game.pathfinder;
+  var pathfinder = targetingPathfinder();
   if (!targetDoor) {
     return null;
   }
@@ -161,7 +175,7 @@ export function findRouteToDoor(character, targetDoor) {
   return null;
 }
 export function findRouteToRoom(character, targetRoom) {
-  var pathfinder = game.pathfinder;
+  var pathfinder = targetingPathfinder();
   if (!targetRoom) {
     return null;
   }
