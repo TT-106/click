@@ -146,11 +146,12 @@ if (arg('report')) {
     const where = (r.toLine > r.fromLine || r.violations > 0)
       ? '行 ' + r.fromLine + '-' + r.toLine + ' 重赋值 ' + r.violations
       : '行 ' + r.fromLine;
-    console.log('  ' + String(r.key).padEnd(32) + ' ' + r.name + '  ' + String(r.kind).padEnd(8)
+    const lookup = r.key === '@other' ? r.name + '@' + r.declLine : r.name;
+    console.log('  ' + String(r.key).padEnd(32) + ' ' + lookup + '  ' + String(r.kind).padEnd(8)
       + ' ×' + String(r.occurrences).padStart(3) + '  ' + where);
   }
   const other = rows.filter((r) => r.key === '@other');
-  if (other.length) console.log('注意：' + other.length + ' 个不在具名函数键下（匿名函数/块作用域/对象方法），需按行号人工定位。');
+  if (other.length) console.log('注意：@other 行的绑定不在具名函数键下（匿名函数/块作用域/对象方法），表里的旧名请写成 名@声明行。');
   process.exit(0);
 }
 
@@ -162,7 +163,12 @@ const edits = [];
 const bindingIndex = new Map();
 for (const [key, bindings] of byKey) {
   const m = new Map();
-  for (const b of bindings) m.set(b.identifier.name, b);
+  for (const b of bindings) {
+    // @other 里的同名绑定是彼此独立的（每个匿名作用域各有一个 a），必须按声明行区分。
+    const lookup = key === '@other' ? `${b.identifier.name}@${lineOf(b.identifier.start)}` : b.identifier.name;
+    if (m.has(lookup)) { console.error(`内部错误：${key} 下重复键 ${lookup}`); process.exit(1); }
+    m.set(lookup, b);
+  }
   bindingIndex.set(key, m);
 }
 
