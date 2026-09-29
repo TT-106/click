@@ -2,12 +2,50 @@
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
 import { canAttackCastle, findCastle } from "../world/regions.js";
-import { game } from "../runtime/game.js";
 import { View, addChildView, resetChildViews } from "./base.js";
 import { appendHeaderCell, clearElementById, createElement, getElement } from "./dom.js";
 import { TabView } from "./navigation.js";
+/** 城堡视图所需的四个依赖由组合根注入。monsterCatalog / castles / regions / itemSprites
+ *  四个容器对象都在 runtime 的 game 模块对象字面量里只构造一次、从不整体重新赋值
+ *  （src/ 内 0 处 `game.X =`，判据见 docs/reverse-engineering/facts.md），所以按引用绑安全；
+ *  字段值（maxUnlockedLevel、revision、castleList 等）随游戏进程变化，读的始终是同一对象。
+ *  未绑定就用到会立刻抛，避免"装配漏一步"退化成静默的 undefined 读取。 */
+var boundMonsterCatalog = null;
+var boundCastleManager = null;
+var boundRegionManager = null;
+var boundItemSprites = null;
+export function bindCastleViews(monsterCatalog, castles, regions, itemSprites) {
+  boundMonsterCatalog = monsterCatalog;
+  boundCastleManager = castles;
+  boundRegionManager = regions;
+  boundItemSprites = itemSprites;
+}
+function monsterCatalogRef() {
+  if (!boundMonsterCatalog) {
+    throw new Error('城堡视图尚未绑定怪物目录：请在组合根调用 bindCastleViews(game.monsterCatalog, game.castles, game.regions, game.itemSprites)');
+  }
+  return boundMonsterCatalog;
+}
+function castleManagerRef() {
+  if (!boundCastleManager) {
+    throw new Error('城堡视图尚未绑定城堡管理器：请在组合根调用 bindCastleViews(game.monsterCatalog, game.castles, game.regions, game.itemSprites)');
+  }
+  return boundCastleManager;
+}
+function regionManagerRef() {
+  if (!boundRegionManager) {
+    throw new Error('城堡视图尚未绑定区域管理器：请在组合根调用 bindCastleViews(game.monsterCatalog, game.castles, game.regions, game.itemSprites)');
+  }
+  return boundRegionManager;
+}
+function itemSpritesRef() {
+  if (!boundItemSprites) {
+    throw new Error('城堡视图尚未绑定物品精灵表：请在组合根调用 bindCastleViews(game.monsterCatalog, game.castles, game.regions, game.itemSprites)');
+  }
+  return boundItemSprites;
+}
 export function getCastleStatusColor(castle) {
-  return castle.regionLocked ? "#222" : castle.conquered ? "#080" : canAttackCastle(castle) ? game.monsterCatalog.maxUnlockedLevel >= castle.requiredMonsterLevel ? "#850" : "#A30" : castle.attackScheduled ? "#A80" : "#AAA";
+  return castle.regionLocked ? "#222" : castle.conquered ? "#080" : canAttackCastle(castle) ? monsterCatalogRef().maxUnlockedLevel >= castle.requiredMonsterLevel ? "#850" : "#A30" : castle.attackScheduled ? "#A80" : "#AAA";
 }
 export function CastleMapView() {
   this.elementId = "castleMapContainer";
@@ -56,10 +94,10 @@ export function initializeViewsCastles() {
       /** @type {{createDomElements: () => void}} */ (/** @type {unknown} */ (this)).createDomElements();
     }
     var castleRevision;
-    castleRevision = game.castles.revision;
+    castleRevision = castleManagerRef().revision;
     if (this.cachedRevision != castleRevision) {
       this.cachedRevision = castleRevision;
-      var regionManager = game.regions;
+      var regionManager = regionManagerRef();
       var columnIndex,
         rowIndex,
         columnCount = regionManager.regionGridOriginColumn + regionManager.regionGridSpan - regionManager.regionGridOriginColumn,
@@ -82,7 +120,7 @@ export function initializeViewsCastles() {
   CastleMapView.prototype.createDomElements = function () {
     var containerId = this.elementId;
     clearElementById(containerId);
-    var regionManager = game.regions,
+    var regionManager = regionManagerRef(),
       originColumn = regionManager.regionGridOriginColumn,
       d = regionManager.regionGridOriginRow,
       maxRegionColumn = regionManager.regionGridOriginColumn + regionManager.regionGridSpan,
@@ -107,7 +145,7 @@ export function initializeViewsCastles() {
             crownImage.src = "images/Transparent.gif";
             crownImage.style.width = "35px";
             crownImage.style.height = "35px";
-            var crownSprite = game.itemSprites.getSprite("CrownGolden.PNG");
+            var crownSprite = itemSpritesRef().getSprite("CrownGolden.PNG");
             crownImage.style.background = "url('spritesheet/items.png') -" + crownSprite.sourceX + "px -" + crownSprite.sourceY + "px";
           }
         }
@@ -125,7 +163,7 @@ export function initializeViewsCastles() {
     if (!this.tableElement) {
       /** @type {{createDomElements: () => void}} */ (/** @type {unknown} */ (this)).createDomElements();
     }
-    var castleList = game.castles.castleList;
+    var castleList = castleManagerRef().castleList;
     if (castleList.length !== this.rowViews.length) {
       /** @type {{setRowCount: (count: number) => void}} */ (/** @type {unknown} */ (this)).setRowCount(castleList.length);
     }
@@ -149,7 +187,7 @@ export function initializeViewsCastles() {
   CastleTableView.prototype.createDomElements = function () {
     var elementId = this.elementId;
     clearElementById(elementId);
-    var castleList = game.castles.castleList,
+    var castleList = castleManagerRef().castleList,
       castleIndex;
     this.tableElement = createElement("table", getElement(elementId), null, "monsterTable");
     /** @type {{createHeaderRow: (row: HTMLTableRowElement) => void}} */ (/** @type {unknown} */ (this)).createHeaderRow(this.tableElement.insertRow(0));
@@ -206,7 +244,7 @@ export function initializeViewsCastles() {
         this.progressFillElement.style.backgroundColor = statusColor;
       }
       var a = this.castle;
-      a = a.regionLocked ? "未解锁" : a.conquered ? "已征服" : canAttackCastle(a) ? game.monsterCatalog.maxUnlockedLevel >= a.requiredMonsterLevel ? "准备攻击" : "怪物等级" + a.requiredMonsterLevel : a.attackScheduled ? "计划攻击" : "地牢" + a.conqueredDungeonCount + " / " + a.dungeonList.length;
+      a = a.regionLocked ? "未解锁" : a.conquered ? "已征服" : canAttackCastle(a) ? monsterCatalogRef().maxUnlockedLevel >= a.requiredMonsterLevel ? "准备攻击" : "怪物等级" + a.requiredMonsterLevel : a.attackScheduled ? "计划攻击" : "地牢" + a.conqueredDungeonCount + " / " + a.dungeonList.length;
       if (this.cachedStatusText != a) {
         this.cachedStatusText = a;
         this.progressTextElement.innerHTML = a;

@@ -5,8 +5,46 @@
 /** @typedef {import('./save-dto.js').SaveMonsterTypeState} SaveMonsterTypeState */
 /** @typedef {import('./save-dto.js').SaveMonsterTypeEntry} SaveMonsterTypeEntry */
 import { Item, ItemEffect } from "../loot/items.js";
-import { game } from "../runtime/game.js";
 import { MonsterType, advanceMonsterTypeRank } from "../combat/encounters.js";
+/** 存档实体所需的四个依赖由组合根注入。itemGenerator / dungeons / monsterCatalog / scrolls
+ *  四个容器对象都在 runtime 的 game 模块对象字面量里只构造一次、从不整体重新赋值
+ *  （src/ 内 0 处 `game.X =`，判据见 docs/reverse-engineering/facts.md），所以按引用绑安全；
+ *  字段值（itemTypesById、farms、monsterTypesByLevelCache 等）随游戏进程变化，读的始终是同一对象。
+ *  未绑定就用到会立刻抛，避免"装配漏一步"退化成静默的 undefined 读取。 */
+var boundItemGenerator = null;
+var boundDungeons = null;
+var boundMonsterCatalog = null;
+var boundScrolls = null;
+export function bindPersistenceEntities(itemGenerator, dungeons, monsterCatalog, scrolls) {
+  boundItemGenerator = itemGenerator;
+  boundDungeons = dungeons;
+  boundMonsterCatalog = monsterCatalog;
+  boundScrolls = scrolls;
+}
+function itemGeneratorRef() {
+  if (!boundItemGenerator) {
+    throw new Error('存档实体尚未绑定物品生成器：请在组合根调用 bindPersistenceEntities(game.itemGenerator, game.dungeons, game.monsterCatalog, game.scrolls)');
+  }
+  return boundItemGenerator;
+}
+function dungeonsRef() {
+  if (!boundDungeons) {
+    throw new Error('存档实体尚未绑定地牢注册表：请在组合根调用 bindPersistenceEntities(game.itemGenerator, game.dungeons, game.monsterCatalog, game.scrolls)');
+  }
+  return boundDungeons;
+}
+function monsterCatalogRef() {
+  if (!boundMonsterCatalog) {
+    throw new Error('存档实体尚未绑定怪物目录：请在组合根调用 bindPersistenceEntities(game.itemGenerator, game.dungeons, game.monsterCatalog, game.scrolls)');
+  }
+  return boundMonsterCatalog;
+}
+function scrollsRef() {
+  if (!boundScrolls) {
+    throw new Error('存档实体尚未绑定卷轴背包：请在组合根调用 bindPersistenceEntities(game.itemGenerator, game.dungeons, game.monsterCatalog, game.scrolls)');
+  }
+  return boundScrolls;
+}
 export function serializeItem(item) {
   var itemTypeId = item.itemType.itemTypeId,
     slot = item.slot,
@@ -49,7 +87,7 @@ export function restoreItem(a) {
   } else {
     itemEffect = null;
   }
-  a = game.itemGenerator.itemTypesById[a.itemTypeId];
+  a = itemGeneratorRef().itemTypesById[a.itemTypeId];
   return a ? new Item(a, itemSlot, characterClass, itemName ? itemName : "Error", itemLevel ? itemLevel : 1, itemRarity ? itemRarity : 0, itemGold ? itemGold : 0, itemValue ? itemValue : 0, itemCharacteristic ? itemCharacteristic : 1, itemEffect) : (console.log("failed to lookup item type"), null);
 }
 export function serializeCharacter(character) {
@@ -290,7 +328,7 @@ export function restoreStatistics(a, statistics, isLifetime) {
     legacyWeaponsRacksLooted = a.weaponsRacksLooted;
   a = a.bookcasesLooted;
   if (!farmsPurchased) {
-    farmsPurchased = game.dungeons.farms.length;
+    farmsPurchased = dungeonsRef().farms.length;
   }
   statistics.playedMillis = isLifetime ? Math.max(0, totalPlayedMillis ? totalPlayedMillis : playedMillis) : Math.max(0, playedMillis ? playedMillis : 0);
   statistics.turnCount = turnCount ? turnCount : 0;
@@ -329,7 +367,7 @@ export function initializePersistenceEntities() {
   // 参数标注不被赋值收窄覆盖——参数 a 在下方被复用为 levelStates 数组，属 AST 恢复期
   // 写法，勿重排、勿改复用形态，故不给参数标注而给读取点 cast，负向验证 TS2339 红/还原绿）。
   MonsterSaveAdapter.prototype.restoreMonsterTypes = function (a) {
-    var monsterCatalog = game.monsterCatalog;
+    var monsterCatalog = monsterCatalogRef();
     monsterCatalog.minUnlockedLevel = (/** @type {SaveMonsterTypesState} */ (a)).minUnlockedLevel;
     monsterCatalog.maxUnlockedLevel = (/** @type {SaveMonsterTypesState} */ (a)).maxUnlockedLevel;
     a = a.monsterLevelStates;
@@ -337,14 +375,14 @@ export function initializePersistenceEntities() {
       for (var c = a[levelStateIndex], monsterLevel = c.level, c = c.monsterTypes, restoredMonsterTypes = [], monsterTypeIndex = undefined, monsterTypeIndex = /** @type {any} */ (0); monsterTypeIndex < c.length; monsterTypeIndex++) {
         restoredMonsterTypes.push(restoreMonsterType(c[monsterTypeIndex], monsterLevel));
       }
-      game.monsterCatalog.monsterTypesByLevelCache[monsterLevel + ""] = restoredMonsterTypes;
+      monsterCatalogRef().monsterTypesByLevelCache[monsterLevel + ""] = restoredMonsterTypes;
     }
   };
   StatisticsSaveAdapter.prototype.restoreScroll = function (entry) {
     var count = entry.count,
       locked = entry.locked,
       upgradeCount = entry.upgradeCount;
-    if (entry = game.scrolls.getScrollById(entry.scrollId)) {
+    if (entry = scrollsRef().getScrollById(entry.scrollId)) {
       entry.quantity = count;
       entry.applyLockedAndUpgradeState(locked, upgradeCount);
     }

@@ -127,10 +127,21 @@ const unexplained = [];
 const tally = new Map();
 function count(why, n) { tally.set(why, (tally.get(why) || 0) + n); }
 
+// 子进程基础设施错误与"文件在 base 里本来就不存在"必须分开：
+// 本机（Windows）下 spawnSync/execFileSync 用**管道 stdin** 会抛 EBUSY，早先这里写成
+// `catch { continue; }` 会把它静默吞掉，于是整轮"0 个文件、0 行待判定"、exit 0 —— 一条
+// 假绿的门禁。现在显式给 stdio 关掉 stdin 管道，并把非"路径不存在"的失败收集起来最后报红。
+const infraErrors = [];
 for (const rel of files) {
   let baseSrc;
-  try { baseSrc = execFileSync('git', ['show', `${BASE}:${rel}`], { encoding: 'utf8', maxBuffer: 1 << 28 }); }
-  catch { continue; }
+  try {
+    baseSrc = execFileSync('git', ['show', `${BASE}:${rel}`], { encoding: 'utf8', maxBuffer: 1 << 28, stdio: ['ignore', 'pipe', 'pipe'] });
+  } catch (err) {
+    // git show 对"base 里没有这个路径"返回 exit 128；那是合法跳过（新增文件），其余是基础设施故障
+    if (err && err.status === 128) continue;
+    infraErrors.push(`${rel}: ${(err && (err.code || err.message) || 'unknown').toString().split('\n')[0]}`);
+    continue;
+  }
   const curSrc = fs.readFileSync(path.join(ROOT, rel), 'utf8');
   const aRows = skeleton(baseSrc), bRows = skeleton(curSrc);
   const a = aRows.map((r) => r[1]), b = bRows.map((r) => r[1]);
@@ -206,4 +217,14 @@ if (unexplained.length) {
   console.log('\n待人工判定的变动（最多列 60 条）:');
   for (const u of unexplained) console.log('  ' + u);
 }
-process.exitCode = unexplainedTotal ? 1 : 0;
+if (infraErrors.length) {
+  console.log(`\n基础设施故障：${infraErrors.length} 个文件读不出 base=${BASE} 的内容（不是"路径不存在"）：`);
+  for (const e of infraErrors.slice(0, 10)) console.log('  ' + e);
+  console.log('  这类失败会让本检查静默退化成空转，必须修掉（本机已知成因：子进程管道 stdin 抛 EBUSY）。');
+}
+// 空转护栏：本应比对若干文件却一个都没比成，说明基础设施坏了，不能报绿
+const silentNoop = compared === 0 && files.length > 0;
+if (silentNoop) {
+  console.log(`\n空转告警：待比对 ${files.length} 个文件，实际比对 0 个 —— 检查未生效，按失败处理。`);
+}
+process.exitCode = (unexplainedTotal || infraErrors.length || silentNoop) ? 1 : 0;

@@ -559,7 +559,9 @@ function writeCase(id, text) {
 function runTool(fileRel, tableRel, dry) {
   const argv = [path.join(ROOT, TOOL), '--file', fileRel, '--table', tableRel];
   if (dry) argv.push('--dry');
-  const r = spawnSync(process.execPath, argv, { cwd: ROOT, encoding: 'utf8' });
+  // stdio 显式关掉 stdin 管道：本机（Windows）下 spawnSync 默认给 stdin 建管道会抛 EBUSY，
+  // 结果是 r.status === null（被当成"工具崩了"），整套测试静默失真。
+  const r = spawnSync(process.execPath, argv, { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
   return { code: r.status, out: (r.stdout || '') + (r.stderr || '') };
 }
 
@@ -676,7 +678,7 @@ for (const c of legacy) {
   const fileRel = path.relative(ROOT, workPath).replace(/\\/g, '/');
   const tableRel = path.relative(ROOT, path.join(CASES, c.id + '.json')).replace(/\\/g, '/');
   const r = spawnSync(process.execPath, [path.join(ROOT, 'scripts', 'rename-bindings-auto.mjs'),
-    '--file', fileRel, '--table', tableRel], { cwd: ROOT, encoding: 'utf8' });
+    '--file', fileRel, '--table', tableRel], { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
   const text = (r.stdout || '') + (r.stderr || '');
   const stacked = /\n\s+at .*\(.+:\d+:\d+\)/.test(text) && /SyntaxError/.test(text);
   const untouched = fs.readFileSync(workPath, 'utf8') === fixtures[c.id];

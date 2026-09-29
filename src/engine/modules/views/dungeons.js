@@ -29,11 +29,11 @@ export function mountTreasureLoot(treasureLootView) {
       }
       return false;
     };
-    var c = createElement("table", treasureLootView.button, null, null);
-    c.style.width = "100%";
-    var b = c.insertRow(0),
-      c = c.insertRow(1),
-      treasureImageCell = b.insertCell(0);
+    var table = createElement("table", treasureLootView.button, null, null);
+    table.style.width = "100%";
+    var treasureRow = table.insertRow(0),
+      messageRow = table.insertRow(1),
+      treasureImageCell = treasureRow.insertCell(0);
     treasureImageCell.rowSpan = 2;
     treasureImageCell.style.width = "50px";
     treasureImageCell.style.height = "50px";
@@ -42,10 +42,10 @@ export function mountTreasureLoot(treasureLootView) {
     treasureLootView.treasureImage.src = "images/Transparent.gif";
     treasureLootView.treasureImage.style.width = "50px";
     treasureLootView.treasureImage.style.height = "50px";
-    b = b.insertCell(1);
-    b.style.textAlign = "left";
-    treasureLootView.actionLabel = createElement("span", b, null, null);
-    treasureLootView.messageCell = c.insertCell(0);
+    var actionCell = treasureRow.insertCell(1);
+    actionCell.style.textAlign = "left";
+    treasureLootView.actionLabel = createElement("span", actionCell, null, null);
+    treasureLootView.messageCell = messageRow.insertCell(0);
     treasureLootView.messageCell.colSpan = 2;
     treasureLootView.messageCell.style.width = "200px";
     treasureLootView.messageCell.style.textAlign = "left";
@@ -239,21 +239,19 @@ export function initializeViewsDungeons() {
   };
   DungeonRowView.prototype.render = function () {
     if (this.dungeon) {
-      var a = this.dungeon.discovered,
+      var discovered = this.dungeon.discovered,
         isCleared = this.dungeon.cleared,
         dungeonName = this.dungeon.dungeonName,
         castleName = this.dungeon.region.castleName,
         isFarm = this.dungeon.isFarm,
-        g;
-      g = this.dungeon;
-      g = g.isFarm ? g.cleared ? "等待中" : g.discovered && !g.cleared ? "收获中" : "收获" : g.cleared ? "已清空" : g.discovered && !g.cleared ? "探索中" : "已探索?";
-      var h;
-      h = this.dungeon;
-      h = h.cleared ? Math.max(0, Math.min(100, 100 * (game.state.turnNumber - h.clearedTurn) / 1500 | 0)) : 0;
-      var l;
-      l = this.dungeon;
-      l = l.cleared ? 0 : Math.max(0, Math.min(100, 100 * (game.state.turnNumber - l.farmStartTurn) / 1200 | 0));
-      a = a && (isFarm || isCleared);
+        dungeon;
+      dungeon = this.dungeon;
+      var statusText = dungeon.isFarm ? dungeon.cleared ? "等待中" : dungeon.discovered && !dungeon.cleared ? "收获中" : "收获" : dungeon.cleared ? "已清空" : dungeon.discovered && !dungeon.cleared ? "探索中" : "已探索?";
+      dungeon = this.dungeon;
+      var invasionProgress = dungeon.cleared ? Math.max(0, Math.min(100, 100 * (game.state.turnNumber - dungeon.clearedTurn) / 1500 | 0)) : 0;
+      dungeon = this.dungeon;
+      var farmProgress = dungeon.cleared ? 0 : Math.max(0, Math.min(100, 100 * (game.state.turnNumber - dungeon.farmStartTurn) / 1200 | 0));
+      var showsProgress = discovered && (isFarm || isCleared);
       if (this.selectedDungeon !== this.dungeon) {
         this.selectedDungeon = this.dungeon;
         var mapSprite = game.terrainSprites.getSprite(this.dungeon.mapSprite);
@@ -267,33 +265,33 @@ export function initializeViewsDungeons() {
         this.cachedCastleName = castleName;
         this.labelCell.innerHTML = castleName;
       }
-      if (this.cachedStatusText !== g) {
-        this.cachedStatusText = g;
-        this.descriptionCell.innerHTML = g;
+      if (this.cachedStatusText !== statusText) {
+        this.cachedStatusText = statusText;
+        this.descriptionCell.innerHTML = statusText;
       }
-      if (this.showsProgress !== a) {
-        if (this.showsProgress = a) {
+      if (this.showsProgress !== showsProgress) {
+        if (this.showsProgress = showsProgress) {
           showElement(this.progressContainer);
         } else {
           hideElement(this.progressContainer);
         }
       }
-      if (a) {
+      if (showsProgress) {
         if (isCleared) {
-          if (this.cachedInvasionProgress !== h) {
-            this.cachedInvasionProgress = h;
-            var progressFillWidth = h / 100 * this.columnWidth | 0;
+          if (this.cachedInvasionProgress !== invasionProgress) {
+            this.cachedInvasionProgress = invasionProgress;
+            var progressFillWidth = invasionProgress / 100 * this.columnWidth | 0;
             this.progressFillElement.style.width = progressFillWidth + "px";
             this.progressFillElement.style.backgroundColor = "#F00";
-            this.progressTextElement.innerHTML = "地牢再次受到侵袭 " + h + "%";
+            this.progressTextElement.innerHTML = "地牢再次受到侵袭 " + invasionProgress + "%";
           }
         } else {
-          if (this.cachedFarmProgress !== l) {
-            this.cachedFarmProgress = l;
-            progressFillWidth = l / 100 * this.columnWidth | 0;
+          if (this.cachedFarmProgress !== farmProgress) {
+            this.cachedFarmProgress = farmProgress;
+            progressFillWidth = farmProgress / 100 * this.columnWidth | 0;
             this.progressFillElement.style.width = progressFillWidth + "px";
             this.progressFillElement.style.backgroundColor = "#080";
-            this.progressTextElement.innerHTML = "收获地牢 " + l + "%";
+            this.progressTextElement.innerHTML = "收获地牢 " + farmProgress + "%";
           }
         }
       }
@@ -335,16 +333,16 @@ export function initializeViewsDungeons() {
     }
   };
   DungeonListView.prototype.createDomElements = function () {
-    var a = this.elementId;
-    clearElementById(a);
+    var elementId = this.elementId;
+    clearElementById(elementId);
     var dungeonList = getDungeonList(this),
       dungeonIndex;
-    this.tableElement = createElement("table", getElement(a), null, "monsterTable");
+    this.tableElement = createElement("table", getElement(elementId), null, "monsterTable");
     /** @type {{createHeaderRow: (row: HTMLTableRowElement) => void}} */ (/** @type {unknown} */ (this)).createHeaderRow(this.tableElement.insertRow(0));
     for (dungeonIndex = 0; dungeonIndex < dungeonList.length; dungeonIndex++) {
-      a = new DungeonRowView(this.tableElement.insertRow(dungeonIndex + 1), this.categoryId);
-      a.setDungeon(dungeonList[dungeonIndex]);
-      this.rowViews.push(a);
+      var rowView = new DungeonRowView(this.tableElement.insertRow(dungeonIndex + 1), this.categoryId);
+      /** @type {{setDungeon: (dungeon: unknown) => void}} */ (/** @type {unknown} */ (rowView)).setDungeon(dungeonList[dungeonIndex]);
+      this.rowViews.push(rowView);
     }
   };
   DungeonListView.prototype.createHeaderRow = function (headerRow) {
