@@ -660,7 +660,7 @@ export function applyAchievementReward(a) {
 
 ### 5.1 三块结构
 
-`src/engine/modules/runtime/game.js:190-199`
+`src/engine/modules/runtime/game.js:192-201`
 
 ```js
       runStatistics: new RunStatistics(),
@@ -945,7 +945,7 @@ if (game.options.allowOfflineProgress && game.lastActiveAt) {
 
 `lastActiveAt` 来自存档的 `gameTimestamp`（写入时是**序列化时刻**，`persistence/game-save.js:51-52` 与 `:704` 附近）。
 
-`runtime/game.js:479-485`
+`runtime/game.js:482-488`
 
 ```js
     beginOfflineProgress: function () {

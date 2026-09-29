@@ -17,6 +17,7 @@ import { PointsView } from "../views/achievements.js";
 import { InformationView } from "../views/information.js";
 import { addChildView } from "../views/base.js";
 import { persistence } from "../runtime/storage-port.js";
+import { TILE_SIZE } from "../core/screen-layout.js";
 export function GameLoop() {
   this.resourcesReady = false;
   this.lastTickAt = nowMilliseconds();
@@ -63,12 +64,12 @@ export function initializeSimulationLoop() {
               centerX = game.level.centerX;
               centerY = game.level.centerY;
             }
-            centerRemainderX = Math.round(centerX % game.tileSize);
-            centerRemainderY = Math.round(centerY % game.tileSize);
+            centerRemainderX = Math.round(centerX % TILE_SIZE);
+            centerRemainderY = Math.round(centerY % TILE_SIZE);
             camera.viewportOffsetX = centerRemainderX - centerRemainderY;
             camera.viewportOffsetY = Math.round((centerRemainderX + centerRemainderY) / 2);
-            camera.tileColumn = centerX / game.tileSize | 0;
-            camera.tileRow = centerY / game.tileSize | 0;
+            camera.tileColumn = centerX / TILE_SIZE | 0;
+            camera.tileRow = centerY / TILE_SIZE | 0;
           }
         }
         if (game.renderEnabled) {

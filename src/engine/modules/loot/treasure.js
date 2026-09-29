@@ -6,6 +6,7 @@ import { Vector2, randomInt, setVector } from "../core/math.js";
 import { getMonsters } from "../combat/encounters.js";
 import { globalUpgradeDefinitions } from "../content/balance.js";
 import { canPlaceRoomObject } from "../world/rooms.js";
+import { TILE_SIZE } from "../core/screen-layout.js";
 export function GoldDrop(goldAmount, levelPositionX, levelPositionY, room) {
   this.goldAmount = goldAmount;
   this.levelPositionX = levelPositionX;
@@ -76,13 +77,13 @@ export function spawnRoomTreasure(a) {
       attemptCount++;
     }
     if (f = wallPoint) {
-      var chestLevelX = f.x * game.tileSize;
-      f = f.y * game.tileSize;
+      var chestLevelX = f.x * TILE_SIZE;
+      f = f.y * TILE_SIZE;
       if (!chestDefinition.flushPlacement) {
         if (isWestWall) {
-          chestLevelX += game.tileSize;
+          chestLevelX += TILE_SIZE;
         } else {
-          f += game.tileSize;
+          f += TILE_SIZE;
         }
       }
       a = new TreasureChest(chestLevelX, f, a, chestDefinition, isWestWall);

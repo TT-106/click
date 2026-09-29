@@ -1404,28 +1404,28 @@ export function initializeViewsUpgradeDetails() {
   UpgradeListView.prototype = new View();
   UpgradeListView.prototype.reset = function () {
     clearElementById(this.elementId);
-    var a;
-    for (a = 0; a < this.buttons.length; a++) {
-      (/** @type {UpgradeButtonView & ActiveUpgradeButton} */ (/** @type {unknown} */ (this.buttons[a]))).reset();
+    var buttonIndex;
+    for (buttonIndex = 0; buttonIndex < this.buttons.length; buttonIndex++) {
+      (/** @type {UpgradeButtonView & ActiveUpgradeButton} */ (/** @type {unknown} */ (this.buttons[buttonIndex]))).reset();
     }
-    var b = this.upgradeCollection.upgrades;
-    for (a = 0; a < this.buttons.length; a++) {
-      (/** @type {UpgradeButtonView & ActiveUpgradeButton} */ (/** @type {unknown} */ (this.buttons[a]))).attachUpgrade(b[a]);
+    var upgrades = this.upgradeCollection.upgrades;
+    for (buttonIndex = 0; buttonIndex < this.buttons.length; buttonIndex++) {
+      (/** @type {UpgradeButtonView & ActiveUpgradeButton} */ (/** @type {unknown} */ (this.buttons[buttonIndex]))).attachUpgrade(upgrades[buttonIndex]);
     }
     this.cachedUpdateCounter = -100;
   };
   UpgradeListView.prototype.update = function () {
-    var a;
-    a = this.upgradeCollection.updateCounter;
-    if (this.cachedUpdateCounter !== a) {
-      this.cachedUpdateCounter = a;
-      var b = this.upgradeCollection.upgrades;
-      for (a = 0; a < this.buttons.length; a++) {
-        (/** @type {UpgradeButtonView & ActiveUpgradeButton} */ (/** @type {unknown} */ (this.buttons[a]))).attachUpgrade(b[a]);
+    var updateCounter;
+    updateCounter = this.upgradeCollection.updateCounter;
+    if (this.cachedUpdateCounter !== updateCounter) {
+      this.cachedUpdateCounter = updateCounter;
+      var upgrades = this.upgradeCollection.upgrades;
+      for (var buttonIndex = 0; buttonIndex < this.buttons.length; buttonIndex++) {
+        (/** @type {UpgradeButtonView & ActiveUpgradeButton} */ (/** @type {unknown} */ (this.buttons[buttonIndex]))).attachUpgrade(upgrades[buttonIndex]);
       }
     }
-    for (a = 0; a < this.buttons.length; a++) {
-      (/** @type {UpgradeButtonView & ActiveUpgradeButton} */ (/** @type {unknown} */ (this.buttons[a]))).render();
+    for (buttonIndex = 0; buttonIndex < this.buttons.length; buttonIndex++) {
+      (/** @type {UpgradeButtonView & ActiveUpgradeButton} */ (/** @type {unknown} */ (this.buttons[buttonIndex]))).render();
     }
   };
 }

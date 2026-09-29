@@ -16,6 +16,7 @@ import { getPartyMaxLevel } from "../characters/party.js";
 import { bossClass, bossSpriteDefinitions, castleGuardianDefinitions } from "../content/guardians.js";
 import { applyLevelStats, createBehaviorQueue, createCastleGuardian, initializeCharacterSkills } from "../simulation/characters.js";
 import { applyBonusList } from "./skill-effects.js";
+import { TILE_SIZE } from "../core/screen-layout.js";
 /** @typedef {Character & { setMonsterType: (monsterType: MonsterType) => void }} TypedMonster */
 /** @typedef {MonsterNameGenerator & { pickWord: (words: string[]) => string }} NamedMonsterGenerator */
 export function EncounterState() {
@@ -81,10 +82,10 @@ export function populateEncounter(a) {
               stats.maxHealth.levelValue = monsterType.maxHealth;
               stats.health = floorNumber(statValue(stats.maxHealth));
             }
-            var left = roomLeftPixels(room) + game.tileSize,
-              top = roomTopPixels(room) + game.tileSize,
-              bottom = roomBottomPixels(room) - game.tileSize,
-              spawnX = left + randomInt(roomRightPixels(room) - game.tileSize - left),
+            var left = roomLeftPixels(room) + TILE_SIZE,
+              top = roomTopPixels(room) + TILE_SIZE,
+              bottom = roomBottomPixels(room) - TILE_SIZE,
+              spawnX = left + randomInt(roomRightPixels(room) - TILE_SIZE - left),
               spawnY = top + randomInt(bottom - top);
             setVector(monster.position.levelPosition, spawnX, spawnY);
             registry.activeMonsters.push(monster);
@@ -134,10 +135,10 @@ export function spawnDungeonBoss(monsterNames, dungeonRoom) {
   var bossPosition = boss.position;
   bossPosition.room = dungeonRoom;
   bossPosition.currentHallway = null;
-  var left = roomLeftPixels(dungeonRoom) + game.tileSize,
-    top = roomTopPixels(dungeonRoom) + game.tileSize,
-    bottom = roomBottomPixels(dungeonRoom) - game.tileSize,
-    spawnX = left + randomInt(roomRightPixels(dungeonRoom) - game.tileSize - left),
+  var left = roomLeftPixels(dungeonRoom) + TILE_SIZE,
+    top = roomTopPixels(dungeonRoom) + TILE_SIZE,
+    bottom = roomBottomPixels(dungeonRoom) - TILE_SIZE,
+    spawnX = left + randomInt(roomRightPixels(dungeonRoom) - TILE_SIZE - left),
     spawnY = top + randomInt(bottom - top);
   setVector(bossPosition.levelPosition, spawnX, spawnY);
   applyBonusList(boss, bossClass.statBonusList);

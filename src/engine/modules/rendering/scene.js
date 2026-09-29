@@ -12,6 +12,7 @@ import { getScrollSprite } from "../combat/scrolls.js";
 import { getMonsters } from "../combat/encounters.js";
 import { TARGETED_EFFECT } from "./sprites.js";
 import { createElement, getElement } from "../views/dom.js";
+import { HALF_TILE_SIZE, TILE_SIZE, VIEWPORT_HALF_HEIGHT, VIEWPORT_HALF_WIDTH, VIEWPORT_HEIGHT, VIEWPORT_WIDTH } from "../core/screen-layout.js";
 export function RenderCommand() {
   this.animation = this.sprite = null;
   this.raiseOffset = this.sortKey = this.frameIndex = 0;
@@ -83,8 +84,8 @@ export function drawWorldTileRow(renderer, tileRow, startColumn, endColumn) {
     var tile = game.world.getTileAtPixel(startColumn, tileRow);
     if (tile) {
       var camera = game.camera;
-      var screenX = game.viewportHalfWidth + (startColumn - camera.tileColumn - (tileRow - camera.tileRow)) * game.tileSize - camera.viewportOffsetX;
-      var screenY = game.viewportHalfHeight + (startColumn - camera.tileColumn + (tileRow - camera.tileRow)) * game.halfTileSize - camera.viewportOffsetY;
+      var screenX = VIEWPORT_HALF_WIDTH + (startColumn - camera.tileColumn - (tileRow - camera.tileRow)) * TILE_SIZE - camera.viewportOffsetX;
+      var screenY = VIEWPORT_HALF_HEIGHT + (startColumn - camera.tileColumn + (tileRow - camera.tileRow)) * HALF_TILE_SIZE - camera.viewportOffsetY;
       renderer.drawSprite(tile.backgroundSprite, screenX, screenY);
       var decorationSprite = tile.decorationSprite;
       if (decorationSprite) {
@@ -98,8 +99,8 @@ export function drawDungeonTileRow(renderer, tileRow, startColumn, endColumn) {
     var tile = game.level.getTileAt(startColumn, tileRow);
     if (tile && tile.floorType !== EMPTY_TILE) {
       var camera = game.camera;
-      var screenX = game.viewportHalfWidth + (startColumn - camera.tileColumn - (tileRow - camera.tileRow)) * game.tileSize - camera.viewportOffsetX;
-      var screenY = game.viewportHalfHeight + (startColumn - camera.tileColumn + (tileRow - camera.tileRow)) * game.halfTileSize - camera.viewportOffsetY;
+      var screenX = VIEWPORT_HALF_WIDTH + (startColumn - camera.tileColumn - (tileRow - camera.tileRow)) * TILE_SIZE - camera.viewportOffsetX;
+      var screenY = VIEWPORT_HALF_HEIGHT + (startColumn - camera.tileColumn + (tileRow - camera.tileRow)) * HALF_TILE_SIZE - camera.viewportOffsetY;
       renderer.drawSprite(tile.backgroundSprite, screenX, screenY);
       var decorationSprite = tile.decorationSprite;
       if (decorationSprite) {
@@ -119,7 +120,7 @@ export function drawWorldCharacters(renderer, characters) {
     worldX = character.position.getWorldPositionX();
     worldY = character.position.getWorldPositionY();
     sprite = character.getSprite();
-    renderer.spriteRenderer.drawSpriteDepth(sprite, worldX, worldY, game.viewportHalfWidth + (worldX - game.world.worldCenterX - (worldY - game.world.worldCenterY)), game.viewportHalfHeight + 0.5 * (worldX - game.world.worldCenterX + (worldY - game.world.worldCenterY)), sprite.spriteSheet.spriteSize, 0);
+    renderer.spriteRenderer.drawSpriteDepth(sprite, worldX, worldY, VIEWPORT_HALF_WIDTH + (worldX - game.world.worldCenterX - (worldY - game.world.worldCenterY)), VIEWPORT_HALF_HEIGHT + 0.5 * (worldX - game.world.worldCenterX + (worldY - game.world.worldCenterY)), sprite.spriteSheet.spriteSize, 0);
   }
 }
 export function drawDungeonCharacters(renderer, characters) {
@@ -248,15 +249,15 @@ export function initializeRenderingScene() {
     for (var commandIndex = 0; commandIndex < this.renderCommands.length; commandIndex++) {
       resetRenderCommand(this.renderCommands[commandIndex]);
     }
-    var halfViewportWidth = game.viewportWidth / 2,
-      doubleViewportHeight = 2 * game.viewportHeight;
+    var halfViewportWidth = VIEWPORT_WIDTH / 2,
+      doubleViewportHeight = 2 * VIEWPORT_HEIGHT;
     var centerX, centerY;
     if (game.worldActive) {
-      centerX = game.world.worldCenterX + (0.5 * (halfViewportWidth - game.viewportHalfWidth) + (doubleViewportHeight - game.viewportHalfHeight)) | 0;
-      centerY = game.world.worldCenterY + (doubleViewportHeight - game.viewportHalfHeight - 0.5 * (halfViewportWidth - game.viewportHalfWidth)) | 0;
+      centerX = game.world.worldCenterX + (0.5 * (halfViewportWidth - VIEWPORT_HALF_WIDTH) + (doubleViewportHeight - VIEWPORT_HALF_HEIGHT)) | 0;
+      centerY = game.world.worldCenterY + (doubleViewportHeight - VIEWPORT_HALF_HEIGHT - 0.5 * (halfViewportWidth - VIEWPORT_HALF_WIDTH)) | 0;
     } else {
-      centerX = game.level.centerX + (0.5 * (halfViewportWidth - game.viewportHalfWidth) + (doubleViewportHeight - game.viewportHalfHeight)) | 0;
-      centerY = game.level.centerY + (doubleViewportHeight - game.viewportHalfHeight - 0.5 * (halfViewportWidth - game.viewportHalfWidth)) | 0;
+      centerX = game.level.centerX + (0.5 * (halfViewportWidth - VIEWPORT_HALF_WIDTH) + (doubleViewportHeight - VIEWPORT_HALF_HEIGHT)) | 0;
+      centerY = game.level.centerY + (doubleViewportHeight - VIEWPORT_HALF_HEIGHT - 0.5 * (halfViewportWidth - VIEWPORT_HALF_WIDTH)) | 0;
     }
     setVector(this.scratchVector, centerX, centerY);
   };
@@ -343,7 +344,7 @@ export function initializeRenderingScene() {
     renderer.spriteRenderer = game.options.depthSortSprites ? renderer.depthSortedRenderer : renderer.immediateRenderer;
     renderer.spriteRenderer.setContext(renderer.context);
     if (game.world.hasPartyPlaced) {
-      if (renderer.context.fillStyle = "#000000", renderer.context.fillRect(0, 0, game.viewportWidth, game.viewportHeight), game.worldActive) {
+      if (renderer.context.fillStyle = "#000000", renderer.context.fillRect(0, 0, VIEWPORT_WIDTH, VIEWPORT_HEIGHT), game.worldActive) {
         var centerTileColumn = game.world.pixelToTileColumn(game.world.worldCenterX),
           worldRowCursor = game.world.pixelToTileRow(game.world.worldCenterY) - 18;
         drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 5, centerTileColumn - 3);
@@ -593,7 +594,7 @@ export function initializeRenderingScene() {
           monsterY,
           monsterScreenX,
           monsterScreenY,
-          halfTileSize = game.tileSize / 2 | 0,
+          halfTileSize = TILE_SIZE / 2 | 0,
           monsterIndex,
           monsterSprite;
         for (monsterIndex = 0; monsterIndex < monsterList.length; monsterIndex++) {
@@ -604,7 +605,7 @@ export function initializeRenderingScene() {
           monsterScreenY = projectDungeonY(monsterX, monsterY);
           monsterSprite = monster.getSprite();
           if (4 === monster.characterType) {
-            renderer.spriteRenderer.drawSpriteDepth(monsterSprite, monsterX, monsterY, monsterScreenX - halfTileSize, monsterScreenY - halfTileSize, 3 * game.tileSize, 0);
+            renderer.spriteRenderer.drawSpriteDepth(monsterSprite, monsterX, monsterY, monsterScreenX - halfTileSize, monsterScreenY - halfTileSize, 3 * TILE_SIZE, 0);
           } else {
             renderer.spriteRenderer.drawSpriteDepth(monsterSprite, monsterX, monsterY, monsterScreenX, monsterScreenY, monsterSprite.spriteSheet.spriteSize, 0);
           }
@@ -645,13 +646,13 @@ export function initializeRenderingScene() {
                 var startPosition = effect.startPosition;
                 var startX = startPosition.x;
                 var startY = startPosition.y;
-                var lightningStartX = projectDungeonX(startX, startY) + game.tileSize;
-                var lightningStartY = projectDungeonY(startX, startY) + game.tileSize;
+                var lightningStartX = projectDungeonX(startX, startY) + TILE_SIZE;
+                var lightningStartY = projectDungeonY(startX, startY) + TILE_SIZE;
                 var targetPosition = effect.targetPosition;
                 var targetX = targetPosition.x;
                 var targetY = targetPosition.y;
-                var lightningEndX = projectDungeonX(targetX, targetY) + game.tileSize;
-                var lightningEndY = projectDungeonY(targetX, targetY) + game.tileSize;
+                var lightningEndX = projectDungeonX(targetX, targetY) + TILE_SIZE;
+                var lightningEndY = projectDungeonY(targetX, targetY) + TILE_SIZE;
                 renderer.context.beginPath();
                 renderer.context.moveTo(lightningStartX, lightningStartY);
                 var lightningMidX = lightningStartX + (lightningEndX - lightningStartX) / 3 | 0,
@@ -728,8 +729,8 @@ export function initializeRenderingScene() {
         canvas = /** @type {HTMLCanvasElement | null} */ (getElement(canvasElementId));
         if (!canvas) {
           canvas = /** @type {HTMLCanvasElement} */ (createElement("canvas", containerElement, canvasElementId, "gameTabTopLeftPanel"));
-        canvas.width = game.viewportWidth;
-        canvas.height = game.viewportHeight;
+        canvas.width = VIEWPORT_WIDTH;
+        canvas.height = VIEWPORT_HEIGHT;
         canvas.innerHTML = "你的浏览器不支持Html5.请升级你的浏览器.";
       }
       this.renderer = new SceneRenderer(canvas.getContext("2d"));

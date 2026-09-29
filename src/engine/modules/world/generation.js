@@ -14,6 +14,7 @@ import { clearVisualEffects } from "../rendering/sprites.js";
 import { IDLE_ACTION } from "../ai/targeting.js";
 import { clearMovementTarget } from "../characters/movement.js";
 import { spawnRoomTreasure } from "../loot/treasure.js";
+import { TILE_SIZE } from "../core/screen-layout.js";
 /** @typedef {{generate: () => boolean, moveUpLeft: (room: DungeonRoom) => void, shiftLeft: (room: DungeonRoom) => void, shiftUp: (room: DungeonRoom) => void, connectRooms: () => boolean, placeStairs: () => boolean, createStairs: (room: DungeonRoom, entrance: boolean) => DungeonStairs, canPlaceDoorAt: (doors: unknown[], column: number, row: number) => boolean}} LayoutMethods */
 export function DungeonLayoutGenerator(widthInTiles, heightInTiles, tileGrid, seededRandom, hasSecondEntrance) {
   this.seededRandom = seededRandom;
@@ -520,9 +521,9 @@ export function initializeWorldGeneration() {
     this.tileGrid = [];
     for (tileColumnIndex = 0; tileColumnIndex < this.widthInTiles; tileColumnIndex++) {
       tileColumnList = [];
-      columnPixel = tileColumnIndex * game.tileSize;
+      columnPixel = tileColumnIndex * TILE_SIZE;
       for (tileRowIndex = 0; tileRowIndex < this.heightInTiles; tileRowIndex++) {
-        rowPixel = tileRowIndex * game.tileSize;
+        rowPixel = tileRowIndex * TILE_SIZE;
         tileColumnList.push(new DungeonTile(tileColumnIndex, tileRowIndex, columnPixel, rowPixel));
       }
       this.tileGrid.push(tileColumnList);
@@ -532,9 +533,9 @@ export function initializeWorldGeneration() {
     return 0 > tileColumn || tileColumn >= this.widthInTiles || 0 > tileRow || tileRow >= this.heightInTiles ? null : this.tileGrid[tileColumn][tileRow];
   };
   DungeonLevel.prototype.pixelToTileColumn = function (pixel) {
-    return pixel / game.tileSize | 0;
+    return pixel / TILE_SIZE | 0;
   };
   DungeonLevel.prototype.pixelToTileRow = function (pixel) {
-    return pixel / game.tileSize | 0;
+    return pixel / TILE_SIZE | 0;
   };
 }

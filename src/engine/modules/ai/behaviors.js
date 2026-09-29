@@ -15,6 +15,7 @@ import { MELEE_ATTACK_RANGE, RANGED_ATTACK_RANGE, RANGED_MIN_DISTANCE } from "..
 import { showFloatingText } from "../rendering/floating-text.js";
 import { isSpellReady } from "../combat/scrolls.js";
 import { getRoomTreasure } from "../loot/treasure.js";
+import { TILE_SIZE } from "../core/screen-layout.js";
 /** @typedef {{ getPriority: () => number }} PrioritizedBehavior */
 /** @typedef {{ repositionInsideRoom: (character: unknown) => unknown }} MovingBehavior */
 /** @typedef {{ performOnArrival: (character: unknown) => void, canExecute: (character: unknown) => boolean, selectTarget: (character: unknown) => any, getActionTarget: () => any, getFinalScore: (character: unknown) => number }} DungeonBehaviorMethods */
@@ -125,10 +126,14 @@ export function ReviveBehavior(actionRange, priorityWeight) {
   this.actionRange = actionRange;
   this.learnedSpell = null;
 }
-export function PartyBuffBehavior(actionRange, priorityWeight, statusEffectTypeId) {
-  this.priorityWeight = statusEffectTypeId;
+/** 原版怪癖（R4 原样保留）：调用点传的是 (射程, 小整数, 较大的 id)，而构造函数把**第三个**实参
+ *  存进 priorityWeight、把**第二个**存进 statusEffectTypeId（原版 `tu(a,b,c)` 里 `this.ka = c`，
+ *  ka 即其它行为共用的优先级字段，见 `this.ka = 10` / `this.ka = 100` 同族赋值）。
+ *  下面的参数名按构造函数自己的数据流向命名；请勿据此交换赋值去"修正"它，那会改变行为。 */
+export function PartyBuffBehavior(actionRange, statusEffectTypeId, priorityWeight) {
+  this.priorityWeight = priorityWeight;
   this.actionRange = actionRange;
-  this.statusEffectTypeId = priorityWeight;
+  this.statusEffectTypeId = statusEffectTypeId;
   this.spell = null;
 }
 export function WaitBehavior() {
@@ -154,35 +159,35 @@ export function LootPotionBehavior(priorityWeight) {
   this.actionRange = 10;
 }
 export function UseShopBehavior(priorityWeight, minPriorityValue) {
-  this.pickupRadius = game.tileSize + 5;
+  this.pickupRadius = TILE_SIZE + 5;
   this.priorityWeight = priorityWeight;
   this.minPriorityValue = minPriorityValue;
   this.goldDrop = null;
   this.cachedDropDistance = 0;
 }
 export function EnterDungeonBehavior(priorityWeight, minPriorityValue) {
-  this.pickupRadius = game.tileSize + 5;
+  this.pickupRadius = TILE_SIZE + 5;
   this.priorityWeight = priorityWeight;
   this.minPriorityValue = minPriorityValue;
   this.scrollDrop = null;
   this.cachedDropDistance = 0;
 }
 export function EnterCastleBehavior(priorityWeight, minPriorityValue) {
-  this.pickupRadius = game.tileSize + 5;
+  this.pickupRadius = TILE_SIZE + 5;
   this.priorityWeight = priorityWeight;
   this.minPriorityValue = minPriorityValue;
   this.potionDrop = null;
   this.cachedDropDistance = 0;
 }
 export function TravelWorldBehavior(priorityWeight, minPriorityValue) {
-  this.pickupRadius = game.tileSize + 5;
+  this.pickupRadius = TILE_SIZE + 5;
   this.priorityWeight = priorityWeight;
   this.minPriorityValue = minPriorityValue;
   this.itemDrop = null;
   this.cachedDropDistance = 0;
 }
 export function ChangeFloorBehavior() {
-  this.pickupRadius = game.tileSize + 1;
+  this.pickupRadius = TILE_SIZE + 1;
   this.priorityWeight = 90;
   this.treasureChest = null;
 }
@@ -326,9 +331,9 @@ export function initializeAiBehaviors() {
     if (room) {
       if (position.movementTargetCleared || this.lastWanderRoom != room) {
         this.lastWanderRoom = room;
-        var wanderMinY = roomTopPixels(room) + game.tileSize,
-          wanderSpanY = (room.heightInTiles - 1) * game.tileSize;
-        setVector(position.moveTargetPoint, roomLeftPixels(room) + game.tileSize + randomInt((room.widthInTiles - 1) * game.tileSize), wanderMinY + randomInt(wanderSpanY));
+        var wanderMinY = roomTopPixels(room) + TILE_SIZE,
+          wanderSpanY = (room.heightInTiles - 1) * TILE_SIZE;
+        setVector(position.moveTargetPoint, roomLeftPixels(room) + TILE_SIZE + randomInt((room.widthInTiles - 1) * TILE_SIZE), wanderMinY + randomInt(wanderSpanY));
         position.movementTargetCleared = false;
       }
       character.actionType = 1;
@@ -1577,7 +1582,7 @@ export function initializeAiBehaviors() {
       var room = position.room,
         moveTargetPoint = position.moveTargetPoint;
       assignVector(moveTargetPoint, position.levelPosition);
-      clampPointToRoom(room, moveTargetPoint, game.tileSize + 1);
+      clampPointToRoom(room, moveTargetPoint, TILE_SIZE + 1);
       position.movementTargetCleared = false;
       position.movementTargetCleared = false;
       character.actionType = 1;
@@ -1596,7 +1601,7 @@ export function initializeAiBehaviors() {
       return 0;
     }
     var levelPosition = position.levelPosition;
-    return isPointNearDoor(room, levelPosition) || room.stairs && distanceToPoint(levelPosition, room.stairs.pixelColumn, room.stairs.pixelRow) < game.tileSize ? this.priorityWeight : 0;
+    return isPointNearDoor(room, levelPosition) || room.stairs && distanceToPoint(levelPosition, room.stairs.pixelColumn, room.stairs.pixelRow) < TILE_SIZE ? this.priorityWeight : 0;
   };
   StunnedBehavior.prototype.getPriority = function () {
     return this.priorityWeight;

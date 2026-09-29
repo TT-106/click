@@ -4,6 +4,7 @@
 import { randomInt } from "../core/math.js";
 import { game } from "../runtime/game.js";
 import { projectDungeonX, projectDungeonY } from "../simulation/characters.js";
+import { VIEWPORT_HALF_HEIGHT, VIEWPORT_HALF_WIDTH } from "../core/screen-layout.js";
 export function FloatingText(text, color) {
   this.text = text;
   this.color = color;
@@ -30,8 +31,8 @@ export function showFloatingText(floatingTextLayer, b, c, d) {
     if (game.worldActive) {
       d = b.getWorldPositionX();
       var positionY = b.getWorldPositionY();
-      b = game.viewportHalfWidth + (d - game.world.worldCenterX - (positionY - game.world.worldCenterY)) + floatingTextLayer.screenXOffset;
-      d = game.viewportHalfHeight + 0.5 * (d - game.world.worldCenterX + (positionY - game.world.worldCenterY)) + floatingTextLayer.screenYOffset;
+      b = VIEWPORT_HALF_WIDTH + (d - game.world.worldCenterX - (positionY - game.world.worldCenterY)) + floatingTextLayer.screenXOffset;
+      d = VIEWPORT_HALF_HEIGHT + 0.5 * (d - game.world.worldCenterX + (positionY - game.world.worldCenterY)) + floatingTextLayer.screenYOffset;
     } else {
       d = b.getLevelPositionX();
       positionY = b.getLevelPositionY();

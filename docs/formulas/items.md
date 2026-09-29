@@ -422,10 +422,10 @@ Vp.ni += floorNumber(Al);
 
 ```js
 export function rollGoldDrop() {
-  var a = globalUpgradeDefinitions.minGoldPerDrop.currentValue,
-    b = Math.max(0, globalUpgradeDefinitions.maxGoldPerDrop.currentValue - a),
-    c = doubleGoldModifier.currentValue;
-  return (a + randomInt(b)) * c;
+  var minGold = globalUpgradeDefinitions.minGoldPerDrop.currentValue,
+    goldRollSpan = Math.max(0, globalUpgradeDefinitions.maxGoldPerDrop.currentValue - minGold),
+    goldMultiplier = doubleGoldModifier.currentValue;
+  return (minGold + randomInt(goldRollSpan)) * goldMultiplier;
 }
 ```
 

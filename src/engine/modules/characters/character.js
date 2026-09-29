@@ -25,6 +25,7 @@ import { ItemDrop, generateItem, isBetterItem, randomizeItemLevel, removeItemDro
 import { tickCharacterTurn } from "../simulation/characters.js";
 import { generateDungeonLevel } from "../world/generation.js";
 import { discoverDungeon } from "../world/dungeons.js";
+import { HALF_TILE_SIZE, TILE_SIZE } from "../core/screen-layout.js";
 /** CombatAction.setTargetCharacter 由 combat/actions.js 后挂到原型，调用点窄签名。 @typedef {CombatAction & { setTargetCharacter: (target: unknown) => void }} TargetedCombatAction */
 /** Equipment.getSlotItem/So 由 characters/movement.js 后挂到原型，调用点窄签名。 @typedef {Equipment & { getSlotItem: (slot: unknown) => unknown, getEffectItem: () => unknown }} SlotEquipment */
 export function Character(a, characterType, characterClass, d, inventory) {
@@ -422,16 +423,16 @@ export function updateCharacter(character, simulationUnits) {
             if (dungeonPosition.room) {
               var clampRoom = dungeonPosition.room,
                 clampPosition = dungeonPosition.levelPosition,
-                clampPadding = game.halfTileSize;
+                clampPadding = HALF_TILE_SIZE;
               if (clampPosition) {
-                if (!(isPointNearDoor(clampRoom, clampPosition) || clampRoom.stairs && distanceToPoint(clampPosition, clampRoom.stairs.pixelColumn, clampRoom.stairs.pixelRow) < game.tileSize)) {
+                if (!(isPointNearDoor(clampRoom, clampPosition) || clampRoom.stairs && distanceToPoint(clampPosition, clampRoom.stairs.pixelColumn, clampRoom.stairs.pixelRow) < TILE_SIZE)) {
                   clampPointToRoom(clampRoom, clampPosition, clampPadding);
                 }
               }
             }
           } else {
             if (dungeonPosition.room) {
-              clampPointToRoom(dungeonPosition.room, dungeonPosition.levelPosition, game.halfTileSize);
+              clampPointToRoom(dungeonPosition.room, dungeonPosition.levelPosition, HALF_TILE_SIZE);
             }
           }
         }
@@ -1055,10 +1056,10 @@ export function updateCharacter(character, simulationUnits) {
           var targetChest = character.targetTreasureChest,
             chestLootIndex,
             chestRoom = targetChest.room,
-            chestSpawnMinX = roomLeftPixels(chestRoom) + game.tileSize,
-            chestSpawnMaxX = roomRightPixels(chestRoom) - game.tileSize,
-            chestSpawnMinY = roomTopPixels(chestRoom) + game.tileSize,
-            chestSpawnMaxY = roomBottomPixels(chestRoom) - game.tileSize,
+            chestSpawnMinX = roomLeftPixels(chestRoom) + TILE_SIZE,
+            chestSpawnMaxX = roomRightPixels(chestRoom) - TILE_SIZE,
+            chestSpawnMinY = roomTopPixels(chestRoom) + TILE_SIZE,
+            chestSpawnMaxY = roomBottomPixels(chestRoom) - TILE_SIZE,
             chestSpawnX = targetChest.levelX,
             chestSpawnY = targetChest.levelY,
             chestKind = targetChest.kind;

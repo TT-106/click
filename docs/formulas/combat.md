@@ -105,7 +105,7 @@ export function isAdventurerOrMinion(a) {
 
 ### C-3 一次攻击出手时"打几个目标"（多重攻击不是多次攻击）
 
-`src/engine/modules/combat/actions.js:419-436`
+`src/engine/modules/combat/actions.js:420-437`
 
 ```js
 export function performMultiAttack(attacker, isRangedAttack) {
@@ -171,7 +171,7 @@ export function performMultiAttack(attacker, isRangedAttack) {
 
 ### C-4 目标挑选半径
 
-`src/engine/modules/combat/actions.js:35-50`
+`src/engine/modules/combat/actions.js:36-51`
 
 ```js
 export function findTargetsInRange(attacker, sourceCharacter, targetLimit, maxDistance) {
@@ -277,7 +277,7 @@ export function randomInt(a) {
 
 ### C-9 核心伤害式
 
-`src/engine/modules/combat/actions.js:580-598`
+`src/engine/modules/combat/actions.js:581-599`
 
 ```js
 export function calculateAttackDamage(attacker, defender) {
@@ -342,7 +342,7 @@ export function calculateAttackDamage(attacker, defender) {
 
 ### C-11 伤害落地：一次调用只吃掉随机的一部分，逐帧续扣
 
-`src/engine/modules/combat/actions.js:302-325`
+`src/engine/modules/combat/actions.js:303-326`
 
 ```js
 export function applyActionDamage(combatAction) {
@@ -381,7 +381,7 @@ export function applyActionDamage(combatAction) {
 
 ### C-12 治疗类法术的伤害闸门（同一函数的另一支）
 
-`src/engine/modules/combat/actions.js:90-92`
+`src/engine/modules/combat/actions.js:91-93`
 
 ```js
       if (targetCharacter) {
@@ -401,7 +401,7 @@ export function applyActionDamage(combatAction) {
 
 ### C-13 法术伤害式（无命中掷点）
 
-`src/engine/modules/combat/actions.js:599-610`
+`src/engine/modules/combat/actions.js:600-611`
 
 ```js
 export function calculateSpellDamage(attacker, defender) {
@@ -453,7 +453,7 @@ export function calculateSpellDamage(attacker, defender) {
 
 ### C-15 首领房/怪物房的属性装配（决定 C-9 里两边的数值量级）
 
-`src/engine/modules/combat/encounters.js:69-83`
+`src/engine/modules/combat/encounters.js:70-84`
 
 ```js
             if (frailMonstersModifier.currentValue) {
@@ -554,7 +554,7 @@ export function applyLevelStats(a, b, c) {
 
 ### C-16 命中概率
 
-`src/engine/modules/combat/actions.js:589-591`
+`src/engine/modules/combat/actions.js:590-592`
 
 ```js
   if (!defender.effects.isDisabled && Math.random() > attackRating / (attackRating + defenceRating)) {
@@ -644,7 +644,7 @@ export function isDisablingEffect(effect) {
 
 ### C-20 效果实例构造与 potency 缩放
 
-`src/engine/modules/combat/actions.js:118-153`
+`src/engine/modules/combat/actions.js:119-154`
 
 ```js
 export function applySpellEffect(combatQueue, combatAction) {
@@ -772,7 +772,7 @@ export function updateCharacterBehaviors(a) {
 
 ### C-24 冒险者"死亡" = 倒地 13 号眩晕
 
-`src/engine/modules/combat/actions.js:326-346`
+`src/engine/modules/combat/actions.js:327-347`
 
 ```js
 export function resolveCharacterDefeat(attacker, defeated) {
@@ -851,15 +851,15 @@ export function resolveCharacterDefeat(attacker, defeated) {
 `src/engine/modules/combat/skill-effects.js:14-25`
 
 ```js
-export function applySkillTreeBonuses(a, b) {
-  var c = b.upgrades,
+export function applySkillTreeBonuses(character, skillTree) {
+  var skillTreeUpgrades = skillTree.upgrades,
     d,
-    f;
-  for (f = 0; f < c.length; f++) {
-    d = c[f];
+    upgradeIndex;
+  for (upgradeIndex = 0; upgradeIndex < skillTreeUpgrades.length; upgradeIndex++) {
+    d = skillTreeUpgrades[upgradeIndex];
     if (d.getUpgradeType() === SKILL_UPGRADE_TYPE && d.isOwned()) {
       d = d.getUpgradeDefinition();
-      applyStatBonus(a, d.statType, d.statBonusValue);
+      applyStatBonus(character, d.statType, d.statBonusValue);
     }
   }
 }
@@ -948,7 +948,7 @@ export function applySkillTreeBonuses(a, b) {
 
 ### C-29 随从与召唤（`spellCategoryId` 9 / 10 / 11 / 17）
 
-`actions.js:154-167`
+`actions.js:155-168`
 
 ```js
   } else if (10 === spellCategoryId || 9 === spellCategoryId) {
@@ -1049,7 +1049,7 @@ export function getSpellSpiritCost(stats) {
 
 ### C-33 法术治疗（cat 1）
 
-`src/engine/modules/combat/actions.js:93-108`
+`src/engine/modules/combat/actions.js:94-109`
 
 ```js
         } else if (1 === spellCategoryId && (potencyPercent = definition.potencyPercent, maxHealth = statValue(targetStats.maxHealth), targetStats.health < maxHealth)) {
@@ -1244,7 +1244,7 @@ export function respondToTaunt(a, b) {
 
 ### C-33 玩家侧行为优先级如何被选出（唯一仲裁口）
 
-`src/engine/modules/ai/behaviors.js:296-314`
+`src/engine/modules/ai/behaviors.js:297-315`
 
 ```js
   BehaviorQueue.prototype.updateDungeonMode = function (character) {
@@ -1314,7 +1314,7 @@ export function respondToTaunt(a, b) {
 
 ### C-35 弹跳链（chain）的目标选择与"可以弹回上一个"
 
-`src/engine/modules/combat/actions.js:611-618`
+`src/engine/modules/combat/actions.js:612-619`
 
 ```js
 export function createChainAction(previousAction) {

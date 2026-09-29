@@ -18,19 +18,20 @@ import { BehaviorQueue } from "../ai/behaviors.js";
 import { GoldDrop } from "../loot/treasure.js";
 import { Potion, PotionDrop, potionDefinitions } from "../combat/potions.js";
 import { showFloatingText } from "../rendering/floating-text.js";
+import { HALF_TILE_SIZE, TILE_SIZE, VIEWPORT_HALF_HEIGHT, VIEWPORT_HALF_WIDTH } from "../core/screen-layout.js";
 export function projectDungeonX(levelX, levelY) {
-  return Math.round(game.viewportHalfWidth + (levelX - game.level.centerX - (levelY - game.level.centerY)));
+  return Math.round(VIEWPORT_HALF_WIDTH + (levelX - game.level.centerX - (levelY - game.level.centerY)));
 }
 export function projectDungeonY(levelX, levelY) {
-  return Math.round(game.viewportHalfHeight + 0.5 * (levelX - game.level.centerX + (levelY - game.level.centerY)));
+  return Math.round(VIEWPORT_HALF_HEIGHT + 0.5 * (levelX - game.level.centerX + (levelY - game.level.centerY)));
 }
 export function projectWorldX(worldX, worldY) {
   var camera = game.camera;
-  return game.viewportHalfWidth + ((worldX / game.tileSize | 0) - camera.tileColumn - ((worldY / game.tileSize | 0) - camera.tileRow)) * game.tileSize + ((worldX % game.tileSize | 0) - (worldY % game.tileSize | 0)) - camera.viewportOffsetX;
+  return VIEWPORT_HALF_WIDTH + ((worldX / TILE_SIZE | 0) - camera.tileColumn - ((worldY / TILE_SIZE | 0) - camera.tileRow)) * TILE_SIZE + ((worldX % TILE_SIZE | 0) - (worldY % TILE_SIZE | 0)) - camera.viewportOffsetX;
 }
 export function projectWorldY(worldX, worldY) {
   var camera = game.camera;
-  return game.viewportHalfHeight + ((worldX / game.tileSize | 0) - camera.tileColumn + ((worldY / game.tileSize | 0) - camera.tileRow)) * game.halfTileSize + (((worldX % game.tileSize | 0) + (worldY % game.tileSize | 0)) / 2 | 0) - camera.viewportOffsetY;
+  return VIEWPORT_HALF_HEIGHT + ((worldX / TILE_SIZE | 0) - camera.tileColumn + ((worldY / TILE_SIZE | 0) - camera.tileRow)) * HALF_TILE_SIZE + (((worldX % TILE_SIZE | 0) + (worldY % TILE_SIZE | 0)) / 2 | 0) - camera.viewportOffsetY;
 }
 export function CharacterLifecycle() {
   this.regenTurnCounter = this.turnTimeAccumulator = 0;
@@ -118,10 +119,10 @@ export function createCastleGuardian(guardianClass, guardianLevel, c) {
   var position = guardian.position;
   position.room = c;
   position.currentHallway = null;
-  var left = roomLeftPixels(c) + game.tileSize,
-    top = roomTopPixels(c) + game.tileSize,
-    bottom = roomBottomPixels(c) - game.tileSize;
-  c = left + randomInt(roomRightPixels(c) - game.tileSize - left);
+  var left = roomLeftPixels(c) + TILE_SIZE,
+    top = roomTopPixels(c) + TILE_SIZE,
+    bottom = roomBottomPixels(c) - TILE_SIZE;
+  c = left + randomInt(roomRightPixels(c) - TILE_SIZE - left);
   top += randomInt(bottom - top);
   setVector(position.levelPosition, c, top);
   applyBonusList(guardian, guardianClass.statBonusList);
@@ -234,7 +235,7 @@ export function updateDungeonTravel() {
   }
 }
 export function tickCharacterTurn(coordinate, minBound, maxBound) {
-  var d = 3 * game.tileSize,
+  var d = 3 * TILE_SIZE,
     lowerTarget = Math.max(minBound, coordinate - d),
     d = Math.min(coordinate + d, maxBound);
   if (lowerTarget >= d) {
@@ -244,7 +245,7 @@ export function tickCharacterTurn(coordinate, minBound, maxBound) {
   return coordinate < minBound ? minBound : coordinate > maxBound ? maxBound : coordinate;
 }
 export function updateCharacterFrames(coordinate, minBound, maxBound) {
-  var maxStepPixels = game.halfTileSize,
+  var maxStepPixels = HALF_TILE_SIZE,
     lowerTarget = Math.max(minBound, coordinate - maxStepPixels),
     upper = Math.min(coordinate + maxStepPixels, maxBound);
   if (lowerTarget >= upper) {
@@ -291,10 +292,10 @@ export function initializeSimulationCharacters() {
         recordMonsterTypeKill(monsterType);
       }
       var room = monsterPosition.room,
-        westBound = roomLeftPixels(room) + game.tileSize,
-        eastBound = roomRightPixels(room) - game.tileSize,
-        northBound = roomTopPixels(room) + game.tileSize,
-        southBound = roomBottomPixels(room) - game.tileSize;
+        westBound = roomLeftPixels(room) + TILE_SIZE,
+        eastBound = roomRightPixels(room) - TILE_SIZE,
+        northBound = roomTopPixels(room) + TILE_SIZE,
+        southBound = roomBottomPixels(room) - TILE_SIZE;
       if (randomInt(100) <= globalUpgradeDefinitions.goldDropChance.currentValue) {
         var goldAmount = rollGoldDrop();
         if (0 < goldAmount) {

@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-09-29T02:40:55.741Z",
+  "generatedAt": "2026-09-29T03:42:57.207Z",
   "counts": {
     "srcJsFiles": 94,
     "engineModules": 78,
-    "totalEdges": 548
+    "totalEdges": 563
   },
   "gameImporters": {
-    "total": 36,
-    "withGameBinding": 35,
+    "total": 35,
+    "withGameBinding": 34,
     "byDir": {
       "engine/modules/ai": 2,
       "engine/modules/characters": 3,
@@ -18,7 +18,7 @@
       "engine/modules/rendering": 2,
       "engine/modules/runtime": 1,
       "engine/modules/simulation": 3,
-      "engine/modules/views": 11,
+      "engine/modules/views": 10,
       "engine/modules/world": 6
     },
     "files": [
@@ -41,7 +41,6 @@
       "src/engine/modules/simulation/characters.js",
       "src/engine/modules/simulation/loop.js",
       "src/engine/modules/simulation/tick.js",
-      "src/engine/modules/views/achievements.js",
       "src/engine/modules/views/castles.js",
       "src/engine/modules/views/character.js",
       "src/engine/modules/views/dungeons.js",
@@ -557,7 +556,7 @@
   "hotFields": [
     {
       "path": "game.state",
-      "readFiles": 28,
+      "readFiles": 27,
       "writeFiles": 0,
       "dirs": [
         "engine/modules/ai",
@@ -615,20 +614,6 @@
         "engine/modules/progression",
         "engine/modules/simulation",
         "engine/modules/views"
-      ]
-    },
-    {
-      "path": "game.tileSize",
-      "readFiles": 13,
-      "writeFiles": 0,
-      "dirs": [
-        "engine/modules/ai",
-        "engine/modules/characters",
-        "engine/modules/combat",
-        "engine/modules/loot",
-        "engine/modules/rendering",
-        "engine/modules/simulation",
-        "engine/modules/world"
       ]
     },
     {
@@ -943,18 +928,6 @@
       ]
     },
     {
-      "path": "game.halfTileSize",
-      "readFiles": 6,
-      "writeFiles": 0,
-      "dirs": [
-        "engine/modules/ai",
-        "engine/modules/characters",
-        "engine/modules/combat",
-        "engine/modules/rendering",
-        "engine/modules/simulation"
-      ]
-    },
-    {
       "path": "game.inventories",
       "readFiles": 6,
       "writeFiles": 0,
@@ -1002,17 +975,6 @@
       ]
     },
     {
-      "path": "game.state.achievements",
-      "readFiles": 6,
-      "writeFiles": 0,
-      "dirs": [
-        "engine/modules/persistence",
-        "engine/modules/progression",
-        "engine/modules/simulation",
-        "engine/modules/views"
-      ]
-    },
-    {
       "path": "game.terrainSprites.getSprite",
       "readFiles": 6,
       "writeFiles": 0,
@@ -1055,6 +1017,41 @@
         "engine/modules/combat",
         "engine/modules/rendering",
         "engine/modules/simulation"
+      ]
+    },
+    {
+      "path": "game.potions",
+      "readFiles": 5,
+      "writeFiles": 0,
+      "dirs": [
+        "engine/modules/characters",
+        "engine/modules/combat",
+        "engine/modules/persistence",
+        "engine/modules/simulation",
+        "engine/modules/views"
+      ]
+    },
+    {
+      "path": "game.itemGenerator",
+      "readFiles": 5,
+      "writeFiles": 0,
+      "dirs": [
+        "engine/modules/characters",
+        "engine/modules/combat",
+        "engine/modules/persistence",
+        "engine/modules/simulation",
+        "engine/modules/views"
+      ]
+    },
+    {
+      "path": "game.saves",
+      "readFiles": 5,
+      "writeFiles": 0,
+      "dirs": [
+        "engine/modules/characters",
+        "engine/modules/persistence",
+        "engine/modules/simulation",
+        "engine/modules/views"
       ]
     }
   ],
@@ -1113,24 +1110,12 @@
     }
   },
   "naming": {
-    "singleLetterBindings": 240,
-    "filesWithSingleLetterBindings": 33,
+    "singleLetterBindings": 173,
+    "filesWithSingleLetterBindings": 31,
     "topFiles": [
-      {
-        "file": "src/engine/modules/loot/treasure.js",
-        "count": 30
-      },
       {
         "file": "src/engine/modules/characters/party.js",
         "count": 17
-      },
-      {
-        "file": "src/engine/modules/combat/skill-effects.js",
-        "count": 13
-      },
-      {
-        "file": "src/engine/modules/rendering/floating-text.js",
-        "count": 13
       },
       {
         "file": "src/engine/modules/core/math.js",
@@ -1141,19 +1126,15 @@
         "count": 11
       },
       {
-        "file": "src/engine/modules/views/party-creation.js",
-        "count": 10
-      },
-      {
         "file": "src/engine/modules/world/pathfinding.js",
         "count": 10
       },
       {
-        "file": "src/engine/modules/simulation/loop.js",
+        "file": "src/engine/modules/views/information.js",
         "count": 9
       },
       {
-        "file": "src/engine/modules/views/information.js",
+        "file": "src/engine/modules/views/party-creation.js",
         "count": 9
       },
       {
@@ -1169,19 +1150,11 @@
         "count": 8
       },
       {
-        "file": "src/engine/modules/views/base.js",
-        "count": 7
-      },
-      {
         "file": "src/engine/modules/views/character.js",
         "count": 7
       },
       {
         "file": "src/engine/modules/views/dungeons.js",
-        "count": 7
-      },
-      {
-        "file": "src/engine/modules/views/expedition.js",
         "count": 7
       },
       {
@@ -1193,12 +1166,36 @@
         "count": 6
       },
       {
+        "file": "src/engine/modules/views/expedition.js",
+        "count": 6
+      },
+      {
+        "file": "src/engine/modules/loot/treasure.js",
+        "count": 5
+      },
+      {
         "file": "src/engine/modules/views/castles.js",
         "count": 5
+      },
+      {
+        "file": "src/engine/modules/combat/scrolls.js",
+        "count": 4
+      },
+      {
+        "file": "src/engine/modules/loot/items.js",
+        "count": 4
+      },
+      {
+        "file": "src/engine/modules/rendering/floating-text.js",
+        "count": 3
+      },
+      {
+        "file": "src/engine/modules/simulation/tick.js",
+        "count": 3
       }
     ],
-    "crypticBindings": 226,
-    "filesWithCrypticBindings": 32,
+    "crypticBindings": 159,
+    "filesWithCrypticBindings": 30,
     "allowListedBindings": 29,
     "allowListedByFile": {
       "src/engine/modules/simulation/tick.js": 6,
@@ -1213,35 +1210,19 @@
     },
     "crypticTopFiles": [
       {
-        "file": "src/engine/modules/loot/treasure.js",
-        "count": 30
-      },
-      {
         "file": "src/engine/modules/characters/party.js",
         "count": 17
-      },
-      {
-        "file": "src/engine/modules/combat/skill-effects.js",
-        "count": 13
-      },
-      {
-        "file": "src/engine/modules/rendering/floating-text.js",
-        "count": 13
       },
       {
         "file": "src/engine/modules/ai/targeting.js",
         "count": 11
       },
       {
-        "file": "src/engine/modules/views/party-creation.js",
-        "count": 10
-      },
-      {
         "file": "src/engine/modules/world/pathfinding.js",
         "count": 10
       },
       {
-        "file": "src/engine/modules/simulation/loop.js",
+        "file": "src/engine/modules/views/party-creation.js",
         "count": 9
       },
       {
@@ -1261,19 +1242,11 @@
         "count": 8
       },
       {
-        "file": "src/engine/modules/views/base.js",
-        "count": 7
-      },
-      {
         "file": "src/engine/modules/views/character.js",
         "count": 7
       },
       {
         "file": "src/engine/modules/views/dungeons.js",
-        "count": 7
-      },
-      {
-        "file": "src/engine/modules/views/expedition.js",
         "count": 7
       },
       {
@@ -1285,12 +1258,36 @@
         "count": 6
       },
       {
+        "file": "src/engine/modules/views/expedition.js",
+        "count": 6
+      },
+      {
         "file": "src/engine/modules/views/information.js",
         "count": 6
       },
       {
+        "file": "src/engine/modules/loot/treasure.js",
+        "count": 5
+      },
+      {
         "file": "src/engine/modules/views/castles.js",
         "count": 5
+      },
+      {
+        "file": "src/engine/modules/rendering/floating-text.js",
+        "count": 3
+      },
+      {
+        "file": "src/engine/modules/views/dom.js",
+        "count": 3
+      },
+      {
+        "file": "src/engine/modules/views/monsters.js",
+        "count": 3
+      },
+      {
+        "file": "src/engine/modules/views/navigation.js",
+        "count": 3
       }
     ]
   }

@@ -5,6 +5,7 @@ import { distanceToPoint, randomInt, randomIntFrom, setVector } from "../core/ma
 import { game } from "../runtime/game.js";
 import { rollGoldDrop, treasureRoomModifier } from "../content/balance.js";
 import { GoldDrop } from "../loot/treasure.js";
+import { TILE_SIZE } from "../core/screen-layout.js";
 export var EMPTY_TILE;
 export function DungeonTile(tileColumn, tileRow, pixelColumn, pixelRow) {
   this.tileColumn = tileColumn;
@@ -33,16 +34,16 @@ export function DungeonRoom(tileColumn, tileRow, widthInTiles, heightInTiles, en
   this.discovered = false;
 }
 export function roomLeftPixels(room) {
-  return room.tileColumn * game.tileSize;
+  return room.tileColumn * TILE_SIZE;
 }
 export function roomRightPixels(room) {
-  return room.tileColumn * game.tileSize + room.widthInTiles * game.tileSize;
+  return room.tileColumn * TILE_SIZE + room.widthInTiles * TILE_SIZE;
 }
 export function roomTopPixels(room) {
-  return room.tileRow * game.tileSize;
+  return room.tileRow * TILE_SIZE;
 }
 export function roomBottomPixels(room) {
-  return room.tileRow * game.tileSize + room.heightInTiles * game.tileSize;
+  return room.tileRow * TILE_SIZE + room.heightInTiles * TILE_SIZE;
 }
 export function roomContainsTile(room, tileColumn, tileRow) {
   return tileColumn >= room.tileColumn && tileColumn < room.tileColumn + room.widthInTiles && tileRow >= room.tileRow && tileRow < room.tileRow + room.heightInTiles;
@@ -206,9 +207,9 @@ export function clampPointToRoom(room, position, padding) {
   if (position) {
     var positionX = position.x,
       positionY = position.y,
-      minX = (room.tileColumn - 1) * game.tileSize + padding,
+      minX = (room.tileColumn - 1) * TILE_SIZE + padding,
       maxX = roomRightPixels(room) - padding,
-      minY = (room.tileRow - 1) * game.tileSize + padding, maxY;
+      minY = (room.tileRow - 1) * TILE_SIZE + padding, maxY;
     maxY = roomBottomPixels(room) - padding;
     if (positionX < minX) {
       positionX = minX;
@@ -233,7 +234,7 @@ export function isPointNearDoor(room, position) {
   }
   var doorIndex;
   for (doorIndex = 0; doorIndex < room.doorList.length; doorIndex++) {
-    if (distanceToPoint(position, room.doorList[doorIndex].pixelColumn, room.doorList[doorIndex].pixelRow) < game.tileSize) {
+    if (distanceToPoint(position, room.doorList[doorIndex].pixelColumn, room.doorList[doorIndex].pixelRow) < TILE_SIZE) {
       return true;
     }
   }
@@ -265,8 +266,8 @@ export function DungeonStairs(leadsTo) {
 export function positionStairs(stairs, tileColumn, tileRow) {
   stairs.tileColumn = tileColumn;
   stairs.tileRow = tileRow;
-  stairs.pixelColumn = tileColumn * game.tileSize;
-  stairs.pixelRow = tileRow * game.tileSize;
+  stairs.pixelColumn = tileColumn * TILE_SIZE;
+  stairs.pixelRow = tileRow * TILE_SIZE;
 }
 export function DungeonHallway(roomA, doorA, roomB, doorB) {
   this.hallwayId = 0;

@@ -9,6 +9,7 @@ import { clampPointToRoom, getOppositeDoor } from "../world/rooms.js";
 import { docileMonstersModifier } from "../content/balance.js";
 import { canAttack, markAttackTurn } from "../characters/character.js";
 import { clearMovementTarget } from "../characters/movement.js";
+import { HALF_TILE_SIZE, TILE_SIZE } from "../core/screen-layout.js";
 export var ADVENTURER_TYPE, MONSTER_TYPE, summonDogSpellDefinition, summonWolfPackSpellDefinition, minorHealSpellDefinition, sleepSpellDefinition, summonChickensSpellDefinition, summonGuardChickenSpellDefinition, swiftStrikeSpellDefinition, hurtSpellDefinition, greenDeathSpellDefinition, summonSkeletonArmySpellDefinition, summonPhantomSkullSpellDefinition, tauntSpellDefinition, rageSpellDefinition, sledgeHammerSpellDefinition, stealthSpellDefinition, instantLootSpellDefinition, detectTreasureChestSpellDefinition, healSpellDefinition, armorSpellDefinition, damageSpellDefinition, attackRatingSpellDefinition, defenseRatingSpellDefinition, reviveSpellDefinition, shockSpellDefinition, spiderWebSpellDefinition, lightningRainSpellDefinition, chainedLightningSpellDefinition, fireBlastSpellDefinition, fireBallSpellDefinition, fireRainSpellDefinition, turnMonsterSpellDefinition, IDLE_ACTION, MELEE_ACTION_TYPE, CAST_ACTION_TYPE;
 export function hasOpponentsInRoom(character, room) {
   if (!room) {
@@ -126,11 +127,11 @@ export function approachValue(maxValue, minValue, distance) {
   return Math.max(minValue, (maxValue - minValue) * (1 - distance / 1E3) + minValue);
 }
 export function choosePointNearTarget(moveTargetPoint, targetLevelPosition, room) {
-  var offsetX = randomInt(game.halfTileSize);
+  var offsetX = randomInt(HALF_TILE_SIZE);
   if (0.5 > Math.random()) {
     offsetX = -offsetX;
   }
-  var offsetY = randomInt(game.halfTileSize);
+  var offsetY = randomInt(HALF_TILE_SIZE);
   if (0.5 > Math.random()) {
     offsetY = -offsetY;
   }
@@ -424,9 +425,9 @@ export function initializeAiTargeting() {
   AttackBehavior.prototype.notifySpellLearned = function () {};
   AttackBehavior.prototype.updateBehaviors = function (character) {
     if (!respondToTaunt(this, character) && (character.position.movementTargetCleared || character.actionType === IDLE_ACTION)) {
-      var wanderMinY = (this.patrolRoom.tileRow + 1) * game.tileSize,
-        wanderSpanY = (this.patrolRoom.heightInTiles - 1) * game.tileSize;
-      setVector(character.position.moveTargetPoint, (this.patrolRoom.tileColumn + 1) * game.tileSize + randomInt((this.patrolRoom.widthInTiles - 1) * game.tileSize), wanderMinY + randomInt(wanderSpanY));
+      var wanderMinY = (this.patrolRoom.tileRow + 1) * TILE_SIZE,
+        wanderSpanY = (this.patrolRoom.heightInTiles - 1) * TILE_SIZE;
+      setVector(character.position.moveTargetPoint, (this.patrolRoom.tileColumn + 1) * TILE_SIZE + randomInt((this.patrolRoom.widthInTiles - 1) * TILE_SIZE), wanderMinY + randomInt(wanderSpanY));
       character.actionType = 1;
       character.position.movementTargetCleared = false;
     }

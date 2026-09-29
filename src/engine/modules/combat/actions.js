@@ -23,6 +23,7 @@ import { isAdventurerOrMinion } from "../characters/character.js";
 import { BASE_POTION_CAPACITY, doubleExperienceModifier, doubleGoldDropsModifier, doubleItemDropsModifier, doubleKillsModifier, potionCapacityBonus, rollGoldDrop } from "../content/balance.js";
 import { clampPointToRoom, roomBottomPixels, roomLeftPixels, roomRightPixels, roomTopPixels, setTileEffect } from "../world/rooms.js";
 import { MELEE_ATTACK_RANGE, RANGED_ATTACK_RANGE } from "../content/classes.js";
+import { HALF_TILE_SIZE, TILE_SIZE } from "../core/screen-layout.js";
 export function CombatAction() {
   this.remainingDamage = 0;
   this.hasProjectilePhase = this.resolved = this.noDamage = false;
@@ -365,10 +366,10 @@ export function resolveCharacterDefeat(attacker, defeated) {
         recordMonsterTypeKill(defeatedMonsterType);
       }
       var dropRoom = defeatedPosition.room,
-        westBound = roomLeftPixels(dropRoom) + game.tileSize;
-      eastBound = roomRightPixels(dropRoom) - game.tileSize;
-      var northBound = roomTopPixels(dropRoom) + game.tileSize,
-        southBound = roomBottomPixels(dropRoom) - game.tileSize,
+        westBound = roomLeftPixels(dropRoom) + TILE_SIZE;
+      eastBound = roomRightPixels(dropRoom) - TILE_SIZE;
+      var northBound = roomTopPixels(dropRoom) + TILE_SIZE,
+        southBound = roomBottomPixels(dropRoom) - TILE_SIZE,
         defeatedX = defeatedPosition.getLevelPositionX(),
         defeatedY = defeatedPosition.getLevelPositionY(),
         goldDropCount = 10 + randomInt(10),
@@ -545,7 +546,7 @@ export function randomPointInRoom(origin, clampRoom) {
     jitteredY = 0.5 >= Math.random() ? originY + yJitter : originY - yJitter;
   setVector(point, jitteredX, jitteredY);
   if (clampRoom) {
-    clampPointToRoom(clampRoom, point, game.halfTileSize);
+    clampPointToRoom(clampRoom, point, HALF_TILE_SIZE);
   }
   return point;
 }

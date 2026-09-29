@@ -24,6 +24,7 @@ import { refreshUpgradeCollection } from "../progression/upgrades.js";
 import { repositionWorldBlock, worldBlockContains } from "../world/terrain.js";
 import { IDLE_ACTION } from "../ai/targeting.js";
 import { spendGold } from "../characters/party.js";
+import { HALF_TILE_SIZE, TILE_SIZE, VIEWPORT_HALF_HEIGHT, VIEWPORT_HALF_WIDTH, VIEWPORT_HEIGHT } from "../core/screen-layout.js";
 export function advanceSimulation(simulationUnits) {
   var lifecycle = game.lifecycle;
   lifecycle.turnTimeAccumulator += simulationUnits;
@@ -258,7 +259,7 @@ export function advanceSimulation(simulationUnits) {
         }
         addVector(steeringPosition.levelPosition, steeringPosition.velocity);
         if (steeringPosition.room) {
-          clampPointToRoom(steeringPosition.room, steeringPosition.levelPosition, game.halfTileSize);
+          clampPointToRoom(steeringPosition.room, steeringPosition.levelPosition, HALF_TILE_SIZE);
         }
       }
     }
@@ -297,7 +298,7 @@ export function advanceSimulation(simulationUnits) {
                 spellCaches = game.spellCaches,
                 targetCharacter = blastAction.targetCharacter,
                 blastAttacker = blastAction.attacker,
-                blastRadius = floorNumber((blastAttacker.stats.areaRadiusBonus + 1) * game.tileSize),
+                blastRadius = floorNumber((blastAttacker.stats.areaRadiusBonus + 1) * TILE_SIZE),
                 targetsInRange = findTargetsInRange(blastAttacker, targetCharacter, 200, blastRadius);
               if (targetsInRange && 0 !== targetsInRange.length) {
                 var targetIndex = undefined,
@@ -785,8 +786,8 @@ export function advanceSimulation(simulationUnits) {
 }
 export function positionScrollCaster(scrollIndex) {
   var casterOffset = 30 + 126 * scrollIndex;
-  var viewportBottomY = game.viewportHeight - 80;
-  setVector(game.state.scrollCaster.position.levelPosition, game.level.centerX + (0.5 * (casterOffset - game.viewportHalfWidth) + (viewportBottomY - game.viewportHalfHeight)) | 0, game.level.centerY + (viewportBottomY - game.viewportHalfHeight - 0.5 * (casterOffset - game.viewportHalfWidth)) | 0);
+  var viewportBottomY = VIEWPORT_HEIGHT - 80;
+  setVector(game.state.scrollCaster.position.levelPosition, game.level.centerX + (0.5 * (casterOffset - VIEWPORT_HALF_WIDTH) + (viewportBottomY - VIEWPORT_HALF_HEIGHT)) | 0, game.level.centerY + (viewportBottomY - VIEWPORT_HALF_HEIGHT - 0.5 * (casterOffset - VIEWPORT_HALF_WIDTH)) | 0);
 }
 export function updateCharacterBehaviors(characters) {
   var characterIndex, character;

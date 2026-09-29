@@ -94,13 +94,22 @@
   匿名作用域（内联 `new function(){}`、块作用域、对象方法）里的同名绑定彼此独立，
   报表与表统一用 `名@声明行` 寻址，避免按名查表静默命中最后一个绑定。
 
+## 2026-09-29 R27（布局常量批量落地 + 结构对账门禁 + 改名工具 v2 + 会话级结构审计）
+
+- **布局常量读取点批量替换**：`core/screen-layout.js` 的 6 个常量在 14 个引擎模块里替掉 149 处 `game.tileSize / game.halfTileSize / game.viewport*` 读取（每文件新增 1 行 import，故行数 +1）。替换由 `scripts/replace-member-reads.mjs` 按 AST 位置完成，配置里带**逐文件命中数断言**，任何一处对不上就整体不写盘。src/ 内对 `game.tileSize|halfTileSize|viewport*` 的读取已归零，字段本身仍留在 `runtime/game.js`（对外形状不变）。
+- **新增结构对账门禁 `scripts/verify-structure-invariant.mjs`**：把标识符全抹成 `I` 后比对代码骨架（字符串、数字、运算符、标点、行结构保留），用"两端收缩 + 中段 LCS"对齐，只放行三条已授权结构模式——新增/改写 import 行、`game.X` 换成裸标识符带来的成员深度变化、改名工具 autoDeclare 补的 `var` 关键字。它存在的理由是本轮真出过一次事故：检查点提交把某智能体的反向验证探针 `camera.tileRowTYPO = centerY / game.tileSize | 0;` 收进了历史（7a2c981），而 parity / 89 场景 / 像素指纹 / e2e / typecheck 全绿。反向验证用那次真实提交做：`node scripts/verify-structure-invariant.mjs 7a2c981^ --file=src/engine/modules/simulation/loop.js`（在 7a2c981 的工作树里跑）报出第 72 行的孤立插入并 exit 1。盲区如实写在文件头：成员名Only 的改动（`this.a` 换成 `this.b`）骨架看不出，那类破坏由 typecheck、`audit:dead-reads` 与 lint 第 4 条的标记词检查负责。
+- **改名工具 v2 `scripts/rename-bindings-v2.mjs`**：新增 `rhsKeep`（区间第一次出现的右值读到本绑定时，把右值映射到上一段的新名，`a = a + 1` 才不会被改写成 `var y = y + 1` 得 NaN）；新增支配性检查（要插的 `var` 落在 if/循环/try/三元/逻辑表达式内，而同区间还有跳出该分支的出现 → 拒，除非给 `dominationWaiver` 写出"这条分支必走"的证明，豁免条目会打印出来复核）；裸 `var a;` 重声明、循环体内携带值、逗号表达式与 for 头里的插 `var` 位置一律拒并给可读诊断。夹具与跑批已进仓库：`tests/rename-tool/run-tests.mjs`（`npm run test:rename-tool`，52 条全绿），其中两条是"不给豁免必须拒且一字节不写"与"原支配性缺口现已关闭"。旧版 `scripts/rename-bindings-auto.mjs` 暂留，供该套件的 legacy 对照使用。
+- **会话级结构审计（只读，三个子智能体分组）**：base `8bb7451` → 工作树共 143 处"无配对插入行"分三组逐条判定，三组结论都是 UNEXPLAINED 为空；每组另做数字与字符串字面量多重集比对（数值字面量 0 处漂移，字符串差异全部是 import 路径与一条绑定错误提示）与"写而不读"成员扫描（0 处孤儿写入，检测器用真探针 `camera.tileRowTYPO` 验过能亮）。判定中被点名复核过的两处：`world/travel-costs.js` 的整函数重写按原版 `gx`（c2.js:22373-22381）逐语句对齐，`characters/character.js:1250` 起的新记忆化表依赖 `initializeContentBalance`（runtime/index.js:129）先于 `initializeRuntimeGame()`（同文件 165）且 balance.js 对 `attackCooldownBonus`/`freeSpellsModifier` 各只赋一次（177、243 行）。
+- **参数名修正 `ai/behaviors.js`**：`PartyBuffBehavior` 的参数名与自身赋值流向交叉——原版构造函数把**第三个**实存档进 `priorityWeight`（原版 `tu(a,b,c)` 里 `this.ka = c`，`ka` 是同族行为共用的优先级字段），本轮按数据流改名并加注释记录该怪癖，赋值语句一个字节未动。
+
+
 ## 尚未完成的主要工作
 
-1. **拆开中心状态与循环依赖**：R26 实测 36 个模块直接导入 `runtime/game.js`（`world/pathfinding.js` 已退出），一个强连通分量仍包含 41 个模块；74 个初始化调用仍依赖固定顺序。装备目录、物品生成、角色属性、状态效果、内容参数、冒险点数、特效动画目录与背包已退出该循环，但整个领域图仍需继续拆分。应按领域建立明确输入与组合根，再逐个移动依赖方向，避免只增加转发包装。
-2. **清理恢复期命名与原型装配**：77 个引擎模块中仍有 39 个模块包含合计 1,602 个单字母局部绑定（`ai/behaviors.js`、`views/upgrade-details.js`、`rendering/scene.js`、`world/terrain.js`、`world/generation.js`、`combat/actions.js`、`world/rooms.js`、`progression/upgrades.js` 已于 R22–R25 归零）。优先处理 `views/character.js`（98）、`persistence/entities.js`（94）、`ai/targeting.js`（89）、`views/expedition.js`（84）等热点，并逐项判断哪些是有意义的坐标。大量运行方法仍在 `initialize*()` 内挂到原型上；改装配方式必须保住初始化时序与存档构造行为。
+1. **拆开中心状态与循环依赖**：R27 实测 35 个模块直接导入 `runtime/game.js`（`world/pathfinding.js`、`world/travel-costs.js` 已退出），一个强连通分量仍包含 41 个模块；74 个初始化调用仍依赖固定顺序。装备目录、物品生成、角色属性、状态效果、内容参数、冒险点数、特效动画目录、背包与旅行代价已退出该循环，但整个领域图仍需继续拆分。应按领域建立明确输入与组合根，再逐个移动依赖方向，避免只增加转发包装。
+2. **清理恢复期命名与原型装配**：`npm run audit:arch` 实测单字母局部绑定 173 个（分布 31 个引擎模块，R22–R27 已从 1,602 降下来），混淆器风格 1–2 字母短名 159 个（分布 30 个文件）。当前热点：`characters/party.js`（17）、`core/math.js`（12）、`ai/targeting.js`（11）、`world/pathfinding.js`（10）、`views/information.js`/`views/party-creation.js`/`views/results.js`/`world/regions.js`（各 9）、`persistence/entities.js`/`views/character.js`（各 8/7）。剩余量按阻塞机制分三类：单条重赋值型已由 `rename-bindings-v2.mjs` 的 rhsKeep 开闸；循环携带与支配性不足者工具按设计拒绝，需逐处人工读；`core/math.js` 里多为有意义的坐标/向量分量，要判的是"改了是否更清楚"，不是"必须归零"。大量运行方法仍在 `initialize*()` 内挂到原型上；改装配方式必须保住初始化时序与存档构造行为。
 3. **继续证明功能保真**：U134 的 P-1、P-5、P-6、P-7 维持 PARTIAL。真实多版本存档、未剥离的原版页面、真机帧时间和第二浏览器依赖外部材料；在现有环境内仍可扩展玩法与 UI 的差分覆盖，但不得把模拟数据称为真实样本。
 4. ~~**构建快照的遗留文件**~~ — ✅ **已闭合（本轮）**：`build.mjs` 拷贝后按源清单清理 dist/ 陈旧文件（带拷贝根归属 + 单轮上限双重护栏），38 个 U+F00D 垃圾产物已清除，dist 136 文件与源清单一致，重复构建 0 回写/0 清理。
 
 ## 下一切片入口
 
-先复核 `git status --short`，不得重置或清理 U131–U134 与 R22–R25 混合工作树。运行 `npm run audit:arch -- --json` 固定最新指标，再从 `views/character.js`（98）或 `persistence/entities.js`（94，兼解耦候选）选择一个有真实使用场景的边界切片。R25 起的编排惯例：每切片一个执行智能体（行数保持 + 机械四断言 + 只改自己文件），落地后由 code-review 双轴（Standards/Spec）审查、修正落实后主智能体统一跑门禁。每个切片至少核对存档差分、相关差分场景、浏览器入口和文档引用；最后对精确工作树重跑 10 门禁与 `git diff --check`。若实际指标、场景数或外部材料变动，以新一轮实测为准。
+先复核 `git status --short`，不得重置或清理混合工作树。运行 `npm run audit:arch` 与 `node scripts/verify-structure-invariant.mjs HEAD` 固定最新指标（后者每切片改完都要跑：它是唯一能发现"改名之外的结构改动"的门禁，`npm run test:rename-tool` 保证改名工具自身不回退）。命名切片从 `characters/party.js`（17）或 `ai/targeting.js`（11，兼解耦候选：它只差一个 `pathfinder` 注入）起步——用 `scripts/rename-bindings-v2.mjs`（`--report` 看形态、`--table` 出表），单条重赋值型走 `rhsKeep`，被支配性/循环携带闸拒下的必须逐处读代码，别绕过闸；`core/math.js`（12）里多是坐标分量，先判断改了是否更清楚。R25 起的编排惯例：每切片一个执行智能体（行数保持 + 机械四断言 + 只改自己文件），落地后由 code-review 双轴（Standards/Spec）审查、修正落实后主智能体统一跑门禁。每个切片至少核对存档差分、相关差分场景、浏览器入口和文档引用，并同步 `npm run check` 的文件数表述（`npm run lint` 第 10 条会核对）；最后对精确工作树重跑 `node scripts/gate-sweep.mjs` 与 `git diff --check`。若实际指标、场景数或外部材料变动，以新一轮实测为准。
