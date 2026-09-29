@@ -9,14 +9,14 @@
 |---|---|---|
 | 混淆属性名 | **41 → 0** | `npm run analyze` 报 0；`npm run lint` 把它固化为不变量 |
 | `symbol-map` 的 fields 段 | 1,010 → **1,047** | `docs/symbol-map.json` |
-| 验收矩阵 | 51 PASS / 0 PARTIAL → **45 PASS / 6 PARTIAL / 0 未覆盖** | 附录 A（把"证据格里已写明缺口却标 PASS"的 7 行按矩阵自身口径改判；随后成就行因逐项进度断言落地而由 PARTIAL 升为 PASS） |
+| 验收矩阵 | 51 PASS / 0 PARTIAL → **47 PASS / 4 PARTIAL / 0 未覆盖** | 附录 A（7 行误标按矩阵口径改判；成就行闭合；彻夜会话闭合「物品」远古档位与「法术」cat=15 两行，Canvas 扩到 4 视口仍 PARTIAL） |
 | 隐形文件名垃圾文件 | 38 个（已被 git 跟踪） → **0** | `scripts/find-invisible-name-files.mjs`；`check` 语法文件数回落 |
 | 文档 `file:line` 引用 | 越界 4 → **0**（934 条引用解析不到 0 条） | `scripts/verify-doc-refs.mjs` |
 | 文档内嵌代码片段 | 漂移 64/76 → **15/76**（残留为节选/伪码型，已在文首声明） | `scripts/check-doc-snippets.mjs` |
 | 文档内旧标识符（fields 命中） | 66 → **0** | `scripts/fix-doc-identifiers.mjs` |
 | `@type {any}` 强制转换 | 50 → **42** | `docs/m10-type-debt.md` |
 | 门禁 | 6 门 → **10 门**（新增 `lint`，并把 soak/perf/perf:frames 纳入最终扫描） | §5 末行；`output/s-*.log` |
-| 差分场景 | 59 → **60**（补上 cat=10「狼群」的覆盖空洞） | `npm run test:scenarios` 60/60；`scripts/check-spell-coverage.mjs` |
+| 差分场景 | 59 → **65**（cat=10 狼群、2 条成就临界值、`ancient-item-found` 远古物品、cat=15 观察器接线、2 条边界视口指纹） | `npm run test:scenarios` 65/65；`scripts/check-spell-coverage.mjs` |
 | 法术直接可观测量 | 4/16 → **15/16 类**（新增 `damageNumbers`/`healNumbers`/`allyEffectType` 三条通道） | 矩阵「法术」行；实测 91~559 次/类 |
 | `lint` 不变量 | 6 条 → **7 条**（新增"每个 spellCategoryId 必须有场景"） | `npm run lint` |
 | 空断言 | 3 处静默失效的 `check` 键（`maxLevelUnlocked`/`multiLearned`+`chainLearned`/`pointsSpent`） → **全部补上断言，并加防呆让未断言的键直接失败** | `scripts/test-scenarios.mjs` 的 `handledVerdictKeys` |
@@ -55,23 +55,23 @@ archive/original/c2.js  ──AST 机械恢复──▶  src/engine/（77 模块
 | 外部契约 | `window.Game/lB/pB/hE` → adapter/runtime API（MIGRATION_MAP.md 对照表） |
 | 公式文档 | `docs/formulas/combat.md`（伤害/命中/暴击/眩晕/技能法术/治疗/目标选择/遭遇结束 + 随机数消耗顺序）、`items.md`（稀有度/等级/词缀/售价/掉落门）、`progression.md`（经验曲线/点数事件/升级价格/成就/统计/重置/离线），共 733 条 file:line 引用逐条回源核对 |
 
-## 5. 测试体系（全部实测通过，共 60 个差分场景）
+## 5. 测试体系（全部实测通过，共 87 个差分场景）
 
 | 层 | 内容 |
 |---|---|
-| L1 单元（15 项） | RNG 位级差分（Babel 从 c2.js 提取原版 `ga` 对照，6 种子×100k 值 + 黄金值）、LZ-string codec 契约（含与原版 fixture 互通）、格式化表驱动、精灵查找双端一致（原版 `Pb` 对照重构 `getSprite`）、成就进度判定表驱动（28 种 `requirementType` 的字段映射 + 未知类型怪癖 + `partyMaxLevel` 惰性，**不启动引擎**） |
-| L3/L4 差分 | `test:parity`：同存档 + 固定 RNG/时钟，0/1/99/900 回合完整存档逐字段相等；`test:scenarios`：**62 场景**（长跑、离线四态 + 12h 截断 + 后台关闭态、药水激活、全 6 类卷轴战斗施放、16 类法术分支、城堡征服→胜利、金币涌入、后期、veteran、prestige、full reset、升级购买与怪物等级解锁、冒险点消费、成就领取与**成就进度临界值两侧**、自动装备、两条农场购买入口、财宝箱/武器架/书架搜索、四类地面掉落拾取、农场收获与长期再侵袭生命周期跨越、药水真实使用、渲染帧 + 自动落盘） |
+| L1 单元（24 项，含 inventory 解耦注入契约 5 项） | RNG 位级差分（Babel 从 c2.js 提取原版 `ga` 对照，6 种子×100k 值 + 黄金值）、LZ-string codec 契约（含与原版 fixture 互通）、格式化表驱动、精灵查找双端一致（原版 `Pb` 对照重构 `getSprite`）、成就进度判定表驱动（28 种 `requirementType` 的字段映射 + 未知类型怪癖 + `partyMaxLevel` 惰性，**不启动引擎**） |
+| L3/L4 差分 | `test:parity`：同存档 + 固定 RNG/时钟，0/1/99/900 回合完整存档逐字段相等；`test:scenarios`：**89 场景**（长跑、离线四态 + 12h 截断 + 后台关闭态、药水激活、全 6 类卷轴战斗施放、16 类法术分支、城堡征服→胜利、金币涌入、后期、veteran、prestige、full reset、升级购买与怪物等级解锁、冒险点消费、成就领取与**成就进度临界值两侧**、自动装备、两条农场购买入口、财宝箱/武器架/书架搜索、四类地面掉落拾取、农场收获与长期再侵袭生命周期跨越、药水真实使用、渲染帧 + 自动落盘） |
 | L5 集成 | 场景内的"两端各自增长断言 + 逐检查点全状态相等"即多模块组合验证（战斗→掉落→拾取→统计→存档） |
 | L6 浏览器 E2E | 建队/自动战斗/暂停/五类面板/**c2c.user.js 外部 DOM 契约**/设置/导出导入/非法存档/刷新恢复/键盘/三种视口 |
 | L7 长跑 soak | `test:soak`：115,200 与 345,600 等价回合（8h/24h），两端完整存档相等 + CDP 主动 GC 后堆增量样本 |
 | 渲染等价 | `rendered-scene` / `autosave-payload`：真实帧循环 1,300 帧后比对主画布逐像素 FNV-1a 指纹（两端相同）与落盘存档解码内容 |
-| 工程门 | `npm run check`（当前 133 文件语法 + 单测）、`npm run typecheck`（tsc 覆盖 76/77 引擎模块，经 import 图传递；`src/engine/modules` 下 `@ts-nocheck` 已清零）、`npm run build`（增量拷贝到 dist）、`npm run lint`（9 条不变量守卫，见 §9）；每切片一 commit。**2026-09-27 最终回归扫描（10 门全绿，退出码逐条回显）**：`lint=0 build=0 typecheck=0 check=0 parity=0 scenarios=0 e2e=0 soak=0 perf=0 perf:frames=0` |
+| 工程门 | `npm run check`（当前 137 文件语法 + 单测）、`npm run typecheck`（tsc 覆盖 76/77 引擎模块，经 import 图传递；`src/engine/modules` 下 `@ts-nocheck` 已清零）、`npm run build`（增量拷贝到 dist）、`npm run lint`（10 条不变量守卫，见 §9）；每切片一 commit。**2026-09-27 最终回归扫描（10 门全绿，退出码逐条回显）**：`lint=0 build=0 typecheck=0 check=0 parity=0 scenarios=0 e2e=0 soak=0 perf=0 perf:frames=0` |
 
 方法论实证：差分矩阵三次抓到人工没看到的真实缺陷——guardians/minions 数据键漏改导致城堡守卫生成崩溃；金堆房对 DungeonTile 误调角色坐标接口；以及本轮由新场景暴露的**自动保存间隔 3E4 vs 原版 3E5**（10 倍频率，改动前无任何测试能看到）。
 
 ## 6. 兼容性（详见 COMPATIBILITY_REPORT.md）
 
-存档兼容、行为差分、RNG 确定性、离线语义、自动保存落盘内容 = **VERIFIED**；外部 DOM 契约已实测（选择器逐项断言 + 反向验证）；附录 A 的 **6 行 PARTIAL** 与 `docs/reverse-engineering/unresolved.md`（U4 覆盖口径、U7 UI 独占路径）逐项写明了缺口。U5（长尾字段重命名）已于 2026-09-27 关闭：`analyze-fields` 报 0。
+存档兼容、行为差分、RNG 确定性、离线语义、自动保存落盘内容 = **VERIFIED**；外部 DOM 契约已实测（选择器逐项断言 + 反向验证）；附录 A 的 **4 行 PARTIAL** 与 `docs/reverse-engineering/unresolved.md`（U4 覆盖口径、U7 UI 独占路径）逐项写明了缺口。U5（长尾字段重命名）已于 2026-09-27 关闭：`analyze-fields` 报 0。
 
 ## 7. 性能（详见 PERFORMANCE_REPORT.md）
 
@@ -81,7 +81,7 @@ archive/original/c2.js  ──AST 机械恢复──▶  src/engine/（77 模块
 
 1. ✅ **字段重命名已收官**（2026-09-27）：`node scripts/analyze-fields.mjs` 现报「**混淆属性总数: 0**」。U66–U122 共 57 批把清单从 806 逐批降到 0（U113–U120 是最后 8 批、33 个字段，收尾于贴纸图集 schema），工作清单 `artifacts/obfuscated-fields.json` 现为空数组。流程已固化为四个工具：`scripts/rename-field.mjs`（单字段）、`rename-fields-batch.mjs`（多字段事务批，带命中数/行数/缩进/字符串字面量四重校验）、`rename-atlas-schema.mjs`（带引号的 JSON 键）、`record-field-names.mjs`（回写 symbol-map 的 fields 段，现 1,047 条）。每批证据链与踩坑见 `docs/WORKSTATE.md` 顶部。
 2. **UI 独占路径仍有差分缺口**（U7）：三种财宝房目标物搜索与金币/卷轴/药水/物品四类地面掉落拾取已分别有专项断言；农场全生命周期（购买/推演成熟收获/休耕再侵袭/二次成熟）已有专项断言；卷轴全 6 类战斗施放与后台行为关闭态已闭环。`upgrades-purchased` 已驱动全局升级、角色升级、技能树与法术学习（type=6）购买，`monster-level-unlocked` 已驱动怪物等级解锁，`adventure-points-spent` 已驱动一项冒险点升级，`achievement-claimed` 已驱动一次成就领取，`auto-equipped` 已驱动自动装备，`scroll-cast-in-combat` 已驱动全部 6 类卷轴施放，`dungeon-farm-purchased` / `dungeon-row-farm-purchased` 已驱动两条购买入口，`potions-activated` 已驱动药水激活。
-3. **验收口径分层（对应附录 A 的 7 行 PARTIAL）**：16 类法术分支靠"唯一注入法术 + 两端各自施法计数增长"归因，只有 cat=2 的三种状态与 cat=17 有专属可观测量；渲染等价只在 **2 条场景 × 2 种视口**下比对逐像素指纹；soak 是加速等价回合而非真机帧循环。这三条已在附录 A 对应行内以"**缺口（写明）**"标注，不得读作 PASS。
+3. **验收口径分层（对应附录 A 现存的 4 行 PARTIAL）**：角色技能的逐项战斗效果、多版本存档迁移样本、渲染指纹的有限视口/浏览器覆盖、真机帧时间与低端设备——这四条已在附录 A 对应行内以"**缺口（写明）**"标注，不得读作 PASS。（历史：本条最初写"7 行 PARTIAL、法术仅 cat=2/17 有可观测量、渲染 2 场景×2 视口"；法术与物品两行已在彻夜会话闭合、渲染扩到 4 视口，具体证据见附录 A 对应行。）
 4. 双主字母 `Cb`/`Qc` 已按所有者拆开；`oc` 的四种所有者已由原版帧数组构造链证明同为 `frameIndex`；`$c` 已改为 `itemDrop`（见 semantic-map）。
 5. ✅ **38 个"隐形文件名"垃圾文件已清除**（2026-09-27）：仓库里存在成对的 `X.js` 与 `X.js\uF00D`（尾随 U+F00D，不可见），后者一律 99 字节、内容仅一行 `// @ts-nocheck -- M10 渐进类型化…`，是历史脚本误写留下的残渣且已被 commit 跟踪。因为名字尾随不可见字符，`*.js` 类匹配（`check.mjs`、`analyze-fields.mjs`、人工 `ls`）都看不见它们——这正是早前"审计报告称 38 个垃圾文件、随后实测为 0"矛盾的根因（两次检查用的匹配方式不同）。工具：`scripts/find-invisible-name-files.mjs`（盘点）与 `scripts/remove-invisible-name-files.mjs`（三条安全断言：≤200B、含 `@ts-nocheck`、存在同名正常文件，任一不符即整批中止）。删除后 `check` 语法文件数由 121 回落，dist 亦不再被拷入垃圾。
 6. ✅ **文档↔代码一致性已机械校验**（2026-09-27）：57 批改名后，`docs/formulas/*` 的片段与散文仍在用改名前的标识符。新增三个可复现工具并据此修正：`check-doc-snippets.mjs`（76 条内嵌片段中 **61 条**已与源码重同步，含 ref 行号重定位）、`fix-doc-identifiers.mjs`（三份文档 71 行标识符更新，fields 命中 **66 → 0**）、`verify-doc-refs.mjs`（**全部文档**——根目录四份报告 + `docs/**/*.md` 共 **1,088 条 `file:line` 引用**：解析不到 **0**、行号越界 **0**，同名歧义 28 条按文档声明的缩写约定接受；校验范围起初只覆盖四份报告，漏掉了引用密度最高的 `docs/formulas/*`，扩充后立刻抓出 5 条越界并逐条修正：`combat.md` 把忍者回旋镖调用点误写成 `actions.js` 的 867 行（实为 characters/character.js 第 867 行）、`persistence.md` 的 scripts/test-parity.mjs 的 36 行（该文件仅 31 行）、`rng.md` 的连击数区间 stats.js 的 113-121 行（`rollChainCount` 实际在 102-114）、`baseline.md` 的 根目录 index.html 的 904-908 行（应为 `archive/original/index.html`）、`facts.md` 的 c2.js 的 270000-271250 行（该文件仅 46,981 行，实际为 `c2.js:16743-16799` 的 `function Cs()`））。四份报告引用的场景名与 60 条场景清单逐一对账全部命中。**仍未闭合**：15 条"节选/伪码"型片段（含 `...`）的行号不逐字对应，已在三份公式文档文首如实声明——判读时以片段上方的 `file:line` 与当前源码为准。
@@ -115,9 +115,9 @@ npm run lint                        # 一条命令守住不变量（见下）
 
 ## 10. 结论
 
-Clickpocalypse II 的核心实现已从高混淆遗留代码中恢复出真实语义：关键玩法行为有 60 个差分场景 + 位级 RNG 单测 + 浏览器 E2E + 8h/24h 等价回合 soak 的自动化证据保护，存档/RNG/时间/离线/自动保存经兼容验证，业务逻辑已迁入带清晰边界的现代模块（77 个），旧文件不再是唯一真相来源。
+Clickpocalypse II 的核心实现已从高混淆遗留代码中恢复出真实语义：关键玩法行为有 87 个差分场景 + 位级 RNG 单测 + 浏览器 E2E + 8h/24h 等价回合 soak 的自动化证据保护，存档/RNG/时间/离线/自动保存经兼容验证，业务逻辑已迁入带清晰边界的现代模块（77 个），旧文件不再是唯一真相来源。
 
-这些结论由运行与差分证明，不是主观判断；同样明确的是**尚未证明的部分**：附录 A 实际有 51 行（逐行统计），其中 **45 行 PASS、6 行 PARTIAL、0 行未覆盖**。PARTIAL 的 6 行都在证据格里以"**缺口（写明）**"逐条写清缺什么——法术的逐类状态级断言、物品的远古稀有度档位、角色技能的逐项战斗效果、多版本存档迁移样本、渲染指纹的视口/浏览器覆盖、真机帧时间与低端设备表现（成就 requirementType 的逐项进度已于 2026-09-27 关闭，见附录 A 该行）。`docs/reverse-engineering/unresolved.md` 的 U4（覆盖口径）/U7（UI 独占路径）是继续推进的入口；U5（长尾字段）已于 2026-09-27 关闭。
+这些结论由运行与差分证明，不是主观判断；同样明确的是**尚未证明的部分**：附录 A 实际有 51 行（逐行统计），其中 **47 行 PASS、4 行 PARTIAL、0 行未覆盖**。PARTIAL 的 4 行都在证据格里以"**缺口（写明）**"逐条写清缺什么——角色技能的逐项战斗效果、多版本存档迁移样本、渲染指纹的视口/浏览器覆盖、真机帧时间与低端设备表现（成就 requirementType、物品远古稀有度档位、法术 cat=15 的归因已于 2026-09-27 关闭，见附录 A 对应行）。`docs/reverse-engineering/unresolved.md` 的 U4（覆盖口径）/U7（UI 独占路径）是继续推进的入口；U5（长尾字段）已于 2026-09-27 关闭。
 
 ---
 
@@ -128,17 +128,23 @@ Clickpocalypse II 的核心实现已从高混淆遗留代码中恢复出真实�
 > **2026-09-27 复核（按上述口径自我纠偏）**：有 7 行的证据格里本来就写明了缺口，却仍标着 PASS——按本表自己的定义属误标，已改判为 **PARTIAL** 并在证据格补写"**缺口（写明）**"：角色技能/技能树、法术、物品、成就、旧版存档兼容、长期稳定性、Canvas 渲染。故本表当时为 **44 PASS / 7 PARTIAL / 0 未覆盖**（共 51 行）。
 >
 > **2026-09-27 再复核（成就行升为 PASS）**：`requirementType` 1-28 的逐项进度计算已由表驱动检查 + 表驱动单测 + 两条临界值差分场景闭合（证据见下方「成就」行），该行缺口文字已删除、判定改为 **PASS**。本表当前为 **45 PASS / 6 PARTIAL / 0 未覆盖**（共 51 行）。**其余 6 行仍为 PARTIAL，缺口一字未减。**
+>
+> **2026-09-27 三复核（彻夜会话：法术/物品两行升为 PASS，Canvas 行覆盖扩大仍 PARTIAL）**：①「物品」行的远古稀有度档位由新场景 `ancient-item-found` 闭合（两端各自用己方 generateItem 构造合法 rarity=4 掉落、由原版 AI 认领→拾取路径驱动 `recordItemFound` case 4，完整 DTO 差分 + 反向验证：改掉重构侧 case 4 即分叉变红）；②「法术」行的 cat=15 由新观察器 `countSelectedTreasure` 闭合（财宝目标 `selected` 旗标全库仅法术与 UI 按钮两个写点，逐帧统计 false→true 跳变——实测两端各 4 次；反向验证：删掉重构侧 `a.selected = true` 即变红）；③「Canvas 渲染」行新增 `rendered-scene-wide`（1920×1080）与 `rendered-scene-tiny`（375×667）两条逐像素指纹场景，覆盖扩大为 4 场景 × 4 视口，但"未覆盖全部组合/未跨浏览器"的缺口仍在，按口径**维持 PARTIAL**。差分场景矩阵 62 → **66**。本表当前为 **47 PASS / 4 PARTIAL / 0 未覆盖**（共 51 行）。
+>
+> **2026-09-28 四复核（U133 定稿后）**：①「角色技能/技能树」行证据升级——全量消费映射表 `docs/p1-skill-consumption.md` 交付（32/32 statType，**L3×8/L2×24/L1×0**），U133 期间新增 15 条技能族差分/探针场景，缺口文字改写为"L2 的 24 种仍为探针级 + 已否决路径清单（statType 11-15 活体量级对账、statType 16 施法次数对账、buff-potency 活体窗口、statType 28/29 活体化）"，判定**维持 PARTIAL**；②「旧版存档兼容」行新增 `save-robustness-field-matrix`（真实 fixture 字段删除变异，两端同接受/同拒绝，带反向验证；构造变异档 ≠ 真实历史档，多版本缺口不变）；③「Canvas 渲染」行新增 `rendered-scene-farm` 与 `rendered-scene-spellstorm`（扩展到游戏内状态维度，缺口不变）；④「长期稳定性」行原版同口径腿实测不可用（资产剥离冻结档案下 `Game.Em=false`，见 `output/overnight-u133/probe-original2.mjs`）。差分场景矩阵 66 → **87**。本表仍为 **47 PASS / 4 PARTIAL / 0 未覆盖**（共 51 行）。
+>
+> **2026-09-28 五复核（U134）**：① U7 升级长尾**全部闭合**——新场景 `equip-item-upgrade-pickup-first`（type 3「装备背包散件」）：`withEmptyBackpacks` 清空背包 → 两端各自 generateItem 造远古掉落 → AI 拾取建立 `item.inventory` 背链 → 驱动 type 3 行真实购买，两端各 2 次（自然拾取的「恐惧之可贵的护盾」入游侠护盾槽 + 种子远古剑「独步荒废之徒劳的剑」入战士武器槽），装备槽摘要两端同变；反向验证（重构侧 purchase 改空操作 → DTO 分叉红，恢复绿）。升级族 19 个实现至此全部有差分/探针证据（清单见 `docs/u7-upgrade-usage.md`）；同时**勘误 U133"恢复存档惰性"归因**：两端恢复路径都经 addInventoryItem 建背链（game-save.js:489 ↔ c2.js:29097），真实门控是 canPurchase 的候选列表 `≤5` 条件（fixture 背包塞满时列表 ≈60 恒不满足）。② `monsterTypes` 三层 typedef（`SaveMonsterTypesState`/`SaveMonsterTypeState`/`SaveMonsterTypeEntry`）挂进 `SaveData` + 恢复/序列化两侧接线（entities.js 读取点 cast / `@param` / `@returns`）+ 审计 3 条嵌套 spot-check；负向验证三向（恢复侧 `a.killsTypo` → TS2339 红、写出侧 `nameTypo:` → TS2353 红、typedef 伪字段 → 审计 exit 1）。实测发现 JS 里 JSDoc 参数标注不被赋值收窄覆盖（记录于 `docs/m10-type-debt.md`）。③「Canvas 渲染」行新增 `rendered-scene-tall`（900×1600），指纹场景 6 → 7 条、视口 4 → 5。差分场景矩阵 87 → **89**。本表仍为 **47 PASS / 4 PARTIAL / 0 未覆盖**（共 51 行）。
 
 | 系统 | 判定 | 证据 / 缺口 |
 |---|---|---|
 | Bootstrap 启动 | PASS | harness 两端 `ready()` 前置断言；E2E 载入 + 无 console/pageerror（渲染异常也纳入捕获） |
-| Party 创建 | PASS | E2E：推荐阵容→改名→开战，断言 4 名队员与姓名 |
+| Party 创建 | PASS | E2E：推荐阵容→改名→开战，断言 4 名队员与姓名 + 五条负路径（重名/未解锁职业/空阵容/开局后重复建队/**载入真实原版存档后重复建队**均被拒）；**原版差分**：`party-creation-differential`（彻夜会话补课）——reset 到两端一致空白态后，镜像字段写入驱动各自原生开局闭包（原版 `Az`：`Vb`/`Ww`/`$i`，c2.js:26306-26312、26363-26414；重构 `PartyCreationView`：`selectedCharacters`/`validParty`/`startButton`）以同一份 4 人阵容建队，300+900 回合完整 DTO 差分全等，带"创建体数值漂移即红"反向验证 |
 | 角色职业 | PASS | 12 个正式职业全部装载：0/2/6/4（战士/游侠/牧师/火法师）即默认阵容，3/7/8/9/10/11 由法术差分场景经 withReclassedSpell 装载，1（野蛮人）由 `class-barbarian-growth` 装载——改为职业 1、补槽 21 职业匹配武器，驱动四棵职业专属技能树购买（含 LearnSpellUpgrade 学会 重锤/愤怒）与 1000 回合自然战斗，逐检查点完整存档相等，带"去掉改职业即失败"的反向探针；职业表不存在职业 5（另有 Monster/Scroll Character 两个特殊类型）；职业成长（applyLevelStats 的 statMultipliers 应用）受 statMultipliers 六键差分与等级曲线覆盖 |
 | 角色升级 | PASS | `upgrades-purchased` 给足经验值后驱动 `LevelUpUpgrade.purchase`；两端各自断言 `characteristicsComponent.characterLevel` 超过 fixture 基线，逐检查点完整存档相等 |
-| 角色技能/技能树 | PARTIAL | `purchaseUpgrades` 遍历每名角色的四棵技能树；两端各自断言 `upgrades1..4` 已解锁布尔位总数超过 fixture 基线，法术学习 type=6 实际购买且 `spells` 数量增长，逐检查点完整存档相等；未逐项验证每种技能的战斗效果 |
+| 角色技能/技能树 | PARTIAL | 既有：`purchaseUpgrades` 驱动四棵技能树购买（upgrades1..4 布尔位 + type=6 法术学习 + spells 增长）；`skill-combat-effects` 对账战士多重攻击（statType 18/19）与游侠跳弹链（23/24）的实战伤害飘字；`combat-critical-hits` 对账暴击（17）。**U133 追加**：①全量消费映射表 `docs/p1-skill-consumption.md`——32/32 种 statType 均有真实战斗路径消费点（file:line 逐条人工核读，视图渲染点单列不计入），证据分级 L1 审计 / L2 探针直读 / L3 直接战斗差分；②U133 期间新增 15 条技能族差分/探针场景（`skill-chicken-king-barbarian-chance`（statType 30，两端各 4 次"野蛮人小鸡!"）、`skill-faster-attacks-cooldown`（statType 10，有效冷却 12→6 探针）、`skill-improved-damage-statvalue`（statType 2/6，组合值 27→35 / 152 由 fixture 独立推导）、`skill-larger-flock-summon-limit`（statType 26，召唤上限 1→2 探针）及技能概率/字段探针等其余 11 条，逐条清单与反向验证见映射表"U133 新增切片明细"）。现证据等级（U133 定稿）：**L3 ×8、L2 ×24、L1 ×0**。**缺口（写明）**：L2 的 24 种仍为公式/字段写入探针而非战斗效果活体差分；statType 11-15 的活体量级对账与 statType 16 的施法次数对账已以证据否决（浮动文字无施法者/目标归因，见映射表否决记录）；buff-potency 活体窗口按位置敏感场景否决（固定 9000 回合 0 次效果）；statType 28/29 活体化受 R4 空投射武器缺陷限制（turns:0 写入侧探针）。 |
 | 角色属性 | PASS | 六个分量 + 生命/精神/击杀在 52 场景每个检查点全量相等 |
 | 背包 | PASS | 物品计数/容量在差分中相等（itemsFound 真实增长） |
-| 装备 | PASS | `manual-equip-swap` 直接驱动手动装备路径：原版 `Character.prototype.Qk` / 重构版 `Character.Qk`（equipItem 交换 + itemEquipped 点数事件 type 21），断言新装备（金属的权杖）入槽、换下旧装备（人民之美好的权杖）回背包、事件计数增长；引擎无独立"卸下"操作（`removeInventoryItemAt` 仅在卖店与装备交换路径）系原版忠实行为；600 回合自然推进 DTO 全等 |
+| 装备 | PASS | `manual-equip-swap` 直接驱动手动装备路径：原版 `Character.prototype.Qk` / 重构版 `Character.Qk`（equipItem 交换 + itemEquipped 点数事件 type 21），断言新装备（金属的权杖）入槽、换下旧装备（人民之美好的权杖）回背包、事件计数增长；引擎无独立"卸下"操作（`removeInventoryItemAt` 仅在卖店与装备交换路径）系原版忠实行为；600 回合自然推进 DTO 全等。**U134 追加**：type 3 升级购买路径由 `equip-item-upgrade-pickup-first` 闭合（清空背包 → 真实掉落 AI 拾取建背链 → 驱动 type 3 行，两端各 2 次购买、装备槽摘要两端同变，带"purchase 改空操作即红"反向验证；并勘误 U133"恢复存档惰性"归因——真实门控是候选列表 ≤5，见 `docs/u7-upgrade-usage.md`） |
 | 自动装备 | PASS | `auto-equipped` 两端调用 type=4 的 `EquipBestItemUpgrade`，各自断言装备槽变化与 itemEquipped 点数事件计数增长，逐检查点完整存档相等 |
 | 怪物定义 | PASS | 名称/精灵/每级击杀数在存档 DTO 全量相等 |
 | 怪物升级 | PASS | 怪物 rank 随战斗推进被覆盖；`monster-level-unlocked` 断言最高等级 `maxUnlockedLevel` 解锁与等级表扩容；`monster-level-retired`（`RetireMonsterLevelUpgrade`，type=11）断言最低等级 `minUnlockedLevel` 递增至 2 且首个有效怪物等级抬高（等级 1 退休排除），两端 5 步递进与完整 DTO 完全相等，带负向破坏探针验证 |
@@ -146,7 +152,7 @@ Clickpocalypse II 的核心实现已从高混淆遗留代码中恢复出真实�
 | 暴击 | PASS | `combat-critical-hits` 驱动战士与游侠在 5 轮升级中解锁全部 7 档暴击几率技能（战士 4 档 + 游侠 3 档），随后在 1000 回合实战中由 `countFloatingText` 采样两端浮动文字层，直接断言两端黄色 `"暴击!"` 出现次数完全一致（各 11 次，无技能时为 0），验证绕过护甲扣除与 RNG 顺序一致，1000 回合后完整 DTO 逐项全等，带非暴击文字负向探针验证 |
 | 眩晕/状态效果 | PASS | `isStunned/isStealthed/isConverted` 语义已落地；type 13/14/0 直接计数两端同值，`characterStunnedCount` 增长断言 |
 | 技能效果层 | PASS | `skill-combat-effects` 驱动战士多重攻击（statType 18 extraAttackCount + 19 extraAttackChance，performMultiAttack 分支）与游侠跳弹链（statType 23 chainCount + 24 chainChance，命中后 createChainAction 沿 Xs 链扩展）共 14 个技能位习得，随后 1500 回合实战直接采样伤害飘字（两端 149 次 / 累计 -52345 完全一致），带"跳过技能购买步即失败"反向探针；暴击几率技能族另有 combat-critical-hits 直接对账；剩余被动属性类技能（statType 1-17/20-22/25-32）改写 stats 字段后即进入全量 DTO 差分覆盖 |
-| 法术 | PARTIAL | 16 个 `spellCategoryId` 每条一个差分场景（**覆盖由 `scripts/check-spell-coverage.mjs` 机械核对：无场景 0 个**）。**15/16 类已有专属可观测量**：cat=1 治疗浮动文字（91 次 / 累计 +279）、cat=2/8 活怪物效果队列直接计数、cat=3 盟友侧效果队列直接计数（20 次，新增 `countAllyEffectApplications`——增益落在队友身上，活怪物队列里看不到）、cat=4/5/6/12/13 伤害浮动文字（379–559 次 / 累计 -4688 ~ -5943）、cat=9/10/11 随从数、cat=14 拾取统计、cat=16 昏迷前置、cat=17 伤害+随从双观测。**缺口（写明）**：仅 **cat=15（发现财宝箱）** 仍靠"唯一注入法术 + 施法计数增长 + 完整存档差分"归因——该法术只把房间财宝设为队伍目标，是否最终开箱取决于 AI 是否走到箱子；实测该统计断言单跑通过、整矩阵失败（场景顺序相关），故不硬凑 |
+| 法术 | PASS | 16 个 `spellCategoryId` 每条一个差分场景（**覆盖由 `scripts/check-spell-coverage.mjs` 机械核对：无场景 0 个、无直接可观测量 0 个**）。cat=1 治疗浮动文字（91 次 / 累计 +279）、cat=2/8 活怪物效果队列直接计数、cat=3 盟友侧效果队列直接计数（20 次，`countAllyEffectApplications`——增益落在队友身上，活怪物队列里看不到）、cat=4/5/6/12/13 伤害浮动文字（379–559 次 / 累计 -4688 ~ -5943）、cat=9/10/11 随从数、cat=14 拾取统计、cat=16 昏迷前置、cat=17 伤害+随从双观测；**cat=15（发现财宝箱）由 `countSelectedTreasure` 直接对账**（U132 彻夜会话闭合）：财宝目标 `selected` 旗标（原版 el）全库仅该法术（actions.js:721 ↔ c2.js:20955）与财宝房 UI 按钮（c2.js:27719，场景从不驱动）两个写点，且法术 AI 评分（behaviors.js getFinalScore）只在"所在房间有未开启未选中财宝"时非零，故逐帧统计 selected false→true 跳变即施法效果的直接因果信号——实测两端各 4 次跳变完全一致；`selected` 不入存档，是 DTO 差分盲区的独立证据。反向验证：删掉重构侧 `a.selected = true` 场景立刻变红。此前"开箱统计 treasureChestsLooted 断言单跑过/全矩阵挂"的教训与此不同：开箱与否取决于 AI 行走，order-dependent，已回退不采用 |
 | 伤害数字 | PASS | 500 回合实战逐帧直接采样浮动文字层，正则匹配负数伤害文本数量（57 次）与累计总伤害（-616 点），两端完全一致，带反向探针验证 |
 | 法术特效 | PASS | `spell-visual-effects` 直接对账特效池（不入存档 DTO 的差分盲区）：harness countVisualEffects 逐帧采样原版 Game.df.Wg（名字段 ca）/ 重构版 game.effects.Wg（impactEffectName），火法师装载火球术自然战斗 3000+1000 回合，两端特效总数（719）、逐类计数（Red Splat/Green Damage/Small Green Projectiles 等 3 种）与创建顺序序列完全一致；反向验证：字段名取错时原版 0 vs 重构版 132 即失败 |
 | 普通遭遇 | PASS | 全场景都会进入遭遇；遭遇点数事件在存档中等值增长 |
@@ -154,7 +160,7 @@ Clickpocalypse II 的核心实现已从高混淆遗留代码中恢复出真实�
 | 首领遭遇 | PASS | castle-victory 用 trackBossEncounter 逐帧扫描 encounter.du（首领遭遇状态）、characterType === 4（首领存活）、"击杀首领!" 浮动文字三重直接因果指标，两端全等（首领战 7611 回合、首领存活 2898 回合、击杀 1 次、名称一致），带双向对抗性探针验证 |
 | 掉落 | PASS | 物品/卷轴/药水/金币四类掉落路径均在长程差分中发生且相等；`claimedBy` 认领语义已恢复 |
 | 金币 | PASS | 队伍金币与累计金币在 DTO 中相等，金币涌入场景断言真实增长 |
-| 物品 | PARTIAL | 稀有度计数增长且两端相等；远古档位在 fixture 场景内未出现 |
+| 物品 | PASS | 稀有度计数增长且两端相等；**远古（rarity=4）档位由 `ancient-item-found` 场景闭合**（彻夜会话）：`itemRarityProbabilities` 的远古档概率 4E-4 在固定 LCG 下从未自然命中，场景改由两端**各自引擎的 generateItem** 构造合法远古物品（随机消费两端同序，字段/名字/数值全部按原版生成路径产出）、作为真实 ItemDrop 放进队员所在房间脚下，由原版 AI 认领→行走→拾取路径（TravelWorldBehavior → actionType 6 → character.js recordItemFound case 4）驱动统计增长，随后完整 DTO 差分（远古物品以一致字段进入同一队员 inventory）；两端各自断言 `ancientItemsFound` 增长且拾取所耗回合数相等。反向验证：把重构侧 `case 4` 的计数删掉场景立刻分叉变红。不掉概率、不碰 LCG、不直接写统计字段 |
 | 卷轴 | PASS | 库存/数量/解锁相等；`scroll-cast-in-combat` 在有活怪物时分步施放全部 6 种卷轴（休克/蜘蛛网/箭雨回退普攻/火雨/连锁闪电/火球），逐项断言尝试数与成功施放，900 回合后逐检查点完整存档相等；非法 scrollId 两端严格抛错保护 |
 | 药水 | PASS | `potions-activated` 直接驱动 `Potion.aw()`，`statistics.potionsUsed` 两端各自增长 |
 | 财宝房 | PASS | 三条场景分别让角色搜索同房间的 type=1/2/3 目标物，各自断言三种统计增长；`ground-drops-collected` 在无已学法术的 fixture 上断言 9/10/11/12 四种常规拾取事件（金币/卷轴/药水/物品）均增长，两端完整存档相等 |
@@ -174,11 +180,11 @@ Clickpocalypse II 的核心实现已从高混淆遗留代码中恢复出真实�
 | 载入 | PASS | 两端载入同一原文并推进 |
 | 导入 | PASS | E2E：非法导入不得改动原存档 |
 | 导出 | PASS | E2E：真实下载→回填导入→状态一致 |
-| 旧版存档兼容 | PARTIAL | 真实原版 fixture 解码/载入/推进 + 4,477 键审计；仅一份存档、一个版本 |
+| 旧版存档兼容 | PARTIAL | 真实原版 fixture 解码/载入/推进 + 4,477 键审计；**U133 追加健壮性矩阵** `save-robustness-field-matrix`：字段删除变异（turnNumber/pointManagerState/gameOptions/dungeonStates[3].clearedTurn/dungeonManagerState.farmedKills 同受——各推进 200 回合 DTO 全等；world 同拒——恢复路径无守卫必抛），两端同接受或同拒绝逐一断言，带反向验证（拆重构版 pointManagerState 守卫 → 红）。**缺口（写明）**：构造变异档只证明恢复路径健壮性，不是第二份真实历史存档；无版本字段可考 |
 | Prestige/reset | PASS | 胜利重置与完全重置两场景，重置后空转亦相等 |
 | 游戏结束/终局 | PASS | castle-victory 在胜利后经 idle() 真帧渲染直接观察 gameOverTabContent：两端面板可见且面板文本一致（279 字符，含续战入口）；GameOverlayView.onGameWon 启用+选中 TabState 的引擎链路两端同构；续战计数 victoryCount 的跨重置持久性由 prestige-restart 完整 DTO 对账覆盖 |
 | RNG 确定性 | PASS | 位级单测 + 全部差分的确定性前提 |
-| 长期稳定性 | PARTIAL | 8h/24h 等价回合两端全等，堆增量 ~17KB 级；非严格泄漏证明。**缺口（写明）**：soak 是"加速等价回合"（直接推回合，非真机帧循环），未测真机帧时间、长时间真实运行与低端设备表现 |
+| 长期稳定性 | PARTIAL | 8h/24h 等价回合两端全等，堆增量 ~17KB 级；非严格泄漏证明。**U133 追加**：`measure-frames.mjs` 新增原版同口径腿与交替 A/B 框架，但原版生产页在资产剥离的冻结档案下 boot 无法到达组队挂载（Game.Em=false，可复现探针 output/overnight-u133/probe-original2.mjs），原版腿如实记录为不可用并跳过 A/B（非致命）。**缺口（写明）**：headless rAF 间隔含浏览器调度影响 ≠ 真机掉帧率；真机/低端设备仍未测 |
 | UI 标签页 | PASS | 14 个静态 TabState 逐一对账：创建队伍（E2E 开战前 setup 屏）、游戏/Char0-3/怪物/地牢/城堡/点数（E2E 主导航 + 角色分页 1-3 逐一断言可见）、信息（E2E 经设置页断言 infoTabContent）；游戏结束/离线为状态门控面板，其门控状态 gameWon/offline 由引擎差分行断言，面板挂载为 app.js navigate 单点 switch；Char4 需 5 人队（E2E 推荐阵容 4 人，capacity=4+加成） |
-| Canvas 渲染 | PARTIAL | `rendered-scene`（默认视口 1300 帧）+ `rendered-scene-narrow`（700×900 窄视口 1300 帧）：两端逐像素 FNV-1a 指纹相同、落盘存档一致、渲染异常纳入失败条件；E2E 另有 1440/1024/375 三档视口 DOM 溢出与面板检查。两条 frames 场景经 rewindAutosaveTimer 回拨上次保存时刻，确定性覆盖 300s 自动保存分支（此前该分支依赖场景顺序，属测试设计缺陷非引擎缺陷）。**缺口（写明）**：逐像素指纹只在 2 条场景 × 2 视口下比对，未覆盖全部视口/分辨率组合，也未做跨浏览器比对 |
+| Canvas 渲染 | PARTIAL | `rendered-scene`（默认视口 1300 帧）+ `rendered-scene-narrow`（700×900）+ **`rendered-scene-wide`（1920×1080）与 `rendered-scene-tiny`（375×667，彻夜会话新增）**：两端逐像素 FNV-1a 指纹相同、落盘存档一致、渲染异常纳入失败条件；E2E 另有 1440/1024/375 三档视口 DOM 溢出与面板检查。frames 场景经 rewindAutosaveTimer 回拨上次保存时刻，确定性覆盖 300s 自动保存分支（此前该分支依赖场景顺序，属测试设计缺陷非引擎缺陷）。**U133 追加**：`rendered-scene-spellstorm`（3 号队员改火法师装载"闪电雨"，3000 回合法术高频释放状态断言 + 1300 帧指纹）与 `rendered-scene-farm`（农场主题画布）——覆盖扩展到"游戏内状态"维度；随机首领药水变体经取证否决（药水背包容量 6 + 点数升级赠药 + 团灭重开互相叠加，order-dependent，见 output/overnight-u133/progress.md CP4）。**U134 追加**：`rendered-scene-tall`（900×1600 竖长视口，1300 帧指纹两端一致）。**缺口（写明）**：逐像素指纹共 7 条场景（5 视口：默认/700×900/1920×1080/375×667/900×1600 × 自然战斗 + 2 条游戏内状态：特效密集 spellstorm、农场主题 farm），仍未覆盖全部视口/分辨率/游戏内状态组合，也未做跨浏览器比对 |
 | 精灵查找 | PASS | 单元差分（tests/unit/sprite-lookup.test.mjs）：Babel 从原版提取 Pb（SpriteSheet）及其查找方法，与重构版 getSprite 在同一手工查找表上对账——命中返回同一表项、未命中返回 undefined 不抛错、原型链继承键（toString/constructor）两侧同样返回继承函数（原版怪癖忠实保留，勿修复）、非法输入两侧同为 undefined |

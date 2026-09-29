@@ -7,7 +7,7 @@ import saveCodec from '../src/engine/save-codec.js';
 import {
   decodeFixture, encodeSave, summarize,
   withPotions, withScrolls, withGold, withKills, withPointPools, withFarmableDungeon, withTurns, withElapsed, withOfflineProcessing, withBackgroundProcessing,
-  withVictories, withClassSpell, withCastleVictory, withReclassedSpell, withEquippedItem, withResurrectionTrial, withSkillPoints, withExperience, withCharacterClass, withAttackableCastle, withClaimableAchievements, withAchievementThresholds,
+  withVictories, withClassSpell, withCastleVictory, withReclassedSpell, withEquippedItem, withResurrectionTrial, withSkillPoints, withExperience, withCharacterClass, withAttackableCastle, withClaimableAchievements, withAchievementThresholds, withoutFields, withFieldValues, withEmptyBackpacks,
   HARNESS_FIXED_NOW,
 } from '../tests/scenarios/save-mutations.mjs';
 
@@ -95,6 +95,17 @@ const manualEquipSwapped = (s) => {
     itemEquippedGrew: equipEvents > baseEquipEvents,
   };
 };
+// U7 长尾（U134）：type 3「装备背包散件」购买必须真实改变装备槽（相对 fixture 基线），
+// 且 equipItem 的点数事件（type 21）真实增长——两项都由各端独立证明，再进入完整 DTO 差分。
+const equipmentActuallyChanged = (s) => {
+  const digest = (save) => (save.adventurers ?? []).map(a => (a.equippedItemCollection ?? []).map(e => e.itemName).sort().join('|'));
+  const equipEvents = (s.pointManagerState?.pointsByType ?? []).find(p => p.pointEventType === 21)?.count ?? 0;
+  const baseEquipEvents = (base.pointManagerState?.pointsByType ?? []).find(p => p.pointEventType === 21)?.count ?? 0;
+  return {
+    equipmentChanged: JSON.stringify(digest(s)) !== JSON.stringify(digest(base)),
+    itemEquippedGrew: equipEvents > baseEquipEvents,
+  };
+};
 const barbarianGrew = (s) => {
   const adv = (s.adventurers ?? [])[3] ?? {};
   const bAdv = (base.adventurers ?? [])[3] ?? {};
@@ -178,11 +189,53 @@ const groundDropsWereCollected = (s) => ({
     (s.pointManagerState?.pointsByType ?? []).find(p => p.pointEventType === type)?.count
       > (base.pointManagerState?.pointsByType ?? []).find(p => p.pointEventType === type)?.count),
 });
+// P-3 远古稀有度：recordItemFound 的 case 4（statistics.js:115）在 fixture 概率下从未被驱动。
+const ancientItemWasFound = (s) => ({
+  ancientFound: (s.statistics?.ancientItemsFound ?? 0) > (base.statistics?.ancientItemsFound ?? 0),
+});
+// 差分原版正常开局路径：reset 后经各自原生开局闭包建队，验证创建真的发生且形态正确。
+const createdPartyMatches = (s) => ({
+  partyCreated: s.partyCreated === true,
+  adventurerCount: (s.adventurers ?? []).length,
+});
+// P-1 技能消费证据：鸡王几率技能（statType 30）购买位必须写进 upgrades4，
+// 且召唤鸡群法术必须真实施法（几率掷骰只发生在施法生成小鸡时，actions.js:172-179）。
+const chickenChanceOwned = (i) => (s) => ({
+  chanceSkillOwned: (s.adventurers?.[i]?.upgrades4 ?? {}).barbarianChanceChickenKing === true,
+});
+const chickenChanceSkillOwned = chickenChanceOwned(0);
+// U7 长尾：ScrollUpgrade（type 12）购买后 scrollInventory 的 upgradeCount 必须增长。
+const scrollUpgradePurchased = (s) => ({
+  scrollUpgraded: (s.scrollInventory ?? []).some(x => (x.upgradeCount ?? 0) > 0),
+});
+// P-1 被动族（statType 10）：冷却缩减购买位写进 upgrades4。
+const fighterCooldownSkillOwned = (s) => ({
+  chanceSkillOwned: (s.adventurers?.[0]?.upgrades4 ?? {}).fasterAttacksFighter3 === true,
+});
+// P-5 健壮性矩阵：接受步要求队伍完好；拒绝步的快照为 null（两端都必须拒绝）。
+const robustnessLoadedOk = (s) => ({
+  adventurersIntact: (s?.adventurers ?? []).length === 4 && s?.partyCreated === true,
+});
+const robustnessRejected = (s) => ({
+  loadRejected: s === null,
+});
+const chickenChanceSkillConsumed = (s) => ({
+  chanceSkillOwned: [0, 1, 2, 3].every(i => (s.adventurers?.[i]?.upgrades4 ?? {}).barbarianChanceChickenKing === true),
+  spellCast: (s.statistics?.spellCastCount ?? 0) > (base.statistics?.spellCastCount ?? 0),
+});
 // U7：药水激活在视图之外没有入口，激活后存档里只有 statistics.potionsUsed 可证。
 const potionWasUsed = (s) => ({ potionUsed: (s.statistics?.potionsUsed ?? 0) > 0 });
 const backgroundProgressWasDisabled = (s) => ({
   backgroundProgressDisabled: s.gameOptions?.inactiveTabProcessingEnabled === false,
 });
+// P-1 增益族期望值：由 fixture 分量按 statValue 公式独立推导（itemValue+levelValue 的基数
+// 加 skillBonusPercent 的百分比增益），不读取实现——这是期望侧与实现侧的独立对账。
+const statValueOf = (adventurerIndex, componentKey, skillBonusPercent) => {
+  const c = (base.adventurers ?? [])[adventurerIndex]?.characteristicsComponent?.[componentKey];
+  if (!c) throw new Error(`fixture 缺少 ${componentKey}`);
+  const itemLevel = c.itemValue + c.levelValue;
+  return itemLevel + Math.floor((c.skillBonusPercent + skillBonusPercent) / 100 * itemLevel);
+};
 const scenarios = [
   {
     name: 'rendered-scene',
@@ -357,10 +410,15 @@ const scenarios = [
     // 宝箱发现分支：spellCategoryId=15（盗贼 发现财宝箱）→ hw.prototype.wu 置宝箱已发现。
     name: 'spell-find-chest',
     make: () => withEquippedItem(withReclassedSpell(base, 3, 7, '发现财宝箱'), 3, '41393542', '61', 7),
-    // cat=15 无可稳定直接可观测量（如实说明）：法术只把房间财宝设为队伍目标，是否最终开箱取决于
-    // AI 是否走到箱子，整矩阵下受场景顺序影响会 flaky；故本场景仍以「唯一注入法术 + 施法计数增长 +
-    // 逐检查点完整存档差分」归因，不用 order-dependent 的统计断言充数。
-    steps: [[3000, snap => ({ spellCast: snap.statistics.spellCastCount > base.statistics.spellCastCount })], [3000, null]],
+    // cat=15（发现财宝箱）的直接可观测量：财宝目标的 selected 旗标只有本法术与财宝房按钮
+    // 两个写点（场景从不驱动按钮），且该法术的 AI 评分（behaviors.js getFinalScore）只在
+    // "房间有未开启、未选中的财宝"时非零，故 selected 计数增长 ⟺ 法术真的发现并选中了财宝。
+    // selected 不入存档，是存档差分之外的独立证据。（此前曾试过的 treasureChestsLooted 增长
+    // 断言与此不同：是否开箱取决于 AI 是否走到箱子，order-dependent flaky，已按宁缺勿滥回退。）
+    steps: [
+      { turns: 0, selectedTreasure: 3000, check: snap => ({ spellCast: snap.statistics.spellCastCount > base.statistics.spellCastCount }) },
+      [3000, null],
+    ],
   },
   {
     // 复活分支：spellCategoryId=16（牧师 复活）要求场上已有昏迷的冒险者，昏迷只在 resolveCharacterDefeat 里产生。
@@ -755,6 +813,424 @@ const scenarios = [
     reset: true,
     steps: [[1, null]],
   },
+  {
+    // P-3 远古稀有度：itemRarityProbabilities 的远古档概率 4E-4，固定 LCG 下从未自然命中，
+    // recordItemFound 的 case 4 因此从未被驱动。两端各自用己方 generateItem 构造一件
+    // 合法 rarity=4 物品作为真实地面掉落放进队员所在房间，由原版 AI 认领→拾取路径
+    // （TravelWorldBehavior → actionType 6 → character.js recordItemFound）驱动统计；
+    // 拾取后完整 DTO 差分（远古物品会以一致字段进入同一队员的 inventory）。
+    // 第二步证明统计落盘后稳定。追加在矩阵末尾，不扰动既有场景的采样窗口。
+    name: 'ancient-item-found',
+    make: () => base,
+    steps: [
+      { turns: 0, seedAncientItemDrop: { maxTurns: 4000, rarity: 4 }, check: ancientItemWasFound },
+      { turns: 900, check: ancientItemWasFound },
+    ],
+  },
+  {
+    // P-7 Canvas 多视口：1920×1080 宽视口（既有覆盖为默认与 700×900）下 1300 帧真实帧循环，
+    // 逐像素 FNV 指纹与落盘存档断言同 rendered-scene。追加在矩阵末尾，不扰动既有场景。
+    name: 'rendered-scene-wide',
+    make: () => base,
+    viewport: { width: 1920, height: 1080 },
+    steps: [
+      { frames: 1300 },
+    ],
+  },
+  {
+    // P-7 Canvas 多视口：375×667 最小视口（与 E2E 的 375 档 DOM 检查同宽）。
+    // 布局最紧凑、面板堆叠最极端时两端仍须逐像素一致。
+    name: 'rendered-scene-tiny',
+    make: () => base,
+    viewport: { width: 375, height: 667 },
+    steps: [
+      { frames: 1300 },
+    ],
+  },
+  {
+    // 差分原版正常开局路径（U132 补课，阶段 3 验收项）：harness 内部先 reset 到两端一致的
+    // 空白态（full-reset 场景已证空白 DTO 全等），再用**镜像字段写入**驱动各自的原生开局
+    // 闭包——原版 Az 控制器（Vb/Ww/$i，c2.js:26306-26312、onclick 26363-26414）↔ 重构
+    // PartyCreationView（selectedCharacters/validParty/startButton）——以同一份 4 人阵容建队，
+    // 推进 300 回合做完整 DTO 差分；第二步证明队伍可持续演进且两端仍逐检查点相等。
+    name: 'party-creation-differential',
+    make: () => base,
+    steps: [
+      { turns: 0, createPartyFromBlank: { members: [
+        { classIndex: 0, defaultName: '远征队长' },
+        { classIndex: 1, defaultName: '圣光' },
+        { classIndex: 2, defaultName: '猎风' },
+        { classIndex: 3, defaultName: '霜语' },
+      ], turns: 300 }, check: createdPartyMatches },
+      { turns: 900, check: createdPartyMatches },
+    ],
+  },
+  {
+    // P-1 主动族切片：鸡王几率技能（statType 30，25%）。
+    // 购买 barbarianChanceChickenKing（鸡王技能树4末位，actions.js:172 消费 stats.barbarianChickenChance）
+    // 后，召唤鸡群（cat=17）每次施法生成小鸡时以 25% 掷出"野蛮人小鸡!"——浮动文字直接对账
+    // 几率技能的战斗效果；固定 LCG 下两端各自购买→施法→掷骰，条数必须 >0 且相等。
+    // 几率位写进 upgrades4（DTO）+ 施法计数归因 + 完整存档差分兜底。
+    name: 'skill-chicken-king-barbarian-chance',
+    // 全员改鸡王并注入召唤鸡群：4 倍施法频次让 25% 几率掷骰在固定 LCG 下有足够的
+    // 确定性采样量（单角色 6000 回合仅 2 次施法、0 命中的坏运气实测过）。
+    make: () => withSkillPoints([0, 1, 2, 3].reduce((acc, i) => withReclassedSpell(acc, i, 11, '召唤鸡群'), base), 12),
+    steps: [
+      { turns: 0, purchaseCharacterSkill: { charIndex: [0, 1, 2, 3], skillId: 'barbarianChanceChickenKing' }, check: chickenChanceSkillOwned },
+      { turns: 6000, floatingText: '野蛮人小鸡!', check: chickenChanceSkillConsumed },
+      { turns: 900, check: chickenChanceSkillConsumed },
+    ],
+  },
+  {
+    // P-1 被动族切片：战士快速攻击 I-III（statType 10，各 -2 冷却）。
+    // 定向购买 fasterAttacksFighter3 连带购入前置链（AR1→FA1→AR2→FA2→暴击4→AR3→FA3），
+    // 只读观察战斗节奏公式 getAttackCooldown（stats.js:40）的输出：
+    // reduction 0→6、有效冷却 12→6——这正是 character.js:134 canAttack 判定攻击时机用的同一个值。
+    // 随后 1500 回合自然战斗做完整 DTO 差分。
+    name: 'skill-faster-attacks-cooldown',
+    make: () => withSkillPoints(base, 12),
+    steps: [
+      { turns: 0, readAttackCooldownProbe: { charIndex: 0, expectReduction: 0, expectCooldown: 12 } },
+      { turns: 0, purchaseCharacterSkill: { charIndex: 0, skillId: 'fasterAttacksFighter3' }, check: fighterCooldownSkillOwned },
+      { turns: 0, readAttackCooldownProbe: { charIndex: 0, expectReduction: 6, expectCooldown: 6 } },
+      { turns: 1500 },
+    ],
+  },
+  {
+    // U133 主线二（U132 开局切片的对抗性复核）：同一份 4 人简单姓名阵容，
+    // 原版端走遗留按钮闭包（原版无产品入口），重构端走产品 adapter.startParty
+    // （校验→escapeName→PartyCreationView.prototype.startParty→paused=false）。
+    // runner 的两端完整 DTO 相等断言给出「重构产品入口 ≡ 原版遗留入口」；
+    // 与 party-creation-differential（重构遗留 ≡ 原版遗留）串联即得
+    // 「重构产品入口 ≡ 重构遗留入口」，排除 U132 切片改变开局行为的反例。
+    // 姓名取无可转义字符的简单中文名，escapeName 为恒等，两侧选择数组逐字段同构。
+    name: 'party-entry-product-differential',
+    make: () => base,
+    steps: [
+      { turns: 0, createPartyFromBlank: { mode: 'product', members: [
+        { classIndex: 0, defaultName: '远征队长' },
+        { classIndex: 1, defaultName: '圣光' },
+        { classIndex: 2, defaultName: '猎风' },
+        { classIndex: 3, defaultName: '霜语' },
+      ], turns: 300 }, check: createdPartyMatches },
+      { turns: 900, check: createdPartyMatches },
+    ],
+  },
+  {
+    // P-7 游戏内状态对照：法术特效密集战斗（3 号队员改火法师并装载"闪电雨"）。
+    // spellCast 检查先断言两端都真的进入"法术高频释放"状态，再 1300 帧逐像素指纹——
+    // 与 rendered-scene 的自然战斗相比，这是法术特效池高负载的另一种渲染状态。
+    // 指纹对任何渲染差异敏感；若真有差异属于缺陷，不改指纹或容差。
+    // （曾尝试随机首领药水 + trackBoss：15000 回合长窗受团灭重开、药水背包容量与
+    //   点数升级赠药等 order-dependent 机制叠加影响，按否决条款放弃该变体，
+    //   取证过程见 output/overnight-u133/progress.md CP4。）
+    // P-1 被动族切片（statType 2/6 增益族，覆盖 132+ 条定义中的代表）：
+    // 战士树 1 前置链购买 improvedDamageFighter3 连带 dmg1(+10%)/hp1(+20%)/dmg2(+10%)/
+    // hp2(+20%)/暴击2/dmg3(+10%)。只读探针直读 statValue 组合值（stats.js:14，全部战斗公式的输入）：
+    // damage 27→29（+30%）、maxHealth 按 +40% 公式期望——期望值全部由 fixture 分量推导，非抄实现。
+    name: 'skill-improved-damage-statvalue',
+    make: () => withSkillPoints(base, 12),
+    steps: [
+      { turns: 0, statValueProbe: { charIndex: 0, component: 'damage', expectSkillBonus: 0, expectValue: statValueOf(0, 'damageComponent', 0) } },
+      { turns: 0, purchaseCharacterSkill: { charIndex: 0, skillId: 'improvedDamageFighter3' }, check: fighterCooldownSkillOwned },
+      { turns: 0, statValueProbe: { charIndex: 0, component: 'damage', expectSkillBonus: 30, expectValue: statValueOf(0, 'damageComponent', 30) } },
+      { turns: 0, statValueProbe: { charIndex: 0, component: 'maxHealth', expectSkillBonus: 40, expectValue: statValueOf(0, 'maxHealthComponent', 40) } },
+      { turns: 1200 },
+    ],
+  },
+  {
+    // P-1 被动族切片（statType 26 召唤上限）：largerFlockChickenKing 每级 +1。
+    // 只读探针直读 stats.maxSummonedMinions（原版 gl）：鸡王默认上限 1（DEFAULT_MINION_LIMIT），
+    // 购买 largerFlockChickenKing1（树 2 前置链含 LearnSpell 召唤鸡群——withReclassedSpell 已注入
+    // 同名法术，实现侧 purchased 守卫会安全跳过）后上限 2。消费点 behaviors.js:1418,1462。
+    // P-1 被动族切片（statType 3/4/5）：战士树 1/4/3 三条前置链分别购买
+    // improvedArmorFighter3 / improvedAttackRatingFighter3 / improvedDefenseRatingFighter3
+    // （各 +10%×3）。只读探针直读 statValue：armor/attackRating/defenceRating 三个组合值
+    // 按各自 +30% 公式期望变化，期望由 fixture 独立推导。
+    name: 'skill-improved-combat-stat-bonuses',
+    make: () => withSkillPoints(base, 60),
+    steps: [
+      { turns: 0, statValueProbe: { charIndex: 0, component: 'armor', expectSkillBonus: 0, expectValue: statValueOf(0, 'armorComponent', 0) } },
+      { turns: 0, statValueProbe: { charIndex: 0, component: 'attackRating', expectSkillBonus: 0, expectValue: statValueOf(0, 'attackRatingComponent', 0) } },
+      { turns: 0, statValueProbe: { charIndex: 0, component: 'defenceRating', expectSkillBonus: 0, expectValue: statValueOf(0, 'defenceRatingComponent', 0) } },
+      { turns: 0, purchaseCharacterSkill: { charIndex: 0, skillId: 'improvedArmorFighter3' } },
+      { turns: 0, purchaseCharacterSkill: { charIndex: 0, skillId: 'improvedAttackRatingFighter3' } },
+      { turns: 0, purchaseCharacterSkill: { charIndex: 0, skillId: 'improvedDefenseRatingFighter3' } },
+      { turns: 0, statValueProbe: { charIndex: 0, component: 'armor', expectSkillBonus: 30, expectValue: statValueOf(0, 'armorComponent', 30) } },
+      { turns: 0, statValueProbe: { charIndex: 0, component: 'attackRating', expectSkillBonus: 30, expectValue: statValueOf(0, 'attackRatingComponent', 30) } },
+      { turns: 0, statValueProbe: { charIndex: 0, component: 'defenceRating', expectSkillBonus: 30, expectValue: statValueOf(0, 'defenceRatingComponent', 30) } },
+      { turns: 1200 },
+    ],
+  },
+  {
+    // P-1 被动族切片（statType 8/7）：生命回复与法力上限。
+    // member 0（战士）买 improvedDefenseRatingFighter3 前置链附带 healthRegenerationFighter1/2
+    // （statType 8，各 +1）→ healthRegenBonus 0→2，消费点 tick.js:42 每 3 回合回复公式；
+    // member 1（牧师）买 improvedSpiritPriest2 前置链（spirit1/2 各 +20）→ maxSpirit
+    // skillBonusPercent 0→40，statValue 探针（statType 7 走分量公式）。两端各自购买+探针，
+    // 完整 DTO 差分兜底。
+    name: 'skill-regen-spirit-bonuses',
+    make: () => withSkillPoints(base, 60),
+    steps: [
+      { turns: 0, readRegenProbe: { charIndex: 0, expectBonus: 0 } },
+      { turns: 0, statValueProbe: { charIndex: 1, component: 'maxSpirit', expectSkillBonus: 0, expectValue: statValueOf(1, 'maxSpiritComponent', 0) } },
+      { turns: 0, purchaseCharacterSkill: { charIndex: 0, skillId: 'improvedDefenseRatingFighter3' } },
+      { turns: 0, purchaseCharacterSkill: { charIndex: 1, skillId: 'improvedSpiritPriest2' } },
+      { turns: 0, readRegenProbe: { charIndex: 0, expectBonus: 2 } },
+      { turns: 0, statValueProbe: { charIndex: 1, component: 'maxSpirit', expectSkillBonus: 40, expectValue: statValueOf(1, 'maxSpiritComponent', 40) } },
+      { turns: 1200 },
+    ],
+  },
+  {
+    // P-1 被动族切片（statType 11-15 法术强度）：牧师五条前置链分别购买
+    // improvedHealingSpell(11)/improvedDamageSpell(12)/improvedArmorSpell(13)/
+    // improvedAttackRatingSpell(14)/improvedDefenseRatingSpell(15)（各 +2）。
+    // 只读探针直读五个增益强度字段（actions.js:94,131,134,137,140 治疗/增益量公式的输入）。
+    name: 'skill-priest-spell-potencies',
+    make: () => withSkillPoints(base, 60),
+    steps: [
+      { turns: 0, buffPotencyProbe: { charIndex: 1, expect: {} } },
+      { turns: 0, purchaseCharacterSkill: { charIndex: 1, skillId: 'improvedHealingSpellPriest' } },
+      { turns: 0, purchaseCharacterSkill: { charIndex: 1, skillId: 'improvedDamageSpellPriest' } },
+      { turns: 0, purchaseCharacterSkill: { charIndex: 1, skillId: 'improvedArmorSpellPriest' } },
+      { turns: 0, purchaseCharacterSkill: { charIndex: 1, skillId: 'improvedAttackRatingSpellPriest' } },
+      { turns: 0, purchaseCharacterSkill: { charIndex: 1, skillId: 'improvedDefenseRatingSpellPriest' } },
+      { turns: 0, buffPotencyProbe: { charIndex: 1, expect: { heal: 2, damage: 2, armor: 2, attackRating: 2, defenceRating: 2 } } },
+      { turns: 1200 },
+    ],
+  },
+  {
+    // P-1 被动族（statType 1 伤害抵抗）：战士树 1 全链购买 ignoreDamageFighter1-4（各 +10），
+    // damageResistance 0→40；消费点 actions.js:587（伤害计算减伤）。
+    // P-1 主动族（statType 31 忍者小鸡几率）：与 30 同构——全员鸡王只购
+    // ninjaChanceChickenKing（25%，不购 barbarian/rogue 几率以免级联竞争），
+    // 召唤鸡群生成小鸡时掷出"忍者小鸡!"（actions.js:176，消费 stats.ninjaChickenChance）。
+    name: 'skill-ninja-chance-chicken',
+    make: () => withSkillPoints([0, 1, 2, 3].reduce((acc, i) => withReclassedSpell(acc, i, 11, '召唤鸡群'), base), 60),
+    steps: [
+      { turns: 0, purchaseCharacterSkill: { charIndex: [0, 1, 2, 3], skillId: 'ninjaChanceChickenKing' } },
+      { turns: 12000, floatingText: '忍者小鸡!', },
+    ],
+  },
+  {
+    // P-1 主动族（statType 32 盗贼小鸡几率）：与上同构，目标文本"盗贼小鸡!"。
+    // 单独购买 rogueChance（不与 31/30 共投）→ 级联无竞争，盗贼分支 25%/次施法。
+    name: 'skill-rogue-chance-chicken',
+    make: () => withSkillPoints([0, 1, 2, 3].reduce((acc, i) => withReclassedSpell(acc, i, 11, '召唤鸡群'), base), 60),
+    steps: [
+      { turns: 0, purchaseCharacterSkill: { charIndex: [0, 1, 2, 3], skillId: 'rogueChanceChickenKing' } },
+      { turns: 12000, floatingText: '盗贼小鸡!', },
+    ],
+  },
+  {
+    // P-1 被动族（statType 1 伤害抵抗）：战士树 1 全链购买 ignoreDamageFighter1-4（各 +10），
+    // damageResistance 0→40；消费点 actions.js:587（伤害计算减伤）。
+    // U7 长尾（ScrollUpgrade，type 12）：卷轴升级购买只有 quickUpgradeCollection 的
+    // scrollUpgrades 行可达（refresh→canPurchase→purchase，需要解锁卷轴 + 施法者等级门槛 + 金币）。
+    // 购买后 DTO 的 scrollInventory[].upgradeCount 增长，两端各自断言 + 完整差分。
+    name: 'scroll-upgrades-purchased',
+    make: () => {
+      const s = withGold(withScrolls(base, [
+        { scrollId: 'shockScroll', count: 99 },
+        { scrollId: 'spiderWebScroll', count: 99 },
+        { scrollId: 'arrowScroll', count: 99 },
+        { scrollId: 'fireRainScroll', count: 99 },
+        { scrollId: 'chainedLightningScroll', count: 99 },
+        { scrollId: 'fireBallScroll', count: 99 },
+      ]), 100000000);
+      for (const a of s.adventurers) a.characteristicsComponent.characterLevel = 99;
+      return s;
+    },
+    steps: [
+      { turns: 0, purchaseUpgrades: 80, check: scrollUpgradePurchased },
+      { turns: 600 },
+    ],
+  },
+  {
+    // P-1 被动族（statType 16 施法花费缩减）：直读 getSpellSpiritCost 公式输出
+    //（stats.js:52；原版 bu，c2.js:21284-21286）。牧师（6）购买 spellCostPriest2
+    //（前置链含 spellCostPriest1，各 +10）→ reduction 0→20，公式输出 base-floor(20%×base)，
+    // 上限 statValue(maxSpirit)。与战斗决策同源：施法可施性判定使用同一函数。
+    name: 'skill-spellcost-reduction-probe',
+    make: () => withSkillPoints(withReclassedSpell(base, 1, 6, '治疗'), 60),
+    steps: [
+      { turns: 0, spellCostProbe: { charIndex: 1, expectReduction: 0 } },
+      { turns: 0, purchaseCharacterSkill: { charIndex: 1, skillId: 'spellCostPriest2' } },
+      { turns: 0, spellCostProbe: { charIndex: 1, expectReduction: 20 } },
+      { turns: 600 },
+    ],
+  },
+  {
+    // P-5 边界值变异矩阵（U133 第二批）：越界/极值赋值——负回合数、负卷轴库存、
+    // 超大胜利数、负冒险点。两端同接受（继续推进 DTO 全等）或同拒绝。
+    name: 'save-boundary-values-matrix',
+    make: () => base,
+    steps: [
+      { loadSave: { save: withFieldValues(base, [['turnNumber', -5]]), turns: 200, expectReject: false }, check: robustnessLoadedOk },
+      { loadSave: { save: withFieldValues(base, [['scrollInventory.0.count', -1]]), turns: 200, expectReject: false }, check: robustnessLoadedOk },
+      { loadSave: { save: withFieldValues(base, [['victoryCount', 1000000]]), turns: 200, expectReject: false }, check: robustnessLoadedOk },
+      { loadSave: { save: withFieldValues(base, [['pointManagerState.spentAdventurePoints', -50]]), turns: 200, expectReject: false }, check: robustnessLoadedOk },
+      { loadSave: { save: withFieldValues(base, [['dungeonManagerState.dungeonStates.0.levelCount', 999]]), turns: 200, expectReject: false }, check: robustnessLoadedOk },
+    ],
+  },
+  {
+    // P-1 被动族（statType 1 伤害抵抗）：战士树 1 全链购买 ignoreDamageFighter1-4（各 +10），
+    // damageResistance 0→40；消费点 actions.js:587（伤害计算减伤）。
+    // P-7 游戏内状态对照（农场）：购买农场后进入农场主题地牢（G2_Town01 贴纸、农场装饰、
+    // 成熟期作物状态），与自然地牢渲染状态显著不同。购买步骤断言农场真实购得（farms 增长），
+    // 随后 1300 帧逐像素指纹两端一致。追加在矩阵末尾，不扰动既有场景。
+    name: 'rendered-scene-farm',
+    make: () => withGold(withFarmableDungeon(base), 1000000),
+    steps: [
+      { turns: 0, purchaseDungeonFarm: true, check: farmWasPurchased },
+      { turns: 600 },
+      { frames: 1300 },
+    ],
+  },
+  {
+    name: 'skill-ignore-damage-resistance',
+    make: () => withSkillPoints(withCharacterClass(base, 0, 0), 60),
+    steps: [
+      { turns: 0, skillFieldProbe: { charIndex: 0, expect: { damageResistance: 0 } } },
+      { turns: 0, purchaseCharacterSkill: { charIndex: 0, skillId: 'ignoreDamageFighter4' } },
+      { turns: 0, skillFieldProbe: { charIndex: 0, expect: { damageResistance: 40 } } },
+      { turns: 1200 },
+    ],
+  },
+  {
+    // P-1 被动族（statType 9 精神回复 / 16 施法花费缩减）：牧师（6）。
+    // spiritRegenerationPriest1 的前置链（tree4 idx0-5）同时包含 spellCostPriest1/2（各 +10）→
+    // spellCostReduction 0→20（stats.js:52 施法花费公式输入）；spiritRegenBonus 0→1（tick.js:47）。
+    name: 'skill-priest-spellcost-spiritregen',
+    make: () => withSkillPoints(withCharacterClass(base, 1, 6), 60),
+    steps: [
+      { turns: 0, skillFieldProbe: { charIndex: 1, expect: { spellCostReduction: 0, spiritRegenBonus: 0 } } },
+      { turns: 0, purchaseCharacterSkill: { charIndex: 1, skillId: 'spellCostPriest2' } },
+      { turns: 0, purchaseCharacterSkill: { charIndex: 1, skillId: 'spiritRegenerationPriest1' } },
+      { turns: 0, skillFieldProbe: { charIndex: 1, expect: { spellCostReduction: 20, spiritRegenBonus: 1 } } },
+      { turns: 1200 },
+    ],
+  },
+  {
+    // P-1 被动族（statType 20 睡眠/蛛网目标 + 21 连锁闪电弧 + 22 闪电雨范围）：电法师（3）。
+    // improvedSpiderWeb3 链 → controlTargetBonus 0→5（character.js:900 睡眠目标数公式）；
+    // improvedChainLightning3 链 → chainArcBonus 0→6（character.js:513 连锁闪电弧数）；
+    // improvedLightningRain2 链 → rainAreaBonus 0→2（character.js:586 闪电雨范围）。
+    name: 'skill-electromancer-control-chain-rain',
+    make: () => withSkillPoints(withCharacterClass(base, 2, 3), 60),
+    steps: [
+      { turns: 0, skillFieldProbe: { charIndex: 2, expect: { controlTargetBonus: 0, chainArcBonus: 0, rainAreaBonus: 0 } } },
+      { turns: 0, purchaseCharacterSkill: { charIndex: 2, skillId: 'improvedSpiderWebMageElectric3' } },
+      { turns: 0, purchaseCharacterSkill: { charIndex: 2, skillId: 'improvedChainLightningMageElectric3' } },
+      { turns: 0, purchaseCharacterSkill: { charIndex: 2, skillId: 'improvedLightningRainMageElectric2' } },
+      { turns: 0, skillFieldProbe: { charIndex: 2, expect: { controlTargetBonus: 5, chainArcBonus: 6, rainAreaBonus: 2 } } },
+      { turns: 1200 },
+    ],
+  },
+  {
+    // P-1 被动族（statType 22 火雨范围 / 25 火球半径 / 27 转变目标）：火法师（4）。
+    // improvedFireRain2 链 → rainAreaBonus 0→2（character.js:586）；improvedFireball2 链 →
+    // areaRadiusBonus 0→2（character.js:677、tick.js:300，+1/级）；improvedTurnMonsters3 链 →
+    // transformTargetBonus 0→5（character.js:902 转变目标数）。
+    name: 'skill-pyromancer-area-transform-rain',
+    make: () => withSkillPoints(withCharacterClass(base, 3, 4), 60),
+    steps: [
+      { turns: 0, skillFieldProbe: { charIndex: 3, expect: { rainAreaBonus: 0, areaRadiusBonus: 0, transformTargetBonus: 0 } } },
+      { turns: 0, purchaseCharacterSkill: { charIndex: 3, skillId: 'improvedFireRainMageFire2' } },
+      { turns: 0, purchaseCharacterSkill: { charIndex: 3, skillId: 'improvedFireballMageFire2' } },
+      { turns: 0, purchaseCharacterSkill: { charIndex: 3, skillId: 'improvedTurnMonsters3' } },
+      { turns: 0, skillFieldProbe: { charIndex: 3, expect: { rainAreaBonus: 2, areaRadiusBonus: 2, transformTargetBonus: 5 } } },
+      { turns: 1200 },
+    ],
+  },
+  {
+    // P-1 被动族（statType 28 迅捷打击链长 / 29 绿死弹射次数）：
+    // member 0 改忍者（8）：swiftStrikeUpgradeNinja2 前置链 → swiftStrikeTargetBonus 0→2
+    //（character.js:857 链长公式）；member 1 改死灵（9）：greenDeathRicochetCountNecromancer3
+    // 前置链 → ricochetCountBonus 0→3（character.js:878 弹射次数公式）。
+    name: 'skill-swiftstrike-ricochet-field-probes',
+    // 如实边界：改职成员无职业匹配武器，长窗推进会在战斗中触发 R4 已知的空投射武器
+    // 缺陷路径（两端同点同错，evaluate 直接抛错）——故本场景只做 turns:0 的
+    // 「购买 → 字段直读探针」，不推进战斗；写入侧证据成立，消费点为静态引用
+    //（character.js:857/878）。
+    make: () => withSkillPoints(withCharacterClass(withCharacterClass(base, 0, 8), 1, 9), 60),
+    steps: [
+      { turns: 0, skillFieldProbe: { charIndex: 0, expect: { swiftStrikeTargetBonus: 0 } } },
+      { turns: 0, skillFieldProbe: { charIndex: 1, expect: { ricochetCountBonus: 0 } } },
+      { turns: 0, purchaseCharacterSkill: { charIndex: 0, skillId: 'swiftStrikeUpgradeNinja2' } },
+      { turns: 0, purchaseCharacterSkill: { charIndex: 1, skillId: 'greenDeathRicochetCountNecromancer3' } },
+      { turns: 0, skillFieldProbe: { charIndex: 0, expect: { swiftStrikeTargetBonus: 2 } } },
+      { turns: 0, skillFieldProbe: { charIndex: 1, expect: { ricochetCountBonus: 3 } } },
+    ],
+  },
+  {
+    name: 'skill-larger-flock-summon-limit',
+    make: () => withSkillPoints(withReclassedSpell(base, 3, 11, '召唤鸡群'), 12),
+    steps: [
+      { turns: 0, summonLimitProbe: { charIndex: 3, expectLimit: 1 } },
+      { turns: 0, purchaseCharacterSkill: { charIndex: 3, skillId: 'largerFlockChickenKing1' } },
+      { turns: 0, summonLimitProbe: { charIndex: 3, expectLimit: 2 } },
+      { turns: 1200 },
+    ],
+  },
+  {
+    name: 'rendered-scene-spellstorm',
+    make: () => withReclassedSpell(base, 3, 3, '闪电雨'),
+    steps: [
+      { turns: 3000, check: snap => ({ spellCast: snap.statistics.spellCastCount > base.statistics.spellCastCount }) },
+      { frames: 1300 },
+    ],
+  },
+  {
+    // P-5 存档恢复鲁棒性矩阵（U133）：以真实原版 fixture 为基底做字段删除变异，
+    // 两端各自经真实恢复路径载入，断言「同接受或同拒绝」+ 接受后继续推进完整 DTO 差分。
+    // 取证（game-save.js 恢复路径）：turnNumber 等 `?: 0` 默认；pointManagerState/gameOptions/
+    // scrollInventory/potionInventory 整块 `if` 守卫；world 无守卫（缺失必抛，两端同拒）。
+    // 这是健壮性测试，不冒充第二份真实历史存档；P-5 多版本结论维持 PARTIAL。
+    name: 'save-robustness-field-matrix',
+    make: () => base,
+    steps: [
+      { loadSave: { save: withoutFields(base, ['turnNumber']), turns: 200, expectReject: false }, check: robustnessLoadedOk },
+      { loadSave: { save: withoutFields(base, ['pointManagerState']), turns: 200, expectReject: false }, check: robustnessLoadedOk },
+      { loadSave: { save: withoutFields(base, ['gameOptions']), turns: 200, expectReject: false }, check: robustnessLoadedOk },
+      { loadSave: { save: withoutFields(base, ['dungeonManagerState.dungeonStates.3.clearedTurn']), turns: 200, expectReject: false }, check: robustnessLoadedOk },
+      { loadSave: { save: withoutFields(base, ['dungeonManagerState.farmedKills']), turns: 200, expectReject: false }, check: robustnessLoadedOk },
+      { loadSave: { save: withoutFields(base, ['world']), turns: 0, expectReject: true }, check: robustnessRejected },
+    ],
+  },
+  {
+    // U7 长尾收口（U134）：EquipItemUpgrade（type 3「装备背包散件」）端到端差分——自然拾取先行。
+    // 取证（upgrades.js:490-495 ↔ c2.js:16586）：purchase 经 item.inventory（原版 nj，= owner 角色）
+    // 调 Character.equipItem（原版 Qk）；背链由 generateItem（items.js:203 ↔ c2.js `b.nj = c`）与
+    // 拾取路径 addInventoryItem（character.js:1033 ↔ c2.js:22215）建立；恢复路径同样建立
+    // （game-save.js:489 ↔ c2.js:29097）——U133"恢复存档惰性/未建背链"假说已被取证否定。
+    // 真实门控是 canPurchase 的候选列表长度条件：game.inventories.list（原版 Game.Di.Fj）
+    // 由 tick.js:490-508 在 inventory.dirty 时重建（仅含"优于已装备"的散件），fixture 背包塞满时
+    // 长度 ≈60，"≤5"永不满足 → type 3 行永不可购（这才是 U133 12 次购买零装备变化的根因）。
+    // 场景不写装备槽、不伪造背链：先清空背包（withEmptyBackpacks，两端同变异），再让两端各自用
+    // 己方 generateItem 造一件远古物品（职业/槽位与拾取者同源）放在队员脚下，AI 认领→拾取
+    // 建立 owner 背链并置 dirty → 候选列表恰含该散件（长度 1 ≤ 5）→ 驱动 type 3 行真实购买。
+    // 反向验证：把重构侧 EquipItemUpgrade.prototype.purchase 改为空操作 → 装备槽摘要不再变化，场景必须变红。
+    name: 'equip-item-upgrade-pickup-first',
+    make: () => withEmptyBackpacks(base),
+    steps: [
+      { turns: 0, seedAncientItemDrop: { maxTurns: 4000, rarity: 4 }, check: ancientItemWasFound },
+      { turns: 2, purchaseEquipItemUpgrades: 5, check: equipmentActuallyChanged },
+      { turns: 300 },
+    ],
+  },
+  {
+    // U134 第 4 轮（P-7 视口扩展）：900×1600 竖长视口下 1300 帧真实帧循环，
+    // 逐像素 FNV 指纹 + 落盘存档断言同 rendered-scene 系（断言机制沿用既有 machinery，
+    // 其反向验证已在引入时做过——本场景为纯配置扩展，不新增断言逻辑）。
+    // REMAINING-WORK §3.1 写明的"可行的下一步"；Canvas 行按 R7 维持 PARTIAL。
+    name: 'rendered-scene-tall',
+    make: () => base,
+    viewport: { width: 900, height: 1600 },
+    steps: [
+      { frames: 1300 },
+    ],
+  },
 ];
 
 // SCENARIO_FILTER=a,b 只跑指定场景，便于新场景快速迭代；不设置时跑全部。
@@ -846,7 +1322,7 @@ try {
         // effectType 表示这一步改用"逐帧扫描活怪物效果队列"的推进方式，并直接对账施加次数。
         // purchaseUpgrades 表示这一步先推进再驱动升级购买（U7：只有视图层会触发的路径）。
         const step = Array.isArray(rawStep) ? { turns: rawStep[0], check: rawStep[1] } : rawStep;
-        const { turns, check, effectType, purchaseUpgrades, purchasePointUpgrades, claimAchievement, equipBestItems, castScrollDuringCombat, scrollId, purchaseDungeonFarm, purchaseDungeonRowFarm, harvestFarmKills, lootTreasureDuringExplore, treasureKind, activatePotions, floatingText, damageNumbers, healNumbers, spellEffects, allyEffectType, trackBoss, frames, frameGap, victoryPanel, equipFromInventory } = step;
+        const { turns, check, effectType, purchaseUpgrades, purchasePointUpgrades, claimAchievement, equipBestItems, purchaseEquipItemUpgrades, castScrollDuringCombat, scrollId, purchaseDungeonFarm, purchaseDungeonRowFarm, harvestFarmKills, lootTreasureDuringExplore, treasureKind, activatePotions, floatingText, damageNumbers, healNumbers, spellEffects, allyEffectType, trackBoss, frames, frameGap, victoryPanel, equipFromInventory, seedAncientItemDrop, selectedTreasure, createPartyFromBlank, purchaseCharacterSkill, readAttackCooldownProbe, loadSave, statValueProbe, summonLimitProbe, readRegenProbe, buffPotencyProbe, skillFieldProbe, spellCostProbe, boundaryValues } = step;
         const results = await Promise.all(pages.map(async p => {
           await p.page.evaluate(ms => window.harness.setTime(ms), HARNESS_FIXED_NOW);
           // 重置后无队伍：走真实帧循环（守卫路径），而非裸推进
@@ -859,6 +1335,8 @@ try {
           if (purchasePointUpgrades !== undefined) return p.page.evaluate(a => window.harness.purchasePointUpgrades(a), { turns, limit: purchasePointUpgrades });
           if (claimAchievement) return p.page.evaluate(a => window.harness.claimAchievement(a), { turns, limit: claimAchievement === true ? 1 : claimAchievement });
           if (equipBestItems) return p.page.evaluate(a => window.harness.equipBestItems(a), { turns });
+          // U7：定向驱动 type 3「装备背包散件」行（真实 refresh→canPurchaseNow→purchase 链）
+          if (purchaseEquipItemUpgrades !== undefined) return p.page.evaluate(a => window.harness.purchaseEquipItemUpgrades(a), { turns, limit: purchaseEquipItemUpgrades });
           if (castScrollDuringCombat !== undefined) return p.page.evaluate(a => window.harness.castScrollDuringCombat(a), { maxTurns: castScrollDuringCombat, scrollId });
           if (purchaseDungeonFarm) return p.page.evaluate(a => window.harness.purchaseDungeonFarm(a), { turns });
           if (purchaseDungeonRowFarm) return p.page.evaluate(a => window.harness.purchaseDungeonRowFarm(a), { turns });
@@ -874,6 +1352,52 @@ try {
           if (trackBoss !== undefined) return p.page.evaluate(a => window.harness.trackBossEncounter(a), { turns });
           if (victoryPanel !== undefined) return p.page.evaluate(n => { window.harness.idle(n); return window.harness.observeVictoryPanel(); }, victoryPanel);
           if (equipFromInventory !== undefined) return p.page.evaluate(a => window.harness.equipFromInventory(a), equipFromInventory);
+          // P-3：注入远古掉落物后逐帧推进直到 AI 真的拾取（两端拾取发生在同一回合）
+          if (seedAncientItemDrop !== undefined) return p.page.evaluate(a => window.harness.seedAncientItemDrop(a), seedAncientItemDrop);
+          // P-2：推进并统计"被法术选中的财宝目标"（selected 不入存档，只能运行时直接观察）
+          if (selectedTreasure !== undefined) return p.page.evaluate(a => window.harness.countSelectedTreasure(a), { turns: selectedTreasure });
+          // 差分原版正常开局路径：reset 后镜像字段写入驱动各自原生开局闭包建队
+          if (createPartyFromBlank !== undefined) return p.page.evaluate(a => window.harness.createPartyFromBlank(a), createPartyFromBlank);
+          // P-1：按定义 id 定向购买一个角色技能（真实技能树购买路径）
+          if (purchaseCharacterSkill !== undefined) return p.page.evaluate(a => window.harness.purchaseCharacterSkill(a), purchaseCharacterSkill);
+          // P-1 被动族：只读观察有效攻击冷却（getAttackCooldown 输出）
+          if (readAttackCooldownProbe !== undefined) return p.page.evaluate(a => window.harness.readAttackCooldown(a), readAttackCooldownProbe);
+          // P-1 增益族：只读直读组合属性 statValue（与全部战斗公式同源）
+          if (statValueProbe !== undefined) return p.page.evaluate(a => window.harness.readStatValue(a), statValueProbe);
+          // P-1 召唤上限：只读直读 stats.maxSummonedMinions（召唤行为门控值）
+          if (summonLimitProbe !== undefined) return p.page.evaluate(a => window.harness.readSummonLimit(a), summonLimitProbe);
+          // P-1 生命回复：只读直读 stats.healthRegenBonus（tick.js:42 回复公式输入）
+          if (readRegenProbe !== undefined) return p.page.evaluate(a => window.harness.readRegenBonus(a), readRegenProbe);
+          // P-1 法术强度：只读直读五个增益强度字段（治疗/增益法术量公式的输入）
+          if (buffPotencyProbe !== undefined) return p.page.evaluate(a => window.harness.readBuffPotencies(a), buffPotencyProbe);
+          // P-1 剩余被动族：一次直读全部剩余技能字段
+          if (skillFieldProbe !== undefined) return p.page.evaluate(a => window.harness.readSkillFields(a), skillFieldProbe);
+          // P-1 施法花费：直读 getSpellSpiritCost 公式输出（base/reduction/discounted/maxSpirit 上限）
+          if (spellCostProbe !== undefined) return p.page.evaluate(a => window.harness.readSpellCostProbe(a), spellCostProbe);
+          // P-5 边界值矩阵：载入越界值变异存档（两端同接受或同拒绝）
+          if (boundaryValues !== undefined) {
+            const text = encodeSave(withFieldValues(base, boundaryValues.entries));
+            return p.page.evaluate(async a => {
+              try {
+                window.harness.load(a.text);
+              } catch (error) {
+                return { loadFailed: true, snapshot: null };
+              }
+              return { loadFailed: false, snapshot: await window.harness.advance(a.turns) };
+            }, { text, turns: boundaryValues.turns });
+          }
+          // P-5 健壮性矩阵：载入变异存档（两端同接受或同拒绝），接受则推进并照常完整差分
+          if (loadSave !== undefined) {
+            const text = encodeSave(loadSave.save);
+            return p.page.evaluate(async a => {
+              try {
+                window.harness.load(a.text);
+              } catch (error) {
+                return { loadFailed: true, snapshot: null };
+              }
+              return { loadFailed: false, snapshot: await window.harness.advance(a.turns) };
+            }, { text, turns: loadSave.turns });
+          }
           if (frameGap !== undefined) return p.page.evaluate(n => window.harness.advanceFrameGap(n), frameGap);
           // frames：走真实帧循环（loop.tick 内含 view.render 的 try/catch），随后读画布不透明像素
           if (frames !== undefined) return p.page.evaluate(n => {
@@ -943,6 +1467,14 @@ try {
             assert.ok(results[i].equipped > 0, `${label} 端必须真的执行自动装备升级`);
           }
           assert.equal(results[1].equipped, results[0].equipped, '两端自动装备升级次数不同');
+        }
+        if (purchaseEquipItemUpgrades !== undefined) {
+          for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {
+            assert.ok(results[i].purchased > 0, `${label} 端必须真的完成 type 3（装备背包散件）购买`);
+            assert.notDeepEqual(results[i].equipmentAfter, results[i].equipmentBefore, `${label} 端 type 3 购买后装备槽摘要必须变化（候选列表为空或 purchase 未生效时摘要不变）`);
+          }
+          assert.equal(results[1].purchased, results[0].purchased, '两端 type 3 装备散件购买次数不同');
+          console.log(`  · type 3 装备散件购买 两端各 ${results[0].purchased} 次，装备槽摘要均真实变化（${JSON.stringify(results[0].equipmentBefore)} → ${JSON.stringify(results[0].equipmentAfter)}）`);
         }
         if (castScrollDuringCombat !== undefined) {
           for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {
@@ -1090,6 +1622,101 @@ try {
           }
           assert.equal(results[1].selected, results[0].selected, '两端选择宝箱次数不同');
         }
+        if (seedAncientItemDrop !== undefined) {
+          for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {
+            assert.ok(results[i].seeded, `${label} 端必须成功生成 rarity=4 掉落物`);
+            assert.ok(results[i].collected, `${label} 端必须在 ${seedAncientItemDrop.maxTurns} 回合内被 AI 真的拾取`);
+          }
+          assert.equal(results[1].turns, results[0].turns, `两端拾取注入掉落物所耗回合数不同（原版 ${results[0].turns} / 重构版 ${results[1].turns}）`);
+          assert.equal(results[1].waited, results[0].waited, `两端等待进房的回合数不同（原版 ${results[0].waited} / 重构版 ${results[1].waited}）`);
+          console.log(`  · 注入的远古掉落物两端均被拾取（等进房 ${results[0].waited} 回合 + 拾取 ${results[0].turns} 回合，物品「${results[0].itemName}」）`);
+        }
+        if (selectedTreasure !== undefined) {
+          for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {
+            assert.ok(results[i].selections > 0, `${label} 端必须观察到财宝目标被发现财宝箱法术选中（selected false→true 跳变 ${results[i].selections} 次）`);
+          }
+          assert.equal(results[1].selections, results[0].selections, `两端财宝选中跳变次数不同（原版 ${results[0].selections} / 重构版 ${results[1].selections}）`);
+          console.log(`  · 被法术选中的财宝目标跳变数两端一致 = ${results[0].selections}`);
+        }
+        if (createPartyFromBlank !== undefined) {
+          for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {
+            assert.ok(results[i].created, `${label} 端经原生开局闭包建队必须成功（partyCreated=true）`);
+          }
+          assert.equal(results[1].waited, results[0].waited, `两端等待组队面板重挂载的帧数不同（原版 ${results[0].waited} / 重构版 ${results[1].waited}）`);
+          console.log(`  · 双端原生开局路径建队成功（等面板重挂载 ${results[0].waited} 帧 + 推进 ${createPartyFromBlank.turns} 回合，随后完整 DTO 差分）`);
+        }
+        if (purchaseCharacterSkill !== undefined) {
+          for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {
+            assert.ok(results[i].purchased, `${label} 端必须真的购买技能 ${purchaseCharacterSkill.skillId}（结果 ${results[i].purchased ? 'ok' : results[i].reason}）`);
+          }
+          console.log(`  · 定向购买技能 ${purchaseCharacterSkill.skillId} 两端成功（真实技能树购买路径）`);
+        }
+        if (readAttackCooldownProbe !== undefined) {
+          for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {
+            if (readAttackCooldownProbe.expectReduction !== undefined) assert.equal(results[i].reduction, readAttackCooldownProbe.expectReduction, `${label} attackCooldownReduction 应为 ${readAttackCooldownProbe.expectReduction}（实际 ${results[i].reduction}）`);
+            if (readAttackCooldownProbe.expectCooldown !== undefined) assert.equal(results[i].cooldown, readAttackCooldownProbe.expectCooldown, `${label} 有效攻击冷却应为 ${readAttackCooldownProbe.expectCooldown}（实际 ${results[i].cooldown}）`);
+          }
+          console.log(`  · 冷却缩减观察两端一致：reduction=${results[0].reduction} 有效冷却=${results[0].cooldown}（getAttackCooldown，canAttack 同源）`);
+        }
+        if (statValueProbe !== undefined) {
+          for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {
+            if (statValueProbe.expectSkillBonus !== undefined) assert.equal(results[i].skillBonusPercent, statValueProbe.expectSkillBonus, `${label} ${statValueProbe.component} skillBonusPercent 应为 ${statValueProbe.expectSkillBonus}（实际 ${results[i].skillBonusPercent}）`);
+            if (statValueProbe.expectValue !== undefined) assert.equal(results[i].value, statValueProbe.expectValue, `${label} ${statValueProbe.component} 组合值应为 ${statValueProbe.expectValue}（实际 ${results[i].value}）`);
+          }
+          console.log(`  · ${statValueProbe.component} 组合值两端一致 = ${results[0].value}（skillBonus ${results[0].skillBonusPercent}%，statValue 公式）`);
+        }
+        if (summonLimitProbe !== undefined) {
+          for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {
+            if (summonLimitProbe.expectLimit !== undefined) assert.equal(results[i].limit, summonLimitProbe.expectLimit, `${label} maxSummonedMinions 应为 ${summonLimitProbe.expectLimit}（实际 ${results[i].limit}）`);
+          }
+          console.log(`  · 召唤上限两端一致 = ${results[0].limit}（behaviors.js 召唤门控同源）`);
+        }
+        if (readRegenProbe !== undefined) {
+          for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {
+            if (readRegenProbe.expectBonus !== undefined) assert.equal(results[i].bonus, readRegenProbe.expectBonus, `${label} healthRegenBonus 应为 ${readRegenProbe.expectBonus}（实际 ${results[i].bonus}）`);
+          }
+          console.log(`  · 生命回复加成两端一致 = ${results[0].bonus}（tick.js:42 回复公式同源）`);
+        }
+        if (skillFieldProbe !== undefined) {
+          for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {
+            for (const [key, expectV] of Object.entries(skillFieldProbe.expect ?? {})) {
+              assert.equal(results[i].fields[key], expectV, `${label} ${key} 应为 ${expectV}（实际 ${results[i].fields[key]}）`);
+            }
+          }
+          console.log(`  · 技能字段探针两端一致 = ${JSON.stringify(results[0].fields)}`);
+        }
+        if (boundaryValues !== undefined) {
+          for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {
+            assert.equal(results[i].loadFailed, boundaryValues.expectReject, `${label} 端载入越界变异存档的接受/拒绝与预期不符（loadFailed=${results[i].loadFailed}）`);
+          }
+          console.log(`  · 边界值变异两端同${boundaryValues.expectReject ? '拒' : '受'}（${boundaryValues.turns} 回合推进后完整 DTO 差分照常）`);
+        }
+        if (spellCostProbe !== undefined) {
+          const er = spellCostProbe.expectReduction;
+          for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {
+            if (er !== undefined) assert.equal(results[i].reduction, er, `${label} spellCostReduction 应为 ${er}（实际 ${results[i].reduction}）`);
+            const expected = Math.min(results[i].base - Math.floor(er / 100 * results[i].base), results[i].maxSpiritValue);
+            assert.equal(results[i].discounted, expected, `${label} 施法花费应为 ${expected}（实际 ${results[i].discounted}，base=${results[i].base}）`);
+          }
+          console.log(`  · 施法花费公式探针两端一致 reduction=${results[0].reduction} base=${results[0].base} discounted=${results[0].discounted}（getSpellSpiritCost/bu 同源）`);
+        }
+        if (buffPotencyProbe !== undefined) {
+          const expect = buffPotencyProbe.expect || {};
+          for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {
+            for (const key of ['heal', 'damage', 'armor', 'attackRating', 'defenceRating']) {
+              if (expect[key] !== undefined) assert.equal(results[i][key], expect[key], `${label} ${key}Potency 应为 ${expect[key]}（实际 ${results[i][key]}）`);
+            }
+          }
+
+          const p0 = results[0];
+          console.log(`  · 法术强度五字段两端一致 heal=${p0.heal} damage=${p0.damage} armor=${p0.armor} attackRating=${p0.attackRating} defenceRating=${p0.defenceRating}（actions.js:94,131-140 公式同源）`);
+        }
+        if (loadSave !== undefined) {
+          for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {
+            assert.equal(results[i].loadFailed, loadSave.expectReject, `${label} 端载入变异存档的接受/拒绝与预期不符（loadFailed=${results[i].loadFailed}）`);
+          }
+          console.log(`  · 变异存档两端同${loadSave.expectReject ? '拒' : '受'}（${loadSave.turns} 回合推进后完整 DTO 差分照常）`);
+        }
         // 场景有效性断言：对每一端独立验证"场景确实产生了预期效果"
         for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {
           if (check) {
@@ -1145,10 +1772,14 @@ try {
             if (verdict.potionUsed !== undefined) assert.equal(verdict.potionUsed, true, `${label} 必须真的激活至少一瓶药水（potionsUsed 增长）`);
             if (verdict.note && i === 0) console.log(`  · ${verdict.note}`);
             if (verdict.victory !== undefined) assert.equal(verdict.victory, true, `${label} 必须真的走完征服尾部并触发胜利`);
+            if (verdict.ancientFound !== undefined) assert.equal(verdict.ancientFound, true, `${label} 远古物品统计（ancientItemsFound）必须经真实拾取路径增长`);
+            if (verdict.scrollUpgraded !== undefined) assert.equal(verdict.scrollUpgraded, true, `${label} 卷轴升级必须真实购买（upgradeCount 增长）`);
+            if (verdict.partyCreated !== undefined) assert.equal(verdict.partyCreated, true, `${label} 建队后 partyCreated 必须为 true`);
+            if (verdict.adventurerCount !== undefined) assert.equal(verdict.adventurerCount, 4, `${label} 建队后必须有 4 名冒险者（实际 ${verdict.adventurerCount}）`);
             // 防呆（本项目真实踩过）：check 返回的键若没在上面被断言，检查会静默变成**空断言**——
             // 例如新场景写了 `itemsFound: ...` 却忘了补断言行，测试照样全绿。这里显式列出全部已处理键，
             // 出现未知键即失败，逼迫补断言；键清单由本文件的断言行机械抽取，勿手改。
-            const handledVerdictKeys = new Set(["achievementAtThreshold","achievementBelowThreshold","achievementClaimed","achievementThresholdReached","appliedDelta","attackPlanned","backgroundProgressDisabled","bookcaseLooted","chainLearned","changed","characterLeveled","classKept","collectedDropTypes","criticalSkillsActive","distinctPointUpgradesBought","enough","equipmentChanged","farmCleared","farmCycleHarvestCount","farmHarvested","farmPurchased","farmedKillsCleared","itemEquipEvents","itemEquippedGrew","itemsFound","killRewardGrew","maxLevelUnlocked","minLevelRetired","monsterUnlocked","multiLearned","noLootSpell","note","pointUpgradePurchased","pointsSpent","potionUsed","retiredLevelExcluded","scrollCast","settingsPurchased","skillLearned","skillsLearned","spellCast","spellLearned","spellsLearned","stunned","summoned","swapDone","treasureLooted","unchanged","upgraded","victory","weaponRackLooted"]);
+            const handledVerdictKeys = new Set(["achievementAtThreshold","achievementBelowThreshold","achievementClaimed","achievementThresholdReached","adventurerCount","ancientFound","adventurersIntact","loadRejected","scrollUpgraded","appliedDelta","attackPlanned","backgroundProgressDisabled","bookcaseLooted","chainLearned","chanceSkillOwned","changed","characterLeveled","classKept","collectedDropTypes","criticalSkillsActive","distinctPointUpgradesBought","enough","equipmentChanged","farmCleared","farmCycleHarvestCount","farmHarvested","farmPurchased","farmedKillsCleared","itemEquipEvents","itemEquippedGrew","itemsFound","killRewardGrew","maxLevelUnlocked","minLevelRetired","monsterUnlocked","multiLearned","noLootSpell","note","partyCreated","pointUpgradePurchased","pointsSpent","potionUsed","retiredLevelExcluded","scrollCast","settingsPurchased","skillLearned","skillsLearned","spellCast","spellLearned","spellsLearned","stunned","summoned","swapDone","treasureLooted","unchanged","upgraded","victory","weaponRackLooted"]);
             const unknownVerdictKeys = Object.keys(verdict).filter(k => !handledVerdictKeys.has(k));
             assert.deepEqual(unknownVerdictKeys, [], `${label} check 返回了未被断言的键：${unknownVerdictKeys.join(", ")}（请在 runner 里补断言，否则该检查是空的）`);
           }

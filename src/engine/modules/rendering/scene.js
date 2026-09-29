@@ -18,208 +18,200 @@ export function RenderCommand() {
   this.isSet = false;
   this.alpha = this.renderSize = this.screenY = this.screenX = 0;
 }
-export function resetRenderCommand(a) {
-  a.isSet = false;
-  a.sprite = null;
-  a.animation = null;
-  a.sortKey = 1E5;
-  a.raiseOffset = 0;
+export function resetRenderCommand(command) {
+  command.isSet = false;
+  command.sprite = null;
+  command.animation = null;
+  command.sortKey = 1E5;
+  command.raiseOffset = 0;
 }
-export function setSpriteRenderCommand(a, b, c, d, f, g, h) {
-  a.sprite = b;
-  a.sortKey = c;
-  a.screenX = d;
-  a.screenY = f;
-  a.renderSize = g;
-  a.alpha = h;
-  a.isSet = true;
+export function setSpriteRenderCommand(command, sprite, sortKey, screenX, screenY, renderSize, alpha) {
+  command.sprite = sprite;
+  command.sortKey = sortKey;
+  command.screenX = screenX;
+  command.screenY = screenY;
+  command.renderSize = renderSize;
+  command.alpha = alpha;
+  command.isSet = true;
 }
-export function setAnimationRenderCommand(a, b, c, d, f, g, h, l) {
-  a.animation = b;
-  a.frameIndex = c;
-  a.sortKey = d;
-  a.screenX = f;
-  a.screenY = g;
-  a.renderSize = h;
-  a.alpha = l;
-  a.isSet = true;
+export function setAnimationRenderCommand(command, animation, frameIndex, sortKey, screenX, screenY, renderSize, alpha) {
+  command.animation = animation;
+  command.frameIndex = frameIndex;
+  command.sortKey = sortKey;
+  command.screenX = screenX;
+  command.screenY = screenY;
+  command.renderSize = renderSize;
+  command.alpha = alpha;
+  command.isSet = true;
 }
 export function DepthSortedRenderer() {
-  this.compareRenderSortKey = function (a, b) {
-    return a.getRenderSortKey() - b.getRenderSortKey();
+  this.compareRenderSortKey = function (left, right) {
+    return left.getRenderSortKey() - right.getRenderSortKey();
   };
   this.scratchVector = new Vector2();
   this.renderCommands = [];
   this.commandIndex = 0;
   this.context = null;
 }
-export function acquireRenderCommand(a) {
-  var b;
-  if (a.commandIndex >= a.renderCommands.length) {
-    b = new RenderCommand();
-    a.renderCommands.push(b);
+export function acquireRenderCommand(renderer) {
+  var command;
+  if (renderer.commandIndex >= renderer.renderCommands.length) {
+    command = new RenderCommand();
+    renderer.renderCommands.push(command);
   } else {
-    b = a.renderCommands[a.commandIndex];
+    command = renderer.renderCommands[renderer.commandIndex];
   }
-  a.commandIndex++;
-  return b;
+  renderer.commandIndex++;
+  return command;
 }
 export function ImmediateRenderer() {
   this.context = null;
   this.command = new RenderCommand();
 }
-export function acquireImmediateCommand(a) {
-  resetRenderCommand(a.command);
-  return a.command;
+export function acquireImmediateCommand(renderer) {
+  resetRenderCommand(renderer.command);
+  return renderer.command;
 }
-export function SceneRenderer(a) {
-  this.context = a;
+export function SceneRenderer(context) {
+  this.context = context;
   this.spriteRenderer = null;
   this.depthSortedRenderer = new DepthSortedRenderer();
   this.immediateRenderer = new ImmediateRenderer();
 }
-export function drawWorldTileRow(a, b, c, d) {
-  for (; c < d; c++) {
-    var f = a,
-      g = game.world.getTileAtPixel(c, b);
-    if (g) {
-      var h;
-      h = game.camera;
-      h = game.viewportHalfWidth + (c - h.tileColumn - (b - h.tileRow)) * game.tileSize - h.viewportOffsetX;
-      var l;
-      l = game.camera;
-      l = game.viewportHalfHeight + (c - l.tileColumn + (b - l.tileRow)) * game.halfTileSize - l.viewportOffsetY;
-      f.drawSprite(g.backgroundSprite, h, l);
-      var n = g.decorationSprite;
-      if (n) {
-        f.spriteRenderer.drawSpriteDepth(n, g.getPixelX(), g.getPixelY(), h, l, n.spriteSheet.spriteSize, 0);
+export function drawWorldTileRow(renderer, tileRow, startColumn, endColumn) {
+  for (; startColumn < endColumn; startColumn++) {
+    var tile = game.world.getTileAtPixel(startColumn, tileRow);
+    if (tile) {
+      var camera = game.camera;
+      var screenX = game.viewportHalfWidth + (startColumn - camera.tileColumn - (tileRow - camera.tileRow)) * game.tileSize - camera.viewportOffsetX;
+      var screenY = game.viewportHalfHeight + (startColumn - camera.tileColumn + (tileRow - camera.tileRow)) * game.halfTileSize - camera.viewportOffsetY;
+      renderer.drawSprite(tile.backgroundSprite, screenX, screenY);
+      var decorationSprite = tile.decorationSprite;
+      if (decorationSprite) {
+        renderer.spriteRenderer.drawSpriteDepth(decorationSprite, tile.getPixelX(), tile.getPixelY(), screenX, screenY, decorationSprite.spriteSheet.spriteSize, 0);
       }
     }
   }
 }
-export function drawDungeonTileRow(a, b, c, d) {
-  for (; c < d; c++) {
-    var f = a,
-      g = game.level.getTileAt(c, b);
-    if (g && g.floorType !== EMPTY_TILE) {
-      var h;
-      h = game.camera;
-      h = game.viewportHalfWidth + (c - h.tileColumn - (b - h.tileRow)) * game.tileSize - h.viewportOffsetX;
-      var l;
-      l = game.camera;
-      l = game.viewportHalfHeight + (c - l.tileColumn + (b - l.tileRow)) * game.halfTileSize - l.viewportOffsetY;
-      f.drawSprite(g.backgroundSprite, h, l);
-      var n = g.decorationSprite;
-      if (n) {
-        f.spriteRenderer.drawSpriteDepth(n, g.getPixelX(), g.getPixelY(), h, l, n.spriteSheet.spriteSize, 0);
+export function drawDungeonTileRow(renderer, tileRow, startColumn, endColumn) {
+  for (; startColumn < endColumn; startColumn++) {
+    var tile = game.level.getTileAt(startColumn, tileRow);
+    if (tile && tile.floorType !== EMPTY_TILE) {
+      var camera = game.camera;
+      var screenX = game.viewportHalfWidth + (startColumn - camera.tileColumn - (tileRow - camera.tileRow)) * game.tileSize - camera.viewportOffsetX;
+      var screenY = game.viewportHalfHeight + (startColumn - camera.tileColumn + (tileRow - camera.tileRow)) * game.halfTileSize - camera.viewportOffsetY;
+      renderer.drawSprite(tile.backgroundSprite, screenX, screenY);
+      var decorationSprite = tile.decorationSprite;
+      if (decorationSprite) {
+        renderer.spriteRenderer.drawSpriteDepth(decorationSprite, tile.getPixelX(), tile.getPixelY(), screenX, screenY, decorationSprite.spriteSheet.spriteSize, 0);
       }
-      if (n = g.cachedBackgroundSprite) {
-        f.spriteRenderer.drawSpriteDepthRaised(n, g.getPixelX(), g.getPixelY(), h, l, n.spriteSheet.spriteSize, 0);
+      var cachedBackgroundSprite = tile.cachedBackgroundSprite;
+      if (cachedBackgroundSprite) {
+        renderer.spriteRenderer.drawSpriteDepthRaised(cachedBackgroundSprite, tile.getPixelX(), tile.getPixelY(), screenX, screenY, cachedBackgroundSprite.spriteSheet.spriteSize, 0);
       }
     }
   }
 }
-export function drawWorldCharacters(a, b) {
-  var c, d, f, g;
-  for (g = b.length - 1; 0 <= g; g--) {
-    c = b[g];
-    d = c.position.getWorldPositionX();
-    f = c.position.getWorldPositionY();
-    c = c.getSprite();
-    a.spriteRenderer.drawSpriteDepth(c, d, f, game.viewportHalfWidth + (d - game.world.worldCenterX - (f - game.world.worldCenterY)), game.viewportHalfHeight + 0.5 * (d - game.world.worldCenterX + (f - game.world.worldCenterY)), c.spriteSheet.spriteSize, 0);
+export function drawWorldCharacters(renderer, characters) {
+  var character, worldX, worldY, sprite, characterIndex;
+  for (characterIndex = characters.length - 1; 0 <= characterIndex; characterIndex--) {
+    character = characters[characterIndex];
+    worldX = character.position.getWorldPositionX();
+    worldY = character.position.getWorldPositionY();
+    sprite = character.getSprite();
+    renderer.spriteRenderer.drawSpriteDepth(sprite, worldX, worldY, game.viewportHalfWidth + (worldX - game.world.worldCenterX - (worldY - game.world.worldCenterY)), game.viewportHalfHeight + 0.5 * (worldX - game.world.worldCenterX + (worldY - game.world.worldCenterY)), sprite.spriteSheet.spriteSize, 0);
   }
 }
-export function drawDungeonCharacters(a, b) {
-  var c,
-    d,
-    f,
-    g,
-    h,
-    l = false,
-    n;
-  for (n = b.length - 1; 0 <= n; n--) {
-    c = b[n];
-    d = c.position.getLevelPositionX();
-    f = c.position.getLevelPositionY();
-    g = projectDungeonX(d, f);
-    h = projectDungeonY(d, f);
-    l = c.effects.isStealthed;
-    c = c.getSprite();
-    a.spriteRenderer.drawSpriteDepth(c, d, f, g, h, c.spriteSheet.spriteSize, l ? 0.4 : 0);
+export function drawDungeonCharacters(renderer, characters) {
+  var character,
+    levelX,
+    levelY,
+    screenX,
+    screenY,
+    isStealthed = false,
+    characterIndex;
+  for (characterIndex = characters.length - 1; 0 <= characterIndex; characterIndex--) {
+    character = characters[characterIndex];
+    levelX = character.position.getLevelPositionX();
+    levelY = character.position.getLevelPositionY();
+    screenX = projectDungeonX(levelX, levelY);
+    screenY = projectDungeonY(levelX, levelY);
+    isStealthed = character.effects.isStealthed;
+    var sprite = character.getSprite();
+    renderer.spriteRenderer.drawSpriteDepth(sprite, levelX, levelY, screenX, screenY, sprite.spriteSheet.spriteSize, isStealthed ? 0.4 : 0);
   }
 }
-export function drawCharacterEffects(a, b) {
-  var c, d, f, g, h, l, n, p, s, u, y;
-  for (c = 0; c < b.length; c++) {
-    if (f = b[c], !f.isDead) {
-      for (y = false, p = f.effects.activeEffects, d = 0; d < p.length; d++) {
-        if (s = p[d], s.hasAnimation && (s = s.animation)) {
-          u = p[d].overlayFrameIndex;
-          if (!y) {
-            g = f.position.getLevelPositionX();
-            h = f.position.getLevelPositionY();
-            l = projectDungeonX(g, h) + 10;
-            n = projectDungeonY(g, h) + 10;
-            y = true;
+export function drawCharacterEffects(renderer, characters) {
+  var characterIndex, effectIndex, character, levelX, levelY, screenX, screenY, activeEffects, effectAnimation, overlayFrameIndex, projected;
+  for (characterIndex = 0; characterIndex < characters.length; characterIndex++) {
+    if (character = characters[characterIndex], !character.isDead) {
+      for (projected = false, activeEffects = character.effects.activeEffects, effectIndex = 0; effectIndex < activeEffects.length; effectIndex++) {
+        if (effectAnimation = activeEffects[effectIndex], effectAnimation.hasAnimation && (effectAnimation = effectAnimation.animation)) {
+          overlayFrameIndex = activeEffects[effectIndex].overlayFrameIndex;
+          if (!projected) {
+            levelX = character.position.getLevelPositionX();
+            levelY = character.position.getLevelPositionY();
+            screenX = projectDungeonX(levelX, levelY) + 10;
+            screenY = projectDungeonY(levelX, levelY) + 10;
+            projected = true;
           }
-          a.spriteRenderer.drawAnimationRaised(s, u, g, h, l, n, s.spriteSheet.spriteSize, 0);
+          renderer.spriteRenderer.drawAnimationRaised(effectAnimation, overlayFrameIndex, levelX, levelY, screenX, screenY, effectAnimation.spriteSheet.spriteSize, 0);
         }
       }
     }
   }
 }
-export function drawFloatingText(a) {
-  var b, c, d;
-  d = game.floatingText.texts;
-  if (0 !== d.length) {
-    for (a.context.font = "12px Georgia", b = 0; b < d.length; b++) {
-      c = d[b];
-      a.context.fillStyle = c.color;
-      a.context.fillText(c.text, c.screenX, c.screenY);
+export function drawFloatingText(renderer) {
+  var textIndex, floatingText, texts;
+  texts = game.floatingText.texts;
+  if (0 !== texts.length) {
+    for (renderer.context.font = "12px Georgia", textIndex = 0; textIndex < texts.length; textIndex++) {
+      floatingText = texts[textIndex];
+      renderer.context.fillStyle = floatingText.color;
+      renderer.context.fillText(floatingText.text, floatingText.screenX, floatingText.screenY);
     }
   }
 }
-export function drawEntityHighlight(a, b, c, d) {
-  b = b.regions;
-  var f, g;
-  g = game.regions;
-  var h = g.regionGridOriginColumn,
-    l = g.regionGridOriginRow,
-    n;
-  for (g = 0; g < b.length; g++) {
-    f = b[g];
-    n = c * (f.regionColumn - h);
-    f = d * (f.regionRow - l);
-    a.context.fillRect(n, f, c, d);
+export function drawEntityHighlight(renderer, entity, cellWidth, cellHeight) {
+  var regions = entity.regions;
+  var regionGrid = game.regions;
+  var originColumn = regionGrid.regionGridOriginColumn,
+    originRow = regionGrid.regionGridOriginRow,
+    regionX;
+  for (var regionIndex = 0; regionIndex < regions.length; regionIndex++) {
+    var region = regions[regionIndex];
+    regionX = cellWidth * (region.regionColumn - originColumn);
+    var regionY = cellHeight * (region.regionRow - originRow);
+    renderer.context.fillRect(regionX, regionY, cellWidth, cellHeight);
   }
 }
-export function drawCharacterHighlights(a, b, c) {
-  var d, f, g, h, l;
-  for (d = 0; d < b.length; d++) {
-    l = b[d];
-    if (!l.isDead) {
-      f = l.position.getLevelPositionX();
-      g = l.position.getLevelPositionY();
-      h = projectDungeonX(f, g);
-      f = projectDungeonY(f, g);
-      g = l.stats;
-      l = g.health;
-      g = statValue(g.maxHealth);
-      if (l === g) {
-        a.context.fillStyle = c;
-        a.context.fillRect(h + 10, f + 0, 30, 4);
+export function drawCharacterHighlights(renderer, characters, healthBarColor) {
+  var characterIndex, character, levelX, levelY, screenX, screenY, stats, health, maxHealth;
+  for (characterIndex = 0; characterIndex < characters.length; characterIndex++) {
+    character = characters[characterIndex];
+    if (!character.isDead) {
+      levelX = character.position.getLevelPositionX();
+      levelY = character.position.getLevelPositionY();
+      screenX = projectDungeonX(levelX, levelY);
+      screenY = projectDungeonY(levelX, levelY);
+      stats = character.stats;
+      health = stats.health;
+      maxHealth = statValue(stats.maxHealth);
+      if (health === maxHealth) {
+        renderer.context.fillStyle = healthBarColor;
+        renderer.context.fillRect(screenX + 10, screenY + 0, 30, 4);
       } else {
-        a.context.fillStyle = "white";
-        a.context.fillRect(h + 10, f + 0, 30, 4);
-        a.context.fillStyle = c;
-        a.context.fillRect(h + 10, f + 0, l / g * 30 | 0, 4);
+        renderer.context.fillStyle = "white";
+        renderer.context.fillRect(screenX + 10, screenY + 0, 30, 4);
+        renderer.context.fillStyle = healthBarColor;
+        renderer.context.fillRect(screenX + 10, screenY + 0, health / maxHealth * 30 | 0, 4);
       }
     }
   }
 }
 export function randomLightningOffset() {
-  var a = Math.max(2, randomInt(5));
-  return 0.5 > Math.random() ? -a : a;
+  var offset = Math.max(2, randomInt(5));
+  return 0.5 > Math.random() ? -offset : offset;
 }
 export function GameCanvasView() {
   this.containerElementId = "gameTabContent";
@@ -230,115 +222,116 @@ export function initializeRenderingScene() {
   RenderCommand.prototype.getRenderSortKey = function () {
     return this.sortKey - this.raiseOffset;
   };
-  RenderCommand.prototype.draw = function (a) {
+  RenderCommand.prototype.draw = function (context) {
     if (this.isSet) {
       if (0 < this.alpha) {
-        a.save();
-        a.globalAlpha = 0.4;
+        context.save();
+        context.globalAlpha = 0.4;
       }
-      var b;
+      var spriteSize;
       if (this.sprite) {
-        b = this.sprite.spriteSheet.spriteSize;
-        a.drawImage(this.sprite.getSheetImage(), this.sprite.sourceX, this.sprite.sourceY, b, b, this.screenX, this.screenY, this.renderSize, this.renderSize);
+        spriteSize = this.sprite.spriteSheet.spriteSize;
+        context.drawImage(this.sprite.getSheetImage(), this.sprite.sourceX, this.sprite.sourceY, spriteSize, spriteSize, this.screenX, this.screenY, this.renderSize, this.renderSize);
       } else if (this.animation) {
-        var c = this.animation.frames[this.frameIndex];
-        b = this.animation.spriteSheet.spriteSize;
-        a.drawImage(this.animation.getSheetImage(), c.frameSourceX, c.frameSourceY, b, b, this.screenX, this.screenY, this.renderSize, this.renderSize);
+        var frame = this.animation.frames[this.frameIndex];
+        spriteSize = this.animation.spriteSheet.spriteSize;
+        context.drawImage(this.animation.getSheetImage(), frame.frameSourceX, frame.frameSourceY, spriteSize, spriteSize, this.screenX, this.screenY, this.renderSize, this.renderSize);
       }
       if (0 < this.alpha) {
-        a.restore();
+        context.restore();
       }
     }
   };
-  DepthSortedRenderer.prototype.setContext = function (a) {
-    this.context = a;
-    for (a = this.commandIndex = 0; a < this.renderCommands.length; a++) {
-      resetRenderCommand(this.renderCommands[a]);
+  DepthSortedRenderer.prototype.setContext = function (context) {
+    this.context = context;
+    this.commandIndex = 0;
+    for (var commandIndex = 0; commandIndex < this.renderCommands.length; commandIndex++) {
+      resetRenderCommand(this.renderCommands[commandIndex]);
     }
-    var b = game.viewportWidth / 2,
-      c = 2 * game.viewportHeight;
+    var halfViewportWidth = game.viewportWidth / 2,
+      doubleViewportHeight = 2 * game.viewportHeight;
+    var centerX, centerY;
     if (game.worldActive) {
-      a = game.world.worldCenterX + (0.5 * (b - game.viewportHalfWidth) + (c - game.viewportHalfHeight)) | 0;
-      b = game.world.worldCenterY + (c - game.viewportHalfHeight - 0.5 * (b - game.viewportHalfWidth)) | 0;
+      centerX = game.world.worldCenterX + (0.5 * (halfViewportWidth - game.viewportHalfWidth) + (doubleViewportHeight - game.viewportHalfHeight)) | 0;
+      centerY = game.world.worldCenterY + (doubleViewportHeight - game.viewportHalfHeight - 0.5 * (halfViewportWidth - game.viewportHalfWidth)) | 0;
     } else {
-      a = game.level.centerX + (0.5 * (b - game.viewportHalfWidth) + (c - game.viewportHalfHeight)) | 0;
-      b = game.level.centerY + (c - game.viewportHalfHeight - 0.5 * (b - game.viewportHalfWidth)) | 0;
+      centerX = game.level.centerX + (0.5 * (halfViewportWidth - game.viewportHalfWidth) + (doubleViewportHeight - game.viewportHalfHeight)) | 0;
+      centerY = game.level.centerY + (doubleViewportHeight - game.viewportHalfHeight - 0.5 * (halfViewportWidth - game.viewportHalfWidth)) | 0;
     }
-    setVector(this.scratchVector, a, b);
+    setVector(this.scratchVector, centerX, centerY);
   };
-  DepthSortedRenderer.prototype.drawSpriteDepth = function (a, b, c, d, f, g, h) {
-    if (a) {
-      b = distanceToPoint(this.scratchVector, b, c);
-      setSpriteRenderCommand(acquireRenderCommand(this), a, b, d, f, g, h);
-    }
-  };
-  DepthSortedRenderer.prototype.drawSpriteDepthRaised = function (a, b, c, d, f, g, h) {
-    if (a) {
-      b = distanceToPoint(this.scratchVector, b, c);
-      c = acquireRenderCommand(this);
-      setSpriteRenderCommand(c, a, b, d, f, g, h);
-      c.raiseOffset = 0.1;
+  DepthSortedRenderer.prototype.drawSpriteDepth = function (sprite, worldX, worldY, screenX, screenY, renderSize, alpha) {
+    if (sprite) {
+      var distance = distanceToPoint(this.scratchVector, worldX, worldY);
+      setSpriteRenderCommand(acquireRenderCommand(this), sprite, distance, screenX, screenY, renderSize, alpha);
     }
   };
-  DepthSortedRenderer.prototype.drawAnimation = function (a, b, c, d, f, g, h, l) {
-    if (a) {
-      c = distanceToPoint(this.scratchVector, c, d);
-      setAnimationRenderCommand(acquireRenderCommand(this), a, b, c, f, g, h, l);
+  DepthSortedRenderer.prototype.drawSpriteDepthRaised = function (sprite, worldX, worldY, screenX, screenY, renderSize, alpha) {
+    if (sprite) {
+      var distance = distanceToPoint(this.scratchVector, worldX, worldY);
+      var command = acquireRenderCommand(this);
+      setSpriteRenderCommand(command, sprite, distance, screenX, screenY, renderSize, alpha);
+      command.raiseOffset = 0.1;
     }
   };
-  DepthSortedRenderer.prototype.drawAnimationRaised = function (a, b, c, d, f, g, h, l) {
-    if (a) {
-      c = distanceToPoint(this.scratchVector, c, d);
-      d = acquireRenderCommand(this);
-      setAnimationRenderCommand(d, a, b, c, f, g, h, l);
-      d.raiseOffset = 0.1;
+  DepthSortedRenderer.prototype.drawAnimation = function (animation, frameIndex, worldX, worldY, screenX, screenY, renderSize, alpha) {
+    if (animation) {
+      var distance = distanceToPoint(this.scratchVector, worldX, worldY);
+      setAnimationRenderCommand(acquireRenderCommand(this), animation, frameIndex, distance, screenX, screenY, renderSize, alpha);
+    }
+  };
+  DepthSortedRenderer.prototype.drawAnimationRaised = function (animation, frameIndex, worldX, worldY, screenX, screenY, renderSize, alpha) {
+    if (animation) {
+      var distance = distanceToPoint(this.scratchVector, worldX, worldY);
+      var command = acquireRenderCommand(this);
+      setAnimationRenderCommand(command, animation, frameIndex, distance, screenX, screenY, renderSize, alpha);
+      command.raiseOffset = 0.1;
     }
   };
   DepthSortedRenderer.prototype.sortCommands = function () {
     if (!(2 > this.commandIndex)) {
       this.renderCommands.sort(this.compareRenderSortKey);
     }
-    var a;
-    for (a = this.commandIndex - 1; 0 <= a; a--) {
-      this.renderCommands[a].draw(this.context);
+    for (var commandIndex = this.commandIndex - 1; 0 <= commandIndex; commandIndex--) {
+      this.renderCommands[commandIndex].draw(this.context);
     }
   };
-  ImmediateRenderer.prototype.setContext = function (a) {
-    this.context = a;
+  ImmediateRenderer.prototype.setContext = function (context) {
+    this.context = context;
   };
-  ImmediateRenderer.prototype.drawSpriteDepth = function (a, b, c, d, f, g, h) {
-    if (a) {
-      b = acquireImmediateCommand(this);
-      setSpriteRenderCommand(b, a, 0, d, f, g, h);
-      b.draw(this.context);
+  ImmediateRenderer.prototype.drawSpriteDepth = function (sprite, worldX, worldY, screenX, screenY, renderSize, alpha) {
+    if (sprite) {
+      var command = acquireImmediateCommand(this);
+      setSpriteRenderCommand(command, sprite, 0, screenX, screenY, renderSize, alpha);
+      command.draw(this.context);
     }
   };
-  ImmediateRenderer.prototype.drawSpriteDepthRaised = function (a, b, c, d, f, g, h) {
-    if (a) {
-      b = acquireImmediateCommand(this);
-      setSpriteRenderCommand(b, a, 0, d, f, g, h);
-      b.draw(this.context);
+  ImmediateRenderer.prototype.drawSpriteDepthRaised = function (sprite, worldX, worldY, screenX, screenY, renderSize, alpha) {
+    if (sprite) {
+      var command = acquireImmediateCommand(this);
+      setSpriteRenderCommand(command, sprite, 0, screenX, screenY, renderSize, alpha);
+      command.draw(this.context);
     }
   };
-  ImmediateRenderer.prototype.drawAnimation = function (a, b, c, d, f, g, h, l) {
-    if (a) {
-      c = acquireImmediateCommand(this);
-      setAnimationRenderCommand(c, a, b, 0, f, g, h, l);
-      c.draw(this.context);
+  ImmediateRenderer.prototype.drawAnimation = function (animation, frameIndex, worldX, worldY, screenX, screenY, renderSize, alpha) {
+    if (animation) {
+      var command = acquireImmediateCommand(this);
+      setAnimationRenderCommand(command, animation, frameIndex, 0, screenX, screenY, renderSize, alpha);
+      command.draw(this.context);
     }
   };
-  ImmediateRenderer.prototype.drawAnimationRaised = function (a, b, c, d, f, g, h, l) {
-    if (a) {
-      c = acquireImmediateCommand(this);
-      setAnimationRenderCommand(c, a, b, 0, f, g, h, l);
-      c.draw(this.context);
+  ImmediateRenderer.prototype.drawAnimationRaised = function (animation, frameIndex, worldX, worldY, screenX, screenY, renderSize, alpha) {
+    if (animation) {
+      var command = acquireImmediateCommand(this);
+      setAnimationRenderCommand(command, animation, frameIndex, 0, screenX, screenY, renderSize, alpha);
+      command.draw(this.context);
     }
   };
   ImmediateRenderer.prototype.sortCommands = function () {};
-  SceneRenderer.prototype.drawSprite = function (a, b, c) {
-    if (a) {
-      var d = a.spriteSheet.spriteSize;
-      this.context.drawImage(a.getSheetImage(), a.sourceX, a.sourceY, d, d, b, c, d, d);
+  SceneRenderer.prototype.drawSprite = function (sprite, screenX, screenY) {
+    if (sprite) {
+      var spriteSize = sprite.spriteSheet.spriteSize;
+      this.context.drawImage(sprite.getSheetImage(), sprite.sourceX, sprite.sourceY, spriteSize, spriteSize, screenX, screenY, spriteSize, spriteSize);
     }
   };
   GameCanvasView.prototype = new View();
@@ -346,412 +339,400 @@ export function initializeRenderingScene() {
     (/** @type {GameCanvasView & { createDomElements: () => void }} */ (/** @type {unknown} */ (this))).createDomElements();
   };
   GameCanvasView.prototype.update = function () {
-    var a = this.renderer;
-    a.spriteRenderer = game.options.depthSortSprites ? a.depthSortedRenderer : a.immediateRenderer;
-    a.spriteRenderer.setContext(a.context);
+    var renderer = this.renderer;
+    renderer.spriteRenderer = game.options.depthSortSprites ? renderer.depthSortedRenderer : renderer.immediateRenderer;
+    renderer.spriteRenderer.setContext(renderer.context);
     if (game.world.hasPartyPlaced) {
-      if (a.context.fillStyle = "#000000", a.context.fillRect(0, 0, game.viewportWidth, game.viewportHeight), game.worldActive) {
-        var b = game.world.pixelToTileColumn(game.world.worldCenterX),
-          c = game.world.pixelToTileRow(game.world.worldCenterY) - 18;
-        drawWorldTileRow(a, c++, b - 5, b - 3);
-        drawWorldTileRow(a, c++, b - 6, b - 2);
-        drawWorldTileRow(a, c++, b - 7, b - 1);
-        drawWorldTileRow(a, c++, b - 8, b);
-        drawWorldTileRow(a, c++, b - 9, b + 1);
-        drawWorldTileRow(a, c++, b - 10, b + 2);
-        drawWorldTileRow(a, c++, b - 11, b + 3);
-        drawWorldTileRow(a, c++, b - 12, b + 4);
-        drawWorldTileRow(a, c++, b - 13, b + 5);
-        drawWorldTileRow(a, c++, b - 14, b + 6);
-        drawWorldTileRow(a, c++, b - 15, b + 7);
-        drawWorldTileRow(a, c++, b - 16, b + 8);
-        drawWorldTileRow(a, c++, b - 17, b + 9);
-        drawWorldTileRow(a, c++, b - 18, b + 10);
-        drawWorldTileRow(a, c++, b - 19, b + 11);
-        drawWorldTileRow(a, c++, b - 20, b + 12);
-        drawWorldTileRow(a, c++, b - 19, b + 13);
-        drawWorldTileRow(a, c++, b - 18, b + 14);
-        drawWorldTileRow(a, c++, b - 17, b + 15);
-        drawWorldTileRow(a, c++, b - 16, b + 16);
-        drawWorldTileRow(a, c++, b - 14, b + 16);
-        drawWorldTileRow(a, c++, b - 13, b + 16);
-        drawWorldTileRow(a, c++, b - 12, b + 15);
-        drawWorldTileRow(a, c++, b - 11, b + 14);
-        drawWorldTileRow(a, c++, b - 10, b + 13);
-        drawWorldTileRow(a, c++, b - 9, b + 12);
-        drawWorldTileRow(a, c++, b - 8, b + 11);
-        drawWorldTileRow(a, c++, b - 7, b + 10);
-        drawWorldTileRow(a, c++, b - 6, b + 9);
-        drawWorldTileRow(a, c++, b - 5, b + 8);
-        drawWorldTileRow(a, c++, b - 4, b + 7);
-        drawWorldTileRow(a, c++, b - 3, b + 6);
-        drawWorldTileRow(a, c++, b - 2, b + 5);
-        drawWorldTileRow(a, c++, b - 1, b + 4);
-        drawWorldTileRow(a, c, b, b + 3);
-        drawWorldCharacters(a, game.minions.minionList);
-        drawWorldCharacters(a, game.state.adventurers);
+      if (renderer.context.fillStyle = "#000000", renderer.context.fillRect(0, 0, game.viewportWidth, game.viewportHeight), game.worldActive) {
+        var centerTileColumn = game.world.pixelToTileColumn(game.world.worldCenterX),
+          worldRowCursor = game.world.pixelToTileRow(game.world.worldCenterY) - 18;
+        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 5, centerTileColumn - 3);
+        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 6, centerTileColumn - 2);
+        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 7, centerTileColumn - 1);
+        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 8, centerTileColumn);
+        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 9, centerTileColumn + 1);
+        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 10, centerTileColumn + 2);
+        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 11, centerTileColumn + 3);
+        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 12, centerTileColumn + 4);
+        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 13, centerTileColumn + 5);
+        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 14, centerTileColumn + 6);
+        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 15, centerTileColumn + 7);
+        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 16, centerTileColumn + 8);
+        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 17, centerTileColumn + 9);
+        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 18, centerTileColumn + 10);
+        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 19, centerTileColumn + 11);
+        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 20, centerTileColumn + 12);
+        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 19, centerTileColumn + 13);
+        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 18, centerTileColumn + 14);
+        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 17, centerTileColumn + 15);
+        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 16, centerTileColumn + 16);
+        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 14, centerTileColumn + 16);
+        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 13, centerTileColumn + 16);
+        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 12, centerTileColumn + 15);
+        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 11, centerTileColumn + 14);
+        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 10, centerTileColumn + 13);
+        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 9, centerTileColumn + 12);
+        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 8, centerTileColumn + 11);
+        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 7, centerTileColumn + 10);
+        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 6, centerTileColumn + 9);
+        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 5, centerTileColumn + 8);
+        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 4, centerTileColumn + 7);
+        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 3, centerTileColumn + 6);
+        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 2, centerTileColumn + 5);
+        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 1, centerTileColumn + 4);
+        drawWorldTileRow(renderer, worldRowCursor, centerTileColumn, centerTileColumn + 3);
+        drawWorldCharacters(renderer, game.minions.minionList);
+        drawWorldCharacters(renderer, game.state.adventurers);
         if (game.options.showCombatText) {
-          drawFloatingText(a);
+          drawFloatingText(renderer);
         }
-        a.spriteRenderer.sortCommands();
+        renderer.spriteRenderer.sortCommands();
         if (game.options.showMapOverlay) {
-          var d = game.regions,
-            f = d.regionGridOriginColumn,
-            g = d.regionGridOriginRow,
-            h = 120 / (d.regionGridOriginColumn + d.regionGridSpan - f) | 0,
-            l = 120 / (d.regionGridOriginRow + d.regionGridSpan - g) | 0;
-          a.context.save();
-          a.context.translate(650, 280);
-          a.context.rotate(Math.PI / 4);
-          var n = game.monsterCatalog.maxUnlockedLevel,
-            p = game.castles.castleList,
-            s,
-            u;
-          a.context.fillStyle = "gray";
-          for (u = 0; u < p.length; u++) {
-            s = p[u];
-            if (s.regionLocked) {
-              drawEntityHighlight(a, s, h, l);
+          var regionGrid = game.regions,
+            regionOriginColumn = regionGrid.regionGridOriginColumn,
+            regionOriginRow = regionGrid.regionGridOriginRow,
+            mapCellWidth = 120 / (regionGrid.regionGridOriginColumn + regionGrid.regionGridSpan - regionOriginColumn) | 0,
+            mapCellHeight = 120 / (regionGrid.regionGridOriginRow + regionGrid.regionGridSpan - regionOriginRow) | 0;
+          renderer.context.save();
+          renderer.context.translate(650, 280);
+          renderer.context.rotate(Math.PI / 4);
+          var maxUnlockedLevel = game.monsterCatalog.maxUnlockedLevel,
+            castleList = game.castles.castleList,
+            castle,
+            castleIndex;
+          renderer.context.fillStyle = "gray";
+          for (castleIndex = 0; castleIndex < castleList.length; castleIndex++) {
+            castle = castleList[castleIndex];
+            if (castle.regionLocked) {
+              drawEntityHighlight(renderer, castle, mapCellWidth, mapCellHeight);
             }
           }
-          a.context.fillStyle = "green";
-          for (u = 0; u < p.length; u++) {
-            s = p[u];
-            if (s.conquered) {
-              drawEntityHighlight(a, s, h, l);
+          renderer.context.fillStyle = "green";
+          for (castleIndex = 0; castleIndex < castleList.length; castleIndex++) {
+            castle = castleList[castleIndex];
+            if (castle.conquered) {
+              drawEntityHighlight(renderer, castle, mapCellWidth, mapCellHeight);
             }
           }
-          a.context.fillStyle = "#AA8800";
-          for (u = 0; u < p.length; u++) {
-            s = p[u];
-            if (s.attackScheduled) {
-              drawEntityHighlight(a, s, h, l);
+          renderer.context.fillStyle = "#AA8800";
+          for (castleIndex = 0; castleIndex < castleList.length; castleIndex++) {
+            castle = castleList[castleIndex];
+            if (castle.attackScheduled) {
+              drawEntityHighlight(renderer, castle, mapCellWidth, mapCellHeight);
             }
           }
-          a.context.fillStyle = "#885500";
-          for (u = 0; u < p.length; u++) {
-            s = p[u];
-            if (canAttackCastle(s) && n >= s.requiredMonsterLevel) {
-              drawEntityHighlight(a, s, h, l);
+          renderer.context.fillStyle = "#885500";
+          for (castleIndex = 0; castleIndex < castleList.length; castleIndex++) {
+            castle = castleList[castleIndex];
+            if (canAttackCastle(castle) && maxUnlockedLevel >= castle.requiredMonsterLevel) {
+              drawEntityHighlight(renderer, castle, mapCellWidth, mapCellHeight);
             }
           }
-          a.context.fillStyle = "#AA3300";
-          for (u = 0; u < p.length; u++) {
-            s = p[u];
-            if (canAttackCastle(s) && n < s.requiredMonsterLevel) {
-              drawEntityHighlight(a, s, h, l);
+          renderer.context.fillStyle = "#AA3300";
+          for (castleIndex = 0; castleIndex < castleList.length; castleIndex++) {
+            castle = castleList[castleIndex];
+            if (canAttackCastle(castle) && maxUnlockedLevel < castle.requiredMonsterLevel) {
+              drawEntityHighlight(renderer, castle, mapCellWidth, mapCellHeight);
             }
           }
-          a.context.fillStyle = "white";
-          for (u = 0; u < p.length; u++) {
-            s = p[u];
-            if (!(canAttackCastle(s) || s.regionLocked || s.attackScheduled || s.conquered)) {
-              drawEntityHighlight(a, s, h, l);
+          renderer.context.fillStyle = "white";
+          for (castleIndex = 0; castleIndex < castleList.length; castleIndex++) {
+            castle = castleList[castleIndex];
+            if (!(canAttackCastle(castle) || castle.regionLocked || castle.attackScheduled || castle.conquered)) {
+              drawEntityHighlight(renderer, castle, mapCellWidth, mapCellHeight);
             }
           }
-          var y = game.world.worldBlocks[1][1],
-            A = h * (y.regionColumn - f),
-            C = l * (y.regionRow - g);
-          a.context.fillStyle = "blue";
-          a.context.fillRect(A + 2, C + 2, 4, 4);
-          a.context.restore();
+          var centerWorldBlock = game.world.worldBlocks[1][1],
+            homeBlockScreenX = mapCellWidth * (centerWorldBlock.regionColumn - regionOriginColumn),
+            homeBlockScreenY = mapCellHeight * (centerWorldBlock.regionRow - regionOriginRow);
+          renderer.context.fillStyle = "blue";
+          renderer.context.fillRect(homeBlockScreenX + 2, homeBlockScreenY + 2, 4, 4);
+          renderer.context.restore();
         }
       } else {
-        var v = game.level.pixelToTileColumn(game.level.centerX),
-          D = game.level.pixelToTileRow(game.level.centerY) - 18;
-        drawDungeonTileRow(a, D++, v - 5, v - 3);
-        drawDungeonTileRow(a, D++, v - 6, v - 2);
-        drawDungeonTileRow(a, D++, v - 7, v - 1);
-        drawDungeonTileRow(a, D++, v - 8, v);
-        drawDungeonTileRow(a, D++, v - 9, v + 1);
-        drawDungeonTileRow(a, D++, v - 10, v + 2);
-        drawDungeonTileRow(a, D++, v - 11, v + 3);
-        drawDungeonTileRow(a, D++, v - 12, v + 4);
-        drawDungeonTileRow(a, D++, v - 13, v + 5);
-        drawDungeonTileRow(a, D++, v - 14, v + 6);
-        drawDungeonTileRow(a, D++, v - 15, v + 7);
-        drawDungeonTileRow(a, D++, v - 16, v + 8);
-        drawDungeonTileRow(a, D++, v - 17, v + 9);
-        drawDungeonTileRow(a, D++, v - 18, v + 10);
-        drawDungeonTileRow(a, D++, v - 19, v + 11);
-        drawDungeonTileRow(a, D++, v - 20, v + 12);
-        drawDungeonTileRow(a, D++, v - 19, v + 13);
-        drawDungeonTileRow(a, D++, v - 18, v + 14);
-        drawDungeonTileRow(a, D++, v - 17, v + 15);
-        drawDungeonTileRow(a, D++, v - 16, v + 16);
-        drawDungeonTileRow(a, D++, v - 14, v + 16);
-        drawDungeonTileRow(a, D++, v - 13, v + 16);
-        drawDungeonTileRow(a, D++, v - 12, v + 15);
-        drawDungeonTileRow(a, D++, v - 11, v + 14);
-        drawDungeonTileRow(a, D++, v - 10, v + 13);
-        drawDungeonTileRow(a, D++, v - 9, v + 12);
-        drawDungeonTileRow(a, D++, v - 8, v + 11);
-        drawDungeonTileRow(a, D++, v - 7, v + 10);
-        drawDungeonTileRow(a, D++, v - 6, v + 9);
-        drawDungeonTileRow(a, D++, v - 5, v + 8);
-        drawDungeonTileRow(a, D++, v - 4, v + 7);
-        drawDungeonTileRow(a, D++, v - 3, v + 6);
-        drawDungeonTileRow(a, D++, v - 2, v + 5);
-        drawDungeonTileRow(a, D++, v - 1, v + 4);
-        drawDungeonTileRow(a, D, v, v + 3);
-        var N = game.goldDrops.drops,
-          I,
-          x,
-          z,
-          O,
-          J,
-          la;
-        for (la = 0; la < N.length; la++) {
-          I = N[la];
-          x = I.levelPositionX;
-          z = I.levelPositionY;
-          O = projectWorldX(x, z);
-          J = projectWorldY(x, z);
-          var Q = I.goldAmount,
-            V = game.goldDrops;
-          a.drawSprite(100 > Q ? V.smallGoldSprite : 1E3 > Q ? V.mediumGoldSprite : V.largeGoldSprite, O, J);
+        var centerTileColumn = game.level.pixelToTileColumn(game.level.centerX),
+          dungeonRowCursor = game.level.pixelToTileRow(game.level.centerY) - 18;
+        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 5, centerTileColumn - 3);
+        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 6, centerTileColumn - 2);
+        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 7, centerTileColumn - 1);
+        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 8, centerTileColumn);
+        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 9, centerTileColumn + 1);
+        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 10, centerTileColumn + 2);
+        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 11, centerTileColumn + 3);
+        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 12, centerTileColumn + 4);
+        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 13, centerTileColumn + 5);
+        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 14, centerTileColumn + 6);
+        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 15, centerTileColumn + 7);
+        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 16, centerTileColumn + 8);
+        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 17, centerTileColumn + 9);
+        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 18, centerTileColumn + 10);
+        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 19, centerTileColumn + 11);
+        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 20, centerTileColumn + 12);
+        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 19, centerTileColumn + 13);
+        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 18, centerTileColumn + 14);
+        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 17, centerTileColumn + 15);
+        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 16, centerTileColumn + 16);
+        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 14, centerTileColumn + 16);
+        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 13, centerTileColumn + 16);
+        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 12, centerTileColumn + 15);
+        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 11, centerTileColumn + 14);
+        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 10, centerTileColumn + 13);
+        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 9, centerTileColumn + 12);
+        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 8, centerTileColumn + 11);
+        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 7, centerTileColumn + 10);
+        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 6, centerTileColumn + 9);
+        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 5, centerTileColumn + 8);
+        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 4, centerTileColumn + 7);
+        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 3, centerTileColumn + 6);
+        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 2, centerTileColumn + 5);
+        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 1, centerTileColumn + 4);
+        drawDungeonTileRow(renderer, dungeonRowCursor, centerTileColumn, centerTileColumn + 3);
+        var goldDropList = game.goldDrops.drops,
+          goldDrop,
+          goldDropX,
+          goldDropY,
+          goldScreenX,
+          goldScreenY,
+          goldDropIndex;
+        for (goldDropIndex = 0; goldDropIndex < goldDropList.length; goldDropIndex++) {
+          goldDrop = goldDropList[goldDropIndex];
+          goldDropX = goldDrop.levelPositionX;
+          goldDropY = goldDrop.levelPositionY;
+          goldScreenX = projectWorldX(goldDropX, goldDropY);
+          goldScreenY = projectWorldY(goldDropX, goldDropY);
+          var goldAmount = goldDrop.goldAmount,
+            goldDrops = game.goldDrops;
+          renderer.drawSprite(100 > goldAmount ? goldDrops.smallGoldSprite : 1E3 > goldAmount ? goldDrops.mediumGoldSprite : goldDrops.largeGoldSprite, goldScreenX, goldScreenY);
         }
-        var na = game.scrollDrops.drops,
-          K,
-          H,
-          S,
-          da,
-          W,
-          ia;
-        for (ia = 0; ia < na.length; ia++) {
-          K = na[ia];
-          H = K.levelPositionX;
-          S = K.levelPositionY;
-          da = projectWorldX(H, S);
-          W = projectWorldY(H, S);
-          a.drawSprite(getScrollSprite(K.getScroll()), da, W);
+        var scrollDropList = game.scrollDrops.drops,
+          scrollDrop,
+          scrollDropX,
+          scrollDropY,
+          scrollScreenX,
+          scrollScreenY,
+          scrollDropIndex;
+        for (scrollDropIndex = 0; scrollDropIndex < scrollDropList.length; scrollDropIndex++) {
+          scrollDrop = scrollDropList[scrollDropIndex];
+          scrollDropX = scrollDrop.levelPositionX;
+          scrollDropY = scrollDrop.levelPositionY;
+          scrollScreenX = projectWorldX(scrollDropX, scrollDropY);
+          scrollScreenY = projectWorldY(scrollDropX, scrollDropY);
+          renderer.drawSprite(getScrollSprite(scrollDrop.getScroll()), scrollScreenX, scrollScreenY);
         }
-        var ea = game.potionDrops.drops,
-          va,
-          yb,
-          Fb,
-          pa,
-          T,
-          X;
-        for (X = 0; X < ea.length; X++) {
-          va = ea[X];
-          yb = va.levelPositionX;
-          Fb = va.levelPositionY;
-          pa = projectWorldX(yb, Fb);
-          T = projectWorldY(yb, Fb);
-          a.drawSprite(va.potion.potionSprite, pa, T);
+        var potionDropList = game.potionDrops.drops,
+          potionDrop,
+          potionDropX,
+          potionDropY,
+          potionScreenX,
+          potionScreenY,
+          potionDropIndex;
+        for (potionDropIndex = 0; potionDropIndex < potionDropList.length; potionDropIndex++) {
+          potionDrop = potionDropList[potionDropIndex];
+          potionDropX = potionDrop.levelPositionX;
+          potionDropY = potionDrop.levelPositionY;
+          potionScreenX = projectWorldX(potionDropX, potionDropY);
+          potionScreenY = projectWorldY(potionDropX, potionDropY);
+          renderer.drawSprite(potionDrop.potion.potionSprite, potionScreenX, potionScreenY);
         }
-        var Ca = game.itemDrops.drops,
-          qa,
-          ta,
-          eb,
-          Gb,
-          Da,
-          ub;
-        for (ub = 0; ub < Ca.length; ub++) {
-          qa = Ca[ub];
-          ta = qa.levelPositionX;
-          eb = qa.levelPositionY;
-          Gb = projectWorldX(ta, eb);
-          Da = projectWorldY(ta, eb);
-          a.drawSprite(qa.getItem().getIconSprite(), Gb, Da);
+        var itemDropList = game.itemDrops.drops,
+          itemDrop,
+          itemDropX,
+          itemDropY,
+          itemScreenX,
+          itemScreenY,
+          itemDropIndex;
+        for (itemDropIndex = 0; itemDropIndex < itemDropList.length; itemDropIndex++) {
+          itemDrop = itemDropList[itemDropIndex];
+          itemDropX = itemDrop.levelPositionX;
+          itemDropY = itemDrop.levelPositionY;
+          itemScreenX = projectWorldX(itemDropX, itemDropY);
+          itemScreenY = projectWorldY(itemDropX, itemDropY);
+          renderer.drawSprite(itemDrop.getItem().getIconSprite(), itemScreenX, itemScreenY);
         }
-        var mb = game.treasure.targets,
-          Ea,
-          La,
-          wa,
-          Fa,
-          ha,
-          ja,
-          Ga;
-        for (ja = 0; ja < mb.length; ja++) {
-          Ea = mb[ja];
-          if (Ea.room.discovered) {
-            La = Ea.levelX;
-            wa = Ea.levelY;
-            Fa = projectWorldX(La, wa);
-            ha = projectWorldY(La, wa);
-            Ga = Ea.opened ? Ea.openedSpriteName : Ea.closedSpriteName;
-            if (Ea.definition.flushPlacement) {
-              a.spriteRenderer.drawSpriteDepthRaised(Ga, La, wa, Fa, ha, Ga.spriteSheet.spriteSize, 0);
+        var treasureTargets = game.treasure.targets,
+          treasure,
+          treasureX,
+          treasureY,
+          treasureScreenX,
+          treasureScreenY,
+          treasureIndex,
+          treasureSprite;
+        for (treasureIndex = 0; treasureIndex < treasureTargets.length; treasureIndex++) {
+          treasure = treasureTargets[treasureIndex];
+          if (treasure.room.discovered) {
+            treasureX = treasure.levelX;
+            treasureY = treasure.levelY;
+            treasureScreenX = projectWorldX(treasureX, treasureY);
+            treasureScreenY = projectWorldY(treasureX, treasureY);
+            treasureSprite = treasure.opened ? treasure.openedSpriteName : treasure.closedSpriteName;
+            if (treasure.definition.flushPlacement) {
+              renderer.spriteRenderer.drawSpriteDepthRaised(treasureSprite, treasureX, treasureY, treasureScreenX, treasureScreenY, treasureSprite.spriteSheet.spriteSize, 0);
             } else {
-              a.spriteRenderer.drawSpriteDepth(Ga, La, wa, Fa, ha, Ga.spriteSheet.spriteSize, 0);
+              renderer.spriteRenderer.drawSpriteDepth(treasureSprite, treasureX, treasureY, treasureScreenX, treasureScreenY, treasureSprite.spriteSheet.spriteSize, 0);
             }
           }
         }
-        var bb = game.monsters.defeatedMonsters,
-          za,
-          nb,
-          fb,
-          cb,
-          Ua,
-          Va;
-        for (Va = 0; Va < bb.length; Va++) {
-          za = bb[Va];
-          nb = za.position.getLevelPositionX();
-          fb = za.position.getLevelPositionY();
-          cb = projectWorldX(nb, fb);
-          Ua = projectWorldY(nb, fb);
-          a.drawSprite(za.getSprite(), cb, Ua);
+        var defeatedMonsterList = game.monsters.defeatedMonsters,
+          defeatedMonster,
+          defeatedX,
+          defeatedY,
+          defeatedScreenX,
+          defeatedScreenY,
+          defeatedIndex;
+        for (defeatedIndex = 0; defeatedIndex < defeatedMonsterList.length; defeatedIndex++) {
+          defeatedMonster = defeatedMonsterList[defeatedIndex];
+          defeatedX = defeatedMonster.position.getLevelPositionX();
+          defeatedY = defeatedMonster.position.getLevelPositionY();
+          defeatedScreenX = projectWorldX(defeatedX, defeatedY);
+          defeatedScreenY = projectWorldY(defeatedX, defeatedY);
+          renderer.drawSprite(defeatedMonster.getSprite(), defeatedScreenX, defeatedScreenY);
         }
-        var mc = getMonsters(),
-          vb,
-          Sb,
-          Ma,
-          zb,
-          Hb,
-          ac = game.tileSize / 2 | 0,
-          ob,
-          pb;
-        for (ob = 0; ob < mc.length; ob++) {
-          vb = mc[ob];
-          Sb = vb.position.getLevelPositionX();
-          Ma = vb.position.getLevelPositionY();
-          zb = projectDungeonX(Sb, Ma);
-          Hb = projectDungeonY(Sb, Ma);
-          pb = vb.getSprite();
-          if (4 === vb.characterType) {
-            a.spriteRenderer.drawSpriteDepth(pb, Sb, Ma, zb - ac, Hb - ac, 3 * game.tileSize, 0);
+        var monsterList = getMonsters(),
+          monster,
+          monsterX,
+          monsterY,
+          monsterScreenX,
+          monsterScreenY,
+          halfTileSize = game.tileSize / 2 | 0,
+          monsterIndex,
+          monsterSprite;
+        for (monsterIndex = 0; monsterIndex < monsterList.length; monsterIndex++) {
+          monster = monsterList[monsterIndex];
+          monsterX = monster.position.getLevelPositionX();
+          monsterY = monster.position.getLevelPositionY();
+          monsterScreenX = projectDungeonX(monsterX, monsterY);
+          monsterScreenY = projectDungeonY(monsterX, monsterY);
+          monsterSprite = monster.getSprite();
+          if (4 === monster.characterType) {
+            renderer.spriteRenderer.drawSpriteDepth(monsterSprite, monsterX, monsterY, monsterScreenX - halfTileSize, monsterScreenY - halfTileSize, 3 * game.tileSize, 0);
           } else {
-            a.spriteRenderer.drawSpriteDepth(pb, Sb, Ma, zb, Hb, pb.spriteSheet.spriteSize, 0);
+            renderer.spriteRenderer.drawSpriteDepth(monsterSprite, monsterX, monsterY, monsterScreenX, monsterScreenY, monsterSprite.spriteSheet.spriteSize, 0);
           }
         }
-        drawDungeonCharacters(a, game.minions.minionList);
-        drawDungeonCharacters(a, game.state.adventurers);
-        drawCharacterEffects(a, getMonsters());
-        drawCharacterEffects(a, game.minions.minionList);
-        drawCharacterEffects(a, game.state.adventurers);
+        drawDungeonCharacters(renderer, game.minions.minionList);
+        drawDungeonCharacters(renderer, game.state.adventurers);
+        drawCharacterEffects(renderer, getMonsters());
+        drawCharacterEffects(renderer, game.minions.minionList);
+        drawCharacterEffects(renderer, game.state.adventurers);
         if (game.options.showSpellEffects) {
-          var Ha = game.effects.pool;
-          if (Ha && 0 !== Ha.length) {
-            var jb,
-              Ab,
-              Bb,
-              qb,
-              wb,
-              Ib,
-              Ec,
-              bc,
-              Wa,
-              cc,
-              Qa = null,
-              nc = false;
-            for (jb = 0; jb < Ha.length; jb++) {
-              if (Wa = Ha[jb], cc = Wa.effectType, 1 === cc) {
-                Ab = Wa.getAnimation();
-                Bb = Wa.currentPosition;
-                bc = Wa.frameIndex;
-                qb = Bb.x;
-                wb = Bb.y;
-                Ib = projectDungeonX(qb, wb) + 10;
-                Ec = projectDungeonY(qb, wb) + 10;
-                a.spriteRenderer.drawAnimationRaised(Ab, bc, qb, wb, Ib, Ec, Ab.spriteSheet.spriteSize, 0);
-              } else if (2 === cc) {
-                var sa = a,
-                  Tb = Wa,
-                  qc = undefined,
-                  Fc = undefined,
-                  Cb = undefined,
-                  kb = undefined,
-                  Ra = undefined,
-                  Ja = undefined,
-                  Db = undefined,
-                  gb = undefined,
-                  rb = undefined,
-                  dc = undefined;
-                sa.context.lineWidth = 1;
-                sa.context.strokeStyle = "#FFD700";
-                Ja = Tb.startPosition;
-                Db = Ja.x;
-                gb = Ja.y;
-                rb = projectDungeonX(Db, gb) + game.tileSize;
-                dc = projectDungeonY(Db, gb) + game.tileSize;
-                qc = Tb.targetPosition;
-                Fc = qc.x;
-                Cb = qc.y;
-                kb = projectDungeonX(Fc, Cb) + game.tileSize;
-                Ra = projectDungeonY(Fc, Cb) + game.tileSize;
-                sa.context.beginPath();
-                sa.context.moveTo(rb, dc);
-                var Ka = rb + (kb - rb) / 3 | 0,
-                  Xa = dc + (Ra - dc) / 3 | 0;
-                Ka = Ka + randomLightningOffset();
-                Xa = Xa + randomLightningOffset();
-                sa.context.lineTo(Ka, Xa);
-                Ka = Ka + (kb - Ka) / 2 | 0;
-                Xa = Xa + (Ra - Xa) / 2 | 0;
-                Ka += randomLightningOffset();
-                Xa += randomLightningOffset();
-                sa.context.lineTo(Ka, Xa);
-                sa.context.lineTo(kb, Ra);
-                sa.context.stroke();
+          var effectPool = game.effects.pool;
+          if (effectPool && 0 !== effectPool.length) {
+            var effectIndex,
+              effectAnimation,
+              effectPosition,
+              effectX,
+              effectY,
+              effectScreenX,
+              effectScreenY,
+              effectFrameIndex,
+              effect,
+              effectType,
+              targetedRoom = null,
+              hasTargetedRoom = false;
+            for (effectIndex = 0; effectIndex < effectPool.length; effectIndex++) {
+              if (effect = effectPool[effectIndex], effectType = effect.effectType, 1 === effectType) {
+                effectAnimation = effect.getAnimation();
+                effectPosition = effect.currentPosition;
+                effectFrameIndex = effect.frameIndex;
+                effectX = effectPosition.x;
+                effectY = effectPosition.y;
+                effectScreenX = projectDungeonX(effectX, effectY) + 10;
+                effectScreenY = projectDungeonY(effectX, effectY) + 10;
+                renderer.spriteRenderer.drawAnimationRaised(effectAnimation, effectFrameIndex, effectX, effectY, effectScreenX, effectScreenY, effectAnimation.spriteSheet.spriteSize, 0);
+              } else if (2 === effectType) {
+                renderer.context.lineWidth = 1;
+                renderer.context.strokeStyle = "#FFD700";
+                var startPosition = effect.startPosition;
+                var startX = startPosition.x;
+                var startY = startPosition.y;
+                var lightningStartX = projectDungeonX(startX, startY) + game.tileSize;
+                var lightningStartY = projectDungeonY(startX, startY) + game.tileSize;
+                var targetPosition = effect.targetPosition;
+                var targetX = targetPosition.x;
+                var targetY = targetPosition.y;
+                var lightningEndX = projectDungeonX(targetX, targetY) + game.tileSize;
+                var lightningEndY = projectDungeonY(targetX, targetY) + game.tileSize;
+                renderer.context.beginPath();
+                renderer.context.moveTo(lightningStartX, lightningStartY);
+                var lightningMidX = lightningStartX + (lightningEndX - lightningStartX) / 3 | 0,
+                  lightningMidY = lightningStartY + (lightningEndY - lightningStartY) / 3 | 0;
+                lightningMidX = lightningMidX + randomLightningOffset();
+                lightningMidY = lightningMidY + randomLightningOffset();
+                renderer.context.lineTo(lightningMidX, lightningMidY);
+                lightningMidX = lightningMidX + (lightningEndX - lightningMidX) / 2 | 0;
+                lightningMidY = lightningMidY + (lightningEndY - lightningMidY) / 2 | 0;
+                lightningMidX += randomLightningOffset();
+                lightningMidY += randomLightningOffset();
+                renderer.context.lineTo(lightningMidX, lightningMidY);
+                renderer.context.lineTo(lightningEndX, lightningEndY);
+                renderer.context.stroke();
               } else {
-                if (cc === TARGETED_EFFECT) {
-                  Qa = Wa.room;
-                  nc = true;
+                if (effectType === TARGETED_EFFECT) {
+                  targetedRoom = effect.room;
+                  hasTargetedRoom = true;
                 }
               }
             }
-            if (nc && Qa) {
-              var hb,
-                lb,
-                rc,
-                sc = Qa.tileColumn,
-                Aa = Qa.tileRow,
-                db = sc + Qa.widthInTiles,
-                Mc = Aa + Qa.heightInTiles,
-                ec,
-                Ub,
-                sb,
-                ka,
-                Eb,
-                xb,
-                Na;
-              for (xb = sc; xb <= db; xb++) {
-                for (Na = Aa; Na <= Mc; Na++) {
-                  if ((ec = game.level.getTileAt(xb, Na)) && (hb = ec.tileEffect) && hb.hasSpawned && !hb.isFinished()) {
-                    lb = hb.getAnimation();
-                    rc = hb.frameIndex;
-                    Ub = ec.getPixelX();
-                    sb = ec.getPixelY();
-                    ka = projectDungeonX(Ub, sb) + 10;
-                    Eb = projectDungeonY(Ub, sb) + 10;
-                    a.spriteRenderer.drawAnimation(lb, rc, Ub, sb, ka, Eb, lb.spriteSheet.spriteSize, 0);
+            if (hasTargetedRoom && targetedRoom) {
+              var tileEffect,
+                tileEffectAnimation,
+                tileEffectFrameIndex,
+                roomStartColumn = targetedRoom.tileColumn,
+                roomStartRow = targetedRoom.tileRow,
+                roomEndColumn = roomStartColumn + targetedRoom.widthInTiles,
+                roomEndRow = roomStartRow + targetedRoom.heightInTiles,
+                tile,
+                tilePixelX,
+                tilePixelY,
+                tileScreenX,
+                tileScreenY,
+                effectColumn,
+                effectRow;
+              for (effectColumn = roomStartColumn; effectColumn <= roomEndColumn; effectColumn++) {
+                for (effectRow = roomStartRow; effectRow <= roomEndRow; effectRow++) {
+                  if ((tile = game.level.getTileAt(effectColumn, effectRow)) && (tileEffect = tile.tileEffect) && tileEffect.hasSpawned && !tileEffect.isFinished()) {
+                    tileEffectAnimation = tileEffect.getAnimation();
+                    tileEffectFrameIndex = tileEffect.frameIndex;
+                    tilePixelX = tile.getPixelX();
+                    tilePixelY = tile.getPixelY();
+                    tileScreenX = projectDungeonX(tilePixelX, tilePixelY) + 10;
+                    tileScreenY = projectDungeonY(tilePixelX, tilePixelY) + 10;
+                    renderer.spriteRenderer.drawAnimation(tileEffectAnimation, tileEffectFrameIndex, tilePixelX, tilePixelY, tileScreenX, tileScreenY, tileEffectAnimation.spriteSheet.spriteSize, 0);
                   }
                 }
               }
             }
           }
         }
-        a.spriteRenderer.sortCommands();
-        drawCharacterHighlights(a, getMonsters(), "red");
+        renderer.spriteRenderer.sortCommands();
+        drawCharacterHighlights(renderer, getMonsters(), "red");
         if (!game.state.encounter.noMonstersLeft) {
-          drawCharacterHighlights(a, game.minions.minionList, "#007FFF");
-          drawCharacterHighlights(a, game.state.adventurers, "#8B008B");
+          drawCharacterHighlights(renderer, game.minions.minionList, "#007FFF");
+          drawCharacterHighlights(renderer, game.state.adventurers, "#8B008B");
         }
         if (game.options.showCombatText) {
-          drawFloatingText(a);
+          drawFloatingText(renderer);
         }
       }
     }
     if (game.options.showFps) {
-      a.context.font = "12px Georgia";
-      a.context.fillStyle = "white";
-      a.context.fillText("帧数: " + game.state.fps, 10, 20);
+      renderer.context.font = "12px Georgia";
+      renderer.context.fillStyle = "white";
+      renderer.context.fillText("帧数: " + game.state.fps, 10, 20);
     }
   };
   GameCanvasView.prototype.createDomElements = function () {
-    var a = getElement(this.containerElementId);
-    if (a) {
-      var b = this.elementId,
-        c = /** @type {HTMLCanvasElement | null} */ (getElement(b));
-        if (!c) {
-          c = /** @type {HTMLCanvasElement} */ (createElement("canvas", a, b, "gameTabTopLeftPanel"));
-        c.width = game.viewportWidth;
-        c.height = game.viewportHeight;
-        c.innerHTML = "你的浏览器不支持Html5.请升级你的浏览器.";
+    var containerElement = getElement(this.containerElementId);
+    if (containerElement) {
+      var canvasElementId = this.elementId,
+        canvas = /** @type {HTMLCanvasElement | null} */ (getElement(canvasElementId));
+        if (!canvas) {
+          canvas = /** @type {HTMLCanvasElement} */ (createElement("canvas", containerElement, canvasElementId, "gameTabTopLeftPanel"));
+        canvas.width = game.viewportWidth;
+        canvas.height = game.viewportHeight;
+        canvas.innerHTML = "你的浏览器不支持Html5.请升级你的浏览器.";
       }
-      this.renderer = new SceneRenderer(c.getContext("2d"));
+      this.renderer = new SceneRenderer(canvas.getContext("2d"));
       (/** @type {GameCanvasView & { visible: boolean }} */ (/** @type {unknown} */ (this))).visible = true;
     }
   };

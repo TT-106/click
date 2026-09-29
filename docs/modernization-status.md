@@ -1,0 +1,74 @@
+# 完整现代化目标与当前状态（2026-09-28）
+
+本文件跟踪用户的完整目标：**产品运行不依赖原版高混淆反编译文件，原有玩法与功能尽量等价，源码采用可维护的命名与架构**。U134 的 89 条差分场景和 10 门禁证明了当时的恢复工作达到其验收范围，**不等于完整现代化已经完成**。
+
+## 验收口径
+
+| 目标 | 当前证据 | 判定 |
+|---|---|---|
+| 产品与原版反编译文件分离 | `index.html` 只加载 `src/app.js`；`npm run build` 现审计全部 93 个源码模块的 551 条导入及实际 `dist/`，原版档案依赖 0；隔离注入 `c2.js` 会使审计报错。原版仅作为差分测试 oracle。 | 产品运行路径已分离；以后每次构建继续守护。 |
+| 行为与功能保真 | 本轮 0/1/99/900 回合完整存档对照、89/89 差分场景、浏览器端到端测试通过；U134 验收矩阵仍为 47 PASS / 4 PARTIAL。 | 已覆盖的行为通过；全功能等价尚不能宣称。 |
+| 现代命名与架构 | `statistics.js`、`stats.js`、`effects.js` 的局部语义命名与显式输入已落地；装备目录 39 个类型名和 903 处关联引用已语义化；物品生成与掉落显式接收依赖；黄金视图经只读函数取状态；R22–R25 已把全库八大热点（behaviors 264、scene 196、upgrade-details 152、terrain 131、generation 130、actions 116、rooms 116、upgrades 110）全部语义化归零，inventory.js 退出 game 依赖。 | 仍有 39 个模块合计 1,602 个单字母局部绑定与 37 个 game 直连模块，未完成。 |
+
+验收时必须保留存档 JSON 键、随机数算法与调用顺序、回合节拍、画布及外部 DOM 契约，除非先有明确的版本迁移或设计决策。对每个行为切片先做原版差分和反向验证，再合入新的边界；不能把源代码行数或门禁数量当成功能覆盖率。
+
+## 本轮可复核修改
+
+- `progression/statistics.js`：`bindStatistics(state)` 显式接收状态，记录器不再读取全局 `game`；本轮与累计统计调用仍双写。反向验证：断开统计记录器后原版存档差分转红，恢复后转绿（`output/modernization-r1-negative.log`）。
+- `characters/stats.js`：卷轴命中率更新显式接收施法者属性，属性运算与随机连锁的变量改成语义名；掷骰循环与调用次数保持原样。
+- `characters/effects.js`：状态效果构造、结算、到期移除改成语义名；当前回合由调用者传入；处理顺序、眩晕解除回血条件保持不变。
+- `characters/character.js` 与 `characters/stats.js`：角色属性所需的默认值与可变修正由角色构造时共享注入，属性模块不再导入内容参数；角色属性与状态效果模块因此退出最大循环依赖组。
+- `content/equipment.js`：目录初始化由组合根传入物品生成器；基于语法树的绑定关系精确改名，`catalog` 为 459 处、39 个物品类型定义与其 444 处引用为同一绑定替换。此处没有更改物品登记顺序或字段。
+- `loot/items.js`：物品登记、物品生成、稀有度掷点与掉落更新改成语义名；装备贴图、掉落表、冒险者列表和物品数值规则由组合根提供。哈希算法、随机消费顺序和注册顺序保留。将生成的 `itemValue` 暂时乘 2 时，拾取先行差分场景在 0 回合变红（24↔48），恢复后转绿（`output/modernization-r21-negative.log` / `r21-restored.log`）。
+- `views/party-creation.js`：初始装备生成改用独立的 `startingItem`，消除角色与物品共用变量导致的类型冲突；相关组队差分场景通过。
+- `views/resources.js`：黄金视图通过 `readGold()` 获取当前金币，避免捕获重置前的 `party` 对象；由 `views/dungeons.js` 提供读取函数。
+- `scripts/audit-production-boundary.mjs`：审计产品入口、源码模块与构建产物；`npm run build` 自动执行。隔离注入旧脚本后检查转红，未修改产品源码。
+- `scripts/audit-architecture.mjs`：增报单字母局部绑定数量，用作人工审查线索。单字母坐标或数学变量可能合理，因此此数字不是自动验收阈值。
+- `content/balance.js`：升级构造器与卷轴目录在 `runtime/index.js` 组合根处提供，内容参数模块不再反向导入玩法实现；最大循环依赖组再减少一个模块。
+
+本轮行为证据位于 `output/modernization-r*-*.log`（`output/` 是本地忽略目录）；交接时重新执行命令，不能把本地日志视为仓库永久证据。
+
+## 2026-09-29 续轮（R24：地牢生成命名归零 + sprites.js 退出 game 依赖）
+
+- `src/engine/modules/world/generation.js`（热点第五，130 个）：**语义化归零**。纯重命名 158 处由作用域感知脚本落地（`LayoutGenerator` 构造器五参、`canPlaceDoorAt`/`CastleLayoutGenerator.connectRooms` 族等）；16 个复用/别名函数手工拆分——`generate` 的 `g/h` 三义复用（房宽→房间号→房间别名）拆为 `roomWidth/roomId/placedRoom`、`h`（房高→undefined→抖动轮次）拆为 `roomHeight/jitterRound`；`connectRooms` 的 `a/g` 复用（房间号→时间戳、开始时间→走廊号）引入 `startTime/endTime/hallwayId`，失败分支由"逗号表达式 return"改为显式语句（日志文本与耗时不変）；`moveUpLeft/shiftLeft/shiftUp` 三胞胎的 `b`（moved 旗标↔列坐标）拆为 `moved/previousColumn/previousRow`；`placeHorizontalStairs/placeVerticalStairs` 的 `a = new DungeonStairs(b)` 参数覆写消除。**取证纠错**：`generateDungeonLevel` 第三参实为 `hasSecondEntrance`（三个调用方 character.js:1155/1180、dungeons.js:216 均传该字段），非"房间数"——首版误命名已当场修正。`LayoutMethods` typedef 补 `generate` 声明。证据：parity = 0（0/1/99/900 回合地牢布局逐字节一致——生成逻辑的最强差分）、89/89 场景 = 0、e2e = 0。
+- **`rendering/sprites.js` 退出 game 依赖**（game 直连 39 → **38**，产品边界 550 → **549** 条导入）：`VisualEffect` 构造查动画改经 `bindEffectAnimations(catalog)`（在 `initializeRuntimeGame` 尾部绑定，`game.animations` 单例恢复时不替换）；`clearVisualEffects()` 改为**显式接收特效管理器**（3 个调用方：game.js reset 两处、generation.js 清场，均传 `game.effects`）。证据：typecheck/lint/check/build = 0；parity/scenarios/e2e/soak = 0；`tests/unit/sprite-lookup.test.mjs` 不受影响（不触这两 API）。
+- **累计指标**（R22 起）：单字母绑定 2,833 → **1,944**；game 直连 49 → **38**；最大 SCC 55 → **43**。下一热点：`combat/actions.js`（116）、`world/rooms.js`（116）、`progression/upgrades.js`（110）、`characters/character.js`（98）；解耦候选：`loot/inventory.js`（4 处 game 引用）、`persistence/entities.js`（6）。日志 `output/goal-r2/`。
+
+## 2026-09-28 续轮（R23：渲染/地形热点命名归零 + points.js 退出 game 依赖）
+
+- `src/engine/modules/rendering/scene.js`（热点第二，196 个）：**语义化归零**。渲染管线参数按职责定名（`setSpriteRenderCommand(command, sprite, sortKey, screenX, screenY, renderSize, alpha)` 等）；`GameCanvasView.update` 的约 70 个绑定按渲染对象族命名（`worldRowCursor`/`goldDropList`/`treasureSprite`/`effectPool`/`lightningStartX`…），闪电分支的反编译别名（`sa = renderer`、`Tb = effect`）消除；`drawWorldTileRow`/`drawDungeonTileRow` 的 `f = a` 别名与 `h = game.camera` 死双写改为单读局部。证据：**7 条逐像素指纹场景全过（渲染输出零变化）** + parity/scenarios/e2e = 0。
+- `src/engine/modules/world/terrain.js`（热点第四，131 个）：**语义化归零**。`sampleNoise` 由 22 个复用变量的反编译形态重写为标准 F2 单纯形命名（`skewSum/unskewFactor/cellOriginX/corner0X/gradientIndex0/…`，逐行对应、调用序列不变）；`populateWorldBlock` 的三组别名（`l = b`、`n = f`、`p = d`）与密集逗号表达式拆为命名变量（语句与调用顺序保持，RNG 消费序列不变）；`ensureShopForDungeon` 的商店重掷循环保持原调用次数。证据：parity/scenarios/e2e/soak = 0。
+- **`progression/points.js` 退出 game 依赖**（game 直连 40 → **39**，最大 SCC 44 → **43**）：新增 `bindAdventurePoints(state)`（取 `state.adventurePoints` 子对象；该子对象存档恢复时原位更新、引用稳定），在两个组合根（`runtime/game.js` resetRun、`world/initialization.js`）与 `bindStatistics` 同点调用；三个记账函数与 `recalculateAdventurePoints` 的单字母局部一并语义化。新增引擎无关单测 `tests/unit/point-awards.test.mjs`（4 条：reset 建零账户/award 记账与未知类型怪癖/increase+recalculate 重算扣减与截断/未绑定必抛错）。**反向验证**：注释掉 initialization.js 的绑定调用 → 场景红；恢复 → 绿（`output/goal-r2/f-negative.log` / `f-restored2.log`）。切片中曾把 `game.state` 整体绑入导致 boot 报 `undefined.length`——被 boot 探针当场抓住并修正（教训：bind 语义必须与 bindStatistics 同约定，收 state 取子对象）。
+- **累计指标**（本轮 R22+R23）：单字母绑定 2,833 → **2,077**（behaviors 264→0、upgrade-details 152→0、scene 196→0、terrain 131→0，合计归零 743 个 + points.js 局部）；game 直连 49 → **39**；最大 SCC 55 → **43**；dist 可复现纯净 136 文件。下一热点：`combat/actions.js`（116）、`world/rooms.js`（116）、`progression/upgrades.js`（110）、`world/generation.js`（130→已归零后为 `rendering/sprites.js` 等）；解耦候选：`rendering/sprites.js`（3 处 game 引用）、`loot/inventory.js`（4）、`persistence/entities.js`（6）。日志 `output/goal-r2/`。
+
+## 2026-09-28 续轮（R22：AI 行为热点命名归零 + 可复现纯净构建 + 升级详情视图命名归零）
+
+- `src/engine/modules/ai/behaviors.js`（全库单字母绑定热点第一，264 个）：**全部语义化归零**。做法分两层——
+  ① 纯重命名（绑定在函数内语义单一，约 540 处标识符）用 Babel 作用域感知脚本 `output/goal-r2/rename-behaviors-auto.mjs` 批量落地：只替换 `binding.identifier`/`referencePaths`/赋值左值，不触碰成员属性 `x.a`、对象键、JSDoc 与字符串；脚本内置"行数不变 + 字符串字面量多重集不变 + 每表项必须命中"三重断言。
+  ② 复用变量（一处字母多义，19 个函数）逐个手工拆分为独立命名（如 `updateWorldMode` 的 `b/c/d/f` 拆为 `party/targetShop/activeCastle/targetDungeon/targetColumn/targetRow/targetTile/position`；`FollowLeaderBehavior.getBehaviorScore` 的标号 `a` 改 `threatSearch`；四个掉落认领 `getBehaviorScore` 的 `b/g/h/l/n` 拆为 `room/drops/drop/dropIndex/characterPosition/bestDrop/dropDistance/searchRoom/bestDistanceSquared`）。语句顺序、条件结构与随机消费顺序均未改动。
+  证据：改名后 typecheck/lint/check = 0；0/1/99/900 回合 parity = 0；89/89 差分场景 = 0（AI 行为主要被场景矩阵覆盖）。
+- `src/engine/modules/views/upgrade-details.js`（热点第三，152 个）：**同套路归零**——自动脚本 267 处纯重命名（16 个详情类构造器 `upgrade/contentContainer`、全部 `attachUpgrade(upgrade)`、各 `update()` 的 `cost/title/description` 等）+ 21 个复用变量函数手工拆分（`createDomElements` 族的 `row→cell→img` 复用拆为 `headerRow/previewCell/costIconBox/costIconImage` 等；`CharacterLevelDetails.update` 的 8 个复用变量拆为 `cost/title/monsterLevel/scaledLevel/partyMinLevel/requiredMonsterLevel/totalDamage…averageDamage…/threatCount/assessmentText`，四项队伍均值与怪物四项的对比方向、评定文案分支逐行保持）。证据：typecheck/lint/check/build = 0；parity = 0；e2e = 0；89/89 场景 = 0；doc-snippets 0 漂移。
+- `scripts/build.mjs`：拷贝后新增**陈旧产物清理**——dist/ 中不在本次源清单内的文件逐一 `rm`，双重护栏（陈旧路径必须落在拷贝根之下；单轮超过 45 个中止并提示分轮，规避 safe-delete-shim 限额）。实测清掉 38 个带 U+F00D 尾随字符的 99 字节历史垃圾文件，dist 174 → **136 个文件**，与源清单精确一致；第二次构建 0 回写/0 清理，构建可复现纯净。清理只作用于 `dist/`，源工作树不受影响。
+- **累计指标**：全库单字母绑定 2,833 → **2,421**（behaviors.js 264→0、upgrade-details.js 152→0）；日志 `output/goal-r2/`。
+
+## 2026-09-29 续轮（R25：命名热点前三归零 + inventory.js 退出 game 依赖；智能体编排轮）
+
+本轮起按用户要求改为**每切片一个执行智能体，落地后 code-review 双轴（Standards/Spec）审查**的编排：R25 共 4 个执行切片 + 6 轴审查；审查发现的命名问题全部落实后复审放行。证据与备份在 `output/goal-r25/`（`*.bak` 起点快照、`*-slice.diff` 逐切片 diff、`f-*.log` 最终门禁）。
+
+- `src/engine/modules/combat/actions.js`（116 个）：**语义化归零**（主智能体执行）。725 行逐行对位，机械四断言（行数/字符串/数字/导出）全过，153 处 `actions.js:行号` 文档引用零漂移。一字母多义全拆：`advanceCombatAction` 的 d 四义、h 四义；`applySpellEffect` 按法术分支拆 19 名（拾取四连统一 collectorPosition/dropList/dropIndex/drop）；`resolveCharacterDefeat` 掉落段四边界 + 计数族；`createReturningAction` 双分支共享声明；label `a:`→`findOwner:`。**审查双轴 PASS**；落实两处审查修正：`effectType`→`tileEffect`（实参是完整特效对象，`remainingEffectDamage` 取证）、`goldRoll`→`goldAmount`（`1+rollGoldDrop()` 即最终金额）。
+- `src/engine/modules/world/rooms.js`（116 个）：**语义化归零**（执行智能体）。657 行对位保持；1237 对标识符逐位置配对校验；`revealHallway` 12 拐角分支方向布尔几何取证（北=小行、西=小列）。**双轴 PASS**；按审查补齐双字母 `la`/`na`→`previousIsEast`/`nextIsEast`（不在单字母指标内的漏网）。
+- `src/engine/modules/progression/upgrades.js`（110 个）：**语义化归零**（执行智能体）。1268 行对位保持；217 函数中仅 15 个有声明性结构差异（全为声明的拆分/同行 var 转换）；previousXxx 快照族赋值时机逐一核对。**双轴 PASS**（5 个自报把握不足点全部判定诚实命名）。
+- **`src/engine/modules/loot/inventory.js` 退出 game 依赖**（game 直连 38→**37**，最大 SCC 43→**41**，产品边界 549→**548** 导入）（执行智能体）。4 处引用取证后选**调用点显式传参**（R24 `clearVisualEffects(effects)` 同款先例，非 bind）：`Inventory(victoryCount)` 容量仍构造时急切求值（时序零变化，party-creation.js:59 与 game-save.js:418 两个调用点都在 victoryCount 定值之后）；`addInventoryItem(a, b, inventories)` 第三参收 InventoryRegistry（5 调用方改传；组合根无 inventory 相关 hunk）。**反向验证红→绿**（`inv-decouple-negative.log`：破坏注入→两拾取场景 DTO 分叉红；恢复绿）。新增引擎无关单测 `tests/unit/inventory-decouple.test.mjs` 5 条（注入遗漏必抛错）。**双轴 PASS**。
+- **门禁（R25 后对最终工作树逐项回显，`output/goal-r25/f-*.log`）**：lint=0 build=0 typecheck=0 check=0 parity=0 scenarios=0（89/89）e2e=0 soak=0 perf=0 perf:frames=0；`git diff --check`=0。文档可数指标同步：单测 19→**24**、语法文件 136→**137**、类型债台账 **41 `any`**/146 `unknown`（lint 口径实测）。
+- **累计指标**（R22 起）：单字母绑定 2,833 → **1,602**（累计归零 behaviors 264/scene 196/upgrade-details 152/terrain 131/generation 130/actions 116/rooms 116/upgrades 110）；game 直连 49 → **37**；最大 SCC 55 → **41**。下一热点：`views/character.js`（98）、`persistence/entities.js`（94）、`ai/targeting.js`（89）、`views/expedition.js`（84）；解耦候选以 `npm run audit:arch` 实测为准（`persistence/entities.js` 6 处）。
+
+## 尚未完成的主要工作
+
+1. **拆开中心状态与循环依赖**：最新 `npm run audit:arch -- --json` 实测 37 个模块直接导入 `runtime/game.js`，一个强连通分量仍包含 41 个模块；74 个初始化调用仍依赖固定顺序。装备目录、物品生成、角色属性、状态效果、内容参数、冒险点数、特效动画目录与背包已退出该循环，但整个领域图仍需继续拆分。应按领域建立明确输入与组合根，再逐个移动依赖方向，避免只增加转发包装。
+2. **清理恢复期命名与原型装配**：77 个引擎模块中仍有 39 个模块包含合计 1,602 个单字母局部绑定（`ai/behaviors.js`、`views/upgrade-details.js`、`rendering/scene.js`、`world/terrain.js`、`world/generation.js`、`combat/actions.js`、`world/rooms.js`、`progression/upgrades.js` 已于 R22–R25 归零）。优先处理 `views/character.js`（98）、`persistence/entities.js`（94）、`ai/targeting.js`（89）、`views/expedition.js`（84）等热点，并逐项判断哪些是有意义的坐标。大量运行方法仍在 `initialize*()` 内挂到原型上；改装配方式必须保住初始化时序与存档构造行为。
+3. **继续证明功能保真**：U134 的 P-1、P-5、P-6、P-7 维持 PARTIAL。真实多版本存档、未剥离的原版页面、真机帧时间和第二浏览器依赖外部材料；在现有环境内仍可扩展玩法与 UI 的差分覆盖，但不得把模拟数据称为真实样本。
+4. ~~**构建快照的遗留文件**~~ — ✅ **已闭合（本轮）**：`build.mjs` 拷贝后按源清单清理 dist/ 陈旧文件（带拷贝根归属 + 单轮上限双重护栏），38 个 U+F00D 垃圾产物已清除，dist 136 文件与源清单一致，重复构建 0 回写/0 清理。
+
+## 下一切片入口
+
+先复核 `git status --short`，不得重置或清理 U131–U134 与 R22–R25 混合工作树。运行 `npm run audit:arch -- --json` 固定最新指标，再从 `views/character.js`（98）或 `persistence/entities.js`（94，兼解耦候选）选择一个有真实使用场景的边界切片。R25 起的编排惯例：每切片一个执行智能体（行数保持 + 机械四断言 + 只改自己文件），落地后由 code-review 双轴（Standards/Spec）审查、修正落实后主智能体统一跑门禁。每个切片至少核对存档差分、相关差分场景、浏览器入口和文档引用；最后对精确工作树重跑 10 门禁与 `git diff --check`。若实际指标、场景数或外部材料变动，以新一轮实测为准。

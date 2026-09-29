@@ -1,5 +1,7 @@
 # 架构债台账（Clickpocalypse II 现代化，2026-09-27 首版）
 
+> 2026-09-28 新一轮实测为 554 条 import 边、43 个直接导入 `runtime/game.js` 的模块、最大 SCC 48 个模块；下文 564/49/55 是本文件首版基线。当前执行状态见 `docs/modernization-status.md`，新指标可用 `npm run audit:arch -- --json` 复核。
+
 > 依据 `docs/NEXT-ARCHITECTURE-PROMPT.md` §3 编写。**本文件只记录可复核的事实与显式标注的推断**；
 > 每个数字都能用文中给出的命令重跑出来。事实来源 = `scripts/audit-architecture.mjs`（`npm run audit:arch`，
 > 结果落 `artifacts/architecture-audit.json`）与直接读源码；**不引用任何旧报告里的结论**。
@@ -49,7 +51,7 @@ rendering / runtime / simulation / views / world` 全部域目录（仅 `core/`�
 74 个 `initialize*()` 按固定顺序调用。脚本只统计**初始化期真正会被执行**的跨模块调用
 （进入 `initializeX()` 函数体后跳过所有嵌套函数体，避免把"以后才发生"的回调算成依赖），得到 41 条边：
 
-- `initializeRuntimeGame(73)` 一条就贡献 18 条（它是组合根，排在最后——`runtime/index.js:150`）；
+- `initializeRuntimeGame(73)` 一条就贡献 18 条（它是组合根，排在最后——现位于 `runtime/index.js:165`）；
 - 视图族 19 条指向 `initializeViewsBase(54)` / `initializeViewsNavigation(55)`（原型挂载必须先于子类）；
 - **41 条边里 0 条违反声明顺序** ⇒ 声明的顺序是这 41 条依赖的一个合法拓扑序。
 
@@ -65,14 +67,32 @@ rendering / runtime / simulation / views / world` 全部域目录（仅 `core/`�
 - `src/services/save-validation.js` → `engine/save-codec.js`（纯编解码，无状态）
 
 **但**：
-1. `adapter.js:63-68` 的 `startParty()` 把"开局"这条命令实现为**直接改写遗留视图的内部字段**：
-   `controller.selectedCharacters = …`、`controller.validParty = true`、`controller.startButton.onclick()`。
-   即命令层的抽象在对象层面被穿透（快照/命令契约只覆盖了读路径与部分写路径）。
+1. ~~`adapter.js:63-68` 的 `startParty()` 把"开局"这条命令实现为**直接改写遗留视图的内部字段**~~
+   ✅ **U132 彻夜会话已收窄**：`adapter.startParty` 现调用 `PartyCreationView.prototype.startParty(members)`
+   ——视图上与遗留开始按钮**共用**的唯一创建入口（内部：写自身选择状态 → `validateSelectedParty`
+   （视图同一条重名/空名/容量校验，写 `validParty` 并刷新按钮文案）→ `createAdventurerPartyFromSelection`
+   ——自原 onclick 闭包**逐字提取**的创建函数，随机消费顺序不变）。产品命令不再直写
+   `selectedCharacters`/`validParty`，也不再调用 `startButton.onclick()` 这个 DOM 回调。
+   **可数收益**：调用者此前须知道 3 个视图内部字段 + 1 条转义职责（`escapeName`）并调用 DOM 回调；
+   现在只需 1 个方法调用。`escapeName` 留在产品侧（转义属产品 DOM 渲染职责；遗留路径传原名，
+   语义不变）。**验证**：E2E 全绿（推荐阵容/改名/开战/五条负路径断言：重名拒绝、未解锁职业拒绝、
+   空阵容拒绝、开局后重复建队拒绝、**载入真实原版存档后重复建队拒绝**）；`test:parity` 0；89 场景矩阵全绿；
+   `DOM 契约`（c2c 选择器）未动。
+   ~~**残留缺口（如实）**：开局创建路径的**原版差分**仍缺~~ ✅ **U132 追加交付（补课完成）**：
+   原版组队视图控制器取证闭环（仿 dh/th/p.u 双端取证流程）——控制器 `Az`（c2.js:26306-26312）：
+   `F`="partyCreationTabContent"、`Vb`=selectedCharacters（元素 `{Qy:classIndex, za:defaultName}`）、
+   `Ww`=validParty、`$i`=startButton（DOM id "startQuestButton"，26360）；onclick 闭包 26363-26414
+   （守卫 `1 > a.Vb.length || !a.Ww`，"Party Creation" 串 @26410 定位创建体）；视图宿主
+   `w.Ee`（gameFields: Ee→view；44293 `Ee: new ay`、23492 `ay`、23497 panels 数组 **`Tc`**）。
+   据此新增差分场景 `party-creation-differential`（harness `createPartyFromBlank`）：reset 到两端一致的
+   空白态后，镜像字段写入驱动**各自的原生开局闭包**（原版 `Game.Ee.Tc` 控制器 ↔ 重构
+   `game.view.panels` 控制器）以同一份 4 人阵容建队，推进 300+900 回合完整 DTO 差分全绿；
+   反向验证：重构侧创建体 `baseAttackCooldown` 12→13 立即分叉变红，恢复后转绿。
 2. 引擎自带的 12 个 `views/**` 模块仍直接持有并操作 DOM，产品壳通过 `mountExpedition()` 搬运节点
    （`src/ui/legacy-panels.js`）。这是"UI 独占路径"的根因（`docs/reverse-engineering/unresolved.md` U7）。
 
-**INFERENCE**：把 `startParty` 改成"调用引擎自己的开局入口"是可行的收窄方向，但它会改动
-`views/party-creation.js` 的调用关系，属于第二个切片的候选，不在本轮范围内。
+**INFERENCE（历史，已被 U132 部分兑现）**：把 `startParty` 改成"调用引擎自己的开局入口"是可行的收窄方向，
+当初判断"会改动 `views/party-creation.js` 的调用关系，属于第二个切片的候选"——U132 即该切片的落地。
 
 ### 1.5 跨目录最常被读写的状态（FACT）
 
@@ -98,18 +118,24 @@ ai/characters/persistence/rendering/simulation/views/world）。但把它收进�
 渲染与存档恢复三条路径，且现有测试只能靠差分"整体相等"来验证——**收益不明确、验证手段弱**，
 故列为后续候选而非本轮切片（见 §4）。
 
-### 1.6 存档 DTO 的类型资产没有被使用（FACT）
+### 1.6 存档 DTO 的类型资产：从 0 引用到已接入两处（FACT，2026-09-27 更新）
 
 `persistence/save-dto.js` 有 9 个 typedef（`SaveItemEffect / SaveItem / SavePosition / SaveAdventurer /
 SavePotion / SaveScroll / SaveAchievement / SaveGameOptions / SaveData`）。用 Babel 扫全部 `src/**/*.js`：
 
-- 除 `save-dto.js` 自身外，**没有任何文件引用这 9 个名字**。
+- 除 `save-dto.js` 自身外，**没有任何文件引用这 9 个名字**（U130 审计时的事实）。
 - `tsconfig.json` 的 `include` 只有 `src/engine/save-codec.js`、`core/**/*.js`、`persistence/**/*.js`；
   `strict: false`、`checkJs: true`。经 import 图传递，`tsc --listFiles` 实际加载 **76/77** 个引擎模块。
+- **U131 已接入两处**：`createSaveState` 标 `@returns {SaveData|SaveDataUninitialized}`、
+  `restoreGameState` 里 `JSON.parse` 的结果标 `@type {SaveData}`。写错/读错顶层键现在**由 tsc 报出**
+  （反向验证：把 `settings:` 改成 `settingsTypo:` → TS2322；把 `d.frameNumber` 改成 `d.frameNumberTypo`
+  → TS2551）。空白档形态不靠注解假装覆盖，由 `scripts/audit-save-schema.mjs` 机械比对四种形态。
+- 顶层键的实测结论：**声明 / 真实 fixture / 序列化器已初始化分支 = 各 30 键且键序一致**；
+  未初始化分支 = 4 键。（旧文档里的"29 顶层键"是笔误，已更正。）
 
-**INFERENCE**：`SaveData` 目前只是"存档 schema 的文档化来源"，不是被检查的契约。
-把它接到 `game-save.js` 的序列化/恢复函数上能获得真正的 DTO 形状校验，但那条路径
-**没有单测、只有差分**，任何接线错误都会表现为"存档损坏"，风险高于本切片收益 → 列为下一候选（§4）。
+**INFERENCE（U130 时的判断，U131 后已部分改变）**：`SaveData` 当时只是"存档 schema 的文档化来源"，
+不是被检查的契约；那条路径**没有单测、只有差分**，接线错误会表现为"存档损坏"，
+故当时列为下一候选而非第一切片。U131 的做法是先做只读的 schema 比对把四种形态对齐，再逐函数接线。
 
 ---
 
@@ -210,19 +236,31 @@ SavePotion / SaveScroll / SaveAchievement / SaveGameOptions / SaveData`）。用
 | 把 `partyMaxLevel` 在 `getAchievementCheckData()` 里提前求值 | 改变 `party.cachedMaxLevel` 的写入时机 ⇒ 行为变更（§2 反例 1） |
 | 不改 `tick.js`，让 328 条成就各自现取数据 | 实测每回合 +0.02ms（§3.4） |
 | 把 `game.worldActive`（9 读 4 写、7 个目录）收进显式接口 | 需要同时改行为决策 / 渲染 / 存档恢复三条路径，而验证手段只有"整体差分相等"，收益不明确（§1.5） |
-| 把 `save-dto.js` 的 `SaveData` 接到 `game-save.js` | 触碰存档路径且该路径只有差分没有单测，风险高于本切片收益（§1.6）→ 列为下一候选 |
+| U132 备选：把 `escapeName` 移进 `PartyCreationView` 的共享入口 | 遗留选择路径传**原名**（`mountClassChoice` push `adventurerClasses[c].defaultName`），入口内转义会改变遗留路径对特殊字符的行为（双重转义）；转义属产品 DOM 渲染职责，留在 adapter 边界 |
+| U132 备选：`adapter.startParty` 绕过选择状态、直接调创建函数 | 会使视图 `selectedCharacters` 与实际队伍脱节，且等于复制一条绕过校验的新路径，与"不复制开局逻辑"冲突；现方案让共享入口自己写选择状态再走同一条校验 |
+| 在**首个切片**里就把 `save-dto.js` 的 `SaveData` 接到 `game-save.js` | 触碰存档路径且该路径只有差分没有单测，风险高于第一个切片的收益（§1.6）→ **改为独立切片 U131 执行**：先用只读的 schema 比对把四种形态对齐，再逐函数接线 |
 | 为"减少 `game` 导入数"而拆分/合并模块 | 模块数不是成果（§4 原话）；唯一 SCC 有 55 个成员，机械消除循环会引入转发层而不减少调用者需要知道的东西 |
 
 ---
 
 ## 5. 下一步候选（按证据排序）
 
-1. **`save-dto.js` 接入 `game-save.js`**（`persistence`）：把 `SaveData` 变成被 tsc 检查的契约。
-   入口证据：`save-dto.js` 的 9 个 typedef 目前 0 引用（§1.6）；`tsc --listFiles` 已覆盖 76/77 模块，
-   接线不会扩大检查范围。**风险控制**：逐函数接线，每个函数一次 parity + 62 场景。
-2. **`views/party-creation.js` 的开局入口收窄**：让 `adapter.startParty` 不再写视图内部字段（§1.4）。
-   入口证据：`adapter.js:63-68` 的三处直接字段写入。**风险**：`partyCreationTabContent` 是 c2c 外部
-   契约的一部分，需先确认选择器不变。
+1. ~~**`save-dto.js` 接入 `game-save.js`**~~ ✅ **U131 已执行（第一处接线）**：`scripts/audit-save-schema.mjs`
+   （已入 lint 不变量 9）确认四种形态的顶层键完全一致（各 30 键，键序也一致），随后接入
+   `createSaveState` 的返回类型与 `restoreGameState` 的解析结果，并各做一次反向验证。
+   **剩余**：把仍标成 `{Object}` 的嵌套形态（`world` / `statistics` / `monsterTypes` /
+   `pointManagerState` …）也写成具名 typedef，每写一层跑一次 tsc——
+   纯增量工作，但每层的证据都必须在 `tests/fixtures/original.c2save` 里核对，**不许凭猜测写**。
+   （彻夜会话已按此法完成 `dungeonManagerState`/`SaveDungeonState` 两层，含审计 spot-check；
+   并实测堵上空白档假绿：审计原先只查"空白分支 ⊆ 30 键声明"，给空白分支加一个声明内也有的键
+   （如 `turnNumber`）时旧审计与 tsc 联合类型**都不红**——已改为与 `SAVE_BLANK_TOP_LEVEL_KEYS`
+   双向逐键相等，破坏实验红/恢复绿。U134 又完成 `monsterTypes` 三层 typedef（含恢复/序列化两侧接线
+   与审计 3 条 spot-check，负向验证 TS2339/TS2353/审计 exit 1 三向）；实测发现 JS 里 JSDoc 参数标注
+   不被赋值收窄覆盖，被复用的参数只能读取点 cast——记录见 `docs/m10-type-debt.md`。）
+2. ~~**`views/party-creation.js` 的开局入口收窄**~~ ✅ **U132 已执行**（见 §1.4）：
+   `PartyCreationView.prototype.startParty(members)` 成为产品命令与遗留按钮共用的唯一创建入口，
+   `adapter.js` 的三处直接字段写入与 DOM 回调调用全部移除；E2E 补四条负路径断言。
+   **风险已解除**：`partyCreationTabContent` 的 c2c 选择器未动（E2E 契约断言全绿）。
 3. **`game.worldActive` 的状态归属**：先把"谁在写"收敛到一处（4 个写点），再考虑是否做接口。
    **前提**：先补一条能直接观察"世界/地牢模式切换"的差分断言，否则无法验证。
 4. **相邻的 `progression/statistics.js`**：把"统计写入"从"每个调用点各自找 recorder"收敛为具名入口。

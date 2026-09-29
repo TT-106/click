@@ -38,60 +38,68 @@ export function mountPartyCreation(a) {
   a.startButton.style.textAlign = "center";
   a.startButton.innerHTML = getPartyCapacityLabel();
   a.startButton.onclick = function () {
-    if (!(1 > a.selectedCharacters.length) && a.validParty) {
-      var b = a.selectedCharacters,
-        d,
-        f,
-        g,
-        h = "";
-      for (d = 0; d < b.length; d++) {
-        f = b[d].classIndex;
-        f = adventurerClasses[f];
-        g = b[d].defaultName;
-        var l = f.spriteName;
-        g = new Character(g, ADVENTURER_TYPE, f.characterClass, f, new Inventory());
-        var n = g.stats;
-        g.sprite = game.monsterSprites.getSprite(l);
-        l = createBehaviorQueue(f.createBehaviors());
-        g.behaviors = l;
-        n.baseAttackCooldown = 12;
-        n.baseHealthRegenPercent = 2;
-        n.baseSpiritRegenPercent = 3;
-        n.characterLevel = 1;
-        l = Math.min(40, game.state.victoryCount);
-        if (0 < l) {
-          var p = g;
-          p.skillPoints = l;
-          p.hasUnspentSkills = hasUnspentSkills(p);
-        }
-        if (f.startsWithSpell) {
-          g.initialSpellSkillPoint = 1;
-        }
-        refreshPartyLevels();
-        for (var l = g.slotList, s = p = undefined, s = /** @type {any} */ (0); s < l.length; s++) {
-          if (p = generateItem(game.itemGenerator, l[s], g, 1, 0)) {
-            (/** @type {any} */ (g)).equipItem(p);
-          }
-        }
-        applyLevelStats(n, 1, f.statMultipliers);
-        f = g;
-        game.state.adventurers.push(f);
-        if (0 < d) {
-          h += ", ";
-        }
-        h += f.classDefinition.className;
-      }
-      game.state.leader = game.state.adventurers[0];
-      game.state.scrollCaster = chooseScrollCaster();
-      game.partyCreated = true;
-      placePartyInWorld();
-      unlockStartingRegion();
-      refreshUnspentSkillFlags();
-      game.allies.reset();
-      game.view.reset();
-      recordGameEvent("Party Creation", h);
-    }
+    createAdventurerPartyFromSelection(a);
   };
+}
+/** 创建小队的真实引擎入口（U132 自 startButton.onclick 闭包逐字提取，随机消费顺序不变）：
+ *  遗留按钮与产品壳 adapter.startParty 经 PartyCreationView.prototype.startParty 共用本函数，
+ *  两边不再各自驱动开局。守卫（非空选择 + validParty）与函数体保持原语义。 */
+function createAdventurerPartyFromSelection(a) {
+  if (!(1 > a.selectedCharacters.length) && a.validParty) {
+    var b = a.selectedCharacters,
+      d,
+      f,
+      g,
+      h = "";
+    for (d = 0; d < b.length; d++) {
+      f = b[d].classIndex;
+      f = adventurerClasses[f];
+      g = b[d].defaultName;
+      var l = f.spriteName;
+      g = new Character(g, ADVENTURER_TYPE, f.characterClass, f, new Inventory(game.state.victoryCount));
+      var n = g.stats;
+      g.sprite = game.monsterSprites.getSprite(l);
+      l = createBehaviorQueue(f.createBehaviors());
+      g.behaviors = l;
+      n.baseAttackCooldown = 12;
+      n.baseHealthRegenPercent = 2;
+      n.baseSpiritRegenPercent = 3;
+      n.characterLevel = 1;
+      l = Math.min(40, game.state.victoryCount);
+      if (0 < l) {
+        var p = g;
+        p.skillPoints = l;
+        p.hasUnspentSkills = hasUnspentSkills(p);
+      }
+      if (f.startsWithSpell) {
+        g.initialSpellSkillPoint = 1;
+      }
+      refreshPartyLevels();
+      const startingSlots = g.slotList;
+      for (let slotIndex = 0; slotIndex < startingSlots.length; slotIndex++) {
+        const startingItem = generateItem(game.itemGenerator, startingSlots[slotIndex], g, 1, 0);
+        if (startingItem) {
+          (/** @type {any} */ (g)).equipItem(startingItem);
+        }
+      }
+      applyLevelStats(n, 1, f.statMultipliers);
+      f = g;
+      game.state.adventurers.push(f);
+      if (0 < d) {
+        h += ", ";
+      }
+      h += f.classDefinition.className;
+    }
+    game.state.leader = game.state.adventurers[0];
+    game.state.scrollCaster = chooseScrollCaster();
+    game.partyCreated = true;
+    placePartyInWorld();
+    unlockStartingRegion();
+    refreshUnspentSkillFlags();
+    game.allies.reset();
+    game.view.reset();
+    recordGameEvent("Party Creation", h);
+  }
 }
 export function mountPartyIntroduction(a) {
   a = createElement("div", a, "partyCreationHeader", "partyCreationIntroductionPanel");
@@ -403,6 +411,16 @@ export function initializeViewsPartyCreation() {
     this.characterSelectionButtons.length = 0;
     this.validParty = false;
     this.startButton = null;
+  };
+  /** 产品壳（adapter.startParty）与遗留 startButton 共用的唯一"创建小队"入口（U132）。
+   *  调用者只需传入 {classIndex, defaultName} 列表，不必再了解 selectedCharacters/validParty
+   *  两个视图私有字段，也不必调用 startButton.onclick 这个 DOM 回调。
+   *  语义：写自身选择状态（update 据此渲染已选表）→ 按视图同一条校验（重名/空名/容量，
+   *  结果写 validParty 并刷新按钮文案）→ 共用创建函数。守卫不过时静默不创建（与原按钮一致）。 */
+  PartyCreationView.prototype.startParty = function (a) {
+    this.selectedCharacters = a;
+    validateSelectedParty(this);
+    createAdventurerPartyFromSelection(this);
   };
   PartyCreationView.prototype.update = function () {
     if (!(0 < game.state.adventurers.length)) {

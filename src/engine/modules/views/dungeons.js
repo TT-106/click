@@ -114,7 +114,7 @@ export function DungeonsView(a) {
   addTab(a, this.clearedTab);
   addTab(a, this.farmedTab);
   this.cachedFarmCount = this.cachedClearedCount = this.cachedAttackableCount = this.cachedDiscoveredCount = -1;
-  addChildView(this, new GoldView());
+  addChildView(this, new GoldView(() => game.state.party.gold));
   addChildView(this, a);
   addChildView(this, b);
   addChildView(this, c);

@@ -313,14 +313,14 @@ export function initializeSimulationCharacters() {
         game.scrollDrops.drops.push(scrollDrop);
       }
       if (100 * Math.random() <= globalUpgradeDefinitions.potionDropChance.currentValue) {
-        const potion = new Potion(potionDefinitions[randomInt(potionDefinitions.length)]);
+        const potion = new Potion(potionDefinitions[randomInt(potionDefinitions.length)], game.itemSprites);
         const potionDrop = new PotionDrop(potion, updateCharacterFrames(c.getLevelPositionX(), g, h), updateCharacterFrames(c.getLevelPositionY(), l, n), f);
         game.potionDrops.drops.push(potionDrop);
       }
       if (randomInt(100) <= globalUpgradeDefinitions.itemDropChance.currentValue || guaranteedItemDropsModifier.currentValue) {
-        spawnItemDrop(game.itemDrops, updateCharacterFrames(c.getLevelPositionX(), g, h), updateCharacterFrames(c.getLevelPositionY(), l, n), f, d);
+        spawnItemDrop(game.itemDrops, updateCharacterFrames(c.getLevelPositionX(), g, h), updateCharacterFrames(c.getLevelPositionY(), l, n), f, d, game.itemGenerator, game.state.adventurers);
         if (doubleItemDropsModifier.currentValue) {
-          spawnItemDrop(game.itemDrops, updateCharacterFrames(c.getLevelPositionX(), g, h), updateCharacterFrames(c.getLevelPositionY(), l, n), f, d);
+          spawnItemDrop(game.itemDrops, updateCharacterFrames(c.getLevelPositionX(), g, h), updateCharacterFrames(c.getLevelPositionY(), l, n), f, d, game.itemGenerator, game.state.adventurers);
         }
       }
       b.isDead = true;

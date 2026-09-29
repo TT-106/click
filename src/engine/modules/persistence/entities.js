@@ -1,6 +1,9 @@
 /** 角色、装备、怪物与统计序列化。
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
+/** @typedef {import('./save-dto.js').SaveMonsterTypesState} SaveMonsterTypesState */
+/** @typedef {import('./save-dto.js').SaveMonsterTypeState} SaveMonsterTypeState */
+/** @typedef {import('./save-dto.js').SaveMonsterTypeEntry} SaveMonsterTypeEntry */
 import { Item, ItemEffect } from "../loot/items.js";
 import { game } from "../runtime/game.js";
 import { MonsterType, advanceMonsterTypeRank } from "../combat/encounters.js";
@@ -175,6 +178,7 @@ export function restoreStatComponent(a, b) {
   }
 }
 export function MonsterSaveAdapter() {}
+/** @returns {SaveMonsterTypeState} U134：序列化器接进 save-dto.js——写出侧键名/缺失由 tsc 对账 */
 export function serializeMonsterLevel(a, b) {
   var c = [],
     d;
@@ -186,6 +190,7 @@ export function serializeMonsterLevel(a, b) {
     monsterTypes: c
   };
 }
+/** @returns {SaveMonsterTypeEntry} U134：写出侧多键/少键（如 nameTypo）由 tsc TS2322/2741 报出 */
 export function serializeMonsterType(a) {
   return {
     name: a.getName(),
@@ -193,6 +198,7 @@ export function serializeMonsterType(a) {
     kills: a.killCount
   };
 }
+/** @param {SaveMonsterTypeEntry} a 存档里的怪物种类行 @param {number} b 怪物等级 */
 export function restoreMonsterType(a, b) {
   var c = a.kills,
     d = new MonsterType(a.name, a.sprite, b),
@@ -319,10 +325,13 @@ export function restoreStatistics(a, b, c) {
   b.weaponRacksLooted = c;
 }
 export function initializePersistenceEntities() {
+  // U134：顶层键读取用行内 cast 守卫（SaveMonsterTypesState 已进 SaveData；JS 里 JSDoc
+  // 参数标注不被赋值收窄覆盖——参数 a 在下方被复用为 levelStates 数组，属 AST 恢复期
+  // 写法，勿重排、勿改复用形态，故不给参数标注而给读取点 cast，负向验证 TS2339 红/还原绿）。
   MonsterSaveAdapter.prototype.restoreMonsterTypes = function (a) {
     var b = game.monsterCatalog;
-    b.minUnlockedLevel = a.minUnlockedLevel;
-    b.maxUnlockedLevel = a.maxUnlockedLevel;
+    b.minUnlockedLevel = (/** @type {SaveMonsterTypesState} */ (a)).minUnlockedLevel;
+    b.maxUnlockedLevel = (/** @type {SaveMonsterTypesState} */ (a)).maxUnlockedLevel;
     a = a.monsterLevelStates;
     for (b = 0; b < a.length; b++) {
       for (var c = a[b], d = c.level, c = c.monsterTypes, f = [], g = undefined, g = /** @type {any} */ (0); g < c.length; g++) {

@@ -1,74 +1,82 @@
 /** 冒险点数事件、奖励和升级定义。
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
-import { game } from "../runtime/game.js";
 export var POINT_EVENT_ENCOUNTER, POINT_EVENT_LEVEL_CLEARED, POINT_EVENT_DUNGEON_CLEARED, killPointEvent, spellPointEvent, encounterPointEvent, levelClearedPointEvent, dungeonClearedPointEvent, castleConqueredPointEvent, chestPointEvent, bookcasePointEvent, weaponRackPointEvent, scrollFoundPointEvent, potionFoundPointEvent, itemFoundPointEvent, goldFoundPointEvent, summonPointEvent, uncommonItemPointEvent, rareItemPointEvent, historicItemPointEvent, ancientItemPointEvent, itemSoldPointEvent, itemEquippedPointEvent, levelUpPointEvent, pointEventsById, pointEventDefinitions, pointUpgradeDefinitions;
+var adventurePointsState = null;
+/**
+ * 绑定冒险点数状态。状态由调用者提供（传入 game.state，此处取其 adventurePoints 子对象），
+ * 避免本模块依赖全局游戏实例；该子对象在存档恢复时被原位更新（引用不变），会话内绑定一次即可。
+ * @param {{ adventurePoints: { availablePoints: number, spentPoints: number, pointsByEventType: Object<string, number>, countsByEventType: Object<string, number>, pointUpgrades: Array } }} state
+ */
+export function bindAdventurePoints(state) {
+  adventurePointsState = state.adventurePoints;
+}
 export function resetAdventurePoints() {
-  var a = game.state.adventurePoints;
-  a.availablePoints = 0;
-  a.spentPoints = 0;
-  a.pointsByEventType = {};
-  a.countsByEventType = {};
-  var b, c;
-  for (b = 0; b < pointEventDefinitions.length; b++) {
-    c = pointEventDefinitions[b];
-    c.currentPointReward = c.basePointReward;
-    if (a.pointsByEventType[c.pointEventTypeId]) {
-      console.log("error - duplicate point event type: " + c.pointEventTypeId);
+  var state = adventurePointsState;
+  state.availablePoints = 0;
+  state.spentPoints = 0;
+  state.pointsByEventType = {};
+  state.countsByEventType = {};
+  var eventIndex, pointEvent;
+  for (eventIndex = 0; eventIndex < pointEventDefinitions.length; eventIndex++) {
+    pointEvent = pointEventDefinitions[eventIndex];
+    pointEvent.currentPointReward = pointEvent.basePointReward;
+    if (state.pointsByEventType[pointEvent.pointEventTypeId]) {
+      console.log("error - duplicate point event type: " + pointEvent.pointEventTypeId);
     }
-    a.pointsByEventType[c.pointEventTypeId] = 0;
-    a.countsByEventType[c.pointEventTypeId] = 0;
+    state.pointsByEventType[pointEvent.pointEventTypeId] = 0;
+    state.countsByEventType[pointEvent.pointEventTypeId] = 0;
   }
-  for (b = 0; b < a.pointUpgrades.length; b++) {
-    a.pointUpgrades[b].resetState();
+  for (eventIndex = 0; eventIndex < state.pointUpgrades.length; eventIndex++) {
+    state.pointUpgrades[eventIndex].resetState();
   }
 }
-export function awardAdventurePoints(a) {
-  var b = game.state.adventurePoints,
-    c = pointEventsById[a];
-  if (c) {
-    c = c.currentPointReward;
-    b.availablePoints += c;
-    var d = b.pointsByEventType[a];
-    if (!d) {
-      d = 0;
+export function awardAdventurePoints(pointEventTypeId) {
+  var state = adventurePointsState,
+    pointEvent = pointEventsById[pointEventTypeId];
+  if (pointEvent) {
+    var pointReward = pointEvent.currentPointReward;
+    state.availablePoints += pointReward;
+    var eventPoints = state.pointsByEventType[pointEventTypeId];
+    if (!eventPoints) {
+      eventPoints = 0;
     }
-    var f = b.countsByEventType[a];
-    if (!f) {
-      f = 0;
+    var eventCount = state.countsByEventType[pointEventTypeId];
+    if (!eventCount) {
+      eventCount = 0;
     }
-    f++;
-    b.pointsByEventType[a] = d + c;
-    b.countsByEventType[a] = f;
+    eventCount++;
+    state.pointsByEventType[pointEventTypeId] = eventPoints + pointReward;
+    state.countsByEventType[pointEventTypeId] = eventCount;
   } else {
-    console.log("error: point settings not found: " + a);
+    console.log("error: point settings not found: " + pointEventTypeId);
   }
 }
-export function increasePointEventReward(a, b) {
-  var c = game.state.adventurePoints,
-    d = pointEventsById[a];
-  if (d) {
-    d.currentPointReward += b;
-    recalculateAdventurePoints(c);
+export function increasePointEventReward(pointEventTypeId, bonus) {
+  var state = adventurePointsState,
+    pointEvent = pointEventsById[pointEventTypeId];
+  if (pointEvent) {
+    pointEvent.currentPointReward += bonus;
+    recalculateAdventurePoints(state);
   } else {
-    console.log("error: point settings not found: " + a);
+    console.log("error: point settings not found: " + pointEventTypeId);
   }
 }
-export function recalculateAdventurePoints(a) {
-  var b, c, d, f;
-  for (b = a.availablePoints = 0; b < pointEventDefinitions.length; b++) {
-    f = pointEventDefinitions[b].pointEventTypeId;
-    c = pointEventDefinitions[b].currentPointReward;
-    if (!(d = a.countsByEventType[f])) {
-      d = 0;
+export function recalculateAdventurePoints(adventurePoints) {
+  var eventIndex, pointEventTypeId, pointReward, eventCount;
+  for (eventIndex = adventurePoints.availablePoints = 0; eventIndex < pointEventDefinitions.length; eventIndex++) {
+    pointEventTypeId = pointEventDefinitions[eventIndex].pointEventTypeId;
+    pointReward = pointEventDefinitions[eventIndex].currentPointReward;
+    if (!(eventCount = adventurePoints.countsByEventType[pointEventTypeId])) {
+      eventCount = 0;
     }
-    c *= d;
-    a.pointsByEventType[f] = c;
-    a.availablePoints += c;
+    pointReward *= eventCount;
+    adventurePoints.pointsByEventType[pointEventTypeId] = pointReward;
+    adventurePoints.availablePoints += pointReward;
   }
-  a.availablePoints -= a.spentPoints;
-  if (0 > a.availablePoints) {
-    a.availablePoints = 0;
+  adventurePoints.availablePoints -= adventurePoints.spentPoints;
+  if (0 > adventurePoints.availablePoints) {
+    adventurePoints.availablePoints = 0;
   }
 }
 export function initializeProgressionPoints() {

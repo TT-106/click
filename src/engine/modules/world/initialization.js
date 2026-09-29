@@ -5,7 +5,7 @@ import { game } from "../runtime/game.js";
 import { Castle, DungeonNameGenerator, RegionLayout, WORLD_BLOCK_COLUMNS, WORLD_BLOCK_ROWS, WorldRegion, chooseAdjacentRegion, generateDungeonName } from "./regions.js";
 import { SeededRandom, randomIntFrom } from "../core/math.js";
 import { Dungeon, randomDungeonType, resetFarms, resetShops, sortDungeons } from "./dungeons.js";
-import { resetAdventurePoints } from "../progression/points.js";
+import { bindAdventurePoints, resetAdventurePoints } from "../progression/points.js";
 import { resetAchievements } from "../progression/achievements.js";
 import { bindStatistics } from "../progression/statistics.js";
 export function initializeRegionsAndCastles() {
@@ -181,10 +181,11 @@ export function initializeRegionsAndCastles() {
   sortDungeons(Ja, Ja.dungeonList);
   resetFarms();
   resetShops();
+  bindAdventurePoints(game.state);
   resetAdventurePoints();
   resetAchievements();
   game.paused = false;
   game.initialized = true;
-  bindStatistics();
+  bindStatistics(game.state);
 }
 export function initializeWorldInitialization() {}

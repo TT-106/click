@@ -32,9 +32,19 @@ export function withPotions(save, potionIds, { active = false } = {}) {
   return out;
 }
 
-/** 卷轴：设置若干卷轴的数量并解锁。 */
-export function withScrolls(save, entries) {
+/** 清空全部队员背包。EquipItemUpgrade（type 3）的 canPurchase 要求候选列表
+ *  game.inventories.list 长度 ≤ 5，而 fixture 背包塞满时该列表长约 60 恒不满足
+ *  （U133"12 次购买零装备变化"的真实根因；"恢复路径未建 item.inventory 背链"假说
+ *  已被取证否定——两端恢复路径都经 addInventoryItem 建背链：game-save.js:489 ↔ c2.js:29097）。
+ *  清空后由场景的真实拾取建立唯一候选。 */
+export function withEmptyBackpacks(save) {
   const out = clone(save);
+  for (const adventurer of out.adventurers ?? []) adventurer.inventory = [];
+  return out;
+}
+
+/** 卷轴：设置若干卷轴的数量并解锁。 */
+export function withScrolls(save, entries) {  const out = clone(save);
   for (const { scrollId, count } of entries) {
     const slot = out.scrollInventory.find(s => s.scrollId === scrollId);
     if (slot) { slot.count = count; slot.locked = false; }
@@ -288,6 +298,43 @@ export function withSkillPoints(save, points) {
   const out = clone(save);
   for (const adventurer of out.adventurers) {
     adventurer.skillPoints = points;
+  }
+  return out;
+}
+
+/** P-5 健壮性矩阵：按点路径删除字段后返回克隆（'a.b' 或 'a.b.3.c' 形态）。
+ *  用于验证恢复路径对缺失字段的容忍度——原版与重构版必须同接受或同拒绝。 */
+export function withoutFields(save, paths) {
+  const out = clone(save);
+  for (const path of paths) {
+    const keys = path.split('.');
+    let node = out;
+    for (let i = 0; i < keys.length - 1; i++) {
+      node = node?.[keys[i]];
+      if (node == null) break;
+    }
+    if (node == null) continue;
+    const last = keys[keys.length - 1];
+    if (Array.isArray(node) && /^\d+$/.test(last)) {
+      node.splice(Number(last), 1); // 数组索引用 splice，delete 会留洞
+    } else {
+      delete node[last];
+    }
+  }
+  return out;
+}
+
+/** P-5 边界值变异：按点路径直接赋值（不做类型/范围校验，忠实写入门控外） */
+export function withFieldValues(save, entries) {
+  const out = clone(save);
+  for (const [path, value] of entries) {
+    const keys = path.split('.');
+    let node = out;
+    for (let i = 0; i < keys.length - 1; i++) {
+      node = node?.[keys[i]];
+      if (node == null) break;
+    }
+    if (node != null) node[keys[keys.length - 1]] = value;
   }
   return out;
 }

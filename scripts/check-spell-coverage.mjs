@@ -40,6 +40,7 @@ for (const raw of rawBlocks) {
   if (/\bstunned:/.test(raw)) observables.push('昏迷前置(characterStunnedCount)');
   if (/\bitemsFound:/.test(raw)) observables.push('拾取统计(itemsFound)');
   if (/\btreasureLooted:/.test(raw)) observables.push('开箱统计(treasureChestsLooted)');
+  if (/\bselectedTreasure:/.test(raw)) observables.push('财宝目标选中直接计数(selectedTreasure)');
   if (!observables.length && /floatingText/.test(raw)) observables.push('浮动文字(floatingText)');
   blocks.push({ name: nameMatch[1], injected, observables, declaredCategories });
 }

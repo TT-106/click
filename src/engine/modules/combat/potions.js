@@ -1,15 +1,14 @@
 /** 药水定义、库存与临时修正。
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
-import { game } from "../runtime/game.js";
 import { BASE_POTION_CAPACITY, autoScrollsModifier, bossEncounterModifier, docileMonstersModifier, doubleExperienceModifier, doubleGoldDropsModifier, doubleGoldModifier, doubleItemDropsModifier, doubleKillsModifier, extraMonstersModifier, farmKillsModifier, fasterFarmingModifier, fasterInfestationModifier, frailMonstersModifier, freeSpellsModifier, guaranteedItemDropsModifier, infiniteScrollsModifier, itemGoldModifier, potionCapacityBonus, potionDurationModifier, treasureRoomModifier, walkingSpeedModifier } from "../content/balance.js";
 export var potionDefinitions;
-export function Potion(a) {
-  this.potionId = a.potionId;
-  this.potionSprite = game.itemSprites.getSprite(a.potionSprite);
-  this.displayName = a.displayName;
-  this.effectLabel = a.effectLabel;
-  this.modifierId = a.modifierId;
+export function Potion(definition, itemSprites) {
+  this.potionId = definition.potionId;
+  this.potionSprite = itemSprites.getSprite(definition.potionSprite);
+  this.displayName = definition.displayName;
+  this.effectLabel = definition.effectLabel;
+  this.modifierId = definition.modifierId;
   this.active = false;
   this.activationTurn = 0;
   this.modifier = getPotionModifier(this.modifierId);
@@ -88,30 +87,26 @@ export function PotionDrop(a, b, c, d) {
 export function PotionDropRegistry() {
   this.drops = [];
 }
-export function removePotionDrop(a) {
-  var b = game.potionDrops;
-  a = b.drops.indexOf(a);
-  if (-1 < a) {
-    b.drops.splice(a, 1);
+export function removePotionDrop(drop, registry) {
+  const index = registry.drops.indexOf(drop);
+  if (-1 < index) {
+    registry.drops.splice(index, 1);
   }
 }
 export function PotionInventory() {
   this.potionList = [];
 }
-export function resetPotionInventory() {
-  var a = game.potions;
-  if (0 < a.potionList.length) {
-    var b;
-    for (b = 0; b < a.potionList.length; b++) {
-      setPotionActive(a.potionList[b], false);
+export function resetPotionInventory(inventory) {
+  if (0 < inventory.potionList.length) {
+    for (let potionIndex = 0; potionIndex < inventory.potionList.length; potionIndex++) {
+      setPotionActive(inventory.potionList[potionIndex], false);
     }
-    a.potionList.length = 0;
+    inventory.potionList.length = 0;
   }
 }
-export function addPotion(a) {
-  var b = game.potions;
-  if (a && b.potionList.length < BASE_POTION_CAPACITY + potionCapacityBonus.currentValue) {
-    b.potionList.push(a);
+export function addPotion(potion, inventory) {
+  if (potion && inventory.potionList.length < BASE_POTION_CAPACITY + potionCapacityBonus.currentValue) {
+    inventory.potionList.push(potion);
   }
 }
 export function initializeCombatPotions() {
@@ -236,14 +231,14 @@ export function initializeCombatPotions() {
     potionSprite: "PotionTallBrown.PNG",
     modifierId: 20
   }];
-  Potion.prototype.activate = function () {
+  Potion.prototype.activate = function (runtimeState) {
     if (!(this.active || !this.active && isPotionModifierActive(this))) {
       this.active = true;
-      this.activationTurn = game.state.turnNumber;
+      this.activationTurn = runtimeState.turnNumber;
       if (this.modifier) {
         this.modifier.currentValue = this.modifier.activeValue;
       }
-      game.state.statisticsRecorder.recordPotionUsed();
+      runtimeState.statisticsRecorder.recordPotionUsed();
     }
   };
   PotionDrop.prototype.setCollected = function (a) {

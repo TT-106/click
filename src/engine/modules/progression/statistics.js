@@ -1,27 +1,29 @@
 /** 本轮、累计统计与事件记账。
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
-import { game } from "../runtime/game.js";
 export function RunStatistics() {
   this.bookcasesLooted = this.weaponRacksLooted = this.treasureChestsLooted = this.ancientItemsFound = this.historicItemsFound = this.rareItemsFound = this.uncommonItemsFound = this.itemsFound = this.itemsSold = this.minionsSummoned = this.playedMillis = this.scrollsUsed = this.potionsUsed = this.spellCastCount = this.rangedAttackCount = this.meleeAttackCount = this.characterStunnedCount = this.farmedKills = this.minionKills = this.scrollKills = this.directKills = this.totalGoldFromItems = this.totalGoldFromMonsters = this.farmsPurchased = this.castlesConquered = this.dungeonsCleared = this.levelsCleared = this.roomsCleared = this.doorsOpened = this.turnCount = 0;
 }
 export function LifetimeStatistics() {}
-export function getClassVictories(a, b) {
-  var c = a.classVictories[b];
-  return c ? c : 0;
+export function getClassVictories(statistics, classId) {
+  const victories = statistics.classVictories[classId];
+  return victories ? victories : 0;
 }
-export function getSoloClassVictories(a, b) {
-  var c = a.soloClassVictories[b];
-  return c ? c : 0;
+export function getSoloClassVictories(statistics, classId) {
+  const victories = statistics.soloClassVictories[classId];
+  return victories ? victories : 0;
 }
 export function StatisticsRecorder() {
   this.lifetimeStatistics = this.statisticsRecorder = null;
 }
-export function bindStatistics() {
-  var a = game.state.statisticsRecorder,
-    b = game.state.lifetimeStatistics;
-  a.statisticsRecorder = game.state.runStatistics;
-  a.lifetimeStatistics = b;
+/**
+ * 将本轮与累计统计接到同一个记录器。状态由调用者提供，避免统计模块依赖全局游戏实例。
+ * @param {{ statisticsRecorder: StatisticsRecorder, runStatistics: RunStatistics, lifetimeStatistics: LifetimeStatistics }} state
+ */
+export function bindStatistics(state) {
+  const recorder = state.statisticsRecorder;
+  recorder.statisticsRecorder = state.runStatistics;
+  recorder.lifetimeStatistics = state.lifetimeStatistics;
 }
 export function initializeProgressionStatistics() {
   RunStatistics.prototype.resetRunStatistics = function () {
@@ -48,17 +50,17 @@ export function initializeProgressionStatistics() {
   RunStatistics.prototype.recordFarmPurchased = function () {
     this.farmsPurchased++;
   };
-  RunStatistics.prototype.recordGoldFromItems = function (a) {
-    this.totalGoldFromItems += a;
+  RunStatistics.prototype.recordGoldFromItems = function (amount) {
+    this.totalGoldFromItems += amount;
   };
-  RunStatistics.prototype.recordGoldFromMonsters = function (a) {
-    this.totalGoldFromMonsters += a;
+  RunStatistics.prototype.recordGoldFromMonsters = function (amount) {
+    this.totalGoldFromMonsters += amount;
   };
-  RunStatistics.prototype.recordFarmHarvest = function (a) {
-    this.farmedKills += a;
+  RunStatistics.prototype.recordFarmHarvest = function (kills) {
+    this.farmedKills += kills;
   };
-  RunStatistics.prototype.setFarmedKills = function (a) {
-    this.farmedKills = a;
+  RunStatistics.prototype.setFarmedKills = function (kills) {
+    this.farmedKills = kills;
   };
   RunStatistics.prototype.recordDirectKill = function () {
     this.directKills++;
@@ -69,8 +71,8 @@ export function initializeProgressionStatistics() {
   RunStatistics.prototype.recordMinionKill = function () {
     this.minionKills++;
   };
-  RunStatistics.prototype.setMinionKills = function (a) {
-    this.minionKills = a;
+  RunStatistics.prototype.setMinionKills = function (kills) {
+    this.minionKills = kills;
   };
   RunStatistics.prototype.recordMinionSummoned = function () {
     this.minionsSummoned++;
@@ -93,15 +95,15 @@ export function initializeProgressionStatistics() {
   RunStatistics.prototype.recordScrollUsed = function () {
     this.scrollsUsed++;
   };
-  RunStatistics.prototype.recordPlayedMilliseconds = function (a) {
-    this.playedMillis += a;
+  RunStatistics.prototype.recordPlayedMilliseconds = function (milliseconds) {
+    this.playedMillis += milliseconds;
   };
-  RunStatistics.prototype.recordItemsSold = function (a) {
-    this.itemsSold += a;
+  RunStatistics.prototype.recordItemsSold = function (count) {
+    this.itemsSold += count;
   };
-  RunStatistics.prototype.recordItemFound = function (a) {
+  RunStatistics.prototype.recordItemFound = function (item) {
     this.itemsFound++;
-    switch (a.getRarity()) {
+    switch (item.getRarity()) {
       case 1:
         this.uncommonItemsFound++;
         break;
@@ -152,17 +154,17 @@ export function initializeProgressionStatistics() {
     this.statisticsRecorder.recordCastleConquered();
     this.lifetimeStatistics.recordCastleConquered();
   };
-  StatisticsRecorder.prototype.recordGoldFromItems = function (a) {
-    this.statisticsRecorder.recordGoldFromItems(a);
-    this.lifetimeStatistics.recordGoldFromItems(a);
+  StatisticsRecorder.prototype.recordGoldFromItems = function (amount) {
+    this.statisticsRecorder.recordGoldFromItems(amount);
+    this.lifetimeStatistics.recordGoldFromItems(amount);
   };
-  StatisticsRecorder.prototype.recordGoldFromMonsters = function (a) {
-    this.statisticsRecorder.recordGoldFromMonsters(a);
-    this.lifetimeStatistics.recordGoldFromMonsters(a);
+  StatisticsRecorder.prototype.recordGoldFromMonsters = function (amount) {
+    this.statisticsRecorder.recordGoldFromMonsters(amount);
+    this.lifetimeStatistics.recordGoldFromMonsters(amount);
   };
-  StatisticsRecorder.prototype.recordFarmHarvest = function (a) {
-    this.statisticsRecorder.recordFarmHarvest(a);
-    this.lifetimeStatistics.recordFarmHarvest(a);
+  StatisticsRecorder.prototype.recordFarmHarvest = function (kills) {
+    this.statisticsRecorder.recordFarmHarvest(kills);
+    this.lifetimeStatistics.recordFarmHarvest(kills);
   };
   StatisticsRecorder.prototype.recordDirectKill = function () {
     this.statisticsRecorder.recordDirectKill();
@@ -208,17 +210,17 @@ export function initializeProgressionStatistics() {
     this.statisticsRecorder.recordFarmPurchased();
     this.lifetimeStatistics.recordFarmPurchased();
   };
-  StatisticsRecorder.prototype.recordPlayedMilliseconds = function (a) {
-    this.statisticsRecorder.recordPlayedMilliseconds(a);
-    this.lifetimeStatistics.recordPlayedMilliseconds(a);
+  StatisticsRecorder.prototype.recordPlayedMilliseconds = function (milliseconds) {
+    this.statisticsRecorder.recordPlayedMilliseconds(milliseconds);
+    this.lifetimeStatistics.recordPlayedMilliseconds(milliseconds);
   };
-  StatisticsRecorder.prototype.recordItemsSold = function (a) {
-    this.statisticsRecorder.recordItemsSold(a);
-    this.lifetimeStatistics.recordItemsSold(a);
+  StatisticsRecorder.prototype.recordItemsSold = function (count) {
+    this.statisticsRecorder.recordItemsSold(count);
+    this.lifetimeStatistics.recordItemsSold(count);
   };
-  StatisticsRecorder.prototype.recordItemFound = function (a) {
-    this.statisticsRecorder.recordItemFound(a);
-    this.lifetimeStatistics.recordItemFound(a);
+  StatisticsRecorder.prototype.recordItemFound = function (item) {
+    this.statisticsRecorder.recordItemFound(item);
+    this.lifetimeStatistics.recordItemFound(item);
   };
   StatisticsRecorder.prototype.recordTreasureChestLooted = function () {
     this.statisticsRecorder.recordTreasureChestLooted();

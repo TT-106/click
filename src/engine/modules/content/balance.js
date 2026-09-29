@@ -2,8 +2,8 @@
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
 import { randomInt } from "../core/math.js";
-import { AutoPurchaseDungeonUpgrade, ClaimAchievementUpgrade, CollectFarmUpgrade, EquipBestItemUpgrade, EquipItemUpgrade, GlobalUpgrade, LevelUpUpgrade, PurchaseCastleUpgrade, PurchaseItemUpgrade, RetireMonsterLevelUpgrade, ScrollUpgrade, UnlockMonsterLevelUpgrade, UpgradeCollection } from "../progression/upgrades.js";
-import { scrollDefinitions } from "../combat/scrolls.js";
+// 升级实现和卷轴目录由 runtime/index.js 在初始化时提供。
+// 数值与内容定义不再反向导入玩法模块。
 export var experienceCurve, healthCurve, spiritCurve, damageCurve, armorCurve, monsterDamageCurve, monsterArmorCurve, monsterAttackCurve, monsterDefenceCurve, monsterHealthCurve, monsterExperienceCurve, itemStatCurve, itemGoldCurve, dungeonPriceCurve, monsterUnlockPriceCurve, scrollPriceCurve, globalUpgradePriceCurve, MONSTER_RANK_KILL_STEP, DUNGEON_WALK_SPEED, WORLD_WALK_SPEED, DEFAULT_MULTI_ATTACK_CHANCE, DEFAULT_CHAIN_CHANCE, DEFAULT_MINION_LIMIT, BASE_INVENTORY_CAPACITY, RETREAT_HEALTH_RATIO, RETREAT_SPIRIT_RATIO, MAX_PRESTIGE_INVENTORY_BONUS, walkingSpeedBonus, dungeonCostBonus, itemCostBonus, scrollCapacityBonus, potionCapacityBonus, partyCapacityBonus, potionDurationBonus, potionPowerBonus, offlineTimeBonus, equipmentQualityBonus, attackCooldownBonus, healthRegenerationBonus, spiritRegenerationBonus, BASE_POTION_CAPACITY, doubleKillsModifier, doubleGoldModifier, doubleExperienceModifier, walkingSpeedModifier, fasterFarmingModifier, fasterInfestationModifier, infiniteScrollsModifier, extraMonstersModifier, guaranteedItemDropsModifier, potionDurationModifier, freeSpellsModifier, farmKillsModifier, docileMonstersModifier, itemGoldModifier, frailMonstersModifier, autoScrollsModifier, doubleGoldDropsModifier, doubleItemDropsModifier, treasureRoomModifier, bossEncounterModifier, CHEST_ITEM_QUALITY_BONUS, CHEST_ITEM_LEVEL_BONUS, MIN_ROOM_DIMENSION, MAX_ROOM_SIZE, ROOM_SPACING, globalUpgradeDefinitions, VISIBLE_MONSTER_LEVELS, BASE_HIGHER_ITEM_CHANCE, LOWER_ITEM_LEVEL_CHANCE, itemRarityProbabilities, itemRarityTiers, EFFECT_FRAME_DURATION_MS, PROJECTILE_FRAME_DURATION_MS, globalUpgradesById, globalUpgradesToIndex, upgradeIndexKey, upgradeIndexEntry, characterLevelUpgrades, equipmentUpgrades, globalUpgrades, scrollUpgradeIndex, scrollUpgrades, monsterLevelUpgrades, castleUpgrades, itemPurchaseUpgrades, achievementClaimUpgrades, farmAndDungeonUpgrades, monsterUpgradeCollection, characterUpgradeCollection, quickUpgradeCollection, upgradeCollections;
 export function rollGoldDrop() {
   var a = globalUpgradeDefinitions.minGoldPerDrop.currentValue,
@@ -11,7 +11,7 @@ export function rollGoldDrop() {
     c = doubleGoldModifier.currentValue;
   return (a + randomInt(b)) * c;
 }
-export function initializeContentBalance() {
+export function initializeContentBalance(dependencies) {
   experienceCurve = {
     power: 2.1,
     coefficient: 500,
@@ -483,20 +483,20 @@ export function initializeContentBalance() {
       }
     }
   }
-  characterLevelUpgrades = [new LevelUpUpgrade(0), new LevelUpUpgrade(1), new LevelUpUpgrade(2), new LevelUpUpgrade(3), new LevelUpUpgrade(4)];
-  equipmentUpgrades = [new EquipBestItemUpgrade(5), new EquipItemUpgrade(0, 5), new EquipItemUpgrade(1, 5), new EquipItemUpgrade(2, 5), new EquipItemUpgrade(3, 5), new EquipItemUpgrade(4, 5)];
-  globalUpgrades = [new GlobalUpgrade(globalUpgradeDefinitions.goldDropChance), new GlobalUpgrade(globalUpgradeDefinitions.maxGoldPerDrop), new GlobalUpgrade(globalUpgradeDefinitions.minGoldPerDrop), new GlobalUpgrade(globalUpgradeDefinitions.itemDropChance), new GlobalUpgrade(globalUpgradeDefinitions.scrollDropChance), new GlobalUpgrade(globalUpgradeDefinitions.potionDropChance), new GlobalUpgrade(globalUpgradeDefinitions.itemQualityChance), new GlobalUpgrade(globalUpgradeDefinitions.maxMonsters), new GlobalUpgrade(globalUpgradeDefinitions.minMonsters), new GlobalUpgrade(globalUpgradeDefinitions.higherLevelItemChance), new GlobalUpgrade(globalUpgradeDefinitions.treasureChance)];
+  characterLevelUpgrades = [new dependencies.LevelUpUpgrade(0), new dependencies.LevelUpUpgrade(1), new dependencies.LevelUpUpgrade(2), new dependencies.LevelUpUpgrade(3), new dependencies.LevelUpUpgrade(4)];
+  equipmentUpgrades = [new dependencies.EquipBestItemUpgrade(5), new dependencies.EquipItemUpgrade(0, 5), new dependencies.EquipItemUpgrade(1, 5), new dependencies.EquipItemUpgrade(2, 5), new dependencies.EquipItemUpgrade(3, 5), new dependencies.EquipItemUpgrade(4, 5)];
+  globalUpgrades = [new dependencies.GlobalUpgrade(globalUpgradeDefinitions.goldDropChance), new dependencies.GlobalUpgrade(globalUpgradeDefinitions.maxGoldPerDrop), new dependencies.GlobalUpgrade(globalUpgradeDefinitions.minGoldPerDrop), new dependencies.GlobalUpgrade(globalUpgradeDefinitions.itemDropChance), new dependencies.GlobalUpgrade(globalUpgradeDefinitions.scrollDropChance), new dependencies.GlobalUpgrade(globalUpgradeDefinitions.potionDropChance), new dependencies.GlobalUpgrade(globalUpgradeDefinitions.itemQualityChance), new dependencies.GlobalUpgrade(globalUpgradeDefinitions.maxMonsters), new dependencies.GlobalUpgrade(globalUpgradeDefinitions.minMonsters), new dependencies.GlobalUpgrade(globalUpgradeDefinitions.higherLevelItemChance), new dependencies.GlobalUpgrade(globalUpgradeDefinitions.treasureChance)];
   scrollUpgrades = [];
-  for (scrollUpgradeIndex = 0; scrollUpgradeIndex < scrollDefinitions.length; scrollUpgradeIndex++) {
-    scrollUpgrades.push(new ScrollUpgrade(scrollDefinitions[scrollUpgradeIndex].scrollId));
+  for (scrollUpgradeIndex = 0; scrollUpgradeIndex < dependencies.scrollDefinitions.length; scrollUpgradeIndex++) {
+    scrollUpgrades.push(new dependencies.ScrollUpgrade(dependencies.scrollDefinitions[scrollUpgradeIndex].scrollId));
   }
-  monsterLevelUpgrades = [new UnlockMonsterLevelUpgrade(), new RetireMonsterLevelUpgrade()];
-  castleUpgrades = [new PurchaseCastleUpgrade(0), new PurchaseCastleUpgrade(1), new PurchaseCastleUpgrade(2), new PurchaseCastleUpgrade(3)];
-  itemPurchaseUpgrades = [new PurchaseItemUpgrade(0), new PurchaseItemUpgrade(1), new PurchaseItemUpgrade(2), new PurchaseItemUpgrade(3)];
-  achievementClaimUpgrades = [new ClaimAchievementUpgrade(0), new ClaimAchievementUpgrade(1), new ClaimAchievementUpgrade(2), new ClaimAchievementUpgrade(3)];
-  farmAndDungeonUpgrades = [new AutoPurchaseDungeonUpgrade(), new CollectFarmUpgrade()];
-  monsterUpgradeCollection = new UpgradeCollection([globalUpgrades, monsterLevelUpgrades], true);
-  characterUpgradeCollection = new UpgradeCollection([characterLevelUpgrades], false);
-  quickUpgradeCollection = new UpgradeCollection([farmAndDungeonUpgrades, characterLevelUpgrades, equipmentUpgrades, globalUpgrades, monsterLevelUpgrades, castleUpgrades, itemPurchaseUpgrades, achievementClaimUpgrades, scrollUpgrades], true);
+  monsterLevelUpgrades = [new dependencies.UnlockMonsterLevelUpgrade(), new dependencies.RetireMonsterLevelUpgrade()];
+  castleUpgrades = [new dependencies.PurchaseCastleUpgrade(0), new dependencies.PurchaseCastleUpgrade(1), new dependencies.PurchaseCastleUpgrade(2), new dependencies.PurchaseCastleUpgrade(3)];
+  itemPurchaseUpgrades = [new dependencies.PurchaseItemUpgrade(0), new dependencies.PurchaseItemUpgrade(1), new dependencies.PurchaseItemUpgrade(2), new dependencies.PurchaseItemUpgrade(3)];
+  achievementClaimUpgrades = [new dependencies.ClaimAchievementUpgrade(0), new dependencies.ClaimAchievementUpgrade(1), new dependencies.ClaimAchievementUpgrade(2), new dependencies.ClaimAchievementUpgrade(3)];
+  farmAndDungeonUpgrades = [new dependencies.AutoPurchaseDungeonUpgrade(), new dependencies.CollectFarmUpgrade()];
+  monsterUpgradeCollection = new dependencies.UpgradeCollection([globalUpgrades, monsterLevelUpgrades], true);
+  characterUpgradeCollection = new dependencies.UpgradeCollection([characterLevelUpgrades], false);
+  quickUpgradeCollection = new dependencies.UpgradeCollection([farmAndDungeonUpgrades, characterLevelUpgrades, equipmentUpgrades, globalUpgrades, monsterLevelUpgrades, castleUpgrades, itemPurchaseUpgrades, achievementClaimUpgrades, scrollUpgrades], true);
   upgradeCollections = [monsterUpgradeCollection, characterUpgradeCollection, quickUpgradeCollection];
 }

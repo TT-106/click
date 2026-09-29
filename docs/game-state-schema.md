@@ -24,7 +24,7 @@
 | 字段 | 初始值 | 所有权（写者） | 生命周期 | 持久化 |
 |---|---|---|---|---|
 | `initialized` | `false` (136) | 写 `true`：world/initialization.js:187（开局）；写回：restore（game-save.js:46） | boot 建 `false`；首帧 `initializeWorld` 后 `true`（loop.js:98）；restore 覆盖 | ✅ `gameInitialized`（serialize 侧 game-save.js:705,1009；restore 侧 :46） |
-| `partyCreated` | `false` (137) | 写 `true`：views/party-creation.js:86；写 `false`：resetRun（game.js:358） | resetRun/restore 重置 | ✅ `partyCreated`（game.js:709→:1013；game-save.js:49） |
+| `partyCreated` | `false` (137) | 写 `true`：views/party-creation.js:93；写 `false`：resetRun（game.js:358） | resetRun/restore 重置 | ✅ `partyCreated`（game.js:709→:1013；game-save.js:49） |
 | `gameWon` | `false` (138) | 写 `true`：characters/party.js:271（通关）；写 `false`：resetRun :359、resetContinuation :437、views/results.js:48,58（续关） | resetRun/续关/restore 重置 | ✅ `gameWon`（game.js:710→:1014；game-save.js:50） |
 | `paused` | `false` (139) | views/navigation.js:24（暂停键）、adapter.js:69,133；写 `false`：resetRun :378、resetContinuation :439、initialization.js:186 | **RuntimeState，不入档**（每次载入从暂停态起步） | ❌ runtime-only |
 | `worldActive` | `true` (140) | 写 `false`：characters/character.js:1154,1179（进入地牢/城堡楼层）；写 `true`：resetRun :379、resetContinuation :440、party.js:212、world/dungeons.js:221（撤出） | 决定序列化/恢复哪套空间（world vs level） | ✅ `worldActive`（game.js:708→:1012；game-save.js:48） |
@@ -52,7 +52,7 @@
 | `achievements` (166-180) | Instance 容器 + PersistentState | 构造：逐条 `achievementDefinitions` → `Achievement`（`jj`=全部、`Lt`=按 id、`ik`=未达成、`Ze`=达成未应用，achievements.js:11,35-43,179-185）；restore：game-save.js:611-656；重置：resetAchievements（game.js:375） | 硬重置（`resetRun(true)`）时重建 | ✅ `achievementManager.achievements[]`，每条仅 `{achievementId,obtained,applied}`（serialize：game.js:993-1004；restore：game-save.js:617-631，映射 `We→obtained`、`Of→applied`；facts.md #16） |
 | `runStatistics` (181) | PersistentState | `RunStatistics`；写入口 StatisticsRecorder（`aa`）；resetRun 软重置 `jx()`（game.js:377）；restore：game-save.js:341-343 | 每周目重置 | ✅ `statistics`（serialize：game.js:889 → entities.js:219-252，30 个语义字段） |
 | `lifetimeStatistics` (182) | PersistentState | `LifetimeStatistics`；restore：game-save.js:344-350（**旧档无 `totalStatistics` 时回退从 `statistics` 恢复**，`:346-349`） | 跨周目累计 | ✅ `totalStatistics`（game.js:890） |
-| `aa` (183) | RuntimeState | `StatisticsRecorder`（progression/statistics.js:17-19），`bindStatistics()` 接线（game.js:363）；计帧 `fp()`：loop.js:46,94 | boot 接线一次，resetRun(true) 重接 | ❌ runtime-only（纯中转） |
+| `aa` (183) | RuntimeState | `StatisticsRecorder`（progression/statistics.js:16-18），`bindStatistics(state)` 接线（game.js:363）；计帧 `fp()`：loop.js:46,94 | boot 接线一次，resetRun(true) 重接 | ❌ runtime-only（纯中转） |
 | `victoryStatistics` (184-189) | PersistentState | 字段 `hn/jn/kn/Xm/mm/vn`（各队伍规模/单职业胜利数）、`qo/lq`（按职业 map）、`nm`（当前续关数）；restore：game-save.js:351-391；清零：game.js:364-373 | 硬重置清零 | ✅ `victoryStatistics`（serialize：game.js:892-927） |
 | `victoryCount` (190) | PersistentState | 通关时 `++`（胜利流程）；清零仅硬重置（game.js:415-417）；restore（game-save.js:58）；职业解锁读它（adapter.js:39,58） | 硬重置清零 | ✅ `victoryCount`（game.js:711→:1015） |
 
@@ -144,7 +144,7 @@ u = {
 - **characters/party.js**：`party.gold/kills/experiencePoints`(:59-65)、`worldActive=true`(:212)、`gameWon=true` + 终止离线(:271-272)。
 - **characters/character.js**：`worldActive=false`（进入楼层，:1154,1179）。
 - **world/initialization.js**：开局 `initialized=true`(:187)。
-- **views/***：`paused`（navigation.js:24）、`partyCreated`（party-creation.js:86）、`gameWon`（results.js:48,58）、重开/续关（results.js:50,60）。
+- **views/***：`paused`（navigation.js:24）、`partyCreated`（party-creation.js:93）、`gameWon`（results.js:48,58）、重开/续关（results.js:50,60）。
 - **persistence/game-save.js**：restore 覆盖上述几乎所有 PersistentState（:39-696）；`lastSavedAt`（:29,36）。
 - **runtime/game.js 自身方法**：resetRun/resetContinuation/begin/finishOfflineProgress（:351-481）。
 - **adapter.js（产品命令层）**：`paused`(:69,133)、`options.*`(:135-146)、reset(:153-155)。

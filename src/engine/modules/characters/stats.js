@@ -2,21 +2,20 @@
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
 import { floorNumber } from "../core/math.js";
-import { DEFAULT_CHAIN_CHANCE, DEFAULT_MINION_LIMIT, DEFAULT_MULTI_ATTACK_CHANCE, attackCooldownBonus, freeSpellsModifier } from "../content/balance.js";
-import { game } from "../runtime/game.js";
-export function StatComponent(a) {
-  this.owner = a;
+export function StatComponent(owner) {
+  this.owner = owner;
   this.skillBonusPercent = this.spellBonusPercent = this.levelValue = this.itemValue = 0;
 }
-export function addSpellStatBonus(a, b) {
-  a.spellBonusPercent += b;
+export function addSpellStatBonus(stat, bonusPercent) {
+  stat.spellBonusPercent += bonusPercent;
 }
-export function statValue(a) {
-  var b = a.itemValue + a.levelValue;
-  return b + floorNumber((a.skillBonusPercent + a.spellBonusPercent) / 100 * b);
+export function statValue(stat) {
+  const baseValue = stat.itemValue + stat.levelValue;
+  return baseValue + floorNumber((stat.skillBonusPercent + stat.spellBonusPercent) / 100 * baseValue);
 }
-export function CharacterStats(a) {
-  this.owner = a;
+export function CharacterStats(owner, rules) {
+  this.owner = owner;
+  this.rules = rules;
   this.characterLevel = 0;
   this.experienceToLevelUp = 100;
   this.critChance = this.spellSpiritCost = this.spirit = this.health = 0;
@@ -24,92 +23,91 @@ export function CharacterStats(a) {
   this.baseSpiritRegenPercent = 4;
   this.baseAttackCooldown = 12;
   this.stunCount = this.damageReceived = this.damageGiven = this.minionKills = this.kills = 0;
-  this.maxSummonedMinions = DEFAULT_MINION_LIMIT;
+  this.maxSummonedMinions = rules.defaultMinionLimit;
   this.chainCount = this.attackCooldownReduction = this.spiritRegenBonus = this.healthRegenBonus = this.spellCostReduction = this.damageResistance = 0;
-  this.chainChance = DEFAULT_CHAIN_CHANCE;
+  this.chainChance = rules.defaultChainChance;
   this.extraAttackCount = 0;
-  this.extraAttackChance = DEFAULT_MULTI_ATTACK_CHANCE;
+  this.extraAttackChance = rules.defaultMultiAttackChance;
   this.rogueChickenChance = this.ninjaChickenChance = this.barbarianChickenChance = this.buffDefenceRatingPotency = this.buffAttackRatingPotency = this.buffArmorPotency = this.buffDamagePotency = this.healPotency = this.ricochetCountBonus = this.swiftStrikeTargetBonus = this.areaRadiusBonus = this.rainAreaBonus = this.transformTargetBonus = this.controlTargetBonus = this.chainArcBonus = 0;
-  this.damage = new StatComponent(a);
-  this.armor = new StatComponent(a);
-  this.attackRating = new StatComponent(a);
-  this.defenceRating = new StatComponent(a);
-  this.maxHealth = new StatComponent(a);
-  this.maxSpirit = new StatComponent(a);
+  this.damage = new StatComponent(owner);
+  this.armor = new StatComponent(owner);
+  this.attackRating = new StatComponent(owner);
+  this.defenceRating = new StatComponent(owner);
+  this.maxHealth = new StatComponent(owner);
+  this.maxSpirit = new StatComponent(owner);
 }
-export function getAttackCooldown(a, b) {
-  return b ? Math.max(4, a.baseAttackCooldown - a.attackCooldownReduction + attackCooldownBonus.currentValue) : Math.max(4, a.baseAttackCooldown - a.attackCooldownReduction);
+export function getAttackCooldown(stats, includeUpgradeBonus) {
+  return includeUpgradeBonus ? Math.max(4, stats.baseAttackCooldown - stats.attackCooldownReduction + stats.rules.attackCooldownBonus.currentValue) : Math.max(4, stats.baseAttackCooldown - stats.attackCooldownReduction);
 }
-export function spendSpirit(a, b) {
-  if (!freeSpellsModifier.currentValue) {
-    a.spirit -= b;
-    if (0 > a.spirit) {
-      a.spirit = 0;
+export function spendSpirit(stats, cost) {
+  if (!stats.rules.freeSpellsModifier.currentValue) {
+    stats.spirit -= cost;
+    if (0 > stats.spirit) {
+      stats.spirit = 0;
     }
   }
 }
-export function getSpellSpiritCost(a) {
-  return Math.min(a.spellSpiritCost - (0 < a.spellCostReduction ? floorNumber(a.spellCostReduction / 100 * a.spellSpiritCost) : 0), statValue(a.maxSpirit));
+export function getSpellSpiritCost(stats) {
+  return Math.min(stats.spellSpiritCost - (0 < stats.spellCostReduction ? floorNumber(stats.spellCostReduction / 100 * stats.spellSpiritCost) : 0), statValue(stats.maxSpirit));
 }
-export function updateScrollAccuracy() {
-  var a = game.state.scrollCaster.stats;
-  a.chainChance = 100;
-  if (100 < a.chainChance) {
-    a.chainChance = 100;
+/** @param {CharacterStats} scrollCasterStats */
+export function updateScrollAccuracy(scrollCasterStats) {
+  scrollCasterStats.chainChance = 100;
+  if (100 < scrollCasterStats.chainChance) {
+    scrollCasterStats.chainChance = 100;
   }
 }
-export function resetSkillStatBonuses(a) {
-  a.damageResistance = 0;
-  a.spellCostReduction = 0;
-  a.damage.skillBonusPercent = 0;
-  a.armor.skillBonusPercent = 0;
-  a.attackRating.skillBonusPercent = 0;
-  a.defenceRating.skillBonusPercent = 0;
-  a.maxHealth.skillBonusPercent = 0;
-  a.maxSpirit.skillBonusPercent = 0;
-  a.healthRegenBonus = 0;
-  a.spiritRegenBonus = 0;
-  a.attackCooldownReduction = 0;
-  a.healPotency = 0;
-  a.buffDamagePotency = 0;
-  a.buffArmorPotency = 0;
-  a.buffAttackRatingPotency = 0;
-  a.buffDefenceRatingPotency = 0;
-  a.extraAttackCount = 0;
-  a.extraAttackChance = DEFAULT_MULTI_ATTACK_CHANCE;
-  a.controlTargetBonus = 0;
-  a.transformTargetBonus = 0;
-  a.chainArcBonus = 0;
-  a.critChance = 0;
-  a.areaRadiusBonus = 0;
-  a.rainAreaBonus = 0;
-  a.swiftStrikeTargetBonus = 0;
-  a.ricochetCountBonus = 0;
-  a.barbarianChickenChance = 0;
-  a.ninjaChickenChance = 0;
-  a.rogueChickenChance = 0;
-  a.chainCount = 0;
-  a.chainChance = DEFAULT_CHAIN_CHANCE;
-  a.maxSummonedMinions = DEFAULT_MINION_LIMIT;
+export function resetSkillStatBonuses(stats) {
+  stats.damageResistance = 0;
+  stats.spellCostReduction = 0;
+  stats.damage.skillBonusPercent = 0;
+  stats.armor.skillBonusPercent = 0;
+  stats.attackRating.skillBonusPercent = 0;
+  stats.defenceRating.skillBonusPercent = 0;
+  stats.maxHealth.skillBonusPercent = 0;
+  stats.maxSpirit.skillBonusPercent = 0;
+  stats.healthRegenBonus = 0;
+  stats.spiritRegenBonus = 0;
+  stats.attackCooldownReduction = 0;
+  stats.healPotency = 0;
+  stats.buffDamagePotency = 0;
+  stats.buffArmorPotency = 0;
+  stats.buffAttackRatingPotency = 0;
+  stats.buffDefenceRatingPotency = 0;
+  stats.extraAttackCount = 0;
+  stats.extraAttackChance = stats.rules.defaultMultiAttackChance;
+  stats.controlTargetBonus = 0;
+  stats.transformTargetBonus = 0;
+  stats.chainArcBonus = 0;
+  stats.critChance = 0;
+  stats.areaRadiusBonus = 0;
+  stats.rainAreaBonus = 0;
+  stats.swiftStrikeTargetBonus = 0;
+  stats.ricochetCountBonus = 0;
+  stats.barbarianChickenChance = 0;
+  stats.ninjaChickenChance = 0;
+  stats.rogueChickenChance = 0;
+  stats.chainCount = 0;
+  stats.chainChance = stats.rules.defaultChainChance;
+  stats.maxSummonedMinions = stats.rules.defaultMinionLimit;
 }
 export function initializeCharactersStats() {
-  CharacterStats.prototype.setMinionKills = function (a) {
-    this.minionKills = a;
+  CharacterStats.prototype.setMinionKills = function (count) {
+    this.minionKills = count;
   };
   CharacterStats.prototype.recordMinionKill = function () {
     this.minionKills++;
   };
   CharacterStats.prototype.rollChainCount = function () {
-    var a = this.chainChance / 100,
-      b = 0,
-      c;
-    for (c = 0; c < this.chainCount; c++) {
-      if (Math.random() < a) {
-        b++;
+    const chance = this.chainChance / 100;
+    let successfulChains = 0;
+    for (let attempt = 0; attempt < this.chainCount; attempt++) {
+      if (Math.random() < chance) {
+        successfulChains++;
       } else {
         break;
       }
     }
-    return b;
+    return successfulChains;
   };
 }

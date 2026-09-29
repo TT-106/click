@@ -2,9 +2,17 @@
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
 import { FRAME_DURATION_MS, Vector2, assignVector, copyVector, floorNumber, normalizeVector, subtractVector } from "../core/math.js";
-import { game } from "../runtime/game.js";
 import { EFFECT_FRAME_DURATION_MS, PROJECTILE_FRAME_DURATION_MS } from "../content/balance.js";
 export var TARGETED_EFFECT, directionScratchVector;
+var effectAnimationsCatalog = null;
+/**
+ * 绑定动画目录，供 VisualEffect 构造时按名称查动画。目录由调用者提供，
+ * 避免本模块依赖全局游戏实例；game.animations 在存档恢复时不被替换（引用稳定），会话内绑定一次即可。
+ * @param {{ getAnimation: (name: string) => unknown }} catalog
+ */
+export function bindEffectAnimations(catalog) {
+  effectAnimationsCatalog = catalog;
+}
 export function Sprite(a, b, c, d) {
   this.spriteSheet = a;
   this.sourceX = b;
@@ -85,7 +93,7 @@ export function VisualEffect(a, b, c, d, f) {
   this.reachedTarget = false;
   this.projectileEffect = d;
   this.finished = this.hasSpawned = this.isReturning = false;
-  this.animation = a ? game.animations.getAnimation(a) : null;
+  this.animation = a ? effectAnimationsCatalog.getAnimation(a) : null;
   if (a && !this.animation) {
     console.log("Failed to find animated sprite: " + a);
   }
@@ -159,16 +167,15 @@ export function advanceEffectFrame(a, b) {
     }
   }
 }
-export function clearVisualEffects() {
-  var a = game.effects;
-  if (0 < a.pool.length) {
-    var b;
-    for (b = 0; b < a.pool.length; b++) {
-      var c = a.pool[b];
-      c.finished = true;
-      c.reachedTarget = true;
+export function clearVisualEffects(effects) {
+  if (0 < effects.pool.length) {
+    var effectIndex;
+    for (effectIndex = 0; effectIndex < effects.pool.length; effectIndex++) {
+      var effect = effects.pool[effectIndex];
+      effect.finished = true;
+      effect.reachedTarget = true;
     }
-    a.pool.length = 0;
+    effects.pool.length = 0;
   }
 }
 export function addVisualEffect(a, b) {

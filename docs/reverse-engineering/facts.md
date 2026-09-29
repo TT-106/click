@@ -29,7 +29,7 @@
 
 13. **角色类定义（adventurerClasses、bossClass、castle guardians、minions）共用形状**：`tb: [{slot, statType}]`（装备槽→属性类型映射）→ Character 构造器读 `.tb[].slot`（Z 槽位列表）与 `.tb[].statType`（KD slot→statType 映射）。**数据定义分布在多个文件**：classes.js、guardians.js、minions.js——重命名数据键时必须全库 grep，漏一个文件会在后期内容（城堡守卫/随从）触发 `generateItem(slot=undefined)` 崩溃。
 14. `Character.Z`（槽位列表）→ 装备表；`Character.KD`（slot→statType）→ `generateItem` 的属性成长与特效判定（`1 === statType` 武器特效）。
-15. 物品类型注册：equipment.js `registerItemType(gen, def, png)`，按 `def.Z`（槽位列表）建 `ItemGenerator.ps[slot]` 缓存；槽位值如 "20"/"80"/"230"。
+15. 物品类型注册：原版 `def.Z` / `ItemGenerator.ps[slot]` 对应现行 `definition.slotList` / `ItemGenerator.itemTypesBySlot[slot]`；`equipment.js` 按登记顺序调用 `registerItemType(generator, definition, spriteFileName)`，槽位值如 "20"/"80"/"230"。
 16. 成就定义 `{id, name, requirementType, requiredCount, Hb(职业), pointEventTypeId}`；存档只存 `{achievementId, obtained, applied}`。点数事件定义 `h`=pointEventTypeId → 存档键 `pointEventType`。
 
 ## 运行时入口

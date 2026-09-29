@@ -28,11 +28,11 @@ import { initializeContentSkillsNecromancer } from '../content/skills/necromance
 import { initializeContentSkillsDruid } from '../content/skills/druid.js';
 import { initializeContentSkillsChickenKing } from '../content/skills/chicken-king.js';
 import { initializeContentSpells } from '../content/spells.js';
-import { initializeCombatScrolls } from '../combat/scrolls.js';
+import { initializeCombatScrolls, scrollDefinitions } from '../combat/scrolls.js';
 import { initializeCombatPotions } from '../combat/potions.js';
 import { initializeProgressionPoints } from '../progression/points.js';
 import { initializeProgressionAchievements } from '../progression/achievements.js';
-import { initializeProgressionUpgrades } from '../progression/upgrades.js';
+import { AutoPurchaseDungeonUpgrade, ClaimAchievementUpgrade, CollectFarmUpgrade, EquipBestItemUpgrade, EquipItemUpgrade, GlobalUpgrade, LevelUpUpgrade, PurchaseCastleUpgrade, PurchaseItemUpgrade, RetireMonsterLevelUpgrade, ScrollUpgrade, UnlockMonsterLevelUpgrade, UpgradeCollection, initializeProgressionUpgrades } from '../progression/upgrades.js';
 import { initializeAiTargeting } from '../ai/targeting.js';
 import { initializeAiBehaviors } from '../ai/behaviors.js';
 import { initializeContentClasses } from '../content/classes.js';
@@ -126,7 +126,22 @@ initializeCharactersCharacter();
 initializeWorldTravelCosts();
 initializeProgressionStatistics();
 initializeCharactersParty();
-initializeContentBalance();
+initializeContentBalance({
+  AutoPurchaseDungeonUpgrade,
+  ClaimAchievementUpgrade,
+  CollectFarmUpgrade,
+  EquipBestItemUpgrade,
+  EquipItemUpgrade,
+  GlobalUpgrade,
+  LevelUpUpgrade,
+  PurchaseCastleUpgrade,
+  PurchaseItemUpgrade,
+  RetireMonsterLevelUpgrade,
+  ScrollUpgrade,
+  UnlockMonsterLevelUpgrade,
+  UpgradeCollection,
+  scrollDefinitions
+});
 initializeViewsDom();
 initializeViewsBase();
 initializeViewsNavigation();

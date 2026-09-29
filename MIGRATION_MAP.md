@@ -40,7 +40,7 @@ UI 壳（`src/app.js`、`src/ui/*`）为新增层，通过 `adapter.js` 访问�
 1. `tests/unit/rng.test.mjs` — RNG 位级差分（Babel 提取原版 `ga` 对照）。
 2. `tests/unit/save-codec.test.mjs` — 存档编码契约。
 3. `scripts/test-parity.mjs` — 同存档 + 固定 RNG/时钟，原版 vs 重构 0/1/99/900 回合全状态相等。
-4. `scripts/test-scenarios.mjs` — 当前 62 场景差分（离线四态、法术类别、城堡征服、升级/点数/成就/农场/三种财宝房入口、四类地面掉落、渲染与自动落盘等），两端逐检查点完整 DTO 相等并设专项必达断言。
+4. `scripts/test-scenarios.mjs` — 当前 89 场景差分（离线四态、法术类别、城堡征服、升级/点数/成就/农场/三种财宝房入口、四类地面掉落、渲染与自动落盘等），两端逐检查点完整 DTO 相等并设专项必达断言。
 5. `scripts/test-browser.mjs` — 真实浏览器 E2E。
 
 ## 已知未迁移/未验证区域（如实记录）

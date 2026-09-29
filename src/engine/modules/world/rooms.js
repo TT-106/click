@@ -6,195 +6,195 @@ import { game } from "../runtime/game.js";
 import { rollGoldDrop, treasureRoomModifier } from "../content/balance.js";
 import { GoldDrop } from "../loot/treasure.js";
 export var EMPTY_TILE;
-export function DungeonTile(a, b, c, d) {
-  this.tileColumn = a;
-  this.tileRow = b;
-  this.pixelColumn = c;
-  this.pixelRow = d;
+export function DungeonTile(tileColumn, tileRow, pixelColumn, pixelRow) {
+  this.tileColumn = tileColumn;
+  this.tileRow = tileRow;
+  this.pixelColumn = pixelColumn;
+  this.pixelRow = pixelRow;
   this.cachedBackgroundSprite = this.decorationSprite = this.backgroundSprite = null;
   this.floorType = EMPTY_TILE;
   this.tileEffect = null;
   this.remainingEffectDamage = 0;
 }
-export function setTileEffect(a, b) {
-  a.tileEffect = b;
-  a.remainingEffectDamage = b ? randomInt(b.remainingEffectDamage) : 0;
+export function setTileEffect(tile, tileEffect) {
+  tile.tileEffect = tileEffect;
+  tile.remainingEffectDamage = tileEffect ? randomInt(tileEffect.remainingEffectDamage) : 0;
 }
-export function DungeonRoom(a, b, c, d, f) {
+export function DungeonRoom(tileColumn, tileRow, widthInTiles, heightInTiles, encounterType) {
   this.roomId = 0;
-  this.tileColumn = a;
-  this.tileRow = b;
-  this.widthInTiles = c;
-  this.heightInTiles = d;
-  this.encounterType = f;
+  this.tileColumn = tileColumn;
+  this.tileRow = tileRow;
+  this.widthInTiles = widthInTiles;
+  this.heightInTiles = heightInTiles;
+  this.encounterType = encounterType;
   this.connectedRooms = [];
   this.doorList = [];
   this.tileGrid = this.theme = this.stairs = null;
   this.discovered = false;
 }
-export function roomLeftPixels(a) {
-  return a.tileColumn * game.tileSize;
+export function roomLeftPixels(room) {
+  return room.tileColumn * game.tileSize;
 }
-export function roomRightPixels(a) {
-  return a.tileColumn * game.tileSize + a.widthInTiles * game.tileSize;
+export function roomRightPixels(room) {
+  return room.tileColumn * game.tileSize + room.widthInTiles * game.tileSize;
 }
-export function roomTopPixels(a) {
-  return a.tileRow * game.tileSize;
+export function roomTopPixels(room) {
+  return room.tileRow * game.tileSize;
 }
-export function roomBottomPixels(a) {
-  return a.tileRow * game.tileSize + a.heightInTiles * game.tileSize;
+export function roomBottomPixels(room) {
+  return room.tileRow * game.tileSize + room.heightInTiles * game.tileSize;
 }
-export function roomContainsTile(a, b, c) {
-  return b >= a.tileColumn && b < a.tileColumn + a.widthInTiles && c >= a.tileRow && c < a.tileRow + a.heightInTiles;
+export function roomContainsTile(room, tileColumn, tileRow) {
+  return tileColumn >= room.tileColumn && tileColumn < room.tileColumn + room.widthInTiles && tileRow >= room.tileRow && tileRow < room.tileRow + room.heightInTiles;
 }
-export function isRoomBorder(a, b, c) {
-  return c === a.tileRow - 1 || c === a.tileRow + a.heightInTiles ? b >= a.tileColumn - 1 && b <= a.tileColumn + a.widthInTiles : b === a.tileColumn - 1 || b === a.tileColumn + a.widthInTiles ? c >= a.tileRow - 1 && c <= a.tileRow + a.heightInTiles : false;
+export function isRoomBorder(room, tileColumn, tileRow) {
+  return tileRow === room.tileRow - 1 || tileRow === room.tileRow + room.heightInTiles ? tileColumn >= room.tileColumn - 1 && tileColumn <= room.tileColumn + room.widthInTiles : tileColumn === room.tileColumn - 1 || tileColumn === room.tileColumn + room.widthInTiles ? tileRow >= room.tileRow - 1 && tileRow <= room.tileRow + room.heightInTiles : false;
 }
-export function revealRoom(a) {
-  var wasHidden = !a.discovered;
-  a.discovered = true;
+export function revealRoom(room) {
+  var wasHidden = !room.discovered;
+  room.discovered = true;
   if (wasHidden) {
-    if (0 === a.encounterType && treasureRoomModifier.currentValue && 0.25 > Math.random()) {
-      a.encounterType = 3;
+    if (0 === room.encounterType && treasureRoomModifier.currentValue && 0.25 > Math.random()) {
+      room.encounterType = 3;
     }
-    var c = a.tileColumn,
-      d = c + a.widthInTiles,
-      f = a.tileRow,
-      g = f + a.heightInTiles,
-      b = a.doorList,
-      h,
-      l,
-      n,
-      p = game.terrainSprites.getSprite(a.theme.floor);
-    n = game.terrainSprites.getSprite(a.theme.wallSprites.wallNS);
-    var s = game.terrainSprites.getSprite(a.theme.wallSprites.wallEW);
-    h = a.tileGrid[c - 1][f - 1];
-    h.setBackgroundSprite(p);
-    h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.wallSprites.wallSW));
-    h = a.tileGrid[d][f - 1];
-    h.setBackgroundSprite(p);
-    h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.wallSprites.wallNW));
-    h = a.tileGrid[c - 1][g];
-    h.setBackgroundSprite(p);
-    h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.wallSprites.wallES));
-    h = a.tileGrid[d][g];
-    h.setBackgroundSprite(p);
-    h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.wallSprites.wallNE));
-    for (l = c; l < d; l++) {
-      h = a.tileGrid[l][f - 1];
-      h.setBackgroundSprite(p);
-      if (!h.decorationSprite) {
-        h.setDecorationSprite(n);
+    var leftColumn = room.tileColumn,
+      rightColumn = leftColumn + room.widthInTiles, doorIndex, wallPoint, innerLeftColumn, goldAmount,
+      topRow = room.tileRow, door, rowLimit, decorationRow, spawnPoint, floorSpriteName, goldTile,
+      bottomRow = topRow + room.heightInTiles, decorationColumn, columnList,
+      doorList = room.doorList,
+      tile, tileGrid, innerTopRow,
+      columnIndex, innerRightColumn, innerBottomRow,
+      wallNSSprite, rowIndex, floorColumnList,
+      floorSprite = game.terrainSprites.getSprite(room.theme.floor), decorationSets, decorationSet, wallDecorations, decorations, wallSpriteName;
+    wallNSSprite = game.terrainSprites.getSprite(room.theme.wallSprites.wallNS);
+    var wallEWSprite = game.terrainSprites.getSprite(room.theme.wallSprites.wallEW);
+    tile = room.tileGrid[leftColumn - 1][topRow - 1];
+    tile.setBackgroundSprite(floorSprite);
+    tile.setDecorationSprite(game.terrainSprites.getSprite(room.theme.wallSprites.wallSW));
+    tile = room.tileGrid[rightColumn][topRow - 1];
+    tile.setBackgroundSprite(floorSprite);
+    tile.setDecorationSprite(game.terrainSprites.getSprite(room.theme.wallSprites.wallNW));
+    tile = room.tileGrid[leftColumn - 1][bottomRow];
+    tile.setBackgroundSprite(floorSprite);
+    tile.setDecorationSprite(game.terrainSprites.getSprite(room.theme.wallSprites.wallES));
+    tile = room.tileGrid[rightColumn][bottomRow];
+    tile.setBackgroundSprite(floorSprite);
+    tile.setDecorationSprite(game.terrainSprites.getSprite(room.theme.wallSprites.wallNE));
+    for (columnIndex = leftColumn; columnIndex < rightColumn; columnIndex++) {
+      tile = room.tileGrid[columnIndex][topRow - 1];
+      tile.setBackgroundSprite(floorSprite);
+      if (!tile.decorationSprite) {
+        tile.setDecorationSprite(wallNSSprite);
       }
     }
-    for (l = c; l < d; l++) {
-      h = a.tileGrid[l][g];
-      h.setBackgroundSprite(p);
-      if (!h.decorationSprite) {
-        h.setDecorationSprite(n);
+    for (columnIndex = leftColumn; columnIndex < rightColumn; columnIndex++) {
+      tile = room.tileGrid[columnIndex][bottomRow];
+      tile.setBackgroundSprite(floorSprite);
+      if (!tile.decorationSprite) {
+        tile.setDecorationSprite(wallNSSprite);
       }
     }
-    for (n = f; n < g; n++) {
-      h = a.tileGrid[c - 1][n];
-      h.setBackgroundSprite(p);
-      if (!h.decorationSprite) {
-        h.setDecorationSprite(s);
+    for (rowIndex = topRow; rowIndex < bottomRow; rowIndex++) {
+      tile = room.tileGrid[leftColumn - 1][rowIndex];
+      tile.setBackgroundSprite(floorSprite);
+      if (!tile.decorationSprite) {
+        tile.setDecorationSprite(wallEWSprite);
       }
     }
-    for (n = f; n < g; n++) {
-      h = a.tileGrid[d][n];
-      h.setBackgroundSprite(p);
-      if (!h.decorationSprite) {
-        h.setDecorationSprite(s);
+    for (rowIndex = topRow; rowIndex < bottomRow; rowIndex++) {
+      tile = room.tileGrid[rightColumn][rowIndex];
+      tile.setBackgroundSprite(floorSprite);
+      if (!tile.decorationSprite) {
+        tile.setDecorationSprite(wallEWSprite);
       }
     }
-    for (l = c; l < d; l++) {
-      for (c = a.tileGrid[l], n = f; n < g; n++) {
-        h = c[n];
-        h.setBackgroundSprite(p);
+    for (columnIndex = leftColumn; columnIndex < rightColumn; columnIndex++) {
+      for (floorColumnList = room.tileGrid[columnIndex], rowIndex = topRow; rowIndex < bottomRow; rowIndex++) {
+        tile = floorColumnList[rowIndex];
+        tile.setBackgroundSprite(floorSprite);
       }
     }
-    for (d = 0; d < b.length; d++) {
-      f = b[d];
-      h = a.tileGrid[f.tileColumn][f.tileRow];
-      h.setBackgroundSprite(p);
-      if (f.horizontalPassage) {
-        if (f.isOpen) {
-          h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.doorSprites.doorOpenASprite));
+    for (doorIndex = 0; doorIndex < doorList.length; doorIndex++) {
+      door = doorList[doorIndex];
+      tile = room.tileGrid[door.tileColumn][door.tileRow];
+      tile.setBackgroundSprite(floorSprite);
+      if (door.horizontalPassage) {
+        if (door.isOpen) {
+          tile.setDecorationSprite(game.terrainSprites.getSprite(room.theme.doorSprites.doorOpenASprite));
         } else {
-          h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.doorSprites.doorClosedASprite));
+          tile.setDecorationSprite(game.terrainSprites.getSprite(room.theme.doorSprites.doorClosedASprite));
         }
       } else {
-        if (f.isOpen) {
-          h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.doorSprites.doorOpenBSprite));
+        if (door.isOpen) {
+          tile.setDecorationSprite(game.terrainSprites.getSprite(room.theme.doorSprites.doorOpenBSprite));
         } else {
-          h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.doorSprites.doorClosedBSprite));
+          tile.setDecorationSprite(game.terrainSprites.getSprite(room.theme.doorSprites.doorClosedBSprite));
         }
       }
     }
-    if (a.stairs) {
-      h = a.tileGrid[a.stairs.tileColumn][a.stairs.tileRow];
-      h.setBackgroundSprite(p);
-      if (a.stairs.isVerticalStairs) {
-        if (a.stairs.showsStairs) {
-          h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.stairs.stairsDownNSSprite));
+    if (room.stairs) {
+      tile = room.tileGrid[room.stairs.tileColumn][room.stairs.tileRow];
+      tile.setBackgroundSprite(floorSprite);
+      if (room.stairs.isVerticalStairs) {
+        if (room.stairs.showsStairs) {
+          tile.setDecorationSprite(game.terrainSprites.getSprite(room.theme.stairs.stairsDownNSSprite));
         } else {
-          h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.stairs.stairDoorASprite));
+          tile.setDecorationSprite(game.terrainSprites.getSprite(room.theme.stairs.stairDoorASprite));
         }
       } else {
-        if (a.stairs.showsStairs) {
-          h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.stairs.stairsDownEWSprite));
+        if (room.stairs.showsStairs) {
+          tile.setDecorationSprite(game.terrainSprites.getSprite(room.theme.stairs.stairsDownEWSprite));
         } else {
-          h.setDecorationSprite(game.terrainSprites.getSprite(a.theme.stairs.stairDoorBSprite));
+          tile.setDecorationSprite(game.terrainSprites.getSprite(room.theme.stairs.stairDoorBSprite));
         }
       }
     }
-    p = a.theme.decorationSets;
-    h = a.tileGrid;
-    b = game.decorations;
-    if (!(!p || 0 === p.length || 0.2 > b.seededRandom.random() || !(p = 1 === p.length ? p[0] : randomIntFrom(b.seededRandom, p.length)))) {
-      if (p.floorDecorations && 0 < p.floorDecorations.length) {
-        if (g = a.tileColumn, d = a.tileRow, f = d + a.heightInTiles - 1, g = g + 1 + randomIntFrom(b.seededRandom, g + a.widthInTiles - 1 - g - 2), d = d + 1 + randomIntFrom(b.seededRandom, f - d - 2), setVector(b.spawnPointScratch, g, d), f = b.spawnPointScratch, d = h[f.x][f.y], d) {
-          if (!d.decorationSprite) {
-            if (f = p.floorDecorations[randomIntFrom(b.seededRandom, p.floorDecorations.length)]) {
-              d.setDecorationSprite(game.terrainSprites.getSprite(f));
+    decorationSets = room.theme.decorationSets;
+    tileGrid = room.tileGrid;
+    decorations = game.decorations;
+    if (!(!decorationSets || 0 === decorationSets.length || 0.2 > decorations.seededRandom.random() || !(decorationSet = 1 === decorationSets.length ? decorationSets[0] : randomIntFrom(decorations.seededRandom, decorationSets.length)))) {
+      if (decorationSet.floorDecorations && 0 < decorationSet.floorDecorations.length) {
+        if (decorationColumn = room.tileColumn, decorationRow = room.tileRow, rowLimit = decorationRow + room.heightInTiles - 1, decorationColumn = decorationColumn + 1 + randomIntFrom(decorations.seededRandom, decorationColumn + room.widthInTiles - 1 - decorationColumn - 2), decorationRow = decorationRow + 1 + randomIntFrom(decorations.seededRandom, rowLimit - decorationRow - 2), setVector(decorations.spawnPointScratch, decorationColumn, decorationRow), spawnPoint = decorations.spawnPointScratch, tile = tileGrid[spawnPoint.x][spawnPoint.y], tile) {
+          if (!tile.decorationSprite) {
+            if (floorSpriteName = decorationSet.floorDecorations[randomIntFrom(decorations.seededRandom, decorationSet.floorDecorations.length)]) {
+              tile.setDecorationSprite(game.terrainSprites.getSprite(floorSpriteName));
             } else {
               console.log("failed to select floor sprite.");
             }
           }
         } else {
-          console.log("invalid level tile. col=" + f.x + " row=" + f.y);
+          console.log("invalid level tile. col=" + spawnPoint.x + " row=" + spawnPoint.y);
         }
       }
-      if (0.5 > b.seededRandom.random()) {
-        d = b.pickNorthWallPoint(a);
-        p = p.horizontalWallDecorations;
+      if (0.5 > decorations.seededRandom.random()) {
+        wallPoint = decorations.pickNorthWallPoint(room);
+        wallDecorations = decorationSet.horizontalWallDecorations;
       } else {
-        d = b.pickWestWallPoint(a);
-        p = p.verticalWallDecorations;
+        wallPoint = decorations.pickWestWallPoint(room);
+        wallDecorations = decorationSet.verticalWallDecorations;
       }
-      if (d && p && 0 !== p.length && canPlaceRoomObject(a, d)) {
-        if (h = h[d.x][d.y], h) {
-          if (!h.cachedBackgroundSprite) {
-            if (b = p[randomIntFrom(b.seededRandom, p.length)]) {
-              h.cachedBackgroundSprite = game.terrainSprites.getSprite(b);
+      if (wallPoint && wallDecorations && 0 !== wallDecorations.length && canPlaceRoomObject(room, wallPoint)) {
+        if (tile = tileGrid[wallPoint.x][wallPoint.y], tile) {
+          if (!tile.cachedBackgroundSprite) {
+            if (wallSpriteName = wallDecorations[randomIntFrom(decorations.seededRandom, wallDecorations.length)]) {
+              tile.cachedBackgroundSprite = game.terrainSprites.getSprite(wallSpriteName);
             } else {
               console.log("failed to select wall sprite.");
             }
           }
         } else {
-          console.log("invalid level tile. col=" + d.x + " row=" + d.y);
+          console.log("invalid level tile. col=" + wallPoint.x + " row=" + wallPoint.y);
         }
       }
     }
-    if (3 === a.encounterType) {
-      for (d = a.tileColumn + 1, b = d + a.widthInTiles, h = a.tileRow + 1, p = h + a.heightInTiles, l = d; l < b; l++) {
-        for (g = a.tileGrid[l], c = h; c < p; c++) {
+    if (3 === room.encounterType) {
+      for (innerLeftColumn = room.tileColumn + 1, innerRightColumn = innerLeftColumn + room.widthInTiles, innerTopRow = room.tileRow + 1, innerBottomRow = innerTopRow + room.heightInTiles, columnIndex = innerLeftColumn; columnIndex < innerRightColumn; columnIndex++) {
+        for (columnList = room.tileGrid[columnIndex], rowIndex = innerTopRow; rowIndex < innerBottomRow; rowIndex++) {
           if (0.8 > Math.random()) {
-            d = 2 * rollGoldDrop();
-            if (0 < d) {
-              f = g[c];
-              game.goldDrops.drops.push(new GoldDrop(d, f.getPixelX(), f.getPixelY(), a));
+            goldAmount = 2 * rollGoldDrop();
+            if (0 < goldAmount) {
+              goldTile = columnList[rowIndex];
+              game.goldDrops.drops.push(new GoldDrop(goldAmount, goldTile.getPixelX(), goldTile.getPixelY(), room));
             }
           }
         }
@@ -202,315 +202,315 @@ export function revealRoom(a) {
     }
   }
 }
-export function clampPointToRoom(a, b, c) {
-  if (b) {
-    var d = b.x,
-      f = b.y,
-      g = (a.tileColumn - 1) * game.tileSize + c,
-      h = roomRightPixels(a) - c,
-      l = (a.tileRow - 1) * game.tileSize + c;
-    a = roomBottomPixels(a) - c;
-    if (d < g) {
-      d = g;
+export function clampPointToRoom(room, position, padding) {
+  if (position) {
+    var positionX = position.x,
+      positionY = position.y,
+      minX = (room.tileColumn - 1) * game.tileSize + padding,
+      maxX = roomRightPixels(room) - padding,
+      minY = (room.tileRow - 1) * game.tileSize + padding, maxY;
+    maxY = roomBottomPixels(room) - padding;
+    if (positionX < minX) {
+      positionX = minX;
     } else {
-      if (d > h) {
-        d = h;
+      if (positionX > maxX) {
+        positionX = maxX;
       }
     }
-    if (f < l) {
-      f = l;
+    if (positionY < minY) {
+      positionY = minY;
     } else {
-      if (f > a) {
-        f = a;
+      if (positionY > maxY) {
+        positionY = maxY;
       }
     }
-    setVector(b, d, f);
+    setVector(position, positionX, positionY);
   }
 }
-export function isPointNearDoor(a, b) {
-  if (!a.doorList) {
+export function isPointNearDoor(room, position) {
+  if (!room.doorList) {
     return false;
   }
-  var c;
-  for (c = 0; c < a.doorList.length; c++) {
-    if (distanceToPoint(b, a.doorList[c].pixelColumn, a.doorList[c].pixelRow) < game.tileSize) {
+  var doorIndex;
+  for (doorIndex = 0; doorIndex < room.doorList.length; doorIndex++) {
+    if (distanceToPoint(position, room.doorList[doorIndex].pixelColumn, room.doorList[doorIndex].pixelRow) < game.tileSize) {
       return true;
     }
   }
   return false;
 }
-export function canPlaceRoomObject(a, b) {
-  var c = b.x,
-    d = b.y,
-    f;
-  for (f = 0; f < a.doorList.length; f++) {
-    if (c === a.doorList[f].tileColumn && d === a.doorList[f].tileRow) {
+export function canPlaceRoomObject(room, point) {
+  var tileColumn = point.x,
+    tileRow = point.y,
+    doorIndex;
+  for (doorIndex = 0; doorIndex < room.doorList.length; doorIndex++) {
+    if (tileColumn === room.doorList[doorIndex].tileColumn && tileRow === room.doorList[doorIndex].tileRow) {
       return false;
     }
   }
-  return a.stairs && c === a.stairs.tileColumn && d === a.stairs.tileRow ? false : true;
+  return room.stairs && tileColumn === room.stairs.tileColumn && tileRow === room.stairs.tileRow ? false : true;
 }
-export function DungeonDoor(a) {
+export function DungeonDoor(leadsTo) {
   this.pixelRow = this.pixelColumn = this.tileRow = this.tileColumn = 0;
   this.isOpen = false;
   this.horizontalPassage = true;
-  this.leadsTo = a;
+  this.leadsTo = leadsTo;
   this.hallway = null;
 }
-export function DungeonStairs(a) {
-  this.leadsTo = a;
+export function DungeonStairs(leadsTo) {
+  this.leadsTo = leadsTo;
   this.pixelRow = this.pixelColumn = this.tileRow = this.tileColumn = 0;
   this.showsStairs = this.isVerticalStairs = true;
 }
-export function positionStairs(a, b, c) {
-  a.tileColumn = b;
-  a.tileRow = c;
-  a.pixelColumn = b * game.tileSize;
-  a.pixelRow = c * game.tileSize;
+export function positionStairs(stairs, tileColumn, tileRow) {
+  stairs.tileColumn = tileColumn;
+  stairs.tileRow = tileRow;
+  stairs.pixelColumn = tileColumn * game.tileSize;
+  stairs.pixelRow = tileRow * game.tileSize;
 }
-export function DungeonHallway(a, b, c, d) {
+export function DungeonHallway(roomA, doorA, roomB, doorB) {
   this.hallwayId = 0;
-  this.roomA = a;
-  this.doorA = b;
-  this.roomB = c;
-  this.doorB = d;
+  this.roomA = roomA;
+  this.doorA = doorA;
+  this.roomB = roomB;
+  this.doorB = doorB;
   this.pathTiles = [];
   this.tileGrid = this.theme = null;
   this.discovered = false;
 }
-export function getOppositeDoor(a, b) {
-  if (b === a.doorA) {
-    return a.doorB;
+export function getOppositeDoor(hallway, door) {
+  if (door === hallway.doorA) {
+    return hallway.doorB;
   }
-  if (b === a.doorB) {
-    return a.doorA;
+  if (door === hallway.doorB) {
+    return hallway.doorA;
   }
   console.log("failed to find opposite door in hallway");
   return null;
 }
-export function revealHallway(a, b) {
-  var shouldReveal = b && !a.discovered;
-  a.discovered = b;
+export function revealHallway(hallway, discovered) {
+  var shouldReveal = discovered && !hallway.discovered;
+  hallway.discovered = discovered;
   if (shouldReveal) {
-    var c = a.pathTiles,
-      d,
-      f,
-      g,
-      h = game.terrainSprites.getSprite(a.theme.floor),
-      l = game.terrainSprites.getSprite(a.theme.wallSprites.wallNS),
-      n = game.terrainSprites.getSprite(a.theme.wallSprites.wallEW),
-      p = game.terrainSprites.getSprite(a.theme.wallSprites.wallNW),
-      s = game.terrainSprites.getSprite(a.theme.wallSprites.wallSW),
-      u = game.terrainSprites.getSprite(a.theme.wallSprites.wallNE),
-      y = game.terrainSprites.getSprite(a.theme.wallSprites.wallES),
-      A = game.terrainSprites.getSprite(a.theme.wallSprites.wallNEW),
-      C = game.terrainSprites.getSprite(a.theme.wallSprites.wallESW),
-      v = game.terrainSprites.getSprite(a.theme.wallSprites.wallNES),
-      D = game.terrainSprites.getSprite(a.theme.wallSprites.wallNSW);
-    for (g = 0; g < c.length; g++) {
-      d = c[g];
-      f = a.tileGrid[d.x][d.y];
-      f.setBackgroundSprite(h);
+    var pathTiles = hallway.pathTiles,
+      pathTile,
+      tile,
+      pathIndex,
+      floorSprite = game.terrainSprites.getSprite(hallway.theme.floor),
+      wallNSSprite = game.terrainSprites.getSprite(hallway.theme.wallSprites.wallNS),
+      wallEWSprite = game.terrainSprites.getSprite(hallway.theme.wallSprites.wallEW),
+      wallNWSprite = game.terrainSprites.getSprite(hallway.theme.wallSprites.wallNW),
+      wallSWSprite = game.terrainSprites.getSprite(hallway.theme.wallSprites.wallSW),
+      wallNESprite = game.terrainSprites.getSprite(hallway.theme.wallSprites.wallNE),
+      wallESSprite = game.terrainSprites.getSprite(hallway.theme.wallSprites.wallES),
+      wallNEWSprite = game.terrainSprites.getSprite(hallway.theme.wallSprites.wallNEW),
+      wallESWSprite = game.terrainSprites.getSprite(hallway.theme.wallSprites.wallESW),
+      wallNESSprite = game.terrainSprites.getSprite(hallway.theme.wallSprites.wallNES),
+      wallNSWSprite = game.terrainSprites.getSprite(hallway.theme.wallSprites.wallNSW);
+    for (pathIndex = 0; pathIndex < pathTiles.length; pathIndex++) {
+      pathTile = pathTiles[pathIndex];
+      tile = hallway.tileGrid[pathTile.x][pathTile.y];
+      tile.setBackgroundSprite(floorSprite);
     }
-    var N = null,
-      I = null,
-      x,
-      z,
-      O,
-      J,
-      la,
-      Q,
-      V,
-      na,
-      K;
-    for (g = 0; g < c.length; g++) {
-      d = c[g];
-      I = g + 1 < c.length ? c[g + 1] : null;
-      x = d.x;
-      z = d.y;
-      if (!N) {
-        f = a.tileGrid[x][z];
-        f.setBackgroundSprite(h);
-        if (a.doorA.horizontalPassage) {
-          if (a.doorA.isOpen) {
-            f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.doorSprites.doorOpenASprite));
+    var previousPathTile = null,
+      nextPathTile = null,
+      tileColumn,
+      tileRow,
+      previousIsNorth, previousIsSouth,
+      previousIsWest,
+      previousIsEast,
+      nextIsNorth,
+      nextIsSouth,
+      nextIsEast,
+      nextIsWest;
+    for (pathIndex = 0; pathIndex < pathTiles.length; pathIndex++) {
+      pathTile = pathTiles[pathIndex];
+      nextPathTile = pathIndex + 1 < pathTiles.length ? pathTiles[pathIndex + 1] : null;
+      tileColumn = pathTile.x;
+      tileRow = pathTile.y;
+      if (!previousPathTile) {
+        tile = hallway.tileGrid[tileColumn][tileRow];
+        tile.setBackgroundSprite(floorSprite);
+        if (hallway.doorA.horizontalPassage) {
+          if (hallway.doorA.isOpen) {
+            tile.setDecorationSprite(game.terrainSprites.getSprite(hallway.theme.doorSprites.doorOpenASprite));
           } else {
-            f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.doorSprites.doorClosedASprite));
+            tile.setDecorationSprite(game.terrainSprites.getSprite(hallway.theme.doorSprites.doorClosedASprite));
           }
         } else {
-          if (a.doorA.isOpen) {
-            f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.doorSprites.doorOpenBSprite));
+          if (hallway.doorA.isOpen) {
+            tile.setDecorationSprite(game.terrainSprites.getSprite(hallway.theme.doorSprites.doorOpenBSprite));
           } else {
-            f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.doorSprites.doorClosedBSprite));
+            tile.setDecorationSprite(game.terrainSprites.getSprite(hallway.theme.doorSprites.doorClosedBSprite));
           }
         }
-        Q = z > I.y;
-        V = z < I.y;
-        K = x > I.x;
-        na = x < I.x;
-        if (K) {
-          f = a.tileGrid[x][z - 1];
-          f.setBackgroundSprite(h);
-          f.setDecorationSprite(A);
-          f = a.tileGrid[x][z + 1];
-          f.setBackgroundSprite(h);
-          f.setDecorationSprite(A);
+        nextIsNorth = tileRow > nextPathTile.y;
+        nextIsSouth = tileRow < nextPathTile.y;
+        nextIsWest = tileColumn > nextPathTile.x;
+        nextIsEast = tileColumn < nextPathTile.x;
+        if (nextIsWest) {
+          tile = hallway.tileGrid[tileColumn][tileRow - 1];
+          tile.setBackgroundSprite(floorSprite);
+          tile.setDecorationSprite(wallNEWSprite);
+          tile = hallway.tileGrid[tileColumn][tileRow + 1];
+          tile.setBackgroundSprite(floorSprite);
+          tile.setDecorationSprite(wallNEWSprite);
         } else {
-          if (na) {
-            f = a.tileGrid[x][z - 1];
-            f.setBackgroundSprite(h);
-            f.setDecorationSprite(C);
-            f = a.tileGrid[x][z + 1];
-            f.setBackgroundSprite(h);
-            f.setDecorationSprite(C);
+          if (nextIsEast) {
+            tile = hallway.tileGrid[tileColumn][tileRow - 1];
+            tile.setBackgroundSprite(floorSprite);
+            tile.setDecorationSprite(wallESWSprite);
+            tile = hallway.tileGrid[tileColumn][tileRow + 1];
+            tile.setBackgroundSprite(floorSprite);
+            tile.setDecorationSprite(wallESWSprite);
           } else {
-            if (Q) {
-              f = a.tileGrid[x + 1][z];
-              f.setBackgroundSprite(h);
-              f.setDecorationSprite(v);
-              f = a.tileGrid[x - 1][z];
-              f.setBackgroundSprite(h);
-              f.setDecorationSprite(v);
+            if (nextIsNorth) {
+              tile = hallway.tileGrid[tileColumn + 1][tileRow];
+              tile.setBackgroundSprite(floorSprite);
+              tile.setDecorationSprite(wallNESSprite);
+              tile = hallway.tileGrid[tileColumn - 1][tileRow];
+              tile.setBackgroundSprite(floorSprite);
+              tile.setDecorationSprite(wallNESSprite);
             } else {
-              if (V) {
-                f = a.tileGrid[x + 1][z];
-                f.setBackgroundSprite(h);
-                f.setDecorationSprite(D);
-                f = a.tileGrid[x - 1][z];
-                f.setBackgroundSprite(h);
-                f.setDecorationSprite(D);
+              if (nextIsSouth) {
+                tile = hallway.tileGrid[tileColumn + 1][tileRow];
+                tile.setBackgroundSprite(floorSprite);
+                tile.setDecorationSprite(wallNSWSprite);
+                tile = hallway.tileGrid[tileColumn - 1][tileRow];
+                tile.setBackgroundSprite(floorSprite);
+                tile.setDecorationSprite(wallNSWSprite);
               }
             }
           }
         }
       }
-      if (!I) {
-        f = a.tileGrid[x][z];
-        f.setBackgroundSprite(h);
-        if (a.doorB.horizontalPassage) {
-          if (a.doorB.isOpen) {
-            f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.doorSprites.doorOpenASprite));
+      if (!nextPathTile) {
+        tile = hallway.tileGrid[tileColumn][tileRow];
+        tile.setBackgroundSprite(floorSprite);
+        if (hallway.doorB.horizontalPassage) {
+          if (hallway.doorB.isOpen) {
+            tile.setDecorationSprite(game.terrainSprites.getSprite(hallway.theme.doorSprites.doorOpenASprite));
           } else {
-            f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.doorSprites.doorClosedASprite));
+            tile.setDecorationSprite(game.terrainSprites.getSprite(hallway.theme.doorSprites.doorClosedASprite));
           }
         } else {
-          if (a.doorB.isOpen) {
-            f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.doorSprites.doorOpenBSprite));
+          if (hallway.doorB.isOpen) {
+            tile.setDecorationSprite(game.terrainSprites.getSprite(hallway.theme.doorSprites.doorOpenBSprite));
           } else {
-            f.setDecorationSprite(game.terrainSprites.getSprite(a.theme.doorSprites.doorClosedBSprite));
+            tile.setDecorationSprite(game.terrainSprites.getSprite(hallway.theme.doorSprites.doorClosedBSprite));
           }
         }
-        f = z < N.y;
-        O = z > N.y;
-        la = x < N.x;
-        if (J = x > N.x) {
-          f = a.tileGrid[x][z - 1];
-          f.setBackgroundSprite(h);
-          f.setDecorationSprite(A);
-          f = a.tileGrid[x][z + 1];
-          f.setBackgroundSprite(h);
-          f.setDecorationSprite(A);
+        previousIsSouth = tileRow < previousPathTile.y;
+        previousIsNorth = tileRow > previousPathTile.y;
+        previousIsEast = tileColumn < previousPathTile.x;
+        if (previousIsWest = tileColumn > previousPathTile.x) {
+          tile = hallway.tileGrid[tileColumn][tileRow - 1];
+          tile.setBackgroundSprite(floorSprite);
+          tile.setDecorationSprite(wallNEWSprite);
+          tile = hallway.tileGrid[tileColumn][tileRow + 1];
+          tile.setBackgroundSprite(floorSprite);
+          tile.setDecorationSprite(wallNEWSprite);
         } else {
-          if (la) {
-            f = a.tileGrid[x][z - 1];
-            f.setBackgroundSprite(h);
-            f.setDecorationSprite(C);
-            f = a.tileGrid[x][z + 1];
-            f.setBackgroundSprite(h);
-            f.setDecorationSprite(C);
+          if (previousIsEast) {
+            tile = hallway.tileGrid[tileColumn][tileRow - 1];
+            tile.setBackgroundSprite(floorSprite);
+            tile.setDecorationSprite(wallESWSprite);
+            tile = hallway.tileGrid[tileColumn][tileRow + 1];
+            tile.setBackgroundSprite(floorSprite);
+            tile.setDecorationSprite(wallESWSprite);
           } else {
-            if (O) {
-              f = a.tileGrid[x + 1][z];
-              f.setBackgroundSprite(h);
-              f.setDecorationSprite(v);
-              f = a.tileGrid[x - 1][z];
-              f.setBackgroundSprite(h);
-              f.setDecorationSprite(v);
+            if (previousIsNorth) {
+              tile = hallway.tileGrid[tileColumn + 1][tileRow];
+              tile.setBackgroundSprite(floorSprite);
+              tile.setDecorationSprite(wallNESSprite);
+              tile = hallway.tileGrid[tileColumn - 1][tileRow];
+              tile.setBackgroundSprite(floorSprite);
+              tile.setDecorationSprite(wallNESSprite);
             } else {
-              if (f) {
-                f = a.tileGrid[x + 1][z];
-                f.setBackgroundSprite(h);
-                f.setDecorationSprite(D);
-                f = a.tileGrid[x - 1][z];
-                f.setBackgroundSprite(h);
-                f.setDecorationSprite(D);
+              if (previousIsSouth) {
+                tile = hallway.tileGrid[tileColumn + 1][tileRow];
+                tile.setBackgroundSprite(floorSprite);
+                tile.setDecorationSprite(wallNSWSprite);
+                tile = hallway.tileGrid[tileColumn - 1][tileRow];
+                tile.setBackgroundSprite(floorSprite);
+                tile.setDecorationSprite(wallNSWSprite);
               }
             }
           }
         }
       }
-      if (N && I) {
-        f = z < N.y;
-        O = z > N.y;
-        la = x < N.x;
-        J = x > N.x;
-        Q = z > I.y;
-        V = z < I.y;
-        K = x > I.x;
-        na = x < I.x;
-        if (f && K) {
-          paintHallwayTile(a.tileGrid[x + 1][z], h, n, false);
-          paintHallwayTile(a.tileGrid[x + 1][z - 1], h, p, true);
-          paintHallwayTile(a.tileGrid[x][z - 1], h, l, false);
-          paintHallwayTile(a.tileGrid[x - 1][z + 1], h, p, true);
+      if (previousPathTile && nextPathTile) {
+        previousIsSouth = tileRow < previousPathTile.y;
+        previousIsNorth = tileRow > previousPathTile.y;
+        previousIsEast = tileColumn < previousPathTile.x;
+        previousIsWest = tileColumn > previousPathTile.x;
+        nextIsNorth = tileRow > nextPathTile.y;
+        nextIsSouth = tileRow < nextPathTile.y;
+        nextIsWest = tileColumn > nextPathTile.x;
+        nextIsEast = tileColumn < nextPathTile.x;
+        if (previousIsSouth && nextIsWest) {
+          paintHallwayTile(hallway.tileGrid[tileColumn + 1][tileRow], floorSprite, wallEWSprite, false);
+          paintHallwayTile(hallway.tileGrid[tileColumn + 1][tileRow - 1], floorSprite, wallNWSprite, true);
+          paintHallwayTile(hallway.tileGrid[tileColumn][tileRow - 1], floorSprite, wallNSSprite, false);
+          paintHallwayTile(hallway.tileGrid[tileColumn - 1][tileRow + 1], floorSprite, wallNWSprite, true);
         } else {
-          if (f && Q) {
-            paintHallwayTile(a.tileGrid[x - 1][z], h, n, false);
-            paintHallwayTile(a.tileGrid[x + 1][z], h, n, false);
+          if (previousIsSouth && nextIsNorth) {
+            paintHallwayTile(hallway.tileGrid[tileColumn - 1][tileRow], floorSprite, wallEWSprite, false);
+            paintHallwayTile(hallway.tileGrid[tileColumn + 1][tileRow], floorSprite, wallEWSprite, false);
           } else {
-            if (f && na) {
-              paintHallwayTile(a.tileGrid[x - 1][z], h, n, false);
-              paintHallwayTile(a.tileGrid[x - 1][z - 1], h, s, true);
-              paintHallwayTile(a.tileGrid[x][z - 1], h, l, false);
-              paintHallwayTile(a.tileGrid[x + 1][z + 1], h, s, true);
+            if (previousIsSouth && nextIsEast) {
+              paintHallwayTile(hallway.tileGrid[tileColumn - 1][tileRow], floorSprite, wallEWSprite, false);
+              paintHallwayTile(hallway.tileGrid[tileColumn - 1][tileRow - 1], floorSprite, wallSWSprite, true);
+              paintHallwayTile(hallway.tileGrid[tileColumn][tileRow - 1], floorSprite, wallNSSprite, false);
+              paintHallwayTile(hallway.tileGrid[tileColumn + 1][tileRow + 1], floorSprite, wallSWSprite, true);
             } else {
-              if (O && K) {
-                paintHallwayTile(a.tileGrid[x + 1][z], h, n, false);
-                paintHallwayTile(a.tileGrid[x + 1][z + 1], h, u, true);
-                paintHallwayTile(a.tileGrid[x][z + 1], h, l, false);
-                paintHallwayTile(a.tileGrid[x - 1][z - 1], h, u, true);
+              if (previousIsNorth && nextIsWest) {
+                paintHallwayTile(hallway.tileGrid[tileColumn + 1][tileRow], floorSprite, wallEWSprite, false);
+                paintHallwayTile(hallway.tileGrid[tileColumn + 1][tileRow + 1], floorSprite, wallNESprite, true);
+                paintHallwayTile(hallway.tileGrid[tileColumn][tileRow + 1], floorSprite, wallNSSprite, false);
+                paintHallwayTile(hallway.tileGrid[tileColumn - 1][tileRow - 1], floorSprite, wallNESprite, true);
               } else {
-                if (O && V) {
-                  paintHallwayTile(a.tileGrid[x - 1][z], h, n, false);
-                  paintHallwayTile(a.tileGrid[x + 1][z], h, n, false);
+                if (previousIsNorth && nextIsSouth) {
+                  paintHallwayTile(hallway.tileGrid[tileColumn - 1][tileRow], floorSprite, wallEWSprite, false);
+                  paintHallwayTile(hallway.tileGrid[tileColumn + 1][tileRow], floorSprite, wallEWSprite, false);
                 } else {
-                  if (O && na) {
-                    paintHallwayTile(a.tileGrid[x - 1][z], h, n, false);
-                    paintHallwayTile(a.tileGrid[x - 1][z + 1], h, y, true);
-                    paintHallwayTile(a.tileGrid[x][z + 1], h, l, false);
-                    paintHallwayTile(a.tileGrid[x + 1][z - 1], h, y, true);
+                  if (previousIsNorth && nextIsEast) {
+                    paintHallwayTile(hallway.tileGrid[tileColumn - 1][tileRow], floorSprite, wallEWSprite, false);
+                    paintHallwayTile(hallway.tileGrid[tileColumn - 1][tileRow + 1], floorSprite, wallESSprite, true);
+                    paintHallwayTile(hallway.tileGrid[tileColumn][tileRow + 1], floorSprite, wallNSSprite, false);
+                    paintHallwayTile(hallway.tileGrid[tileColumn + 1][tileRow - 1], floorSprite, wallESSprite, true);
                   } else {
-                    if (la && K) {
-                      paintHallwayTile(a.tileGrid[x][z - 1], h, l, false);
-                      paintHallwayTile(a.tileGrid[x][z + 1], h, l, false);
+                    if (previousIsEast && nextIsWest) {
+                      paintHallwayTile(hallway.tileGrid[tileColumn][tileRow - 1], floorSprite, wallNSSprite, false);
+                      paintHallwayTile(hallway.tileGrid[tileColumn][tileRow + 1], floorSprite, wallNSSprite, false);
                     } else {
-                      if (la && V) {
-                        paintHallwayTile(a.tileGrid[x - 1][z], h, n, false);
-                        paintHallwayTile(a.tileGrid[x - 1][z - 1], h, s, true);
-                        paintHallwayTile(a.tileGrid[x][z - 1], h, l, false);
-                        paintHallwayTile(a.tileGrid[x + 1][z + 1], h, s, true);
+                      if (previousIsEast && nextIsSouth) {
+                        paintHallwayTile(hallway.tileGrid[tileColumn - 1][tileRow], floorSprite, wallEWSprite, false);
+                        paintHallwayTile(hallway.tileGrid[tileColumn - 1][tileRow - 1], floorSprite, wallSWSprite, true);
+                        paintHallwayTile(hallway.tileGrid[tileColumn][tileRow - 1], floorSprite, wallNSSprite, false);
+                        paintHallwayTile(hallway.tileGrid[tileColumn + 1][tileRow + 1], floorSprite, wallSWSprite, true);
                       } else {
-                        if (la && Q) {
-                          paintHallwayTile(a.tileGrid[x - 1][z], h, n, false);
-                          paintHallwayTile(a.tileGrid[x - 1][z + 1], h, y, true);
-                          paintHallwayTile(a.tileGrid[x][z + 1], h, l, false);
-                          paintHallwayTile(a.tileGrid[x + 1][z - 1], h, y, true);
+                        if (previousIsEast && nextIsNorth) {
+                          paintHallwayTile(hallway.tileGrid[tileColumn - 1][tileRow], floorSprite, wallEWSprite, false);
+                          paintHallwayTile(hallway.tileGrid[tileColumn - 1][tileRow + 1], floorSprite, wallESSprite, true);
+                          paintHallwayTile(hallway.tileGrid[tileColumn][tileRow + 1], floorSprite, wallNSSprite, false);
+                          paintHallwayTile(hallway.tileGrid[tileColumn + 1][tileRow - 1], floorSprite, wallESSprite, true);
                         } else {
-                          if (J && Q) {
-                            paintHallwayTile(a.tileGrid[x + 1][z], h, n, false);
-                            paintHallwayTile(a.tileGrid[x + 1][z + 1], h, u, true);
-                            paintHallwayTile(a.tileGrid[x][z + 1], h, l, false);
-                            paintHallwayTile(a.tileGrid[x - 1][z - 1], h, u, true);
+                          if (previousIsWest && nextIsNorth) {
+                            paintHallwayTile(hallway.tileGrid[tileColumn + 1][tileRow], floorSprite, wallEWSprite, false);
+                            paintHallwayTile(hallway.tileGrid[tileColumn + 1][tileRow + 1], floorSprite, wallNESprite, true);
+                            paintHallwayTile(hallway.tileGrid[tileColumn][tileRow + 1], floorSprite, wallNSSprite, false);
+                            paintHallwayTile(hallway.tileGrid[tileColumn - 1][tileRow - 1], floorSprite, wallNESprite, true);
                           } else {
-                            if (J && V) {
-                              paintHallwayTile(a.tileGrid[x + 1][z], h, n, false);
-                              paintHallwayTile(a.tileGrid[x + 1][z - 1], h, p, true);
-                              paintHallwayTile(a.tileGrid[x][z - 1], h, l, false);
-                              paintHallwayTile(a.tileGrid[x - 1][z + 1], h, p, true);
+                            if (previousIsWest && nextIsSouth) {
+                              paintHallwayTile(hallway.tileGrid[tileColumn + 1][tileRow], floorSprite, wallEWSprite, false);
+                              paintHallwayTile(hallway.tileGrid[tileColumn + 1][tileRow - 1], floorSprite, wallNWSprite, true);
+                              paintHallwayTile(hallway.tileGrid[tileColumn][tileRow - 1], floorSprite, wallNSSprite, false);
+                              paintHallwayTile(hallway.tileGrid[tileColumn - 1][tileRow + 1], floorSprite, wallNWSprite, true);
                             } else {
-                              if (J && na) {
-                                paintHallwayTile(a.tileGrid[x][z - 1], h, l, false);
-                                paintHallwayTile(a.tileGrid[x][z + 1], h, l, false);
+                              if (previousIsWest && nextIsEast) {
+                                paintHallwayTile(hallway.tileGrid[tileColumn][tileRow - 1], floorSprite, wallNSSprite, false);
+                                paintHallwayTile(hallway.tileGrid[tileColumn][tileRow + 1], floorSprite, wallNSSprite, false);
                               }
                             }
                           }
@@ -524,15 +524,15 @@ export function revealHallway(a, b) {
           }
         }
       }
-      N = d;
+      previousPathTile = pathTile;
     }
   }
 }
-export function paintHallwayTile(a, b, c, d) {
-  if (1 !== a.floorType) {
-    a.setBackgroundSprite(b);
-    if (!(!d && a.decorationSprite)) {
-      a.setDecorationSprite(c);
+export function paintHallwayTile(tile, floorSprite, wallSprite, forceDecoration) {
+  if (1 !== tile.floorType) {
+    tile.setBackgroundSprite(floorSprite);
+    if (!(!forceDecoration && tile.decorationSprite)) {
+      tile.setDecorationSprite(wallSprite);
     }
   }
 }
@@ -549,19 +549,19 @@ export function initializeWorldRooms() {
   DungeonTile.prototype.getPixelY = function () {
     return this.pixelRow;
   };
-  DungeonTile.prototype.setBackgroundSprite = function (a) {
-    this.backgroundSprite = a;
+  DungeonTile.prototype.setBackgroundSprite = function (sprite) {
+    this.backgroundSprite = sprite;
   };
-  DungeonTile.prototype.setDecorationSprite = function (a) {
-    this.decorationSprite = a;
+  DungeonTile.prototype.setDecorationSprite = function (sprite) {
+    this.decorationSprite = sprite;
   };
-  DungeonTile.prototype.setRemainingEffectDamage = function (a) {
-    this.remainingEffectDamage = a;
+  DungeonTile.prototype.setRemainingEffectDamage = function (remainingEffectDamage) {
+    this.remainingEffectDamage = remainingEffectDamage;
   };
   EMPTY_TILE = 0;
-  DungeonRoom.prototype.applyTheme = function (a, b) {
-    this.theme = a;
-    this.tileGrid = b;
+  DungeonRoom.prototype.applyTheme = function (theme, tileGrid) {
+    this.theme = theme;
+    this.tileGrid = tileGrid;
   };
   DungeonRoom.prototype.moveUpLeft = function () {
     if (1 < this.tileColumn) {
@@ -581,77 +581,77 @@ export function initializeWorldRooms() {
       this.tileRow--;
     }
   };
-  DungeonRoom.prototype.paintTiles = function (a) {
-    /** @type {{paintFloor: (grid: unknown) => void}} */ (/** @type {unknown} */ (this)).paintFloor(a);
-    var b, c;
-    c = this.tileRow - 1;
-    for (b = this.tileColumn - 1; b < this.tileColumn + this.widthInTiles + 1; b++) {
-      a[b][c].floorType = 2;
+  DungeonRoom.prototype.paintTiles = function (tileGrid) {
+    /** @type {{paintFloor: (grid: unknown) => void}} */ (/** @type {unknown} */ (this)).paintFloor(tileGrid);
+    var columnIndex, rowIndex, columnList;
+    rowIndex = this.tileRow - 1;
+    for (columnIndex = this.tileColumn - 1; columnIndex < this.tileColumn + this.widthInTiles + 1; columnIndex++) {
+      tileGrid[columnIndex][rowIndex].floorType = 2;
     }
-    c = this.tileRow + this.heightInTiles;
-    for (b = this.tileColumn - 1; b < this.tileColumn + this.widthInTiles + 1; b++) {
-      a[b][c].floorType = 2;
+    rowIndex = this.tileRow + this.heightInTiles;
+    for (columnIndex = this.tileColumn - 1; columnIndex < this.tileColumn + this.widthInTiles + 1; columnIndex++) {
+      tileGrid[columnIndex][rowIndex].floorType = 2;
     }
-    b = this.tileColumn - 1;
-    b = a[b];
-    for (c = this.tileRow - 1; c < this.tileRow + this.heightInTiles + 1; c++) {
-      b[c].floorType = 2;
+    columnIndex = this.tileColumn - 1;
+    columnList = tileGrid[columnIndex];
+    for (rowIndex = this.tileRow - 1; rowIndex < this.tileRow + this.heightInTiles + 1; rowIndex++) {
+      columnList[rowIndex].floorType = 2;
     }
-    b = this.tileColumn + this.widthInTiles;
-    b = a[b];
-    for (c = this.tileRow - 1; c < this.tileRow + this.heightInTiles + 1; c++) {
-      b[c].floorType = 2;
+    columnIndex = this.tileColumn + this.widthInTiles;
+    columnList = tileGrid[columnIndex];
+    for (rowIndex = this.tileRow - 1; rowIndex < this.tileRow + this.heightInTiles + 1; rowIndex++) {
+      columnList[rowIndex].floorType = 2;
     }
   };
-  DungeonRoom.prototype.paintFloor = function (a) {
-    var b,
-      c,
-      d = this.tileColumn + this.widthInTiles,
-      f = this.tileRow + this.heightInTiles,
-      g;
-    for (c = this.tileColumn; c < d; c++) {
-      for (b = a[c], g = this.tileRow; g < f; g++) {
-        b[g].floorType = 1;
+  DungeonRoom.prototype.paintFloor = function (tileGrid) {
+    var columnList,
+      columnIndex,
+      rightColumn = this.tileColumn + this.widthInTiles,
+      bottomRow = this.tileRow + this.heightInTiles,
+      rowIndex;
+    for (columnIndex = this.tileColumn; columnIndex < rightColumn; columnIndex++) {
+      for (columnList = tileGrid[columnIndex], rowIndex = this.tileRow; rowIndex < bottomRow; rowIndex++) {
+        columnList[rowIndex].floorType = 1;
       }
     }
   };
-  DungeonRoom.prototype.squaredDistanceToRoom = function (a) {
-    var b = a.tileColumn + a.widthInTiles / 2 - (this.tileColumn + this.widthInTiles / 2);
-    a = a.tileRow + a.heightInTiles / 2 - (this.tileRow + this.heightInTiles / 2);
-    return b * b + a * a;
+  DungeonRoom.prototype.squaredDistanceToRoom = function (otherRoom) {
+    var deltaX = otherRoom.tileColumn + otherRoom.widthInTiles / 2 - (this.tileColumn + this.widthInTiles / 2), deltaY;
+    deltaY = otherRoom.tileRow + otherRoom.heightInTiles / 2 - (this.tileRow + this.heightInTiles / 2);
+    return deltaX * deltaX + deltaY * deltaY;
   };
-  DungeonHallway.prototype.applyTheme = function (a, b) {
-    this.theme = a;
-    this.tileGrid = b;
+  DungeonHallway.prototype.applyTheme = function (theme, tileGrid) {
+    this.theme = theme;
+    this.tileGrid = tileGrid;
   };
-  DungeonHallway.prototype.paintTiles = function (a) {
-    var b, c;
-    for (c = 0; c < this.pathTiles.length; c++) {
-      b = this.pathTiles[c];
-      var d = b.x;
-      b = b.y;
-      var f = a[d - 1],
-        g = a[d],
-        d = a[d + 1];
-      f[b - 1].floorType = 2;
-      f[b].floorType = 2;
-      f[b + 1].floorType = 2;
-      g[b - 1].floorType = 2;
-      g[b].floorType = 2;
-      g[b + 1].floorType = 2;
-      d[b - 1].floorType = 2;
-      d[b].floorType = 2;
-      d[b + 1].floorType = 2;
+  DungeonHallway.prototype.paintTiles = function (tileGrid) {
+    var pathTile, pathIndex, eastColumnList;
+    for (pathIndex = 0; pathIndex < this.pathTiles.length; pathIndex++) {
+      pathTile = this.pathTiles[pathIndex];
+      var tileColumn = pathTile.x, tileRow;
+      tileRow = pathTile.y;
+      var westColumnList = tileGrid[tileColumn - 1],
+        centerColumnList = tileGrid[tileColumn],
+        eastColumnList = tileGrid[tileColumn + 1];
+      westColumnList[tileRow - 1].floorType = 2;
+      westColumnList[tileRow].floorType = 2;
+      westColumnList[tileRow + 1].floorType = 2;
+      centerColumnList[tileRow - 1].floorType = 2;
+      centerColumnList[tileRow].floorType = 2;
+      centerColumnList[tileRow + 1].floorType = 2;
+      eastColumnList[tileRow - 1].floorType = 2;
+      eastColumnList[tileRow].floorType = 2;
+      eastColumnList[tileRow + 1].floorType = 2;
     }
-    /** @type {{paintFloor: (grid: unknown) => void}} */ (/** @type {unknown} */ (this)).paintFloor(a);
+    /** @type {{paintFloor: (grid: unknown) => void}} */ (/** @type {unknown} */ (this)).paintFloor(tileGrid);
   };
-  DungeonHallway.prototype.paintFloor = function (a) {
-    var b, c;
-    for (c = 0; c < this.pathTiles.length; c++) {
-      b = this.pathTiles[c];
-      a[b.x][b.y].floorType = 1;
+  DungeonHallway.prototype.paintFloor = function (tileGrid) {
+    var pathTile, pathIndex;
+    for (pathIndex = 0; pathIndex < this.pathTiles.length; pathIndex++) {
+      pathTile = this.pathTiles[pathIndex];
+      tileGrid[pathTile.x][pathTile.y].floorType = 1;
     }
-    a[this.doorA.tileColumn][this.doorA.tileRow].floorType = 3;
-    a[this.doorB.tileColumn][this.doorB.tileRow].floorType = 3;
+    tileGrid[this.doorA.tileColumn][this.doorA.tileRow].floorType = 3;
+    tileGrid[this.doorB.tileColumn][this.doorB.tileRow].floorType = 3;
   };
 }

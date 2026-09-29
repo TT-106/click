@@ -8,7 +8,7 @@ const resetRandom = () => { seed = 123456789; };
 Math.random = () => { seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0; return seed / 4294967296; };
 Date.now = () => fixedNow;
 const original = new URLSearchParams(location.search).has('original');
-let game, initialize, ready, snapshot, load, advance, isOffline, loopTick, restart, reset, syncLoopClock, upgradeCollections, castScroll, PurchaseDungeonUpgrade;
+let game, initialize, ready, snapshot, load, advance, isOffline, loopTick, restart, reset, syncLoopClock, upgradeCollections, castScroll, PurchaseDungeonUpgrade, generateItem, ItemDrop, getAttackCooldown, getSpellSpiritCost, statValue;
 if (original) {
   await new Promise((resolve, reject) => {
     const script = document.createElement('script');
@@ -33,6 +33,8 @@ if (original) {
   ({ upgradeCollections } = await import('../src/engine/modules/content/balance.js'));
   ({ castScroll } = await import('../src/engine/modules/combat/scrolls.js'));
   ({ PurchaseDungeonUpgrade } = await import('../src/engine/modules/progression/upgrades.js'));
+  ({ generateItem, ItemDrop } = await import('../src/engine/modules/loot/items.js'));
+  ({ getAttackCooldown, getSpellSpiritCost, statValue } = await import('../src/engine/modules/characters/stats.js'));
   // 引擎不直接碰 localStorage（宿主注入端口）。差分要比对"自动保存真正落盘的字节"，
   // 这里按 src/services/saves.js 的同一套键与备份语义注入端口。
   {
@@ -444,6 +446,38 @@ window.harness = {
     }
     return { equipped, snapshot: snapshot() };
   },
+  // U7：EquipItemUpgrade（type 3「装备背包散件」）定向驱动——与视图同一条
+  // refresh → canPurchaseNow → purchase 链（同上 type 4 驱动器的 type 3 版）。
+  // 取证（upgrades.js:490-495）：purchase 经 item.inventory（= owner 角色）调 Character.equipItem；
+  // 背链由 generateItem（items.js:203 `b.inventory = c`）与 AI 拾取路径 addInventoryItem
+  // （character.js:1033 → inventory.js:15 `b.inventory = a.owner`）建立；候选列表
+  // game.inventories.list 由 tick.js:490-508 在任一 inventory.dirty 时重建（仅含"优于已装备"的散件，
+  // 按 itemGold 降序）。本驱动不写装备槽、不伪造背链；返回购买前后装备槽摘要，
+  // 供场景断言"购买真的把散件装进了槽位"而非仅"purchase 被调用"。
+  purchaseEquipItemUpgrades({ turns = 0, limit = 5 } = {}) {
+    for (let i = 0; i < turns; i++) advance();
+    const digest = s => (s.adventurers ?? []).map(a => (a.equippedItemCollection ?? []).map(e => e.itemName).sort().join('|'));
+    const before = snapshot();
+    const collections = original ? window.Nx : upgradeCollections;
+    const rows = collections.flatMap(collection => original ? collection.HC : collection.upgradeRows).flat();
+    let purchased = 0;
+    for (const upgrade of rows) {
+      if (purchased >= limit) break;
+      if ((original ? upgrade.Na() : upgrade.getUpgradeType()) !== 3) continue;
+      if (original) upgrade.Cd(); else upgrade.refreshAvailabilityState();
+      if (original ? upgrade.qc() : upgrade.canPurchaseNow()) {
+        if (original) upgrade.Qc(); else upgrade.purchase();
+        purchased++;
+      }
+    }
+    const after = snapshot();
+    return {
+      purchased,
+      equipmentBefore: digest(before),
+      equipmentAfter: digest(after),
+      snapshot: after,
+    };
+  },
   castScrollDuringCombat({ maxTurns = 3000, scrollId } = {}) {
     const scroll = (original
       ? window.Game.nh.at.find(s => !s.Qe && s.mh > 0 && (!scrollId || s.qg === scrollId))
@@ -538,6 +572,274 @@ window.harness = {
     }
     return { selected, spawned, looted: snapshot().statistics[statKey] - before, snapshot: snapshot() };
   },
+  // P-3 远古稀有度：用**各自引擎自己的** generateItem 构造一件合法的指定稀有度物品，
+  // 作为真实 ItemDrop 放进某队员所在房间的脚下，随后完全交给原版 AI 的
+  // 认领→行走→拾取路径（TravelWorldBehavior → targetItemDrop → actionType 6 →
+  // character.js 拾取分支里的 recordItemFound）。测试的唯一干预是"掉落物位置 + 稀有度"：
+  // 不改掉落概率、不碰固定 LCG、不直接写统计字段。
+  // 字段对照：重构 position.levelPosition/.room/.slotList ↔ 原版 p.u/.w/.Z；
+  // 重构 generateItem/ItemDrop/itemDrops.drops ↔ 原版 Nv/zv/dh.yf（c2.js:20619/20453/18614）。
+  // 掉落是否被拾取直接读 drop 的 collected 旗标（不入存档、每帧可读、不消耗随机数）。
+  seedAncientItemDrop({ maxTurns = 4000, rarity = 4, slotIndex = 0 } = {}) {
+    const adventurers = () => (original ? window.Game.i.D : game.state.adventurers);
+    const roomOf = a => (original ? a.p.w : a.position.room);
+    // fixture 队伍从世界地图出发（roomId=-1）：先推进到有人进入地牢房间再放置
+    let waited = 0;
+    while (waited < maxTurns && !adventurers().some(roomOf)) {
+      advance();
+      waited++;
+    }
+    const anchor = adventurers().find(roomOf);
+    if (!anchor) throw new Error('推进 ' + maxTurns + ' 回合内没有队员进入任何房间，无法放置掉落物');
+    const position = original ? anchor.p : anchor.position;
+    const levelPosition = original ? position.u : position.levelPosition;
+    // 原版 Vector2（Za）的字段是 T/U；重构版已语义化为 x/y（见 c2.js:7014）
+    const levelX = original ? levelPosition.T : levelPosition.x;
+    const levelY = original ? levelPosition.U : levelPosition.y;
+    const slotList = original ? anchor.Z : anchor.slotList;
+    const slot = slotList[slotIndex % slotList.length];
+    const generator = original ? window.Game.Sm : game.itemGenerator;
+    const item = original
+      ? window.Nv(generator, slot, anchor, 1, rarity)
+      : generateItem(generator, slot, anchor, 1, rarity);
+    if (!item) throw new Error('generateItem 未产出物品（该槽位没有物品类型?）');
+    const drops = original ? window.Game.dh.yf : game.itemDrops.drops;
+    const drop = original
+      ? new window.zv(item, levelX, levelY, position.w)
+      : new ItemDrop(item, levelX, levelY, position.room);
+    drops.push(drop);
+    let turns = 0;
+    while (turns < maxTurns && !(original ? drop.gc : drop.collected)) {
+      advance();
+      turns++;
+    }
+    return {
+      seeded: true,
+      collected: Boolean(original ? drop.gc : drop.collected),
+      itemName: original ? item.Ew : item.itemName,
+      waited,
+      turns,
+      snapshot: snapshot(),
+    };
+  },
+  // P-2 cat=15（发现财宝箱）直接可观测量：财宝目标的 selected 旗标（原版 el）全库只有
+  // 两个写点——本法术（actions.js:721 ↔ c2.js:20955）与财宝房 UI 按钮（c2.js:27719，
+  // 场景从不驱动按钮）。且该法术的 AI 行为评分（behaviors.js getFinalScore）只在
+  // "所在房间有未开启、未选中的财宝目标"时非零，因此施法成功 ⟺ selected 置真。
+  // 注意不能只看终态计数：setChestOpened(treasure.js:41) 在开箱时会把 selected 清回 false
+  // （AI 会自然开箱，实测 4 次施法后终态为 0），所以必须逐帧统计 false→true 的跳变次数。
+  // selected 不入存档（运行时字段），存档差分看不见它——这正是本观察器的价值。
+  // 只读、不消耗随机数。
+  countSelectedTreasure({ turns = 0 } = {}) {
+    const targets = () => (original ? window.Game.th.Mn : game.treasure.targets);
+    const isSelected = t => Boolean(original ? t.el : t.selected);
+    const previous = new Map();
+    let selections = 0;
+    for (let i = 0; i < turns; i++) {
+      advance();
+      const current = targets();
+      if (!Array.isArray(current)) throw new Error('财宝目标注册表访问失败');
+      for (const t of current) {
+        const now = isSelected(t);
+        if (now && previous.get(t) === false) selections++;
+        previous.set(t, now);
+      }
+    }
+    return { selections, snapshot: snapshot() };
+  },
+  // 差分原版正常开局路径（U132 补课）：reset 到两端一致的空白态后，用**镜像字段写入**
+  // 驱动各自的原生开局闭包，再对创建结果做完整 DTO 差分。原版侧取证（c2.js）：
+  // 控制器 Az（26306-26312）F="partyCreationTabContent"、Vb=selectedCharacters（元素 {Qy:classIndex, za:defaultName}）、
+  // Ww=validParty、$i=startButton（DOM id "startQuestButton"）；onclick 闭包 26363-26414
+  // （守卫 `1 > a.Vb.length || !a.Ww`，"Party Creation" 串 @26410 定位创建体）；
+  // 视图宿主 w.Ee（gameFields: Ee→view；44293 `Ee: new ay`、23492 ay、23497 panels 数组 Tc）。
+  async createPartyFromBlank({ members, turns = 0, mode = 'legacy' } = {}) {
+    if (!Array.isArray(members) || !members.length) throw new Error('members 不能为空');
+    reset();
+    const controller = () => (original
+      ? window.Game.Ee.Tc.find(t => t.F === 'partyCreationTabContent')
+      : game.view.panels.find(t => t.elementId === 'partyCreationTabContent'));
+    const startButtonOf = c => (original ? c.$i : c.startButton);
+    let waited = 0;
+    while (waited < 600) {
+      const c = controller();
+      if (c && startButtonOf(c)) break;
+      fixedNow += 250;
+      loopTick();
+      waited++;
+    }
+    const c = controller();
+    if (!c || !startButtonOf(c)) throw new Error('reset 后组队面板未重新挂载（startButton 为空），无法驱动原分开局路径');
+    if (original) {
+      // 原版没有产品入口，mode 仅对重构端有意义：原版永远走遗留按钮闭包
+      c.Vb = members.map(m => ({ Qy: m.classIndex, za: m.defaultName }));
+      c.Ww = true;
+      startButtonOf(c).onclick();
+    } else if (mode === 'product') {
+      // U133 主线二：走产品 adapter.startParty（内部：校验→escapeName→controller.startParty→paused=false）。
+      // adapter 经 internal-api 与本 harness 共享同一 game 单例，属于公平调用而非复制组队逻辑。
+      const adapterModule = await import('../src/engine/adapter.js');
+      adapterModule.engine.startParty(members.map(m => ({ id: m.classIndex, name: m.defaultName })));
+    } else {
+      c.selectedCharacters = members.map(m => ({ classIndex: m.classIndex, defaultName: m.defaultName }));
+      c.validParty = true;
+      startButtonOf(c).onclick();
+    }
+    for (let i = 0; i < turns; i++) advance();
+    return {
+      created: Boolean(original ? window.Game.lg : game.partyCreated),
+      waited,
+      snapshot: snapshot(),
+    };
+  },
+  // P-1 技能消费证据：按定义 id 定向购买一个角色技能树升级（与视图同一条
+  // refresh→canPurchase→purchase 路径）。原版 CharacterSkillUpgrade 的定义访问器是
+  // Jr（返回 skillDefinition；原版定义形状 {c:id, title, e:description, g:statBonusValue, f:statType}，
+  // c2.js:12443 起）；重构版为 getUpgradeDefinition/.id。
+  // 技能树内第 2+ 项依赖前一项已购（bindSkillTree 设 prerequisite，原版 Wp，c2.js:21560-21566），
+  // 因此沿前置链从树根顺序购买；点数不足时如实返回 not-purchasable。
+  purchaseCharacterSkill({ charIndex = 0, skillId } = {}) {
+    const indexes = Array.isArray(charIndex) ? charIndex : [charIndex];
+    for (const index of indexes) {
+      const outcome = this.purchaseCharacterSkillOne({ charIndex: index, skillId });
+      if (!outcome.purchased) return { ...outcome, charIndex: index };
+    }
+    const snapshotState = snapshot();
+    const allOwned = indexes.every(i => ['upgrades1', 'upgrades2', 'upgrades3', 'upgrades4']
+      .some(k => ((snapshotState.adventurers ?? [])[i] ?? {})[k]?.[skillId] === true));
+    return { purchased: allOwned, skillId, snapshot: snapshotState };
+  },
+  purchaseCharacterSkillOne({ charIndex = 0, skillId } = {}) {
+    const chars = original ? window.Game.i.D : game.state.adventurers;
+    const c = chars[charIndex];
+    if (!c) throw new Error('角色下标不存在: ' + charIndex);
+    const trees = original ? [c.ei, c.fi, c.gi, c.hi] : [c.skillTree1, c.skillTree2, c.skillTree3, c.skillTree4];
+    let target = null;
+    for (const tree of trees) {
+      const rows = original ? tree.HC : tree.upgradeRows;
+      for (const row of rows) {
+        for (const upgrade of row) {
+          const definition = original ? upgrade.Jr() : upgrade.getUpgradeDefinition();
+          const definitionId = original ? definition.c : definition.id;
+          if (definition && definitionId === skillId) { target = upgrade; break; }
+        }
+        if (target) break;
+      }
+      if (target) break;
+    }
+    if (!target) return { purchased: false, reason: 'not-found', skillId, snapshot: snapshot() };
+    const chain = [];
+    for (let u = target; u; u = (original ? u.Wp : u.prerequisite)) chain.unshift(u);
+    const bought = [];
+    for (const upgrade of chain) {
+      const id = original ? upgrade.Jr().c : upgrade.getUpgradeDefinition().id;
+      // purchase() 自身守卫已购与点数不足（原版 Qc 同构），链上已购项安全跳过
+      if (original) upgrade.Qc(); else upgrade.purchase();
+      bought.push(id);
+    }
+    const adv = snapshot().adventurers[charIndex] ?? {};
+    const ownedNow = ['upgrades1', 'upgrades2', 'upgrades3', 'upgrades4'].some(k => (adv[k] ?? {})[skillId] === true);
+    return { purchased: ownedNow, bought, skillId, snapshot: snapshot() };
+  },
+  // P-1 被动族切片（statType 10 冷却缩减）：只读观察战斗节奏公式 getAttackCooldown
+  // （stats.js:40，消费点 character.js:134 canAttack——每次攻击时机的真实判定）。
+  // 原版为 Mw(a,b)（c2.js:21272，角色面板"冷却回合"同源）；字段 原版 ao ↔ 重构 attackCooldownReduction。
+  readAttackCooldown({ charIndex = 0 } = {}) {
+    const c = (original ? window.Game.i.D : game.state.adventurers)[charIndex];
+    if (!c) throw new Error('角色下标不存在: ' + charIndex);
+    const stats = original ? c.K : c.stats;
+    const cooldown = original ? window.Mw(stats, true) : getAttackCooldown(stats, true);
+    const reduction = original ? stats.ao : stats.attackCooldownReduction;
+    return { cooldown, reduction, snapshot: snapshot() };
+  },
+  // P-1 被动族（statType 2-7 增益族，132+ 条定义）：只读直读组合属性公式 statValue
+  // （stats.js:14-16；原版 $h，c2.js:21246-21249）。一次覆盖 damage/armor/attackRating/
+  // defenceRating/maxHealth/maxSpirit 六个分量——组合值正是全部伤害/命中/生存公式的输入。
+  readStatValue({ charIndex = 0, component = 'damage' } = {}) {
+    const c = (original ? window.Game.i.D : game.state.adventurers)[charIndex];
+    if (!c) throw new Error('角色下标不存在: ' + charIndex);
+    const stats = original ? c.K : c.stats;
+    const componentField = (original ? {
+      damage: 'sd', armor: 'je', attackRating: 'xe', defenceRating: 'Ae', maxHealth: 'Jb', maxSpirit: 'Ke',
+    } : {
+      damage: 'damage', armor: 'armor', attackRating: 'attackRating', defenceRating: 'defenceRating', maxHealth: 'maxHealth', maxSpirit: 'maxSpirit',
+    })[component];
+    if (!componentField) throw new Error('未知分量: ' + component);
+    const comp = stats[componentField];
+    const value = original ? window.$h(comp) : statValue(comp);
+    return {
+      value,
+      skillBonusPercent: original ? comp.wc : comp.skillBonusPercent,
+      snapshot: snapshot(),
+    };
+  },
+  // P-1 被动族（statType 26 召唤上限）：只读直读 stats.maxSummonedMinions（原版 gl，
+  // c2.js 侧经 symbol-map）。消费点 ai/behaviors.js:1418,1462——召唤行为评分与上限门控。
+  readSummonLimit({ charIndex = 0 } = {}) {
+    const c = (original ? window.Game.i.D : game.state.adventurers)[charIndex];
+    if (!c) throw new Error('角色下标不存在: ' + charIndex);
+    const stats = original ? c.K : c.stats;
+    return { limit: original ? stats.gl : stats.maxSummonedMinions, snapshot: snapshot() };
+  },
+  // P-1 被动族（statType 8 生命回复）：只读直读 stats.healthRegenBonus（原版 ap，
+  // symbol-map）。消费点 simulation/tick.js:42——每 3 回合回复量公式。
+  readRegenBonus({ charIndex = 0 } = {}) {
+    const c = (original ? window.Game.i.D : game.state.adventurers)[charIndex];
+    if (!c) throw new Error('角色下标不存在: ' + charIndex);
+    const stats = original ? c.K : c.stats;
+    return { bonus: original ? stats.ap : stats.healthRegenBonus, snapshot: snapshot() };
+  },
+  // P-1 被动族（statType 11-15 法术强度）：只读直读五个增益强度字段。
+  // 原版名（symbol-map）：Ts=healPotency、Rs=buffDamagePotency、Ps=buffArmorPotency、
+  // Qs=buffAttackRatingPotency、Ss=buffDefenceRatingPotency。消费点 combat/actions.js:94,131,134,137,140
+  // （治疗/增益法术量公式）。
+  readBuffPotencies({ charIndex = 0 } = {}) {
+    const c = (original ? window.Game.i.D : game.state.adventurers)[charIndex];
+    if (!c) throw new Error('角色下标不存在: ' + charIndex);
+    const stats = original ? c.K : c.stats;
+    return {
+      heal: original ? stats.Ts : stats.healPotency,
+      damage: original ? stats.Rs : stats.buffDamagePotency,
+      armor: original ? stats.Ps : stats.buffArmorPotency,
+      attackRating: original ? stats.Qs : stats.buffAttackRatingPotency,
+      defenceRating: original ? stats.Ss : stats.buffDefenceRatingPotency,
+      snapshot: snapshot(),
+    };
+  },
+  // P-1 剩余被动族（statType 1/9/16/20/21/22/25/27/28/29）：一次直读全部剩余技能字段。
+  // 原版名（symbol-map）：wo=damageResistance、pq=spiritRegenBonus、xn=spellCostReduction、
+  // mr=controlTargetBonus、ar=chainArcBonus、Qq=rainAreaBonus、ho=areaRadiusBonus、
+  // Ft=transformTargetBonus、vt=swiftStrikeTargetBonus、nt=ricochetCountBonus。
+  // 消费点：actions.js:587(1)、tick.js:47(9)、stats.js:52(16)、character.js:900(20)、:513(21)、
+  // :586(22)、:677+tick.js:300(25)、:902(27)、:857(28)、:878(29)。
+  readSkillFields({ charIndex = 0 } = {}) {
+    const c = (original ? window.Game.i.D : game.state.adventurers)[charIndex];
+    if (!c) throw new Error('角色下标不存在: ' + charIndex);
+    const stats = original ? c.K : c.stats;
+    const F = original
+      ? { damageResistance: 'wo', spiritRegenBonus: 'pq', spellCostReduction: 'xn', controlTargetBonus: 'mr', chainArcBonus: 'ar', rainAreaBonus: 'Qq', areaRadiusBonus: 'ho', transformTargetBonus: 'Ft', swiftStrikeTargetBonus: 'vt', ricochetCountBonus: 'nt', healthRegenBonus: 'ap' }
+      : { damageResistance: 'damageResistance', spiritRegenBonus: 'spiritRegenBonus', spellCostReduction: 'spellCostReduction', controlTargetBonus: 'controlTargetBonus', chainArcBonus: 'chainArcBonus', rainAreaBonus: 'rainAreaBonus', areaRadiusBonus: 'areaRadiusBonus', transformTargetBonus: 'transformTargetBonus', swiftStrikeTargetBonus: 'swiftStrikeTargetBonus', ricochetCountBonus: 'ricochetCountBonus', healthRegenBonus: 'healthRegenBonus' };
+    const fields = {};
+    for (const [k, f] of Object.entries(F)) fields[k] = stats[f];
+    return { fields, snapshot: snapshot() };
+  },
+  // P-1 被动族（statType 16 施法花费缩减）：直读 getSpellSpiritCost 公式输出
+  // （stats.js:52 = min(base - floor(reduction/100×base), statValue(maxSpirit))；
+  //   原版同构函数 bu，c2.js:21284-21286；字段 原版 mt=spellSpiritCost、xn=reduction、Ke=maxSpirit）。
+  // base = stats.spellSpiritCost（按角色等级派生，simulation/characters.js:184），
+  // reduction = stats.spellCostReduction（原版 xn）。消费点：施法决策的可施性判定。
+  readSpellCostProbe({ charIndex = 0 } = {}) {
+    const c = (original ? window.Game.i.D : game.state.adventurers)[charIndex];
+    if (!c) throw new Error('角色下标不存在: ' + charIndex);
+    const stats = original ? c.K : c.stats;
+    return {
+      base: original ? stats.mt : stats.spellSpiritCost,
+      reduction: original ? stats.xn : stats.spellCostReduction,
+      discounted: original ? window.bu(stats) : getSpellSpiritCost(stats),
+      maxSpiritValue: original ? window.$h(stats.Ke) : statValue(stats.maxSpirit),
+      snapshot: snapshot(),
+    };
+  },
   // U7：药水激活也没有非视图入口（Potion.activate 只由药水按钮调用），激活会在存档里
   // 记 statistics.potionsUsed，因此两端各自断言计数增长，再照常做完整存档差分。
   // 重构侧 Potion.activate 已语义化，原版侧仍是 aw（archive 不可改）→ 双端分支；
@@ -550,7 +852,7 @@ window.harness = {
     let attempted = 0;
     for (const potion of list) {
       if (attempted >= limit) break;
-      if (original) potion.aw(); else potion.activate();
+      if (original) potion.aw(); else potion.activate(game.state);
       attempted++;
     }
     return { attempted, snapshot: snapshot() };

@@ -1,33 +1,45 @@
 /** 大地图通行代价计算。
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
-import { game } from "../runtime/game.js";
 export function WorldPathfinder() {
   this.unreachableCost = 1E8;
 }
-export function calculateWorldCosts(a, b, c) {
-  a = a.unreachableCost;
-  var d = game.world.worldBlocks,
-    f,
-    g,
-    h;
-  for (h = 0; 3 > h; h++) {
-    for (f = d[h], g = 0; 3 > g; g++) {
-      for (var l = f[g], n = a, p = 0, s = undefined, u = undefined; p < l.tileGrid.length; p++) {
-        for (u = l.tileGrid[p], s = 0; s < u.length; s++) {
-          u[s].pathDistanceToDestination = n;
+export function calculateWorldCosts(pathfinder, destinationColumn, destinationRow, world) {
+  const unreachableCost = pathfinder.unreachableCost;
+  for (let blockRow = 0; blockRow < 3; blockRow++) {
+    const blockColumn = world.worldBlocks[blockRow];
+    for (let blockIndex = 0; blockIndex < 3; blockIndex++) {
+      const block = blockColumn[blockIndex];
+      for (let tileRow = 0; tileRow < block.tileGrid.length; tileRow++) {
+        const row = block.tileGrid[tileRow];
+        for (let tileColumn = 0; tileColumn < row.length; tileColumn++) {
+          row[tileColumn].pathDistanceToDestination = unreachableCost;
         }
       }
     }
   }
-  if (c = game.world.getTileAtPixel(b, c)) {
-    for (b = [], c.pathDistanceToDestination = 0, b.push(c), c = [null, null, null, null]; 0 < b.length;) {
-      for (g = b.shift(), a = g.pathDistanceToDestination, d = c, f = g.getWorldColumn(), g = g.getWorldRow(), d[0] = game.world.getTileAtPixel(f, g - 1), d[1] = game.world.getTileAtPixel(f - 1, g), d[2] = game.world.getTileAtPixel(f + 1, g), d[3] = game.world.getTileAtPixel(f, g + 1), g = 0; g < c.length; g++) {
-        if (d = c[g]) {
-          f = a + d.terrainMoveCost + 1;
-          if (f < d.pathDistanceToDestination) {
-            d.pathDistanceToDestination = f;
-            b.push(d);
+
+  const destination = world.getTileAtPixel(destinationColumn, destinationRow);
+  if (destination) {
+    const pendingTiles = [destination];
+    destination.pathDistanceToDestination = 0;
+    const neighbors = [null, null, null, null];
+    while (pendingTiles.length > 0) {
+      const currentTile = pendingTiles.shift();
+      const currentCost = currentTile.pathDistanceToDestination;
+      const column = currentTile.getWorldColumn();
+      const row = currentTile.getWorldRow();
+      neighbors[0] = world.getTileAtPixel(column, row - 1);
+      neighbors[1] = world.getTileAtPixel(column - 1, row);
+      neighbors[2] = world.getTileAtPixel(column + 1, row);
+      neighbors[3] = world.getTileAtPixel(column, row + 1);
+      for (let neighborIndex = 0; neighborIndex < neighbors.length; neighborIndex++) {
+        const neighbor = neighbors[neighborIndex];
+        if (neighbor) {
+          const cost = currentCost + neighbor.terrainMoveCost + 1;
+          if (cost < neighbor.pathDistanceToDestination) {
+            neighbor.pathDistanceToDestination = cost;
+            pendingTiles.push(neighbor);
           }
         }
       }

@@ -53,10 +53,19 @@ const edges = new Map(files.map((f) => [f, new Set()]));
 const importsOf = new Map(files.map((f) => [f, []]));
 /** file -> exportedNames Set（本模块导出的顶层名） */
 const exportsOf = new Map(files.map((f) => [f, new Set()]));
+/** 用于定位仍需人工语义命名的局部绑定；单字母也可能是合法坐标名，只作审计线索。 */
+const singleLetterBindingsByFile = new Map();
 
 for (const file of files) {
   const ast = parseOrDie(file);
+  const shortBindings = new Set();
   traverse(ast, {
+    Scope(p) {
+      for (const binding of Object.values(p.scope.bindings)) {
+        const identifier = binding.identifier;
+        if (/^[A-Za-z]$/.test(identifier.name)) shortBindings.add(identifier.start);
+      }
+    },
     ImportDeclaration(p) {
       const spec = p.node.source.value;
       const resolved = resolveSpec(file, spec);
@@ -86,6 +95,9 @@ for (const file of files) {
       }
     },
   });
+  if (file.startsWith('src/engine/modules/') && shortBindings.size) {
+    singleLetterBindingsByFile.set(file, shortBindings.size);
+  }
 }
 
 // 反向：file -> 直接依赖它的文件
@@ -321,6 +333,11 @@ const out = {
   shellEngineImports,
   hotFields: hotFields.slice(0, 40),
   saveDto: { typeNames: dtoTypeNames, referencedOutsideDtoFile: dtoReferencedAnywhere, usage: dtoUsage },
+  naming: {
+    singleLetterBindings: [...singleLetterBindingsByFile.values()].reduce((sum, count) => sum + count, 0),
+    filesWithSingleLetterBindings: singleLetterBindingsByFile.size,
+    topFiles: [...singleLetterBindingsByFile.entries()].sort((a, b) => b[1] - a[1]).slice(0, 20).map(([file, count]) => ({ file, count })),
+  },
 };
 
 console.log('=== 1) 规模 ===');
@@ -345,6 +362,9 @@ console.log(`\n=== 7) 存档 DTO typedef 的使用 ===`);
 console.log(`${dtoTypeNames.length} 个 typedef：${dtoTypeNames.join(', ')}`);
 console.log(`DTO 文件之外是否被任何 @type 引用：${dtoReferencedAnywhere ? '是' : '否（纯文档资产）'}`);
 for (const [name, users] of Object.entries(dtoUsage)) if (users.length) console.log(`  ${name}: ${users.join(', ')}`);
+console.log(`\n=== 8) 单字母局部绑定（人工语义命名的审计线索） ===`);
+console.log(`合计 ${out.naming.singleLetterBindings} 个，分布于 ${out.naming.filesWithSingleLetterBindings} 个 engine/modules 文件`);
+for (const { file, count } of out.naming.topFiles.slice(0, 10)) console.log(`  ${String(count).padStart(3)}  ${file.replace('src/engine/modules/', '')}`);
 
 if (jsonOut) {
   fs.mkdirSync(path.join(ROOT, 'artifacts'), { recursive: true });

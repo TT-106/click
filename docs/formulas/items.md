@@ -3,7 +3,7 @@
 > 引用规范：形如 `combat/actions.js:84` 的路径相对 `src/engine/modules/`；若某处只写了裸文件名（如 `character.js:677`），以所在小节的模块归属为准——`characters/character.js` 与 `views/character.js` 同名，未逐一消歧。
 
 > 事实来源：`src/engine/modules/**` 当前实现。每条公式给出 `file:line` 与原文 JS 片段。
-> 与 `archive/original/c2.js` 的等价性由 **62 场景差分矩阵**（`npm run test:scenarios`）保证，因此本文描述的是**权威行为**，不是设计意图。
+> 与 `archive/original/c2.js` 的等价性由 **89 场景差分矩阵（`npm run test:scenarios`）保证，因此本文描述的是**权威行为**，不是设计意图。
 > **片段同步状态（2026-09-27）**：内嵌片段与散文里的标识符已按 `docs/symbol-map.json` 的字段映射批量同步到当前语义名（`scripts/fix-doc-identifiers.mjs`）；节选/伪码型片段的行号不逐字对应（见 `scripts/check-doc-snippets.mjs` 的残留清单），判读时以片段上方的 `file:line` 为准。
 > 凡看起来像 bug 的地方一律按原样记录并标 `[疑似遗留怪癖]`；本文不提出修正。
 > **引用体例**：JS 片段为源码原文，但为控制篇幅做了两种压缩——(a) `…` 表示省略的行；(b) 少数多行嵌套被并为单行（token 序列不变）。凡 token 序列与源码不一致之处均为笔误，欢迎按 `file:line` 复核后修正。
@@ -67,6 +67,7 @@
 
 ### I-2 归一化掷点
 
+<!-- snippet: abridged -->
 `src/engine/modules/loot/items.js:332-343`
 
 ```js
@@ -101,7 +102,7 @@ P(返回 0) = (a - 0.2) / a
 
 调用点只有两处，都传 `a ≥ 0.55`，上式简化形式恒成立：
 
-- 普通掉落：`loot/items.js:277` `n = g.uf((100 - globalUpgradeDefinitions.itemQualityChance.currentValue) / 100)`
+- 普通掉落：`loot/items.js:275` `rarity = generator.rollRarity((100 - upgrades.itemQualityChance.currentValue) / 100)`
 - 宝箱掉落：`characters/character.js:1101-1102`
 
 ```js
@@ -113,27 +114,27 @@ AA = Op.uf(zA),
 
 ### I-3 序号 → tier 的匹配（数组顺序是否承重）
 
-`src/engine/modules/loot/items.js:155-164`
+`src/engine/modules/loot/items.js:156-165`
 
 ```js
-  a: {
-    var l, n;
-    for (l = 0; l < itemRarityTiers.length; l++) {
-      if (n = itemRarityTiers[l], n.tierId === f) {
-        h = n;
-        break a;
+  rarityLookup: {
+    for (let tierIndex = 0; tierIndex < rules.itemRarityTiers.length; tierIndex++) {
+      const tier = rules.itemRarityTiers[tierIndex];
+      if (tier.tierId === rarityId) {
+        rarityTier = tier;
+        break rarityLookup;
       }
     }
-    h = itemRarityTiers[0];
+    rarityTier = rules.itemRarityTiers[0];
   }
 ```
 
 - `itemRarityTiers` 按 `tierId` 值查表，**数组顺序不承重**（仅"查不到时回落 `[0]`"依赖顺序）。
 - `itemRarityProbabilities` 的**索引本身即稀有度 ID**，顺序承重：
   - 存档字段 `itemRarity` 直接写 `a.uf()`（`persistence/entities.js:13,20`）；
-  - UI 文案 `getItemRarityLabel`（`loot/items.js:112-127`）、CSS 类 `getRarityClass`（`views/upgrade-details.js:228-240`）、统计分档 `recordItemFound`（`progression/statistics.js:102-117`）、冒险点分档 `awardAdventurePoints(13/14/15/16)`（`characters/character.js:1036-1049`、`combat/actions.js:235-249`）全部按 `0..4` 硬编码 switch。
-  - 越界值走 `"BUG FOUND: " + a.uf()`（`loot/items.js:125`）。
-- **另一处顺序承重**：槽位池 `ps[slot]` 是注册序数组，`g = g[randomInt(g.length)]`（`loot/items.js:149`）按下标取模板；`content/equipment.js:324+` 的 `registerItemType(...)` 调用顺序改变，同一次随机数会取出不同贴图/基底名，差分立即分叉。`ItemType.RD`（存档里的 `itemTypeId`）是 `baseName + png` 的字符串哈希（`loot/items.js:233-245`），与注册顺序无关。
+  - UI 文案 `getItemRarityLabel`（`loot/items.js:112-127`）、CSS 类 `getRarityClass`（`views/upgrade-details.js:228-240`）、统计分档 `recordItemFound`（`progression/statistics.js:104-119`）、冒险点分档 `awardAdventurePoints(13/14/15/16)`（`characters/character.js:1036-1049`、`combat/actions.js:235-249`）全部按 `0..4` 硬编码 switch。
+  - 越界值走 `"BUG FOUND: " + item.getRarity()`（`loot/items.js:125`）。
+- **另一处顺序承重**：槽位池 `itemTypesBySlot[slot]` 是注册序数组，`itemType = availableTypes[randomInt(availableTypes.length)]`（`loot/items.js:150`）按下标取模板；`content/equipment.js:324+` 的 `registerItemType(...)` 调用顺序改变，同一次随机数会取出不同贴图/基底名，差分立即分叉。`itemTypeId` 是 `baseName + spriteFileName` 的字符串哈希（`loot/items.js:235-247`），与注册顺序无关。
 
 ---
 
@@ -141,22 +142,22 @@ AA = Op.uf(zA),
 
 ### I-4 等级抖动
 
-`src/engine/modules/loot/items.js:226-232`
+`src/engine/modules/loot/items.js:228-234`
 
 ```js
-export function randomizeItemLevel(a, b) {
-  if (Math.random() < LOWER_ITEM_LEVEL_CHANCE) {
-    return Math.max(1, a - 1);
+export function randomizeItemLevel(level, higherChanceBonus, rules) {
+  if (Math.random() < rules.lowerItemLevelChance) {
+    return Math.max(1, level - 1);
   }
-  var c = Math.min(1, BASE_HIGHER_ITEM_CHANCE + b);
-  return Math.random() < c ? a + 1 : a;
+  const higherChance = Math.min(1, rules.baseHigherItemChance + higherChanceBonus);
+  return Math.random() < higherChance ? level + 1 : level;
 }
 ```
 
 `LOWER_ITEM_LEVEL_CHANCE = 0.15`、`BASE_HIGHER_ITEM_CHANCE = 0.1`（`content/balance.js:444-445`）。
 调用方传的第二个参数是 **`(100 - higherLevelItemChance)/100`**：
 
-- 普通掉落：`loot/items.js:278` `f = randomizeItemLevel(f, (100 - globalUpgradeDefinitions.higherLevelItemChance.currentValue) / 100)`
+- 普通掉落：`loot/items.js:276` `itemLevel = randomizeItemLevel(monsterLevel, (100 - upgrades.higherLevelItemChance.currentValue) / 100, generator.rules)`
 - 宝箱：`characters/character.js:1103-1104`
 
 ```js
@@ -184,7 +185,7 @@ P(不变)   = 0.85 · (1 − min(1, 0.1 + b))
 `[疑似遗留怪癖]` 标题为"道具等级加成/更高等级道具掉落几率(+3%)"的升级，**实际把 +1 级的概率从 85% 压低到 68%**。同一 `(100 - v)/100` 惯用法在稀有度处是正确的归一化除数（I-2），在等级处被当成加法概率使用。数值按原样记录。
 
 - 等级基准 `a`：普通掉落用**被杀怪物的等级**（`loot/items.js:278` 的 `f` ← `simulation/characters.js:321` 传入的 `d = b.stats.characterLevel`，见 `simulation/characters.js:275-276`）；首领爆发同样用**死者（首领）等级**（`combat/actions.js:389` 的 `b.stats.characterLevel`）；只有宝箱用**随机冒险者等级**（`characters/character.js:1104` 的 `wl.stats.characterLevel`）。
-- 新建队伍初始装备**不掷等级/稀有度**：`generateItem(game.itemGenerator, l[s], g, 1, 0)` 固定等级 1、稀有度 0（`views/party-creation.js:72`）。
+- 新建队伍初始装备**不掷等级/稀有度**：`generateItem(game.itemGenerator, l[s], g, 1, 0)` 固定等级 1、稀有度 0（`views/party-creation.js:79`）。
 
 ### I-5 等级 → 数值（曲线 + ±10% 抖动）
 
@@ -242,14 +243,14 @@ value(level, curve, mult) = floor( floor( mult · (base + coef·(level−1)^powe
 
 ### I-7 倍率合成
 
-`src/engine/modules/loot/items.js:165-169`
+`src/engine/modules/loot/items.js:166-170`
 
 ```js
-  var p = null;
-  l = c.slotStatTypes[b];
-  var s = getClassStatMultiplier(c, l) * h.statMultiplier;
-  n = randomizeScaledValue(d, itemStatCurve, s);
-  s = randomizeScaledValue(d, itemGoldCurve, s) * itemGoldModifier.currentValue;
+  let itemEffect = null;
+  const characteristic = inventory.slotStatTypes[slot];
+  const statMultiplier = getClassStatMultiplier(inventory, characteristic) * rarityTier.statMultiplier;
+  const itemValue = randomizeScaledValue(itemLevel, rules.itemStatCurve, statMultiplier);
+  const itemGold = randomizeScaledValue(itemLevel, rules.itemGoldCurve, statMultiplier) * rules.itemGoldModifier.currentValue;
 ```
 
 `mult = 职业系数(characteristic) × 稀有度 pp`，属性与金币共用同一 `mult`，但各自消耗一次 `Math.random()`。
@@ -258,11 +259,11 @@ value(level, curve, mult) = floor( floor( mult · (base + coef·(level−1)^powe
 
 | 次序 | 位置 | 用途 |
 |---|---|---|
-| 1 | `loot/items.js:149` `randomInt(g.length)` | 槽位模板 |
-| 2 | `loot/items.js:168`（内部 `:78`） | 属性抖动 |
-| 3 | `loot/items.js:169`（内部 `:78`） | 金币抖动 |
-| 4 | `loot/items.js:170` `Math.random() < h.elementalEffectChance` | 是否带元素特效（**仅 `characteristic===1` 时才消耗**，`&&` 短路） |
-| 5–6 | `loot/items.js:172`、`:174` | 元素种类、特效量 |
+| 1 | `loot/items.js:150` `randomInt(availableTypes.length)` | 槽位模板 |
+| 2 | `loot/items.js:169`（内部 `:78`） | 属性抖动 |
+| 3 | `loot/items.js:170`（内部 `:78`） | 金币抖动 |
+| 4 | `loot/items.js:171` `Math.random() < rarityTier.elementalEffectChance` | 是否带元素特效（**仅 `characteristic===1` 时才消耗**，`&&` 短路） |
+| 5–6 | `loot/items.js:173`、`:175` | 元素种类、特效量 |
 | 7+ | `loot/item-names.js:58-60,62-69` 等 | 词库结构 1–2 次 + 取词 `randomInt` |
 
 ---
@@ -271,6 +272,7 @@ value(level, curve, mult) = floor( floor( mult · (base + coef·(level−1)^powe
 
 ### I-9 属性类型集合
 
+<!-- snippet: abridged -->
 `src/engine/modules/loot/items.js:77-111`
 
 ```js
@@ -318,27 +320,27 @@ export function getItemStatLabel(a) {
 
 ### I-11 职业系数
 
-`src/engine/modules/loot/items.js:206-225`
+`src/engine/modules/loot/items.js:208-227`
 
 ```js
-export function getClassStatMultiplier(a, b) {
-  var c = a.classDefinition.statMultipliers;
-  if (!c) {
+export function getClassStatMultiplier(inventory, characteristic) {
+  const multipliers = inventory.classDefinition.statMultipliers;
+  if (!multipliers) {
     return 1;
   }
-  switch (b) {
+  switch (characteristic) {
     case 2:
-      return c.armorMultiplier;
+      return multipliers.armorMultiplier;
     case 1:
-      return c.damageMultiplier;
+      return multipliers.damageMultiplier;
     case 3:
-      return c.attackRatingMultiplier;
+      return multipliers.attackRatingMultiplier;
     case 4:
-      return c.defenceRatingMultiplier;
+      return multipliers.defenceRatingMultiplier;
     case 5:
-      return c.maxHealthMultiplier;
+      return multipliers.maxHealthMultiplier;
     case 6:
-      return c.maxSpiritMultiplier;
+      return multipliers.maxSpiritMultiplier;
   }
 }
 ```
@@ -347,27 +349,27 @@ export function getClassStatMultiplier(a, b) {
 
 ### I-12 元素特效
 
-`src/engine/modules/loot/items.js:170-180`
+`src/engine/modules/loot/items.js:171-181`
 
 ```js
-  if (1 === l && Math.random() < h.elementalEffectChance) {
-    p = a.itemEffectGenerator;
-    h = Math.random();
-    h = 0.2 > h ? FIRE_ITEM_EFFECT : 0.4 > h ? ICE_ITEM_EFFECT : 0.6 > h ? SHOCK_ITEM_EFFECT : 0.7 > h ? SONIC_ITEM_EFFECT : POISON_ITEM_EFFECT;
-    var u = floorNumber(Math.max(0.1 * n, 0.4 * n * Math.random()));
-    if (1 > u) {
-      u = 1;
+  if (1 === characteristic && Math.random() < rarityTier.elementalEffectChance) {
+    const effectGenerator = generator.itemEffectGenerator;
+    const effectRoll = Math.random();
+    const effectType = 0.2 > effectRoll ? FIRE_ITEM_EFFECT : 0.4 > effectRoll ? ICE_ITEM_EFFECT : 0.6 > effectRoll ? SHOCK_ITEM_EFFECT : 0.7 > effectRoll ? SONIC_ITEM_EFFECT : POISON_ITEM_EFFECT;
+    let effectAmount = floorNumber(Math.max(0.1 * itemValue, 0.4 * itemValue * Math.random()));
+    if (1 > effectAmount) {
+      effectAmount = 1;
     }
-    p = p.effectsByType[h];
-    p = new ItemEffect(h, u, "+" + formatAmount(u) + " " + p.description, p.weaponEffectAnimationName);
+    const effectDefinition = effectGenerator.effectsByType[effectType];
+    itemEffect = new ItemEffect(effectType, effectAmount, "+" + formatAmount(effectAmount) + " " + effectDefinition.description, effectDefinition.weaponEffectAnimationName);
   }
 ```
 
 - 门槛：`characteristic === 1`（伤害槽）**且** `U() < tier.elementalEffectChance`。
-- 种类分布：火 20% / 冰 20% / 休克 20% / 音波 10% / 毒 30%（阈值链顺序即概率，`FIRE=1, ICE=2, POISON=3, SHOCK=4, SONIC=5`，`loot/items.js:306-310`）。
+- 种类分布：火 20% / 冰 20% / 休克 20% / 音波 10% / 毒 30%（阈值链顺序即概率，`FIRE=1, ICE=2, POISON=3, SHOCK=4, SONIC=5`，`loot/items.js:303-307`）。
 - 特效量：`max(1, floor( max(0.1·itemValue, 0.4·itemValue·U) ))`，即"不低于属性值 10%，最高 40% 均匀"，下限 1。
 - `formatAmount` 见 `core/math.js:55-60`（阈值链为原版行为锁定）。
-- `[疑似遗留怪癖]` 局部变量 `h`（tier）在 `:172` 被随机数覆写，之后无人再读，属可读性问题不影响数值。
+- 恢复期局部变量复用已拆开：稀有度模板 `rarityTier` 与特效掷点 `effectRoll` 分别持有各自的值，随机消费顺序保持原样。
 - `[疑似遗留怪癖]` 特效的消费链是死的：`Equipment.Qk` 用 `a.statType` 记录"主手武器"（`characters/movement.js:202-204`），但 `Item` 上只有 `characteristic`，从无 `statType` 字段 → `effectItem` 永不被赋值 → `So()` 恒 `null` → `combat/actions.js:453-454, 479-486` 读取的武器元素特效贴图分支永不生效。投射物分支 `projectileWeapon`（`characters/movement.js:199-201`，经 `Cw()`）不受影响。
 
 ---
@@ -387,6 +389,7 @@ s = randomizeScaledValue(d, itemGoldCurve, s) * itemGoldModifier.currentValue;
 
 ### I-14 卖价（商店）
 
+<!-- snippet: abridged -->
 `src/engine/modules/characters/character.js:1195-1207`
 
 ```js
@@ -435,6 +438,7 @@ export function rollGoldDrop() {
 
 ### 5.1 前提：怪物死亡分派
 
+<!-- snippet: abridged -->
 `src/engine/modules/combat/actions.js:326-414`
 
 ```js
@@ -449,6 +453,7 @@ export function rollGoldDrop() {
 
 ### I-16 首领爆发（无概率门）
 
+<!-- snippet: abridged -->
 `src/engine/modules/combat/actions.js:374-403`
 
 ```js
@@ -477,6 +482,7 @@ for (g = 0; g < s && game.potions.re.length < BASE_POTION_CAPACITY + potionCapac
 
 ### I-17 普通怪四类掉落门（**四套不同的比较式**）
 
+<!-- snippet: abridged -->
 `src/engine/modules/simulation/characters.js:298-325`
 
 ```js
@@ -498,19 +504,19 @@ if (randomInt(100) <= globalUpgradeDefinitions.itemDropChance.currentValue || gu
 
 ### I-18 掉落生成用的槽位/持有者是随机选取
 
-`src/engine/modules/loot/items.js:271-282`
+`src/engine/modules/loot/items.js:270-281`
 
 ```js
-export function spawnItemDrop(a, b, c, d, f) {
-  var g;
-  g = game.itemGenerator;
-  var h = game.state.adventurers[randomInt(game.state.adventurers.length)],
-    l = h.slotList,
-    l = l[randomInt(l.length)],
-    n = g.rollRarity((100 - globalUpgradeDefinitions.itemQualityChance.currentValue) / 100);
-  f = randomizeItemLevel(f, (100 - globalUpgradeDefinitions.higherLevelItemChance.currentValue) / 100);
-  if (g = generateItem(g, l, h, f, n)) {
-    a.drops.push(new ItemDrop(g, b, c, d));
+export function spawnItemDrop(dropRegistry, x, y, room, monsterLevel, generator, adventurers) {
+  const upgrades = generator.rules.globalUpgradeDefinitions;
+  const adventurer = adventurers[randomInt(adventurers.length)];
+  const slots = adventurer.slotList;
+  const slot = slots[randomInt(slots.length)];
+  const rarity = generator.rollRarity((100 - upgrades.itemQualityChance.currentValue) / 100);
+  const itemLevel = randomizeItemLevel(monsterLevel, (100 - upgrades.higherLevelItemChance.currentValue) / 100, generator.rules);
+  const item = generateItem(generator, slot, adventurer, itemLevel, rarity);
+  if (item) {
+    dropRegistry.drops.push(new ItemDrop(item, x, y, room));
   }
 }
 ```
@@ -548,6 +554,7 @@ export function spawnItemDrop(a, b, c, d, f) {
 
 ### I-20 卷轴掉落的取样池
 
+<!-- snippet: abridged -->
 `src/engine/modules/simulation/characters.js:309-313`
 
 ```js
@@ -567,20 +574,21 @@ if (randomInt(100) <= globalUpgradeDefinitions.scrollDropChance.currentValue) {
 
 ### I-21 唯一比较式
 
-`src/engine/modules/loot/items.js:74-76`
+`src/engine/modules/loot/items.js:72-74`
 
 ```js
-export function isBetterItem(a, b) {
-  return !b || a.itemValue > b.itemValue;
+export function isBetterItem(candidate, currentItem) {
+  return !currentItem || candidate.itemValue > currentItem.itemValue;
 }
 ```
 
 - 判据是**属性数值 `itemValue`**，不是金币 `itemGold`，也不是等级/稀有度。
 - **严格大于**：同价值不视为更好 → 不触发自动装备、不会被卖出、也不会替换背包里价值最低者。
-- `b` 为 `null`（槽位空）时恒为"更好"。
+- `currentItem` 为 `null`（槽位空）时恒为"更好"。
 
 ### I-22 装备校验与属性回算
 
+<!-- snippet: abridged -->
 `src/engine/modules/characters/character.js:142-184`
 
 ```js
@@ -612,7 +620,7 @@ export function equipItem(a, b) {
 
 `[疑似遗留怪癖]` **不校验槽位是否属于该角色的 `slotList`**：`Qk` 无条件 `this.hw[a.slot] = a`（`characters/movement.js:197-198`），异职业槽位会写入一个不在 `slotList` 里的键，因而回算循环（`characters/character.js:163-180` 遍历 `slotList`）看不见它 —— 装备进"影子槽"，既不生效也不显示，只有存档会带上它。当前所有生成路径的 `slot` 都取自持有者 `slotList`，因此正常流程不可达。
 
-属性显示值（派生，不存字段）：`characters/stats.js:14-17`
+属性显示值（派生，不存字段）：`characters/stats.js:13-16`
 
 ```js
 export function statValue(a) {
@@ -729,7 +737,7 @@ return {
 
 - **全部数值都是"存下来的"而非"重算的"**：等级、稀有度、属性值、金币值、特效量逐字回读（`persistence/entities.js:32-51`）。加载不重掷任何随机数。
 - 特效的 4 个字段（含描述字符串与动画名）也全部持久化。
-- 恢复只依赖 `itemTypeId` 反查模板：`game.itemGenerator.os[a.itemTypeId]`，查不到 → `console.log("failed to lookup item type")` 并返回 `null`，调用点跳过该件（`persistence/game-save.js:481,490`）。基底名或 PNG 任一处改名都会改变哈希（`loot/items.js:234-245`）而使旧档道具整体消失。
+- 恢复只依赖 `itemTypeId` 反查模板：`game.itemGenerator.itemTypesById[a.itemTypeId]`，查不到 → `console.log("failed to lookup item type")` 并返回 `null`，调用点跳过该件（`persistence/game-save.js:481,490`）。基底名或 PNG 任一处改名都会改变哈希（`loot/items.js:234-245`）而使旧档道具整体消失。
 - 回读时的零值兜底会**改写 0**：`g ? g : 1`（等级 0→1）、`n ? n : 1`（`characteristic` 0→1）、`f ? f : 0`、`h/l ? : 0`（`persistence/entities.js:50`）。
 - 角色侧另有 `characteristicsComponent` 保存六条 `StatComponent` 的 `itemValue/levelValue/spellBonusPercent/skillBonusPercent`（`persistence/entities.js:157-164`）。装备回算发生两次：先由 `equipItem` 求和（`persistence/game-save.js:491`），再由 `restoreStatComponent` 用存档值覆写（`persistence/game-save.js:522-527`）—— **存档值优先**。
 

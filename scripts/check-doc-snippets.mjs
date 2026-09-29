@@ -68,6 +68,11 @@ function locateSnippet(srcLines, snippetLines) {
 let checked = 0;
 let drifted = 0;
 let skipped = 0;
+let abridgedOk = 0;
+let brokenMarked = 0;
+// 节选标注约定（U133）：ref 行的上一行放 `<!-- snippet: abridged -->` 即声明本片段是
+// 节选/伪码示意。标注只豁免"逐行内容比对"，不豁免 ref 本身的可解析性与行号边界——
+// 标注损坏（引用不存在或行号越界）同样算失败，防止用标注绕过检查。
 
 for (const doc of docs) {
   if (!fs.existsSync(doc)) continue;
@@ -85,12 +90,24 @@ for (const doc of docs) {
     if (k >= lines.length) continue;
 
     const [, rel, startStr, endStr] = m;
+    const isMarked = i > 0 && /<!--\s*snippet:\s*abridged\s*-->/.test(lines[i - 1]);
     const file = resolveRef(rel);
-    if (!file) { skipped++; console.log(`? 无法解析 ${doc}:${i + 1} -> ${rel}`); continue; }
+    if (!file) {
+      if (isMarked) { brokenMarked++; checked++; console.log(`✗ 已标注节选但引用无法解析 ${doc}:${i + 1} -> ${rel}`); }
+      else { skipped++; console.log(`? 无法解析 ${doc}:${i + 1} -> ${rel}`); }
+      continue;
+    }
 
     const srcLines = fs.readFileSync(file, 'utf8').split('\n');
     const start = Number(startStr);
     const end = Number(endStr ?? start + body.length - 1);
+    if (isMarked) {
+      const inBounds = start >= 1 && start <= srcLines.length && Number(endStr ?? start) <= srcLines.length;
+      checked++;
+      if (!inBounds) { brokenMarked++; console.log(`✗ 已标注节选但行号越界 ${doc}:${i + 1} -> ${rel}:${start}-${end}（源码共 ${srcLines.length} 行）`); }
+      else { abridgedOk++; }
+      continue;
+    }
     const actual = srcLines.slice(start - 1, end).map((l) => l.replace(/\s+$/, ''));
 
     checked++;
@@ -150,4 +167,5 @@ for (const doc of docs) {
   if (rewrite) fs.writeFileSync(doc, lines.join('\n'));
 }
 
-console.log(`\n共检查 ${checked} 个代码片段：漂移 ${drifted} 个，无法解析 ${skipped} 个。`);
+console.log(`\n共检查 ${checked} 个代码片段：漂移 ${drifted} 个，已标注节选 ${abridgedOk} 个（ref 均验证可解析），标注损坏 ${brokenMarked} 个，无法解析 ${skipped} 个。`);
+if (drifted > 0 || brokenMarked > 0) process.exitCode = 1;

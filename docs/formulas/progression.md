@@ -3,7 +3,7 @@
 > 引用规范：形如 `combat/actions.js:84` 的路径相对 `src/engine/modules/`；若某处只写了裸文件名（如 `character.js:677`），以所在小节的模块归属为准——`characters/character.js` 与 `views/character.js` 同名，未逐一消歧。
 
 > 事实来源：`src/engine/modules/**` 当前实现。每条公式给出 `file:line` 与原文 JS 片段。
-> 与 `archive/original/c2.js` 的等价性由 **62 场景差分矩阵**（`npm run test:scenarios`）保证，因此本文描述的是**权威行为**。
+> 与 `archive/original/c2.js` 的等价性由 **89 场景差分矩阵（`npm run test:scenarios`）保证，因此本文描述的是**权威行为**。
 > **片段同步状态（2026-09-27）**：内嵌片段与散文里的标识符已按 `docs/symbol-map.json` 的字段映射批量同步到当前语义名（`scripts/fix-doc-identifiers.mjs`）；节选/伪码型片段的行号不逐字对应（见 `scripts/check-doc-snippets.mjs` 的残留清单），判读时以片段上方的 `file:line` 为准。
 > 凡看起来像 bug 的地方一律按原样记录并标 `[疑似遗留怪癖]`；本文不提出修正。
 > **引用体例**：JS 片段为源码原文，但为控制篇幅做了两种压缩——(a) `…` 表示省略的行；(b) 少数多行嵌套被并为单行（token 序列不变）。凡 token 序列与源码不一致之处均为笔误，欢迎按 `file:line` 复核后修正。
@@ -117,7 +117,7 @@ XP(当前等级 L 升到 L+1) = floor( 100 + 500·(L−1)^2.1·1.005^(L−1) )
 
 （整表为按 §0 求值器实算，非引用外部资料。）
 
-- **钳制**：仅 §0 的 `Math.max(0, L−1)` 下钳；**无上限钳制**，全库不存在最高等级常量（`characterLevel` 的全部赋值点：`characters/stats.js:20`、`combat/encounters.js:66,127`、`persistence/game-save.js:510`、`progression/upgrades.js:549,554,567`、`simulation/characters.js:78,111,151`、`views/party-creation.js:60`）。
+- **钳制**：仅 §0 的 `Math.max(0, L−1)` 下钳；**无上限钳制**，全库不存在最高等级常量（`characterLevel` 的全部赋值点：`characters/stats.js:19`、`combat/encounters.js:66,127`、`persistence/game-save.js:510`、`progression/upgrades.js:549,554,567`、`simulation/characters.js:78,111,151`、`views/party-creation.js:67`）。
 
 ### P-2 升级不是自动的：升级由购买驱动
 
@@ -238,28 +238,28 @@ killPointEvent = {
 
 ### 2.2 发放
 
-`src/engine/modules/progression/points.js:26-46`
+`src/engine/modules/progression/points.js:34-54`
 
 ```js
-export function awardAdventurePoints(a) {
-  var b = game.state.adventurePoints,
-    c = pointEventsById[a];
-  if (c) {
-    c = c.currentPointReward;
-    b.availablePoints += c;
-    var d = b.pointsByEventType[a];
-    if (!d) {
-      d = 0;
+export function awardAdventurePoints(pointEventTypeId) {
+  var state = adventurePointsState,
+    pointEvent = pointEventsById[pointEventTypeId];
+  if (pointEvent) {
+    var pointReward = pointEvent.currentPointReward;
+    state.availablePoints += pointReward;
+    var eventPoints = state.pointsByEventType[pointEventTypeId];
+    if (!eventPoints) {
+      eventPoints = 0;
     }
-    var f = b.countsByEventType[a];
-    if (!f) {
-      f = 0;
+    var eventCount = state.countsByEventType[pointEventTypeId];
+    if (!eventCount) {
+      eventCount = 0;
     }
-    f++;
-    b.pointsByEventType[a] = d + c;
-    b.countsByEventType[a] = f;
+    eventCount++;
+    state.pointsByEventType[pointEventTypeId] = eventPoints + pointReward;
+    state.countsByEventType[pointEventTypeId] = eventCount;
   } else {
-    console.log("error: point settings not found: " + a);
+    console.log("error: point settings not found: " + pointEventTypeId);
   }
 }
 ```
@@ -297,34 +297,34 @@ export function awardAdventurePoints(a) {
 
 ### 2.3 重建函数（21 池全量重算）
 
-`src/engine/modules/progression/points.js:47-73`
+`src/engine/modules/progression/points.js:55-81`
 
 ```js
-export function increasePointEventReward(a, b) {
-  var c = game.state.adventurePoints,
-    d = pointEventsById[a];
-  if (d) {
-    d.currentPointReward += b;
-    recalculateAdventurePoints(c);
+export function increasePointEventReward(pointEventTypeId, bonus) {
+  var state = adventurePointsState,
+    pointEvent = pointEventsById[pointEventTypeId];
+  if (pointEvent) {
+    pointEvent.currentPointReward += bonus;
+    recalculateAdventurePoints(state);
   } else {
-    console.log("error: point settings not found: " + a);
+    console.log("error: point settings not found: " + pointEventTypeId);
   }
 }
-export function recalculateAdventurePoints(a) {
-  var b, c, d, f;
-  for (b = a.availablePoints = 0; b < pointEventDefinitions.length; b++) {
-    f = pointEventDefinitions[b].pointEventTypeId;
-    c = pointEventDefinitions[b].currentPointReward;
-    if (!(d = a.countsByEventType[f])) {
-      d = 0;
+export function recalculateAdventurePoints(adventurePoints) {
+  var eventIndex, pointEventTypeId, pointReward, eventCount;
+  for (eventIndex = adventurePoints.availablePoints = 0; eventIndex < pointEventDefinitions.length; eventIndex++) {
+    pointEventTypeId = pointEventDefinitions[eventIndex].pointEventTypeId;
+    pointReward = pointEventDefinitions[eventIndex].currentPointReward;
+    if (!(eventCount = adventurePoints.countsByEventType[pointEventTypeId])) {
+      eventCount = 0;
     }
-    c *= d;
-    a.pointsByEventType[f] = c;
-    a.availablePoints += c;
+    pointReward *= eventCount;
+    adventurePoints.pointsByEventType[pointEventTypeId] = pointReward;
+    adventurePoints.availablePoints += pointReward;
   }
-  a.availablePoints -= a.spentPoints;
-  if (0 > a.availablePoints) {
-    a.availablePoints = 0;
+  adventurePoints.availablePoints -= adventurePoints.spentPoints;
+  if (0 > adventurePoints.availablePoints) {
+    adventurePoints.availablePoints = 0;
   }
 }
 ```
@@ -340,6 +340,7 @@ Dd = clamp( Σ Qi[id] − An , 0 , +∞ )
 
 ### 2.4 重置
 
+<!-- snippet: abridged -->
 `src/engine/modules/progression/points.js:6-25`
 
 ```js
@@ -362,12 +363,12 @@ for (b = 0; b < a.pointUpgrades.length; b++) { a.pointUpgrades[b].og(); }   // �
 ```js
   AdventurePointUpgrade.prototype.purchase = function () {
     if (!(this.purchased || this.definition.pointCost > game.state.adventurePoints.availablePoints)) {
-      var a = this.definition.pointCost,
-        b = game.state.adventurePoints;
-      b.spentPoints += a;
-      b.availablePoints -= a;
-      if (0 > b.availablePoints) {
-        b.availablePoints = 0;
+      var pointCost = this.definition.pointCost,
+        adventurePoints = game.state.adventurePoints;
+      adventurePoints.spentPoints += pointCost;
+      adventurePoints.availablePoints -= pointCost;
+      if (0 > adventurePoints.availablePoints) {
+        adventurePoints.availablePoints = 0;
       }
       this.purchased = true;
       this.canPurchase = false;
@@ -384,9 +385,9 @@ for (b = 0; b < a.pointUpgrades.length; b++) { a.pointUpgrades[b].og(); }   // �
   };
   AdventurePointUpgrade.prototype.refreshAvailabilityState = function () {
     this.canPurchase = !this.purchased && this.definition.pointCost <= game.state.adventurePoints.availablePoints;
-    var a = this.cachedCanPurchase !== this.canPurchase;
+    var changed = this.cachedCanPurchase !== this.canPurchase;
     this.cachedCanPurchase = this.canPurchase;
-    return a;
+    return changed;
   };
 ```
 
@@ -406,14 +407,14 @@ export function applyPointUpgrade(a) {
 | 1 | `scrollCapacityBonus` | +10 | `combat/scrolls.js:56`（上限 `30+bonus`） |
 | 2 | `walkingSpeedBonus` | +0.1 | `characters/character.js:194`（世界移动） |
 | 3 | `potionCapacityBonus` | +1 | `combat/potions.js:113`（`6+bonus`） |
-| 4 | `partyCapacityBonus` | +1 | `views/party-creation.js:109`（`4+bonus`，最多 5） |
+| 4 | `partyCapacityBonus` | +1 | `views/party-creation.js:115`（`4+bonus`，最多 5） |
 | 5 | `dungeonCostBonus` | **−0.1** | `progression/upgrades.js:932,974`（农场价乘子） |
 | 6 | `itemCostBonus` | **−0.1** | `progression/upgrades.js:652,730`（怪物等级价乘子） |
 | 7 | `potionDurationBonus` | +120 回合 | `simulation/tick.js:112`（`800+bonus`） |
 | 8 | `potionPowerBonus` | +20 | `simulation/tick.js:179`（`(100+bonus)·farmKillsModifier`） |
 | 9 | `offlineTimeBonus` | +7.2e6 ms | `runtime/game.js:471`（离线上限） |
 | 10 | `equipmentQualityBonus` | +0.01 | `characters/character.js:1195`（卖价 `0.1+bonus`） |
-| 11 | `attackCooldownBonus` | **−1** | `characters/stats.js:40-42`（`max(4, base−red+bonus)`） |
+| 11 | `attackCooldownBonus` | **−1** | `characters/stats.js:39-41`（`max(4, base−red+bonus)`） |
 | 12 | `healthRegenerationBonus` | +1 | `simulation/tick.js:42`（回复百分比） |
 | 13 | `spiritRegenerationBonus` | +1 | `simulation/tick.js:47` |
 
@@ -429,11 +430,11 @@ export function applyPointUpgrade(a) {
 `src/engine/modules/progression/upgrades.js:131-137`
 
 ```js
-export function recalculateGlobalUpgrade(a) {
-  a.definition.cost = scaleByLevel(a.definition.baseCost + a.definition.purchasedLevels * a.definition.costPerLevel, globalUpgradePriceCurve, 1);
-  a.definition.currentValue = a.definition.baseValue + a.definition.purchasedLevels * a.definition.perLevelIncrement;
-  if (a.definition.currentValue > a.definition.maxValue) {
-    a.definition.currentValue = a.definition.maxValue;
+export function recalculateGlobalUpgrade(upgrade) {
+  upgrade.definition.cost = scaleByLevel(upgrade.definition.baseCost + upgrade.definition.purchasedLevels * upgrade.definition.costPerLevel, globalUpgradePriceCurve, 1);
+  upgrade.definition.currentValue = upgrade.definition.baseValue + upgrade.definition.purchasedLevels * upgrade.definition.perLevelIncrement;
+  if (upgrade.definition.currentValue > upgrade.definition.maxValue) {
+    upgrade.definition.currentValue = upgrade.definition.maxValue;
   }
 }
 ```
@@ -558,6 +559,7 @@ if (a.locked) {
 
 ### 4.1 达成判定（每 4 回合扫描一次）
 
+<!-- snippet: abridged -->
 `src/engine/modules/simulation/tick.js:214-236`
 
 ```js
@@ -628,6 +630,7 @@ switch (a.requirementType) {
 
 ### 4.2 奖励应用
 
+<!-- snippet: abridged -->
 `src/engine/modules/progression/achievements.js:34-47`
 
 ```js
@@ -657,7 +660,7 @@ export function applyAchievementReward(a) {
 
 ### 5.1 三块结构
 
-`src/engine/modules/runtime/game.js:181-190`
+`src/engine/modules/runtime/game.js:190-199`
 
 ```js
       runStatistics: new RunStatistics(),
@@ -672,10 +675,10 @@ export function applyAchievementReward(a) {
       victoryCount: 0
 ```
 
-- **本周目** `runStatistics`：30 个计数字段，一次声明清零（`progression/statistics.js:5-7`），`resetRunStatistics()` 同式清零（`:27-29`）。
+- **本周目** `runStatistics`：30 个计数字段，一次声明清零（`progression/statistics.js:4-6`），`resetRunStatistics()` 同式清零（`:29-31`）。
 - **累计** `lifetimeStatistics`：**原型链复用 RunStatistics**，只覆写清零函数为"记日志、什么都不清"：
 
-`progression/statistics.js:127-130`
+`progression/statistics.js:129-132`
 
 ```js
   LifetimeStatistics.prototype = new RunStatistics();
@@ -714,13 +717,14 @@ export function applyAchievementReward(a) {
 | `scrollsUsed` | `recordScrollUsed` | `combat/scrolls.js:161` |
 | `playedMillis` | `recordPlayedMilliseconds(增量)` | `simulation/loop.js:46`（离线：+250/回合）、`:94`（在线：+帧差） |
 | `itemsSold` | `recordItemsSold(批量数)` | `characters/character.js:1204` |
-| `itemsFound` + `uncommon/rare/historic/ancientItemsFound` | `recordItemFound(item)` | `characters/character.js:1034`、`combat/actions.js:232`；分档见 `progression/statistics.js:102-117` |
+| `itemsFound` + `uncommon/rare/historic/ancientItemsFound` | `recordItemFound(item)` | `characters/character.js:1034`、`combat/actions.js:232`；分档见 `progression/statistics.js:104-119` |
 | `treasureChestsLooted` / `weaponRacksLooted` / `bookcasesLooted` | 三个 `record…Looted` | `characters/character.js:1130/1134/1138`（按宝箱 `Mf` 1/2/3 分派） |
 
 `[疑似遗留怪癖]` `MELEE_ACTION_TYPE = 3`（`ai/targeting.js:422`）却走 `recordRangedAttack`，`actionType === 2` 走 `recordMeleeAttack`（`characters/character.js:440,454`）。存档键语义以键名为准，已在 `docs/reverse-engineering/unresolved.md` 第 5 条记为"误名、落地时勿顺手纠正"。
 
 ### 5.3 回读侧的两处特殊映射
 
+<!-- snippet: abridged -->
 `src/engine/modules/persistence/entities.js:283-319`
 
 ```js
@@ -870,14 +874,14 @@ resetGame: function () {
 | 世界 / 当前层 / 掉落物 / 战斗队列 | 重建 | 重建 | 重建 |
 | `turnNumber` | 归 0 | 归 0 | 归 0 |
 
-`victoryCount` 在 `src/engine/modules` 内的读取点共 5 处（`loot/inventory.js:9`、`views/party-creation.js:61,127,350`、`views/results.js:30`、另 `views/information.js:168` 展示），其中三处构成实际加成：
+`victoryCount` 在 `src/engine/modules` 内的读取点共 5 处（`loot/inventory.js:9`、`views/party-creation.js:68,133,356`、`views/results.js:30`、另 `views/information.js:168` 展示），其中三处构成实际加成：
 
 ```js
 // loot/inventory.js:9 —— 背包容量
 this.vp = BASE_INVENTORY_CAPACITY + Math.min(MAX_PRESTIGE_INVENTORY_BONUS, game.state.victoryCount);   // 20 + min(10, 胜场)
-// views/party-creation.js:61-65 —— 新队伍每人技能点
+// views/party-creation.js:68-72 —— 新队伍每人技能点
 l = Math.min(40, game.state.victoryCount); if (0 < l) { p.skillPoints = l; … }
-// views/party-creation.js:127 —— 职业解锁 requiredVictories
+// views/party-creation.js:133 —— 职业解锁 requiredVictories
 ```
 
 `[疑似遗留怪癖]` 背包容量在 `Inventory` **构造时**快照，之后 `victoryCount` 变化不回填旧实例；而"继续"路径根本不重建 `Inventory`。三处加成的上限互不一致（10 / 40 / 无上限）。
@@ -941,7 +945,7 @@ if (game.options.allowOfflineProgress && game.lastActiveAt) {
 
 `lastActiveAt` 来自存档的 `gameTimestamp`（写入时是**序列化时刻**，`persistence/game-save.js:51-52` 与 `:704` 附近）。
 
-`runtime/game.js:469-475`
+`runtime/game.js:479-485`
 
 ```js
     beginOfflineProgress: function () {

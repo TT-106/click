@@ -1,21 +1,22 @@
 /** 背包容量、排序、替换及装备所有权。
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
+ * 不依赖全局 game 实例：容量奖励的 victoryCount 由构造方显式传入（仍在构造时求值），
+ * addInventoryItem 显式接收 InventoryRegistry（sortInventory 比较器来源）。
  */
 import { BASE_INVENTORY_CAPACITY, MAX_PRESTIGE_INVENTORY_BONUS } from "../content/balance.js";
-import { game } from "../runtime/game.js";
 import { isBetterItem } from "./items.js";
-export function Inventory() {
+export function Inventory(victoryCount) {
   this.items = [];
-  this.capacity = BASE_INVENTORY_CAPACITY + Math.min(MAX_PRESTIGE_INVENTORY_BONUS, game.state.victoryCount);
+  this.capacity = BASE_INVENTORY_CAPACITY + Math.min(MAX_PRESTIGE_INVENTORY_BONUS, victoryCount);
   this.owner = null;
   this.dirty = false;
 }
-export function addInventoryItem(a, b) {
+export function addInventoryItem(a, b, inventories) {
   if (a.items.length < a.capacity) {
     b.inventory = a.owner;
     a.items.push(b);
     a.dirty = true;
-    sortInventory(game.inventories, a.items);
+    sortInventory(inventories, a.items);
   } else {
     var c,
       d = -1,
@@ -39,7 +40,7 @@ export function addInventoryItem(a, b) {
       b.inventory = a.owner;
       a.items.push(b);
       a.dirty = true;
-      sortInventory(game.inventories, a.items);
+      sortInventory(inventories, a.items);
     }
   }
 }

@@ -1,8 +1,8 @@
 /** 从原始组合根独立出的配置数据。
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
-import { AnimationCatalog, AnimationSheet } from "../rendering/sprites.js";
-export function createAnimationCatalog() {
+// 渲染类由 runtime/game.js 在组合根处提供，素材表只描述动画数据。
+export function createAnimationCatalog({ AnimationCatalog, AnimationSheet }) {
   return new AnimationCatalog([new AnimationSheet("spritesheet/SpellFXAnim1.png", 31, [{
     animationName: "Gold Sparkles",
     firstFrameColumn: 0,

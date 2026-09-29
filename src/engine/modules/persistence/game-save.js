@@ -40,6 +40,13 @@ export function restoreGameState(a, b) {
   if (b) {
     var c = saveCodec.decompress(b);
     if (c) {
+      /** 存档 DTO 的**恢复侧**类型接入：d 上每个被读的键都必须存在于 SaveData，
+       *  读错键（改名时漏改映射行）会由 `npm run typecheck` 直接报出来。
+       *  注意：这里只标已初始化形态——空白档只有 4 个键，而 `if (game.initialized)`
+       *  分支保证了其余键只在已开局时才被读；**空白档形态本身由
+       *  scripts/audit-save-schema.mjs 机械比对**（四种形态的键集逐一核对），
+       *  不靠这条注解假装覆盖。
+       *  @type {SaveData} */
       var d = JSON.parse(c);
       if (d) {
         game.resetRun(true);
@@ -408,7 +415,7 @@ export function restoreGameState(a, b) {
                 jd = fc.upgrades3,
                 kd = fc.upgrades4,
                 eg = classesById[vd],
-                hc = new Character(fc.adventurerName, fc.characterType, vd, eg, new Inventory()),
+                hc = new Character(fc.adventurerName, fc.characterType, vd, eg, new Inventory(game.state.victoryCount)),
                 re = createBehaviorQueue(eg.createBehaviors());
               hc.behaviors = re;
               hc.sprite = game.monsterSprites.getSprite(qe);
@@ -479,7 +486,7 @@ export function restoreGameState(a, b) {
               if (tf) {
                 for (var Dh = undefined, uf = 0; uf < tf.length; uf++) {
                   if (Dh = restoreItem(tf[uf])) {
-                    addInventoryItem(Md, Dh);
+                    addInventoryItem(Md, Dh, game.inventories);
                   }
                 }
               }
@@ -673,10 +680,10 @@ export function restoreGameState(a, b) {
                 og = null;
               }
               if (og) {
-                var Oh = new Potion(og);
+                var Oh = new Potion(og, game.itemSprites);
                 setPotionActive(Oh, hj);
                 Oh.activationTurn = vl;
-                addPotion(Oh);
+                addPotion(Oh, game.potions);
               }
             }
           }
@@ -694,9 +701,18 @@ export function restoreGameState(a, b) {
   }
   return false;
 }
+/** @typedef {import('./save-dto.js').SaveData} SaveData */
+/** @typedef {import('./save-dto.js').SaveDataUninitialized} SaveDataUninitialized */
+
 export function serializeGame(a) {
   return (a = JSON.stringify(createSaveState(a))) ? saveCodec.compress(a) : null;
 }
+/**
+ * 内存 → 存档 DTO。返回类型接上 `SaveData`（或空白档形态 `SaveDataUninitialized`）后，
+ * 少写/写错顶层键会由 `npm run typecheck` 直接报出来——此前这块没有任何类型检查，
+ * 只有差分测试兜底。
+ * @returns {SaveData|SaveDataUninitialized}
+ */
 export function createSaveState(a) {
   var b;
   if (game.initialized) {
@@ -946,6 +962,9 @@ export function createSaveState(a) {
     };
     var kb,
       Ra,
+      // 键是 settingId、值是已购级数（存档 DTO: settings.upgrades）。
+      // 类型只标注，不改运行时行为；少了这条注解，createSaveState 的 SaveData 返回类型会不成立。
+      /** @type {Object<string, number>} */
       Ja = {};
     for (kb in globalUpgradeDefinitions) {
       if (Object.prototype.hasOwnProperty.call(globalUpgradeDefinitions, kb)) {

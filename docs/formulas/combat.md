@@ -3,35 +3,35 @@
 > 引用规范：形如 `combat/actions.js:84` 的路径相对 `src/engine/modules/`；若某处只写了裸文件名（如 `character.js:677`），以所在小节的模块归属为准——`characters/character.js` 与 `views/character.js` 同名，未逐一消歧。
 
 > 事实来源：`src/engine/modules/**` 当前实现。每条公式给出 `file:line` 与原文 JS 片段。
-> 与 `archive/original/c2.js`（46,980 行单文件）的等价性由 **62 场景差分矩阵**（`npm run test:scenarios`）保证，因此本文描述的是**权威行为**，不是设计意图。
+> 与 `archive/original/c2.js`（46,980 行单文件）的等价性由 **89 场景差分矩阵（`npm run test:scenarios`）保证，因此本文描述的是**权威行为**，不是设计意图。
 > **片段同步状态（2026-09-27）**：内嵌 JS 片段与散文里的标识符已按 `docs/symbol-map.json` 的 1,047 条字段映射**批量同步到当前语义名**（工具 `scripts/fix-doc-identifiers.mjs`），逐字摘录型片段的 `file:line` 也由 `scripts/check-doc-snippets.mjs` 重定位并对齐（61/76 条已同步）。**仍有 15 条是"节选/伪码"型片段**（含 `...` 或跨多处拼接），其行号与片段不逐字对应——这是已知的文档精度缺口，判读时以片段上方的 `file:line` 与当前源码为准。
 > 凡看起来像 bug 的地方一律按原样记录并标 `[疑似遗留怪癖]`；本文不提出修正。
 > 路径缩写：`actions.js` = `src/engine/modules/combat/actions.js`，`character.js` = `src/engine/modules/characters/character.js`，其余同理。
 > 时间模型（帧/回合/离线结算）见 `docs/time-model.md`；道具生成见 `docs/formulas/items.md`（本文多处引用其结论 I-*）。
 
-字段速查 A —— `CharacterStats`（`characters/stats.js:18-39`）中与战斗相关的部分：
+字段速查 A —— `CharacterStats`（`characters/stats.js:17-38`）中与战斗相关的部分：
 
 | 字段 | 含义（依据消费点反推） | 证据 | 置信度 |
 |---|---|---|---|
-| `damage` / `armor` / `attackRating` / `defenceRating` / `maxHealth` / `maxSpirit` | 六条 `StatComponent` | `stats.js:33-38`、`actions.js:583-586` | 高 |
-| `health` / `spirit` | 当前生命/法力池（非组件） | `stats.js:22`、`actions.js:312` | 高 |
-| `baseAttackCooldown` = 12 | 攻击冷却基准（回合） | `stats.js:25`、`stats.js:41` | 高 |
-| `attackCooldownReduction` | 冷却减免（回合），技能 `statType 10` | `stats.js:28`、`skill-effects.js:72-74` | 高 |
-| `critChance` | **暴击几率 %**（技能 `statType 17`） | `stats.js:22`、`skill-effects.js:93-95`、`actions.js:592` | 高 |
-| `damageResistance` | **受伤减免 %**（技能 `statType 1`，"免疫 X% 敌人的伤害"） | `stats.js:28`、`skill-effects.js:39-40`、`actions.js:587,597` | 高 |
+| `damage` / `armor` / `attackRating` / `defenceRating` / `maxHealth` / `maxSpirit` | 六条 `StatComponent` | `stats.js:32-37`、`actions.js:583-586` | 高 |
+| `health` / `spirit` | 当前生命/法力池（非组件） | `stats.js:21`、`actions.js:312` | 高 |
+| `baseAttackCooldown` = 12 | 攻击冷却基准（回合） | `stats.js:24`、`stats.js:40` | 高 |
+| `attackCooldownReduction` | 冷却减免（回合），技能 `statType 10` | `stats.js:27`、`skill-effects.js:72-74` | 高 |
+| `critChance` | **暴击几率 %**（技能 `statType 17`） | `stats.js:21`、`skill-effects.js:93-95`、`actions.js:592` | 高 |
+| `damageResistance` | **受伤减免 %**（技能 `statType 1`，"免疫 X% 敌人的伤害"） | `stats.js:27`、`skill-effects.js:39-40`、`actions.js:587,597` | 高 |
 | `healPotency` | 治疗强度倍率（`statType 11`） | `skill-effects.js:75-77`、`actions.js:94-97` | 高 |
 | `Ps/Rs/Qs/Ss` | 护甲/伤害/攻击等级/防御等级**法术**强化倍率（`statType 13/12/14/15`） | `skill-effects.js:78-89`、`actions.js:129-141` | 高 |
-| `spellSpiritCost` | 单次施法基准耗蓝（按 `damageCurve` 随等级算） | `stats.js:22`、`characters.js:183-184` | 高 |
-| `spellCostReduction` | 耗蓝减免 %（`statType 16`） | `skill-effects.js:90-92`、`stats.js:52` | 高 |
-| `extraAttackCount` / `extraAttackChance` | 分裂目标数上限 / 逐档命中几率（`statType 18/19`） | `stats.js:30-31`、`skill-effects.js:96-101`、`actions.js:420-431` | 高 |
-| `chainCount` / `chainChance` | 弹跳次数上限 / 逐跳几率（`statType 23/24`） | `stats.js:29,32`、`skill-effects.js:117-125`、`stats.js:102-114` | 高 |
+| `spellSpiritCost` | 单次施法基准耗蓝（按 `damageCurve` 随等级算） | `stats.js:21`、`characters.js:183-184` | 高 |
+| `spellCostReduction` | 耗蓝减免 %（`statType 16`） | `skill-effects.js:90-92`、`stats.js:51` | 高 |
+| `extraAttackCount` / `extraAttackChance` | 分裂目标数上限 / 逐档命中几率（`statType 18/19`） | `stats.js:29-30`、`skill-effects.js:96-101`、`actions.js:420-431` | 高 |
+| `chainCount` / `chainChance` | 弹跳次数上限 / 逐跳几率（`statType 23/24`） | `stats.js:28,32`、`skill-effects.js:117-125`、`stats.js:102-114` | 高 |
 | `chainArcBonus` / `controlTargetBonus` / `transformTargetBonus` | 连锁跳数、睡眠/定身群体数、转变群体数（`statType 21/20/27`） | `skill-effects.js:102-110`、`character.js:513,900,902` | 高（名字语义由 `character.js:513` 与 `:900` 的用法给出） |
 | `rainAreaBonus` | 范围雨类法术半径（格）（`statType 22`） | `skill-effects.js:111-112`、`character.js:586` | 高 |
 | `areaRadiusBonus` | 溅射/爆炸半径增量（`statType 25`，**`+= 1` 而非 `+= c`**） | `skill-effects.js:113-116`、`tick.js:297`、`character.js:677` | 高 |
 | `swiftStrikeTargetBonus` / `ricochetCountBonus` | 回旋镖跳数 / 弹射跳数（`statType 28/29`） | `skill-effects.js:129-134`、`src/engine/modules/characters/character.js:857,878` | 高 |
 | `ku/lu/mu` | 野蛮人/忍者/盗贼小鸡出现几率 %（`statType 30/31/32`，**赋值而非累加**） | `skill-effects.js:135-143`、`actions.js:171-190` | 高 |
-| `baseHealthRegenPercent` = 1、`baseSpiritRegenPercent` = 4 | 再生基准 % | `stats.js:23-24`、`tick.js:42,47` | 高 |
-| `stunCount`、`damageGiven`、`damageReceived`、`kills`、`minionKills` | 统计量，不回馈战斗 | `stats.js:26`、`actions.js:317-319,334` | 高 |
+| `baseHealthRegenPercent` = 1、`baseSpiritRegenPercent` = 4 | 再生基准 % | `stats.js:22-23`、`tick.js:42,47` | 高 |
+| `stunCount`、`damageGiven`、`damageReceived`、`kills`、`minionKills` | 统计量，不回馈战斗 | `stats.js:25`、`actions.js:317-319,334` | 高 |
 
 字段速查 B —— `CombatAction`（`actions.js:26-33`）：
 
@@ -74,11 +74,11 @@ export function advanceSimulation(a) {
 
 ### C-2 攻击冷却（含 `attackCooldownBonus` 的确切作用域）
 
-`src/engine/modules/characters/stats.js:40-42`
+`src/engine/modules/characters/stats.js:39-41`
 
 ```js
-export function getAttackCooldown(a, b) {
-  return b ? Math.max(4, a.baseAttackCooldown - a.attackCooldownReduction + attackCooldownBonus.currentValue) : Math.max(4, a.baseAttackCooldown - a.attackCooldownReduction);
+export function getAttackCooldown(stats, includeUpgradeBonus) {
+  return includeUpgradeBonus ? Math.max(4, stats.baseAttackCooldown - stats.attackCooldownReduction + stats.rules.attackCooldownBonus.currentValue) : Math.max(4, stats.baseAttackCooldown - stats.attackCooldownReduction);
 }
 ```
 
@@ -96,7 +96,7 @@ export function isAdventurerOrMinion(a) {
 }
 ```
 
-- 基准 `baseAttackCooldown = 12` 回合 = **3.0 秒**（`stats.js:25`）。
+- 基准 `baseAttackCooldown = 12` 回合 = **3.0 秒**（`stats.js:24`）。
 - 下限 `Math.max(4, …)` = 4 回合 = **1.0 秒** → **每个角色每秒最多 1 次攻击动作**，无论多少随从/怪物，各自独立计时。
 - `attackCooldownBonus.currentValue` **只作用于第二参数为真的三类**（0 冒险者、1 随从、5 卷轴施法者）。怪物(2)/守卫(3)/首领(4) 走 `Math.max(4, 12 - attackCooldownReduction)`，不吃该加成。
 - 来源：冒险点升级 `bonusIndex 11`「永久快速攻击」，`levelIncrement: -1`，目录里有 `coolDownTurn1`/`coolDownTurn2` 两条（`progression/upgrades.js:177-181,243-244`；`progression/points.js:372-383`，各 `pointCost: 11E6`）。
@@ -108,28 +108,28 @@ export function isAdventurerOrMinion(a) {
 `src/engine/modules/combat/actions.js:419-436`
 
 ```js
-export function performMultiAttack(a, b) {
-  var c = a.stats,
-    d = c.extraAttackChance / 100,
-    f = 0,
-    g;
-  for (g = 0; g < c.extraAttackCount; g++) {
-    if (Math.random() < d) {
-      f++;
+export function performMultiAttack(attacker, isRangedAttack) {
+  var attackerStats = attacker.stats, targets,
+    extraAttackChance = attackerStats.extraAttackChance / 100,
+    triggeredExtraAttacks = 0,
+    attemptIndex, targetIndex;
+  for (attemptIndex = 0; attemptIndex < attackerStats.extraAttackCount; attemptIndex++) {
+    if (Math.random() < extraAttackChance) {
+      triggeredExtraAttacks++;
     } else {
       break;
     }
   }
-  if ((c = findTargetsInRange(a, a, 1 + f, b ? a === game.state.scrollCaster ? 100 * RANGED_ATTACK_RANGE : RANGED_ATTACK_RANGE : MELEE_ATTACK_RANGE)) && 0 !== c.length) {
-    for (d = 0; d < c.length; d++) {
-      createAttackAction(a, c[d], b);
+  if ((targets = findTargetsInRange(attacker, attacker, 1 + triggeredExtraAttacks, isRangedAttack ? attacker === game.state.scrollCaster ? 100 * RANGED_ATTACK_RANGE : RANGED_ATTACK_RANGE : MELEE_ATTACK_RANGE)) && 0 !== targets.length) {
+    for (targetIndex = 0; targetIndex < targets.length; targetIndex++) {
+      createAttackAction(attacker, targets[targetIndex], isRangedAttack);
     }
   }
 }
 ```
 
 - 掷点是**连续成功直到首次失败**（`else break`），所以实际额外目标数是几何截断的：期望 ≈ `p/(1-p)` 且被 `extraAttackCount` 封顶。
-- `extraAttackCount`/`extraAttackChance` 默认 0 / `DEFAULT_MULTI_ATTACK_CHANCE = 25`（`stats.js:30-31`、`balance.js:120`）。
+- `extraAttackCount`/`extraAttackChance` 默认 0 / `DEFAULT_MULTI_ATTACK_CHANCE = 25`（`stats.js:29-30`、`balance.js:120`）。
 - 分裂出的是**同一帧内的多个独立 `CombatAction`**，各自重掷命中/暴击/护甲（`createAttackAction` 内部各调一次 `calculateAttackDamage`）。
 - 卷轴施法者的射程被写成 `100 * RANGED_ATTACK_RANGE` = **14000 px**，即全房间无衰减。`100` 未在代码内命名，语义为"任意远"，置信度高（同函数另一分支用的是正常 140）。
 - 只有 `extraAttackCount > 0` 才走这条路径（`character.js:442-443`、`:456-457`）；否则单体直攻：
@@ -174,21 +174,21 @@ export function performMultiAttack(a, b) {
 `src/engine/modules/combat/actions.js:35-50`
 
 ```js
-export function findTargetsInRange(a, b, c, d) {
-  a = getOpponents(a);
-  if (0 === a.length) {
+export function findTargetsInRange(attacker, sourceCharacter, targetLimit, maxDistance) {
+  var opponents = getOpponents(attacker);
+  if (0 === opponents.length) {
     return null;
   }
-  var f = b.position.room;
-  if (!f) {
+  var sourceRoom = sourceCharacter.position.room;
+  if (!sourceRoom) {
     return null;
   }
-  var g,
-    h = b.position.levelPosition,
-    l,
-    n = [];
-  for (b = 0; b < a.length && (g = a[b], g.isDead || g.position.room !== f || (l = h.distanceTo(g.position.levelPosition), !(l <= d && (n.push(g), n.length >= c)))); b++) {}
-  return n;
+  var targetIndex, opponent,
+    sourcePosition = sourceCharacter.position.levelPosition,
+    distance,
+    targets = [];
+  for (targetIndex = 0; targetIndex < opponents.length && (opponent = opponents[targetIndex], opponent.isDead || opponent.position.room !== sourceRoom || (distance = sourcePosition.distanceTo(opponent.position.levelPosition), !(distance <= maxDistance && (targets.push(opponent), targets.length >= targetLimit)))); targetIndex++) {}
+  return targets;
 }
 ```
 
@@ -199,6 +199,7 @@ export function findTargetsInRange(a, b, c, d) {
 
 ### C-5 法术冷却
 
+<!-- snippet: abridged -->
 `src/engine/modules/combat/scrolls.js:22-34`
 
 ```js
@@ -232,19 +233,19 @@ export function isSpellReady(a) {
 
 ### C-7 属性分量如何合成最终值（所有伤害公式的前置）
 
-`src/engine/modules/characters/stats.js:7-17`
+`src/engine/modules/characters/stats.js:5-15`
 
 ```js
-export function StatComponent(a) {
-  this.owner = a;
+export function StatComponent(owner) {
+  this.owner = owner;
   this.skillBonusPercent = this.spellBonusPercent = this.levelValue = this.itemValue = 0;
 }
-export function addSpellStatBonus(a, b) {
-  a.spellBonusPercent += b;
+export function addSpellStatBonus(stat, bonusPercent) {
+  stat.spellBonusPercent += bonusPercent;
 }
-export function statValue(a) {
-  var b = a.itemValue + a.levelValue;
-  return b + floorNumber((a.skillBonusPercent + a.spellBonusPercent) / 100 * b);
+export function statValue(stat) {
+  const baseValue = stat.itemValue + stat.levelValue;
+  return baseValue + floorNumber((stat.skillBonusPercent + stat.spellBonusPercent) / 100 * baseValue);
 }
 ```
 
@@ -279,24 +280,24 @@ export function randomInt(a) {
 `src/engine/modules/combat/actions.js:580-598`
 
 ```js
-export function calculateAttackDamage(a, b) {
-  var c = a.stats,
-    d = b.stats,
-    f = statValue(c.attackRating),
-    g = statValue(c.damage),
-    h = statValue(d.defenceRating),
-    l = statValue(d.armor),
-    d = d.damageResistance,
-    c = c.critChance;
-  if (!b.effects.isDisabled && Math.random() > f / (f + h)) {
+export function calculateAttackDamage(attacker, defender) {
+  var attackerStats = attacker.stats,
+    defenderStats = defender.stats,
+    attackRating = statValue(attackerStats.attackRating),
+    damage = statValue(attackerStats.damage),
+    defenceRating = statValue(defenderStats.defenceRating),
+    armor = statValue(defenderStats.armor),
+    damageResistance = defenderStats.damageResistance,
+    critChance = attackerStats.critChance;
+  if (!defender.effects.isDisabled && Math.random() > attackRating / (attackRating + defenceRating)) {
     return 0;
   }
-  if (0 < c && Math.random() < c / 100) {
-    return showFloatingText(game.floatingText, a, "暴击!", "#FFFF00"), g;
+  if (0 < critChance && Math.random() < critChance / 100) {
+    return showFloatingText(game.floatingText, attacker, "暴击!", "#FFFF00"), damage;
   }
-  f = floorNumber(l / 2);
-  g -= f + randomInt(f);
-  return 0 >= g ? 0 : 0 < d ? Math.max(0, g - floorNumber(d / 100 * g)) : g;
+  var armorReduction = floorNumber(armor / 2);
+  damage -= armorReduction + randomInt(armorReduction);
+  return 0 >= damage ? 0 : 0 < damageResistance ? Math.max(0, damage - floorNumber(damageResistance / 100 * damage)) : damage;
 }
 ```
 
@@ -344,26 +345,26 @@ export function calculateAttackDamage(a, b) {
 `src/engine/modules/combat/actions.js:302-325`
 
 ```js
-export function applyActionDamage(a) {
-  var b = a.targetCharacter,
-    c = b.stats,
-    d = a.remainingDamage;
-  if (0 !== d) {
-    var f = 1 + randomInt(d - 1);
-    if (0 !== f) {
-      d = Math.max(0, d - f);
-      a.remainingDamage = d;
-      c.health -= floorNumber(f);
-      if (0 > c.health) {
-        c.health = 0;
+export function applyActionDamage(combatAction) {
+  var targetCharacter = combatAction.targetCharacter,
+    targetStats = targetCharacter.stats,
+    remainingDamage = combatAction.remainingDamage;
+  if (0 !== remainingDamage) {
+    var rollDamage = 1 + randomInt(remainingDamage - 1);
+    if (0 !== rollDamage) {
+      remainingDamage = Math.max(0, remainingDamage - rollDamage);
+      combatAction.remainingDamage = remainingDamage;
+      targetStats.health -= floorNumber(rollDamage);
+      if (0 > targetStats.health) {
+        targetStats.health = 0;
       }
-      d = a.attacker;
-      d = 1 === d.characterType ? d.summoner.stats : d.stats;
-      d.damageGiven += f;
-      d = b.stats;
-      d.damageReceived += f;
-      if (0 === c.health) {
-        resolveCharacterDefeat(a.attacker, b);
+      var attacker = combatAction.attacker,
+        attackerStats = 1 === attacker.characterType ? attacker.summoner.stats : attacker.stats;
+      attackerStats.damageGiven += rollDamage;
+      targetStats = targetCharacter.stats;
+      targetStats.damageReceived += rollDamage;
+      if (0 === targetStats.health) {
+        resolveCharacterDefeat(combatAction.attacker, targetCharacter);
       }
     }
   }
@@ -383,9 +384,9 @@ export function applyActionDamage(a) {
 `src/engine/modules/combat/actions.js:90-92`
 
 ```js
-      if (g) {
-        if (d = g.stats, 4 === l || 5 === l || 8 === l || 13 === l || 12 === l) {
-          applyActionDamage(b);
+      if (targetCharacter) {
+        if (targetStats = targetCharacter.stats, 4 === spellCategoryId || 5 === spellCategoryId || 8 === spellCategoryId || 13 === spellCategoryId || 12 === spellCategoryId) {
+          applyActionDamage(combatAction);
 ```
 
 只有 `spellCategoryId ∈ {4, 5, 8, 12, 13}` 的动作会在动画期间逐帧结算伤害；`cat = 1` 走治疗支（C-33）。**普通攻击（`actionDefinition` 为 null）走 `actions.js:110-113`**：
@@ -403,17 +404,17 @@ export function applyActionDamage(a) {
 `src/engine/modules/combat/actions.js:599-610`
 
 ```js
-export function calculateSpellDamage(a, b) {
-  var c = a.stats,
-    d = statValue(c.damage),
-    f = statValue(b.stats.armor),
-    c = c.critChance;
-  if (0 < c && Math.random() < c / 100) {
-    return showFloatingText(game.floatingText, a, "暴击!", "#FFFF00"), d;
+export function calculateSpellDamage(attacker, defender) {
+  var attackerStats = attacker.stats,
+    damage = statValue(attackerStats.damage),
+    armor = statValue(defender.stats.armor),
+    critChance = attackerStats.critChance;
+  if (0 < critChance && Math.random() < critChance / 100) {
+    return showFloatingText(game.floatingText, attacker, "暴击!", "#FFFF00"), damage;
   }
-  f = floorNumber(f / 2);
-  d -= f + randomInt(f);
-  return 0 >= d ? 0 : d;
+  var armorReduction = floorNumber(armor / 2);
+  damage -= armorReduction + randomInt(armorReduction);
+  return 0 >= damage ? 0 : damage;
 }
 ```
 
@@ -421,6 +422,7 @@ export function calculateSpellDamage(a, b) {
 
 ### C-14 地面持续伤害（雨/爆炸留下的 tile effect）
 
+<!-- snippet: abridged -->
 `src/engine/modules/simulation/tick.js:413-430`
 
 ```js
@@ -555,7 +557,7 @@ export function applyLevelStats(a, b, c) {
 `src/engine/modules/combat/actions.js:589-591`
 
 ```js
-  if (!b.effects.isDisabled && Math.random() > f / (f + h)) {
+  if (!defender.effects.isDisabled && Math.random() > attackRating / (attackRating + defenceRating)) {
     return 0;
   }
 ```
@@ -567,7 +569,7 @@ P(命中) = AR / (AR + DR)          （AR = statValue(attacker.attackRating)，D
 
 - `AR + DR` 恒 > 0 吗？两者都是 `statValue`，可为 0（`armorCurve` base 15 且等级从 1 起算，实际最小为 15×倍率，不为 0）。若真为 `0/0` → `NaN` → `Math.random() > NaN` 为 **false** → **必定命中**（无除零保护，但当前内容下不可达）。
 - 严格大于（`>`）意味着 `Math.random()` 恰等于概率时判命中；`Math.random()` 上界不含 1，所以 P 不会因为端点而偏移。
-- **潜行不参与命中式**，它通过法术加成进 `attackRating`：`statusEffectTypeId 11` → `attackRating.spellBonusPercent += potency`（`characters/effects.js:71-74`，潜行 `potencyPercent: 100`，`content/spells.js:196-207`），即**潜行期 AR +100%**。潜行对 AI 的影响是"不被选为目标"（C-31），不是"打不到"。
+- **潜行不参与命中式**，它通过法术加成进 `attackRating`：`statusEffectTypeId 11` → `attackRating.spellBonusPercent += potency`（`characters/effects.js:64-66`，潜行 `potencyPercent: 100`，`content/spells.js:196-207`），即**潜行期 AR +100%**。潜行对 AI 的影响是"不被选为目标"（C-31），不是"打不到"。
 - 减免来源汇总：`defenceRating`（提升 P 的分母）、`armor`（提升扣血下限）、`armor.spellBonusPercent`（type 5 法术 +`buffArmorPotency` 倍率）、`defenceRating.spellBonusPercent`（type 8 法术 +`buffDefenceRatingPotency` 倍率、type 10 嘲讽也加 DR）。见 C-22/C-7。
 
 ### C-17 `calculateSpellDamage` 与所有"纯法术"路径**没有**命中掷点
@@ -610,11 +612,11 @@ P(暴击) = lm / 100        （仅当 lm > 0；lm 即 statType 17）
 
 ### C-19 哪些 id 会让人"不能动"
 
-`src/engine/modules/characters/effects.js:17-19`
+`src/engine/modules/characters/effects.js:16-18`
 
 ```js
-export function isDisablingEffect(a) {
-  return 0 === a.statusEffectTypeId || 1 === a.statusEffectTypeId || 13 === a.statusEffectTypeId || 14 === a.statusEffectTypeId;
+export function isDisablingEffect(effect) {
+  return 0 === effect.statusEffectTypeId || 1 === effect.statusEffectTypeId || 13 === effect.statusEffectTypeId || 14 === effect.statusEffectTypeId;
 }
 ```
 
@@ -622,11 +624,11 @@ export function isDisablingEffect(a) {
 
 | id | `cf` 标签 | `Qd`（回合） | 禁用 | 效果位 / 属性作用 |
 |---|---|---|---|---|
-| 0 | 睡着 | 100 | ✅ | 仅 `Kd`（`effects.js:52-53`） |
+| 0 | 睡着 | 100 | ✅ | 仅 `Kd`（`effects.js:49-51`） |
 | 1 | 定身 | 100 | ✅ | 仅 `Kd` |
 | 2 | — | — | — | **表中不存在**（`applySpellEffect` 会 `console.log("Failed to find char effect description: 2")` 并施加 `null`，见 `actions.js:143-146`） |
-| 3 | 失明 | 100 | ❌ | **无任何读者**：`effects.js:56-97` 不处理 3，`isDisablingEffect` 不含 3 → 死效果 |
-| 4 | 转变 | 100 | ❌ | `isConverted = true`（`effects.js:80-81`）→ 敌我翻转（C-30） |
+| 3 | 失明 | 100 | ❌ | **无任何读者**：`effects.js:49-74` 不处理 3，`isDisablingEffect` 不含 3 → 死效果 |
+| 4 | 转变 | 100 | ❌ | `isConverted = true`（`effects.js:70-71`）→ 敌我翻转（C-30） |
 | 5 | 护甲提高 | 700 | ❌ | `armor.spellBonusPercent += Ok` |
 | 6 | 伤害提高 | 700 | ❌ | `damage.spellBonusPercent += Ok` |
 | 7 | 攻击等级提高 | 700 | ❌ | `attackRating.spellBonusPercent += Ok` |
@@ -645,45 +647,45 @@ export function isDisablingEffect(a) {
 `src/engine/modules/combat/actions.js:118-153`
 
 ```js
-export function applySpellEffect(a, b) {
-  var c = b.actionDefinition,
-    d = c.spellCategoryId;
-  if (2 === d || 3 === d) {
-    var f = b.attacker,
-      d = c.statusEffectTypeId,
-      c = c.potencyPercent,
-      g = statusEffectDefinitions[d];
-    if (g) {
-      var f = f.stats,
-        h = 1;
-      switch (d) {
+export function applySpellEffect(combatQueue, combatAction) {
+  var actionDefinition = combatAction.actionDefinition,
+    spellCategoryId = actionDefinition.spellCategoryId, statusEffect, targetEffects, reviveAttacker, revivePosition, reviveTarget, monsterRegistry, reviveIndex, chickenCaster, chickenTargetPosition, barbarianChance, ninjaChance, rogueChance, chickenMinionDefinition, claimedItem, claimedRarity, cleanseTarget, cleanseEffects;
+  if (2 === spellCategoryId || 3 === spellCategoryId) {
+    var attacker = combatAction.attacker,
+      statusEffectTypeId = actionDefinition.statusEffectTypeId,
+      potencyPercent = actionDefinition.potencyPercent,
+      effectDefinition = statusEffectDefinitions[statusEffectTypeId];
+    if (effectDefinition) {
+      var casterStats = attacker.stats,
+        potencyMultiplier = 1;
+      switch (statusEffectTypeId) {
         case 5:
-          h = f.buffArmorPotency;
+          potencyMultiplier = casterStats.buffArmorPotency;
           break;
         case 6:
-          h = f.buffDamagePotency;
+          potencyMultiplier = casterStats.buffDamagePotency;
           break;
         case 7:
-          h = f.buffAttackRatingPotency;
+          potencyMultiplier = casterStats.buffAttackRatingPotency;
           break;
         case 8:
-          h = f.buffDefenceRatingPotency;
+          potencyMultiplier = casterStats.buffDefenceRatingPotency;
       }
-      d = new StatusEffect(d, game.state.turnNumber, g.durationTurns, game.animations.getAnimation(g.animationName), g.overlayFrameIndex, g.hasAnimation, 1 > h ? c : c * h);
+      statusEffect = new StatusEffect(statusEffectTypeId, game.state.turnNumber, effectDefinition.durationTurns, game.animations.getAnimation(effectDefinition.animationName), effectDefinition.overlayFrameIndex, effectDefinition.hasAnimation, 1 > potencyMultiplier ? potencyPercent : potencyPercent * potencyMultiplier);
     } else {
-      console.log("Failed to find char effect description: " + d);
-      d = null;
+      console.log("Failed to find char effect description: " + statusEffectTypeId);
+      statusEffect = null;
     }
-    c = b.targetCharacter.effects;
-    if (d) {
-      c.activeEffects.push(d);
-      if (isDisablingEffect(d)) {
-        c.isDisabled = true;
+    targetEffects = combatAction.targetCharacter.effects;
+    if (statusEffect) {
+      targetEffects.activeEffects.push(statusEffect);
+      if (isDisablingEffect(statusEffect)) {
+        targetEffects.isDisabled = true;
       }
     }
 ```
 
-`potency` 字段的语义：写入 `StatusEffect.Ok`（`effects.js:7-16` 的第 7 参），在 C-22 里成为 `spellBonusPercent` 的**百分点**（例如牧师「提高护甲」`potencyPercent: 10` → `armor +10%`）。倍率 `Ps/Rs/Qs/Ss` 来自祭司「×2」类技能（`content/skills/priest.js:196-214`，`statType 13/12/14/15`，值 2）。
+`potency` 字段的语义：写入 `StatusEffect.potencyMultiplier`（`effects.js:6-14` 的第 7 参），在 C-22 里成为 `spellBonusPercent` 的**百分点**（例如牧师「提高护甲」`potencyPercent: 10` → `armor +10%`）。倍率 `Ps/Rs/Qs/Ss` 来自祭司「×2」类技能（`content/skills/priest.js:196-214`，`statType 13/12/14/15`，值 2）。
 
 **`1 > h ? c : c * h`**：倍率为 0（未学技能）或 1 时不乘，避免把 0 乘进去；`h` 可为 3（学了两次）→ 30%。
 
@@ -691,7 +693,7 @@ export function applySpellEffect(a, b) {
 
 ### C-21 效果的时效与"过期即删"
 
-`src/engine/modules/characters/effects.js:25-53,100-106`
+`src/engine/modules/characters/effects.js:25-47,77-83`
 
 ```js
   var n = a.owner.stats,
@@ -707,67 +709,47 @@ export function applySpellEffect(a, b) {
     h.bg = d - h.jD >= h.Qd;
 ```
 
-- 过期判定 `(当前回合 - 施加回合) >= Qd`，每回合由 `updateCharacterEffects` 重算；过期效果在同一个函数尾部 `splice`（`effects.js:100-106`）。
-- 每回合**清空并重算**四条 `spellBonusPercent`（同文件 `:43-46`），所以法术增益不叠加同名，只是把所有在效期内同名 `Ok` 相加。
+- 过期判定 `(当前回合 - 施加回合) >= Qd`，每回合由 `updateCharacterEffects` 重算；过期效果在同一个函数尾部 `splice`（`effects.js:77-83`）。
+- 每回合**清空并重算**四条 `spellBonusPercent`（同文件 `:39-42`），所以法术增益不叠加同名，只是把所有在效期内同名 `Ok` 相加。
 - 驱动点：`simulation/tick.js:79-87`——冒险者与随从（`getAllies()`）传 `true`，怪物/守卫/首领传 `false`。
 
 ### C-22 效果位与增益的逐条落地
 
-`src/engine/modules/characters/effects.js:55-98`
+`src/engine/modules/characters/effects.js:52-74`
 
 ```js
-      h = f.statusEffectTypeId;
-      if (5 === h) {
-        addSpellStatBonus(s, f.potencyMultiplier);
-      } else {
-        if (6 === h && p) {
-          addSpellStatBonus(p, f.potencyMultiplier);
-        } else {
-          if (7 === h) {
-            addSpellStatBonus(u, f.potencyMultiplier);
-          } else {
-            if (8 === h) {
-              addSpellStatBonus(y, f.potencyMultiplier);
-            } else {
-              if (10 === h) {
-                a.hasStealthEffect = true;
-                addSpellStatBonus(y, f.potencyMultiplier);
-              } else {
-                if (11 === h) {
-                  a.isStealthed = true;
-                  addSpellStatBonus(u, f.potencyMultiplier);
-                } else {
-                  if (12 === h) {
-                    a.isEnraged = true;
-                    addSpellStatBonus(p, f.potencyMultiplier);
-                  } else {
-                    if (4 === h) {
-                      a.isConverted = true;
-                    } else {
-                      if (13 === h) {
-                        a.isStunned = true;
-                      } else {
-                        if (14 === h) {
-                          a.isStunned = true;
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
+      const typeId = effect.statusEffectTypeId;
+      if (5 === typeId) {
+        addSpellStatBonus(armor, effect.potencyMultiplier);
+      } else if (6 === typeId && damage) {
+        addSpellStatBonus(damage, effect.potencyMultiplier);
+      } else if (7 === typeId) {
+        addSpellStatBonus(attackRating, effect.potencyMultiplier);
+      } else if (8 === typeId) {
+        addSpellStatBonus(defenceRating, effect.potencyMultiplier);
+      } else if (10 === typeId) {
+        effects.hasStealthEffect = true;
+        addSpellStatBonus(defenceRating, effect.potencyMultiplier);
+      } else if (11 === typeId) {
+        effects.isStealthed = true;
+        addSpellStatBonus(attackRating, effect.potencyMultiplier);
+      } else if (12 === typeId) {
+        effects.isEnraged = true;
+        addSpellStatBonus(damage, effect.potencyMultiplier);
+      } else if (4 === typeId) {
+        effects.isConverted = true;
+      } else if (13 === typeId || 14 === typeId) {
+        effects.isStunned = true;
       }
-    }
 ```
 
-映射：5→armor、6→damage、7→attackRating、8→defenceRating、10→defenceRating、11→attackRating、12→damage（同函数 `:64-79`）。
+映射：5→armor、6→damage、7→attackRating、8→defenceRating、10→defenceRating、11→attackRating、12→damage（同函数 `:53-69`）。
 
-`[疑似遗留怪癖]` `if (6 === h && p)` 的 `&& p` 只对 damage 一条做真值判断（`p` 是对象，永远真），其余分支没有——无行为影响，属原样保留。
+`[疑似遗留怪癖]` `if (6 === typeId && damage)` 的 `&& damage` 只对 damage 一条做真值判断（`damage` 是对象，永远真），其余分支没有——无行为影响，属原样保留。
 
 ### C-23 眩晕如何让人停手
 
+<!-- snippet: abridged -->
 `src/engine/modules/simulation/tick.js:788-800`
 
 ```js
@@ -793,26 +775,26 @@ export function updateCharacterBehaviors(a) {
 `src/engine/modules/combat/actions.js:326-346`
 
 ```js
-export function resolveCharacterDefeat(a, b) {
-  if (b.characterType === ADVENTURER_TYPE) {
-    if (!b.effects.isStunned) {
+export function resolveCharacterDefeat(attacker, defeated) {
+  if (defeated.characterType === ADVENTURER_TYPE) {
+    if (!defeated.effects.isStunned) {
       game.state.statisticsRecorder.recordCharacterStunned();
-      b.effects.isStunned = true;
-      var c = b.position.levelPosition,
+      defeated.effects.isStunned = true;
+      var defeatedLevelPosition = defeated.position.levelPosition, stunVisual,
         stunEffect = new StatusEffect(13, game.state.turnNumber, stunEffectDefinition.durationTurns, game.animations.getAnimation(stunEffectDefinition.animationName), stunEffectDefinition.overlayFrameIndex, stunEffectDefinition.hasAnimation, 0);
-      c = new VisualEffect(stunEffectDefinition.animationName, c, c, false, 1);
-      b.stats.stunCount++;
-      var f = b.effects;
+      stunVisual = new VisualEffect(stunEffectDefinition.animationName, defeatedLevelPosition, defeatedLevelPosition, false, 1);
+      defeated.stats.stunCount++;
+      var stunEffects = defeated.effects;
       if (stunEffect) {
-        f.activeEffects.push(stunEffect);
+        stunEffects.activeEffects.push(stunEffect);
         if (isDisablingEffect(stunEffect)) {
-          f.isDisabled = true;
+          stunEffects.isDisabled = true;
         }
       }
-      c.loopsWhileStunned = true;
-      c.boundCharacter = b;
-      addVisualEffect(game.effects, c);
-      showFloatingText(game.floatingText, b, "昏迷!", "white");
+      stunVisual.loopsWhileStunned = true;
+      stunVisual.boundCharacter = defeated;
+      addVisualEffect(game.effects, stunVisual);
+      showFloatingText(game.floatingText, defeated, "昏迷!", "white");
     }
 ```
 
@@ -822,19 +804,19 @@ export function resolveCharacterDefeat(a, b) {
 
 ### C-25 醒来时的全回复（唯一的全回复口）
 
-`src/engine/modules/characters/effects.js:107-110`
+`src/engine/modules/characters/effects.js:84-87`
 
 ```js
-  if (b && l && !a.isStunned) {
-    n.health = floorNumber(statValue(n.maxHealth));
-    n.spirit = statValue(n.maxSpirit);
+  if (restoreOnStunEnd && wasStunned && !effects.isStunned) {
+    stats.health = floorNumber(statValue(stats.maxHealth));
+    stats.spirit = statValue(stats.maxSpirit);
   }
 ```
 
-`l` 是本次重算**之前**的 `isStunned`（`effects.js:29`）。条件：只对有 `b === true` 的一方（冒险者+随从，`tick.js:83`）、上一回合还 `isStunned`、这一回合不再 `isStunned`（即 13/14 号效果**自然到期**）。
+`wasStunned` 是本次重算**之前**的 `isStunned`（`effects.js:27`）。条件：只对传入 `restoreOnStunEnd === true` 的一方（冒险者+随从，`tick.js:83`）、上一回合还 `isStunned`、这一回合不再 `isStunned`（即 13/14 号效果**自然到期**）。
 
 - `health` 多套一层 `floorNumber`，`spirit` 不套（`statValue` 已给整数，两者当前等价，但写法不对称，保留原样）。
-- `[疑似遗留怪癖]` **房间清空与复活术都不走这条路**：`encounters.js:273-280` 与 `actions.js:287-291` 是把 `isStunned` **就地改 false 并删掉 13 号效果**，于是下一个回合边界 `l` 已经是 false → 不触发全回复 → **被救/清场后角色仍是 0 血**，任何一次挨打都会重新进入 C-24（因为 `!b.effects.isStunned` 此刻成立）。只有"熬满 100 回合自然醒"才满血满蓝站起。
+- `[疑似遗留怪癖]` **房间清空与复活术都不走这条路**：`encounters.js:273-280` 与 `actions.js:287-291` 是把 `isStunned` **就地改 false 并删掉 13 号效果**，于是下一个回合边界 `wasStunned` 已经是 false → 不触发全回复 → **被救/清场后角色仍是 0 血**，任何一次挨打都会重新进入 C-24（因为 `!b.effects.isStunned` 此刻成立）。只有"熬满 100 回合自然醒"才满血满蓝站起。
 
 ### C-26 Blast Stun（溅射二段眩晕）
 
@@ -933,6 +915,7 @@ export function applySkillTreeBonuses(a, b) {
                   }
 ```
 
+<!-- snippet: abridged -->
 `src/engine/modules/simulation/tick.js:339-355`
 
 ```js
@@ -968,20 +951,20 @@ export function applySkillTreeBonuses(a, b) {
 `actions.js:154-167`
 
 ```js
-  } else if (10 === d || 9 === d) {
-    summonSpellMinion(c, b.attacker, b.impactEffect.targetPosition);
-  } else if (11 === d) {
-    d = b.attacker;
-    g = b.impactEffect.targetPosition;
-    h = b.targetCharacter;
-    f = game.monsters;
-    if (h) {
-      h = f.defeatedMonsters.indexOf(h);
-      if (-1 < h) {
-        f.defeatedMonsters.splice(h, 1);
+  } else if (10 === spellCategoryId || 9 === spellCategoryId) {
+    summonSpellMinion(actionDefinition, combatAction.attacker, combatAction.impactEffect.targetPosition);
+  } else if (11 === spellCategoryId) {
+    reviveAttacker = combatAction.attacker;
+    revivePosition = combatAction.impactEffect.targetPosition;
+    reviveTarget = combatAction.targetCharacter;
+    monsterRegistry = game.monsters;
+    if (reviveTarget) {
+      reviveIndex = monsterRegistry.defeatedMonsters.indexOf(reviveTarget);
+      if (-1 < reviveIndex) {
+        monsterRegistry.defeatedMonsters.splice(reviveIndex, 1);
       }
     }
-    summonSpellMinion(c, d, g);
+    summonSpellMinion(actionDefinition, reviveAttacker, revivePosition);
 ```
 
 cat 11（骷髅军队）先把目标怪从尸体环形缓冲 `game.monsters.Og`（容量 `aE = 50`，`encounters.js:313`）里 splice 掉再召唤。召唤落点 `xi` 是 `VisualEffect` 的"终点坐标"（`sprites.js:64-93`）。cat 17（鸡群/小鸡守卫）用 `ku/lu/mu` 三个几率做模板抽签：`actions.js:171-191`，判据 `0 < g && Math.random() < g / 100`，依次尝试野蛮人/忍者/盗贼小鸡，否则普通小鸡。
@@ -1037,19 +1020,19 @@ cat 11（骷髅军队）先把目标怪从尸体环形缓冲 `game.monsters.Og`�
 
 ### C-31 施法耗蓝（唯一代价，没有"spirit 点"之外的消耗）
 
-`src/engine/modules/characters/stats.js:43-53`
+`src/engine/modules/characters/stats.js:42-52`
 
 ```js
-export function spendSpirit(a, b) {
-  if (!freeSpellsModifier.currentValue) {
-    a.spirit -= b;
-    if (0 > a.spirit) {
-      a.spirit = 0;
+export function spendSpirit(stats, cost) {
+  if (!stats.rules.freeSpellsModifier.currentValue) {
+    stats.spirit -= cost;
+    if (0 > stats.spirit) {
+      stats.spirit = 0;
     }
   }
 }
-export function getSpellSpiritCost(a) {
-  return Math.min(a.spellSpiritCost - (0 < a.spellCostReduction ? floorNumber(a.spellCostReduction / 100 * a.spellSpiritCost) : 0), statValue(a.maxSpirit));
+export function getSpellSpiritCost(stats) {
+  return Math.min(stats.spellSpiritCost - (0 < stats.spellCostReduction ? floorNumber(stats.spellCostReduction / 100 * stats.spellSpiritCost) : 0), statValue(stats.maxSpirit));
 }
 ```
 
@@ -1069,20 +1052,20 @@ export function getSpellSpiritCost(a) {
 `src/engine/modules/combat/actions.js:93-108`
 
 ```js
-        } else if (1 === l && (h = h.potencyPercent, l = statValue(d.maxHealth), d.health < l)) {
-          var n = b.attacker.stats.healPotency;
-          if (1 < n) {
-            h = Math.min(100, h * n);
+        } else if (1 === spellCategoryId && (potencyPercent = definition.potencyPercent, maxHealth = statValue(targetStats.maxHealth), targetStats.health < maxHealth)) {
+          var healPotency = combatAction.attacker.stats.healPotency;
+          if (1 < healPotency) {
+            potencyPercent = Math.min(100, potencyPercent * healPotency);
           }
-          f = Math.max(1, floorNumber(h / 100 * l / f));
-          h = game.floatingText;
-          if (0 < f) {
-            showFloatingText(h, g, "+" + f, "#00FF00");
+          healAmount = Math.max(1, floorNumber(potencyPercent / 100 * maxHealth / effectFrameCount));
+          floatingTextLayer = game.floatingText;
+          if (0 < healAmount) {
+            showFloatingText(floatingTextLayer, targetCharacter, "+" + healAmount, "#00FF00");
           }
-          d.health += floorNumber(f);
-          g = statValue(d.maxHealth);
-          if (d.health > g) {
-            d.health = g;
+          targetStats.health += floorNumber(healAmount);
+          maxHealth = statValue(targetStats.maxHealth);
+          if (targetStats.health > maxHealth) {
+            targetStats.health = maxHealth;
           }
         }
 ```
@@ -1114,7 +1097,7 @@ export function getSpellSpiritCost(a) {
 ```
 
 - 节律：每 `zD = 3` 回合一次（`tick.js:33-34`、`characters.js:37`）→ 3×250ms = **每 0.75 秒回复一跳**。
-- 基准：`baseHealthRegenPercent = 1`、`baseSpiritRegenPercent = 4`（`stats.js:23-24`）→ 默认每跳回 1% 最大生命、4% 最大法力。
+- 基准：`baseHealthRegenPercent = 1`、`baseSpiritRegenPercent = 4`（`stats.js:22-23`）→ 默认每跳回 1% 最大生命、4% 最大法力。
 - 加项：技能 `statType 8/9` → `healthRegenBonus/spiritRegenBonus`；冒险点升级 `bonusIndex 12/13`（各 `+1%`/级，`upgrades.js:245-248`、`balance.js:182-191`）。
 - `Math.max(1, …)` → 任何角色每跳至少回 1 点，**包括 0 血倒地的冒险者**。倒地者因此会自行爬出 0 血状态，但仍 `Kd` 直到 13 号效果过期。
 - **只有友方回血**：`d = getAllies()`（`tick.js:37`）。怪物/守卫/首领**完全没有再生**——`frailMonsters/docileMonsters` 之外没有任何怪物回血口。
@@ -1146,7 +1129,7 @@ export function getFriendlyTargets(a) {
 
 `isHostile`：`character.js:139-141` `return a.characterType === MONSTER_TYPE || 3 === a.characterType || 4 === a.characterType;`
 
-真值表（`isConverted` 为 `statusEffectTypeId 4` 的产物，`effects.js:80-81`）：
+真值表（`isConverted` 为 `statusEffectTypeId 4` 的产物，`effects.js:70-71`）：
 
 | 未转变 | 对手 | 友方 |
 |---|---|---|
@@ -1162,6 +1145,7 @@ export function getFriendlyTargets(a) {
 
 ### C-31 最近可见对手 / 最近对手（潜行、倒地、转变的过滤差异）
 
+<!-- snippet: abridged -->
 `src/engine/modules/ai/targeting.js:29-51`
 
 ```js
@@ -1254,32 +1238,32 @@ export function respondToTaunt(a, b) {
 1. **优先级**：当前目标仍活着且带 `Gn`（嘲讽）→ 继续打它（不清）。当前目标死了 / `isStunned` / `isStealthed` → 清空目标。
 2. 随后：找**最近的带 `Gn` 且未 `Kd` 的对手**（无视 100px 接敌门），否则退回 `findNearbyOpponent`（100px 内、非潜行、非倒地冒险者、非排除转变）。
 3. `docileMonstersModifier`（药水 `modifierId 13`「驯养怪物」）**只关掉仇恨与接敌**——`respondToTaunt` 直接返回 false，怪物转为房内随机游走，但已经排定的动作不被撤销。
-4. 嘲讽的 `Gn` 位由 `statusEffectTypeId 10` 置（`effects.js:68-70`），同时给被嘲讽者 `defenceRating.spellBonusPercent += 50`（`spells.js:183-194` 的 `potencyPercent: 50`）。
+4. 嘲讽的 `Gn` 位由 `statusEffectTypeId 10` 置（`effects.js:61-63`），同时给被嘲讽者 `defenceRating.spellBonusPercent += 50`（`spells.js:183-194` 的 `potencyPercent: 50`）。
 5. 出手与追击：`attackTauntingTarget`（`targeting.js:277-293`）用 `a.actionRange`（= `MELEE_ATTACK_RANGE` 50）判距，够近则 `canAttack` → `markAttackTurn` → `actionType = 2`；否则 `choosePointNearTarget`（`:128-141`，目标 ±`halfTileSize`(13) 内随机点，再 `clampPointToRoom(..., 0)`）→ `actionType = 1`。
 6. `[疑似遗留怪癖]` 第 2 步的循环只找 `Gn`，但 `findNearbyOpponent` 的返回值赋给的是 `c` 而不是 `l`，最后 `(c = l) || (c = findNearbyOpponent(b))` 里的短路赋值语义与原版逐字一致（`c2.js` 同结构）——不影响结果，只是变量复用。
 
 ### C-33 玩家侧行为优先级如何被选出（唯一仲裁口）
 
-`src/engine/modules/ai/behaviors.js:285-303`
+`src/engine/modules/ai/behaviors.js:296-314`
 
 ```js
-  BehaviorQueue.prototype.updateDungeonMode = function (a) {
-    a.actionType = IDLE_ACTION;
-    a.targetGoldDrop = null;
-    a.combatTarget = null;
-    a.targetItemDrop = null;
-    a.targetTreasureChest = null;
-    a.spellToCast = null;
-    a.targetScrollDrop = null;
-    a.targetPotionDrop = null;
-    var b,
-      c = 0,
-      d,
-      f = null,
-      g;
-    for (b = 0; b < this.behaviorList.length && !(d = this.behaviorList[b], d.getPriority() > c && (g = d.getBehaviorScore(a), g > c && (c = g, f = d), 100 <= c)); b++) {}
-    if (f) {
-      f.execute(a);
+  BehaviorQueue.prototype.updateDungeonMode = function (character) {
+    character.actionType = IDLE_ACTION;
+    character.targetGoldDrop = null;
+    character.combatTarget = null;
+    character.targetItemDrop = null;
+    character.targetTreasureChest = null;
+    character.spellToCast = null;
+    character.targetScrollDrop = null;
+    character.targetPotionDrop = null;
+    var behaviorIndex,
+      bestScore = 0,
+      behavior,
+      bestBehavior = null,
+      behaviorScore;
+    for (behaviorIndex = 0; behaviorIndex < this.behaviorList.length && !(behavior = this.behaviorList[behaviorIndex], behavior.getPriority() > bestScore && (behaviorScore = behavior.getBehaviorScore(character), behaviorScore > bestScore && (bestScore = behaviorScore, bestBehavior = behavior), 100 <= bestScore)); behaviorIndex++) {}
+    if (bestBehavior) {
+      bestBehavior.execute(character);
     }
   };
 ```
@@ -1333,14 +1317,14 @@ export function respondToTaunt(a, b) {
 `src/engine/modules/combat/actions.js:611-618`
 
 ```js
-export function createChainAction(a) {
-  var b = a.getChainCount(),
-    c = a.chainCount;
-  if (b >= c) {
+export function createChainAction(previousAction) {
+  var currentChainStep = previousAction.getChainCount(),
+    chainCount = previousAction.chainCount;
+  if (currentChainStep >= chainCount) {
     return null;
   }
-  var d = findChainTarget(a.targetCharacter);
-  if (!d) {
+  var chainTarget = findChainTarget(previousAction.targetCharacter);
+  if (!chainTarget) {
 ```
 
 `findChainTarget`（`targeting.js:79-120`）在**上一跳目标的友方表**里找最近可见者——上一跳目标是怪物，其"友方"就是怪物列表，所以链在敌方内部传递。
@@ -1394,6 +1378,7 @@ export function createChainAction(a) {
 
 ### C-37 遭遇何时结束（唯一判据）
 
+<!-- snippet: abridged -->
 `src/engine/modules/combat/encounters.js:266-282`
 
 ```js
@@ -1417,7 +1402,7 @@ export function createChainAction(a) {
 
 - **判据 = 怪物注册表 `Pi` 长度为 0**（含首领、守卫）。随从/冒险者全倒不会结束遭遇。
 - `ym = true` 是"该房未开过怪"标记，`populateEncounter` 的唯一闸门（`encounters.js:43`）。
-- `removeStunEffects` 只删 `statusEffectTypeId === 13`（`effects.js:112-122`），**不删 14**；也不清 `Kd`——`Kd` 要等下一个回合边界由 `updateCharacterEffects` 重算，因此**清场当回合内倒地者仍不能动**。
+- `removeStunEffects` 只删 `statusEffectTypeId === 13`（`effects.js:89-98`），**不删 14**；也不清 `Kd`——`Kd` 要等下一个回合边界由 `updateCharacterEffects` 重算，因此**清场当回合内倒地者仍不能动**。
 - 结合 C-25：清场/复活术把 `isStunned` 直接改 false，导致下一次 `updateCharacterEffects` 的 `l` 已是 false → **不给全回复**，角色以 0 血状态回到可行动集合，直到 C-34 的每 3 回合 +1% 回复把他抬出 0 血。
 
 ### C-38 遭遇如何开始（房间类型决定对手构成）
@@ -1472,11 +1457,11 @@ export function populateEncounter(a) {
 | 1 | `combat/actions.js:557-559` | `getProjectileAnimation(a, b)` 首行 `if (3 === a.sw())` **无空值保护**；`createAttackAction` 在远程支传入 `a.equipment.Ey`（`actions.js:452`），无投射武器槽的角色该字段是 `null`（`movement.js:11`）→ `TypeError: Cannot read properties of null (reading 'sw')`，异常从 `advanceSimulation` 直穿帧循环（`simulation/loop.js` 的 try/catch 只包 `view.render()`，`loop.js:74-80`） | 原版同式同点抛错：`Aw (c2.js:21119) ← yw (21061)`。已由差分场景实测两端**同点、同消息**（`docs/reverse-engineering/unresolved.md` U4，cat 12/14/15 场景早期） |
 | 2 | `simulation/tick.js:346-349` | 溅射眩晕动作的 `actionDefinition` 在懒初始化**之前**就被赋值为 `null` → **全场第一次**火球/重锤溅射不产生任何眩晕 | 逐字相同（`c2.js:30003-30005`），原版行为 |
 | 3 | `simulation/tick.js:334` | 溅射伤害 `Math.max(1, calculateAttackDamage(zb, Ma))` 用**主目标**算、给**其它目标**扣，护甲/DR/`damageResistance` 全部错位 | 逐字相同（`c2.js:29994`），原版行为 |
-| 4 | `characters/effects.js:107-110` vs `encounters.js:273-280`、`actions.js:287-291` | 清场与复活把 `isStunned` 就地改 false，绕开了唯一的全回复分支 → 被救者停在 0 血 | 原版同结构（`c2.js:9444-9445`、`20950`），原版行为 |
-| 5 | `characters/effects.js:18` 与 `skill-effects.js:155-264` | `statusEffectDefinitions` **没有 key `2`**；`isDisablingEffect` 也不认 2。若将来有法术配 `statusEffectTypeId: 2`，`applySpellEffect` 会打日志并施加 `null`（`actions.js:143-146`） | 当前内容无引用（已 grep 全库） |
-| 6 | `characters/effects.js:56-97` | `statusEffectTypeId` **3（失明）与 9（迅捷）** 定义了但在战斗中无任何读者；两者在 `content/spells.js` 里也没有对应法术 | 死数据，原版同样无读者 |
+| 4 | `characters/effects.js:84-87` vs `encounters.js:273-280`、`actions.js:287-291` | 清场与复活把 `isStunned` 就地改 false，绕开了唯一的全回复分支 → 被救者停在 0 血 | 原版同结构（`c2.js:9444-9445`、`20950`），原版行为 |
+| 5 | `characters/effects.js:16-18` 与 `skill-effects.js:155-264` | `statusEffectDefinitions` **没有 key `2`**；`isDisablingEffect` 也不认 2。若将来有法术配 `statusEffectTypeId: 2`，`applySpellEffect` 会打日志并施加 `null`（`actions.js:143-146`） | 当前内容无引用（已 grep 全库） |
+| 6 | `characters/effects.js:49-74` | `statusEffectTypeId` **3（失明）与 9（迅捷）** 定义了但在战斗中无任何读者；两者在 `content/spells.js` 里也没有对应法术 | 死数据，原版同样无读者 |
 | 7 | `content/spells.js` 多处 `bo: true` | `unusedSpellFlag` 字段**全库无读者**（`Spell` 构造器只复制 `name/spellCategoryId/impact/projectile/statusEffectTypeId/potencyPercent/cooldownTurns/td`，`scrolls.js:15-25`）→ 写-only | 原版亦无读取（`c2.js` 内 `\bbo\b` 仅出现在数据字面量） |
-| 8 | `characters/stats.js:54-60` | `updateScrollAccuracy` 先 `a.chainChance = 100` 再 `if (100 < a.chainChance) a.chainChance = 100` —— 钳位写在赋值之后，恒不生效；且它无条件作用于 `game.state.scrollCaster`，与升级所属角色无关 | 原版同式（`c2.js` 对应 `xq.prototype` 分支），原版行为 |
+| 8 | `characters/stats.js:54-59` | `updateScrollAccuracy` 先设置 `scrollCasterStats.chainChance = 100` 再检查是否超过 100 —— 钳位写在赋值之后，恒不生效；调用者传入 `game.state.scrollCaster.stats`，与升级所属角色无关 | 原版同式（`c2.js` 对应 `xq.prototype` 分支），原版行为 |
 | 9 | `combat/actions.js:307-308` | `var f = 1 + randomInt(d - 1); if (0 !== f)` —— `f >= 1` 恒真，死分支 | 原版同式（`c2.js:20963`），原版行为 |
 | 10 | `combat/actions.js:589` | 命中概率无除零保护：`AR + DR === 0` → `0/0 = NaN` → 比较为 false → **必定命中**。当前内容（`armorCurve` base 15）不可达 | 原版同式（`c2.js:21144`） |
 | 11 | `characters/character.js:513` | 连锁跳数写作 `1 + (a.stats.ar + 1)`，即未学技能也有 2 跳（疑 off-by-one） | 原版同式，原版行为 |
@@ -1490,7 +1475,7 @@ export function populateEncounter(a) {
 | 19 | `[迁移缺陷？]` `combat/scrolls.js:43` vs `:262-330` | `Scroll` 构造器读 `a.spellDefinition`，而 `scrollDefinitions` 数据表的键仍是 `spellDefinition`（`scrolls.js:266,274,286,298,310,322`）→ `a.spellDefinition` 恒 `undefined` → **`scrollSpell` 对所有 6 种卷轴恒为 `null`** → `castScroll` 的 `if (a.mB)`（`:152-157`）永远走 `else`，即卷轴**从不施法**，一律退化为卷轴施法者的远程攻击 | 原版为 `this.mB = a.xa ? new li(a.xa) : null`（`c2.js:12892`），**读的是存在的 `spellDefinition`**；6 条卷轴里 5 条有法术定义。**极可能是重命名漏改数据字面量**，与 `docs/reverse-engineering/facts.md` 第 20 条记录的同类事故同型 |
 | 20 | `[迁移缺陷？]` 承接 #19 | 该支路进一步把 `actionType = MELEE_ACTION_TYPE`（远程）交给卷轴施法者，而它没有投射武器槽（`slotStatBonusList` 只有 `"230".."235"`，`classes.js:617-635`）→ `Ey === null` → **必抛本表 #1 的 TypeError**。原版只有 `arrowScroll`（`xa: null`）会掉进这条 | 未由差分覆盖：`docs/reverse-engineering/unresolved.md` U7 明记 `castScroll()` 至今未被驱动（`scrolls-stocked` 场景只比库存） |
 
-#19/#20 的定论方式：给 harness 加一条驱动 `castScroll()` 的场景（要求房内已有可打目标，`getOpponents` 非空），两端各自断言 `statistics.spellsCast` 是否增长、以及是否抛出 `reading 'sw'`。当前矩阵两端都不会抛（因为两端都不会走到），所以这条**无法由现有 62 场景证伪**。
+#19/#20 的定论方式：给 harness 加一条驱动 `castScroll()` 的场景（要求房内已有可打目标，`getOpponents` 非空），两端各自断言 `statistics.spellsCast` 是否增长、以及是否抛出 `reading 'sw'`。当前矩阵两端都不会抛（因为两端都不会走到），所以这条**无法由现有 89 场景证伪**。
 
 ---
 
@@ -1505,4 +1490,4 @@ export function populateEncounter(a) {
 5. 若 `chainCount > 0` 且掷出 ≥1，`findChainTarget` 可能 `randomInt(d.length)`（≤6 次）
 6. 之后每帧 `applyActionDamage` 的 `randomInt(remainingDamage - 1)` —— 每次 `Math.random()`，直到 `remainingDamage` 归 0
 
-`docs/rng.md` 已确认 `randomInt` 走全局 `Math.random`、与 `SeededRandom` 两条流互不相干；任何一步增删都会让 62 场景矩阵立刻分叉。
+`docs/rng.md` 已确认 `randomInt` 走全局 `Math.random`、与 `SeededRandom` 两条流互不相干；任何一步增删都会让 89 场景矩阵立刻分叉。

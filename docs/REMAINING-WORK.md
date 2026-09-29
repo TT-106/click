@@ -1,5 +1,7 @@
 # 剩余工作说明书（交接给下一个 agent）
 
+> 本文件主要跟踪 U134 恢复与差分矩阵的历史范围。用户要求的完整命名与架构现代化仍在进行，当前状态见 `docs/modernization-status.md`。
+
 > 生成时间：2026-09-27。基于 `REFACTOR_REPORT.md` 附录 A、`docs/WORKSTATE.md`、`docs/reverse-engineering/unresolved.md` 与当前 HEAD 的实测。
 > **本文档只描述"没做完的部分"**；已完成的部分与证据见 `REFACTOR_REPORT.md`。
 > **阅读顺序**：§1 红线 → §2 现状与验证命令 → §3 逐项缺口 → §5 建议顺序。**不要跳过 §1。**
@@ -32,19 +34,19 @@
 
 ```bash
 npm install && npm run dev        # 开发服务器（部分门禁需要它）
-npm run lint                      # 9 条不变量守卫（零依赖）
+npm run lint                      # 10 条不变量守卫（零依赖）
 npm run typecheck                 # tsc，当前 0 错误
-npm run check                     # 133 文件语法 + 15 单测
+npm run check                     # 137 文件语法 + 24 单测
 npm run test:parity               # 0/1/99/900 回合完整 DTO 相等
-npm run test:scenarios            # 62 场景差分（可用 SCENARIO_FILTER=a,b 单跑）
+npm run test:scenarios            # 89 场景差分（可用 SCENARIO_FILTER=a,b 单跑）
 npm run test:e2e                  # 浏览器 E2E
 npm run test:soak                 # 8h/24h 等价回合
 npm run perf && npm run perf:frames
 node scripts/analyze-fields.mjs           # 混淆属性名（当前 0）
-node scripts/check-spell-coverage.mjs     # 法术类别覆盖（当前 16/16，可观测量 15/16）
+node scripts/check-spell-coverage.mjs     # 法术类别覆盖（当前 16/16，可观测量 16/16，U132 起 cat=15 闭合）
 node scripts/check-achievement-requirements.mjs  # 成就定义表 ↔ 判定实现（328 条 × 28 类，已入 lint）
 node scripts/check-doc-counts.mjs         # 文档可数指标 ↔ 源码实况（已入 lint）
-node scripts/check-doc-snippets.mjs       # 文档片段漂移（当前 15/76）
+node scripts/check-doc-snippets.mjs       # 片段检查（当前 0 漂移 + 18 条已标注节选，见 §3.2）
 node scripts/verify-doc-refs.mjs          # 文档 file:line 引用（当前 0 越界）
 node scripts/audit-architecture.mjs       # 架构债只读审计（依赖图/SCC/初始化顺序/game 热点）
 node scripts/find-invisible-name-files.mjs
@@ -53,60 +55,57 @@ node scripts/show-field-backlog.mjs
 node scripts/find-field-refs.mjs <owner> <names>
 ```
 
-**当前实测基线**（2026-09-27 第二轮，日志 `output/g-*.log`）：10 门禁全绿；混淆字段 **0**；差分场景 **62/62**；验收矩阵 **45 PASS / 6 PARTIAL / 0 未覆盖**；`@type {any}` **42** 处；JSDoc `unknown` **142** 行；文档片段漂移 **15/76**。
+**当前实测基线**（2026-09-28 U134 后，日志 `output/u134-*.log`）：10 门禁全绿；混淆字段 **0**；差分场景 **89/89**；验收矩阵 **47 PASS / 4 PARTIAL / 0 未覆盖**（P-1 缺口大幅收窄：32/32 statType 消费映射，分级 L3×8/L2×24/L1×0，U133 期间新增 21 条场景 + U134 新增 2 条（U7 EquipItemUpgrade 拾取先行、P-7 竖长视口），见 `docs/p1-skill-consumption.md`）；`@type {any}` **42** 处；JSDoc `unknown` **142** 行；文档片段 **0 漂移（18 条已标注节选，U133）**。
 
 ---
 
 ## 3. 剩余工作逐项详解
 
-### 3.1 验收矩阵的 PARTIAL（**主线工作**；2026-09-27 起为 6 条，P-4 已闭合）
+### 3.1 验收矩阵的 PARTIAL（**主线工作**；2026-09-27 彻夜会话起为 4 条：P-2/P-3 已闭合，剩 P-1/P-5/P-6/P-7）
 
 判定口径：PASS = 有自动化检查真的驱动该系统并对它断言；PARTIAL = 已驱动但存在写明缺口。以下每项都给出「闭合它需要什么」与「完成定义」。
 
 ---
 
-#### P-1 角色技能/技能树 — 缺"逐项技能的战斗效果"
+#### P-1 角色技能/技能树 — 映射表全量交付（U133 定稿：L3×8/L2×24/L1×0），仍 PARTIAL
 
-- **现状**：`upgrades-purchased` 遍历每名角色的四棵技能树，两端各自断言 `upgrades1..4` 已解锁布尔位总数增长、`LearnSpellUpgrade`（type=6）实际购买、`spells` 数量增长，逐检查点完整存档相等。`skill-combat-effects` 直接对账了**两个**技能效果（战士多重攻击 `statType 18/19` → `performMultiAttack`；游侠跳弹链 `statType 23/24` → `createChainAction`），1,500 回合伤害飘字两端 149 次 / 累计 -52345 完全一致。
-- **缺口**：其余被动属性类技能（`statType` 1-17、20-22、25-32）**没有逐项的战斗效果断言**。
+- **现状（U133 定稿）**：全量消费映射表 `docs/p1-skill-consumption.md` 交付——32/32 种 statType
+  均有真实战斗路径消费点（file:line 人工核读），分级 **L3 ×8（17/18/19/23/24/30/31/32 的直接战斗差分）、
+  L2 ×24（公式探针 2-7/10 共 7 种 + 字段写入探针 1/8/9/11-16/20-22/25/26/27-29 共 17 种）、L1 ×0**。
+  U133 期间新增 15 条技能族差分/探针场景；基础设施：`purchaseCharacterSkill`（前置链顺序购买）、
+  `readStatValue`/`readAttackCooldown`/`readSummonLimit`/`readBuffPotencies`/`readSkillFields`/
+  `readRegenBonus` 只读探针。反向验证逐 case 的记录见映射表与 `output/overnight-u133/progress.md` CP15-17。
+- **缺口（精确，U133 定稿后）**：L2 的 24 种仍是"公式/字段写入探针直读"，不是战斗效果活体差分。
+  **已以证据否决的路径（不得重试）**：statType 11-15 活体量级对账（治疗/增益浮动文字无施法者/目标归因，
+  目标 maxHealth 与动画帧数是引擎内部量）；statType 16 施法次数对账（需跨场景基线，RNG 流不可比，
+  已由 22→18 公式探针替代）；buff-potency 后段 9000 回合活体窗口（固定窗口内 0 次效果，
+  按位置敏感场景否决并移除，字段探针保留）；statType 28/29 活体化（受 R4 空投射武器缺陷限制，
+  仅 turns:0 写入侧探针）。**在 8 种 L3 之外取得新的可靠活体证据前该行保持 PARTIAL。**
 - **已有可复用机制**：`tests/scenarios/save-mutations.mjs` 的 `withReclassedSpell` / `withCharacterClass` / `withEquippedItem` 变异器；`scripts/test-scenarios.mjs` 的步骤旗标 `damageNumbers` / `healNumbers` / `effectType` / `allyEffectType`。
-- **闭合方案（建议）**：
-  1. 先取证：读 `content/skills/*.js`（12 个职业各一文件）与 `characters/stats.js` 的 `StatComponent`，建立 `statType → 字段 → 消费点（file:line）` 对照表。
-  2. 对**被动属性类**技能：不必造新场景——它们改的是 `stats` 字段，而 `stats` 全量参与完整存档 DTO 差分。真正缺的是"**该字段真的被读**"的证据。建议做法：仿照 `docs/reverse-engineering/facts.md#26-28` 记录过的那类缺陷（`movement.js` 曾把 `a.characteristic` 误读为 `a.statType`，武器特效静默丢失），写一个**读取点审计**：对每个 `statType` 字段列出全部读点 file:line，并断言"至少有 1 个非平凡读点"。
-  3. 对**主动效果类**技能（多重攻击、跳弹链已覆盖）：按 `skill-combat-effects` 的模式补同类断言。
-- **风险**：容易被"技能树点亮了就代表生效"误导。点亮 ≠ 生效——`movement.js` 那个缺陷就是点了技能但读错字段。**必须断言到消费点。**
-- **完成定义（DoD）**：附录 A 该行的"缺口"文字被删除，改为"全部 `statType` 均有消费点证据（列出条数）"；`npm run test:scenarios` 全绿。
-- **难度**：中高（需先建对照表，但建成后是机械工作）。
+- **历史方案（已执行）**：本节原先建议的"先建 `statType → 字段 → 消费点` 对照表 + 读取点审计"
+  已于 U133 完成——映射表即交付物（静态 grep + 人工核读；动态属性访问与原型后挂载的漏报风险
+  已在表头"审计边界"声明）。
+- **风险**：容易被"技能树点亮了就代表生效"误导。点亮 ≠ 生效——`movement.js` 那个缺陷就是点了技能但读错字段。新证据必须断言到消费点或活体效果。
+- **完成定义（DoD）**：新的活体差分证据入映射表并升级对应分级，附录 A 该行缺口文字随之改写；`npm run test:scenarios` 全绿。
+- **难度**：高（剩余路径均需绕开已否决的归因障碍，机械增量已用尽）。
 
 ---
 
-#### P-2 法术 — 仅 cat=15 仍为计数归因
+#### P-2 法术 — 仅 cat=15 仍为计数归因 — ✅ **已闭合（2026-09-27 彻夜会话）**
 
-- **现状**：16 个 `spellCategoryId`（1–6、8–17；目录中**不存在 cat=7**）各有专属场景，由 `scripts/check-spell-coverage.mjs` 机械核对。**15/16 有直接可观测量**：cat=1 治疗浮动文字（91 次 / +279）、cat=2/8 活怪物效果队列计数、cat=3 盟友效果队列计数（20 次）、cat=4/5/6/12/13 伤害浮动文字（379–559 次 / -4688 ~ -5943）、cat=9/10/11 随从数、cat=14 拾取统计、cat=16 昏迷前置、cat=17 伤害+随从双观测。
-- **缺口**：**cat=15（`发现财宝箱` / `findTreasureSpell`）** 仍靠"唯一注入法术 + 施法计数增长 + 完整存档差分"归因。
-- **为什么没做**：该法术的实现是 `combat/actions.js:719-724` —— `getRoomTreasure(game.treasure, room)` 命中后 `a.selected = true` 并 `party.setTargetTreasureChest(a)`。`selected` 是运行时字段（`loot/treasure.js:39`），**不入存档**；是否最终开箱取决于 AI 是否走到箱子。实测：用 `treasureChestsLooted` 增长做断言，**单跑通过、整矩阵失败**（场景顺序相关）→ 属 flaky，已回退。
-- **闭合方案（选一，按推荐度排序）**：
-  1. **加一个只读观察器**：仿 `tests/engine-harness.js` 的 `countEffectApplications`，新增 `countTreasureTargetAcquired(turns)` —— 逐帧扫描 `game.state.party`（原版侧需先查 `archive/original/c2.js` 对应字段）的目标财宝箱从 `null` 变为非 null 的次数。**只读、不消耗随机数**。断言两端 > 0 且相等。这样把"是否走到箱子"从断言里摘出去，只断言"法术确实选中了目标"。
-  2. 或：在场景里额外做一步"手动把队伍挪到财宝所在房间"，使开箱成为确定事件。风险是引入了非原版的驱动路径。
-  3. 或：接受现状，把该行缺口写得再明确一点（**最保守**）。
-- **风险**：方案 1 需要先在原版侧找到等价字段（`archive/original/c2.js` 里 `setTargetTreasureChest` 对应的混淆名），并在 harness 里做双端分支——harness 的既有模式是 `original ? window.Game.xxx : game.xxx`。
-- **DoD**：`node scripts/check-spell-coverage.mjs` 报"无直接可观测量 0 个"；矩阵该行缺口文字随之删除。
-- **难度**：中（一个新观察器 + 双端字段名取证）。
+- **结论**：该行已由 PARTIAL 升为 **PASS**（16/16 类有直接可观测量，`check-spell-coverage.mjs` 报"无直接可观测量 0 个"）。
+- **闭合方式**：`tests/engine-harness.js` 新增 `countSelectedTreasure({turns})` 只读观察器——财宝目标的 `selected` 旗标（原版 `el`）全库只有两个写点：`findTreasureSpell`（`actions.js:721` ↔ `c2.js:20955`）与财宝房 UI 按钮（`c2.js:27719`，场景从不驱动）；且该法术的 AI 行为评分（`behaviors.js` 的 `getFinalScore`）只在"所在房间有未开启、未选中财宝"时非零，故**施法成功 ⟺ selected 被置真**。关键实现细节：**必须逐帧统计 false→true 跳变**而非终态计数——`setChestOpened`（`loot/treasure.js:41`）会在开箱时把 `selected` 清回 false（AI 会自然开箱，实测 4 次施法后终态为 0）。`spell-find-chest` 场景改用该观察器推进 3000 回合，实测两端各 **4 次跳变**且相等；`selected` 不入存档，是 DTO 差分盲区之外的独立证据。反向验证：删掉重构侧 `a.selected = true` → 场景立刻变红。
+- **原 DoD 已满足**：`node scripts/check-spell-coverage.mjs` 报 0；附录 A「法术」行缺口文字已删除。
 
 ---
 
-#### P-3 物品 — 远古稀有度档位未出现
+#### P-3 物品 — 远古稀有度档位未出现 — ✅ **已闭合（2026-09-27 彻夜会话）**
 
-- **现状**：稀有度计数增长且两端相等。
-- **缺口**：**远古（rarity 4）档位在 fixture 场景内从未出现**，因此该分支（`statistics.js:115` 的 `ancientItemsFound++`）从未被执行到。
-- **关键事实（对方案有决定性影响）**：`loot/items.js` 的 `rollRarity` 用 `Math.random() * a` 逐档扣减 `itemRarityProbabilities`；而 harness **把 `Math.random` 替换成了固定 LCG**。所以稀有度在本测试环境下是**确定性**的——远古档没出现，是因为当前固定种子下它的概率没被命中，而不是"随机没抽到"。
-- **闭合方案**：
-  1. 用 `save-mutations.mjs` 的既有模式写一个变异器：把一件 `rarity=4` 的物品放进某个财宝箱/地面掉落，或直接塞进背包后驱动 `recordItemFound`。
-  2. 断言 `snap.statistics.ancientItemsFound > base.statistics.ancientItemsFound`，两端相等。
-  3. **必须先取证**：`rarity` 字段在存档 DTO 里的键名与取值域（查 `persistence/game-save.js` 的 Item 序列化段），不可臆造。
-- **风险**：低。但注意**不要**为了"让远古出现"去调概率或换 LCG 种子（违反 R1/R3）。
-- **DoD**：新场景（如 `ancient-item-found`）两端各自断言远古统计增长 + 完整存档相等；矩阵「物品」行缺口删除。
-- **难度**：低（最容易闭合的一条，**建议第一个做**）。
+- **结论**：该行已由 PARTIAL 升为 **PASS**。新场景 `ancient-item-found`（矩阵 62 → 63 起步）。
+- **闭合方式**：`tests/engine-harness.js` 新增 `seedAncientItemDrop({maxTurns, rarity})`——两端**各自引擎的 `generateItem`**（原版 `Nv`，c2.js:20619）构造一件合法 rarity=4 物品（随机消费两端同序，名字/数值走原版生成路径，远古名字池产出如「独步荒废之徒劳的剑」），作为**真实 ItemDrop**（原版 `zv`，c2.js:20453）放进某队员所在房间脚下，随后完全交给原版 AI 的认领→行走→拾取路径（`TravelWorldBehavior` → `targetItemDrop` → actionType 6 → `character.js` 拾取分支的 `recordItemFound` case 4）。fixture 队伍从世界地图出发（roomId=-1），harness 先推进到有人进房再放置。断言：两端 `drop.collected`（原版 `gc`）为真、拾取与等进房回合数两端相等、`ancientItemsFound` 增长、拾取后完整 DTO 相等（远古物品以一致字段进入同一队员 inventory）。
+- **踩坑记录**：原版 Vector2（`Za`，c2.js:7014）的字段是 **`T`/`U`** 而非 `x`/`y`——首版给 `zv` 传了 `undefined` 坐标导致掉落永不倍认领，已修。
+- **反向验证**：把重构侧 `case 4` 的 `ancientItemsFound++` 删掉 → 场景立刻分叉变红；恢复后转绿。
+- **不越线**：不掉概率、不碰固定 LCG、不直接写统计字段（原 DoD 的约束全部保持）。
 
 ---
 
@@ -148,29 +147,28 @@ node scripts/find-field-refs.mjs <owner> <names>
 
 ---
 
-#### P-7 Canvas 渲染 — 指纹只在 2 场景 × 2 视口
+#### P-7 Canvas 渲染 — 已扩到 7 条指纹场景 × 5 视口 + 2 游戏内状态，仍为有限组合
 
-- **现状**：`rendered-scene`（默认视口 1,300 帧）+ `rendered-scene-narrow`（700×900 视口 1,300 帧），两端主画布逐像素 FNV-1a 指纹相同、落盘存档一致、渲染异常纳入失败条件；E2E 另有 1440/1024/375 三档视口的 DOM 溢出与面板检查。
-- **缺口**：逐像素指纹只覆盖 2 场景 × 2 视口；未覆盖全部视口/分辨率组合，未做跨浏览器比对。
-- **关键事实**：`scripts/test-scenarios.mjs:761-763` 已支持场景声明 `viewport: {width, height}`，在两端同时 `setViewportSize`。**加视口是改配置，不是写代码。**
-- **闭合方案（最省力的一条）**：
-  1. 复制 `rendered-scene-narrow` 的步骤体，新增若干场景：例如 `rendered-scene-wide`（1920×1080）、`rendered-scene-tiny`（375×667）、`rendered-scene-tall`（900×1600），各自 1,300 帧 + 指纹断言。
-  2. 注意成本：每个 frames 场景要跑 1,300 帧 × 两端，**矩阵总时长会线性上升**。建议挑 2 个有代表性的（如最窄 + 最宽），而不是全铺。
-  3. 若要覆盖不同**游戏内状态**（远征视图 / 冒险点面板 / 战斗特效密集 / 地牢切换），需要新的变异器与场景，成本高得多。
-- **风险**：低。但注意指纹对**任何**渲染差异都敏感——如果某个视口下两端真的有差异，那是**真缺陷**，不要改指纹算法或容差来"过"。
-- **DoD**：至少新增 1 个视口的逐像素指纹场景并全绿；矩阵该行缺口改写为"仍为有限视口组合（列出实际覆盖）"。
-- **难度**：低（**与 P-3 并列最易**）。
+- **现状（U134 更新）**：`rendered-scene`（默认视口）+ `rendered-scene-narrow`（700×900）+ `rendered-scene-wide`（1920×1080）+ `rendered-scene-tiny`（375×667）+ **`rendered-scene-tall`（900×1600，U134 新增）**，各自 1,300 帧真实帧循环，两端主画布逐像素 FNV-1a 指纹相同、落盘存档一致、渲染异常纳入失败条件；游戏内状态维度另有 `rendered-scene-spellstorm`（特效密集）与 `rendered-scene-farm`（农场主题）；E2E 另有 1440/1024/375 三档视口的 DOM 溢出与面板检查。新场景全部追加在矩阵末尾，不扰动既有场景的采样窗口。
+- **缺口**：仍为有限视口组合（当前 7 条指纹场景：5 视口 + 2 游戏内状态）；未覆盖全部视口/分辨率/**游戏内状态**组合（远征视图/冒险点面板/地牢切换各有独立布局），未做跨浏览器比对。矩阵该行**维持 PARTIAL**（按 R7 不因覆盖扩大而升 PASS）。
+- ~~**可行的下一步**：按旧方案补 `rendered-scene-tall`（900×1600）等更多视口~~ —— `rendered-scene-tall` 已于 U134 交付；再扩是纯配置，更高价值但成本高的是覆盖不同游戏内状态。
+- **DoD（不变）**：每加一个组合都要全绿且不能改指纹算法或容差；若某视口下两端真有差异，那是真缺陷。
 
 ---
 
-### 3.2 15 条"节选/伪码"型文档片段
+### 3.2 文档片段节选标注 — ✅ **已闭合（U133）**
 
-- **现状**：`docs/formulas/{combat,items,progression}.md` 共 76 条内嵌 JS 片段；`scripts/check-doc-snippets.mjs` 报 **61 条已与源码逐字同步**，**15 条漂移**。
-- **性质**：这 15 条**不是"忘了同步"，而是它们本身就不是逐字摘录**——含 `...` 省略号、或把跨多处/跨文件的代码拼成一段"伪码"。因此自动重同步的相似度判据（≥50%）不成立。
+- **结论**：`check-doc-snippets.mjs` 报 **0 漂移 + 18 条已标注节选（ref 均验证可解析）**，exit 0。
+- **闭合方式**：检查器新增 `<!-- snippet: abridged -->` 标注约定——ref 行上一行有该标注即声明"本片段是节选/伪码示意"。**标注只豁免内容比对，不豁免 ref 可解析性与行号边界**（标注损坏同样 exit 1，防止用标注绕过检查）。18 条逐一插入标注（combat 6 / items 8 / progression 4）。
+- **反向验证 ×3**：①篡改一条未标注的逐字片段 → 漂移 1、exit 1；②已标注片段引用不存在文件 → "标注损坏 1"、exit 1；③已标注片段行号越界（99999）→ exit 1。恢复后 0 漂移。
+- **历史说明**：原记录 15 条低估——combat.md:424/771/936 三条 tick.js 漂移在本轮之前已存在（双方文件均不在本轮 diff 内）。
 - **清单**（`node scripts/check-doc-snippets.mjs` 输出，格式 `文档位置 -> 源码位置`）：
   | 文档 | 声明的位置 | 问题 |
   |---|---|---|
   | `docs/formulas/combat.md:202` | `combat/scrolls.js:22-34` | 首行即不同 |
+  | `docs/formulas/combat.md:424` | `simulation/tick.js:413-430` | 首行即不同（U133 复核补录：本轮之前已漂移） |
+  | `docs/formulas/combat.md:771` | `simulation/tick.js:788-800` | 首行即不同（同上补录） |
+  | `docs/formulas/combat.md:936` | `simulation/tick.js:339-355` | 首行即不同（同上补录） |
   | `docs/formulas/combat.md:1165` | `ai/targeting.js:29-51` | 含 `…` 省略号 |
   | `docs/formulas/combat.md:1397` | `combat/encounters.js:266-282` | 首行即不同 |
   | `docs/formulas/items.md:70` | `loot/items.js:332-343` | 首行即不同 |
@@ -190,23 +188,23 @@ node scripts/find-field-refs.mjs <owner> <names>
   - **B. 明确标注为"节选/伪码"**：若片段本就是示意（含 `...`、或跨文件拼接），**在片段上方加一行**"（节选，非逐字摘录；权威以 `file:line` 指向的源码为准）"，并**同时修正 `check-doc-snippets.mjs` 让它跳过被显式标注的片段**（加一个 `<!-- snippet: abridged -->` 或代码块语言标记 ` ```js-abridged ` 的约定）。
 - **推荐**：做 **B**。因为 A 对这些片段不成立（它们本就是示意），硬改成逐字摘录会**丢失"这里有两处调用"这类信息**。B 同时让检查器变成"0 漂移"，把噪音消掉。
 - **风险**：低。唯一要求是**不要为了让检查器变绿而删掉信息**。
-- **DoD**：`node scripts/check-doc-snippets.mjs` 报 0 漂移，且每处改动都能说清"为什么这条是节选"。
+- **DoD（已达成）**：0 漂移 + 每处标注均有 §3.2 清单中的"为什么是节选"依据（含 `...`/跨文件拼接/伪码）。
 - **难度**：低。
 
 ---
 
-### 3.3 M10 类型债务（42 处 `any` + 142 行 `unknown`）
+### 3.3 M10 类型债务（41 处 `any` + 146 行 `unknown`，R25 轮实测）
 
-- **现状**：`tsc` 0 错误；77/77 引擎模块无 `@ts-nocheck`；0 处 `@ts-ignore`/`eslint-disable`。**但**仍有 42 处 `@type {any}`（精确统计命令见下）。
+- **现状**：`tsc` 0 错误；77/77 引擎模块无 `@ts-nocheck`；0 处 `@ts-ignore`/`eslint-disable`。**但**仍有 41 处 `@type {any}`（精确统计命令见下；R25 轮实测）。
 - **分布**（按文件降序）：
   ```
-  views/expedition.js 7      simulation/tick.js 4      views/party-creation.js 3
-  views/monsters.js 3        views/base.js 3           characters/party.js 3
-  world/initialization.js 2  views/navigation.js 2     runtime/game.js 2
-  rendering/sprites.js 2     persistence/entities.js 2 characters/minions.js 2
+  views/expedition.js 7      simulation/tick.js 4      characters/party.js 3
+  views/base.js 3            views/monsters.js 3       characters/minions.js 2
+  persistence/entities.js 2  rendering/sprites.js 2    runtime/game.js 2
+  views/navigation.js 2      views/party-creation.js 2 world/initialization.js 2
+  ai/targeting.js 1          combat/scrolls.js 1       loot/items.js 1
   views/results.js 1         world/{regions,pathfinding,dungeons}.js 各 1
-  loot/items.js 1            combat/scrolls.js 1       ai/targeting.js 1
-  合计 42（命令：grep -ro "/\*\* @type {any} \*/" src/ | wc -l；**不要**用宽松的 @type {any} 匹配，会把注释里的提及也算进去）
+  合计 41（命令：grep -ro "/\*\* @type {any} \*/" src/ | wc -l；**不要**用宽松的 @type {any} 匹配，会把注释里的提及也算进去）
   ```
 - **根因（结构性，不是"没写完"）**：
   1. **原型后挂载**：本项目用 `function X(){}` + `initializeXxx()` 里逐条 `X.prototype.m = function(){}`。tsc 在**函数边界**外看不到这些成员，于是调用点写成 `(/** @type {any} */ (this)).m()`。
@@ -216,7 +214,7 @@ node scripts/find-field-refs.mjs <owner> <names>
   1. **一个 typedef 消掉多处 cast**（收益最高）：`views/expedition.js` 的 4 处 `createDomElements()` 可用一个 `& { createDomElements: () => void }` 交叉类型消掉；`views/monsters.js`、`views/party-creation.js` 同理。**已完成的先例**：`views/results.js` 的 9 处 → 1 个 `OfflineProgressViewWithCells` typedef（该文件 `any` 9 → 1）。
   2. **表达式型 cast**（如 `tick.js` 的三元）：需要先把复用变量按分支拆成不同类型——**属"重写函数"，风险高，收益低，建议不动**。
   3. **绝不**为了消 cast 而改运行时行为（补默认字段、改原型链）。
-- **另一条更高价值的线索**：`persistence/save-dto.js` 是 **119 行纯 JSDoc typedef 的 schema 文件**（无运行时导出），目前**未被任何 `@type` 引用**——它是"可加载但未生效"的类型资产。把它接到 `game-save.js` 的序列化/恢复函数上，可获得**真正的存档形状校验**（能抓到"运行时字段 ↔ 存档键"映射写错）。这是 M10 最值得做的一步，但它**触碰存档路径**，必须在差分矩阵保护下逐函数推进，且**不得改任何存档键**（R2）。
+- ~~**另一条更高价值的线索**：`persistence/save-dto.js` 未被任何 `@type` 引用~~ —— **已完成**：U131 接线 `createSaveState` 返回与 `restoreGameState` 解析；U132 起 `dungeonManagerState`、U133 起 `pointManagerState`、U134 起 `monsterTypes`（三层 + 恢复/序列化两侧接线 + 审计 3 条 spot-check）均已具名 typedef 并挂进 `SaveData`。**剩余**：`world`/`statistics`/`castleManager`/`shopManager` 等仍为 `{Object}`，照同一套路（typedef + fixture 核对 + spot-check + 负向编译验证）增量推进即可。
 - **DoD**：不设"归零"目标（不现实）。可达成目标是：① 把 43 降到 ~25（做完配方 1 的所有可做项）；② 完成 `save-dto.js` 接线并保持 tsc 0 错误 + 10 门禁全绿；③ `docs/m10-type-debt.md` 的数字随之更新。
 - **难度**：配方 1 低；`save-dto.js` 接线中高（触碰存档，需谨慎）。
 
@@ -225,8 +223,8 @@ node scripts/find-field-refs.mjs <owner> <names>
 ### 3.4 未决台账仍开放的两项
 
 `docs/reverse-engineering/unresolved.md`：
-- **U4（差分覆盖缺口）**：主体已关闭（城堡征服、Blast Stun 直接计数、16 类法术场景等）。**残留**：法术归因口径（= 上面的 P-2）与"怪物/首领 AI 施法、卷轴施法两条入口未按类别单独设场景"。
-- **U7（UI 独占路径）**：升级长尾、农场收获、拾取类型已大量闭合。**残留**：`views/upgrade-details.js` 的 19 个升级实现未逐项驱动；逐件手动装备未专项驱动；DOM 点击路线已实测不可行（按钮全为 `disabledUpgradeButton` 且矩形 0×0）。
+- **U4（差分覆盖缺口）**：主体已关闭（城堡征服、Blast Stun 直接计数、16 类法术场景等；P-2/cat=15 已于 U132 闭合，16/16 类有直接可观测量）。**残留**：仅"怪物/首领 AI 施法、卷轴施法两条入口未按类别单独设场景"——不把"16 类每类一个职业施法场景"表述成"所有入口全覆盖"。
+- **U7（UI 独占路径）**：升级长尾、农场收获、拾取类型已大量闭合。**现状（U134 更新，逐项清单见 `docs/u7-upgrade-usage.md`）**：19 个升级实现**全部**有端到端差分或探针——U133 以 `scroll-upgrades-purchased` 闭合 ScrollUpgrade（type 12），U134 以 `equip-item-upgrade-pickup-first` 闭合 EquipItemUpgrade（type 3）的道具效果级断言（清空背包 → 真实掉落 AI 拾取建背链 → 驱动 type 3 行 → 两端装备槽摘要真实变化 + 反向验证；并勘误 U133"恢复存档惰性"归因——真实门控是候选列表 `≤5` 条件，见该场景注释与 u7 文档）。逐件手动装备已由 `manual-equip-swap` 专项驱动（附录 A 装备行 PASS）。DOM 点击路线已实测不可行（按钮全为 `disabledUpgradeButton` 且矩形 0×0），harness 驱动是唯一稳定入口。
 - **DoD**：U4 随 P-2 收口；U7 需为每个未覆盖的 `Upgrade` 子类写变异器 + 场景，工作量线性于 19。
 
 ---
@@ -247,29 +245,29 @@ node scripts/find-field-refs.mjs <owner> <names>
 | 项 | 验收命令 | 期望 |
 |---|---|---|
 | P-1 技能 | `npm run test:scenarios` | 全绿；附录 A 该行缺口文字被替换 |
-| P-2 法术 | `node scripts/check-spell-coverage.mjs` | "无直接可观测量 0 个" |
-| P-3 物品 | `SCENARIO_FILTER=<新场景> npm run test:scenarios` | 通过且远古统计两端增长 |
-| P-4 成就 ✅ | `npm test` + `npm run test:scenarios` + `node scripts/check-achievement-requirements.mjs` | 15 单测通过 + 2 条新场景全绿 + 表驱动核对 0 不符（**2026-09-27 已闭合**） |
+| P-2 法术 ✅ | `node scripts/check-spell-coverage.mjs` + `SCENARIO_FILTER=spell-find-chest npm run test:scenarios` | "无直接可观测量 0 个" + 选中跳变两端相等（**2026-09-27 彻夜会话已闭合**） |
+| P-3 物品 ✅ | `SCENARIO_FILTER=ancient-item-found npm run test:scenarios` | 通过且远古统计两端增长（**2026-09-27 彻夜会话已闭合**） |
+| P-4 成就 ✅ | `npm test` + `npm run test:scenarios` + `node scripts/check-achievement-requirements.mjs` | 24 单测通过（含后增切片；2026-09-27 闭合时为 19）+ 2 条新场景全绿 + 表驱动核对 0 不符（**2026-09-27 已闭合**） |
 | P-5 存档 | `npm run test:parity` + `npm run test:scenarios` | 全绿；缺口改写为"需外部样本" |
 | P-6 帧时间 | `npm run perf:frames` | 有原版同口径基线（新增） |
 | P-7 渲染 | `npm run test:scenarios` | 新视口场景指纹两端相同 |
-| 文档片段 | `node scripts/check-doc-snippets.mjs` | 0 漂移 |
-| 类型 | `npm run typecheck && npm run lint` | tsc 0 错误 + 9 不变量绿 |
+| 文档片段 ✅ | `node scripts/check-doc-snippets.mjs` | 0 漂移 + 18 条已标注节选（**U133 已闭合**） |
+| 类型 | `npm run typecheck && npm run lint` | tsc 0 错误 + 10 不变量绿 |
 | **总门禁** | `npm run lint && npm run build && npm run typecheck && npm run check && npm run test:parity && npm run test:scenarios && npm run test:e2e && npm run test:soak && npm run perf && npm run perf:frames` | **10/10 退出码为 0** |
 
 ---
 
-## 5. 建议推进顺序（按"收益 ÷ 风险"排序）
+## 5. 建议推进顺序（按"收益 ÷ 风险"排序；彻夜会话后更新）
 
-1. **P-3 远古稀有度** — 最简单，一条场景即可把 1 条 PARTIAL 推向 PASS。**先做这个建立手感。**
+1. ~~**P-3 远古稀有度**~~ — ✅ 已于 2026-09-27 彻夜会话闭合（`ancient-item-found`，带反向验证）。
 2. ~~**P-4 成就 requirementType**~~ — ✅ 已于 2026-09-27 闭合（表驱动检查 + 表驱动单测 + 两条临界值差分场景）。
-3. **P-7 渲染多视口** — 改配置即可，能再推 1 条（或至少显著收窄）。
-4. **P-2 法术 cat=15** — 需一个新观察器 + 原版字段名取证，中等工作量。
-5. **P-6 原版帧时间基线** — 原版页面可加载，补基线价值高。
-6. **3.2 文档片段** — 独立、低风险，可与其他并行。
-7. **P-1 技能逐项** — 需先建 `statType → 消费点` 对照表，最费时但价值最高（能抓到"点了技能但读错字段"这类静默缺陷）。
+3. ~~**P-2 法术 cat=15**~~ — ✅ 已于 2026-09-27 彻夜会话闭合（`countSelectedTreasure` 跳变观察器，带反向验证）。
+4. **P-7 渲染多视口** — 已扩到 5 视口 + 2 游戏内状态（`rendered-scene-tall` 为 U134 新增）仍 PARTIAL；再加视口是纯配置，覆盖游戏内状态则成本高。
+5. ~~**P-6 原版帧时间基线**~~ — **U133 实测受阻（如实）**：资产剥离的冻结档案下原版生产页 boot 无法到达组队挂载（`Game.Em=false`，可复现探针 `output/overnight-u133/probe-original2.mjs`），原版同口径腿已写入 `measure-frames.mjs` 但记录为不可用；补基线需**未剥离的原版档案**（外部条件）。
+6. ~~**3.2 文档片段**~~ — ✅ 已于 U133 闭合（0 漂移 + 18 条标注节选，反向验证 ×3）。
+7. ~~**P-1 技能逐项对照表**~~ — ✅ 已于 U133 交付（32/32 映射表，L3×8/L2×24/L1×0）；该行仍 PARTIAL，剩余为活体差分设计，已否决路径见 §3.1（不得重试）。
 8. **P-5 存档多版本** — 只能部分闭合，最后做。
-9. **3.3 类型债务** — 长期债，穿插做配方 1；`save-dto.js` 接线单独排期。
+9. **3.3 类型债务** — 长期债，穿插做配方 1；嵌套 typedef 已有 `dungeonManagerState` 先例（含审计 spot-check 套路），`pointManagerState` 等可照做。
 
 **每完成一项都要**：更新 `REFACTOR_REPORT.md` 附录 A 对应行的判定与缺口文字 + `docs/WORKSTATE.md` 顶部加一条 bullet（含符号、证据、命令）+ 单独 commit。
 
@@ -301,5 +299,5 @@ node scripts/find-field-refs.mjs <owner> <names>
 ## 8. 一句话交接
 
 **可执行的清单（P0–P3）已 100% 完成；剩下的是"证据广度"与"类型债务"两类。**
-本环境**物理上无法闭合**的是：真机帧时间/低端设备、多版本真实存档样本。**其余 6 条 PARTIAL（P-1/P-2/P-3/P-5/P-6/P-7）+ 15 条文档片段 + 类型债务都可以推进**，且 P-3 与 P-7 各自只需一条场景/一次配置改动就能把一条 PARTIAL 真正推向 PASS。
-**请从 §5 的第 1 项开始，并严格遵守 §1 的红线。**
+本环境**物理上无法闭合**的是：真机帧时间/低端设备、多版本真实存档样本。（开局创建路径的原版差分已由 `party-creation-differential` 场景交付，见 `docs/architecture-debt.md` §1.4。）**剩余 4 条 PARTIAL（P-1/P-5/P-6/P-7）+ 类型债务都可以推进**（18 条文档片段已于 U133 标注闭合）——P-2/P-3 已于 2026-09-27 彻夜会话闭合（各自带反向验证），**U7 升级族 19 个实现已于 U134 全部闭合**（最后一个是 EquipItemUpgrade，见 `docs/u7-upgrade-usage.md`），验收矩阵现为 47 PASS / 4 PARTIAL（差分矩阵 89/89，U134 后 10 门禁全绿，日志 `output/u134-f-*.log` + `output/g` 前缀历史日志；U134 逐轮验收记录 `output/u134-final-report.md`）。
+**请从 §5 的第 4 项开始（或做 §3.3 的 save-dto 剩余嵌套 typedef），并严格遵守 §1 的红线。**

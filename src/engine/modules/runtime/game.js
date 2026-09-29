@@ -1,7 +1,7 @@
 /** 会话组合根、世界初始化和周目生命周期。
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
-import { SpriteSheet, clearVisualEffects } from "../rendering/sprites.js";
+import { AnimationCatalog, AnimationSheet, SpriteSheet, bindEffectAnimations, clearVisualEffects } from "../rendering/sprites.js";
 import { monsterSpriteDefinitions } from "../core/bootstrap-data.js";
 import { createAnimationCatalog } from "../content/animations.js";
 import { CharacterLifecycle } from "../simulation/characters.js";
@@ -23,14 +23,14 @@ import { FloatingTextLayer } from "../rendering/floating-text.js";
 import { nowMilliseconds, recordGameEvent } from "../core/math.js";
 import { MonsterSaveAdapter, StatisticsSaveAdapter } from "../persistence/entities.js";
 import { PartyState } from "../characters/party.js";
-import { pointUpgradeDefinitions, resetAdventurePoints } from "../progression/points.js";
+import { bindAdventurePoints, pointUpgradeDefinitions, resetAdventurePoints } from "../progression/points.js";
 import { AdventurePointUpgrade, resetUpgradeCollection, restoreUpgradeCollection } from "../progression/upgrades.js";
 import { Achievement, achievementDefinitions, resetAchievements } from "../progression/achievements.js";
 import { LifetimeStatistics, RunStatistics, StatisticsRecorder, bindStatistics } from "../progression/statistics.js";
 import { monsterDefinitions } from "../content/monsters.js";
 import { initializeItemCatalog } from "../content/equipment.js";
 import { initializeRegionsAndCastles } from "../world/initialization.js";
-import { offlineTimeBonus, upgradeCollections } from "../content/balance.js";
+import { BASE_HIGHER_ITEM_CHANCE, LOWER_ITEM_LEVEL_CHANCE, globalUpgradeDefinitions, itemGoldCurve, itemGoldModifier, itemRarityProbabilities, itemRarityTiers, itemStatCurve, offlineTimeBonus, upgradeCollections } from "../content/balance.js";
 import { getAttackCooldown } from "../characters/stats.js";
 import { recalculateCharacterSkills } from "../combat/skill-effects.js";
 import { deleteStoredSave, restoreGameState, saveProgress } from "../persistence/game-save.js";
@@ -48,14 +48,14 @@ export function initializeRuntimeGame() {
     monsterSprites: new SpriteSheet("spritesheet/monsters.png", 54, monsterSpriteDefinitions),
     terrainSprites: new SpriteSheet("spritesheet/terrain.png", 54, terrainAtlas),
     itemSprites: new SpriteSheet("spritesheet/items.png", 32, itemsAtlas),
-    animations: createAnimationCatalog(),
+    animations: createAnimationCatalog({ AnimationCatalog, AnimationSheet }),
     camera: new function () {
       this.viewportOffsetY = this.viewportOffsetX = this.tileRow = this.tileColumn = 0;
     }(),
     lifecycle: new CharacterLifecycle(),
     world: new WorldMap(),
     monsters: new MonsterRegistry(),
-    minions: new MinionRegistry(),
+    minions: new MinionRegistry(() => game.allies),
     allies: new AllyRegistry(),
     dungeons: new DungeonRegistry(),
     regions: new function () {
@@ -106,7 +106,16 @@ export function initializeRuntimeGame() {
     scrollDrops: new ScrollDropRegistry(),
     potionDrops: new PotionDropRegistry(),
     treasure: new TreasureRegistry(),
-    itemGenerator: new ItemGenerator(),
+    itemGenerator: new ItemGenerator({
+      baseHigherItemChance: BASE_HIGHER_ITEM_CHANCE,
+      lowerItemLevelChance: LOWER_ITEM_LEVEL_CHANCE,
+      globalUpgradeDefinitions,
+      itemGoldCurve,
+      itemGoldModifier,
+      itemRarityProbabilities,
+      itemRarityTiers,
+      itemStatCurve
+    }),
     itemDrops: new ItemDropRegistry(),
     inventories: new InventoryRegistry(),
     scrolls: new ScrollInventory(),
@@ -208,13 +217,13 @@ export function initializeRuntimeGame() {
       a.maxUnlockedLevel = 1;
       a.monsterTemplates.length = 0;
       a.monsterTemplates.push(...monsterDefinitions);
-      initializeItemCatalog();
+      initializeItemCatalog(game.itemGenerator, game.itemSprites);
       var qa = game.goldDrops;
       qa.smallGoldSprite = game.itemSprites.getSprite("CoinsGoldSmall.PNG");
       qa.mediumGoldSprite = game.itemSprites.getSprite("CoinsGoldMedium.PNG");
       qa.largeGoldSprite = game.itemSprites.getSprite("CoinsGoldLarge.PNG");
       resetScrollInventory();
-      resetPotionInventory();
+      resetPotionInventory(game.potions);
       var ta = game.treasure;
       ta.targetDefinitions.push({
         settingsId: "chest1",
@@ -360,7 +369,8 @@ export function initializeRuntimeGame() {
       if (a) {
         game.state.runStatistics = new RunStatistics();
         game.state.lifetimeStatistics = new LifetimeStatistics();
-        bindStatistics();
+        bindStatistics(game.state);
+        bindAdventurePoints(game.state);
         var b = game.state.victoryStatistics;
         b.partySize1Victories = 0;
         b.partySize2Victories = 0;
@@ -381,20 +391,20 @@ export function initializeRuntimeGame() {
       game.level = new DungeonLevel();
       game.currentDungeon = null;
       game.currentCastle = null;
-      clearItemDrops();
+      clearItemDrops(game.itemDrops);
       b = game.inventories;
       if (0 < b.list.length) {
         b.list.length = 0;
       }
       resetScrollInventory();
-      resetPotionInventory();
+      resetPotionInventory(game.potions);
       clearScrollTargets();
       resetDungeons();
       resetCastles();
       resetFarms();
       resetShops();
       clearCombatQueue();
-      clearVisualEffects();
+      clearVisualEffects(game.effects);
       for (b = 0; b < upgradeCollections.length; b++) {
         resetUpgradeCollection(upgradeCollections[b]);
       }
@@ -407,7 +417,7 @@ export function initializeRuntimeGame() {
       }
       game.allies.allies.length = 0;
       clearMonsters();
-      clearMinions();
+      clearMinions(game.minions);
       b = game.monsterCatalog;
       b.minUnlockedLevel = 1;
       b.maxUnlockedLevel = 1;
@@ -442,8 +452,8 @@ export function initializeRuntimeGame() {
       game.level = new DungeonLevel();
       game.currentDungeon = null;
       game.currentCastle = null;
-      resetPotionInventory();
-      clearItemDrops();
+      resetPotionInventory(game.potions);
+      clearItemDrops(game.itemDrops);
       clearScrollTargets();
       a = game.dungeons.farms.length;
       resetDungeons();
@@ -454,10 +464,10 @@ export function initializeRuntimeGame() {
       resetFarms();
       resetShops();
       clearCombatQueue();
-      clearVisualEffects();
+      clearVisualEffects(game.effects);
       game.allies.allies.length = 0;
       clearMonsters();
-      clearMinions();
+      clearMinions(game.minions);
       for (var b, a = /** @type {any} */ (0); a < game.state.adventurers.length; a++) {
         if (b = game.state.adventurers[a], b.summonedMinions = null, b.companion = null, b.combatTarget = null, b.targetGoldDrop = null, b.targetScrollDrop = null, b.targetPotionDrop = null, b.targetItemDrop = null, b.targetTreasureChest = null, b.spellToCast = null, b.lastAttackTurn = -3 * getAttackCooldown(b.stats, true), b.spells && 0 < b.spells.length) {
           for (var c = 0; c < b.spells.length; c++) {
@@ -525,4 +535,5 @@ export function initializeRuntimeGame() {
       game.view.resetTabs();
     }
   };
+  bindEffectAnimations(game.animations);
 }

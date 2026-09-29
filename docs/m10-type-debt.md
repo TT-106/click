@@ -9,11 +9,11 @@
 | `tsc` 错误 | **0** | `npm run typecheck` |
 | `src/engine/modules` 下 `@ts-nocheck` | **0**（77 个模块全部参与检查） | `npm run lint`（不变量 3） |
 | tsc 实际加载的引擎模块 | **76 / 77**（经 import 图从 `core/**` + `persistence/**` 传递） | `tsc -p tsconfig.json --listFiles` |
-| `@type {any}` 强制转换 | **42** | `grep -ro "/\*\* @type {any} \*/" src/ \| wc -l`（**必须用精确模式**：宽松匹配 `@type {any}` 会把本文档与源码注释里对它的**提及**也算进去，实测差 1 处——`views/results.js:16` 的说明性注释） |
-| JSDoc 里的 `unknown`（含 `unknown` 收窄转换） | 142 行 | `grep -rn "\bunknown\b" src/ --include=*.js \| wc -l` |
+| `@type {any}` 强制转换 | **41**（R25 轮实测；切片④顺手消掉 views/party-creation.js 一处） | `grep -ro "/\*\* @type {any} \*/" src/ \| wc -l`（**必须用精确模式**：宽松匹配 `@type {any}` 会把本文档与源码注释里对它的**提及**也算进去，实测差 1 处——`views/results.js:16` 的说明性注释） |
+| JSDoc 里的 `unknown`（含 `unknown` 收窄转换） | 146 行（R25 轮实测） | `grep -rn "\bunknown\b" src/ --include=*.js \| wc -l` |
 | `@ts-ignore` / `eslint-disable` | **0** | `npm run lint`（不变量 4） |
 
-**分布（前 6 名）**：`views/expedition.js` 7、`simulation/tick.js` 4、`views/party-creation.js` 3、`views/monsters.js` 3、`views/base.js` 3、`characters/party.js` 3；`views/results.js` 已从 9 降到 **1**（仅剩一个数值表达式的 cast）。
+**分布（前 6 名，R25 实测）**：`views/expedition.js` 7、`simulation/tick.js` 4、`characters/party.js` 3、`views/base.js` 3、`views/monsters.js` 3、`views/party-creation.js` 2；`views/results.js` 已从 9 降到 **1**（仅剩一个数值表达式的 cast）。
 
 ## 2. 根因（结构性，不是"没写完"）
 
@@ -38,5 +38,23 @@
 ## 5. 结论（如实）
 
 - **VERIFIED**：`tsc` 0 错误；77/77 模块无整文件豁免；无 `@ts-ignore`/`eslint-disable`。
-- **PARTIALLY VERIFIED**：类型**完备性**——仍有 42 处 `any` 与 142 行 `unknown` 收窄，集中在"原型后挂载 + 变量复用"两类结构性问题。
-- **UNRESOLVED**：`persistence/save-dto.js` 是**未被任何 `@type` 引用的类型资产**（119 行纯 JSDoc typedef，无运行时导出）。它目前只作为"存档 DTO schema 的文档化来源"（被 `docs/formulas/items.md:286` 引用），把 `game-save.js` 的序列化/恢复函数接上去可获得真正的 DTO 形状校验——这是 M10 后续最值得做的一步，但会触碰存档路径，必须在差分矩阵保护下逐函数推进。
+- **PARTIALLY VERIFIED**：类型**完备性**——仍有 41 处 `any` 与 146 行 `unknown` 收窄，集中在"原型后挂载 + 变量复用"两类结构性问题。
+- **UNRESOLVED（2026-09-27 更新：已部分解决）**：`persistence/save-dto.js` 曾是**未被任何 `@type` 引用的类型资产**。
+  **U131 已接入两处**：`createSaveState` 的 `@returns {SaveData|SaveDataUninitialized}` 与 `restoreGameState` 里
+  `JSON.parse` 结果的 `@type {SaveData}`——写错/读错顶层键现在由 `tsc` 报出（反向验证过：TS2322 / TS2551）。
+  前置的只读比对由 `scripts/audit-save-schema.mjs`（已入 lint 不变量 9）承担：声明 / 真实 fixture /
+  序列化器已初始化分支各 30 键且键序一致，未初始化分支 4 键。
+  **彻夜会话（U132）追加**：① `dungeonManagerState` 已写成具名 typedef（`SaveDungeonManagerState` 3 键 +
+  `SaveDungeonState` 10 键，字段逐一对照 fixture 实测），挂进 `SaveData`，审计新增两条嵌套 spot-check
+  （typedef↔fixture 双向）；反向验证：序列化器临时改名 `clearedTurnX` → tsc TS2322 红。
+  ② 实测堵上空白档假绿：审计原先只查"空白分支 ⊆ 30 键声明"，给空白分支加一个声明内也有的键时
+  **旧审计与 tsc 联合类型都不红**——已改为与 `SAVE_BLANK_TOP_LEVEL_KEYS` 双向逐键相等（破坏红/恢复绿）。
+  **U134 追加（2026-09-28）**：③ `monsterTypes` 三层 typedef（`SaveMonsterTypesState`/`SaveMonsterTypeState`/
+  `SaveMonsterTypeEntry`）+ 审计 3 条嵌套 spot-check + 恢复/序列化两侧接线
+  （`restoreMonsterType` 参数标注；两个序列化器 `@returns`；`restoreMonsterTypes` 顶层读取行内 cast）。
+  负向验证 ×3：恢复侧 `a.killsTypo` → TS2339 红；写出侧 `nameTypo:` → TS2353 红；typedef 加伪字段 → 审计 exit 1。
+  **实测发现（记入台账）**：JS 文件里 JSDoc 参数标注**不被赋值收窄覆盖**（参数标注后 `a = <any>` 再读
+  `a.length` 仍报 TS2339——声明类型恒胜），故被复用参数不能靠参数标注+any 赋值收窄，只能读取点 cast。
+  **仍未做**：其余嵌套形态（`world`、`statistics`、`castleManager`、`shopManager` 等）在 `SaveData` 里
+  仍标成 `{Object}`，没有形状约束；照同一套路（typedef + fixture 核对 + 审计 spot-check）做是纯增量工作。
+  红线不变：**不得通过 `any`、宽泛断言或更改存档键让 tsc 变绿**。

@@ -1,53 +1,42 @@
 {
-  "generatedAt": "2026-09-27T09:58:41.828Z",
+  "generatedAt": "2026-09-29T01:16:57.467Z",
   "counts": {
     "srcJsFiles": 93,
     "engineModules": 77,
-    "totalEdges": 564
+    "totalEdges": 547
   },
   "gameImporters": {
-    "total": 49,
-    "withGameBinding": 48,
+    "total": 37,
+    "withGameBinding": 36,
     "byDir": {
       "engine/modules/ai": 2,
-      "engine/modules/characters": 6,
-      "engine/modules/combat": 4,
-      "engine/modules/content": 1,
-      "engine/modules/loot": 3,
+      "engine/modules/characters": 3,
+      "engine/modules/combat": 3,
+      "engine/modules/loot": 1,
       "engine/modules/persistence": 2,
-      "engine/modules/progression": 4,
-      "engine/modules/rendering": 3,
+      "engine/modules/progression": 2,
+      "engine/modules/rendering": 2,
       "engine/modules/runtime": 1,
       "engine/modules/simulation": 3,
-      "engine/modules/views": 12,
-      "engine/modules/world": 8
+      "engine/modules/views": 11,
+      "engine/modules/world": 7
     },
     "files": [
       "src/engine/modules/ai/behaviors.js",
       "src/engine/modules/ai/targeting.js",
       "src/engine/modules/characters/character.js",
-      "src/engine/modules/characters/effects.js",
-      "src/engine/modules/characters/minions.js",
       "src/engine/modules/characters/movement.js",
       "src/engine/modules/characters/party.js",
-      "src/engine/modules/characters/stats.js",
       "src/engine/modules/combat/actions.js",
       "src/engine/modules/combat/encounters.js",
-      "src/engine/modules/combat/potions.js",
       "src/engine/modules/combat/scrolls.js",
-      "src/engine/modules/content/equipment.js",
-      "src/engine/modules/loot/inventory.js",
-      "src/engine/modules/loot/items.js",
       "src/engine/modules/loot/treasure.js",
       "src/engine/modules/persistence/entities.js",
       "src/engine/modules/persistence/game-save.js",
       "src/engine/modules/progression/achievements.js",
-      "src/engine/modules/progression/points.js",
-      "src/engine/modules/progression/statistics.js",
       "src/engine/modules/progression/upgrades.js",
       "src/engine/modules/rendering/floating-text.js",
       "src/engine/modules/rendering/scene.js",
-      "src/engine/modules/rendering/sprites.js",
       "src/engine/modules/runtime/index.js",
       "src/engine/modules/simulation/characters.js",
       "src/engine/modules/simulation/loop.js",
@@ -61,7 +50,6 @@
       "src/engine/modules/views/monsters.js",
       "src/engine/modules/views/navigation.js",
       "src/engine/modules/views/party-creation.js",
-      "src/engine/modules/views/resources.js",
       "src/engine/modules/views/results.js",
       "src/engine/modules/views/upgrade-details.js",
       "src/engine/modules/world/dungeons.js",
@@ -70,8 +58,7 @@
       "src/engine/modules/world/pathfinding.js",
       "src/engine/modules/world/regions.js",
       "src/engine/modules/world/rooms.js",
-      "src/engine/modules/world/terrain.js",
-      "src/engine/modules/world/travel-costs.js"
+      "src/engine/modules/world/terrain.js"
     ]
   },
   "cycles": [
@@ -79,34 +66,22 @@
       "src/engine/modules/ai/behaviors.js",
       "src/engine/modules/ai/targeting.js",
       "src/engine/modules/characters/character.js",
-      "src/engine/modules/characters/effects.js",
-      "src/engine/modules/characters/minions.js",
       "src/engine/modules/characters/movement.js",
       "src/engine/modules/characters/party.js",
-      "src/engine/modules/characters/stats.js",
       "src/engine/modules/combat/actions.js",
       "src/engine/modules/combat/encounters.js",
-      "src/engine/modules/combat/potions.js",
       "src/engine/modules/combat/scrolls.js",
       "src/engine/modules/combat/skill-effects.js",
-      "src/engine/modules/content/animations.js",
-      "src/engine/modules/content/balance.js",
       "src/engine/modules/content/classes.js",
-      "src/engine/modules/content/equipment.js",
       "src/engine/modules/content/guardians.js",
       "src/engine/modules/content/minions.js",
-      "src/engine/modules/loot/inventory.js",
-      "src/engine/modules/loot/items.js",
       "src/engine/modules/loot/treasure.js",
       "src/engine/modules/persistence/entities.js",
       "src/engine/modules/persistence/game-save.js",
       "src/engine/modules/progression/achievements.js",
-      "src/engine/modules/progression/points.js",
-      "src/engine/modules/progression/statistics.js",
       "src/engine/modules/progression/upgrades.js",
       "src/engine/modules/rendering/floating-text.js",
       "src/engine/modules/rendering/scene.js",
-      "src/engine/modules/rendering/sprites.js",
       "src/engine/modules/runtime/game.js",
       "src/engine/modules/simulation/characters.js",
       "src/engine/modules/simulation/loop.js",
@@ -120,7 +95,6 @@
       "src/engine/modules/views/monsters.js",
       "src/engine/modules/views/navigation.js",
       "src/engine/modules/views/party-creation.js",
-      "src/engine/modules/views/resources.js",
       "src/engine/modules/views/results.js",
       "src/engine/modules/views/upgrade-details.js",
       "src/engine/modules/world/dungeons.js",
@@ -129,8 +103,7 @@
       "src/engine/modules/world/pathfinding.js",
       "src/engine/modules/world/regions.js",
       "src/engine/modules/world/rooms.js",
-      "src/engine/modules/world/terrain.js",
-      "src/engine/modules/world/travel-costs.js"
+      "src/engine/modules/world/terrain.js"
     ]
   ],
   "initOrder": [
@@ -217,15 +190,6 @@
       "toInit": "initializeCoreMath",
       "toIndex": 5,
       "fromIndex": 6,
-      "violatesOrder": false
-    },
-    {
-      "from": "initializeContentBalance",
-      "fromModule": "src/engine/modules/content/balance.js",
-      "toModule": "src/engine/modules/progression/upgrades.js",
-      "toInit": "initializeProgressionUpgrades",
-      "toIndex": 34,
-      "fromIndex": 52,
       "violatesOrder": false
     },
     {
@@ -594,7 +558,7 @@
   "hotFields": [
     {
       "path": "game.state",
-      "readFiles": 35,
+      "readFiles": 28,
       "writeFiles": 0,
       "dirs": [
         "engine/modules/ai",
@@ -611,13 +575,12 @@
     },
     {
       "path": "game.state.adventurers",
-      "readFiles": 20,
+      "readFiles": 19,
       "writeFiles": 0,
       "dirs": [
         "engine/modules/ai",
         "engine/modules/characters",
         "engine/modules/combat",
-        "engine/modules/loot",
         "engine/modules/persistence",
         "engine/modules/progression",
         "engine/modules/rendering",
@@ -628,32 +591,16 @@
     },
     {
       "path": "game.state.adventurers.length",
-      "readFiles": 18,
+      "readFiles": 17,
       "writeFiles": 0,
       "dirs": [
         "engine/modules/characters",
         "engine/modules/combat",
-        "engine/modules/loot",
         "engine/modules/persistence",
         "engine/modules/progression",
         "engine/modules/simulation",
         "engine/modules/views",
         "engine/modules/world"
-      ]
-    },
-    {
-      "path": "game.state.party",
-      "readFiles": 14,
-      "writeFiles": 0,
-      "dirs": [
-        "engine/modules/ai",
-        "engine/modules/characters",
-        "engine/modules/combat",
-        "engine/modules/loot",
-        "engine/modules/persistence",
-        "engine/modules/progression",
-        "engine/modules/simulation",
-        "engine/modules/views"
       ]
     },
     {
@@ -671,17 +618,18 @@
       ]
     },
     {
-      "path": "game.state.turnNumber",
-      "readFiles": 12,
-      "writeFiles": 2,
+      "path": "game.state.party",
+      "readFiles": 13,
+      "writeFiles": 0,
       "dirs": [
         "engine/modules/ai",
         "engine/modules/characters",
         "engine/modules/combat",
+        "engine/modules/loot",
         "engine/modules/persistence",
+        "engine/modules/progression",
         "engine/modules/simulation",
-        "engine/modules/views",
-        "engine/modules/world"
+        "engine/modules/views"
       ]
     },
     {
@@ -700,7 +648,7 @@
     },
     {
       "path": "game.world",
-      "readFiles": 13,
+      "readFiles": 12,
       "writeFiles": 0,
       "dirs": [
         "engine/modules/ai",
@@ -712,14 +660,16 @@
       ]
     },
     {
-      "path": "game.state.statisticsRecorder",
-      "readFiles": 12,
-      "writeFiles": 0,
+      "path": "game.state.turnNumber",
+      "readFiles": 10,
+      "writeFiles": 2,
       "dirs": [
+        "engine/modules/ai",
         "engine/modules/characters",
         "engine/modules/combat",
-        "engine/modules/progression",
+        "engine/modules/persistence",
         "engine/modules/simulation",
+        "engine/modules/views",
         "engine/modules/world"
       ]
     },
@@ -750,6 +700,18 @@
       ]
     },
     {
+      "path": "game.state.statisticsRecorder",
+      "readFiles": 10,
+      "writeFiles": 0,
+      "dirs": [
+        "engine/modules/characters",
+        "engine/modules/combat",
+        "engine/modules/progression",
+        "engine/modules/simulation",
+        "engine/modules/world"
+      ]
+    },
+    {
       "path": "game.goldDrops",
       "readFiles": 9,
       "writeFiles": 0,
@@ -758,6 +720,19 @@
         "engine/modules/characters",
         "engine/modules/combat",
         "engine/modules/loot",
+        "engine/modules/rendering",
+        "engine/modules/simulation",
+        "engine/modules/world"
+      ]
+    },
+    {
+      "path": "game.itemDrops",
+      "readFiles": 9,
+      "writeFiles": 0,
+      "dirs": [
+        "engine/modules/ai",
+        "engine/modules/characters",
+        "engine/modules/combat",
         "engine/modules/rendering",
         "engine/modules/simulation",
         "engine/modules/world"
@@ -803,30 +778,6 @@
       ]
     },
     {
-      "path": "game.world.getTileAtPixel",
-      "readFiles": 8,
-      "writeFiles": 0,
-      "dirs": [
-        "engine/modules/ai",
-        "engine/modules/characters",
-        "engine/modules/rendering",
-        "engine/modules/world"
-      ]
-    },
-    {
-      "path": "game.potionDrops",
-      "readFiles": 8,
-      "writeFiles": 0,
-      "dirs": [
-        "engine/modules/ai",
-        "engine/modules/characters",
-        "engine/modules/combat",
-        "engine/modules/rendering",
-        "engine/modules/simulation",
-        "engine/modules/world"
-      ]
-    },
-    {
       "path": "game.currentDungeon",
       "readFiles": 5,
       "writeFiles": 3,
@@ -851,17 +802,6 @@
       ]
     },
     {
-      "path": "game.state.victoryCount",
-      "readFiles": 6,
-      "writeFiles": 2,
-      "dirs": [
-        "engine/modules/characters",
-        "engine/modules/loot",
-        "engine/modules/persistence",
-        "engine/modules/views"
-      ]
-    },
-    {
       "path": "game.monsterCatalog",
       "readFiles": 8,
       "writeFiles": 0,
@@ -874,16 +814,14 @@
       ]
     },
     {
-      "path": "game.itemDrops",
+      "path": "game.world.getTileAtPixel",
       "readFiles": 7,
       "writeFiles": 0,
       "dirs": [
         "engine/modules/ai",
         "engine/modules/characters",
-        "engine/modules/combat",
-        "engine/modules/loot",
         "engine/modules/rendering",
-        "engine/modules/simulation"
+        "engine/modules/world"
       ]
     },
     {
@@ -913,6 +851,31 @@
       ]
     },
     {
+      "path": "game.potionDrops",
+      "readFiles": 7,
+      "writeFiles": 0,
+      "dirs": [
+        "engine/modules/ai",
+        "engine/modules/characters",
+        "engine/modules/combat",
+        "engine/modules/rendering",
+        "engine/modules/simulation",
+        "engine/modules/world"
+      ]
+    },
+    {
+      "path": "game.itemSprites",
+      "readFiles": 7,
+      "writeFiles": 0,
+      "dirs": [
+        "engine/modules/characters",
+        "engine/modules/combat",
+        "engine/modules/persistence",
+        "engine/modules/simulation",
+        "engine/modules/views"
+      ]
+    },
+    {
       "path": "game.shops",
       "readFiles": 7,
       "writeFiles": 0,
@@ -925,15 +888,12 @@
       ]
     },
     {
-      "path": "game.state.scrollCaster",
+      "path": "game.state.victoryCount",
       "readFiles": 5,
       "writeFiles": 2,
       "dirs": [
         "engine/modules/characters",
-        "engine/modules/combat",
         "engine/modules/persistence",
-        "engine/modules/progression",
-        "engine/modules/simulation",
         "engine/modules/views"
       ]
     },
@@ -996,26 +956,14 @@
       ]
     },
     {
-      "path": "game.itemGenerator",
-      "readFiles": 6,
-      "writeFiles": 0,
-      "dirs": [
-        "engine/modules/characters",
-        "engine/modules/content",
-        "engine/modules/loot",
-        "engine/modules/persistence",
-        "engine/modules/simulation",
-        "engine/modules/views"
-      ]
-    },
-    {
-      "path": "game.potions",
+      "path": "game.inventories",
       "readFiles": 6,
       "writeFiles": 0,
       "dirs": [
         "engine/modules/characters",
         "engine/modules/combat",
         "engine/modules/persistence",
+        "engine/modules/progression",
         "engine/modules/simulation",
         "engine/modules/views"
       ]
@@ -1027,6 +975,18 @@
       "dirs": [
         "engine/modules/characters",
         "engine/modules/persistence",
+        "engine/modules/simulation",
+        "engine/modules/views"
+      ]
+    },
+    {
+      "path": "game.state.scrollCaster",
+      "readFiles": 4,
+      "writeFiles": 2,
+      "dirs": [
+        "engine/modules/combat",
+        "engine/modules/persistence",
+        "engine/modules/progression",
         "engine/modules/simulation",
         "engine/modules/views"
       ]
@@ -1109,9 +1069,18 @@
       "SaveScroll",
       "SaveAchievement",
       "SaveGameOptions",
+      "SavePointEventCount",
+      "SavePointUpgrade",
+      "SavePointManagerState",
+      "SaveDungeonState",
+      "SaveDungeonManagerState",
+      "SaveMonsterTypeEntry",
+      "SaveMonsterTypeState",
+      "SaveMonsterTypesState",
+      "SaveDataUninitialized",
       "SaveData"
     ],
-    "referencedOutsideDtoFile": false,
+    "referencedOutsideDtoFile": true,
     "usage": {
       "SaveItemEffect": [],
       "SaveItem": [],
@@ -1121,7 +1090,113 @@
       "SaveScroll": [],
       "SaveAchievement": [],
       "SaveGameOptions": [],
-      "SaveData": []
+      "SavePointEventCount": [],
+      "SavePointUpgrade": [],
+      "SavePointManagerState": [],
+      "SaveDungeonState": [],
+      "SaveDungeonManagerState": [],
+      "SaveMonsterTypeEntry": [
+        "src/engine/modules/persistence/entities.js"
+      ],
+      "SaveMonsterTypeState": [
+        "src/engine/modules/persistence/entities.js"
+      ],
+      "SaveMonsterTypesState": [
+        "src/engine/modules/persistence/entities.js"
+      ],
+      "SaveDataUninitialized": [
+        "src/engine/modules/persistence/game-save.js"
+      ],
+      "SaveData": [
+        "src/engine/modules/persistence/entities.js",
+        "src/engine/modules/persistence/game-save.js"
+      ]
     }
+  },
+  "naming": {
+    "singleLetterBindings": 1602,
+    "filesWithSingleLetterBindings": 39,
+    "topFiles": [
+      {
+        "file": "src/engine/modules/views/character.js",
+        "count": 98
+      },
+      {
+        "file": "src/engine/modules/persistence/entities.js",
+        "count": 94
+      },
+      {
+        "file": "src/engine/modules/ai/targeting.js",
+        "count": 89
+      },
+      {
+        "file": "src/engine/modules/views/expedition.js",
+        "count": 84
+      },
+      {
+        "file": "src/engine/modules/persistence/game-save.js",
+        "count": 70
+      },
+      {
+        "file": "src/engine/modules/characters/character.js",
+        "count": 68
+      },
+      {
+        "file": "src/engine/modules/simulation/characters.js",
+        "count": 68
+      },
+      {
+        "file": "src/engine/modules/views/party-creation.js",
+        "count": 64
+      },
+      {
+        "file": "src/engine/modules/rendering/sprites.js",
+        "count": 61
+      },
+      {
+        "file": "src/engine/modules/world/regions.js",
+        "count": 58
+      },
+      {
+        "file": "src/engine/modules/characters/party.js",
+        "count": 56
+      },
+      {
+        "file": "src/engine/modules/views/information.js",
+        "count": 52
+      },
+      {
+        "file": "src/engine/modules/views/achievements.js",
+        "count": 51
+      },
+      {
+        "file": "src/engine/modules/world/dungeons.js",
+        "count": 51
+      },
+      {
+        "file": "src/engine/modules/combat/encounters.js",
+        "count": 50
+      },
+      {
+        "file": "src/engine/modules/core/math.js",
+        "count": 49
+      },
+      {
+        "file": "src/engine/modules/views/dungeons.js",
+        "count": 47
+      },
+      {
+        "file": "src/engine/modules/simulation/tick.js",
+        "count": 46
+      },
+      {
+        "file": "src/engine/modules/world/pathfinding.js",
+        "count": 44
+      },
+      {
+        "file": "src/engine/modules/characters/movement.js",
+        "count": 40
+      }
+    ]
   }
 }

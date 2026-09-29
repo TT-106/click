@@ -32,209 +32,209 @@ export function CombatAction() {
   this.returnOriginPosition = null;
 }
 /** @typedef {CombatAction & { setTargetCharacter: (target: unknown) => void }} TargetedCombatAction */
-export function findTargetsInRange(a, b, c, d) {
-  a = getOpponents(a);
-  if (0 === a.length) {
+export function findTargetsInRange(attacker, sourceCharacter, targetLimit, maxDistance) {
+  var opponents = getOpponents(attacker);
+  if (0 === opponents.length) {
     return null;
   }
-  var f = b.position.room;
-  if (!f) {
+  var sourceRoom = sourceCharacter.position.room;
+  if (!sourceRoom) {
     return null;
   }
-  var g,
-    h = b.position.levelPosition,
-    l,
-    n = [];
-  for (b = 0; b < a.length && (g = a[b], g.isDead || g.position.room !== f || (l = h.distanceTo(g.position.levelPosition), !(l <= d && (n.push(g), n.length >= c)))); b++) {}
-  return n;
+  var targetIndex, opponent,
+    sourcePosition = sourceCharacter.position.levelPosition,
+    distance,
+    targets = [];
+  for (targetIndex = 0; targetIndex < opponents.length && (opponent = opponents[targetIndex], opponent.isDead || opponent.position.room !== sourceRoom || (distance = sourcePosition.distanceTo(opponent.position.levelPosition), !(distance <= maxDistance && (targets.push(opponent), targets.length >= targetLimit)))); targetIndex++) {}
+  return targets;
 }
 export function CombatQueue() {
   this.queue = [];
 }
 export function clearCombatQueue() {
-  var a = game.combatQueue;
-  if (0 < a.queue.length) {
-    a.queue.length = 0;
+  var combatQueue = game.combatQueue;
+  if (0 < combatQueue.queue.length) {
+    combatQueue.queue.length = 0;
   }
 }
-export function advanceCombatAction(a, b) {
-  var c = b.impactEffect;
-  if (c && !c.hasSpawned) {
-    if (b.noDamage) {
-      return b.resolved = true;
+export function advanceCombatAction(combatQueue, combatAction) {
+  var impactEffect = combatAction.impactEffect, recheckDefinition;
+  if (impactEffect && !impactEffect.hasSpawned) {
+    if (combatAction.noDamage) {
+      return combatAction.resolved = true;
     }
-    addVisualEffect(game.effects, c);
-    var d = b.actionDefinition;
-    if (d && d.applyEffectOnImpact) {
-      applySpellEffect(a, b);
+    addVisualEffect(game.effects, impactEffect);
+    var actionDefinition = combatAction.actionDefinition, chainedAction, returningAction, targetStats;
+    if (actionDefinition && actionDefinition.applyEffectOnImpact) {
+      applySpellEffect(combatQueue, combatAction);
     }
-    if (0 < b.remainingDamage) {
-      showDamageText(b.targetCharacter, b.remainingDamage);
+    if (0 < combatAction.remainingDamage) {
+      showDamageText(combatAction.targetCharacter, combatAction.remainingDamage);
     }
-    if (b.chains) {
-      if (d = createChainAction(b)) {
-        enqueueCombatAction(a, d);
+    if (combatAction.chains) {
+      if (chainedAction = createChainAction(combatAction)) {
+        enqueueCombatAction(combatQueue, chainedAction);
       }
     } else {
-      if (b.returns && (d = createReturningAction(b))) {
-        enqueueCombatAction(a, d);
+      if (combatAction.returns && (returningAction = createReturningAction(combatAction))) {
+        enqueueCombatAction(combatQueue, returningAction);
       }
     }
   }
-  if ((d = b.impactEffect) && d.previousFrameIndex !== d.frameIndex) {
-    var f = d.getFrameCount();
-    if (b.actionDefinition) {
-      var g = b.targetCharacter,
-        h = b.actionDefinition,
-        l = h.spellCategoryId;
-      if (g) {
-        if (d = g.stats, 4 === l || 5 === l || 8 === l || 13 === l || 12 === l) {
-          applyActionDamage(b);
-        } else if (1 === l && (h = h.potencyPercent, l = statValue(d.maxHealth), d.health < l)) {
-          var n = b.attacker.stats.healPotency;
-          if (1 < n) {
-            h = Math.min(100, h * n);
+  if ((impactEffect = combatAction.impactEffect) && impactEffect.previousFrameIndex !== impactEffect.frameIndex) {
+    var effectFrameCount = impactEffect.getFrameCount(), healAmount;
+    if (combatAction.actionDefinition) {
+      var targetCharacter = combatAction.targetCharacter,
+        definition = combatAction.actionDefinition,
+        spellCategoryId = definition.spellCategoryId, maxHealth, potencyPercent, floatingTextLayer;
+      if (targetCharacter) {
+        if (targetStats = targetCharacter.stats, 4 === spellCategoryId || 5 === spellCategoryId || 8 === spellCategoryId || 13 === spellCategoryId || 12 === spellCategoryId) {
+          applyActionDamage(combatAction);
+        } else if (1 === spellCategoryId && (potencyPercent = definition.potencyPercent, maxHealth = statValue(targetStats.maxHealth), targetStats.health < maxHealth)) {
+          var healPotency = combatAction.attacker.stats.healPotency;
+          if (1 < healPotency) {
+            potencyPercent = Math.min(100, potencyPercent * healPotency);
           }
-          f = Math.max(1, floorNumber(h / 100 * l / f));
-          h = game.floatingText;
-          if (0 < f) {
-            showFloatingText(h, g, "+" + f, "#00FF00");
+          healAmount = Math.max(1, floorNumber(potencyPercent / 100 * maxHealth / effectFrameCount));
+          floatingTextLayer = game.floatingText;
+          if (0 < healAmount) {
+            showFloatingText(floatingTextLayer, targetCharacter, "+" + healAmount, "#00FF00");
           }
-          d.health += floorNumber(f);
-          g = statValue(d.maxHealth);
-          if (d.health > g) {
-            d.health = g;
+          targetStats.health += floorNumber(healAmount);
+          maxHealth = statValue(targetStats.maxHealth);
+          if (targetStats.health > maxHealth) {
+            targetStats.health = maxHealth;
           }
         }
       }
     } else {
-      if (0 < b.remainingDamage) {
-        applyActionDamage(b);
+      if (0 < combatAction.remainingDamage) {
+        applyActionDamage(combatAction);
       }
     }
   }
-  return c && c.isFinished() ? ((c = b.actionDefinition) && (c.applyEffectOnImpact || applySpellEffect(a, b)), b.resolved = true) : false;
+  return impactEffect && impactEffect.isFinished() ? ((recheckDefinition = combatAction.actionDefinition) && (recheckDefinition.applyEffectOnImpact || applySpellEffect(combatQueue, combatAction)), combatAction.resolved = true) : false;
 }
-export function applySpellEffect(a, b) {
-  var c = b.actionDefinition,
-    d = c.spellCategoryId;
-  if (2 === d || 3 === d) {
-    var f = b.attacker,
-      d = c.statusEffectTypeId,
-      c = c.potencyPercent,
-      g = statusEffectDefinitions[d];
-    if (g) {
-      var f = f.stats,
-        h = 1;
-      switch (d) {
+export function applySpellEffect(combatQueue, combatAction) {
+  var actionDefinition = combatAction.actionDefinition,
+    spellCategoryId = actionDefinition.spellCategoryId, statusEffect, targetEffects, reviveAttacker, revivePosition, reviveTarget, monsterRegistry, reviveIndex, chickenCaster, chickenTargetPosition, barbarianChance, ninjaChance, rogueChance, chickenMinionDefinition, claimedItem, claimedRarity, cleanseTarget, cleanseEffects;
+  if (2 === spellCategoryId || 3 === spellCategoryId) {
+    var attacker = combatAction.attacker,
+      statusEffectTypeId = actionDefinition.statusEffectTypeId,
+      potencyPercent = actionDefinition.potencyPercent,
+      effectDefinition = statusEffectDefinitions[statusEffectTypeId];
+    if (effectDefinition) {
+      var casterStats = attacker.stats,
+        potencyMultiplier = 1;
+      switch (statusEffectTypeId) {
         case 5:
-          h = f.buffArmorPotency;
+          potencyMultiplier = casterStats.buffArmorPotency;
           break;
         case 6:
-          h = f.buffDamagePotency;
+          potencyMultiplier = casterStats.buffDamagePotency;
           break;
         case 7:
-          h = f.buffAttackRatingPotency;
+          potencyMultiplier = casterStats.buffAttackRatingPotency;
           break;
         case 8:
-          h = f.buffDefenceRatingPotency;
+          potencyMultiplier = casterStats.buffDefenceRatingPotency;
       }
-      d = new StatusEffect(d, game.state.turnNumber, g.durationTurns, game.animations.getAnimation(g.animationName), g.overlayFrameIndex, g.hasAnimation, 1 > h ? c : c * h);
+      statusEffect = new StatusEffect(statusEffectTypeId, game.state.turnNumber, effectDefinition.durationTurns, game.animations.getAnimation(effectDefinition.animationName), effectDefinition.overlayFrameIndex, effectDefinition.hasAnimation, 1 > potencyMultiplier ? potencyPercent : potencyPercent * potencyMultiplier);
     } else {
-      console.log("Failed to find char effect description: " + d);
-      d = null;
+      console.log("Failed to find char effect description: " + statusEffectTypeId);
+      statusEffect = null;
     }
-    c = b.targetCharacter.effects;
-    if (d) {
-      c.activeEffects.push(d);
-      if (isDisablingEffect(d)) {
-        c.isDisabled = true;
+    targetEffects = combatAction.targetCharacter.effects;
+    if (statusEffect) {
+      targetEffects.activeEffects.push(statusEffect);
+      if (isDisablingEffect(statusEffect)) {
+        targetEffects.isDisabled = true;
       }
     }
-  } else if (10 === d || 9 === d) {
-    summonSpellMinion(c, b.attacker, b.impactEffect.targetPosition);
-  } else if (11 === d) {
-    d = b.attacker;
-    g = b.impactEffect.targetPosition;
-    h = b.targetCharacter;
-    f = game.monsters;
-    if (h) {
-      h = f.defeatedMonsters.indexOf(h);
-      if (-1 < h) {
-        f.defeatedMonsters.splice(h, 1);
+  } else if (10 === spellCategoryId || 9 === spellCategoryId) {
+    summonSpellMinion(actionDefinition, combatAction.attacker, combatAction.impactEffect.targetPosition);
+  } else if (11 === spellCategoryId) {
+    reviveAttacker = combatAction.attacker;
+    revivePosition = combatAction.impactEffect.targetPosition;
+    reviveTarget = combatAction.targetCharacter;
+    monsterRegistry = game.monsters;
+    if (reviveTarget) {
+      reviveIndex = monsterRegistry.defeatedMonsters.indexOf(reviveTarget);
+      if (-1 < reviveIndex) {
+        monsterRegistry.defeatedMonsters.splice(reviveIndex, 1);
       }
     }
-    summonSpellMinion(c, d, g);
-  } else if (17 === d) {
-    c = b.attacker;
-    d = b.impactEffect.targetPosition;
-    var chickenStats = c.stats;
-    g = chickenStats.barbarianChickenChance;
-    f = chickenStats.ninjaChickenChance;
-    h = chickenStats.rogueChickenChance;
-    if (0 < g && Math.random() < g / 100) {
-      g = barbarianChickenMinion;
-      showFloatingText(game.floatingText, c, "野蛮人小鸡!", "blue");
+    summonSpellMinion(actionDefinition, reviveAttacker, revivePosition);
+  } else if (17 === spellCategoryId) {
+    chickenCaster = combatAction.attacker;
+    chickenTargetPosition = combatAction.impactEffect.targetPosition;
+    var chickenStats = chickenCaster.stats;
+    barbarianChance = chickenStats.barbarianChickenChance;
+    ninjaChance = chickenStats.ninjaChickenChance;
+    rogueChance = chickenStats.rogueChickenChance;
+    if (0 < barbarianChance && Math.random() < barbarianChance / 100) {
+      chickenMinionDefinition = barbarianChickenMinion;
+      showFloatingText(game.floatingText, chickenCaster, "野蛮人小鸡!", "blue");
     } else {
-      if (0 < f && Math.random() < f / 100) {
-        g = ninjaChickenMinion;
-        showFloatingText(game.floatingText, c, "忍者小鸡!", "blue");
+      if (0 < ninjaChance && Math.random() < ninjaChance / 100) {
+        chickenMinionDefinition = ninjaChickenMinion;
+        showFloatingText(game.floatingText, chickenCaster, "忍者小鸡!", "blue");
       } else {
-        if (0 < h && Math.random() < h / 100) {
-          g = rogueChickenMinion;
-          showFloatingText(game.floatingText, c, "盗贼小鸡!", "blue");
+        if (0 < rogueChance && Math.random() < rogueChance / 100) {
+          chickenMinionDefinition = rogueChickenMinion;
+          showFloatingText(game.floatingText, chickenCaster, "盗贼小鸡!", "blue");
         } else {
-          g = chickenMinion;
+          chickenMinionDefinition = chickenMinion;
         }
       }
     }
-    spawnMinion(g, c, d);
-  } else if (14 === d) {
-    d = b.attacker.position.levelPosition;
-    g = game.goldDrops.drops;
-    for (c = g.length - 1; 0 <= c; c--) {
-      f = g[c];
-      if (!f.collected) {
+    spawnMinion(chickenMinionDefinition, chickenCaster, chickenTargetPosition);
+  } else if (14 === spellCategoryId) {
+    var collectorPosition = combatAction.attacker.position.levelPosition,
+      dropList = game.goldDrops.drops, dropIndex, drop;
+    for (dropIndex = dropList.length - 1; 0 <= dropIndex; dropIndex--) {
+      drop = dropList[dropIndex];
+      if (!drop.collected) {
         var goldOffset = new Vector2();
-        setVector(goldOffset, f.levelPositionX, f.levelPositionY);
-        var goldEffect = new VisualEffect("Gold Sparkles", d, goldOffset, false, 1);
+        setVector(goldOffset, drop.levelPositionX, drop.levelPositionY);
+        var goldEffect = new VisualEffect("Gold Sparkles", collectorPosition, goldOffset, false, 1);
         addVisualEffect(game.effects, goldEffect);
-        addGold(f.goldAmount);
-        game.state.statisticsRecorder.recordGoldFromMonsters(f.goldAmount);
-        f.setCollected(true);
-        removeGoldDrop(f);
+        addGold(drop.goldAmount);
+        game.state.statisticsRecorder.recordGoldFromMonsters(drop.goldAmount);
+        drop.setCollected(true);
+        removeGoldDrop(drop);
         awardAdventurePoints(9);
       }
     }
-    d = b.attacker.position.levelPosition;
-    g = game.itemDrops.drops;
-    for (c = g.length - 1; 0 <= c; c--) {
-      var itemDrop = g[c];
+    collectorPosition = combatAction.attacker.position.levelPosition;
+    dropList = game.itemDrops.drops;
+    for (dropIndex = dropList.length - 1; 0 <= dropIndex; dropIndex--) {
+      var itemDrop = dropList[dropIndex];
       if (!itemDrop.collected) {
         var itemOffset = new Vector2();
         setVector(itemOffset, itemDrop.levelPositionX, itemDrop.levelPositionY);
-        var itemEffect = new VisualEffect("Blue Sparkles", d, itemOffset, false, 1);
+        var itemEffect = new VisualEffect("Blue Sparkles", collectorPosition, itemOffset, false, 1);
         addVisualEffect(game.effects, itemEffect);
-        f = itemDrop.getItem();
+        claimedItem = itemDrop.getItem();
         itemDrop.setCollected(true);
-        removeItemDrop(itemDrop);
-        a: {
+        removeItemDrop(itemDrop, game.itemDrops);
+        findOwner: {
           var itemOwner = undefined;
           for (var ownerIndex = 0; ownerIndex < game.state.adventurers.length; ownerIndex++) {
-            if (game.state.adventurers[ownerIndex].characterClass === f.characterClass) {
+            if (game.state.adventurers[ownerIndex].characterClass === claimedItem.characterClass) {
               itemOwner = game.state.adventurers[ownerIndex];
-              break a;
+              break findOwner;
             }
           }
           console.log("failed to find item character");
           itemOwner = null;
         }
-        game.state.statisticsRecorder.recordItemFound(f);
-        addInventoryItem(itemOwner.inventory, f);
+        game.state.statisticsRecorder.recordItemFound(claimedItem);
+        addInventoryItem(itemOwner.inventory, claimedItem, game.inventories);
         awardAdventurePoints(12);
-        f = f.getRarity();
-        if (0 != f) {
-          switch (f) {
+        claimedRarity = claimedItem.getRarity();
+        if (0 != claimedRarity) {
+          switch (claimedRarity) {
             case 1:
               awardAdventurePoints(13);
               break;
@@ -250,316 +250,316 @@ export function applySpellEffect(a, b) {
         }
       }
     }
-    d = b.attacker.position.levelPosition;
-    g = game.scrollDrops.drops;
-    for (c = g.length - 1; 0 <= c; c--) {
-      f = g[c];
-      if (!f.collected) {
+    collectorPosition = combatAction.attacker.position.levelPosition;
+    dropList = game.scrollDrops.drops;
+    for (dropIndex = dropList.length - 1; 0 <= dropIndex; dropIndex--) {
+      drop = dropList[dropIndex];
+      if (!drop.collected) {
         var scrollOffset = new Vector2();
-        setVector(scrollOffset, f.levelPositionX, f.levelPositionY);
-        var scrollEffect = new VisualEffect("Pink Sparkles", d, scrollOffset, false, 1);
+        setVector(scrollOffset, drop.levelPositionX, drop.levelPositionY);
+        var scrollEffect = new VisualEffect("Pink Sparkles", collectorPosition, scrollOffset, false, 1);
         addVisualEffect(game.effects, scrollEffect);
-        f.setCollected(true);
-        removeScrollDrop(f);
-        addScrollCharge(f.getScroll());
+        drop.setCollected(true);
+        removeScrollDrop(drop);
+        addScrollCharge(drop.getScroll());
         awardAdventurePoints(10);
       }
     }
-    d = b.attacker.position.levelPosition;
-    g = game.potionDrops.drops;
-    for (c = g.length - 1; 0 <= c; c--) {
-      f = g[c];
-      if (!f.collected) {
+    collectorPosition = combatAction.attacker.position.levelPosition;
+    dropList = game.potionDrops.drops;
+    for (dropIndex = dropList.length - 1; 0 <= dropIndex; dropIndex--) {
+      drop = dropList[dropIndex];
+      if (!drop.collected) {
         var potionOffset = new Vector2();
-        setVector(potionOffset, f.levelPositionX, f.levelPositionY);
-        var potionEffect = new VisualEffect("Green Sparkles", d, potionOffset, false, 1);
+        setVector(potionOffset, drop.levelPositionX, drop.levelPositionY);
+        var potionEffect = new VisualEffect("Green Sparkles", collectorPosition, potionOffset, false, 1);
         addVisualEffect(game.effects, potionEffect);
-        f.setCollected(true);
-        removePotionDrop(f);
-        addPotion(f.potion);
+        drop.setCollected(true);
+        removePotionDrop(drop, game.potionDrops);
+        addPotion(drop.potion, game.potions);
         awardAdventurePoints(11);
       }
     }
   } else {
-    if (15 === d) {
-      a.findTreasureSpell(b);
+    if (15 === spellCategoryId) {
+      combatQueue.findTreasureSpell(combatAction);
     } else {
-      if (16 === d && (c = b.targetCharacter)) {
-        c = c.effects;
-        c.isStunned = false;
-        removeStunEffects(c);
+      if (16 === spellCategoryId && (cleanseTarget = combatAction.targetCharacter)) {
+        cleanseEffects = cleanseTarget.effects;
+        cleanseEffects.isStunned = false;
+        removeStunEffects(cleanseEffects);
       }
     }
   }
 }
-export function summonSpellMinion(a, b, c) {
-  if (a = minionsBySpell[a.name]) {
-    spawnMinion(a, b, c);
+export function summonSpellMinion(spell, attacker, targetPosition) {
+  var minionDefinition = minionsBySpell[spell.name]; if (minionDefinition) {
+    spawnMinion(minionDefinition, attacker, targetPosition);
   } else {
     console.log("Failed to find minion for summon spell.");
   }
 }
-export function applyActionDamage(a) {
-  var b = a.targetCharacter,
-    c = b.stats,
-    d = a.remainingDamage;
-  if (0 !== d) {
-    var f = 1 + randomInt(d - 1);
-    if (0 !== f) {
-      d = Math.max(0, d - f);
-      a.remainingDamage = d;
-      c.health -= floorNumber(f);
-      if (0 > c.health) {
-        c.health = 0;
+export function applyActionDamage(combatAction) {
+  var targetCharacter = combatAction.targetCharacter,
+    targetStats = targetCharacter.stats,
+    remainingDamage = combatAction.remainingDamage;
+  if (0 !== remainingDamage) {
+    var rollDamage = 1 + randomInt(remainingDamage - 1);
+    if (0 !== rollDamage) {
+      remainingDamage = Math.max(0, remainingDamage - rollDamage);
+      combatAction.remainingDamage = remainingDamage;
+      targetStats.health -= floorNumber(rollDamage);
+      if (0 > targetStats.health) {
+        targetStats.health = 0;
       }
-      d = a.attacker;
-      d = 1 === d.characterType ? d.summoner.stats : d.stats;
-      d.damageGiven += f;
-      d = b.stats;
-      d.damageReceived += f;
-      if (0 === c.health) {
-        resolveCharacterDefeat(a.attacker, b);
+      var attacker = combatAction.attacker,
+        attackerStats = 1 === attacker.characterType ? attacker.summoner.stats : attacker.stats;
+      attackerStats.damageGiven += rollDamage;
+      targetStats = targetCharacter.stats;
+      targetStats.damageReceived += rollDamage;
+      if (0 === targetStats.health) {
+        resolveCharacterDefeat(combatAction.attacker, targetCharacter);
       }
     }
   }
 }
-export function resolveCharacterDefeat(a, b) {
-  if (b.characterType === ADVENTURER_TYPE) {
-    if (!b.effects.isStunned) {
+export function resolveCharacterDefeat(attacker, defeated) {
+  if (defeated.characterType === ADVENTURER_TYPE) {
+    if (!defeated.effects.isStunned) {
       game.state.statisticsRecorder.recordCharacterStunned();
-      b.effects.isStunned = true;
-      var c = b.position.levelPosition,
+      defeated.effects.isStunned = true;
+      var defeatedLevelPosition = defeated.position.levelPosition, stunVisual,
         stunEffect = new StatusEffect(13, game.state.turnNumber, stunEffectDefinition.durationTurns, game.animations.getAnimation(stunEffectDefinition.animationName), stunEffectDefinition.overlayFrameIndex, stunEffectDefinition.hasAnimation, 0);
-      c = new VisualEffect(stunEffectDefinition.animationName, c, c, false, 1);
-      b.stats.stunCount++;
-      var f = b.effects;
+      stunVisual = new VisualEffect(stunEffectDefinition.animationName, defeatedLevelPosition, defeatedLevelPosition, false, 1);
+      defeated.stats.stunCount++;
+      var stunEffects = defeated.effects;
       if (stunEffect) {
-        f.activeEffects.push(stunEffect);
+        stunEffects.activeEffects.push(stunEffect);
         if (isDisablingEffect(stunEffect)) {
-          f.isDisabled = true;
+          stunEffects.isDisabled = true;
         }
       }
-      c.loopsWhileStunned = true;
-      c.boundCharacter = b;
-      addVisualEffect(game.effects, c);
-      showFloatingText(game.floatingText, b, "昏迷!", "white");
+      stunVisual.loopsWhileStunned = true;
+      stunVisual.boundCharacter = defeated;
+      addVisualEffect(game.effects, stunVisual);
+      showFloatingText(game.floatingText, defeated, "昏迷!", "white");
     }
-  } else if (1 === b.characterType) {
-    game.lifecycle.despawnMinion(b);
-  } else if (4 === b.characterType) {
-    if (!b.isDead) {
-      var g = b.position,
-        d = 1 === a.characterType ? a.summoner : a;
-      if (isAdventurerOrMinion(d)) {
-        d.stats.kills++;
+  } else if (1 === defeated.characterType) {
+    game.lifecycle.despawnMinion(defeated);
+  } else if (4 === defeated.characterType) {
+    if (!defeated.isDead) {
+      var defeatedPosition = defeated.position,
+        killer = 1 === attacker.characterType ? attacker.summoner : attacker, defeatedMonsterType;
+      if (isAdventurerOrMinion(killer)) {
+        killer.stats.kills++;
         addKills(doubleKillsModifier.currentValue);
         game.state.statisticsRecorder.recordDirectKill();
-        if (5 === d.characterType) {
+        if (5 === killer.characterType) {
           game.state.statisticsRecorder.recordScrollKill();
         }
-        if (1 === a.characterType) {
+        if (1 === attacker.characterType) {
           game.state.statisticsRecorder.recordMinionKill();
         }
-        d = b.monsterType;
-        addExperience(d.experienceReward * doubleExperienceModifier.currentValue);
-        recordMonsterTypeKill(d);
+        defeatedMonsterType = defeated.monsterType;
+        addExperience(defeatedMonsterType.experienceReward * doubleExperienceModifier.currentValue);
+        recordMonsterTypeKill(defeatedMonsterType);
       }
-      var d = g.room,
-        c = roomLeftPixels(d) + game.tileSize;
-      f = roomRightPixels(d) - game.tileSize;
-      var h = roomTopPixels(d) + game.tileSize,
-        l = roomBottomPixels(d) - game.tileSize,
-        n = g.getLevelPositionX(),
-        p = g.getLevelPositionY(),
-        s = 10 + randomInt(10),
-        u;
+      var dropRoom = defeatedPosition.room,
+        westBound = roomLeftPixels(dropRoom) + game.tileSize;
+      eastBound = roomRightPixels(dropRoom) - game.tileSize;
+      var northBound = roomTopPixels(dropRoom) + game.tileSize,
+        southBound = roomBottomPixels(dropRoom) - game.tileSize,
+        defeatedX = defeatedPosition.getLevelPositionX(),
+        defeatedY = defeatedPosition.getLevelPositionY(),
+        goldDropCount = 10 + randomInt(10),
+        goldAmount, goldDrop, dropIndex, eastBound, itemCount, scrollCount, potionCount, unlockedScrolls, scrollDefinition, scrollDrop, potion, potionDrop, corpseSprite;
       if (doubleGoldDropsModifier.currentValue) {
-        s *= 2;
+        goldDropCount *= 2;
       }
-      for (g = 0; g < s; g++) {
-        u = 1 + rollGoldDrop();
-        u = new GoldDrop(u, tickCharacterTurn(n, c, f), tickCharacterTurn(p, h, l), d);
-        game.goldDrops.drops.push(u);
+      for (dropIndex = 0; dropIndex < goldDropCount; dropIndex++) {
+        goldAmount = 1 + rollGoldDrop();
+        goldDrop = new GoldDrop(goldAmount, tickCharacterTurn(defeatedX, westBound, eastBound), tickCharacterTurn(defeatedY, northBound, southBound), dropRoom);
+        game.goldDrops.drops.push(goldDrop);
       }
-      s = 7 + randomInt(8);
+      itemCount = 7 + randomInt(8);
       if (doubleItemDropsModifier.currentValue) {
-        s *= 2;
+        itemCount *= 2;
       }
-      for (g = 0; g < s; g++) {
-        spawnItemDrop(game.itemDrops, tickCharacterTurn(n, c, f), tickCharacterTurn(p, h, l), d, b.stats.characterLevel);
+      for (dropIndex = 0; dropIndex < itemCount; dropIndex++) {
+        spawnItemDrop(game.itemDrops, tickCharacterTurn(defeatedX, westBound, eastBound), tickCharacterTurn(defeatedY, northBound, southBound), dropRoom, defeated.stats.characterLevel, game.itemGenerator, game.state.adventurers);
       }
-      s = 2 + randomInt(5);
-      for (g = 0; g < s; g++) {
-        u = game.scrolls.unlockedScrolls;
-        u = u[randomInt(u.length)];
-        u = new ScrollDrop(u, tickCharacterTurn(n, c, f), tickCharacterTurn(p, h, l), d);
-        game.scrollDrops.drops.push(u);
+      scrollCount = 2 + randomInt(5);
+      for (dropIndex = 0; dropIndex < scrollCount; dropIndex++) {
+        unlockedScrolls = game.scrolls.unlockedScrolls;
+        scrollDefinition = unlockedScrolls[randomInt(unlockedScrolls.length)];
+        scrollDrop = new ScrollDrop(scrollDefinition, tickCharacterTurn(defeatedX, westBound, eastBound), tickCharacterTurn(defeatedY, northBound, southBound), dropRoom);
+        game.scrollDrops.drops.push(scrollDrop);
       }
-      s = 0 + randomInt(2);
-      for (g = 0; g < s && game.potions.potionList.length < BASE_POTION_CAPACITY + potionCapacityBonus.currentValue; g++) {
-        u = new Potion(potionDefinitions[randomInt(potionDefinitions.length)]);
-        u = new PotionDrop(u, tickCharacterTurn(n, c, f), tickCharacterTurn(p, h, l), d);
-        game.potionDrops.drops.push(u);
+      potionCount = 0 + randomInt(2);
+      for (dropIndex = 0; dropIndex < potionCount && game.potions.potionList.length < BASE_POTION_CAPACITY + potionCapacityBonus.currentValue; dropIndex++) {
+        potion = new Potion(potionDefinitions[randomInt(potionDefinitions.length)], game.itemSprites);
+        potionDrop = new PotionDrop(potion, tickCharacterTurn(defeatedX, westBound, eastBound), tickCharacterTurn(defeatedY, northBound, southBound), dropRoom);
+        game.potionDrops.drops.push(potionDrop);
       }
-      b.isDead = true;
-      d = updateWorldTravel();
-      b.sprite = d;
-      game.monsters.clearEncounter(b);
+      defeated.isDead = true;
+      corpseSprite = updateWorldTravel();
+      defeated.sprite = corpseSprite;
+      game.monsters.clearEncounter(defeated);
       game.state.encounter.clearEncounter();
-      recordGameEvent("Boss Defeated", "等级:" + b.stats.characterLevel);
-      showFloatingText(game.floatingText, b, "击杀首领!", "white");
+      recordGameEvent("Boss Defeated", "等级:" + defeated.stats.characterLevel);
+      showFloatingText(game.floatingText, defeated, "击杀首领!", "white");
     }
   } else {
-    game.lifecycle.clearEncounter(a, b);
+    game.lifecycle.clearEncounter(attacker, defeated);
   }
 }
-export function enqueueCombatAction(a, b) {
-  a.queue.push(b);
+export function enqueueCombatAction(combatQueue, combatAction) {
+  combatQueue.queue.push(combatAction);
 }
-export function performMultiAttack(a, b) {
-  var c = a.stats,
-    d = c.extraAttackChance / 100,
-    f = 0,
-    g;
-  for (g = 0; g < c.extraAttackCount; g++) {
-    if (Math.random() < d) {
-      f++;
+export function performMultiAttack(attacker, isRangedAttack) {
+  var attackerStats = attacker.stats, targets,
+    extraAttackChance = attackerStats.extraAttackChance / 100,
+    triggeredExtraAttacks = 0,
+    attemptIndex, targetIndex;
+  for (attemptIndex = 0; attemptIndex < attackerStats.extraAttackCount; attemptIndex++) {
+    if (Math.random() < extraAttackChance) {
+      triggeredExtraAttacks++;
     } else {
       break;
     }
   }
-  if ((c = findTargetsInRange(a, a, 1 + f, b ? a === game.state.scrollCaster ? 100 * RANGED_ATTACK_RANGE : RANGED_ATTACK_RANGE : MELEE_ATTACK_RANGE)) && 0 !== c.length) {
-    for (d = 0; d < c.length; d++) {
-      createAttackAction(a, c[d], b);
+  if ((targets = findTargetsInRange(attacker, attacker, 1 + triggeredExtraAttacks, isRangedAttack ? attacker === game.state.scrollCaster ? 100 * RANGED_ATTACK_RANGE : RANGED_ATTACK_RANGE : MELEE_ATTACK_RANGE)) && 0 !== targets.length) {
+    for (targetIndex = 0; targetIndex < targets.length; targetIndex++) {
+      createAttackAction(attacker, targets[targetIndex], isRangedAttack);
     }
   }
 }
-export function createAttackAction(a, b, c) {
-  var d = new CombatAction();
-  d.attacker = a;
-  (/** @type {TargetedCombatAction} */ (d)).setTargetCharacter(b);
-  if (12 == a.characterClass) {
-    c = b.position.levelPosition;
-    a = calculateAttackDamage(a, b);
-    d.remainingDamage = a;
-    d.noDamage = 0 === a;
-    d.hasProjectilePhase = false;
-    a = new VisualEffect("Red Splat", c, c, false, 1);
-  } else if (c) {
-    c = b.position.levelPosition;
-    var f = a.position.levelPosition,
-      g = calculateAttackDamage(a, b);
-    b = a.equipment ? a.equipment.projectileWeapon : null;
-    var h = a.getEffectItem(),
-      h = h ? h.itemEffect : null;
-    d.remainingDamage = g;
-    d.noDamage = 0 === g;
-    d.hasProjectilePhase = true;
-    g = "Red Splat";
-    if (h) {
-      var l = h.itemEffectName;
-      if (l) {
-        g = l;
+export function createAttackAction(attacker, target, isRangedAttack) {
+  var combatAction = new CombatAction(), impactVisual, targetPosition, meleeDamage, effectItem, itemEffect;
+  combatAction.attacker = attacker;
+  (/** @type {TargetedCombatAction} */ (combatAction)).setTargetCharacter(target);
+  if (12 == attacker.characterClass) {
+    targetPosition = target.position.levelPosition;
+    meleeDamage = calculateAttackDamage(attacker, target);
+    combatAction.remainingDamage = meleeDamage;
+    combatAction.noDamage = 0 === meleeDamage;
+    combatAction.hasProjectilePhase = false;
+    impactVisual = new VisualEffect("Red Splat", targetPosition, targetPosition, false, 1);
+  } else if (isRangedAttack) {
+    targetPosition = target.position.levelPosition;
+    var attackerPosition = attacker.position.levelPosition,
+      rangedDamage = calculateAttackDamage(attacker, target), projectileWeapon, rangedImpactAnimationName, itemEffectName, projectileVisual;
+    projectileWeapon = attacker.equipment ? attacker.equipment.projectileWeapon : null;
+    effectItem = attacker.getEffectItem();
+    itemEffect = effectItem ? effectItem.itemEffect : null;
+    combatAction.remainingDamage = rangedDamage;
+    combatAction.noDamage = 0 === rangedDamage;
+    combatAction.hasProjectilePhase = true;
+    rangedImpactAnimationName = "Red Splat";
+    if (itemEffect) {
+      itemEffectName = itemEffect.itemEffectName;
+      if (itemEffectName) {
+        rangedImpactAnimationName = itemEffectName;
       }
-      f = new VisualEffect(getProjectileAnimation(b, h.itemEffectType), f, c, true, 1);
+      projectileVisual = new VisualEffect(getProjectileAnimation(projectileWeapon, itemEffect.itemEffectType), attackerPosition, targetPosition, true, 1);
     } else {
-      f = new VisualEffect(getProjectileAnimation(b, null), f, c, true, 1);
+      projectileVisual = new VisualEffect(getProjectileAnimation(projectileWeapon, null), attackerPosition, targetPosition, true, 1);
     }
-    f.boundCharacter = a;
-    d.projectileEffect = f;
-    a = a.stats.rollChainCount();
-    if (0 < a) {
-      d.chains = true;
-      d.chainCount = a;
+    projectileVisual.boundCharacter = attacker;
+    combatAction.projectileEffect = projectileVisual;
+    var chainCount = attacker.stats.rollChainCount();
+    if (0 < chainCount) {
+      combatAction.chains = true;
+      combatAction.chainCount = chainCount;
     }
-    a = new VisualEffect(g, c, c, false, 1);
+    impactVisual = new VisualEffect(rangedImpactAnimationName, targetPosition, targetPosition, false, 1);
   } else {
-    c = b.position.levelPosition;
-    f = calculateAttackDamage(a, b);
-    b = (a = a.getEffectItem()) ? a.itemEffect : null;
-    a = null;
-    d.remainingDamage = f;
-    d.noDamage = 0 === f;
-    d.hasProjectilePhase = false;
-    if (b && (f = b.itemEffectName)) {
-      a = new VisualEffect(f, c, c, false, 1);
+    targetPosition = target.position.levelPosition;
+    meleeDamage = calculateAttackDamage(attacker, target);
+    effectItem = attacker.getEffectItem(); itemEffect = effectItem ? effectItem.itemEffect : null;
+    impactVisual = null;
+    combatAction.remainingDamage = meleeDamage;
+    combatAction.noDamage = 0 === meleeDamage;
+    combatAction.hasProjectilePhase = false;
+    if (itemEffect && (itemEffectName = itemEffect.itemEffectName)) {
+      impactVisual = new VisualEffect(itemEffectName, targetPosition, targetPosition, false, 1);
     }
-    if (!a) {
-      a = new VisualEffect("Red Splat", c, c, false, 1);
+    if (!impactVisual) {
+      impactVisual = new VisualEffect("Red Splat", targetPosition, targetPosition, false, 1);
     }
   }
-  d.impactEffect = a;
-  enqueueCombatAction(game.combatQueue, d);
+  combatAction.impactEffect = impactVisual;
+  enqueueCombatAction(game.combatQueue, combatAction);
 }
-export function createSpellAction(a) {
-  var b = a.combatTarget;
-  if (!b || b.isDead) {
+export function createSpellAction(caster) {
+  var combatTarget = caster.combatTarget;
+  if (!combatTarget || combatTarget.isDead) {
     return null;
   }
-  var c = a.spellToCast;
-  if (!c) {
+  var spellDefinition = caster.spellToCast;
+  if (!spellDefinition) {
     return null;
   }
-  var d = new CombatAction();
-  d.attacker = a;
-  (/** @type {TargetedCombatAction} */ (d)).setTargetCharacter(b);
-  var f = b.position.levelPosition,
-    g = a.position.levelPosition;
-  d.actionDefinition = c;
-  d.hasProjectilePhase = true;
-  var h = c.projectileEffectName;
-  if (h) {
-    h = new VisualEffect(h, g, f, true, 1);
-    h.boundCharacter = a;
-    d.projectileEffect = h;
+  var combatAction = new CombatAction();
+  combatAction.attacker = caster;
+  (/** @type {TargetedCombatAction} */ (combatAction)).setTargetCharacter(combatTarget);
+  var targetPosition = combatTarget.position.levelPosition,
+    casterPosition = caster.position.levelPosition;
+  combatAction.actionDefinition = spellDefinition;
+  combatAction.hasProjectilePhase = true;
+  var projectileEffectName = spellDefinition.projectileEffectName, projectileVisual, impactEffectName, impactVisual, spellCategoryId, spellDamage, casterStats, spiritCost;
+  if (projectileEffectName) {
+    projectileVisual = new VisualEffect(projectileEffectName, casterPosition, targetPosition, true, 1);
+    projectileVisual.boundCharacter = caster;
+    combatAction.projectileEffect = projectileVisual;
   }
-  if (h = c.impactEffectName) {
-    f = new VisualEffect(h, g, f, false, 1);
-    d.impactEffect = f;
+  if ((impactEffectName = spellDefinition.impactEffectName)) {
+    impactVisual = new VisualEffect(impactEffectName, casterPosition, targetPosition, false, 1);
+    combatAction.impactEffect = impactVisual;
   }
-  c = c.spellCategoryId;
-  if (4 === c) {
-    b = calculateAttackDamage(a, b);
-    d.noDamage = 0 === b;
-    d.remainingDamage = b;
+  spellCategoryId = spellDefinition.spellCategoryId;
+  if (4 === spellCategoryId) {
+    spellDamage = calculateAttackDamage(caster, combatTarget);
+    combatAction.noDamage = 0 === spellDamage;
+    combatAction.remainingDamage = spellDamage;
   } else {
-    if (13 === c) {
-      b = Math.max(1, calculateAttackDamage(a, b));
-      d.noDamage = false;
-      d.remainingDamage = b;
+    if (13 === spellCategoryId) {
+      spellDamage = Math.max(1, calculateAttackDamage(caster, combatTarget));
+      combatAction.noDamage = false;
+      combatAction.remainingDamage = spellDamage;
     }
   }
-  a = a.stats;
-  b = getSpellSpiritCost(a);
-  spendSpirit(a, b);
-  enqueueCombatAction(game.combatQueue, d);
-  return d;
+  casterStats = caster.stats;
+  spiritCost = getSpellSpiritCost(casterStats);
+  spendSpirit(casterStats, spiritCost);
+  enqueueCombatAction(game.combatQueue, combatAction);
+  return combatAction;
 }
-export function randomPointInRoom(a, b) {
-  var c = new Vector2(),
-    d = a.x,
-    f = a.y,
-    g = randomInt(40),
-    h = randomInt(40),
-    d = 0.5 >= Math.random() ? d + g : d - g,
-    f = 0.5 >= Math.random() ? f + h : f - h;
-  setVector(c, d, f);
-  if (b) {
-    clampPointToRoom(b, c, game.halfTileSize);
+export function randomPointInRoom(origin, clampRoom) {
+  var point = new Vector2(),
+    originX = origin.x,
+    originY = origin.y,
+    xJitter = randomInt(40),
+    yJitter = randomInt(40),
+    jitteredX = 0.5 >= Math.random() ? originX + xJitter : originX - xJitter,
+    jitteredY = 0.5 >= Math.random() ? originY + yJitter : originY - yJitter;
+  setVector(point, jitteredX, jitteredY);
+  if (clampRoom) {
+    clampPointToRoom(clampRoom, point, game.halfTileSize);
   }
-  return c;
+  return point;
 }
-export function applyAreaTileEffect(a, b, c, d, f, g, h) {
-  if (a >= c && a <= d && b >= f && b <= g && (a = game.level.getTileAt(a, b))) {
-    setTileEffect(a, h);
+export function applyAreaTileEffect(tileColumn, tileRow, minColumn, maxColumn, minRow, maxRow, tileEffect) {
+  var tile; if (tileColumn >= minColumn && tileColumn <= maxColumn && tileRow >= minRow && tileRow <= maxRow && (tile = game.level.getTileAt(tileColumn, tileRow))) {
+    setTileEffect(tile, tileEffect);
   }
 }
-export function getProjectileAnimation(a, b) {
-  if (3 === a.getProjectileAnimationId()) {
+export function getProjectileAnimation(projectileWeapon, itemEffectType) {
+  if (3 === projectileWeapon.getProjectileAnimationId()) {
     return "Ninja Star";
   }
-  if (b) {
-    switch (b) {
+  if (itemEffectType) {
+    switch (itemEffectType) {
       case FIRE_ITEM_EFFECT:
         return "Fire Arrow";
       case ICE_ITEM_EFFECT:
@@ -577,149 +577,149 @@ export function getProjectileAnimation(a, b) {
     return "Red Arrow";
   }
 }
-export function calculateAttackDamage(a, b) {
-  var c = a.stats,
-    d = b.stats,
-    f = statValue(c.attackRating),
-    g = statValue(c.damage),
-    h = statValue(d.defenceRating),
-    l = statValue(d.armor),
-    d = d.damageResistance,
-    c = c.critChance;
-  if (!b.effects.isDisabled && Math.random() > f / (f + h)) {
+export function calculateAttackDamage(attacker, defender) {
+  var attackerStats = attacker.stats,
+    defenderStats = defender.stats,
+    attackRating = statValue(attackerStats.attackRating),
+    damage = statValue(attackerStats.damage),
+    defenceRating = statValue(defenderStats.defenceRating),
+    armor = statValue(defenderStats.armor),
+    damageResistance = defenderStats.damageResistance,
+    critChance = attackerStats.critChance;
+  if (!defender.effects.isDisabled && Math.random() > attackRating / (attackRating + defenceRating)) {
     return 0;
   }
-  if (0 < c && Math.random() < c / 100) {
-    return showFloatingText(game.floatingText, a, "暴击!", "#FFFF00"), g;
+  if (0 < critChance && Math.random() < critChance / 100) {
+    return showFloatingText(game.floatingText, attacker, "暴击!", "#FFFF00"), damage;
   }
-  f = floorNumber(l / 2);
-  g -= f + randomInt(f);
-  return 0 >= g ? 0 : 0 < d ? Math.max(0, g - floorNumber(d / 100 * g)) : g;
+  var armorReduction = floorNumber(armor / 2);
+  damage -= armorReduction + randomInt(armorReduction);
+  return 0 >= damage ? 0 : 0 < damageResistance ? Math.max(0, damage - floorNumber(damageResistance / 100 * damage)) : damage;
 }
-export function calculateSpellDamage(a, b) {
-  var c = a.stats,
-    d = statValue(c.damage),
-    f = statValue(b.stats.armor),
-    c = c.critChance;
-  if (0 < c && Math.random() < c / 100) {
-    return showFloatingText(game.floatingText, a, "暴击!", "#FFFF00"), d;
+export function calculateSpellDamage(attacker, defender) {
+  var attackerStats = attacker.stats,
+    damage = statValue(attackerStats.damage),
+    armor = statValue(defender.stats.armor),
+    critChance = attackerStats.critChance;
+  if (0 < critChance && Math.random() < critChance / 100) {
+    return showFloatingText(game.floatingText, attacker, "暴击!", "#FFFF00"), damage;
   }
-  f = floorNumber(f / 2);
-  d -= f + randomInt(f);
-  return 0 >= d ? 0 : d;
+  var armorReduction = floorNumber(armor / 2);
+  damage -= armorReduction + randomInt(armorReduction);
+  return 0 >= damage ? 0 : damage;
 }
-export function createChainAction(a) {
-  var b = a.getChainCount(),
-    c = a.chainCount;
-  if (b >= c) {
+export function createChainAction(previousAction) {
+  var currentChainStep = previousAction.getChainCount(),
+    chainCount = previousAction.chainCount;
+  if (currentChainStep >= chainCount) {
     return null;
   }
-  var d = findChainTarget(a.targetCharacter);
-  if (!d) {
+  var chainTarget = findChainTarget(previousAction.targetCharacter);
+  if (!chainTarget) {
     return null;
   }
-  var f = a.projectileEffect;
-  if (!f) {
+  var previousProjectileEffect = previousAction.projectileEffect;
+  if (!previousProjectileEffect) {
     return null;
   }
-  var g = a.impactEffect;
-  if (!g) {
+  var previousImpactEffect = previousAction.impactEffect;
+  if (!previousImpactEffect) {
     return null;
   }
-  var h = new CombatAction(),
-    l = g.targetPosition,
-    n = d.position.levelPosition;
-  h.attacker = a.attacker;
-  (/** @type {TargetedCombatAction} */ (h)).setTargetCharacter(d);
-  g = new VisualEffect(g.impactEffectName, l, n, false, 1);
-  h.impactEffect = g;
-  f = new VisualEffect(f.impactEffectName, l, n, true, 1);
-  h.projectileEffect = f;
-  h.hasProjectilePhase = true;
-  d = calculateAttackDamage(a.attacker, d);
-  h.remainingDamage = d;
-  h.noDamage = 0 === d;
-  h.actionDefinition = a.actionDefinition;
-  h.currentChainStep = b + 1;
-  h.chains = true;
-  h.chainCount = c;
-  return h;
+  var chainAction = new CombatAction(),
+    impactPosition = previousImpactEffect.targetPosition,
+    chainTargetPosition = chainTarget.position.levelPosition;
+  chainAction.attacker = previousAction.attacker;
+  (/** @type {TargetedCombatAction} */ (chainAction)).setTargetCharacter(chainTarget);
+  var impactVisual = new VisualEffect(previousImpactEffect.impactEffectName, impactPosition, chainTargetPosition, false, 1);
+  chainAction.impactEffect = impactVisual;
+  var projectileVisual = new VisualEffect(previousProjectileEffect.impactEffectName, impactPosition, chainTargetPosition, true, 1);
+  chainAction.projectileEffect = projectileVisual;
+  chainAction.hasProjectilePhase = true;
+  var chainDamage = calculateAttackDamage(previousAction.attacker, chainTarget);
+  chainAction.remainingDamage = chainDamage;
+  chainAction.noDamage = 0 === chainDamage;
+  chainAction.actionDefinition = previousAction.actionDefinition;
+  chainAction.currentChainStep = currentChainStep + 1;
+  chainAction.chains = true;
+  chainAction.chainCount = chainCount;
+  return chainAction;
 }
-export function createReturningAction(a) {
-  var b = a.getChainCount(),
-    c = a.chainCount,
-    d;
-  if (b === c) {
-    var f = new CombatAction();
-    f.attacker = a.attacker;
-    (/** @type {TargetedCombatAction} */ (f)).setTargetCharacter(a.attacker);
-    f.hasProjectilePhase = true;
-    f.actionDefinition = a.actionDefinition;
-    f.returns = true;
-    f.currentChainStep = 1;
-    f.chainCount = 0;
-    c = a.projectileEffect;
-    d = a.attacker.position.levelPosition;
-    var g = a.returnOriginPosition,
-      b = a.impactEffect;
-    f.noDamage = false;
-    if (c) {
-      c = new VisualEffect(c.impactEffectName, d, g, true, 1);
-      c.isReturning = true;
-      c.boundCharacter = a.attacker;
-      f.projectileEffect = c;
+export function createReturningAction(previousAction) {
+  var currentChainStep = previousAction.getChainCount(),
+    chainCount = previousAction.chainCount,
+    previousImpactEffect, impactPosition, chainTargetPosition;
+  if (currentChainStep === chainCount) {
+    var returnAction = new CombatAction();
+    returnAction.attacker = previousAction.attacker;
+    (/** @type {TargetedCombatAction} */ (returnAction)).setTargetCharacter(previousAction.attacker);
+    returnAction.hasProjectilePhase = true;
+    returnAction.actionDefinition = previousAction.actionDefinition;
+    returnAction.returns = true;
+    returnAction.currentChainStep = 1;
+    returnAction.chainCount = 0;
+    var previousProjectileEffect = previousAction.projectileEffect,
+      returnTargetPosition = previousAction.attacker.position.levelPosition,
+      returnOriginPosition = previousAction.returnOriginPosition;
+    previousImpactEffect = previousAction.impactEffect;
+    returnAction.noDamage = false;
+    if (previousProjectileEffect) {
+      var returningProjectile = new VisualEffect(previousProjectileEffect.impactEffectName, returnTargetPosition, returnOriginPosition, true, 1);
+      returningProjectile.isReturning = true;
+      returningProjectile.boundCharacter = previousAction.attacker;
+      returnAction.projectileEffect = returningProjectile;
     }
-    a = new VisualEffect(b.impactEffectName, d, g, false, 1);
-    f.impactEffect = a;
-    return f;
+    var impactVisual = new VisualEffect(previousImpactEffect.impactEffectName, returnTargetPosition, returnOriginPosition, false, 1);
+    returnAction.impactEffect = impactVisual;
+    return returnAction;
   }
-  if (b > c) {
+  if (currentChainStep > chainCount) {
     return null;
   }
-  d = a.impactEffect;
-  if (!d) {
+  previousImpactEffect = previousAction.impactEffect;
+  if (!previousImpactEffect) {
     return null;
   }
-  g = findChainTarget(a.targetCharacter);
-  if (!g) {
+  var chainTarget = findChainTarget(previousAction.targetCharacter);
+  if (!chainTarget) {
     return null;
   }
-  f = new CombatAction();
-  f.attacker = a.attacker;
-  f.hasProjectilePhase = true;
-  f.actionDefinition = a.actionDefinition;
-  f.currentChainStep = b + 1;
-  f.returns = true;
-  f.chainCount = c;
-  f.returnOriginPosition = a.returnOriginPosition;
-  var h = a.projectileEffect,
-    b = d.targetPosition,
-    c = g.position.levelPosition;
-  (/** @type {TargetedCombatAction} */ (f)).setTargetCharacter(g);
-  g = calculateSpellDamage(a.attacker, g);
-  f.remainingDamage = g;
-  f.noDamage = 0 === g;
-  if (h) {
-    g = new VisualEffect(h.impactEffectName, b, c, true, 1);
-    g.isReturning = true;
-    g.boundCharacter = a.attacker;
-    f.projectileEffect = g;
+  returnAction = new CombatAction();
+  returnAction.attacker = previousAction.attacker;
+  returnAction.hasProjectilePhase = true;
+  returnAction.actionDefinition = previousAction.actionDefinition;
+  returnAction.currentChainStep = currentChainStep + 1;
+  returnAction.returns = true;
+  returnAction.chainCount = chainCount;
+  returnAction.returnOriginPosition = previousAction.returnOriginPosition;
+  previousProjectileEffect = previousAction.projectileEffect,
+    impactPosition = previousImpactEffect.targetPosition,
+    chainTargetPosition = chainTarget.position.levelPosition;
+  (/** @type {TargetedCombatAction} */ (returnAction)).setTargetCharacter(chainTarget);
+  var chainDamage = calculateSpellDamage(previousAction.attacker, chainTarget);
+  returnAction.remainingDamage = chainDamage;
+  returnAction.noDamage = 0 === chainDamage;
+  if (previousProjectileEffect) {
+    returningProjectile = new VisualEffect(previousProjectileEffect.impactEffectName, impactPosition, chainTargetPosition, true, 1);
+    returningProjectile.isReturning = true;
+    returningProjectile.boundCharacter = previousAction.attacker;
+    returnAction.projectileEffect = returningProjectile;
   }
-  a = new VisualEffect(d.impactEffectName, b, c, false, 1);
-  f.impactEffect = a;
-  return f;
+  impactVisual = new VisualEffect(previousImpactEffect.impactEffectName, impactPosition, chainTargetPosition, false, 1);
+  returnAction.impactEffect = impactVisual;
+  return returnAction;
 }
 export function initializeCombatActions() {
-  CombatAction.prototype.setTargetCharacter = function (a) {
-    this.targetCharacter = a;
+  CombatAction.prototype.setTargetCharacter = function (target) {
+    this.targetCharacter = target;
   };
   CombatAction.prototype.getChainCount = function () {
     return this.currentChainStep;
   };
-  CombatQueue.prototype.findTreasureSpell = function (a) {
-    if (a = getRoomTreasure(game.treasure, a.attacker.position.room)) {
-      a.selected = true;
-      game.state.party.setTargetTreasureChest(a);
+  CombatQueue.prototype.findTreasureSpell = function (combatAction) {
+    var treasure; if ((treasure = getRoomTreasure(game.treasure, combatAction.attacker.position.room))) {
+      treasure.selected = true;
+      game.state.party.setTargetTreasureChest(treasure);
     }
   };
 }

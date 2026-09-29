@@ -120,7 +120,18 @@ function walk(dir, out = [], skip = new Set(['node_modules', '.git', 'dist', 'ou
   }
 }
 
-// 9) 当前态文档里的可数指标（场景数/单测数/不变量条数/语法检查文件数）必须与源码实况一致
+// 9) 存档 DTO schema 必须与"真实形态"一致（声明 / fixture / 序列化器两分支 / 嵌套 typedef）
+{
+  const r = await run(process.execPath, ['scripts/audit-save-schema.mjs']);
+  if (r.status !== 0 || !/顶层键完全一致/.test(r.stdout || '')) {
+    problems.push('存档 DTO schema 与真实形态不一致（见 audit-save-schema 输出）');
+  } else {
+    const m = (r.stdout || '').match(/② 真实原版 fixture\s+(\d+) 键/);
+    notes.push(`存档 DTO schema 与四种形态一致 ✓（顶层 ${m ? m[1] : '?'} 键）`);
+  }
+}
+
+// 10) 当前态文档里的可数指标（场景数/单测数/不变量条数/语法检查文件数）必须与源码实况一致
 {
   const r = await run(process.execPath, ['scripts/check-doc-counts.mjs']);
   if (r.status !== 0 || !/✓ 全部一致/.test(r.stdout || '')) {

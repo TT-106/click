@@ -1,25 +1,23 @@
 /** 装备模板、数值、稀有度与掉落生成。
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
-import { game } from "../runtime/game.js";
 import { ItemNameGenerator, formatItemName } from "./item-names.js";
 import { floorNumber, formatAmount, randomInt, randomizeScaledValue } from "../core/math.js";
-import { BASE_HIGHER_ITEM_CHANCE, LOWER_ITEM_LEVEL_CHANCE, globalUpgradeDefinitions, itemGoldCurve, itemGoldModifier, itemRarityProbabilities, itemRarityTiers, itemStatCurve } from "../content/balance.js";
 export var FIRE_ITEM_EFFECT, ICE_ITEM_EFFECT, POISON_ITEM_EFFECT, SHOCK_ITEM_EFFECT, SONIC_ITEM_EFFECT;
-export function ItemDrop(a, b, c, d) {
-  this.item = a;
-  this.levelPositionX = b;
-  this.levelPositionY = c;
-  this.room = d;
+export function ItemDrop(item, x, y, room) {
+  this.item = item;
+  this.levelPositionX = x;
+  this.levelPositionY = y;
+  this.room = room;
   this.collected = false;
   this.claimedBy = null;
   this.claimDistance = 0;
 }
-export function ItemEffect(a, b, c, d) {
-  this.itemEffectType = a;
-  this.itemEffectAmount = b;
-  this.itemEffectDescription = c;
-  this.itemEffectName = d;
+export function ItemEffect(type, amount, description, name) {
+  this.itemEffectType = type;
+  this.itemEffectAmount = amount;
+  this.itemEffectDescription = description;
+  this.itemEffectName = name;
 }
 export function ItemEffectGenerator() {
   this.effectsByType = [];
@@ -44,38 +42,38 @@ export function ItemEffectGenerator() {
     weaponEffectAnimationName: "Sonic Damage"
   };
 }
-export function ItemType(a, b, c, d, f, g, h, l, n) {
-  this.itemTypeId = a;
-  this.baseName = b;
-  this.slotList = c;
-  this.projectileAnimationId = n;
-  if (!(this.iconSprite = game.itemSprites.getSprite(d))) {
-    console.log("error. invalid item sprite: " + d);
+export function ItemType(typeId, baseName, slotList, spriteFileName, isMeleeWeapon, isArmor, isMiscItem, isProjectile, projectileAnimationId, itemSprites) {
+  this.itemTypeId = typeId;
+  this.baseName = baseName;
+  this.slotList = slotList;
+  this.projectileAnimationId = projectileAnimationId;
+  if (!(this.iconSprite = itemSprites.getSprite(spriteFileName))) {
+    console.log("error. invalid item sprite: " + spriteFileName);
   }
   // write-only 分类旗标（原 na/ma/la；双端零读者，语义由数据模式推断：近战/护甲/杂项）
-  this.isMeleeWeapon = f;
-  this.isArmor = g;
-  this.isMiscItem = h;
-  this.isProjectileItem = l;
+  this.isMeleeWeapon = isMeleeWeapon;
+  this.isArmor = isArmor;
+  this.isMiscItem = isMiscItem;
+  this.isProjectileItem = isProjectile;
 }
-export function Item(a, b, c, d, f, g, h, l, n, p) {
-  this.itemType = a;
-  this.slot = b;
-  this.characterClass = c;
-  this.itemName = d;
-  this.itemRarity = g;
-  this.itemLevel = f;
-  this.itemGold = h;
-  this.itemValue = l;
-  this.characteristic = n;
-  this.itemEffect = p;
+export function Item(itemType, slot, characterClass, itemName, itemLevel, itemRarity, itemGold, itemValue, characteristic, itemEffect) {
+  this.itemType = itemType;
+  this.slot = slot;
+  this.characterClass = characterClass;
+  this.itemName = itemName;
+  this.itemRarity = itemRarity;
+  this.itemLevel = itemLevel;
+  this.itemGold = itemGold;
+  this.itemValue = itemValue;
+  this.characteristic = characteristic;
+  this.itemEffect = itemEffect;
   this.inventory = null;
 }
-export function isBetterItem(a, b) {
-  return !b || a.itemValue > b.itemValue;
+export function isBetterItem(candidate, currentItem) {
+  return !currentItem || candidate.itemValue > currentItem.itemValue;
 }
-export function getItemStatLabel(a) {
-  switch (a.characteristic) {
+export function getItemStatLabel(item) {
+  switch (item.characteristic) {
     case 2:
       return "护甲";
     case 3:
@@ -87,8 +85,8 @@ export function getItemStatLabel(a) {
     case 6:
       return "最大法力";
     case 1:
-      if (a.itemEffect) {
-        switch (a.itemEffect.itemEffectType) {
+      if (item.itemEffect) {
+        switch (item.itemEffect.itemEffectType) {
           case FIRE_ITEM_EFFECT:
             return "火焰伤害";
           case ICE_ITEM_EFFECT:
@@ -109,8 +107,8 @@ export function getItemStatLabel(a) {
       return "Error";
   }
 }
-export function getItemRarityLabel(a) {
-  switch (a.itemRarity) {
+export function getItemRarityLabel(item) {
+  switch (item.itemRarity) {
     case 0:
       return "普通";
     case 1:
@@ -122,186 +120,186 @@ export function getItemRarityLabel(a) {
     case 4:
       return "远古";
     default:
-      return "BUG FOUND: " + a.getRarity();
+      return "BUG FOUND: " + item.getRarity();
   }
 }
-export function getHighlightedItemName(a) {
-  var b = a.itemType.baseName;
-  a = a.itemName;
-  var c = a.indexOf(b);
-  return -1 === c ? a : a.substring(0, c) + '<span style="color:#FAF;">' + b + "</span>" + a.substring(c + b.length);
+export function getHighlightedItemName(item) {
+  const baseName = item.itemType.baseName;
+  const itemName = item.itemName;
+  const nameIndex = itemName.indexOf(baseName);
+  return -1 === nameIndex ? itemName : itemName.substring(0, nameIndex) + '<span style="color:#FAF;">' + baseName + "</span>" + itemName.substring(nameIndex + baseName.length);
 }
-export function ItemGenerator() {
+export function ItemGenerator(rules) {
+  this.rules = rules;
   this.itemNameGenerator = new ItemNameGenerator();
   this.itemEffectGenerator = new ItemEffectGenerator();
   this.itemTypesBySlot = {};
   this.itemTypesById = {};
 }
-export function generateItem(a, b, c, d, f) {
-  var g;
-  if (!(g = a.itemTypesBySlot[b])) {
-    console.log("ItemGenerator.getRandomItemType() failed to find item types for slot: " + b);
+export function generateItem(generator, slot, inventory, itemLevel, rarityId) {
+  const rules = generator.rules;
+  const availableTypes = generator.itemTypesBySlot[slot];
+  if (!availableTypes) {
+    console.log("ItemGenerator.getRandomItemType() failed to find item types for slot: " + slot);
   }
-  if (0 === g.length) {
-    console.log("ItemGenerator.getRandomItemType() no item types for slot: " + b);
-    g = null;
+  let itemType;
+  if (0 === availableTypes.length) {
+    console.log("ItemGenerator.getRandomItemType() no item types for slot: " + slot);
+    itemType = null;
   } else {
-    g = g[randomInt(g.length)];
+    itemType = availableTypes[randomInt(availableTypes.length)];
   }
-  if (!g) {
+  if (!itemType) {
     return null;
   }
-  var h;
-  a: {
-    var l, n;
-    for (l = 0; l < itemRarityTiers.length; l++) {
-      if (n = itemRarityTiers[l], n.tierId === f) {
-        h = n;
-        break a;
+  let rarityTier;
+  rarityLookup: {
+    for (let tierIndex = 0; tierIndex < rules.itemRarityTiers.length; tierIndex++) {
+      const tier = rules.itemRarityTiers[tierIndex];
+      if (tier.tierId === rarityId) {
+        rarityTier = tier;
+        break rarityLookup;
       }
     }
-    h = itemRarityTiers[0];
+    rarityTier = rules.itemRarityTiers[0];
   }
-  var p = null;
-  l = c.slotStatTypes[b];
-  var s = getClassStatMultiplier(c, l) * h.statMultiplier;
-  n = randomizeScaledValue(d, itemStatCurve, s);
-  s = randomizeScaledValue(d, itemGoldCurve, s) * itemGoldModifier.currentValue;
-  if (1 === l && Math.random() < h.elementalEffectChance) {
-    p = a.itemEffectGenerator;
-    h = Math.random();
-    h = 0.2 > h ? FIRE_ITEM_EFFECT : 0.4 > h ? ICE_ITEM_EFFECT : 0.6 > h ? SHOCK_ITEM_EFFECT : 0.7 > h ? SONIC_ITEM_EFFECT : POISON_ITEM_EFFECT;
-    var u = floorNumber(Math.max(0.1 * n, 0.4 * n * Math.random()));
-    if (1 > u) {
-      u = 1;
+  let itemEffect = null;
+  const characteristic = inventory.slotStatTypes[slot];
+  const statMultiplier = getClassStatMultiplier(inventory, characteristic) * rarityTier.statMultiplier;
+  const itemValue = randomizeScaledValue(itemLevel, rules.itemStatCurve, statMultiplier);
+  const itemGold = randomizeScaledValue(itemLevel, rules.itemGoldCurve, statMultiplier) * rules.itemGoldModifier.currentValue;
+  if (1 === characteristic && Math.random() < rarityTier.elementalEffectChance) {
+    const effectGenerator = generator.itemEffectGenerator;
+    const effectRoll = Math.random();
+    const effectType = 0.2 > effectRoll ? FIRE_ITEM_EFFECT : 0.4 > effectRoll ? ICE_ITEM_EFFECT : 0.6 > effectRoll ? SHOCK_ITEM_EFFECT : 0.7 > effectRoll ? SONIC_ITEM_EFFECT : POISON_ITEM_EFFECT;
+    let effectAmount = floorNumber(Math.max(0.1 * itemValue, 0.4 * itemValue * Math.random()));
+    if (1 > effectAmount) {
+      effectAmount = 1;
     }
-    p = p.effectsByType[h];
-    p = new ItemEffect(h, u, "+" + formatAmount(u) + " " + p.description, p.weaponEffectAnimationName);
+    const effectDefinition = effectGenerator.effectsByType[effectType];
+    itemEffect = new ItemEffect(effectType, effectAmount, "+" + formatAmount(effectAmount) + " " + effectDefinition.description, effectDefinition.weaponEffectAnimationName);
   }
-  a = a.itemNameGenerator;
-  switch (f) {
+  const nameGenerator = generator.itemNameGenerator;
+  let nameList;
+  switch (rarityId) {
     case 0:
-      a = a.commonNames;
+      nameList = nameGenerator.commonNames;
       break;
     case 1:
-      a = a.uncommonNames;
+      nameList = nameGenerator.uncommonNames;
       break;
     case 2:
-      a = a.rareNames;
+      nameList = nameGenerator.rareNames;
       break;
     case 3:
-      a = a.historicNames;
+      nameList = nameGenerator.historicNames;
       break;
     case 4:
-      a = a.ancientNames;
+      nameList = nameGenerator.ancientNames;
       break;
     default:
-      a = a.commonNames;
+      nameList = nameGenerator.commonNames;
   }
-  a = formatItemName(g.baseName, a);
-  b = new Item(g, b, c.characterClass, a, d, f, s, n, l, p);
-  b.inventory = c;
-  return b;
+  const itemName = formatItemName(itemType.baseName, nameList);
+  const item = new Item(itemType, slot, inventory.characterClass, itemName, itemLevel, rarityId, itemGold, itemValue, characteristic, itemEffect);
+  item.inventory = inventory;
+  return item;
 }
-export function getClassStatMultiplier(a, b) {
-  var c = a.classDefinition.statMultipliers;
-  if (!c) {
+export function getClassStatMultiplier(inventory, characteristic) {
+  const multipliers = inventory.classDefinition.statMultipliers;
+  if (!multipliers) {
     return 1;
   }
-  switch (b) {
+  switch (characteristic) {
     case 2:
-      return c.armorMultiplier;
+      return multipliers.armorMultiplier;
     case 1:
-      return c.damageMultiplier;
+      return multipliers.damageMultiplier;
     case 3:
-      return c.attackRatingMultiplier;
+      return multipliers.attackRatingMultiplier;
     case 4:
-      return c.defenceRatingMultiplier;
+      return multipliers.defenceRatingMultiplier;
     case 5:
-      return c.maxHealthMultiplier;
+      return multipliers.maxHealthMultiplier;
     case 6:
-      return c.maxSpiritMultiplier;
+      return multipliers.maxSpiritMultiplier;
   }
 }
-export function randomizeItemLevel(a, b) {
-  if (Math.random() < LOWER_ITEM_LEVEL_CHANCE) {
-    return Math.max(1, a - 1);
+export function randomizeItemLevel(level, higherChanceBonus, rules) {
+  if (Math.random() < rules.lowerItemLevelChance) {
+    return Math.max(1, level - 1);
   }
-  var c = Math.min(1, BASE_HIGHER_ITEM_CHANCE + b);
-  return Math.random() < c ? a + 1 : a;
+  const higherChance = Math.min(1, rules.baseHigherItemChance + higherChanceBonus);
+  return Math.random() < higherChance ? level + 1 : level;
 }
-export function registerItemType(a, b, c) {
-  var d = b.baseName + c;
-  var f = 0,
-    g,
-    h;
-  if (0 !== d.length) {
-    for (g = 0; g < d.length; g++) {
-      h = d.charCodeAt(g);
-      f = (f << 5) - f + h;
-      f |= 0;
+export function registerItemType(generator, definition, spriteFileName) {
+  const hashInput = definition.baseName + spriteFileName;
+  let hash = 0;
+  if (0 !== hashInput.length) {
+    for (let characterIndex = 0; characterIndex < hashInput.length; characterIndex++) {
+      const characterCode = hashInput.charCodeAt(characterIndex);
+      hash = (hash << 5) - hash + characterCode;
+      hash |= 0;
     }
   }
-  g = f + "";
-  f = b.slotList;
-  b = new ItemType(g, b.baseName, f, c, b.isMeleeWeapon, b.isArmor, b.isMiscItem, b.isProjectile, b.projectileAnimationId);
-  if (a.itemTypesById[g]) {
-    console.log("item type hash collision: " + d);
+  const typeId = hash + "";
+  const slots = definition.slotList;
+  const itemType = new ItemType(typeId, definition.baseName, slots, spriteFileName, definition.isMeleeWeapon, definition.isArmor, definition.isMiscItem, definition.isProjectile, definition.projectileAnimationId, generator.itemSprites);
+  if (generator.itemTypesById[typeId]) {
+    console.log("item type hash collision: " + hashInput);
   }
-  a.itemTypesById[g] = b;
-  for (g = 0; g < (/** @type {any} */ (f)).length; g++) {
-    d = f[g];
-    c = a.itemTypesBySlot[d];
-    if (!c) {
-      c = [];
-      a.itemTypesBySlot[d] = c;
+  generator.itemTypesById[typeId] = itemType;
+  for (let slotIndex = 0; slotIndex < (/** @type {any} */ (slots)).length; slotIndex++) {
+    const slot = slots[slotIndex];
+    let candidates = generator.itemTypesBySlot[slot];
+    if (!candidates) {
+      candidates = [];
+      generator.itemTypesBySlot[slot] = candidates;
     }
-    c.push(b);
+    candidates.push(itemType);
   }
 }
 export function ItemDropRegistry() {
   this.drops = [];
 }
-export function clearItemDrops() {
-  var a = game.itemDrops;
-  if (0 < a.drops.length) {
-    a.drops.length = 0;
+export function clearItemDrops(dropRegistry) {
+  if (0 < dropRegistry.drops.length) {
+    dropRegistry.drops.length = 0;
   }
 }
-export function spawnItemDrop(a, b, c, d, f) {
-  var g;
-  g = game.itemGenerator;
-  var h = game.state.adventurers[randomInt(game.state.adventurers.length)],
-    l = h.slotList,
-    l = l[randomInt(l.length)],
-    n = g.rollRarity((100 - globalUpgradeDefinitions.itemQualityChance.currentValue) / 100);
-  f = randomizeItemLevel(f, (100 - globalUpgradeDefinitions.higherLevelItemChance.currentValue) / 100);
-  if (g = generateItem(g, l, h, f, n)) {
-    a.drops.push(new ItemDrop(g, b, c, d));
+export function spawnItemDrop(dropRegistry, x, y, room, monsterLevel, generator, adventurers) {
+  const upgrades = generator.rules.globalUpgradeDefinitions;
+  const adventurer = adventurers[randomInt(adventurers.length)];
+  const slots = adventurer.slotList;
+  const slot = slots[randomInt(slots.length)];
+  const rarity = generator.rollRarity((100 - upgrades.itemQualityChance.currentValue) / 100);
+  const itemLevel = randomizeItemLevel(monsterLevel, (100 - upgrades.higherLevelItemChance.currentValue) / 100, generator.rules);
+  const item = generateItem(generator, slot, adventurer, itemLevel, rarity);
+  if (item) {
+    dropRegistry.drops.push(new ItemDrop(item, x, y, room));
   }
 }
-export function removeItemDrop(a) {
-  var b = game.itemDrops;
-  a = b.drops.indexOf(a);
-  if (-1 < a) {
-    b.drops.splice(a, 1);
+export function removeItemDrop(itemDrop, dropRegistry) {
+  const index = dropRegistry.drops.indexOf(itemDrop);
+  if (-1 < index) {
+    dropRegistry.drops.splice(index, 1);
   }
 }
 export function initializeLootItems() {
   ItemDrop.prototype.getItem = function () {
     return this.item;
   };
-  ItemDrop.prototype.setCollected = function (a) {
-    this.collected = a;
+  ItemDrop.prototype.setCollected = function (collected) {
+    this.collected = collected;
   };
-  ItemDrop.prototype.setClaimedBy = function (a) {
-    this.claimedBy = a;
+  ItemDrop.prototype.setClaimedBy = function (character) {
+    this.claimedBy = character;
   };
   ItemDrop.prototype.getClaimDistance = function () {
     return this.claimDistance;
   };
-  ItemDrop.prototype.setClaimDistance = function (a) {
-    this.claimDistance = a;
+  ItemDrop.prototype.setClaimDistance = function (distance) {
+    this.claimDistance = distance;
   };
   FIRE_ITEM_EFFECT = 1;
   ICE_ITEM_EFFECT = 2;
@@ -329,23 +327,23 @@ export function initializeLootItems() {
   Item.prototype.isProjectileWeapon = function () {
     return this.itemType.isProjectileWeapon();
   };
-  ItemGenerator.prototype.rollRarity = function (a) {
-    var b = 0,
-      c = Math.random() * a;
-    for (a = itemRarityProbabilities.length - 1; 0 <= a; a--) {
-      b = itemRarityProbabilities[a];
-      if (c < b) {
-        return a;
+  ItemGenerator.prototype.rollRarity = function (chanceScale) {
+    const probabilities = this.rules.itemRarityProbabilities;
+    let threshold = 0;
+    let roll = Math.random() * chanceScale;
+    for (let rarityIndex = probabilities.length - 1; 0 <= rarityIndex; rarityIndex--) {
+      threshold = probabilities[rarityIndex];
+      if (roll < threshold) {
+        return rarityIndex;
       }
-      c -= b;
+      roll -= threshold;
     }
     return 0;
   };
   ItemDropRegistry.prototype.releaseClaims = function () {
-    var a;
-    for (a = 0; a < this.drops.length; a++) {
-      this.drops[a].setClaimedBy(null);
-      this.drops[a].setClaimDistance(0);
+    for (let dropIndex = 0; dropIndex < this.drops.length; dropIndex++) {
+      this.drops[dropIndex].setClaimedBy(null);
+      this.drops[dropIndex].setClaimDistance(0);
     }
   };
 }

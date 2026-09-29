@@ -76,7 +76,7 @@ g.loop.tick();                                                // 手动驱动一
 | `dev` / `start` | `node scripts/serve.mjs` | 静态服务器，`http://127.0.0.1:4173`（`PORT` 环境变量可改，`serve.mjs:7`）；`--dist` 时改为伺服 `dist/`（`serve.mjs:6`） | 无 |
 | `test` | `node --test "tests/unit/*.test.mjs"` | 纯 Node 单测：RNG 黄金值、存档 codec、格式化（`tests/unit/`） | 无 |
 | `test:parity` | `node scripts/test-parity.mjs` | Playwright 双开 harness（`?original` 与重构），载入 `tests/fixtures/original.c2save`，推进 0/1/99/900 回合后两端完整状态 `deepEqual`（`test-parity.mjs:5-28`）；状态落盘 `output/parity/` | `dev` 在跑；本机 Chrome（`channel:'chrome'`，`test-parity.mjs:7`） |
-| `test:scenarios` | `node scripts/test-scenarios.mjs` | 62 场景差分矩阵（场景定义在 `test-scenarios.mjs:186-758`）：长跑/后期、离线四态 + 12h 截断 + 后台关闭态、药水、全 6 类卷轴、16 类法术分支、城堡征服→胜利、金币涌入、veteran/prestige/full reset、升级与怪物等级解锁/退休、冒险点消费、成就领取与**成就进度临界值两侧**、自动装备、两条农场购买入口、三种财宝房搜索、四类地面掉落、农场全生命周期、渲染帧与自动落盘；离线场景走 `advanceOffline` 并断言时间戳前移（`:807-824`） | 同上 |
+| `test:scenarios` | `node scripts/test-scenarios.mjs` | 89 场景差分矩阵（场景定义在 `test-scenarios.mjs:186-758`）：长跑/后期、离线四态 + 12h 截断 + 后台关闭态、药水、全 6 类卷轴、16 类法术分支、城堡征服→胜利、金币涌入、veteran/prestige/full reset、升级与怪物等级解锁/退休、冒险点消费、成就领取与**成就进度临界值两侧**、自动装备、两条农场购买入口、三种财宝房搜索、四类地面掉落、农场全生命周期、渲染帧与自动落盘；离线场景走 `advanceOffline` 并断言时间戳前移（`:807-824`） | 同上 |
 | `test:e2e` | `node scripts/test-browser.mjs` | 产品页黑盒：建队、自动战斗、暂停、五类面板、设置持久化、导入导出与坏档拒绝、刷新恢复、键盘、375/1024px 视口（`test-browser.mjs:14-75`） | 同上 |
 | `check` | `node scripts/check.mjs` | 对 `src/scripts/tests` 全部 `.js/.mjs` 跑 `node --check` 语法检查，随后执行 `tests/unit`（`check.mjs:23-35`）；parity/E2E 因需浏览器单独跑（`check.mjs:1` 注释） | 无 |
 | `build` | `node scripts/build.mjs` | 校验关键文件存在后整体拷贝到 `dist/`（纯静态 ESM，无转译；`build.mjs:1-19`）；注释明示引入打包器前必须先对 dist 跑 `test:parity` | 无 |

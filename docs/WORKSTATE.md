@@ -1,11 +1,159 @@
 # WORKSTATE — Clickpocalypse II 语义恢复与现代化工程
 
-> 下一阶段架构现代化执行提示词：`docs/NEXT-ARCHITECTURE-PROMPT.md`。本文件记录历史工作状态，开始新切片前仍须重新取证。
+> 完整现代化目标的当前态与验收口径：`docs/modernization-status.md`。下一阶段架构提示词：`docs/NEXT-ARCHITECTURE-PROMPT.md`。本文件记录历史工作状态，开始新切片前仍须重新取证。
 
 > 本文件是长程自治任务的**唯一续跑入口**。上下文压缩或中断后，先读本文件 + `git log --oneline`，再继续。
-> 最后更新：2026-09-27（U66-U130。U130 = 架构现代化首个纵向切片：成就进度判定已收进以显式数据为输入的接口；**62 场景矩阵全绿**；**10 门禁逐条回显全绿**；验收矩阵 **45 PASS / 6 PARTIAL / 0 未覆盖**（成就行由 PARTIAL 升为 PASS）。U66-U129 共 64 批落地后，**混淆属性清单归零 0**；fields 段 267 → 1047；**60 场景矩阵全绿**；**10 门禁逐条回显全绿**（lint/build/typecheck/check/parity/scenarios/e2e/soak/perf/perf:frames）；P1 回归完成；P2 文档↔代码一致性机械校验（全量文档 1,089 条引用 0 越界、61/76 片段重同步）与**验收矩阵自我纠偏（44 PASS / 7 PARTIAL / 0 未覆盖）**；P3 清除 38 个隐形文件名垃圾文件并复跑审计；M10 类型债务已建台账；U129 把法术直接可观测量从 4/16 提到 15/16 并抓出 3 处空断言）
+> 最后更新：2026-09-29（R25 轮：**命名热点前三全归零 + inventory.js 退出 game 依赖**——`combat/actions.js` 116→0、`world/rooms.js` 116→0、`progression/upgrades.js` 110→0；`loot/inventory.js` 以显式传参退出 game 依赖，game 直连 38→**37**、最大 SCC 43→**41**、产品边界 549→**548** 导入。本轮起按用户要求改为**每切片一个执行智能体 + 落地后 code-review 双轴审查**编排（4 执行切片 + 6 轴审查）；审查发现已全部落实：`effectType`→`tileEffect`（特效对象非类型枚举，actions/rooms 两文件）、`goldRoll`→`goldAmount`、`la`/`na`→`previousIsEast`/`nextIsEast`（8 方向布尔族补齐）。矩阵 89/89、10 门禁全绿；文档可数指标同步（单测 19→**24**、语法文件 136→**137**、类型债台账 41 `any`/146 `unknown`））
+> 历史版本：2026-09-28（U134 收官切片：**U7 升级长尾全闭合**——`equip-item-upgrade-pickup-first` 以"清空背包→真实掉落 AI 拾取建背链→驱动 type 3 行"取两端装备槽变化证据并勘误 U133"恢复存档惰性"归因（真实门控 = 候选列表 ≤5，fixture 塞满时 ≈60 恒不满足）；**monsterTypes 三层 typedef** 接进 SaveData + 恢复/序列化两侧接线 + 审计 3 条 spot-check（负向验证 TS2339/TS2353/审计 exit 1 三向；实测 JS 里 JSDoc 参数标注不被赋值收窄覆盖）；**P-7 竖长视口** `rendered-scene-tall`（900×1600）；文档真值修正（附录 A P-1 行 L3×8/L2×24/L1×0、不变量数、Canvas 行 7 场景 5 视口）。矩阵 87 → **89**）
+> 历史版本：2026-09-28（U133 彻夜长程：**P-1 技能消费证据**——32/32 statType 全量消费映射表 `docs/p1-skill-consumption.md`（32/32 全覆盖：L3×8/L2×24/L1×0）+ 17 条带反向验证的新差分/探针场景；**P-5 健壮性矩阵**（字段删除变异，两端同接受/同拒绝）；**U132 对抗复核**（产品入口 ≡ 原版遗留入口 DTO 全等 + E2E 状态保持断言）；**P-7 特效密集状态 + 农场主题画布指纹（2 条新状态对照场景）**；**pointManagerState 三层 typedef**；**文档片段 0 漂移（18 条标注节选）**；矩阵 66 → **87**。U132 = 存档契约加固 + 远古/法术两行闭合 + 开局入口切片。此前：U131 = 存档类型契约；U130 = 成就进度显式数据化；U66-U129 混淆清零、法术可观测量 4/16→15/16、10 门禁体系建立）
+> 历史版本：2026-09-27（U132 彻夜会话：**空白档审计假绿实测并修复**（`SAVE_BLANK_TOP_LEVEL_KEYS` 原为 0 消费者，审计改双向逐键相等）+ `dungeonManagerState` 嵌套 typedef；**验收矩阵 47 PASS / 4 PARTIAL / 0 未覆盖**（「物品」远古档位与「法术」cat=15 两行闭合，均带反向验证；渲染扩 4 视口仍 PARTIAL）；**66 场景矩阵全绿**；**开局入口切片**：`adapter.startParty` 与遗留按钮共用 `PartyCreationView.prototype.startParty`，产品壳不再直写视图内部字段/DOM 回调，E2E 补四条负路径断言；U131 = 存档类型契约切片；U130 = 成就进度以显式数据为输入。此前：U66-U129 混淆属性清单归零、法术可观测量 4/16→15/16、10 门禁体系建立）
 
-## 当前轮次状态（2026-09-27，U130 架构现代化首个纵向切片 —— 已收官）
+## 当前轮次状态（2026-09-29，R25 —— 命名热点前三归零 + inventory.js 退出 game 依赖；智能体编排轮）
+
+- **R25（2026-09-29，续 `docs/modernization-status.md` 口径；本轮起按用户要求改为"每切片一个执行智能体，落地后 code-review 双轴（Standards/Spec）审查"的编排）**。四个切片，逐项证据（日志 `output/goal-r25/`；备份 `*.bak`、逐切片 diff `*-slice.diff`、审查修正脚本 `apply-review-fixes.mjs`/`fix-rooms-lana.mjs`）：
+  ① **`combat/actions.js` 单字母绑定 116 → 0**（主智能体执行）。725 行逐行对位重写（行数/字符串/数字字面量多重集/导出集合四断言全过，153 处 `actions.js:行号` 文档引用零漂移）；一字母多义全部拆分：`advanceCombatAction` 的 d 四义（actionDefinition→链击→回旋→impactEffect 重读）与 h 四义（definition→potencyPercent→floatingText 层）、`applySpellEffect` 的 c/d/f/g/h 按法术分支拆 19 个语义名（拾取四连统一 collectorPosition/dropList/dropIndex/drop）、`resolveCharacterDefeat` 掉落段 westBound/eastBound/northBound/southBound + 四个掉落计数 + goldAmount、`createAttackAction` 三分支 effectItem/itemEffect 复用声明、`createReturningAction` 双分支共享 returnAction/impactVisual/returningProjectile、label `a:`→`findOwner:`。**code-review 双轴 PASS**（Standards：零硬违规、R1–R7 全守住、命名有调用方实证；Spec：S1–S5 全过）+ 两处命名修正落实（`effectType`→`tileEffect`：实参是完整特效对象 `remainingEffectDamage` 取证；`goldRoll`→`goldAmount`：`1+rollGoldDrop()` 即最终金额）。
+  ② **`world/rooms.js` 单字母绑定 116 → 0**（执行智能体）。657 行对位保持；1237 对标识符逐位置配对校验全在声明映射内；`revealHallway` 12 拐角分支的方向布尔几何取证（`pickNorthWallPoint`→北=小行、`pickWestWallPoint`→西=小列）。**双轴 PASS**；审查发现双字母 `la`/`na`（=previousIsEast/nextIsEast，不在单字母指标内）漏网——已补齐改名并复跑全部断言。
+  ③ **`progression/upgrades.js` 单字母绑定 110 → 0**（执行智能体）。1268 行对位保持；217 函数中仅 15 个有声明性结构差异（全部是声明的拆分/`x=f(x)`→`var y=f(x)` 同行转换）；`LevelUpUpgrade.purchase` 的 b 四拆（stats/minionList/newPartyMinLevel/scrollCasterStats）、previousXxx 快照族赋值时机逐一核对为"改动前快照"。**双轴 PASS**（5 个自报把握不足点全部判定诚实命名）。
+  ④ **`loot/inventory.js` 退出 game 依赖**（game 直连 38→**37**，最大 SCC 43→**41**，产品边界 549→**548** 导入）（执行智能体）。取证：4 处 game 引用 = 构造器容量读 `game.state.victoryCount`（两调用点均在 victoryCount 定值后）+ `sortInventory(game.inventories,…)` ×2（仅取比较器）。选**调用点显式传参**（非 bind，R24 `clearVisualEffects(effects)` 同款先例）：`Inventory(victoryCount)` 容量仍构造时急切求值（时序零变化）；`addInventoryItem(a, b, inventories)` 第三参收 InventoryRegistry，5 个调用方改传（actions.js:233、character.js:151/:1033、game-save.js:418/:489；组合根无 inventory 相关 hunk）。**反向验证红→绿**（`inv-decouple-negative.log`/`inv-decouple-restored.log`：破坏注入→`ancient-item-found`/`equip-item-upgrade-pickup-first` 两场景 DTO 分叉红→恢复绿）。新增引擎无关单测 `tests/unit/inventory-decouple.test.mjs` 5 条（注入遗漏必抛 `compareByItemGold` TypeError，非恒真断言）。**双轴 PASS**。
+  **门禁（R25 后对最终工作树逐项回显，日志 `output/goal-r25/f-*.log`）**：lint=0 build=0（产品边界 93 模块/548 导入/原版档案依赖 0）typecheck=0 check=0（137 语法+24 单测）parity=0 scenarios=0（89/89）e2e=0 soak=0（8h/24h 一致，堆偏移稳定）perf=0 perf:frames=0；`git diff --check`=0。指标：单字母绑定 2,833 → **1,602**（R22 起累计归零 behaviors 264/scene 196/upgrade-details 152/terrain 131/generation 130/actions 116/rooms 116/upgrades 110）；game 直连 **37**；最大 SCC **41**；文档可数指标与类型债台账已同步（41 `any`/146 `unknown`）。
+- **续跑入口**：本文件 + `docs/modernization-status.md` + `output/goal-r25/`。下一最小动作：命名热点 `views/character.js`（98）/`persistence/entities.js`（94）/`ai/targeting.js`（89）/`views/expedition.js`（84）同套路推进；解耦候选 `persistence/entities.js`（6 处）、`views/resources.js` 等（以 `node scripts/audit-architecture.mjs` 实测为准）。
+
+## 历史轮次（2026-09-29，R24 —— 地牢生成命名归零 + sprites.js 退出 game 依赖）
+
+- **R24（2026-09-29，续 `docs/modernization-status.md` 口径）**。两个切片，逐项证据（日志 `output/goal-r2/`）：
+  ① **`world/generation.js` 单字母绑定 130 → 0**（热点第五）。脚本 158 处纯重命名 + 16 个复用/别名函数手工拆分（`generate` 的 g/h 三义复用、`connectRooms` 的时间戳/走廊号复用、`moveUpLeft/shiftLeft/shiftUp` 三胞胎的旗标↔坐标复用、楼梯放置的参数覆写消除）。**取证纠错**：`generateDungeonLevel` 第三参实为 `hasSecondEntrance`（三调用方均传该字段），首版误命名"房间数"已当场修正。`LayoutMethods` typedef 补 `generate`。证据：parity（地牢布局逐字节一致）、89/89 场景、e2e 全 0。
+  ② **`rendering/sprites.js` 退出 game 依赖**（game 直连 39→**38**，产品边界 550→**549** 导入）：`bindEffectAnimations(catalog)`（`initializeRuntimeGame` 尾部绑定）替代 `game.animations` 直读；`clearVisualEffects(effects)` 显式接收特效管理器（3 调用方改传 `game.effects`）。
+  **门禁（R24 后对最终工作树逐项回显，日志 `output/goal-r2/`）**：lint=0 build=0 typecheck=0 check=0 parity=0 scenarios=0（89/89）e2e=0 soak=0 perf=0 perf:frames=0（perf 两项见 g-perf*.log 与 h-*.log）。指标：单字母绑定 2,833 → **1,944**（R22 起累计归零 behaviors 264/scene 196/upgrade-details 152/terrain 131/generation 130）；game 直连 **38**；最大 SCC **43**。
+- **续跑入口**：本文件 + `docs/modernization-status.md` + `output/goal-r2/`。下一最小动作：命名热点 `combat/actions.js`（116）/`world/rooms.js`（116）/`progression/upgrades.js`（110）；解耦候选 `loot/inventory.js`（4 处）、`persistence/entities.js`（6 处）。
+
+## 历史轮次（2026-09-28，R23 —— 渲染/地形热点命名归零 + points.js 退出 game 依赖）
+
+- **R23（2026-09-28，续 `docs/modernization-status.md` 口径）**。三个切片，逐项证据（日志 `output/goal-r2/`）：
+  ① **`rendering/scene.js` 单字母绑定 196 → 0**（热点第二）。渲染管线参数按职责定名；`GameCanvasView.update` 约 70 个绑定按对象族命名，闪电分支别名（`sa`/`Tb`）消除，`draw*TileRow` 的 `f = a` 别名与死双写清理。证据：**7 条逐像素指纹场景全过**（渲染输出零变化）。
+  ② **`world/terrain.js` 单字母绑定 131 → 0**（热点第四）。`sampleNoise` 重写为标准 F2 单纯形命名（逐行对应）；`populateWorldBlock` 三组反编译别名拆分，RNG 消费序列不变。证据：parity/scenarios/e2e/soak = 0。
+  ③ **`progression/points.js` 退出 game 依赖**（game 直连 40→**39**，最大 SCC 44→**43**）：`bindAdventurePoints(state)`（取 `state.adventurePoints`，与 `bindStatistics` 同约定）接入两个组合根；新增引擎无关单测 `tests/unit/point-awards.test.mjs`（4 条）；**反向验证**：注释绑定 → 场景红，恢复 → 绿。教训：bind 收整个 state、内部取子对象——首版把 `game.state` 整体当 adventurePoints 用，boot 即崩，被探针抓住修正。
+  **门禁（R23 后对最终工作树逐项回显，日志 `output/goal-r2/`）**：lint=0 build=0 typecheck=0 check=0 parity=0 scenarios=0（89/89）e2e=0 soak=0 perf=0 perf:frames=0；doc-snippets=0（progression.md 两个 points 片段同步至 `:34-54`/`:55-81`，game.js 一个片段经 --rewrite 平移）doc-refs=0 doc-counts=0（单测 15→**19** 项、语法文件 135→**136**，REFACTOR_REPORT 与 REMAINING-WORK 已同步）；git diff --check=0。指标：单字母绑定 2,833 → **2,077**；game 直连 **39**；最大 SCC **43**；build 审计 93 模块/**550** 条导入。
+- **续跑入口**：本文件 + `docs/modernization-status.md` + `output/goal-r2/`。下一最小动作：命名热点 `combat/actions.js`（116）/`world/rooms.js`（116）/`world/generation.js`（130）同套路推进；解耦候选 `rendering/sprites.js`（3 处 game 引用）、`loot/inventory.js`（4）、`persistence/entities.js`（6）。
+
+## 历史轮次（2026-09-28，R22 —— AI 行为热点命名归零 + 可复现纯净构建 + 升级详情视图命名归零）
+
+- **R22（2026-09-28，执行 `docs/modernization-status.md` 的"下一切片入口"；该文件是本目标的验收口径）**。三个切片，逐项证据（日志 `output/goal-r2/`）：
+  ① **`ai/behaviors.js` 单字母绑定 264 → 0**（全库热点第一）。纯重命名约 540 处标识符由 Babel 作用域感知脚本 `output/goal-r2/rename-behaviors-auto.mjs` 批量完成（只替换 binding.identifier/referencePaths/赋值左值；行数不变 + 字符串多重集不变 + 表项全命中三重断言）；19 个复用变量函数（`updateWorldMode`、`ExploreDungeon.execute`、`repositionInsideRoom`×2、四个掉落认领 `getBehaviorScore`、`CompanionSpell.canExecute/selectTarget`、`StunnedBehavior.getBehaviorScore` 等）手工拆为独立命名，标号 `a:` 改 `threatSearch:`。语句顺序与随机消费顺序未动。
+  ② **`scripts/build.mjs` 可复现纯净构建**：拷贝后按源清单清理 dist/ 陈旧文件（护栏：路径必须在拷贝根下 + 单轮 ≤45 个，规避 safe-delete-shim 限额）。实测清掉 38 个 U+F00D 尾随字符垃圾产物，dist 174 → **136 文件**（与源清单一致）；二跑 0 回写/0 清理。
+  ③ **`views/upgrade-details.js` 单字母绑定 152 → 0**（热点第三，同套路）：自动脚本 `rename-upgrade-details-auto.mjs` 267 处纯重命名 + 21 个复用变量函数手工拆分（`createDomElements` 族的行/格/图复用、`CharacterLevelDetails.update` 的 8 变量三义复用拆为 cost/title/monsterLevel/scaledLevel/monsterTypes/monsterSprite/partyMinLevel/requiredMonsterLevel/total*/average*/threatCount/assessmentText）。
+  **门禁（R22 后对最终工作树逐项回显，日志 `output/goal-r2/`）**：lint=0 build=0 typecheck=0 check=0 parity=0 scenarios=0（89/89）e2e=0 soak=0 perf=0 perf:frames=0；doc-snippets=0 漂移（combat.md C-33 片段因切片①同步至 `behaviors.js:296-314`）；doc-refs=0；git diff --check=0。指标：单字母绑定 2,833 → **2,421**（behaviors.js 264→0、upgrade-details.js 152→0）；game 直连 40；最大 SCC 44；dist 136 文件纯净可复现。
+- **续跑入口**：本文件 + `docs/modernization-status.md` + `output/goal-r2/`。下一最小动作：按同款"作用域感知脚本 + 复用函数手工拆"套路推进 `rendering/scene.js`（196，注意坐标类单字母可能合理保留）或 `world/terrain.js`（131）；或继续 save-dto 嵌套 typedef（world/statistics/castleManager/shopManager）。
+
+## 历史轮次（2026-09-28，U134 收官切片 —— U7 全闭合 + monsterTypes typedef + P-7 竖长视口）
+
+- **U134（2026-09-28，目标："2–4 轮完成 U133 后的本地证据与工程收尾，保持原版行为等价，交付可复跑验收记录"）**。四轮完成，逐轮证据（日志 `output/u134-*.log`）：
+  ① **第 1 轮（固定真实基线并修正文档真值）**：复核 87 场景唯一名、附录 A 51 行（47 PASS/4 PARTIAL）、10 门禁定义、35 个未提交路径归属；修正过期真值——附录 A P-1 行（L3×7/L2×4/L1×21 → 定稿 **L3×8/L2×24/L1×0**）、REMAINING-WORK P-1 段与 U7 残留、不变量数 9→10、P-6 原版腿不可用结论（REMAINING-WORK §5 第 5 项）；确认 buff-potency 否决记录保留、测试代码无 potencyMultiplier 观察器残留（`readBuffPotencies` 是保留的字段探针，归 `skill-priest-spell-potencies`）。
+  ② **第 2 轮（U7 EquipItemUpgrade 拾取先行）**：新场景 `equip-item-upgrade-pickup-first`（矩阵末尾追加）——`withEmptyBackpacks` 清空背包 → 两端各自 generateItem 造远古掉落（职业/槽位与拾取者同源）→ AI 认领拾取建立背链 → 驱动 type 3 行真实 `refresh→canPurchaseNow→purchase` 链。**取证推翻 U133 假说**：恢复路径两端都经 addInventoryItem 建背链（game-save.js:489 ↔ c2.js:29097，拾取路径 character.js:1033 ↔ c2.js:22215），真实门控是 canPurchase 的候选列表 `≤5` 条件（game.inventories.list ↔ 原版 Game.Di.Fj；fixture 背包塞满时 ≈60 恒不满足——这才是 U133"12 次购买零装备变化"的根因）。实测两端各 **2 次** type 3 购买（自然拾取的「恐惧之可贵的护盾」入游侠护盾槽 + 种子远古剑「独步荒废之徒劳的剑」入战士武器槽），装备槽摘要两端同变；反向验证：重构侧 purchase 改空操作 → DTO 首检查点分叉红（damageComponent.itemValue 24↔13），恢复绿。harness 新增 `purchaseEquipItemUpgrades`（type 3 定向驱动，返回购买前后装备槽摘要）。**U7 升级族 19 个实现至此全部有差分/探针证据**（docs/u7-upgrade-usage.md 已更新）。
+  ③ **第 3 轮（save-dto monsterTypes 三层 typedef）**：`SaveMonsterTypesState`/`SaveMonsterTypeState`/`SaveMonsterTypeEntry` 挂进 SaveData（fixture 实测三层形状，序列化器 game-save.js:955-962 ↔ entities.js serializeMonsterLevel/serializeMonsterType 同形状）；审计新增 3 条嵌套 spot-check（双向）；恢复侧 `restoreMonsterTypes` 顶层读取行内 cast + `restoreMonsterType` 参数标注 `@param {SaveMonsterTypeEntry}` + 两个序列化器 `@returns`。负向验证 ×3：`a.killsTypo` → TS2339 红、`nameTypo:` → TS2353 红、typedef 伪字段 → 审计 exit 1，逐一还原转绿。**实测发现（记入 m10-type-debt.md）**：JS 文件里 JSDoc 参数标注**不被赋值收窄覆盖**（TS2339 恒报，声明类型恒胜），被复用的参数只能读取点 cast——首版"参数标注 + any 赋值"方案实测假绿，已按此修正。
+  ④ **第 4 轮（P-7 竖长视口）**：`rendered-scene-tall`（900×1600）1300 帧指纹两端一致（非背景像素两端各 203,763，指纹值 1853346327），指纹场景 6→7 条、视口 4→5；Canvas 行按 R7 维持 PARTIAL。选择理由：REMAINING-WORK §3.1 写明的"可行的下一步"（纯配置），且不与已否决的 P-1 活体路径重叠。
+  **门禁（U134 后对最终工作树逐项回显，日志 output/u134-g-*.log，退出码 output/u134-g-exits.txt；文档编辑后 lint 单独复跑 output/u134-g-lint-post.log）**：lint=0 build=0 typecheck=0 check=0 parity=0 scenarios=0（89/89）e2e=0 soak=0 perf=0 perf:frames=0，git diff --check=0。逐轮验收记录落盘 `output/u134-final-report.md`。
+- **续跑入口**：本文件 + `output/u134-*.log`。下一最小动作：save-dto 剩余嵌套（world/statistics/castleManager/shopManager）照 monsterTypes 套路推进；或 P-1 活体化新路径设计（statType 11-15/16 活体对账、buff-potency 窗口、28/29 活体化均已否决，不得重试）。
+
+## 历史轮次（2026-09-28，U133 彻夜长程 —— P-1 技能消费证据 + P-5 健壮性矩阵 + U132 对抗复核）
+
+- **U133（2026-09-28 凌晨起，执行 `docs/NEXT-OVERNIGHT-LONG-RUN-PROMPT.md`）**。起点 01:03，
+  基线 lint/check/parity/e2e 全 0（`output/overnight-u133/b-*.log`）；检查点日志 `output/overnight-u133/progress.md`。
+  ① **P-1 主交付**：`docs/p1-skill-consumption.md` —— 32/32 种 statType 的
+  "定义数 → applyStatBonus 写入字段 → 真实战斗消费点（file:line）→ 视图渲染点（单列不计入）→ 证据等级"
+  全量映射；分级 **L3 直接战斗差分 ×8（17/18/19/23/24/30/31/32）、L2 探针/差分 ×24（2-16/20-22/25-29 等其余全部分量与门控字段）、L1 审计 ×0**。
+  ② **P-1 十二条新差分/探针场景（各带反向验证）**：`skill-chicken-king-barbarian-chance`（statType 30，全员鸡王
+  231 次施法，"野蛮人小鸡!"两端各 4 次）、`skill-faster-attacks-cooldown`（statType 10，getAttackCooldown
+  探针 12→6）、`skill-improved-damage-statvalue`（statType 2/6，statValue 27→35 / maxHealth→152，
+  期望由 fixture 独立推导）、`skill-larger-flock-summon-limit`（statType 26，召唤上限 1→2）、`skill-improved-combat-stat-bonuses`（statType 3/4/5，armor 29→37 / attackRating 28→36 / defenceRating 32→41）、`skill-regen-spirit-bonuses`（statType 8/7，healthRegenBonus 0→2 / maxSpirit +40% 探针）、`skill-priest-spell-potencies`（statType 11-15，五法术强度 0→2 各探针）、`skill-spellcost-reduction-probe`（statType 16 活体公式，22→18）、`skill-ninja-chance-chicken` / `skill-rogue-chance-chicken`（statType 31/32 活体浮动文字）、`equipment-upgrades-purchased` 尝试后按取证移除（EquipItemUpgrade 对恢复存档惰性，见 docs/u7-upgrade-usage.md）、`rendered-scene-farm`（农场主题画布指纹）。
+  harness 新增 `purchaseCharacterSkill`（前置链 Wp/prerequisite 顺序购买，原版定义形状
+  `{c,title,e,g,f}`）、`readAttackCooldown`、`readStatValue`、`readSummonLimit` 四个只读/驱动入口。
+  ③ **U132 对抗复核（主线二）**：`party-entry-product-differential`——原版遗留按钮闭包 ↔
+  重构产品 `adapter.startParty`（harness 经 internal-api 共享同一 game 单例，公平调用），
+  同一 4 人阵容两端 DTO 全等；与 party-creation-differential 串联证得「重构产品入口 ≡ 重构遗留入口」。
+  E2E 拒绝断言补 localStorage 不变校验（被拒调用零 mutation）。
+  ④ **P-5 健壮性矩阵**：`save-robustness-field-matrix`——真实 fixture 字段删除（turnNumber/
+  pointManagerState/gameOptions/dungeonStates[3].clearedTurn/farmedKills 同受，world 同拒），
+  恢复容缺谱系取证写入场景注释；反向验证（拆 pointManagerState 守卫）红→绿。
+  多版本结论**维持 PARTIAL**（构造变异档 ≠ 真实历史档）。
+  ⑤ **P-7**：`rendered-scene-spellstorm`（闪电雨特效密集状态 + 1300 帧指纹两端一致）。
+  随机首领药水变体**取证否决**（BASE_POTION_CAPACITY=6 + 点数升级赠药 + 团灭重开叠加，
+  order-dependent，见 progress.md CP4）。**P-6**：`measure-frames.mjs` 新增原版同口径腿 +
+  交替 A/B 框架；原版生产页在资产剥离档案下 boot 无法到达组队挂载（Game.Em=false，
+  复现探针 probe-original2.mjs）——原版腿非致命记录并跳过，P-6 维持 PARTIAL。
+  ⑥ **主线五**：`pointManagerState` 三层 typedef（SavePointManagerState/SavePointEventCount/
+  SavePointUpgrade）+ 3 条审计 spot-check + 负向编译验证（upgradeIdX → TS2322 红）；
+  REMAINING-WORK 四处文档真值修正（法术 16/16、save-dto 已接入、U4 残留口径、片段清单补录）。
+  ⑦ **矩阵 66 → 87**（含 U132 追加的 party-creation-differential 等）；修复一处区域编辑残留的
+  无名重复场景（曾以 name:undefined 混入矩阵——已删，名称/make 计数对齐）。
+  ⑧ **文档片段节选标注（主线五）**：`check-doc-snippets.mjs` 新增 `<!-- snippet: abridged -->`
+  约定——标注只豁免内容比对，ref 可解析性与行号边界仍强制（标注损坏同样 exit 1）。
+  18 条逐一标注，报 **0 漂移 + 18 标注节选**；反向验证 ×3（未标注漂移红 / 标注引用不存在红 /
+  标注行号越界红）。本轮 P-1 未全闭合：L1×15 仍为消费点审计，探针/场景基础设施已就绪，
+  维持 PARTIAL 不虚报。
+
+- **U133 续跑补录（同会话第二段）**：P-1 剩余 12 族全部升级为 L2 探针/差分（statType 1/9/16/
+  20/21/22/25/27/28/29/31/32，场景 skill-ignore-damage-resistance、skill-priest-spellcost-spiritregen、
+  skill-electromancer-control-chain-rain、skill-pyromancer-area-transform-rain、
+  skill-swiftstrike-ricochet-field-probes、skill-ninja-chance-chicken、skill-rogue-chance-chicken），
+  **L1 清零**（L3×8 + L2×24）。映射表 32/32 全表带反向验证（case 1/9→16/20/21/22/25/27/28/29/31/32
+  逐一破坏→红→恢复）。U7：`scroll-upgrades-purchased` 闭合 ScrollUpgrade（type 12，upgradeCount
+  增长 + 反向验证；取证：shockScroll maxCharges=0 原版即不可升级、scrollUpgrades 在
+  quickUpgradeCollection 内）。**如实边界**：statType 28/29 的探针受 R4 空投射武器缺陷限制只做
+  turns:0 写入侧（战斗推进即抛错，两端同点同错）；statType 11-15/20-22/25/27-29 等的
+  "战斗效果活体差分"仍待逐 spell 场景设计（statType 11-15 的活体量级对账已以证据否决：目标 maxHealth/动画帧数归因为引擎内部量；statType 28/29 受 R4 空投射武器缺陷限制为 turns:0 写入侧探针）。矩阵 76 → **87**（含边界值矩阵与农场状态画布场景；buff-potency 活体场景因施法稀疏按否决条款移除，字段探针保留）。
+- **续跑入口**（已被 U134 取代，见上）：`output/overnight-u133/progress.md` + 本文件。当时下一最小动作：U7 长尾逐升级家族的
+  活体效果差分（ScrollUpgrade 已闭合），或 P-1 的 28/29 活体化（需 R4 缺陷路径规避方案）。
+
+## 历史轮次（2026-09-27，U132 彻夜会话 —— 存档契约加固 + 三条验收缺口闭合 + 开局入口切片）
+
+- **U132 彻夜会话（2026-09-27 晚，执行 `docs/OVERNIGHT-DEVELOPMENT-ROADMAP-PROMPT.md`）**。
+  **工作树起点**：U131 的未提交改动（10 文件 + 未跟踪 `audit-save-schema.mjs`）经审读确认**只加类型、
+  审计与文档**，不改运行时序列化任何键/值/顺序；本轮在其上继续，未回退、未夹带。
+  ① **先跑当前基线**：lint/build/typecheck/check/parity/scenarios(62/62)/e2e 逐项回显退出码全 0
+  （日志 `output/b-*.log`）；`audit:arch` 数字与交接一致（93 文件/77 模块/564 边/49 game import）。
+  ② **空白档审计假绿实测并修复**：给 `createSaveState` 空白分支临时加 `turnNumber` ——**旧审计与 tsc 都不红**
+  （审计的"④⊆①"子集检查 + tsc 联合类型多余属性规则双双放行）；已把 `audit-save-schema.mjs` 改为与
+  `SAVE_BLANK_TOP_LEVEL_KEYS` **双向逐键相等**（该导出此前 0 消费者），破坏实验红/恢复绿
+  （另一方向：删 `gameWon` 时 tsc 能红）。`game-save.js` 实验后逐字节还原（diff 仍为 U131 的 19 行）。
+  ③ **嵌套 typedef**：`dungeonManagerState` → `SaveDungeonManagerState`（3 键）+ `SaveDungeonState`
+  （10 键，dungeonId 为 "列_行" 字符串，字段逐一对照 fixture 实测），挂进 `SaveData`；审计新增两条
+  嵌套 spot-check（typedef↔fixture 双向）；反向验证：序列化器临时改名 `clearedTurnX` → tsc TS2322 红
+  （嵌套层的审计只管 typedef↔fixture，序列化器↔原版由 parity/场景矩阵兜底——边界已写入审计注释）。
+  ④ **P-3 物品行闭合**（矩阵 62→63）：新场景 `ancient-item-found` + harness `seedAncientItemDrop`——
+  两端各自用**己方 generateItem** 构造合法 rarity=4 物品（原版侧取证：Nv/zv/dh.yf/p.u/p.w/Z，
+  c2.js:20619/20453/18614；**原版 Vector2 字段是 T/U 不是 x/y**，首版踩坑已修）、作为真实 ItemDrop
+  放进队员房间脚下，AI 认领→拾取路径驱动 `recordItemFound` case 4，完整 DTO 差分（远古剑
+  「独步荒废之徒劳的剑」进入同一队员 inventory）；拾取回合数两端相等断言。
+  **反向验证**：删重构侧 case 4 计数 → 场景红。
+  ⑤ **P-2 法术行闭合**（矩阵 63→64）：`spell-find-chest` 换上 `countSelectedTreasure` 观察器——
+  财宝目标 `selected`（原版 el）全库仅法术（actions.js:721↔c2.js:20955）与 UI 按钮（c2.js:27719，
+  场景不驱动）两个写点，且法术 AI 评分（behaviors.js getFinalScore）只在房间有未开启未选中财宝时非零
+  ⇒ 施法 ⟺ selected 置真；**必须逐帧统计 false→true 跳变**（`setChestOpened` 开箱会把 selected 清回
+  false——首版终态计数实测 0，已修）。实测两端各 4 次跳变；反向验证：删 `a.selected = true` → 红。
+  `check-spell-coverage.mjs` 升级为"无直接可观测量 **0** 个"（16/16）。
+  ⑥ **P-7 渲染**（矩阵 64→65）：新增 `rendered-scene-wide`（1920×1080）与 `rendered-scene-tiny`
+  （375×667）两条逐像素指纹场景，覆盖 4 场景 × 4 视口；新场景全部追加在矩阵末尾，不扰动既有采样窗口。
+  ⑦ **开局入口切片（U132 架构切片）**：`adapter.startParty` 改调 `PartyCreationView.prototype.startParty(members)`
+  ——视图上与遗留 startButton **共用**的唯一创建入口（`createAdventurerPartyFromSelection` 自 onclick
+  闭包逐字提取，随机消费顺序不变）；产品命令不再直写 `selectedCharacters`/`validParty`、不再调用
+  DOM 回调。调用者所需知识：3 个视图内部字段 + 转义 + DOM 回调 → **1 个方法**。
+  `escapeName` 留产品侧（遗留路径传原名，入口内转义会双重转义=行为变更，已记入被否决方案）。
+  E2E 新增四条负路径断言：重名拒绝/未解锁职业拒绝/空阵容拒绝/开局后重复建队拒绝，全绿。
+  **开局创建路径的原版差分仍缺**（原版侧开局入口的混淆视图字段未建档，无法双端驱动），已如实写入台账。
+  **（U132 追加，同会话补课交付）**：原版组队视图控制器取证闭环——`Az`（c2.js:26306-26312，
+  `F`=元素id/`Vb`=选择列表/`Ww`=validParty/`$i`=startButton）+ 视图宿主 `w.Ee.Tc`（Ee→view，c2.js:44293/23492/23497）+
+  onclick 闭包 26363-26414；据此新增差分场景 `party-creation-differential`（harness `createPartyFromBlank`：
+  reset 到两端一致空白态 → 镜像字段写入驱动**各自原生开局闭包**建同一份 4 人阵容 → 300+900 回合完整 DTO 差分）；
+  反向验证：重构侧创建体 baseAttackCooldown 12→13 → 红，恢复 → 绿。E2E 增补负路径断言：
+  **载入真实原版存档（tests/fixtures/original.c2save）后 startParty 被拒**（started=true + 拒绝文案）。
+  矩阵 65 → **66**，66/66 全绿。
+  ⑧ **验收矩阵**：法术、物品两行 PARTIAL→PASS，Canvas 行覆盖扩大仍 PARTIAL（缺口文字已改 4 场景×4 视口），
+  现为 **47 PASS / 4 PARTIAL / 0 未覆盖**；`check-spell-coverage` 无直接可观测量 0；文档可数指标
+  （场景数 66 等 23 处）经 lint 机械核对一致。
+  **门禁（U132 后，退出码逐条回显，日志 `output/g-*.log`）**：`lint=0 build=0 typecheck=0 check=0
+  parity=0 scenarios=0（66/66）e2e=0 soak=0 perf=0 perf:frames=0`。
+
+## 历史轮次（2026-09-27，U130 + U131 架构现代化两个纵向切片 —— 已收官）
 
 - **U130 架构债基线 + 成就进度纵向切片（2026-09-27，执行 `docs/NEXT-ARCHITECTURE-PROMPT.md` §3/§4）**。
   ① **先建立基线**：清理 6 个 0 字节未跟踪垃圾文件（隔离到 `output/quarantine-untracked-2026-09-27/`，可原样移回；其中 1 个文件名含 U+F02A 是 `npm run lint` 报红的唯一原因）；随后逐项跑 **10 门禁全绿**（`output/base-*.log`）。
@@ -16,6 +164,24 @@
   ⑥ **验收矩阵成就行 PARTIAL → PASS**（44/7 → **45/6**），`docs/REMAINING-WORK.md` 的 P-4 标记闭合。
   ⑦ **把"文档数字漂移"变成门禁**：新增 `scripts/check-doc-counts.mjs`（**入 lint 不变量 9**）——差分场景数 / 单测条数 / 语法检查文件数 / lint 不变量条数四项与源码实况比对；一次性修正了当前态文档里 20 处过期数字（60→62 场景、128→133 文件、10→15 单测、6→9 不变量 等）。`scripts/fix-doc-identifiers.mjs` 增强（散文里反引号包裹的 `obj.X` 形态也同步），`docs/architecture.md` 25 处旧标识符改用源码里已核对的名字，**残留 31 处已在文首如实写明**（统计记录器方法别名与装备定义表键未取证，**不臆造替换**）。
   **门禁（U130 后，退出码逐条回显，日志 `output/g-*.log`）**：`lint=0 build=0 typecheck=0 check=0 parity=0 scenarios=0（62/62）e2e=0 soak=0 perf=0 perf:frames=0`。
+
+- **U131 存档类型契约切片（2026-09-27，架构现代化第二个独立切片）**。
+  ① **先做只读的 schema 比对**：新增 `scripts/audit-save-schema.mjs`（**入 lint 不变量 9**；`npm run audit:save-schema`）。
+  它比对四种形态的顶层键：`save-dto.js` 声明集、真实原版 fixture、`createSaveState` 的**已初始化**分支、
+  **未初始化**分支，并逐条核对 6 个嵌套 typedef 的字段。结论：**三种已初始化形态各 30 键且键序完全一致**，
+  未初始化分支 4 键（`saveKey/gameInitialized/partyCreated/gameWon`）；`SaveAdventurer 15 / SavePotion 3 /
+  SaveScroll 4 / SaveAchievement 3 / SaveGameOptions 7 / SavePosition 7` 字段与 fixture 样本逐一吻合。
+  顺带订正一个旧笔误：architecture.md 两处"29 顶层键"实为 **30**（`docs/persistence.md` 早先已记 30）。
+  ② **再逐函数接线**（`SaveData` 此前是 0 引用的纯文档资产）：`createSaveState` 加
+  `@returns {SaveData|SaveDataUninitialized}`，`restoreGameState` 里 `JSON.parse(c)` 的结果加 `@type {SaveData}`。
+  为让返回类型真的成立，给 `settings.upgrades` 的构造变量 `Ja` 补 `@type {Object<string, number>}`
+  （**只标类型，不动运行时**）。两处都做了反向验证：`settings:` → `settingsTypo:` 报 TS2322、
+  `d.frameNumber` → `d.frameNumberTypo` 报 TS2551，恢复后 tsc 回 0。
+  ③ `save-dto.js` 新增 `SaveDataUninitialized` typedef 与 `SAVE_BLANK_TOP_LEVEL_KEYS` 导出。
+  **边界（如实）**：嵌套形态（`world`/`statistics`/`monsterTypes`/`pointManagerState`…）在 `SaveData` 里仍是
+  `{Object}`，**没有**形状约束；空白档形态也不靠注解假装覆盖，而是由 schema 比对脚本兜底。
+  **门禁（U131 后，日志 `output/u-*.log`）**：`lint=0 build=0 typecheck=0 check=0 parity=0 scenarios=0（62/62）
+  e2e=0 soak=0 perf=0 perf:frames=0`；lint 不变量 9 → **10**，语法检查文件 133 → **134**。
 
 ---
 

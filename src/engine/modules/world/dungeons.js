@@ -237,7 +237,7 @@ export function initializeWorldDungeons() {
         b.room = null;
         d.actionType = IDLE_ACTION;
       }
-      clearItemDrops();
+      clearItemDrops(game.itemDrops);
     }
   };
   DungeonRegistry.prototype.setFarmedKills = function (a) {

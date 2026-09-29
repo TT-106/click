@@ -231,7 +231,7 @@ export function initializeCombatScrolls() {
       for (level = 0; level < this.upgradeCount; level++) {
         applyStatBonus(game.state.scrollCaster, this.statBonusPerUpgrade.statType, this.statBonusPerUpgrade.statBonusValue);
       }
-      updateScrollAccuracy();
+      updateScrollAccuracy(game.state.scrollCaster.stats);
     }
     this.label = getScrollLabel(this);
     this.nextLabel = getNextScrollLabel(this);

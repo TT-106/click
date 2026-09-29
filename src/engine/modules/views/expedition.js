@@ -733,7 +733,7 @@ export function initializeViewsExpedition() {
   PotionButtonView.prototype.activate = function () {
     if (this.potion) {
       if (!(this.potion.active || !this.potion.active && isPotionModifierActive(this.potion))) {
-        this.potion.activate();
+        this.potion.activate(game.state);
       }
     }
   };

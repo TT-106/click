@@ -80,10 +80,10 @@ export function advanceSimulation(a) {
       D = getAllies(),
       N;
     for (N = 0; N < D.length; N++) {
-      updateCharacterEffects(D[N].effects, true);
+      updateCharacterEffects(D[N].effects, true, game.state.turnNumber);
     }
     for (N = 0; N < v.length; N++) {
-      updateCharacterEffects(v[N].effects, false);
+      updateCharacterEffects(v[N].effects, false, game.state.turnNumber);
     }
     game.state.statisticsRecorder.recordTurn();
     var I = game.state.party;

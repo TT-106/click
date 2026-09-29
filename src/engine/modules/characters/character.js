@@ -3,7 +3,7 @@
  */
 import { ADVENTURER_TYPE, CAST_ACTION_TYPE, IDLE_ACTION, MELEE_ACTION_TYPE, MONSTER_TYPE, selectScrollTarget } from "../ai/targeting.js";
 import { CharacterPosition, Equipment, clearMovementTarget, findCheapestNeighbor, separateDungeonCharacters, separateWorldCharacters } from "./movement.js";
-import { BASE_POTION_CAPACITY, CHEST_ITEM_LEVEL_BONUS, CHEST_ITEM_QUALITY_BONUS, DUNGEON_WALK_SPEED, RETREAT_HEALTH_RATIO, RETREAT_SPIRIT_RATIO, WORLD_WALK_SPEED, dungeonPriceCurve, equipmentQualityBonus, globalUpgradeDefinitions, potionCapacityBonus, rollGoldDrop, walkingSpeedBonus, walkingSpeedModifier } from "../content/balance.js";
+import { BASE_POTION_CAPACITY, CHEST_ITEM_LEVEL_BONUS, CHEST_ITEM_QUALITY_BONUS, DEFAULT_CHAIN_CHANCE, DEFAULT_MINION_LIMIT, DEFAULT_MULTI_ATTACK_CHANCE, DUNGEON_WALK_SPEED, RETREAT_HEALTH_RATIO, RETREAT_SPIRIT_RATIO, WORLD_WALK_SPEED, attackCooldownBonus, dungeonPriceCurve, equipmentQualityBonus, freeSpellsModifier, globalUpgradeDefinitions, potionCapacityBonus, rollGoldDrop, walkingSpeedBonus, walkingSpeedModifier } from "../content/balance.js";
 import { CharacterEffects, hasStatusEffect } from "./effects.js";
 import { CharacterStats, getAttackCooldown, getSpellSpiritCost, spendSpirit, statValue } from "./stats.js";
 import { UpgradeCollection } from "../progression/upgrades.js";
@@ -63,7 +63,7 @@ export function Character(a, b, c, d, f) {
   this.actionType = IDLE_ACTION;
   this.isDead = false;
   this.spellToCast = this.targetTreasureChest = this.targetItemDrop = this.targetPotionDrop = this.targetScrollDrop = this.targetGoldDrop = this.combatTarget = this.behaviors = null;
-  this.stats = new CharacterStats(this);
+  this.stats = new CharacterStats(this, getCharacterStatRules());
   this.lastAttackTurn = -3 * getAttackCooldown(this.stats, true);
   this.summoner = null;
   this.summonedAtTurn = this.lifetimeTurns = 0;
@@ -148,7 +148,7 @@ export function equipItem(a, b) {
     if (a.inventory) {
       a.inventory.removeItem(b);
       if (c) {
-        addInventoryItem(a.inventory, c);
+        addInventoryItem(a.inventory, c, game.inventories);
       }
     }
     var c = a.stats,
@@ -1019,18 +1019,18 @@ export function updateCharacter(a, b) {
         if (a.targetPotionDrop && !a.targetPotionDrop.collected) {
           showFloatingText(game.floatingText, a, "药剂!", "white");
           a.targetPotionDrop.setCollected(true);
-          removePotionDrop(a.targetPotionDrop);
-          addPotion(a.targetPotionDrop.potion);
+          removePotionDrop(a.targetPotionDrop, game.potionDrops);
+          addPotion(a.targetPotionDrop.potion, game.potions);
           a.targetScrollDrop = null;
           awardAdventurePoints(11);
         }
       } else if (6 === a.actionType) {
         if (a.targetItemDrop && !a.targetItemDrop.collected) {
           a.targetItemDrop.setCollected(true);
-          removeItemDrop(a.targetItemDrop);
+          removeItemDrop(a.targetItemDrop, game.itemDrops);
           var Qe = a.targetItemDrop.getItem(),
             Cf = Qe.getRarity();
-          addInventoryItem(Qe.inventory.inventory, Qe);
+          addInventoryItem(Qe.inventory.inventory, Qe, game.inventories);
           game.state.statisticsRecorder.recordItemFound(Qe);
           awardAdventurePoints(12);
           if (0 != Cf) {
@@ -1101,7 +1101,7 @@ export function updateCharacter(a, b) {
                 zA = (100 - Math.min(90, globalUpgradeDefinitions.itemQualityChance.currentValue + CHEST_ITEM_QUALITY_BONUS)) / 100,
                 AA = Op.rollRarity(zA),
                 CA = (100 - Math.min(90, globalUpgradeDefinitions.higherLevelItemChance.currentValue + CHEST_ITEM_LEVEL_BONUS)) / 100,
-                DA = randomizeItemLevel(wl.stats.characterLevel, CA);
+                DA = randomizeItemLevel(wl.stats.characterLevel, CA, game.itemGenerator.rules);
               if (Np = generateItem(Op, xA, wl, DA, AA)) {
                 ij.drops.push(new ItemDrop(Np, Df, Oh, wA));
               }
@@ -1119,7 +1119,7 @@ export function updateCharacter(a, b) {
           if (1 === Ad) {
             var HA = 0 + randomInt(2);
             for (Oc = 0; Oc < HA && game.potions.potionList.length < BASE_POTION_CAPACITY + potionCapacityBonus.currentValue; Oc++) {
-              var IA = new Potion(potionDefinitions[randomInt(potionDefinitions.length)]),
+              var IA = new Potion(potionDefinitions[randomInt(potionDefinitions.length)], game.itemSprites),
                 JA = new PotionDrop(IA, tickCharacterTurn(wc, Re, Zd), tickCharacterTurn(zd, Vc, Od), Yd);
               game.potionDrops.drops.push(JA);
             }
@@ -1245,4 +1245,17 @@ export function initializeCharactersCharacter() {
       this.behaviors.updateBehaviors(this);
     }
   };
+}
+let sharedStatRules;
+function getCharacterStatRules() {
+  if (!sharedStatRules) {
+    sharedStatRules = {
+      defaultChainChance: DEFAULT_CHAIN_CHANCE,
+      defaultMinionLimit: DEFAULT_MINION_LIMIT,
+      defaultMultiAttackChance: DEFAULT_MULTI_ATTACK_CHANCE,
+      attackCooldownBonus,
+      freeSpellsModifier
+    };
+  }
+  return sharedStatRules;
 }

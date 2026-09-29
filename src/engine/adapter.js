@@ -60,12 +60,13 @@ export const engine = {
       names.add(name);
     }
     const controller = game.view.panels.find(tab => tab.elementId === 'partyCreationTabContent');
-    controller.selectedCharacters = party.map(member => ({
+    // U132：与遗留开始按钮共用视图的唯一创建入口（含视图自身的重名/空名校验），
+    // 不再直写 selectedCharacters/validParty，也不再调用 startButton.onclick 这个 DOM 回调。
+    // escapeName 留在产品侧：名字最终渲染在产品 DOM，转义属产品边界职责（遗留路径传原名，语义不变）。
+    controller.startParty(party.map(member => ({
       classIndex: member.id,
       defaultName: escapeName(member.name.trim())
-    }));
-    controller.validParty = true;
-    controller.startButton.onclick();
+    })));
     game.paused = false;
   },
   snapshot() {

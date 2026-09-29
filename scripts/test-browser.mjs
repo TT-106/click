@@ -14,11 +14,21 @@ try {
   await page.goto(baseURL);
   await page.locator('#app-content').waitFor({state:'visible'});
   const snapshot = () => page.evaluate(async()=> (await import('/src/engine/adapter.js')).engine.snapshot());
+  // U132 负路径：adapter.startParty 的拒绝语义（在推荐阵容建队前断言，不影响后续流程）
+  const startPartyResult = list => page.evaluate(async members => {
+    const engine = (await import('/src/engine/adapter.js')).engine;
+    try { engine.startParty(members); return 'ok'; } catch (error) { return error.message; }
+  }, list);
+  assert.equal(await startPartyResult([{id:0,name:'同名的'},{id:1,name:'同名的'}]), '每位队员需要不同的名字（1–15 字）。', '重名阵容未被拒绝');
+  assert.equal(await startPartyResult([{id:6,name:'未解锁的野蛮人'}]), '该职业尚未解锁。', '未解锁职业未被拒绝');
+  assert.equal(await startPartyResult([]), '请选择有效数量的队员。', '空阵容未被拒绝');
   await page.screenshot({path:'output/playwright/setup-desktop.png',fullPage:true});
   await page.locator('#recommended-party').click();
   await page.locator('[data-rename="0"]').fill('远征队长');
   await page.locator('#begin-adventure').click();
   await page.locator('#expedition-screen').waitFor({state:'visible'});
+  // U132：开局后重复建队必须被拒绝（game.partyCreated 守卫）
+  assert.equal(await startPartyResult([{id:0,name:'再次建队'}]), '当前冒险已经开始。', '开局后仍可重复建队');
   await page.waitForFunction(async()=> (await import('/src/engine/adapter.js')).engine.snapshot().turn>2);
   assert.equal((await snapshot()).heroes.length,4);
   assert.equal((await snapshot()).heroes[0].name,'远征队长');
@@ -105,6 +115,20 @@ try {
   await page.locator('#main').focus();
   await page.keyboard.press('Space');
   assert.equal((await snapshot()).paused,false,'空格没有恢复冒险');
+  // U132 补课：载入**真实原版存档**（tests/fixtures/original.c2save，partyCreated=true）后，
+  // adapter.startParty 必须被 game.partyCreated 守卫拒绝——放在收尾处，不扰动前序断言的状态。
+  const originalSaveCode = (await fs.readFile('tests/fixtures/original.c2save', 'utf8')).trim();
+  await page.locator('#open-saves').click();
+  await page.locator('.import-section summary').click();
+  await page.locator('#save-code').fill(originalSaveCode);
+  await page.locator('#import-save').click();
+  await page.locator('#save-dialog').waitFor({state:'hidden'});
+  assert.equal((await snapshot()).started,true,'原版存档导入后 started 应为 true');
+  // 拒绝断言在导入真正完成后执行（#save-dialog 隐藏即导入成功门），且同时校验
+  // 被拒调用不触碰 localStorage 存档（adapter 守卫先于一切 mutation）。
+  const beforeRejectedStart = await page.evaluate(()=>localStorage.getItem('C2_V1_001'));
+  assert.equal(await startPartyResult([{id:0,name:'原版存档后再建队'}]), '当前冒险已经开始。', '载入原版存档后仍可重复建队');
+  assert.equal(await page.evaluate(()=>localStorage.getItem('C2_V1_001')), beforeRejectedStart, '被拒的建队尝试改变了存档');
   assert.deepEqual(errors,[],'存在浏览器异常');
-  console.log('✓ 新建队伍、自动战斗、暂停、五类面板、c2c 外部 DOM 契约、设置、导出/导入、错误存档、刷新恢复、键盘与三种视口');
+  console.log('✓ 新建队伍、自动战斗、暂停、五类面板、c2c 外部 DOM 契约、设置、导出/导入、错误存档、刷新恢复、原版存档导入后拒绝重复建队、键盘与三种视口');
 } finally { await browser.close(); }

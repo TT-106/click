@@ -222,7 +222,7 @@ export function initializeCharactersParty() {
         b.room = null;
         d.actionType = IDLE_ACTION;
       }
-      clearItemDrops();
+      clearItemDrops(game.itemDrops);
       a.attackScheduled = false;
       invalidateCastleRevision();
       a.conquered = true;
@@ -500,13 +500,13 @@ export function initializeCharactersParty() {
       }
       if (a || f || b) {
         if (game.world.getTileAtPixel(c, d)) {
-          calculateWorldCosts(this.worldPathfinder, c, d);
+          calculateWorldCosts(this.worldPathfinder, c, d, game.world);
           this.destinationOffWorld = false;
         } else {
           this.destinationOffWorld = true;
           this.worldDestColumn = findNearestWorldColumn(c);
           this.worldDestRow = findNearestWorldRow(d);
-          calculateWorldCosts(this.worldPathfinder, this.worldDestColumn, this.worldDestRow);
+          calculateWorldCosts(this.worldPathfinder, this.worldDestColumn, this.worldDestRow, game.world);
         }
       } else {
         if (a = this.destinationOffWorld) {
@@ -517,12 +517,12 @@ export function initializeCharactersParty() {
         }
         if (a) {
           if (game.world.getTileAtPixel(c, d)) {
-            calculateWorldCosts(this.worldPathfinder, c, d);
+            calculateWorldCosts(this.worldPathfinder, c, d, game.world);
             this.destinationOffWorld = false;
           } else {
             this.worldDestColumn = findNearestWorldColumn(c);
             this.worldDestRow = findNearestWorldRow(d);
-            calculateWorldCosts(this.worldPathfinder, this.worldDestColumn, this.worldDestRow);
+            calculateWorldCosts(this.worldPathfinder, this.worldDestColumn, this.worldDestRow, game.world);
           }
         }
       }

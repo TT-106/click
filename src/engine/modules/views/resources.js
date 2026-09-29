@@ -2,10 +2,11 @@
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
 import { View } from "./base.js";
-import { game } from "../runtime/game.js";
 import { setElementHtml } from "./dom.js";
 import { formatGroupedAmount } from "../core/math.js";
-export function GoldView() {
+/** @param {() => number} readGold */
+export function GoldView(readGold) {
+  this.readGold = readGold;
   this.elementId = "goldContainer";
   this.visible = true;
   this.amountElementId = "partyGoldPanel";
@@ -17,10 +18,10 @@ export function initializeViewsResources() {
     this.cachedResourceCount = -1;
   };
   GoldView.prototype.update = function () {
-    var a = game.state.party.gold;
-    if (a !== this.cachedResourceCount) {
-      this.cachedResourceCount = a;
-      setElementHtml(this.amountElementId, "" + formatGroupedAmount(a));
+    const gold = this.readGold();
+    if (gold !== this.cachedResourceCount) {
+      this.cachedResourceCount = gold;
+      setElementHtml(this.amountElementId, "" + formatGroupedAmount(gold));
     }
   };
 }
