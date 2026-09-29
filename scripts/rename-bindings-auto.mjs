@@ -66,23 +66,60 @@ const kindOf = (b) => {
   return b.kind;
 };
 
-function collectNodes(b, onError) {
-  const nodes = [b.identifier];
+/** 该绑定全部"可改名"的标识符节点，带上下文：赋值左侧的节点额外记录其右值起始位置，
+ *  供拆分改名时把 `a = x` 整段改写成 `var a新名 = x`（一次连续区间替换，不留 `var y = y = x`）。 */
+/** 子树里是否读到这个名字本身。自带递归 walker：babel 的 traverse 对裸节点要求
+ *  scope/parentPath，从一个非 Program 节点起遍会直接抛错。
+ *  跳过 a.foo 里的 foo 与 {a: 1} 里的键——它们是属性名，不是对本绑定的读取。 */
+function readsName(subtree, name) {
+  const stack = [subtree];
+  while (stack.length) {
+    const node = stack.pop();
+    if (!node || typeof node !== 'object') continue;
+    if (Array.isArray(node)) { stack.push(...node); continue; }
+    if (node.type === 'Identifier' && node.name === name) return true;
+    for (const key of Object.keys(node)) {
+      if (key === 'loc' || key === 'start' || key === 'end' || key === 'type' || key === 'extra') continue;
+      // 非计算成员表达式的属性名、对象字面量的键：都不是标识符读取
+      if ((node.type === 'MemberExpression' && !node.computed && key === 'property')
+        || ((node.type === 'ObjectProperty' || node.type === 'Property') && key === 'key')) continue;
+      // 函数/类的形参名与内部同名声明属于另一个作用域，保守起见仍继续遍历（会由区间覆盖检查兜住）
+      stack.push(node[key]);
+    }
+  }
+  return false;
+}
+
+function collectEntries(b, onError) {
+  const entries = [{ node: b.identifier, role: 'decl' }];
   for (const rp of b.referencePaths) {
     if (rp.node.type !== 'Identifier') { onError(b.identifier.name + ': 引用不是 Identifier'); continue; }
-    nodes.push(rp.node);
+    entries.push({ node: rp.node, role: 'ref' });
   }
   for (const v of b.constantViolations) {
     const n = v.node;
-    if (n.type === 'AssignmentExpression') nodes.push(n.left);
-    else if (n.type === 'UpdateExpression') nodes.push(n.argument);
-    else if (n.type === 'VariableDeclarator') nodes.push(n.id);
-    else if (n.type === 'Identifier') nodes.push(n);
+    if (n.type === 'AssignmentExpression') {
+      entries.push({
+        node: n.left,
+        // 复合赋值（a += x / a ||= y）不是"重新绑定"，改成 var 会丢掉旧值累积
+        role: n.operator === '=' ? 'assign' : 'compound',
+        assignRightStart: n.right.start,
+        // 右值读到本绑定（a = a + 1、a = a.bookcasesLooted）：拆名后会变成
+        // var y = y + 1（NaN）或 var y = y.prop（TypeError），必须拒绝
+        selfReadInRight: readsName(n.right, b.identifier.name),
+      });
+    } else if (n.type === 'UpdateExpression') entries.push({ node: n.argument, role: 'update' });
+    else if (n.type === 'VariableDeclarator') entries.push({ node: n.id, role: 'declarator' });
+    else if (n.type === 'Identifier') entries.push({ node: n, role: 'other' });
     else onError(b.identifier.name + ': 未支持的赋值形态 ' + n.type);
   }
   const uniq = new Map();
-  for (const n of nodes) uniq.set(n.start + ':' + n.end, n);
+  for (const e of entries) uniq.set(e.node.start + ':' + e.node.end, e);
   return [...uniq.values()];
+}
+
+function collectNodes(b, onError) {
+  return collectEntries(b, onError).map((e) => e.node);
 }
 
 const seenStarts = new Set();
@@ -190,7 +227,8 @@ for (const [key, entries] of Object.entries(table)) {
   for (const [oldName, spec] of Object.entries(entries)) {
     const binding = m.get(oldName);
     if (!binding) { errors.push(key + ': 找不到单字母绑定 "' + oldName + '"'); continue; }
-    const nodes = collectNodes(binding, (msg) => errors.push(key + ': ' + msg));
+    const nodeEntries = collectEntries(binding, (msg) => errors.push(key + ': ' + msg));
+    const nodes = nodeEntries.map((e) => e.node);
     const windows = typeof spec === 'string' ? [{ name: spec, fromLine: -Infinity, toLine: Infinity }] : spec;
     if (windows.find((w) => !w || !w.name || !/^[A-Za-z_$][\w$]*$/.test(w.name))) {
       errors.push(key + '.' + oldName + ': 新名不合法'); continue;
@@ -210,11 +248,47 @@ for (const [key, entries] of Object.entries(table)) {
         + miss.slice(0, 12).join(',') + '；重叠 ' + doubled + ' 处）');
       continue;
     }
-    nodes.forEach((n) => {
-      const ln = lineOf(n.start);
+    // 拆分后每个新名字都必须有声明点。原绑定的声明只落在其中一个区间；其余区间若只改名，
+    // `a = x` 就变成给未声明变量赋值——ESM 严格模式 ReferenceError、tsc TS2304，
+    // 而"行数不变 / 字面量不变 / 导出不变"三项断言全都察觉不到（R26 targeting 切片实测出这个洞）。
+    // 做法：该区间内第一次出现若是赋值左侧，就把 `a = ` 整段（到右值起始处）改写成 `var 新名 = `，
+    // 一次连续替换，绝不产生 `var y = y = x` 这种双重赋值；行数与求值次序都不变。
+    // 第一次出现不是赋值（读、自增、裸 for-init 等）就拒绝这一刀并说明原因——
+    // 那种位置要改必须先做结构性改写，超出"只改绑定名"的授权。
+    const declLine = lineOf(binding.identifier.start);
+    const declareSpans = new Map();
+    let blocked = false;
+    for (const w of windows) {
+      if (windows.length === 1) break;
+      if (declLine >= w.fromLine && declLine <= w.toLine) continue;
+      const inWin = nodeEntries
+        .filter((e) => lineOf(e.node.start) >= w.fromLine && lineOf(e.node.start) <= w.toLine)
+        .sort((x, y) => x.node.start - y.node.start);
+      const first = inWin[0];
+      const unsafeRole = !first || first.role !== 'assign';
+      const selfRead = first && first.role === 'assign' && first.selfReadInRight;
+      if (unsafeRole || selfRead) {
+        const why = !first ? '该区间没有任何出现'
+          : unsafeRole ? `第一次出现（行 ${lineOf(first.node.start)}，形态 ${first.role}）不是单纯赋值左侧`
+            : `第一次出现（行 ${lineOf(first.node.start)}）的右值仍读到本绑定`;
+        errors.push(`${key}.${oldName}: 区间 ${w.fromLine}-${w.toLine} 不含声明点，且${why}——`
+          + '直接改名会引用未声明变量或把旧值丢掉（a += x 变 var y = x；a = a + 1 变 var y = y + 1 得 NaN）。'
+          + '保留原字母，或另行授权结构性改写。');
+        blocked = true;
+        continue;
+      }
+      declareSpans.set(first.node.start + ':' + first.node.end, {
+        start: first.node.start, end: first.assignRightStart, text: 'var ' + w.name + ' = ',
+      });
+    }
+    if (blocked) continue;
+    for (const e of nodeEntries) {
+      const ln = lineOf(e.node.start);
       const w = windows.find((x) => ln >= x.fromLine && ln <= x.toLine);
-      edits.push({ start: n.start, end: n.end, text: w.name });
-    });
+      const span = declareSpans.get(e.node.start + ':' + e.node.end);
+      if (span) { edits.push({ start: span.start, end: span.end, text: span.text }); continue; }
+      edits.push({ start: e.node.start, end: e.node.end, text: w.name });
+    }
   }
 }
 
