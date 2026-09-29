@@ -71,25 +71,25 @@ scaleByLevel(x, curve, mult) = floor( mult · (curve.base + curve.coefficient ·
 `src/engine/modules/simulation/characters.js:167-186`
 
 ```js
-export function applyLevelStats(stats, b, c) {
-  var scaledLevelValue = scaleByLevel(b, experienceCurve, 1);
+export function applyLevelStats(stats, level, statMultipliers) {
+  var scaledLevelValue = scaleByLevel(level, experienceCurve, 1);
   stats.experienceToLevelUp = scaledLevelValue;
-  scaledLevelValue = scaleByLevel(b, armorCurve, c.armorMultiplier);
+  scaledLevelValue = scaleByLevel(level, armorCurve, statMultipliers.armorMultiplier);
   stats.armor.levelValue = scaledLevelValue;
-  scaledLevelValue = scaleByLevel(b, armorCurve, c.attackRatingMultiplier);
+  scaledLevelValue = scaleByLevel(level, armorCurve, statMultipliers.attackRatingMultiplier);
   stats.attackRating.levelValue = scaledLevelValue;
-  scaledLevelValue = scaleByLevel(b, armorCurve, c.defenceRatingMultiplier);
+  scaledLevelValue = scaleByLevel(level, armorCurve, statMultipliers.defenceRatingMultiplier);
   stats.defenceRating.levelValue = scaledLevelValue;
-  scaledLevelValue = scaleByLevel(b, armorCurve, c.damageMultiplier);
+  scaledLevelValue = scaleByLevel(level, armorCurve, statMultipliers.damageMultiplier);
   stats.damage.levelValue = scaledLevelValue;
-  scaledLevelValue = scaleByLevel(b, healthCurve, c.maxHealthMultiplier);
+  scaledLevelValue = scaleByLevel(level, healthCurve, statMultipliers.maxHealthMultiplier);
   stats.maxHealth.levelValue = scaledLevelValue;
-  c = scaleByLevel(b, spiritCurve, c.maxSpiritMultiplier);
-  stats.maxSpirit.levelValue = c;
+  var maxSpiritValue = scaleByLevel(level, spiritCurve, statMultipliers.maxSpiritMultiplier);
+  stats.maxSpirit.levelValue = maxSpiritValue;
   stats.health = floorNumber(statValue(stats.maxHealth));
   stats.spirit = statValue(stats.maxSpirit);
-  b = scaleByLevel(b, damageCurve, 1);
-  stats.spellSpiritCost = b;
+  var spellSpiritCost = scaleByLevel(level, damageCurve, 1);
+  stats.spellSpiritCost = spellSpiritCost;
 }
 ```
 
@@ -134,25 +134,25 @@ export function addExperience(experiencePointsToAdd) {
 
 `experienceToLevelUp`/`experiencePoints` 的唯一比较者是 `LevelUpUpgrade`：
 
-`src/engine/modules/progression/upgrades.js:593-610`（判定）与 `:532-574`（执行）
+`src/engine/modules/progression/upgrades.js:601-602`（判定）与 `:532-574`（执行）
 
 ```js
-this.requiredExperience = a.stats.experienceToLevelUp;
+this.requiredExperience = adventurer.stats.experienceToLevelUp;
 this.canPurchase = game.state.party.experiencePoints >= this.requiredExperience;
 ```
 
 ```js
-if (!(game.state.party.experiencePoints < c)) {
-  var f = game.state.party;
-  f.experiencePoints -= c;
-  if (0 > f.experiencePoints) {
-    f.experiencePoints = 0;
+if (!(game.state.party.experiencePoints < requiredExperience)) {
+  var party = game.state.party;
+  party.experiencePoints -= requiredExperience;
+  if (0 > party.experiencePoints) {
+    party.experiencePoints = 0;
   }
-  c = b.characterLevel + 1;
-  applyLevelStats(b, c, a.classDefinition.statMultipliers);
-  a.skillPoints++;
-  a.hasUnspentSkills = hasUnspentSkills(a);
-  b.characterLevel = c;
+  newLevel = stats.characterLevel + 1;
+  applyLevelStats(stats, newLevel, adventurer.classDefinition.statMultipliers);
+  adventurer.skillPoints++;
+  adventurer.hasUnspentSkills = hasUnspentSkills(adventurer);
+  stats.characterLevel = newLevel;
 ```
 
 结论性证据（两向）：
@@ -161,24 +161,24 @@ if (!(game.state.party.experiencePoints < c)) {
 - **反证（无自动升级路径）**：`addExperience` 的两个调用点仅调 `addExperience`，不做等级检查（`simulation/characters.js:290`、`combat/actions.js:364`）。
 - **旁证**：差分夹具的中局存档里"冒险者 `characterLevel` 恒为 1、`skillPoints` 恒为 0"，因为矩阵从不点升级按钮（`docs/reverse-engineering/unresolved.md` U7）。
 
-升级的连带结算（`progression/upgrades.js:550-568`）：
+升级的连带结算（`progression/upgrades.js:540-570`）：
 
 ```js
-if ((b = a.summonedMinions) && 0 < b.length) { ... g.stats.characterLevel = h; applyLevelStats(...) }
+if ((minionList = adventurer.summonedMinions) && 0 < minionList.length) { ... minion.stats.characterLevel = minionLevel; applyLevelStats(minion.stats, minionLevel, minion.classDefinition.statMultipliers) }
 refreshPartyLevels();
-b = getPartyMinLevel();
+newPartyMinLevel = getPartyMinLevel();
 // 队伍最低等级变化 → 卷轴施法者跟随重定级
-if (d !== b) {
-  d = game.state.scrollCaster; ...
-  applyLevelStats(b, f, d.classDefinition.statMultipliers);
-  b.characterLevel = f;
+if (previousPartyMinLevel !== newPartyMinLevel) {
+  scrollCaster = game.state.scrollCaster; ...
+  applyLevelStats(scrollCasterStats, scrollCasterLevel, scrollCaster.classDefinition.statMultipliers);
+  scrollCasterStats.characterLevel = scrollCasterLevel;
 }
 awardAdventurePoints(22);
 ```
 
 - 每升 1 级 `skillPoints++`；技能/法术升级各花 1 点（`progression/upgrades.js:790-807`、`:862-886`，`getCost()` 恒为 1）。
 - 队伍等级口径：`getPartyMaxLevel`/`getPartyMinLevel` 缓存于 `party.xs/zs`，负值表示脏（`characters/party.js:68-108`）。首领等级取 `getPartyMaxLevel`（`combat/encounters.js:114`），城堡守卫取 `monsterCatalog.maxUnlockedLevel`（`combat/encounters.js:154`）。
-- `[疑似遗留怪癖]` `applyLevelStats` 会把 `health/spirit` 直接**设为满值**（`:181-182`），所以升级瞬间回满血；`LevelUpUpgrade` 里被升级者的 `applyLevelStats` 在 `characterLevel` 自增**之前**调用（`:546` 早于 `:549`），但因传参 `c` 已是新等级，结果正确 —— 顺序仅为可读性问题。
+- `[疑似遗留怪癖]` `applyLevelStats` 会把 `health/spirit` 直接**设为满值**（`simulation/characters.js:167-186` 内的 `stats.health` / `stats.spirit` 两行），所以升级瞬间回满血；`LevelUpUpgrade` 里被升级者的 `applyLevelStats` 在 `characterLevel` 自增**之前**调用（`progression/upgrades.js:545` 早于 `:549`），但因传参 `newLevel` 已是新等级，结果正确 —— 顺序仅为可读性问题。
 - `[疑似遗留怪癖]` 四条 `armor/attackRating/defenceRating/damage` 的 `levelValue` 全部来自 `armorCurve`，`damageCurve` 只喂 `spellSpiritCost`（`simulation/characters.js:169-184`）。数值按原样记录。
 
 ### P-3 XP 的来源
@@ -1033,7 +1033,7 @@ if (15 <= b.turnTimeAccumulator) {
 | 3 | `progression/points.js:134-149` | `bookcasePointEvent`/`weaponRackPointEvent` 变量名与自身文案互换（纯命名） |
 | 4 | `progression/points.js:246-268` | 点事件 ID 无 20；`pointEventsById[20]` 为空，发放只打日志 |
 | 5 | `progression/points.js:26-46` + `:57-73` | 成就加成对历史事件次数**追溯生效**，"先杀后领"回补全部差额（§2.2/§2.3） |
-| 6 | `progression/upgrades.js:546-549` | `applyLevelStats` 在 `characterLevel` 自增前调用（靠传参 `c` 保持正确）；且升级即把 `health/spirit` 设为满值 |
+| 6 | `progression/upgrades.js:545-549` | `applyLevelStats` 在 `characterLevel` 自增前调用（靠传参 `newLevel` 保持正确）；且升级即把 `health/spirit` 设为满值 |
 | 7 | `progression/upgrades.js:217-252` | `equipmentQualityBonus` 实为卖价加成、`itemCostBonus` 实为怪物等级折扣 |
 | 8 | `progression/upgrades.js:943` | 农场"即将可买"用绝对差额 `<120`，而全局升级用"差额 ≤400 或 ≤30%"、升级 XP 用"≤300 或 ≤20%"，三套口径 |
 | 9 | `combat/scrolls.js:61-63` + `progression/upgrades.js:1100` | 卷轴的价格档位与等级门槛是同一个表达式；`sg = 0` 的 `shockScroll` 开局即解锁 |

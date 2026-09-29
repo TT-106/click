@@ -497,9 +497,9 @@ export function advanceMonsterTypeRank(monsterType) {
 - 通用曲线式：`core/math.js:72-75`
 
 ```js
-export function scaleByLevel(a, b, c) {
-  a = Math.max(0, a - 1);
-  return floorNumber(c * (b.base + b.coefficient * Math.pow(a, b.power) * Math.pow(b.growth, a)));
+export function scaleByLevel(level, curve, multiplier) {
+  level = Math.max(0, level - 1);
+  return floorNumber(multiplier * (curve.base + curve.coefficient * Math.pow(level, curve.power) * Math.pow(curve.growth, level)));
 }
 ```
 
@@ -520,25 +520,25 @@ export function scaleByLevel(a, b, c) {
 `src/engine/modules/simulation/characters.js:167-186`（冒险者/随从/首领/卷轴施法者的同一装配口）
 
 ```js
-export function applyLevelStats(a, b, c) {
-  var d = scaleByLevel(b, experienceCurve, 1);
-  a.experienceToLevelUp = d;
-  d = scaleByLevel(b, armorCurve, c.armorMultiplier);
-  a.armor.levelValue = d;
-  d = scaleByLevel(b, armorCurve, c.attackRatingMultiplier);
-  a.attackRating.levelValue = d;
-  d = scaleByLevel(b, armorCurve, c.defenceRatingMultiplier);
-  a.defenceRating.levelValue = d;
-  d = scaleByLevel(b, armorCurve, c.damageMultiplier);
-  a.damage.levelValue = d;
-  d = scaleByLevel(b, healthCurve, c.maxHealthMultiplier);
-  a.maxHealth.levelValue = d;
-  c = scaleByLevel(b, spiritCurve, c.maxSpiritMultiplier);
-  a.maxSpirit.levelValue = c;
-  a.health = floorNumber(statValue(a.maxHealth));
-  a.spirit = statValue(a.maxSpirit);
-  b = scaleByLevel(b, damageCurve, 1);
-  a.spellSpiritCost = b;
+export function applyLevelStats(stats, level, statMultipliers) {
+  var scaledLevelValue = scaleByLevel(level, experienceCurve, 1);
+  stats.experienceToLevelUp = scaledLevelValue;
+  scaledLevelValue = scaleByLevel(level, armorCurve, statMultipliers.armorMultiplier);
+  stats.armor.levelValue = scaledLevelValue;
+  scaledLevelValue = scaleByLevel(level, armorCurve, statMultipliers.attackRatingMultiplier);
+  stats.attackRating.levelValue = scaledLevelValue;
+  scaledLevelValue = scaleByLevel(level, armorCurve, statMultipliers.defenceRatingMultiplier);
+  stats.defenceRating.levelValue = scaledLevelValue;
+  scaledLevelValue = scaleByLevel(level, armorCurve, statMultipliers.damageMultiplier);
+  stats.damage.levelValue = scaledLevelValue;
+  scaledLevelValue = scaleByLevel(level, healthCurve, statMultipliers.maxHealthMultiplier);
+  stats.maxHealth.levelValue = scaledLevelValue;
+  var maxSpiritValue = scaleByLevel(level, spiritCurve, statMultipliers.maxSpiritMultiplier);
+  stats.maxSpirit.levelValue = maxSpiritValue;
+  stats.health = floorNumber(statValue(stats.maxHealth));
+  stats.spirit = statValue(stats.maxSpirit);
+  var spellSpiritCost = scaleByLevel(level, damageCurve, 1);
+  stats.spellSpiritCost = spellSpiritCost;
 }
 ```
 
