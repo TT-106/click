@@ -1,24 +1,24 @@
 {
-  "generatedAt": "2026-09-29T03:42:57.207Z",
+  "generatedAt": "2026-09-29T04:22:47.582Z",
   "counts": {
     "srcJsFiles": 94,
     "engineModules": 78,
-    "totalEdges": 563
+    "totalEdges": 561
   },
   "gameImporters": {
-    "total": 35,
-    "withGameBinding": 34,
+    "total": 33,
+    "withGameBinding": 33,
     "byDir": {
       "engine/modules/ai": 2,
       "engine/modules/characters": 3,
       "engine/modules/combat": 3,
       "engine/modules/loot": 1,
       "engine/modules/persistence": 2,
-      "engine/modules/progression": 2,
+      "engine/modules/progression": 1,
       "engine/modules/rendering": 2,
       "engine/modules/runtime": 1,
       "engine/modules/simulation": 3,
-      "engine/modules/views": 10,
+      "engine/modules/views": 9,
       "engine/modules/world": 6
     },
     "files": [
@@ -33,7 +33,6 @@
       "src/engine/modules/loot/treasure.js",
       "src/engine/modules/persistence/entities.js",
       "src/engine/modules/persistence/game-save.js",
-      "src/engine/modules/progression/achievements.js",
       "src/engine/modules/progression/upgrades.js",
       "src/engine/modules/rendering/floating-text.js",
       "src/engine/modules/rendering/scene.js",
@@ -46,7 +45,6 @@
       "src/engine/modules/views/dungeons.js",
       "src/engine/modules/views/expedition.js",
       "src/engine/modules/views/information.js",
-      "src/engine/modules/views/monsters.js",
       "src/engine/modules/views/navigation.js",
       "src/engine/modules/views/party-creation.js",
       "src/engine/modules/views/results.js",
@@ -556,7 +554,7 @@
   "hotFields": [
     {
       "path": "game.state",
-      "readFiles": 27,
+      "readFiles": 26,
       "writeFiles": 0,
       "dirs": [
         "engine/modules/ai",
@@ -566,6 +564,7 @@
         "engine/modules/persistence",
         "engine/modules/progression",
         "engine/modules/rendering",
+        "engine/modules/runtime",
         "engine/modules/simulation",
         "engine/modules/views",
         "engine/modules/world"
@@ -599,21 +598,6 @@
         "engine/modules/simulation",
         "engine/modules/views",
         "engine/modules/world"
-      ]
-    },
-    {
-      "path": "game.state.party",
-      "readFiles": 13,
-      "writeFiles": 0,
-      "dirs": [
-        "engine/modules/ai",
-        "engine/modules/characters",
-        "engine/modules/combat",
-        "engine/modules/loot",
-        "engine/modules/persistence",
-        "engine/modules/progression",
-        "engine/modules/simulation",
-        "engine/modules/views"
       ]
     },
     {
@@ -655,6 +639,21 @@
         "engine/modules/simulation",
         "engine/modules/views",
         "engine/modules/world"
+      ]
+    },
+    {
+      "path": "game.state.party",
+      "readFiles": 11,
+      "writeFiles": 0,
+      "dirs": [
+        "engine/modules/ai",
+        "engine/modules/characters",
+        "engine/modules/combat",
+        "engine/modules/loot",
+        "engine/modules/persistence",
+        "engine/modules/progression",
+        "engine/modules/simulation",
+        "engine/modules/views"
       ]
     },
     {
@@ -794,6 +793,7 @@
         "engine/modules/persistence",
         "engine/modules/progression",
         "engine/modules/rendering",
+        "engine/modules/runtime",
         "engine/modules/views"
       ]
     },
@@ -1110,12 +1110,12 @@
     }
   },
   "naming": {
-    "singleLetterBindings": 173,
+    "singleLetterBindings": 168,
     "filesWithSingleLetterBindings": 31,
     "topFiles": [
       {
         "file": "src/engine/modules/characters/party.js",
-        "count": 17
+        "count": 16
       },
       {
         "file": "src/engine/modules/core/math.js",
@@ -1124,10 +1124,6 @@
       {
         "file": "src/engine/modules/ai/targeting.js",
         "count": 11
-      },
-      {
-        "file": "src/engine/modules/world/pathfinding.js",
-        "count": 10
       },
       {
         "file": "src/engine/modules/views/information.js",
@@ -1142,11 +1138,11 @@
         "count": 9
       },
       {
-        "file": "src/engine/modules/world/regions.js",
-        "count": 9
+        "file": "src/engine/modules/persistence/entities.js",
+        "count": 8
       },
       {
-        "file": "src/engine/modules/persistence/entities.js",
+        "file": "src/engine/modules/world/pathfinding.js",
         "count": 8
       },
       {
@@ -1155,6 +1151,10 @@
       },
       {
         "file": "src/engine/modules/views/dungeons.js",
+        "count": 7
+      },
+      {
+        "file": "src/engine/modules/world/regions.js",
         "count": 7
       },
       {
@@ -1194,7 +1194,7 @@
         "count": 3
       }
     ],
-    "crypticBindings": 159,
+    "crypticBindings": 154,
     "filesWithCrypticBindings": 30,
     "allowListedBindings": 29,
     "allowListedByFile": {
@@ -1211,15 +1211,11 @@
     "crypticTopFiles": [
       {
         "file": "src/engine/modules/characters/party.js",
-        "count": 17
+        "count": 16
       },
       {
         "file": "src/engine/modules/ai/targeting.js",
         "count": 11
-      },
-      {
-        "file": "src/engine/modules/world/pathfinding.js",
-        "count": 10
       },
       {
         "file": "src/engine/modules/views/party-creation.js",
@@ -1227,10 +1223,6 @@
       },
       {
         "file": "src/engine/modules/views/results.js",
-        "count": 9
-      },
-      {
-        "file": "src/engine/modules/world/regions.js",
         "count": 9
       },
       {
@@ -1242,11 +1234,19 @@
         "count": 8
       },
       {
+        "file": "src/engine/modules/world/pathfinding.js",
+        "count": 8
+      },
+      {
         "file": "src/engine/modules/views/character.js",
         "count": 7
       },
       {
         "file": "src/engine/modules/views/dungeons.js",
+        "count": 7
+      },
+      {
+        "file": "src/engine/modules/world/regions.js",
         "count": 7
       },
       {

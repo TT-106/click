@@ -103,6 +103,14 @@
 - **参数名修正 `ai/behaviors.js`**：`PartyBuffBehavior` 的参数名与自身赋值流向交叉——原版构造函数把**第三个**实存档进 `priorityWeight`（原版 `tu(a,b,c)` 里 `this.ka = c`，`ka` 是同族行为共用的优先级字段），本轮按数据流改名并加注释记录该怪癖，赋值语句一个字节未动。
 
 
+## 2026-09-29 R27 续（结构对账成门禁 + 两处组合根注入 + 命名波次及其拒绝记录）
+
+- **结构对账接进 `npm run lint` 成为第 11 条不变量**：拿 HEAD 对工作树跑骨架对账，未提交改动里出现"改名之外且未逐条授权"的结构变动即失败。为了能长期跑而不是变成噪音，加了两个授权通道（都写在脚本文件头）：纯括号行按"本文件变动行花括号收支为 0"放行（完整块的骨架收支必然为 0，多塞一个闭括号就不为 0；先前用无符号计数误判过一次，改完重新验证）；其余插入/删除要在 `artifacts/structure-allowlist.json` 逐条列出，键是抹平后的骨架文本加计数上限，切片落地即删（本轮剪掉已提交的 15 条，留 19 条对应当前未提交改动，闲置条目会被门禁自己点名报出）。明确**拒绝**把归一化放宽成"`I()` 折成 `I`"：那会让"把一个成员读取换成函数调用"这类破坏正好隐身，而插调用就是本会话事故的类型。反向验证仍然成立——`7a2c981` 的工作树对 `7a2c981^` 跑，报 `simulation/loop.js:72` 的孤立插入并 exit 1。
+- **两个模块退出 game 直连**：`progression/achievements.js`（5 处 `game.state.*` → `bindAchievementProgress(game.state)` 加未绑定即抛的访问器；`world/initialization.js` 里必须绑在 `resetAchievements()` 之前，第 187 行就要用）与 `views/monsters.js`（4 处 `game.monsterCatalog` + 1 处 `game.state.party.kills` → `bindMonsterViews(game.monsterCatalog, game.state)`，绑在 `runtime/index.js` 的 `initializeRuntimeGame()` 之后，组合根本来就已 import 这两个模块，没有新增依赖边）。绑的是容器对象本身而不是会被整体重置替换的子对象，这点写进注释。`grep -c "^import .*runtime/game.js"` 实测直连模块 **34 → 32**。功能探针输出实证 fail-loud 真的会抛：未绑定时抛"怪物图鉴尚未绑定怪物目录…"，绑定后才进入更深的真实逻辑。
+- **命名波次（一文件一智能体，只自查，门禁由主智能体统一跑）**：`world/regions.js` 9 → 7、`world/pathfinding.js` 10 → 8（A* 角色 `grid`/`startNode`/`currentNode`/`doorFrom`/`builtHallway`，`PathOpenSet.remove` 用 `rhsKeep` 拆成 `node`+`nodeIndex`）、`characters/party.js` 17 → 16、`ai/targeting.js` **11 → 11 零改名**。后两个的"改不动"是穷举出来的：targeting 把 11 个绑定的全部 344 种按行切分灌进工具，14 种通过，其中 11 种就是"整段共用一个名字"（给 2-3 个不同含义的值起一个名，另一半必然撒谎），剩下 3 种把布尔/下标与 Character/Door 粘在一起，由智能体判掉；party 的 16 个剩余绑定每个都至少有一条"赋值不在整条语句就是这次赋值的语法位置"的拒绝（`for (b = c = 0; ...)`、`if (d = roomList[i], d.discovered)`、`var l = h = g = undefined`）。两个智能体都没有使用 `dominationWaiver`，并各自说明理由（条件是运行时状态而非常量）。
+- **由此确定的下一步形状**：命名残量现在卡在"表达式位置的赋值"这一类，不是工具能力问题，而是"只改绑定名"的授权边界问题。要继续推进必须先定义并单独授权一类**语句拆分改写**（把 `if (x = f())` 的赋值提成前置独立语句），逐处对齐求值顺序与副作用，并由差分场景 + 存档 parity + 结构对账三重兜底。
+
+
 ## 尚未完成的主要工作
 
 1. **拆开中心状态与循环依赖**：R27 实测 35 个模块直接导入 `runtime/game.js`（`world/pathfinding.js`、`world/travel-costs.js` 已退出），一个强连通分量仍包含 41 个模块；74 个初始化调用仍依赖固定顺序。装备目录、物品生成、角色属性、状态效果、内容参数、冒险点数、特效动画目录、背包与旅行代价已退出该循环，但整个领域图仍需继续拆分。应按领域建立明确输入与组合根，再逐个移动依赖方向，避免只增加转发包装。

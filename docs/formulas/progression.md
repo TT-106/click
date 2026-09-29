@@ -945,7 +945,7 @@ if (game.options.allowOfflineProgress && game.lastActiveAt) {
 
 `lastActiveAt` 来自存档的 `gameTimestamp`（写入时是**序列化时刻**，`persistence/game-save.js:51-52` 与 `:704` 附近）。
 
-`runtime/game.js:482-488`
+`runtime/game.js:483-489`
 
 ```js
     beginOfflineProgress: function () {

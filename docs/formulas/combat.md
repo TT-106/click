@@ -1244,7 +1244,7 @@ export function respondToTaunt(a, b) {
 
 ### C-33 玩家侧行为优先级如何被选出（唯一仲裁口）
 
-`src/engine/modules/ai/behaviors.js:297-315`
+`src/engine/modules/ai/behaviors.js:301-319`
 
 ```js
   BehaviorQueue.prototype.updateDungeonMode = function (character) {
