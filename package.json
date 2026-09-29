@@ -30,7 +30,8 @@
     "audit:arch": "node scripts/audit-architecture.mjs",
     "audit:production-boundary": "node scripts/audit-production-boundary.mjs",
     "audit:save-schema": "node scripts/audit-save-schema.mjs",
-    "check:achievements": "node scripts/check-achievement-requirements.mjs"
+    "check:achievements": "node scripts/check-achievement-requirements.mjs",
+    "audit:doc-mappings": "node scripts/check-doc-mappings.mjs"
   },
   "devDependencies": {
     "@babel/generator": "7.29.8",
