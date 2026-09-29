@@ -90,3 +90,33 @@
 40. 伤害飘字池机制与全数对账（2026-09-26）：`combat/actions.js:20-25` 的 `showDamageText(target, damage)` 在伤害大于 0 时把 `"-" + damage` 文本推入 `game.floatingText.al`（原版 `w.pc.al`），颜色 `#FF4444`。harness `countFloatingText({ pattern: '^-[0-9]+$' })` 逐帧直接采样该池：`combat-damage-numbers` 场景 500 回合实战，两端负数伤害文本数量精确全等（57 次）且累计总伤害分毫不差（-616 点），证明伤害计算、飘字挂载与文本序列逐条全等；反向探针（把断言改为 `sums[i] > 0` 或破坏正则）两端即刻失败，证明采样非恒真。
 
 41. 首领遭遇生成与击杀的完整因果链（2026-09-26）：城堡 5 号房间的房间类型 `Yp === 2` 是首领遭遇的确定性触发器（`populateEncounter` 100% 调用 `spawnDungeonBoss`），首领怪物以 `characterType === 4`（原版 `zb === 4`）唯一标识；首领遭遇状态由 `encounter.du`（原版 `Xg.du`）承载，名称存于 `encounter.fw`；首领被击杀时产出白色浮动文字 `"击杀首领!"`。harness `trackBossEncounter` 逐帧扫描这三个互不相交的运行时信号：`castle-victory` 场景（单步 15000 回合）实测两端首领遭遇持续 7611 回合、首领怪物存活 2898 回合、击杀首领 1 次、首领名称完全一致；双向对抗探针（`kills > 1` 与 `seens === 0`）均即刻失败。这三类状态均不入存档 DTO，是存档差分的盲区，只有逐帧直接观察才能闭环。
+
+## 功能面完整性与外部契约的独立取证（2026-09-29 R26）
+
+这三条支撑"产品表现与原版一致、功能齐全"的判定口径，全部由只读脚本实测，可复跑。
+
+1. **差分 oracle 覆盖的是完整版本，不是某个子集**。`archive/original/` 里有两份原版 JS：
+   `c2.js`（956KB，内嵌中文文案）与 `c2-ver=20150918.js`（1.06MB）。按**结构形态**而非文案比较：
+   两者属性名集合各 2,094 个且**完全相同**（互有独有 0 个）、数值字面量序列各 15,044 个且
+   **逐位相同**、函数各 1,701 个。结论：同一 build 的不同语言快照，`c2.js` 作差分 oracle 不存在
+   "另一个版本还有没恢复的功能"这种盲区。
+   复跑：`node scripts/audit-feature-surface.mjs`（A 节）。
+
+2. **原版页面 156 个元素 id 在产品里的下落已全部归因**：91 个在 `src/` 里以精确字符串出现，
+   55 个由"前缀 + 序号"拼接产生（如 `"characterTabMenu" + this.adventurerIndex`，
+   见 `views/character.js`），余下 10 个（`rightPanel`/`bottomPanel`/`loadJB`/`recentChanges`/
+   `contactInfo`/`gameCredits`/`information`/`monsterUpgradesContainer`/`dungeonsTabContainer`/
+   `pendingFarmsContainer`）在原版 `c2.js` 里**带引号出现 0 次**——引擎从不使用它们，
+   属汉化站的页面附属结构（联系方式、近期更新、加载图标等）。
+   我们的 shell 保留了一个 `credits` 锚点但未复刻这些区块：**这是页面装饰的差异，不是玩法功能的缺口**，
+   如实记录，不写成"完全一致"。
+
+3. **外部 userscript 契约的绑定面是 class，不是 id**。`c2c.user.js` 是 jQuery 脚本，
+   只用 `.find('.gameTabLootButtonPanel')`、`.lootButton`、`.potionButtonActive`、
+   `.potionContentContainer`、`.scrollButton` 这类**类选择器**（外加 `td`/`tr`/`title`/`display`）。
+   五个 class 在我们的产品里全部存在（`src/ui/panels/game.html`、`src/styles/panels/game-tab.css`、
+   `views/dungeons.js`、`views/expedition.js`）。
+   **取证教训**：第一版探针按 `getElementById`/`querySelector` 正则去数，得到"id 0 个、class 0 个、
+   选择器 0 个 → 契约全部满足"的**假绿灯**——在 jQuery 脚本里找原生 API 自然一个也找不到。
+   检查器的口径必须匹配语料，否则它的"通过"毫无含义（同一批里它也把 55 个拼接 id 误判成缺失，
+   假红灯与假绿灯同时出现）。
