@@ -131,7 +131,7 @@ AA = Op.uf(zA),
 
 - `itemRarityTiers` 按 `tierId` 值查表，**数组顺序不承重**（仅"查不到时回落 `[0]`"依赖顺序）。
 - `itemRarityProbabilities` 的**索引本身即稀有度 ID**，顺序承重：
-  - 存档字段 `itemRarity` 直接写 `a.uf()`（`persistence/entities.js:13,20`）；
+  - 存档字段 `itemRarity` 直接写 `a.uf()`（`persistence/entities.js:53,60`）；
   - UI 文案 `getItemRarityLabel`（`loot/items.js:112-127`）、CSS 类 `getRarityClass`（`views/upgrade-details.js:228-240`）、统计分档 `recordItemFound`（`progression/statistics.js:104-119`）、冒险点分档 `awardAdventurePoints(13/14/15/16)`（`characters/character.js:1036-1049`、`combat/actions.js:235-249`）全部按 `0..4` 硬编码 switch。
   - 越界值走 `"BUG FOUND: " + item.getRarity()`（`loot/items.js:125`）。
 - **另一处顺序承重**：槽位池 `itemTypesBySlot[slot]` 是注册序数组，`itemType = availableTypes[randomInt(availableTypes.length)]`（`loot/items.js:150`）按下标取模板；`content/equipment.js:324+` 的 `registerItemType(...)` 调用顺序改变，同一次随机数会取出不同贴图/基底名，差分立即分叉。`itemTypeId` 是 `baseName + spriteFileName` 的字符串哈希（`loot/items.js:235-247`），与注册顺序无关。
@@ -385,7 +385,7 @@ s = randomizeScaledValue(d, itemGoldCurve, s) * itemGoldModifier.currentValue;
 ```
 
 `itemGoldModifier = { currentValue: 1, defaultValue: 1, activeValue: 1.2 }`（`content/balance.js:258-262`），由 `higherItemValues` 药水（`modifierId:14`，`combat/potions.js:58-59`、`combat/potions.js:196-202` "新道具+20%黄金"）激活。
-`[疑似遗留怪癖]` `1.2 ×` 整数**不再取整**，药水生效期间 `itemGold` 可为小数（例 17 → 20.4）；显示经 `formatAmount` 截断（`views/character.js:186,318`），存档原样写入小数（`persistence/entities.js:21`）。
+`[疑似遗留怪癖]` `1.2 ×` 整数**不再取整**，药水生效期间 `itemGold` 可为小数（例 17 → 20.4）；显示经 `formatAmount` 截断（`views/character.js:186,318`），存档原样写入小数（`persistence/entities.js:62`）。
 
 ### I-14 卖价（商店）
 
@@ -713,7 +713,7 @@ this.vp = BASE_INVENTORY_CAPACITY + Math.min(MAX_PRESTIGE_INVENTORY_BONUS, game.
 
 `[重要]` 但 `itemName`（最终显示名）**不是派生值而是实例字段**，由 `formatItemName` 掷词后固化（`loot/items.js:181-201`）并写进存档 `itemName`。`getHighlightedItemName`（`loot/items.js:128-133`）在读取时才对 `itemName` 做子串高亮，找不到基底名时原样返回。
 
-### 存档字段（`persistence/entities.js:7-31`）
+### 存档字段（`persistence/entities.js:48-72`）
 
 ```js
 return {
@@ -735,10 +735,10 @@ return {
 };
 ```
 
-- **全部数值都是"存下来的"而非"重算的"**：等级、稀有度、属性值、金币值、特效量逐字回读（`persistence/entities.js:32-51`）。加载不重掷任何随机数。
+- **全部数值都是"存下来的"而非"重算的"**：等级、稀有度、属性值、金币值、特效量逐字回读（`persistence/entities.js:73-92`）。加载不重掷任何随机数。
 - 特效的 4 个字段（含描述字符串与动画名）也全部持久化。
 - 恢复只依赖 `itemTypeId` 反查模板：`game.itemGenerator.itemTypesById[a.itemTypeId]`，查不到 → `console.log("failed to lookup item type")` 并返回 `null`，调用点跳过该件（`persistence/game-save.js:481,490`）。基底名或 PNG 任一处改名都会改变哈希（`loot/items.js:234-245`）而使旧档道具整体消失。
-- 回读时的零值兜底会**改写 0**：`g ? g : 1`（等级 0→1）、`n ? n : 1`（`characteristic` 0→1）、`f ? f : 0`、`h/l ? : 0`（`persistence/entities.js:50`）。
+- 回读时的零值兜底会**改写 0**：`g ? g : 1`（等级 0→1）、`n ? n : 1`（`characteristic` 0→1）、`f ? f : 0`、`h/l ? : 0`（`persistence/entities.js:91`）。
 - 角色侧另有 `characteristicsComponent` 保存六条 `StatComponent` 的 `itemValue/levelValue/spellBonusPercent/skillBonusPercent`（`persistence/entities.js:157-164`）。装备回算发生两次：先由 `equipItem` 求和（`persistence/game-save.js:491`），再由 `restoreStatComponent` 用存档值覆写（`persistence/game-save.js:522-527`）—— **存档值优先**。
 
 ---

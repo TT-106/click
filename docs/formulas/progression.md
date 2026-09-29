@@ -725,7 +725,7 @@ export function applyAchievementReward(a) {
 ### 5.3 回读侧的两处特殊映射
 
 <!-- snippet: abridged -->
-`src/engine/modules/persistence/entities.js:283-319`
+`src/engine/modules/persistence/entities.js:327-363`
 
 ```js
 ia = a.weaponRacksLooted,
@@ -740,7 +740,7 @@ b.weaponRacksLooted = c;
 ```
 
 - `[疑似遗留怪癖]` `farmsPurchased` 为 0 时会被替换成"现存农场数量"（同一数字，但"拥有 0 个农场"与"从未买过农场"无法区分）。
-- `[疑似遗留怪癖]` `weaponRacksLooted` 与 `bookcasesLooted` 的回读**不对称**：武器架取两个历史键的最大值，书架只取一个；`weaponsRacksLooted` 已不在写出侧（`persistence/entities.js:219-252`）。
+- `[疑似遗留怪癖]` `weaponRacksLooted` 与 `bookcasesLooted` 的回读**不对称**：武器架取两个历史键的最大值，书架只取一个；`weaponsRacksLooted` 已不在写出侧（`persistence/entities.js:327-363`）。
 
 ### 5.4 胜利块
 
@@ -919,7 +919,7 @@ export function recordMonsterTypeKill(monsterType) {
 }
 ```
 
-- 曲线输入 `effectiveLevel = 10·(怪物等级 − 1) + rank`，`rank ∈ [1,5]`，`MONSTER_RANK_KILL_STEP = 20`（`content/balance.js:117`）。`rank` 与 `rankKillThreshold` 同步增长（构造即 `advanceMonsterTypeRank`：`rank 0→1`、`rankKillThreshold 0→20`，`combat/encounters.js:190-191`），故**处于阶位 `rank` 时升下一阶还需 `20·rank` 次**（20 → 40 → 60 → 80 → 100，累进而非固定步长），`rankProgressKills` 是"自上次升阶以来"的余数计数器（升阶时 `rankProgressKills -= rankKillThreshold` 保留余数）。`rank = 5` 后不再推进但 `rankProgressKills`/`killCount` 继续累加。`killCount` = 该怪类历史总杀（存档字段 `kills`，`persistence/entities.js:189-195`）。
+- 曲线输入 `effectiveLevel = 10·(怪物等级 − 1) + rank`，`rank ∈ [1,5]`，`MONSTER_RANK_KILL_STEP = 20`（`content/balance.js:117`）。`rank` 与 `rankKillThreshold` 同步增长（构造即 `advanceMonsterTypeRank`：`rank 0→1`、`rankKillThreshold 0→20`，`combat/encounters.js:190-191`），故**处于阶位 `rank` 时升下一阶还需 `20·rank` 次**（20 → 40 → 60 → 80 → 100，累进而非固定步长），`rankProgressKills` 是"自上次升阶以来"的余数计数器（升阶时 `rankProgressKills -= rankKillThreshold` 保留余数）。`rank = 5` 后不再推进但 `rankProgressKills`/`killCount` 继续累加。`killCount` = 该怪类历史总杀（存档字段 `kills`，`persistence/entities.js:232-236`）。
 - `experienceReward`（`monsterExperienceCurve`，power 1.24 / growth 1.0002）是**每杀经验**（§P-3），其增长明显慢于战斗属性曲线。含义未在代码内命名，由唯一读者 `addExperience(….experienceReward × doubleExperienceModifier.currentValue)`（`simulation/characters.js:291` 变量名 `monsterType.experienceReward`、`combat/actions.js:365` 变量名 `defeatedMonsterType.experienceReward`）反推，置信高。
 - 曲线→属性映射（`combat/encounters.js:77-84` 把 `monsterType.*` 写进 `stats.*.levelValue`；曲线取用点见 `encounters.js:206-211`）：`maxHealth ← monsterHealthCurve`、`damage ← monsterDamageCurve`、`armor ← monsterArmorCurve`、`attackRating ← monsterAttackCurve`、`defenceRating ← monsterDefenceCurve`。旧版本条记为"映射错位"（伤害与生命取了对方名字的曲线），那是早期改名批的命名，当前源码名实一致；**每个槽位拿到的曲线参数与实算数值与旧版逐字相同**，详见 `docs/formulas/combat.md` C-15 的同条更正。
 - 脆弱怪物药水把 5 条 levelValue 统一乘 0.7（`combat/encounters.js:70-76`）。
@@ -1041,8 +1041,8 @@ if (15 <= b.turnTimeAccumulator) {
 | 11 | `progression/statistics.js:39,69` | `levelsCleared`/`minionKills` 的记录方法仍是混淆名 `recordLevelCleared`/`$k`（与 `docs/reverse-engineering/unresolved.md` 第七批一致，未落地改名） |
 | 12 | `characters/character.js:440,454` + `ai/targeting.js:422` | `MELEE_ACTION_TYPE = 3` 记账为 `rangedAttackCount`（存档键为准，勿顺手纠正） |
 | 13 | `progression/achievements.js:98-99` | `requirementType 16` 读实时队伍等级，进度可随重生回退；函数无 `default` |
-| 14 | `persistence/entities.js:286-288` | `farmsPurchased` 缺失时用"当前农场数"补值，"0 农场"与"从未买农场"不可区分 |
-| 15 | `persistence/entities.js:283-284,318-319` | `weaponRacksLooted` 取 `weaponRacksLooted/weaponsRacksLooted` 两键最大值，`bookcasesLooted` 只取一键 |
+| 14 | `persistence/entities.js:330-331` | `farmsPurchased` 缺失时用"当前农场数"补值，"0 农场"与"从未买农场"不可区分 |
+| 15 | `persistence/entities.js:327-328,362-363` | `weaponRacksLooted` 取 `weaponRacksLooted/weaponsRacksLooted` 两键最大值，`bookcasesLooted` 只取一键 |
 | 16 | `characters/party.js:302-308` + `views/results.js:61` | `currentContinueCount` 在"点继续"时才自增，首胜不进 `Xm/mm` |
 | 17 | `runtime/game.js:471` vs `simulation/loop.js:42` | 12h/14h/16h 上限只约束读档离线；后台标签页累加不受钳 |
 | 18 | `loot/inventory.js:9` | 背包容量在 `Inventory` 构造时快照 `victoryCount`，之后不回填 |

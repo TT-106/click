@@ -8,7 +8,7 @@
 |---|---|---|
 | 产品与原版反编译文件分离 | `index.html` 只加载 `src/app.js`；`npm run build` 现审计全部源码模块的导入及实际 `dist/`，原版档案依赖 0。**R26 重新做越界注入反向验证**：临时在 `src/app.js` 加一行 `import "../archive/original/c2.js"`，审计立刻以 `导入越过 src 或目标不存在：src\app.js -> ../archive/original/c2.js` 退出码 1；撤掉后恢复通过且计数回到 94 模块 / 549 导入 / 136 产物（`git diff` 对 `src/app.js` 为空，确认逐字节还原）。原版仅作为差分测试 oracle。 | 产品运行路径已分离；守卫本身经过破坏性验证，不是只跑一次的成功路径。 |
 | 行为与功能保真 | 本轮 0/1/99/900 回合完整存档对照、89/89 差分场景、浏览器端到端测试通过；U134 验收矩阵仍为 47 PASS / 4 PARTIAL。 | 已覆盖的行为通过；全功能等价尚不能宣称。 |
-| 现代命名与架构 | `statistics.js`、`stats.js`、`effects.js` 的局部语义命名与显式输入已落地；装备目录 39 个类型名和 903 处关联引用已语义化；物品生成与掉落显式接收依赖；黄金视图经只读函数取状态；R22–R25 已把全库八大热点（behaviors 264、scene 196、upgrade-details 152、terrain 131、generation 130、actions 116、rooms 116、upgrades 110）全部语义化归零，inventory.js 退出 game 依赖。 | 单字母局部绑定已从 1,602 降到 168（R27 实测，分布 31 个文件），game 直连模块 37 → 33，最大强连通分量仍 41 个模块，未完成。 |
+| 现代命名与架构 | `statistics.js`、`stats.js`、`effects.js` 的局部语义命名与显式输入已落地；装备目录 39 个类型名和 903 处关联引用已语义化；物品生成与掉落显式接收依赖；黄金视图经只读函数取状态；R22–R25 已把全库八大热点（behaviors 264、scene 196、upgrade-details 152、terrain 131、generation 130、actions 116、rooms 116、upgrades 110）全部语义化归零，inventory.js 退出 game 依赖；R30 又把 `views/dungeons.js`（7）、`views/results.js`（9）归零，并让 `views/castles.js`、`persistence/entities.js` 退出 game 直连。 | 单字母局部绑定已从 2,833 降到 **152**（R30 实测，分布 29 个文件），game 直连模块 49 → **26**，最大强连通分量仍 41 个模块，未完成。 |
 
 验收时必须保留存档 JSON 键、随机数算法与调用顺序、回合节拍、画布及外部 DOM 契约，除非先有明确的版本迁移或设计决策。对每个行为切片先做原版差分和反向验证，再合入新的边界；不能把源代码行数或门禁数量当成功能覆盖率。
 
@@ -176,13 +176,25 @@
   这样"退回 33 个直连"不再被门禁当作允许范围。
 
 
+## 2026-09-29 R30（两个模块退出 game 直连 + 两个视图命名归零 + 结构对账门禁"静默空转"缺陷修复）
+
+四个执行切片（一文件一智能体）+ 一项门禁基础设施修复；证据在 `output/goal-r30/`。
+
+- **`views/castles.js` 退出 game 直连**：9 处 `game.*`（4 个容器）→ `bindCastleViews(game.monsterCatalog, game.castles, game.regions, game.itemSprites)` + 四个 fail-loud 访问器。取证 `grep -rnE '^\s*game\.(monsterCatalog|castles|regions|itemSprites)\s*=[^=]' src` 命中 0，四者都是 `initializeRuntimeGame()` 里只构造一次的容器，按引用绑安全。
+- **`persistence/entities.js` 退出 game 直连**：6 处 `game.*`（4 个容器）→ `bindPersistenceEntities(game.itemGenerator, game.dungeons, game.monsterCatalog, game.scrolls)`。该模块被 `runtime/game.js` 反向 import，但两个 SaveAdapter 的恢复方法只在**存档恢复期**被调用，晚于组合根绑定。`npm run audit:arch` 实测 game 直连 **28 → 26**。
+- **`views/dungeons.js` 单字母 7 → 0**、**`views/results.js` 单字母 9 → 0**（`scripts/rename-bindings-v2.mjs` 表驱动，逐函数读代码定名）。dungeons 的工具 autoDeclare 曾补出三处冗余 `var dungeon;`（同作用域重声明，no-op 但是噪音），主智能体收成一处。
+- **`scripts/verify-structure-invariant.mjs` 的假绿缺陷（本轮最重要的发现）**：该门禁用 `execFileSync('git', ['show', …])` 取 base 内容，默认 stdio 会给 **stdin 建管道**，在本机稳定抛 `EBUSY`；`catch { continue; }` 把它吞掉，于是每轮都输出"0 个文件、待判定 0 行"并 **exit 0**——**R27 立起来的"唯一能发现'改名之外结构改动'的门禁"自建立起从未真正比对过文件**。修复三件套：显式 `stdio: ['ignore','pipe','pipe']`；把非 `status===128`（"路径不在 base 里"）的 git 失败收集为 `infraErrors` 判失败；新增空转护栏（`compared===0` 且有待比对文件即 exit 1）。修复后实测 78 个文件、82 行待判定（含被替换侧），按骨架去重授权 50 条后归零。同款 trap 也修掉 `tests/rename-tool/run-tests.mjs` 的两处 `spawnSync`（不修则 `r.status` 恒为 null，52 条夹具整体失真）。
+- **文档引用随行号漂移搬正**：`persistence/entities.js` 顶部 +38 行使 5 条引用失效（`formulas/items.md` 2、`formulas/progression.md` 3），逐条搬到真实行号；`doc-anchors` 从"比基线 +3"回到 204 条（与 HEAD 侧实测相同，0 新增）。类型债台账同步修正：`unknown` 146 → **149**（R25 记的 146 在 R26–R29 已漂到 148，本轮 dungeons 类型收窄 cast 再 +1），`any` 41 持平。
+- **累计指标**（R22 起）：单字母绑定 2,833 → **152**（29 个文件）；混淆短名 154 → **138**；game 直连 49 → **26**；最大 SCC 55 → **41**；import 边 554。`gate-sweep` 23 项全绿。
+
+
 ## 尚未完成的主要工作
 
-1. **拆开中心状态与循环依赖**：R27 续实测 33 个模块直接导入 `runtime/game.js`（`world/pathfinding.js`、`world/travel-costs.js`、`progression/achievements.js`、`views/monsters.js` 已退出），一个强连通分量仍包含 41 个模块；74 个初始化调用仍依赖固定顺序。装备目录、物品生成、角色属性、状态效果、内容参数、冒险点数、特效动画目录、背包与旅行代价已退出该循环，但整个领域图仍需继续拆分。应按领域建立明确输入与组合根，再逐个移动依赖方向，避免只增加转发包装。
-2. **清理恢复期命名与原型装配**：`npm run audit:arch` 实测单字母局部绑定 173 个（分布 31 个引擎模块，R22–R27 已从 1,602 降下来），混淆器风格 1–2 字母短名 159 个（分布 30 个文件）。当前热点：`characters/party.js`（17）、`core/math.js`（12）、`ai/targeting.js`（11）、`world/pathfinding.js`（10）、`views/information.js`/`views/party-creation.js`/`views/results.js`/`world/regions.js`（各 9）、`persistence/entities.js`/`views/character.js`（各 8/7）。剩余量按阻塞机制分三类：单条重赋值型已由 `rename-bindings-v2.mjs` 的 rhsKeep 开闸；循环携带与支配性不足者工具按设计拒绝，需逐处人工读；`core/math.js` 里多为有意义的坐标/向量分量，要判的是"改了是否更清楚"，不是"必须归零"。大量运行方法仍在 `initialize*()` 内挂到原型上；改装配方式必须保住初始化时序与存档构造行为。
+1. **拆开中心状态与循环依赖**：R30 实测 **26** 个模块直接导入 `runtime/game.js`（`views/castles.js`、`persistence/entities.js` 本轮退出），一个强连通分量仍包含 41 个模块；74 个初始化调用仍依赖固定顺序。装备目录、物品生成、角色属性、状态效果、内容参数、冒险点数、特效动画目录、背包、旅行代价、区域、瞄准、宝箱、角色移动、角色/怪物视图、城堡视图、存档实体已退出该循环，但整个领域图仍需继续拆分。应按领域建立明确输入与组合根，再逐个移动依赖方向，避免只增加转发包装。
+2. **清理恢复期命名与原型装配**：`npm run audit:arch` 实测单字母局部绑定 **152** 个（分布 29 个引擎模块，R22–R30 已从 2,833 降下来），混淆器风格 1–2 字母短名 **138** 个（分布 28 个文件）。当前热点：`characters/party.js`（16）、`core/math.js`（12）、`ai/targeting.js`（11）、`views/information.js`/`views/party-creation.js`（各 9）、`persistence/entities.js`/`world/pathfinding.js`（各 8）、`views/character.js`/`world/regions.js`（各 7）。剩余量按阻塞机制分三类：单条重赋值型已由 `rename-bindings-v2.mjs` 的 rhsKeep 开闸；循环携带与支配性不足者工具按设计拒绝，需逐处人工读；`core/math.js` 里多为有意义的坐标/向量分量，要判的是"改了是否更清楚"，不是"必须归零"。大量运行方法仍在 `initialize*()` 内挂到原型上；改装配方式必须保住初始化时序与存档构造行为。
 3. **继续证明功能保真**：U134 的 P-1、P-5、P-6、P-7 维持 PARTIAL。真实多版本存档、未剥离的原版页面、真机帧时间和第二浏览器依赖外部材料；在现有环境内仍可扩展玩法与 UI 的差分覆盖，但不得把模拟数据称为真实样本。
 4. ~~**构建快照的遗留文件**~~ — ✅ **已闭合（本轮）**：`build.mjs` 拷贝后按源清单清理 dist/ 陈旧文件（带拷贝根归属 + 单轮上限双重护栏），38 个 U+F00D 垃圾产物已清除，dist 136 文件与源清单一致，重复构建 0 回写/0 清理。
 
 ## 下一切片入口
 
-先复核 `git status --short`，不得重置或清理混合工作树。运行 `npm run audit:arch` 与 `node scripts/verify-structure-invariant.mjs HEAD` 固定最新指标（后者每切片改完都要跑：它是唯一能发现"改名之外的结构改动"的门禁，`npm run test:rename-tool` 保证改名工具自身不回退）。命名切片从 `characters/party.js`（17）或 `ai/targeting.js`（11，兼解耦候选：它只差一个 `pathfinder` 注入）起步——用 `scripts/rename-bindings-v2.mjs`（`--report` 看形态、`--table` 出表），单条重赋值型走 `rhsKeep`，被支配性/循环携带闸拒下的必须逐处读代码，别绕过闸；`core/math.js`（12）里多是坐标分量，先判断改了是否更清楚。R25 起的编排惯例：每切片一个执行智能体（行数保持 + 机械四断言 + 只改自己文件），落地后由 code-review 双轴（Standards/Spec）审查、修正落实后主智能体统一跑门禁。每个切片至少核对存档差分、相关差分场景、浏览器入口和文档引用，并同步 `npm run check` 的文件数表述（`npm run lint` 第 10 条会核对）；最后对精确工作树重跑 `node scripts/gate-sweep.mjs` 与 `git diff --check`。若实际指标、场景数或外部材料变动，以新一轮实测为准。
+先复核 `git status --short`，不得重置或清理混合工作树。运行 `npm run audit:arch` 与 `node scripts/verify-structure-invariant.mjs HEAD` 固定最新指标（后者每切片改完都要跑：它是唯一能发现"改名之外的结构改动"的门禁，`npm run test:rename-tool` 保证改名工具自身不回退；**R30 已修掉它"管道 stdin 抛 EBUSY 被 catch 吞掉 → 0 个文件假绿"的缺陷，并加了空转护栏，现在它真的会比对**）。命名切片从 `characters/party.js`（16）、`core/math.js`（12）或 `views/information.js`（9）起步——用 `scripts/rename-bindings-v2.mjs`（`--report` 看形态、`--table` 出表），单条重赋值型走 `rhsKeep`，被支配性/循环携带闸拒下的必须逐处读代码，别绕过闸；`core/math.js` 里多是坐标分量，先判断改了是否更清楚。解耦切片按 `audit:arch` 第 2 节实测挑（剩余 26 个直连模块里 `views/` 占 7 个），先跑 `grep -rnE '^\s*game\.[A-Za-z_$][\w$]*\s*=[^=]' src` 确认被绑容器不会整体替换；会被整体替换的（`game.world`/`game.level`/`game.currentDungeon`/`game.currentCastle`）必须走 provider 回调。R25 起的编排惯例：每切片一个执行智能体（行数保持 + 机械四断言 + 只改自己文件），落地后由 code-review 双轴（Standards/Spec）审查、修正落实后主智能体统一跑门禁。每个切片至少核对存档差分、相关差分场景、浏览器入口和文档引用（行号会漂，跑 `npm run audit:doc-anchors`），并同步 `npm run check` 的文件数表述（`npm run lint` 第 10 条会核对）；最后对精确工作树重跑 `node scripts/gate-sweep.mjs` 与 `git diff --check`。若实际指标、场景数或外部材料变动，以新一轮实测为准。

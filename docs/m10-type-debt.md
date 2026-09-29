@@ -9,8 +9,8 @@
 | `tsc` 错误 | **0** | `npm run typecheck` |
 | `src/engine/modules` 下 `@ts-nocheck` | **0**（77 个模块全部参与检查） | `npm run lint`（不变量 3） |
 | tsc 实际加载的引擎模块 | **76 / 77**（经 import 图从 `core/**` + `persistence/**` 传递） | `tsc -p tsconfig.json --listFiles` |
-| `@type {any}` 强制转换 | **41**（R25 轮实测；切片④顺手消掉 views/party-creation.js 一处） | `grep -ro "/\*\* @type {any} \*/" src/ \| wc -l`（**必须用精确模式**：宽松匹配 `@type {any}` 会把本文档与源码注释里对它的**提及**也算进去，实测差 1 处——`views/results.js:16` 的说明性注释） |
-| JSDoc 里的 `unknown`（含 `unknown` 收窄转换） | 146 行（R25 轮实测） | `grep -rn "\bunknown\b" src/ --include=*.js \| wc -l` |
+| `@type {any}` 强制转换 | **41**（R30 实测；与 R25 持平） | `grep -ro "/\*\* @type {any} \*/" src/ \| wc -l`（**必须用精确模式**：宽松匹配 `@type {any}` 会把本文档与源码注释里对它的**提及**也算进去，实测差 1 处——`views/results.js:16` 的说明性注释） |
+| JSDoc 里的 `unknown`（含 `unknown` 收窄转换） | 149 行（R30 实测；R25 记的 146 在 R26–R29 期间已漂到 148，本轮解耦切片的 `views/dungeons.js` 类型收窄 cast 再 +1） | `grep -rn "\bunknown\b" src/ --include=*.js \| wc -l` |
 | `@ts-ignore` / `eslint-disable` | **0** | `npm run lint`（不变量 4） |
 
 **分布（前 6 名，R25 实测）**：`views/expedition.js` 7、`simulation/tick.js` 4、`characters/party.js` 3、`views/base.js` 3、`views/monsters.js` 3、`views/party-creation.js` 2；`views/results.js` 已从 9 降到 **1**（仅剩一个数值表达式的 cast）。
@@ -38,7 +38,7 @@
 ## 5. 结论（如实）
 
 - **VERIFIED**：`tsc` 0 错误；77/77 模块无整文件豁免；无 `@ts-ignore`/`eslint-disable`。
-- **PARTIALLY VERIFIED**：类型**完备性**——仍有 41 处 `any` 与 146 行 `unknown` 收窄，集中在"原型后挂载 + 变量复用"两类结构性问题。
+- **PARTIALLY VERIFIED**：类型**完备性**——仍有 41 处 `any` 与 149 行 `unknown` 收窄，集中在"原型后挂载 + 变量复用"两类结构性问题。
 - **UNRESOLVED（2026-09-27 更新：已部分解决）**：`persistence/save-dto.js` 曾是**未被任何 `@type` 引用的类型资产**。
   **U131 已接入两处**：`createSaveState` 的 `@returns {SaveData|SaveDataUninitialized}` 与 `restoreGameState` 里
   `JSON.parse` 结果的 `@type {SaveData}`——写错/读错顶层键现在由 `tsc` 报出（反向验证过：TS2322 / TS2551）。
