@@ -2,6 +2,16 @@
 
 > 当前分支边界（2026-10-03，R34）：`main` 优先完善浏览器 `src/`；Godot 已保留在 `feature/native-godot-csharp` 与独立工作目录 `D:\下载\clickpocalypse2-godot`，暂缓功能开发。操作约定见 `docs/BRANCH-WORKFLOW.md`。
 
+## R37 — 恢复原素材颜色（2026-10-03）
+
+- 用户最新要求“调回最初的颜色”：地面、墙壁、树木与装饰恢复原素材 RGB/alpha 与纹理，删除降饱和、压低对比和地面 2×2 颜色采样；不通过切回 classic 撤掉防频闪修复。
+- 保留缓存/画外剔除、稳定墙面排序、物理画布与屏幕原点对齐、固定重采样及地面接缝补边。原资产、游戏数值、RNG/存档和 Godot 工作目录不改。
+- 既有 presentation 检查改为在原生尺寸严格核对 ground/scenery 与实际源素材 RGBA 一致，取消旧的“画面需降低亮度”断言；改动前该原色断言退出 1，红日志 `output/playwright/r37/colors-red.log`。动态纹理检查断言保持不变。
+- 最终 `node scripts/gate-sweep.mjs` 退出码 0：23 项门禁 + 3 项附随检查共 26 条全部为 0，包含原色 RGBA、四档 DPR 的移动纹理与桌面/手机窗口变化、parity 0/1/99/900、89/89 场景等；日志 `output/gate-sweep/2026-10-03T09-49-37/summary.txt`。headless 帧采样不提升真机/跨浏览器 PARTIAL，原版帧 A/B 腿仍未启动。
+- 源码提交 `a500b0d`；人工审查 32 行结构变化（仅删除调色），提交前清空本批临时授权清单，提交后 lint 退出码 0、结构待判定 0。复核清单留在 `output/playwright/r37/structure-allowlist-reviewed.json`。
+
+---
+
 ## R36 — 移动条纹的屏幕采样修复（2026-10-03）
 
 - 用户确认仍能看到“移动时有、静止时没有”的墙地条纹，并询问配色。明确：R35 确实在绘制缓存降低地面/墙壁/装饰的饱和度和对比，原素材未改；这轮保留该配色，针对动态采样修复。Godot 独立工作目录不改动。
