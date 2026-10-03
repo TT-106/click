@@ -13,6 +13,10 @@ const quick = process.argv.includes('--quick');
 const stamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
 const dir = path.join(ROOT, 'output', 'gate-sweep', stamp);
 fs.mkdirSync(dir, { recursive: true });
+const unitTests = fs.readdirSync(path.join(ROOT, 'tests/unit'), { withFileTypes: true })
+  .filter(entry => entry.isFile() && entry.name.endsWith('.test.mjs'))
+  .map(entry => `tests/unit/${entry.name}`).sort();
+if (!unitTests.length) throw new Error('tests/unit 下没有测试文件，拒绝空转');
 
 function runCmd(cmd, args, opts = {}) {
   return new Promise((resolve) => {
@@ -45,7 +49,7 @@ const gates = [
   ['typecheck', ['node_modules/typescript/bin/tsc', '-p', 'tsconfig.json']],
   ['initialization-order', ['scripts/check-initialization-order.mjs']],
   ['check', ['scripts/check.mjs']],
-  ['test-unit', ['--test', 'tests/unit/achievement-progress.test.mjs', 'tests/unit/format.test.mjs', 'tests/unit/initialization-order.test.mjs', 'tests/unit/inventory-decouple.test.mjs', 'tests/unit/navigation-decouple.test.mjs', 'tests/unit/point-awards.test.mjs', 'tests/unit/rng.test.mjs', 'tests/unit/save-codec.test.mjs', 'tests/unit/sprite-lookup.test.mjs', 'tests/unit/stat-save-contract.test.mjs']],
+  ['test-unit', ['--test', ...unitTests]],
   ['audit-arch-ratchet', ['scripts/audit-architecture.mjs', '--json']],
   ['dead-reads-ratchet', ['scripts/find-dead-reads.mjs']],
   ['doc-mappings', ['scripts/check-doc-mappings.mjs']],

@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-10-03T10:21:06.749Z",
+  "generatedAt": "2026-10-03T10:57:01.596Z",
   "counts": {
     "srcJsFiles": 95,
     "engineModules": 79,
-    "totalEdges": 551
+    "totalEdges": 549
   },
   "gameImporters": {
-    "total": 22,
-    "withGameBinding": 22,
+    "total": 21,
+    "withGameBinding": 21,
     "byDir": {
       "engine/modules/ai": 1,
       "engine/modules/characters": 2,
@@ -17,7 +17,7 @@
       "engine/modules/rendering": 1,
       "engine/modules/runtime": 1,
       "engine/modules/simulation": 3,
-      "engine/modules/views": 5,
+      "engine/modules/views": 4,
       "engine/modules/world": 5
     },
     "files": [
@@ -35,7 +35,6 @@
       "src/engine/modules/simulation/tick.js",
       "src/engine/modules/views/dungeons.js",
       "src/engine/modules/views/expedition.js",
-      "src/engine/modules/views/information.js",
       "src/engine/modules/views/party-creation.js",
       "src/engine/modules/views/results.js",
       "src/engine/modules/world/dungeons.js",
@@ -75,7 +74,6 @@
       "src/engine/modules/views/character.js",
       "src/engine/modules/views/dungeons.js",
       "src/engine/modules/views/expedition.js",
-      "src/engine/modules/views/information.js",
       "src/engine/modules/views/monsters.js",
       "src/engine/modules/views/party-creation.js",
       "src/engine/modules/views/results.js",
@@ -541,7 +539,7 @@
   "hotFields": [
     {
       "path": "game.state",
-      "readFiles": 20,
+      "readFiles": 19,
       "writeFiles": 0,
       "dirs": [
         "engine/modules/ai",
@@ -719,6 +717,7 @@
         "engine/modules/progression",
         "engine/modules/rendering",
         "engine/modules/runtime",
+        "engine/modules/simulation",
         "engine/modules/views",
         "engine/modules/world"
       ]
@@ -834,6 +833,7 @@
       "dirs": [
         "engine/modules/characters",
         "engine/modules/persistence",
+        "engine/modules/simulation",
         "engine/modules/views"
       ]
     },
@@ -992,17 +992,6 @@
       ]
     },
     {
-      "path": "game.saves",
-      "readFiles": 5,
-      "writeFiles": 0,
-      "dirs": [
-        "engine/modules/characters",
-        "engine/modules/persistence",
-        "engine/modules/simulation",
-        "engine/modules/views"
-      ]
-    },
-    {
       "path": "game.effects",
       "readFiles": 5,
       "writeFiles": 0,
@@ -1047,6 +1036,17 @@
         "engine/modules/progression",
         "engine/modules/rendering",
         "engine/modules/runtime"
+      ]
+    },
+    {
+      "path": "game.monsterSprites.getSprite",
+      "readFiles": 5,
+      "writeFiles": 0,
+      "dirs": [
+        "engine/modules/combat",
+        "engine/modules/persistence",
+        "engine/modules/simulation",
+        "engine/modules/views"
       ]
     }
   ],
@@ -1121,16 +1121,12 @@
     }
   },
   "naming": {
-    "singleLetterBindings": 54,
-    "filesWithSingleLetterBindings": 19,
+    "singleLetterBindings": 46,
+    "filesWithSingleLetterBindings": 17,
     "topFiles": [
       {
         "file": "src/engine/modules/core/math.js",
         "count": 12
-      },
-      {
-        "file": "src/engine/modules/views/castles.js",
-        "count": 5
       },
       {
         "file": "src/engine/modules/combat/scrolls.js",
@@ -1150,10 +1146,6 @@
       },
       {
         "file": "src/engine/modules/views/dom.js",
-        "count": 3
-      },
-      {
-        "file": "src/engine/modules/views/monsters.js",
         "count": 3
       },
       {
@@ -1201,8 +1193,8 @@
         "count": 1
       }
     ],
-    "crypticBindings": 43,
-    "filesWithCrypticBindings": 18,
+    "crypticBindings": 35,
+    "filesWithCrypticBindings": 16,
     "allowListedBindings": 26,
     "allowListedByFile": {
       "src/engine/modules/simulation/tick.js": 6,
@@ -1220,19 +1212,11 @@
         "count": 8
       },
       {
-        "file": "src/engine/modules/views/castles.js",
-        "count": 5
-      },
-      {
         "file": "src/engine/modules/rendering/floating-text.js",
         "count": 3
       },
       {
         "file": "src/engine/modules/views/dom.js",
-        "count": 3
-      },
-      {
-        "file": "src/engine/modules/views/monsters.js",
         "count": 3
       },
       {
