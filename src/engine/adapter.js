@@ -136,7 +136,21 @@ export const engine = {
   setPresentation(style) {
     const panel = game.view.panels.find(view => view.elementId === 'gameTabContent');
     const canvasView = panel?.childViews.find(view => view.elementId === 'gameCanvas');
-    if (canvasView) canvasView.setPresentation(style);
+    if (canvasView) {
+      canvasView.setPresentation(style);
+      const canvas = canvasView.renderer?.context.canvas;
+      if (canvas?.parentElement.id === 'map-stage') {
+        const width = canvas.parentElement.getBoundingClientRect().width, density = window.devicePixelRatio || 1;
+        if (width > 0) {
+          const pixelWidth = Math.max(1, Math.floor(width * density)), pixelHeight = Math.max(1, Math.round(pixelWidth * 450 / 740));
+          canvas.style.width = `${pixelWidth / density}px`; canvas.style.height = `${pixelHeight / density}px`;
+          canvas.style.imageRendering = style === 'clean' ? 'crisp-edges' : 'pixelated';
+          const bounds = canvas.parentElement.getBoundingClientRect();
+          canvas.style.transform = `translate(${Math.round(bounds.x * density) / density - bounds.x}px, ${Math.round(bounds.y * density) / density - bounds.y}px)`;
+          canvasView.setDisplaySize(pixelWidth, pixelHeight);
+        }
+      }
+    }
   },
   setOption(name, enabled) {
     const fields = {

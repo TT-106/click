@@ -19,6 +19,7 @@
     "test:soak": "node scripts/test-soak.mjs",
     "test:e2e": "node scripts/test-browser.mjs",
     "test:presentation": "node scripts/test-presentation.mjs",
+    "test:map-motion": "node scripts/test-map-motion.mjs",
     "test:e2e:dist": "node scripts/e2e-dist.mjs",
     "check": "node scripts/check.mjs",
     "lint": "node scripts/lint-invariants.mjs",

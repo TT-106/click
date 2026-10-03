@@ -109,7 +109,7 @@ main { min-width:0; padding:18px 24px 24px; }
 .map-state[data-state="combat"] { color:var(--gold); }
 .map-state[data-state="paused"] { color:var(--muted); }
 .map-stage { position:relative;  background:#0e120c; isolation:isolate; }
-#map-stage canvas { position:relative; left:0; top:0; margin:0; width:100%; height:auto; aspect-ratio:740/450; border:0; display:block; z-index:0; image-rendering:pixelated; }
+#map-stage canvas { position:relative; left:0; top:0; margin:0; padding:0; width:100%; max-width:100%; height:auto; aspect-ratio:740/450; border:0; display:block; z-index:0; image-rendering:pixelated; }
 .map-footer { font-size:10px; color:var(--muted); padding:7px 13px; }
 .map-footer b { font-family:ui-monospace,Consolas,monospace; font-weight:400; color:var(--text); }
 .map-footer .quiet-button { font-size:10px; padding:4px 7px; min-height:28px; border-color:transparent; }

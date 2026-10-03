@@ -93,7 +93,10 @@ export function drawWorldTileRow(renderer, tileRow, startColumn, endColumn) {
       var camera = game.camera;
       var screenX = VIEWPORT_HALF_WIDTH + (startColumn - camera.tileColumn - (tileRow - camera.tileRow)) * TILE_SIZE - camera.viewportOffsetX;
       var screenY = VIEWPORT_HALF_HEIGHT + (startColumn - camera.tileColumn + (tileRow - camera.tileRow)) * HALF_TILE_SIZE - camera.viewportOffsetY;
-      if (renderer.presentation) screenY = VIEWPORT_HALF_HEIGHT + (startColumn + tileRow) * HALF_TILE_SIZE - renderer.presentation.cameraOffsetY(game.world.worldCenterX, game.world.worldCenterY, TILE_SIZE, HALF_TILE_SIZE);
+      if (renderer.presentation) {
+        screenX = renderer.presentation.tileScreenX(startColumn, tileRow, game.world.worldCenterX, game.world.worldCenterY, TILE_SIZE, VIEWPORT_HALF_WIDTH);
+        screenY = renderer.presentation.tileScreenY(startColumn, tileRow, game.world.worldCenterX, game.world.worldCenterY, TILE_SIZE, HALF_TILE_SIZE, VIEWPORT_HALF_HEIGHT);
+      }
       renderer.drawSprite(tile.backgroundSprite, screenX, screenY, 'ground');
       var decorationSprite = tile.decorationSprite;
       if (decorationSprite) {
@@ -109,7 +112,10 @@ export function drawDungeonTileRow(renderer, tileRow, startColumn, endColumn) {
       var camera = game.camera;
       var screenX = VIEWPORT_HALF_WIDTH + (startColumn - camera.tileColumn - (tileRow - camera.tileRow)) * TILE_SIZE - camera.viewportOffsetX;
       var screenY = VIEWPORT_HALF_HEIGHT + (startColumn - camera.tileColumn + (tileRow - camera.tileRow)) * HALF_TILE_SIZE - camera.viewportOffsetY;
-      if (renderer.presentation) screenY = VIEWPORT_HALF_HEIGHT + (startColumn + tileRow) * HALF_TILE_SIZE - renderer.presentation.cameraOffsetY(game.level.centerX, game.level.centerY, TILE_SIZE, HALF_TILE_SIZE);
+      if (renderer.presentation) {
+        screenX = renderer.presentation.tileScreenX(startColumn, tileRow, game.level.centerX, game.level.centerY, TILE_SIZE, VIEWPORT_HALF_WIDTH);
+        screenY = renderer.presentation.tileScreenY(startColumn, tileRow, game.level.centerX, game.level.centerY, TILE_SIZE, HALF_TILE_SIZE, VIEWPORT_HALF_HEIGHT);
+      }
       renderer.drawSprite(tile.backgroundSprite, screenX, screenY, 'ground');
       var decorationSprite = tile.decorationSprite;
       if (decorationSprite) {
@@ -362,6 +368,7 @@ export function initializeRenderingScene() {
   };
   GameCanvasView.prototype.update = function () {
     var renderer = this.renderer;
+    if (renderer.presentation) renderer.presentation.beginFrame(renderer.context);
     renderer.spriteRenderer = game.options.depthSortSprites ? renderer.depthSortedRenderer : renderer.immediateRenderer;
     renderer.spriteRenderer.presentation = renderer.presentation;
     renderer.spriteRenderer.setContext(renderer.context);
@@ -773,5 +780,18 @@ export function initializeRenderingScene() {
     this.presentationStyle = style;
     this.renderer.presentation = style === 'clean' ? createMapPresentation() : null;
     this.renderer.context.imageSmoothingEnabled = style !== 'clean';
+    if (style === 'classic') resizeDisplay.call(this, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
   };
+  /** @this {GameCanvasView} */
+  function resizeDisplay(width, height) {
+    if (!this.renderer) return;
+    const context = this.renderer.context, canvas = context.canvas;
+    width = this.presentationStyle === 'clean' ? width : VIEWPORT_WIDTH;
+    height = this.presentationStyle === 'clean' ? height : VIEWPORT_HEIGHT;
+    if (canvas.width === width && canvas.height === height) return;
+    canvas.width = width; canvas.height = height;
+    context.setTransform(width / VIEWPORT_WIDTH, 0, 0, height / VIEWPORT_HEIGHT, 0, 0);
+    context.imageSmoothingEnabled = this.presentationStyle !== 'clean';
+  }
+  GameCanvasView.prototype.setDisplaySize = resizeDisplay;
 }

@@ -57,6 +57,7 @@ const gates = [
   ['parity', ['scripts/test-parity.mjs']],
   ['scenarios', ['scripts/test-scenarios.mjs']],
   ['presentation', ['scripts/test-presentation.mjs']],
+  ['map-motion', ['scripts/test-map-motion.mjs']],
   ['e2e', ['scripts/test-browser.mjs']],
   ['e2e-dist', ['scripts/e2e-dist.mjs']],
   ['perf', ['scripts/measure-perf.mjs']],

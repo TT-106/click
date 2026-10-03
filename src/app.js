@@ -116,6 +116,7 @@ function bind() {
     if (engine.snapshot().started) { event.preventDefault(); engine.pause(); refresh(); }
   });
   window.addEventListener('pagehide', () => saves.save(true));
+  window.addEventListener('resize', () => engine.setPresentation(presentationStyle));
   document.addEventListener('visibilitychange', () => { if (document.hidden) saves.save(true); });
 }
 
