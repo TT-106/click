@@ -56,6 +56,7 @@ const gates = [
   ['production-boundary', ['scripts/audit-production-boundary.mjs']],
   ['parity', ['scripts/test-parity.mjs']],
   ['scenarios', ['scripts/test-scenarios.mjs']],
+  ['presentation', ['scripts/test-presentation.mjs']],
   ['e2e', ['scripts/test-browser.mjs']],
   ['e2e-dist', ['scripts/e2e-dist.mjs']],
   ['perf', ['scripts/measure-perf.mjs']],

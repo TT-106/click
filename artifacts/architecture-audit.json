@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-09-29T09:54:05.804Z",
+  "generatedAt": "2026-10-03T08:25:22.424Z",
   "counts": {
-    "srcJsFiles": 94,
-    "engineModules": 78,
-    "totalEdges": 551
+    "srcJsFiles": 95,
+    "engineModules": 79,
+    "totalEdges": 552
   },
   "gameImporters": {
     "total": 23,

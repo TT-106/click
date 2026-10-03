@@ -17,16 +17,13 @@ function notify(message, error = false) {
 }
 const saves = createSaveService(engine, notify);
 const titles = {
-  expedition: ['远征 / 探索中', '小队的脚步，从未停歇。', '探索、战斗、成长。下一场奇遇就在前方。'],
-  heroes: ['冒险手册 / 冒险者', '每位伙伴，各有所长。', '分配技能点，整理装备，打造属于你的阵容。'],
-  dungeons: ['冒险手册 / 地牢', '深入未知，收复失地。', '追踪地牢状态，将清理过的地牢变为农场。'],
-  castles: ['冒险手册 / 城堡', '让大陆重见光明。', '攻陷城堡，解除永恒之冬的诅咒。'],
-  monsters: ['冒险手册 / 怪物图鉴', '了解你的下一位对手。', '升级怪物，换取更丰厚的冒险回报。'],
-  points: ['冒险手册 / 成就与点数', '每一步，皆有回响。', '把旅途中的里程碑，化作下一次出发的力量。'],
-  settings: ['冒险手册 / 设置与帮助', '按你的节奏冒险。', '调整游戏偏好，了解这片大陆的规则。'],
-  info: ['冒险手册 / 统计资料', '你的冒险，皆有记录。', '查看本周目与历次冒险的详细统计。'],
-  victory: ['远征 / 胜利', '永冬终将散去。', '回顾战果，准备下一次远征。']
+  expedition: '远征', heroes: '冒险者', dungeons: '地牢', castles: '城堡',
+  monsters: '怪物图鉴', points: '成就与点数', settings: '设置与帮助',
+  info: '统计资料', victory: '远征战果'
 };
+const PRESENTATION_KEY = 'C2_PRESENTATION_V1';
+let presentationStyle = 'clean';
+try { if (localStorage.getItem(PRESENTATION_KEY) === 'classic') presentationStyle = 'classic'; } catch { /* 浏览器禁用存储时仍可使用默认画面。 */ }
 const panels = { dungeons:'dungeonsTabContent', castles:'castlesTabContent', monsters:'monstersTabContent', points:'pointsTabContent', info:'infoTabContent', victory:'gameOverTabContent' };
 const dashboard = createDashboard(index => { activeHero = index; navigate('heroes'); });
 
@@ -36,8 +33,8 @@ function navigate(page, focus = false) {
   if (!state.started && ['heroes','dungeons','castles','monsters'].includes(page)) return;
   currentPage = page;
   const setup = page === 'expedition' && !state.started;
-  const title = setup ? ['远征 / 准备出发', '每段传奇，都始于一支小队。', '召集冒险者，走进永冬笼罩的大陆。'] : titles[page];
-  ['page-eyebrow','page-title','page-description'].forEach((id,index) => { $(`#${id}`).textContent = title[index]; });
+  $('#page-heading').hidden = page === 'expedition';
+  $('#page-title').textContent = titles[page];
   $('#setup-screen').hidden = !setup;
   $('#expedition-screen').hidden = page !== 'expedition' || !state.started;
   $('#settings-screen').hidden = page !== 'settings';
@@ -66,6 +63,8 @@ function navigate(page, focus = false) {
 
 function refresh() {
   const state = engine.snapshot();
+  engine.setPresentation(presentationStyle);
+  $('#presentation-style').value = presentationStyle;
   $('#run-number').textContent = state.run;
   $('#pause-label').textContent = state.paused ? '继续' : '暂停';
   $('#toggle-pause').setAttribute('aria-label', state.paused ? '继续冒险' : '暂停冒险');
@@ -77,7 +76,11 @@ function refresh() {
 
 function bind() {
   for (const button of $$('[data-page]')) button.addEventListener('click', () => navigate(button.dataset.page, true));
-  $('#header-settings').onclick = () => navigate('settings');
+  $('#presentation-style').onchange = event => {
+    presentationStyle = event.target.value;
+    engine.setPresentation(presentationStyle);
+    try { localStorage.setItem(PRESENTATION_KEY, presentationStyle); } catch { /* 偏好仍在本次会话生效。 */ }
+  };
   $('#manage-heroes').onclick = () => navigate('heroes');
   $('#original-info').onclick = () => navigate('info');
   $('#hero-tabs').onclick = event => { const target = event.target.closest('[data-hero-tab]'); if (target) { activeHero = Number(target.dataset.heroTab); navigate('heroes'); } };

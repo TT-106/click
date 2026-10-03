@@ -133,6 +133,11 @@ export const engine = {
   pause(value = !game.paused) {
     game.paused = value;
   },
+  setPresentation(style) {
+    const panel = game.view.panels.find(view => view.elementId === 'gameTabContent');
+    const canvasView = panel?.childViews.find(view => view.elementId === 'gameCanvas');
+    if (canvasView) canvasView.setPresentation(style);
+  },
   setOption(name, enabled) {
     const fields = {
       effects: 'showSpellEffects',

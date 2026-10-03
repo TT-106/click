@@ -13,11 +13,13 @@ import { getMonsters } from "../combat/encounters.js";
 import { TARGETED_EFFECT } from "./sprites.js";
 import { createElement, getElement } from "../views/dom.js";
 import { HALF_TILE_SIZE, TILE_SIZE, VIEWPORT_HALF_HEIGHT, VIEWPORT_HALF_WIDTH, VIEWPORT_HEIGHT, VIEWPORT_WIDTH } from "../core/screen-layout.js";
+import { createMapPresentation } from "./presentation.js";
 export function RenderCommand() {
   this.animation = this.sprite = null;
   this.raiseOffset = this.sortKey = this.frameIndex = 0;
   this.isSet = false;
   this.alpha = this.renderSize = this.screenY = this.screenX = 0;
+  this.layer = 'actor';
 }
 export function resetRenderCommand(command) {
   command.isSet = false;
@@ -25,8 +27,9 @@ export function resetRenderCommand(command) {
   command.animation = null;
   command.sortKey = 1E5;
   command.raiseOffset = 0;
+  command.layer = 'actor';
 }
-export function setSpriteRenderCommand(command, sprite, sortKey, screenX, screenY, renderSize, alpha) {
+export function setSpriteRenderCommand(command, sprite, sortKey, screenX, screenY, renderSize, alpha, layer = 'actor') {
   command.sprite = sprite;
   command.sortKey = sortKey;
   command.screenX = screenX;
@@ -34,6 +37,7 @@ export function setSpriteRenderCommand(command, sprite, sortKey, screenX, screen
   command.renderSize = renderSize;
   command.alpha = alpha;
   command.isSet = true;
+  command.layer = layer;
 }
 export function setAnimationRenderCommand(command, animation, frameIndex, sortKey, screenX, screenY, renderSize, alpha) {
   command.animation = animation;
@@ -53,6 +57,7 @@ export function DepthSortedRenderer() {
   this.renderCommands = [];
   this.commandIndex = 0;
   this.context = null;
+  this.presentation = null;
 }
 export function acquireRenderCommand(renderer) {
   var command;
@@ -67,6 +72,7 @@ export function acquireRenderCommand(renderer) {
 }
 export function ImmediateRenderer() {
   this.context = null;
+  this.presentation = null;
   this.command = new RenderCommand();
 }
 export function acquireImmediateCommand(renderer) {
@@ -75,6 +81,7 @@ export function acquireImmediateCommand(renderer) {
 }
 export function SceneRenderer(context) {
   this.context = context;
+  this.presentation = null;
   this.spriteRenderer = null;
   this.depthSortedRenderer = new DepthSortedRenderer();
   this.immediateRenderer = new ImmediateRenderer();
@@ -86,10 +93,11 @@ export function drawWorldTileRow(renderer, tileRow, startColumn, endColumn) {
       var camera = game.camera;
       var screenX = VIEWPORT_HALF_WIDTH + (startColumn - camera.tileColumn - (tileRow - camera.tileRow)) * TILE_SIZE - camera.viewportOffsetX;
       var screenY = VIEWPORT_HALF_HEIGHT + (startColumn - camera.tileColumn + (tileRow - camera.tileRow)) * HALF_TILE_SIZE - camera.viewportOffsetY;
-      renderer.drawSprite(tile.backgroundSprite, screenX, screenY);
+      if (renderer.presentation) screenY = VIEWPORT_HALF_HEIGHT + (startColumn + tileRow) * HALF_TILE_SIZE - renderer.presentation.cameraOffsetY(game.world.worldCenterX, game.world.worldCenterY, TILE_SIZE, HALF_TILE_SIZE);
+      renderer.drawSprite(tile.backgroundSprite, screenX, screenY, 'ground');
       var decorationSprite = tile.decorationSprite;
       if (decorationSprite) {
-        renderer.spriteRenderer.drawSpriteDepth(decorationSprite, tile.getPixelX(), tile.getPixelY(), screenX, screenY, decorationSprite.spriteSheet.spriteSize, 0);
+        renderer.spriteRenderer.drawSpriteDepth(decorationSprite, tile.getPixelX(), tile.getPixelY(), screenX, screenY, decorationSprite.spriteSheet.spriteSize, 0, 'scenery');
       }
     }
   }
@@ -101,14 +109,15 @@ export function drawDungeonTileRow(renderer, tileRow, startColumn, endColumn) {
       var camera = game.camera;
       var screenX = VIEWPORT_HALF_WIDTH + (startColumn - camera.tileColumn - (tileRow - camera.tileRow)) * TILE_SIZE - camera.viewportOffsetX;
       var screenY = VIEWPORT_HALF_HEIGHT + (startColumn - camera.tileColumn + (tileRow - camera.tileRow)) * HALF_TILE_SIZE - camera.viewportOffsetY;
-      renderer.drawSprite(tile.backgroundSprite, screenX, screenY);
+      if (renderer.presentation) screenY = VIEWPORT_HALF_HEIGHT + (startColumn + tileRow) * HALF_TILE_SIZE - renderer.presentation.cameraOffsetY(game.level.centerX, game.level.centerY, TILE_SIZE, HALF_TILE_SIZE);
+      renderer.drawSprite(tile.backgroundSprite, screenX, screenY, 'ground');
       var decorationSprite = tile.decorationSprite;
       if (decorationSprite) {
-        renderer.spriteRenderer.drawSpriteDepth(decorationSprite, tile.getPixelX(), tile.getPixelY(), screenX, screenY, decorationSprite.spriteSheet.spriteSize, 0);
+        renderer.spriteRenderer.drawSpriteDepth(decorationSprite, tile.getPixelX(), tile.getPixelY(), screenX, screenY, decorationSprite.spriteSheet.spriteSize, 0, 'scenery');
       }
       var cachedBackgroundSprite = tile.cachedBackgroundSprite;
       if (cachedBackgroundSprite) {
-        renderer.spriteRenderer.drawSpriteDepthRaised(cachedBackgroundSprite, tile.getPixelX(), tile.getPixelY(), screenX, screenY, cachedBackgroundSprite.spriteSheet.spriteSize, 0);
+        renderer.spriteRenderer.drawSpriteDepthRaised(cachedBackgroundSprite, tile.getPixelX(), tile.getPixelY(), screenX, screenY, cachedBackgroundSprite.spriteSheet.spriteSize, 0, 'scenery');
       }
     }
   }
@@ -163,6 +172,10 @@ export function drawCharacterEffects(renderer, characters) {
   }
 }
 export function drawFloatingText(renderer) {
+  if (renderer.presentation) {
+    renderer.presentation.drawCombatText(renderer.context, game.floatingText.texts);
+    return;
+  }
   var textIndex, floatingText, texts;
   texts = game.floatingText.texts;
   if (0 !== texts.length) {
@@ -198,6 +211,10 @@ export function drawCharacterHighlights(renderer, characters, healthBarColor) {
       stats = character.stats;
       health = stats.health;
       maxHealth = statValue(stats.maxHealth);
+      if (renderer.presentation) {
+        renderer.presentation.drawHealthBar(renderer.context, screenX, screenY, health, maxHealth, healthBarColor);
+        continue;
+      }
       if (health === maxHealth) {
         renderer.context.fillStyle = healthBarColor;
         renderer.context.fillRect(screenX + 10, screenY + 0, 30, 4);
@@ -218,12 +235,13 @@ export function GameCanvasView() {
   this.containerElementId = "gameTabContent";
   this.elementId = "gameCanvas";
   this.renderer = null;
+  this.presentationStyle = 'classic';
 }
 export function initializeRenderingScene() {
   RenderCommand.prototype.getRenderSortKey = function () {
     return this.sortKey - this.raiseOffset;
   };
-  RenderCommand.prototype.draw = function (context) {
+  RenderCommand.prototype.draw = function (context, presentation = null) {
     if (this.isSet) {
       if (0 < this.alpha) {
         context.save();
@@ -232,11 +250,13 @@ export function initializeRenderingScene() {
       var spriteSize;
       if (this.sprite) {
         spriteSize = this.sprite.spriteSheet.spriteSize;
-        context.drawImage(this.sprite.getSheetImage(), this.sprite.sourceX, this.sprite.sourceY, spriteSize, spriteSize, this.screenX, this.screenY, this.renderSize, this.renderSize);
+        if (presentation) presentation.drawSprite(context, this.sprite, this.screenX, this.screenY, this.renderSize, this.layer);
+        else context.drawImage(this.sprite.getSheetImage(), this.sprite.sourceX, this.sprite.sourceY, spriteSize, spriteSize, this.screenX, this.screenY, this.renderSize, this.renderSize);
       } else if (this.animation) {
         var frame = this.animation.frames[this.frameIndex];
         spriteSize = this.animation.spriteSheet.spriteSize;
-        context.drawImage(this.animation.getSheetImage(), frame.frameSourceX, frame.frameSourceY, spriteSize, spriteSize, this.screenX, this.screenY, this.renderSize, this.renderSize);
+        if (presentation) presentation.drawAnimation(context, this.animation, this.frameIndex, this.screenX, this.screenY, this.renderSize);
+        else context.drawImage(this.animation.getSheetImage(), frame.frameSourceX, frame.frameSourceY, spriteSize, spriteSize, this.screenX, this.screenY, this.renderSize, this.renderSize);
       }
       if (0 < this.alpha) {
         context.restore();
@@ -261,29 +281,29 @@ export function initializeRenderingScene() {
     }
     setVector(this.scratchVector, centerX, centerY);
   };
-  DepthSortedRenderer.prototype.drawSpriteDepth = function (sprite, worldX, worldY, screenX, screenY, renderSize, alpha) {
+  DepthSortedRenderer.prototype.drawSpriteDepth = function (sprite, worldX, worldY, screenX, screenY, renderSize, alpha, layer = 'actor') {
     if (sprite) {
-      var distance = distanceToPoint(this.scratchVector, worldX, worldY);
-      setSpriteRenderCommand(acquireRenderCommand(this), sprite, distance, screenX, screenY, renderSize, alpha);
+      var distance = this.presentation ? this.presentation.depthKey(worldX, worldY) : distanceToPoint(this.scratchVector, worldX, worldY);
+      setSpriteRenderCommand(acquireRenderCommand(this), sprite, distance, screenX, screenY, renderSize, alpha, layer);
     }
   };
-  DepthSortedRenderer.prototype.drawSpriteDepthRaised = function (sprite, worldX, worldY, screenX, screenY, renderSize, alpha) {
+  DepthSortedRenderer.prototype.drawSpriteDepthRaised = function (sprite, worldX, worldY, screenX, screenY, renderSize, alpha, layer = 'actor') {
     if (sprite) {
-      var distance = distanceToPoint(this.scratchVector, worldX, worldY);
+      var distance = this.presentation ? this.presentation.depthKey(worldX, worldY) : distanceToPoint(this.scratchVector, worldX, worldY);
       var command = acquireRenderCommand(this);
-      setSpriteRenderCommand(command, sprite, distance, screenX, screenY, renderSize, alpha);
+      setSpriteRenderCommand(command, sprite, distance, screenX, screenY, renderSize, alpha, layer);
       command.raiseOffset = 0.1;
     }
   };
   DepthSortedRenderer.prototype.drawAnimation = function (animation, frameIndex, worldX, worldY, screenX, screenY, renderSize, alpha) {
     if (animation) {
-      var distance = distanceToPoint(this.scratchVector, worldX, worldY);
+      var distance = this.presentation ? this.presentation.depthKey(worldX, worldY) : distanceToPoint(this.scratchVector, worldX, worldY);
       setAnimationRenderCommand(acquireRenderCommand(this), animation, frameIndex, distance, screenX, screenY, renderSize, alpha);
     }
   };
   DepthSortedRenderer.prototype.drawAnimationRaised = function (animation, frameIndex, worldX, worldY, screenX, screenY, renderSize, alpha) {
     if (animation) {
-      var distance = distanceToPoint(this.scratchVector, worldX, worldY);
+      var distance = this.presentation ? this.presentation.depthKey(worldX, worldY) : distanceToPoint(this.scratchVector, worldX, worldY);
       var command = acquireRenderCommand(this);
       setAnimationRenderCommand(command, animation, frameIndex, distance, screenX, screenY, renderSize, alpha);
       command.raiseOffset = 0.1;
@@ -294,45 +314,46 @@ export function initializeRenderingScene() {
       this.renderCommands.sort(this.compareRenderSortKey);
     }
     for (var commandIndex = this.commandIndex - 1; 0 <= commandIndex; commandIndex--) {
-      this.renderCommands[commandIndex].draw(this.context);
+      this.renderCommands[commandIndex].draw(this.context, this.presentation);
     }
   };
   ImmediateRenderer.prototype.setContext = function (context) {
     this.context = context;
   };
-  ImmediateRenderer.prototype.drawSpriteDepth = function (sprite, worldX, worldY, screenX, screenY, renderSize, alpha) {
+  ImmediateRenderer.prototype.drawSpriteDepth = function (sprite, worldX, worldY, screenX, screenY, renderSize, alpha, layer = 'actor') {
     if (sprite) {
       var command = acquireImmediateCommand(this);
-      setSpriteRenderCommand(command, sprite, 0, screenX, screenY, renderSize, alpha);
-      command.draw(this.context);
+      setSpriteRenderCommand(command, sprite, 0, screenX, screenY, renderSize, alpha, layer);
+      command.draw(this.context, this.presentation);
     }
   };
-  ImmediateRenderer.prototype.drawSpriteDepthRaised = function (sprite, worldX, worldY, screenX, screenY, renderSize, alpha) {
+  ImmediateRenderer.prototype.drawSpriteDepthRaised = function (sprite, worldX, worldY, screenX, screenY, renderSize, alpha, layer = 'actor') {
     if (sprite) {
       var command = acquireImmediateCommand(this);
-      setSpriteRenderCommand(command, sprite, 0, screenX, screenY, renderSize, alpha);
-      command.draw(this.context);
+      setSpriteRenderCommand(command, sprite, 0, screenX, screenY, renderSize, alpha, layer);
+      command.draw(this.context, this.presentation);
     }
   };
   ImmediateRenderer.prototype.drawAnimation = function (animation, frameIndex, worldX, worldY, screenX, screenY, renderSize, alpha) {
     if (animation) {
       var command = acquireImmediateCommand(this);
       setAnimationRenderCommand(command, animation, frameIndex, 0, screenX, screenY, renderSize, alpha);
-      command.draw(this.context);
+      command.draw(this.context, this.presentation);
     }
   };
   ImmediateRenderer.prototype.drawAnimationRaised = function (animation, frameIndex, worldX, worldY, screenX, screenY, renderSize, alpha) {
     if (animation) {
       var command = acquireImmediateCommand(this);
       setAnimationRenderCommand(command, animation, frameIndex, 0, screenX, screenY, renderSize, alpha);
-      command.draw(this.context);
+      command.draw(this.context, this.presentation);
     }
   };
   ImmediateRenderer.prototype.sortCommands = function () {};
-  SceneRenderer.prototype.drawSprite = function (sprite, screenX, screenY) {
+  SceneRenderer.prototype.drawSprite = function (sprite, screenX, screenY, layer = 'actor') {
     if (sprite) {
       var spriteSize = sprite.spriteSheet.spriteSize;
-      this.context.drawImage(sprite.getSheetImage(), sprite.sourceX, sprite.sourceY, spriteSize, spriteSize, screenX, screenY, spriteSize, spriteSize);
+      if (this.presentation) this.presentation.drawSprite(this.context, sprite, screenX, screenY, spriteSize, layer);
+      else this.context.drawImage(sprite.getSheetImage(), sprite.sourceX, sprite.sourceY, spriteSize, spriteSize, screenX, screenY, spriteSize, spriteSize);
     }
   };
   GameCanvasView.prototype = new View();
@@ -342,6 +363,7 @@ export function initializeRenderingScene() {
   GameCanvasView.prototype.update = function () {
     var renderer = this.renderer;
     renderer.spriteRenderer = game.options.depthSortSprites ? renderer.depthSortedRenderer : renderer.immediateRenderer;
+    renderer.spriteRenderer.presentation = renderer.presentation;
     renderer.spriteRenderer.setContext(renderer.context);
     if (game.world.hasPartyPlaced) {
       if (renderer.context.fillStyle = "#000000", renderer.context.fillRect(0, 0, VIEWPORT_WIDTH, VIEWPORT_HEIGHT), game.worldActive) {
@@ -734,7 +756,22 @@ export function initializeRenderingScene() {
         canvas.innerHTML = "你的浏览器不支持Html5.请升级你的浏览器.";
       }
       this.renderer = new SceneRenderer(canvas.getContext("2d"));
+      if (this.presentationStyle === 'clean') {
+        this.renderer.presentation = createMapPresentation();
+        this.renderer.context.imageSmoothingEnabled = false;
+      }
       (/** @type {GameCanvasView & { visible: boolean }} */ (/** @type {unknown} */ (this))).visible = true;
     }
+  };
+  GameCanvasView.prototype.setPresentation = function (style) {
+    if (style !== 'clean' && style !== 'classic') throw new Error('未知画面风格');
+    if (!this.renderer) {
+      this.presentationStyle = style;
+      return;
+    }
+    if (style === this.presentationStyle) return;
+    this.presentationStyle = style;
+    this.renderer.presentation = style === 'clean' ? createMapPresentation() : null;
+    this.renderer.context.imageSmoothingEnabled = style !== 'clean';
   };
 }
