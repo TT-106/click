@@ -18,7 +18,7 @@
 - 结构对账：`verify-structure-invariant.mjs HEAD` 报 91 行待人工判定 → 61 条去重临时授权（副本 `output/struct-allowlist-reviewed.json`，理由逐条写明），提交前清空。`loop.js`/`results.js` 的新增行主要来自依赖装配与 `assertResultsDeps`；`tick.js`/`math.js`/`items.js` 为 0 净增行。
 - 编排与复核：本轮 7 个执行智能体并行（命名切片各改各的文件，互不冲突），**未另派只读审查智能体**——由主智能体逐文件复核 diff（重点核对求值顺序/RNG 次数/短路语义、`tick.js`/`math.js`/`items.js` 的**净增 0 行**、`loop.js` 的 deps 一律写 `() => game.x` 而非按值捕获），再以 parity + 89 场景 + e2e + soak + presentation + map-motion 作行为兜底。
 - 完整 `node scripts/gate-sweep.mjs`：首轮 27 条中仅 `doc-snippets` 红（3 处片段漂移，即上条），改正后复跑 **27 条全部退出 0**——含 44 项单测、89/89 差分场景、0/1/99/900 回合逐字节存档、原色与四档 DPR 动态纹理、E2E/dist E2E、8h/24h 等价回合、CPU perf 与 headless 帧时间；日志 `output/gate-sweep/<时间戳>/summary.txt`。原版帧时间 A/B 腿仍无法启动，四条 PARTIAL 不因此升级。
-- 本地源码提交：`c16cfd3`（7 切片 + 单测 + 棘轮）、`<DOCS_SHA>`（文档搬正与本轮记录）。原素材、原版档案、fixture、保护研究目录及 Godot 工作目录未改。下一候选：`views/expedition.js`、`views/dungeons.js`、`views/party-creation.js` 退出 game 直连（剩余 20 个直连模块里 `views/` 占 3 个）；命名残量从 `characters/character.js`、`characters/movement.js`、`combat/encounters.js`、`combat/potions.js`、`combat/skill-effects.js`、`rendering/sprites.js`（各 2 个单字母）起步；类型债继续按 `docs/m10-type-debt.md` 的配方 1 收窄。
+- 本地源码提交：`c16cfd3`（7 切片 + 单测 + 棘轮）；文档搬正与本轮记录在紧随其后的 `docs:` 提交里。原素材、原版档案、fixture、保护研究目录及 Godot 工作目录未改。下一候选：`views/expedition.js`、`views/dungeons.js`、`views/party-creation.js` 退出 game 直连（剩余 20 个直连模块里 `views/` 占 3 个）；命名残量从 `characters/character.js`、`characters/movement.js`、`combat/encounters.js`、`combat/potions.js`、`combat/skill-effects.js`、`rendering/sprites.js`（各 2 个单字母）起步；类型债继续按 `docs/m10-type-debt.md` 的配方 1 收窄。
 
 ---
 
