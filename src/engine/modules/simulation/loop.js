@@ -155,7 +155,7 @@ export function initializeSimulationLoop() {
           pointsView = new PointsView(pointsTab),
           offlineProgressView = new OfflineProgressView(offlineTab),
           informationView = new InformationView(informationTab),
-          pauseView = new PauseView();
+          pauseView = new PauseView(() => game.paused, () => { game.paused = !game.paused; });
         addTab(gameView.tabBar, createPartyTab);
         addTab(gameView.tabBar, gameOverTab);
         addTab(gameView.tabBar, gameTab);

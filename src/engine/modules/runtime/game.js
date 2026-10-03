@@ -88,7 +88,7 @@ export function initializeRuntimeGame() {
     currentDungeon: null,
     currentCastle: null,
     loop: new GameLoop(),
-    view: new GameView(),
+    view: new GameView(() => game.state.adventurers, () => !game.gameWon && game.partyCreated),
     options: new function () {
       this.showFps = this.allowBackgroundProgress = this.allowOfflineProgress = this.depthSortSprites = this.showMapOverlay = this.showSpellEffects = this.showCombatText = true;
     }(),

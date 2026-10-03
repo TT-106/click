@@ -2,9 +2,12 @@
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
 import { CompositeView, View, resetChildViews, updateChildViews } from "./base.js";
-import { game } from "../runtime/game.js";
 import { clearElementById, createElement, getElement, hideElement, showElement } from "./dom.js";
-export function GameView() {
+/** @param {() => import('../characters/character.js').Character[]} readAdventurers
+ * @param {() => boolean} canShowOfflineProgress */
+export function GameView(readAdventurers, canShowOfflineProgress) {
+  this.readAdventurers = readAdventurers;
+  this.canShowOfflineProgress = canShowOfflineProgress;
   this.elementId = "gameContainer";
   this.visible = true;
   this.cachedSkillPoints = [0, 0, 0, 0, 0];
@@ -12,8 +15,11 @@ export function GameView() {
   this.panels = [];
   this.tabBar = null;
 }
-export function PauseView() {
-  this.cachedPaused = !game.paused;
+/** @param {() => boolean} readPaused @param {() => void} togglePause */
+export function PauseView(readPaused, togglePause) {
+  this.readPaused = readPaused;
+  this.togglePause = togglePause;
+  this.cachedPaused = !readPaused();
   this.pauseButton = null;
   this.elementId = "pauseButtonContainer";
   this.visible = true;
@@ -21,7 +27,7 @@ export function PauseView() {
 export function bindPauseButton(pauseView) {
   pauseView.pauseButton = getElement("pauseButton");
   pauseView.pauseButton.onmouseup = function () {
-    game.paused = !game.paused;
+    pauseView.togglePause();
     return false;
   };
 }
@@ -65,9 +71,9 @@ export function addTab(tabBar, tabState) {
 }
 export function mountTabBar(tabBar) {
   clearElementById(tabBar.elementId);
-  var b = getElement(tabBar.elementId);
-  if (b) {
-    b = createElement("ul", /** @type {any} */ (b), null, null);
+  var container = getElement(tabBar.elementId);
+  if (container) {
+    var tabList = createElement("ul", container, null, null);
     var tabButtonView;
     var tabIndex;
     if (0 < tabBar.tabBarContainer.length) {
@@ -75,7 +81,7 @@ export function mountTabBar(tabBar) {
     }
     for (tabIndex = 0; tabIndex < tabBar.tabs.length; tabIndex++) {
       tabButtonView = new TabButtonView(tabBar.tabs[tabIndex]);
-      mountTabButton(tabButtonView, b, tabBar);
+      mountTabButton(tabButtonView, tabList, tabBar);
       tabBar.tabBarContainer.push(tabButtonView);
     }
   }
@@ -92,7 +98,7 @@ export function initializeViewsNavigation() {
     }
   };
   GameView.prototype.onOfflineStart = function () {
-    if (!game.gameWon && game.partyCreated) {
+    if (this.canShowOfflineProgress()) {
       var panelIndex;
       for (panelIndex = 0; panelIndex < this.panels.length; panelIndex++) {
         this.panels[panelIndex].onOfflineStart();
@@ -100,7 +106,7 @@ export function initializeViewsNavigation() {
     }
   };
   GameView.prototype.onOfflineFinish = function () {
-    if (!game.gameWon && game.partyCreated) {
+    if (this.canShowOfflineProgress()) {
       var panelIndex;
       for (panelIndex = 0; panelIndex < this.panels.length; panelIndex++) {
         this.panels[panelIndex].onOfflineFinish();
@@ -121,19 +127,21 @@ export function initializeViewsNavigation() {
     }
     resetChildViews(this);
   };
+  /** @this {GameView & { getAvailableSkillPoints: (adventurer: import('../characters/character.js').Character) => number }} */
   GameView.prototype.update = function () {
-    var adventurerIndex, b, availableSkillPoints;
-    for (adventurerIndex = 0; adventurerIndex < game.state.adventurers.length; adventurerIndex++) {
-      b = game.state.adventurers[adventurerIndex];
-      availableSkillPoints = (/** @type {any} */ (this)).getAvailableSkillPoints(b);
+    var adventurerIndex, adventurer, availableSkillPoints;
+    const adventurers = this.readAdventurers();
+    for (adventurerIndex = 0; adventurerIndex < adventurers.length; adventurerIndex++) {
+      adventurer = adventurers[adventurerIndex];
+      availableSkillPoints = this.getAvailableSkillPoints(adventurer);
       if (this.cachedSkillPoints[adventurerIndex] !== availableSkillPoints) {
         this.cachedSkillPoints[adventurerIndex] = availableSkillPoints;
-        b = b.classDefinition.shortName;
+        const shortName = adventurer.classDefinition.shortName;
         if (0 < availableSkillPoints) {
-          this.tabStates[adventurerIndex].label = b + " " + availableSkillPoints;
+          this.tabStates[adventurerIndex].label = shortName + " " + availableSkillPoints;
           this.tabStates[adventurerIndex].highlighted = true;
         } else {
-          this.tabStates[adventurerIndex].label = b;
+          this.tabStates[adventurerIndex].label = shortName;
           this.tabStates[adventurerIndex].highlighted = false;
         }
       }
@@ -148,8 +156,8 @@ export function initializeViewsNavigation() {
     if (!this.pauseButton) {
       bindPauseButton(this);
     }
-    if (this.cachedPaused != game.paused) {
-      if (this.cachedPaused = game.paused) {
+    if (this.cachedPaused != this.readPaused()) {
+      if (this.cachedPaused = this.readPaused()) {
         this.pauseButton.innerHTML = "恢复";
         this.pauseButton.className = "ownedUpgradeButton";
       } else {
@@ -162,26 +170,26 @@ export function initializeViewsNavigation() {
     this.cachedLabel = null;
   };
   TabButtonView.prototype.render = function () {
-    var a = this.tabState.enabled;
-    if (this.enabled !== a) {
-      if (this.enabled = a) {
+    var enabled = this.tabState.enabled;
+    if (this.enabled !== enabled) {
+      if (this.enabled = enabled) {
         showElement(this.tabListItem);
       } else {
         hideElement(this.tabListItem);
       }
     }
-    if (a) {
-      a = this.tabState.label;
-      if (this.cachedLabel !== a) {
-        this.cachedLabel = a;
-        this.labelElement.innerHTML = a;
+    if (enabled) {
+      var label = this.tabState.label;
+      if (this.cachedLabel !== label) {
+        this.cachedLabel = label;
+        this.labelElement.innerHTML = label;
       }
-      var a = this.tabState.selected,
+      var selected = this.tabState.selected,
         highlighted = this.tabState.highlighted;
-      if (this.selected != a || this.highlighted != highlighted) {
-        this.selected = a;
+      if (this.selected != selected || this.highlighted != highlighted) {
+        this.selected = selected;
         this.highlighted = highlighted;
-        this.tabListItem.className = a ? highlighted ? "selectedTab tabHighlighted" : "selectedTab" : highlighted ? "tabHighlighted" : "";
+        this.tabListItem.className = selected ? highlighted ? "selectedTab tabHighlighted" : "selectedTab" : highlighted ? "tabHighlighted" : "";
       }
     }
   };
