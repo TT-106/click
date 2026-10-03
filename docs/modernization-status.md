@@ -1,5 +1,7 @@
 # 完整现代化目标与当前状态（2026-09-28）
 
+> **最新实测（R39，2026-10-03）**：game 直连 **21**、最大 SCC **39**、导入边 **549**；单字母 **46**（17 文件）/混淆短名 **35**（16 文件）；any **28** / unknown **144 行**。信息面板的保存/导入/导出、统计与设置改为显式输入；城堡与怪物视图的单字母归零；远征、怪物、城堡视图以明确 this/参数类型约束原型后挂载方法。原型顺序与运行时行为不改，完整回归见 WORKSTATE 的 R39 条目。下面 R38 及以前段落是对应批次的历史快照。
+
 > **最新实测（R38，2026-10-03）**：95 个 JS / 79 个引擎模块 / 551 条导入边；game 直连 **22**（改前 23），最大 SCC **40**（改前 41），单字母绑定 **54**、混淆短名 **43**（改前 57/46）；显式 any 转换 **38**、unknown **149 行**。导航与暂停视图用四个数据/操作函数退出全局依赖；新增初始化顺序门禁，锁定 74 个 initialize 与 11 个 bind 的来源、顺序、次数和参数。存档新增世界/角色统计/属性组件/法术状态四个类型，保持原 JSON 与兼容兜底。原色与动态防频闪继续保留。完整回归结果见 WORKSTATE 的 R38 条目；以下各轮段落保留历史口径。
 
 > **当前产品范围（R35，2026-10-03）**：Godot 继续独立保留并暂缓。用户授权浏览器 UI 上移、去顶栏、保留像素风减少杂乱及修复墙地闪动；产品默认 `clean`，引擎默认 `classic` 保留原版逐像素 oracle。`clean` 是有意变化的表现，不承诺其像素与原版相同。玩法/RNG/存档契约继续保持。当前源码审计：95 个 JS、79 个引擎模块、552 条导入边；game 直连 23、最大 SCC 41、单字母绑定 57、短名 46。仍存在完整现代化与 4 条 PARTIAL 的缺口。验证入口新增 `npm run test:presentation`，本批结果与日志见 `docs/WORKSTATE.md`。
@@ -14,7 +16,7 @@
 |---|---|---|
 | 产品与原版反编译文件分离 | `index.html` 只加载 `src/app.js`；`npm run build` 现审计全部源码模块的导入及实际 `dist/`，原版档案依赖 0。**R26 重新做越界注入反向验证**：临时在 `src/app.js` 加一行 `import "../archive/original/c2.js"`，审计立刻以 `导入越过 src 或目标不存在：src\app.js -> ../archive/original/c2.js` 退出码 1；撤掉后恢复通过且计数回到 94 模块 / 549 导入 / 136 产物（`git diff` 对 `src/app.js` 为空，确认逐字节还原）。原版仅作为差分测试 oracle。 | 产品运行路径已分离；守卫本身经过破坏性验证，不是只跑一次的成功路径。 |
 | 行为与功能保真 | 本轮 0/1/99/900 回合完整存档对照、89/89 差分场景、浏览器端到端测试通过；U134 验收矩阵仍为 47 PASS / 4 PARTIAL。 | 已覆盖的行为通过；全功能等价尚不能宣称。 |
-| 现代命名与架构 | `statistics.js`、`stats.js`、`effects.js` 的局部语义命名与显式输入已落地；装备目录 39 个类型名和 903 处关联引用已语义化；物品生成与掉落显式接收依赖；黄金视图经只读函数取状态；R22–R25 已把全库八大热点（behaviors 264、scene 196、upgrade-details 152、terrain 131、generation 130、actions 116、rooms 116、upgrades 110）全部语义化归零，inventory.js 退出 game 依赖；R30 把 `views/dungeons.js`、`views/results.js` 归零并让 `views/castles.js`、`persistence/entities.js` 退出直连；R31 授权"语句拆分改写"类，把 `world/regions.js`、`simulation/characters.js`、`views/achievements.js`、`views/party-creation.js` 归零并让 `rendering/floating-text.js` 退出直连；R32 用它啃下嵌套短路表达式，把 `ai/targeting.js`、`world/pathfinding.js`、`views/character.js`、`loot/treasure.js` 归零并让 `views/upgrade-details.js` 退出直连。 | 单字母局部绑定已从 2,833 降到 **54**（R38 实测，分布 19 个文件），game 直连模块 49 → **22**，最大强连通分量 55 → **40**；初始化顺序已有守卫，完整解耦仍未完成。 |
+| 现代命名与架构 | `statistics.js`、`stats.js`、`effects.js` 的局部语义命名与显式输入已落地；装备目录 39 个类型名和 903 处关联引用已语义化；物品生成与掉落显式接收依赖；黄金视图经只读函数取状态；R22–R25 已把全库八大热点（behaviors 264、scene 196、upgrade-details 152、terrain 131、generation 130、actions 116、rooms 116、upgrades 110）全部语义化归零，inventory.js 退出 game 依赖；R30 把 `views/dungeons.js`、`views/results.js` 归零并让 `views/castles.js`、`persistence/entities.js` 退出直连；R31 授权"语句拆分改写"类，把 `world/regions.js`、`simulation/characters.js`、`views/achievements.js`、`views/party-creation.js` 归零并让 `rendering/floating-text.js` 退出直连；R32 用它啃下嵌套短路表达式，把 `ai/targeting.js`、`world/pathfinding.js`、`views/character.js`、`loot/treasure.js` 归零并让 `views/upgrade-details.js` 退出直连。 | 单字母局部绑定已从 2,833 降到 **46**（R39 实测，分布 17 个文件），game 直连模块 49 → **21**，最大强连通分量 55 → **39**；初始化顺序已有守卫，完整解耦仍未完成。 |
 
 验收时必须保留存档 JSON 键、随机数算法与调用顺序、回合节拍、画布及外部 DOM 契约，除非先有明确的版本迁移或设计决策。对每个行为切片先做原版差分和反向验证，再合入新的边界；不能把源代码行数或门禁数量当成功能覆盖率。
 

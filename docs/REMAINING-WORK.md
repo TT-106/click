@@ -38,7 +38,7 @@
 npm install && npm run dev        # 开发服务器（部分门禁需要它）
 npm run lint                      # 11 条不变量守卫（零依赖）
 npm run typecheck                 # tsc，当前 0 错误
-npm run check                     # 158 文件语法 + 36 单测
+npm run check                     # 159 文件语法 + 40 单测
 npm run test:parity               # 0/1/99/900 回合完整 DTO 相等
 npm run test:scenarios            # 89 场景差分（可用 SCENARIO_FILTER=a,b 单跑）
 npm run test:e2e                  # 浏览器 E2E
@@ -249,7 +249,7 @@ node scripts/find-field-refs.mjs <owner> <names>
 | P-1 技能 | `npm run test:scenarios` | 全绿；附录 A 该行缺口文字被替换 |
 | P-2 法术 ✅ | `node scripts/check-spell-coverage.mjs` + `SCENARIO_FILTER=spell-find-chest npm run test:scenarios` | "无直接可观测量 0 个" + 选中跳变两端相等（**2026-09-27 彻夜会话已闭合**） |
 | P-3 物品 ✅ | `SCENARIO_FILTER=ancient-item-found npm run test:scenarios` | 通过且远古统计两端增长（**2026-09-27 彻夜会话已闭合**） |
-| P-4 成就 ✅ | `npm test` + `npm run test:scenarios` + `node scripts/check-achievement-requirements.mjs` | 36 单测通过（含后增切片；2026-09-27 闭合时为 19）+ 2 条新场景全绿 + 表驱动核对 0 不符（**2026-09-27 已闭合**） |
+| P-4 成就 ✅ | `npm test` + `npm run test:scenarios` + `node scripts/check-achievement-requirements.mjs` | 40 单测通过（含后增切片；2026-09-27 闭合时为 19）+ 2 条新场景全绿 + 表驱动核对 0 不符（**2026-09-27 已闭合**） |
 | P-5 存档 | `npm run test:parity` + `npm run test:scenarios` | 全绿；缺口改写为"需外部样本" |
 | P-6 帧时间 | `npm run perf:frames` | 有原版同口径基线（新增） |
 | P-7 渲染 | `npm run test:scenarios` | 新视口场景指纹两端相同 |

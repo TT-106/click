@@ -131,7 +131,7 @@ Base64 字符串
 4. `engine.importSave(text.trim())` → `game.importSave`（game.js:505-509）→ `restoreGameState`；失败则回滚导入 `previous` 并恢复暂停态（saves.js:75-79）；
 5. 成功后 `write(新档, previous)`——**被替换的旧进度自动存入 backup 键**（saves.js:82,25-27）。
 
-**重置**（saves.js:90-97 + app.js:109-110）：`#reset-game` 要求输入框精确键入"重新开始"（app.js:109）→ `saves.reset()` → `engine.reset()`（adapter.js:153-155）→ `game.resetGame()`（game.js:521-526）＝ `resetRun(true)` + `deleteStoredSave` + `saveProgress`（覆盖写 4 键空档，旧档先进 backup）+ 视图重置 → `location.reload()`（saves.js:94）。另有轻度重开 `restartRun`（保留跨周目统计，game.js:513-520，results.js:50 / information.js:25）。
+**重置**（saves.js:90-97 + app.js:109-110）：`#reset-game` 要求输入框精确键入"重新开始"（app.js:109）→ `saves.reset()` → `engine.reset()`（adapter.js:153-155）→ `game.resetGame()`（game.js:521-526）＝ `resetRun(true)` + `deleteStoredSave` + `saveProgress`（覆盖写 4 键空档，旧档先进 backup）+ 视图重置 → `location.reload()`（saves.js:94）。另有轻度重开 `restartRun`（保留跨周目统计，game.js:513-520，results.js:50 / information.js:53）。
 
 **启动恢复**（app.js:122-136 + loop.js:97-110）：
 1. `saves.prepare()`：读 `C2_V1_001`，worker 校验；失败 → `blocked = true`，**原档留在磁盘不动**，提示导出或恢复备份（saves.js:33-41）；

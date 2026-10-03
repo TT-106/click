@@ -2,6 +2,21 @@
 
 > 当前分支边界（2026-10-03，R34）：`main` 优先完善浏览器 `src/`；Godot 已保留在 `feature/native-godot-csharp` 与独立工作目录 `D:\下载\clickpocalypse2-godot`，暂缓功能开发。操作约定见 `docs/BRANCH-WORKFLOW.md`。
 
+## R39 — 信息面板解耦、视图语义命名与类型收窄（2026-10-03）
+
+- 基于干净的 `8d0364c` 实跑基线：game 直连 22、SCC 40、551 边；单字母 54、短名 43、any 38 / unknown 149。本轮继续向完整重构推进，不将全绿门禁当作目标完成。
+- `views/information.js` 删除 game 与存档编码器导入，保存控件、统计、设置接收明确操作/实时读取函数/选项对象；真实命令在 loop 中装配。四项独立测试覆盖确认、导入导出、七项设置与重生后统计刷新。
+- 城堡五个、怪物三个单字母绑定归零，分开 region/castle/statusColor、DOM 容器、状态文字、进度比例与像素宽度；保留读写和短路求值顺序。机械方法调用序列三文件全部一致；粗粒度文本检查将 JSDoc 箭头误作赋值而有差异（`output/refactor-r39/call-order.log`）。改用 Babel AST 排除注释，比较调用、赋值/初始化、字符串：282/502/952 项全序列一致；初始化与普通赋值统一按求值后的 STORE 计，逐行对齐实际分支语义。证据 `output/refactor-r39/ast-effect-order.log`。
+- 远征 any 减 7、怪物 any 减 3、城堡 unknown 减 5。通过构造器/原型的明确 this 类型与键码参数类型收窄；不新增运行时默认字段，不提前挂载原型，不用新 cast 抵消旧 cast。
+- 五次反向实验均捕获并逐字节恢复：错误导入误报成功、统计缓存旧对象、设置字段拼错、原型方法多传参数、键码错误类型；日志 `output/refactor-r39/*-negative.log`。初始化守卫仍核对原 74 initialize + 11 bind，无顺序变更。
+- 当前实测：21 个 game 导入者、最大 SCC 39、549 边；单字母 46（17 文件）/ 短名 35（16 文件）；any 28 / unknown 144。架构棘轮已收紧。单测 40 / 语法 159 文件，门禁按目录自动收集单测，避免新文件遗漏。
+- 文档正文显式引用按 HEAD 与当前源码 LCS 先映射，再回源核对；对照临时干净 worktree，锚点 200→201。新增的一条在保护研究目录 `semantic-map.md:149`（expedition.js 原 :687 的展示文字），按红线未改，不提高基线阈值 206。当前正文/代码片段同步，历史快照保留。
+- 人工审查 83 行待判定结构变动，53 条去重临时授权；副本 `output/refactor-r39/structure-allowlist-reviewed.json`，提交前清空。源码提交后空清单重跑 lint 退出 0，结构待判定 0。
+- 完整 `node scripts/gate-sweep.mjs` 退出 0：24 项门禁 + 3 项附随检查共 27 条均为 0，包含 40 项单测、89/89 差分场景、0/1/99/900 回合逐字节存档、原色/四档 DPR 动态纹理、E2E/dist、8h/24h 等价回合、CPU/headless 帧采样；日志 `output/gate-sweep/2026-10-03T10-56-28/summary.txt`。帧时间原版 A/B 腿仍无法启动，不升级真机/跨浏览器等四条 PARTIAL。
+- 本地源码提交：`35bf4dd` 信息面板解耦、`f1dee60` 视图命名/类型、`984cc1e` 单测自动发现与棘轮。临时对照 worktree 在确认干净后已用 git worktree remove 移除；原素材、档案、fixture、保护研究目录及 Godot 工作目录未改。下一候选：results.js 胜利/离线视图的具体操作接口，继续收紧剩余命名与嵌套类型，最终仍须重新全量验证。
+
+---
+
 ## R38 — 导航解耦、初始化顺序守卫与嵌套存档类型（2026-10-03）
 
 - 基线重新实跑：95 JS / 79 引擎模块 / 552 边、game 直连 23、最大 SCC 41、单字母 57、短名 46；any 41 / unknown 149。SaveData 顶层早在 U131 接线，不沿用“未接线”的旧判断。

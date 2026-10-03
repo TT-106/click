@@ -874,7 +874,7 @@ resetGame: function () {
 | 世界 / 当前层 / 掉落物 / 战斗队列 | 重建 | 重建 | 重建 |
 | `turnNumber` | 归 0 | 归 0 | 归 0 |
 
-`victoryCount` 在 `src/engine/modules` 内的读取点共 5 处（`loot/inventory.js:9`、`views/party-creation.js:68,133,356`、`views/results.js:30`、另 `views/information.js:168` 展示），其中三处构成实际加成：
+`victoryCount` 在 `src/engine/modules` 内的读取点共 5 处（`loot/inventory.js:9`、`views/party-creation.js:68,133,356`、`views/results.js:30`、另 `views/information.js:203` 展示），其中三处构成实际加成：
 
 ```js
 // loot/inventory.js:9 —— 背包容量

@@ -26,7 +26,7 @@
 | `initialized` | `false` (136) | 写 `true`：world/initialization.js:187（开局）；写回：restore（game-save.js:46） | boot 建 `false`；首帧 `initializeWorld` 后 `true`（loop.js:98）；restore 覆盖 | ✅ `gameInitialized`（serialize 侧 game-save.js:705,1009；restore 侧 :46） |
 | `partyCreated` | `false` (137) | 写 `true`：views/party-creation.js:93；写 `false`：resetRun（game.js:358） | resetRun/restore 重置 | ✅ `partyCreated`（game.js:709→:1013；game-save.js:49） |
 | `gameWon` | `false` (138) | 写 `true`：characters/party.js:278（通关）；写 `false`：resetRun :359、resetContinuation :437、views/results.js:48,58（续关） | resetRun/续关/restore 重置 | ✅ `gameWon`（game.js:710→:1014；game-save.js:50） |
-| `paused` | `false` (139) | simulation/loop.js:158 注入暂停切换操作，由 `bindPauseButton`（views/navigation.js:27-33）绑定按钮；adapter.js:69,133；写 `false`：resetRun :378、resetContinuation :439、initialization.js:186 | **RuntimeState，不入档**（每次载入从暂停态起步） | ❌ runtime-only |
+| `paused` | `false` (139) | simulation/loop.js:174 注入暂停切换操作，由 `bindPauseButton`（views/navigation.js:27-33）绑定按钮；adapter.js:69,133；写 `false`：resetRun :378、resetContinuation :439、initialization.js:186 | **RuntimeState，不入档**（每次载入从暂停态起步） | ❌ runtime-only |
 | `worldActive` | `true` (140) | 写 `false`：characters/character.js:1154,1179（进入地牢/城堡楼层）；写 `true`：resetRun :379、resetContinuation :440、party.js:212、world/dungeons.js:221（撤出） | 决定序列化/恢复哪套空间（world vs level） | ✅ `worldActive`（game.js:708→:1012；game-save.js:48） |
 | `processingOffline` | `false` (141) | 写 `true`：beginOfflineProgress（game.js:472）、后台分支（loop.js:42）；写 `false`：finishOfflineProgress（game.js:477，调用方 loop.js:50、party.js:272、views/results.js:137） | **RuntimeState**；自动保存期间被跳过（loop.js:87） | ❌ runtime-only |
 | `lastActiveAt` | `Date.now()` (142) | restore 写入（game-save.js:51-52） | boot 取当前时刻；恢复时读旧档时间戳 | ⚠️ 间接持久化：存档键是 `gameTimestamp`，**写入侧永远是当下时刻**，恢复时读回变 `lastActiveAt`（facts.md #7；game-save.js:704,1008 ↔ :52） |
@@ -88,11 +88,11 @@
 | 字段 | 内容 | 持久化 |
 |---|---|---|
 | `loop` (88) | `GameLoop`（simulation/loop.js:20-31）：`frameDuration=1000/60`(:24)、`turnDuration=250`(:25)、`resourcesReady`、`lastTickAt/lastFrameAt`、fps 计数 | ❌ runtime-only |
-| `view` (89) | `GameView`（views/navigation.js）：`Gh`/`panels`/`tabBar`/`um` | ❌ DerivedViewModel；restore 后由 loop.js:112-216 重建 UI |
+| `view` (89) | `GameView`（views/navigation.js）：`Gh`/`panels`/`tabBar`/`um` | ❌ DerivedViewModel；restore 后由 loop.js:112-232 重建 UI |
 | `camera` (52-54) | `At/zt/wk/vk`，loop.js:57-71 每帧由世界/楼层中心推导 | ❌ DerivedViewModel |
 | `options` (90-92) | 7 个布尔开关，初值全 `true`；新档强制 `showFps=false`（adapter.js:29） | ✅ `gameOptions`：`showCombatText→infoTextVisible`、`showSpellEffects→spellEffectsVisible`、`showMapOverlay→mapOverlayVisible`、`allowOfflineProgress→offlineProcessingEnabled`、`allowBackgroundProgress→inactiveTabProcessingEnabled`、`depthSortSprites→spriteRenderOrderEnabled`、`showFps→fpsVisible`（restore game-save.js:321-340，缺省键默认 `true`；serialize game.js:721-730） |
 | `saves` (129-135) | `saveKey="C2_V1_001"`(:130)、`lastSavedAt`(:131)、**`autoSaveInterval=3E4`（30 秒，:132）**、`statisticsAdapter`/`monsterAdapter`(:133-134) | `saveKey` ✅ 进 DTO 首键（game.js:703→:1007）；`lastSavedAt` ❌（自动保存节拍器，loop.js:87-92）；两个 adapter ❌（无状态恢复器） |
-| `monsterSprites/terrainSprites/itemSprites/animations` (48-51) | SpriteSheet/动画目录，`cl()` 就绪探测（loop.js:219） | ❌ Definition + 资源缓存 |
+| `monsterSprites/terrainSprites/itemSprites/animations` (48-51) | SpriteSheet/动画目录，`cl()` 就绪探测（loop.js:236） | ❌ Definition + 资源缓存 |
 | `lifecycle` (55) | `CharacterLifecycle`（simulation/characters.js） | ❌ runtime-only |
 | `pathfinder`(93)/`decorations`(94)/`spellCaches`(124-126)/`unusedPlaceholder`(128) | 空壳/装饰生成器 | ❌ runtime-only |
 
@@ -109,9 +109,9 @@
 | `beginOfflineProgress` / `finishOfflineProgress` | 469-481 | 离线结算开/关 | game.js:501、loop.js:42-50、party.js:272、results.js:137 |
 | `restoreRuntimeState` | 482-504 | 重挂全局升级集合、重算角色技能，并触发离线判定 | restoreGameState 末尾（game-save.js:690） |
 | `importSave` | 505-509 | `restoreGameState` 成功后**立即回写一份存档**（`saveProgress`），并按状态重放视图 | 服务层导入（services/saves.js:74）经 adapter.js:150-152 |
-| `saveNow` | 510-512 | 手动保存 | 遗留信息面板（views/information.js:16） |
-| `restartRun` | 513-520 | `resetRun(false)` + 删档 + 存空档 | results.js:50、information.js:25 |
-| `resetGame` | 521-526 | `resetRun(true)` + 删档 + 存空档 | adapter.js:153-155（服务层 reset）、information.js:41 |
+| `saveNow` | 510-512 | 手动保存 | 遗留信息面板（views/information.js:44） |
+| `restartRun` | 513-520 | `resetRun(false)` + 删档 + 存空档 | results.js:50、information.js:53 |
+| `resetGame` | 521-526 | `resetRun(true)` + 删档 + 存空档 | adapter.js:153-155（服务层 reset）、information.js:69 |
 
 ## 5. 存档键 ↔ 运行时字段映射（映射只在 game-save.js 成对出现）
 
