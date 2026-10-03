@@ -19,10 +19,10 @@ export function scaleByLevel(level, curve, multiplier) {
   level = Math.max(0, level - 1);
   return floorNumber(multiplier * (curve.base + curve.coefficient * Math.pow(level, curve.power) * Math.pow(curve.growth, level)));
 }
-export function randomizeScaledValue(a, curve, multiplier) {
-  a = scaleByLevel(a, curve, multiplier);
+export function randomizeScaledValue(level, curve, multiplier) {
+  var scaledValue = scaleByLevel(level, curve, multiplier);
   var jitterFactor = 1.1 - 0.2 * Math.random();
-  return floorNumber(a * jitterFactor);
+  return floorNumber(scaledValue * jitterFactor);
 }
 ```
 
@@ -547,7 +547,7 @@ if (a.locked) {
 
 `c` = `scrollCaster.stats.characterLevel`（= 队伍最低等级，§P-2）。上方示意里的 `sg`/`Qh` 即源码的 `baseCapacity`/`maxCharges`：`baseCapacity` 为"解锁等级"、`maxCharges` 为"最大升级次数"（含义由 `getScrollLabel` 的 `II…VIII` 上限 `:145-160` 与 `upgradeCount < maxCharges` 反推，置信高）。实算档位价：`idx 0 → 100`、`3 → 783`、`6 → 2701`、`9 → 5399`、`12 → 8832`、`15 → 13011`。
 购买执行：`progression/upgrades.js:1067-1095`（`spendGold(rn)` → 解锁或 `upgradeCount++` → 重算 `rn/rg/lx`）。
-`[疑似遗留怪癖]` `scaleByLevel(0, …)` 走 `Math.max(0, −1) = 0` → `shockScroll`（`baseCapacity: 0`）的"解锁价"与"1 级升级价"同为 100，且开局已被视为解锁（`combat/scrolls.js:266` `applyLockedAndUpgradeState(0 < …baseCapacity, 0)`，`locked` 传 `false` 才解锁）。
+`[疑似遗留怪癖]` `scaleByLevel(0, …)` 走 `Math.max(0, −1) = 0` → `shockScroll`（`baseCapacity: 0`）的"解锁价"与"1 级升级价"同为 100，且开局已被视为解锁（`combat/scrolls.js:272` `applyLockedAndUpgradeState(0 < …baseCapacity, 0)`，`locked` 传 `false` 才解锁）。
 
 ### P-8 成就领取
 
@@ -714,8 +714,8 @@ export function applyAchievementReward(a) {
 | `rangedAttackCount` | `recordRangedAttack` | `characters/character.js:464-466`（分支为 `actionType === MELEE_ACTION_TYPE`，常量值为 3） |
 | `spellCastCount` | `recordSpellCast` | `characters/character.js:991-993`（仅 `isAdventurerOrMinion`） |
 | `potionsUsed` | `recordPotionUsed` | `combat/potions.js:246` |
-| `scrollsUsed` | `recordScrollUsed` | `combat/scrolls.js:218` |
-| `playedMillis` | `recordPlayedMilliseconds(增量)` | `simulation/loop.js:46`（离线：+250/回合）、`:94`（在线：+帧差） |
+| `scrollsUsed` | `recordScrollUsed` | `combat/scrolls.js:224` |
+| `playedMillis` | `recordPlayedMilliseconds(增量)` | `simulation/loop.js:48`（离线：+250/回合）、`:94`（在线：+帧差） |
 | `itemsSold` | `recordItemsSold(批量数)` | `characters/character.js:1204` |
 | `itemsFound` + `uncommon/rare/historic/ancientItemsFound` | `recordItemFound(item)` | `characters/character.js:1034`、`combat/actions.js:232`；分档见 `progression/statistics.js:104-119` |
 | `treasureChestsLooted` / `weaponRacksLooted` / `bookcasesLooted` | 三个 `record…Looted` | `characters/character.js:1130/1134/1138`（按宝箱 `Mf` 1/2/3 分派） |
@@ -790,7 +790,7 @@ if (0 === c) {
   }
 ```
 
-- 计数写入瞬间**先于** `currentContinueCount` 自增（`nm++` 在玩家点"继续"时执行，`views/results.js:61`），所以 `maxContinuationVictories` 记的是"上一次链的长度"。
+- 计数写入瞬间**先于** `currentContinueCount` 自增（`nm++` 在玩家点"继续"时执行，`views/results.js:100`），所以 `maxContinuationVictories` 记的是"上一次链的长度"。
 - `[疑似遗留怪癖]` `currentContinueCount` 从未在胜利瞬间被写入，因此首胜（`nm = 0`）完全不参与 `Xm/mm`；`requirementType 26`（"延续胜利"/"不进行重生"）只能由"继续"路径累积。
 
 ---
@@ -874,7 +874,7 @@ resetGame: function () {
 | 世界 / 当前层 / 掉落物 / 战斗队列 | 重建 | 重建 | 重建 |
 | `turnNumber` | 归 0 | 归 0 | 归 0 |
 
-`victoryCount` 在 `src/engine/modules` 内的读取点共 5 处（`loot/inventory.js:9`、`views/party-creation.js:68,133,356`、`views/results.js:30`、另 `views/information.js:203` 展示），其中三处构成实际加成：
+`victoryCount` 在 `src/engine/modules` 内的读取点共 5 处（`loot/inventory.js:9`、`views/party-creation.js:68,133,356`、`views/results.js:63`、另 `views/information.js:203` 展示），其中三处构成实际加成：
 
 ```js
 // loot/inventory.js:9 —— 背包容量
@@ -965,7 +965,7 @@ offlineTimeBonus ∈ {0, 7.2e6, 1.44e7}                       // 两条点升级
 
 ### 8.2 时长 → 回合
 
-`src/engine/modules/simulation/loop.js:20-31, 42-51`
+`src/engine/modules/simulation/loop.js:22-33, 42-51`
 
 ```js
 this.frameDuration = 1E3 / 60;
@@ -999,7 +999,7 @@ if (15 <= b.turnTimeAccumulator) {
   b.turnTimeAccumulator -= 15;
 ```
 
-（在线分支是 `advanceSimulation(帧差 / frameDuration)`，`simulation/loop.js:53-56`；15 个模拟单位 ≈ 15 × 16.67ms ≈ 250ms，与 `turnDuration` 一致。）
+（在线分支是 `advanceSimulation(帧差 / frameDuration)`，`simulation/loop.js:55-58`；15 个模拟单位 ≈ 15 × 16.67ms ≈ 250ms，与 `turnDuration` 一致。）
 
 ### 8.3 回合 → 各子系统
 
@@ -1018,9 +1018,9 @@ if (15 <= b.turnTimeAccumulator) {
 
 ### 8.4 三条边界事实
 
-1. `[疑似遗留怪癖]` **12h 上限只在读档路径生效**。后台标签页路径直接 `game.offlineDuration += a`（`simulation/loop.js:42`），不经 `beginOfflineProgress`，因此长挂页可超过上限；上限要等下次读档才被 `Math.min` 应用。
-2. 离线期间**不刷新升级可购状态**（`simulation/tick.js:515` 的 `if (!game.processingOffline)` 包住整段 `refreshUpgradeCollection`），也不自动存档（`simulation/loop.js:87-92`）；两者都在结算完成后的第一个正常帧补齐。
-3. 离线结算途中若触发胜利（`game.gameWon`），循环即刻退出，且 `PartyState.iw()` 会主动 `finishOfflineProgress()`（`characters/party.js:279`）；`playedMillis` 只按已结算的 `250ms/回合` 累加（`simulation/loop.js:46`），不会被 `simulation/loop.js:94` 二次累加（该行的 `!processingOffline` 保护）。
+1. `[疑似遗留怪癖]` **12h 上限只在读档路径生效**。后台标签页路径直接 `game.offlineDuration += a`（`simulation/loop.js:44`），不经 `beginOfflineProgress`，因此长挂页可超过上限；上限要等下次读档才被 `Math.min` 应用。
+2. 离线期间**不刷新升级可购状态**（`simulation/tick.js:515` 的 `if (!game.processingOffline)` 包住整段 `refreshUpgradeCollection`），也不自动存档（`simulation/loop.js:89-94`）；两者都在结算完成后的第一个正常帧补齐。
+3. 离线结算途中若触发胜利（`game.gameWon`），循环即刻退出，且 `PartyState.iw()` 会主动 `finishOfflineProgress()`（`characters/party.js:279`）；`playedMillis` 只按已结算的 `250ms/回合` 累加（`simulation/loop.js:48`），不会被 `simulation/loop.js:96` 二次累加（该行的 `!processingOffline` 保护）。
 
 ---
 
@@ -1036,14 +1036,14 @@ if (15 <= b.turnTimeAccumulator) {
 | 6 | `progression/upgrades.js:545-549` | `applyLevelStats` 在 `characterLevel` 自增前调用（靠传参 `newLevel` 保持正确）；且升级即把 `health/spirit` 设为满值 |
 | 7 | `progression/upgrades.js:217-252` | `equipmentQualityBonus` 实为卖价加成、`itemCostBonus` 实为怪物等级折扣 |
 | 8 | `progression/upgrades.js:943` | 农场"即将可买"用绝对差额 `<120`，而全局升级用"差额 ≤400 或 ≤30%"、升级 XP 用"≤300 或 ≤20%"，三套口径 |
-| 9 | `combat/scrolls.js:118-120`（价档表达式）+ `combat/scrolls.js:320-326`（`shockScroll` 定义，`baseCapacity: 0`）+ `progression/upgrades.js:1100` | 卷轴的价格档位与等级门槛是同一个表达式；`sg = 0` 的 `shockScroll` 开局即解锁 |
+| 9 | `combat/scrolls.js:118-120`（价档表达式）+ `combat/scrolls.js:326-332`（`shockScroll` 定义，`baseCapacity: 0`）+ `progression/upgrades.js:1100` | 卷轴的价格档位与等级门槛是同一个表达式；`sg = 0` 的 `shockScroll` 开局即解锁 |
 | 10 | `runtime/game.js:448-450` | "继续"路径把地牢定价计数器 `Mk` 重置为**农场数量** |
 | 11 | `progression/statistics.js:39,69` | `levelsCleared`/`minionKills` 的记录方法仍是混淆名 `recordLevelCleared`/`$k`（与 `docs/reverse-engineering/unresolved.md` 第七批一致，未落地改名） |
 | 12 | `characters/character.js:440,454` + `ai/targeting.js:484` | `MELEE_ACTION_TYPE = 3` 记账为 `rangedAttackCount`（存档键为准，勿顺手纠正） |
 | 13 | `progression/achievements.js:98-99` | `requirementType 16` 读实时队伍等级，进度可随重生回退；函数无 `default` |
 | 14 | `persistence/entities.js:338-339` | `farmsPurchased` 缺失时用"当前农场数"补值，"0 农场"与"从未买农场"不可区分 |
 | 15 | `persistence/entities.js:335-336,370-371` | `weaponRacksLooted` 取 `weaponRacksLooted/weaponsRacksLooted` 两键最大值，`bookcasesLooted` 只取一键 |
-| 16 | `characters/party.js:302-308` + `views/results.js:61` | `currentContinueCount` 在"点继续"时才自增，首胜不进 `Xm/mm` |
-| 17 | `runtime/game.js:471` vs `simulation/loop.js:42` | 12h/14h/16h 上限只约束读档离线；后台标签页累加不受钳 |
+| 16 | `characters/party.js:302-308` + `views/results.js:94` | `currentContinueCount` 在"点继续"时才自增，首胜不进 `Xm/mm` |
+| 17 | `runtime/game.js:471` vs `simulation/loop.js:44` | 12h/14h/16h 上限只约束读档离线；后台标签页累加不受钳 |
 | 18 | `loot/inventory.js:9` | 背包容量在 `Inventory` 构造时快照 `victoryCount`，之后不回填 |
 | 19 | `runtime/game.js:360-376,415-417` | `resetRun` 用同一形参承担"重生"与"清档"两种语义；`resetContinuation` 与它保留集合不一致（全局升级/卷轴/怪物目录在"继续"中保留、在"重生"中清空） |

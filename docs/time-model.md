@@ -9,17 +9,17 @@
 | # | 名称 | 定义 | 代码位置 |
 |---|---|---|---|
 | 1 | **wall clock** | `Date.now()` 真实时间。所有取值经 `nowMilliseconds()`（`Date.now` 优先，退化 `new Date().valueOf()`） | `src/engine/modules/core/math.js:49-51` |
-| 2 | **frame tick** | `requestAnimationFrame` 驱动的 `GameLoop.prototype.tick`，每帧一次 | `src/engine/modules/simulation/loop.js:33`；入口挂载 `runtime/game.js:200-203` |
-| 3 | **render frame** | 渲染假设 60Hz：`frameDuration = 1E3/60`（≈16.667ms） | `simulation/loop.js:24`；同值常量 `FRAME_DURATION_MS` 在 `core/math.js:149` |
-| 4 | **frame delta** | 本次 tick 与上次 tick 的墙钟差 `a = now - lastTickAt`（可为 0 或很大）；`b = now - lastFrameAt` 仅用于 FPS 统计 | `simulation/loop.js:36-40, 81-86` |
-| 5 | **simulation unit** | 模拟推进的最小单位 = 1 个"60Hz 帧当量"。`advanceSimulation(c)` 的入参 `c = a / frameDuration`（帧差换算成帧数，可为小数） | `simulation/loop.js:53-55`；`advanceSimulation` 本体 `simulation/tick.js:27` |
-| 6 | **turn（回合）** | 累计 15 个模拟单位 = 1 回合：`lifecycle.Jo += a; if (15 <= Jo) { turnNumber++; Jo -= 15; }`。15 单位 × 16.667ms = **250ms**，与 `turnDuration = 250` 一致 | `simulation/tick.js:28-32`；`turnDuration` `simulation/loop.js:25`；facts.md 第 4 条 |
+| 2 | **frame tick** | `requestAnimationFrame` 驱动的 `GameLoop.prototype.tick`，每帧一次 | `src/engine/modules/simulation/loop.js:35`；入口挂载 `runtime/game.js:200-203` |
+| 3 | **render frame** | 渲染假设 60Hz：`frameDuration = 1E3/60`（≈16.667ms） | `simulation/loop.js:26`；同值常量 `FRAME_DURATION_MS` 在 `core/math.js:149` |
+| 4 | **frame delta** | 本次 tick 与上次 tick 的墙钟差 `a = now - lastTickAt`（可为 0 或很大）；`b = now - lastFrameAt` 仅用于 FPS 统计 | `simulation/loop.js:38-42, 81-86` |
+| 5 | **simulation unit** | 模拟推进的最小单位 = 1 个"60Hz 帧当量"。`advanceSimulation(c)` 的入参 `c = a / frameDuration`（帧差换算成帧数，可为小数） | `simulation/loop.js:55-57`；`advanceSimulation` 本体 `simulation/tick.js:27` |
+| 6 | **turn（回合）** | 累计 15 个模拟单位 = 1 回合：`lifecycle.Jo += a; if (15 <= Jo) { turnNumber++; Jo -= 15; }`。15 单位 × 16.667ms = **250ms**，与 `turnDuration = 250` 一致 | `simulation/tick.js:28-32`；`turnDuration` `simulation/loop.js:27`；facts.md 第 4 条 |
 
 ### 1.1 wall clock 的全部消费点
 
 | 位置 | 用途 |
 |---|---|
-| `src/engine/modules/simulation/loop.js:22-23,36,40,89,96,111,220` | lastTickAt/lastFrameAt 更新、帧差计算、自动存档节流 |
+| `src/engine/modules/simulation/loop.js:24-25,36,40,89,96,111,220` | lastTickAt/lastFrameAt 更新、帧差计算、自动存档节流 |
 | `src/engine/modules/runtime/game.js:131,142` | `lastSavedAt` 初值、`lastActiveAt` 初值 |
 | `src/engine/modules/runtime/game.js:499` | 离线时长 = `Date.now() - lastActiveAt` |
 | `src/engine/modules/persistence/game-save.js:29,36` | 存档后刷新 `lastSavedAt` |
@@ -61,17 +61,17 @@ harness 用 `Date.now = () => fixedNow`（固定 1750000000000）覆盖 wall clo
 9. **触发**：restore 末尾 `allowOfflineProgress && lastActiveAt && elapsed > 120000ms` → `beginOfflineProgress`（上限 `432e5 + offlineTimeBonus.t` = 12 小时 + 加成）。
    - 落点：`runtime/game.js:498-503`（`offlineDuration = Date.now() - lastActiveAt`，阈值 `12E4`ms）；`beginOfflineProgress` 钳制 `Math.min(offlineDuration, 432E5 + offlineTimeBonus.t)`（`game.js:469-475`）；`offlineTimeBonus` 每级 +72E5ms=2h（`content/balance.js:167-171`）。前置条件 `!game.gameWon && game.partyCreated`（`game.js:470`）。
 10. **结算由帧循环驱动**：`loop.tick()` 在 `processingOffline` 时每帧最多 200 回合（每回合 `advanceSimulation(15)`、`offlineProcessed += 250`），完成时 `finishOfflineProgress`。直连 `advanceSimulation` 会**绕过**离线结算——harness 必须用 `advanceOffline()`（每帧 +2000ms 虚拟时钟，因为分支条件为 `1E3 < 帧差`）。
-    - 落点：`simulation/loop.js:42-51`（分支条件、`c < 200` 循环、`offlineProcessed += this.turnDuration`、统计 `aa.fp(turnDuration)`、完成判定）；`game.js:476-481`（finish）；harness `tests/engine-harness.js:51-55`。
-11. **后台标签页**（`allowBackgroundProgress` + 帧差 > 1s）走同一离线分支并累加 `offlineDuration`——落点 `simulation/loop.js:42`（`1E3 < a && allowBackgroundProgress` → `offlineDuration += a`）。rAF 在后台被浏览器节流，帧差因此超过 1s。
+    - 落点：`simulation/loop.js:44-53`（分支条件、`c < 200` 循环、`offlineProcessed += this.turnDuration`、统计 `aa.fp(turnDuration)`、完成判定）；`game.js:476-481`（finish）；harness `tests/engine-harness.js:51-55`。
+11. **后台标签页**（`allowBackgroundProgress` + 帧差 > 1s）走同一离线分支并累加 `offlineDuration`——落点 `simulation/loop.js:44`（`1E3 < a && allowBackgroundProgress` → `offlineDuration += a`）。rAF 在后台被浏览器节流，帧差因此超过 1s。
 12. **差分验证**：offline-1h/8h 场景两端金币/击杀实际增长且逐字段相等；offline-disabled 无增长（`scripts/test-scenarios.mjs:23-40`，场景有效性钩子 `:107-112,131-137`）。
 
-补充语义：序列化在离线结算过程中**仍写当前时刻**（`game-save.js:704`），所以离线结算完成后 `gameTimestamp` 必然晚于 harness 固定时钟——差分场景对此做了显式断言（`test-scenarios.mjs:107-112`）。离线期间自动存档被跳过（`loop.js:87` 的 `!game.processingOffline` 条件）。
+补充语义：序列化在离线结算过程中**仍写当前时刻**（`game-save.js:704`），所以离线结算完成后 `gameTimestamp` 必然晚于 harness 固定时钟——差分场景对此做了显式断言（`test-scenarios.mjs:107-112`）。离线期间自动存档被跳过（`loop.js:89` 的 `!game.processingOffline` 条件）。
 
 ## 3. 暂停语义与后台标签页处理
 
 ### 3.1 暂停检查的位置
 
-`GameLoop.prototype.tick` 的模拟闸门是**一个条件**（`simulation/loop.js:41`）：
+`GameLoop.prototype.tick` 的模拟闸门是**一个条件**（`simulation/loop.js:43`）：
 
 ```js
 if (game.partyCreated && !game.gameWon && !game.paused) { ...推进模拟... }
@@ -79,9 +79,9 @@ if (game.partyCreated && !game.gameWon && !game.paused) { ...推进模拟... }
 
 即：未建队、已通关、暂停中三者任一成立时，`advanceSimulation` 完全不被调用。关键推论：
 
-- **持续运行的手动暂停不会积累待补回合**：每次 tick 末尾仍刷新 `lastTickAt`（`loop.js:97`），恢复时只按最近一次 tick 的帧差推进。仅当 tick 实际被节流或停止后，下一次 tick 才可能看到大时间间隙，并按后台进度开关进入对应分支。
-- 渲染不受暂停影响（`loop.js:74-80`），自动存档节流也不受影响（`loop.js:87-92`）。
-- 玩法时间统计在暂停/离线时冻结：`if (!(game.paused || game.processingOffline)) game.state.aa.fp(a)`（`loop.js:93-95`）。
+- **持续运行的手动暂停不会积累待补回合**：每次 tick 末尾仍刷新 `lastTickAt`（`loop.js:99`），恢复时只按最近一次 tick 的帧差推进。仅当 tick 实际被节流或停止后，下一次 tick 才可能看到大时间间隙，并按后台进度开关进入对应分支。
+- 渲染不受暂停影响（`loop.js:76-82`），自动存档节流也不受影响（`loop.js:89-94`）。
+- 玩法时间统计在暂停/离线时冻结：`if (!(game.paused || game.processingOffline)) game.state.aa.fp(a)`（`loop.js:95-97`）。
 
 ### 3.2 paused 的写入口
 
@@ -96,7 +96,7 @@ E2E 覆盖：点击暂停后 700ms 内 turn 不变（`scripts/test-browser.mjs:2
 
 ### 3.3 后台标签页
 
-- 可见性只关**渲染**：`visibilitychange` → `renderEnabled = !document.hidden`（`runtime/game.js:192-199`），渲染跳过点在 `loop.js:74`。模拟不会被显式暂停。
+- 可见性只关**渲染**：`visibilitychange` → `renderEnabled = !document.hidden`（`runtime/game.js:192-199`），渲染跳过点在 `loop.js:76`。模拟不会被显式暂停。
 - 后台时 rAF 节流 → 帧差变大：
   - 帧差 ≤ 1s：回到前台后按帧数一次性补推进（§3.1 的补推进语义）。
   - 帧差 > 1s 且 `allowBackgroundProgress` 开启：直接进入离线分支（§2 第 11 条），按离线节奏补结算。

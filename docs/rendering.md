@@ -58,4 +58,4 @@ R35 仍把 740×450 后备画布拉伸到产品容器宽度（例如 924px），
 
 既有 89 场景中的 7 条 Canvas 指纹仍验证 `classic` 与原版 oracle，包括多视口、spellstorm 与 farm。新清晰画面为有意差异，未建立覆盖所有视口/场景组合的像素基线；跨浏览器、真机低端帧时间和用户设备上的所有闪动仍未验证。验收矩阵 Canvas 行继续保持 PARTIAL。
 
-帧循环仍在 `src/engine/modules/simulation/loop.js:75-79` 的 try/catch 中绘制。异常会以 `Caught error.` 日志出现，因此只监听 pageerror 不足以验证渲染。
+帧循环仍在 `src/engine/modules/simulation/loop.js:77-81` 的 try/catch 中绘制。异常会以 `Caught error.` 日志出现，因此只监听 pageerror 不足以验证渲染。

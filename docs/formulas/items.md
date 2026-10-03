@@ -196,10 +196,10 @@ export function scaleByLevel(level, curve, multiplier) {
   level = Math.max(0, level - 1);
   return floorNumber(multiplier * (curve.base + curve.coefficient * Math.pow(level, curve.power) * Math.pow(curve.growth, level)));
 }
-export function randomizeScaledValue(a, curve, multiplier) {
-  a = scaleByLevel(a, curve, multiplier);
+export function randomizeScaledValue(level, curve, multiplier) {
+  var scaledValue = scaleByLevel(level, curve, multiplier);
   var jitterFactor = 1.1 - 0.2 * Math.random();
-  return floorNumber(a * jitterFactor);
+  return floorNumber(scaledValue * jitterFactor);
 }
 ```
 
@@ -507,7 +507,7 @@ if (randomInt(100) <= globalUpgradeDefinitions.itemDropChance.currentValue || gu
 `src/engine/modules/loot/items.js:270-281`
 
 ```js
-export function spawnItemDrop(dropRegistry, x, y, room, monsterLevel, generator, adventurers) {
+export function spawnItemDrop(dropRegistry, levelPositionX, levelPositionY, room, monsterLevel, generator, adventurers) {
   const upgrades = generator.rules.globalUpgradeDefinitions;
   const adventurer = adventurers[randomInt(adventurers.length)];
   const slots = adventurer.slotList;
@@ -516,7 +516,7 @@ export function spawnItemDrop(dropRegistry, x, y, room, monsterLevel, generator,
   const itemLevel = randomizeItemLevel(monsterLevel, (100 - upgrades.higherLevelItemChance.currentValue) / 100, generator.rules);
   const item = generateItem(generator, slot, adventurer, itemLevel, rarity);
   if (item) {
-    dropRegistry.drops.push(new ItemDrop(item, x, y, room));
+    dropRegistry.drops.push(new ItemDrop(item, levelPositionX, levelPositionY, room));
   }
 }
 ```
@@ -564,7 +564,7 @@ if (randomInt(100) <= globalUpgradeDefinitions.scrollDropChance.currentValue) {
   const scrollDrop = new ScrollDrop(scroll, ...);
 ```
 
-池 `Pl` 只含**已解锁**卷轴（`combat/scrolls.js:217-221`）。`shockScroll.sg = 0` → `resetScrollInventory` 里 `ts(0 < 0, 0)` 使其开局即解锁（`combat/scrolls.js:209`、`combat/scrolls.js:223-227`、`combat/scrolls.js:263-269`），故 `Pl` 非空。
+池 `Pl` 只含**已解锁**卷轴（`combat/scrolls.js:223-227`）。`shockScroll.sg = 0` → `resetScrollInventory` 里 `ts(0 < 0, 0)` 使其开局即解锁（`combat/scrolls.js:215`、`combat/scrolls.js:229-233`、`combat/scrolls.js:269-275`），故 `Pl` 非空。
 `[疑似遗留怪癖]` 若 `Pl` 为空，`randomInt(0)=0` → `scrolls[0]` 为 `undefined`，掉落仍被创建，拾取时 `addScrollCharge(undefined)` 抛错；代码无保护。
 药水入库另有容量门：`BASE_POTION_CAPACITY(6) + potionCapacityBonus.currentValue`（`combat/potions.js:111-116`），而**卷轴拾取无容量门**，只有叠加时被夹到 `30 + scrollCapacityBonus.currentValue`（`combat/scrolls.js:54-59`）。
 

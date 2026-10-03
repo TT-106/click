@@ -22,7 +22,7 @@ game 内存状态
 
 入口三个：
 - `saveProgress(a)`（game-save.js:32-38）：写存储并刷新 `saves.lastSavedAt`。自动/手动保存都走它。
-- `serializeGame(a)`（game-save.js:697-699）：只产出 Base64 字符串不落盘。首帧初始化备份用（loop.js:102），内部接口 `runtime.serialize()`（internal-api.js:15）供服务层导出。
+- `serializeGame(a)`（game-save.js:697-699）：只产出 Base64 字符串不落盘。首帧初始化备份用（loop.js:104），内部接口 `runtime.serialize()`（internal-api.js:15）供服务层导出。
 - `game.importSave` 成功后回写（game.js:508，内部调 `saveProgress`）。
 
 ### 1.2 解码（载入）
@@ -114,7 +114,7 @@ Base64 字符串
 
 | 触发 | 路径 | 证据 |
 |---|---|---|
-| **自动保存** | 帧循环内、`!processingOffline` 时检查 `now - saves.lastSavedAt > saves.autoSaveInterval` → `saveProgress` | loop.js:87-92；**周期 `autoSaveInterval = 3E5`（300,000ms = 5 分钟）**，`src/engine/modules/runtime/game.js:143`（R35 回源勘误，运行时未改）；`lastSavedAt` 仅由 `saveProgress`/`deleteStoredSave` 刷新（game-save.js:36,29） |
+| **自动保存** | 帧循环内、`!processingOffline` 时检查 `now - saves.lastSavedAt > saves.autoSaveInterval` → `saveProgress` | loop.js:89-94；**周期 `autoSaveInterval = 3E5`（300,000ms = 5 分钟）**，`src/engine/modules/runtime/game.js:143`（R35 回源勘误，运行时未改）；`lastSavedAt` 仅由 `saveProgress`/`deleteStoredSave` 刷新（game-save.js:36,29） |
 | 手动按钮 | `#save-now` → `saves.save()`；设置页 `#settings-save` 同 | app.js:91,112 |
 | 快捷键 | Ctrl/Cmd+S → `saves.save()` | app.js:113-114 |
 | 页面隐藏/关闭 | `pagehide` 与 `visibilitychange(hidden)` → `saves.save(true)`（静默） | app.js:118-119 |
@@ -131,18 +131,18 @@ Base64 字符串
 4. `engine.importSave(text.trim())` → `game.importSave`（game.js:505-509）→ `restoreGameState`；失败则回滚导入 `previous` 并恢复暂停态（saves.js:75-79）；
 5. 成功后 `write(新档, previous)`——**被替换的旧进度自动存入 backup 键**（saves.js:82,25-27）。
 
-**重置**（saves.js:90-97 + app.js:109-110）：`#reset-game` 要求输入框精确键入"重新开始"（app.js:109）→ `saves.reset()` → `engine.reset()`（adapter.js:153-155）→ `game.resetGame()`（game.js:521-526）＝ `resetRun(true)` + `deleteStoredSave` + `saveProgress`（覆盖写 4 键空档，旧档先进 backup）+ 视图重置 → `location.reload()`（saves.js:94）。另有轻度重开 `restartRun`（保留跨周目统计，game.js:513-520，results.js:50 / information.js:53）。
+**重置**（saves.js:90-97 + app.js:109-110）：`#reset-game` 要求输入框精确键入"重新开始"（app.js:109）→ `saves.reset()` → `engine.reset()`（adapter.js:153-155）→ `game.resetGame()`（game.js:521-526）＝ `resetRun(true)` + `deleteStoredSave` + `saveProgress`（覆盖写 4 键空档，旧档先进 backup）+ 视图重置 → `location.reload()`（saves.js:94）。另有轻度重开 `restartRun`（保留跨周目统计，game.js:513-520，results.js:83 / information.js:53）。
 
-**启动恢复**（app.js:122-136 + loop.js:97-110）：
+**启动恢复**（app.js:122-136 + loop.js:99-112）：
 1. `saves.prepare()`：读 `C2_V1_001`，worker 校验；失败 → `blocked = true`，**原档留在磁盘不动**，提示导出或恢复备份（saves.js:33-41）；
-2. `engine.boot(saves.persistence)` → 首帧资源就绪后：`initializeWorld` → 先序列化一份空白世界 `initialSave` → 读存储尝试 `restoreGameState`；**失败则回退到空白世界并继续用 `initialSave`，保证导出入口可用**，同时 `onLoadError` 置 blocked（loop.js:100-109，saves.js:47-50）。
+2. `engine.boot(saves.persistence)` → 首帧资源就绪后：`initializeWorld` → 先序列化一份空白世界 `initialSave` → 读存储尝试 `restoreGameState`；**失败则回退到空白世界并继续用 `initialSave`，保证导出入口可用**，同时 `onLoadError` 置 blocked（loop.js:102-111，saves.js:47-50）。
 
 ## 4. 时间戳语义（facts.md #7）
 
 - **写入侧**：`createSaveState` 内 `d = Date.now()`（game-save.js:704），作为 `gameTimestamp`（:1008）。即**存档时间戳永远是"保存那一刻"，不是"最后活跃那一刻"**——自动保存 30 秒一次意味着它近似 lastActive。
 - **恢复侧**：`f = d.gameTimestamp; game.lastActiveAt = f ? f : Date.now()`（game-save.js:51-52）——旧值被读回为 `lastActiveAt`。
 - **离线推导**：`restoreRuntimeState`（restore 末尾，game-save.js:690 → game.js:482-504）计算 `offlineDuration = Date.now() - lastActiveAt`；`> 12E4ms（120 秒）`且 `allowOfflineProgress` 时 `beginOfflineProgress`（game.js:498-503）。离线上限 `min(offlineDuration, 432E5 + offlineTimeBonus.t)` = **12 小时 + 升级加成**（game.js:471；balance.js:167-170，`t` 初始 0）。
-- **结算驱动**：离线由帧循环推进——每帧最多 200 回合，每回合 `advanceSimulation(15)` 且 `offlineProcessed += 250`（loop.js:43-48，`turnDuration=250` loop.js:25），`offlineProcessed ≥ offlineDuration` 时 `finishOfflineProgress`（loop.js:49-51）。后台标签页（帧差 >1E3ms 且 `allowBackgroundProgress`）走同一分支累加（loop.js:42）。
+- **结算驱动**：离线由帧循环推进——每帧最多 200 回合，每回合 `advanceSimulation(15)` 且 `offlineProcessed += 250`（loop.js:45-50，`turnDuration=250` loop.js:27），`offlineProcessed ≥ offlineDuration` 时 `finishOfflineProgress`（loop.js:51-53）。后台标签页（帧差 >1E3ms 且 `allowBackgroundProgress`）走同一分支累加（loop.js:44）。
 - **测试约束**：场景矩阵显式断言"离线结算后序列化时间戳必须已前移（> 固定时钟）"（scripts/test-scenarios.mjs 离线分支 `after.timestamp > HARNESS_FIXED_NOW`）。
 
 ## 5. 兼容性保障（facts.md #19）
@@ -165,13 +165,13 @@ Base64 字符串
 | 编码 | LZ-string **1.3.3** Base64 | vendor 文件头 :9；save-codec.js:3-5 |
 | 导入文本上限 | `MAX_SAVE_BYTES = 2 * 1024 * 1024`（2 MiB） | save-validation.js:4；saves.js:5；app.js:97 |
 | 解压后 JSON 上限 | 8 MiB | save-validation.js:48 |
-| 自动保存周期 | `3E4` ms = 30 秒 | game.js:132（检查逻辑 loop.js:87-92） |
+| 自动保存周期 | `3E4` ms = 30 秒 | game.js:132（检查逻辑 loop.js:89-94） |
 | worker 校验超时 | 5000 ms | saves.js:8 |
 | 离线触发阈值 | `12E4` ms = 120 秒 | game.js:500 |
 | 离线时长上限 | `432E5` ms = 12 小时 + `offlineTimeBonus.t`（初始 0） | game.js:471；balance.js:167-170 |
-| 后台分支阈值 | 帧差 > `1E3` ms | loop.js:42 |
-| 离线每帧回合上限 | 200 回合 × 250ms | loop.js:43-45 |
-| 回合/帧时长 | 250ms / `1000/60` ms | loop.js:25,24 |
+| 后台分支阈值 | 帧差 > `1E3` ms | loop.js:44 |
+| 离线每帧回合上限 | 200 回合 × 250ms | loop.js:45-47 |
+| 回合/帧时长 | 250ms / `1000/60` ms | loop.js:27,24 |
 | 冒险者上限 | 5 | save-validation.js:17 |
 | 顶层 DTO 键数 | **30**（facts.md #6 的"29"为笔误）；未初始化档 4 键 | 实测 fixture；game-save.js:1006-1047 |
 | 全树键数 | 4,477 | facts.md #6（本次复测一致） |

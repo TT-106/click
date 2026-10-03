@@ -42,11 +42,11 @@
    - `:139-145` 启动 300ms 轮询：监测 `started/won/offline` 变化并调用 `refresh()`。
 3. `src/engine/adapter.js:20-30` `engine.boot`：`runtime.setPersistence(persistence)` 注入存储端口（`:21`），调 `game.onLoad()`（`:22`），然后轮询等待 `game.view.panels.length` 非空且（未开局时）DOM 出现 `#startQuestButton`，15 秒超时报错（`:24-27`）。
 4. `src/engine/modules/runtime/game.js:200-203` `game.onLoad()` = `bindVisibility()`（visibilitychange → `renderEnabled`）+ `game.loop.tick()` 启动帧循环。
-5. 帧循环 `GameLoop.prototype.tick`（`src/engine/modules/simulation/loop.js:33`）分三态：
-   - 资源未就绪：`resourcesReady = monsterSprites/terrainSprites/itemSprites/animations 的 .isLoaded()`（`loop.js:236`），每帧重试并继续 `requestAnimationFrame`（`loop.js:239`）；
+5. 帧循环 `GameLoop.prototype.tick`（`src/engine/modules/simulation/loop.js:36`）分三态：
+   - 资源未就绪：`resourcesReady = monsterSprites/terrainSprites/itemSprites/animations 的 .isLoaded()`（`loop.js:257`），每帧重试并继续 `requestAnimationFrame`（`loop.js:260`）；
    - `game.initialized` 为假（首次）：执行一次性初始化分支（见下）；
    - 已初始化：正常模拟 + 渲染（见第 3/4 节）。
-6. 首次初始化分支（`loop.js:97-234`）：`game.initializeWorld()`（`:98`，填充怪物目录、物品目录、宝箱定义、区域与城堡，`game.js:204-350`）→ 先序列化一份空白存档 `initialSave`（`:102`）→ 尝试 `persistence.read()` + `restoreGameState`，失败则回滚到 `initialSave` 并回调 `onLoadError`（`:103-109`，保证坏档不破坏可用状态）→ 构建 15 个 Tab/Panel 视图并挂载（`:112-223`）→ 已有队伍则 `view.reset()`，离线中则 `onOfflineStart()`，已胜利则 `onGameWon()`（`:224-233`）。
+6. 首次初始化分支（`loop.js:99-255`）：`game.initializeWorld()`（`:98`，填充怪物目录、物品目录、宝箱定义、区域与城堡，`game.js:204-350`）→ 先序列化一份空白存档 `initialSave`（`:102`）→ 尝试 `persistence.read()` + `restoreGameState`，失败则回滚到 `initialSave` 并回调 `onLoadError`（`:103-109`，保证坏档不破坏可用状态）→ 构建 15 个 Tab/Panel 视图并挂载（`:112-223`）→ 已有队伍则 `view.reset()`，离线中则 `onOfflineStart()`，已胜利则 `onGameWon()`（`:224-233`）。
 7. 模块级初始化（构造器原型、内容表）由 `src/engine/modules/runtime/index.js:77-165` 按固定顺序调用 74 个 `initialize*()`，最后 `initializeRuntimeGame()`（`:165`）创建 `game` 组合根，`:166` 再导出 `game`。注释明确"模块初始化阶段只有这里拥有调用顺序"（`:76`）。
 
 ### startup sequence
@@ -68,12 +68,12 @@ sequenceDiagram
     E->>G: game.onLoad() (adapter.js:22, game.js:200)
     G->>G: bindVisibility() renderEnabled 开关 (game.js:197)
     G->>L: game.loop.tick() (game.js:202)
-    L->>L: 资源未就绪? 每帧探测 .cl() (loop.js:236)
-    L->>G: 首帧: initializeWorld() (loop.js:98, game.js:204)
-    L->>L: serializeGame(空白档) 作回滚底 (loop.js:102)
-    L->>L: persistence.read() + restoreGameState, 失败回滚 (loop.js:103-109)
-    L->>L: 构建 15 个 Tab/Panel 视图 (loop.js:112-223)
-    L->>L: requestAnimationFrame 自续 (loop.js:239)
+    L->>L: 资源未就绪? 每帧探测 .cl() (loop.js:257)
+    L->>G: 首帧: initializeWorld() (loop.js:100, game.js:204)
+    L->>L: serializeGame(空白档) 作回滚底 (loop.js:104)
+    L->>L: persistence.read() + restoreGameState, 失败回滚 (loop.js:105-111)
+    L->>L: 构建 15 个 Tab/Panel 视图 (loop.js:114-244)
+    L->>L: requestAnimationFrame 自续 (loop.js:260)
     E->>E: 轮询等待 panels + #startQuestButton (adapter.js:24-27)
     E-->>A: boot 返回; 新档默认关 showFps (adapter.js:29)
     A->>A: createPartyBuilder / bind / navigate (app.js:131-136)
@@ -100,10 +100,10 @@ sequenceDiagram
 
 **主循环 = `GameLoop`（`src/engine/modules/simulation/loop.js`）的自续 `requestAnimationFrame` 帧循环。**
 
-- 构造器 `loop.js:20-31`：`resourcesReady=false`；`frameDuration = 1E3/60`（60Hz 帧假设，`:24`，与 `core/math.js:149` 的 `FRAME_DURATION_MS` 一致）；`turnDuration = 250`（一回合 250ms，`:25`）；`requestTick` 闭包（`:27-29`）。
-- `GameLoop.prototype.tick` 在 `initializeSimulationLoop()` 中定义（`loop.js:33`），每帧末尾 `requestAnimationFrame(this.requestTick)` 自续（`:222`）。
+- 构造器 `loop.js:22-33`：`resourcesReady=false`；`frameDuration = 1E3/60`（60Hz 帧假设，`:24`，与 `core/math.js:149` 的 `FRAME_DURATION_MS` 一致）；`turnDuration = 250`（一回合 250ms，`:25`）；`requestTick` 闭包（`:27-29`）。
+- `GameLoop.prototype.tick` 在 `initializeSimulationLoop()` 中定义（`loop.js:35`），每帧末尾 `requestAnimationFrame(this.requestTick)` 自续（`:222`）。
 - 入口：`game.onLoad()` → `game.loop.tick()`（`game.js:202`）；测试 harness 也直接调 `game.loop.tick()`（`tests/engine-harness.js:30,36`）。
-- 每帧的调度规则（`loop.js:41-96`）：
+- 每帧的调度规则（`loop.js:43-98`）：
   - 仅当 `game.partyCreated && !game.gameWon && !game.paused` 才推进模拟（`:41`）；
   - 离线分支（`:42-51`，详见第 12 节）；否则 `advanceSimulation(帧差/frameDuration)`（`:53-56`）；
   - 随后更新相机（`:57-71`）、渲染（`:74-80`）、FPS 统计写入 `game.state.fps`（`:81-86`）、30 秒自动存档（离线时跳过，`:87-92`）、非暂停时给统计器记时长 `aa.fp(a)`（`:93-95`）。
@@ -112,36 +112,36 @@ sequenceDiagram
 
 ```mermaid
 sequenceDiagram
-    participant RAF as requestAnimationFrame (loop.js:239)
-    participant L as loop.tick (loop.js:33)
+    participant RAF as requestAnimationFrame (loop.js:260)
+    participant L as loop.tick (loop.js:35)
     participant S as advanceSimulation (tick.js:27)
-    participant C as camera (loop.js:57)
+    participant C as camera (loop.js:59)
     participant V as game.view.render (views/base.js:41)
     participant P as saveProgress (game-save.js:32)
 
     RAF->>L: 每帧回调
-    alt 资源未就绪 (loop.js:34,236)
+    alt 资源未就绪 (loop.js:36,236)
         L->>L: 探测 sprites/animations.cl()，继续等待
-    else 未初始化 (loop.js:97)
-        L->>L: initializeWorld + 恢复存档 + 建视图 (loop.js:98-232)
+    else 未初始化 (loop.js:99)
+        L->>L: initializeWorld + 恢复存档 + 建视图 (loop.js:100-253)
     else 已初始化
-        L->>L: a = 帧差毫秒 (loop.js:36-38)
-        alt partyCreated 且未胜利未暂停 (loop.js:41)
-            alt 帧差>1s 且 allowBackgroundProgress / processingOffline (loop.js:42)
-                loop 每帧 ≤200 回合 (loop.js:43)
+        L->>L: a = 帧差毫秒 (loop.js:38-40)
+        alt partyCreated 且未胜利未暂停 (loop.js:43)
+            alt 帧差>1s 且 allowBackgroundProgress / processingOffline (loop.js:44)
+                loop 每帧 ≤200 回合 (loop.js:45)
                     L->>S: advanceSimulation(15)
-                    L->>L: offlineProcessed += 250 (loop.js:45)
+                    L->>L: offlineProcessed += 250 (loop.js:47)
                 end
             else 正常帧
-                L->>S: advanceSimulation(帧差/16.67ms) (loop.js:53-56)
+                L->>S: advanceSimulation(帧差/16.67ms) (loop.js:55-58)
             end
-            L->>C: 由队伍位置推相机 (loop.js:57-71)
+            L->>C: 由队伍位置推相机 (loop.js:59-73)
         end
-        L->>V: game.renderEnabled 为真才渲染，异常吞掉 (loop.js:74-80)
-        L->>L: FPS 采样 → game.state.fps (loop.js:81-86)
-        L->>P: 距上次保存>30s 且非离线 → 自动存档 (loop.js:87-92)
-        L->>L: 非暂停非离线：aa.fp(a) 记时长 (loop.js:93-95)
-        L->>RAF: requestAnimationFrame 自续 (loop.js:239)
+        L->>V: game.renderEnabled 为真才渲染，异常吞掉 (loop.js:76-82)
+        L->>L: FPS 采样 → game.state.fps (loop.js:83-88)
+        L->>P: 距上次保存>30s 且非离线 → 自动存档 (loop.js:89-94)
+        L->>L: 非暂停非离线：aa.fp(a) 记时长 (loop.js:95-97)
+        L->>RAF: requestAnimationFrame 自续 (loop.js:260)
     end
 ```
 
@@ -152,8 +152,8 @@ sequenceDiagram
 
 **两者在同一 `tick` 内顺序执行，由 `renderEnabled` 布尔开关解耦；渲染失败被 try/catch 吞掉，不影响模拟。**
 
-- `loop.js:53-56`：模拟推进量 = 实际帧差 / `frameDuration`（可 >1 帧），`advanceSimulation(c)`；
-- `loop.js:74-80`：`if (game.renderEnabled) { try { game.view.render(); } catch (l) { console.log(...) } }`——渲染异常只记日志（原版行为保留）；
+- `loop.js:55-58`：模拟推进量 = 实际帧差 / `frameDuration`（可 >1 帧），`advanceSimulation(c)`；
+- `loop.js:76-82`：`if (game.renderEnabled) { try { game.view.render(); } catch (l) { console.log(...) } }`——渲染异常只记日志（原版行为保留）；
 - `renderEnabled` 唯一写点是 `handleVisibility`：`game.renderEnabled = !document.hidden`（`game.js:192-196`），由 `bindVisibility` 在 visibilitychange 时触发（`game.js:197-199`）。即后台标签页跳过渲染但不跳过模拟（配合后台离线分支）；
 - `game.view.render()` 来自视图基类：`View.prototype.render` → 可见性切换 + `update()`；`CompositeView.update` → 递归 `render()` 所有子视图（`src/engine/modules/views/base.js:41-64`）。`GameView.prototype = new CompositeView()`（`views/navigation.js:93`），子视图含 `GameCanvasView`（画布渲染，`views/expedition.js:225` + `rendering/scene.js`）；
 - 反向耦合（UI → 模拟）：适配层 `showPanel` 会主动调一次 `game.view.render()` 立即重绘（`adapter.js:125-131`）；暂停只停模拟不停渲染（`:41` 的门条件不含渲染）。
@@ -204,7 +204,7 @@ sequenceDiagram
 
 ```mermaid
 sequenceDiagram
-    participant L as loop.tick (loop.js:53)
+    participant L as loop.tick (loop.js:55)
     participant T as advanceSimulation (tick.js:27)
     participant B as BehaviorQueue (ai/behaviors.js:217)
     participant C as updateCharacter (character.js:183)
@@ -321,8 +321,8 @@ sequenceDiagram
     Note over UI,LS: 启动恢复
     LS-->>SV: prepare() 读原文并 Worker 校验 (saves.js:33-41)
     SV-->>AD: persistence.read()=bootSave (saves.js:45)
-    AD->>GS: restoreGameState(b, storedSave) (loop.js:104-105)
-    GS-->>GS: 失败→回滚 initialSave + onLoadError (loop.js:106-109)
+    AD->>GS: restoreGameState(b, storedSave) (loop.js:106-107)
+    GS-->>GS: 失败→回滚 initialSave + onLoadError (loop.js:108-111)
     end
 ```
 
@@ -334,8 +334,8 @@ sequenceDiagram
 
 1. **触发（恢复存档末尾）**：`restoreRuntimeState()`（`game.js:482-504`）在 `game.options.allowOfflineProgress && game.lastActiveAt` 时计算 `offlineDuration = Date.now() - lastActiveAt`（`:498-499`；`lastActiveAt` 来自存档旧 `gameTimestamp`，`game-save.js:51-52`），超过 `12E4`ms（2 分钟）才 `beginOfflineProgress()`（`:500-502`）。
 2. **上限**：`beginOfflineProgress`（`game.js:478-484`）：仅当 `!gameWon && partyCreated`（`:479`）；`offlineDuration = min(offlineDuration, 432E5 + offlineTimeBonus.t)`（12 小时 + 升成加成，`:480`，`offlineTimeBonus` 定义于 `content/balance.js:167`）；`processingOffline=true; offlineProcessed=0`（`:481-482`）。
-3. **驱动（帧循环，不是一次性结算）**：`loop.js:42` —— 帧差 `a > 1E3` 且 `allowBackgroundProgress` 时进入（首次会 `view.onOfflineStart()` 并把 `offlineDuration` 从 0 起累加，这就是后台标签页也走同一条路的机制，facts 第 11 条）；随后 `loop.js:43-48` 每帧最多 **200 回合**：`advanceSimulation(15)` → `offlineProcessed += turnDuration(250)` → `aa.fp(250)`；`offlineProcessed >= offlineDuration` 时 `finishOfflineProgress()`（`:49-51`；`game.js:476-481` 复位标志并 `view.onOfflineFinish()`）。
-4. 离线期间：不自动存档（`loop.js:87` 的 `!game.processingOffline` 门）、升级条刷新跳过（`tick.js:515-528`）、帧时长统计不走 `:93-95` 分支。
+3. **驱动（帧循环，不是一次性结算）**：`loop.js:44` —— 帧差 `a > 1E3` 且 `allowBackgroundProgress` 时进入（首次会 `view.onOfflineStart()` 并把 `offlineDuration` 从 0 起累加，这就是后台标签页也走同一条路的机制，facts 第 11 条）；随后 `loop.js:45-50` 每帧最多 **200 回合**：`advanceSimulation(15)` → `offlineProcessed += turnDuration(250)` → `aa.fp(250)`；`offlineProcessed >= offlineDuration` 时 `finishOfflineProgress()`（`:49-51`；`game.js:476-481` 复位标志并 `view.onOfflineFinish()`）。
+4. 离线期间：不自动存档（`loop.js:89` 的 `!game.processingOffline` 门）、升级条刷新跳过（`tick.js:515-528`）、帧时长统计不走 `:93-95` 分支。
 5. 直连 `advanceSimulation` 会绕过该分支（它只认 `game.processingOffline`）——所以 harness 提供 `advanceOffline()`（`tests/engine-harness.js:51-55`）：每帧把虚拟时钟 +2000ms 再 `loop.tick()`，使 `1E3 < 帧差` 恒成立（facts 第 10 条）。差分场景 `offline-1h/8h/disabled` 验证两端一致（`scripts/test-scenarios.mjs:23-40`，facts 第 12 条）。
 6. UI 侧：离线进度经快照 `offlineProgress` 百分比展示（`adapter.js:88`），`app.js:142` 在离线结束瞬间强制重导航。
 
@@ -345,7 +345,7 @@ sequenceDiagram
 sequenceDiagram
     participant R as restoreGameState (game-save.js:39)
     participant G as game (game.js)
-    participant L as loop.tick (loop.js:33)
+    participant L as loop.tick (loop.js:35)
     participant S as advanceSimulation (tick.js:27)
     participant V as view 面板
 
@@ -354,14 +354,14 @@ sequenceDiagram
     G->>G: offlineDuration = now - lastActiveAt (game.js:498-499)
     alt > 120000ms 且 allowOfflineProgress
         G->>G: beginOfflineProgress(): 上限 12h+加成, processingOffline=true (game.js:469-475)
-        G->>V: onOfflineStart() (loop.js:42 / game.js:211-213)
-        loop 每帧 (loop.js:42-51)
+        G->>V: onOfflineStart() (loop.js:44 / game.js:211-213)
+        loop 每帧 (loop.js:44-53)
             L->>S: advanceSimulation(15) × ≤200
             S-->>L: 回合推进
             L->>L: offlineProcessed += 250; aa.fp(250)
         end
         alt offlineProcessed ≥ offlineDuration
-            L->>G: finishOfflineProgress() (loop.js:49-51)
+            L->>G: finishOfflineProgress() (loop.js:51-53)
             G->>G: processingOffline=false, 计数清零 (game.js:476-481)
             G->>V: onOfflineFinish() (game.js:480)
         end
@@ -385,7 +385,7 @@ sequenceDiagram
 ## 14. achievement / statistics 如何更新？
 
 - **统计是单一事件源**：`StatisticsRecorder`（`progression/statistics.js:16-18`）持有 `runStatistics + lifetimeStatistics` 双份，记录方法成对转发（`:133-236`）；`bindStatistics(state)` 在开局/重置时重新绑定（`:23-27`；调用点 `game.js:363`）。`LifetimeStatistics` 的清零方法被刻意改为告警不清零（`:129-132`）——跨周目永久累计。
-- **写入点（采样）**：每回合 `aa.is()`（`tick.js:88`，回合计数）；帧/离线时长 `aa.fp`（`loop.js:46,93-95`）；进房 `aa.Ur()` + `awardAdventurePoints(2)`（`character.js:311-312`）；击杀 `aa.cp()`、随从击杀 `aa.$k()`（`actions.js:354-360`）；遭遇结束 `aa.es()`（`encounters.js:264`）；开箱/搜架 `aa.hs/js/Rr`（`characters/character.js:1128/1132/1136`）；买农场 `aa.Xr()`（`tick.js:816`）。
+- **写入点（采样）**：每回合 `aa.is()`（`tick.js:88`，回合计数）；帧/离线时长 `aa.fp`（`loop.js:48,93-95`）；进房 `aa.Ur()` + `awardAdventurePoints(2)`（`character.js:311-312`）；击杀 `aa.cp()`、随从击杀 `aa.$k()`（`actions.js:354-360`）；遭遇结束 `aa.es()`（`encounters.js:264`）；开箱/搜架 `aa.hs/js/Rr`（`characters/character.js:1128/1132/1136`）；买农场 `aa.Xr()`（`tick.js:816`）。
 - **成就检查是回合节拍任务**：`lifecycle.achievementCheckTurnCounter` 每 4 回合（`PC=4`，`simulation/characters.js:40`）跑一次（`tick.js:214-236`）：遍历待判定列表 `achievements.obtainedList`，`qa.isVictoryAchievement`（胜利类）→ `hasVictoryAchievement`（读 `victoryStatistics`，`achievements.js:48-64`），否则 `getAchievementProgress(qa) >= qa.requiredCount`（读 `lifetimeStatistics` 字段 switch，`:65-115`）；达标移入 `claimQueue` 待领取列表（`tick.js:219-229`），已应用（`applied`）的出队（`:230-235`）。
 - **领取（点数联动）**：`applyAchievementReward` → `increasePointEventReward(pointEventTypeId, pointRewardBonus)`（`points.js:47-56`）→ `recalculateAdventurePoints`（`points.js:57-70`）——即成就是"提高某类点数事件的单价"，点数总量按事件次数重算；事件计数入口 `awardAdventurePoints`（`points.js:26-45`）。触发处 `achievements.js:34-47`。
 - 存档侧只持久化 `{achievementId, obtained, applied}`（`game-save.js:997-1005`，facts 第 16 条），恢复时按 `obtained`/`applied` 重建 `obtainedList`/`claimQueue` 队列并补发已应用成就的单价（`game-save.js:620-656`）。
@@ -475,9 +475,9 @@ flowchart BT
 
 | 不变量 | 证据 |
 | --- | --- |
-| 一回合 = 15 个模拟单位 = 250ms | `loop.js:25`、`tick.js:28-32`、`loop.js:44-45` |
-| 自动存档间隔 30s，离线期间暂停 | `game.js:132`、`loop.js:87-92` |
-| `renderEnabled` 只受页面可见性控制 | `game.js:192-199`、`loop.js:74` |
+| 一回合 = 15 个模拟单位 = 250ms | `loop.js:27`、`tick.js:28-32`、`loop.js:46-47` |
+| 自动存档间隔 30s，离线期间暂停 | `game.js:132`、`loop.js:89-94` |
+| `renderEnabled` 只受页面可见性控制 | `game.js:192-199`、`loop.js:76` |
 | 存档键 `C2_V1_001`（备份 `+_backup`） | `save-validation.js:3`、`saves.js:21` |
 | 离线上限 12h + `offlineTimeBonus.t`，2 分钟起结 | `game.js:471`、`game.js:500` |
 | 遭遇结束条件 = 场上怪物清空 | `encounters.js:261-264` |

@@ -66,7 +66,7 @@ export function advanceSimulation(simulationUnits) {
     lifecycle.regenTurnCounter++;
 ```
 
-入参 `simulationUnits` 是"60Hz 帧当量"（`simulation/loop.js:54` `var frameSimulationUnits = a / this.frameDuration;`，`frameDuration = 1E3 / 60`，`loop.js:25`）。15 个帧当量 = 1 回合 = 250ms（`loop.js:26` `this.turnDuration = 250;`，与离线结算口径一致）。
+入参 `simulationUnits` 是"60Hz 帧当量"（`simulation/loop.js:56` `var frameSimulationUnits = a / this.frameDuration;`，`frameDuration = 1E3 / 60`，`loop.js:27`）。15 个帧当量 = 1 回合 = 250ms（`loop.js:28` `this.turnDuration = 250;`，与离线结算口径一致）。
 
 **所有战斗冷却/持续时间都以 `turnNumber` 计**，与墙钟无关；离线补算按每回合 250ms 记账（`docs/time-model.md` 第 10 条）。
 
@@ -1462,7 +1462,7 @@ export function populateEncounter(a) {
 
 | # | 位置 | 现象 | 与原版对比 |
 |---|---|---|---|
-| 1 | `combat/actions.js:557-559` | `getProjectileAnimation(a, b)` 首行 `if (3 === a.sw())` **无空值保护**；`createAttackAction` 在远程支传入 `a.equipment.Ey`（`actions.js:452`），无投射武器槽的角色该字段是 `null`（`movement.js:11`）→ `TypeError: Cannot read properties of null (reading 'sw')`，异常从 `advanceSimulation` 直穿帧循环（`simulation/loop.js` 的 try/catch 只包 `view.render()`，`loop.js:74-80`） | 原版同式同点抛错：`Aw (c2.js:21119) ← yw (21061)`。已由差分场景实测两端**同点、同消息**（`docs/reverse-engineering/unresolved.md` U4，cat 12/14/15 场景早期） |
+| 1 | `combat/actions.js:557-559` | `getProjectileAnimation(a, b)` 首行 `if (3 === a.sw())` **无空值保护**；`createAttackAction` 在远程支传入 `a.equipment.Ey`（`actions.js:452`），无投射武器槽的角色该字段是 `null`（`movement.js:11`）→ `TypeError: Cannot read properties of null (reading 'sw')`，异常从 `advanceSimulation` 直穿帧循环（`simulation/loop.js` 的 try/catch 只包 `view.render()`，`loop.js:76-82`） | 原版同式同点抛错：`Aw (c2.js:21119) ← yw (21061)`。已由差分场景实测两端**同点、同消息**（`docs/reverse-engineering/unresolved.md` U4，cat 12/14/15 场景早期） |
 | 2 | `simulation/tick.js:346-349` | 溅射眩晕动作的 `actionDefinition` 在懒初始化**之前**就被赋值为 `null` → **全场第一次**火球/重锤溅射不产生任何眩晕 | 逐字相同（`c2.js:30003-30005`），原版行为 |
 | 3 | `simulation/tick.js:334` | 溅射伤害 `Math.max(1, calculateAttackDamage(zb, Ma))` 用**主目标**算、给**其它目标**扣，护甲/DR/`damageResistance` 全部错位 | 逐字相同（`c2.js:29994`），原版行为 |
 | 4 | `characters/effects.js:84-87` vs `encounters.js:273-280`、`actions.js:287-291` | 清场与复活把 `isStunned` 就地改 false，绕开了唯一的全回复分支 → 被救者停在 0 血 | 原版同结构（`c2.js:9444-9445`、`20950`），原版行为 |
@@ -1480,7 +1480,7 @@ export function populateEncounter(a) {
 | 16 | `content/classes.js:639` | 卷轴施法者 `attackRatingMultiplier: 500` 未命名，按 C-9 推断为"卷轴不失手" | 原版同值；**语义置信度中** |
 | 17 | `simulation/characters.js:236` | `tickCharacterTurn` 是**位置抖动**函数（±3 格内取随机点并夹到房间内），与"回合"无关；名字会误导读者 | 原版符号 `vw`（`c2.js:29816`），实现逐字一致；纯命名问题 |
 | 18 | **`combat/actions.js:452-467` 的 `So()`/`itemEffect` 支为死代码** | `Equipment.prototype.So()` 返回 `this.fz`，而 `effectItem` 只在 `movement.js:202` 的 `if (1 === a.statType)` 下赋值，`Item` 上没有 `statType` 字段（只有 `characteristic`，`items.js:70`）→ `So()` 恒 `null` → `if (h)`（`:459`）与近战支 `if (b && (f = b.ms))`（`:484`）永不进入 → 元素特效武器**永远拿不到自己的弹道与命中标签**，远程投射物一律 `"Red Arrow"`、impact 一律 `"Red Splat"` | 原版同样读 `a.statType`（不存在）→ 同样死支。**原版行为，非迁移引入**。已在 `docs/formulas/items.md` 记为怪癖 #4；`"Ninja Star"` 支不受影响（走 `projectileWeapon` 而非 `effectItem`） |
-| 19 | `[迁移缺陷？]` `combat/scrolls.js:43` vs `:262-330` | `Scroll` 构造器读 `a.spellDefinition`，而 `scrollDefinitions` 数据表的键仍是 `spellDefinition`（`scrolls.js:266,274,286,298,310,322`）→ `a.spellDefinition` 恒 `undefined` → **`scrollSpell` 对所有 6 种卷轴恒为 `null`** → `castScroll` 的 `if (a.mB)`（`:152-157`）永远走 `else`，即卷轴**从不施法**，一律退化为卷轴施法者的远程攻击 | 原版为 `this.mB = a.xa ? new li(a.xa) : null`（`c2.js:12892`），**读的是存在的 `spellDefinition`**；6 条卷轴里 5 条有法术定义。**极可能是重命名漏改数据字面量**，与 `docs/reverse-engineering/facts.md` 第 20 条记录的同类事故同型 |
+| 19 | `[迁移缺陷？]` `combat/scrolls.js:43` vs `:262-330` | `Scroll` 构造器读 `a.spellDefinition`，而 `scrollDefinitions` 数据表的键仍是 `spellDefinition`（`scrolls.js:272,274,286,298,310,322`）→ `a.spellDefinition` 恒 `undefined` → **`scrollSpell` 对所有 6 种卷轴恒为 `null`** → `castScroll` 的 `if (a.mB)`（`:152-157`）永远走 `else`，即卷轴**从不施法**，一律退化为卷轴施法者的远程攻击 | 原版为 `this.mB = a.xa ? new li(a.xa) : null`（`c2.js:12892`），**读的是存在的 `spellDefinition`**；6 条卷轴里 5 条有法术定义。**极可能是重命名漏改数据字面量**，与 `docs/reverse-engineering/facts.md` 第 20 条记录的同类事故同型 |
 | 20 | `[迁移缺陷？]` 承接 #19 | 该支路进一步把 `actionType = MELEE_ACTION_TYPE`（远程）交给卷轴施法者，而它没有投射武器槽（`slotStatBonusList` 只有 `"230".."235"`，`classes.js:617-635`）→ `Ey === null` → **必抛本表 #1 的 TypeError**。原版只有 `arrowScroll`（`xa: null`）会掉进这条 | 未由差分覆盖：`docs/reverse-engineering/unresolved.md` U7 明记 `castScroll()` 至今未被驱动（`scrolls-stocked` 场景只比库存） |
 
 #19/#20 的定论方式：给 harness 加一条驱动 `castScroll()` 的场景（要求房内已有可打目标，`getOpponents` 非空），两端各自断言 `statistics.spellsCast` 是否增长、以及是否抛出 `reading 'sw'`。当前矩阵两端都不会抛（因为两端都不会走到），所以这条**无法由现有 89 场景证伪**。

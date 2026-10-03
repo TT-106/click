@@ -23,15 +23,15 @@
 
 | 字段 | 初始值 | 所有权（写者） | 生命周期 | 持久化 |
 |---|---|---|---|---|
-| `initialized` | `false` (136) | 写 `true`：world/initialization.js:187（开局）；写回：restore（game-save.js:46） | boot 建 `false`；首帧 `initializeWorld` 后 `true`（loop.js:98）；restore 覆盖 | ✅ `gameInitialized`（serialize 侧 game-save.js:705,1009；restore 侧 :46） |
+| `initialized` | `false` (136) | 写 `true`：world/initialization.js:187（开局）；写回：restore（game-save.js:46） | boot 建 `false`；首帧 `initializeWorld` 后 `true`（loop.js:100）；restore 覆盖 | ✅ `gameInitialized`（serialize 侧 game-save.js:705,1009；restore 侧 :46） |
 | `partyCreated` | `false` (137) | 写 `true`：views/party-creation.js:93；写 `false`：resetRun（game.js:358） | resetRun/restore 重置 | ✅ `partyCreated`（game.js:709→:1013；game-save.js:49） |
-| `gameWon` | `false` (138) | 写 `true`：characters/party.js:278（通关）；写 `false`：resetRun :359、resetContinuation :437、views/results.js:48,58（续关） | resetRun/续关/restore 重置 | ✅ `gameWon`（game.js:710→:1014；game-save.js:50） |
-| `paused` | `false` (139) | simulation/loop.js:174 注入暂停切换操作，由 `bindPauseButton`（views/navigation.js:27-33）绑定按钮；adapter.js:69,133；写 `false`：resetRun :378、resetContinuation :439、initialization.js:186 | **RuntimeState，不入档**（每次载入从暂停态起步） | ❌ runtime-only |
+| `gameWon` | `false` (138) | 写 `true`：characters/party.js:278（通关）；写 `false`：resetRun :359、resetContinuation :437、views/results.js:81,58（续关） | resetRun/续关/restore 重置 | ✅ `gameWon`（game.js:710→:1014；game-save.js:50） |
+| `paused` | `false` (139) | simulation/loop.js:195 注入暂停切换操作，由 `bindPauseButton`（views/navigation.js:27-33）绑定按钮；adapter.js:69,133；写 `false`：resetRun :378、resetContinuation :439、initialization.js:186 | **RuntimeState，不入档**（每次载入从暂停态起步） | ❌ runtime-only |
 | `worldActive` | `true` (140) | 写 `false`：characters/character.js:1154,1179（进入地牢/城堡楼层）；写 `true`：resetRun :379、resetContinuation :440、party.js:212、world/dungeons.js:221（撤出） | 决定序列化/恢复哪套空间（world vs level） | ✅ `worldActive`（game.js:708→:1012；game-save.js:48） |
-| `processingOffline` | `false` (141) | 写 `true`：beginOfflineProgress（game.js:472）、后台分支（loop.js:42）；写 `false`：finishOfflineProgress（game.js:477，调用方 loop.js:50、party.js:272、views/results.js:137） | **RuntimeState**；自动保存期间被跳过（loop.js:87） | ❌ runtime-only |
+| `processingOffline` | `false` (141) | 写 `true`：beginOfflineProgress（game.js:472）、后台分支（loop.js:44）；写 `false`：finishOfflineProgress（game.js:477，调用方 loop.js:52、party.js:272、views/results.js:181） | **RuntimeState**；自动保存期间被跳过（loop.js:89） | ❌ runtime-only |
 | `lastActiveAt` | `Date.now()` (142) | restore 写入（game-save.js:51-52） | boot 取当前时刻；恢复时读旧档时间戳 | ⚠️ 间接持久化：存档键是 `gameTimestamp`，**写入侧永远是当下时刻**，恢复时读回变 `lastActiveAt`（facts.md #7；game-save.js:704,1008 ↔ :52） |
-| `offlineDuration` | `0` (143) | restoreRuntimeState 计算（game.js:499）；后台分支累加（loop.js:42）；beginOfflineProgress 封顶（game.js:471）；finish 清零（:479） | **RuntimeState** | ❌ runtime-only |
-| `offlineProcessed` | `0` (144) | beginOfflineProgress 清零（game.js:473）；离线循环每回合 `+= 250`（loop.js:45）；finish 清零（game.js:478） | 同上 | ❌ runtime-only |
+| `offlineDuration` | `0` (143) | restoreRuntimeState 计算（game.js:499）；后台分支累加（loop.js:44）；beginOfflineProgress 封顶（game.js:471）；finish 清零（:479） | **RuntimeState** | ❌ runtime-only |
+| `offlineProcessed` | `0` (144) | beginOfflineProgress 清零（game.js:473）；离线循环每回合 `+= 250`（loop.js:47）；finish 清零（game.js:478） | 同上 | ❌ runtime-only |
 | `renderEnabled` | `true` (145) | handleVisibility/bindVisibility（game.js:192-199，visibilitychange） | **RuntimeState** | ❌ runtime-only |
 
 离线触发链：restore 末尾 `restoreRuntimeState()`（game-save.js:690 → game.js:482-504）在 `options.allowOfflineProgress && lastActiveAt` 时计算 `Date.now() - lastActiveAt`，超过 **120,000ms** 才 `beginOfflineProgress`（game.js:498-503）；封顶 `432E5ms（12h）+ offlineTimeBonus.t`（game.js:471；balance.js:167-170，`t` 初始 0）。
@@ -42,7 +42,7 @@
 |---|---|---|---|---|
 | `turnNumber` (147) | PersistentState | `++`：simulation/tick.js:31；清零：resetRun（game.js:352）、resetContinuation（:420）；restore 覆盖（game-save.js:56） | resetRun/restore 重置 | ✅ `turnNumber`（game.js:706→:1010） |
 | `frameNumber` (148) | PersistentState | `++`：tick.js:238；restore 覆盖（game-save.js:57） | 同上（不随 resetRun 清零） | ✅ `frameNumber`（game.js:707→:1011） |
-| `dz` (149) | DerivedViewModel | loop.js:84（每 60 帧算一次 FPS） | 持续覆盖 | ❌ runtime-only |
+| `dz` (149) | DerivedViewModel | loop.js:86（每 60 帧算一次 FPS） | 持续覆盖 | ❌ runtime-only |
 | `encounter` (150) | RuntimeState | `EncounterState`（combat/encounters.js，字段 `Ar/fw/ym/du`）；resetEncounter：game.js:353 | resetRun 清空 | ❌ runtime-only |
 | `party` (151) | PersistentState（部分） | `PartyState`（characters/party.js:15-25）；金币 `gold`：party.js:59-65；restore：game-save.js:311-320 | resetRun 换新实例（game.js:354）；resetContinuation 只清导航字段（:422-435） | ✅ `party` 仅 `{gold,kills,experiencePoints}`（game.js:882-888；game-save.js:313-319）；导航/寻路字段（`Wb/ge/Lf/.../Nm/Om`）runtime-only |
 | `adventurers` (152) | Instance 容器 + PersistentState | 建队：views/party-creation.js（≤5 人）；restore 重建：game-save.js:392-541（`push` @ :536）；清空：game.js:355 | resetRun 清空 | ✅ `adventurers[]`（serialize：game.js:928-932 → entities.js:52-137） |
@@ -52,7 +52,7 @@
 | `achievements` (166-180) | Instance 容器 + PersistentState | 构造：逐条 `achievementDefinitions` → `Achievement`（`jj`=全部、`Lt`=按 id、`ik`=未达成、`Ze`=达成未应用，achievements.js:11,35-43,179-185）；restore：game-save.js:611-656；重置：resetAchievements（game.js:375） | 硬重置（`resetRun(true)`）时重建 | ✅ `achievementManager.achievements[]`，每条仅 `{achievementId,obtained,applied}`（serialize：game.js:993-1004；restore：game-save.js:617-631，映射 `We→obtained`、`Of→applied`；facts.md #16） |
 | `runStatistics` (181) | PersistentState | `RunStatistics`；写入口 StatisticsRecorder（`aa`）；resetRun 软重置 `jx()`（game.js:377）；restore：game-save.js:341-343 | 每周目重置 | ✅ `statistics`（serialize：game.js:889 → entities.js:219-252，30 个语义字段） |
 | `lifetimeStatistics` (182) | PersistentState | `LifetimeStatistics`；restore：game-save.js:344-350（**旧档无 `totalStatistics` 时回退从 `statistics` 恢复**，`:346-349`） | 跨周目累计 | ✅ `totalStatistics`（game.js:890） |
-| `aa` (183) | RuntimeState | `StatisticsRecorder`（progression/statistics.js:16-18），`bindStatistics(state)` 接线（game.js:363）；计帧 `fp()`：loop.js:46,94 | boot 接线一次，resetRun(true) 重接 | ❌ runtime-only（纯中转） |
+| `aa` (183) | RuntimeState | `StatisticsRecorder`（progression/statistics.js:16-18），`bindStatistics(state)` 接线（game.js:363）；计帧 `fp()`：loop.js:48,94 | boot 接线一次，resetRun(true) 重接 | ❌ runtime-only（纯中转） |
 | `victoryStatistics` (184-189) | PersistentState | 字段 `hn/jn/kn/Xm/mm/vn`（各队伍规模/单职业胜利数）、`qo/lq`（按职业 map）、`nm`（当前续关数）；restore：game-save.js:351-391；清零：game.js:364-373 | 硬重置清零 | ✅ `victoryStatistics`（serialize：game.js:892-927） |
 | `victoryCount` (190) | PersistentState | 通关时 `++`（胜利流程）；清零仅硬重置（game.js:415-417）；restore（game-save.js:58）；职业解锁读它（adapter.js:39,58） | 硬重置清零 | ✅ `victoryCount`（game.js:711→:1015） |
 
@@ -81,18 +81,18 @@
 - `monsterCatalog` (95-104)：`n`=定义数组、`hd/fc`=最小/最大解锁等级、`en`=按等级的 `MonsterType` 缓存。✅ 持久化为 `monsterTypes`（`minUnlockedLevel↔hd`、`maxUnlockedLevel↔fc`、`monsterLevelStates[]`；restore 走 `MonsterSaveAdapter.Kw`，entities.js:322-333，击杀数经 `advanceMonsterTypeRank` 重放军衔，entities.js:196-217；serialize game.js:933-946）。
 - `itemGenerator` (109)：`ItemGenerator`（loot/items.js：`OD` 命名器、`ND` 特效器、`ps`=槽位→类型缓存、`os`=按 id）；`initializeItemCatalog()` 重建（game.js:211）。Definition 类，不入档（物品实例内只存 `itemTypeId` 引用，entities.js:49）。
 - `itemDrops`(110)/`goldDrops`(105)/`scrollDrops`(106)/`potionDrops`(107)/`treasure`(108)/`inventories`(111)：掉落与战利品注册表；`treasure.ve` 是**宝箱设置（Definition）**，`initializeWorld` 每次 boot 填充（game.js:218-348），`treasure.Mn` 是楼层宝箱 Instance，✅ 以 `treasureChestManager` 持久化（仅 `!worldActive`，restore game-save.js:280-310；serialize :839-858）。
-- `scrolls`(112)/`potions`(113)：`ScrollInventory.at`（scrolls.js:198）/`PotionInventory.re`（potions.js:99）。✅ 分别持久化为 `scrollInventory[]`（`{scrollId,count,locked,upgradeCount}`，restore 经 `StatisticsSaveAdapter.ts`，game-save.js:555-562 + entities.js:334-342；serialize :859-870）与 `potionInventory[]`（`{potionId,active,activeStartTurn}`，restore :657-682；serialize :871-881）。
+- `scrolls`(112)/`potions`(113)：`ScrollInventory.at`（scrolls.js:204）/`PotionInventory.re`（potions.js:99）。✅ 分别持久化为 `scrollInventory[]`（`{scrollId,count,locked,upgradeCount}`，restore 经 `StatisticsSaveAdapter.ts`，game-save.js:555-562 + entities.js:334-342；serialize :859-870）与 `potionInventory[]`（`{potionId,active,activeStartTurn}`，restore :657-682；serialize :871-881）。
 - `combatQueue`(123)/`scrollTargets`(114-116)/`effects`(120-122)/`floatingText`(127)：战斗队列、卷轴目标、视觉特效。RuntimeState，`clearCombatQueue`/`clearVisualEffects`/`clearScrollTargets` 在 resetRun 调用（game.js:391,396-397）。
 
 ### 3.4 调度 / 渲染 / 存档
 | 字段 | 内容 | 持久化 |
 |---|---|---|
-| `loop` (88) | `GameLoop`（simulation/loop.js:20-31）：`frameDuration=1000/60`(:24)、`turnDuration=250`(:25)、`resourcesReady`、`lastTickAt/lastFrameAt`、fps 计数 | ❌ runtime-only |
-| `view` (89) | `GameView`（views/navigation.js）：`Gh`/`panels`/`tabBar`/`um` | ❌ DerivedViewModel；restore 后由 loop.js:112-232 重建 UI |
-| `camera` (52-54) | `At/zt/wk/vk`，loop.js:57-71 每帧由世界/楼层中心推导 | ❌ DerivedViewModel |
+| `loop` (88) | `GameLoop`（simulation/loop.js:22-33）：`frameDuration=1000/60`(:24)、`turnDuration=250`(:25)、`resourcesReady`、`lastTickAt/lastFrameAt`、fps 计数 | ❌ runtime-only |
+| `view` (89) | `GameView`（views/navigation.js）：`Gh`/`panels`/`tabBar`/`um` | ❌ DerivedViewModel；restore 后由 loop.js:114-253 重建 UI |
+| `camera` (52-54) | `At/zt/wk/vk`，loop.js:59-73 每帧由世界/楼层中心推导 | ❌ DerivedViewModel |
 | `options` (90-92) | 7 个布尔开关，初值全 `true`；新档强制 `showFps=false`（adapter.js:29） | ✅ `gameOptions`：`showCombatText→infoTextVisible`、`showSpellEffects→spellEffectsVisible`、`showMapOverlay→mapOverlayVisible`、`allowOfflineProgress→offlineProcessingEnabled`、`allowBackgroundProgress→inactiveTabProcessingEnabled`、`depthSortSprites→spriteRenderOrderEnabled`、`showFps→fpsVisible`（restore game-save.js:321-340，缺省键默认 `true`；serialize game.js:721-730） |
-| `saves` (129-135) | `saveKey="C2_V1_001"`(:130)、`lastSavedAt`(:131)、**`autoSaveInterval=3E4`（30 秒，:132）**、`statisticsAdapter`/`monsterAdapter`(:133-134) | `saveKey` ✅ 进 DTO 首键（game.js:703→:1007）；`lastSavedAt` ❌（自动保存节拍器，loop.js:87-92）；两个 adapter ❌（无状态恢复器） |
-| `monsterSprites/terrainSprites/itemSprites/animations` (48-51) | SpriteSheet/动画目录，`cl()` 就绪探测（loop.js:236） | ❌ Definition + 资源缓存 |
+| `saves` (129-135) | `saveKey="C2_V1_001"`(:130)、`lastSavedAt`(:131)、**`autoSaveInterval=3E4`（30 秒，:132）**、`statisticsAdapter`/`monsterAdapter`(:133-134) | `saveKey` ✅ 进 DTO 首键（game.js:703→:1007）；`lastSavedAt` ❌（自动保存节拍器，loop.js:89-94）；两个 adapter ❌（无状态恢复器） |
+| `monsterSprites/terrainSprites/itemSprites/animations` (48-51) | SpriteSheet/动画目录，`cl()` 就绪探测（loop.js:257） | ❌ Definition + 资源缓存 |
 | `lifecycle` (55) | `CharacterLifecycle`（simulation/characters.js） | ❌ runtime-only |
 | `pathfinder`(93)/`decorations`(94)/`spellCaches`(124-126)/`unusedPlaceholder`(128) | 空壳/装饰生成器 | ❌ runtime-only |
 
@@ -103,14 +103,14 @@
 | 方法 | 行号 | 语义 | 调用方 |
 |---|---|---|---|
 | `onLoad` | 200-203 | 绑定 visibility + 启动首帧 tick | adapter.js:22 |
-| `initializeWorld` | 204-350 | 填怪物目录、物品目录、宝箱设置、区域与城堡（Definition 装配） | loop.js:98（首帧）、game-save.js:688（载入未初始化档） |
+| `initializeWorld` | 204-350 | 填怪物目录、物品目录、宝箱设置、区域与城堡（Definition 装配） | loop.js:100（首帧）、game-save.js:688（载入未初始化档） |
 | `resetRun(a)` | 351-418 | 清回合数/ encounter / party / 世界 / 楼层 / 各注册表；`a=true`（硬重置）另清统计、点数、成就、`victoryCount` | restoreGameState（game-save.js:45）、`restartRun`(:516)、`resetGame`(:522) |
-| `resetContinuation` | 419-468 | 续关：保留队伍与 `castles.Uj`/`dungeons.Mk` 进度，只清战斗/空间态 | views/results.js:60 |
-| `beginOfflineProgress` / `finishOfflineProgress` | 469-481 | 离线结算开/关 | game.js:501、loop.js:42-50、party.js:272、results.js:137 |
+| `resetContinuation` | 419-468 | 续关：保留队伍与 `castles.Uj`/`dungeons.Mk` 进度，只清战斗/空间态 | views/results.js:93 |
+| `beginOfflineProgress` / `finishOfflineProgress` | 469-481 | 离线结算开/关 | game.js:501、loop.js:44-52、party.js:272、results.js:175 |
 | `restoreRuntimeState` | 482-504 | 重挂全局升级集合、重算角色技能，并触发离线判定 | restoreGameState 末尾（game-save.js:690） |
 | `importSave` | 505-509 | `restoreGameState` 成功后**立即回写一份存档**（`saveProgress`），并按状态重放视图 | 服务层导入（services/saves.js:74）经 adapter.js:150-152 |
 | `saveNow` | 510-512 | 手动保存 | 遗留信息面板（views/information.js:44） |
-| `restartRun` | 513-520 | `resetRun(false)` + 删档 + 存空档 | results.js:50、information.js:53 |
+| `restartRun` | 513-520 | `resetRun(false)` + 删档 + 存空档 | results.js:83、information.js:53 |
 | `resetGame` | 521-526 | `resetRun(true)` + 删档 + 存空档 | adapter.js:153-155（服务层 reset）、information.js:69 |
 
 ## 5. 存档键 ↔ 运行时字段映射（映射只在 game-save.js 成对出现）
@@ -144,7 +144,7 @@ u = {
 - **characters/party.js**：`party.gold/kills/experiencePoints`(:59-65)、`worldActive=true`(:212)、`gameWon=true` + 终止离线(:271-272)。
 - **characters/character.js**：`worldActive=false`（进入楼层，:1154,1179）。
 - **world/initialization.js**：开局 `initialized=true`(:187)。
-- **views/***：`paused`（navigation.js:24）、`partyCreated`（party-creation.js:93）、`gameWon`（results.js:48,58）、重开/续关（results.js:50,60）。
+- **views/***：`paused`（navigation.js:24）、`partyCreated`（party-creation.js:93）、`gameWon`（results.js:81,58）、重开/续关（results.js:83,60）。
 - **persistence/game-save.js**：restore 覆盖上述几乎所有 PersistentState（:39-696）；`lastSavedAt`（:29,36）。
 - **runtime/game.js 自身方法**：resetRun/resetContinuation/begin/finishOfflineProgress（:351-481）。
 - **adapter.js（产品命令层）**：`paused`(:69,133)、`options.*`(:135-146)、reset(:153-155)。

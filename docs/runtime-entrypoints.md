@@ -9,13 +9,13 @@
 | --- | --- | --- | --- |
 | 游戏对象 | `window.Game`（=w） | `game` 单例，`src/engine/modules/runtime/game.js:39` 导出 | `tests/engine-harness.js:18,27` |
 | 帧循环实例 | `Game.Hr`（GameLoop） | `game.loop`（`game.js:88`） | harness `:19` ↔ `game.js:88` |
-| 手动驱动一帧 | `Game.Hr.Hr()` | `game.loop.tick()`（原型定义 `simulation/loop.js:33`） | harness `:19,25` ↔ `:30,36` |
+| 手动驱动一帧 | `Game.Hr.Hr()` | `game.loop.tick()`（原型定义 `simulation/loop.js:35`） | harness `:19,25` ↔ `:30,36` |
 | 完整存档序列化 | `window.lB(game.pg)` | `serializeGame(game.saves)`（`persistence/game-save.js:697`）；产品走 `engine.serialize()`（`adapter.js:147-149`） | harness `:21` ↔ `:32` |
 | 单回合步进 | `window.pB(15)` | `advanceSimulation(15)`（`simulation/tick.js:27`） | harness `:23` ↔ `:34` |
 | 导入存档 | `game.hE(text)` | `game.importSave(text)`（`game.js:505-509`）；产品走 `engine.importSave()`（`adapter.js:150-152`） | harness `:22` ↔ `:33`；符号映射 `docs/symbol-map.json`（`"hE": "importSave"`） |
 | 已初始化标志 | `game.Em` | `game.initialized`（`game.js:136`） | harness `:20` ↔ `:31` |
 | 离线进行中标志 | `game.ig === true` | `game.processingOffline === true`（`game.js:141`） | harness `:24` ↔ `:35` |
-| 离线时长/已结算 | `game.jf / game.Vj` | `game.offlineDuration / game.offlineProcessed`（`game.js:143-144`） | facts 第 17 条；上限消费 `game.js:471`、`loop.js:43` |
+| 离线时长/已结算 | `game.jf / game.Vj` | `game.offlineDuration / game.offlineProcessed`（`game.js:143-144`） | facts 第 17 条；上限消费 `game.js:471`、`loop.js:45` |
 | 产品唯一入口 | 无（全局即 API） | `src/engine/adapter.js` `engine`（快照 + 命令，`adapter.js:18-156`） | facts 第 18 条 |
 | 内部接口 | — | `src/engine/internal-api.js` `runtime`（`internal-api.js:10-21`） | facts 第 18 条 |
 
@@ -51,7 +51,7 @@ g.loop.tick();                                                // 手动驱动一
 
 注意事项：
 - `import()` 路径以站点根为准（serve.mjs 以仓库根为站点，`scripts/serve.mjs:6`）；dist 构建同样保留 `src/` 目录（`scripts/build.mjs:17`）。
-- 直接调 `advanceSimulation` **不会**触发离线结算（离线由 `loop.tick` 帧差分支驱动，`loop.js:42`；见 facts 第 10 条）。
+- 直接调 `advanceSimulation` **不会**触发离线结算（离线由 `loop.tick` 帧差分支驱动，`loop.js:44`；见 facts 第 10 条）。
 - 原版入口（`window.Game` 等）只在 `tests/engine-harness.html?original` 页面存在——原脚本只被该 harness 加载（`engine-harness.js:13-17`）。
 
 ## 3. 测试 harness 用法
@@ -65,8 +65,8 @@ g.loop.tick();                                                // 手动驱动一
   - `harness.snapshot()`：完整可序列化存档状态（原版 `lB` / 重构 `createSaveState`，`:21`/`:32`）；
   - `harness.setTime(ms)`：改虚拟时钟（`:47`）；
   - `harness.advance(turns)`：步进 N 回合后返回快照（`:48`，每回合 `advanceSimulation(15)`/`pB(15)`）；
-  - `harness.advanceOffline(maxTicks=2000)`：离线专用——每帧虚拟时钟 +2000ms 并 `loop.tick()`，直到退出离线（`:51-55`；帧差恒 >1s 命中 `loop.js:42` 分支，facts 第 10 条）。
-- 初始化：`game.onLoad()` 后最多 200 次 × 20ms 轮询 `ready()`（`engine-harness.js:38-43`；重构侧 ready 即 `game.initialized`，其翻转点在 `loop.js:97` 首次初始化分支）。
+  - `harness.advanceOffline(maxTicks=2000)`：离线专用——每帧虚拟时钟 +2000ms 并 `loop.tick()`，直到退出离线（`:51-55`；帧差恒 >1s 命中 `loop.js:44` 分支，facts 第 10 条）。
+- 初始化：`game.onLoad()` 后最多 200 次 × 20ms 轮询 `ready()`（`engine-harness.js:38-43`；重构侧 ready 即 `game.initialized`，其翻转点在 `loop.js:99` 首次初始化分支）。
 - 消费方：`npm run test:parity`（0/1/99/900 回合逐字段 deepEqual，`scripts/test-parity.mjs:25-28`）、`npm run test:scenarios`（9 个变异场景矩阵，`scripts/test-scenarios.mjs:16-71`）、`tests/scenarios/save-mutations.mjs` 的存档变异助手（`withPotions/withScrolls/withGold/withTurns/withElapsed/withOfflineProcessing`，`save-mutations.mjs:21-67`）。
 
 ## 4. npm 脚本表（package.json:7-15）
@@ -85,7 +85,7 @@ g.loop.tick();                                                // 手动驱动一
 
 | 症状 | 先看 |
 | --- | --- |
-| 存档载入失败 | console 中 `loop.js:106-109` 的回滚告警 + `saves.js:47-50` `onLoadError` 消息；原档保留在 `C2_V1_001`，备份在 `C2_V1_001_backup`（`saves.js:21-31`） |
-| 离线没结算 | 三道门：`allowOfflineProgress`（`game.js:498`）、间隔 >120000ms（`:500`）、`!gameWon && partyCreated`（`:470`）；后台标签页还需 `allowBackgroundProgress`（`loop.js:42`） |
-| 面板/渲染异常 | `loop.js:74-80` 会把渲染异常吞成 console.log——查 console 的 `Caught error` 前缀（E2E 也监听它，`test-browser.mjs:13`） |
+| 存档载入失败 | console 中 `loop.js:108-111` 的回滚告警 + `saves.js:47-50` `onLoadError` 消息；原档保留在 `C2_V1_001`，备份在 `C2_V1_001_backup`（`saves.js:21-31`） |
+| 离线没结算 | 三道门：`allowOfflineProgress`（`game.js:498`）、间隔 >120000ms（`:500`）、`!gameWon && partyCreated`（`:470`）；后台标签页还需 `allowBackgroundProgress`（`loop.js:44`） |
+| 面板/渲染异常 | `loop.js:76-82` 会把渲染异常吞成 console.log——查 console 的 `Caught error` 前缀（E2E 也监听它，`test-browser.mjs:13`） |
 | 差分失败 | `output/parity|scenarios/*.json` 两端快照 diff；先确认两端 `harness.load` 后随机流一致（`engine-harness.js:45`） |

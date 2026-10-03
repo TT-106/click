@@ -10,7 +10,7 @@
 | 远征视图（地牢渲染 + DOM 面板） | 599 | 4.19 ms | 4.20 | 4.50 | 5.50 | 8.50 | 0 |
 | 冒险点面板（数百行 DOM 刷新） | 599 | 4.23 ms | 4.20 | 4.80 | 7.50 | 13.10 | 0 |
 
-同一次运行内被 `simulation/loop.js:76` 的 try/catch 吞掉的渲染异常（`console.log("Caught error. …")`）：**0 条**。
+同一次运行内被 `simulation/loop.js:78` 的 try/catch 吞掉的渲染异常（`console.log("Caught error. …")`）：**0 条**。
 
 ## 2. 结论与口径边界
 
