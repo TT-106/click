@@ -51,7 +51,7 @@ Base64 字符串
 
 ### 1.3 存储端口（依赖倒置）
 
-引擎不直接碰 localStorage：`src/engine/modules/runtime/storage-port.js:2-3` 定义 `{read, write, remove}` 可替换端口（默认全空实现），`configurePersistence`（:3）由产品启动时注入（app.js:124 → adapter.js:20-21 → internal-api.js:20）。产品实现是 `createSaveService(...).persistence`（saves.js:45-51）：`read` 返回启动时校验过的 `bootSave`；`write` 带 backup 语义；**`remove` 是空操作**——引擎 `deleteStoredSave`（game-save.js:26-31）调用它不会真删键，重置流程实际是"覆盖写一份未初始化空档"（见 §4.5）。
+引擎不直接碰 localStorage：`src/engine/modules/runtime/storage-port.js:2-3` 定义 `{read, write, remove}` 可替换端口（默认全空实现），`configurePersistence`（:3）由产品启动时注入（app.js:127 → adapter.js:20-21 → internal-api.js:20）。产品实现是 `createSaveService(...).persistence`（saves.js:45-51）：`read` 返回启动时校验过的 `bootSave`；`write` 带 backup 语义；**`remove` 是空操作**——引擎 `deleteStoredSave`（game-save.js:26-31）调用它不会真删键，重置流程实际是"覆盖写一份未初始化空档"（见 §4.5）。
 
 ## 2. 存档 DTO 结构
 
@@ -114,26 +114,26 @@ Base64 字符串
 
 | 触发 | 路径 | 证据 |
 |---|---|---|
-| **自动保存** | 帧循环内、`!processingOffline` 时检查 `now - saves.lastSavedAt > saves.autoSaveInterval` → `saveProgress` | loop.js:87-92；**周期 `autoSaveInterval = 3E4`（30,000ms = 30 秒）**，game.js:132；`lastSavedAt` 仅由 `saveProgress`/`deleteStoredSave` 刷新（game-save.js:36,29） |
-| 手动按钮 | `#save-now` → `saves.save()`；设置页 `#settings-save` 同 | app.js:88,109 |
-| 快捷键 | Ctrl/Cmd+S → `saves.save()` | app.js:110-111 |
-| 页面隐藏/关闭 | `pagehide` 与 `visibilitychange(hidden)` → `saves.save(true)`（静默） | app.js:115-116 |
-| 建队完成/导入成功后 | 各流程回写 | app.js:127、game.js:508 |
+| **自动保存** | 帧循环内、`!processingOffline` 时检查 `now - saves.lastSavedAt > saves.autoSaveInterval` → `saveProgress` | loop.js:87-92；**周期 `autoSaveInterval = 3E5`（300,000ms = 5 分钟）**，`src/engine/modules/runtime/game.js:143`（R35 回源勘误，运行时未改）；`lastSavedAt` 仅由 `saveProgress`/`deleteStoredSave` 刷新（game-save.js:36,29） |
+| 手动按钮 | `#save-now` → `saves.save()`；设置页 `#settings-save` 同 | app.js:91,112 |
+| 快捷键 | Ctrl/Cmd+S → `saves.save()` | app.js:113-114 |
+| 页面隐藏/关闭 | `pagehide` 与 `visibilitychange(hidden)` → `saves.save(true)`（静默） | app.js:118-119 |
+| 建队完成/导入成功后 | 各流程回写 | app.js:130、game.js:508 |
 
 服务层 `saves.save()`（saves.js:52-58）的前置：未被 `blocked`（原档待恢复时拒绝覆盖，保护磁盘原档）、`engine.snapshot().ready`（引擎已初始化）。写入统一走 `write()`（saves.js:22-31）：localStorage 异常时提示"先导出"，不抛出。
 
-**导出**（saves.js:59-68）：`export()` 序列化当前内存态；`export(true)` 直接读 localStorage 原文。文件名 `clickpocalypse[-original]-YYYY-MM-DD.c2save`（:65），Blob 下载。按钮绑定 app.js:89-90。
+**导出**（saves.js:59-68）：`export()` 序列化当前内存态；`export(true)` 直接读 localStorage 原文。文件名 `clickpocalypse[-original]-YYYY-MM-DD.c2save`（:65），Blob 下载。按钮绑定 app.js:92-93。
 
-**导入**（saves.js:69-84 + app.js:91-102）：
-1. 文件 ≤2MiB 前置检查（app.js:94），文本进 `#save-code`；
+**导入**（saves.js:69-84 + app.js:94-105）：
+1. 文件 ≤2MiB 前置检查（app.js:97），文本进 `#save-code`；
 2. `saves.import(text)`：worker 内 `decodeSave` 校验（5 秒超时，saves.js:8）；
 3. 置 `transaction = true`（阻塞自动写，saves.js:22-23），先快照当前进度 `previous = engine.serialize()`；
 4. `engine.importSave(text.trim())` → `game.importSave`（game.js:505-509）→ `restoreGameState`；失败则回滚导入 `previous` 并恢复暂停态（saves.js:75-79）；
 5. 成功后 `write(新档, previous)`——**被替换的旧进度自动存入 backup 键**（saves.js:82,25-27）。
 
-**重置**（saves.js:90-97 + app.js:106-107）：`#reset-game` 要求输入框精确键入"重新开始"（app.js:106）→ `saves.reset()` → `engine.reset()`（adapter.js:153-155）→ `game.resetGame()`（game.js:521-526）＝ `resetRun(true)` + `deleteStoredSave` + `saveProgress`（覆盖写 4 键空档，旧档先进 backup）+ 视图重置 → `location.reload()`（saves.js:94）。另有轻度重开 `restartRun`（保留跨周目统计，game.js:513-520，results.js:50 / information.js:25）。
+**重置**（saves.js:90-97 + app.js:109-110）：`#reset-game` 要求输入框精确键入"重新开始"（app.js:109）→ `saves.reset()` → `engine.reset()`（adapter.js:153-155）→ `game.resetGame()`（game.js:521-526）＝ `resetRun(true)` + `deleteStoredSave` + `saveProgress`（覆盖写 4 键空档，旧档先进 backup）+ 视图重置 → `location.reload()`（saves.js:94）。另有轻度重开 `restartRun`（保留跨周目统计，game.js:513-520，results.js:50 / information.js:25）。
 
-**启动恢复**（app.js:119-133 + loop.js:97-110）：
+**启动恢复**（app.js:122-136 + loop.js:97-110）：
 1. `saves.prepare()`：读 `C2_V1_001`，worker 校验；失败 → `blocked = true`，**原档留在磁盘不动**，提示导出或恢复备份（saves.js:33-41）；
 2. `engine.boot(saves.persistence)` → 首帧资源就绪后：`initializeWorld` → 先序列化一份空白世界 `initialSave` → 读存储尝试 `restoreGameState`；**失败则回退到空白世界并继续用 `initialSave`，保证导出入口可用**，同时 `onLoadError` 置 blocked（loop.js:100-109，saves.js:47-50）。
 
@@ -163,7 +163,7 @@ Base64 字符串
 | 主存档键 | `C2_V1_001` | save-validation.js:3；game.js:130 |
 | 备份键 | `C2_V1_001_backup` | saves.js:21 |
 | 编码 | LZ-string **1.3.3** Base64 | vendor 文件头 :9；save-codec.js:3-5 |
-| 导入文本上限 | `MAX_SAVE_BYTES = 2 * 1024 * 1024`（2 MiB） | save-validation.js:4；saves.js:5；app.js:94 |
+| 导入文本上限 | `MAX_SAVE_BYTES = 2 * 1024 * 1024`（2 MiB） | save-validation.js:4；saves.js:5；app.js:97 |
 | 解压后 JSON 上限 | 8 MiB | save-validation.js:48 |
 | 自动保存周期 | `3E4` ms = 30 秒 | game.js:132（检查逻辑 loop.js:87-92） |
 | worker 校验超时 | 5000 ms | saves.js:8 |

@@ -33,13 +33,13 @@
 ## 1. 页面从加载到进入游戏经过哪些步骤？
 
 1. `index.html:12` 以 ES module 加载 `./src/app.js`（无其他脚本入口）。
-2. `src/app.js:119-142` `boot()` 依次执行：
-   - `:120` 渲染图标；`:121` `loadGamePanels()` 把 `src/ui/panels/*.html`（含 shell + 5 份 character 模板）注入 `#legacy-host`（`src/ui/load-panels.js:9-14`）；
-   - `:123` `saves.prepare()`：读 localStorage 原始串并交 Worker 校验（`src/services/saves.js:33-41`）；
-   - `:124` `engine.boot(saves.persistence)`；
-   - `:127-129` 创建组队构建器、绑定事件、增强遗留控件；
-   - `:130-131` 隐藏 loading、显示应用；`:132` 按 `won/expedition` 导航；
-   - `:135-141` 启动 300ms 轮询：监测 `started/won/offline` 变化并调用 `refresh()`。
+2. `src/app.js:122-145` `boot()` 依次执行：
+   - `:123` 渲染图标；`:124` `loadGamePanels()` 把 `src/ui/panels/*.html`（含 shell + 5 份 character 模板）注入 `#legacy-host`（`src/ui/load-panels.js:9-14`）；
+   - `:126` `saves.prepare()`：读 localStorage 原始串并交 Worker 校验（`src/services/saves.js:33-41`）；
+   - `:127` `engine.boot(saves.persistence)`；
+   - `:130-132` 创建组队构建器、绑定事件、增强遗留控件；
+   - `:133-134` 隐藏 loading、显示应用；`:135` 按 `won/expedition` 导航；
+   - `:138-144` 启动 300ms 轮询：监测 `started/won/offline` 变化并调用 `refresh()`。
 3. `src/engine/adapter.js:20-30` `engine.boot`：`runtime.setPersistence(persistence)` 注入存储端口（`:21`），调 `game.onLoad()`（`:22`），然后轮询等待 `game.view.panels.length` 非空且（未开局时）DOM 出现 `#startQuestButton`，15 秒超时报错（`:24-27`）。
 4. `src/engine/modules/runtime/game.js:200-203` `game.onLoad()` = `bindVisibility()`（visibilitychange → `renderEnabled`）+ `game.loop.tick()` 启动帧循环。
 5. 帧循环 `GameLoop.prototype.tick`（`src/engine/modules/simulation/loop.js:33`）分三态：
@@ -60,10 +60,10 @@ sequenceDiagram
     participant G as game.js (game 单例)
     participant L as loop.js GameLoop
 
-    B->>A: module 加载并执行 boot() (app.js:119)
-    A->>A: loadGamePanels() 注入面板 DOM (app.js:121)
-    A->>S: saves.prepare() Worker 校验 localStorage (app.js:123, saves.js:33)
-    A->>E: engine.boot(persistence) (app.js:124)
+    B->>A: module 加载并执行 boot() (app.js:122)
+    A->>A: loadGamePanels() 注入面板 DOM (app.js:124)
+    A->>S: saves.prepare() Worker 校验 localStorage (app.js:126, saves.js:33)
+    A->>E: engine.boot(persistence) (app.js:127)
     E->>E: runtime.setPersistence(persistence) (adapter.js:21)
     E->>G: game.onLoad() (adapter.js:22, game.js:200)
     G->>G: bindVisibility() renderEnabled 开关 (game.js:197)
@@ -76,8 +76,8 @@ sequenceDiagram
     L->>L: requestAnimationFrame 自续 (loop.js:222)
     E->>E: 轮询等待 panels + #startQuestButton (adapter.js:24-27)
     E-->>A: boot 返回; 新档默认关 showFps (adapter.js:29)
-    A->>A: createPartyBuilder / bind / navigate (app.js:127-132)
-    A->>A: 300ms 轮询 engine.snapshot() 刷新 UI (app.js:135-141)
+    A->>A: createPartyBuilder / bind / navigate (app.js:130-135)
+    A->>A: 300ms 轮询 engine.snapshot() 刷新 UI (app.js:138-144)
 ```
 
 ---
@@ -165,12 +165,13 @@ sequenceDiagram
 **产品 UI 不直接持有 `game`；只通过 `src/engine/adapter.js` 的只读快照 `snapshot()` 与校验过的命令方法交互。**
 
 - `adapter.js:18` 注释明示"产品层的唯一引擎入口：校验命令并提供只读显示快照"；`internal-api.js:9` 注释"产品仅通过 adapter.js 的快照与命令访问"。
-- 读取：`engine.snapshot()`（`adapter.js:72-125`）每 300ms 被 `app.js:135-141` 拉取，产出扁平展示模型（`ready/started/paused/won/offline/turn/run/gold/kills/heroes[]/options` 等），例如 `gold: game.state.party.gold`（`:81`）、`inCombat: !game.state.encounter.noMonstersLeft`（`:88`）、英雄属性经 `runtime.statValue` 折算（`:104-108`）。新 UI `src/ui/dashboard.js:14-44` 只消费这个快照渲染 DOM。
+- 读取：`engine.snapshot()`（`adapter.js:72-125`）每 300ms 被 `app.js:138-144` 拉取，产出扁平展示模型（`ready/started/paused/won/offline/turn/run/gold/kills/heroes[]/options` 等），例如 `gold: game.state.party.gold`（`:81`）、`inCombat: !game.state.encounter.noMonstersLeft`（`:88`）、英雄属性经 `runtime.statValue` 折算（`:104-108`）。新 UI `src/ui/dashboard.js:14-44` 只消费这个快照渲染 DOM。
 - 命令（写入路径）：
   - `startParty(party)`（`adapter.js:51-70`）：校验数量/解锁/重名后，调用视图上**与遗留开始按钮共用**的唯一创建入口 `PartyCreationView.prototype.startParty(members)`（`views/party-creation.js` 的 `startParty` → `createAdventurerPartyFromSelection`，U132；产品命令不再直写 `selectedCharacters`/`validParty`，也不再调用 `startButton.onclick()` 这个 DOM 回调），最后 `game.paused = false`；
-  - `pause(value)`（`:133-135`）、`setOption(name, enabled)`（`:136-147`，白名单映射到 `game.options` 六个字段）；
-  - `showPanel(id)`（`:126-132`）、`serialize()/importSave()/reset()`（`:148-156`）。
-- `src/app.js` 的使用点：`navigate` 读快照并 `engine.showPanel`（`app.js:35,49-51`）、暂停按钮 `engine.pause`（`:84`）、设置项 `engine.setOption`（`:108`）、存档服务经 `engine.serialize/importSave/reset`（`src/services/saves.js:55,74,76,92`）。
+  - `pause(value)`（`:133-135`）、`setOption(name, enabled)`（`:141-152`，白名单映射到 `game.options` 六个字段）；
+  - `showPanel(id)`（`:126-132`）、`serialize()/importSave()/reset()`（`:153-161`）。
+- 画面风格命令：`setPresentation(style)`（`src/engine/adapter.js:136-140`）定位画布视图，仅切换绘制策略；独立偏好键不属于存档 DTO。
+- `src/app.js` 的使用点：`navigate` 读快照并 `engine.showPanel`（`app.js:30,46-48`）、暂停按钮 `engine.pause`（`:87`）、设置项 `engine.setOption`（`:111`）、存档服务经 `engine.serialize/importSave/reset`（`src/services/saves.js:55,74,76,92`）。
 - 遗留面板（引擎 views/*）仍直接操作 DOM 与 `game`，新 UI 通过 `mountExpedition()` 搬运节点、`enhanceLegacyControls()` 增强键盘可达性（`src/ui/legacy-panels.js:3-13,16`）。
 
 ---
@@ -179,7 +180,7 @@ sequenceDiagram
 
 - 状态：`EncounterState`（`combat/encounters.js:19-24`）——`noMonstersLeft=true` 表示"无遭遇"；`beginEncounter(name, isBoss)`（`:32-38`）置 `noMonstersLeft=false` 并累加计数 `encounterCount`。
 - **`populateEncounter(room)`（`encounters.js:39-106`）是唯一批量刷怪入口**，仅在 `noMonstersLeft` 时生效（`:41`），按房间类型 `room.encounterType` 分派（`encounterType` 的 0/1/2 三分支行为如下所示；"野外/城堡"标签为按行为推断的语义命名——待验证：未在代码中找到 `encounterType` 赋值处的命名证据）：
-  - `Yp===0`（野外房间）：`bossEncounterModifier` 生效时 20% 概率（`0.2 > Math.random()`，`:44-45`）改走地下城 Boss；否则怪物数 `minMonsters + randomInt(max-min) + extraMonsters`（`:47-51`），等级在怪物目录解锁区间 `[hd, fc]` 内随机（`:52`），经 `getMonsterTypesForLevel` 取 20 只一组的类型缓存（`:52`，`:220-242`），逐只 `new Character("Monster", MONSTER_TYPE, 12, monsterClass, null)`（`:56`）、挂 `AttackBehavior`（`:61`）、按类型成长曲线填六维（`:64-77`）、在房间内随机落位（`:78-83`）、压入 `game.monsters.activeMonsters`（`:84`），最后 `beginEncounter(...)`（`:86`）；
+  - `Yp===0`（野外房间）：`bossEncounterModifier` 生效时 20% 概率（`0.2 > Math.random()`，`:44-45`）改走地下城 Boss；否则怪物数 `minMonsters + randomInt(max-min) + extraMonsters`（`:47-51`），等级在怪物目录解锁区间 `[hd, fc]` 内随机（`:52`），经 `getMonsterTypesForLevel` 取 20 只一组的类型缓存（`:52`，`:220-242`），逐只 `new Character("Monster", MONSTER_TYPE, 12, monsterClass, null)`（`:56`）、挂 `AttackBehavior`（`:61`）、按类型成长曲线填六维（`:64-77`）、在房间内随机落位（`:78-83`）、压入 `game.monsters.activeMonsters`（`:87`），最后 `beginEncounter(...)`（`:86`）；
   - `Yp===1`（城堡房间）：`spawnCastleGuardians(count, room)`（`:96`，实现 `:147-163`，从 `content/guardians.js` 的 `castleGuardianDefinitions` 抽取，`createCastleGuardian` 在 `simulation/characters.js:102-128`），遭遇名取自 `game.currentCastle.castleName`（`:97-98`）；
   - `Yp===2`：`spawnDungeonBoss(room)`（`:101`，实现 `:107-146`：`bossClass` + 随机 Boss 贴图 + 队伍最高等级 + 技能初始化 + 附带一队守卫）。
 - 触发点：队伍推开房门时——`characters/character.js:311-316`：首次抵达门目标（`Q.Mb` 置位）→ 记统计 `aa.Ur()`、`awardAdventurePoints(2)`（`:311-312`）→ `populateEncounter(Q.$d)`（`:314`）+ `revealRoom`/`spawnRoomTreasure`（`:315-316`）。
@@ -336,7 +337,7 @@ sequenceDiagram
 3. **驱动（帧循环，不是一次性结算）**：`loop.js:42` —— 帧差 `a > 1E3` 且 `allowBackgroundProgress` 时进入（首次会 `view.onOfflineStart()` 并把 `offlineDuration` 从 0 起累加，这就是后台标签页也走同一条路的机制，facts 第 11 条）；随后 `loop.js:43-48` 每帧最多 **200 回合**：`advanceSimulation(15)` → `offlineProcessed += turnDuration(250)` → `aa.fp(250)`；`offlineProcessed >= offlineDuration` 时 `finishOfflineProgress()`（`:49-51`；`game.js:476-481` 复位标志并 `view.onOfflineFinish()`）。
 4. 离线期间：不自动存档（`loop.js:87` 的 `!game.processingOffline` 门）、升级条刷新跳过（`tick.js:515-528`）、帧时长统计不走 `:93-95` 分支。
 5. 直连 `advanceSimulation` 会绕过该分支（它只认 `game.processingOffline`）——所以 harness 提供 `advanceOffline()`（`tests/engine-harness.js:51-55`）：每帧把虚拟时钟 +2000ms 再 `loop.tick()`，使 `1E3 < 帧差` 恒成立（facts 第 10 条）。差分场景 `offline-1h/8h/disabled` 验证两端一致（`scripts/test-scenarios.mjs:23-40`，facts 第 12 条）。
-6. UI 侧：离线进度经快照 `offlineProgress` 百分比展示（`adapter.js:88`），`app.js:138` 在离线结束瞬间强制重导航。
+6. UI 侧：离线进度经快照 `offlineProgress` 百分比展示（`adapter.js:88`），`app.js:141` 在离线结束瞬间强制重导航。
 
 ### offline-resume sequence
 

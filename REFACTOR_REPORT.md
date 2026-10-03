@@ -1,5 +1,7 @@
 # REFACTOR REPORT — Clickpocalypse II 语义恢复与现代化工程
 
+> **R35（2026-10-03）补充**：本报告保真矩阵中的原版逐像素证据对应 `classic` 引擎路径。用户新授权的产品默认 `clean` 保留原像素角色、弱化地形与特效、稳定墙面排序，并移除顶栏。`npm run test:presentation` 另测新画面、墙地闪动反例、缓存/剔除、风格切换存档不变及桌面/手机布局。跨浏览器和真机范围仍为 PARTIAL，完整现代化仍未完成。实现与证据边界见 `docs/rendering.md`、`docs/WORKSTATE.md`。
+
 > 执行窗口：2026-09-25（首次恢复）→ 2026-09-26（主体重构）→ **2026-09-27（语义恢复收官 + 验证收尾）**。
 > 配套文档：`MIGRATION_MAP.md`、`COMPATIBILITY_REPORT.md`、`PERFORMANCE_REPORT.md`、`docs/architecture.md`、`docs/WORKSTATE.md`（续跑入口）、`docs/m10-type-debt.md`（类型债务台账）、`docs/m13-exhaustion-audit.md`（残留项审计）、`docs/reverse-engineering/facts.md`（事实库）。
 
@@ -65,7 +67,7 @@ archive/original/c2.js  ──AST 机械恢复──▶  src/engine/（77 模块
 | L6 浏览器 E2E | 建队/自动战斗/暂停/五类面板/**c2c.user.js 外部 DOM 契约**/设置/导出导入/非法存档/刷新恢复/键盘/三种视口 |
 | L7 长跑 soak | `test:soak`：115,200 与 345,600 等价回合（8h/24h），两端完整存档相等 + CDP 主动 GC 后堆增量样本 |
 | 渲染等价 | `rendered-scene` / `autosave-payload`：真实帧循环 1,300 帧后比对主画布逐像素 FNV-1a 指纹（两端相同）与落盘存档解码内容 |
-| 工程门 | `npm run check`（当前 151 文件语法 + 单测）、`npm run typecheck`（tsc 覆盖 77/78 引擎模块，经 import 图传递；`src/engine/modules` 下 `@ts-nocheck` 已清零）、`npm run build`（增量拷贝到 dist）、`npm run lint`（11 条不变量守卫，见 §9）；每切片一 commit。**2026-09-27 最终回归扫描（10 门全绿，退出码逐条回显）**：`lint=0 build=0 typecheck=0 check=0 parity=0 scenarios=0 e2e=0 soak=0 perf=0 perf:frames=0` |
+| 工程门 | `npm run check`（当前 153 文件语法 + 单测）、`npm run typecheck`（tsc 覆盖 77/78 引擎模块，经 import 图传递；`src/engine/modules` 下 `@ts-nocheck` 已清零）、`npm run build`（增量拷贝到 dist）、`npm run lint`（11 条不变量守卫，见 §9）；每切片一 commit。**2026-09-27 最终回归扫描（10 门全绿，退出码逐条回显）**：`lint=0 build=0 typecheck=0 check=0 parity=0 scenarios=0 e2e=0 soak=0 perf=0 perf:frames=0` |
 
 方法论实证：差分矩阵三次抓到人工没看到的真实缺陷——guardians/minions 数据键漏改导致城堡守卫生成崩溃；金堆房对 DungeonTile 误调角色坐标接口；以及本轮由新场景暴露的**自动保存间隔 3E4 vs 原版 3E5**（10 倍频率，改动前无任何测试能看到）。
 

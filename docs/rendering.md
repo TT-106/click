@@ -1,94 +1,51 @@
-# 渲染层（Canvas）— 实现实况
+# 渲染层（Canvas）— 当前实现与验证边界
 
-> 本文只写代码里真实存在的东西，每条都带 `file:line`。渲染层不参与存档，因此它的正确性只能靠"跑起来不报错 + 与原版逐像素一致"两类证据，见 §6。
+R35（2026-10-03）：用户明确要求移除顶部横幅和说明、上移主画面，并保留像素风明显减少杂乱，另报告墙壁与地面闪动。本轮只改 UI 和表现，不改玩法、数值、随机流、存档格式或原版素材文件。
 
-## 1. 入口与门控
+## 1. 产品样式与原版验证路径
 
-- 唯一驱动点是帧循环：`simulation/loop.js:74-78`
+- 产品默认 `clean`（清晰像素），见 `src/app.js:25`；设置里可以切换到 `classic`（原版像素）。偏好单独存在 `C2_PRESENTATION_V1`，不写入游戏存档 JSON。
+- `GameCanvasView` 的引擎默认仍为 `classic`，见 `src/engine/modules/rendering/scene.js:238`。原版差分 harness 不加载产品入口，因此继续验证原版绘制路径；这些指纹不能用来宣称 `clean` 像素与原版一致。
+- 产品通过 adapter 的 `setPresentation` 命令切换样式；相同样式不重建缓存，见 `src/engine/modules/rendering/scene.js:766`。画布恢复时的 `createDomElements` 按已有样式重新创建策略，见 `src/engine/modules/rendering/scene.js:747`。
+- 顶部横幅、远征页大标题/说明、组队页旁注与页尾说明已移除。保存状态、周目、存档管理和设置移到侧栏，原按钮 ID 保留。
 
-```js
-if (game.renderEnabled) {
-  try {
-    game.view.render();
-  } catch (l) {
-    console.log("Caught error. name: " + l.name + " message: " + l.message + " exception: " + l);
-  }
-}
-```
+## 2. 纯绘制边界
 
-- `game.renderEnabled` 初值 `true`（`runtime/game.js:145`），并由可见性切换：`runtime/game.js:194` `game.renderEnabled = !document.hidden;`
-- **渲染异常被吞成 `console.log`**，不会冒泡成 `pageerror`。任何只听 `pageerror` 的测试都看不到渲染崩溃——差分矩阵因此额外监听 console（`scripts/test-scenarios.mjs`），过滤掉 harness 页自发的 `/favicon.ico` 404（浏览器行为，与引擎无关）。
+`createMapPresentation` 位于 `src/engine/modules/rendering/presentation.js`，没有 game、随机函数、存储或游戏模块依赖。它接收 Canvas 上下文、精灵、坐标与显示数据，处理：
 
-## 2. 两套绘制策略
+| 内容 | 清晰像素行为 |
+|---|---|
+| 地面 | 同一精灵首次绘制时降低纹理对比，2×2 采样弱化细碎高频纹理；逐像素 alpha 原样保留 |
+| 墙壁、树木与装饰 | 保留轮廓，降低饱和度与纹理对比；独立缓存避免混用地面处理结果 |
+| 角色、掉落物 | 保留原素材与颜色，整数屏幕坐标绘制 |
+| 特效 | 保留帧和播放逻辑，绘制时降低透明度；画外精灵/动画剔除 |
+| 血条 | 简短低对比色条；非队友满血时不画 |
+| 浮动文字 | 显示最后 20 条，同一 42×24 区域最多 3 条并错开基线，柔和颜色和暗色描边 |
 
-`DepthSortedRenderer`（`rendering/scene.js:47`）与 `ImmediateRenderer`（`:67`）实现同一组绘制接口，由选项切换：`scene.js:350`
+地形缓存按 sprite 对象分别放在两个 WeakMap；`cachedSprites`、`drawnSprites`、`culledSprites` 只作绘制诊断。缓存不会逐帧读像素或改写原图。地形层标记由 `drawWorldTileRow` 和 `drawDungeonTileRow` 显式传入，角色和掉落默认为 actor。
 
-```js
-a.se = game.options.depthSortSprites ? a.uE : a.DD;
-```
+浮动文字的生成、随机偏移、状态更新和到期移除保持原调用链；策略只筛选最终可见文字。闪电折线随机偏移仍调用原函数，见 `src/engine/modules/rendering/scene.js:231-232`，不能因其属于表现而删除 RNG 消费。
 
-- 深度排序版把每帧的绘制请求收进**命令池** `Hl`（计数 `Bn`），帧首 `hB()` 逐个 `resetRenderCommand` 复用，避免每帧新建对象；提交时 `hx()`（`:297-305`）：
+## 3. 墙地闪动修复
 
-```js
-DepthSortedRenderer.prototype.hx = function () {
-  if (!(2 > this.Bn)) {
-    this.Hl.sort(this.FE);
-  }
-  var a;
-  for (a = this.Bn - 1; 0 <= a; a--) {
-    this.Hl[a].If(this.context);
-  }
-};
-```
+原深度排序按精灵到相机参考点的平面距离排序。两个同等角深度的墙面在相机微移时可以交换排序，产生遮挡跳变。清晰像素改用世界坐标的 `-(worldX + worldY)` 作为等角深度键，保留原命令池、倒序提交与 raised 偏移；原版像素仍使用原距离排序。
 
-  即：元素数 ≥2 才排序，然后**倒序**绘制（距离相机焦点最远的先画）。
-- 即时版不排序，拿到命令立刻 `If(context)`。
-- `gx/fx` 与 `dk/fB` 的差别只有一行：`c.vr = 0.1;`（高亮/描边层，随后再画一次本体）。
+清晰像素另外关闭 Canvas 平滑采样，并将目标屏幕坐标取整，避免同一像素格内的亚像素变化造成纹理闪动。地面原投影另外存在格边界不连续：27px 格子配 13px 半格，相机余数取整跨界时让地面反向跳回 1px。清晰像素保留原格子间距，通过连续相机 Y 偏移消除该跳动；只改绘制坐标，不改模拟相机和角色移动。
 
-## 3. 相机与等距投影
+`DepthSortedRenderer` 与 `ImmediateRenderer` 仍服从已有 `depthSortSprites` 选项。地图的菱形可见窗、相机运动、世界/地牢生成与模拟推进不变。
 
-`DepthSortedRenderer.hB()` 每帧计算一个"焦点" `ko`，世界与地牢共用同一式子，只是像素原点不同（`scene.js:252-266`）：
+## 4. 验证与范围
 
-```js
-var b = game.viewportWidth / 2,
-  c = 2 * game.viewportHeight;
-a = game.world.he + (0.5 * (b - game.viewportHalfWidth) + (c - game.viewportHalfHeight)) | 0;
-b = game.world.ie + (c - game.viewportHalfHeight - 0.5 * (b - game.viewportHalfWidth)) | 0;
-setVector(this.ko, a, b);
-```
+执行 `npm run test:presentation`，需要开发服务器运行在 4173（也可用 `TEST_URL`）。测试使用独立浏览器上下文和原版 fixture 的临时副本，仅刷新副本时间戳以排除离线结算；原 fixture 不修改。
 
-- 每个精灵的深度 = 到焦点的平面距离：`distanceToPoint(this.ko, x, y)`（`:270`）。这就是排序键，不是 z 层号。
-- 世界与地牢的像素原点分别是 `game.world.he/ie` 与 `game.level.Ki/Li`。
+- 墙面排序反例：相机参考点 ±0.25，原路径排序翻转、1,542 个 RGBA 通道变化；修复后顺序相同、变化为 0。修复前清晰路径曾失败，记录在 `output/playwright/presentation-red.log`。
+- 实际 `drawWorldTileRow` 格边界反例：相机跨过边界前后，原版地面 Y 为 224 → 225（反向跳动），清晰像素为 225 → 225；修复前该断言失败，见 `output/playwright/presentation-boundary-red.log`。
+- 地形采样反例：位置 10.1 → 10.3，原路径 1,592 个通道变化，清晰路径为 0。
+- 60 次重复绘制不重建缓存，画外精灵被剔除；锁定时间后连续切换样式，完整存档逐字节不变。
+- 实际大地图与自然进入地牢后的画面均走地形缓存，清晰画面亮度低于对应原版画面；该检查验证接线，不把亮度当成美观评分。
+- 1440×1000、1280×720、375×812 布局：地图顶部小于 100px、无横向溢出，存档/设置入口可用，风格偏好在刷新后保留；捕获 pageerror 以及被引擎吞入 console 的渲染异常。
+- 当前截图与诊断位于 `output/playwright/presentation/`；完整回归结果由 `docs/WORKSTATE.md` 登记。
 
-## 4. 一帧的绘制顺序
+既有 89 场景中的 7 条 Canvas 指纹仍验证 `classic` 与原版 oracle，包括多视口、spellstorm 与 farm。新清晰画面为有意差异，未建立覆盖所有视口/场景组合的像素基线；跨浏览器、真机低端帧时间和用户设备上的所有闪动仍未验证。验收矩阵 Canvas 行继续保持 PARTIAL。
 
-`GameCanvasView.prototype.update`（`scene.js:348` 起）按固定顺序发射命令，世界地图分支：
-
-1. `fillStyle = "#000000"; fillRect(...)` 清屏；
-2. **36 次 `drawWorldTileRow(a, 行, 起始列, 结束列)`**（`scene.js:356-391`）—— 起止列是硬编码的菱形窗（`b-5..b-3` 递增到 `b-20..b+12` 再收回），首行取相机所在行 `-18`；
-3. `drawWorldCharacters(a, game.minions.eh)` → `drawWorldCharacters(a, game.state.adventurers)`（随从先画，冒险者后画）；
-4. `if (game.options.showCombatText) drawFloatingText(a)`；
-5. `a.se.hx()` 提交并按深度绘制；
-6. 之后是 `showMapOverlay` 等覆盖层。
-
-地牢分支同构：`drawDungeonTileRow` 枚举 36 行，随后 `drawDungeonCharacters(a, game.minions.eh)` → `drawDungeonCharacters(a, game.state.adventurers)`（`scene.js:619-620`）→ `drawCharacterEffects(a, getMonsters())`（`:621`）→ 高亮层 `drawCharacterHighlights`。
-
-> 结论：可见窗不是"裁剪后画全部"，而是**按菱形窗的行枚举固定列区间**（世界与地牢各 36 行调用）。改这些常数会直接改变画面构成，逐像素指纹会变（见 §6）。
-
-## 5. 精灵与动画查找
-
-- `SpriteSheet.prototype.getSprite = function (a) { return this.Yh[a]; }`（`sprites.js:193-195`）—— 纯字典查表，**未命中返回 `undefined`**，不报错；把 `undefined` 交给绘制路径就会在 §1 的 try/catch 里变成一条 `Caught error.` 日志。
-- 动画表未命中会打印：`sprites.js:90` `console.log("Failed to find animated sprite: " + a);`
-- 帧序列由 `content/animations.js` 的静态表驱动（`AnimationSheet(sheetFile, cellSize, rows)`），条目字段已语义化为 `firstFrameColumn / firstFrameRow / lastRowFrameCount / lastFrameRow`，外加 `isDirectional`（`zc` 的原名）：为真时特效改为"转向朝向"而非逐帧推进（`simulation/tick.js` 的分支）。
-- `SpriteAnimation` 的播放游标在 `sprites.js` 与 `RenderCommand` 中仍叫 `oc`（同字母双主，见 `docs/reverse-engineering/semantic-map.md` 第十二轮"刻意未做"）。
-
-## 6. 渲染的验证手段（现状）
-
-| 手段 | 位置 | 能证明什么 | 不能证明什么 |
-|---|---|---|---|
-| 逐像素指纹差分 | `tests/engine-harness.js` `canvasInk()` + `scripts/test-scenarios.mjs` 的 `rendered-scene` / `autosave-payload` | 同一状态下两版引擎在 1,300 真实帧后画布**完全一致**（FNV-1a 指纹相同，例：非背景像素 203,763、指纹 1853346327） | 只有一条场景、一种视口；不是全量像素回归基线 |
-| 反向验证 | 手工把 `scene.js:341` 的 `drawImage` 目标横移 2 像素 | 指纹立刻分叉、场景失败 —— 检查有牙齿 | — |
-| console 捕获 | `test-scenarios.mjs` 的 console 监听 | 被吞掉的渲染异常会让矩阵失败 | 只在真正执行绘制的步骤里有效（多数场景走 `advanceSimulation`，不绘制；`frames` 步骤才走 `loop.tick`） |
-| E2E 截图 | `scripts/test-browser.mjs` | 页面确实出图、三种视口不溢出 | 截图未做基线比对 |
-
-真实帧时间/掉帧分布见 `docs/performance-baseline.md` 与 `docs/performance-after.md`。
+帧循环仍在 `src/engine/modules/simulation/loop.js:75-79` 的 try/catch 中绘制。异常会以 `Caught error.` 日志出现，因此只监听 pageerror 不足以验证渲染。

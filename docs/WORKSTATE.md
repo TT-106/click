@@ -2,6 +2,22 @@
 
 > 当前分支边界（2026-10-03，R34）：`main` 优先完善浏览器 `src/`；Godot 已保留在 `feature/native-godot-csharp` 与独立工作目录 `D:\下载\clickpocalypse2-godot`，暂缓功能开发。操作约定见 `docs/BRANCH-WORKFLOW.md`。
 
+## R35 — 浏览器 UI 上移、清晰像素与墙地闪动修复（2026-10-03）
+
+- 用户最新授权：继续完善 `src/`，移除最上面的横幅/说明，保留像素风明显减少杂乱，并修复墙壁与地面闪动。此授权覆盖 UI 尺寸与表现变化；玩法、数值、RNG 消费顺序、存档、原版资产仍保持。Godot worktree 保持暂停且未改动。
+- 删除顶栏、远征大标题/说明、组队旁注和页尾说明；存档/设置/状态迁到侧栏，手机保留入口。1440/1280px 地图顶部约 61px（改前约 270px），375px 约 99px；无横向溢出。
+- 新增无 game/RNG/存储依赖的 `rendering/presentation.js`：独立地面/装饰 WeakMap 像素缓存，地形降饱和/低对比/地面 2×2 采样，保留 alpha 与原角色/掉落；画外剔除、整数坐标、关闭平滑采样，弱化特效、血条与文字拥挤。产品默认 clean，设置可切 classic，偏好单独存在 `C2_PRESENTATION_V1`。引擎默认 classic 继续用于原版 Canvas oracle；clean 不承诺与原版逐像素相同。
+- 墙面：原距离排序会随相机参考点微移翻转同等角深度墙面的遮挡；clean 改用稳定世界坐标深度键。定向反例原路径 1,542 个 RGBA 通道变化，修复后为 0。首次 clean 仍用距离排序时断言失败，证据 `output/playwright/presentation-red.log`。
+- 地面：另用真实 `drawWorldTileRow` 复现相机跨 27px 格边界时地面 Y 224→225 的反向 1px 跳动；clean 绘制用连续相机偏移、保留 13px 半格间距，修后 225→225。红证据 `output/playwright/presentation-boundary-red.log`。亚像素 10.1→10.3 采样反例原路径 1,592 通道变化，clean 为 0。这些证据不代表所有硬件上的全部闪动都已排除。
+- 新增 `npm run test:presentation` 并接进总门禁：实际大地图/自然进入地牢的清晰策略接线，墙面排序、格边界反向跳动、亚像素采样、缓存/画外剔除，锁定时间后风格切换完整存档字节不变，三档布局/存档/设置入口与偏好持久化，console/pageerror 捕获。fixture 只使用更新时间戳的副本，原文件未修改。
+- 本轮完整扫描第一次只有 presentation 的手机布局断言红（清除死样式时误匹配复合选择器）；修复后对最终源码重新扫描：`node scripts/gate-sweep.mjs` **退出码 0，22 项门禁 + 3 项随附检查共 25 条全部为 0**。日志 `output/gate-sweep/2026-10-03T08-24-48/summary.txt`，含 parity 0/1/99/900、89/89 场景、E2E 与 dist E2E、8h/24h 等价回合、perf 与 headless 帧时间。不能把这些提升为跨浏览器或真机 PASS。
+- 源码与新检查已提交为 `269f7c1`；提交后清空临时授权，`lint` 再跑退出码 0、待人工结构变动 0。
+- 同步当前语法文件数为 153（新增模块 + 检查脚本，区别于 R33 的未跟踪原生脚本假红）；更新渲染实况说明及 app/adapter/RNG 的当前引用；顺带回源纠正存档说明中旧的 30 秒自动保存表述，实际一直为 5 分钟。正文锚点待复核保持 200（基线阈值 206）；保护目录内历史引用保留。结构 diff 人工审查 87 行、加自动授权合计 93 行，通过本批临时清单验证；源切片提交时清空清单，避免遗留豁免。
+- 当前架构审计：95 JS / 79 引擎模块 / 552 边，game 直连 23、最大 SCC 41、单字母 57、短名 46；类型债 41 any / 149 unknown。本轮建立纯表现模块，未宣称剩余命名、解耦、类型债已完成；验收矩阵仍 47 PASS / 4 PARTIAL。
+- 画面证据：`output/playwright/ui-r35-final-desktop.png`、`output/playwright/presentation/layout-375.png`；诊断、布局数据与实际场景接线数据在 `output/playwright/presentation/`。上述 output 为本地忽略目录，复核需重新运行测试。
+
+---
+
 ## R34 — 完成 Godot 隔离（2026-10-03）
 
 - 通过新增提交移除主线 13 份原生专属设计文件（ADR 0002–0012 与两份桌面重建规格），保留两条线共用的 ADR 0001；不重写历史。Godot 分支保有全部原生实现、ADR 0001–0015 和专属规格。
