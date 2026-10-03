@@ -154,7 +154,23 @@ export function initializeSimulationLoop() {
           gameOverView = new GameOverView(gameOverTab),
           pointsView = new PointsView(pointsTab),
           offlineProgressView = new OfflineProgressView(offlineTab),
-          informationView = new InformationView(informationTab),
+          informationView = new InformationView(informationTab, {
+            saveActions: {
+              saveNow: () => game.saveNow(),
+              restartRun: () => game.restartRun(),
+              resetGame: () => game.resetGame(),
+              exportSave: () => serializeGame(game.saves),
+              importSave: saveText => game.importSave(saveText),
+            },
+            readLastSavedAt: () => game.saves.lastSavedAt,
+            readStatistics: () => ({
+              runStatistics: game.state.runStatistics,
+              lifetimeStatistics: game.state.lifetimeStatistics,
+              victoryCount: game.state.victoryCount,
+            }),
+            readCastleCount: () => game.castles.castleList.length,
+            options: game.options,
+          }),
           pauseView = new PauseView(() => game.paused, () => { game.paused = !game.paused; });
         addTab(gameView.tabBar, createPartyTab);
         addTab(gameView.tabBar, gameOverTab);

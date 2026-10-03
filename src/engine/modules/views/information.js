@@ -2,18 +2,46 @@
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
 import { appendHeaderCell, clearElementById, createElement, getElement, hideElementById, setElementHtml, showElementById } from "./dom.js";
-import { game } from "../runtime/game.js";
-import { serializeGame } from "../persistence/game-save.js";
 import { View, addChildView, resetChildViews } from "./base.js";
 import { TabView } from "./navigation.js";
 import { floorNumber, formatAmount } from "../core/math.js";
-export function SaveControlsView() {
+/** @typedef {Object} SaveControlActions
+ * @property {() => void} saveNow
+ * @property {() => void} restartRun
+ * @property {() => void} resetGame
+ * @property {() => string} exportSave
+ * @property {(saveText: string) => boolean} importSave
+ *
+ * @typedef {Object} StatisticsSnapshot
+ * @property {import('../progression/statistics.js').RunStatistics} runStatistics
+ * @property {import('../progression/statistics.js').RunStatistics} lifetimeStatistics 累计统计继承同一组运行统计字段。
+ * @property {number} victoryCount
+ *
+ * @typedef {Object} GameOptions
+ * @property {boolean} showCombatText
+ * @property {boolean} showSpellEffects
+ * @property {boolean} showMapOverlay
+ * @property {boolean} allowOfflineProgress
+ * @property {boolean} allowBackgroundProgress
+ * @property {boolean} depthSortSprites
+ * @property {boolean} showFps
+ *
+ * @typedef {Object} InformationInputs
+ * @property {SaveControlActions} saveActions
+ * @property {() => number} readLastSavedAt
+ * @property {() => StatisticsSnapshot} readStatistics
+ * @property {() => number} readCastleCount
+ * @property {GameOptions} options
+ */
+/** @param {SaveControlActions} actions @param {() => number} readLastSavedAt */
+export function SaveControlsView(actions, readLastSavedAt) {
+  this.readLastSavedAt = readLastSavedAt;
   this.elementId = "infoTabSaveLoadContainer";
   this.visible = true;
   this.lastSaveDivElementId = "lastSaveDiv";
   this.cachedLastSavedAt = -1;
   getElement("saveButton").onclick = function () {
-    game.saveNow();
+    actions.saveNow();
     return false;
   };
   getElement("firstResetButton").onclick = function () {
@@ -22,7 +50,7 @@ export function SaveControlsView() {
     return false;
   };
   getElement("realResetButton").onclick = function () {
-    game.restartRun();
+    actions.restartRun();
     hideElementById("resetConfirmContainer");
     showElementById("firstResetButtonContainer");
     return false;
@@ -38,7 +66,7 @@ export function SaveControlsView() {
     return false;
   };
   getElement("realDeleteButton").onclick = function () {
-    game.resetGame();
+    actions.resetGame();
     hideElementById("deleteSaveConfirmContainer");
     showElementById("firstDeleteSaveButtonContainer");
     return false;
@@ -50,7 +78,7 @@ export function SaveControlsView() {
   };
   getElement("exportSaveButton").onclick = function () {
     var exportSaveInput = /** @type {HTMLInputElement} */ (getElement("exportSaveInput"));
-    exportSaveInput.value = serializeGame(game.saves);
+    exportSaveInput.value = actions.exportSave();
     showElementById("exportSaveContainer");
     hideElementById("exportSaveButton");
     exportSaveInput.select();
@@ -71,7 +99,7 @@ export function SaveControlsView() {
     return false;
   };
   getElement("importOkButton").onclick = function () {
-    if (game.importSave(/** @type {HTMLInputElement} */ (getElement("importSaveInput")).value)) {
+    if (actions.importSave(/** @type {HTMLInputElement} */ (getElement("importSaveInput")).value)) {
       hideElementById("importErrorMessage");
       showElementById("importSuccessMessage");
     } else {
@@ -89,12 +117,13 @@ export function SaveControlsView() {
     return false;
   };
 }
-export function InformationView(tabState) {
+/** @param {InformationInputs} inputs */
+export function InformationView(tabState, inputs) {
   this.elementId = "infoTabContent";
   this.tabState = tabState;
-  addChildView(this, new SaveControlsView());
-  addChildView(this, new StatisticsView());
-  addChildView(this, new OptionsView());
+  addChildView(this, new SaveControlsView(inputs.saveActions, inputs.readLastSavedAt));
+  addChildView(this, new StatisticsView(inputs.readStatistics, inputs.readCastleCount));
+  addChildView(this, new OptionsView(inputs.options));
 }
 /** StatisticsView.prototype 在初始化里被 new View() 替换，后挂成员对 TS 不可见；用 this 类型标注这几个方法。
  * @typedef {Object} MountedStatisticsViewMethods
@@ -103,7 +132,10 @@ export function InformationView(tabState) {
  * @property {function(number): void} createHeaderRow 在表尾插入一行表头。
  * @property {function(HTMLTableRowElement, number): HTMLTableCellElement} getStatisticCell 取指定行的单元格。
  */
-export function StatisticsView() {
+/** @param {() => StatisticsSnapshot} readStatistics @param {() => number} readCastleCount */
+export function StatisticsView(readStatistics, readCastleCount) {
+  this.readStatistics = readStatistics;
+  this.readCastleCount = readCastleCount;
   this.elementId = "statisticsContainer";
   this.visible = true;
   this.tableElement = null;
@@ -118,7 +150,9 @@ export function appendStatisticsRow(statisticsView, label, rowIndex) {
   labelCell.innerHTML = label;
   return statisticsRow;
 }
-export function OptionsView() {
+/** @param {GameOptions} options */
+export function OptionsView(options) {
+  this.options = options;
   this.elementId = "gameOptionsContainer";
   this.visible = true;
   this.hasBoundOptionListeners = false;
@@ -130,7 +164,7 @@ export function initializeViewsInformation() {
   };
   SaveControlsView.prototype.update = function () {
     var lastSavedAt;
-    lastSavedAt = game.saves.lastSavedAt;
+    lastSavedAt = this.readLastSavedAt();
     if (this.cachedLastSavedAt !== lastSavedAt && 0 < lastSavedAt) {
       this.cachedLastSavedAt = lastSavedAt;
       setElementHtml(this.lastSaveDivElementId, "最后保存于: " + new Date(this.cachedLastSavedAt).toLocaleTimeString());
@@ -163,9 +197,10 @@ export function initializeViewsInformation() {
     if (!this.tableElement) {
       this.buildStatisticsTable();
     }
-    var runStatistics = game.state.runStatistics,
-      lifetimeStatistics = game.state.lifetimeStatistics,
-      victoryCount = game.state.victoryCount,
+    var statistics = this.readStatistics(),
+      runStatistics = statistics.runStatistics,
+      lifetimeStatistics = statistics.lifetimeStatistics,
+      victoryCount = statistics.victoryCount,
       lifetimePlayedMillis = lifetimeStatistics.playedMillis,
       runPlayedMillis = runStatistics.playedMillis,
       lifetimeTurnCount = lifetimeStatistics.turnCount,
@@ -272,7 +307,7 @@ export function initializeViewsInformation() {
     }
     if (this.cachedRunCastlesConquered != runCastlesConquered) {
       this.cachedRunCastlesConquered = runCastlesConquered;
-      this.runCastlesConqueredCell.innerHTML = formatAmount(runCastlesConquered) + "/" + game.castles.castleList.length;
+      this.runCastlesConqueredCell.innerHTML = formatAmount(runCastlesConquered) + "/" + this.readCastleCount();
     }
     if (this.cachedLifetimeCastlesConquered != lifetimeCastlesConquered) {
       this.cachedLifetimeCastlesConquered = lifetimeCastlesConquered;
@@ -610,34 +645,35 @@ export function initializeViewsInformation() {
       allowBackgroundProgressCheckbox = /** @type {HTMLInputElement} */ (getElement("inactiveTabProcessingEnabledCheckbox")),
       depthSortSpritesCheckbox = /** @type {HTMLInputElement} */ (getElement("spriteRenderOrderEnabledCheckbox")),
       showFpsCheckbox = /** @type {HTMLInputElement} */ (getElement("fpsVisibleCheckbox"));
-    showCombatTextCheckbox.checked = game.options.showCombatText;
-    showSpellEffectsCheckbox.checked = game.options.showSpellEffects;
-    showMapOverlayCheckbox.checked = game.options.showMapOverlay;
-    allowOfflineProgressCheckbox.checked = game.options.allowOfflineProgress;
-    allowBackgroundProgressCheckbox.checked = game.options.allowBackgroundProgress;
-    depthSortSpritesCheckbox.checked = game.options.depthSortSprites;
-    showFpsCheckbox.checked = game.options.showFps;
+    var options = this.options;
+    showCombatTextCheckbox.checked = options.showCombatText;
+    showSpellEffectsCheckbox.checked = options.showSpellEffects;
+    showMapOverlayCheckbox.checked = options.showMapOverlay;
+    allowOfflineProgressCheckbox.checked = options.allowOfflineProgress;
+    allowBackgroundProgressCheckbox.checked = options.allowBackgroundProgress;
+    depthSortSpritesCheckbox.checked = options.depthSortSprites;
+    showFpsCheckbox.checked = options.showFps;
     if (!this.hasBoundOptionListeners) {
       showCombatTextCheckbox.addEventListener("change", function () {
-        game.options.showCombatText = showCombatTextCheckbox.checked;
+        options.showCombatText = showCombatTextCheckbox.checked;
       });
       showSpellEffectsCheckbox.addEventListener("change", function () {
-        game.options.showSpellEffects = showSpellEffectsCheckbox.checked;
+        options.showSpellEffects = showSpellEffectsCheckbox.checked;
       });
       showMapOverlayCheckbox.addEventListener("change", function () {
-        game.options.showMapOverlay = showMapOverlayCheckbox.checked;
+        options.showMapOverlay = showMapOverlayCheckbox.checked;
       });
       allowOfflineProgressCheckbox.addEventListener("change", function () {
-        game.options.allowOfflineProgress = allowOfflineProgressCheckbox.checked;
+        options.allowOfflineProgress = allowOfflineProgressCheckbox.checked;
       });
       allowBackgroundProgressCheckbox.addEventListener("change", function () {
-        game.options.allowBackgroundProgress = allowBackgroundProgressCheckbox.checked;
+        options.allowBackgroundProgress = allowBackgroundProgressCheckbox.checked;
       });
       depthSortSpritesCheckbox.addEventListener("change", function () {
-        game.options.depthSortSprites = depthSortSpritesCheckbox.checked;
+        options.depthSortSprites = depthSortSpritesCheckbox.checked;
       });
       showFpsCheckbox.addEventListener("change", function () {
-        game.options.showFps = showFpsCheckbox.checked;
+        options.showFps = showFpsCheckbox.checked;
       });
       this.hasBoundOptionListeners = true;
     }
