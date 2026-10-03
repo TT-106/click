@@ -43,10 +43,10 @@
 3. `src/engine/adapter.js:20-30` `engine.boot`：`runtime.setPersistence(persistence)` 注入存储端口（`:21`），调 `game.onLoad()`（`:22`），然后轮询等待 `game.view.panels.length` 非空且（未开局时）DOM 出现 `#startQuestButton`，15 秒超时报错（`:24-27`）。
 4. `src/engine/modules/runtime/game.js:200-203` `game.onLoad()` = `bindVisibility()`（visibilitychange → `renderEnabled`）+ `game.loop.tick()` 启动帧循环。
 5. 帧循环 `GameLoop.prototype.tick`（`src/engine/modules/simulation/loop.js:36`）分三态：
-   - 资源未就绪：`resourcesReady = monsterSprites/terrainSprites/itemSprites/animations 的 .isLoaded()`（`loop.js:257`），每帧重试并继续 `requestAnimationFrame`（`loop.js:260`）；
+   - 资源未就绪：`resourcesReady = monsterSprites/terrainSprites/itemSprites/animations 的 .isLoaded()`（`loop.js:266`），每帧重试并继续 `requestAnimationFrame`（`loop.js:269`）；
    - `game.initialized` 为假（首次）：执行一次性初始化分支（见下）；
    - 已初始化：正常模拟 + 渲染（见第 3/4 节）。
-6. 首次初始化分支（`loop.js:99-255`）：`game.initializeWorld()`（`:98`，填充怪物目录、物品目录、宝箱定义、区域与城堡，`game.js:204-350`）→ 先序列化一份空白存档 `initialSave`（`:102`）→ 尝试 `persistence.read()` + `restoreGameState`，失败则回滚到 `initialSave` 并回调 `onLoadError`（`:103-109`，保证坏档不破坏可用状态）→ 构建 15 个 Tab/Panel 视图并挂载（`:112-223`）→ 已有队伍则 `view.reset()`，离线中则 `onOfflineStart()`，已胜利则 `onGameWon()`（`:224-233`）。
+6. 首次初始化分支（`loop.js:99-264`）：`game.initializeWorld()`（`:98`，填充怪物目录、物品目录、宝箱定义、区域与城堡，`game.js:204-350`）→ 先序列化一份空白存档 `initialSave`（`:102`）→ 尝试 `persistence.read()` + `restoreGameState`，失败则回滚到 `initialSave` 并回调 `onLoadError`（`:103-109`，保证坏档不破坏可用状态）→ 构建 15 个 Tab/Panel 视图并挂载（`:112-223`）→ 已有队伍则 `view.reset()`，离线中则 `onOfflineStart()`，已胜利则 `onGameWon()`（`:224-233`）。
 7. 模块级初始化（构造器原型、内容表）由 `src/engine/modules/runtime/index.js:77-165` 按固定顺序调用 74 个 `initialize*()`，最后 `initializeRuntimeGame()`（`:165`）创建 `game` 组合根，`:166` 再导出 `game`。注释明确"模块初始化阶段只有这里拥有调用顺序"（`:76`）。
 
 ### startup sequence
@@ -68,12 +68,12 @@ sequenceDiagram
     E->>G: game.onLoad() (adapter.js:22, game.js:200)
     G->>G: bindVisibility() renderEnabled 开关 (game.js:197)
     G->>L: game.loop.tick() (game.js:202)
-    L->>L: 资源未就绪? 每帧探测 .cl() (loop.js:257)
+    L->>L: 资源未就绪? 每帧探测 .cl() (loop.js:266)
     L->>G: 首帧: initializeWorld() (loop.js:100, game.js:204)
     L->>L: serializeGame(空白档) 作回滚底 (loop.js:104)
     L->>L: persistence.read() + restoreGameState, 失败回滚 (loop.js:105-111)
-    L->>L: 构建 15 个 Tab/Panel 视图 (loop.js:114-244)
-    L->>L: requestAnimationFrame 自续 (loop.js:260)
+    L->>L: 构建 15 个 Tab/Panel 视图 (loop.js:114-253)
+    L->>L: requestAnimationFrame 自续 (loop.js:269)
     E->>E: 轮询等待 panels + #startQuestButton (adapter.js:24-27)
     E-->>A: boot 返回; 新档默认关 showFps (adapter.js:29)
     A->>A: createPartyBuilder / bind / navigate (app.js:131-136)
@@ -112,7 +112,7 @@ sequenceDiagram
 
 ```mermaid
 sequenceDiagram
-    participant RAF as requestAnimationFrame (loop.js:260)
+    participant RAF as requestAnimationFrame (loop.js:269)
     participant L as loop.tick (loop.js:35)
     participant S as advanceSimulation (tick.js:27)
     participant C as camera (loop.js:59)
@@ -123,7 +123,7 @@ sequenceDiagram
     alt 资源未就绪 (loop.js:36,236)
         L->>L: 探测 sprites/animations.cl()，继续等待
     else 未初始化 (loop.js:99)
-        L->>L: initializeWorld + 恢复存档 + 建视图 (loop.js:100-253)
+        L->>L: initializeWorld + 恢复存档 + 建视图 (loop.js:100-262)
     else 已初始化
         L->>L: a = 帧差毫秒 (loop.js:38-40)
         alt partyCreated 且未胜利未暂停 (loop.js:43)
@@ -141,7 +141,7 @@ sequenceDiagram
         L->>L: FPS 采样 → game.state.fps (loop.js:83-88)
         L->>P: 距上次保存>30s 且非离线 → 自动存档 (loop.js:89-94)
         L->>L: 非暂停非离线：aa.fp(a) 记时长 (loop.js:95-97)
-        L->>RAF: requestAnimationFrame 自续 (loop.js:260)
+        L->>RAF: requestAnimationFrame 自续 (loop.js:269)
     end
 ```
 
@@ -155,7 +155,7 @@ sequenceDiagram
 - `loop.js:55-58`：模拟推进量 = 实际帧差 / `frameDuration`（可 >1 帧），`advanceSimulation(c)`；
 - `loop.js:76-82`：`if (game.renderEnabled) { try { game.view.render(); } catch (l) { console.log(...) } }`——渲染异常只记日志（原版行为保留）；
 - `renderEnabled` 唯一写点是 `handleVisibility`：`game.renderEnabled = !document.hidden`（`game.js:192-196`），由 `bindVisibility` 在 visibilitychange 时触发（`game.js:197-199`）。即后台标签页跳过渲染但不跳过模拟（配合后台离线分支）；
-- `game.view.render()` 来自视图基类：`View.prototype.render` → 可见性切换 + `update()`；`CompositeView.update` → 递归 `render()` 所有子视图（`src/engine/modules/views/base.js:41-64`）。`GameView.prototype = new CompositeView()`（`views/navigation.js:93`），子视图含 `GameCanvasView`（画布渲染，`views/expedition.js:225` + `rendering/scene.js`）；
+- `game.view.render()` 来自视图基类：`View.prototype.render` → 可见性切换 + `update()`；`CompositeView.update` → 递归 `render()` 所有子视图（`src/engine/modules/views/base.js:41-64`）。`GameView.prototype = new CompositeView()`（`views/navigation.js:93`），子视图含 `GameCanvasView`（画布渲染，`views/expedition.js:253` + `rendering/scene.js`）；
 - 反向耦合（UI → 模拟）：适配层 `showPanel` 会主动调一次 `game.view.render()` 立即重绘（`adapter.js:125-131`）；暂停只停模拟不停渲染（`:41` 的门条件不含渲染）。
 
 ---

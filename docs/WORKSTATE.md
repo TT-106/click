@@ -2,6 +2,32 @@
 
 > 当前分支边界（2026-10-03，R34）：`main` 优先完善浏览器 `src/`；Godot 已保留在 `feature/native-godot-csharp` 与独立工作目录 `D:\下载\clickpocalypse2-godot`，暂缓功能开发。操作约定见 `docs/BRANCH-WORKFLOW.md`。
 
+## R41 — 单字母绑定归零：远征面板解耦 + 11 个命名切片（2026-10-03）
+
+- 基于干净的 `be35a8a` 实跑基线：95 JS / 79 引擎模块 / 549 边、game 直连 20、最大 SCC 39、单字母 17（11 文件）/ 混淆短名 17（11 文件）/ 白名单短名 11。本轮 12 个执行智能体（1 解耦 + 11 命名），命名切片互不共享文件故可并行。
+- **① `views/expedition.js` 退出 game 直连**（game 直连 20 → **19**）。采用**模块级绑定 + fail-loud 访问器**（本仓库对"多视图类模块"的既定手法，同 `bindCastleViews`/`bindUpgradeDetailViews`）：`bindExpeditionViews(deps)` 接 7 个字段（`readState`/`readAnimation`/`isWorldActive`/`readDungeonHeader`/`readScrollList`/`readPotionList`/`removePotion`），28 处 `game.*` 全部改经 `expeditionDeps()` **现读**。**判据**：`game.state`/`animations`/`scrolls`/`potions` 从不被整体重赋值 → 可绑容器；`worldActive` 是可变标量、`currentDungeon`/`currentCastle` 会被整体替换（`grep -rnE 'game\.[A-Za-z_$][\w$]*\s*=[^=]' src` 实测）→ 必须走 provider 回调。`readDungeonHeader` 的 castle 分支返回 `level: 0`，与原版 `dungeonLevel = 0;` 逐字一致。`initializeSimulationLoop()` 在构造视图前装配。新增 `tests/unit/expedition-decouple.test.mjs` 4 条（未绑定即抛、缺字段即抛、注入值驱动 DOM、`readDungeonHeader` 两分支）。
+- **② 单字母绑定 17 → 0（全库归零）**，11 个命名切片：
+  - `characters/character.js`（2）：`Character` 构造器的 `a`/`d` **各承载四段含义**（`adventurerName`→`slotList`→`slotStatTypes`→`skillTree4`；`classDefinition`→`slotStatBonusList`→`slotStatTypes`→`skillTree3`），拆成 `adventurerName`/`slotList`/`slotStatTypes`/`skillTree4Upgrades` 与 `classDefinition`/`slotStatTypeMap`/`skillTree3Upgrades`；声明合并进既有 var 行，**净增 0 行**（该文件有 139 条文档行号引用）。
+  - `characters/movement.js`（2）：两个分离力函数的 `b`（角色→其 `position`，冒险者/随从/怪物三循环共用）拆 `otherCharacter`/`otherCharacterPosition`。
+  - `combat/encounters.js`（2）：`populateEncounter` 的 `a`（房间）→ `encounterRoom`；`spawnCastleGuardians` 的 `f`（守卫定义→守卫对象）拆 `guardianDefinition`/`guardian`。**`0.5 > Math.random()` 分支里"真分支每轮一次 `randomInt`、假分支只在循环前一次"的不对称按原样保留**（那是原版行为）。
+  - `combat/potions.js`（2）：`PotionDrop` 的 `x`/`y` → `levelPositionX`/`levelPositionY`。
+  - `combat/skill-effects.js`（2）：`applySkillTreeBonuses` 的 `d`（升级实例→升级定义）拆 `upgrade`/`upgradeDefinition`；`applyStatBonus` 的 `a`（角色→属性对象）拆 `character`/`stats`（32 个 case 的编号、顺序与运算符逐字不变，含原版 `case 11/13/12` 的乱序）。
+  - `rendering/sprites.js`（2）：`SpriteAnimation` 的 `d` 拆 `firstFrameRow`/`frameColumn`；`VisualEffect` 的 `f` 拆 `effectType`/`currentPosition`（构造器消费随机数的次数与顺序不变）。
+  - `persistence/entities.js`（1）：`restoreMonsterTypes` 的 `a`（存档态→等级数组）拆 `savedMonsterTypes`/`levelStates`，**存档键不变**。
+  - `simulation/characters.js`（1）：`initializeCharacterSkills` 的 `d` 拆 `slot`/`item`。
+  - `simulation/loop.js`（1）：`GameLoop.tick` 的 `a` 拆 `now`/`frameDeltaMs`/`tickDeltaMs`；`nowMilliseconds()` 仍调用两次（第 43 行的 `this.lastFrameAt = nowMilliseconds()` 是**独立第二次调用**，未合并）。
+  - `world/dungeons.js`（1）：`ShopRegistry.addShop` 的 `a` 拆 `shop`/`shopTile`。
+  - `world/regions.js`（1）：`chooseAdjacentRegion` 的 `d`（随机源→候选区域）拆 `randomSource`/`candidateRegion`；16 处"赋值-短路链"语义与 `randomSource.random()` 调用次数不变，末尾未命中仍返回 `undefined`（未补 `return null`）。
+  - 11 个文件中 **9 个净增 0 行**（`character`/`movement`/`encounters`/`potions`/`skill-effects`/`entities`/`simulation-characters`/`regions` 为 0；`sprites` +1、`dungeons` +1、`loop` +9、`expedition` +23）。
+- 当前实测：95 JS / 79 引擎模块 / **546** 边；game 直连 **19**、最大 SCC 39；**单字母 0**、混淆短名 **2**（仅 `persistence/game-save.js` 的 `$`/`$c`）、白名单短名 **9**；any 28 / unknown 144。架构棘轮按实测收紧。
+- 文档：新增通用版 `output/rewrite-doc-refs.mjs`（按 `git diff -U0` 的 hunk 映射平移 `file:line`，排除红线保护的 `docs/reverse-engineering/**`），本轮平移 4 份文档共 18 处；`doc-snippets` 抓到 3 处逐字摘录漂移（`combat.md` 的 `applySkillTreeBonuses` 与 `populateEncounter`、`items.md` 的槽位→属性映射）已按源码改正；`doc-counts` 同步语法 **161** / 单测 **48**。锚点待复核 **201**（基线 206，与 R40 持平）；**回源抽查**另修 1 条本轮之前就存在的漂移——`game-state-schema.md` 的"世界原点初值 100/100"引 `regions.js:285-286`，实为 `:334-335`（`WORLD_ORIGIN_COLUMN`/`WORLD_ORIGIN_ROW`）。
+- **踩坑记录（值得进 skill）**：`rewrite-doc-refs.mjs` **对同一批改动只能跑一次**——第二次运行会把"HEAD→当前"的映射**重复施加**到已经映射过的行号上，造成双重平移（本轮实测把 `loop.js` 的引用推到越界，`doc-refs` 报 3 条红）。正确顺序：先 `git restore` 被平移的文档 → 只跑一次 → 再叠加人工内容改动。
+- 结构对账：`verify-structure-invariant.mjs HEAD` 报 95 行待人工判定 → 77 条去重临时授权（副本 `output/struct-allowlist-reviewed.json`，逐条写明理由），提交前清空。
+- 完整 `node scripts/gate-sweep.mjs` **27 条全部退出 0**——含 48 项单测、89/89 差分场景、0/1/99/900 回合逐字节存档、原色与四档 DPR 动态纹理、E2E/dist E2E、8h/24h 等价回合、CPU perf 与 headless 帧时间；日志 `output/gate-sweep/2026-10-03T12-12-36/summary.txt`。原版帧时间 A/B 腿仍无法启动，四条 PARTIAL 不因此升级。
+- 本地源码提交：`7278345`；文档搬正与本轮记录在紧随其后的 `docs:` 提交里。原素材、原版档案、fixture、保护研究目录及 Godot 工作目录未改。下一候选：`views/dungeons.js`、`views/party-creation.js` 退出 game 直连（剩余 19 个直连模块里 `views/` 占 2 个）；混淆短名残量 `persistence/game-save.js` 的 `$`/`$c`；类型债按 `docs/m10-type-debt.md` 的配方 1 收窄。
+
+---
+
 ## R40 — 七个并行切片：结果面板解耦 + 六个命名热点归零（2026-10-03）
 
 - 基于干净的 `77a45bb` 实跑基线：95 JS / 79 引擎模块 / 549 边、game 直连 21、最大 SCC 39、单字母 46（17 文件）/ 混淆短名 35（16 文件）、any 28 / unknown 144。本轮按"一文件一执行智能体"派 7 个切片（1 个解耦 + 6 个命名），命名切片互不共享文件故可并行；解耦切片额外只动 `simulation/loop.js` 的装配点。
@@ -381,7 +407,7 @@
 
 - U120 贴纸图集数据键语义化（2026-09-27，混淆清单 2 → **0**）：三份 atlas（`src/data/{items,monsters,terrain}-atlas.js`，共 2,836 条）的键 `a`→`name`（贴纸文件名）、`b`→`position`（`{x,y}` 图集像素坐标），2 个消费点同步（`rendering/sprites.js` 的 `SpriteSheet.registerDefinitions`：`c.a`/`c.b.x`/`c.b.y` → `c.name`/`c.position.x`/`c.position.y`；`views/results.js:138` 的 `appendRandomMonsterPortrait`：`b.a`→`b.name`）。**定名证据**：`Sprite` 构造签名 `(spriteSheet, sourceX, sourceY, name)` 与 `Sprite.sourceX/sourceY/name` 逐参对应。新增工具 `scripts/rename-atlas-schema.mjs`（带 `"a":/"b":` 计数相等断言 + 消费点唯一性断言 + 回扫；**不用 rename-fields-batch 的原因**：该工具的 keyRe 只认**裸键**，且其"字符串字面量多重集"校验会把键名改动误判为语义变化）。**`a`/`b` 不写入 symbol-map 的 fields 段**（它们是极常见标识符、全库多义，只有 atlas 这一处 schema 被改名）。`rendered-scene`/`rendered-scene-narrow` 的逐像素指纹 + E2E 三视口是本批的保护网。
 
-- U119 渲染层收尾（2026-09-27，混淆清单 7 → 2）：`rendering/sprites.js` 4 项 + `rendering/scene.js` 2 项。`SpriteSheet.$w` 与 `AnimationSheet.$w`→registerDefinitions（**同义并名**：都在 `image.onload` 里把定义数组灌进 `animationMap`）；`AnimationCatalog.Zt`→sheets（`isLoaded` 逐表轮询、惰性建 `animationMap` 时的来源表数组）；`AnimationSheet.FB`→animationNames（本表声明的动画名列表，Catalog 据此建全局映射并检测重名）；`VisualEffect.iD`→startPosition（**证据**：scene.js:664-668 以 `Tb.iD` 与 `Tb.targetPosition` 作线段两端点，构造器里 `iD = b` 是不被改写的起始位置，`currentPosition` 才是可变副本）；`GameCanvasView.kE`→containerElementId（"gameTabContent"；**不可叫 elementId**——同构造器 226 行已有 `elementId = "gameCanvas"`）。另把 `Math.PI`（scene.js:405、sprites.js:107）加入 `analyze-fields.mjs` 的 BUILTIN 排除集。
+- U119 渲染层收尾（2026-09-27，混淆清单 7 → 2）：`rendering/sprites.js` 4 项 + `rendering/scene.js` 2 项。`SpriteSheet.$w` 与 `AnimationSheet.$w`→registerDefinitions（**同义并名**：都在 `image.onload` 里把定义数组灌进 `animationMap`）；`AnimationCatalog.Zt`→sheets（`isLoaded` 逐表轮询、惰性建 `animationMap` 时的来源表数组）；`AnimationSheet.FB`→animationNames（本表声明的动画名列表，Catalog 据此建全局映射并检测重名）；`VisualEffect.iD`→startPosition（**证据**：scene.js:664-668 以 `Tb.iD` 与 `Tb.targetPosition` 作线段两端点，构造器里 `iD = b` 是不被改写的起始位置，`currentPosition` 才是可变副本）；`GameCanvasView.kE`→containerElementId（"gameTabContent"；**不可叫 elementId**——同构造器 226 行已有 `elementId = "gameCanvas"`）。另把 `Math.PI`（scene.js:405、sprites.js:108）加入 `analyze-fields.mjs` 的 BUILTIN 排除集。
 
 - U118 生命周期计时器（2026-09-27，混淆清单 16 → 7）：`CharacterLifecycle`（`simulation/characters.js` 构造，`tick.js` 消费）9 项。`Jo`→turnTimeAccumulator（累加帧差，`15 <= Jo` 时 `turnNumber++` 并 `Jo -= 15`）；三组（计数, 阈值）对：`yw`/`zD`→regenTurnCounter/regenIntervalTurns（每 3 回合回复全队生命与法力）、`cw`/`gD`→dungeonRespawnTurnCounter/dungeonRespawnIntervalTurns（每 2 回合检查已清地牢是否满 1500 回合可再侵袭）、`Qt`/`PC`→achievementCheckTurnCounter/achievementCheckIntervalTurns（每 4 回合结算成就 obtained 与 claimQueue）；`Inventory.ip`→dirty（物品增删/换装后置位，`tick.js:494` 消费时重建 `game.inventories.list`）；`DungeonTile.qB` 与 `VisualEffect.qB`→setRemainingEffectDamage（**同义并名**：两者函数体逐字节相同 `this.remainingEffectDamage = a;`，tick.js:417 在帧推进时按随机伤害递减）。
 

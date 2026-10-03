@@ -44,7 +44,7 @@
 | `chainCount` / `currentChainStep` | 该链段数上限 / 当前段序号 | `actions.js:471-474`、`actions.js:612-613` |
 | `pl` | 回旋镖的落点（回到施法者的位置） | `actions.js:664`、`src/engine/modules/characters/character.js:858-866` |
 | `actionDefinition` | 指向 `Spell` 实例；**null 表示这是一次普通攻击** | `actions.js:67-70`、`actions.js:86-114` |
-| `impactEffect` / `projectileEffect` | 两个 `VisualEffect`；impact 的动画剩余帧数同时充当"本动作还剩几帧可结算" | `actions.js:84`、`sprites.js:64-93` |
+| `impactEffect` / `projectileEffect` | 两个 `VisualEffect`；impact 的动画剩余帧数同时充当"本动作还剩几帧可结算" | `actions.js:84`、`sprites.js:64-94` |
 
 字段速查 C —— 角色类型常量：`ADVENTURER_TYPE = 0`、`MONSTER_TYPE = 2`（`ai/targeting.js:357-358`）。实际出现 6 种：0 冒险者、1 随从、2 普通怪、3 城堡守卫、4 首领、5 卷轴施法者。敌我判定见 C-30。
 
@@ -799,7 +799,7 @@ export function resolveCharacterDefeat(attacker, defeated) {
 ```
 
 - `stunEffectDefinition.Qd = 100`（`skill-effects.js:146-154`）→ **倒地 100 回合**（25 秒），`Ok = 0`。
-- `c.uA = true; c.ud = b;`：头顶气泡动画在角色仍 `isStunned` 时无限循环（`rendering/sprites.js:145-151`）。
+- `c.uA = true; c.ud = b;`：头顶气泡动画在角色仍 `isStunned` 时无限循环（`rendering/sprites.js:146-152`）。
 - **生命不会回一点**：`health` 已在 C-11 被夹到 0 且这里不写回。
 
 ### C-25 醒来时的全回复（唯一的全回复口）
@@ -853,13 +853,13 @@ export function resolveCharacterDefeat(attacker, defeated) {
 ```js
 export function applySkillTreeBonuses(character, skillTree) {
   var skillTreeUpgrades = skillTree.upgrades,
-    d,
+    upgrade, upgradeDefinition,
     upgradeIndex;
   for (upgradeIndex = 0; upgradeIndex < skillTreeUpgrades.length; upgradeIndex++) {
-    d = skillTreeUpgrades[upgradeIndex];
-    if (d.getUpgradeType() === SKILL_UPGRADE_TYPE && d.isOwned()) {
-      d = d.getUpgradeDefinition();
-      applyStatBonus(character, d.statType, d.statBonusValue);
+    upgrade = skillTreeUpgrades[upgradeIndex];
+    if (upgrade.getUpgradeType() === SKILL_UPGRADE_TYPE && upgrade.isOwned()) {
+      upgradeDefinition = upgrade.getUpgradeDefinition();
+      applyStatBonus(character, upgradeDefinition.statType, upgradeDefinition.statBonusValue);
     }
   }
 }
@@ -967,7 +967,7 @@ export function applySkillTreeBonuses(character, skillTree) {
     summonSpellMinion(actionDefinition, reviveAttacker, revivePosition);
 ```
 
-cat 11（骷髅军队）先把目标怪从尸体环形缓冲 `game.monsters.Og`（容量 `aE = 50`，`encounters.js:313`）里 splice 掉再召唤。召唤落点 `xi` 是 `VisualEffect` 的"终点坐标"（`sprites.js:64-93`）。cat 17（鸡群/小鸡守卫）用 `ku/lu/mu` 三个几率做模板抽签：`actions.js:171-191`，判据 `0 < g && Math.random() < g / 100`，依次尝试野蛮人/忍者/盗贼小鸡，否则普通小鸡。
+cat 11（骷髅军队）先把目标怪从尸体环形缓冲 `game.monsters.Og`（容量 `aE = 50`，`encounters.js:313`）里 splice 掉再召唤。召唤落点 `xi` 是 `VisualEffect` 的"终点坐标"（`sprites.js:64-94`）。cat 17（鸡群/小鸡守卫）用 `ku/lu/mu` 三个几率做模板抽签：`actions.js:171-191`，判据 `0 < g && Math.random() < g / 100`，依次尝试野蛮人/忍者/盗贼小鸡，否则普通小鸡。
 
 随从继承召唤者的技能树（`simulation/characters.js:85-97`）：
 
@@ -1070,7 +1070,7 @@ export function getSpellSpiritCost(stats) {
         }
 ```
 
-- `f` 在 `actions.js:85` 已取为 `impactEffect.To()`，即**影响动画的总帧数**（`sprites.js:266-268` → `SpriteAnimation.frames.length`，`sprites.js:39`）。治疗量被**摊到每一帧**：动画期内 `advanceCombatAction` 每帧执行一次本段。
+- `f` 在 `actions.js:85` 已取为 `impactEffect.To()`，即**影响动画的总帧数**（`sprites.js:267-269` → `SpriteAnimation.frames.length`，`sprites.js:39`）。治疗量被**摊到每一帧**：动画期内 `advanceCombatAction` 每帧执行一次本段。
 - 单帧量 `max(1, floor(potency% / 100 × maxHealth / 帧数))`。牧师「治疗」`potencyPercent: 35`（`content/spells.js:117-126`）+ "Red Crosses" 动画 **8 帧**（`content/animations.js:66-71` 与 `:132` 的 `frameCount = 7`，行列展开为 0..7 共 8 帧）→ 名义总量 ≈ 35% maxHealth，`Ts = 2` 时 `min(100, 35×2) = 70%`。
 - `[疑似遗留怪癖]` 帧数为 1 的动画、或 `maxHealth` 很小时，`Math.max(1, …)` 与"每帧一次"相乘会**超出名义百分比**（8 帧时 `floor` 向下、`max(1)` 兜底，净效果偏保守；帧数 < 目标所需治疗份数时反而放大）。`healPotency` 只在 `1 < n` 时参与，且先 `Math.min(100, …)` 再摊帧。
 - `[疑似遗留怪癖]` `d.health += floorNumber(f)` 里 `f` 已是整数，二次取整无害。
@@ -1418,13 +1418,13 @@ export function createChainAction(previousAction) {
 `src/engine/modules/combat/encounters.js:42-59`
 
 ```js
-export function populateEncounter(a) {
+export function populateEncounter(encounterRoom) {
   var monsterNames = game.monsterNames;
   if (game.state.encounter.noMonstersLeft) {
-    var encounterType = a.encounterType;
+    var encounterType = encounterRoom.encounterType;
     if (0 === encounterType) {
       if (bossEncounterModifier.currentValue && 0.2 > Math.random()) {
-        spawnDungeonBoss(monsterNames, a);
+        spawnDungeonBoss(monsterNames, encounterRoom);
       } else {
         var minMonsters = globalUpgradeDefinitions.minMonsters.currentValue,
           maxMonsters = Math.max(globalUpgradeDefinitions.maxMonsters.currentValue, minMonsters),

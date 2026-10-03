@@ -303,16 +303,16 @@ export function getItemStatLabel(a) {
 `src/engine/modules/characters/character.js:47-56`
 
 ```js
-  if (d = d.slotStatBonusList) {
-    a = {};
-    for (var slotStatBonusIndex = 0; slotStatBonusIndex < d.length; slotStatBonusIndex++) {
-      a[d[slotStatBonusIndex].slot] = d[slotStatBonusIndex].statType;
+  if (slotStatTypes = classDefinition.slotStatBonusList) {
+    var slotStatTypeMap = {};
+    for (var slotStatBonusIndex = 0; slotStatBonusIndex < slotStatTypes.length; slotStatBonusIndex++) {
+      slotStatTypeMap[slotStatTypes[slotStatBonusIndex].slot] = slotStatTypes[slotStatBonusIndex].statType;
     }
-    d = a;
+    slotStatTypes = slotStatTypeMap;
   } else {
-    d = null;
+    slotStatTypes = null;
   }
-  this.slotStatTypes = d;
+  this.slotStatTypes = slotStatTypes;
 ```
 
 每个职业恰有 6 个槽位、6 个 `statType`（例：战士 `content/classes.js:57-75`，槽 `"20"→1, "80"→2, "40"→4, "120"→5, "101"→3, "185"→6`）。
