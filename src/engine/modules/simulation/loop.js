@@ -9,7 +9,7 @@ import { placePartyInWorld } from "../world/terrain.js";
 import { unlockStartingRegion } from "../world/regions.js";
 import { PauseView, TabBar, TabState, addTab, mountTabBar } from "../views/navigation.js";
 import { PartyCreationView } from "../views/party-creation.js";
-import { ExpeditionView } from "../views/expedition.js";
+import { ExpeditionView, bindExpeditionViews } from "../views/expedition.js";
 import { CharacterView } from "../views/character.js";
 import { MonsterView } from "../views/monsters.js";
 import { DungeonsView } from "../views/dungeons.js";
@@ -36,13 +36,13 @@ export function initializeSimulationLoop() {
   GameLoop.prototype.tick = function () {
     if (this.resourcesReady) {
       if (game.initialized) {
-        var a = nowMilliseconds(),
-          frameDeltaMs = a - this.lastFrameAt,
-          a = Math.max(0, a - this.lastTickAt),
+        var now = nowMilliseconds(),
+          frameDeltaMs = now - this.lastFrameAt,
+          tickDeltaMs = Math.max(0, now - this.lastTickAt),
           offlineTurnCount;
         this.lastFrameAt = nowMilliseconds();
         if (game.partyCreated && !game.gameWon && !game.paused) {
-          if (1E3 < a && game.options.allowBackgroundProgress && (game.processingOffline || (game.processingOffline = true, game.offlineProcessed = 0, game.offlineDuration = 0, game.view.onOfflineStart()), game.offlineDuration += a), game.processingOffline) {
+          if (1E3 < tickDeltaMs && game.options.allowBackgroundProgress && (game.processingOffline || (game.processingOffline = true, game.offlineProcessed = 0, game.offlineDuration = 0, game.view.onOfflineStart()), game.offlineDuration += tickDeltaMs), game.processingOffline) {
             for (offlineTurnCount = 0; 200 > offlineTurnCount && game.offlineProcessed < game.offlineDuration && !game.gameWon && game.processingOffline;) {
               advanceSimulation(15);
               game.offlineProcessed += this.turnDuration;
@@ -53,7 +53,7 @@ export function initializeSimulationLoop() {
               game.finishOfflineProgress();
             }
           } else {
-            var frameSimulationUnits = a / this.frameDuration;
+            var frameSimulationUnits = tickDeltaMs / this.frameDuration;
             if (0 < frameSimulationUnits) {
               advanceSimulation(frameSimulationUnits);
             }
@@ -94,7 +94,7 @@ export function initializeSimulationLoop() {
           }
         }
         if (!(game.paused || game.processingOffline)) {
-          game.state.statisticsRecorder.recordPlayedMilliseconds(a);
+          game.state.statisticsRecorder.recordPlayedMilliseconds(tickDeltaMs);
         }
         this.lastTickAt = nowMilliseconds();
       } else {
@@ -143,6 +143,15 @@ export function initializeSimulationLoop() {
           createPartyTab.selected = true;
         }
         gameView.tabBar = new TabBar("gameTabMenu");
+        bindExpeditionViews({
+          readState: () => game.state,
+          readAnimation: name => game.animations.getAnimation(name),
+          isWorldActive: () => game.worldActive,
+          readDungeonHeader: () => game.currentDungeon ? { name: game.currentDungeon.dungeonName, level: game.currentDungeon.currentLevelIndex + 1 } : { name: game.currentCastle.castleName, level: 0 },
+          readScrollList: () => game.scrolls.scrollList,
+          readPotionList: () => game.potions.potionList,
+          removePotion: potion => game.potions.removePotion(potion),
+        });
         var partyCreationView = new PartyCreationView(createPartyTab),
           expeditionView = new ExpeditionView(gameTab),
           charView0 = new CharacterView(character0Tab, "characterTabContent0", 0),

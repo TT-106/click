@@ -371,16 +371,16 @@ export function restoreStatistics(savedStatistics, statistics, isLifetime) {
   statistics.weaponRacksLooted = maxWeaponRacksLooted;
 }
 export function initializePersistenceEntities() {
-  // U134：顶层键读取用行内 cast 守卫（SaveMonsterTypesState 已进 SaveData；JS 里 JSDoc
-  // 参数标注不被赋值收窄覆盖——参数 a 在下方被复用为 levelStates 数组，属 AST 恢复期
-  // 写法，勿重排、勿改复用形态，故不给参数标注而给读取点 cast，负向验证 TS2339 红/还原绿）。
-  MonsterSaveAdapter.prototype.restoreMonsterTypes = function (a) {
+  // U134：顶层键读取用行内 cast 守卫（SaveMonsterTypesState 已进 SaveData；参数无 JSDoc
+  // 标注，故不给参数标注而给读取点 cast——存档态 savedMonsterTypes 只读 min/max 两键，
+  // 怪物等级数组另拆 levelStates，属 AST 恢复期写法，勿重排，负向验证 TS2339 红/还原绿）。
+  MonsterSaveAdapter.prototype.restoreMonsterTypes = function (savedMonsterTypes) {
     var monsterCatalog = monsterCatalogRef();
-    monsterCatalog.minUnlockedLevel = (/** @type {SaveMonsterTypesState} */ (a)).minUnlockedLevel;
-    monsterCatalog.maxUnlockedLevel = (/** @type {SaveMonsterTypesState} */ (a)).maxUnlockedLevel;
-    a = a.monsterLevelStates;
-    for (var levelStateIndex = 0; levelStateIndex < a.length; levelStateIndex++) {
-      for (var levelState = a[levelStateIndex], monsterLevel = levelState.level, monsterTypes = levelState.monsterTypes, restoredMonsterTypes = [], monsterTypeIndex = undefined, monsterTypeIndex = /** @type {any} */ (0); monsterTypeIndex < monsterTypes.length; monsterTypeIndex++) {
+    monsterCatalog.minUnlockedLevel = (/** @type {SaveMonsterTypesState} */ (savedMonsterTypes)).minUnlockedLevel;
+    monsterCatalog.maxUnlockedLevel = (/** @type {SaveMonsterTypesState} */ (savedMonsterTypes)).maxUnlockedLevel;
+    var levelStates = savedMonsterTypes.monsterLevelStates;
+    for (var levelStateIndex = 0; levelStateIndex < levelStates.length; levelStateIndex++) {
+      for (var levelState = levelStates[levelStateIndex], monsterLevel = levelState.level, monsterTypes = levelState.monsterTypes, restoredMonsterTypes = [], monsterTypeIndex = undefined, monsterTypeIndex = /** @type {any} */ (0); monsterTypeIndex < monsterTypes.length; monsterTypeIndex++) {
         restoredMonsterTypes.push(restoreMonsterType(monsterTypes[monsterTypeIndex], monsterLevel));
       }
       monsterCatalogRef().monsterTypesByLevelCache[monsterLevel + ""] = restoredMonsterTypes;

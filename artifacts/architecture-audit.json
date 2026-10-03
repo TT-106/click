@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-10-03T11:38:46.956Z",
+  "generatedAt": "2026-10-03T12:14:09.276Z",
   "counts": {
     "srcJsFiles": 95,
     "engineModules": 79,
-    "totalEdges": 547
+    "totalEdges": 546
   },
   "gameImporters": {
-    "total": 20,
-    "withGameBinding": 20,
+    "total": 19,
+    "withGameBinding": 19,
     "byDir": {
       "engine/modules/ai": 1,
       "engine/modules/characters": 2,
@@ -17,7 +17,7 @@
       "engine/modules/rendering": 1,
       "engine/modules/runtime": 1,
       "engine/modules/simulation": 3,
-      "engine/modules/views": 3,
+      "engine/modules/views": 2,
       "engine/modules/world": 5
     },
     "files": [
@@ -34,7 +34,6 @@
       "src/engine/modules/simulation/loop.js",
       "src/engine/modules/simulation/tick.js",
       "src/engine/modules/views/dungeons.js",
-      "src/engine/modules/views/expedition.js",
       "src/engine/modules/views/party-creation.js",
       "src/engine/modules/world/dungeons.js",
       "src/engine/modules/world/generation.js",
@@ -538,7 +537,7 @@
   "hotFields": [
     {
       "path": "game.state",
-      "readFiles": 18,
+      "readFiles": 17,
       "writeFiles": 0,
       "dirs": [
         "engine/modules/ai",
@@ -555,7 +554,7 @@
     },
     {
       "path": "game.state.adventurers",
-      "readFiles": 14,
+      "readFiles": 13,
       "writeFiles": 0,
       "dirs": [
         "engine/modules/ai",
@@ -571,7 +570,7 @@
     },
     {
       "path": "game.worldActive",
-      "readFiles": 9,
+      "readFiles": 8,
       "writeFiles": 4,
       "dirs": [
         "engine/modules/ai",
@@ -586,7 +585,7 @@
     },
     {
       "path": "game.state.adventurers.length",
-      "readFiles": 12,
+      "readFiles": 11,
       "writeFiles": 0,
       "dirs": [
         "engine/modules/characters",
@@ -596,34 +595,6 @@
         "engine/modules/simulation",
         "engine/modules/views",
         "engine/modules/world"
-      ]
-    },
-    {
-      "path": "game.state.turnNumber",
-      "readFiles": 9,
-      "writeFiles": 2,
-      "dirs": [
-        "engine/modules/ai",
-        "engine/modules/characters",
-        "engine/modules/combat",
-        "engine/modules/persistence",
-        "engine/modules/simulation",
-        "engine/modules/views",
-        "engine/modules/world"
-      ]
-    },
-    {
-      "path": "game.state.party",
-      "readFiles": 10,
-      "writeFiles": 0,
-      "dirs": [
-        "engine/modules/ai",
-        "engine/modules/characters",
-        "engine/modules/combat",
-        "engine/modules/persistence",
-        "engine/modules/progression",
-        "engine/modules/simulation",
-        "engine/modules/views"
       ]
     },
     {
@@ -641,6 +612,20 @@
       ]
     },
     {
+      "path": "game.state.turnNumber",
+      "readFiles": 8,
+      "writeFiles": 2,
+      "dirs": [
+        "engine/modules/ai",
+        "engine/modules/characters",
+        "engine/modules/combat",
+        "engine/modules/persistence",
+        "engine/modules/simulation",
+        "engine/modules/views",
+        "engine/modules/world"
+      ]
+    },
+    {
       "path": "game.dungeons",
       "readFiles": 10,
       "writeFiles": 0,
@@ -652,6 +637,20 @@
         "engine/modules/simulation",
         "engine/modules/views",
         "engine/modules/world"
+      ]
+    },
+    {
+      "path": "game.state.party",
+      "readFiles": 9,
+      "writeFiles": 0,
+      "dirs": [
+        "engine/modules/ai",
+        "engine/modules/characters",
+        "engine/modules/combat",
+        "engine/modules/persistence",
+        "engine/modules/progression",
+        "engine/modules/simulation",
+        "engine/modules/views"
       ]
     },
     {
@@ -730,8 +729,7 @@
         "engine/modules/persistence",
         "engine/modules/progression",
         "engine/modules/runtime",
-        "engine/modules/simulation",
-        "engine/modules/views"
+        "engine/modules/simulation"
       ]
     },
     {
@@ -742,7 +740,7 @@
         "engine/modules/characters",
         "engine/modules/combat",
         "engine/modules/persistence",
-        "engine/modules/views",
+        "engine/modules/simulation",
         "engine/modules/world"
       ]
     },
@@ -754,7 +752,7 @@
         "engine/modules/characters",
         "engine/modules/combat",
         "engine/modules/persistence",
-        "engine/modules/views",
+        "engine/modules/simulation",
         "engine/modules/world"
       ]
     },
@@ -962,8 +960,7 @@
         "engine/modules/characters",
         "engine/modules/combat",
         "engine/modules/persistence",
-        "engine/modules/simulation",
-        "engine/modules/views"
+        "engine/modules/simulation"
       ]
     },
     {
@@ -1001,17 +998,6 @@
       ]
     },
     {
-      "path": "game.state.encounter",
-      "readFiles": 5,
-      "writeFiles": 0,
-      "dirs": [
-        "engine/modules/combat",
-        "engine/modules/rendering",
-        "engine/modules/simulation",
-        "engine/modules/views"
-      ]
-    },
-    {
       "path": "game.state.scrollCaster",
       "readFiles": 3,
       "writeFiles": 2,
@@ -1044,6 +1030,16 @@
         "engine/modules/persistence",
         "engine/modules/simulation",
         "engine/modules/views"
+      ]
+    },
+    {
+      "path": "game.terrainSprites.getSprite",
+      "readFiles": 5,
+      "writeFiles": 0,
+      "dirs": [
+        "engine/modules/simulation",
+        "engine/modules/views",
+        "engine/modules/world"
       ]
     }
   ],
@@ -1118,108 +1114,22 @@
     }
   },
   "naming": {
-    "singleLetterBindings": 17,
-    "filesWithSingleLetterBindings": 11,
-    "topFiles": [
-      {
-        "file": "src/engine/modules/characters/character.js",
-        "count": 2
-      },
-      {
-        "file": "src/engine/modules/characters/movement.js",
-        "count": 2
-      },
-      {
-        "file": "src/engine/modules/combat/encounters.js",
-        "count": 2
-      },
-      {
-        "file": "src/engine/modules/combat/potions.js",
-        "count": 2
-      },
-      {
-        "file": "src/engine/modules/combat/skill-effects.js",
-        "count": 2
-      },
-      {
-        "file": "src/engine/modules/rendering/sprites.js",
-        "count": 2
-      },
-      {
-        "file": "src/engine/modules/persistence/entities.js",
-        "count": 1
-      },
-      {
-        "file": "src/engine/modules/simulation/characters.js",
-        "count": 1
-      },
-      {
-        "file": "src/engine/modules/simulation/loop.js",
-        "count": 1
-      },
-      {
-        "file": "src/engine/modules/world/dungeons.js",
-        "count": 1
-      },
-      {
-        "file": "src/engine/modules/world/regions.js",
-        "count": 1
-      }
-    ],
-    "crypticBindings": 17,
-    "filesWithCrypticBindings": 11,
-    "allowListedBindings": 11,
+    "singleLetterBindings": 0,
+    "filesWithSingleLetterBindings": 0,
+    "topFiles": [],
+    "crypticBindings": 2,
+    "filesWithCrypticBindings": 1,
+    "allowListedBindings": 9,
     "allowListedByFile": {
       "src/engine/modules/persistence/game-save.js": 4,
       "src/engine/modules/characters/character.js": 3,
-      "src/engine/modules/combat/potions.js": 2,
       "src/engine/modules/simulation/tick.js": 1,
       "src/engine/modules/world/initialization.js": 1
     },
     "crypticTopFiles": [
       {
-        "file": "src/engine/modules/characters/character.js",
-        "count": 2
-      },
-      {
-        "file": "src/engine/modules/characters/movement.js",
-        "count": 2
-      },
-      {
-        "file": "src/engine/modules/combat/encounters.js",
-        "count": 2
-      },
-      {
-        "file": "src/engine/modules/combat/skill-effects.js",
-        "count": 2
-      },
-      {
         "file": "src/engine/modules/persistence/game-save.js",
         "count": 2
-      },
-      {
-        "file": "src/engine/modules/rendering/sprites.js",
-        "count": 2
-      },
-      {
-        "file": "src/engine/modules/persistence/entities.js",
-        "count": 1
-      },
-      {
-        "file": "src/engine/modules/simulation/characters.js",
-        "count": 1
-      },
-      {
-        "file": "src/engine/modules/simulation/loop.js",
-        "count": 1
-      },
-      {
-        "file": "src/engine/modules/world/dungeons.js",
-        "count": 1
-      },
-      {
-        "file": "src/engine/modules/world/regions.js",
-        "count": 1
       }
     ]
   }

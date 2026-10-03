@@ -28,32 +28,32 @@ import { discoverDungeon } from "../world/dungeons.js";
 import { HALF_TILE_SIZE, TILE_SIZE } from "../core/screen-layout.js";
 /** CombatAction.setTargetCharacter 由 combat/actions.js 后挂到原型，调用点窄签名。 @typedef {CombatAction & { setTargetCharacter: (target: unknown) => void }} TargetedCombatAction */
 /** Equipment.getSlotItem/So 由 characters/movement.js 后挂到原型，调用点窄签名。 @typedef {Equipment & { getSlotItem: (slot: unknown) => unknown, getEffectItem: () => unknown }} SlotEquipment */
-export function Character(a, characterType, characterClass, d, inventory) {
-  this.adventurerName = a;
+export function Character(adventurerName, characterType, characterClass, classDefinition, inventory) {
+  this.adventurerName = adventurerName;
   this.characterType = characterType;
-  this.classDefinition = d;
+  this.classDefinition = classDefinition;
   this.characterClass = characterClass;
-  if ((a = d.slotStatBonusList) && 0 !== a.length) {
-    var slotNameList = [];
+  if ((slotList = classDefinition.slotStatBonusList) && 0 !== slotList.length) {
+    var slotList, slotStatTypes, slotNameList = [];
     var slotBonusIndex;
-    for (slotBonusIndex = 0; slotBonusIndex < a.length; slotBonusIndex++) {
-      slotNameList.push(a[slotBonusIndex].slot);
+    for (slotBonusIndex = 0; slotBonusIndex < slotList.length; slotBonusIndex++) {
+      slotNameList.push(slotList[slotBonusIndex].slot);
     }
-    a = slotNameList;
+    slotList = slotNameList;
   } else {
-    a = null;
+    slotList = null;
   }
-  this.slotList = a;
-  if (d = d.slotStatBonusList) {
-    a = {};
-    for (var slotStatBonusIndex = 0; slotStatBonusIndex < d.length; slotStatBonusIndex++) {
-      a[d[slotStatBonusIndex].slot] = d[slotStatBonusIndex].statType;
+  this.slotList = slotList;
+  if (slotStatTypes = classDefinition.slotStatBonusList) {
+    var slotStatTypeMap = {};
+    for (var slotStatBonusIndex = 0; slotStatBonusIndex < slotStatTypes.length; slotStatBonusIndex++) {
+      slotStatTypeMap[slotStatTypes[slotStatBonusIndex].slot] = slotStatTypes[slotStatBonusIndex].statType;
     }
-    d = a;
+    slotStatTypes = slotStatTypeMap;
   } else {
-    d = null;
+    slotStatTypes = null;
   }
-  this.slotStatTypes = d;
+  this.slotStatTypes = slotStatTypes;
   this.equipment = characterType != MONSTER_TYPE ? new Equipment(this.slotList, this.characterClass) : null;
   this.monsterType = this.sprite = null;
   this.position = new CharacterPosition(WORLD_WALK_SPEED, DUNGEON_WALK_SPEED);
@@ -76,16 +76,16 @@ export function Character(a, characterType, characterClass, d, inventory) {
   if (this.characterType === ADVENTURER_TYPE) {
     var skillTree1Upgrades = this.classDefinition.buildSkillTree1();
     var skillTree2Upgrades = this.classDefinition.buildSkillTree2();
-    d = this.classDefinition.buildSkillTree3();
-    a = this.classDefinition.buildSkillTree4();
+    var skillTree3Upgrades = this.classDefinition.buildSkillTree3();
+    var skillTree4Upgrades = this.classDefinition.buildSkillTree4();
     bindSkillTree(this, skillTree1Upgrades);
     bindSkillTree(this, skillTree2Upgrades);
-    bindSkillTree(this, d);
-    bindSkillTree(this, a);
+    bindSkillTree(this, skillTree3Upgrades);
+    bindSkillTree(this, skillTree4Upgrades);
     this.skillTree1 = new UpgradeCollection([skillTree1Upgrades], false);
     this.skillTree2 = new UpgradeCollection([skillTree2Upgrades], false);
-    this.skillTree3 = new UpgradeCollection([d], false);
-    this.skillTree4 = new UpgradeCollection([a], false);
+    this.skillTree3 = new UpgradeCollection([skillTree3Upgrades], false);
+    this.skillTree4 = new UpgradeCollection([skillTree4Upgrades], false);
   }
 }
 export function bindSkillTree(character, skillTreeUpgrades) {

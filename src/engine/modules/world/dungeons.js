@@ -258,12 +258,13 @@ export function initializeWorldDungeons() {
     var jitterAmount = 1 + randomInt(2);
     return 0.5 > Math.random() ? coordinate - jitterAmount : coordinate + jitterAmount;
   };
-  ShopRegistry.prototype.addShop = function (a) {
-    this.shopList.push(a);
-    this.shopsById[a.dungeonId] = a;
-    if (a = game.world.getTileAtPixel(a.worldColumn, a.worldRow)) {
+  ShopRegistry.prototype.addShop = function (shop) {
+    this.shopList.push(shop);
+    this.shopsById[shop.dungeonId] = shop;
+    var shopTile = game.world.getTileAtPixel(shop.worldColumn, shop.worldRow);
+    if (shopTile) {
       var shopSprite = game.terrainSprites.getSprite(randomShopSprite(this));
-      a.setDecorationSprite(shopSprite);
+      shopTile.setDecorationSprite(shopSprite);
     }
   };
   ShopRegistry.prototype.jitterCoordinate = function (coordinate) {

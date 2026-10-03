@@ -3,7 +3,6 @@
  */
 import { View, addChildView, resetChildViews } from "./base.js";
 import { clearElement, clearElementById, createElement, getElement, hideElement, hideElementById, setElementHtml, showElement, showElementById } from "./dom.js";
-import { game } from "../runtime/game.js";
 import { BASE_POTION_CAPACITY, infiniteScrollsModifier, partyCapacityBonus, potionCapacityBonus, potionDurationBonus, quickUpgradeCollection } from "../content/balance.js";
 import { statValue } from "../characters/stats.js";
 import { floorNumber, formatAmount, formatGroupedAmount } from "../core/math.js";
@@ -16,6 +15,35 @@ import { GameCanvasView } from "../rendering/scene.js";
 import { UpgradeListView } from "./upgrade-details.js";
 import { TreasureLootView } from "./dungeons.js";
 import { TabView } from "./navigation.js";
+/** 远征视图所需的七个依赖由组合根注入。state / animations / scrolls / potions 四个容器对象在 runtime 的
+ *  game 模块对象字面量里只构造一次、从不整体重新赋值，所以按引用绑安全；worldActive 是会被反复改写的标量布尔，
+ *  currentDungeon / currentCastle 会被整体替换，因此这三者走"取现值"的回调。未绑定就用到一律立刻抛。
+ *  @typedef {Object} ExpeditionDeps
+ *  @property {() => object} readState
+ *  @property {(name: string) => object} readAnimation
+ *  @property {() => boolean} isWorldActive
+ *  @property {() => {name: string, level: number}} readDungeonHeader
+ *  @property {() => object[]} readScrollList
+ *  @property {() => object[]} readPotionList
+ *  @property {(potion: object) => void} removePotion
+ */
+var boundExpeditionDeps = null;
+/** @param {ExpeditionDeps} deps */
+export function bindExpeditionViews(deps) {
+  var requiredFields = ["readState", "readAnimation", "isWorldActive", "readDungeonHeader", "readScrollList", "readPotionList", "removePotion"];
+  for (var fieldIndex = 0; fieldIndex < requiredFields.length; fieldIndex++) {
+    if (!deps || typeof deps[requiredFields[fieldIndex]] !== "function") {
+      throw new Error("远征视图绑定缺少依赖字段 " + requiredFields[fieldIndex] + "：请在组合根调用 bindExpeditionViews(...)");
+    }
+  }
+  boundExpeditionDeps = deps;
+}
+function expeditionDeps() {
+  if (!boundExpeditionDeps) {
+    throw new Error('远征视图尚未绑定依赖：请在组合根调用 bindExpeditionViews(...)');
+  }
+  return boundExpeditionDeps;
+}
 export function AdventurerSummaryView(adventurerIndex) {
   this.elementId = "gameTabAdventurerInfo" + adventurerIndex;
   this.visible = true;
@@ -244,7 +272,7 @@ export function initializeViewsExpedition() {
     this.summaryTable = null;
     this.isLocked = false;
     this.vacantOverlay = null;
-    if (0 > this.adventurerIndex || this.adventurerIndex >= game.state.adventurers.length) {
+    if (0 > this.adventurerIndex || this.adventurerIndex >= expeditionDeps().readState().adventurers.length) {
       if (this.adventurerIndex >= 4 + partyCapacityBonus.currentValue) {
         this.vacantOverlay = createElement("div", getElement(this.elementId), null, "gameTabLockedAdventurerInfo");
         createElement("span", this.vacantOverlay, null, "lockedSpanText").innerHTML = "未解锁";
@@ -265,7 +293,7 @@ export function initializeViewsExpedition() {
       var portraitElement = healthRow.insertCell(0);
       portraitElement.className = "gameTabAdventurerIconCell";
       portraitElement.rowSpan = 2;
-      var adventurer = game.state.adventurers[this.adventurerIndex],
+      var adventurer = expeditionDeps().readState().adventurers[this.adventurerIndex],
         sprite = adventurer.getSprite(),
         portraitElement = createElement("img", portraitElement, null, "characterImage");
       portraitElement.src = "images/Transparent.gif";
@@ -354,14 +382,14 @@ export function initializeViewsExpedition() {
   };
   AdventurerSummaryView.prototype.update = function () {
     if (!(0 > this.adventurerIndex)) {
-      if (this.adventurerIndex >= game.state.adventurers.length) {
+      if (this.adventurerIndex >= expeditionDeps().readState().adventurers.length) {
         if (this.isLocked && this.adventurerIndex < 4 + partyCapacityBonus.currentValue) {
           this.isLocked = false;
           this.vacantOverlay.className = "gameTabBlankAdventurerInfo";
           clearElement(this.vacantOverlay);
         }
       } else {
-        var adventurer = game.state.adventurers[this.adventurerIndex],
+        var adventurer = expeditionDeps().readState().adventurers[this.adventurerIndex],
           stats = adventurer.stats,
           health = stats.health,
           maxHealth = statValue(stats.maxHealth),
@@ -388,7 +416,7 @@ export function initializeViewsExpedition() {
         }
         if (this.cachedLevel !== characterLevel) {
           this.cachedLevel = characterLevel;
-          setElementHtml(this.levelClassTextId, "等级" + characterLevel + " " + game.state.adventurers[this.adventurerIndex].classDefinition.className);
+          setElementHtml(this.levelClassTextId, "等级" + characterLevel + " " + expeditionDeps().readState().adventurers[this.adventurerIndex].classDefinition.className);
         }
         if (this.cachedDamage !== damage) {
           setElementHtml(this.damageTextId, formatAmount(damage));
@@ -429,7 +457,7 @@ export function initializeViewsExpedition() {
               if (shouldAdvanceEffectFrame) {
                 var currentEffectDefinition = statusEffectDefinitions[shownEffectTypeId];
                 var currentSpritesheetPath = currentEffectDefinition.spritesheetPath;
-                var currentEffectAnimation = game.animations.getAnimation(currentEffectDefinition.animationName);
+                var currentEffectAnimation = expeditionDeps().readAnimation(currentEffectDefinition.animationName);
                 this.effectFrameIndices[effectIconIndex]++;
                 if (this.effectFrameIndices[effectIconIndex] >= currentEffectAnimation.getFrameCount()) {
                   this.effectFrameIndices[effectIconIndex] = 0;
@@ -443,7 +471,7 @@ export function initializeViewsExpedition() {
               this.shownEffectTypeIds[effectIconIndex] = adoptedEffectTypeId;
               var newEffectDefinition = statusEffectDefinitions[adoptedEffectTypeId];
               var newSpritesheetPath = newEffectDefinition.spritesheetPath;
-              var newEffectAnimation = game.animations.getAnimation(newEffectDefinition.animationName);
+              var newEffectAnimation = expeditionDeps().readAnimation(newEffectDefinition.animationName);
               this.effectFrameIndices[effectIconIndex] = 0;
               var newEffectFrame = newEffectAnimation.frames[0];
               var newEffectIconElement = getElement(this.effectIconIds[effectIconIndex]);
@@ -477,7 +505,7 @@ export function initializeViewsExpedition() {
           var monsterArmor = statValue(monsterStats.armor);
           var monsterAttackRating = statValue(monsterStats.attackRating);
           var monsterDefenceRating = statValue(monsterStats.defenceRating);
-          this.comparisonEncounterIndex = game.state.encounter.encounterCount;
+          this.comparisonEncounterIndex = expeditionDeps().readState().encounter.encounterCount;
           colorComparedStats(this.damageTextId, damage, monsterArmor, this.cachedDamage, this.cachedMonsterDamage, this.damageHeaderCell);
           colorComparedStats(this.armorTextId, armor, monsterDamage, this.cachedArmor, this.cachedMonsterArmor, this.potionButton);
           colorComparedStats(this.attackRatingTextId, attackRating, monsterDefenceRating, this.cachedAttackRating, this.cachedMonsterDefenceRating, this.attackRatingHeaderCell);
@@ -505,17 +533,12 @@ export function initializeViewsExpedition() {
     this.cachedVisible = false;
   };
   DungeonNotificationView.prototype.isVisible = function () {
-    return !game.worldActive;
+    return !expeditionDeps().isWorldActive();
   };
   DungeonNotificationView.prototype.update = function () {
-    var dungeonName, dungeonLevel;
-    if (game.currentDungeon) {
-      dungeonName = game.currentDungeon.dungeonName;
-      dungeonLevel = game.currentDungeon.currentLevelIndex + 1;
-    } else {
-      dungeonName = game.currentCastle.castleName;
-      dungeonLevel = 0;
-    }
+    var dungeonHeader = expeditionDeps().readDungeonHeader(),
+      dungeonName = dungeonHeader.name,
+      dungeonLevel = dungeonHeader.level;
     if (dungeonLevel !== this.cachedDungeonLevel || dungeonName !== this.cachedDungeonName) {
       this.cachedDungeonLevel = dungeonLevel;
       this.cachedDungeonName = dungeonName;
@@ -529,10 +552,10 @@ export function initializeViewsExpedition() {
     }
   };
   EncounterNotificationView.prototype.isVisible = function () {
-    return !game.state.encounter.noMonstersLeft;
+    return !expeditionDeps().readState().encounter.noMonstersLeft;
   };
   EncounterNotificationView.prototype.update = function () {
-    var encounterCount = game.state.encounter.encounterCount,
+    var encounterCount = expeditionDeps().readState().encounter.encounterCount,
       monsterCount = getMonsters().length;
     if (this.cachedEncounterIndex !== encounterCount || this.cachedMonsterCount != monsterCount) {
       if (this.cachedEncounterIndex !== encounterCount) {
@@ -541,8 +564,8 @@ export function initializeViewsExpedition() {
       this.cachedEncounterIndex = encounterCount;
       this.cachedMonsterCount = monsterCount;
       var encounterName;
-      encounterName = game.state.encounter.encounterName;
-      var isBossEncounter = game.state.encounter.isBossEncounter;
+      encounterName = expeditionDeps().readState().encounter.encounterName;
+      var isBossEncounter = expeditionDeps().readState().encounter.isBossEncounter;
       this.notificationElement.innerHTML = isBossEncounter ? "遭遇首领!<br/> " + encounterName : "一场遭遇战!<br/>" + monsterCount + "/" + this.encounterTotalMonsters + " " + encounterName;
       if (this.isBossEncounter != isBossEncounter) {
         this.isBossEncounter = isBossEncounter;
@@ -553,9 +576,9 @@ export function initializeViewsExpedition() {
   CurrencyView.prototype = new View();
   CurrencyView.prototype.reset = function () {};
   CurrencyView.prototype.update = function () {
-    var experiencePoints = game.state.party.experiencePoints,
-      gold = game.state.party.gold,
-      kills = game.state.party.kills;
+    var experiencePoints = expeditionDeps().readState().party.experiencePoints,
+      gold = expeditionDeps().readState().party.gold,
+      kills = expeditionDeps().readState().party.kills;
     if (experiencePoints !== this.cachedExperience) {
       this.cachedExperience = experiencePoints;
       setElementHtml(this.experienceCellId, "" + formatAmount(experiencePoints));
@@ -578,7 +601,7 @@ export function initializeViewsExpedition() {
     if (!this.pointsCell) {
       mountAdventurePoints(this);
     }
-    var availablePoints = game.state.adventurePoints.availablePoints;
+    var availablePoints = expeditionDeps().readState().adventurePoints.availablePoints;
     if (availablePoints !== this.cachedPoints) {
       this.cachedPoints = availablePoints;
       this.pointsCell.innerHTML = formatGroupedAmount(availablePoints);
@@ -605,7 +628,7 @@ export function initializeViewsExpedition() {
       scrollQuantity = -2;
     }
     var hasQuantity = 0 < scrollQuantity || infiniteScrollsModifier.currentValue;
-    this.isEnabled = !this.scroll.locked && hasQuantity && !game.worldActive && 0 < getMonsters().length;
+    this.isEnabled = !this.scroll.locked && hasQuantity && !expeditionDeps().isWorldActive() && 0 < getMonsters().length;
     if (scrollChanged || this.wasEnabled != this.isEnabled) {
       this.wasEnabled = this.isEnabled;
       this.buttonElement.className = this.isEnabled ? "scrollButton" : "scrollButtonDisabled";
@@ -643,7 +666,7 @@ export function initializeViewsExpedition() {
       this.createDomElements();
     }
     var buttonIndex,
-      scrollList = game.scrolls.scrollList,
+      scrollList = expeditionDeps().readScrollList(),
       buttonView,
       scroll;
     for (buttonIndex = 0; buttonIndex < this.buttonViews.length; buttonIndex++) {
@@ -703,7 +726,7 @@ export function initializeViewsExpedition() {
           showElement(this.progressFillElement);
           this.dropButtonVisible = true;
         }
-        var fillWidth = Math.min(1, (game.state.turnNumber - this.potion.activationTurn) / (800 + potionDurationBonus.currentValue));
+        var fillWidth = Math.min(1, (expeditionDeps().readState().turnNumber - this.potion.activationTurn) / (800 + potionDurationBonus.currentValue));
         fillWidth *= this.progressBarWidth;
         if (this.cachedFillWidth !== fillWidth) {
           this.cachedFillWidth = fillWidth;
@@ -741,13 +764,13 @@ export function initializeViewsExpedition() {
   PotionButtonView.prototype.activate = function () {
     if (this.potion) {
       if (!(this.potion.active || !this.potion.active && isPotionModifierActive(this.potion))) {
-        this.potion.activate(game.state);
+        this.potion.activate(expeditionDeps().readState());
       }
     }
   };
   PotionButtonView.prototype.removePotion = function () {
     if (this.potion) {
-      game.potions.removePotion(this.potion);
+      expeditionDeps().removePotion(this.potion);
       this.potion = null;
     }
   };
@@ -765,7 +788,7 @@ export function initializeViewsExpedition() {
       this.createDomElements();
     }
     var buttonIndex,
-      potionList = game.potions.potionList,
+      potionList = expeditionDeps().readPotionList(),
       buttonView,
       potion;
     for (buttonIndex = 0; buttonIndex < this.buttonViews.length; buttonIndex++) {

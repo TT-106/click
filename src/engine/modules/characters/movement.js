@@ -120,25 +120,25 @@ export function findCheapestNeighbor(originTile, excludedTile) {
 }
 export function separateDungeonCharacters(characterPosition) {
   setVector(characterPosition.separationVector, 0, 0);
-  var b,
+  var otherCharacter, otherCharacterPosition,
     characterIndex,
     hasSeparationVector = false,
     monsterList = getMonsters(),
     minionList = movementMinions().minionList,
     levelDistance;
   for (characterIndex = 0; characterIndex < movementState().adventurers.length; characterIndex++) {
-    b = movementState().adventurers[characterIndex];
-    b = b.position;
-    if (b === characterPosition) {
+    otherCharacter = movementState().adventurers[characterIndex];
+    otherCharacterPosition = otherCharacter.position;
+    if (otherCharacterPosition === characterPosition) {
       break;
     }
-    levelDistance = characterPosition.levelPosition.distanceTo(b.levelPosition);
+    levelDistance = characterPosition.levelPosition.distanceTo(otherCharacterPosition.levelPosition);
     if (40 > levelDistance) {
       if (0 === levelDistance) {
         setVector(characterPosition.separationDelta, Math.random(), Math.random());
       } else {
         copyVector(characterPosition.separationDelta, characterPosition.levelPosition);
-        subtractVector(characterPosition.separationDelta, b.levelPosition);
+        subtractVector(characterPosition.separationDelta, otherCharacterPosition.levelPosition);
       }
       normalizeVector(characterPosition.separationDelta);
       addVector(characterPosition.separationVector, characterPosition.separationDelta);
@@ -146,16 +146,16 @@ export function separateDungeonCharacters(characterPosition) {
     }
   }
   for (characterIndex = 0; characterIndex < minionList.length; characterIndex++) {
-    b = minionList[characterIndex];
-    b = b.position;
-    if (b !== characterPosition) {
-      levelDistance = characterPosition.levelPosition.distanceTo(b.levelPosition);
+    otherCharacter = minionList[characterIndex];
+    otherCharacterPosition = otherCharacter.position;
+    if (otherCharacterPosition !== characterPosition) {
+      levelDistance = characterPosition.levelPosition.distanceTo(otherCharacterPosition.levelPosition);
       if (50 > levelDistance) {
         if (0 === levelDistance) {
           setVector(characterPosition.separationDelta, Math.random(), Math.random());
         } else {
           copyVector(characterPosition.separationDelta, characterPosition.levelPosition);
-          subtractVector(characterPosition.separationDelta, b.levelPosition);
+          subtractVector(characterPosition.separationDelta, otherCharacterPosition.levelPosition);
         }
         normalizeVector(characterPosition.separationDelta);
         addVector(characterPosition.separationVector, characterPosition.separationDelta);
@@ -164,16 +164,16 @@ export function separateDungeonCharacters(characterPosition) {
     }
   }
   for (characterIndex = 0; characterIndex < monsterList.length; characterIndex++) {
-    b = monsterList[characterIndex];
-    b = b.position;
-    if (b !== characterPosition) {
-      levelDistance = characterPosition.levelPosition.distanceTo(b.levelPosition);
+    otherCharacter = monsterList[characterIndex];
+    otherCharacterPosition = otherCharacter.position;
+    if (otherCharacterPosition !== characterPosition) {
+      levelDistance = characterPosition.levelPosition.distanceTo(otherCharacterPosition.levelPosition);
       if (50 > levelDistance) {
         if (0 === levelDistance) {
           setVector(characterPosition.separationDelta, Math.random(), Math.random());
         } else {
           copyVector(characterPosition.separationDelta, characterPosition.levelPosition);
-          subtractVector(characterPosition.separationDelta, b.levelPosition);
+          subtractVector(characterPosition.separationDelta, otherCharacterPosition.levelPosition);
         }
         normalizeVector(characterPosition.separationDelta);
         addVector(characterPosition.separationVector, characterPosition.separationDelta);
@@ -189,22 +189,22 @@ export function separateDungeonCharacters(characterPosition) {
 }
 export function separateWorldCharacters(characterPosition) {
   setVector(characterPosition.worldSeparationVector, 0, 0);
-  var b,
+  var otherCharacter, otherCharacterPosition,
     characterIndex,
     hasSeparationVector = false,
     allyList = getAllies(),
     worldDistance;
   for (characterIndex = 0; characterIndex < allyList.length; characterIndex++) {
-    b = allyList[characterIndex];
-    b = b.position;
-    if (b !== characterPosition) {
-      worldDistance = characterPosition.worldPosition.distanceTo(b.worldPosition);
+    otherCharacter = allyList[characterIndex];
+    otherCharacterPosition = otherCharacter.position;
+    if (otherCharacterPosition !== characterPosition) {
+      worldDistance = characterPosition.worldPosition.distanceTo(otherCharacterPosition.worldPosition);
       if (40 > worldDistance) {
         if (0 === worldDistance) {
           setVector(characterPosition.separationDelta, Math.random(), Math.random());
         } else {
           copyVector(characterPosition.separationDelta, characterPosition.worldPosition);
-          subtractVector(characterPosition.separationDelta, b.worldPosition);
+          subtractVector(characterPosition.separationDelta, otherCharacterPosition.worldPosition);
         }
         normalizeVector(characterPosition.separationDelta);
         addVector(characterPosition.worldSeparationVector, characterPosition.separationDelta);

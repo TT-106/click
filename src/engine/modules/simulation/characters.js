@@ -131,15 +131,15 @@ export function createCastleGuardian(guardianClass, guardianLevel, room) {
 export function initializeCharacterSkills(character, characterLevel) {
   var slotList = character.slotList;
   if (slotList && 0 < slotList.length) {
-    var d, slotIndex;
+    var slot, item, slotIndex;
     for (slotIndex = 0; slotIndex < slotList.length; slotIndex++) {
-      d = slotList[slotIndex];
+      slot = slotList[slotIndex];
       var itemHolder = character,
         itemLevel = characterLevel,
         itemGenerator = game.itemGenerator,
         rarityId = itemGenerator.rollRarity((100 - globalUpgradeDefinitions.itemQualityChance.currentValue) / 100);
-      if (d = generateItem(itemGenerator, d, itemHolder, itemLevel, rarityId)) {
-        character.equipItem(d);
+      if (item = generateItem(itemGenerator, slot, itemHolder, itemLevel, rarityId)) {
+        character.equipItem(item);
       }
     }
   }

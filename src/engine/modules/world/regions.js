@@ -165,34 +165,34 @@ export function getSouthRegion(regionLayout, regionColumn, regionRow, occupiedRe
   var regionKey = regionColumn + "_" + (regionRow + 1);
   return !occupiedRegionKeys[regionKey] ? regionManagerRef().byKey[regionKey] : null;
 }
-export function chooseAdjacentRegion(regionLayout, sourceRegion, occupiedRegionKeys, d) {
-  var regionColumn = sourceRegion.regionColumn;
-  var regionRow = sourceRegion.regionRow;
-  if (0.5 > d.random()) {
-    if (0.5 > d.random()) {
-      if ((d = getWestRegion(regionLayout, regionColumn, regionRow, occupiedRegionKeys)) || (d = getEastRegion(regionLayout, regionColumn, regionRow, occupiedRegionKeys)) || (d = getSouthRegion(regionLayout, regionColumn, regionRow, occupiedRegionKeys))) {
-        return d;
+export function chooseAdjacentRegion(regionLayout, sourceRegion, occupiedRegionKeys, randomSource) {
+  var regionColumn = sourceRegion.regionColumn, regionRow = sourceRegion.regionRow;
+  var candidateRegion;
+  if (0.5 > randomSource.random()) {
+    if (0.5 > randomSource.random()) {
+      if ((candidateRegion = getWestRegion(regionLayout, regionColumn, regionRow, occupiedRegionKeys)) || (candidateRegion = getEastRegion(regionLayout, regionColumn, regionRow, occupiedRegionKeys)) || (candidateRegion = getSouthRegion(regionLayout, regionColumn, regionRow, occupiedRegionKeys))) {
+        return candidateRegion;
       }
-      d = getNorthRegion(regionLayout, regionColumn, regionRow, occupiedRegionKeys);
+      candidateRegion = getNorthRegion(regionLayout, regionColumn, regionRow, occupiedRegionKeys);
     } else {
-      if ((d = getEastRegion(regionLayout, regionColumn, regionRow, occupiedRegionKeys)) || (d = getWestRegion(regionLayout, regionColumn, regionRow, occupiedRegionKeys)) || (d = getNorthRegion(regionLayout, regionColumn, regionRow, occupiedRegionKeys))) {
-        return d;
+      if ((candidateRegion = getEastRegion(regionLayout, regionColumn, regionRow, occupiedRegionKeys)) || (candidateRegion = getWestRegion(regionLayout, regionColumn, regionRow, occupiedRegionKeys)) || (candidateRegion = getNorthRegion(regionLayout, regionColumn, regionRow, occupiedRegionKeys))) {
+        return candidateRegion;
       }
-      d = getSouthRegion(regionLayout, regionColumn, regionRow, occupiedRegionKeys);
+      candidateRegion = getSouthRegion(regionLayout, regionColumn, regionRow, occupiedRegionKeys);
     }
-  } else if (0.5 > d.random()) {
-    if ((d = getNorthRegion(regionLayout, regionColumn, regionRow, occupiedRegionKeys)) || (d = getSouthRegion(regionLayout, regionColumn, regionRow, occupiedRegionKeys)) || (d = getEastRegion(regionLayout, regionColumn, regionRow, occupiedRegionKeys))) {
-      return d;
+  } else if (0.5 > randomSource.random()) {
+    if ((candidateRegion = getNorthRegion(regionLayout, regionColumn, regionRow, occupiedRegionKeys)) || (candidateRegion = getSouthRegion(regionLayout, regionColumn, regionRow, occupiedRegionKeys)) || (candidateRegion = getEastRegion(regionLayout, regionColumn, regionRow, occupiedRegionKeys))) {
+      return candidateRegion;
     }
-    d = getWestRegion(regionLayout, regionColumn, regionRow, occupiedRegionKeys);
+    candidateRegion = getWestRegion(regionLayout, regionColumn, regionRow, occupiedRegionKeys);
   } else {
-    if ((d = getSouthRegion(regionLayout, regionColumn, regionRow, occupiedRegionKeys)) || (d = getNorthRegion(regionLayout, regionColumn, regionRow, occupiedRegionKeys)) || (d = getWestRegion(regionLayout, regionColumn, regionRow, occupiedRegionKeys))) {
-      return d;
+    if ((candidateRegion = getSouthRegion(regionLayout, regionColumn, regionRow, occupiedRegionKeys)) || (candidateRegion = getNorthRegion(regionLayout, regionColumn, regionRow, occupiedRegionKeys)) || (candidateRegion = getWestRegion(regionLayout, regionColumn, regionRow, occupiedRegionKeys))) {
+      return candidateRegion;
     }
-    d = getEastRegion(regionLayout, regionColumn, regionRow, occupiedRegionKeys);
+    candidateRegion = getEastRegion(regionLayout, regionColumn, regionRow, occupiedRegionKeys);
   }
-  if (d) {
-    return d;
+  if (candidateRegion) {
+    return candidateRegion;
   }
 }
 export function resetCastles() {

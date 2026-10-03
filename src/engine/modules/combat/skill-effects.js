@@ -13,13 +13,13 @@ export function recalculateCharacterSkills(character) {
 }
 export function applySkillTreeBonuses(character, skillTree) {
   var skillTreeUpgrades = skillTree.upgrades,
-    d,
+    upgrade, upgradeDefinition,
     upgradeIndex;
   for (upgradeIndex = 0; upgradeIndex < skillTreeUpgrades.length; upgradeIndex++) {
-    d = skillTreeUpgrades[upgradeIndex];
-    if (d.getUpgradeType() === SKILL_UPGRADE_TYPE && d.isOwned()) {
-      d = d.getUpgradeDefinition();
-      applyStatBonus(character, d.statType, d.statBonusValue);
+    upgrade = skillTreeUpgrades[upgradeIndex];
+    if (upgrade.getUpgradeType() === SKILL_UPGRADE_TYPE && upgrade.isOwned()) {
+      upgradeDefinition = upgrade.getUpgradeDefinition();
+      applyStatBonus(character, upgradeDefinition.statType, upgradeDefinition.statBonusValue);
     }
   }
 }
@@ -33,113 +33,113 @@ export function applyBonusList(character, statBonusList) {
     }
   }
 }
-export function applyStatBonus(a, statType, statBonusValue) {
-  a = a.stats;
+export function applyStatBonus(character, statType, statBonusValue) {
+  var stats = character.stats;
   switch (statType) {
     case 1:
-      a.damageResistance += statBonusValue;
+      stats.damageResistance += statBonusValue;
       break;
     case 2:
-      var statComponent = a.damage;
+      var statComponent = stats.damage;
       statComponent.skillBonusPercent += statBonusValue;
       break;
     case 3:
-      statComponent = a.armor;
+      statComponent = stats.armor;
       statComponent.skillBonusPercent += statBonusValue;
       break;
     case 4:
-      statComponent = a.attackRating;
+      statComponent = stats.attackRating;
       statComponent.skillBonusPercent += statBonusValue;
       break;
     case 5:
-      statComponent = a.defenceRating;
+      statComponent = stats.defenceRating;
       statComponent.skillBonusPercent += statBonusValue;
       break;
     case 6:
-      statComponent = a.maxHealth;
+      statComponent = stats.maxHealth;
       statComponent.skillBonusPercent += statBonusValue;
       break;
     case 7:
-      statComponent = a.maxSpirit;
+      statComponent = stats.maxSpirit;
       statComponent.skillBonusPercent += statBonusValue;
       break;
     case 8:
-      a.healthRegenBonus += statBonusValue;
+      stats.healthRegenBonus += statBonusValue;
       break;
     case 9:
-      a.spiritRegenBonus += statBonusValue;
+      stats.spiritRegenBonus += statBonusValue;
       break;
     case 10:
-      a.attackCooldownReduction += statBonusValue;
+      stats.attackCooldownReduction += statBonusValue;
       break;
     case 11:
-      a.healPotency += statBonusValue;
+      stats.healPotency += statBonusValue;
       break;
     case 13:
-      a.buffArmorPotency += statBonusValue;
+      stats.buffArmorPotency += statBonusValue;
       break;
     case 12:
-      a.buffDamagePotency += statBonusValue;
+      stats.buffDamagePotency += statBonusValue;
       break;
     case 14:
-      a.buffAttackRatingPotency += statBonusValue;
+      stats.buffAttackRatingPotency += statBonusValue;
       break;
     case 15:
-      a.buffDefenceRatingPotency += statBonusValue;
+      stats.buffDefenceRatingPotency += statBonusValue;
       break;
     case 16:
-      a.spellCostReduction += statBonusValue;
+      stats.spellCostReduction += statBonusValue;
       break;
     case 17:
-      a.critChance += statBonusValue;
+      stats.critChance += statBonusValue;
       break;
     case 18:
-      a.extraAttackCount += statBonusValue;
+      stats.extraAttackCount += statBonusValue;
       break;
     case 19:
-      a.extraAttackChance += statBonusValue;
+      stats.extraAttackChance += statBonusValue;
       break;
     case 21:
-      a.chainArcBonus += statBonusValue;
+      stats.chainArcBonus += statBonusValue;
       break;
     case 20:
-      a.controlTargetBonus += statBonusValue;
+      stats.controlTargetBonus += statBonusValue;
       break;
     case 27:
-      a.transformTargetBonus += statBonusValue;
+      stats.transformTargetBonus += statBonusValue;
       break;
     case 22:
-      a.rainAreaBonus += statBonusValue;
+      stats.rainAreaBonus += statBonusValue;
       break;
     case 25:
-      a.areaRadiusBonus += 1;
+      stats.areaRadiusBonus += 1;
       break;
     case 23:
-      a.chainCount += statBonusValue;
+      stats.chainCount += statBonusValue;
       break;
     case 24:
-      a.chainChance += statBonusValue;
-      if (100 < a.chainChance) {
-        a.chainChance = 100;
+      stats.chainChance += statBonusValue;
+      if (100 < stats.chainChance) {
+        stats.chainChance = 100;
       }
       break;
     case 26:
-      a.maxSummonedMinions += statBonusValue;
+      stats.maxSummonedMinions += statBonusValue;
       break;
     case 28:
-      a.swiftStrikeTargetBonus += statBonusValue;
+      stats.swiftStrikeTargetBonus += statBonusValue;
       break;
     case 29:
-      a.ricochetCountBonus += statBonusValue;
+      stats.ricochetCountBonus += statBonusValue;
       break;
     case 30:
-      a.barbarianChickenChance = statBonusValue;
+      stats.barbarianChickenChance = statBonusValue;
       break;
     case 31:
-      a.ninjaChickenChance = statBonusValue;
+      stats.ninjaChickenChance = statBonusValue;
       break;
     case 32:
-      a.rogueChickenChance = statBonusValue;
+      stats.rogueChickenChance = statBonusValue;
   }
 }
 export function initializeCombatSkillEffects() {

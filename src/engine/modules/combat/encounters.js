@@ -39,13 +39,13 @@ export function beginEncounter(encounterName, isBossEncounter) {
   encounter.noMonstersLeft = false;
   encounter.isBossEncounter = isBossEncounter;
 }
-export function populateEncounter(a) {
+export function populateEncounter(encounterRoom) {
   var monsterNames = game.monsterNames;
   if (game.state.encounter.noMonstersLeft) {
-    var encounterType = a.encounterType;
+    var encounterType = encounterRoom.encounterType;
     if (0 === encounterType) {
       if (bossEncounterModifier.currentValue && 0.2 > Math.random()) {
-        spawnDungeonBoss(monsterNames, a);
+        spawnDungeonBoss(monsterNames, encounterRoom);
       } else {
         var minMonsters = globalUpgradeDefinitions.minMonsters.currentValue,
           maxMonsters = Math.max(globalUpgradeDefinitions.maxMonsters.currentValue, minMonsters),
@@ -59,7 +59,7 @@ export function populateEncounter(a) {
             encounterName = monsterNames.nameGenerator.generateName(monsterType.pluralName) + " (等级." + monsterType.level + ")";
           for (var monsterIndex = 0; monsterIndex < monsterCount; monsterIndex++) {
             var registry = game.monsters,
-              room = a,
+              room = encounterRoom,
               monster = new Character("Monster", MONSTER_TYPE, 12, monsterClass, null),
               stats = monster.stats;
             monster.sprite = monsterType.sprite;
@@ -100,12 +100,12 @@ export function populateEncounter(a) {
         var castleMonsterCount = castleMinMonsters + randomInt(castleMaxMonsters - castleMinMonsters);
         var castleLevel = game.monsterCatalog.maxUnlockedLevel;
         castleMonsterCount += extraMonstersModifier.currentValue;
-        spawnCastleGuardians(castleMonsterCount, a);
-        a = game.currentCastle ? generateMonsterName(monsterNames.nameGenerator, game.currentCastle.castleName) : generateMonsterName(monsterNames.nameGenerator, "Unknown Castle");
-        beginEncounter(a + " (等级." + castleLevel + ")", false);
+        spawnCastleGuardians(castleMonsterCount, encounterRoom);
+        var castleEncounterName = game.currentCastle ? generateMonsterName(monsterNames.nameGenerator, game.currentCastle.castleName) : generateMonsterName(monsterNames.nameGenerator, "Unknown Castle");
+        beginEncounter(castleEncounterName + " (等级." + castleLevel + ")", false);
       } else {
         if (2 === encounterType) {
-          spawnDungeonBoss(monsterNames, a);
+          spawnDungeonBoss(monsterNames, encounterRoom);
         }
       }
     }
@@ -153,16 +153,16 @@ export function spawnDungeonBoss(monsterNames, dungeonRoom) {
 export function spawnCastleGuardians(guardianCount, dungeonRoom) {
   var guardianIndex,
     guardianLevel = game.monsterCatalog.maxUnlockedLevel,
-    f;
+    guardianDefinition, guardian;
   if (0.5 > Math.random()) {
     for (guardianIndex = 0; guardianIndex < guardianCount; guardianIndex++) {
-      f = castleGuardianDefinitions[randomInt(castleGuardianDefinitions.length)];
-      f = createCastleGuardian(f, guardianLevel, dungeonRoom);
-      game.monsters.activeMonsters.push(f);
+      guardianDefinition = castleGuardianDefinitions[randomInt(castleGuardianDefinitions.length)];
+      guardian = createCastleGuardian(guardianDefinition, guardianLevel, dungeonRoom);
+      game.monsters.activeMonsters.push(guardian);
     }
   } else {
-    for (f = castleGuardianDefinitions[randomInt(castleGuardianDefinitions.length)], guardianIndex = 0; guardianIndex < guardianCount; guardianIndex++) {
-      var guardian = createCastleGuardian(f, guardianLevel, dungeonRoom);
+    for (guardianDefinition = castleGuardianDefinitions[randomInt(castleGuardianDefinitions.length)], guardianIndex = 0; guardianIndex < guardianCount; guardianIndex++) {
+      guardian = createCastleGuardian(guardianDefinition, guardianLevel, dungeonRoom);
       game.monsters.activeMonsters.push(guardian);
     }
   }

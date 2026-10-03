@@ -75,10 +75,10 @@ export function getPotionModifier(modifierId) {
 export function isPotionModifierActive(potion) {
   return potion.modifier && potion.modifier.currentValue === potion.modifier.activeValue;
 }
-export function PotionDrop(potion, x, y, room) {
+export function PotionDrop(potion, levelPositionX, levelPositionY, room) {
   this.potion = potion;
-  this.levelPositionX = x;
-  this.levelPositionY = y;
+  this.levelPositionX = levelPositionX;
+  this.levelPositionY = levelPositionY;
   this.room = room;
   this.collected = false;
   this.claimedBy = null;

@@ -31,18 +31,18 @@ export function SpriteSheet(imageUrl, spriteSize, spriteDefinitions) {
   };
   this.image.src = imageUrl;
 }
-export function SpriteAnimation(spriteSheet, animationName, firstFrameColumn, d, lastRowFrameCount, lastFrameRow, lastFrameColumnIndex, isDirectional) {
+export function SpriteAnimation(spriteSheet, animationName, firstFrameColumn, firstFrameRow, lastRowFrameCount, lastFrameRow, lastFrameColumnIndex, isDirectional) {
   this.spriteSheet = spriteSheet;
   this.animationName = animationName;
   this.isDirectional = isDirectional;
   var frameList = [];
-  var frameRow, frameSourceX, frameSourceY;
+  var frameRow, frameColumn, frameSourceX, frameSourceY;
   var frameCounter = 0;
   var rowLastColumnIndex;
   var spriteSize = this.spriteSheet.spriteSize;
-  for (frameRow = d; frameRow <= lastFrameRow; frameRow++) {
-    for (frameSourceY = frameRow * spriteSize, rowLastColumnIndex = frameRow < lastFrameRow ? lastFrameColumnIndex : Math.min(lastRowFrameCount, lastFrameColumnIndex), d = firstFrameColumn; d <= rowLastColumnIndex; d++) {
-      frameSourceX = d * spriteSize;
+  for (frameRow = firstFrameRow; frameRow <= lastFrameRow; frameRow++) {
+    for (frameSourceY = frameRow * spriteSize, rowLastColumnIndex = frameRow < lastFrameRow ? lastFrameColumnIndex : Math.min(lastRowFrameCount, lastFrameColumnIndex), frameColumn = firstFrameColumn; frameColumn <= rowLastColumnIndex; frameColumn++) {
+      frameSourceX = frameColumn * spriteSize;
       frameList.push(new AnimationFrame(frameCounter++, frameSourceX, frameSourceY));
     }
   }
@@ -71,24 +71,25 @@ export function AnimationCatalog(sheets) {
   this.animationMap = null;
   this.sheets = sheets;
 }
-export function VisualEffect(impactEffectName, startPosition, targetPosition, projectileEffect, f) {
+export function VisualEffect(impactEffectName, startPosition, targetPosition, projectileEffect, effectType) {
   this.impactEffectName = impactEffectName;
-  this.effectType = f;
+  this.effectType = effectType;
   this.room = this.boundCharacter = null;
   this.remainingEffectDamage = 0;
+  var currentPosition;
   if (projectileEffect) {
-    f = new Vector2();
-    copyVector(f, startPosition);
+    currentPosition = new Vector2();
+    copyVector(currentPosition, startPosition);
   } else {
-    if (f === TARGETED_EFFECT) {
-      f = new Vector2();
-      copyVector(f, targetPosition);
+    if (effectType === TARGETED_EFFECT) {
+      currentPosition = new Vector2();
+      copyVector(currentPosition, targetPosition);
     } else {
-      f = targetPosition;
+      currentPosition = targetPosition;
     }
   }
   this.startPosition = startPosition;
-  this.currentPosition = f;
+  this.currentPosition = currentPosition;
   this.targetPosition = targetPosition;
   this.reachedTarget = false;
   this.projectileEffect = projectileEffect;
