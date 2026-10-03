@@ -4,10 +4,10 @@
 import { ItemNameGenerator, formatItemName } from "./item-names.js";
 import { floorNumber, formatAmount, randomInt, randomizeScaledValue } from "../core/math.js";
 export var FIRE_ITEM_EFFECT, ICE_ITEM_EFFECT, POISON_ITEM_EFFECT, SHOCK_ITEM_EFFECT, SONIC_ITEM_EFFECT;
-export function ItemDrop(item, x, y, room) {
+export function ItemDrop(item, levelPositionX, levelPositionY, room) {
   this.item = item;
-  this.levelPositionX = x;
-  this.levelPositionY = y;
+  this.levelPositionX = levelPositionX;
+  this.levelPositionY = levelPositionY;
   this.room = room;
   this.collected = false;
   this.claimedBy = null;
@@ -267,7 +267,7 @@ export function clearItemDrops(dropRegistry) {
     dropRegistry.drops.length = 0;
   }
 }
-export function spawnItemDrop(dropRegistry, x, y, room, monsterLevel, generator, adventurers) {
+export function spawnItemDrop(dropRegistry, levelPositionX, levelPositionY, room, monsterLevel, generator, adventurers) {
   const upgrades = generator.rules.globalUpgradeDefinitions;
   const adventurer = adventurers[randomInt(adventurers.length)];
   const slots = adventurer.slotList;
@@ -276,7 +276,7 @@ export function spawnItemDrop(dropRegistry, x, y, room, monsterLevel, generator,
   const itemLevel = randomizeItemLevel(monsterLevel, (100 - upgrades.higherLevelItemChance.currentValue) / 100, generator.rules);
   const item = generateItem(generator, slot, adventurer, itemLevel, rarity);
   if (item) {
-    dropRegistry.drops.push(new ItemDrop(item, x, y, room));
+    dropRegistry.drops.push(new ItemDrop(item, levelPositionX, levelPositionY, room));
   }
 }
 export function removeItemDrop(itemDrop, dropRegistry) {

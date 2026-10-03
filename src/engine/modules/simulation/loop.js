@@ -5,6 +5,8 @@ import { nowMilliseconds, recordGameEvent } from "../core/math.js";
 import { game } from "../runtime/game.js";
 import { advanceSimulation } from "./tick.js";
 import { restoreGameState, saveProgress, serializeGame } from "../persistence/game-save.js";
+import { placePartyInWorld } from "../world/terrain.js";
+import { unlockStartingRegion } from "../world/regions.js";
 import { PauseView, TabBar, TabState, addTab, mountTabBar } from "../views/navigation.js";
 import { PartyCreationView } from "../views/party-creation.js";
 import { ExpeditionView } from "../views/expedition.js";
@@ -151,9 +153,28 @@ export function initializeSimulationLoop() {
           monsterView = new MonsterView(monstersTab),
           dungeonsView = new DungeonsView(dungeonsTab),
           castlesView = new CastlesView(castlesTab),
-          gameOverView = new GameOverView(gameOverTab),
+          resultsDeps = {
+            readVictoryCount: () => game.state.victoryCount,
+            clearGameWon: () => { game.gameWon = false; },
+            restartRun: () => game.restartRun(),
+            resetContinuation: () => game.resetContinuation(),
+            incrementContinueCount: () => { game.state.victoryStatistics.currentContinueCount++; },
+            resetAllies: () => game.allies.reset(),
+            resetView: () => game.view.reset(),
+            placePartyInWorld: () => placePartyInWorld(),
+            unlockStartingRegion: () => unlockStartingRegion(),
+            saveGame: () => saveProgress(game.saves),
+            getMonsterSprite: monsterName => game.monsterSprites.getSprite(monsterName),
+            readOfflineDuration: () => game.offlineDuration,
+            readOfflineProcessed: () => game.offlineProcessed,
+            readRunStatistics: () => game.state.runStatistics,
+            readAttackableCastleCount: () => game.castles.attackableCastles.length,
+            readAchievementClaimQueueLength: () => game.state.achievements.claimQueue.length,
+            finishOfflineProgress: () => game.finishOfflineProgress(),
+          },
+          gameOverView = new GameOverView(gameOverTab, resultsDeps),
           pointsView = new PointsView(pointsTab),
-          offlineProgressView = new OfflineProgressView(offlineTab),
+          offlineProgressView = new OfflineProgressView(offlineTab, resultsDeps),
           informationView = new InformationView(informationTab, {
             saveActions: {
               saveNow: () => game.saveNow(),

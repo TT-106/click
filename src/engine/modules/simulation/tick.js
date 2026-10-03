@@ -53,7 +53,7 @@ export function advanceSimulation(simulationUnits) {
     var minionList = game.minions.minionList,
       minion,
       summoner,
-      y,
+      summonedAtTurn,
       lifetimeTurns,
       minionIndex;
     for (minionIndex = minionList.length - 1; 0 <= minionIndex; minionIndex--) {
@@ -63,13 +63,13 @@ export function advanceSimulation(simulationUnits) {
         showDeathEffect(minion);
         game.lifecycle.despawnMinion(minion);
       } else {
-        y = minion.summonedAtTurn;
+        summonedAtTurn = minion.summonedAtTurn;
         lifetimeTurns = minion.lifetimeTurns;
         if (!(0 > lifetimeTurns)) {
-          if (y > game.state.turnNumber) {
+          if (summonedAtTurn > game.state.turnNumber) {
             console.log("minion bug: start turn in future.");
           } else {
-            if (game.state.turnNumber - y > lifetimeTurns) {
+            if (game.state.turnNumber - summonedAtTurn > lifetimeTurns) {
               showDeathEffect(minion);
               game.lifecycle.despawnMinion(minion);
             }
@@ -104,26 +104,26 @@ export function advanceSimulation(simulationUnits) {
     }
     updateCharacterBehaviors(getAllies());
     updateCharacterBehaviors(getMonsters());
-    var x = game.potions,
-      z = 0 === game.state.turnNumber % 3,
+    var potionRegistry = game.potions,
+      isPotionTickTurn = 0 === game.state.turnNumber % 3,
       potionIndex,
       potion,
       expiredPotionIndex,
       activationTurn,
       potionDurationTurns = 800 + potionDurationBonus.currentValue;
-    for (potionIndex = x.potionList.length - 1; 0 <= potionIndex; potionIndex--) {
-      potion = x.potionList[potionIndex];
+    for (potionIndex = potionRegistry.potionList.length - 1; 0 <= potionIndex; potionIndex--) {
+      potion = potionRegistry.potionList[potionIndex];
       if (potion.active) {
         activationTurn = potion.activationTurn;
-        if (z && potionDurationModifier.currentValue && activationTurn < game.state.turnNumber) {
+        if (isPotionTickTurn && potionDurationModifier.currentValue && activationTurn < game.state.turnNumber) {
           activationTurn++;
           potion.activationTurn = activationTurn;
         }
         if (game.state.turnNumber - activationTurn >= potionDurationTurns) {
           setPotionActive(potion, false);
-          expiredPotionIndex = x.potionList.indexOf(potion);
+          expiredPotionIndex = potionRegistry.potionList.indexOf(potion);
           if (-1 < expiredPotionIndex) {
-            x.potionList.splice(expiredPotionIndex, 1);
+            potionRegistry.potionList.splice(expiredPotionIndex, 1);
           }
         }
       }
@@ -533,14 +533,14 @@ export function advanceSimulation(simulationUnits) {
   var partyMemberIndex,
     adventurers = game.state.adventurers,
     positionSumX = 0,
-    $ = 0;
+    positionSumY = 0;
   if (game.worldActive) {
     for (partyMemberIndex = 0; partyMemberIndex < adventurers.length; partyMemberIndex++) {
       positionSumX += adventurers[partyMemberIndex].position.getWorldPositionX();
-      $ += adventurers[partyMemberIndex].position.getWorldPositionY();
+      positionSumY += adventurers[partyMemberIndex].position.getWorldPositionY();
     }
     var partyCenterWorldX = positionSumX / adventurers.length,
-      partyCenterWorldY = $ / adventurers.length,
+      partyCenterWorldY = positionSumY / adventurers.length,
       world = game.world;
     if (null == partyCenterWorldX || null == partyCenterWorldY) {
       console.log("Setting world center x/y to null. worldCenterX=" + partyCenterWorldX + " y=" + partyCenterWorldY);
@@ -562,13 +562,13 @@ export function advanceSimulation(simulationUnits) {
         }
       }
       if (foundCenterBlock) {
-        var $c = world.worldBlocks[0][0],
+        var blockAtCol0Row0 = world.worldBlocks[0][0],
           blockAtCol0Row1 = world.worldBlocks[0][1],
           blockAtCol0Row2 = world.worldBlocks[0][2],
           blockAtCol1Row0 = world.worldBlocks[1][0],
           blockAtCol1Row1 = world.worldBlocks[1][1],
           blockAtCol1Row2 = world.worldBlocks[1][2],
-          id = world.worldBlocks[2][0],
+          blockAtCol2Row0 = world.worldBlocks[2][0],
           blockAtCol2Row1 = world.worldBlocks[2][1],
           blockAtCol2Row2 = world.worldBlocks[2][2];
         if (0 === centerSlotColumn) {
@@ -576,10 +576,10 @@ export function advanceSimulation(simulationUnits) {
           if (0 === centerSlotRow) {
             world.blockOriginRow--;
             world.worldBlocks[0][0] = blockAtCol2Row2;
-            world.worldBlocks[0][1] = id;
+            world.worldBlocks[0][1] = blockAtCol2Row0;
             world.worldBlocks[0][2] = blockAtCol2Row1;
             world.worldBlocks[1][0] = blockAtCol0Row2;
-            world.worldBlocks[1][1] = $c;
+            world.worldBlocks[1][1] = blockAtCol0Row0;
             world.worldBlocks[1][2] = blockAtCol0Row1;
             world.worldBlocks[2][0] = blockAtCol1Row2;
             world.worldBlocks[2][1] = blockAtCol1Row0;
@@ -595,10 +595,10 @@ export function advanceSimulation(simulationUnits) {
             repositionWorldBlock(world.worldBlocks[2][2], world.blockOriginColumn + 2, world.blockOriginRow + 2, false);
           } else {
             if (1 === centerSlotRow) {
-              world.worldBlocks[0][0] = id;
+              world.worldBlocks[0][0] = blockAtCol2Row0;
               world.worldBlocks[0][1] = blockAtCol2Row1;
               world.worldBlocks[0][2] = blockAtCol2Row2;
-              world.worldBlocks[1][0] = $c;
+              world.worldBlocks[1][0] = blockAtCol0Row0;
               world.worldBlocks[1][1] = blockAtCol0Row1;
               world.worldBlocks[1][2] = blockAtCol0Row2;
               world.worldBlocks[2][0] = blockAtCol1Row0;
@@ -617,10 +617,10 @@ export function advanceSimulation(simulationUnits) {
               world.blockOriginRow++;
               world.worldBlocks[0][0] = blockAtCol2Row1;
               world.worldBlocks[0][1] = blockAtCol2Row2;
-              world.worldBlocks[0][2] = id;
+              world.worldBlocks[0][2] = blockAtCol2Row0;
               world.worldBlocks[1][0] = blockAtCol0Row1;
               world.worldBlocks[1][1] = blockAtCol0Row2;
-              world.worldBlocks[1][2] = $c;
+              world.worldBlocks[1][2] = blockAtCol0Row0;
               world.worldBlocks[2][0] = blockAtCol1Row1;
               world.worldBlocks[2][1] = blockAtCol1Row2;
               world.worldBlocks[2][2] = blockAtCol1Row0;
@@ -640,13 +640,13 @@ export function advanceSimulation(simulationUnits) {
             if (0 === centerSlotRow) {
               world.blockOriginRow--;
               world.worldBlocks[0][0] = blockAtCol0Row2;
-              world.worldBlocks[0][1] = $c;
+              world.worldBlocks[0][1] = blockAtCol0Row0;
               world.worldBlocks[0][2] = blockAtCol0Row1;
               world.worldBlocks[1][0] = blockAtCol1Row2;
               world.worldBlocks[1][1] = blockAtCol1Row0;
               world.worldBlocks[1][2] = blockAtCol1Row1;
               world.worldBlocks[2][0] = blockAtCol2Row2;
-              world.worldBlocks[2][1] = id;
+              world.worldBlocks[2][1] = blockAtCol2Row0;
               world.worldBlocks[2][2] = blockAtCol2Row1;
               repositionWorldBlock(world.worldBlocks[0][0], world.blockOriginColumn, world.blockOriginRow, true);
               repositionWorldBlock(world.worldBlocks[0][1], world.blockOriginColumn, world.blockOriginRow + 1, false);
@@ -664,13 +664,13 @@ export function advanceSimulation(simulationUnits) {
                 world.blockOriginRow++;
                 world.worldBlocks[0][0] = blockAtCol0Row1;
                 world.worldBlocks[0][1] = blockAtCol0Row2;
-                world.worldBlocks[0][2] = $c;
+                world.worldBlocks[0][2] = blockAtCol0Row0;
                 world.worldBlocks[1][0] = blockAtCol1Row1;
                 world.worldBlocks[1][1] = blockAtCol1Row2;
                 world.worldBlocks[1][2] = blockAtCol1Row0;
                 world.worldBlocks[2][0] = blockAtCol2Row1;
                 world.worldBlocks[2][1] = blockAtCol2Row2;
-                world.worldBlocks[2][2] = id;
+                world.worldBlocks[2][2] = blockAtCol2Row0;
                 repositionWorldBlock(world.worldBlocks[0][0], world.blockOriginColumn, world.blockOriginRow, false);
                 repositionWorldBlock(world.worldBlocks[0][1], world.blockOriginColumn, world.blockOriginRow + 1, false);
                 repositionWorldBlock(world.worldBlocks[0][2], world.blockOriginColumn, world.blockOriginRow + 2, true);
@@ -690,10 +690,10 @@ export function advanceSimulation(simulationUnits) {
               world.worldBlocks[0][1] = blockAtCol1Row0;
               world.worldBlocks[0][2] = blockAtCol1Row1;
               world.worldBlocks[1][0] = blockAtCol2Row2;
-              world.worldBlocks[1][1] = id;
+              world.worldBlocks[1][1] = blockAtCol2Row0;
               world.worldBlocks[1][2] = blockAtCol2Row1;
               world.worldBlocks[2][0] = blockAtCol0Row2;
-              world.worldBlocks[2][1] = $c;
+              world.worldBlocks[2][1] = blockAtCol0Row0;
               world.worldBlocks[2][2] = blockAtCol0Row1;
               repositionWorldBlock(world.worldBlocks[0][0], world.blockOriginColumn, world.blockOriginRow, true);
               repositionWorldBlock(world.worldBlocks[0][1], world.blockOriginColumn, world.blockOriginRow + 1, false);
@@ -706,10 +706,10 @@ export function advanceSimulation(simulationUnits) {
                 world.worldBlocks[0][0] = blockAtCol1Row0;
                 world.worldBlocks[0][1] = blockAtCol1Row1;
                 world.worldBlocks[0][2] = blockAtCol1Row2;
-                world.worldBlocks[1][0] = id;
+                world.worldBlocks[1][0] = blockAtCol2Row0;
                 world.worldBlocks[1][1] = blockAtCol2Row1;
                 world.worldBlocks[1][2] = blockAtCol2Row2;
-                world.worldBlocks[2][0] = $c;
+                world.worldBlocks[2][0] = blockAtCol0Row0;
                 world.worldBlocks[2][1] = blockAtCol0Row1;
                 world.worldBlocks[2][2] = blockAtCol0Row2;
                 repositionWorldBlock(world.worldBlocks[0][0], world.blockOriginColumn, world.blockOriginRow, false);
@@ -725,10 +725,10 @@ export function advanceSimulation(simulationUnits) {
                 world.worldBlocks[0][2] = blockAtCol1Row0;
                 world.worldBlocks[1][0] = blockAtCol2Row1;
                 world.worldBlocks[1][1] = blockAtCol2Row2;
-                world.worldBlocks[1][2] = id;
+                world.worldBlocks[1][2] = blockAtCol2Row0;
                 world.worldBlocks[2][0] = blockAtCol0Row1;
                 world.worldBlocks[2][1] = blockAtCol0Row2;
-                world.worldBlocks[2][2] = $c;
+                world.worldBlocks[2][2] = blockAtCol0Row0;
                 repositionWorldBlock(world.worldBlocks[0][0], world.blockOriginColumn, world.blockOriginRow, false);
                 repositionWorldBlock(world.worldBlocks[0][1], world.blockOriginColumn, world.blockOriginRow + 1, false);
                 repositionWorldBlock(world.worldBlocks[0][2], world.blockOriginColumn, world.blockOriginRow + 2, true);
@@ -776,12 +776,12 @@ export function advanceSimulation(simulationUnits) {
   } else {
     for (partyMemberIndex = 0; partyMemberIndex < adventurers.length; partyMemberIndex++) {
       positionSumX += adventurers[partyMemberIndex].position.getLevelPositionX();
-      $ += adventurers[partyMemberIndex].position.getLevelPositionY();
+      positionSumY += adventurers[partyMemberIndex].position.getLevelPositionY();
     }
-    var of = $ / adventurers.length,
+    var partyCenterLevelY = positionSumY / adventurers.length,
       level = game.level;
     level.centerX = positionSumX / adventurers.length;
-    level.centerY = of;
+    level.centerY = partyCenterLevelY;
   }
 }
 export function positionScrollCaster(scrollIndex) {

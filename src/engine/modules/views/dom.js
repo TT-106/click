@@ -4,23 +4,24 @@
 export function getElement(elementId) {
   return document.getElementById(elementId);
 }
-export function createElement(a, parentElement, elementId, className) {
-  a = document.createElement(a);
+export function createElement(tagName, parentElement, elementId, className) {
+  var createdElement = document.createElement(tagName);
   if (className) {
-    a.className = className;
+    createdElement.className = className;
   }
   if (elementId) {
-    a.id = elementId;
+    createdElement.id = elementId;
   }
   if (parentElement) {
-    parentElement.appendChild(a);
+    parentElement.appendChild(createdElement);
   }
-  return a;
+  return createdElement;
 }
-export function clearElementById(a) {
-  if (a = getElement(a)) {
-    for (; a.firstChild;) {
-      a.removeChild(a.firstChild);
+export function clearElementById(elementId) {
+  var element;
+  if (element = getElement(elementId)) {
+    for (; element.firstChild;) {
+      element.removeChild(element.firstChild);
     }
   }
 }
@@ -58,11 +59,11 @@ export function appendHeaderCell(headerRow) {
   headerRow.appendChild(headerCell);
   return headerCell;
 }
-export function appendAttributeRow(a, labelHtml, rowIndex) {
-  a = a.insertRow(rowIndex);
-  var labelCell = a.insertCell(0);
+export function appendAttributeRow(table, labelHtml, rowIndex) {
+  var attributeRow = table.insertRow(rowIndex);
+  var labelCell = attributeRow.insertCell(0);
   labelCell.className = "characteristicsTableLabel";
   labelCell.innerHTML = labelHtml;
-  return a.insertCell(1);
+  return attributeRow.insertCell(1);
 }
 export function initializeViewsDom() {}

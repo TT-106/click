@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-10-03T10:57:01.596Z",
+  "generatedAt": "2026-10-03T11:38:46.956Z",
   "counts": {
     "srcJsFiles": 95,
     "engineModules": 79,
-    "totalEdges": 549
+    "totalEdges": 547
   },
   "gameImporters": {
-    "total": 21,
-    "withGameBinding": 21,
+    "total": 20,
+    "withGameBinding": 20,
     "byDir": {
       "engine/modules/ai": 1,
       "engine/modules/characters": 2,
@@ -17,7 +17,7 @@
       "engine/modules/rendering": 1,
       "engine/modules/runtime": 1,
       "engine/modules/simulation": 3,
-      "engine/modules/views": 4,
+      "engine/modules/views": 3,
       "engine/modules/world": 5
     },
     "files": [
@@ -36,7 +36,6 @@
       "src/engine/modules/views/dungeons.js",
       "src/engine/modules/views/expedition.js",
       "src/engine/modules/views/party-creation.js",
-      "src/engine/modules/views/results.js",
       "src/engine/modules/world/dungeons.js",
       "src/engine/modules/world/generation.js",
       "src/engine/modules/world/initialization.js",
@@ -539,7 +538,7 @@
   "hotFields": [
     {
       "path": "game.state",
-      "readFiles": 19,
+      "readFiles": 18,
       "writeFiles": 0,
       "dirs": [
         "engine/modules/ai",
@@ -708,21 +707,6 @@
       ]
     },
     {
-      "path": "game.castles",
-      "readFiles": 9,
-      "writeFiles": 0,
-      "dirs": [
-        "engine/modules/characters",
-        "engine/modules/persistence",
-        "engine/modules/progression",
-        "engine/modules/rendering",
-        "engine/modules/runtime",
-        "engine/modules/simulation",
-        "engine/modules/views",
-        "engine/modules/world"
-      ]
-    },
-    {
       "path": "game.scrollDrops",
       "readFiles": 8,
       "writeFiles": 0,
@@ -771,6 +755,20 @@
         "engine/modules/combat",
         "engine/modules/persistence",
         "engine/modules/views",
+        "engine/modules/world"
+      ]
+    },
+    {
+      "path": "game.castles",
+      "readFiles": 8,
+      "writeFiles": 0,
+      "dirs": [
+        "engine/modules/characters",
+        "engine/modules/persistence",
+        "engine/modules/progression",
+        "engine/modules/rendering",
+        "engine/modules/runtime",
+        "engine/modules/simulation",
         "engine/modules/world"
       ]
     },
@@ -824,29 +822,6 @@
         "engine/modules/progression",
         "engine/modules/runtime",
         "engine/modules/world"
-      ]
-    },
-    {
-      "path": "game.state.victoryCount",
-      "readFiles": 5,
-      "writeFiles": 2,
-      "dirs": [
-        "engine/modules/characters",
-        "engine/modules/persistence",
-        "engine/modules/simulation",
-        "engine/modules/views"
-      ]
-    },
-    {
-      "path": "game.monsterSprites",
-      "readFiles": 7,
-      "writeFiles": 0,
-      "dirs": [
-        "engine/modules/combat",
-        "engine/modules/persistence",
-        "engine/modules/runtime",
-        "engine/modules/simulation",
-        "engine/modules/views"
       ]
     },
     {
@@ -922,6 +897,29 @@
       ]
     },
     {
+      "path": "game.state.victoryCount",
+      "readFiles": 4,
+      "writeFiles": 2,
+      "dirs": [
+        "engine/modules/characters",
+        "engine/modules/persistence",
+        "engine/modules/simulation",
+        "engine/modules/views"
+      ]
+    },
+    {
+      "path": "game.monsterSprites",
+      "readFiles": 6,
+      "writeFiles": 0,
+      "dirs": [
+        "engine/modules/combat",
+        "engine/modules/persistence",
+        "engine/modules/runtime",
+        "engine/modules/simulation",
+        "engine/modules/views"
+      ]
+    },
+    {
       "path": "game.scrollDrops.drops",
       "readFiles": 5,
       "writeFiles": 0,
@@ -987,8 +985,7 @@
       "dirs": [
         "engine/modules/characters",
         "engine/modules/persistence",
-        "engine/modules/simulation",
-        "engine/modules/views"
+        "engine/modules/simulation"
       ]
     },
     {
@@ -1121,33 +1118,9 @@
     }
   },
   "naming": {
-    "singleLetterBindings": 46,
-    "filesWithSingleLetterBindings": 17,
+    "singleLetterBindings": 17,
+    "filesWithSingleLetterBindings": 11,
     "topFiles": [
-      {
-        "file": "src/engine/modules/core/math.js",
-        "count": 12
-      },
-      {
-        "file": "src/engine/modules/combat/scrolls.js",
-        "count": 4
-      },
-      {
-        "file": "src/engine/modules/loot/items.js",
-        "count": 4
-      },
-      {
-        "file": "src/engine/modules/rendering/floating-text.js",
-        "count": 3
-      },
-      {
-        "file": "src/engine/modules/simulation/tick.js",
-        "count": 3
-      },
-      {
-        "file": "src/engine/modules/views/dom.js",
-        "count": 3
-      },
       {
         "file": "src/engine/modules/characters/character.js",
         "count": 2
@@ -1193,32 +1166,17 @@
         "count": 1
       }
     ],
-    "crypticBindings": 35,
-    "filesWithCrypticBindings": 16,
-    "allowListedBindings": 26,
+    "crypticBindings": 17,
+    "filesWithCrypticBindings": 11,
+    "allowListedBindings": 11,
     "allowListedByFile": {
-      "src/engine/modules/simulation/tick.js": 6,
-      "src/engine/modules/core/math.js": 4,
-      "src/engine/modules/loot/items.js": 4,
       "src/engine/modules/persistence/game-save.js": 4,
       "src/engine/modules/characters/character.js": 3,
       "src/engine/modules/combat/potions.js": 2,
-      "src/engine/modules/combat/scrolls.js": 2,
+      "src/engine/modules/simulation/tick.js": 1,
       "src/engine/modules/world/initialization.js": 1
     },
     "crypticTopFiles": [
-      {
-        "file": "src/engine/modules/core/math.js",
-        "count": 8
-      },
-      {
-        "file": "src/engine/modules/rendering/floating-text.js",
-        "count": 3
-      },
-      {
-        "file": "src/engine/modules/views/dom.js",
-        "count": 3
-      },
       {
         "file": "src/engine/modules/characters/character.js",
         "count": 2
@@ -1232,10 +1190,6 @@
         "count": 2
       },
       {
-        "file": "src/engine/modules/combat/scrolls.js",
-        "count": 2
-      },
-      {
         "file": "src/engine/modules/combat/skill-effects.js",
         "count": 2
       },
@@ -1245,10 +1199,6 @@
       },
       {
         "file": "src/engine/modules/rendering/sprites.js",
-        "count": 2
-      },
-      {
-        "file": "src/engine/modules/simulation/tick.js",
         "count": 2
       },
       {

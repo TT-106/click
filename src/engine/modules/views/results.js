@@ -3,12 +3,8 @@
  */
 import { TabView } from "./navigation.js";
 import { clearElement, clearElementById, createElement, getElement } from "./dom.js";
-import { game } from "../runtime/game.js";
 import { MAX_PRESTIGE_INVENTORY_BONUS } from "../content/balance.js";
 import { floorNumber, formatAmount, randomInt, recordGameEvent } from "../core/math.js";
-import { placePartyInWorld } from "../world/terrain.js";
-import { unlockStartingRegion } from "../world/regions.js";
-import { saveProgress } from "../persistence/game-save.js";
 import { adventurerClasses } from "../content/classes.js";
 import { monsterSpriteDefinitions } from "../core/bootstrap-data.js";
 /**
@@ -17,7 +13,44 @@ import { monsterSpriteDefinitions } from "../core/bootstrap-data.js";
  * 既去掉 `any`，也让参数/返回值的误用能被 tsc 抓到（DOM 类型来自 tsconfig 的 `lib: ["ES2022","DOM"]`）。
  * @typedef {OfflineProgressView & { getOfflineProgressCell: (table: HTMLTableElement, label: string, rowIndex: number) => HTMLTableCellElement }} OfflineProgressViewWithCells
  */
-export function GameOverView(tabState) {
+/**
+ * 胜利/离线面板所需的运行时依赖。全部为取现值函数（调用时才读取运行时全局状态），
+ * 因为运行统计、城堡列表、存档对象都可能被整体替换。
+ * @typedef {Object} ResultsDeps
+ * @property {() => number} readVictoryCount
+ * @property {() => void} clearGameWon
+ * @property {() => void} restartRun
+ * @property {() => void} resetContinuation
+ * @property {() => void} incrementContinueCount
+ * @property {() => void} resetAllies
+ * @property {() => void} resetView
+ * @property {() => void} placePartyInWorld
+ * @property {() => void} unlockStartingRegion
+ * @property {() => void} saveGame
+ * @property {(monsterName: string) => {sourceX: number, sourceY: number}} getMonsterSprite
+ * @property {() => number} readOfflineDuration
+ * @property {() => number} readOfflineProcessed
+ * @property {() => import('../progression/statistics.js').RunStatistics} readRunStatistics
+ * @property {() => number} readAttackableCastleCount
+ * @property {() => number} readAchievementClaimQueueLength
+ * @property {() => void} finishOfflineProgress
+ */
+var resultsDepsFields = ["readVictoryCount", "clearGameWon", "restartRun", "resetContinuation", "incrementContinueCount", "resetAllies", "resetView", "placePartyInWorld", "unlockStartingRegion", "saveGame", "getMonsterSprite", "readOfflineDuration", "readOfflineProcessed", "readRunStatistics", "readAttackableCastleCount", "readAchievementClaimQueueLength", "finishOfflineProgress"];
+/** @param {ResultsDeps} deps */
+function assertResultsDeps(deps) {
+  if (!deps) {
+    throw new Error("results.js: 缺少依赖对象");
+  }
+  for (var fieldIndex = 0; fieldIndex < resultsDepsFields.length; fieldIndex++) {
+    if (typeof deps[resultsDepsFields[fieldIndex]] !== "function") {
+      throw new Error("results.js: 缺少依赖 " + resultsDepsFields[fieldIndex]);
+    }
+  }
+}
+/** @param {import('./navigation.js').TabState} tabState @param {ResultsDeps} deps */
+export function GameOverView(tabState, deps) {
+  assertResultsDeps(deps);
+  this.deps = deps;
   this.elementId = "gameOverTabContent";
   this.tabState = tabState;
   this.gameOverMounted = false;
@@ -25,7 +58,7 @@ export function GameOverView(tabState) {
 export function mountGameOver(gameOverView) {
   clearElementById(gameOverView.elementId);
   var tabElement = getElement(gameOverView.elementId);
-  mountVictoryDecoration(tabElement);
+  mountVictoryDecoration(tabElement, gameOverView.deps);
   var contentsDiv = createElement("div", tabElement, null, "gameOverContentsDiv");
   createElement("div", contentsDiv, null, "gameOverHeading").innerHTML = "末日危机2胜利!";
   var victoryBlurbDiv = createElement("div", contentsDiv, null, "gameOverBlurb");
@@ -33,7 +66,7 @@ export function mountGameOver(gameOverView) {
   createElement("p", victoryBlurbDiv, null, null).innerHTML = "末日大陆上的人民终于从怪物的蹂躏下解放出来,不再需要战战兢兢的度日!";
   createElement("p", victoryBlurbDiv, null, null).innerHTML = "你可以重新选择队友开始新的一轮征程,也可以用当前的队伍继续.";
   createElement("p", victoryBlurbDiv, null, null).innerHTML = "重新开始征程你将获得以下加成:";
-  var victoryCount = game.state.victoryCount,
+  var victoryCount = gameOverView.deps.readVictoryCount(),
     newlyUnlockedClassNames = getNewlyUnlockedClasses(victoryCount),
     skillPointBonus = Math.min(40, victoryCount),
     inventorySizeBonus = Math.min(MAX_PRESTIGE_INVENTORY_BONUS, victoryCount),
@@ -51,9 +84,9 @@ export function mountGameOver(gameOverView) {
   restartButtonDiv.style.textAlign = "center";
   restartButtonDiv.innerHTML = "重生 - 以1级的队伍重新开始游戏.";
   restartButtonDiv.onclick = function () {
-    game.gameWon = false;
+    gameOverView.deps.clearGameWon();
     recordGameEvent("Victory", "Decision: Prestige");
-    game.restartRun();
+    gameOverView.deps.restartRun();
   };
   var continueBlurbDiv = createElement("div", contentsDiv, null, "gameOverBlurb");
   var continueButtonDiv = createElement("div", continueBlurbDiv, null, "upgradeButton");
@@ -61,15 +94,15 @@ export function mountGameOver(gameOverView) {
   continueButtonDiv.style.textAlign = "center";
   continueButtonDiv.innerHTML = "继续 - 用你当前的队伍征服新的城堡.";
   continueButtonDiv.onclick = function () {
-    game.gameWon = false;
+    gameOverView.deps.clearGameWon();
     recordGameEvent("Victory", "Decision: Continue");
-    game.resetContinuation();
-    game.state.victoryStatistics.currentContinueCount++;
-    placePartyInWorld();
-    unlockStartingRegion();
-    game.allies.reset();
-    game.view.reset();
-    saveProgress(game.saves);
+    gameOverView.deps.resetContinuation();
+    gameOverView.deps.incrementContinueCount();
+    gameOverView.deps.placePartyInWorld();
+    gameOverView.deps.unlockStartingRegion();
+    gameOverView.deps.resetAllies();
+    gameOverView.deps.resetView();
+    gameOverView.deps.saveGame();
   };
 }
 export function getNewlyUnlockedClasses(victoryCount) {
@@ -82,39 +115,44 @@ export function getNewlyUnlockedClasses(victoryCount) {
   }
   return classNames;
 }
-export function mountVictoryDecoration(parentElement) {
+/** @param {HTMLElement} parentElement @param {ResultsDeps} deps */
+export function mountVictoryDecoration(parentElement, deps) {
   var firstTopPortraitRow = createElement("table", parentElement, null, "gameOverTableTopRow").insertRow(0),
     firstTopCellIndex;
   for (firstTopCellIndex = 0; 19 > firstTopCellIndex; firstTopCellIndex++) {
-    appendRandomMonsterPortrait(firstTopPortraitRow.insertCell(firstTopCellIndex));
+    appendRandomMonsterPortrait(firstTopPortraitRow.insertCell(firstTopCellIndex), deps);
   }
   var secondTopPortraitTable = createElement("table", parentElement, null, "gameOverTableTopRow");
   secondTopPortraitTable.style.top = "41px";
   var secondTopPortraitRow = secondTopPortraitTable.insertRow(0);
   for (var secondTopCellIndex = 0; 19 > secondTopCellIndex; secondTopCellIndex++) {
-    appendRandomMonsterPortrait(secondTopPortraitRow.insertCell(secondTopCellIndex));
+    appendRandomMonsterPortrait(secondTopPortraitRow.insertCell(secondTopCellIndex), deps);
   }
   var firstBottomPortraitTable = createElement("table", parentElement, null, "gameOverTableBottomRow");
   firstBottomPortraitTable.style.bottom = "41px";
   var firstBottomPortraitRow = firstBottomPortraitTable.insertRow(0);
   for (var firstBottomCellIndex = 0; 19 > firstBottomCellIndex; firstBottomCellIndex++) {
-    appendRandomMonsterPortrait(firstBottomPortraitRow.insertCell(firstBottomCellIndex));
+    appendRandomMonsterPortrait(firstBottomPortraitRow.insertCell(firstBottomCellIndex), deps);
   }
   var bottomPortraitRow = createElement("table", parentElement, null, "gameOverTableBottomRow").insertRow(0);
   for (var secondBottomCellIndex = 0; 19 > secondBottomCellIndex; secondBottomCellIndex++) {
-    appendRandomMonsterPortrait(bottomPortraitRow.insertCell(secondBottomCellIndex));
+    appendRandomMonsterPortrait(bottomPortraitRow.insertCell(secondBottomCellIndex), deps);
   }
 }
-export function appendRandomMonsterPortrait(portraitCell) {
+/** @param {HTMLTableCellElement} portraitCell @param {ResultsDeps} deps */
+export function appendRandomMonsterPortrait(portraitCell, deps) {
   var monsterDefinition = monsterSpriteDefinitions[randomInt(monsterSpriteDefinitions.length)],
-    monsterSprite = game.monsterSprites.getSprite(monsterDefinition.name);
+    monsterSprite = deps.getMonsterSprite(monsterDefinition.name);
   var portraitImage = createElement("img", portraitCell, null, "characterImage");
   portraitImage.src = "images/Transparent.gif";
   portraitImage.style.background = "url('spritesheet/monsters.png') -" + monsterSprite.sourceX + "px -" + (monsterSprite.sourceY + 10) + "px";
   portraitImage.style.height = "30px";
   portraitImage.style.width = "52px";
 }
-export function OfflineProgressView(tabState) {
+/** @param {import('./navigation.js').TabState} tabState @param {ResultsDeps} deps */
+export function OfflineProgressView(tabState, deps) {
+  assertResultsDeps(deps);
+  this.deps = deps;
   this.elementId = "offlineTabContent";
   this.tabState = tabState;
   this.cancelButton = this.progressFillElement = null;
@@ -127,7 +165,7 @@ export function mountOfflineProgress(offlineProgressView) {
   var offlineTabElement = getElement(offlineProgressView.elementId);
   clearElement(offlineTabElement);
   var offlineHeaderDiv = createElement("div", offlineTabElement, null, "offlineHeader"),
-    formattedOfflineDuration = offlineProgressView.formatHoursMinutesSeconds(floorNumber(game.offlineDuration / 36E5), floorNumber(game.offlineDuration / 6E4 % 60), floorNumber(game.offlineDuration / 1E3 % 60));
+    formattedOfflineDuration = offlineProgressView.formatHoursMinutesSeconds(floorNumber(offlineProgressView.deps.readOfflineDuration() / 36E5), floorNumber(offlineProgressView.deps.readOfflineDuration() / 6E4 % 60), floorNumber(offlineProgressView.deps.readOfflineDuration() / 1E3 % 60));
   createElement("div", offlineHeaderDiv, null, "offlineTitleText").innerHTML = "末日危机2";
   createElement("div", offlineHeaderDiv, null, "offlineSubHeader").innerHTML = "离线:" + formattedOfflineDuration;
   createElement("div", offlineHeaderDiv, null, "offlineSubHeader").innerHTML = "正在清算你离开时发生了什么...";
@@ -140,7 +178,7 @@ export function mountOfflineProgress(offlineProgressView) {
   offlineProgressView.cancelButton = createElement("div", cancelButtonContainer, null, "offlineCancelButton");
   offlineProgressView.cancelButton.innerHTML = "跳过这个.我只是想杀杀怪物.";
   offlineProgressView.cancelButton.onclick = function () {
-    game.finishOfflineProgress();
+    offlineProgressView.deps.finishOfflineProgress();
   };
 }
 export function initializeViewsResults() {
@@ -179,15 +217,15 @@ export function initializeViewsResults() {
     tabState.enabled = true;
     tabState.selected = true;
     this.cachedFillWidth = -1;
-    var runStatistics = game.state.runStatistics;
+    var runStatistics = this.deps.readRunStatistics();
     this.directKillsBaseline = runStatistics.directKills;
     this.itemsFoundBaseline = runStatistics.itemsFound;
     this.itemsSoldBaseline = runStatistics.itemsSold;
     this.levelsClearedBaseline = runStatistics.levelsCleared;
     this.dungeonsClearedBaseline = runStatistics.dungeonsCleared;
-    this.attackableCastlesBaseline = game.castles.attackableCastles.length;
+    this.attackableCastlesBaseline = this.deps.readAttackableCastleCount();
     this.stunnedCountBaseline = runStatistics.characterStunnedCount;
-    this.achievementsBaseline = game.state.achievements.claimQueue.length;
+    this.achievementsBaseline = this.deps.readAchievementClaimQueueLength();
     this.cachedAchievementsDelta = this.cachedStunnedCountDelta = this.cachedAttackableCastlesDelta = this.cachedDungeonsClearedDelta = this.cachedLevelsClearedDelta = this.cachedItemsSoldDelta = this.cachedItemsFoundDelta = this.cachedDirectKillsDelta = -1;
   };
   OfflineProgressView.prototype.onOfflineFinish = function () {
@@ -206,21 +244,21 @@ export function initializeViewsResults() {
     if (!this.cancelButton) {
       mountOfflineProgress(this);
     }
-    var progressFraction = Math.min(1, game.offlineProcessed / game.offlineDuration),
+    var progressFraction = Math.min(1, this.deps.readOfflineProcessed() / this.deps.readOfflineDuration()),
       progressFillWidth = this.progressBarWidth * progressFraction;
     if (this.cachedFillWidth != progressFillWidth) {
       this.cachedFillWidth = progressFillWidth;
       this.progressFillElement.style.width = progressFillWidth + "px";
     }
-    var runStatistics = game.state.runStatistics,
+    var runStatistics = this.deps.readRunStatistics(),
       directKillsDelta = runStatistics.directKills - this.directKillsBaseline,
       itemsFoundDelta = runStatistics.itemsFound - this.itemsFoundBaseline,
       itemsSoldDelta = runStatistics.itemsSold - this.itemsSoldBaseline,
       levelsClearedDelta = runStatistics.levelsCleared - this.levelsClearedBaseline,
       dungeonsClearedDelta = runStatistics.dungeonsCleared - this.dungeonsClearedBaseline,
-      attackableCastlesDelta = game.castles.attackableCastles.length - this.attackableCastlesBaseline,
+      attackableCastlesDelta = this.deps.readAttackableCastleCount() - this.attackableCastlesBaseline,
       stunnedCountDelta = /** @type {any} */ (runStatistics.characterStunnedCount - this.stunnedCountBaseline),
-      achievementsDelta = game.state.achievements.claimQueue.length - this.achievementsBaseline;
+      achievementsDelta = this.deps.readAchievementClaimQueueLength() - this.achievementsBaseline;
     if (this.cachedDirectKillsDelta != directKillsDelta) {
       this.cachedDirectKillsDelta = directKillsDelta;
       this.directKillsDeltaCell.innerHTML = formatAmount(directKillsDelta);

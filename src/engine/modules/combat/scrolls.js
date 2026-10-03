@@ -175,12 +175,18 @@ export function castScroll(scroll, hasInfiniteScrolls) {
           opponentIndex,
           adventurerLevelPosition = randomAdventurer.position.levelPosition,
           nearestOpponent = null,
-          p,
           bestDistanceSquared = -1;
         for (opponentIndex = 0; opponentIndex < opponents.length; opponentIndex++) {
-          if (!(candidate = opponents[opponentIndex], randomAdventurer === candidate || candidate.isDead || candidate.position.room !== searchRoom || (p = candidate.effects, p.isStealthed || p.isDisabled || p.isConverted || -1 < scroll.scrollTargets.recentTargets.indexOf(candidate) || (p = adventurerLevelPosition.squaredDistanceTo(candidate.position.levelPosition), !(0 > bestDistanceSquared || p < bestDistanceSquared))))) {
-            nearestOpponent = candidate;
-            bestDistanceSquared = p;
+          candidate = opponents[opponentIndex];
+          if (!(randomAdventurer === candidate || candidate.isDead || candidate.position.room !== searchRoom)) {
+            var candidateEffects = candidate.effects;
+            if (!(candidateEffects.isStealthed || candidateEffects.isDisabled || candidateEffects.isConverted || -1 < scroll.scrollTargets.recentTargets.indexOf(candidate))) {
+              var distanceSquared = adventurerLevelPosition.squaredDistanceTo(candidate.position.levelPosition);
+              if (0 > bestDistanceSquared || distanceSquared < bestDistanceSquared) {
+                nearestOpponent = candidate;
+                bestDistanceSquared = distanceSquared;
+              }
+            }
           }
         }
         var castTarget = nearestOpponent;
@@ -231,10 +237,10 @@ export function clearScrollTargets() {
     scrollTargets.recentTargets.length = 0;
   }
 }
-export function ScrollDrop(scroll, x, y, room) {
+export function ScrollDrop(scroll, levelPositionX, levelPositionY, room) {
   this.scroll = scroll;
-  this.levelPositionX = x;
-  this.levelPositionY = y;
+  this.levelPositionX = levelPositionX;
+  this.levelPositionY = levelPositionY;
   this.room = room;
   this.collected = false;
   this.claimedBy = null;
@@ -243,11 +249,11 @@ export function ScrollDrop(scroll, x, y, room) {
 export function ScrollDropRegistry() {
   this.drops = [];
 }
-export function removeScrollDrop(a) {
+export function removeScrollDrop(scrollDrop) {
   var dropRegistry = scrollDropsRef();
-  a = dropRegistry.drops.indexOf(a);
-  if (-1 < a) {
-    dropRegistry.drops.splice(a, 1);
+  var index = dropRegistry.drops.indexOf(scrollDrop);
+  if (-1 < index) {
+    dropRegistry.drops.splice(index, 1);
   }
 }
 export function ScrollInventory() {

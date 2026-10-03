@@ -73,10 +73,10 @@ export function scaleByLevel(level, curve, multiplier) {
   level = Math.max(0, level - 1);
   return floorNumber(multiplier * (curve.base + curve.coefficient * Math.pow(level, curve.power) * Math.pow(curve.growth, level)));
 }
-export function randomizeScaledValue(a, curve, multiplier) {
-  a = scaleByLevel(a, curve, multiplier);
+export function randomizeScaledValue(level, curve, multiplier) {
+  var scaledValue = scaleByLevel(level, curve, multiplier);
   var jitterFactor = 1.1 - 0.2 * Math.random();
-  return floorNumber(a * jitterFactor);
+  return floorNumber(scaledValue * jitterFactor);
 }
 export function hashCoordinates(hash, row, levelIndex) {
   hash = (hash << 5) - hash + row;
@@ -106,9 +106,9 @@ export function copyVector(targetVector, sourceVector) {
   targetVector.x = sourceVector.x;
   targetVector.y = sourceVector.y;
 }
-export function setVector(targetVector, x, y) {
-  targetVector.x = x;
-  targetVector.y = y;
+export function setVector(targetVector, positionX, positionY) {
+  targetVector.x = positionX;
+  targetVector.y = positionY;
 }
 export function assignVector(targetVector, sourceVector) {
   targetVector.x = sourceVector.x;
@@ -122,25 +122,25 @@ export function subtractVector(targetVector, otherVector) {
   targetVector.x -= otherVector.x;
   targetVector.y -= otherVector.y;
 }
-export function distanceToPoint(a, b, y) {
-  b = a.x - b;
-  a = a.y - y;
-  return Math.sqrt(b * b + a * a);
+export function distanceToPoint(point, targetX, targetY) {
+  var deltaX = point.x - targetX;
+  var deltaY = point.y - targetY;
+  return Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 }
-export function distanceSquaredToPoint(a, b, y) {
-  b = a.x - b;
-  a = a.y - y;
-  return b * b + a * a;
+export function distanceSquaredToPoint(point, targetX, targetY) {
+  var deltaX = point.x - targetX;
+  var deltaY = point.y - targetY;
+  return deltaX * deltaX + deltaY * deltaY;
 }
 export function vectorLength(vector) {
   return Math.sqrt(vector.x * vector.x + vector.y * vector.y);
 }
 export function normalizeVector(vector) {
-  var b = vector.x * vector.x + vector.y * vector.y;
-  if (0 < b) {
-    b = 1 / Math.sqrt(b);
-    vector.x *= b;
-    vector.y *= b;
+  var lengthSquared = vector.x * vector.x + vector.y * vector.y;
+  if (0 < lengthSquared) {
+    var inverseLength = 1 / Math.sqrt(lengthSquared);
+    vector.x *= inverseLength;
+    vector.y *= inverseLength;
   }
 }
 export function multiplyVector(targetVector, scale) {
@@ -173,15 +173,15 @@ export function initializeCoreMath() {
     return ((outputWord ^ outputWord >>> 18) >>> 0) * this.unitScale;
   };
   FRAME_DURATION_MS = 1E3 / 60;
-  Vector2.prototype.distanceTo = function (a) {
-    var deltaX = this.x - a.x;
-    a = this.y - a.y;
-    return Math.sqrt(deltaX * deltaX + a * a);
+  Vector2.prototype.distanceTo = function (otherVector) {
+    var deltaX = this.x - otherVector.x;
+    var deltaY = this.y - otherVector.y;
+    return Math.sqrt(deltaX * deltaX + deltaY * deltaY);
   };
-  Vector2.prototype.squaredDistanceTo = function (a) {
-    var deltaX = this.x - a.x;
-    a = this.y - a.y;
-    return deltaX * deltaX + a * a;
+  Vector2.prototype.squaredDistanceTo = function (otherVector) {
+    var deltaX = this.x - otherVector.x;
+    var deltaY = this.y - otherVector.y;
+    return deltaX * deltaX + deltaY * deltaY;
   };
   Vector2.prototype.toString = function () {
     return "(" + this.x + ", " + this.y + ")";

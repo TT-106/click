@@ -62,24 +62,25 @@ export function showDamageText(targetCharacter, damage) {
     showFloatingText(floatingTextLayer, targetCharacter, "-" + damage, "#FF4444");
   }
 }
-export function showFloatingText(floatingTextLayer, b, c, d) {
+export function showFloatingText(floatingTextLayer, targetCharacter, text, color) {
+  var screenX, screenY;
   if (!processingOfflineNow()) {
-    c = new FloatingText(c, d);
-    b = b.position;
+    var floatingText = new FloatingText(text, color);
+    var position = targetCharacter.position;
     if (worldActiveNow()) {
-      d = b.getWorldPositionX();
-      var positionY = b.getWorldPositionY();
-      b = VIEWPORT_HALF_WIDTH + (d - worldNow().worldCenterX - (positionY - worldNow().worldCenterY)) + floatingTextLayer.screenXOffset;
-      d = VIEWPORT_HALF_HEIGHT + 0.5 * (d - worldNow().worldCenterX + (positionY - worldNow().worldCenterY)) + floatingTextLayer.screenYOffset;
+      var worldX = position.getWorldPositionX();
+      var positionY = position.getWorldPositionY();
+      screenX = VIEWPORT_HALF_WIDTH + (worldX - worldNow().worldCenterX - (positionY - worldNow().worldCenterY)) + floatingTextLayer.screenXOffset;
+      screenY = VIEWPORT_HALF_HEIGHT + 0.5 * (worldX - worldNow().worldCenterX + (positionY - worldNow().worldCenterY)) + floatingTextLayer.screenYOffset;
     } else {
-      d = b.getLevelPositionX();
-      positionY = b.getLevelPositionY();
-      b = projectDungeonX(d, positionY) + floatingTextLayer.screenXOffset;
-      d = projectDungeonY(d, positionY) + floatingTextLayer.screenYOffset;
+      var levelX = position.getLevelPositionX();
+      positionY = position.getLevelPositionY();
+      screenX = projectDungeonX(levelX, positionY) + floatingTextLayer.screenXOffset;
+      screenY = projectDungeonY(levelX, positionY) + floatingTextLayer.screenYOffset;
     }
-    c.screenX = b;
-    c.screenY = d;
-    floatingTextLayer.texts.push(c);
+    floatingText.screenX = screenX;
+    floatingText.screenY = screenY;
+    floatingTextLayer.texts.push(floatingText);
   }
 }
 export function initializeRenderingFloatingText() {
