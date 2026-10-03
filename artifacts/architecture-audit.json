@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-10-03T08:25:22.424Z",
+  "generatedAt": "2026-10-03T10:21:06.749Z",
   "counts": {
     "srcJsFiles": 95,
     "engineModules": 79,
-    "totalEdges": 552
+    "totalEdges": 551
   },
   "gameImporters": {
-    "total": 23,
-    "withGameBinding": 23,
+    "total": 22,
+    "withGameBinding": 22,
     "byDir": {
       "engine/modules/ai": 1,
       "engine/modules/characters": 2,
@@ -17,7 +17,7 @@
       "engine/modules/rendering": 1,
       "engine/modules/runtime": 1,
       "engine/modules/simulation": 3,
-      "engine/modules/views": 6,
+      "engine/modules/views": 5,
       "engine/modules/world": 5
     },
     "files": [
@@ -36,7 +36,6 @@
       "src/engine/modules/views/dungeons.js",
       "src/engine/modules/views/expedition.js",
       "src/engine/modules/views/information.js",
-      "src/engine/modules/views/navigation.js",
       "src/engine/modules/views/party-creation.js",
       "src/engine/modules/views/results.js",
       "src/engine/modules/world/dungeons.js",
@@ -78,7 +77,6 @@
       "src/engine/modules/views/expedition.js",
       "src/engine/modules/views/information.js",
       "src/engine/modules/views/monsters.js",
-      "src/engine/modules/views/navigation.js",
       "src/engine/modules/views/party-creation.js",
       "src/engine/modules/views/results.js",
       "src/engine/modules/views/upgrade-details.js",
@@ -543,7 +541,7 @@
   "hotFields": [
     {
       "path": "game.state",
-      "readFiles": 21,
+      "readFiles": 20,
       "writeFiles": 0,
       "dirs": [
         "engine/modules/ai",
@@ -560,7 +558,7 @@
     },
     {
       "path": "game.state.adventurers",
-      "readFiles": 15,
+      "readFiles": 14,
       "writeFiles": 0,
       "dirs": [
         "engine/modules/ai",
@@ -591,7 +589,7 @@
     },
     {
       "path": "game.state.adventurers.length",
-      "readFiles": 13,
+      "readFiles": 12,
       "writeFiles": 0,
       "dirs": [
         "engine/modules/characters",
@@ -924,17 +922,6 @@
       ]
     },
     {
-      "path": "game.gameWon",
-      "readFiles": 3,
-      "writeFiles": 3,
-      "dirs": [
-        "engine/modules/characters",
-        "engine/modules/persistence",
-        "engine/modules/simulation",
-        "engine/modules/views"
-      ]
-    },
-    {
       "path": "game.scrollDrops.drops",
       "readFiles": 5,
       "writeFiles": 0,
@@ -989,6 +976,17 @@
         "engine/modules/characters",
         "engine/modules/combat",
         "engine/modules/runtime",
+        "engine/modules/simulation",
+        "engine/modules/views"
+      ]
+    },
+    {
+      "path": "game.gameWon",
+      "readFiles": 2,
+      "writeFiles": 3,
+      "dirs": [
+        "engine/modules/characters",
+        "engine/modules/persistence",
         "engine/modules/simulation",
         "engine/modules/views"
       ]
@@ -1057,6 +1055,10 @@
       "SaveItemEffect",
       "SaveItem",
       "SavePosition",
+      "SaveStatComponent",
+      "SaveCharacterStats",
+      "SaveSpellState",
+      "SaveWorld",
       "SaveAdventurer",
       "SavePotion",
       "SaveScroll",
@@ -1078,7 +1080,19 @@
       "SaveItemEffect": [],
       "SaveItem": [],
       "SavePosition": [],
-      "SaveAdventurer": [],
+      "SaveStatComponent": [
+        "src/engine/modules/persistence/entities.js"
+      ],
+      "SaveCharacterStats": [
+        "src/engine/modules/persistence/entities.js"
+      ],
+      "SaveSpellState": [
+        "src/engine/modules/persistence/entities.js"
+      ],
+      "SaveWorld": [],
+      "SaveAdventurer": [
+        "src/engine/modules/persistence/entities.js"
+      ],
       "SavePotion": [],
       "SaveScroll": [],
       "SaveAchievement": [],
@@ -1107,8 +1121,8 @@
     }
   },
   "naming": {
-    "singleLetterBindings": 57,
-    "filesWithSingleLetterBindings": 20,
+    "singleLetterBindings": 54,
+    "filesWithSingleLetterBindings": 19,
     "topFiles": [
       {
         "file": "src/engine/modules/core/math.js",
@@ -1140,10 +1154,6 @@
       },
       {
         "file": "src/engine/modules/views/monsters.js",
-        "count": 3
-      },
-      {
-        "file": "src/engine/modules/views/navigation.js",
         "count": 3
       },
       {
@@ -1191,8 +1201,8 @@
         "count": 1
       }
     ],
-    "crypticBindings": 46,
-    "filesWithCrypticBindings": 19,
+    "crypticBindings": 43,
+    "filesWithCrypticBindings": 18,
     "allowListedBindings": 26,
     "allowListedByFile": {
       "src/engine/modules/simulation/tick.js": 6,
@@ -1223,10 +1233,6 @@
       },
       {
         "file": "src/engine/modules/views/monsters.js",
-        "count": 3
-      },
-      {
-        "file": "src/engine/modules/views/navigation.js",
         "count": 3
       },
       {

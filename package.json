@@ -33,6 +33,7 @@
   "audit:doc-anchors": "node scripts/check-doc-ref-anchors.mjs",
     "audit:doc-counts": "node scripts/check-doc-counts.mjs",
     "audit:arch": "node scripts/audit-architecture.mjs",
+    "audit:initialization-order": "node scripts/check-initialization-order.mjs",
     "audit:production-boundary": "node scripts/audit-production-boundary.mjs",
     "audit:save-schema": "node scripts/audit-save-schema.mjs",
     "check:achievements": "node scripts/check-achievement-requirements.mjs",

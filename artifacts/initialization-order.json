@@ -1,0 +1,480 @@
+[
+  {
+    "module": "../content/animations.js",
+    "name": "initializeContentAnimations",
+    "arguments": []
+  },
+  {
+    "module": "../content/monsters.js",
+    "name": "initializeContentMonsters",
+    "arguments": []
+  },
+  {
+    "module": "../core/bootstrap-data.js",
+    "name": "initializeCoreBootstrapData",
+    "arguments": []
+  },
+  {
+    "module": "../content/equipment.js",
+    "name": "initializeContentEquipment",
+    "arguments": []
+  },
+  {
+    "module": "../world/initialization.js",
+    "name": "initializeWorldInitialization",
+    "arguments": []
+  },
+  {
+    "module": "../core/math.js",
+    "name": "initializeCoreMath",
+    "arguments": []
+  },
+  {
+    "module": "../rendering/sprites.js",
+    "name": "initializeRenderingSprites",
+    "arguments": []
+  },
+  {
+    "module": "../world/regions.js",
+    "name": "initializeWorldRegions",
+    "arguments": []
+  },
+  {
+    "module": "../world/dungeons.js",
+    "name": "initializeWorldDungeons",
+    "arguments": []
+  },
+  {
+    "module": "../world/terrain.js",
+    "name": "initializeWorldTerrain",
+    "arguments": []
+  },
+  {
+    "module": "../content/dungeon-themes.js",
+    "name": "initializeContentDungeonThemes",
+    "arguments": []
+  },
+  {
+    "module": "../world/rooms.js",
+    "name": "initializeWorldRooms",
+    "arguments": []
+  },
+  {
+    "module": "../world/pathfinding.js",
+    "name": "initializeWorldPathfinding",
+    "arguments": []
+  },
+  {
+    "module": "../world/generation.js",
+    "name": "initializeWorldGeneration",
+    "arguments": []
+  },
+  {
+    "module": "../rendering/floating-text.js",
+    "name": "initializeRenderingFloatingText",
+    "arguments": []
+  },
+  {
+    "module": "../combat/encounters.js",
+    "name": "initializeCombatEncounters",
+    "arguments": []
+  },
+  {
+    "module": "../loot/treasure.js",
+    "name": "initializeLootTreasure",
+    "arguments": []
+  },
+  {
+    "module": "../combat/skill-effects.js",
+    "name": "initializeCombatSkillEffects",
+    "arguments": []
+  },
+  {
+    "module": "../content/skills/barbarian.js",
+    "name": "initializeContentSkillsBarbarian",
+    "arguments": []
+  },
+  {
+    "module": "../content/skills/fighter.js",
+    "name": "initializeContentSkillsFighter",
+    "arguments": []
+  },
+  {
+    "module": "../content/skills/ninja.js",
+    "name": "initializeContentSkillsNinja",
+    "arguments": []
+  },
+  {
+    "module": "../content/skills/priest.js",
+    "name": "initializeContentSkillsPriest",
+    "arguments": []
+  },
+  {
+    "module": "../content/skills/electromancer.js",
+    "name": "initializeContentSkillsElectromancer",
+    "arguments": []
+  },
+  {
+    "module": "../content/skills/pyromancer.js",
+    "name": "initializeContentSkillsPyromancer",
+    "arguments": []
+  },
+  {
+    "module": "../content/skills/ranger.js",
+    "name": "initializeContentSkillsRanger",
+    "arguments": []
+  },
+  {
+    "module": "../content/skills/rogue.js",
+    "name": "initializeContentSkillsRogue",
+    "arguments": []
+  },
+  {
+    "module": "../content/skills/necromancer.js",
+    "name": "initializeContentSkillsNecromancer",
+    "arguments": []
+  },
+  {
+    "module": "../content/skills/druid.js",
+    "name": "initializeContentSkillsDruid",
+    "arguments": []
+  },
+  {
+    "module": "../content/skills/chicken-king.js",
+    "name": "initializeContentSkillsChickenKing",
+    "arguments": []
+  },
+  {
+    "module": "../content/spells.js",
+    "name": "initializeContentSpells",
+    "arguments": []
+  },
+  {
+    "module": "../combat/scrolls.js",
+    "name": "initializeCombatScrolls",
+    "arguments": []
+  },
+  {
+    "module": "../combat/potions.js",
+    "name": "initializeCombatPotions",
+    "arguments": []
+  },
+  {
+    "module": "../progression/points.js",
+    "name": "initializeProgressionPoints",
+    "arguments": []
+  },
+  {
+    "module": "../progression/achievements.js",
+    "name": "initializeProgressionAchievements",
+    "arguments": []
+  },
+  {
+    "module": "../progression/upgrades.js",
+    "name": "initializeProgressionUpgrades",
+    "arguments": []
+  },
+  {
+    "module": "../ai/targeting.js",
+    "name": "initializeAiTargeting",
+    "arguments": []
+  },
+  {
+    "module": "../ai/behaviors.js",
+    "name": "initializeAiBehaviors",
+    "arguments": []
+  },
+  {
+    "module": "../content/classes.js",
+    "name": "initializeContentClasses",
+    "arguments": []
+  },
+  {
+    "module": "../content/minions.js",
+    "name": "initializeContentMinions",
+    "arguments": []
+  },
+  {
+    "module": "../characters/minions.js",
+    "name": "initializeCharactersMinions",
+    "arguments": []
+  },
+  {
+    "module": "../content/guardians.js",
+    "name": "initializeContentGuardians",
+    "arguments": []
+  },
+  {
+    "module": "../loot/item-names.js",
+    "name": "initializeLootItemNames",
+    "arguments": []
+  },
+  {
+    "module": "../loot/items.js",
+    "name": "initializeLootItems",
+    "arguments": []
+  },
+  {
+    "module": "../loot/inventory.js",
+    "name": "initializeLootInventory",
+    "arguments": []
+  },
+  {
+    "module": "../combat/actions.js",
+    "name": "initializeCombatActions",
+    "arguments": []
+  },
+  {
+    "module": "../characters/stats.js",
+    "name": "initializeCharactersStats",
+    "arguments": []
+  },
+  {
+    "module": "../characters/effects.js",
+    "name": "initializeCharactersEffects",
+    "arguments": []
+  },
+  {
+    "module": "../characters/movement.js",
+    "name": "initializeCharactersMovement",
+    "arguments": []
+  },
+  {
+    "module": "../characters/character.js",
+    "name": "initializeCharactersCharacter",
+    "arguments": []
+  },
+  {
+    "module": "../world/travel-costs.js",
+    "name": "initializeWorldTravelCosts",
+    "arguments": []
+  },
+  {
+    "module": "../progression/statistics.js",
+    "name": "initializeProgressionStatistics",
+    "arguments": []
+  },
+  {
+    "module": "../characters/party.js",
+    "name": "initializeCharactersParty",
+    "arguments": []
+  },
+  {
+    "module": "../content/balance.js",
+    "name": "initializeContentBalance",
+    "arguments": [
+      "{AutoPurchaseDungeonUpgrade,ClaimAchievementUpgrade,CollectFarmUpgrade,EquipBestItemUpgrade,EquipItemUpgrade,GlobalUpgrade,LevelUpUpgrade,PurchaseCastleUpgrade,PurchaseItemUpgrade,RetireMonsterLevelUpgrade,ScrollUpgrade,UnlockMonsterLevelUpgrade,UpgradeCollection,scrollDefinitions}"
+    ]
+  },
+  {
+    "module": "../views/dom.js",
+    "name": "initializeViewsDom",
+    "arguments": []
+  },
+  {
+    "module": "../views/base.js",
+    "name": "initializeViewsBase",
+    "arguments": []
+  },
+  {
+    "module": "../views/navigation.js",
+    "name": "initializeViewsNavigation",
+    "arguments": []
+  },
+  {
+    "module": "../views/upgrade-details.js",
+    "name": "initializeViewsUpgradeDetails",
+    "arguments": []
+  },
+  {
+    "module": "../rendering/scene.js",
+    "name": "initializeRenderingScene",
+    "arguments": []
+  },
+  {
+    "module": "../views/expedition.js",
+    "name": "initializeViewsExpedition",
+    "arguments": []
+  },
+  {
+    "module": "../views/information.js",
+    "name": "initializeViewsInformation",
+    "arguments": []
+  },
+  {
+    "module": "../views/party-creation.js",
+    "name": "initializeViewsPartyCreation",
+    "arguments": []
+  },
+  {
+    "module": "../views/character.js",
+    "name": "initializeViewsCharacter",
+    "arguments": []
+  },
+  {
+    "module": "../views/monsters.js",
+    "name": "initializeViewsMonsters",
+    "arguments": []
+  },
+  {
+    "module": "../views/castles.js",
+    "name": "initializeViewsCastles",
+    "arguments": []
+  },
+  {
+    "module": "../views/resources.js",
+    "name": "initializeViewsResources",
+    "arguments": []
+  },
+  {
+    "module": "../views/dungeons.js",
+    "name": "initializeViewsDungeons",
+    "arguments": []
+  },
+  {
+    "module": "../views/results.js",
+    "name": "initializeViewsResults",
+    "arguments": []
+  },
+  {
+    "module": "../views/achievements.js",
+    "name": "initializeViewsAchievements",
+    "arguments": []
+  },
+  {
+    "module": "../persistence/entities.js",
+    "name": "initializePersistenceEntities",
+    "arguments": []
+  },
+  {
+    "module": "../persistence/game-save.js",
+    "name": "initializePersistenceGameSave",
+    "arguments": []
+  },
+  {
+    "module": "../simulation/characters.js",
+    "name": "initializeSimulationCharacters",
+    "arguments": []
+  },
+  {
+    "module": "../simulation/tick.js",
+    "name": "initializeSimulationTick",
+    "arguments": []
+  },
+  {
+    "module": "../simulation/loop.js",
+    "name": "initializeSimulationLoop",
+    "arguments": []
+  },
+  {
+    "module": "./game.js",
+    "name": "initializeRuntimeGame",
+    "arguments": []
+  },
+  {
+    "module": "../views/monsters.js",
+    "name": "bindMonsterViews",
+    "arguments": [
+      "game.monsterCatalog",
+      "game.state"
+    ]
+  },
+  {
+    "module": "../views/character.js",
+    "name": "bindCharacterViews",
+    "arguments": [
+      "game.state",
+      "game.inventories"
+    ]
+  },
+  {
+    "module": "../characters/movement.js",
+    "name": "bindCharacterMovement",
+    "arguments": [
+      "game.state",
+      "game.minions",
+      "()=>game.world"
+    ]
+  },
+  {
+    "module": "../ai/targeting.js",
+    "name": "bindTargetingPathfinder",
+    "arguments": [
+      "game.pathfinder"
+    ]
+  },
+  {
+    "module": "../loot/treasure.js",
+    "name": "bindLootTreasure",
+    "arguments": [
+      "game.goldDrops",
+      "game.state",
+      "game.treasure"
+    ]
+  },
+  {
+    "module": "../world/regions.js",
+    "name": "bindWorldRegions",
+    "arguments": [
+      "game.regions",
+      "game.castles",
+      "()=>game.world"
+    ]
+  },
+  {
+    "module": "../views/castles.js",
+    "name": "bindCastleViews",
+    "arguments": [
+      "game.monsterCatalog",
+      "game.castles",
+      "game.regions",
+      "game.itemSprites"
+    ]
+  },
+  {
+    "module": "../persistence/entities.js",
+    "name": "bindPersistenceEntities",
+    "arguments": [
+      "game.itemGenerator",
+      "game.dungeons",
+      "game.monsterCatalog",
+      "game.scrolls"
+    ]
+  },
+  {
+    "module": "../views/upgrade-details.js",
+    "name": "bindUpgradeDetailViews",
+    "arguments": [
+      "game.state",
+      "game.terrainSprites",
+      "game.monsterSprites",
+      "game.monsterCatalog",
+      "game.shops",
+      "game.dungeons",
+      "game.castles",
+      "game.animations"
+    ]
+  },
+  {
+    "module": "../rendering/floating-text.js",
+    "name": "bindFloatingTextRender",
+    "arguments": [
+      "game.floatingText",
+      "()=>game.processingOffline",
+      "()=>game.worldActive",
+      "()=>game.world"
+    ]
+  },
+  {
+    "module": "../combat/scrolls.js",
+    "name": "bindCombatScrolls",
+    "arguments": [
+      "game.state",
+      "game.scrolls",
+      "game.scrollTargets",
+      "game.scrollDrops",
+      "game.itemSprites",
+      "game.effects"
+    ]
+  }
+]
