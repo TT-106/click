@@ -155,7 +155,7 @@ sequenceDiagram
 - `loop.js:53-56`：模拟推进量 = 实际帧差 / `frameDuration`（可 >1 帧），`advanceSimulation(c)`；
 - `loop.js:74-80`：`if (game.renderEnabled) { try { game.view.render(); } catch (l) { console.log(...) } }`——渲染异常只记日志（原版行为保留）；
 - `renderEnabled` 唯一写点是 `handleVisibility`：`game.renderEnabled = !document.hidden`（`game.js:192-196`），由 `bindVisibility` 在 visibilitychange 时触发（`game.js:197-199`）。即后台标签页跳过渲染但不跳过模拟（配合后台离线分支）；
-- `game.view.render()` 来自视图基类：`View.prototype.render` → 可见性切换 + `update()`；`CompositeView.update` → 递归 `render()` 所有子视图（`src/engine/modules/views/base.js:41-64`）。`GameView.prototype = new CompositeView()`（`views/navigation.js:87`），子视图含 `GameCanvasView`（画布渲染，`views/expedition.js:223` + `rendering/scene.js`）；
+- `game.view.render()` 来自视图基类：`View.prototype.render` → 可见性切换 + `update()`；`CompositeView.update` → 递归 `render()` 所有子视图（`src/engine/modules/views/base.js:41-64`）。`GameView.prototype = new CompositeView()`（`views/navigation.js:93`），子视图含 `GameCanvasView`（画布渲染，`views/expedition.js:223` + `rendering/scene.js`）；
 - 反向耦合（UI → 模拟）：适配层 `showPanel` 会主动调一次 `game.view.render()` 立即重绘（`adapter.js:125-131`）；暂停只停模拟不停渲染（`:41` 的门条件不含渲染）。
 
 ---

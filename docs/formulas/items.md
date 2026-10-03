@@ -739,7 +739,7 @@ return {
 - 特效的 4 个字段（含描述字符串与动画名）也全部持久化。
 - 恢复只依赖 `itemTypeId` 反查模板：`game.itemGenerator.itemTypesById[a.itemTypeId]`，查不到 → `console.log("failed to lookup item type")` 并返回 `null`，调用点跳过该件（`persistence/game-save.js:481,490`）。基底名或 PNG 任一处改名都会改变哈希（`loot/items.js:234-245`）而使旧档道具整体消失。
 - 回读时的零值兜底会**改写 0**：`g ? g : 1`（等级 0→1）、`n ? n : 1`（`characteristic` 0→1）、`f ? f : 0`、`h/l ? : 0`（`persistence/entities.js:91`）。
-- 角色侧另有 `characteristicsComponent` 保存六条 `StatComponent` 的 `itemValue/levelValue/spellBonusPercent/skillBonusPercent`（`persistence/entities.js:157-164`）。装备回算发生两次：先由 `equipItem` 求和（`persistence/game-save.js:491`），再由 `restoreStatComponent` 用存档值覆写（`persistence/game-save.js:522-527`）—— **存档值优先**。
+- 角色侧另有 `characteristicsComponent` 保存六条 `StatComponent` 的 `itemValue/levelValue/spellBonusPercent/skillBonusPercent`（`persistence/entities.js:204-211`）。装备回算发生两次：先由 `equipItem` 求和（`persistence/game-save.js:491`），再由 `restoreStatComponent` 用存档值覆写（`persistence/game-save.js:522-527`）—— **存档值优先**。
 
 ---
 

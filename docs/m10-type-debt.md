@@ -7,9 +7,9 @@
 | 指标 | 数值 | 复核命令 |
 |---|---|---|
 | `tsc` 错误 | **0** | `npm run typecheck` |
-| `src/engine/modules` 下 `@ts-nocheck` | **0**（77 个模块全部参与检查） | `npm run lint`（不变量 3） |
-| tsc 实际加载的引擎模块 | **76 / 77**（经 import 图从 `core/**` + `persistence/**` 传递） | `tsc -p tsconfig.json --listFiles` |
-| `@type {any}` 强制转换 | **41**（R30 实测；与 R25 持平） | `grep -ro "/\*\* @type {any} \*/" src/ \| wc -l`（**必须用精确模式**：宽松匹配 `@type {any}` 会把本文档与源码注释里对它的**提及**也算进去，实测差 1 处——`views/results.js:16` 的说明性注释） |
+| `src/engine/modules` 下 `@ts-nocheck` | **0**（79 个模块无整文件豁免；实际加载范围见下一行） | `npm run lint`（不变量 3） |
+| tsc 实际加载的引擎模块 | **78 / 79**（R38 经 import 图从 `core/**` + `persistence/**` 传递） | `tsc -p tsconfig.json --listFiles` |
+| `@type {any}` 强制转换 | **38**（R38 实测；改前 41，导航减 2、法术存档数组减 1） | `npm run lint` 最后的精确转换计数 |
 | JSDoc 里的 `unknown`（含 `unknown` 收窄转换） | 149 行（R30 实测；R25 记的 146 在 R26–R29 期间已漂到 148，本轮解耦切片的 `views/dungeons.js` 类型收窄 cast 再 +1） | `grep -rn "\bunknown\b" src/ --include=*.js \| wc -l` |
 | `@ts-ignore` / `eslint-disable` | **0** | `npm run lint`（不变量 4） |
 
@@ -37,8 +37,8 @@
 
 ## 5. 结论（如实）
 
-- **VERIFIED**：`tsc` 0 错误；77/77 模块无整文件豁免；无 `@ts-ignore`/`eslint-disable`。
-- **PARTIALLY VERIFIED**：类型**完备性**——仍有 41 处 `any` 与 149 行 `unknown` 收窄，集中在"原型后挂载 + 变量复用"两类结构性问题。
+- **VERIFIED**：`tsc` 0 错误；79/79 模块无整文件豁免，tsc 实际加载 78 个；无 `@ts-ignore`/`eslint-disable`。
+- **PARTIALLY VERIFIED**：类型**完备性**——仍有 38 处 `any` 与 149 行 `unknown` 收窄，集中在"原型后挂载 + 变量复用"两类结构性问题。
 - **UNRESOLVED（2026-09-27 更新：已部分解决）**：`persistence/save-dto.js` 曾是**未被任何 `@type` 引用的类型资产**。
   **U131 已接入两处**：`createSaveState` 的 `@returns {SaveData|SaveDataUninitialized}` 与 `restoreGameState` 里
   `JSON.parse` 结果的 `@type {SaveData}`——写错/读错顶层键现在由 `tsc` 报出（反向验证过：TS2322 / TS2551）。
@@ -55,6 +55,12 @@
   负向验证 ×3：恢复侧 `a.killsTypo` → TS2339 红；写出侧 `nameTypo:` → TS2353 红；typedef 加伪字段 → 审计 exit 1。
   **实测发现（记入台账）**：JS 文件里 JSDoc 参数标注**不被赋值收窄覆盖**（参数标注后 `a = <any>` 再读
   `a.length` 仍报 TS2339——声明类型恒胜），故被复用参数不能靠参数标注+any 赋值收窄，只能读取点 cast。
-  **仍未做**：其余嵌套形态（`world`、`statistics`、`castleManager`、`shopManager` 等）在 `SaveData` 里
+  **R38 追加（2026-10-03）**：`SaveWorld`（4 键）、`SaveCharacterStats`（14 键）、
+  `SaveStatComponent`（4 键，六种组件逐一核对原版 fixture）与 `SaveSpellState`（spellName）接入嵌套形态。
+  角色/组件写出侧与组件回读侧受类型约束；技能购买标记收紧为布尔字典。读错键、写错键、虚构世界键、
+  遗漏顶层声明的四次反向实验均失败，逐字节恢复后通过；日志在 `output/refactor-r38/`。
+  原版 fixture 的法术数组为空，因此审计明确报告这一类型缺少 fixture 样本，不冒充历史样本验证。
+  审计按完整 typedef 名精确切块，修复 SaveData 与 SaveDataUninitialized 前缀混淆，并新增顶层遗漏检查。
+  **仍未做**：其余嵌套形态（`statistics`、`castleManager`、`shopManager` 等）在 `SaveData` 里
   仍标成 `{Object}`，没有形状约束；照同一套路（typedef + fixture 核对 + 审计 spot-check）做是纯增量工作。
   红线不变：**不得通过 `any`、宽泛断言或更改存档键让 tsc 变绿**。
