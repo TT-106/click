@@ -99,11 +99,12 @@ export function mountAdventurePoints(view) {
   apLabelCell.title = "冒险点数";
   apLabelCell.innerHTML = "AP";
 }
+/** @param {number[][]} keyBindings */
 export function ScrollButtonCollection(keyBindings) {
   this.keyStates = {};
   this.buttons = [];
   var buttonIndex, keyIndex, buttonKeyCodes;
-  for (buttonIndex = 0; buttonIndex < (/** @type {any} */ (keyBindings)).length; buttonIndex++) {
+  for (buttonIndex = 0; buttonIndex < keyBindings.length; buttonIndex++) {
     for (buttonKeyCodes = keyBindings[buttonIndex], keyIndex = 0; keyIndex < buttonKeyCodes.length; keyIndex++) {
       this.buttons.push(buttonKeyCodes[keyIndex]);
     }
@@ -122,6 +123,7 @@ export function scrollButtonsChanged(collection) {
     collection.keyStates[collection.buttons[buttonIndex]] = false;
   }
 }
+/** @param {number[]} keyBindings */
 export function ScrollButtonView(elementId, casterIndex, collection, keyBindings) {
   this.elementId = elementId;
   this.visible = true;
@@ -493,13 +495,14 @@ export function initializeViewsExpedition() {
     }
   };
   DungeonNotificationView.prototype = new View();
+  /** @this {DungeonNotificationView & View} */
   DungeonNotificationView.prototype.reset = function () {
     clearElementById(this.elementId);
     this.cachedDungeonLevel = this.cachedDungeonName = "";
     var panelElement = getElement(this.elementId);
     this.notificationElement = createElement("div", panelElement, null, "dungeonNotificationDiv");
     hideElement(panelElement);
-    (/** @type {any} */ (this)).cachedVisible = false;
+    this.cachedVisible = false;
   };
   DungeonNotificationView.prototype.isVisible = function () {
     return !game.worldActive;
@@ -615,7 +618,7 @@ export function initializeViewsExpedition() {
     }
     a: {
       var keyBindings = this.keyBindings;
-      for (var keyIndex = 0; keyIndex < (/** @type {any} */ (keyBindings)).length; keyIndex++) {
+      for (var keyIndex = 0; keyIndex < keyBindings.length; keyIndex++) {
         if (this.collection.keyStates[keyBindings[keyIndex]]) {
           var hasReleasedKey = true;
           break a;
@@ -628,14 +631,16 @@ export function initializeViewsExpedition() {
     }
   };
   ScrollBarView.prototype = new View();
+  /** @this {ScrollBarView & { createDomElements: () => void }} */
   ScrollBarView.prototype.reset = function () {
     clearElementById(this.elementId);
     this.buttonViews.length = 0;
-    (/** @type {any} */ (this)).createDomElements();
+    this.createDomElements();
   };
+  /** @this {ScrollBarView & { createDomElements: () => void }} */
   ScrollBarView.prototype.update = function () {
     if (!this.tableElement) {
-      (/** @type {any} */ (this)).createDomElements();
+      this.createDomElements();
     }
     var buttonIndex,
       scrollList = game.scrolls.scrollList,
@@ -747,15 +752,17 @@ export function initializeViewsExpedition() {
     }
   };
   PotionBarView.prototype = new View();
+  /** @this {PotionBarView & { createDomElements: () => void }} */
   PotionBarView.prototype.reset = function () {
     clearElementById(this.elementId);
     this.buttonViews.length = 0;
     this.mounted = false;
-    (/** @type {any} */ (this)).createDomElements();
+    this.createDomElements();
   };
+  /** @this {PotionBarView & { createDomElements: () => void }} */
   PotionBarView.prototype.update = function () {
     if (!this.mounted) {
-      (/** @type {any} */ (this)).createDomElements();
+      this.createDomElements();
     }
     var buttonIndex,
       potionList = game.potions.potionList,

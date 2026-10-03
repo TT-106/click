@@ -42,6 +42,7 @@ export function MonsterLevelView() {
   this.visible = true;
   this.cachedMinGoldPerDrop = this.cachedMaxGoldPerDrop = this.cachedTreasureChance = this.cachedPotionDropChance = this.cachedScrollDropChance = this.cachedGoldDropChance = this.cachedHigherLevelItemChance = this.cachedItemQualityChance = this.cachedMinMonsters = this.cachedMaxMonsters = this.cachedItemDropChance = -1;
 }
+/** @this {MonsterRowView & { createRowCells: () => void }} */
 export function MonsterRowView(rowElement, monsterType) {
   this.rowElement = rowElement;
   this.monsterType = monsterType;
@@ -49,7 +50,7 @@ export function MonsterRowView(rowElement, monsterType) {
   this.cachedRank = this.cachedLevel = this.cachedFillWidth = this.cachedKills = -1;
   this.progressBarWidth = 80;
   this.spriteImage = null;
-  (/** @type {any} */ (this)).createRowCells();
+  this.createRowCells();
 }
 export function MonsterLevelTabView(tabState, elementId) {
   this.elementId = elementId;
@@ -116,15 +117,15 @@ export function updateMonsterTabLabels(monsterView) {
 export function refreshMonsterTabVisibility(monsterView) {
   var monsterCatalog = monsterCatalogRef(),
     levelTableIndex,
-    d,
+    displayedLevel,
     levelTable,
     needsNewSelection = false;
   for (levelTableIndex = 0; levelTableIndex < monsterView.levelTables.length; levelTableIndex++) {
     levelTable = monsterView.levelTables[levelTableIndex];
-    d = levelTable.view.level;
-    d = monsterCatalog.minUnlockedLevel <= d && d <= monsterCatalog.maxUnlockedLevel;
-    levelTable.tabState.enabled = d;
-    if (!d && levelTable.tabState.selected) {
+    displayedLevel = levelTable.view.level;
+    var enabled = monsterCatalog.minUnlockedLevel <= displayedLevel && displayedLevel <= monsterCatalog.maxUnlockedLevel;
+    levelTable.tabState.enabled = enabled;
+    if (!enabled && levelTable.tabState.selected) {
       levelTable.tabState.selected = false;
       needsNewSelection = true;
     }
@@ -279,8 +280,8 @@ export function initializeViewsMonsters() {
     var rankProgressKills = this.monsterType.rankProgressKills,
       rankKillThreshold = this.monsterType.rankKillThreshold,
       killCount = this.monsterType.killCount,
-      d = Math.min(1, rankProgressKills / rankKillThreshold),
-      d = this.progressBarWidth * d | 0;
+      progressFraction = Math.min(1, rankProgressKills / rankKillThreshold),
+      fillWidth = this.progressBarWidth * progressFraction | 0;
     if (this.cachedLevel != this.monsterType.level || this.cachedRank != this.monsterType.rank) {
       this.experienceCell.innerHTML = formatAmount(this.monsterType.experienceReward);
       this.healthCell.innerHTML = formatAmount(this.monsterType.maxHealth);
@@ -301,9 +302,9 @@ export function initializeViewsMonsters() {
       this.cachedKills = killCount;
       this.killCountCell.innerHTML = formatAmount(killCount);
     }
-    if (this.cachedFillWidth !== d) {
-      this.cachedFillWidth = d;
-      this.progressFillElement.style.width = d + "px";
+    if (this.cachedFillWidth !== fillWidth) {
+      this.cachedFillWidth = fillWidth;
+      this.progressFillElement.style.width = fillWidth + "px";
       this.progressTextElement.innerHTML = rankProgressKills > rankKillThreshold ? "最大" : formatAmount(rankProgressKills) + " / " + formatAmount(rankKillThreshold);
     }
   };
@@ -318,6 +319,7 @@ export function initializeViewsMonsters() {
     this.level = -1;
     this.cachedLevel = -2;
   };
+  /** @this {MonsterLevelTabView & { createDomElements: () => void }} */
   MonsterLevelTabView.prototype.update = function () {
     if (1 > this.level) {
       console.log("MonsterTableView.updateViewContents  monsterLevel=" + this.level);
@@ -335,7 +337,7 @@ export function initializeViewsMonsters() {
           }
         }
       } else {
-        (/** @type {any} */ (this)).createDomElements();
+        this.createDomElements();
       }
       this.cachedLevel = this.level;
       for (var renderRowIndex = 0; renderRowIndex < this.rowViews.length; renderRowIndex++) {
@@ -343,15 +345,16 @@ export function initializeViewsMonsters() {
       }
     }
   };
+  /** @this {MonsterLevelTabView & { createHeaderRow: (row: HTMLTableRowElement) => void }} */
   MonsterLevelTabView.prototype.createDomElements = function () {
-    var a = this.elementId;
-    clearElementById(a);
-    var containerElement = getElement(a),
-      a = getMonsterTypesForLevel(monsterCatalogRef(), this.level);
+    var elementId = this.elementId;
+    clearElementById(elementId);
+    var containerElement = getElement(elementId),
+      monsterTypes = getMonsterTypesForLevel(monsterCatalogRef(), this.level);
     this.tableElement = createElement("table", containerElement, null, "monsterTable");
-    (/** @type {any} */ (this)).createHeaderRow(this.tableElement.insertRow(0));
-    for (var rowIndex = 0; rowIndex < a.length; rowIndex++) {
-      this.rowViews.push(new MonsterRowView(this.tableElement.insertRow(rowIndex + 1), a[rowIndex]));
+    this.createHeaderRow(this.tableElement.insertRow(0));
+    for (var rowIndex = 0; rowIndex < monsterTypes.length; rowIndex++) {
+      this.rowViews.push(new MonsterRowView(this.tableElement.insertRow(rowIndex + 1), monsterTypes[rowIndex]));
     }
   };
   MonsterLevelTabView.prototype.createHeaderRow = function (headerRow) {

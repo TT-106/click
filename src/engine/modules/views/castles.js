@@ -60,13 +60,14 @@ export function CastleTableView() {
   this.tableElement = null;
   this.rowViews = [];
 }
+/** @this {CastleRowView & { createRowCells: () => void }} */
 export function CastleRowView(rowElement) {
   this.rowElement = rowElement;
   this.progressTextElement = this.progressFillElement = this.progressCell = this.nameCell = this.castle = null;
   this.progressWidth = 120;
   this.cachedStatusText = this.cachedStatusColor = this.cachedDescriptionText = "";
   this.cachedProgressWidth = 0;
-  /** @type {{createRowCells: () => void}} */ (/** @type {unknown} */ (this)).createRowCells();
+  this.createRowCells();
 }
 export function setCastleRowModel(rowView, castle) {
   rowView.castle = castle;
@@ -89,9 +90,10 @@ export function initializeViewsCastles() {
     this.tableElement = null;
     this.mapCells.length = 0;
   };
+  /** @this {CastleMapView & { createDomElements: () => void }} */
   CastleMapView.prototype.update = function () {
     if (!this.tableElement) {
-      /** @type {{createDomElements: () => void}} */ (/** @type {unknown} */ (this)).createDomElements();
+      this.createDomElements();
     }
     var castleRevision;
     castleRevision = castleManagerRef().revision;
@@ -103,14 +105,16 @@ export function initializeViewsCastles() {
         columnCount = regionManager.regionGridOriginColumn + regionManager.regionGridSpan - regionManager.regionGridOriginColumn,
         rowCount = regionManager.regionGridOriginRow + regionManager.regionGridSpan - regionManager.regionGridOriginRow,
         mapCell,
-        h;
+        region;
       for (rowIndex = 0; rowIndex < rowCount; rowIndex++) {
         for (columnIndex = 0; columnIndex < columnCount; columnIndex++) {
-          if (mapCell = this.mapCells[columnIndex][rowIndex], h = regionManager.regionGrid[columnIndex][rowIndex]) {
-            h = h.castle;
-            h = getCastleStatusColor(h);
-            if (mapCell.style.backgroundColor != h) {
-              mapCell.style.backgroundColor = h;
+          mapCell = this.mapCells[columnIndex][rowIndex];
+          region = regionManager.regionGrid[columnIndex][rowIndex];
+          if (region) {
+            var castle = region.castle;
+            var statusColor = getCastleStatusColor(castle);
+            if (mapCell.style.backgroundColor != statusColor) {
+              mapCell.style.backgroundColor = statusColor;
             }
           }
         }
@@ -122,26 +126,29 @@ export function initializeViewsCastles() {
     clearElementById(containerId);
     var regionManager = regionManagerRef(),
       originColumn = regionManager.regionGridOriginColumn,
-      d = regionManager.regionGridOriginRow,
+      originRow = regionManager.regionGridOriginRow,
       maxRegionColumn = regionManager.regionGridOriginColumn + regionManager.regionGridSpan,
       maxRegionRow = regionManager.regionGridOriginRow + regionManager.regionGridSpan,
-      h;
+      region;
     this.tableElement = createElement("table", getElement(containerId), null, null);
     var columnCount = maxRegionColumn - originColumn,
-      l;
-    d = maxRegionRow - d;
+      tableCell,
+      mapTile;
+    var rowCount = maxRegionRow - originRow;
     for (var columnIndex = 0; columnIndex < columnCount; columnIndex++) {
       this.mapCells.push([]);
     }
-    for (var rowIndex = 0; rowIndex < d; rowIndex++) {
+    for (var rowIndex = 0; rowIndex < rowCount; rowIndex++) {
       for (var tableRow = this.tableElement.insertRow(rowIndex), columnIndex = 0; columnIndex < columnCount; columnIndex++) {
-        l = tableRow.insertCell(columnIndex);
-        l = createElement("div", l, null, null);
-        l.style.width = "39px";
-        l.style.height = "39px";
-        if (h = regionManager.regionGrid[columnIndex][rowIndex]) {
-          if (h = findCastle(h.regionKey)) {
-            var crownImage = createElement("img", l, null, null);
+        tableCell = tableRow.insertCell(columnIndex);
+        mapTile = createElement("div", tableCell, null, null);
+        mapTile.style.width = "39px";
+        mapTile.style.height = "39px";
+        region = regionManager.regionGrid[columnIndex][rowIndex];
+        if (region) {
+          var castle = findCastle(region.regionKey);
+          if (castle) {
+            var crownImage = createElement("img", mapTile, null, null);
             crownImage.src = "images/Transparent.gif";
             crownImage.style.width = "35px";
             crownImage.style.height = "35px";
@@ -149,7 +156,7 @@ export function initializeViewsCastles() {
             crownImage.style.background = "url('spritesheet/items.png') -" + crownSprite.sourceX + "px -" + crownSprite.sourceY + "px";
           }
         }
-        this.mapCells[columnIndex].push(l);
+        this.mapCells[columnIndex].push(mapTile);
       }
     }
   };
@@ -159,13 +166,14 @@ export function initializeViewsCastles() {
     clearElementById(this.elementId);
     this.tableElement = null;
   };
+  /** @this {CastleTableView & { createDomElements: () => void, setRowCount: (count: number) => void }} */
   CastleTableView.prototype.update = function () {
     if (!this.tableElement) {
-      /** @type {{createDomElements: () => void}} */ (/** @type {unknown} */ (this)).createDomElements();
+      this.createDomElements();
     }
     var castleList = castleManagerRef().castleList;
     if (castleList.length !== this.rowViews.length) {
-      /** @type {{setRowCount: (count: number) => void}} */ (/** @type {unknown} */ (this)).setRowCount(castleList.length);
+      this.setRowCount(castleList.length);
     }
     var rowIndex;
     for (rowIndex = 0; rowIndex < this.rowViews.length; rowIndex++) {
@@ -184,13 +192,14 @@ export function initializeViewsCastles() {
       this.rowViews.push(new CastleRowView(this.tableElement.insertRow(this.rowViews.length + 1)));
     }
   };
+  /** @this {CastleTableView & { createHeaderRow: (row: HTMLTableRowElement) => void }} */
   CastleTableView.prototype.createDomElements = function () {
     var elementId = this.elementId;
     clearElementById(elementId);
     var castleList = castleManagerRef().castleList,
       castleIndex;
     this.tableElement = createElement("table", getElement(elementId), null, "monsterTable");
-    /** @type {{createHeaderRow: (row: HTMLTableRowElement) => void}} */ (/** @type {unknown} */ (this)).createHeaderRow(this.tableElement.insertRow(0));
+    this.createHeaderRow(this.tableElement.insertRow(0));
     for (castleIndex = 0; castleIndex < castleList.length; castleIndex++) {
       var rowView = new CastleRowView(this.tableElement.insertRow(castleIndex + 1));
       setCastleRowModel(rowView, castleList[castleIndex]);
@@ -243,26 +252,27 @@ export function initializeViewsCastles() {
         this.cachedStatusColor = statusColor;
         this.progressFillElement.style.backgroundColor = statusColor;
       }
-      var a = this.castle;
-      a = a.regionLocked ? "未解锁" : a.conquered ? "已征服" : canAttackCastle(a) ? monsterCatalogRef().maxUnlockedLevel >= a.requiredMonsterLevel ? "准备攻击" : "怪物等级" + a.requiredMonsterLevel : a.attackScheduled ? "计划攻击" : "地牢" + a.conqueredDungeonCount + " / " + a.dungeonList.length;
-      if (this.cachedStatusText != a) {
-        this.cachedStatusText = a;
-        this.progressTextElement.innerHTML = a;
+      var statusCastle = this.castle;
+      var statusText = statusCastle.regionLocked ? "未解锁" : statusCastle.conquered ? "已征服" : canAttackCastle(statusCastle) ? monsterCatalogRef().maxUnlockedLevel >= statusCastle.requiredMonsterLevel ? "准备攻击" : "怪物等级" + statusCastle.requiredMonsterLevel : statusCastle.attackScheduled ? "计划攻击" : "地牢" + statusCastle.conqueredDungeonCount + " / " + statusCastle.dungeonList.length;
+      if (this.cachedStatusText != statusText) {
+        this.cachedStatusText = statusText;
+        this.progressTextElement.innerHTML = statusText;
       }
-      a = this.castle;
-      if (a.regionLocked) {
-        a = 0;
-      } else if (a.conquered || canAttackCastle(a) || a.attackScheduled || a.dungeonsConquered) {
-        a = this.progressWidth;
+      var progressCastle = this.castle;
+      var progressWidth;
+      if (progressCastle.regionLocked) {
+        progressWidth = 0;
+      } else if (progressCastle.conquered || canAttackCastle(progressCastle) || progressCastle.attackScheduled || progressCastle.dungeonsConquered) {
+        progressWidth = this.progressWidth;
       } else {
-        a = this.castle.conqueredDungeonCount;
+        var conqueredDungeonCount = this.castle.conqueredDungeonCount;
         var dungeonList = this.castle.dungeonList;
-        a = 0 === dungeonList.length ? 1 : Math.min(1, a / dungeonList.length);
-        a = this.progressWidth * a | 0;
+        var progressFraction = 0 === dungeonList.length ? 1 : Math.min(1, conqueredDungeonCount / dungeonList.length);
+        progressWidth = this.progressWidth * progressFraction | 0;
       }
-      if (this.cachedProgressWidth != a) {
-        this.cachedProgressWidth = a;
-        this.progressFillElement.style.width = a + "px";
+      if (this.cachedProgressWidth != progressWidth) {
+        this.cachedProgressWidth = progressWidth;
+        this.progressFillElement.style.width = progressWidth + "px";
       }
     }
   };
