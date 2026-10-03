@@ -25,7 +25,7 @@
 |---|---|---|---|---|
 | `initialized` | `false` (136) | 写 `true`：world/initialization.js:187（开局）；写回：restore（game-save.js:46） | boot 建 `false`；首帧 `initializeWorld` 后 `true`（loop.js:98）；restore 覆盖 | ✅ `gameInitialized`（serialize 侧 game-save.js:705,1009；restore 侧 :46） |
 | `partyCreated` | `false` (137) | 写 `true`：views/party-creation.js:93；写 `false`：resetRun（game.js:358） | resetRun/restore 重置 | ✅ `partyCreated`（game.js:709→:1013；game-save.js:49） |
-| `gameWon` | `false` (138) | 写 `true`：characters/party.js:271（通关）；写 `false`：resetRun :359、resetContinuation :437、views/results.js:48,58（续关） | resetRun/续关/restore 重置 | ✅ `gameWon`（game.js:710→:1014；game-save.js:50） |
+| `gameWon` | `false` (138) | 写 `true`：characters/party.js:278（通关）；写 `false`：resetRun :359、resetContinuation :437、views/results.js:48,58（续关） | resetRun/续关/restore 重置 | ✅ `gameWon`（game.js:710→:1014；game-save.js:50） |
 | `paused` | `false` (139) | views/navigation.js:24（暂停键）、adapter.js:69,133；写 `false`：resetRun :378、resetContinuation :439、initialization.js:186 | **RuntimeState，不入档**（每次载入从暂停态起步） | ❌ runtime-only |
 | `worldActive` | `true` (140) | 写 `false`：characters/character.js:1154,1179（进入地牢/城堡楼层）；写 `true`：resetRun :379、resetContinuation :440、party.js:212、world/dungeons.js:221（撤出） | 决定序列化/恢复哪套空间（world vs level） | ✅ `worldActive`（game.js:708→:1012；game-save.js:48） |
 | `processingOffline` | `false` (141) | 写 `true`：beginOfflineProgress（game.js:472）、后台分支（loop.js:42）；写 `false`：finishOfflineProgress（game.js:477，调用方 loop.js:50、party.js:272、views/results.js:137） | **RuntimeState**；自动保存期间被跳过（loop.js:87） | ❌ runtime-only |

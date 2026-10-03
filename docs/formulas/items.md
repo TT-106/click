@@ -756,5 +756,5 @@ return {
 | 7 | `characters/character.js:145-147`、`characters/movement.js:197-198` | 装备不校验槽位归属，可写"影子槽"（当前不可达）（I-22） |
 | 8 | `loot/items.js:55-58` | `isMeleeWeapon/isArmor/isMiscItem` write-only |
 | 9 | `content/balance.js:81-92` | `itemStatCurve` 与 `itemGoldCurve` 常量完全相同 |
-| 10 | `combat/scrolls.js:309-313`（`simulation/characters.js`） | 卷轴池为空时会生成 `scroll: undefined` 的掉落，拾取即抛错（当前不可达） |
+| 10 | `simulation/characters.js:311-314`（`combat/scrolls.js` 的 `ScrollDrop`） | 卷轴池为空时会生成 `scroll: undefined` 的掉落，拾取即抛错（当前不可达） |
 | 11 | `progression/upgrades.js:466` | `EquipBestItemUpgrade` 可购门槛写死为"件数 > 5"（构造参数 `equipmentUpgrades` 首项索引 5），与背包容量无关 |

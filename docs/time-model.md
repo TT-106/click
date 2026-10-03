@@ -36,7 +36,7 @@ harness 用 `Date.now = () => fixedNow`（固定 1750000000000）覆盖 wall clo
 | 机制 | 单位与数值 | 代码位置 |
 |---|---|---|
 | 攻击冷却 | 回合；`baseAttackCooldown = 12`，下限 4（`Math.max(4, base - reduction [+ bonus])`） | `characters/stats.js:22, 40-43` |
-| 法术/卷轴冷却 | 回合 `La`；初始 `mq = turnNumber - 3*La`（视为久已就绪）；就绪判定 `turnNumber - mq >= La` | `combat/scrolls.js:23-34` |
+| 法术/卷轴冷却 | 回合 `La`；初始 `mq = turnNumber - 3*La`（视为久已就绪）；就绪判定 `turnNumber - mq >= La` | `combat/scrolls.js:80-91` |
 | **药水持续时间** | **回合数 800**：`V = 800 + potionDurationBonus.t`。激活时 `activationTurn = game.state.turnNumber`（存档键 `activeStartTurn`）；过期判定 `turnNumber - activationTurn >= V` | `simulation/tick.js:112,121`；`combat/potions.js:14,242`；存档写出/读回 `persistence/game-save.js:879,678` |
 | 药水延时升级 | `potionDurationBonus` 每级 +120 回合（`lf: 120`）；药水"持续时间+50%"（`potionDurationModifier`）生效期间**每 3 回合把 activationTurn 回拨 1**（`z = 0 === turnNumber % 3`） | `content/balance.js:157-161`；`simulation/tick.js:107,117-120` |
 | 随从寿命 | 回合 `lifetimeTurns`，`turnNumber - summonedAtTurn > lifetimeTurns` 时消散 | `simulation/tick.js:65-77` |

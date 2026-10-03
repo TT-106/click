@@ -404,7 +404,7 @@ export function applyPointUpgrade(a) {
 
 | bonusIndex | 对象 | levelIncrement | 消费点 |
 |---|---|---|---|
-| 1 | `scrollCapacityBonus` | +10 | `combat/scrolls.js:56`（上限 `30+bonus`） |
+| 1 | `scrollCapacityBonus` | +10 | `combat/scrolls.js:113`（上限 `30+bonus`） |
 | 2 | `walkingSpeedBonus` | +0.1 | `characters/character.js:194`（世界移动） |
 | 3 | `potionCapacityBonus` | +1 | `combat/potions.js:113`（`6+bonus`） |
 | 4 | `partyCapacityBonus` | +1 | `views/party-creation.js:115`（`4+bonus`，最多 5） |
@@ -521,7 +521,7 @@ if (c = game.state.party.kills >= (…).getCost()) {
 
 ### P-7 卷轴解锁 / 升级价（金币）
 
-`src/engine/modules/combat/scrolls.js:61-63`
+`src/engine/modules/combat/scrolls.js:118-120`
 
 ```js
 export function getScrollUpgradeCost(scroll) {
@@ -545,9 +545,9 @@ if (a.locked) {
   this.canPurchase = a.upgradeCount < a.Qh && c >= d && game.state.party.gold >= a.upgradeCost;
 ```
 
-`c` = `scrollCaster.stats.characterLevel`（= 队伍最低等级，§P-2）。上方示意里的 `sg`/`Qh` 即源码的 `baseCapacity`/`maxCharges`：`baseCapacity` 为"解锁等级"、`maxCharges` 为"最大升级次数"（含义由 `getScrollLabel` 的 `II…VIII` 上限 `:64-85` 与 `upgradeCount < maxCharges` 反推，置信高）。实算档位价：`idx 0 → 100`、`3 → 783`、`6 → 2701`、`9 → 5399`、`12 → 8832`、`15 → 13011`。
+`c` = `scrollCaster.stats.characterLevel`（= 队伍最低等级，§P-2）。上方示意里的 `sg`/`Qh` 即源码的 `baseCapacity`/`maxCharges`：`baseCapacity` 为"解锁等级"、`maxCharges` 为"最大升级次数"（含义由 `getScrollLabel` 的 `II…VIII` 上限 `:145-160` 与 `upgradeCount < maxCharges` 反推，置信高）。实算档位价：`idx 0 → 100`、`3 → 783`、`6 → 2701`、`9 → 5399`、`12 → 8832`、`15 → 13011`。
 购买执行：`progression/upgrades.js:1067-1095`（`spendGold(rn)` → 解锁或 `upgradeCount++` → 重算 `rn/rg/lx`）。
-`[疑似遗留怪癖]` `scaleByLevel(0, …)` 走 `Math.max(0, −1) = 0` → `shockScroll`（`baseCapacity: 0`）的"解锁价"与"1 级升级价"同为 100，且开局已被视为解锁（`combat/scrolls.js:209` `applyLockedAndUpgradeState(0 < …baseCapacity, 0)`，`locked` 传 `false` 才解锁）。
+`[疑似遗留怪癖]` `scaleByLevel(0, …)` 走 `Math.max(0, −1) = 0` → `shockScroll`（`baseCapacity: 0`）的"解锁价"与"1 级升级价"同为 100，且开局已被视为解锁（`combat/scrolls.js:266` `applyLockedAndUpgradeState(0 < …baseCapacity, 0)`，`locked` 传 `false` 才解锁）。
 
 ### P-8 成就领取
 
@@ -714,7 +714,7 @@ export function applyAchievementReward(a) {
 | `rangedAttackCount` | `recordRangedAttack` | `characters/character.js:464-466`（分支为 `actionType === MELEE_ACTION_TYPE`，常量值为 3） |
 | `spellCastCount` | `recordSpellCast` | `characters/character.js:991-993`（仅 `isAdventurerOrMinion`） |
 | `potionsUsed` | `recordPotionUsed` | `combat/potions.js:246` |
-| `scrollsUsed` | `recordScrollUsed` | `combat/scrolls.js:161` |
+| `scrollsUsed` | `recordScrollUsed` | `combat/scrolls.js:218` |
 | `playedMillis` | `recordPlayedMilliseconds(增量)` | `simulation/loop.js:46`（离线：+250/回合）、`:94`（在线：+帧差） |
 | `itemsSold` | `recordItemsSold(批量数)` | `characters/character.js:1204` |
 | `itemsFound` + `uncommon/rare/historic/ancientItemsFound` | `recordItemFound(item)` | `characters/character.js:1034`、`combat/actions.js:232`；分档见 `progression/statistics.js:104-119` |
@@ -1020,7 +1020,7 @@ if (15 <= b.turnTimeAccumulator) {
 
 1. `[疑似遗留怪癖]` **12h 上限只在读档路径生效**。后台标签页路径直接 `game.offlineDuration += a`（`simulation/loop.js:42`），不经 `beginOfflineProgress`，因此长挂页可超过上限；上限要等下次读档才被 `Math.min` 应用。
 2. 离线期间**不刷新升级可购状态**（`simulation/tick.js:515` 的 `if (!game.processingOffline)` 包住整段 `refreshUpgradeCollection`），也不自动存档（`simulation/loop.js:87-92`）；两者都在结算完成后的第一个正常帧补齐。
-3. 离线结算途中若触发胜利（`game.gameWon`），循环即刻退出，且 `PartyState.iw()` 会主动 `finishOfflineProgress()`（`characters/party.js:272`）；`playedMillis` 只按已结算的 `250ms/回合` 累加（`simulation/loop.js:46`），不会被 `simulation/loop.js:94` 二次累加（该行的 `!processingOffline` 保护）。
+3. 离线结算途中若触发胜利（`game.gameWon`），循环即刻退出，且 `PartyState.iw()` 会主动 `finishOfflineProgress()`（`characters/party.js:279`）；`playedMillis` 只按已结算的 `250ms/回合` 累加（`simulation/loop.js:46`），不会被 `simulation/loop.js:94` 二次累加（该行的 `!processingOffline` 保护）。
 
 ---
 
@@ -1036,7 +1036,7 @@ if (15 <= b.turnTimeAccumulator) {
 | 6 | `progression/upgrades.js:545-549` | `applyLevelStats` 在 `characterLevel` 自增前调用（靠传参 `newLevel` 保持正确）；且升级即把 `health/spirit` 设为满值 |
 | 7 | `progression/upgrades.js:217-252` | `equipmentQualityBonus` 实为卖价加成、`itemCostBonus` 实为怪物等级折扣 |
 | 8 | `progression/upgrades.js:943` | 农场"即将可买"用绝对差额 `<120`，而全局升级用"差额 ≤400 或 ≤30%"、升级 XP 用"≤300 或 ≤20%"，三套口径 |
-| 9 | `combat/scrolls.js:61-63` + `progression/upgrades.js:1100` | 卷轴的价格档位与等级门槛是同一个表达式；`sg = 0` 的 `shockScroll` 开局即解锁 |
+| 9 | `combat/scrolls.js:118-120`（价档表达式）+ `combat/scrolls.js:320-326`（`shockScroll` 定义，`baseCapacity: 0`）+ `progression/upgrades.js:1100` | 卷轴的价格档位与等级门槛是同一个表达式；`sg = 0` 的 `shockScroll` 开局即解锁 |
 | 10 | `runtime/game.js:448-450` | "继续"路径把地牢定价计数器 `Mk` 重置为**农场数量** |
 | 11 | `progression/statistics.js:39,69` | `levelsCleared`/`minionKills` 的记录方法仍是混淆名 `recordLevelCleared`/`$k`（与 `docs/reverse-engineering/unresolved.md` 第七批一致，未落地改名） |
 | 12 | `characters/character.js:440,454` + `ai/targeting.js:484` | `MELEE_ACTION_TYPE = 3` 记账为 `rangedAttackCount`（存档键为准，勿顺手纠正） |
