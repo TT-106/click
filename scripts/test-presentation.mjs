@@ -99,6 +99,15 @@ try {
       [world.worldCenterX, world.worldCenterY] = originalCenter;
     }
     const presentation = createMapPresentation();
+    const sourceSize = sprite.spriteSheet.spriteSize;
+    context.clearRect(0, 0, 100, 100);
+    context.drawImage(sprite.getSheetImage(), sprite.sourceX, sprite.sourceY, sourceSize, sourceSize, 10, 10, sourceSize, sourceSize);
+    const originalColors = pixels();
+    const terrainColorChanges = ['ground', 'scenery'].map(layer => {
+      context.clearRect(0, 0, 100, 100);
+      createMapPresentation().drawSprite(context, sprite, 10, 10, sourceSize, layer);
+      return changed(originalColors, pixels());
+    });
     presentation.drawSprite(context, sprite, 10, 10, 56, 'ground');
     const initialCache = presentation.metrics.cachedSprites;
     for (let frame = 0; frame < 60; frame++) presentation.drawSprite(context, sprite, 10, 10, 56, 'ground');
@@ -120,7 +129,7 @@ try {
       classicWallOrders: classicWalls.map(frame => frame.order), cleanWallOrders: cleanWalls.map(frame => frame.order),
       classicWallChanges: changed(classicWalls[0].image, classicWalls[1].image),
       cleanWallChanges: changed(cleanWalls[0].image, cleanWalls[1].image), tileBoundary,
-      initialCache, cacheAfter, culledSprites: presentation.metrics.culledSprites,
+      initialCache, cacheAfter, culledSprites: presentation.metrics.culledSprites, terrainColorChanges,
       saveUnchanged, defaultStyle: view.presentationStyle,
       smoothing: view.renderer.context.imageSmoothingEnabled
     };
@@ -134,6 +143,7 @@ try {
   assert.ok(result.tileBoundary.clean[1] <= result.tileBoundary.clean[0], '相机前移过格边界时地面反向跳动');
   assert.ok(result.groundClassicChanges > 0, '地形亚像素采样反例未触发');
   assert.equal(result.groundCleanChanges, 0, '同一像素格内的亚像素微移仍导致纹理闪动');
+  assert.deepEqual(result.terrainColorChanges, [0, 0], '地面或装饰仍改变原素材颜色');
   assert.equal(result.cacheAfter, result.initialCache, '已缓存地形仍逐帧重建');
   assert.equal(result.culledSprites, 1, '画外精灵未被剔除');
   assert.equal(result.saveUnchanged, true, '切换画面改变了存档或随机流');
@@ -172,7 +182,6 @@ try {
   assert.equal(scenes.dungeon.world, false, '自然推进未进入地牢');
   for (const scene of [scenes.world, scenes.dungeon]) {
     assert.ok(scene.frames.clean.cachedSprites > 0, '实际场景未经过清晰地形缓存');
-    assert.ok(scene.frames.clean.brightness < scene.frames.classic.brightness * .9, '实际场景的地形对比未降低');
   }
   await fs.writeFile('output/playwright/presentation/scenes.json', JSON.stringify(scenes, null, 2) + '\n');
 

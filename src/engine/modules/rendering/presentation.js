@@ -15,47 +15,8 @@ export function createMapPresentation() {
     const size = sprite.spriteSheet.spriteSize;
     image = document.createElement('canvas');
     image.width = image.height = size;
-    const context = image.getContext('2d', { willReadFrequently: true });
+    const context = image.getContext('2d');
     context.drawImage(sprite.getSheetImage(), sprite.sourceX, sprite.sourceY, size, size, 0, 0, size, size);
-    const pixels = context.getImageData(0, 0, size, size);
-    const source = new Uint8ClampedArray(pixels.data);
-    let red = 0, green = 0, blue = 0, weight = 0;
-    for (let offset = 0; offset < source.length; offset += 4) {
-      const alpha = source[offset + 3] / 255;
-      red += source[offset] * alpha;
-      green += source[offset + 1] * alpha;
-      blue += source[offset + 2] * alpha;
-      weight += alpha;
-    }
-    if (weight) {
-      red /= weight; green /= weight; blue /= weight;
-      const luminance = .2126 * red + .7152 * green + .0722 * blue;
-      const base = [.2 * red + .35 * luminance + 10, .2 * green + .35 * luminance + 13, .2 * blue + .35 * luminance + 17];
-      const detail = ground ? .16 : .48;
-      const blockSize = ground ? 2 : 1;
-      for (let top = 0; top < size; top += blockSize) {
-        for (let left = 0; left < size; left += blockSize) {
-          let blockLight = 0, blockWeight = 0;
-          for (let row = top; row < Math.min(size, top + blockSize); row++) {
-            for (let column = left; column < Math.min(size, left + blockSize); column++) {
-              const offset = (row * size + column) * 4;
-              const alpha = source[offset + 3] / 255;
-              blockLight += (.2126 * source[offset] + .7152 * source[offset + 1] + .0722 * source[offset + 2]) * alpha;
-              blockWeight += alpha;
-            }
-          }
-          const variation = blockWeight ? (blockLight / blockWeight - luminance) * detail : 0;
-          for (let row = top; row < Math.min(size, top + blockSize); row++) {
-            for (let column = left; column < Math.min(size, left + blockSize); column++) {
-              const offset = (row * size + column) * 4;
-              for (let channel = 0; channel < 3; channel++) pixels.data[offset + channel] = base[channel] + variation;
-              // 保留逐像素 alpha，通道、墙边和透明轮廓不会被方块采样填平。
-            }
-          }
-        }
-      }
-      context.putImageData(pixels, 0, 0);
-    }
     cache.set(sprite, image);
     metrics.cachedSprites++;
     return image;
