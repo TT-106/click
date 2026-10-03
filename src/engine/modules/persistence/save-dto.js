@@ -31,22 +31,54 @@
  * @property {number} floorPositionIndex
  * @property {number} hallwayId
  *
+ * @typedef {Object} SaveStatComponent
+ * @property {number} itemValue
+ * @property {number} levelValue
+ * @property {number} spellBonusPercent
+ * @property {number} skillBonusPercent
+ *
+ * @typedef {Object} SaveCharacterStats
+ * @property {number} characterLevel
+ * @property {number} characterHealth
+ * @property {number} characterSpirit
+ * @property {number} kills
+ * @property {SaveStatComponent|null} damageComponent
+ * @property {SaveStatComponent|null} armorComponent
+ * @property {SaveStatComponent|null} attackRatingComponent
+ * @property {SaveStatComponent|null} defenceRatingComponent
+ * @property {SaveStatComponent|null} maxHealthComponent
+ * @property {SaveStatComponent|null} maxSpiritComponent
+ * @property {number} stunCount
+ * @property {number} minionKills
+ * @property {number} damageGiven
+ * @property {number} damageReceived
+ *
+ * @typedef {Object} SaveSpellState
+ * 法术名由 entities.js 序列化，game-save.js 按名称恢复；不添加新存档键。
+ * @property {string} spellName
+ *
+ * @typedef {Object} SaveWorld
+ * @property {number} worldCenterX
+ * @property {number} worldCenterY
+ * @property {number} blockShiftCol
+ * @property {number} blockShiftRow
+ *
  * @typedef {Object} SaveAdventurer
  * @property {string} adventurerName
  * @property {number} characterClass
  * @property {number} characterType
  * @property {string} spriteName
- * @property {Object} characteristicsComponent
+ * @property {SaveCharacterStats} characteristicsComponent
  * @property {SavePosition} positionComponent
- * @property {Array} spells
+ * @property {Array<SaveSpellState>} spells
  * @property {Array<SaveItem>} inventory
  * @property {Array<SaveItem>} equippedItemCollection
  * @property {number} skillPoints
  * @property {number} initialSpellSkillPoint
- * @property {Object} upgrades1 技能树 1（键=技能/法术 id，值=布尔）
- * @property {Object} upgrades2
- * @property {Object} upgrades3
- * @property {Object} upgrades4
+ * @property {Object<string, boolean>} upgrades1 技能树 1（键=技能/法术 id，值=布尔）
+ * @property {Object<string, boolean>} upgrades2
+ * @property {Object<string, boolean>} upgrades3
+ * @property {Object<string, boolean>} upgrades4
  *
  * @typedef {Object} SavePotion
  * @property {string} potionId
@@ -143,7 +175,7 @@
  * @property {boolean} partyCreated
  * @property {boolean} gameWon
  * @property {number} victoryCount
- * @property {Object} world worldCenterX/Y、blockShiftCol/Row
+ * @property {SaveWorld} world worldCenterX/Y、blockShiftCol/Row
  * @property {SaveGameOptions} gameOptions
  * @property {SaveDungeonManagerState} dungeonManagerState
  * @property {Object} shopManager

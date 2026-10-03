@@ -89,8 +89,13 @@ function propertyNamesOf(source) {
   }
   return out;
 }
-const declaredProps = propertyNamesOf(dtoSource);
-const saveDataBlock = dtoSource.slice(dtoSource.indexOf('@typedef {Object} SaveData'));
+function typedefBlock(typeName) {
+  const match = dtoSource.match(new RegExp(`@typedef \\{Object\\} ${typeName}\\b`));
+  if (!match) throw new Error(`缺少 typedef：${typeName}`);
+  const next = dtoSource.indexOf('@typedef', match.index + match[0].length);
+  return dtoSource.slice(match.index, next < 0 ? undefined : next);
+}
+const saveDataBlock = typedefBlock('SaveData');
 const saveDataProps = propertyNamesOf(saveDataBlock);
 
 // -------------------------------------------------- 报告
@@ -137,20 +142,23 @@ console.log(`  · 键序：fixture 与序列化器${orderEqual ? '完全一致' 
 
 // SaveData 的 @property 是否都在真实 fixture 里
 const missingProps = saveDataProps.filter((k) => !fixtureSet.has(k));
-if (missingProps.length) { mismatch++; console.log(`  ✗ SaveData 的 @property 在 fixture 里不存在：${missingProps.join(', ')}`); }
+const absentProps = fixtureKeys.filter((k) => !saveDataProps.includes(k));
+if (missingProps.length || absentProps.length || new Set(saveDataProps).size !== saveDataProps.length) {
+  mismatch++;
+  console.log(`  ✗ SaveData 的 @property 不匹配：未知 ${missingProps.join(', ')}；遗漏 ${absentProps.join(', ')}；重复 ${saveDataProps.length - new Set(saveDataProps).size}`);
+}
 else console.log(`  ✓ SaveData 的 ${saveDataProps.length} 个 @property 全部存在于真实 fixture`);
 
 // 嵌套 spot-check：SaveAdventurer / SavePotion / SaveScroll 的字段是否在 fixture 里真有
-const spotCheck = (typeName, samplePath) => {
-  const anchor = `@typedef {Object} ${typeName}`;
-  const blockStart = dtoSource.indexOf(anchor);
-  if (blockStart < 0) return;
-  // 整个文件只有一段 JSDoc 注释，故按"下一个 @typedef"切块，而不是找 */
-  const nextTypedef = dtoSource.indexOf('@typedef', blockStart + anchor.length);
-  const block = dtoSource.slice(blockStart, nextTypedef < 0 ? undefined : nextTypedef);
+const spotCheck = (typeName, samplePath, required = false) => {
+  const block = typedefBlock(typeName);
   const props = propertyNamesOf(block);
   const sample = samplePath(fixture);
-  if (!sample) { console.log(`  ~ ${typeName}：fixture 里没有样本，跳过`); return; }
+  if (!sample) {
+    console.log(`  ${required ? '✗' : '~'} ${typeName}：fixture 里没有样本${required ? '，必需样本缺失' : '，跳过'}`);
+    if (required) mismatch++;
+    return;
+  }
   const missing = props.filter((k) => !(k in sample));
   const extra = Object.keys(sample).filter((k) => !props.includes(k));
   console.log(`  ${missing.length || extra.length ? '✗' : '✓'} ${typeName}：${props.length} 个声明字段` +
@@ -164,6 +172,13 @@ spotCheck('SaveScroll', (f) => f.scrollInventory?.[0]);
 spotCheck('SaveAchievement', (f) => f.achievementManager?.achievements?.[0]);
 spotCheck('SaveGameOptions', (f) => f.gameOptions);
 spotCheck('SavePosition', (f) => f.adventurers?.[0]?.positionComponent);
+spotCheck('SaveWorld', (f) => f.world, true);
+spotCheck('SaveCharacterStats', (f) => f.adventurers?.[0]?.characteristicsComponent, true);
+for (const component of ['damageComponent', 'armorComponent', 'attackRatingComponent',
+  'defenceRatingComponent', 'maxHealthComponent', 'maxSpiritComponent']) {
+  spotCheck('SaveStatComponent', (f) => f.adventurers?.[0]?.characteristicsComponent?.[component], true);
+}
+spotCheck('SaveSpellState', (f) => f.adventurers?.flatMap(adventurer => adventurer.spells ?? [])[0]);
 spotCheck('SaveDungeonManagerState', (f) => f.dungeonManagerState);
 spotCheck('SaveDungeonState', (f) => f.dungeonManagerState?.dungeonStates?.[0]);
 spotCheck('SavePointManagerState', (f) => f.pointManagerState);

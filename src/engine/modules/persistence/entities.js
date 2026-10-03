@@ -90,6 +90,7 @@ export function restoreItem(savedItemRecord) {
   var itemType = itemGeneratorRef().itemTypesById[savedItemRecord.itemTypeId];
   return itemType ? new Item(itemType, itemSlot, characterClass, itemName ? itemName : "Error", itemLevel ? itemLevel : 1, itemRarity ? itemRarity : 0, itemGold ? itemGold : 0, itemValue ? itemValue : 0, itemCharacteristic ? itemCharacteristic : 1, itemEffect) : (console.log("failed to lookup item type"), null);
 }
+/** @returns {import('./save-dto.js').SaveAdventurer} */
 export function serializeCharacter(character) {
   var adventurerName = character.adventurerName,
     characterClass = character.characterClass,
@@ -97,6 +98,7 @@ export function serializeCharacter(character) {
     spriteName = character.getSprite().getName(),
     characterStats;
   characterStats = character.stats;
+  /** @type {import('./save-dto.js').SaveCharacterStats} */
   var serializedStats = {
     characterLevel: characterStats.characterLevel,
     characterHealth: characterStats.health,
@@ -127,7 +129,7 @@ export function serializeCharacter(character) {
     hallwayId: currentHallway ? currentHallway.hallwayId : -1
   };
   var spellList = character.spells,
-    spellStateList = /** @type {any} */ ([]),
+    spellStateList = /** @type {import('./save-dto.js').SaveSpellState[]} */ ([]),
     spellIndex;
   if (spellList) {
     for (spellIndex = 0; spellIndex < spellList.length; spellIndex++) {
@@ -176,9 +178,11 @@ export function serializeCharacter(character) {
     upgrades4: serializeUpgradeFlags(character.skillTree4.upgrades)
   };
 }
+/** @returns {Object<string, boolean>} */
 export function serializeUpgradeFlags(upgradeList) {
-  var ownedFlagsById = {},
-    upgrade,
+  /** @type {Object<string, boolean>} */
+  var ownedFlagsById = {};
+  var upgrade,
     upgradeIndex;
   for (upgradeIndex = 0; upgradeIndex < upgradeList.length; upgradeIndex++) {
     upgrade = upgradeList[upgradeIndex];
@@ -195,6 +199,8 @@ export function restoreUpgradeFlags(upgradeList, ownedFlagsById) {
     upgrade.setPurchased(ownedFlag);
   }
 }
+/** @param {import('../characters/stats.js').StatComponent|null} statComponent
+ * @returns {import('./save-dto.js').SaveStatComponent|null} */
 export function serializeStatComponent(statComponent) {
   return statComponent ? {
     itemValue: statComponent.itemValue,
@@ -203,6 +209,8 @@ export function serializeStatComponent(statComponent) {
     skillBonusPercent: statComponent.skillBonusPercent
   } : null;
 }
+/** @param {import('../characters/stats.js').StatComponent|null} statComponent
+ * @param {import('./save-dto.js').SaveStatComponent|null} savedStatComponent */
 export function restoreStatComponent(statComponent, savedStatComponent) {
   if (statComponent && savedStatComponent) {
     var itemValue = savedStatComponent.itemValue,
