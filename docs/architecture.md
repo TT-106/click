@@ -33,13 +33,13 @@
 ## 1. 页面从加载到进入游戏经过哪些步骤？
 
 1. `index.html:12` 以 ES module 加载 `./src/app.js`（无其他脚本入口）。
-2. `src/app.js:122-145` `boot()` 依次执行：
-   - `:123` 渲染图标；`:124` `loadGamePanels()` 把 `src/ui/panels/*.html`（含 shell + 5 份 character 模板）注入 `#legacy-host`（`src/ui/load-panels.js:9-14`）；
-   - `:126` `saves.prepare()`：读 localStorage 原始串并交 Worker 校验（`src/services/saves.js:33-41`）；
-   - `:127` `engine.boot(saves.persistence)`；
-   - `:130-132` 创建组队构建器、绑定事件、增强遗留控件；
-   - `:133-134` 隐藏 loading、显示应用；`:135` 按 `won/expedition` 导航；
-   - `:138-144` 启动 300ms 轮询：监测 `started/won/offline` 变化并调用 `refresh()`。
+2. `src/app.js:123-146` `boot()` 依次执行：
+   - `:124` 渲染图标；`:125` `loadGamePanels()` 把 `src/ui/panels/*.html`（含 shell + 5 份 character 模板）注入 `#legacy-host`（`src/ui/load-panels.js:9-14`）；
+   - `:127` `saves.prepare()`：读 localStorage 原始串并交 Worker 校验（`src/services/saves.js:33-41`）；
+   - `:128` `engine.boot(saves.persistence)`；
+   - `:131-133` 创建组队构建器、绑定事件、增强遗留控件；
+   - `:134-135` 隐藏 loading、显示应用；`:136` 按 `won/expedition` 导航；
+   - `:139-145` 启动 300ms 轮询：监测 `started/won/offline` 变化并调用 `refresh()`。
 3. `src/engine/adapter.js:20-30` `engine.boot`：`runtime.setPersistence(persistence)` 注入存储端口（`:21`），调 `game.onLoad()`（`:22`），然后轮询等待 `game.view.panels.length` 非空且（未开局时）DOM 出现 `#startQuestButton`，15 秒超时报错（`:24-27`）。
 4. `src/engine/modules/runtime/game.js:200-203` `game.onLoad()` = `bindVisibility()`（visibilitychange → `renderEnabled`）+ `game.loop.tick()` 启动帧循环。
 5. 帧循环 `GameLoop.prototype.tick`（`src/engine/modules/simulation/loop.js:33`）分三态：
@@ -60,10 +60,10 @@ sequenceDiagram
     participant G as game.js (game 单例)
     participant L as loop.js GameLoop
 
-    B->>A: module 加载并执行 boot() (app.js:122)
-    A->>A: loadGamePanels() 注入面板 DOM (app.js:124)
-    A->>S: saves.prepare() Worker 校验 localStorage (app.js:126, saves.js:33)
-    A->>E: engine.boot(persistence) (app.js:127)
+    B->>A: module 加载并执行 boot() (app.js:123)
+    A->>A: loadGamePanels() 注入面板 DOM (app.js:125)
+    A->>S: saves.prepare() Worker 校验 localStorage (app.js:127, saves.js:33)
+    A->>E: engine.boot(persistence) (app.js:128)
     E->>E: runtime.setPersistence(persistence) (adapter.js:21)
     E->>G: game.onLoad() (adapter.js:22, game.js:200)
     G->>G: bindVisibility() renderEnabled 开关 (game.js:197)
@@ -76,8 +76,8 @@ sequenceDiagram
     L->>L: requestAnimationFrame 自续 (loop.js:222)
     E->>E: 轮询等待 panels + #startQuestButton (adapter.js:24-27)
     E-->>A: boot 返回; 新档默认关 showFps (adapter.js:29)
-    A->>A: createPartyBuilder / bind / navigate (app.js:130-135)
-    A->>A: 300ms 轮询 engine.snapshot() 刷新 UI (app.js:138-144)
+    A->>A: createPartyBuilder / bind / navigate (app.js:131-136)
+    A->>A: 300ms 轮询 engine.snapshot() 刷新 UI (app.js:139-145)
 ```
 
 ---
@@ -165,12 +165,12 @@ sequenceDiagram
 **产品 UI 不直接持有 `game`；只通过 `src/engine/adapter.js` 的只读快照 `snapshot()` 与校验过的命令方法交互。**
 
 - `adapter.js:18` 注释明示"产品层的唯一引擎入口：校验命令并提供只读显示快照"；`internal-api.js:9` 注释"产品仅通过 adapter.js 的快照与命令访问"。
-- 读取：`engine.snapshot()`（`adapter.js:72-125`）每 300ms 被 `app.js:138-144` 拉取，产出扁平展示模型（`ready/started/paused/won/offline/turn/run/gold/kills/heroes[]/options` 等），例如 `gold: game.state.party.gold`（`:81`）、`inCombat: !game.state.encounter.noMonstersLeft`（`:88`）、英雄属性经 `runtime.statValue` 折算（`:104-108`）。新 UI `src/ui/dashboard.js:14-44` 只消费这个快照渲染 DOM。
+- 读取：`engine.snapshot()`（`adapter.js:72-125`）每 300ms 被 `app.js:139-145` 拉取，产出扁平展示模型（`ready/started/paused/won/offline/turn/run/gold/kills/heroes[]/options` 等），例如 `gold: game.state.party.gold`（`:81`）、`inCombat: !game.state.encounter.noMonstersLeft`（`:88`）、英雄属性经 `runtime.statValue` 折算（`:104-108`）。新 UI `src/ui/dashboard.js:14-44` 只消费这个快照渲染 DOM。
 - 命令（写入路径）：
   - `startParty(party)`（`adapter.js:51-70`）：校验数量/解锁/重名后，调用视图上**与遗留开始按钮共用**的唯一创建入口 `PartyCreationView.prototype.startParty(members)`（`views/party-creation.js` 的 `startParty` → `createAdventurerPartyFromSelection`，U132；产品命令不再直写 `selectedCharacters`/`validParty`，也不再调用 `startButton.onclick()` 这个 DOM 回调），最后 `game.paused = false`；
-  - `pause(value)`（`:133-135`）、`setOption(name, enabled)`（`:141-152`，白名单映射到 `game.options` 六个字段）；
-  - `showPanel(id)`（`:126-132`）、`serialize()/importSave()/reset()`（`:153-161`）。
-- 画面风格命令：`setPresentation(style)`（`src/engine/adapter.js:136-140`）定位画布视图，仅切换绘制策略；独立偏好键不属于存档 DTO。
+  - `pause(value)`（`:133-135`）、`setOption(name, enabled)`（`:155-165`，白名单映射到 `game.options` 六个字段）；
+  - `showPanel(id)`（`:126-132`）、`serialize()/importSave()/reset()`（`:167-178`）。
+- 画面风格命令：`setPresentation(style)`（`src/engine/adapter.js:136-154`）定位画布视图，切换绘制策略并同步屏幕像素尺寸；独立偏好键不属于存档 DTO。
 - `src/app.js` 的使用点：`navigate` 读快照并 `engine.showPanel`（`app.js:30,46-48`）、暂停按钮 `engine.pause`（`:87`）、设置项 `engine.setOption`（`:111`）、存档服务经 `engine.serialize/importSave/reset`（`src/services/saves.js:55,74,76,92`）。
 - 遗留面板（引擎 views/*）仍直接操作 DOM 与 `game`，新 UI 通过 `mountExpedition()` 搬运节点、`enhanceLegacyControls()` 增强键盘可达性（`src/ui/legacy-panels.js:3-13,16`）。
 
@@ -294,7 +294,7 @@ sequenceDiagram
     rect rgb(235, 245, 255)
     Note over UI,LS: 保存（手动/30s 自动/pagehide）
     UI->>SV: save() (saves.js:52)
-    SV->>AD: engine.serialize() (adapter.js:147)
+    SV->>AD: engine.serialize() (adapter.js:167)
     AD->>GS: serializeGame(game.saves) (internal-api.js:15)
     GS->>GS: createSaveState: 30 顶层键 + Date.now() (game-save.js:700,704)
     GS->>SC: compress(JSON.stringify) (game-save.js:697)
@@ -309,7 +309,7 @@ sequenceDiagram
     SV->>WV: postMessage(text) (saves.js:6-12)
     WV->>WV: decodeSave: 字符集/解压/JSON/validateSave (save-validation.js:42)
     WV-->>SV: ok / error
-    SV->>AD: engine.importSave(text) (adapter.js:150)
+    SV->>AD: engine.importSave(text) (adapter.js:170)
     AD->>GS: game.importSave → restoreGameState (game.js:505-509)
     GS->>GS: decompress→parse→resetRun(true)→逐字段恢复 (game-save.js:41-45)
     GS->>GS: restoreRuntimeState: 技能重算 + 离线判定 (game-save.js:690, game.js:482)
@@ -337,7 +337,7 @@ sequenceDiagram
 3. **驱动（帧循环，不是一次性结算）**：`loop.js:42` —— 帧差 `a > 1E3` 且 `allowBackgroundProgress` 时进入（首次会 `view.onOfflineStart()` 并把 `offlineDuration` 从 0 起累加，这就是后台标签页也走同一条路的机制，facts 第 11 条）；随后 `loop.js:43-48` 每帧最多 **200 回合**：`advanceSimulation(15)` → `offlineProcessed += turnDuration(250)` → `aa.fp(250)`；`offlineProcessed >= offlineDuration` 时 `finishOfflineProgress()`（`:49-51`；`game.js:476-481` 复位标志并 `view.onOfflineFinish()`）。
 4. 离线期间：不自动存档（`loop.js:87` 的 `!game.processingOffline` 门）、升级条刷新跳过（`tick.js:515-528`）、帧时长统计不走 `:93-95` 分支。
 5. 直连 `advanceSimulation` 会绕过该分支（它只认 `game.processingOffline`）——所以 harness 提供 `advanceOffline()`（`tests/engine-harness.js:51-55`）：每帧把虚拟时钟 +2000ms 再 `loop.tick()`，使 `1E3 < 帧差` 恒成立（facts 第 10 条）。差分场景 `offline-1h/8h/disabled` 验证两端一致（`scripts/test-scenarios.mjs:23-40`，facts 第 12 条）。
-6. UI 侧：离线进度经快照 `offlineProgress` 百分比展示（`adapter.js:88`），`app.js:141` 在离线结束瞬间强制重导航。
+6. UI 侧：离线进度经快照 `offlineProgress` 百分比展示（`adapter.js:88`），`app.js:142` 在离线结束瞬间强制重导航。
 
 ### offline-resume sequence
 
@@ -397,7 +397,7 @@ sequenceDiagram
 三个入口，共享 `resetRun`：
 
 - **`resetRun(full)`**（`game.js:351-418`，所有重置的基座）：`turnNumber=0`、`resetEncounter()`、新建 `PartyState`、清空 `adventurers/leader/scrollCaster`、`partyCreated=false; gameWon=false`（`:352-359`）；`full=true` 时额外：新建 `RunStatistics/LifetimeStatistics` + `bindStatistics()`、清零 `victoryStatistics`、`resetAdventurePoints()`、`resetAchievements()`（`:360-376`）；公共部分：世界/楼层对象整体换新、清掉落/背包/卷轴/药水、`resetDungeons/resetCastles/resetFarms/resetShops`、`clearCombatQueue/clearVisualEffects`、重置全部升级集（全局 + 每角色 4 棵技能树，`:398-407`）、清盟友/怪物/随从、怪物目录等级回 1（`:408-414`）；`full=true` 时 `victoryCount=0`（`:415-417`）。
-- **`resetGame()`**（`:521-526`）= 彻底重开（"重新开始"按钮）：`resetRun(true)` + `deleteStoredSave()` + `saveProgress()`（写空白档）+ `view.resetTabs()` 重挂 UI。产品入口 `adapter.reset()`（`adapter.js:153-155`）→ `saves.reset()`（`saves.js:90-97`，事务保护 + 成功后 `location.reload()`）。
+- **`resetGame()`**（`:521-526`）= 彻底重开（"重新开始"按钮）：`resetRun(true)` + `deleteStoredSave()` + `saveProgress()`（写空白档）+ `view.resetTabs()` 重挂 UI。产品入口 `adapter.reset()`（`adapter.js:173-175`）→ `saves.reset()`（`saves.js:90-97`，事务保护 + 成功后 `location.reload()`）。
 - **`restartRun()`**（`:513-520`）= 胜利后重开本局：先清 `victoryStatistics.currentContinueCount/currentContinuationVictories`，`resetRun(false)`——**保留**成就、点数、终身统计与 `victoryCount`（这正是"转生/周目"的核心：永久成长跨局保留，仅世界与队伍重建），删档后立即写新档。
 - **`resetContinuation()`**（`:419-468`）= 第三种：胜利后**带着同一支队伍**继续（不重建 `adventurers`，只重置队伍关系字段、世界、地牢进度、保留地牢/城堡计数的 `Mk/Uj`），供"继续冒险"路径使用。
 - 全量重建的对照组：存档恢复走 `resetRun(true)` 后逐字段回填（`game-save.js:45`），所以"重置"与"读档"共享同一清场语义，保证恢复不会残留上一局引用。
