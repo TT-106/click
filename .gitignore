@@ -6,3 +6,4 @@ output/
 
 # 智能体工作区状态（续跑入口是 docs/WORKSTATE.md，此处只放本地记忆，不入库）
 .workbuddy-ai/
+.workbuddy/
