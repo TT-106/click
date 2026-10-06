@@ -1,0 +1,9 @@
+# 统一换行：存储与检出一律 LF，抵消全局 core.autocrlf=true 的影响。
+# 两个字节敏感点决定了必须固定：
+#   1) scripts/import-assets.mjs 的 --check 逐字节比较生成文件（CRLF 会误报不一致）；
+#   2) 多个检查脚本按 LF 解析源码（如 check-spell-coverage 用 "\n  {\n" 切分场景块）。
+# 若不固定，独立干净检出上 `npm run build` 与 `npm run lint` 会失败（2026-10-06 实测）。
+* text=auto eol=lf
+
+# Windows 批处理按惯例保留 CRLF
+*.cmd text eol=crlf
