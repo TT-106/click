@@ -55,6 +55,7 @@
 - 根目录 [REFACTOR_REPORT](../REFACTOR_REPORT.md)：恢复总结及当前经典验收矩阵；正文逐批明确区分历史。
 - [COMPATIBILITY_REPORT](../COMPATIBILITY_REPORT.md)：经典兼容证据分级与限制；[MIGRATION_MAP](../MIGRATION_MAP.md)：原版到现模块映射。
 - [PERFORMANCE_REPORT](../PERFORMANCE_REPORT.md)、[CPU样本](performance-baseline.md)、[帧时间样本](performance-after.md)：冻结的2026-09-26/27样本，不表示当前性能。
+- [耗尽审计](m13-exhaustion-audit.md)：冻结的2026-09-26残留项扫描与2026-10-03补注，不当当前类型台账。
 - [逆向证据索引](reverse-engineering/README.md)：facts、semantic-map、unresolved保留原证据，当前接口从源码核对；symbol-map.json是机器映射，不能重置。
 - [ADR0001](adr/0001-retain-original-as-test-oracle.md)：保留原版参照；原生专属ADR在Godot分支。
 - [历史索引](history/README.md)：逐轮日志、旧架构、旧待办、已执行任务书与被R54纠正的GLM原报告。
