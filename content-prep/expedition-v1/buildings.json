@@ -1,0 +1,798 @@
+{
+  "schemaVersion": 1,
+  "status": "planned-not-wired",
+  "freeStations": [
+    {
+      "id": "handcraft",
+      "name": "免费手作",
+      "note": "初始工位;木板/绳索手作4分钟、火把;不是第九栋收费建筑",
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#7"
+    },
+    {
+      "id": "campfire",
+      "name": "初始篝火",
+      "note": "口粮篝火变体2分钟可用",
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.1"
+    }
+  ],
+  "buildings": [
+    {
+      "id": "lodge",
+      "name": "营舍",
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#7.1",
+      "levels": [
+        {
+          "level": 1,
+          "freeInitially": true,
+          "cost": [],
+          "buildTimeMs": 60000,
+          "phase": "A",
+          "prereq": [],
+          "unlockDesc": "初始安全休整、基本工具、默认安全策略",
+          "efficiency": null,
+          "visual": {
+            "status": "pending",
+            "note": "候选外观见T4 asset-candidates.json;未标定门位/脚点/占地"
+          }
+        },
+        {
+          "level": 2,
+          "freeInitially": false,
+          "cost": [
+            {
+              "id": "plank",
+              "qty": 6
+            },
+            {
+              "id": "stone",
+              "qty": 12000
+            },
+            {
+              "id": "cloth",
+              "qty": 2
+            }
+          ],
+          "buildTimeMs": 120000,
+          "phase": "B",
+          "prereq": [
+            "lodge:1"
+          ],
+          "unlockDesc": "常规回营休整效率+10%;保存两套准备方案",
+          "efficiency": {
+            "restSpeedMultiplier": 1.1
+          },
+          "visual": {
+            "status": "pending",
+            "note": "同基础图升级外观,待美术规格"
+          }
+        },
+        {
+          "level": 3,
+          "freeInitially": false,
+          "cost": [
+            {
+              "id": "plank",
+              "qty": 18
+            },
+            {
+              "id": "brick",
+              "qty": 12
+            },
+            {
+              "id": "rope",
+              "qty": 4
+            }
+          ],
+          "buildTimeMs": 180000,
+          "phase": "C",
+          "prereq": [
+            "lodge:2"
+          ],
+          "unlockDesc": "休整效率总+20%;更多队员生活动作",
+          "efficiency": {
+            "restSpeedMultiplier": 1.2
+          },
+          "visual": {
+            "status": "pending",
+            "note": "同基础图升级外观,待美术规格"
+          }
+        }
+      ],
+      "limits": "不自动提供攻击加成;队员/职业解锁另做内容"
+    },
+    {
+      "id": "warehouse",
+      "name": "仓库",
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#7.1",
+      "levels": [
+        {
+          "level": 1,
+          "freeInitially": true,
+          "cost": [],
+          "buildTimeMs": 60000,
+          "phase": "A",
+          "prereq": [],
+          "unlockDesc": "初始干货250kg软目标,自动归仓",
+          "efficiency": {
+            "dryGoodsSoftTargetG": 250000
+          },
+          "visual": {
+            "status": "pending",
+            "note": "露天库初始形态;候选外观待T4"
+          }
+        },
+        {
+          "level": 2,
+          "freeInitially": false,
+          "cost": [
+            {
+              "id": "plank",
+              "qty": 8
+            },
+            {
+              "id": "stone",
+              "qty": 12000
+            },
+            {
+              "id": "rope",
+              "qty": 2
+            }
+          ],
+          "buildTimeMs": 120000,
+          "phase": "B",
+          "prereq": [
+            "warehouse:1"
+          ],
+          "unlockDesc": "干货500kg;装卸时间-10%;补货方案",
+          "efficiency": {
+            "dryGoodsSoftTargetG": 500000,
+            "loadUnloadTimeMultiplier": 0.9
+          },
+          "visual": {
+            "status": "pending",
+            "note": "同基础图升级外观,待美术规格"
+          }
+        },
+        {
+          "level": 3,
+          "freeInitially": false,
+          "cost": [
+            {
+              "id": "plank",
+              "qty": 20
+            },
+            {
+              "id": "brick",
+              "qty": 16
+            },
+            {
+              "id": "iron_ingot",
+              "qty": 4000
+            }
+          ],
+          "buildTimeMs": 180000,
+          "phase": "C",
+          "prereq": [
+            "warehouse:2"
+          ],
+          "unlockDesc": "干货1000kg;装卸时间总-20%;前哨货运调度",
+          "efficiency": {
+            "dryGoodsSoftTargetG": 1000000,
+            "loadUnloadTimeMultiplier": 0.8
+          },
+          "visual": {
+            "status": "pending",
+            "note": "同基础图升级外观,待美术规格"
+          }
+        }
+      ],
+      "limits": "水目标跟随水井(20/40/60kg),仓库等级不限制水量;超额仍入账;货运必须走真实已知可达路线"
+    },
+    {
+      "id": "workshop",
+      "name": "工坊",
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#7.1",
+      "levels": [
+        {
+          "level": 1,
+          "freeInitially": false,
+          "cost": [
+            {
+              "id": "wood",
+              "qty": 12000
+            },
+            {
+              "id": "stone",
+              "qty": 6000
+            },
+            {
+              "id": "fiber",
+              "qty": 1000
+            }
+          ],
+          "buildTimeMs": 60000,
+          "phase": "A",
+          "prereq": [],
+          "unlockDesc": "木板、布料、绳索、布背包与铜工具(铜工具另需炉窑一级)",
+          "efficiency": {
+            "craftSpeedMultiplier": 1
+          },
+          "visual": {
+            "status": "pending",
+            "note": "GPT工坊概念图为风格样板(output/imagegen/building-concepts/workshop-v1.png),未注册未标定"
+          }
+        },
+        {
+          "level": 2,
+          "freeInitially": false,
+          "cost": [
+            {
+              "id": "plank",
+              "qty": 8
+            },
+            {
+              "id": "rope",
+              "qty": 2
+            },
+            {
+              "id": "iron_ingot",
+              "qty": 2000
+            }
+          ],
+          "buildTimeMs": 120000,
+          "phase": "B",
+          "prereq": [
+            "workshop:1"
+          ],
+          "unlockDesc": "铁工具、强化包、五金、修理;加工速度+10%",
+          "efficiency": {
+            "craftSpeedMultiplier": 1.1
+          },
+          "visual": {
+            "status": "pending",
+            "note": "同基础图升级外观,待美术规格"
+          }
+        },
+        {
+          "level": 3,
+          "freeInitially": false,
+          "cost": [
+            {
+              "id": "plank",
+              "qty": 20
+            },
+            {
+              "id": "iron_ingot",
+              "qty": 6000
+            },
+            {
+              "id": "cloth",
+              "qty": 4
+            }
+          ],
+          "buildTimeMs": 180000,
+          "phase": "C",
+          "prereq": [
+            "workshop:2"
+          ],
+          "unlockDesc": "加工速度总+20%;解锁外观与后续装备制作接口",
+          "efficiency": {
+            "craftSpeedMultiplier": 1.2
+          },
+          "visual": {
+            "status": "pending",
+            "note": "同基础图升级外观,待美术规格"
+          }
+        }
+      ],
+      "limits": "仅一条默认产线;不把速度升级当免费产量翻倍;速度倍率含义=基础时间/倍率"
+    },
+    {
+      "id": "smelter",
+      "name": "炉窑",
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#7.1",
+      "levels": [
+        {
+          "level": 1,
+          "freeInitially": false,
+          "cost": [
+            {
+              "id": "stone",
+              "qty": 20000
+            },
+            {
+              "id": "clay",
+              "qty": 8000
+            },
+            {
+              "id": "wood",
+              "qty": 8000
+            }
+          ],
+          "buildTimeMs": 60000,
+          "phase": "A",
+          "prereq": [],
+          "unlockDesc": "木炭、砖块、铜铁冶炼(原料直接投入,不要求铁锭)",
+          "efficiency": {
+            "craftSpeedMultiplier": 1
+          },
+          "visual": {
+            "status": "pending",
+            "note": "候选外观待T4;炉烟属效果层"
+          }
+        },
+        {
+          "level": 2,
+          "freeInitially": false,
+          "cost": [
+            {
+              "id": "brick",
+              "qty": 10
+            },
+            {
+              "id": "iron_ingot",
+              "qty": 2000
+            },
+            {
+              "id": "plank",
+              "qty": 6
+            }
+          ],
+          "buildTimeMs": 120000,
+          "phase": "B",
+          "prereq": [
+            "smelter:1"
+          ],
+          "unlockDesc": "银冶炼;加工速度+10%",
+          "efficiency": {
+            "craftSpeedMultiplier": 1.1
+          },
+          "visual": {
+            "status": "pending",
+            "note": "同基础图升级外观,待美术规格"
+          }
+        },
+        {
+          "level": 3,
+          "freeInitially": false,
+          "cost": [
+            {
+              "id": "brick",
+              "qty": 24
+            },
+            {
+              "id": "iron_ingot",
+              "qty": 6000
+            },
+            {
+              "id": "copper_ingot",
+              "qty": 4000
+            }
+          ],
+          "buildTimeMs": 180000,
+          "phase": "C",
+          "prereq": [
+            "smelter:2"
+          ],
+          "unlockDesc": "加工速度总+20%;少量可选器具配方(精钢)",
+          "efficiency": {
+            "craftSpeedMultiplier": 1.2
+          },
+          "visual": {
+            "status": "pending",
+            "note": "同基础图升级外观,待美术规格"
+          }
+        }
+      ],
+      "limits": "不直接产矿;烧炭不能吃掉全部建筑木料(输入保护)"
+    },
+    {
+      "id": "well",
+      "name": "水井",
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#7.1",
+      "levels": [
+        {
+          "level": 1,
+          "freeInitially": false,
+          "cost": [
+            {
+              "id": "stone",
+              "qty": 12000
+            },
+            {
+              "id": "wood",
+              "qty": 6000
+            }
+          ],
+          "buildTimeMs": 60000,
+          "phase": "A",
+          "prereq": [],
+          "unlockDesc": "自动净水补货,基础蓄水目标20kg(每批1kg/2分钟)",
+          "efficiency": {
+            "waterTargetG": 20000,
+            "productionSpeedRatioFromL1": 1
+          },
+          "visual": {
+            "status": "pending",
+            "note": "候选外观待T4;取水点必须在可走岸边交互"
+          }
+        },
+        {
+          "level": 2,
+          "freeInitially": false,
+          "cost": [
+            {
+              "id": "brick",
+              "qty": 8
+            },
+            {
+              "id": "plank",
+              "qty": 4
+            },
+            {
+              "id": "iron_ingot",
+              "qty": 1000
+            }
+          ],
+          "buildTimeMs": 120000,
+          "phase": "B",
+          "prereq": [
+            "well:1"
+          ],
+          "unlockDesc": "蓄水40kg;生产速度约+11%(每批1kg/1.8分钟)",
+          "efficiency": {
+            "waterTargetG": 40000,
+            "productionSpeedRatioFromL1": 1.1111111111111112
+          },
+          "visual": {
+            "status": "pending",
+            "note": "同基础图升级外观,待美术规格"
+          }
+        },
+        {
+          "level": 3,
+          "freeInitially": false,
+          "cost": [
+            {
+              "id": "brick",
+              "qty": 18
+            },
+            {
+              "id": "iron_ingot",
+              "qty": 4000
+            },
+            {
+              "id": "rope",
+              "qty": 2
+            }
+          ],
+          "buildTimeMs": 180000,
+          "phase": "C",
+          "prereq": [
+            "well:2"
+          ],
+          "unlockDesc": "蓄水60kg;生产速度总+25%(每批1kg/1.6分钟)",
+          "efficiency": {
+            "waterTargetG": 60000,
+            "productionSpeedRatioFromL1": 1.25
+          },
+          "visual": {
+            "status": "pending",
+            "note": "同基础图升级外观,待美术规格"
+          }
+        }
+      ],
+      "limits": "水目标仅由井等级20/40/60kg决定,库房联动展示;不要求定时收水,无离线溢出损失;升级在制批次按开工时长完成;各级取水时间以well-water-Lx配方为准，速度比仅说明，不再乘一次"
+    },
+    {
+      "id": "garden",
+      "name": "园圃",
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#7.1",
+      "levels": [
+        {
+          "level": 1,
+          "freeInitially": false,
+          "cost": [
+            {
+              "id": "wood",
+              "qty": 8000
+            },
+            {
+              "id": "fiber",
+              "qty": 1000
+            },
+            {
+              "id": "water",
+              "qty": 4000
+            }
+          ],
+          "buildTimeMs": 60000,
+          "phase": "B",
+          "prereq": [],
+          "unlockDesc": "一条普通食材/纤维/已发现药草补产线(每批耗净水0.5kg)",
+          "efficiency": {
+            "craftSpeedMultiplier": 1
+          },
+          "visual": {
+            "status": "pending",
+            "note": "候选外观待T4;园圃为阶段B内容"
+          }
+        },
+        {
+          "level": 2,
+          "freeInitially": false,
+          "cost": [
+            {
+              "id": "plank",
+              "qty": 6
+            },
+            {
+              "id": "rope",
+              "qty": 2
+            },
+            {
+              "id": "stone",
+              "qty": 8000
+            }
+          ],
+          "buildTimeMs": 120000,
+          "phase": "B",
+          "prereq": [
+            "garden:1"
+          ],
+          "unlockDesc": "产线可保存偏好;加工速度+10%",
+          "efficiency": {
+            "craftSpeedMultiplier": 1.1
+          },
+          "visual": {
+            "status": "pending",
+            "note": "同基础图升级外观,待美术规格"
+          }
+        },
+        {
+          "level": 3,
+          "freeInitially": false,
+          "cost": [
+            {
+              "id": "brick",
+              "qty": 12
+            },
+            {
+              "id": "cloth",
+              "qty": 4
+            },
+            {
+              "id": "iron_ingot",
+              "qty": 2000
+            }
+          ],
+          "buildTimeMs": 180000,
+          "phase": "C",
+          "prereq": [
+            "garden:2"
+          ],
+          "unlockDesc": "加工速度总+20%;外观/季节动作",
+          "efficiency": {
+            "craftSpeedMultiplier": 1.2
+          },
+          "visual": {
+            "status": "pending",
+            "note": "同基础图升级外观,待美术规格"
+          }
+        }
+      ],
+      "limits": "一条线依次补货;不靠无尽空地复制数百座园圃;未发现药草时药草线不可用"
+    },
+    {
+      "id": "supply",
+      "name": "补给所",
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#7.1",
+      "levels": [
+        {
+          "level": 1,
+          "freeInitially": false,
+          "cost": [
+            {
+              "id": "wood",
+              "qty": 8000
+            },
+            {
+              "id": "stone",
+              "qty": 8000
+            }
+          ],
+          "buildTimeMs": 60000,
+          "phase": "A",
+          "prereq": [],
+          "unlockDesc": "口粮与自动出发补给(初始篝火亦可手作口粮)",
+          "efficiency": null,
+          "visual": {
+            "status": "pending",
+            "note": "候选外观待T4;食品架/工作台候选在props包"
+          }
+        },
+        {
+          "level": 2,
+          "freeInitially": false,
+          "cost": [
+            {
+              "id": "plank",
+              "qty": 6
+            },
+            {
+              "id": "brick",
+              "qty": 6
+            },
+            {
+              "id": "iron_ingot",
+              "qty": 1000
+            }
+          ],
+          "buildTimeMs": 120000,
+          "phase": "B",
+          "prereq": [
+            "supply:1"
+          ],
+          "unlockDesc": "治疗/解毒与自动使用策略(需战斗消费者先落地)",
+          "efficiency": null,
+          "visual": {
+            "status": "pending",
+            "note": "同基础图升级外观,待美术规格"
+          }
+        },
+        {
+          "level": 3,
+          "freeInitially": false,
+          "cost": [
+            {
+              "id": "plank",
+              "qty": 16
+            },
+            {
+              "id": "brick",
+              "qty": 12
+            },
+            {
+              "id": "cloth",
+              "qty": 4
+            }
+          ],
+          "buildTimeMs": 180000,
+          "phase": "C",
+          "prereq": [
+            "supply:2"
+          ],
+          "unlockDesc": "专注药剂与生境准备方案(环境状态消费者)",
+          "efficiency": null,
+          "visual": {
+            "status": "pending",
+            "note": "同基础图升级外观,待美术规格"
+          }
+        }
+      ],
+      "limits": "先有实际状态/战斗消费者,再启用对应药剂;口粮/绷带不等同于饥饿条"
+    },
+    {
+      "id": "cartography",
+      "name": "地图室",
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#7.1",
+      "levels": [
+        {
+          "level": 1,
+          "freeInitially": false,
+          "cost": [
+            {
+              "id": "wood",
+              "qty": 10000
+            },
+            {
+              "id": "stone",
+              "qty": 4000
+            }
+          ],
+          "buildTimeMs": 60000,
+          "phase": "B",
+          "prereq": [],
+          "unlockDesc": "显示已知产地与缺料路线,规划普通采集",
+          "efficiency": null,
+          "visual": {
+            "status": "pending",
+            "note": "候选外观待T4"
+          },
+          "costAlternatives": {
+            "feather": "无羽毛可用纤维300g替代,功能相同(设计7.2);非草原种子不卡开局"
+          },
+          "costAnyOf": [
+            {
+              "options": [
+                {
+                  "id": "feather",
+                  "qty": 6
+                },
+                {
+                  "id": "fiber",
+                  "qty": 300
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "level": 2,
+          "freeInitially": false,
+          "cost": [
+            {
+              "id": "plank",
+              "qty": 8
+            },
+            {
+              "id": "cloth",
+              "qty": 2
+            },
+            {
+              "id": "rope",
+              "qty": 2
+            }
+          ],
+          "buildTimeMs": 120000,
+          "phase": "B",
+          "prereq": [
+            "cartography:1"
+          ],
+          "unlockDesc": "前哨建造包;合法营地迁移/货运路线",
+          "efficiency": null,
+          "visual": {
+            "status": "pending",
+            "note": "同基础图升级外观,待美术规格"
+          }
+        },
+        {
+          "level": 3,
+          "freeInitially": false,
+          "cost": [
+            {
+              "id": "plank",
+              "qty": 18
+            },
+            {
+              "id": "iron_ingot",
+              "qty": 4000
+            },
+            {
+              "id": "rope",
+              "qty": 4
+            },
+            {
+              "id": "cloth",
+              "qty": 4
+            }
+          ],
+          "buildTimeMs": 180000,
+          "phase": "C",
+          "prereq": [
+            "cartography:2"
+          ],
+          "unlockDesc": "远征回顾、路线偏好与后续特殊地点搜索",
+          "efficiency": null,
+          "visual": {
+            "status": "pending",
+            "note": "同基础图升级外观,待美术规格"
+          }
+        }
+      ],
+      "limits": "不生成整世界地图,不让地图室自造稀有掉落"
+    }
+  ],
+  "coreUnlockChain": [
+    "handcraft(free)",
+    "workshop:1 | well:1",
+    "smelter:1",
+    "workshop:2",
+    "cartography:2/前哨"
+  ],
+  "substitutionRules": [
+    "地图室一级:羽毛6根 ↔ 纤维300g(功能相同,设计7.2)",
+    "铁锭缺货时铜锭1:1替代'不涉及铁工具解锁的建筑紧固部分'——具体哪些等级的铁锭属于紧固部分设计未逐项定案,见 unlock-summary.md 问题表"
+  ],
+  "costNote": "L2/L3 成本是该次升级新增消耗,不是累计总费用;所有消耗来自已入仓或合法预留,不从途中背包远程扣"
+}

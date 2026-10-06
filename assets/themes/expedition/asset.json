@@ -1,0 +1,306 @@
+[
+  {
+    "id": "material.nails",
+    "bundle": "forest-village",
+    "group": "items",
+    "source": {
+      "image": "../../vendor/bizmaster-crafting/materials.png",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "width": 32,
+        "height": 32
+      }
+    },
+    "origin": {
+      "x": 0,
+      "y": 0
+    }
+  },
+  {
+    "id": "material.wood",
+    "bundle": "forest-village",
+    "group": "items",
+    "source": {
+      "image": "../../vendor/bizmaster-crafting/materials.png",
+      "rect": {
+        "x": 32,
+        "y": 0,
+        "width": 32,
+        "height": 32
+      }
+    },
+    "origin": {
+      "x": 0,
+      "y": 0
+    }
+  },
+  {
+    "id": "material.rod",
+    "bundle": "forest-village",
+    "group": "items",
+    "source": {
+      "image": "../../vendor/bizmaster-crafting/materials.png",
+      "rect": {
+        "x": 64,
+        "y": 0,
+        "width": 32,
+        "height": 32
+      }
+    },
+    "origin": {
+      "x": 0,
+      "y": 0
+    }
+  },
+  {
+    "id": "material.feather",
+    "bundle": "forest-village",
+    "group": "items",
+    "source": {
+      "image": "../../vendor/bizmaster-crafting/materials.png",
+      "rect": {
+        "x": 96,
+        "y": 0,
+        "width": 32,
+        "height": 32
+      }
+    },
+    "origin": {
+      "x": 0,
+      "y": 0
+    }
+  },
+  {
+    "id": "material.copper",
+    "bundle": "forest-village",
+    "group": "items",
+    "source": {
+      "image": "../../vendor/bizmaster-crafting/materials.png",
+      "rect": {
+        "x": 0,
+        "y": 32,
+        "width": 32,
+        "height": 32
+      }
+    },
+    "origin": {
+      "x": 0,
+      "y": 0
+    }
+  },
+  {
+    "id": "material.iron",
+    "bundle": "forest-village",
+    "group": "items",
+    "source": {
+      "image": "../../vendor/bizmaster-crafting/materials.png",
+      "rect": {
+        "x": 32,
+        "y": 32,
+        "width": 32,
+        "height": 32
+      }
+    },
+    "origin": {
+      "x": 0,
+      "y": 0
+    }
+  },
+  {
+    "id": "material.silver",
+    "bundle": "forest-village",
+    "group": "items",
+    "source": {
+      "image": "../../vendor/bizmaster-crafting/materials.png",
+      "rect": {
+        "x": 64,
+        "y": 32,
+        "width": 32,
+        "height": 32
+      }
+    },
+    "origin": {
+      "x": 0,
+      "y": 0
+    }
+  },
+  {
+    "id": "material.gold",
+    "bundle": "forest-village",
+    "group": "items",
+    "source": {
+      "image": "../../vendor/bizmaster-crafting/materials.png",
+      "rect": {
+        "x": 96,
+        "y": 32,
+        "width": 32,
+        "height": 32
+      }
+    },
+    "origin": {
+      "x": 0,
+      "y": 0
+    }
+  },
+  {
+    "id": "material.copper-bar",
+    "bundle": "forest-village",
+    "group": "items",
+    "source": {
+      "image": "../../vendor/bizmaster-crafting/materials.png",
+      "rect": {
+        "x": 0,
+        "y": 64,
+        "width": 32,
+        "height": 32
+      }
+    },
+    "origin": {
+      "x": 0,
+      "y": 0
+    }
+  },
+  {
+    "id": "material.iron-bar",
+    "bundle": "forest-village",
+    "group": "items",
+    "source": {
+      "image": "../../vendor/bizmaster-crafting/materials.png",
+      "rect": {
+        "x": 32,
+        "y": 64,
+        "width": 32,
+        "height": 32
+      }
+    },
+    "origin": {
+      "x": 0,
+      "y": 0
+    }
+  },
+  {
+    "id": "material.silver-bar",
+    "bundle": "forest-village",
+    "group": "items",
+    "source": {
+      "image": "../../vendor/bizmaster-crafting/materials.png",
+      "rect": {
+        "x": 64,
+        "y": 64,
+        "width": 32,
+        "height": 32
+      }
+    },
+    "origin": {
+      "x": 0,
+      "y": 0
+    }
+  },
+  {
+    "id": "material.gold-bar",
+    "bundle": "forest-village",
+    "group": "items",
+    "source": {
+      "image": "../../vendor/bizmaster-crafting/materials.png",
+      "rect": {
+        "x": 96,
+        "y": 64,
+        "width": 32,
+        "height": 32
+      }
+    },
+    "origin": {
+      "x": 0,
+      "y": 0
+    }
+  },
+  {
+    "id": "material.dragon-feather",
+    "bundle": "forest-village",
+    "group": "items",
+    "source": {
+      "image": "../../vendor/bizmaster-crafting/materials.png",
+      "rect": {
+        "x": 0,
+        "y": 96,
+        "width": 32,
+        "height": 32
+      }
+    },
+    "origin": {
+      "x": 0,
+      "y": 0
+    }
+  },
+  {
+    "id": "material.dragon-scale",
+    "bundle": "forest-village",
+    "group": "items",
+    "source": {
+      "image": "../../vendor/bizmaster-crafting/materials.png",
+      "rect": {
+        "x": 32,
+        "y": 96,
+        "width": 32,
+        "height": 32
+      }
+    },
+    "origin": {
+      "x": 0,
+      "y": 0
+    }
+  },
+  {
+    "id": "material.crystal",
+    "bundle": "forest-village",
+    "group": "items",
+    "source": {
+      "image": "../../vendor/bizmaster-crafting/materials.png",
+      "rect": {
+        "x": 64,
+        "y": 96,
+        "width": 32,
+        "height": 32
+      }
+    },
+    "origin": {
+      "x": 0,
+      "y": 0
+    }
+  },
+  {
+    "id": "material.leather",
+    "bundle": "forest-village",
+    "group": "items",
+    "source": {
+      "image": "../../vendor/bizmaster-crafting/materials.png",
+      "rect": {
+        "x": 96,
+        "y": 96,
+        "width": 32,
+        "height": 32
+      }
+    },
+    "origin": {
+      "x": 0,
+      "y": 0
+    }
+  },
+  {
+    "id": "expedition-ui.panel",
+    "bundle": "expedition-ui",
+    "group": "items",
+    "source": {
+      "image": "../../vendor/kenney-ui-adventure/PNG/Default/panel_brown_dark_corners_a.png"
+    }
+  },
+  {
+    "id": "expedition-ui.slot",
+    "bundle": "expedition-ui",
+    "group": "items",
+    "source": {
+      "image": "../../vendor/kenney-ui-adventure/PNG/Default/panel_brown.png"
+    }
+  }
+]

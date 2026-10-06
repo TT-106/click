@@ -1,0 +1,25 @@
+﻿建筑ID,建筑名,等级,初始免费,新增成本,建造时间ms,阶段,前置,功能解锁,效率,外观状态
+lodge,营舍,1,是,(免费),60000,A,(无),初始安全休整、基本工具、默认安全策略,(无),pending
+lodge,营舍,2,否,plank×6 + stone×12000 + cloth×2,120000,B,lodge:1,常规回营休整效率+10%;保存两套准备方案,restSpeedMultiplier=1.1,pending
+lodge,营舍,3,否,plank×18 + brick×12 + rope×4,180000,C,lodge:2,休整效率总+20%;更多队员生活动作,restSpeedMultiplier=1.2,pending
+warehouse,仓库,1,是,(免费),60000,A,(无),"初始干货250kg软目标,自动归仓",dryGoodsSoftTargetG=250000,pending
+warehouse,仓库,2,否,plank×8 + stone×12000 + rope×2,120000,B,warehouse:1,干货500kg;装卸时间-10%;补货方案,dryGoodsSoftTargetG=500000; loadUnloadTimeMultiplier=0.9,pending
+warehouse,仓库,3,否,plank×20 + brick×16 + iron_ingot×4000,180000,C,warehouse:2,干货1000kg;装卸时间总-20%;前哨货运调度,dryGoodsSoftTargetG=1000000; loadUnloadTimeMultiplier=0.8,pending
+workshop,工坊,1,否,wood×12000 + stone×6000 + fiber×1000,60000,A,(无),木板、布料、绳索、布背包与铜工具(铜工具另需炉窑一级),craftSpeedMultiplier=1,pending
+workshop,工坊,2,否,plank×8 + rope×2 + iron_ingot×2000,120000,B,workshop:1,铁工具、强化包、五金、修理;加工速度+10%,craftSpeedMultiplier=1.1,pending
+workshop,工坊,3,否,plank×20 + iron_ingot×6000 + cloth×4,180000,C,workshop:2,加工速度总+20%;解锁外观与后续装备制作接口,craftSpeedMultiplier=1.2,pending
+smelter,炉窑,1,否,stone×20000 + clay×8000 + wood×8000,60000,A,(无),"木炭、砖块、铜铁冶炼(原料直接投入,不要求铁锭)",craftSpeedMultiplier=1,pending
+smelter,炉窑,2,否,brick×10 + iron_ingot×2000 + plank×6,120000,B,smelter:1,银冶炼;加工速度+10%,craftSpeedMultiplier=1.1,pending
+smelter,炉窑,3,否,brick×24 + iron_ingot×6000 + copper_ingot×4000,180000,C,smelter:2,加工速度总+20%;少量可选器具配方(精钢),craftSpeedMultiplier=1.2,pending
+well,水井,1,否,stone×12000 + wood×6000,60000,A,(无),"自动净水补货,基础蓄水目标20kg(每批1kg/2分钟)",waterTargetG=20000; productionSpeedRatioFromL1=1,pending
+well,水井,2,否,brick×8 + plank×4 + iron_ingot×1000,120000,B,well:1,蓄水40kg;生产速度约+11%(每批1kg/1.8分钟),waterTargetG=40000; productionSpeedRatioFromL1=1.1111111111111112,pending
+well,水井,3,否,brick×18 + iron_ingot×4000 + rope×2,180000,C,well:2,蓄水60kg;生产速度总+25%(每批1kg/1.6分钟),waterTargetG=60000; productionSpeedRatioFromL1=1.25,pending
+garden,园圃,1,否,wood×8000 + fiber×1000 + water×4000,60000,B,(无),一条普通食材/纤维/已发现药草补产线(每批耗净水0.5kg),craftSpeedMultiplier=1,pending
+garden,园圃,2,否,plank×6 + rope×2 + stone×8000,120000,B,garden:1,产线可保存偏好;加工速度+10%,craftSpeedMultiplier=1.1,pending
+garden,园圃,3,否,brick×12 + cloth×4 + iron_ingot×2000,180000,C,garden:2,加工速度总+20%;外观/季节动作,craftSpeedMultiplier=1.2,pending
+supply,补给所,1,否,wood×8000 + stone×8000,60000,A,(无),口粮与自动出发补给(初始篝火亦可手作口粮),(无),pending
+supply,补给所,2,否,plank×6 + brick×6 + iron_ingot×1000,120000,B,supply:1,治疗/解毒与自动使用策略(需战斗消费者先落地),(无),pending
+supply,补给所,3,否,plank×16 + brick×12 + cloth×4,180000,C,supply:2,专注药剂与生境准备方案(环境状态消费者),(无),pending
+cartography,地图室,1,否,wood×10000 + stone×4000 + (feather×6 | fiber×300),60000,B,(无),"显示已知产地与缺料路线,规划普通采集",(无),pending
+cartography,地图室,2,否,plank×8 + cloth×2 + rope×2,120000,B,cartography:1,前哨建造包;合法营地迁移/货运路线,(无),pending
+cartography,地图室,3,否,plank×18 + iron_ingot×4000 + rope×4 + cloth×4,180000,C,cartography:2,远征回顾、路线偏好与后续特殊地点搜索,(无),pending

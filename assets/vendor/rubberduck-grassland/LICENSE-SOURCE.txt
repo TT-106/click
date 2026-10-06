@@ -1,0 +1,6 @@
+Author: rubberduck
+Title: stylized grassland tileset
+License: CC0 1.0
+Source: https://opengameart.org/content/stylized-grassland-tileset
+License URL: https://creativecommons.org/publicdomain/zero/1.0/
+Verified 2026-10-04 on author submission. Original PNG files are unmodified.

@@ -1,0 +1,25 @@
+﻿building,name,level,free,directCost,rawSummary,stationSummary,totalStationMin,buildMin,parallelRefMin,leftovers,note
+lodge,营舍,1,是,,,,,,,{},初始安全休整、基本工具、默认安全策略
+lodge,营舍,2,否,plank×6 + stone×12000 + cloth×2,stone 12000g + wood 18000g + fiber 1500g,workshop 16 分钟,16,2,18,"{""plank"":0,""cloth"":0}",常规回营休整效率+10%;保存两套准备方案
+lodge,营舍,3,否,plank×18 + brick×12 + rope×4,wood 62000g + clay 24000g + fiber 2400g,workshop 44 分钟 + smelter 42 分钟,86,3,47,"{""plank"":0,""brick"":0,""rope"":0,""charcoal"":1000}",休整效率总+20%;更多队员生活动作
+warehouse,仓库,1,是,,,,,,,{},"初始干货250kg软目标,自动归仓"
+warehouse,仓库,2,否,plank×8 + stone×12000 + rope×2,stone 12000g + wood 24000g + fiber 1200g,workshop 20 分钟,20,2,22,"{""plank"":0,""rope"":0}",干货500kg;装卸时间-10%;补货方案
+warehouse,仓库,3,否,plank×20 + brick×16 + iron_ingot×4000,wood 72000g + clay 32000g + iron 8000g,workshop 40 分钟 + smelter 73 分钟,113,3,76,"{""plank"":0,""brick"":0,""iron_ingot"":0,""charcoal"":0}",干货1000kg;装卸时间总-20%;前哨货运调度
+workshop,工坊,1,否,wood×12000 + stone×6000 + fiber×1000,wood 12000g + stone 6000g + fiber 1000g,,0,1,1,{},木板、布料、绳索、布背包与铜工具(铜工具另需炉窑一级)
+workshop,工坊,2,否,plank×8 + rope×2 + iron_ingot×2000,wood 28000g + fiber 1200g + iron 4000g,workshop 20 分钟 + smelter 11 分钟,31,2,22,"{""plank"":0,""rope"":0,""iron_ingot"":0,""charcoal"":1000}",铁工具、强化包、五金、修理;加工速度+10%
+workshop,工坊,3,否,plank×20 + iron_ingot×6000 + cloth×4,wood 68000g + iron 12000g + fiber 3000g,workshop 48 分钟 + smelter 30 分钟,78,3,51,"{""plank"":0,""iron_ingot"":0,""cloth"":0,""charcoal"":1000}",加工速度总+20%;解锁外观与后续装备制作接口
+smelter,炉窑,1,否,stone×20000 + clay×8000 + wood×8000,stone 20000g + clay 8000g + wood 8000g,,0,1,1,{},"木炭、砖块、铜铁冶炼(原料直接投入,不要求铁锭)"
+smelter,炉窑,2,否,brick×10 + iron_ingot×2000 + plank×6,clay 20000g + iron 4000g + wood 26000g,smelter 44 分钟 + workshop 12 分钟,56,2,46,"{""brick"":0,""iron_ingot"":0,""plank"":0,""charcoal"":500}",银冶炼;加工速度+10%
+smelter,炉窑,3,否,brick×24 + iron_ingot×6000 + copper_ingot×4000,clay 48000g + iron 12000g + copper 8000g + wood 24000g,smelter 130 分钟,130,3,133,"{""brick"":0,""iron_ingot"":0,""copper_ingot"":0,""charcoal"":1000}",加工速度总+20%;少量可选器具配方(精钢)
+well,水井,1,否,stone×12000 + wood×6000,stone 12000g + wood 6000g,,0,1,1,{},"自动净水补货,基础蓄水目标20kg(每批1kg/2分钟)"
+well,水井,2,否,brick×8 + plank×4 + iron_ingot×1000,clay 16000g + wood 20000g + iron 2000g,smelter 34 分钟 + workshop 8 分钟,42,2,36,"{""brick"":0,""plank"":0,""iron_ingot"":0,""charcoal"":1500}",蓄水40kg;生产速度约+11%(每批1kg/1.8分钟)
+well,水井,3,否,brick×18 + iron_ingot×4000 + rope×2,clay 36000g + iron 8000g + fiber 1200g + wood 16000g,smelter 82 分钟 + workshop 4 分钟,86,3,85,"{""brick"":0,""iron_ingot"":0,""rope"":0,""charcoal"":1500}",蓄水60kg;生产速度总+25%(每批1kg/1.6分钟)
+garden,园圃,1,否,wood×8000 + fiber×1000 + water×4000,wood 8000g + fiber 1000g + water 4000g,,0,1,1,{},一条普通食材/纤维/已发现药草补产线(每批耗净水0.5kg)
+garden,园圃,2,否,plank×6 + rope×2 + stone×8000,stone 8000g + wood 18000g + fiber 1200g,workshop 16 分钟,16,2,18,"{""plank"":0,""rope"":0}",产线可保存偏好;加工速度+10%
+garden,园圃,3,否,brick×12 + cloth×4 + iron_ingot×2000,clay 24000g + fiber 3000g + iron 4000g + wood 8000g,smelter 50 分钟 + workshop 8 分钟,58,3,53,"{""brick"":0,""cloth"":0,""iron_ingot"":0,""charcoal"":0}",加工速度总+20%;外观/季节动作
+supply,补给所,1,否,wood×8000 + stone×8000,wood 8000g + stone 8000g,,0,1,1,{},口粮与自动出发补给(初始篝火亦可手作口粮)
+supply,补给所,2,否,plank×6 + brick×6 + iron_ingot×1000,wood 22000g + clay 12000g + iron 2000g,workshop 12 分钟 + smelter 25 分钟,37,2,27,"{""plank"":0,""brick"":0,""iron_ingot"":0,""charcoal"":0}",治疗/解毒与自动使用策略(需战斗消费者先落地)
+supply,补给所,3,否,plank×16 + brick×12 + cloth×4,wood 56000g + clay 24000g + fiber 3000g,workshop 40 分钟 + smelter 42 分钟,82,3,45,"{""plank"":0,""brick"":0,""cloth"":0,""charcoal"":1000}",专注药剂与生境准备方案(环境状态消费者)
+cartography,地图室,1,否,wood×10000 + stone×4000 + feather×6,wood 10000g + stone 4000g + feather 6件,,0,1,1,{},"显示已知产地与缺料路线,规划普通采集"
+cartography,地图室,2,否,plank×8 + cloth×2 + rope×2,wood 24000g + fiber 2700g,workshop 24 分钟,24,2,26,"{""plank"":0,""cloth"":0,""rope"":0}",前哨建造包;合法营地迁移/货运路线
+cartography,地图室,3,否,plank×18 + iron_ingot×4000 + rope×4 + cloth×4,wood 58000g + iron 8000g + fiber 5400g,workshop 52 分钟 + smelter 19 分钟,71,3,55,"{""plank"":0,""iron_ingot"":0,""rope"":0,""cloth"":0,""charcoal"":0}",远征回顾、路线偏好与后续特殊地点搜索

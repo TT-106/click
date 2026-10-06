@@ -1,0 +1,1645 @@
+{
+  "schemaVersion": 1,
+  "status": "planned-not-wired",
+  "items": [
+    {
+      "id": "wood",
+      "name": "木料",
+      "category": "raw",
+      "measure": {
+        "kind": "mass",
+        "unit": "g",
+        "quantumG": 100,
+        "unitMassG": null
+      },
+      "phase": "A",
+      "sources": [
+        "林地倒木",
+        "普通采集点",
+        "近营地可靠拾枝"
+      ],
+      "uses": [
+        "木板",
+        "木炭",
+        "初级建筑"
+      ],
+      "icon": {
+        "semanticId": "material.wood",
+        "status": "registered"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.1",
+      "notes": [
+        "首趟就可建工坊;不把所有木料自动烧光"
+      ]
+    },
+    {
+      "id": "stone",
+      "name": "石料",
+      "category": "raw",
+      "measure": {
+        "kind": "mass",
+        "unit": "g",
+        "quantumG": 100,
+        "unitMassG": null
+      },
+      "phase": "A",
+      "sources": [
+        "各生境可达露石",
+        "高地更多"
+      ],
+      "uses": [
+        "建筑",
+        "炉窑",
+        "水井"
+      ],
+      "icon": {
+        "semanticId": null,
+        "status": "candidate",
+        "candidatePath": "output/imagegen/material-icons/stone-v1.png",
+        "source": "built-in image_gen; original PNG preserved; candidate-not-wired"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.1",
+      "notes": [
+        "所有初始可达区域须有基础来源"
+      ]
+    },
+    {
+      "id": "clay",
+      "name": "黏土",
+      "category": "raw",
+      "measure": {
+        "kind": "mass",
+        "unit": "g",
+        "quantumG": 100,
+        "unitMassG": null
+      },
+      "phase": "A",
+      "sources": [
+        "可走河岸",
+        "湿地土层(不要求下水)"
+      ],
+      "uses": [
+        "砖块",
+        "炉窑"
+      ],
+      "icon": {
+        "semanticId": null,
+        "status": "missing"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.1",
+      "notes": [
+        "少量保障,深层采集后置"
+      ]
+    },
+    {
+      "id": "fiber",
+      "name": "植物纤维",
+      "category": "raw",
+      "measure": {
+        "kind": "mass",
+        "unit": "g",
+        "quantumG": 10,
+        "unitMassG": null
+      },
+      "phase": "A",
+      "sources": [
+        "草地",
+        "林缘",
+        "小园补产(阶段B)"
+      ],
+      "uses": [
+        "布料",
+        "绳索",
+        "背包"
+      ],
+      "icon": {
+        "semanticId": null,
+        "status": "missing"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.1",
+      "notes": [
+        "不用羽毛代替纤维;前期稳定来源"
+      ]
+    },
+    {
+      "id": "herb",
+      "name": "药草",
+      "category": "raw",
+      "measure": {
+        "kind": "mass",
+        "unit": "g",
+        "quantumG": 10,
+        "unitMassG": null
+      },
+      "phase": "B",
+      "sources": [
+        "林缘",
+        "湿地",
+        "小园"
+      ],
+      "uses": [
+        "药剂",
+        "状态恢复"
+      ],
+      "icon": {
+        "semanticId": null,
+        "status": "missing"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.1",
+      "notes": [
+        "药剂消费者为补给所二级(阶段B),药剂系统落地前不提高危险逼玩家使用"
+      ]
+    },
+    {
+      "id": "wild_food",
+      "name": "食材",
+      "category": "raw",
+      "measure": {
+        "kind": "mass",
+        "unit": "g",
+        "quantumG": null,
+        "unitMassG": null
+      },
+      "phase": "A",
+      "sources": [
+        "草地野果",
+        "可食植物",
+        "小园"
+      ],
+      "uses": [
+        "口粮"
+      ],
+      "icon": {
+        "semanticId": null,
+        "status": "missing"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.1",
+      "notes": [
+        "统一食材,暂不做烹饪菜单分支;采集步长设计未单列,记null"
+      ]
+    },
+    {
+      "id": "water",
+      "name": "净水",
+      "category": "raw",
+      "measure": {
+        "kind": "mass",
+        "unit": "g",
+        "quantumG": 100,
+        "unitMassG": null
+      },
+      "phase": "A",
+      "sources": [
+        "水井",
+        "已发现的安全水点"
+      ],
+      "uses": [
+        "随身补给",
+        "园圃",
+        "药剂"
+      ],
+      "icon": {
+        "semanticId": null,
+        "status": "missing"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.1",
+      "notes": [
+        "显示按1kg/L换算,不另存升数;远征只携带一趟所需,需水袋容器"
+      ]
+    },
+    {
+      "id": "copper",
+      "name": "铜矿",
+      "category": "raw",
+      "measure": {
+        "kind": "mass",
+        "unit": "g",
+        "quantumG": 100,
+        "unitMassG": null
+      },
+      "phase": "A",
+      "sources": [
+        "低高地",
+        "露矿"
+      ],
+      "uses": [
+        "铜锭",
+        "入门金属器具"
+      ],
+      "icon": {
+        "semanticId": "material.copper",
+        "status": "registered"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.1",
+      "notes": [
+        "普通替代路线,非必须同时有铜和铁才可开局"
+      ]
+    },
+    {
+      "id": "iron",
+      "name": "铁矿",
+      "category": "raw",
+      "measure": {
+        "kind": "mass",
+        "unit": "g",
+        "quantumG": 100,
+        "unitMassG": null
+      },
+      "phase": "A",
+      "sources": [
+        "高地",
+        "部分林地矿点"
+      ],
+      "uses": [
+        "铁锭",
+        "工具",
+        "二三级设施"
+      ],
+      "icon": {
+        "semanticId": "material.iron",
+        "status": "registered"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.1",
+      "notes": [
+        "勘测引导和替代贸易保障,不能靠随机盲找"
+      ]
+    },
+    {
+      "id": "silver",
+      "name": "银矿",
+      "category": "raw",
+      "measure": {
+        "kind": "mass",
+        "unit": "g",
+        "quantumG": 100,
+        "unitMassG": null
+      },
+      "phase": "A",
+      "sources": [
+        "高地少见矿点",
+        "旧屋遗留"
+      ],
+      "uses": [
+        "银锭",
+        "可选施法/外观强化"
+      ],
+      "icon": {
+        "semanticId": "material.silver",
+        "status": "registered"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.1",
+      "notes": [
+        "旧七种材料之一继续工作;稀有支线,不锁基本背包与炉窑"
+      ]
+    },
+    {
+      "id": "crystal",
+      "name": "晶石",
+      "category": "raw",
+      "measure": {
+        "kind": "mass",
+        "unit": "g",
+        "quantumG": 100,
+        "unitMassG": null
+      },
+      "phase": "A",
+      "sources": [
+        "湿地/特殊地貌",
+        "后续遗迹"
+      ],
+      "uses": [
+        "施法用品",
+        "可选高级加工"
+      ],
+      "icon": {
+        "semanticId": "material.crystal",
+        "status": "registered"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.1",
+      "notes": [
+        "旧七种材料之一;魔法分支,不锁主干生产;主要消费者在阶段C"
+      ]
+    },
+    {
+      "id": "leather",
+      "name": "皮料",
+      "category": "raw",
+      "measure": {
+        "kind": "count",
+        "unit": "张",
+        "quantumG": null,
+        "unitMassG": 500
+      },
+      "phase": "A",
+      "sources": [
+        "旧屋",
+        "后续普通遭遇",
+        "已解锁交换"
+      ],
+      "uses": [
+        "背包",
+        "皮护具",
+        "修理"
+      ],
+      "icon": {
+        "semanticId": "material.leather",
+        "status": "registered"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.1",
+      "notes": [
+        "按标准处理的一张计数;动物/怪物掉落未落地前允许布包路线"
+      ]
+    },
+    {
+      "id": "feather",
+      "name": "羽毛",
+      "category": "raw",
+      "measure": {
+        "kind": "count",
+        "unit": "根",
+        "quantumG": null,
+        "unitMassG": 50
+      },
+      "phase": "A",
+      "sources": [
+        "草地",
+        "林缘"
+      ],
+      "uses": [
+        "地图标记",
+        "装饰",
+        "后续箭矢"
+      ],
+      "icon": {
+        "semanticId": "material.feather",
+        "status": "registered"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.1",
+      "notes": [
+        "旧七种材料之一;重复材料不自动卖掉,不用羽毛当主干货币"
+      ]
+    },
+    {
+      "id": "resin",
+      "name": "树脂",
+      "category": "raw",
+      "measure": {
+        "kind": "mass",
+        "unit": "g",
+        "quantumG": 10,
+        "unitMassG": null
+      },
+      "phase": "B",
+      "sources": [
+        "林地采集",
+        "切树互动(以后接入)"
+      ],
+      "uses": [
+        "修理包",
+        "防水用品"
+      ],
+      "icon": {
+        "semanticId": null,
+        "status": "missing"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.1",
+      "notes": [
+        "阶段B内容;不是第一栋工坊的门槛"
+      ]
+    },
+    {
+      "id": "hardwood",
+      "name": "硬木",
+      "category": "raw",
+      "measure": {
+        "kind": "mass",
+        "unit": "g",
+        "quantumG": 100,
+        "unitMassG": null
+      },
+      "phase": "B",
+      "sources": [
+        "深林老树倒木(较普通木少)"
+      ],
+      "uses": [
+        "强化弓身",
+        "耐候前哨部件"
+      ],
+      "icon": {
+        "semanticId": null,
+        "status": "missing"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.1",
+      "notes": [
+        "可选木工分支;普通建筑可用更多普通木料替代;深林地貌开放时点未定案,按首个消费者硬木弓变体(工坊二级)记B"
+      ]
+    },
+    {
+      "id": "coal",
+      "name": "煤",
+      "category": "raw",
+      "measure": {
+        "kind": "mass",
+        "unit": "g",
+        "quantumG": 100,
+        "unitMassG": null
+      },
+      "phase": "B",
+      "sources": [
+        "高地裸露煤层",
+        "后续矿点"
+      ],
+      "uses": [
+        "代替木炭的冶炼燃料"
+      ],
+      "icon": {
+        "semanticId": null,
+        "status": "missing"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.1",
+      "notes": [
+        "同质量1:1替换木炭;首个专属配方精钢在炉窑三级(阶段C);不卖水买煤套利"
+      ]
+    },
+    {
+      "id": "beast_bone",
+      "name": "兽骨",
+      "category": "raw",
+      "measure": {
+        "kind": "count",
+        "unit": "根",
+        "quantumG": null,
+        "unitMassG": 300
+      },
+      "phase": "C",
+      "sources": [
+        "后续普通野兽/骷髅遭遇"
+      ],
+      "uses": [
+        "工具柄替代",
+        "轻型骨质护甲"
+      ],
+      "icon": {
+        "semanticId": null,
+        "status": "missing"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.1",
+      "notes": [
+        "普通怪物材料,战斗未启用前不放虚假掉落"
+      ]
+    },
+    {
+      "id": "chitin",
+      "name": "甲壳",
+      "category": "raw",
+      "measure": {
+        "kind": "count",
+        "unit": "片",
+        "quantumG": null,
+        "unitMassG": 250
+      },
+      "phase": "C",
+      "sources": [
+        "后续草原/湿地虫类怪物"
+      ],
+      "uses": [
+        "护甲",
+        "强化容器的可选结构件"
+      ],
+      "icon": {
+        "semanticId": null,
+        "status": "missing"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.1",
+      "notes": [
+        "与兽骨形成防护分支,不作基地公共建设门槛"
+      ]
+    },
+    {
+      "id": "slime_gel",
+      "name": "凝胶",
+      "category": "raw",
+      "measure": {
+        "kind": "mass",
+        "unit": "g",
+        "quantumG": null,
+        "unitMassG": null
+      },
+      "phase": "C",
+      "sources": [
+        "后续普通史莱姆遭遇"
+      ],
+      "uses": [
+        "冷敷用品",
+        "普通治疗配方替代"
+      ],
+      "icon": {
+        "semanticId": null,
+        "status": "missing"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.1",
+      "notes": [
+        "掉落量按怪物采集成本定,不用精英保底解普通药剂;采集步长未定,记null"
+      ]
+    },
+    {
+      "id": "mana_dust",
+      "name": "魔力尘",
+      "category": "raw",
+      "measure": {
+        "kind": "mass",
+        "unit": "g",
+        "quantumG": null,
+        "unitMassG": null
+      },
+      "phase": "C",
+      "sources": [
+        "后续施法怪物",
+        "特殊遗迹"
+      ],
+      "uses": [
+        "法器",
+        "专注药剂替代/强化"
+      ],
+      "icon": {
+        "semanticId": null,
+        "status": "missing"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.1",
+      "notes": [
+        "魔法分支,不能成为普通工具的必要材料;采集步长未定,记null"
+      ]
+    },
+    {
+      "id": "plank",
+      "name": "木板",
+      "category": "processed",
+      "measure": {
+        "kind": "count",
+        "unit": "块",
+        "quantumG": null,
+        "unitMassG": 2000
+      },
+      "phase": "A",
+      "sources": [
+        "手作或工坊(木料3kg/块)"
+      ],
+      "uses": [
+        "建筑",
+        "工具",
+        "货运设施"
+      ],
+      "icon": {
+        "semanticId": null,
+        "status": "missing"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.2",
+      "notes": [
+        "第一条加工链;初始手作4分钟可用,工坊2分钟"
+      ]
+    },
+    {
+      "id": "brick",
+      "name": "砖块",
+      "category": "processed",
+      "measure": {
+        "kind": "count",
+        "unit": "块",
+        "quantumG": null,
+        "unitMassG": 2000
+      },
+      "phase": "A",
+      "sources": [
+        "炉窑(黏土2kg+木炭0.25kg)"
+      ],
+      "uses": [
+        "二三级建筑",
+        "水井升级"
+      ],
+      "icon": {
+        "semanticId": null,
+        "status": "missing"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.2",
+      "notes": [
+        "炉窑一级即可生产;消费集中在二/三级升级与水井升级"
+      ]
+    },
+    {
+      "id": "charcoal",
+      "name": "木炭",
+      "category": "processed",
+      "measure": {
+        "kind": "mass",
+        "unit": "g",
+        "quantumG": null,
+        "unitMassG": null
+      },
+      "phase": "A",
+      "sources": [
+        "炉窑(木料4kg→2kg)"
+      ],
+      "uses": [
+        "冶炼",
+        "烘焙",
+        "砖块"
+      ],
+      "icon": {
+        "semanticId": null,
+        "status": "missing"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.2",
+      "notes": [
+        "整批生产:需求1kg仍做一批产2kg,余1kg入仓;基础锅灶可直接用木料"
+      ]
+    },
+    {
+      "id": "copper_ingot",
+      "name": "铜锭",
+      "category": "processed",
+      "measure": {
+        "kind": "mass",
+        "unit": "g",
+        "quantumG": null,
+        "unitMassG": null
+      },
+      "phase": "A",
+      "sources": [
+        "炉窑一级(铜矿2kg+木炭0.5kg)"
+      ],
+      "uses": [
+        "工具替代配方",
+        "修理",
+        "建筑紧固替代(1:1替铁锭)"
+      ],
+      "icon": {
+        "semanticId": "material.copper-bar",
+        "status": "registered"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.2",
+      "notes": []
+    },
+    {
+      "id": "iron_ingot",
+      "name": "铁锭",
+      "category": "processed",
+      "measure": {
+        "kind": "mass",
+        "unit": "g",
+        "quantumG": null,
+        "unitMassG": null
+      },
+      "phase": "A",
+      "sources": [
+        "炉窑一级(铁矿2kg+木炭0.5kg)"
+      ],
+      "uses": [
+        "主要工具",
+        "建筑",
+        "五金"
+      ],
+      "icon": {
+        "semanticId": "material.iron-bar",
+        "status": "registered"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.2",
+      "notes": [
+        "炉窑一级不得先要求铁锭"
+      ]
+    },
+    {
+      "id": "silver_ingot",
+      "name": "银锭",
+      "category": "processed",
+      "measure": {
+        "kind": "mass",
+        "unit": "g",
+        "quantumG": null,
+        "unitMassG": null
+      },
+      "phase": "B",
+      "sources": [
+        "炉窑二级(银矿2kg+木炭0.5kg)"
+      ],
+      "uses": [
+        "可选施法器具",
+        "外观强化"
+      ],
+      "icon": {
+        "semanticId": "material.silver-bar",
+        "status": "registered"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.2",
+      "notes": [
+        "可选分支"
+      ]
+    },
+    {
+      "id": "cloth",
+      "name": "布料",
+      "category": "processed",
+      "measure": {
+        "kind": "count",
+        "unit": "卷",
+        "quantumG": null,
+        "unitMassG": 500
+      },
+      "phase": "A",
+      "sources": [
+        "工坊一级(纤维0.75kg)"
+      ],
+      "uses": [
+        "背包",
+        "补给",
+        "建筑"
+      ],
+      "icon": {
+        "semanticId": null,
+        "status": "missing"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.2",
+      "notes": []
+    },
+    {
+      "id": "rope",
+      "name": "绳索",
+      "category": "processed",
+      "measure": {
+        "kind": "count",
+        "unit": "卷",
+        "quantumG": null,
+        "unitMassG": 500
+      },
+      "phase": "A",
+      "sources": [
+        "手作或工坊(纤维0.6kg)"
+      ],
+      "uses": [
+        "工具",
+        "建筑",
+        "前哨"
+      ],
+      "icon": {
+        "semanticId": null,
+        "status": "missing"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.2",
+      "notes": [
+        "初始手作4分钟可用;已注册material.rod为金属棒语义不符,不作rope图标,保留缺口"
+      ]
+    },
+    {
+      "id": "nails",
+      "name": "五金钉料",
+      "category": "processed",
+      "measure": {
+        "kind": "mass",
+        "unit": "g",
+        "quantumG": null,
+        "unitMassG": null
+      },
+      "phase": "B",
+      "sources": [
+        "工坊二级(铜锭或铁锭0.6kg)"
+      ],
+      "uses": [
+        "修理",
+        "精制工具",
+        "强化背包"
+      ],
+      "icon": {
+        "semanticId": "material.nails",
+        "status": "registered"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.2",
+      "notes": [
+        "铜/铁任选一种anyOf,不同时扣"
+      ]
+    },
+    {
+      "id": "treated_leather",
+      "name": "强韧革",
+      "category": "processed",
+      "measure": {
+        "kind": "count",
+        "unit": "张",
+        "quantumG": null,
+        "unitMassG": 800
+      },
+      "phase": "B",
+      "sources": [
+        "工坊二级(皮料2张+树脂0.1kg)"
+      ],
+      "uses": [
+        "耐候背包",
+        "护具升级"
+      ],
+      "icon": {
+        "semanticId": null,
+        "status": "missing"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.2",
+      "notes": [
+        "耐候分支;普通皮料仍可做基础护具"
+      ]
+    },
+    {
+      "id": "herb_extract",
+      "name": "草药萃取液",
+      "category": "processed",
+      "measure": {
+        "kind": "mass",
+        "unit": "g",
+        "quantumG": null,
+        "unitMassG": null
+      },
+      "phase": "B",
+      "sources": [
+        "补给所二级(药草0.5kg+水0.2kg)"
+      ],
+      "uses": [
+        "环境用品",
+        "药剂"
+      ],
+      "icon": {
+        "semanticId": null,
+        "status": "missing"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.2",
+      "notes": [
+        "常规治疗保留直接药草配方,不强迫所有药物多一级链"
+      ]
+    },
+    {
+      "id": "steel_ingot",
+      "name": "精钢",
+      "category": "processed",
+      "measure": {
+        "kind": "mass",
+        "unit": "g",
+        "quantumG": null,
+        "unitMassG": null
+      },
+      "phase": "C",
+      "sources": [
+        "炉窑三级(铁锭1kg+煤或木炭0.2kg)"
+      ],
+      "uses": [
+        "可选高阶工具/武器升级"
+      ],
+      "icon": {
+        "semanticId": null,
+        "status": "missing"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.2",
+      "notes": [
+        "燃料煤/木炭anyOf仅选一种;不是新配方全面替换铁锭"
+      ]
+    },
+    {
+      "id": "ration",
+      "name": "便携口粮",
+      "category": "consumable",
+      "measure": {
+        "kind": "count",
+        "unit": "份",
+        "quantumG": null,
+        "unitMassG": 400
+      },
+      "phase": "A",
+      "sources": [
+        "补给所一级(食材0.5kg+水0.2kg+木料0.1kg);初始篝火2分钟可用"
+      ],
+      "uses": [
+        "远征补给预算(一人一趟15-30分钟采集)"
+      ],
+      "icon": {
+        "semanticId": null,
+        "status": "missing"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.3",
+      "notes": [
+        "出发装一份;趟内累计15分钟首次安全用餐扣整份;未用餐归来返还完整剩余;无半份"
+      ]
+    },
+    {
+      "id": "healing_potion",
+      "name": "治疗药剂",
+      "category": "consumable",
+      "measure": {
+        "kind": "count",
+        "unit": "瓶",
+        "quantumG": null,
+        "unitMassG": 250
+      },
+      "phase": "B",
+      "sources": [
+        "补给所二级(药草0.2kg+水0.2kg;可改凝胶0.2kg)"
+      ],
+      "uses": [
+        "未来恢复25%最大生命"
+      ],
+      "icon": {
+        "semanticId": null,
+        "status": "missing"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.3",
+      "notes": [
+        "启用条件:原野战斗消费者落地;战斗实测前不接经典血量;药草0.2kg可由凝胶0.2kg替代(任选)"
+      ]
+    },
+    {
+      "id": "antitoxin",
+      "name": "解毒剂",
+      "category": "consumable",
+      "measure": {
+        "kind": "count",
+        "unit": "瓶",
+        "quantumG": null,
+        "unitMassG": 250
+      },
+      "phase": "B",
+      "sources": [
+        "补给所二级(药草0.3kg+木炭0.05kg+水0.2kg)"
+      ],
+      "uses": [
+        "清除可解除中毒并短期缓解湿地环境状态"
+      ],
+      "icon": {
+        "semanticId": null,
+        "status": "missing"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.3",
+      "notes": [
+        "启用条件:原野战斗/环境状态消费者;无状态不消耗;不能解所有首领技能"
+      ]
+    },
+    {
+      "id": "mana_potion",
+      "name": "专注药剂",
+      "category": "consumable",
+      "measure": {
+        "kind": "count",
+        "unit": "瓶",
+        "quantumG": null,
+        "unitMassG": 250
+      },
+      "phase": "C",
+      "sources": [
+        "补给所三级(药草0.2kg+晶石0.05kg+水0.2kg;晶石可改魔力尘0.05kg)"
+      ],
+      "uses": [
+        "未来恢复20%施法资源"
+      ],
+      "icon": {
+        "semanticId": null,
+        "status": "missing"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.3",
+      "notes": [
+        "稀有路线可选补给;无药剂也能自然恢复并完成基础战斗"
+      ]
+    },
+    {
+      "id": "repair_kit",
+      "name": "修理包",
+      "category": "consumable",
+      "measure": {
+        "kind": "count",
+        "unit": "份",
+        "quantumG": null,
+        "unitMassG": 500
+      },
+      "phase": "B",
+      "sources": [
+        "工坊二级(五金钉料0.1kg+树脂0.1kg+布料1卷)"
+      ],
+      "uses": [
+        "恢复优质工具25点状态"
+      ],
+      "icon": {
+        "semanticId": null,
+        "status": "missing"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.3",
+      "notes": [
+        "回营自动维护;没有修理包回退基础效率,不销毁工具;工具维护系统在阶段B"
+      ]
+    },
+    {
+      "id": "camp_kit",
+      "name": "前哨建造包",
+      "category": "consumable",
+      "measure": {
+        "kind": "count",
+        "unit": "个",
+        "quantumG": null,
+        "unitMassG": 6000
+      },
+      "phase": "B",
+      "sources": [
+        "地图室二级+工坊二级(木板2+绳索2+布料2+铁锭0.5kg)"
+      ],
+      "uses": [
+        "在已抵达的合法地点建立补给前哨"
+      ],
+      "icon": {
+        "semanticId": null,
+        "status": "missing"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.3",
+      "notes": [
+        "不远程凭空落点;按件一次消耗,重试建造不能重复扣"
+      ]
+    },
+    {
+      "id": "bandage",
+      "name": "绷带",
+      "category": "consumable",
+      "measure": {
+        "kind": "count",
+        "unit": "份",
+        "quantumG": null,
+        "unitMassG": 200
+      },
+      "phase": "B",
+      "sources": [
+        "补给所一级(布料1卷+水0.1kg)"
+      ],
+      "uses": [
+        "未来战后恢复10%最大生命,仅安全停留使用"
+      ],
+      "icon": {
+        "semanticId": null,
+        "status": "missing"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.3",
+      "notes": [
+        "启用条件:战后恢复一起实施;便宜恢复选项,不能战斗中无条件回血"
+      ]
+    },
+    {
+      "id": "torch",
+      "name": "火把",
+      "category": "consumable",
+      "measure": {
+        "kind": "count",
+        "unit": "支",
+        "quantumG": null,
+        "unitMassG": 500
+      },
+      "phase": "C",
+      "sources": [
+        "手作(木料0.5kg+纤维0.05kg+树脂0.05kg)"
+      ],
+      "uses": [
+        "未来照亮地下/夜间范围,持续一段探索任务"
+      ],
+      "icon": {
+        "semanticId": null,
+        "status": "missing"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.3",
+      "notes": [
+        "夜间内容启用后消耗;持续时间等参数设计未定,记null不入数值"
+      ]
+    },
+    {
+      "id": "warming_salve",
+      "name": "保暖药膏",
+      "category": "consumable",
+      "measure": {
+        "kind": "count",
+        "unit": "份",
+        "quantumG": null,
+        "unitMassG": 250
+      },
+      "phase": "C",
+      "sources": [
+        "补给所三级(萃取液0.1kg+树脂0.1kg+水0.2kg)"
+      ],
+      "uses": [
+        "寒冷地貌一次短趟减轻环境效率惩罚"
+      ],
+      "icon": {
+        "semanticId": null,
+        "status": "missing"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.3",
+      "notes": [
+        "环境状态消费者;按目的地装载"
+      ]
+    },
+    {
+      "id": "cooling_salve",
+      "name": "清凉冷敷",
+      "category": "consumable",
+      "measure": {
+        "kind": "count",
+        "unit": "份",
+        "quantumG": null,
+        "unitMassG": 250
+      },
+      "phase": "C",
+      "sources": [
+        "补给所三级(萃取液0.1kg+凝胶0.1kg+水0.2kg)"
+      ],
+      "uses": [
+        "炎热地貌一次短趟减轻环境效率惩罚"
+      ],
+      "icon": {
+        "semanticId": null,
+        "status": "missing"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.3",
+      "notes": [
+        "与保暖互斥,按气候使用;没有环境状态就隐藏"
+      ]
+    },
+    {
+      "id": "axe",
+      "name": "斧",
+      "category": "tool",
+      "measure": {
+        "kind": "instance",
+        "unit": "把",
+        "quantumG": null,
+        "unitMassG": 600
+      },
+      "phase": "A",
+      "sources": [
+        "初始营地提供(基础斧)",
+        "铜斧:工坊一级+炉窑一级",
+        "铁斧:工坊二级"
+      ],
+      "uses": [
+        "木料交互",
+        "铜/铁材质木料操作效率+10%/+20%"
+      ],
+      "icon": {
+        "semanticId": null,
+        "status": "missing"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.4",
+      "notes": [
+        "永久实例;铜升级A,铁升级B;升级替换旧实例而非叠加"
+      ]
+    },
+    {
+      "id": "pickaxe",
+      "name": "镐",
+      "category": "tool",
+      "measure": {
+        "kind": "instance",
+        "unit": "把",
+        "quantumG": null,
+        "unitMassG": 1200
+      },
+      "phase": "A",
+      "sources": [
+        "初始营地提供(基础镐)",
+        "铜镐:工坊一级+炉窑一级",
+        "铁镐:工坊二级"
+      ],
+      "uses": [
+        "普通露矿与石料",
+        "铜/铁材质矿物操作效率+10%/+20%"
+      ],
+      "icon": {
+        "semanticId": null,
+        "status": "missing"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.4",
+      "notes": [
+        "永久实例;铜升级A,铁升级B"
+      ]
+    },
+    {
+      "id": "gathering_knife",
+      "name": "采集刀",
+      "category": "tool",
+      "measure": {
+        "kind": "instance",
+        "unit": "把",
+        "quantumG": null,
+        "unitMassG": 150
+      },
+      "phase": "A",
+      "sources": [
+        "基础刀初始提供",
+        "工坊一级(铁锭0.2kg+绳索1)"
+      ],
+      "uses": [
+        "药草/纤维采集,改善操作效率和更完整采集"
+      ],
+      "icon": {
+        "semanticId": null,
+        "status": "missing"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.4",
+      "notes": [
+        "不直接倍增稀有掉落"
+      ]
+    },
+    {
+      "id": "backpack",
+      "name": "背包",
+      "category": "tool",
+      "measure": {
+        "kind": "instance",
+        "unit": "个",
+        "quantumG": null,
+        "unitMassG": 500
+      },
+      "phase": "A",
+      "sources": [
+        "基础包初始提供",
+        "布背包:工坊一级(布料2+绳索1)",
+        "强化背包:工坊二级(布料3+皮料2张+绳索2+五金0.2kg)"
+      ],
+      "uses": [
+        "舒适负重24kg;布包28kg;强化包32kg"
+      ],
+      "icon": {
+        "semanticId": null,
+        "status": "missing"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.4",
+      "notes": [
+        "实例质量随等级:基础500g/布包700g/强化包900g;皮料有普通替代采购任务"
+      ]
+    },
+    {
+      "id": "water_container",
+      "name": "水袋",
+      "category": "tool",
+      "measure": {
+        "kind": "instance",
+        "unit": "个",
+        "quantumG": null,
+        "unitMassG": 200
+      },
+      "phase": "A",
+      "sources": [
+        "初始水袋提供",
+        "加固水袋:工坊二级(皮料1张+布料1+树脂0.1kg)"
+      ],
+      "uses": [
+        "装净水1kg;加固袋装2kg"
+      ],
+      "icon": {
+        "semanticId": null,
+        "status": "missing"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.4",
+      "notes": [
+        "可复用实例,空袋质量另算;加固袋350g;装得更多不代表默认灌满"
+      ]
+    },
+    {
+      "id": "lantern",
+      "name": "提灯",
+      "category": "tool",
+      "measure": {
+        "kind": "instance",
+        "unit": "盏",
+        "quantumG": null,
+        "unitMassG": 600
+      },
+      "phase": "C",
+      "sources": [
+        "工坊(铜锭0.3kg+木板1+树脂0.1kg)"
+      ],
+      "uses": [
+        "后续夜间/洞穴视觉与交互"
+      ],
+      "icon": {
+        "semanticId": null,
+        "status": "missing"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.4",
+      "notes": [
+        "夜间/洞穴内容一起启用,未启用则隐藏;持续时间设计未定,不提供虚假属性"
+      ]
+    },
+    {
+      "id": "short_sword",
+      "name": "短剑",
+      "category": "equipment",
+      "measure": {
+        "kind": "instance",
+        "unit": "把",
+        "quantumG": null,
+        "unitMassG": 1200
+      },
+      "phase": "B",
+      "sources": [
+        "工坊二级(木板1+铁锭1.4kg+绳索1)"
+      ],
+      "uses": [
+        "稳定近战;铜铁精钢三级材质"
+      ],
+      "icon": {
+        "semanticId": null,
+        "status": "missing"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.5",
+      "notes": [
+        "战斗系统一起启用;精钢短剑变体为实例升级(工坊三级,质量1.3kg);非逐次无限+1"
+      ]
+    },
+    {
+      "id": "dagger",
+      "name": "匕首",
+      "category": "equipment",
+      "measure": {
+        "kind": "instance",
+        "unit": "把",
+        "quantumG": null,
+        "unitMassG": 350
+      },
+      "phase": "B",
+      "sources": [
+        "工坊二级(铁锭0.4kg+绳索1)"
+      ],
+      "uses": [
+        "轻便与快速攻击;负重敏感角色选择"
+      ],
+      "icon": {
+        "semanticId": null,
+        "status": "missing"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.5",
+      "notes": [
+        "伤害数值待原野怪物攻击模型实施"
+      ]
+    },
+    {
+      "id": "bow",
+      "name": "弓",
+      "category": "equipment",
+      "measure": {
+        "kind": "instance",
+        "unit": "把",
+        "quantumG": null,
+        "unitMassG": 800
+      },
+      "phase": "B",
+      "sources": [
+        "工坊一级(木板1+绳索2+羽毛4根)"
+      ],
+      "uses": [
+        "远程;首版箭矢抽象在武器中"
+      ],
+      "icon": {
+        "semanticId": null,
+        "status": "missing"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.5",
+      "notes": [
+        "配方工坊一级但战斗消费者在阶段B;硬木弓变体为实例升级(工坊二级,质量1kg)"
+      ]
+    },
+    {
+      "id": "staff",
+      "name": "法杖",
+      "category": "equipment",
+      "measure": {
+        "kind": "instance",
+        "unit": "根",
+        "quantumG": null,
+        "unitMassG": 1000
+      },
+      "phase": "B",
+      "sources": [
+        "工坊一级(木板1+绳索1)"
+      ],
+      "uses": [
+        "持续施法;基础木杖不要求稀有晶石"
+      ],
+      "icon": {
+        "semanticId": null,
+        "status": "missing"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.5",
+      "notes": [
+        "晶石法杖变体为实例升级(工坊二级,铜锭0.3kg+晶石0.1kg,质量1kg→1.2kg,不复制旧杖)"
+      ]
+    },
+    {
+      "id": "focus",
+      "name": "法器",
+      "category": "equipment",
+      "measure": {
+        "kind": "instance",
+        "unit": "件",
+        "quantumG": null,
+        "unitMassG": 400
+      },
+      "phase": "B",
+      "sources": [
+        "工坊二级(布料1+铜锭0.2kg+魔力尘0.05kg)"
+      ],
+      "uses": [
+        "可选法术协作/专注"
+      ],
+      "icon": {
+        "semanticId": null,
+        "status": "missing"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.5",
+      "notes": [
+        "没有法器也可用角色默认技能;银饰法器变体为实例升级(工坊三级,质量0.5kg);魔力尘来源在阶段C"
+      ]
+    },
+    {
+      "id": "cloth_robe",
+      "name": "布袍",
+      "category": "equipment",
+      "measure": {
+        "kind": "instance",
+        "unit": "件",
+        "quantumG": null,
+        "unitMassG": 1000
+      },
+      "phase": "B",
+      "sources": [
+        "工坊一级(布料3+绳索1)"
+      ],
+      "uses": [
+        "轻防护/施法活动;初级最可靠制作路线"
+      ],
+      "icon": {
+        "semanticId": null,
+        "status": "missing"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.5",
+      "notes": []
+    },
+    {
+      "id": "leather_coat",
+      "name": "皮护衣",
+      "category": "equipment",
+      "measure": {
+        "kind": "instance",
+        "unit": "件",
+        "quantumG": null,
+        "unitMassG": 2000
+      },
+      "phase": "B",
+      "sources": [
+        "工坊二级(皮料4张+布料1+绳索1)"
+      ],
+      "uses": [
+        "通用防护;强韧革作后续可选升级"
+      ],
+      "icon": {
+        "semanticId": null,
+        "status": "missing"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.5",
+      "notes": [
+        "耐候护衣变体为实例升级(工坊三级,强韧革1张+绳索1,质量2.2kg)"
+      ]
+    },
+    {
+      "id": "carapace_armor",
+      "name": "骨/甲壳护甲",
+      "category": "equipment",
+      "measure": {
+        "kind": "instance",
+        "unit": "件",
+        "quantumG": null,
+        "unitMassG": 3000
+      },
+      "phase": "B",
+      "sources": [
+        "工坊二级(兽骨8根或甲壳8片+布料2+绳索2+铁锭0.3kg)"
+      ],
+      "uses": [
+        "更重防护分支"
+      ],
+      "icon": {
+        "semanticId": null,
+        "status": "missing"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.5",
+      "notes": [
+        "两类骨材anyOf任选一种,不同时扣;内部记材质variant不复制物品定义;兽骨/甲壳掉落在阶段C,阶段B内实际不可制作"
+      ]
+    },
+    {
+      "id": "field_notes",
+      "name": "实地记录",
+      "category": "research",
+      "measure": {
+        "kind": "count",
+        "unit": "条",
+        "quantumG": null,
+        "unitMassG": 100
+      },
+      "phase": "B",
+      "sources": [
+        "新地貌/道路/地点的可重复发现记录"
+      ],
+      "uses": [
+        "回顾与可选地图分支"
+      ],
+      "icon": {
+        "semanticId": null,
+        "status": "missing"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.6",
+      "notes": [
+        "不是隐藏稀有掉落;登记后知识存档不再需要一直携带实物"
+      ]
+    },
+    {
+      "id": "blueprint",
+      "name": "配方蓝图",
+      "category": "research",
+      "measure": {
+        "kind": "count",
+        "unit": "张",
+        "quantumG": null,
+        "unitMassG": 50
+      },
+      "phase": "A",
+      "sources": [
+        "首次制作自动登记解锁"
+      ],
+      "uses": [
+        "配方解锁登记",
+        "重复可转装饰研究进度"
+      ],
+      "icon": {
+        "semanticId": null,
+        "status": "missing"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.6",
+      "notes": [
+        "核心配方不靠蓝图随机掉落"
+      ]
+    },
+    {
+      "id": "keepsake",
+      "name": "纪念物",
+      "category": "research",
+      "measure": {
+        "kind": "instance",
+        "unit": "个",
+        "quantumG": null,
+        "unitMassG": null
+      },
+      "phase": "B",
+      "sources": [
+        "旧屋/遗迹纪念物发现"
+      ],
+      "uses": [
+        "命名、来源、发现时间和陈列位"
+      ],
+      "icon": {
+        "semanticId": null,
+        "status": "missing"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.6",
+      "notes": [
+        "按实例配置质量100g-2kg(massRangeG),异常更大物件走货运;不自动消耗,不提供必须战力"
+      ],
+      "massRangeG": [
+        100,
+        2000
+      ]
+    },
+    {
+      "id": "trophy",
+      "name": "特殊战利纪念",
+      "category": "research",
+      "measure": {
+        "kind": "instance",
+        "unit": "个",
+        "quantumG": null,
+        "unitMassG": null
+      },
+      "phase": "C",
+      "sources": [
+        "后续精英/首领首次稳定登记"
+      ],
+      "uses": [
+        "陈列和回顾用途"
+      ],
+      "icon": {
+        "semanticId": null,
+        "status": "missing"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.6",
+      "notes": [
+        "按实例配置质量100g-2kg(massRangeG);重复不影响主干升级"
+      ],
+      "massRangeG": [
+        100,
+        2000
+      ]
+    }
+  ]
+}

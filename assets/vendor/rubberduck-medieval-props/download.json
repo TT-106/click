@@ -1,0 +1,22 @@
+{
+  "title": "isometric medieval props",
+  "author": "rubberduck",
+  "page": "https://opengameart.org/content/isometric-medieval-props",
+  "source": "https://opengameart.org/sites/default/files/medieval_props_single.zip",
+  "downloaded": "2026-10-05T00:00:30+08:00",
+  "sha256": "f75eb1d985f378dd62de1b2fb4e0d7c69958f918c82168e270f95295dbbeb5af",
+  "bytes": 10887052,
+  "archive": "artifacts/vendor-assets/downloads/rubberduck-medieval-props-single.zip",
+  "license": "CC0-1.0",
+  "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "extracted": { "png": 708, "modifiedImages": false },
+  "preview": {
+    "source": "https://opengameart.org/sites/default/files/medieval_props_prev.png",
+    "file": "Preview.png",
+    "downloaded": "2026-10-05T00:02:38+08:00",
+    "sha256": "d870a514b508d8013147a73e2ccff2463f60fc83189438086318149885099e16",
+    "bytes": 397606
+  },
+  "status": "candidate-not-registered",
+  "notes": "PNG only, with resolved extraction paths constrained to this vendor directory. Preserve the original 64_x32 directory spelling. No model, script or executable was downloaded. License.txt is a locally maintained provenance notice."
+}

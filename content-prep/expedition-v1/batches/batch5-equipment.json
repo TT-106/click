@@ -1,0 +1,103 @@
+{
+  "batch": 5,
+  "category": "equipment",
+  "expected": 8,
+  "items": [
+    {
+      "id": "short_sword",
+      "name": "短剑",
+      "category": "equipment",
+      "measure": { "kind": "instance", "unit": "把", "quantumG": null, "unitMassG": 1200 },
+      "phase": "B",
+      "sources": ["工坊二级(木板1+铁锭1.4kg+绳索1)"],
+      "uses": ["稳定近战;铜铁精钢三级材质"],
+      "icon": { "semanticId": null, "status": "missing" },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.5",
+      "notes": ["战斗系统一起启用;精钢短剑变体为实例升级(工坊三级,质量1.3kg);非逐次无限+1"]
+    },
+    {
+      "id": "dagger",
+      "name": "匕首",
+      "category": "equipment",
+      "measure": { "kind": "instance", "unit": "把", "quantumG": null, "unitMassG": 350 },
+      "phase": "B",
+      "sources": ["工坊二级(铁锭0.4kg+绳索1)"],
+      "uses": ["轻便与快速攻击;负重敏感角色选择"],
+      "icon": { "semanticId": null, "status": "missing" },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.5",
+      "notes": ["伤害数值待原野怪物攻击模型实施"]
+    },
+    {
+      "id": "bow",
+      "name": "弓",
+      "category": "equipment",
+      "measure": { "kind": "instance", "unit": "把", "quantumG": null, "unitMassG": 800 },
+      "phase": "B",
+      "sources": ["工坊一级(木板1+绳索2+羽毛4根)"],
+      "uses": ["远程;首版箭矢抽象在武器中"],
+      "icon": { "semanticId": null, "status": "missing" },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.5",
+      "notes": ["配方工坊一级但战斗消费者在阶段B;硬木弓变体为实例升级(工坊二级,质量1kg)"]
+    },
+    {
+      "id": "staff",
+      "name": "法杖",
+      "category": "equipment",
+      "measure": { "kind": "instance", "unit": "根", "quantumG": null, "unitMassG": 1000 },
+      "phase": "B",
+      "sources": ["工坊一级(木板1+绳索1)"],
+      "uses": ["持续施法;基础木杖不要求稀有晶石"],
+      "icon": { "semanticId": null, "status": "missing" },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.5",
+      "notes": ["晶石法杖变体为实例升级(工坊二级,铜锭0.3kg+晶石0.1kg,质量1kg→1.2kg,不复制旧杖)"]
+    },
+    {
+      "id": "focus",
+      "name": "法器",
+      "category": "equipment",
+      "measure": { "kind": "instance", "unit": "件", "quantumG": null, "unitMassG": 400 },
+      "phase": "B",
+      "sources": ["工坊二级(布料1+铜锭0.2kg+魔力尘0.05kg)"],
+      "uses": ["可选法术协作/专注"],
+      "icon": { "semanticId": null, "status": "missing" },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.5",
+      "notes": ["没有法器也可用角色默认技能;银饰法器变体为实例升级(工坊三级,质量0.5kg);魔力尘来源在阶段C"]
+    },
+    {
+      "id": "cloth_robe",
+      "name": "布袍",
+      "category": "equipment",
+      "measure": { "kind": "instance", "unit": "件", "quantumG": null, "unitMassG": 1000 },
+      "phase": "B",
+      "sources": ["工坊一级(布料3+绳索1)"],
+      "uses": ["轻防护/施法活动;初级最可靠制作路线"],
+      "icon": { "semanticId": null, "status": "missing" },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.5",
+      "notes": []
+    },
+    {
+      "id": "leather_coat",
+      "name": "皮护衣",
+      "category": "equipment",
+      "measure": { "kind": "instance", "unit": "件", "quantumG": null, "unitMassG": 2000 },
+      "phase": "B",
+      "sources": ["工坊二级(皮料4张+布料1+绳索1)"],
+      "uses": ["通用防护;强韧革作后续可选升级"],
+      "icon": { "semanticId": null, "status": "missing" },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.5",
+      "notes": ["耐候护衣变体为实例升级(工坊三级,强韧革1张+绳索1,质量2.2kg)"]
+    },
+    {
+      "id": "carapace_armor",
+      "name": "骨/甲壳护甲",
+      "category": "equipment",
+      "measure": { "kind": "instance", "unit": "件", "quantumG": null, "unitMassG": 3000 },
+      "phase": "B",
+      "sources": ["工坊二级(兽骨8根或甲壳8片+布料2+绳索2+铁锭0.3kg)"],
+      "uses": ["更重防护分支"],
+      "icon": { "semanticId": null, "status": "missing" },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.5",
+      "notes": ["两类骨材anyOf任选一种,不同时扣;内部记材质variant不复制物品定义;兽骨/甲壳掉落在阶段C,阶段B内实际不可制作"]
+    }
+  ]
+}

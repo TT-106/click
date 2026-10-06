@@ -1,0 +1,16 @@
+isometric medieval buildings #2 — rubberduck
+Original submission: https://opengameart.org/content/isometric-medieval-buildings-2
+Original download: https://opengameart.org/sites/default/files/building_pack_03_single.zip
+License declared by the author: CC0 1.0 Universal
+https://creativecommons.org/publicdomain/zero/1.0/
+
+The author credits CC0 medieval containers and props by Daniel Andersson:
+https://opengameart.org/content/medieval-containers
+https://opengameart.org/content/medieval-props-pack-1
+Everything else (design, models, textures) is described as the author's own work.
+
+All 144 rendered PNG files retain their original bytes, names and directories.
+The ZIP contains no license text. This provenance notice was added locally;
+it is not represented as an original file supplied in the download.
+No endorsement by the artists or OpenGameArt is implied.
+Downloaded as a candidate asset library; no runtime manifest is enabled.

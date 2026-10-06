@@ -1,0 +1,127 @@
+{
+  "batch": 3,
+  "category": "consumable",
+  "expected": 10,
+  "items": [
+    {
+      "id": "ration",
+      "name": "便携口粮",
+      "category": "consumable",
+      "measure": { "kind": "count", "unit": "份", "quantumG": null, "unitMassG": 400 },
+      "phase": "A",
+      "sources": ["补给所一级(食材0.5kg+水0.2kg+木料0.1kg);初始篝火2分钟可用"],
+      "uses": ["远征补给预算(一人一趟15-30分钟采集)"],
+      "icon": { "semanticId": null, "status": "missing" },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.3",
+      "notes": ["出发装一份;趟内累计15分钟首次安全用餐扣整份;未用餐归来返还完整剩余;无半份"]
+    },
+    {
+      "id": "healing_potion",
+      "name": "治疗药剂",
+      "category": "consumable",
+      "measure": { "kind": "count", "unit": "瓶", "quantumG": null, "unitMassG": 250 },
+      "phase": "B",
+      "sources": ["补给所二级(药草0.2kg+水0.2kg;可改凝胶0.2kg)"],
+      "uses": ["未来恢复25%最大生命"],
+      "icon": { "semanticId": null, "status": "missing" },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.3",
+      "notes": ["启用条件:原野战斗消费者落地;战斗实测前不接经典血量;药草0.2kg可由凝胶0.2kg替代(任选)"]
+    },
+    {
+      "id": "antitoxin",
+      "name": "解毒剂",
+      "category": "consumable",
+      "measure": { "kind": "count", "unit": "瓶", "quantumG": null, "unitMassG": 250 },
+      "phase": "B",
+      "sources": ["补给所二级(药草0.3kg+木炭0.05kg+水0.2kg)"],
+      "uses": ["清除可解除中毒并短期缓解湿地环境状态"],
+      "icon": { "semanticId": null, "status": "missing" },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.3",
+      "notes": ["启用条件:原野战斗/环境状态消费者;无状态不消耗;不能解所有首领技能"]
+    },
+    {
+      "id": "mana_potion",
+      "name": "专注药剂",
+      "category": "consumable",
+      "measure": { "kind": "count", "unit": "瓶", "quantumG": null, "unitMassG": 250 },
+      "phase": "C",
+      "sources": ["补给所三级(药草0.2kg+晶石0.05kg+水0.2kg;晶石可改魔力尘0.05kg)"],
+      "uses": ["未来恢复20%施法资源"],
+      "icon": { "semanticId": null, "status": "missing" },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.3",
+      "notes": ["稀有路线可选补给;无药剂也能自然恢复并完成基础战斗"]
+    },
+    {
+      "id": "repair_kit",
+      "name": "修理包",
+      "category": "consumable",
+      "measure": { "kind": "count", "unit": "份", "quantumG": null, "unitMassG": 500 },
+      "phase": "B",
+      "sources": ["工坊二级(五金钉料0.1kg+树脂0.1kg+布料1卷)"],
+      "uses": ["恢复优质工具25点状态"],
+      "icon": { "semanticId": null, "status": "missing" },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.3",
+      "notes": ["回营自动维护;没有修理包回退基础效率,不销毁工具;工具维护系统在阶段B"]
+    },
+    {
+      "id": "camp_kit",
+      "name": "前哨建造包",
+      "category": "consumable",
+      "measure": { "kind": "count", "unit": "个", "quantumG": null, "unitMassG": 6000 },
+      "phase": "B",
+      "sources": ["地图室二级+工坊二级(木板2+绳索2+布料2+铁锭0.5kg)"],
+      "uses": ["在已抵达的合法地点建立补给前哨"],
+      "icon": { "semanticId": null, "status": "missing" },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.3",
+      "notes": ["不远程凭空落点;按件一次消耗,重试建造不能重复扣"]
+    },
+    {
+      "id": "bandage",
+      "name": "绷带",
+      "category": "consumable",
+      "measure": { "kind": "count", "unit": "份", "quantumG": null, "unitMassG": 200 },
+      "phase": "B",
+      "sources": ["补给所一级(布料1卷+水0.1kg)"],
+      "uses": ["未来战后恢复10%最大生命,仅安全停留使用"],
+      "icon": { "semanticId": null, "status": "missing" },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.3",
+      "notes": ["启用条件:战后恢复一起实施;便宜恢复选项,不能战斗中无条件回血"]
+    },
+    {
+      "id": "torch",
+      "name": "火把",
+      "category": "consumable",
+      "measure": { "kind": "count", "unit": "支", "quantumG": null, "unitMassG": 500 },
+      "phase": "C",
+      "sources": ["手作(木料0.5kg+纤维0.05kg+树脂0.05kg)"],
+      "uses": ["未来照亮地下/夜间范围,持续一段探索任务"],
+      "icon": { "semanticId": null, "status": "missing" },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.3",
+      "notes": ["夜间内容启用后消耗;持续时间等参数设计未定,记null不入数值"]
+    },
+    {
+      "id": "warming_salve",
+      "name": "保暖药膏",
+      "category": "consumable",
+      "measure": { "kind": "count", "unit": "份", "quantumG": null, "unitMassG": 250 },
+      "phase": "C",
+      "sources": ["补给所三级(萃取液0.1kg+树脂0.1kg+水0.2kg)"],
+      "uses": ["寒冷地貌一次短趟减轻环境效率惩罚"],
+      "icon": { "semanticId": null, "status": "missing" },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.3",
+      "notes": ["环境状态消费者;按目的地装载"]
+    },
+    {
+      "id": "cooling_salve",
+      "name": "清凉冷敷",
+      "category": "consumable",
+      "measure": { "kind": "count", "unit": "份", "quantumG": null, "unitMassG": 250 },
+      "phase": "C",
+      "sources": ["补给所三级(萃取液0.1kg+凝胶0.1kg+水0.2kg)"],
+      "uses": ["炎热地貌一次短趟减轻环境效率惩罚"],
+      "icon": { "semanticId": null, "status": "missing" },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.3",
+      "notes": ["与保暖互斥,按气候使用;没有环境状态就隐藏"]
+    }
+  ]
+}

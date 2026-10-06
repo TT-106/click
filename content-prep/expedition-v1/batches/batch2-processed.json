@@ -1,0 +1,151 @@
+{
+  "batch": 2,
+  "category": "processed",
+  "expected": 12,
+  "items": [
+    {
+      "id": "plank",
+      "name": "木板",
+      "category": "processed",
+      "measure": { "kind": "count", "unit": "块", "quantumG": null, "unitMassG": 2000 },
+      "phase": "A",
+      "sources": ["手作或工坊(木料3kg/块)"],
+      "uses": ["建筑", "工具", "货运设施"],
+      "icon": { "semanticId": null, "status": "missing" },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.2",
+      "notes": ["第一条加工链;初始手作4分钟可用,工坊2分钟"]
+    },
+    {
+      "id": "brick",
+      "name": "砖块",
+      "category": "processed",
+      "measure": { "kind": "count", "unit": "块", "quantumG": null, "unitMassG": 2000 },
+      "phase": "A",
+      "sources": ["炉窑(黏土2kg+木炭0.25kg)"],
+      "uses": ["二三级建筑", "水井升级"],
+      "icon": { "semanticId": null, "status": "missing" },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.2",
+      "notes": ["炉窑一级即可生产;消费集中在二/三级升级与水井升级"]
+    },
+    {
+      "id": "charcoal",
+      "name": "木炭",
+      "category": "processed",
+      "measure": { "kind": "mass", "unit": "g", "quantumG": null, "unitMassG": null },
+      "phase": "A",
+      "sources": ["炉窑(木料4kg→2kg)"],
+      "uses": ["冶炼", "烘焙", "砖块"],
+      "icon": { "semanticId": null, "status": "missing" },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.2",
+      "notes": ["整批生产:需求1kg仍做一批产2kg,余1kg入仓;基础锅灶可直接用木料"]
+    },
+    {
+      "id": "copper_ingot",
+      "name": "铜锭",
+      "category": "processed",
+      "measure": { "kind": "mass", "unit": "g", "quantumG": null, "unitMassG": null },
+      "phase": "A",
+      "sources": ["炉窑一级(铜矿2kg+木炭0.5kg)"],
+      "uses": ["工具替代配方", "修理", "建筑紧固替代(1:1替铁锭)"],
+      "icon": { "semanticId": "material.copper-bar", "status": "registered" },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.2",
+      "notes": []
+    },
+    {
+      "id": "iron_ingot",
+      "name": "铁锭",
+      "category": "processed",
+      "measure": { "kind": "mass", "unit": "g", "quantumG": null, "unitMassG": null },
+      "phase": "A",
+      "sources": ["炉窑一级(铁矿2kg+木炭0.5kg)"],
+      "uses": ["主要工具", "建筑", "五金"],
+      "icon": { "semanticId": "material.iron-bar", "status": "registered" },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.2",
+      "notes": ["炉窑一级不得先要求铁锭"]
+    },
+    {
+      "id": "silver_ingot",
+      "name": "银锭",
+      "category": "processed",
+      "measure": { "kind": "mass", "unit": "g", "quantumG": null, "unitMassG": null },
+      "phase": "B",
+      "sources": ["炉窑二级(银矿2kg+木炭0.5kg)"],
+      "uses": ["可选施法器具", "外观强化"],
+      "icon": { "semanticId": "material.silver-bar", "status": "registered" },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.2",
+      "notes": ["可选分支"]
+    },
+    {
+      "id": "cloth",
+      "name": "布料",
+      "category": "processed",
+      "measure": { "kind": "count", "unit": "卷", "quantumG": null, "unitMassG": 500 },
+      "phase": "A",
+      "sources": ["工坊一级(纤维0.75kg)"],
+      "uses": ["背包", "补给", "建筑"],
+      "icon": { "semanticId": null, "status": "missing" },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.2",
+      "notes": []
+    },
+    {
+      "id": "rope",
+      "name": "绳索",
+      "category": "processed",
+      "measure": { "kind": "count", "unit": "卷", "quantumG": null, "unitMassG": 500 },
+      "phase": "A",
+      "sources": ["手作或工坊(纤维0.6kg)"],
+      "uses": ["工具", "建筑", "前哨"],
+      "icon": { "semanticId": null, "status": "missing" },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.2",
+      "notes": ["初始手作4分钟可用;已注册material.rod为金属棒语义不符,不作rope图标,保留缺口"]
+    },
+    {
+      "id": "nails",
+      "name": "五金钉料",
+      "category": "processed",
+      "measure": { "kind": "mass", "unit": "g", "quantumG": null, "unitMassG": null },
+      "phase": "B",
+      "sources": ["工坊二级(铜锭或铁锭0.6kg)"],
+      "uses": ["修理", "精制工具", "强化背包"],
+      "icon": { "semanticId": "material.nails", "status": "registered" },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.2",
+      "notes": ["铜/铁任选一种anyOf,不同时扣"]
+    },
+    {
+      "id": "treated_leather",
+      "name": "强韧革",
+      "category": "processed",
+      "measure": { "kind": "count", "unit": "张", "quantumG": null, "unitMassG": 800 },
+      "phase": "B",
+      "sources": ["工坊二级(皮料2张+树脂0.1kg)"],
+      "uses": ["耐候背包", "护具升级"],
+      "icon": { "semanticId": null, "status": "missing" },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.2",
+      "notes": ["耐候分支;普通皮料仍可做基础护具"]
+    },
+    {
+      "id": "herb_extract",
+      "name": "草药萃取液",
+      "category": "processed",
+      "measure": { "kind": "mass", "unit": "g", "quantumG": null, "unitMassG": null },
+      "phase": "B",
+      "sources": ["补给所二级(药草0.5kg+水0.2kg)"],
+      "uses": ["环境用品", "药剂"],
+      "icon": { "semanticId": null, "status": "missing" },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.2",
+      "notes": ["常规治疗保留直接药草配方,不强迫所有药物多一级链"]
+    },
+    {
+      "id": "steel_ingot",
+      "name": "精钢",
+      "category": "processed",
+      "measure": { "kind": "mass", "unit": "g", "quantumG": null, "unitMassG": null },
+      "phase": "C",
+      "sources": ["炉窑三级(铁锭1kg+煤或木炭0.2kg)"],
+      "uses": ["可选高阶工具/武器升级"],
+      "icon": { "semanticId": null, "status": "missing" },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.2",
+      "notes": ["燃料煤/木炭anyOf仅选一种;不是新配方全面替换铁锭"]
+    }
+  ]
+}

@@ -1,0 +1,1609 @@
+{
+  "schemaVersion": 1,
+  "status": "planned-not-wired",
+  "expectTotal": 53,
+  "recipes": [
+    {
+      "id": "plank-workshop",
+      "name": "木板(工坊)",
+      "station": "workshop",
+      "level": 1,
+      "phase": "A",
+      "inputs": [
+        {
+          "id": "wood",
+          "qty": 3000
+        }
+      ],
+      "outputs": [
+        {
+          "id": "plank",
+          "qty": 1
+        }
+      ],
+      "baseTimeMs": 120000,
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.1",
+      "notes": []
+    },
+    {
+      "id": "plank-handcraft",
+      "name": "木板(手作)",
+      "station": "handcraft",
+      "level": 0,
+      "phase": "A",
+      "inputs": [
+        {
+          "id": "wood",
+          "qty": 3000
+        }
+      ],
+      "outputs": [
+        {
+          "id": "plank",
+          "qty": 1
+        }
+      ],
+      "baseTimeMs": 240000,
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.1",
+      "notes": [
+        "免费手作初始可用,速度为工坊一半"
+      ]
+    },
+    {
+      "id": "brick",
+      "name": "砖块",
+      "station": "smelter",
+      "level": 1,
+      "phase": "A",
+      "inputs": [
+        {
+          "id": "clay",
+          "qty": 2000
+        },
+        {
+          "id": "charcoal",
+          "qty": 250
+        }
+      ],
+      "outputs": [
+        {
+          "id": "brick",
+          "qty": 1
+        }
+      ],
+      "baseTimeMs": 180000,
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.1",
+      "notes": [
+        "燃料质量作为排放,不记垃圾物品"
+      ]
+    },
+    {
+      "id": "charcoal",
+      "name": "木炭",
+      "station": "smelter",
+      "level": 1,
+      "phase": "A",
+      "inputs": [
+        {
+          "id": "wood",
+          "qty": 4000
+        }
+      ],
+      "outputs": [
+        {
+          "id": "charcoal",
+          "qty": 2000
+        }
+      ],
+      "baseTimeMs": 180000,
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.1",
+      "notes": [
+        "整批开工:需求1000g仍做一批,余1000g入仓;不得吃光建筑木料储备"
+      ]
+    },
+    {
+      "id": "copper-smelt",
+      "name": "铜冶炼",
+      "station": "smelter",
+      "level": 1,
+      "phase": "A",
+      "inputs": [
+        {
+          "id": "copper",
+          "qty": 2000
+        },
+        {
+          "id": "charcoal",
+          "qty": 500
+        }
+      ],
+      "outputs": [
+        {
+          "id": "copper_ingot",
+          "qty": 1000
+        }
+      ],
+      "baseTimeMs": 240000,
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.1",
+      "notes": []
+    },
+    {
+      "id": "iron-smelt",
+      "name": "铁冶炼",
+      "station": "smelter",
+      "level": 1,
+      "phase": "A",
+      "inputs": [
+        {
+          "id": "iron",
+          "qty": 2000
+        },
+        {
+          "id": "charcoal",
+          "qty": 500
+        }
+      ],
+      "outputs": [
+        {
+          "id": "iron_ingot",
+          "qty": 1000
+        }
+      ],
+      "baseTimeMs": 240000,
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.1",
+      "notes": [
+        "炉窑一级不得先要求铁锭"
+      ]
+    },
+    {
+      "id": "silver-smelt",
+      "name": "银冶炼",
+      "station": "smelter",
+      "level": 2,
+      "phase": "B",
+      "inputs": [
+        {
+          "id": "silver",
+          "qty": 2000
+        },
+        {
+          "id": "charcoal",
+          "qty": 500
+        }
+      ],
+      "outputs": [
+        {
+          "id": "silver_ingot",
+          "qty": 1000
+        }
+      ],
+      "baseTimeMs": 360000,
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.1",
+      "notes": [
+        "可选分支"
+      ]
+    },
+    {
+      "id": "cloth",
+      "name": "布料",
+      "station": "workshop",
+      "level": 1,
+      "phase": "A",
+      "inputs": [
+        {
+          "id": "fiber",
+          "qty": 750
+        }
+      ],
+      "outputs": [
+        {
+          "id": "cloth",
+          "qty": 1
+        }
+      ],
+      "baseTimeMs": 120000,
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.1",
+      "notes": []
+    },
+    {
+      "id": "rope-workshop",
+      "name": "绳索(工坊)",
+      "station": "workshop",
+      "level": 1,
+      "phase": "A",
+      "inputs": [
+        {
+          "id": "fiber",
+          "qty": 600
+        }
+      ],
+      "outputs": [
+        {
+          "id": "rope",
+          "qty": 1
+        }
+      ],
+      "baseTimeMs": 120000,
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.1",
+      "notes": []
+    },
+    {
+      "id": "rope-handcraft",
+      "name": "绳索(手作)",
+      "station": "handcraft",
+      "level": 0,
+      "phase": "A",
+      "inputs": [
+        {
+          "id": "fiber",
+          "qty": 600
+        }
+      ],
+      "outputs": [
+        {
+          "id": "rope",
+          "qty": 1
+        }
+      ],
+      "baseTimeMs": 240000,
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.1",
+      "notes": [
+        "免费手作初始可用"
+      ]
+    },
+    {
+      "id": "nails",
+      "name": "五金钉料",
+      "station": "workshop",
+      "level": 2,
+      "phase": "B",
+      "inputs": [],
+      "anyOf": [
+        {
+          "options": [
+            {
+              "id": "copper_ingot",
+              "qty": 600
+            },
+            {
+              "id": "iron_ingot",
+              "qty": 600
+            }
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "id": "nails",
+          "qty": 500
+        }
+      ],
+      "baseTimeMs": 120000,
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.1",
+      "notes": [
+        "默认选储备充足的一种,不同时扣两种(设计6.1五金行)"
+      ]
+    },
+    {
+      "id": "ration-supply",
+      "name": "口粮(补给所)",
+      "station": "supply",
+      "level": 1,
+      "phase": "A",
+      "inputs": [
+        {
+          "id": "wild_food",
+          "qty": 500
+        },
+        {
+          "id": "water",
+          "qty": 200
+        },
+        {
+          "id": "wood",
+          "qty": 100
+        }
+      ],
+      "outputs": [
+        {
+          "id": "ration",
+          "qty": 1
+        }
+      ],
+      "baseTimeMs": 60000,
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.1",
+      "notes": []
+    },
+    {
+      "id": "ration-campfire",
+      "name": "口粮(篝火)",
+      "station": "campfire",
+      "level": 0,
+      "phase": "A",
+      "inputs": [
+        {
+          "id": "wild_food",
+          "qty": 500
+        },
+        {
+          "id": "water",
+          "qty": 200
+        },
+        {
+          "id": "wood",
+          "qty": 100
+        }
+      ],
+      "outputs": [
+        {
+          "id": "ration",
+          "qty": 1
+        }
+      ],
+      "baseTimeMs": 120000,
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.1",
+      "notes": [
+        "初始篝火可用,速度为补给所一半"
+      ]
+    },
+    {
+      "id": "healing-potion",
+      "name": "治疗药剂",
+      "station": "supply",
+      "level": 2,
+      "phase": "B",
+      "inputs": [
+        {
+          "id": "water",
+          "qty": 200
+        }
+      ],
+      "anyOf": [
+        {
+          "options": [
+            {
+              "id": "herb",
+              "qty": 200
+            },
+            {
+              "id": "slime_gel",
+              "qty": 200
+            }
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "id": "healing_potion",
+          "qty": 1
+        }
+      ],
+      "baseTimeMs": 120000,
+      "visibleWhen": "combat-consumers",
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.1",
+      "notes": [
+        "药草/凝胶任选替代;待战斗消费能力实施,未启用前隐藏"
+      ]
+    },
+    {
+      "id": "antitoxin",
+      "name": "解毒剂",
+      "station": "supply",
+      "level": 2,
+      "phase": "B",
+      "inputs": [
+        {
+          "id": "herb",
+          "qty": 300
+        },
+        {
+          "id": "charcoal",
+          "qty": 50
+        },
+        {
+          "id": "water",
+          "qty": 200
+        }
+      ],
+      "outputs": [
+        {
+          "id": "antitoxin",
+          "qty": 1
+        }
+      ],
+      "baseTimeMs": 120000,
+      "visibleWhen": "combat-consumers",
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.1",
+      "notes": [
+        "普通湿地用途;启用与战斗/环境状态消费者一起"
+      ]
+    },
+    {
+      "id": "mana-potion",
+      "name": "专注药剂",
+      "station": "supply",
+      "level": 3,
+      "phase": "C",
+      "inputs": [
+        {
+          "id": "herb",
+          "qty": 200
+        },
+        {
+          "id": "water",
+          "qty": 200
+        }
+      ],
+      "anyOf": [
+        {
+          "options": [
+            {
+              "id": "crystal",
+              "qty": 50
+            },
+            {
+              "id": "mana_dust",
+              "qty": 50
+            }
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "id": "mana_potion",
+          "qty": 1
+        }
+      ],
+      "baseTimeMs": 180000,
+      "visibleWhen": "casting-consumers",
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.1",
+      "notes": [
+        "晶石/魔力尘任选;不是必需续航"
+      ]
+    },
+    {
+      "id": "repair-kit",
+      "name": "修理包",
+      "station": "workshop",
+      "level": 2,
+      "phase": "B",
+      "inputs": [
+        {
+          "id": "nails",
+          "qty": 100
+        },
+        {
+          "id": "resin",
+          "qty": 100
+        },
+        {
+          "id": "cloth",
+          "qty": 1
+        }
+      ],
+      "outputs": [
+        {
+          "id": "repair_kit",
+          "qty": 1
+        }
+      ],
+      "baseTimeMs": 120000,
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.1",
+      "notes": []
+    },
+    {
+      "id": "treated-leather",
+      "name": "强韧革",
+      "station": "workshop",
+      "level": 2,
+      "phase": "B",
+      "inputs": [
+        {
+          "id": "leather",
+          "qty": 2
+        },
+        {
+          "id": "resin",
+          "qty": 100
+        }
+      ],
+      "outputs": [
+        {
+          "id": "treated_leather",
+          "qty": 1
+        }
+      ],
+      "baseTimeMs": 180000,
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.1",
+      "notes": [
+        "耐候分支"
+      ]
+    },
+    {
+      "id": "herb-extract",
+      "name": "草药萃取液",
+      "station": "supply",
+      "level": 2,
+      "phase": "B",
+      "inputs": [
+        {
+          "id": "herb",
+          "qty": 500
+        },
+        {
+          "id": "water",
+          "qty": 200
+        }
+      ],
+      "outputs": [
+        {
+          "id": "herb_extract",
+          "qty": 200
+        }
+      ],
+      "baseTimeMs": 180000,
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.1",
+      "notes": [
+        "普通治疗保留直接药草配方"
+      ]
+    },
+    {
+      "id": "steel-ingot",
+      "name": "精钢",
+      "station": "smelter",
+      "level": 3,
+      "phase": "C",
+      "inputs": [
+        {
+          "id": "iron_ingot",
+          "qty": 1000
+        }
+      ],
+      "anyOf": [
+        {
+          "options": [
+            {
+              "id": "coal",
+              "qty": 200
+            },
+            {
+              "id": "charcoal",
+              "qty": 200
+            }
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "id": "steel_ingot",
+          "qty": 800
+        }
+      ],
+      "baseTimeMs": 360000,
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.1",
+      "notes": [
+        "燃料煤/木炭任选一种"
+      ]
+    },
+    {
+      "id": "bandage",
+      "name": "绷带",
+      "station": "supply",
+      "level": 1,
+      "phase": "B",
+      "inputs": [
+        {
+          "id": "cloth",
+          "qty": 1
+        },
+        {
+          "id": "water",
+          "qty": 100
+        }
+      ],
+      "outputs": [
+        {
+          "id": "bandage",
+          "qty": 2
+        }
+      ],
+      "baseTimeMs": 120000,
+      "visibleWhen": "combat-consumers",
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.1",
+      "notes": [
+        "一批2份;实际战后恢复一起实施"
+      ]
+    },
+    {
+      "id": "torch",
+      "name": "火把",
+      "station": "handcraft",
+      "level": 0,
+      "phase": "C",
+      "inputs": [
+        {
+          "id": "wood",
+          "qty": 500
+        },
+        {
+          "id": "fiber",
+          "qty": 50
+        },
+        {
+          "id": "resin",
+          "qty": 50
+        }
+      ],
+      "outputs": [
+        {
+          "id": "torch",
+          "qty": 1
+        }
+      ],
+      "baseTimeMs": 120000,
+      "visibleWhen": "night-content",
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.1",
+      "notes": [
+        "夜间内容启用才提供任务;持续时间未定案"
+      ]
+    },
+    {
+      "id": "warming-salve",
+      "name": "保暖药膏",
+      "station": "supply",
+      "level": 3,
+      "phase": "C",
+      "inputs": [
+        {
+          "id": "herb_extract",
+          "qty": 100
+        },
+        {
+          "id": "resin",
+          "qty": 100
+        },
+        {
+          "id": "water",
+          "qty": 200
+        }
+      ],
+      "outputs": [
+        {
+          "id": "warming_salve",
+          "qty": 1
+        }
+      ],
+      "baseTimeMs": 180000,
+      "visibleWhen": "environment-states",
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.1",
+      "notes": [
+        "寒冷环境状态消费者"
+      ]
+    },
+    {
+      "id": "cooling-salve",
+      "name": "清凉冷敷",
+      "station": "supply",
+      "level": 3,
+      "phase": "C",
+      "inputs": [
+        {
+          "id": "herb_extract",
+          "qty": 100
+        },
+        {
+          "id": "slime_gel",
+          "qty": 100
+        },
+        {
+          "id": "water",
+          "qty": 200
+        }
+      ],
+      "outputs": [
+        {
+          "id": "cooling_salve",
+          "qty": 1
+        }
+      ],
+      "baseTimeMs": 180000,
+      "visibleWhen": "environment-states",
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.1",
+      "notes": [
+        "炎热环境状态消费者;与保暖互斥"
+      ]
+    },
+    {
+      "id": "well-water-L1",
+      "name": "水井取水(一级)",
+      "station": "well",
+      "level": 1,
+      "phase": "A",
+      "inputs": [],
+      "outputs": [
+        {
+          "id": "water",
+          "qty": 1000
+        }
+      ],
+      "baseTimeMs": 120000,
+      "externalSource": "水井:地下水,有条件取水过程,不能在任意悬崖/屋顶放井;初始基地提供手动逻辑安全取水任务保底",
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.1",
+      "notes": [
+        "默认蓄水目标20kg;不要求定时收水,无离线溢出损失"
+      ]
+    },
+    {
+      "id": "well-water-L2",
+      "name": "水井取水(二级)",
+      "station": "well",
+      "level": 2,
+      "phase": "B",
+      "inputs": [],
+      "outputs": [
+        {
+          "id": "water",
+          "qty": 1000
+        }
+      ],
+      "baseTimeMs": 108000,
+      "externalSource": "水井:地下水(设计6.1:每批仍1kg,时间缩短)",
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.1",
+      "notes": [
+        "蓄水40kg;约+11%速度=120000/108000;升级在制批次按开工时长完成"
+      ]
+    },
+    {
+      "id": "well-water-L3",
+      "name": "水井取水(三级)",
+      "station": "well",
+      "level": 3,
+      "phase": "C",
+      "inputs": [],
+      "outputs": [
+        {
+          "id": "water",
+          "qty": 1000
+        }
+      ],
+      "baseTimeMs": 96000,
+      "externalSource": "水井:地下水(设计6.1:每批仍1kg,时间缩短)",
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.1",
+      "notes": [
+        "蓄水60kg;总+25%速度=120000/96000"
+      ]
+    },
+    {
+      "id": "garden-food",
+      "name": "园圃食材线",
+      "station": "garden",
+      "level": 1,
+      "phase": "B",
+      "inputs": [
+        {
+          "id": "water",
+          "qty": 500
+        }
+      ],
+      "outputs": [
+        {
+          "id": "wild_food",
+          "qty": 500
+        }
+      ],
+      "baseTimeMs": 300000,
+      "externalSource": "园圃:土壤/光照不计入质量账;基础野生移栽来自已采到的对应食材",
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.1",
+      "notes": [
+        "一条产线依次补货;产出率和储备目标限制作用,不是无限材料工厂"
+      ]
+    },
+    {
+      "id": "garden-fiber",
+      "name": "园圃纤维线",
+      "station": "garden",
+      "level": 1,
+      "phase": "B",
+      "inputs": [
+        {
+          "id": "water",
+          "qty": 500
+        }
+      ],
+      "outputs": [
+        {
+          "id": "fiber",
+          "qty": 250
+        }
+      ],
+      "baseTimeMs": 300000,
+      "externalSource": "园圃:土壤/光照不计入质量账;基础野生移栽来自已采到的对应纤维",
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.1",
+      "notes": []
+    },
+    {
+      "id": "garden-herb",
+      "name": "园圃药草线",
+      "station": "garden",
+      "level": 1,
+      "phase": "B",
+      "inputs": [
+        {
+          "id": "water",
+          "qty": 500
+        }
+      ],
+      "outputs": [
+        {
+          "id": "herb",
+          "qty": 100
+        }
+      ],
+      "baseTimeMs": 300000,
+      "externalSource": "园圃:土壤/光照不计入质量账;未发现药草时药草线不可用",
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.1",
+      "notes": []
+    },
+    {
+      "id": "copper-axe",
+      "name": "铜斧",
+      "station": "workshop",
+      "level": 1,
+      "phase": "A",
+      "inputs": [
+        {
+          "id": "copper_ingot",
+          "qty": 500
+        },
+        {
+          "id": "rope",
+          "qty": 1
+        }
+      ],
+      "anyOf": [
+        {
+          "options": [
+            {
+              "id": "plank",
+              "qty": 1
+            },
+            {
+              "id": "beast_bone",
+              "qty": 4
+            }
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "id": "axe",
+          "qty": 1,
+          "variant": "copper"
+        }
+      ],
+      "baseTimeMs": 180000,
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.2",
+      "notes": [
+        "解锁=工坊一级+炉窑一级;工具柄兽骨4根替代1木板,质量与基础效率相同(设计6.3)"
+      ]
+    },
+    {
+      "id": "copper-pickaxe",
+      "name": "铜镐",
+      "station": "workshop",
+      "level": 1,
+      "phase": "A",
+      "inputs": [
+        {
+          "id": "copper_ingot",
+          "qty": 500
+        },
+        {
+          "id": "rope",
+          "qty": 1
+        }
+      ],
+      "anyOf": [
+        {
+          "options": [
+            {
+              "id": "plank",
+              "qty": 1
+            },
+            {
+              "id": "beast_bone",
+              "qty": 4
+            }
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "id": "pickaxe",
+          "qty": 1,
+          "variant": "copper"
+        }
+      ],
+      "baseTimeMs": 180000,
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.2",
+      "notes": [
+        "解锁=工坊一级+炉窑一级"
+      ]
+    },
+    {
+      "id": "iron-axe",
+      "name": "铁斧",
+      "station": "workshop",
+      "level": 2,
+      "phase": "B",
+      "inputs": [
+        {
+          "id": "iron_ingot",
+          "qty": 500
+        },
+        {
+          "id": "rope",
+          "qty": 1
+        }
+      ],
+      "anyOf": [
+        {
+          "options": [
+            {
+              "id": "plank",
+              "qty": 1
+            },
+            {
+              "id": "beast_bone",
+              "qty": 4
+            }
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "id": "axe",
+          "qty": 1,
+          "variant": "iron"
+        }
+      ],
+      "baseTimeMs": 180000,
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.2",
+      "notes": []
+    },
+    {
+      "id": "iron-pickaxe",
+      "name": "铁镐",
+      "station": "workshop",
+      "level": 2,
+      "phase": "B",
+      "inputs": [
+        {
+          "id": "iron_ingot",
+          "qty": 500
+        },
+        {
+          "id": "rope",
+          "qty": 1
+        }
+      ],
+      "anyOf": [
+        {
+          "options": [
+            {
+              "id": "plank",
+              "qty": 1
+            },
+            {
+              "id": "beast_bone",
+              "qty": 4
+            }
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "id": "pickaxe",
+          "qty": 1,
+          "variant": "iron"
+        }
+      ],
+      "baseTimeMs": 180000,
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.2",
+      "notes": []
+    },
+    {
+      "id": "gathering-knife",
+      "name": "采集刀",
+      "station": "workshop",
+      "level": 1,
+      "phase": "A",
+      "inputs": [
+        {
+          "id": "iron_ingot",
+          "qty": 200
+        },
+        {
+          "id": "rope",
+          "qty": 1
+        }
+      ],
+      "outputs": [
+        {
+          "id": "gathering_knife",
+          "qty": 1,
+          "variant": "iron"
+        }
+      ],
+      "baseTimeMs": 120000,
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.2",
+      "notes": [
+        "基础刀初始提供"
+      ]
+    },
+    {
+      "id": "backpack-cloth",
+      "name": "布背包(28kg)",
+      "station": "workshop",
+      "level": 1,
+      "phase": "A",
+      "inputs": [
+        {
+          "id": "cloth",
+          "qty": 2
+        },
+        {
+          "id": "rope",
+          "qty": 1
+        }
+      ],
+      "outputs": [
+        {
+          "id": "backpack",
+          "qty": 1,
+          "variant": "cloth-28kg",
+          "resultMassG": 700
+        }
+      ],
+      "baseTimeMs": 180000,
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.2",
+      "notes": [
+        "替代皮料门槛;舒适负重24→28kg,包自身500→700g"
+      ]
+    },
+    {
+      "id": "backpack-reinforced",
+      "name": "强化背包(32kg)",
+      "station": "workshop",
+      "level": 2,
+      "phase": "B",
+      "inputs": [
+        {
+          "id": "cloth",
+          "qty": 3
+        },
+        {
+          "id": "leather",
+          "qty": 2
+        },
+        {
+          "id": "rope",
+          "qty": 2
+        },
+        {
+          "id": "nails",
+          "qty": 200
+        }
+      ],
+      "outputs": [
+        {
+          "id": "backpack",
+          "qty": 1,
+          "variant": "reinforced-32kg",
+          "resultMassG": 900
+        }
+      ],
+      "baseTimeMs": 240000,
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.2",
+      "notes": [
+        "皮料有普通替代采购任务"
+      ]
+    },
+    {
+      "id": "water-container-reinforced",
+      "name": "加固水袋(2kg)",
+      "station": "workshop",
+      "level": 2,
+      "phase": "B",
+      "inputs": [
+        {
+          "id": "leather",
+          "qty": 1
+        },
+        {
+          "id": "cloth",
+          "qty": 1
+        },
+        {
+          "id": "resin",
+          "qty": 100
+        }
+      ],
+      "outputs": [
+        {
+          "id": "water_container",
+          "qty": 1,
+          "variant": "reinforced-2kg",
+          "resultMassG": 350
+        }
+      ],
+      "baseTimeMs": 180000,
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.2",
+      "notes": [
+        "初始水袋已提供;容量1→2kg,空袋200→350g"
+      ]
+    },
+    {
+      "id": "lantern",
+      "name": "提灯",
+      "station": "workshop",
+      "level": 1,
+      "phase": "C",
+      "inputs": [
+        {
+          "id": "copper_ingot",
+          "qty": 300
+        },
+        {
+          "id": "plank",
+          "qty": 1
+        },
+        {
+          "id": "resin",
+          "qty": 100
+        }
+      ],
+      "outputs": [
+        {
+          "id": "lantern",
+          "qty": 1
+        }
+      ],
+      "baseTimeMs": 180000,
+      "visibleWhen": "night-content",
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.2",
+      "notes": [
+        "夜间/洞穴内容一起启用,未启用则隐藏"
+      ]
+    },
+    {
+      "id": "camp-kit",
+      "name": "前哨建造包",
+      "station": "workshop",
+      "level": 2,
+      "phase": "B",
+      "inputs": [
+        {
+          "id": "plank",
+          "qty": 2
+        },
+        {
+          "id": "rope",
+          "qty": 2
+        },
+        {
+          "id": "cloth",
+          "qty": 2
+        },
+        {
+          "id": "iron_ingot",
+          "qty": 500
+        }
+      ],
+      "outputs": [
+        {
+          "id": "camp_kit",
+          "qty": 1
+        }
+      ],
+      "baseTimeMs": 300000,
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.2",
+      "notes": [
+        "解锁=地图室二级+工坊二级;建造包6kg由队伍真实携带"
+      ]
+    },
+    {
+      "id": "short-sword",
+      "name": "短剑",
+      "station": "workshop",
+      "level": 2,
+      "phase": "B",
+      "inputs": [
+        {
+          "id": "plank",
+          "qty": 1
+        },
+        {
+          "id": "iron_ingot",
+          "qty": 1400
+        },
+        {
+          "id": "rope",
+          "qty": 1
+        }
+      ],
+      "outputs": [
+        {
+          "id": "short_sword",
+          "qty": 1
+        }
+      ],
+      "baseTimeMs": 240000,
+      "visibleWhen": "combat-consumers",
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.3",
+      "notes": [
+        "战斗系统一起启用"
+      ]
+    },
+    {
+      "id": "dagger",
+      "name": "匕首",
+      "station": "workshop",
+      "level": 2,
+      "phase": "B",
+      "inputs": [
+        {
+          "id": "iron_ingot",
+          "qty": 400
+        },
+        {
+          "id": "rope",
+          "qty": 1
+        }
+      ],
+      "outputs": [
+        {
+          "id": "dagger",
+          "qty": 1
+        }
+      ],
+      "baseTimeMs": 180000,
+      "visibleWhen": "combat-consumers",
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.3",
+      "notes": []
+    },
+    {
+      "id": "bow",
+      "name": "普通弓",
+      "station": "workshop",
+      "level": 1,
+      "phase": "B",
+      "inputs": [
+        {
+          "id": "plank",
+          "qty": 1
+        },
+        {
+          "id": "rope",
+          "qty": 2
+        },
+        {
+          "id": "feather",
+          "qty": 4
+        }
+      ],
+      "outputs": [
+        {
+          "id": "bow",
+          "qty": 1
+        }
+      ],
+      "baseTimeMs": 240000,
+      "visibleWhen": "combat-consumers",
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.3",
+      "notes": []
+    },
+    {
+      "id": "staff-basic",
+      "name": "基础法杖",
+      "station": "workshop",
+      "level": 1,
+      "phase": "B",
+      "inputs": [
+        {
+          "id": "plank",
+          "qty": 1
+        },
+        {
+          "id": "rope",
+          "qty": 1
+        }
+      ],
+      "outputs": [
+        {
+          "id": "staff",
+          "qty": 1
+        }
+      ],
+      "baseTimeMs": 180000,
+      "visibleWhen": "combat-consumers",
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.3",
+      "notes": [
+        "不需稀有物"
+      ]
+    },
+    {
+      "id": "focus",
+      "name": "法器",
+      "station": "workshop",
+      "level": 2,
+      "phase": "B",
+      "inputs": [
+        {
+          "id": "cloth",
+          "qty": 1
+        },
+        {
+          "id": "copper_ingot",
+          "qty": 200
+        },
+        {
+          "id": "mana_dust",
+          "qty": 50
+        }
+      ],
+      "outputs": [
+        {
+          "id": "focus",
+          "qty": 1
+        }
+      ],
+      "baseTimeMs": 240000,
+      "visibleWhen": "casting-consumers",
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.3",
+      "notes": [
+        "可选施法分支;魔力尘来源在阶段C"
+      ]
+    },
+    {
+      "id": "cloth-robe",
+      "name": "布袍",
+      "station": "workshop",
+      "level": 1,
+      "phase": "B",
+      "inputs": [
+        {
+          "id": "cloth",
+          "qty": 3
+        },
+        {
+          "id": "rope",
+          "qty": 1
+        }
+      ],
+      "outputs": [
+        {
+          "id": "cloth_robe",
+          "qty": 1
+        }
+      ],
+      "baseTimeMs": 240000,
+      "visibleWhen": "combat-consumers",
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.3",
+      "notes": []
+    },
+    {
+      "id": "leather-coat",
+      "name": "皮护衣",
+      "station": "workshop",
+      "level": 2,
+      "phase": "B",
+      "inputs": [
+        {
+          "id": "leather",
+          "qty": 4
+        },
+        {
+          "id": "cloth",
+          "qty": 1
+        },
+        {
+          "id": "rope",
+          "qty": 1
+        }
+      ],
+      "outputs": [
+        {
+          "id": "leather_coat",
+          "qty": 1
+        }
+      ],
+      "baseTimeMs": 240000,
+      "visibleWhen": "combat-consumers",
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.3",
+      "notes": []
+    },
+    {
+      "id": "carapace-armor",
+      "name": "骨/甲壳护甲",
+      "station": "workshop",
+      "level": 2,
+      "phase": "B",
+      "inputs": [
+        {
+          "id": "cloth",
+          "qty": 2
+        },
+        {
+          "id": "rope",
+          "qty": 2
+        },
+        {
+          "id": "iron_ingot",
+          "qty": 300
+        }
+      ],
+      "anyOf": [
+        {
+          "options": [
+            {
+              "id": "beast_bone",
+              "qty": 8
+            },
+            {
+              "id": "chitin",
+              "qty": 8
+            }
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "id": "carapace_armor",
+          "qty": 1
+        }
+      ],
+      "baseTimeMs": 300000,
+      "visibleWhen": "combat-consumers",
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.3",
+      "notes": [
+        "两类骨材任选一种,不同时扣;内部记材质variant"
+      ]
+    },
+    {
+      "id": "staff-crystal-upgrade",
+      "name": "晶石法杖变体",
+      "station": "workshop",
+      "level": 2,
+      "phase": "B",
+      "operation": "upgrade-instance",
+      "targetItemId": "staff",
+      "inputInstanceId": "old-staff-instance",
+      "outputInstanceId": "old-staff-instance",
+      "inputs": [
+        {
+          "id": "copper_ingot",
+          "qty": 300
+        },
+        {
+          "id": "crystal",
+          "qty": 100
+        }
+      ],
+      "resultMassG": 1200,
+      "resultVariant": "crystal",
+      "baseTimeMs": 240000,
+      "visibleWhen": "combat-consumers",
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.3",
+      "notes": [
+        "原实例升级,质量1kg→1.2kg,不复制旧杖"
+      ]
+    },
+    {
+      "id": "bow-hardwood-upgrade",
+      "name": "硬木弓变体",
+      "station": "workshop",
+      "level": 2,
+      "phase": "B",
+      "operation": "upgrade-instance",
+      "targetItemId": "bow",
+      "inputInstanceId": "old-bow-instance",
+      "outputInstanceId": "old-bow-instance",
+      "inputs": [
+        {
+          "id": "hardwood",
+          "qty": 1000
+        },
+        {
+          "id": "rope",
+          "qty": 1
+        }
+      ],
+      "resultMassG": 1000,
+      "resultVariant": "hardwood",
+      "baseTimeMs": 240000,
+      "visibleWhen": "combat-consumers",
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.3",
+      "notes": [
+        "原实例升级质量1kg;稳定性方向,绝对伤害待遭遇测试"
+      ]
+    },
+    {
+      "id": "short-sword-steel-upgrade",
+      "name": "精钢短剑变体",
+      "station": "workshop",
+      "level": 3,
+      "phase": "C",
+      "operation": "upgrade-instance",
+      "targetItemId": "short_sword",
+      "inputInstanceId": "old-short-sword-instance",
+      "outputInstanceId": "old-short-sword-instance",
+      "inputs": [
+        {
+          "id": "steel_ingot",
+          "qty": 400
+        }
+      ],
+      "resultMassG": 1300,
+      "resultVariant": "steel",
+      "baseTimeMs": 300000,
+      "visibleWhen": "combat-consumers",
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.3",
+      "notes": [
+        "工坊三级;非所有角色必须换精钢"
+      ]
+    },
+    {
+      "id": "leather-coat-weathered-upgrade",
+      "name": "耐候护衣变体",
+      "station": "workshop",
+      "level": 3,
+      "phase": "C",
+      "operation": "upgrade-instance",
+      "targetItemId": "leather_coat",
+      "inputInstanceId": "old-leather-coat-instance",
+      "outputInstanceId": "old-leather-coat-instance",
+      "inputs": [
+        {
+          "id": "treated_leather",
+          "qty": 1
+        },
+        {
+          "id": "rope",
+          "qty": 1
+        }
+      ],
+      "resultMassG": 2200,
+      "resultVariant": "weathered",
+      "baseTimeMs": 240000,
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.3",
+      "notes": [
+        "环境适应分支"
+      ]
+    },
+    {
+      "id": "focus-silver-upgrade",
+      "name": "银饰法器变体",
+      "station": "workshop",
+      "level": 3,
+      "phase": "C",
+      "operation": "upgrade-instance",
+      "targetItemId": "focus",
+      "inputInstanceId": "old-focus-instance",
+      "outputInstanceId": "old-focus-instance",
+      "inputs": [
+        {
+          "id": "silver_ingot",
+          "qty": 200
+        }
+      ],
+      "resultMassG": 500,
+      "resultVariant": "silver",
+      "baseTimeMs": 240000,
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#6.3",
+      "notes": [
+        "可选施法资源管理"
+      ]
+    }
+  ]
+}

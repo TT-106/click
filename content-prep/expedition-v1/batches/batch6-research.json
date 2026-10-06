@@ -1,0 +1,120 @@
+{
+  "batch": 6,
+  "category": "research",
+  "expected": 4,
+  "items": [
+    {
+      "id": "field_notes",
+      "name": "实地记录",
+      "category": "research",
+      "measure": {
+        "kind": "count",
+        "unit": "条",
+        "quantumG": null,
+        "unitMassG": 100
+      },
+      "phase": "B",
+      "sources": [
+        "新地貌/道路/地点的可重复发现记录"
+      ],
+      "uses": [
+        "回顾与可选地图分支"
+      ],
+      "icon": {
+        "semanticId": null,
+        "status": "missing"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.6",
+      "notes": [
+        "不是隐藏稀有掉落;登记后知识存档不再需要一直携带实物"
+      ]
+    },
+    {
+      "id": "blueprint",
+      "name": "配方蓝图",
+      "category": "research",
+      "measure": {
+        "kind": "count",
+        "unit": "张",
+        "quantumG": null,
+        "unitMassG": 50
+      },
+      "phase": "A",
+      "sources": [
+        "首次制作自动登记解锁"
+      ],
+      "uses": [
+        "配方解锁登记",
+        "重复可转装饰研究进度"
+      ],
+      "icon": {
+        "semanticId": null,
+        "status": "missing"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.6",
+      "notes": [
+        "核心配方不靠蓝图随机掉落"
+      ]
+    },
+    {
+      "id": "keepsake",
+      "name": "纪念物",
+      "category": "research",
+      "measure": {
+        "kind": "instance",
+        "unit": "个",
+        "quantumG": null,
+        "unitMassG": null
+      },
+      "phase": "B",
+      "sources": [
+        "旧屋/遗迹纪念物发现"
+      ],
+      "uses": [
+        "命名、来源、发现时间和陈列位"
+      ],
+      "icon": {
+        "semanticId": null,
+        "status": "missing"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.6",
+      "notes": [
+        "按实例配置质量100g-2kg(massRangeG),异常更大物件走货运;不自动消耗,不提供必须战力"
+      ],
+      "massRangeG": [
+        100,
+        2000
+      ]
+    },
+    {
+      "id": "trophy",
+      "name": "特殊战利纪念",
+      "category": "research",
+      "measure": {
+        "kind": "instance",
+        "unit": "个",
+        "quantumG": null,
+        "unitMassG": null
+      },
+      "phase": "C",
+      "sources": [
+        "后续精英/首领首次稳定登记"
+      ],
+      "uses": [
+        "陈列和回顾用途"
+      ],
+      "icon": {
+        "semanticId": null,
+        "status": "missing"
+      },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.6",
+      "notes": [
+        "按实例配置质量100g-2kg(massRangeG);重复不影响主干升级"
+      ],
+      "massRangeG": [
+        100,
+        2000
+      ]
+    }
+  ]
+}

@@ -1,0 +1,92 @@
+:root {
+  --bg: #16211b;
+  --panel: #1f2d24;
+  --panel-2: #26372c;
+  --text: #dce5d2;
+  --muted: #93a58c;
+  --brass: #c9a24b;
+  --wood: #6b4f2a;
+  --line: #3a4f3f;
+  --bad: #d47a5a;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.55 "Microsoft YaHei", system-ui, sans-serif;
+}
+.banner {
+  background: repeating-linear-gradient(45deg, #5a3d20, #5a3d20 12px, #6b4a28 12px, #6b4a28 24px);
+  border-bottom: 2px solid var(--brass);
+  padding: 10px 14px;
+}
+.banner strong { font-size: 17px; color: #ffe9b8; }
+.banner span { display: block; color: #f2e3c8; font-size: 13px; }
+.tabs { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 14px 0; }
+.tabs button {
+  background: var(--panel); color: var(--text); border: 1px solid var(--line);
+  border-bottom: none; border-radius: 8px 8px 0 0; padding: 8px 18px; cursor: pointer;
+  font: inherit;
+}
+.tabs button[aria-selected="true"] { background: var(--panel-2); color: var(--brass); font-weight: bold; }
+.tabs button:focus-visible, .toolbar input:focus-visible, .toolbar select:focus-visible, a:focus-visible {
+  outline: 2px solid var(--brass); outline-offset: 2px;
+}
+main { border-top: 1px solid var(--line); padding: 14px; min-height: 55vh; }
+.toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 12px; }
+.toolbar input, .toolbar select {
+  background: var(--panel-2); color: var(--text); border: 1px solid var(--line);
+  border-radius: 6px; padding: 6px 8px; font: inherit;
+}
+.muted { color: var(--muted); font-size: 13px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 10px; }
+.card {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 10px;
+}
+.card h3 { margin: 0 0 2px; font-size: 15px; color: #f0e6c8; }
+.card .id { color: var(--muted); font-size: 12px; }
+.card .row { margin-top: 6px; font-size: 13px; }
+.badge {
+  display: inline-block; border-radius: 10px; padding: 0 8px; font-size: 12px;
+  border: 1px solid var(--line); background: var(--panel-2); margin-right: 4px;
+}
+.badge.A { color: #9fd48a; } .badge.B { color: #e8c66a; } .badge.C { color: #d47a5a; }
+.badge.reg { color: #9fd48a; } .badge.missing { color: var(--bad); } .badge.pending { color: #e8c66a; }
+.icon-slot {
+  width: 44px; height: 44px; border: 1px solid var(--line); border-radius: 6px;
+  background: var(--panel-2); display: inline-flex; align-items: center; justify-content: center;
+  font-size: 10px; color: var(--muted); vertical-align: top; overflow: hidden;
+}
+.icon-slot canvas { width: 32px; height: 32px; image-rendering: pixelated; }
+table.data { border-collapse: collapse; width: 100%; font-size: 13px; }
+table.data th, table.data td { border: 1px solid var(--line); padding: 5px 8px; text-align: left; vertical-align: top; }
+table.data th { background: var(--panel-2); color: var(--brass); font-weight: normal; }
+.building { margin-bottom: 18px; }
+.building .head { display: flex; gap: 14px; align-items: flex-start; flex-wrap: wrap; }
+.building img.cand {
+  width: 200px; max-width: 45vw; border: 1px solid var(--line); border-radius: 8px;
+  background: #243228; object-fit: contain;
+}
+.anyof { color: #e8c66a; }
+footer { padding: 10px 14px; }
+.table-wrap { overflow-x: auto; }
+.checker {
+  background-image:
+    linear-gradient(45deg, #6e6e6e 25%, transparent 25%, transparent 75%, #6e6e6e 75%),
+    linear-gradient(45deg, #6e6e6e 25%, #969696 25%, #969696 75%, #6e6e6e 75%);
+  background-size: 16px 16px; background-position: 0 0, 8px 8px; background-color: #969696;
+}
+.bg-green { background: #243028; }
+.bg-gray { background: #c8cac6; }
+.swatch { display: inline-block; padding: 6px; border-radius: 6px; margin: 4px; vertical-align: top; }
+.fp-line { position: relative; }
+.fp-line::after {
+  content: ""; position: absolute; left: 0; right: 0; top: var(--fp, 100%);
+  border-top: 2px dashed #ff8f5e;
+}
+@media (max-width: 480px) {
+  .grid { grid-template-columns: 1fr; }
+  .building img.cand { width: 100%; max-width: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}

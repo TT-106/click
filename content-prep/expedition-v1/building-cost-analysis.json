@@ -1,0 +1,2128 @@
+{
+  "schema": 1,
+  "generatedAt": "2026-10-05T02:03:55.770Z",
+  "assumptions": [
+    "默认空成品库存;每次独立展开(场景A),另提供连建场景B(全局共享余量,顺序:工坊→炉窑→水井→仓库→营舍→园圃→补给所→地图室)",
+    "固定普通路线:{\"plank\":\"plank-workshop\",\"rope\":\"rope-workshop\",\"cloth\":\"cloth\",\"brick\":\"brick\",\"charcoal\":\"charcoal\",\"copper_ingot\":\"copper-smelt\",\"iron_ingot\":\"iron-smelt\",\"nails\":\"nails\"};nails 的 anyOf 默认选 iron_ingot(空库存无\"储备充足\"可言,按主干金属选择,可复现)",
+    "假设所需工位等级已存在(工坊一级/炉窑一级等),与设计7.3算例口径一致",
+    "使用基础配方时间;未叠加建筑速度倍率(升级后速度对后续加工的影响未计入,报告注明)",
+    "串行时间是各工位时间之和;并行最短参考 = max(工位时间)+建造时间,不冒充精确调度"
+  ],
+  "examples": {
+    "example1_plank8": "通过",
+    "example2_workshop_l2": "通过"
+  },
+  "perLevel": [
+    {
+      "building": "lodge",
+      "name": "营舍",
+      "level": 1,
+      "free": true,
+      "raw": {},
+      "stationMs": {},
+      "leftovers": {},
+      "batches": [],
+      "note": "初始安全休整、基本工具、默认安全策略"
+    },
+    {
+      "building": "lodge",
+      "name": "营舍",
+      "level": 2,
+      "free": false,
+      "directCost": [
+        "plank×6",
+        "stone×12000",
+        "cloth×2"
+      ],
+      "costAnyOf": [],
+      "raw": {
+        "stone": 12000,
+        "wood": 18000,
+        "fiber": 1500
+      },
+      "rawSummary": [
+        "stone 12000g",
+        "wood 18000g",
+        "fiber 1500g"
+      ],
+      "stationMs": {
+        "workshop": 960000
+      },
+      "stationSummary": [
+        "workshop 16 分钟"
+      ],
+      "totalStationMs": 960000,
+      "buildTimeMs": 120000,
+      "parallelRefMs": 1080000,
+      "leftovers": {
+        "plank": 0,
+        "cloth": 0
+      },
+      "batches": [
+        {
+          "recipeId": "plank-workshop",
+          "batches": 6,
+          "selectedInputs": [
+            {
+              "id": "wood",
+              "qty": 3000
+            }
+          ],
+          "output": "plank×6件"
+        },
+        {
+          "recipeId": "cloth",
+          "batches": 2,
+          "selectedInputs": [
+            {
+              "id": "fiber",
+              "qty": 750
+            }
+          ],
+          "output": "cloth×2件"
+        }
+      ],
+      "note": "常规回营休整效率+10%;保存两套准备方案"
+    },
+    {
+      "building": "lodge",
+      "name": "营舍",
+      "level": 3,
+      "free": false,
+      "directCost": [
+        "plank×18",
+        "brick×12",
+        "rope×4"
+      ],
+      "costAnyOf": [],
+      "raw": {
+        "wood": 62000,
+        "clay": 24000,
+        "fiber": 2400
+      },
+      "rawSummary": [
+        "wood 62000g",
+        "clay 24000g",
+        "fiber 2400g"
+      ],
+      "stationMs": {
+        "workshop": 2640000,
+        "smelter": 2520000
+      },
+      "stationSummary": [
+        "workshop 44 分钟",
+        "smelter 42 分钟"
+      ],
+      "totalStationMs": 5160000,
+      "buildTimeMs": 180000,
+      "parallelRefMs": 2820000,
+      "leftovers": {
+        "plank": 0,
+        "brick": 0,
+        "rope": 0,
+        "charcoal": 1000
+      },
+      "batches": [
+        {
+          "recipeId": "plank-workshop",
+          "batches": 18,
+          "selectedInputs": [
+            {
+              "id": "wood",
+              "qty": 3000
+            }
+          ],
+          "output": "plank×18件"
+        },
+        {
+          "recipeId": "brick",
+          "batches": 12,
+          "selectedInputs": [
+            {
+              "id": "clay",
+              "qty": 2000
+            },
+            {
+              "id": "charcoal",
+              "qty": 250
+            }
+          ],
+          "output": "brick×12件"
+        },
+        {
+          "recipeId": "rope-workshop",
+          "batches": 4,
+          "selectedInputs": [
+            {
+              "id": "fiber",
+              "qty": 600
+            }
+          ],
+          "output": "rope×4件"
+        },
+        {
+          "recipeId": "charcoal",
+          "batches": 2,
+          "selectedInputs": [
+            {
+              "id": "wood",
+              "qty": 4000
+            }
+          ],
+          "output": "charcoal×4000g"
+        }
+      ],
+      "note": "休整效率总+20%;更多队员生活动作"
+    },
+    {
+      "building": "warehouse",
+      "name": "仓库",
+      "level": 1,
+      "free": true,
+      "raw": {},
+      "stationMs": {},
+      "leftovers": {},
+      "batches": [],
+      "note": "初始干货250kg软目标,自动归仓"
+    },
+    {
+      "building": "warehouse",
+      "name": "仓库",
+      "level": 2,
+      "free": false,
+      "directCost": [
+        "plank×8",
+        "stone×12000",
+        "rope×2"
+      ],
+      "costAnyOf": [],
+      "raw": {
+        "stone": 12000,
+        "wood": 24000,
+        "fiber": 1200
+      },
+      "rawSummary": [
+        "stone 12000g",
+        "wood 24000g",
+        "fiber 1200g"
+      ],
+      "stationMs": {
+        "workshop": 1200000
+      },
+      "stationSummary": [
+        "workshop 20 分钟"
+      ],
+      "totalStationMs": 1200000,
+      "buildTimeMs": 120000,
+      "parallelRefMs": 1320000,
+      "leftovers": {
+        "plank": 0,
+        "rope": 0
+      },
+      "batches": [
+        {
+          "recipeId": "plank-workshop",
+          "batches": 8,
+          "selectedInputs": [
+            {
+              "id": "wood",
+              "qty": 3000
+            }
+          ],
+          "output": "plank×8件"
+        },
+        {
+          "recipeId": "rope-workshop",
+          "batches": 2,
+          "selectedInputs": [
+            {
+              "id": "fiber",
+              "qty": 600
+            }
+          ],
+          "output": "rope×2件"
+        }
+      ],
+      "note": "干货500kg;装卸时间-10%;补货方案"
+    },
+    {
+      "building": "warehouse",
+      "name": "仓库",
+      "level": 3,
+      "free": false,
+      "directCost": [
+        "plank×20",
+        "brick×16",
+        "iron_ingot×4000"
+      ],
+      "costAnyOf": [],
+      "raw": {
+        "wood": 72000,
+        "clay": 32000,
+        "iron": 8000
+      },
+      "rawSummary": [
+        "wood 72000g",
+        "clay 32000g",
+        "iron 8000g"
+      ],
+      "stationMs": {
+        "workshop": 2400000,
+        "smelter": 4380000
+      },
+      "stationSummary": [
+        "workshop 40 分钟",
+        "smelter 73 分钟"
+      ],
+      "totalStationMs": 6780000,
+      "buildTimeMs": 180000,
+      "parallelRefMs": 4560000,
+      "leftovers": {
+        "plank": 0,
+        "brick": 0,
+        "iron_ingot": 0,
+        "charcoal": 0
+      },
+      "batches": [
+        {
+          "recipeId": "plank-workshop",
+          "batches": 20,
+          "selectedInputs": [
+            {
+              "id": "wood",
+              "qty": 3000
+            }
+          ],
+          "output": "plank×20件"
+        },
+        {
+          "recipeId": "brick",
+          "batches": 16,
+          "selectedInputs": [
+            {
+              "id": "clay",
+              "qty": 2000
+            },
+            {
+              "id": "charcoal",
+              "qty": 250
+            }
+          ],
+          "output": "brick×16件"
+        },
+        {
+          "recipeId": "iron-smelt",
+          "batches": 4,
+          "selectedInputs": [
+            {
+              "id": "iron",
+              "qty": 2000
+            },
+            {
+              "id": "charcoal",
+              "qty": 500
+            }
+          ],
+          "output": "iron_ingot×4000g"
+        },
+        {
+          "recipeId": "charcoal",
+          "batches": 2,
+          "selectedInputs": [
+            {
+              "id": "wood",
+              "qty": 4000
+            }
+          ],
+          "output": "charcoal×4000g"
+        },
+        {
+          "recipeId": "charcoal",
+          "batches": 1,
+          "selectedInputs": [
+            {
+              "id": "wood",
+              "qty": 4000
+            }
+          ],
+          "output": "charcoal×2000g"
+        }
+      ],
+      "note": "干货1000kg;装卸时间总-20%;前哨货运调度"
+    },
+    {
+      "building": "workshop",
+      "name": "工坊",
+      "level": 1,
+      "free": false,
+      "directCost": [
+        "wood×12000",
+        "stone×6000",
+        "fiber×1000"
+      ],
+      "costAnyOf": [],
+      "raw": {
+        "wood": 12000,
+        "stone": 6000,
+        "fiber": 1000
+      },
+      "rawSummary": [
+        "wood 12000g",
+        "stone 6000g",
+        "fiber 1000g"
+      ],
+      "stationMs": {},
+      "stationSummary": [],
+      "totalStationMs": 0,
+      "buildTimeMs": 60000,
+      "parallelRefMs": 60000,
+      "leftovers": {},
+      "batches": [],
+      "note": "木板、布料、绳索、布背包与铜工具(铜工具另需炉窑一级)"
+    },
+    {
+      "building": "workshop",
+      "name": "工坊",
+      "level": 2,
+      "free": false,
+      "directCost": [
+        "plank×8",
+        "rope×2",
+        "iron_ingot×2000"
+      ],
+      "costAnyOf": [],
+      "raw": {
+        "wood": 28000,
+        "fiber": 1200,
+        "iron": 4000
+      },
+      "rawSummary": [
+        "wood 28000g",
+        "fiber 1200g",
+        "iron 4000g"
+      ],
+      "stationMs": {
+        "workshop": 1200000,
+        "smelter": 660000
+      },
+      "stationSummary": [
+        "workshop 20 分钟",
+        "smelter 11 分钟"
+      ],
+      "totalStationMs": 1860000,
+      "buildTimeMs": 120000,
+      "parallelRefMs": 1320000,
+      "leftovers": {
+        "plank": 0,
+        "rope": 0,
+        "iron_ingot": 0,
+        "charcoal": 1000
+      },
+      "batches": [
+        {
+          "recipeId": "plank-workshop",
+          "batches": 8,
+          "selectedInputs": [
+            {
+              "id": "wood",
+              "qty": 3000
+            }
+          ],
+          "output": "plank×8件"
+        },
+        {
+          "recipeId": "rope-workshop",
+          "batches": 2,
+          "selectedInputs": [
+            {
+              "id": "fiber",
+              "qty": 600
+            }
+          ],
+          "output": "rope×2件"
+        },
+        {
+          "recipeId": "iron-smelt",
+          "batches": 2,
+          "selectedInputs": [
+            {
+              "id": "iron",
+              "qty": 2000
+            },
+            {
+              "id": "charcoal",
+              "qty": 500
+            }
+          ],
+          "output": "iron_ingot×2000g"
+        },
+        {
+          "recipeId": "charcoal",
+          "batches": 1,
+          "selectedInputs": [
+            {
+              "id": "wood",
+              "qty": 4000
+            }
+          ],
+          "output": "charcoal×2000g"
+        }
+      ],
+      "note": "铁工具、强化包、五金、修理;加工速度+10%"
+    },
+    {
+      "building": "workshop",
+      "name": "工坊",
+      "level": 3,
+      "free": false,
+      "directCost": [
+        "plank×20",
+        "iron_ingot×6000",
+        "cloth×4"
+      ],
+      "costAnyOf": [],
+      "raw": {
+        "wood": 68000,
+        "iron": 12000,
+        "fiber": 3000
+      },
+      "rawSummary": [
+        "wood 68000g",
+        "iron 12000g",
+        "fiber 3000g"
+      ],
+      "stationMs": {
+        "workshop": 2880000,
+        "smelter": 1800000
+      },
+      "stationSummary": [
+        "workshop 48 分钟",
+        "smelter 30 分钟"
+      ],
+      "totalStationMs": 4680000,
+      "buildTimeMs": 180000,
+      "parallelRefMs": 3060000,
+      "leftovers": {
+        "plank": 0,
+        "iron_ingot": 0,
+        "cloth": 0,
+        "charcoal": 1000
+      },
+      "batches": [
+        {
+          "recipeId": "plank-workshop",
+          "batches": 20,
+          "selectedInputs": [
+            {
+              "id": "wood",
+              "qty": 3000
+            }
+          ],
+          "output": "plank×20件"
+        },
+        {
+          "recipeId": "iron-smelt",
+          "batches": 6,
+          "selectedInputs": [
+            {
+              "id": "iron",
+              "qty": 2000
+            },
+            {
+              "id": "charcoal",
+              "qty": 500
+            }
+          ],
+          "output": "iron_ingot×6000g"
+        },
+        {
+          "recipeId": "cloth",
+          "batches": 4,
+          "selectedInputs": [
+            {
+              "id": "fiber",
+              "qty": 750
+            }
+          ],
+          "output": "cloth×4件"
+        },
+        {
+          "recipeId": "charcoal",
+          "batches": 2,
+          "selectedInputs": [
+            {
+              "id": "wood",
+              "qty": 4000
+            }
+          ],
+          "output": "charcoal×4000g"
+        }
+      ],
+      "note": "加工速度总+20%;解锁外观与后续装备制作接口"
+    },
+    {
+      "building": "smelter",
+      "name": "炉窑",
+      "level": 1,
+      "free": false,
+      "directCost": [
+        "stone×20000",
+        "clay×8000",
+        "wood×8000"
+      ],
+      "costAnyOf": [],
+      "raw": {
+        "stone": 20000,
+        "clay": 8000,
+        "wood": 8000
+      },
+      "rawSummary": [
+        "stone 20000g",
+        "clay 8000g",
+        "wood 8000g"
+      ],
+      "stationMs": {},
+      "stationSummary": [],
+      "totalStationMs": 0,
+      "buildTimeMs": 60000,
+      "parallelRefMs": 60000,
+      "leftovers": {},
+      "batches": [],
+      "note": "木炭、砖块、铜铁冶炼(原料直接投入,不要求铁锭)"
+    },
+    {
+      "building": "smelter",
+      "name": "炉窑",
+      "level": 2,
+      "free": false,
+      "directCost": [
+        "brick×10",
+        "iron_ingot×2000",
+        "plank×6"
+      ],
+      "costAnyOf": [],
+      "raw": {
+        "clay": 20000,
+        "iron": 4000,
+        "wood": 26000
+      },
+      "rawSummary": [
+        "clay 20000g",
+        "iron 4000g",
+        "wood 26000g"
+      ],
+      "stationMs": {
+        "smelter": 2640000,
+        "workshop": 720000
+      },
+      "stationSummary": [
+        "smelter 44 分钟",
+        "workshop 12 分钟"
+      ],
+      "totalStationMs": 3360000,
+      "buildTimeMs": 120000,
+      "parallelRefMs": 2760000,
+      "leftovers": {
+        "brick": 0,
+        "iron_ingot": 0,
+        "plank": 0,
+        "charcoal": 500
+      },
+      "batches": [
+        {
+          "recipeId": "brick",
+          "batches": 10,
+          "selectedInputs": [
+            {
+              "id": "clay",
+              "qty": 2000
+            },
+            {
+              "id": "charcoal",
+              "qty": 250
+            }
+          ],
+          "output": "brick×10件"
+        },
+        {
+          "recipeId": "iron-smelt",
+          "batches": 2,
+          "selectedInputs": [
+            {
+              "id": "iron",
+              "qty": 2000
+            },
+            {
+              "id": "charcoal",
+              "qty": 500
+            }
+          ],
+          "output": "iron_ingot×2000g"
+        },
+        {
+          "recipeId": "plank-workshop",
+          "batches": 6,
+          "selectedInputs": [
+            {
+              "id": "wood",
+              "qty": 3000
+            }
+          ],
+          "output": "plank×6件"
+        },
+        {
+          "recipeId": "charcoal",
+          "batches": 2,
+          "selectedInputs": [
+            {
+              "id": "wood",
+              "qty": 4000
+            }
+          ],
+          "output": "charcoal×4000g"
+        }
+      ],
+      "note": "银冶炼;加工速度+10%"
+    },
+    {
+      "building": "smelter",
+      "name": "炉窑",
+      "level": 3,
+      "free": false,
+      "directCost": [
+        "brick×24",
+        "iron_ingot×6000",
+        "copper_ingot×4000"
+      ],
+      "costAnyOf": [],
+      "raw": {
+        "clay": 48000,
+        "iron": 12000,
+        "copper": 8000,
+        "wood": 24000
+      },
+      "rawSummary": [
+        "clay 48000g",
+        "iron 12000g",
+        "copper 8000g",
+        "wood 24000g"
+      ],
+      "stationMs": {
+        "smelter": 7800000
+      },
+      "stationSummary": [
+        "smelter 130 分钟"
+      ],
+      "totalStationMs": 7800000,
+      "buildTimeMs": 180000,
+      "parallelRefMs": 7980000,
+      "leftovers": {
+        "brick": 0,
+        "iron_ingot": 0,
+        "copper_ingot": 0,
+        "charcoal": 1000
+      },
+      "batches": [
+        {
+          "recipeId": "brick",
+          "batches": 24,
+          "selectedInputs": [
+            {
+              "id": "clay",
+              "qty": 2000
+            },
+            {
+              "id": "charcoal",
+              "qty": 250
+            }
+          ],
+          "output": "brick×24件"
+        },
+        {
+          "recipeId": "iron-smelt",
+          "batches": 6,
+          "selectedInputs": [
+            {
+              "id": "iron",
+              "qty": 2000
+            },
+            {
+              "id": "charcoal",
+              "qty": 500
+            }
+          ],
+          "output": "iron_ingot×6000g"
+        },
+        {
+          "recipeId": "copper-smelt",
+          "batches": 4,
+          "selectedInputs": [
+            {
+              "id": "copper",
+              "qty": 2000
+            },
+            {
+              "id": "charcoal",
+              "qty": 500
+            }
+          ],
+          "output": "copper_ingot×4000g"
+        },
+        {
+          "recipeId": "charcoal",
+          "batches": 3,
+          "selectedInputs": [
+            {
+              "id": "wood",
+              "qty": 4000
+            }
+          ],
+          "output": "charcoal×6000g"
+        },
+        {
+          "recipeId": "charcoal",
+          "batches": 2,
+          "selectedInputs": [
+            {
+              "id": "wood",
+              "qty": 4000
+            }
+          ],
+          "output": "charcoal×4000g"
+        },
+        {
+          "recipeId": "charcoal",
+          "batches": 1,
+          "selectedInputs": [
+            {
+              "id": "wood",
+              "qty": 4000
+            }
+          ],
+          "output": "charcoal×2000g"
+        }
+      ],
+      "note": "加工速度总+20%;少量可选器具配方(精钢)"
+    },
+    {
+      "building": "well",
+      "name": "水井",
+      "level": 1,
+      "free": false,
+      "directCost": [
+        "stone×12000",
+        "wood×6000"
+      ],
+      "costAnyOf": [],
+      "raw": {
+        "stone": 12000,
+        "wood": 6000
+      },
+      "rawSummary": [
+        "stone 12000g",
+        "wood 6000g"
+      ],
+      "stationMs": {},
+      "stationSummary": [],
+      "totalStationMs": 0,
+      "buildTimeMs": 60000,
+      "parallelRefMs": 60000,
+      "leftovers": {},
+      "batches": [],
+      "note": "自动净水补货,基础蓄水目标20kg(每批1kg/2分钟)"
+    },
+    {
+      "building": "well",
+      "name": "水井",
+      "level": 2,
+      "free": false,
+      "directCost": [
+        "brick×8",
+        "plank×4",
+        "iron_ingot×1000"
+      ],
+      "costAnyOf": [],
+      "raw": {
+        "clay": 16000,
+        "wood": 20000,
+        "iron": 2000
+      },
+      "rawSummary": [
+        "clay 16000g",
+        "wood 20000g",
+        "iron 2000g"
+      ],
+      "stationMs": {
+        "smelter": 2040000,
+        "workshop": 480000
+      },
+      "stationSummary": [
+        "smelter 34 分钟",
+        "workshop 8 分钟"
+      ],
+      "totalStationMs": 2520000,
+      "buildTimeMs": 120000,
+      "parallelRefMs": 2160000,
+      "leftovers": {
+        "brick": 0,
+        "plank": 0,
+        "iron_ingot": 0,
+        "charcoal": 1500
+      },
+      "batches": [
+        {
+          "recipeId": "brick",
+          "batches": 8,
+          "selectedInputs": [
+            {
+              "id": "clay",
+              "qty": 2000
+            },
+            {
+              "id": "charcoal",
+              "qty": 250
+            }
+          ],
+          "output": "brick×8件"
+        },
+        {
+          "recipeId": "plank-workshop",
+          "batches": 4,
+          "selectedInputs": [
+            {
+              "id": "wood",
+              "qty": 3000
+            }
+          ],
+          "output": "plank×4件"
+        },
+        {
+          "recipeId": "iron-smelt",
+          "batches": 1,
+          "selectedInputs": [
+            {
+              "id": "iron",
+              "qty": 2000
+            },
+            {
+              "id": "charcoal",
+              "qty": 500
+            }
+          ],
+          "output": "iron_ingot×1000g"
+        },
+        {
+          "recipeId": "charcoal",
+          "batches": 1,
+          "selectedInputs": [
+            {
+              "id": "wood",
+              "qty": 4000
+            }
+          ],
+          "output": "charcoal×2000g"
+        },
+        {
+          "recipeId": "charcoal",
+          "batches": 1,
+          "selectedInputs": [
+            {
+              "id": "wood",
+              "qty": 4000
+            }
+          ],
+          "output": "charcoal×2000g"
+        }
+      ],
+      "note": "蓄水40kg;生产速度约+11%(每批1kg/1.8分钟)"
+    },
+    {
+      "building": "well",
+      "name": "水井",
+      "level": 3,
+      "free": false,
+      "directCost": [
+        "brick×18",
+        "iron_ingot×4000",
+        "rope×2"
+      ],
+      "costAnyOf": [],
+      "raw": {
+        "clay": 36000,
+        "iron": 8000,
+        "fiber": 1200,
+        "wood": 16000
+      },
+      "rawSummary": [
+        "clay 36000g",
+        "iron 8000g",
+        "fiber 1200g",
+        "wood 16000g"
+      ],
+      "stationMs": {
+        "smelter": 4920000,
+        "workshop": 240000
+      },
+      "stationSummary": [
+        "smelter 82 分钟",
+        "workshop 4 分钟"
+      ],
+      "totalStationMs": 5160000,
+      "buildTimeMs": 180000,
+      "parallelRefMs": 5100000,
+      "leftovers": {
+        "brick": 0,
+        "iron_ingot": 0,
+        "rope": 0,
+        "charcoal": 1500
+      },
+      "batches": [
+        {
+          "recipeId": "brick",
+          "batches": 18,
+          "selectedInputs": [
+            {
+              "id": "clay",
+              "qty": 2000
+            },
+            {
+              "id": "charcoal",
+              "qty": 250
+            }
+          ],
+          "output": "brick×18件"
+        },
+        {
+          "recipeId": "iron-smelt",
+          "batches": 4,
+          "selectedInputs": [
+            {
+              "id": "iron",
+              "qty": 2000
+            },
+            {
+              "id": "charcoal",
+              "qty": 500
+            }
+          ],
+          "output": "iron_ingot×4000g"
+        },
+        {
+          "recipeId": "rope-workshop",
+          "batches": 2,
+          "selectedInputs": [
+            {
+              "id": "fiber",
+              "qty": 600
+            }
+          ],
+          "output": "rope×2件"
+        },
+        {
+          "recipeId": "charcoal",
+          "batches": 3,
+          "selectedInputs": [
+            {
+              "id": "wood",
+              "qty": 4000
+            }
+          ],
+          "output": "charcoal×6000g"
+        },
+        {
+          "recipeId": "charcoal",
+          "batches": 1,
+          "selectedInputs": [
+            {
+              "id": "wood",
+              "qty": 4000
+            }
+          ],
+          "output": "charcoal×2000g"
+        }
+      ],
+      "note": "蓄水60kg;生产速度总+25%(每批1kg/1.6分钟)"
+    },
+    {
+      "building": "garden",
+      "name": "园圃",
+      "level": 1,
+      "free": false,
+      "directCost": [
+        "wood×8000",
+        "fiber×1000",
+        "water×4000"
+      ],
+      "costAnyOf": [],
+      "raw": {
+        "wood": 8000,
+        "fiber": 1000,
+        "water": 4000
+      },
+      "rawSummary": [
+        "wood 8000g",
+        "fiber 1000g",
+        "water 4000g"
+      ],
+      "stationMs": {},
+      "stationSummary": [],
+      "totalStationMs": 0,
+      "buildTimeMs": 60000,
+      "parallelRefMs": 60000,
+      "leftovers": {},
+      "batches": [],
+      "note": "一条普通食材/纤维/已发现药草补产线(每批耗净水0.5kg)"
+    },
+    {
+      "building": "garden",
+      "name": "园圃",
+      "level": 2,
+      "free": false,
+      "directCost": [
+        "plank×6",
+        "rope×2",
+        "stone×8000"
+      ],
+      "costAnyOf": [],
+      "raw": {
+        "stone": 8000,
+        "wood": 18000,
+        "fiber": 1200
+      },
+      "rawSummary": [
+        "stone 8000g",
+        "wood 18000g",
+        "fiber 1200g"
+      ],
+      "stationMs": {
+        "workshop": 960000
+      },
+      "stationSummary": [
+        "workshop 16 分钟"
+      ],
+      "totalStationMs": 960000,
+      "buildTimeMs": 120000,
+      "parallelRefMs": 1080000,
+      "leftovers": {
+        "plank": 0,
+        "rope": 0
+      },
+      "batches": [
+        {
+          "recipeId": "plank-workshop",
+          "batches": 6,
+          "selectedInputs": [
+            {
+              "id": "wood",
+              "qty": 3000
+            }
+          ],
+          "output": "plank×6件"
+        },
+        {
+          "recipeId": "rope-workshop",
+          "batches": 2,
+          "selectedInputs": [
+            {
+              "id": "fiber",
+              "qty": 600
+            }
+          ],
+          "output": "rope×2件"
+        }
+      ],
+      "note": "产线可保存偏好;加工速度+10%"
+    },
+    {
+      "building": "garden",
+      "name": "园圃",
+      "level": 3,
+      "free": false,
+      "directCost": [
+        "brick×12",
+        "cloth×4",
+        "iron_ingot×2000"
+      ],
+      "costAnyOf": [],
+      "raw": {
+        "clay": 24000,
+        "fiber": 3000,
+        "iron": 4000,
+        "wood": 8000
+      },
+      "rawSummary": [
+        "clay 24000g",
+        "fiber 3000g",
+        "iron 4000g",
+        "wood 8000g"
+      ],
+      "stationMs": {
+        "smelter": 3000000,
+        "workshop": 480000
+      },
+      "stationSummary": [
+        "smelter 50 分钟",
+        "workshop 8 分钟"
+      ],
+      "totalStationMs": 3480000,
+      "buildTimeMs": 180000,
+      "parallelRefMs": 3180000,
+      "leftovers": {
+        "brick": 0,
+        "cloth": 0,
+        "iron_ingot": 0,
+        "charcoal": 0
+      },
+      "batches": [
+        {
+          "recipeId": "brick",
+          "batches": 12,
+          "selectedInputs": [
+            {
+              "id": "clay",
+              "qty": 2000
+            },
+            {
+              "id": "charcoal",
+              "qty": 250
+            }
+          ],
+          "output": "brick×12件"
+        },
+        {
+          "recipeId": "cloth",
+          "batches": 4,
+          "selectedInputs": [
+            {
+              "id": "fiber",
+              "qty": 750
+            }
+          ],
+          "output": "cloth×4件"
+        },
+        {
+          "recipeId": "iron-smelt",
+          "batches": 2,
+          "selectedInputs": [
+            {
+              "id": "iron",
+              "qty": 2000
+            },
+            {
+              "id": "charcoal",
+              "qty": 500
+            }
+          ],
+          "output": "iron_ingot×2000g"
+        },
+        {
+          "recipeId": "charcoal",
+          "batches": 2,
+          "selectedInputs": [
+            {
+              "id": "wood",
+              "qty": 4000
+            }
+          ],
+          "output": "charcoal×4000g"
+        }
+      ],
+      "note": "加工速度总+20%;外观/季节动作"
+    },
+    {
+      "building": "supply",
+      "name": "补给所",
+      "level": 1,
+      "free": false,
+      "directCost": [
+        "wood×8000",
+        "stone×8000"
+      ],
+      "costAnyOf": [],
+      "raw": {
+        "wood": 8000,
+        "stone": 8000
+      },
+      "rawSummary": [
+        "wood 8000g",
+        "stone 8000g"
+      ],
+      "stationMs": {},
+      "stationSummary": [],
+      "totalStationMs": 0,
+      "buildTimeMs": 60000,
+      "parallelRefMs": 60000,
+      "leftovers": {},
+      "batches": [],
+      "note": "口粮与自动出发补给(初始篝火亦可手作口粮)"
+    },
+    {
+      "building": "supply",
+      "name": "补给所",
+      "level": 2,
+      "free": false,
+      "directCost": [
+        "plank×6",
+        "brick×6",
+        "iron_ingot×1000"
+      ],
+      "costAnyOf": [],
+      "raw": {
+        "wood": 22000,
+        "clay": 12000,
+        "iron": 2000
+      },
+      "rawSummary": [
+        "wood 22000g",
+        "clay 12000g",
+        "iron 2000g"
+      ],
+      "stationMs": {
+        "workshop": 720000,
+        "smelter": 1500000
+      },
+      "stationSummary": [
+        "workshop 12 分钟",
+        "smelter 25 分钟"
+      ],
+      "totalStationMs": 2220000,
+      "buildTimeMs": 120000,
+      "parallelRefMs": 1620000,
+      "leftovers": {
+        "plank": 0,
+        "brick": 0,
+        "iron_ingot": 0,
+        "charcoal": 0
+      },
+      "batches": [
+        {
+          "recipeId": "plank-workshop",
+          "batches": 6,
+          "selectedInputs": [
+            {
+              "id": "wood",
+              "qty": 3000
+            }
+          ],
+          "output": "plank×6件"
+        },
+        {
+          "recipeId": "brick",
+          "batches": 6,
+          "selectedInputs": [
+            {
+              "id": "clay",
+              "qty": 2000
+            },
+            {
+              "id": "charcoal",
+              "qty": 250
+            }
+          ],
+          "output": "brick×6件"
+        },
+        {
+          "recipeId": "iron-smelt",
+          "batches": 1,
+          "selectedInputs": [
+            {
+              "id": "iron",
+              "qty": 2000
+            },
+            {
+              "id": "charcoal",
+              "qty": 500
+            }
+          ],
+          "output": "iron_ingot×1000g"
+        },
+        {
+          "recipeId": "charcoal",
+          "batches": 1,
+          "selectedInputs": [
+            {
+              "id": "wood",
+              "qty": 4000
+            }
+          ],
+          "output": "charcoal×2000g"
+        }
+      ],
+      "note": "治疗/解毒与自动使用策略(需战斗消费者先落地)"
+    },
+    {
+      "building": "supply",
+      "name": "补给所",
+      "level": 3,
+      "free": false,
+      "directCost": [
+        "plank×16",
+        "brick×12",
+        "cloth×4"
+      ],
+      "costAnyOf": [],
+      "raw": {
+        "wood": 56000,
+        "clay": 24000,
+        "fiber": 3000
+      },
+      "rawSummary": [
+        "wood 56000g",
+        "clay 24000g",
+        "fiber 3000g"
+      ],
+      "stationMs": {
+        "workshop": 2400000,
+        "smelter": 2520000
+      },
+      "stationSummary": [
+        "workshop 40 分钟",
+        "smelter 42 分钟"
+      ],
+      "totalStationMs": 4920000,
+      "buildTimeMs": 180000,
+      "parallelRefMs": 2700000,
+      "leftovers": {
+        "plank": 0,
+        "brick": 0,
+        "cloth": 0,
+        "charcoal": 1000
+      },
+      "batches": [
+        {
+          "recipeId": "plank-workshop",
+          "batches": 16,
+          "selectedInputs": [
+            {
+              "id": "wood",
+              "qty": 3000
+            }
+          ],
+          "output": "plank×16件"
+        },
+        {
+          "recipeId": "brick",
+          "batches": 12,
+          "selectedInputs": [
+            {
+              "id": "clay",
+              "qty": 2000
+            },
+            {
+              "id": "charcoal",
+              "qty": 250
+            }
+          ],
+          "output": "brick×12件"
+        },
+        {
+          "recipeId": "cloth",
+          "batches": 4,
+          "selectedInputs": [
+            {
+              "id": "fiber",
+              "qty": 750
+            }
+          ],
+          "output": "cloth×4件"
+        },
+        {
+          "recipeId": "charcoal",
+          "batches": 2,
+          "selectedInputs": [
+            {
+              "id": "wood",
+              "qty": 4000
+            }
+          ],
+          "output": "charcoal×4000g"
+        }
+      ],
+      "note": "专注药剂与生境准备方案(环境状态消费者)"
+    },
+    {
+      "building": "cartography",
+      "name": "地图室",
+      "level": 1,
+      "free": false,
+      "directCost": [
+        "wood×10000",
+        "stone×4000",
+        "feather×6"
+      ],
+      "costAnyOf": [
+        {
+          "options": [
+            {
+              "id": "feather",
+              "qty": 6
+            },
+            {
+              "id": "fiber",
+              "qty": 300
+            }
+          ]
+        }
+      ],
+      "raw": {
+        "wood": 10000,
+        "stone": 4000,
+        "feather": 6
+      },
+      "rawSummary": [
+        "wood 10000g",
+        "stone 4000g",
+        "feather 6件"
+      ],
+      "stationMs": {},
+      "stationSummary": [],
+      "totalStationMs": 0,
+      "buildTimeMs": 60000,
+      "parallelRefMs": 60000,
+      "leftovers": {},
+      "batches": [],
+      "note": "显示已知产地与缺料路线,规划普通采集"
+    },
+    {
+      "building": "cartography",
+      "name": "地图室",
+      "level": 2,
+      "free": false,
+      "directCost": [
+        "plank×8",
+        "cloth×2",
+        "rope×2"
+      ],
+      "costAnyOf": [],
+      "raw": {
+        "wood": 24000,
+        "fiber": 2700
+      },
+      "rawSummary": [
+        "wood 24000g",
+        "fiber 2700g"
+      ],
+      "stationMs": {
+        "workshop": 1440000
+      },
+      "stationSummary": [
+        "workshop 24 分钟"
+      ],
+      "totalStationMs": 1440000,
+      "buildTimeMs": 120000,
+      "parallelRefMs": 1560000,
+      "leftovers": {
+        "plank": 0,
+        "cloth": 0,
+        "rope": 0
+      },
+      "batches": [
+        {
+          "recipeId": "plank-workshop",
+          "batches": 8,
+          "selectedInputs": [
+            {
+              "id": "wood",
+              "qty": 3000
+            }
+          ],
+          "output": "plank×8件"
+        },
+        {
+          "recipeId": "cloth",
+          "batches": 2,
+          "selectedInputs": [
+            {
+              "id": "fiber",
+              "qty": 750
+            }
+          ],
+          "output": "cloth×2件"
+        },
+        {
+          "recipeId": "rope-workshop",
+          "batches": 2,
+          "selectedInputs": [
+            {
+              "id": "fiber",
+              "qty": 600
+            }
+          ],
+          "output": "rope×2件"
+        }
+      ],
+      "note": "前哨建造包;合法营地迁移/货运路线"
+    },
+    {
+      "building": "cartography",
+      "name": "地图室",
+      "level": 3,
+      "free": false,
+      "directCost": [
+        "plank×18",
+        "iron_ingot×4000",
+        "rope×4",
+        "cloth×4"
+      ],
+      "costAnyOf": [],
+      "raw": {
+        "wood": 58000,
+        "iron": 8000,
+        "fiber": 5400
+      },
+      "rawSummary": [
+        "wood 58000g",
+        "iron 8000g",
+        "fiber 5400g"
+      ],
+      "stationMs": {
+        "workshop": 3120000,
+        "smelter": 1140000
+      },
+      "stationSummary": [
+        "workshop 52 分钟",
+        "smelter 19 分钟"
+      ],
+      "totalStationMs": 4260000,
+      "buildTimeMs": 180000,
+      "parallelRefMs": 3300000,
+      "leftovers": {
+        "plank": 0,
+        "iron_ingot": 0,
+        "rope": 0,
+        "cloth": 0,
+        "charcoal": 0
+      },
+      "batches": [
+        {
+          "recipeId": "plank-workshop",
+          "batches": 18,
+          "selectedInputs": [
+            {
+              "id": "wood",
+              "qty": 3000
+            }
+          ],
+          "output": "plank×18件"
+        },
+        {
+          "recipeId": "iron-smelt",
+          "batches": 4,
+          "selectedInputs": [
+            {
+              "id": "iron",
+              "qty": 2000
+            },
+            {
+              "id": "charcoal",
+              "qty": 500
+            }
+          ],
+          "output": "iron_ingot×4000g"
+        },
+        {
+          "recipeId": "rope-workshop",
+          "batches": 4,
+          "selectedInputs": [
+            {
+              "id": "fiber",
+              "qty": 600
+            }
+          ],
+          "output": "rope×4件"
+        },
+        {
+          "recipeId": "cloth",
+          "batches": 4,
+          "selectedInputs": [
+            {
+              "id": "fiber",
+              "qty": 750
+            }
+          ],
+          "output": "cloth×4件"
+        },
+        {
+          "recipeId": "charcoal",
+          "batches": 1,
+          "selectedInputs": [
+            {
+              "id": "wood",
+              "qty": 4000
+            }
+          ],
+          "output": "charcoal×2000g"
+        }
+      ],
+      "note": "远征回顾、路线偏好与后续特殊地点搜索"
+    }
+  ],
+  "sequence": {
+    "steps": [
+      {
+        "building": "workshop",
+        "level": 1,
+        "raw": {
+          "wood": 12000,
+          "stone": 6000,
+          "fiber": 1000
+        },
+        "stationMs": {},
+        "leftoversAfter": {}
+      },
+      {
+        "building": "workshop",
+        "level": 2,
+        "raw": {
+          "wood": 28000,
+          "fiber": 1200,
+          "iron": 4000
+        },
+        "stationMs": {
+          "workshop": 1200000,
+          "smelter": 660000
+        },
+        "leftoversAfter": {
+          "plank": 0,
+          "rope": 0,
+          "iron_ingot": 0,
+          "charcoal": 1000
+        }
+      },
+      {
+        "building": "workshop",
+        "level": 3,
+        "raw": {
+          "wood": 64000,
+          "iron": 12000,
+          "fiber": 3000
+        },
+        "stationMs": {
+          "workshop": 2880000,
+          "smelter": 1620000
+        },
+        "leftoversAfter": {
+          "plank": 0,
+          "rope": 0,
+          "iron_ingot": 0,
+          "charcoal": 0,
+          "cloth": 0
+        }
+      },
+      {
+        "building": "smelter",
+        "level": 1,
+        "raw": {
+          "stone": 20000,
+          "clay": 8000,
+          "wood": 8000
+        },
+        "stationMs": {},
+        "leftoversAfter": {
+          "plank": 0,
+          "rope": 0,
+          "iron_ingot": 0,
+          "charcoal": 0,
+          "cloth": 0
+        }
+      },
+      {
+        "building": "smelter",
+        "level": 2,
+        "raw": {
+          "clay": 20000,
+          "iron": 4000,
+          "wood": 26000
+        },
+        "stationMs": {
+          "smelter": 2640000,
+          "workshop": 720000
+        },
+        "leftoversAfter": {
+          "plank": 0,
+          "rope": 0,
+          "iron_ingot": 0,
+          "charcoal": 500,
+          "cloth": 0,
+          "brick": 0
+        }
+      },
+      {
+        "building": "smelter",
+        "level": 3,
+        "raw": {
+          "clay": 48000,
+          "iron": 12000,
+          "copper": 8000,
+          "wood": 24000
+        },
+        "stationMs": {
+          "smelter": 7800000
+        },
+        "leftoversAfter": {
+          "plank": 0,
+          "rope": 0,
+          "iron_ingot": 0,
+          "charcoal": 1500,
+          "cloth": 0,
+          "brick": 0,
+          "copper_ingot": 0
+        }
+      },
+      {
+        "building": "well",
+        "level": 1,
+        "raw": {
+          "stone": 12000,
+          "wood": 6000
+        },
+        "stationMs": {},
+        "leftoversAfter": {
+          "plank": 0,
+          "rope": 0,
+          "iron_ingot": 0,
+          "charcoal": 1500,
+          "cloth": 0,
+          "brick": 0,
+          "copper_ingot": 0
+        }
+      },
+      {
+        "building": "well",
+        "level": 2,
+        "raw": {
+          "clay": 16000,
+          "wood": 16000,
+          "iron": 2000
+        },
+        "stationMs": {
+          "smelter": 1860000,
+          "workshop": 480000
+        },
+        "leftoversAfter": {
+          "plank": 0,
+          "rope": 0,
+          "iron_ingot": 0,
+          "charcoal": 1000,
+          "cloth": 0,
+          "brick": 0,
+          "copper_ingot": 0
+        }
+      },
+      {
+        "building": "well",
+        "level": 3,
+        "raw": {
+          "clay": 36000,
+          "iron": 8000,
+          "fiber": 1200,
+          "wood": 12000
+        },
+        "stationMs": {
+          "smelter": 4740000,
+          "workshop": 240000
+        },
+        "leftoversAfter": {
+          "plank": 0,
+          "rope": 0,
+          "iron_ingot": 0,
+          "charcoal": 500,
+          "cloth": 0,
+          "brick": 0,
+          "copper_ingot": 0
+        }
+      },
+      {
+        "building": "warehouse",
+        "level": 1,
+        "free": true
+      },
+      {
+        "building": "warehouse",
+        "level": 2,
+        "raw": {
+          "stone": 12000,
+          "wood": 24000,
+          "fiber": 1200
+        },
+        "stationMs": {
+          "workshop": 1200000
+        },
+        "leftoversAfter": {
+          "plank": 0,
+          "rope": 0,
+          "iron_ingot": 0,
+          "charcoal": 500,
+          "cloth": 0,
+          "brick": 0,
+          "copper_ingot": 0
+        }
+      },
+      {
+        "building": "warehouse",
+        "level": 3,
+        "raw": {
+          "wood": 72000,
+          "clay": 32000,
+          "iron": 8000
+        },
+        "stationMs": {
+          "workshop": 2400000,
+          "smelter": 4380000
+        },
+        "leftoversAfter": {
+          "plank": 0,
+          "rope": 0,
+          "iron_ingot": 0,
+          "charcoal": 500,
+          "cloth": 0,
+          "brick": 0,
+          "copper_ingot": 0
+        }
+      },
+      {
+        "building": "lodge",
+        "level": 1,
+        "free": true
+      },
+      {
+        "building": "lodge",
+        "level": 2,
+        "raw": {
+          "stone": 12000,
+          "wood": 18000,
+          "fiber": 1500
+        },
+        "stationMs": {
+          "workshop": 960000
+        },
+        "leftoversAfter": {
+          "plank": 0,
+          "rope": 0,
+          "iron_ingot": 0,
+          "charcoal": 500,
+          "cloth": 0,
+          "brick": 0,
+          "copper_ingot": 0
+        }
+      },
+      {
+        "building": "lodge",
+        "level": 3,
+        "raw": {
+          "wood": 62000,
+          "clay": 24000,
+          "fiber": 2400
+        },
+        "stationMs": {
+          "workshop": 2640000,
+          "smelter": 2520000
+        },
+        "leftoversAfter": {
+          "plank": 0,
+          "rope": 0,
+          "iron_ingot": 0,
+          "charcoal": 1500,
+          "cloth": 0,
+          "brick": 0,
+          "copper_ingot": 0
+        }
+      },
+      {
+        "building": "garden",
+        "level": 1,
+        "raw": {
+          "wood": 8000,
+          "fiber": 1000,
+          "water": 4000
+        },
+        "stationMs": {},
+        "leftoversAfter": {
+          "plank": 0,
+          "rope": 0,
+          "iron_ingot": 0,
+          "charcoal": 1500,
+          "cloth": 0,
+          "brick": 0,
+          "copper_ingot": 0
+        }
+      },
+      {
+        "building": "garden",
+        "level": 2,
+        "raw": {
+          "stone": 8000,
+          "wood": 18000,
+          "fiber": 1200
+        },
+        "stationMs": {
+          "workshop": 960000
+        },
+        "leftoversAfter": {
+          "plank": 0,
+          "rope": 0,
+          "iron_ingot": 0,
+          "charcoal": 1500,
+          "cloth": 0,
+          "brick": 0,
+          "copper_ingot": 0
+        }
+      },
+      {
+        "building": "garden",
+        "level": 3,
+        "raw": {
+          "clay": 24000,
+          "fiber": 3000,
+          "iron": 4000,
+          "wood": 8000
+        },
+        "stationMs": {
+          "smelter": 3000000,
+          "workshop": 480000
+        },
+        "leftoversAfter": {
+          "plank": 0,
+          "rope": 0,
+          "iron_ingot": 0,
+          "charcoal": 1500,
+          "cloth": 0,
+          "brick": 0,
+          "copper_ingot": 0
+        }
+      },
+      {
+        "building": "supply",
+        "level": 1,
+        "raw": {
+          "wood": 8000,
+          "stone": 8000
+        },
+        "stationMs": {},
+        "leftoversAfter": {
+          "plank": 0,
+          "rope": 0,
+          "iron_ingot": 0,
+          "charcoal": 1500,
+          "cloth": 0,
+          "brick": 0,
+          "copper_ingot": 0
+        }
+      },
+      {
+        "building": "supply",
+        "level": 2,
+        "raw": {
+          "wood": 22000,
+          "clay": 12000,
+          "iron": 2000
+        },
+        "stationMs": {
+          "workshop": 720000,
+          "smelter": 1500000
+        },
+        "leftoversAfter": {
+          "plank": 0,
+          "rope": 0,
+          "iron_ingot": 0,
+          "charcoal": 1500,
+          "cloth": 0,
+          "brick": 0,
+          "copper_ingot": 0
+        }
+      },
+      {
+        "building": "supply",
+        "level": 3,
+        "raw": {
+          "wood": 52000,
+          "clay": 24000,
+          "fiber": 3000
+        },
+        "stationMs": {
+          "workshop": 2400000,
+          "smelter": 2340000
+        },
+        "leftoversAfter": {
+          "plank": 0,
+          "rope": 0,
+          "iron_ingot": 0,
+          "charcoal": 500,
+          "cloth": 0,
+          "brick": 0,
+          "copper_ingot": 0
+        }
+      },
+      {
+        "building": "cartography",
+        "level": 1,
+        "raw": {
+          "wood": 10000,
+          "stone": 4000,
+          "feather": 6
+        },
+        "stationMs": {},
+        "leftoversAfter": {
+          "plank": 0,
+          "rope": 0,
+          "iron_ingot": 0,
+          "charcoal": 500,
+          "cloth": 0,
+          "brick": 0,
+          "copper_ingot": 0
+        }
+      },
+      {
+        "building": "cartography",
+        "level": 2,
+        "raw": {
+          "wood": 24000,
+          "fiber": 2700
+        },
+        "stationMs": {
+          "workshop": 1440000
+        },
+        "leftoversAfter": {
+          "plank": 0,
+          "rope": 0,
+          "iron_ingot": 0,
+          "charcoal": 500,
+          "cloth": 0,
+          "brick": 0,
+          "copper_ingot": 0
+        }
+      },
+      {
+        "building": "cartography",
+        "level": 3,
+        "raw": {
+          "wood": 58000,
+          "iron": 8000,
+          "fiber": 5400
+        },
+        "stationMs": {
+          "workshop": 3120000,
+          "smelter": 1140000
+        },
+        "leftoversAfter": {
+          "plank": 0,
+          "rope": 0,
+          "iron_ingot": 0,
+          "charcoal": 500,
+          "cloth": 0,
+          "brick": 0,
+          "copper_ingot": 0
+        }
+      }
+    ],
+    "finalLeftovers": {
+      "plank": 0,
+      "rope": 0,
+      "iron_ingot": 0,
+      "charcoal": 500,
+      "cloth": 0,
+      "brick": 0,
+      "copper_ingot": 0
+    }
+  }
+}

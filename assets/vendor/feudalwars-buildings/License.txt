@@ -1,0 +1,14 @@
+Medieval Blacksmith (Isometric 2.5D) and Medieval Stable (Isometric 2.5D)
+Author: feudalwars (Chris)
+Original submissions:
+https://opengameart.org/content/medieval-blacksmith-isometric-25d
+https://opengameart.org/content/medieval-stable-isometric-25d
+License declared by the author: CC0 1.0 Universal
+https://creativecommons.org/publicdomain/zero/1.0/
+
+blacksmith.png is the unmodified original attachment blacksmith_0.png.
+stable.png is the unmodified original attachment stable_0.png.
+File names changed locally; pixels and PNG bytes remain unchanged.
+This provenance notice was added locally; it is not an author-supplied file.
+No endorsement by Feudal Wars, the author or OpenGameArt is implied.
+Downloaded as candidate assets; no runtime manifest is enabled.

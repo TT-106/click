@@ -1,0 +1,22 @@
+isometric medieval props — rubberduck
+Original submission: https://opengameart.org/content/isometric-medieval-props
+Original download: https://opengameart.org/sites/default/files/medieval_props_single.zip
+License declared by the author: CC0 1.0 Universal
+https://creativecommons.org/publicdomain/zero/1.0/
+
+The author credits CC0 source art by Daniel Andersson, yd and Lucian Pavel:
+https://opengameart.org/content/medieval-containers
+https://opengameart.org/content/medieval-props-pack-1
+https://opengameart.org/content/medieval-props-pack-2
+https://opengameart.org/content/three-barrels
+https://opengameart.org/content/heavy-greatsword
+https://opengameart.org/content/kite-shield-1
+https://opengameart.org/content/round-shield-1
+https://opengameart.org/content/short-sword-0
+
+All 708 rendered PNG files retain their original bytes, names and directories.
+Preview.png is the original submission preview, downloaded separately.
+The ZIP contains no license text. This provenance notice was added locally;
+it is not represented as an original file supplied in the download.
+No endorsement by the artists or OpenGameArt is implied.
+Downloaded as a candidate asset library; no runtime manifest is enabled.

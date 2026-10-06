@@ -1,0 +1,15 @@
+{
+  "label": "synthetic-scenario",
+  "note": "候选模型:设计7.3的假设换算参数,不是R50实测;仅用于重算设计的'每趟额外净收益'示例。旧样本量纲是抽象负重,不能当kg。",
+  "perTripExtraNetG": {
+    "wood": 14000,
+    "fiber": 600,
+    "iron": 2000
+  },
+  "dailyProtectionG": {
+    "wood": 12000,
+    "stone": 8000,
+    "fiber": 600
+  },
+  "source": "ECONOMY-BASE-DESIGN-V1.md#7.3"
+}

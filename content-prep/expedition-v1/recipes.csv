@@ -1,0 +1,54 @@
+﻿ID,名称,工位,等级,阶段,输入,替代组,输出,整批基础时间ms,外部来源,操作,设计出处
+plank-workshop,木板(工坊),workshop,1,A,wood×3000,,plank×1,120000,,craft,ECONOMY-BASE-DESIGN-V1.md#6.1
+plank-handcraft,木板(手作),handcraft,0,A,wood×3000,,plank×1,240000,,craft,ECONOMY-BASE-DESIGN-V1.md#6.1
+brick,砖块,smelter,1,A,clay×2000 + charcoal×250,,brick×1,180000,,craft,ECONOMY-BASE-DESIGN-V1.md#6.1
+charcoal,木炭,smelter,1,A,wood×4000,,charcoal×2000,180000,,craft,ECONOMY-BASE-DESIGN-V1.md#6.1
+copper-smelt,铜冶炼,smelter,1,A,copper×2000 + charcoal×500,,copper_ingot×1000,240000,,craft,ECONOMY-BASE-DESIGN-V1.md#6.1
+iron-smelt,铁冶炼,smelter,1,A,iron×2000 + charcoal×500,,iron_ingot×1000,240000,,craft,ECONOMY-BASE-DESIGN-V1.md#6.1
+silver-smelt,银冶炼,smelter,2,B,silver×2000 + charcoal×500,,silver_ingot×1000,360000,,craft,ECONOMY-BASE-DESIGN-V1.md#6.1
+cloth,布料,workshop,1,A,fiber×750,,cloth×1,120000,,craft,ECONOMY-BASE-DESIGN-V1.md#6.1
+rope-workshop,绳索(工坊),workshop,1,A,fiber×600,,rope×1,120000,,craft,ECONOMY-BASE-DESIGN-V1.md#6.1
+rope-handcraft,绳索(手作),handcraft,0,A,fiber×600,,rope×1,240000,,craft,ECONOMY-BASE-DESIGN-V1.md#6.1
+nails,五金钉料,workshop,2,B,,copper_ingot×600 | iron_ingot×600,nails×500,120000,,craft,ECONOMY-BASE-DESIGN-V1.md#6.1
+ration-supply,口粮(补给所),supply,1,A,wild_food×500 + water×200 + wood×100,,ration×1,60000,,craft,ECONOMY-BASE-DESIGN-V1.md#6.1
+ration-campfire,口粮(篝火),campfire,0,A,wild_food×500 + water×200 + wood×100,,ration×1,120000,,craft,ECONOMY-BASE-DESIGN-V1.md#6.1
+healing-potion,治疗药剂,supply,2,B,water×200,herb×200 | slime_gel×200,healing_potion×1,120000,,craft,ECONOMY-BASE-DESIGN-V1.md#6.1
+antitoxin,解毒剂,supply,2,B,herb×300 + charcoal×50 + water×200,,antitoxin×1,120000,,craft,ECONOMY-BASE-DESIGN-V1.md#6.1
+mana-potion,专注药剂,supply,3,C,herb×200 + water×200,crystal×50 | mana_dust×50,mana_potion×1,180000,,craft,ECONOMY-BASE-DESIGN-V1.md#6.1
+repair-kit,修理包,workshop,2,B,nails×100 + resin×100 + cloth×1,,repair_kit×1,120000,,craft,ECONOMY-BASE-DESIGN-V1.md#6.1
+treated-leather,强韧革,workshop,2,B,leather×2 + resin×100,,treated_leather×1,180000,,craft,ECONOMY-BASE-DESIGN-V1.md#6.1
+herb-extract,草药萃取液,supply,2,B,herb×500 + water×200,,herb_extract×200,180000,,craft,ECONOMY-BASE-DESIGN-V1.md#6.1
+steel-ingot,精钢,smelter,3,C,iron_ingot×1000,coal×200 | charcoal×200,steel_ingot×800,360000,,craft,ECONOMY-BASE-DESIGN-V1.md#6.1
+bandage,绷带,supply,1,B,cloth×1 + water×100,,bandage×2,120000,,craft,ECONOMY-BASE-DESIGN-V1.md#6.1
+torch,火把,handcraft,0,C,wood×500 + fiber×50 + resin×50,,torch×1,120000,,craft,ECONOMY-BASE-DESIGN-V1.md#6.1
+warming-salve,保暖药膏,supply,3,C,herb_extract×100 + resin×100 + water×200,,warming_salve×1,180000,,craft,ECONOMY-BASE-DESIGN-V1.md#6.1
+cooling-salve,清凉冷敷,supply,3,C,herb_extract×100 + slime_gel×100 + water×200,,cooling_salve×1,180000,,craft,ECONOMY-BASE-DESIGN-V1.md#6.1
+well-water-L1,水井取水(一级),well,1,A,,,water×1000,120000,"水井:地下水,有条件取水过程,不能在任意悬崖/屋顶放井;初始基地提供手动逻辑安全取水任务保底",craft,ECONOMY-BASE-DESIGN-V1.md#6.1
+well-water-L2,水井取水(二级),well,2,B,,,water×1000,108000,"水井:地下水(设计6.1:每批仍1kg,时间缩短)",craft,ECONOMY-BASE-DESIGN-V1.md#6.1
+well-water-L3,水井取水(三级),well,3,C,,,water×1000,96000,"水井:地下水(设计6.1:每批仍1kg,时间缩短)",craft,ECONOMY-BASE-DESIGN-V1.md#6.1
+garden-food,园圃食材线,garden,1,B,water×500,,wild_food×500,300000,园圃:土壤/光照不计入质量账;基础野生移栽来自已采到的对应食材,craft,ECONOMY-BASE-DESIGN-V1.md#6.1
+garden-fiber,园圃纤维线,garden,1,B,water×500,,fiber×250,300000,园圃:土壤/光照不计入质量账;基础野生移栽来自已采到的对应纤维,craft,ECONOMY-BASE-DESIGN-V1.md#6.1
+garden-herb,园圃药草线,garden,1,B,water×500,,herb×100,300000,园圃:土壤/光照不计入质量账;未发现药草时药草线不可用,craft,ECONOMY-BASE-DESIGN-V1.md#6.1
+copper-axe,铜斧,workshop,1,A,copper_ingot×500 + rope×1,plank×1 | beast_bone×4,axe×1,180000,,craft,ECONOMY-BASE-DESIGN-V1.md#6.2
+copper-pickaxe,铜镐,workshop,1,A,copper_ingot×500 + rope×1,plank×1 | beast_bone×4,pickaxe×1,180000,,craft,ECONOMY-BASE-DESIGN-V1.md#6.2
+iron-axe,铁斧,workshop,2,B,iron_ingot×500 + rope×1,plank×1 | beast_bone×4,axe×1,180000,,craft,ECONOMY-BASE-DESIGN-V1.md#6.2
+iron-pickaxe,铁镐,workshop,2,B,iron_ingot×500 + rope×1,plank×1 | beast_bone×4,pickaxe×1,180000,,craft,ECONOMY-BASE-DESIGN-V1.md#6.2
+gathering-knife,采集刀,workshop,1,A,iron_ingot×200 + rope×1,,gathering_knife×1,120000,,craft,ECONOMY-BASE-DESIGN-V1.md#6.2
+backpack-cloth,布背包(28kg),workshop,1,A,cloth×2 + rope×1,,backpack×1,180000,,craft,ECONOMY-BASE-DESIGN-V1.md#6.2
+backpack-reinforced,强化背包(32kg),workshop,2,B,cloth×3 + leather×2 + rope×2 + nails×200,,backpack×1,240000,,craft,ECONOMY-BASE-DESIGN-V1.md#6.2
+water-container-reinforced,加固水袋(2kg),workshop,2,B,leather×1 + cloth×1 + resin×100,,water_container×1,180000,,craft,ECONOMY-BASE-DESIGN-V1.md#6.2
+lantern,提灯,workshop,1,C,copper_ingot×300 + plank×1 + resin×100,,lantern×1,180000,,craft,ECONOMY-BASE-DESIGN-V1.md#6.2
+camp-kit,前哨建造包,workshop,2,B,plank×2 + rope×2 + cloth×2 + iron_ingot×500,,camp_kit×1,300000,,craft,ECONOMY-BASE-DESIGN-V1.md#6.2
+short-sword,短剑,workshop,2,B,plank×1 + iron_ingot×1400 + rope×1,,short_sword×1,240000,,craft,ECONOMY-BASE-DESIGN-V1.md#6.3
+dagger,匕首,workshop,2,B,iron_ingot×400 + rope×1,,dagger×1,180000,,craft,ECONOMY-BASE-DESIGN-V1.md#6.3
+bow,普通弓,workshop,1,B,plank×1 + rope×2 + feather×4,,bow×1,240000,,craft,ECONOMY-BASE-DESIGN-V1.md#6.3
+staff-basic,基础法杖,workshop,1,B,plank×1 + rope×1,,staff×1,180000,,craft,ECONOMY-BASE-DESIGN-V1.md#6.3
+focus,法器,workshop,2,B,cloth×1 + copper_ingot×200 + mana_dust×50,,focus×1,240000,,craft,ECONOMY-BASE-DESIGN-V1.md#6.3
+cloth-robe,布袍,workshop,1,B,cloth×3 + rope×1,,cloth_robe×1,240000,,craft,ECONOMY-BASE-DESIGN-V1.md#6.3
+leather-coat,皮护衣,workshop,2,B,leather×4 + cloth×1 + rope×1,,leather_coat×1,240000,,craft,ECONOMY-BASE-DESIGN-V1.md#6.3
+carapace-armor,骨/甲壳护甲,workshop,2,B,cloth×2 + rope×2 + iron_ingot×300,beast_bone×8 | chitin×8,carapace_armor×1,300000,,craft,ECONOMY-BASE-DESIGN-V1.md#6.3
+staff-crystal-upgrade,晶石法杖变体,workshop,2,B,copper_ingot×300 + crystal×100,,升级实例→staff(1200g),240000,,upgrade-instance,ECONOMY-BASE-DESIGN-V1.md#6.3
+bow-hardwood-upgrade,硬木弓变体,workshop,2,B,hardwood×1000 + rope×1,,升级实例→bow(1000g),240000,,upgrade-instance,ECONOMY-BASE-DESIGN-V1.md#6.3
+short-sword-steel-upgrade,精钢短剑变体,workshop,3,C,steel_ingot×400,,升级实例→short_sword(1300g),300000,,upgrade-instance,ECONOMY-BASE-DESIGN-V1.md#6.3
+leather-coat-weathered-upgrade,耐候护衣变体,workshop,3,C,treated_leather×1 + rope×1,,升级实例→leather_coat(2200g),240000,,upgrade-instance,ECONOMY-BASE-DESIGN-V1.md#6.3
+focus-silver-upgrade,银饰法器变体,workshop,3,C,silver_ingot×200,,升级实例→focus(500g),240000,,upgrade-instance,ECONOMY-BASE-DESIGN-V1.md#6.3

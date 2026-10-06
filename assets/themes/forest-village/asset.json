@@ -1,0 +1,467 @@
+[
+  {
+    "id": "village.grass",
+    "group": "terrain",
+    "bundle": "forest-village",
+    "source": {
+      "image": "../../vendor/rubberduck-grassland/ground_grasses.png",
+      "rect": {
+        "x": 0,
+        "y": 384,
+        "width": 128,
+        "height": 64
+      }
+    },
+    "origin": {
+      "x": 0,
+      "y": 0
+    },
+    "size": {
+      "width": 54,
+      "height": 26
+    },
+    "anchor": {
+      "x": 27,
+      "y": 13
+    },
+    "layer": "ground"
+  },
+  {
+    "id": "village.path",
+    "group": "terrain",
+    "bundle": "forest-village",
+    "source": {
+      "image": "../../vendor/rubberduck-grassland/grassland_1x1.png",
+      "rect": {
+        "x": 768,
+        "y": 1826,
+        "width": 128,
+        "height": 66
+      }
+    },
+    "origin": {
+      "x": 0,
+      "y": 0
+    },
+    "size": {
+      "width": 54,
+      "height": 26
+    },
+    "anchor": {
+      "x": 27,
+      "y": 13
+    },
+    "layer": "ground"
+  },
+  {
+    "id": "village.floor",
+    "group": "terrain",
+    "bundle": "forest-village",
+    "source": {
+      "image": "../../vendor/kenney-isometric-miniature-farm/Isometric/planks_N.png"
+    },
+    "origin": {
+      "x": 0,
+      "y": 0
+    },
+    "size": {
+      "width": 54,
+      "height": 89.94594594594595
+    },
+    "anchor": {
+      "x": 27,
+      "y": 76.94594594594595
+    },
+    "layer": "ground"
+  },
+  {
+    "id": "village.bridge",
+    "group": "terrain",
+    "bundle": "forest-village",
+    "source": {
+      "image": "../../vendor/kenney-isometric-miniature-farm/Isometric/planksOld_N.png"
+    },
+    "origin": {
+      "x": 0,
+      "y": 0
+    },
+    "size": {
+      "width": 54,
+      "height": 89.94594594594595
+    },
+    "anchor": {
+      "x": 27,
+      "y": 76.94594594594595
+    },
+    "layer": "ground"
+  },
+  {
+    "id": "village.wall.se",
+    "group": "terrain",
+    "bundle": "forest-village",
+    "source": {
+      "image": "../../vendor/kenney-isometric-miniature-farm/Isometric/woodWall_N.png"
+    },
+    "origin": {
+      "x": 0,
+      "y": 0
+    },
+    "size": {
+      "width": 54,
+      "height": 89.94594594594595
+    },
+    "anchor": {
+      "x": 27,
+      "y": 76.94594594594595
+    },
+    "layer": "scenery"
+  },
+  {
+    "id": "village.wall.sw",
+    "group": "terrain",
+    "bundle": "forest-village",
+    "source": {
+      "image": "../../vendor/kenney-isometric-miniature-farm/Isometric/woodWall_W.png"
+    },
+    "origin": {
+      "x": 0,
+      "y": 0
+    },
+    "size": {
+      "width": 54,
+      "height": 89.94594594594595
+    },
+    "anchor": {
+      "x": 27,
+      "y": 76.94594594594595
+    },
+    "layer": "scenery"
+  },
+  {
+    "id": "village.door.se",
+    "group": "terrain",
+    "bundle": "forest-village",
+    "source": {
+      "image": "../../vendor/kenney-isometric-miniature-farm/Isometric/woodWallDoorOpen_N.png"
+    },
+    "origin": {
+      "x": 0,
+      "y": 0
+    },
+    "size": {
+      "width": 54,
+      "height": 89.94594594594595
+    },
+    "anchor": {
+      "x": 27,
+      "y": 76.94594594594595
+    },
+    "layer": "scenery"
+  },
+  {
+    "id": "village.hay",
+    "group": "terrain",
+    "bundle": "forest-village",
+    "source": {
+      "image": "../../vendor/kenney-isometric-miniature-farm/Isometric/hayBales_N.png"
+    },
+    "origin": {
+      "x": 0,
+      "y": 0
+    },
+    "size": {
+      "width": 54,
+      "height": 89.94594594594595
+    },
+    "anchor": {
+      "x": 27,
+      "y": 76.94594594594595
+    },
+    "layer": "scenery"
+  },
+  {
+    "id": "village.corn",
+    "group": "terrain",
+    "bundle": "forest-village",
+    "source": {
+      "image": "../../vendor/kenney-isometric-miniature-farm/Isometric/cornDouble_N.png"
+    },
+    "origin": {
+      "x": 0,
+      "y": 0
+    },
+    "size": {
+      "width": 54,
+      "height": 89.94594594594595
+    },
+    "anchor": {
+      "x": 27,
+      "y": 76.94594594594595
+    },
+    "layer": "scenery"
+  },
+  {
+    "id": "village.ruin",
+    "group": "terrain",
+    "bundle": "forest-village",
+    "source": {
+      "image": "../../vendor/kenney-isometric-miniature-farm/Isometric/chimneyBase_N.png"
+    },
+    "origin": {
+      "x": 0,
+      "y": 0
+    },
+    "size": {
+      "width": 54,
+      "height": 89.94594594594595
+    },
+    "anchor": {
+      "x": 27,
+      "y": 76.94594594594595
+    },
+    "layer": "scenery"
+  },
+  {
+    "id": "village.water",
+    "group": "terrain",
+    "bundle": "forest-village",
+    "source": {
+      "image": "../../vendor/kenney-isometric-landscape/PNG/landscapeTiles_035.png",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "width": 132,
+        "height": 66
+      }
+    },
+    "origin": {
+      "x": 0,
+      "y": 0
+    },
+    "size": {
+      "width": 54,
+      "height": 26
+    },
+    "anchor": {
+      "x": 27,
+      "y": 13
+    },
+    "layer": "ground"
+  },
+  {
+    "id": "village.tree.oak",
+    "group": "terrain",
+    "bundle": "forest-village",
+    "source": {
+      "image": "../../vendor/rubberduck-isometric-plants/isometric tiles/bigtree01.png"
+    },
+    "origin": {
+      "x": 0,
+      "y": 0
+    },
+    "size": {
+      "width": 110,
+      "height": 110
+    },
+    "anchor": {
+      "x": 59.7265625,
+      "y": 103.125
+    },
+    "layer": "scenery"
+  },
+  {
+    "id": "village.tree.pine",
+    "group": "terrain",
+    "bundle": "forest-village",
+    "source": {
+      "image": "../../vendor/rubberduck-isometric-plants/isometric tiles/pine-none04.png"
+    },
+    "origin": {
+      "x": 0,
+      "y": 0
+    },
+    "size": {
+      "width": 110,
+      "height": 110
+    },
+    "anchor": {
+      "x": 58.8671875,
+      "y": 105.2734375
+    },
+    "layer": "scenery"
+  },
+  {
+    "id": "village.cabin.workshop",
+    "group": "terrain",
+    "bundle": "forest-village",
+    "source": {
+      "image": "../../vendor/rubberduck-log-cabins/wooden_buildings_01.png",
+      "rect": {
+        "x": 40,
+        "y": 1954,
+        "width": 427,
+        "height": 321
+      }
+    },
+    "size": {
+      "width": 270,
+      "height": 202.97423887587823
+    },
+    "anchor": {
+      "x": 135,
+      "y": 150.97423887587823
+    },
+    "origin": {
+      "x": 0,
+      "y": 0
+    },
+    "footprint": {
+      "columns": 3,
+      "rows": 3
+    },
+    "layer": "scenery"
+  },
+  {
+    "id": "village.cabin.herbalist",
+    "group": "terrain",
+    "bundle": "forest-village",
+    "source": {
+      "image": "../../vendor/rubberduck-log-cabins/wooden_buildings_01.png",
+      "rect": {
+        "x": 41,
+        "y": 1122,
+        "width": 486,
+        "height": 362
+      }
+    },
+    "size": {
+      "width": 275,
+      "height": 204.83539094650206
+    },
+    "anchor": {
+      "x": 137.5,
+      "y": 152.83539094650206
+    },
+    "origin": {
+      "x": 0,
+      "y": 0
+    },
+    "footprint": {
+      "columns": 3,
+      "rows": 3
+    },
+    "layer": "scenery"
+  },
+  {
+    "id": "village.cabin.storehouse",
+    "group": "terrain",
+    "bundle": "forest-village",
+    "source": {
+      "image": "../../vendor/rubberduck-log-cabins/wooden_buildings_01.png",
+      "rect": {
+        "x": 11,
+        "y": 2640,
+        "width": 601,
+        "height": 413
+      }
+    },
+    "size": {
+      "width": 286,
+      "height": 196.53577371048254
+    },
+    "anchor": {
+      "x": 143,
+      "y": 144.53577371048254
+    },
+    "origin": {
+      "x": 0,
+      "y": 0
+    },
+    "footprint": {
+      "columns": 3,
+      "rows": 3
+    },
+    "layer": "scenery"
+  },
+  {
+    "id": "village.grass.alt-1",
+    "group": "terrain",
+    "bundle": "forest-village",
+    "source": {
+      "image": "../../vendor/rubberduck-grassland/ground_grasses.png",
+      "rect": {
+        "x": 128,
+        "y": 384,
+        "width": 128,
+        "height": 64
+      }
+    },
+    "origin": {
+      "x": 0,
+      "y": 0
+    },
+    "size": {
+      "width": 54,
+      "height": 26
+    },
+    "anchor": {
+      "x": 27,
+      "y": 13
+    },
+    "layer": "ground"
+  },
+  {
+    "id": "village.grass.alt-2",
+    "group": "terrain",
+    "bundle": "forest-village",
+    "source": {
+      "image": "../../vendor/rubberduck-grassland/ground_grasses.png",
+      "rect": {
+        "x": 256,
+        "y": 384,
+        "width": 128,
+        "height": 64
+      }
+    },
+    "origin": {
+      "x": 0,
+      "y": 0
+    },
+    "size": {
+      "width": 54,
+      "height": 26
+    },
+    "anchor": {
+      "x": 27,
+      "y": 13
+    },
+    "layer": "ground"
+  },
+  {
+    "id": "village.grass.alt-3",
+    "group": "terrain",
+    "bundle": "forest-village",
+    "source": {
+      "image": "../../vendor/rubberduck-grassland/ground_grasses.png",
+      "rect": {
+        "x": 384,
+        "y": 384,
+        "width": 128,
+        "height": 64
+      }
+    },
+    "origin": {
+      "x": 0,
+      "y": 0
+    },
+    "size": {
+      "width": 54,
+      "height": 26
+    },
+    "anchor": {
+      "x": 27,
+      "y": 13
+    },
+    "layer": "ground"
+  }
+]

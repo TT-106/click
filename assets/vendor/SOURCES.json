@@ -1,0 +1,86 @@
+{
+  "sources": [
+    {
+      "id": "kenney-isometric-landscape",
+      "author": "Kenney",
+      "license": "CC0-1.0",
+      "sourcePage": "https://kenney.nl/assets/isometric-tiles-landscape",
+      "downloadUrl": "https://kenney.nl/media/pages/assets/isometric-tiles-landscape/37eb18a8d1-1677695072/kenney_isometric-landscape.zip",
+      "downloadedAt": "2026-10-04",
+      "archive": "artifacts/vendor-assets/downloads/kenney_isometric-landscape.zip",
+      "sha256": "18fa4fb22fa18bd4230e2422bc4123c986123c53966846b5a5bc219b331e7d3e",
+      "archiveBytes": 1141541,
+      "files": 132,
+      "pngFiles": 130,
+      "role": "地形"
+    },
+    {
+      "id": "kenney-isometric-buildings",
+      "author": "Kenney",
+      "license": "CC0-1.0",
+      "sourcePage": "https://kenney.nl/assets/isometric-tiles-buildings",
+      "downloadUrl": "https://kenney.nl/media/pages/assets/isometric-tiles-buildings/cfcdb066e1-1677694983/kenney_isometric-buildings.zip",
+      "downloadedAt": "2026-10-04",
+      "archive": "artifacts/vendor-assets/downloads/kenney_isometric-buildings.zip",
+      "sha256": "0894214e3b604f3eef53b9fa633340ba4617e24053a6178fa81dab6bac3d6d5e",
+      "archiveBytes": 1706949,
+      "files": 134,
+      "pngFiles": 132,
+      "role": "备选现代建筑，当前场景未使用"
+    },
+    {
+      "id": "kenney-isometric-miniature-farm",
+      "author": "Kenney",
+      "license": "CC0-1.0",
+      "sourcePage": "https://kenney.nl/assets/isometric-miniature-farm",
+      "downloadUrl": "https://kenney.nl/media/pages/assets/isometric-miniature-farm/abd0274182-1670690319/kenney_isometric-miniature-farm.zip",
+      "downloadedAt": "2026-10-04",
+      "archive": "artifacts/vendor-assets/downloads/kenney_isometric-miniature-farm.zip",
+      "sha256": "6dd0db7d26cb2999fd4a7a28e25b4727e61dafaf1662cac364eb97172a027268",
+      "archiveBytes": 10135825,
+      "files": 460,
+      "pngFiles": 459,
+      "role": "木屋构件与家具"
+    },
+    {
+      "id": "rubberduck-isometric-plants",
+      "author": "rubberduck / Yughues",
+      "license": "CC0-1.0",
+      "sourcePage": "https://opengameart.org/content/free-isometric-plants-pack",
+      "downloadUrl": "https://opengameart.org/sites/default/files/isometric-plant-pack.zip",
+      "downloadedAt": "2026-10-04",
+      "archive": "artifacts/vendor-assets/downloads/rubberduck-isometric-plants.zip",
+      "sha256": "f3650ab8eb6f149714c72f671e9485e3431f360686a180d40271a833c1604b8f",
+      "archiveBytes": 24527397,
+      "files": 94,
+      "pngFiles": 94,
+      "role": "树木"
+    },
+    {
+      "id": "rubberduck-log-cabins",
+      "author": "rubberduck",
+      "license": "CC0-1.0",
+      "sourcePage": "https://opengameart.org/content/isometric-log-cabins",
+      "downloadUrl": "https://opengameart.org/sites/default/files/wooden_buildings_01.png",
+      "downloadedAt": "2026-10-04",
+      "originalFile": "assets/vendor/rubberduck-log-cabins/wooden_buildings_01.png",
+      "sha256": "4b7d33318bb0078f589a74f4c499a75d373e6b393f80943348286d48bf05ad92",
+      "bytes": 4444473,
+      "pngFiles": 1,
+      "role": "完整外部木屋；室内沿用独立地面、墙与家具"
+    },
+    {
+      "id": "rubberduck-grassland",
+      "author": "rubberduck",
+      "license": "CC0-1.0",
+      "sourcePage": "https://opengameart.org/content/stylized-grassland-tileset",
+      "downloadUrl": "https://opengameart.org/sites/default/files/grassland_tileset_sheets.zip",
+      "downloadedAt": "2026-10-04",
+      "archive": "artifacts/vendor-assets/downloads/rubberduck-grassland.zip",
+      "sha256": "2fe6cb57403f8e42b71be8345f0a09965fe61df8f281fd897aafc2e1468634d3",
+      "archiveBytes": 9036377,
+      "pngFiles": 3,
+      "role": "与木屋、植物同作者的草地与泥土；保留原 atlas"
+    }
+  ]
+}

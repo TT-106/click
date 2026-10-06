@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>内容准备预览(GLM-R52,未接入游戏)</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="preview.css">
+</head>
+<body>
+<header class="banner">
+  <strong>内容准备预览 — 未接入游戏</strong>
+  <span>数据为 <code>content-prep/expedition-v1/</code> 未接线设计草案;素材为未注册候选。没有存档读写、没有生产接线、没有世界碰撞/进屋。</span>
+</header>
+<nav class="tabs" role="tablist" aria-label="预览标签">
+  <button role="tab" id="tab-items" aria-controls="panel-items" aria-selected="true">物品(60)</button>
+  <button role="tab" id="tab-recipes" aria-controls="panel-recipes" aria-selected="false">配方</button>
+  <button role="tab" id="tab-buildings" aria-controls="panel-buildings" aria-selected="false">建筑(8×3)</button>
+  <button role="tab" id="tab-assets" aria-controls="panel-assets" aria-selected="false">素材候选</button>
+</nav>
+
+<main>
+  <section id="panel-items" role="tabpanel" aria-labelledby="tab-items">
+    <div class="toolbar">
+      <label>搜索 <input id="item-search" type="search" placeholder="ID 或中文名"></label>
+      <label>类别 <select id="item-category"><option value="">全部</option></select></label>
+      <label>阶段 <select id="item-phase"><option value="">全部</option><option>A</option><option>B</option><option>C</option></select></label>
+      <span id="item-count" class="muted"></span>
+    </div>
+    <div id="item-grid" class="grid"></div>
+  </section>
+
+  <section id="panel-recipes" role="tabpanel" aria-labelledby="tab-recipes" hidden>
+    <div class="toolbar">
+      <label>产物 <select id="recipe-select"></select></label>
+      <span class="muted">整批开工、整批结算;需求不足一批仍做整批,余量入仓</span>
+    </div>
+    <div id="recipe-detail"></div>
+  </section>
+
+  <section id="panel-buildings" role="tabpanel" aria-labelledby="tab-buildings" hidden>
+    <p class="muted">全部三级外观均缺失(visual pending),下列配图为语义最近的**未注册候选**,仅示意;没有可在游戏里升级的按钮。</p>
+    <div id="building-list"></div>
+  </section>
+
+  <section id="panel-assets" role="tabpanel" aria-labelledby="tab-assets" hidden>
+    <div class="toolbar">
+      <label>候选 <select id="asset-select"></select></label>
+      <span class="muted">脚点参考线 = alpha包围框底边(线索),**不是正式锚点**;没有世界碰撞/进屋接线</span>
+    </div>
+    <div id="asset-view"></div>
+  </section>
+</main>
+
+<footer class="muted" id="data-status">加载数据中…</footer>
+<script src="preview.js"></script>
+</body>
+</html>

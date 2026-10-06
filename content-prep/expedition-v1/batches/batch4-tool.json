@@ -1,0 +1,79 @@
+{
+  "batch": 4,
+  "category": "tool",
+  "expected": 6,
+  "items": [
+    {
+      "id": "axe",
+      "name": "斧",
+      "category": "tool",
+      "measure": { "kind": "instance", "unit": "把", "quantumG": null, "unitMassG": 600 },
+      "phase": "A",
+      "sources": ["初始营地提供(基础斧)", "铜斧:工坊一级+炉窑一级", "铁斧:工坊二级"],
+      "uses": ["木料交互", "铜/铁材质木料操作效率+10%/+20%"],
+      "icon": { "semanticId": null, "status": "missing" },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.4",
+      "notes": ["永久实例;铜升级A,铁升级B;升级替换旧实例而非叠加"]
+    },
+    {
+      "id": "pickaxe",
+      "name": "镐",
+      "category": "tool",
+      "measure": { "kind": "instance", "unit": "把", "quantumG": null, "unitMassG": 1200 },
+      "phase": "A",
+      "sources": ["初始营地提供(基础镐)", "铜镐:工坊一级+炉窑一级", "铁镐:工坊二级"],
+      "uses": ["普通露矿与石料", "铜/铁材质矿物操作效率+10%/+20%"],
+      "icon": { "semanticId": null, "status": "missing" },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.4",
+      "notes": ["永久实例;铜升级A,铁升级B"]
+    },
+    {
+      "id": "gathering_knife",
+      "name": "采集刀",
+      "category": "tool",
+      "measure": { "kind": "instance", "unit": "把", "quantumG": null, "unitMassG": 150 },
+      "phase": "A",
+      "sources": ["基础刀初始提供", "工坊一级(铁锭0.2kg+绳索1)"],
+      "uses": ["药草/纤维采集,改善操作效率和更完整采集"],
+      "icon": { "semanticId": null, "status": "missing" },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.4",
+      "notes": ["不直接倍增稀有掉落"]
+    },
+    {
+      "id": "backpack",
+      "name": "背包",
+      "category": "tool",
+      "measure": { "kind": "instance", "unit": "个", "quantumG": null, "unitMassG": 500 },
+      "phase": "A",
+      "sources": ["基础包初始提供", "布背包:工坊一级(布料2+绳索1)", "强化背包:工坊二级(布料3+皮料2张+绳索2+五金0.2kg)"],
+      "uses": ["舒适负重24kg;布包28kg;强化包32kg"],
+      "icon": { "semanticId": null, "status": "missing" },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.4",
+      "notes": ["实例质量随等级:基础500g/布包700g/强化包900g;皮料有普通替代采购任务"]
+    },
+    {
+      "id": "water_container",
+      "name": "水袋",
+      "category": "tool",
+      "measure": { "kind": "instance", "unit": "个", "quantumG": null, "unitMassG": 200 },
+      "phase": "A",
+      "sources": ["初始水袋提供", "加固水袋:工坊二级(皮料1张+布料1+树脂0.1kg)"],
+      "uses": ["装净水1kg;加固袋装2kg"],
+      "icon": { "semanticId": null, "status": "missing" },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.4",
+      "notes": ["可复用实例,空袋质量另算;加固袋350g;装得更多不代表默认灌满"]
+    },
+    {
+      "id": "lantern",
+      "name": "提灯",
+      "category": "tool",
+      "measure": { "kind": "instance", "unit": "盏", "quantumG": null, "unitMassG": 600 },
+      "phase": "C",
+      "sources": ["工坊(铜锭0.3kg+木板1+树脂0.1kg)"],
+      "uses": ["后续夜间/洞穴视觉与交互"],
+      "icon": { "semanticId": null, "status": "missing" },
+      "designRef": "ECONOMY-BASE-DESIGN-V1.md#5.4",
+      "notes": ["夜间/洞穴内容一起启用,未启用则隐藏;持续时间设计未定,不提供虚假属性"]
+    }
+  ]
+}

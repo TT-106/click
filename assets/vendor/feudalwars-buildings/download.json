@@ -1,0 +1,33 @@
+{
+  "author": "feudalwars",
+  "license": "CC0-1.0",
+  "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "status": "candidate-not-registered",
+  "files": [
+    {
+      "title": "Medieval Blacksmith (Isometric 2.5D)",
+      "file": "blacksmith.png",
+      "page": "https://opengameart.org/content/medieval-blacksmith-isometric-25d",
+      "source": "https://opengameart.org/sites/default/files/blacksmith_0.png",
+      "downloaded": "2026-10-04T23:58:45+08:00",
+      "sha256": "bfb845d5c31c3f90b0fe13478a988b582797e12b0c2f9d1fae38a18704dfad2b",
+      "bytes": 135040,
+      "width": 305,
+      "height": 259,
+      "modifiedPixels": false
+    },
+    {
+      "title": "Medieval Stable (Isometric 2.5D)",
+      "file": "stable.png",
+      "page": "https://opengameart.org/content/medieval-stable-isometric-25d",
+      "source": "https://opengameart.org/sites/default/files/stable_0.png",
+      "downloaded": "2026-10-04T23:58:46+08:00",
+      "sha256": "6ac29f94bc3526b2522ff56d595a8f671e0c1fa44e11f19e821889259096c99e",
+      "bytes": 127327,
+      "width": 318,
+      "height": 252,
+      "modifiedPixels": false
+    }
+  ],
+  "notes": "Original PNG attachments only. No PSD, executable or model downloaded. Local file names normalized; original attachment URLs and hashes retained. License.txt is a locally maintained provenance notice."
+}

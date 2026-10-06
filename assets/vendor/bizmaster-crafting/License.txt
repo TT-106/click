@@ -1,0 +1,7 @@
+RPG Crafting Material Icons — BizmasterStudios
+Source: https://opengameart.org/content/rpg-crafting-material-icons
+License: Creative Commons Attribution 4.0 International (CC BY 4.0)
+https://creativecommons.org/licenses/by/4.0/
+Original materials.png (nails.png) is unmodified. Atlas metadata selects frames;
+UI/map render at different display sizes. No endorsement is implied.
+Attribution is also displayed inside the expedition backpack.
