@@ -1,6 +1,13 @@
 # U133：Clickpocalypse II 一整晚长程开发提示词
 
-> 交给下一位开发 agent 的直接执行文本。工作区 `D:\下载\clickpocalypse2-main`，Windows / PowerShell，时区 Asia/Shanghai。编写于 2026-09-28。前一版 `docs/OVERNIGHT-DEVELOPMENT-ROADMAP-PROMPT.md` 是 U131→U132 的历史任务书，其中 P-2、P-3 与组队入口切片已经完成，不能再当作新任务。
+> **历史档案，停止执行和更新。** 下文的“当前/最新/下一步”、数字、权限和命令只适用于原批次；不能用于当前开发或表示本轮验证。当前入口是 [文档索引](../../README.md)。
+
+
+> **历史任务书（已执行完）。** 本文件对应 **U133** 批次，已于 2026-09-28 交付。
+> **不要再把本文当作新任务执行。** 当前入口见 `docs/README.md`；接手顺序见 `docs/WORKSTATE.md` 顶部。
+> 下文保留供追溯，其中的日期、计数与测试结果都是**交接时的观测**，不是当前值。
+
+> 交给下一位开发 agent 的直接执行文本。工作区 `D:\下载\clickpocalypse2-main`，Windows / PowerShell，时区 Asia/Shanghai。编写于 2026-09-28。前一版 `docs/history/tasks/OVERNIGHT-DEVELOPMENT-ROADMAP-PROMPT.md` 是 U131→U132 的历史任务书，其中 P-2、P-3 与组队入口切片已经完成，不能再当作新任务。
 
 ## 给开发 agent 的提示词
 

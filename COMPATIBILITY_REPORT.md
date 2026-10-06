@@ -1,7 +1,7 @@
 # COMPATIBILITY REPORT — 兼容性验证报告
 
 > 结论分级遵循目标规范 §89：VERIFIED（有自动化证据）/ PARTIALLY VERIFIED / UNRESOLVED。
-> 测试环境：Node 22.x / Chrome (playwright channel) headless / Win32。数据截至 **2026-09-27**（本文件在 M12 收官与 P1 回归后复跑并更新）。
+> 测试环境：Node 22.x / Chrome (playwright channel) headless / Win32。下表收录恢复阶段至 R42 等后续批次的经典检查证据；文档治理没有重新执行这些浏览器差分。当前代码/定义与最近检查见 [WORKSTATE](docs/WORKSTATE.md)，完整判定在 REFACTOR_REPORT 附录 A。
 
 ## 1. 存档兼容 — VERIFIED
 
@@ -18,7 +18,7 @@
 
 ## 2. 行为兼容（原版 vs 重构差分）— VERIFIED（覆盖范围内）
 
-`scripts/test-scenarios.mjs` 的 **89 个场景全部通过（同一变异存档 + 固定 LCG 随机流 + 固定时钟，双端逐字段比较完整存档 DTO；矩阵可用 `SCENARIO_FILTER=a,b` 单跑）：
+`scripts/test-scenarios.mjs` 的现行 **91 个场景曾记录通过（同一变异存档 + 固定 LCG 随机流 + 固定时钟，双端逐字段比较完整存档 DTO；矩阵可用 `SCENARIO_FILTER=a,b` 单跑）：
 
 | 组 | 场景 | 除全状态相等外的专项断言 |
 |---|---|---|
@@ -71,8 +71,8 @@
 
 已转入差分覆盖（2026-09-26）：城堡攻防战全程与胜利瞬间（`castle-victory`，两端各自断言 gameWon/victoryCount/castlesConquered 后比较完整存档）、12h 离线截断（`offline-13h-capped`）、火球与两条控制/增益法术分支、召唤族两条分支（cat=9/11，两端各自断言 `minionsSummoned` 增长）、睡眠（cat=2、type=0），以及 Blast Stun 的直接执行计数——harness 逐帧扫描两端活怪物效果队列，`fireball-blast-stun` 实测原版与重构版各 31 次 type=14 施加，数值相等。同批次再补 10 条：cat=1 治疗、cat=4 火环、cat=5 连锁闪电、cat=6 闪电雨、cat=13 绿色死亡、cat=17 召唤鸡群（含 `Math.random` 概率模板分支），需要注入投射武器的 cat=12 快速打击（唯一 `td: false`）、cat=14 立即搜索、cat=15 发现财宝箱——后三条在注入前会命中原版自带的空武器解引用（`Aw`/`getProjectileAnimation` 对 `equipment.Ey` 无空值保护，两端同点同错，栈逐帧同构），属忠实保留而非重构差异，因此未改动引擎，只在存档里补回真实武器类型（盗贼槽 61、忍者槽 62）；以及 cat=16 复活（`withResurrectionTrial()` 激活 `randomBossEncounter` 药水并把三名队友压到 1 级 1 血，两端实测 `characterStunnedCount` 同为 22，真正打出"已有昏迷队友"的前置）；地牢农场购买、推演成熟收获、待收获击杀池清零、再侵袭休耕与二次成熟收获等全生命周期已由 `dungeon-farm-purchased`、`dungeon-row-farm-purchased`、`dungeon-farm-harvested`、`dungeon-farm-cycle-long-term` 差分场景完整覆盖并带负向探针验证；卷轴全 6 类战斗施放与后台行为关闭态已分别由 `scroll-cast-in-combat` 与 `background-progress-disabled` 差分场景闭环；怪物等级退休已由 `monster-level-retired`（`RetireMonsterLevelUpgrade`）闭环；暴击机制与伤害绕过护甲已由 `combat-critical-hits` 驱动战士与游侠 7 档暴击技能并通过浮动文字 `countFloatingText` 直接对账闭环。
 
-后续扩展路径：在 `tests/scenarios/save-mutations.mjs` 增加对应变异器，即可纳入 `test:scenarios` 矩阵（当前 89 个场景）。
+后续扩展路径：在 `tests/scenarios/save-mutations.mjs` 增加对应变异器，即可纳入 `test:scenarios` 矩阵（当前 91 个场景）。
 
 ## 7. 性能兼容 — PARTIALLY VERIFIED
 
-当前 `output/perf/perf-baseline.json` 的单次 CPU 样本（**2026-09-27 复跑**）：回合推进 0.072 vs 0.068 ms（1.06x）、序列化 0.09 vs 0.08 ms（1.13x）、导入 26.1 vs 62.1 ms（0.42x）、离线 1h 结算 156 vs 156 ms（1.00x，同为 18,925 回合）。与 2026-09-26 样本（1.08x / 1.43x / 0.75x / 0.79x）相比**导入与离线结算的相对快慢明显翻转**，故倍数不是稳定结论；只能确认无数量级退化，单回合模拟约占 250ms 预算的 0.03%。`npm run perf:frames` 另测当前页面两种状态各 599 次 rAF 间隔，P95 为 4.5/4.8ms、>50ms 为 0；间隔含浏览器调度，且没有原版页面同口径基线或真机 vsync 测量，故页面帧时间等价仍未验证。
+2026-09-27记录的单次 CPU 样本（output文件每次运行可能覆盖）（**2026-09-27 复跑**）：回合推进 0.072 vs 0.068 ms（1.06x）、序列化 0.09 vs 0.08 ms（1.13x）、导入 26.1 vs 62.1 ms（0.42x）、离线 1h 结算 156 vs 156 ms（1.00x，同为 18,925 回合）。与 2026-09-26 样本（1.08x / 1.43x / 0.75x / 0.79x）相比**导入与离线结算的相对快慢明显翻转**，故倍数不是稳定结论；只能确认无数量级退化，单回合模拟约占 250ms 预算的 0.03%。`npm run perf:frames` 当时另测页面两种状态各 599 次 rAF 间隔，P95 为 4.5/4.8ms、>50ms 为 0；间隔含浏览器调度，且没有原版页面同口径基线或真机 vsync 测量，故页面帧时间等价仍未验证。

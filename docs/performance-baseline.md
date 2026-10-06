@@ -1,5 +1,9 @@
 # 性能基线（harness CPU 测量，2026-09-26）
 
+> **历史快照（冻结）。** 本文件记录 2026-09-26 的样本，**不随代码更新**；表内数字是当时值。
+> 引用前请重跑 `npm run perf` 取当前值。性能对比必须**交替 A/B**（同一实现切换前后各跑一轮、重复多轮），
+> 单批对比会给出假信号——`npm run perf` 单次样本波动约 ±0.02ms/回合，大于多数改动的效应。
+
 > 方法：`scripts/measure-perf.mjs`，在差分 harness（`tests/engine-harness.html`）中用 `performance.now()` 测量，Chrome headless。这是**无渲染循环的操作耗时样本**，用于重构回归比较；不代表真实浏览器帧率。页面 rAF 间隔另见 `docs/performance-after.md`。
 > 原始数据：`output/perf/perf-baseline.json`（每次运行覆盖）。环境：Node 22 / Win32 / Chrome channel。
 

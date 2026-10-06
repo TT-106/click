@@ -11,7 +11,7 @@
 
 从 `docs/WORKSTATE.md`、`docs/modernization-status.md`、`docs/REMAINING-WORK.md` 续跑。命名、依赖解耦和类型契约仍未全部完成；验收矩阵中的四条 PARTIAL 继续按实际证据判断。
 
-存档 JSON 键、随机算法与消费顺序、时间节拍、原版素材及外部 DOM 契约继续保持。`archive/original/` 只作验证参照；保留 ADR 0001，因为它也适用于主线。原生专属 ADR 0002–0015、桌面规格、`native/` 和 `scripts/native/` 在 Godot 分支查阅。已提交的历史不重写，主线以新增提交移除专属文件。
+存档 JSON 键、随机算法与消费顺序、时间节拍、原版素材及外部 DOM 契约继续保持。`archive/original/` 只作验证参照；保留 ADR 0001，因为它也适用于主线。原生专属 ADR 0002–0015、Godot/C#规格、`native/` 和 `scripts/native/` 在 Godot 分支查阅。已提交的历史不重写，主线以新增提交移除专属文件。
 
 ```powershell
 Set-Location -LiteralPath 'D:\下载\clickpocalypse2-main'
@@ -28,7 +28,7 @@ Set-Location -LiteralPath 'D:\下载\clickpocalypse2-godot'
 git status --short --branch
 ```
 
-在该目录阅读 `AGENTS.md`、`docs/native-build.md`、原生规格与 ADR；按最新明确需求选定后续产品目标。本轮只完成隔离，没有验证或推进原生功能。
+在该目录阅读 `AGENTS.md`、`docs/native-build.md`、原生规格与 ADR；按最新明确需求选定后续产品目标。2026-10-03隔离批次没有验证或推进原生功能；当前主线Electron试用不属于Godot/C#原生线。
 
 本地工具链 `.tools/`、试验记录 `.scratch/`、浏览器取证 `.playwright-mcp/` 及 `output/native-*`、`output/windows-*` 已迁到 Godot 工作目录。旧路径生成的 489 个构建文件和 1 个 Python 缓存文件存放在该目录的 `output/branch-isolation-preserved/`；不覆盖新检出的源码，后续构建按新目录重建。
 

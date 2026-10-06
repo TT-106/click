@@ -1,26 +1,141 @@
-# 经典恢复报告与验收矩阵
+# 治理前恢复报告
 
-本报告保存恢复工作的结论和**经典验收判定**；本轮指标/检查统一见 [WORKSTATE](docs/WORKSTATE.md)。附录A沿用既有证据，仍为47 PASS / 4 PARTIAL，文档治理没有将任何缺口升级。
+> 历史正文，停止执行；当前矩阵仍在根 REFACTOR_REPORT.md。
 
-## 恢复成果
+# REFACTOR REPORT — Clickpocalypse II 语义恢复与现代化工程
 
-原始 `archive/original/c2.js` 经AST机械转换恢复为静态ES模块，提取atlas/固定codec、私有化Game并注入保存端口；不是重新设计原版规则。迁移明细在 [MIGRATION_MAP](MIGRATION_MAP.md)，当前架构在 [architecture](docs/architecture.md)。产品入口与构建不加载原版脚本，原版仍保留作差分oracle。
+> **R35（2026-10-03）补充**：本报告保真矩阵中的原版逐像素证据对应 `classic` 引擎路径。用户新授权的产品默认 `clean` 保留原像素角色、弱化地形与特效、稳定墙面排序，并移除顶栏。`npm run test:presentation` 另测新画面、墙地闪动反例、缓存/剔除、风格切换存档不变及桌面/手机布局。跨浏览器和真机范围仍为 PARTIAL，完整现代化仍未完成。实现与证据边界见 `docs/rendering.md`、`docs/WORKSTATE.md`。
 
-恢复期混淆属性扫描已归零，局部命名和深接口持续推进；当前仍有共享game、大SCC、类型债和初始化顺序依赖。不能把“初始化可运行”写成“静态依赖单向”或“完整现代化已完成”。
+> 执行窗口：2026-09-25（首次恢复）→ 2026-09-26（主体重构）→ **2026-09-27（语义恢复收官 + 验证收尾）**。
+> 配套文档：`MIGRATION_MAP.md`、`COMPATIBILITY_REPORT.md`、`PERFORMANCE_REPORT.md`、`docs/architecture.md`、`docs/WORKSTATE.md`（续跑入口）、`docs/m10-type-debt.md`（类型债务台账）、`docs/m13-exhaustion-audit.md`（残留项审计）、`docs/reverse-engineering/facts.md`（事实库）。
 
-## 行为证据与范围
+## 0. 2026-09-27 会话摘要（本轮改了什么）
 
-位级RNG、固定codec、完整存档parity、场景差分、外部DOM选择器、classic像素与加速soak构成保护网。具体命令/前置条件见 [DEVELOPMENT](docs/DEVELOPMENT.md)，方法见 [baseline](docs/baseline.md)；实际定义数量和本轮执行范围只引用WORKSTATE。
+| 项 | 前 → 后 | 证据 |
+|---|---|---|
+| 混淆属性名 | **41 → 0** | `npm run analyze` 报 0；`npm run lint` 把它固化为不变量 |
+| `symbol-map` 的 fields 段 | 1,010 → **1,047** | `docs/symbol-map.json` |
+| 验收矩阵 | 51 PASS / 0 PARTIAL → **47 PASS / 4 PARTIAL / 0 未覆盖** | 附录 A（7 行误标按矩阵口径改判；成就行闭合；彻夜会话闭合「物品」远古档位与「法术」cat=15 两行，Canvas 扩到 4 视口仍 PARTIAL） |
+| 隐形文件名垃圾文件 | 38 个（已被 git 跟踪） → **0** | `scripts/find-invisible-name-files.mjs`；`check` 语法文件数回落 |
+| 文档 `file:line` 引用 | 越界 4 → **0**（934 条引用解析不到 0 条） | `scripts/verify-doc-refs.mjs` |
+| 文档内嵌代码片段 | 漂移 64/76 → **15/76**（残留为节选/伪码型，已在文首声明） | `scripts/check-doc-snippets.mjs` |
+| 文档内旧标识符（fields 命中） | 66 → **0** | `scripts/fix-doc-identifiers.mjs` |
+| `@type {any}` 强制转换 | 50 → **42** | `docs/m10-type-debt.md` |
+| 门禁 | 6 门 → **10 门**（新增 `lint`，并把 soak/perf/perf:frames 纳入最终扫描） | §5 末行；`output/s-*.log` |
+| 差分场景 | 59 → **65**（cat=10 狼群、2 条成就临界值、`ancient-item-found` 远古物品、cat=15 观察器接线、2 条边界视口指纹） | `npm run test:scenarios` 65/65；`scripts/check-spell-coverage.mjs` |
+| 法术直接可观测量 | 4/16 → **15/16 类**（新增 `damageNumbers`/`healNumbers`/`allyEffectType` 三条通道） | 矩阵「法术」行；实测 91~559 次/类 |
+| `lint` 不变量 | 6 条 → **7 条**（新增"每个 spellCategoryId 必须有场景"） | `npm run lint` |
+| 空断言 | 3 处静默失效的 `check` 键（`maxLevelUnlocked`/`multiLearned`+`chainLearned`/`pointsSpent`） → **全部补上断言，并加防呆让未断言的键直接失败** | `scripts/test-scenarios.mjs` 的 `handledVerdictKeys` |
 
-classic承接原版像素参照；clean保留原素材颜色，采用授权的布局/采样/动态接缝处理，不宣称逐像素与原版相同。R55增加名称输出与模拟故障处理，正常规则/存档/RNG路径继续差分。
+新增的可复用工具（全部零第三方依赖）：`scripts/lint-invariants.mjs`（不变量守卫）、`record-field-names.mjs`、`rename-atlas-schema.mjs`、`find/remove-invisible-name-files.mjs`、`verify-doc-refs.mjs`、`check-doc-snippets.mjs`、`fix-doc-identifiers.mjs`、`find-unused-modules.mjs`。
 
-原野采集、背包和返程、Windows小窗与磁盘记录是新增系统，不属于下表原版覆盖率。60类经济定义及生产/基地仍未接线；完整原创产品、长期真机稳定和商业发行尚未完成。
+## 1. 原始问题
 
-## 仍未证明的部分
+`c2.js`：46,980 行高度混淆的浏览器游戏单体——1,231 个压缩符号（`ga`、`lB`、`pB`…）、数百个单字母字段、全部逻辑（模拟/渲染/DOM/存档/RNG）耦合在一个 `<script>` 里，无测试、无文档、无构建。直接维护等于持续逆向。
 
-四条PARTIAL为技能效果证据广度、多版本真实历史档、长期真机/原版帧基线、有限渲染视口/状态。细节在 [REMAINING-WORK](docs/REMAINING-WORK.md)，类型/结构债另列；性能报告是历史样本，不能把旧数字称当前性能。
+## 2. 恢复出的架构（考古结论，非设计）
 
-原恢复阶段详尽记录、关键事故和旧实验表已归档到 [治理前报告](docs/history/refactor-report-before-governance.md) 及 [逐轮日志](docs/history/WORKSTATE-through-R56.md)。历史行号/原名按对应版本回源，不作为当前可复制接口。
+游戏是**回合制 idle RPG**：250ms 一回合的模拟核心 + 60Hz 渲染循环 + 帧循环驱动的离线结算；两条随机源（MT19937 变体管世界生成、`Math.random` 管战斗掉落）；存档为语义化 JSON → LZ-string 1.3.3 Base64 → localStorage。完整论证见 `docs/architecture.md`（15 问 + 6 幅 Mermaid 序列图，315 处 file:line 引用）。
+
+## 3. 新架构
+
+```
+archive/original/c2.js  ──AST 机械恢复──▶  src/engine/（77 模块，32,431 行）
+                                            core ← content/characters/combat/loot/world/…
+                                                   ← simulation ← runtime(组合根)
+                                            唯一产品入口：src/engine/adapter.js（命令校验+只读快照）
+新增 UI 壳：src/app.js + src/ui/（中文界面，经 adapter 访问引擎，DOM 面板契约保留）
+```
+
+- **不是重写**：恢复清单 `archive/migration/recovery-manifest.json`（atlas 抽取、codec 复用、ES module 化、初始化函数化、Game 私有化）。
+- 依赖方向单向；`core/` 不依赖 `game`；循环依赖由 `runtime/index.js` 初始化顺序打破。
+
+## 4. 关键语义恢复（证据分级均为 HIGH）
+
+| 领域 | 恢复内容 |
+|---|---|
+| RNG | `ga`=SeededRandom（**JS 浮点变体 MT19937**，黄金值锁定）；`randomInt` 走全局 `Math.random`；两条随机流的消费顺序受差分保护 |
+| 存档 | 30 顶层键语义化 DTO；4,477 键实测无混淆键；LZ-string 1.3.3 契约；`gameTimestamp` 写当前时刻/恢复为 lastActiveAt |
+| 离线 | 120s 阈值、12h+加成上限、帧循环驱动（每帧≤200 回合）、后台标签页累加路径 |
+| 领域字段 | 30+ 字段身份重命名落地（position/levelPosition/room/slot/characteristic/statType/spriteName/canPurchase/tabState/currentValue 组/tileGrid/worldBlocks 组/动画帧表组/Achievement 组…），映射与证据见 `docs/reverse-engineering/semantic-map.md` |
+| 外部契约 | `window.Game/lB/pB/hE` → adapter/runtime API（MIGRATION_MAP.md 对照表） |
+| 公式文档 | `docs/formulas/combat.md`（伤害/命中/暴击/眩晕/技能法术/治疗/目标选择/遭遇结束 + 随机数消耗顺序）、`items.md`（稀有度/等级/词缀/售价/掉落门）、`progression.md`（经验曲线/点数事件/升级价格/成就/统计/重置/离线），共 733 条 file:line 引用逐条回源核对 |
+
+## 5. 测试体系（全部实测通过，共 87 个差分场景）
+
+| 层 | 内容 |
+|---|---|
+| L1 单元（155 项） | RNG 位级差分、codec 与存档契约、格式化、注入契约、资源包校验与加载失败、帧锚点、地图投影与排序、语义动画状态、林中旧村生成与自动探索、旧村布局、拆桥通行、自然世界分块与负坐标、环境选址、连续探索、位图历史、半步刷新续跑及旧生成器指纹、**经典地图窗口金标准**（逐行等价于重构前展开的 35 行绘制序列）、**tile 显示层数据化**（顺序/通道/访问器/动态层）、**场景物件生产者**（规则校验/取格/确定性物化/生成期接线）、**名称输出边界**（存档可写入的物品名/怪物名在 innerHTML 边界转义、高亮 span 不被二次转义、合法内容名逐字节不变）、**模拟停机策略**（故障记录与上报、停机后不续排模拟、不自动覆盖最后有效存档、resetRun/importSave 可恢复）；均不启动产品页面 |
+| L3/L4 差分 | `test:parity`：同存档 + 固定 RNG/时钟，0/1/99/900 回合完整存档逐字段相等；`test:scenarios`：**91 场景**（长跑、离线四态 + 12h 截断 + 后台关闭态、药水激活、全 6 类卷轴战斗施放、16 类法术分支、城堡征服→胜利、胜利后继续征程（真实按钮 + 1/99/900 回合 + 非空前提 + 再次进入）、金币涌入、后期、veteran、prestige、full reset、升级购买与怪物等级解锁、冒险点消费、成就领取与**成就进度临界值两侧**、自动装备、两条农场购买入口、财宝箱/武器架/书架搜索、四类地面掉落拾取、农场收获与长期再侵袭生命周期跨越、药水真实使用、渲染帧 + 自动落盘） |
+| L5 集成 | 场景内的"两端各自增长断言 + 逐检查点全状态相等"即多模块组合验证（战斗→掉落→拾取→统计→存档） |
+| L6 浏览器 E2E | 建队/自动战斗/暂停/五类面板/**c2c.user.js 外部 DOM 契约**/设置/导出导入/非法存档/刷新恢复/键盘/三种视口 |
+| L7 长跑 soak | `test:soak`：115,200 与 345,600 等价回合（8h/24h），两端完整存档相等 + CDP 主动 GC 后堆增量样本 |
+| 渲染等价 | `rendered-scene` / `autosave-payload`：真实帧循环 1,300 帧后比对主画布逐像素 FNV-1a 指纹（两端相同）与落盘存档解码内容 |
+| 工程门 | `npm run check`（当前 219 文件语法 + 单测）、`npm run typecheck`（tsc 覆盖 77/78 引擎模块，经 import 图传递；`src/engine/modules` 下 `@ts-nocheck` 已清零）、`npm run build`（增量拷贝到 dist）、`npm run lint`（12 条不变量守卫，见 §9）；每切片一 commit。**2026-09-27 最终回归扫描（10 门全绿，退出码逐条回显）**：`lint=0 build=0 typecheck=0 check=0 parity=0 scenarios=0 e2e=0 soak=0 perf=0 perf:frames=0` |
+
+方法论实证：差分矩阵三次抓到人工没看到的真实缺陷——guardians/minions 数据键漏改导致城堡守卫生成崩溃；金堆房对 DungeonTile 误调角色坐标接口；以及本轮由新场景暴露的**自动保存间隔 3E4 vs 原版 3E5**（10 倍频率，改动前无任何测试能看到）。
+
+## 6. 兼容性（详见 COMPATIBILITY_REPORT.md）
+
+存档兼容、行为差分、RNG 确定性、离线语义、自动保存落盘内容 = **VERIFIED**；外部 DOM 契约已实测（选择器逐项断言 + 反向验证）；附录 A 的 **4 行 PARTIAL** 与 `docs/reverse-engineering/unresolved.md`（U4 覆盖口径、U7 UI 独占路径）逐项写明了缺口。U5（长尾字段重命名）已于 2026-09-27 关闭：`analyze-fields` 报 0。
+
+## 7. 性能（详见 PERFORMANCE_REPORT.md）
+
+最新一次 `npm run perf` CPU 样本比值：回合推进 1.08x、序列化 1.43x、导入 0.75x、离线 1h 结算 0.79x；既有样本的相对快慢会翻转，不能把单次倍数当稳定结论。`npm run perf:frames` 的当前页面两种状态 P95 为 4.5/4.8ms（各 599 帧），没有原版页面同口径基线。可确认的是未见数量级退化，模拟约占 250ms 回合预算的 0.03%；未做无数据驱动的优化。
+
+## 8. 剩余风险与未完成
+
+1. ✅ **字段重命名已收官**（2026-09-27）：`node scripts/analyze-fields.mjs` 现报「**混淆属性总数: 0**」。U66–U122 共 57 批把清单从 806 逐批降到 0（U113–U120 是最后 8 批、33 个字段，收尾于贴纸图集 schema），工作清单 `artifacts/obfuscated-fields.json` 现为空数组。流程已固化为四个工具：`scripts/rename-field.mjs`（单字段）、`rename-fields-batch.mjs`（多字段事务批，带命中数/行数/缩进/字符串字面量四重校验）、`rename-atlas-schema.mjs`（带引号的 JSON 键）、`record-field-names.mjs`（回写 symbol-map 的 fields 段，现 1,047 条）。每批证据链与踩坑见 `docs/WORKSTATE.md` 顶部。
+2. **UI 独占路径仍有差分缺口**（U7）：三种财宝房目标物搜索与金币/卷轴/药水/物品四类地面掉落拾取已分别有专项断言；农场全生命周期（购买/推演成熟收获/休耕再侵袭/二次成熟）已有专项断言；卷轴全 6 类战斗施放与后台行为关闭态已闭环。`upgrades-purchased` 已驱动全局升级、角色升级、技能树与法术学习（type=6）购买，`monster-level-unlocked` 已驱动怪物等级解锁，`adventure-points-spent` 已驱动一项冒险点升级，`achievement-claimed` 已驱动一次成就领取，`auto-equipped` 已驱动自动装备，`scroll-cast-in-combat` 已驱动全部 6 类卷轴施放，`dungeon-farm-purchased` / `dungeon-row-farm-purchased` 已驱动两条购买入口，`potions-activated` 已驱动药水激活。
+3. **验收口径分层（对应附录 A 现存的 4 行 PARTIAL）**：角色技能的逐项战斗效果、多版本存档迁移样本、渲染指纹的有限视口/浏览器覆盖、真机帧时间与低端设备——这四条已在附录 A 对应行内以"**缺口（写明）**"标注，不得读作 PASS。（历史：本条最初写"7 行 PARTIAL、法术仅 cat=2/17 有可观测量、渲染 2 场景×2 视口"；法术与物品两行已在彻夜会话闭合、渲染扩到 4 视口，具体证据见附录 A 对应行。）
+4. 双主字母 `Cb`/`Qc` 已按所有者拆开；`oc` 的四种所有者已由原版帧数组构造链证明同为 `frameIndex`；`$c` 已改为 `itemDrop`（见 semantic-map）。
+5. ✅ **38 个"隐形文件名"垃圾文件已清除**（2026-09-27）：仓库里存在成对的 `X.js` 与 `X.js\uF00D`（尾随 U+F00D，不可见），后者一律 99 字节、内容仅一行 `// @ts-nocheck -- M10 渐进类型化…`，是历史脚本误写留下的残渣且已被 commit 跟踪。因为名字尾随不可见字符，`*.js` 类匹配（`check.mjs`、`analyze-fields.mjs`、人工 `ls`）都看不见它们——这正是早前"审计报告称 38 个垃圾文件、随后实测为 0"矛盾的根因（两次检查用的匹配方式不同）。工具：`scripts/find-invisible-name-files.mjs`（盘点）与 `scripts/remove-invisible-name-files.mjs`（三条安全断言：≤200B、含 `@ts-nocheck`、存在同名正常文件，任一不符即整批中止）。删除后 `check` 语法文件数由 121 回落，dist 亦不再被拷入垃圾。
+6. ✅ **文档↔代码一致性已机械校验**（2026-09-27）：57 批改名后，`docs/formulas/*` 的片段与散文仍在用改名前的标识符。新增三个可复现工具并据此修正：`check-doc-snippets.mjs`（76 条内嵌片段中 **61 条**已与源码重同步，含 ref 行号重定位）、`fix-doc-identifiers.mjs`（三份文档 71 行标识符更新，fields 命中 **66 → 0**）、`verify-doc-refs.mjs`（**全部文档**——根目录四份报告 + `docs/**/*.md` 共 **1,088 条 `file:line` 引用**：解析不到 **0**、行号越界 **0**，同名歧义 28 条按文档声明的缩写约定接受；校验范围起初只覆盖四份报告，漏掉了引用密度最高的 `docs/formulas/*`，扩充后立刻抓出 5 条越界并逐条修正：`combat.md` 把忍者回旋镖调用点误写成 `actions.js` 的 867 行（实为 characters/character.js 第 867 行）、`persistence.md` 的 scripts/test-parity.mjs 的 36 行（该文件仅 31 行）、`rng.md` 的连击数区间 stats.js 的 113-121 行（`rollChainCount` 实际在 102-114）、`baseline.md` 的 根目录 index.html 的 904-908 行（应为 `archive/original/index.html`）、`facts.md` 的 c2.js 的 270000-271250 行（该文件仅 46,981 行，实际为 `c2.js:16743-16799` 的 `function Cs()`））。四份报告引用的场景名与 60 条场景清单逐一对账全部命中。**仍未闭合**：15 条"节选/伪码"型片段（含 `...`）的行号不逐字对应，已在三份公式文档文首如实声明——判读时以片段上方的 `file:line` 与当前源码为准。
+7. **类型债务仍存（PARTIALLY VERIFIED，详见 `docs/m10-type-debt.md`）**：`tsc` 0 错误、77/77 引擎模块无 `@ts-nocheck`、0 处 `@ts-ignore`/`eslint-disable`，但仍有 **42 处 `@type {any}`** 与 **142 行 `unknown` 收窄**。根因是**结构性**的：本项目用"`function X(){}` + `initializeXxx()` 里逐条 `X.prototype.m = ...`"的原型后挂载写法，tsc 在函数边界外看不到这些成员；加上 AST 恢复期的变量复用。本轮已完成：`tsconfig` 补 `lib: ["ES2022","DOM"]`（浏览器项目本就该有，此前 DOM 类型完全缺失）；`views/results.js` 用 1 个交叉类型 typedef 消掉 9 处 `any`。**刻意不做**：为消 cast 而改运行时行为（补默认字段/改原型链）——规范 §39 的优先级是「行为正确 > 存档兼容 > 可测试 > 可维护 > 类型安全」。最值得的下一步是把未被任何 `@type` 引用的 `persistence/save-dto.js`（119 行 DTO typedef）接到 `game-save.js` 上，换取真正的存档形状校验。
+
+## 9. 后续开发方式（对新开发者的承诺）
+
+```bash
+npm install && npm run dev          # 一条命令跑起来
+npm test && npm run check           # 一条命令测试（单测 + 语法 + tsc）
+npm run lint                        # 一条命令守住不变量（见下）
+```
+
+`npm run lint`（`scripts/lint-invariants.mjs`，**零第三方依赖**）把本轮建立的关键不变量变成可自动回归的守卫——这些不变量被破坏时通常不会立刻报错，而是悄悄退化：
+
+| 不变量 | 含义 |
+|---|---|
+| 混淆属性名 = 0 | `analyze-fields` 报 0；防止旧名回流 |
+| 无隐形字符文件名 | 防止 `X.js\uF00D` 这类垃圾同名文件重现 |
+| `src/engine/modules` 无 `@ts-nocheck` | 防止用整文件豁免掩盖类型错误 |
+| 源码无 `TODO`/`FIXME`/`HACK`/`@ts-ignore`/`eslint-disable` | 防止待办与规则豁免堆积 |
+| 文档 `file:line` 引用无越界 | 防止文档与代码脱节（934 条引用） |
+| 原版存档 fixture 无单字母键 | 守住"4,477 键全语义化"的存档契约 |
+| 每个 spellCategoryId 都有差分场景 | 防止新法术只靠计数归因、没有可观测行为 |
+| 成就定义表与判定实现一致 | 328 条定义 × 28 种 requirementType，判定漏分支即失败 |
+| 存档 DTO schema 与四种形态一致 | 顶层 30 键在声明 / fixture / 序列化器两分支 / 嵌套 typedef 四处对齐 |
+| 当前态文档可数指标与源码实况一致 | 场景数、单测数、语法检查文件数、本条数——数字只能有一个来源 |
+| 工作树无"改名之外且未逐条授权"的结构变动 | 标识符抹平后的骨架对账；本会话的检查点事故（探针进了 HEAD、所有行为门禁全绿）就是它要防的那一类 |
+| 素材引用全部可解析且不跨组错用 | `audit-asset-refs`：代码引用的每个精灵名必须能在原版图集或素材包清单里解析到，且 `X.getSprite()` 的组判定成立；防"加内容时拼错名/写错目录 → 运行时静默画空白" |
+
+已做**反向验证**：故意插入一个 `// TODO` 后 `npm run lint` 退出码为 1 并指名文件，移除后恢复 0；
+故意插入 `var sampleTYPOmarker = 1` 同样被第 4 条点名；结构对账那条用真实的历史提交验过——
+在 7a2c981 的工作树里以 `7a2c981^` 为基线跑，报出 `simulation/loop.js:70` 的孤立插入并 exit 1；
+素材引用那条注入拼错名 (`L2_WallBrickNS_TYPO.PNG`) 与跨组错用（把 `CoinsGoldSmall.PNG` 交给 `terrainSprites`）
+各一次，均 exit 1 并指名 `file:line`，还原后转绿。
+
+其余命令：`npm run test:parity`（差分）、`npm run test:scenarios`（60 场景）、`npm run test:e2e`（浏览器）、`npm run test:soak`（8h/24h）、`npm run build`、`npm run analyze`、`npm run audit:doc-refs` / `audit:doc-snippets` / `audit:dead-reads`。
+- 找战斗：`src/engine/modules/combat/`；物品：`loot/`；地牢：`world/`；存档：`persistence/`；随机：`core/math.js`；渲染：`rendering/`。
+- 改任何行为前先读 `docs/architecture.md` 对应小节；改数值前读 `content/`；**不要**碰 RNG 顺序与存档键（差分会拦住你，但先读 facts.md 更省时间）。
+- 续跑入口：`docs/WORKSTATE.md`（含下一步任务队列与避坑清单）。
+
+## 10. 结论
+
+Clickpocalypse II 的核心实现已从高混淆遗留代码中恢复出真实语义：关键玩法行为有 87 个差分场景 + 位级 RNG 单测 + 浏览器 E2E + 8h/24h 等价回合 soak 的自动化证据保护，存档/RNG/时间/离线/自动保存经兼容验证，业务逻辑已迁入带清晰边界的现代模块（77 个），旧文件不再是唯一真相来源。
+
+这些结论由运行与差分证明，不是主观判断；同样明确的是**尚未证明的部分**：附录 A 实际有 51 行（逐行统计），其中 **47 行 PASS、4 行 PARTIAL、0 行未覆盖**。PARTIAL 的 4 行都在证据格里以"**缺口（写明）**"逐条写清缺什么——角色技能的逐项战斗效果、多版本存档迁移样本、渲染指纹的视口/浏览器覆盖、真机帧时间与低端设备表现（成就 requirementType、物品远古稀有度档位、法术 cat=15 的归因已于 2026-09-27 关闭，见附录 A 对应行）。`docs/reverse-engineering/unresolved.md` 的 U4（覆盖口径）/U7（UI 独占路径）是继续推进的入口；U5（长尾字段）已于 2026-09-27 关闭。
+
+---
 
 ## 附录 A：验收矩阵（规范 §56，逐系统，附证据）
 

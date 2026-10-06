@@ -1,5 +1,12 @@
 # Clickpocalypse II 下一阶段总路线与彻夜执行提示词
 
+> **历史档案，停止执行和更新。** 下文的“当前/最新/下一步”、数字、权限和命令只适用于原批次；不能用于当前开发或表示本轮验证。当前入口是 [文档索引](../../README.md)。
+
+
+> **历史任务书（已执行完）。** 本文件对应 **U131 → U132** 批次，其中 P-2、P-3 与组队入口切片均已完成。
+> **不要再把本文当作新任务执行。** 当前入口见 `docs/README.md`；接手顺序见 `docs/WORKSTATE.md` 顶部。
+> 下文保留供追溯，其中的日期、计数与测试结果都是**交接时的观测**，不是当前值。
+
 > 适用工作区：`D:\下载\clickpocalypse2-main`，Windows / PowerShell。编写于 2026-09-27。下面“给执行代理的提示词”可整段交给另一个 agent。日期、计数和测试结果只是交接时的观测；开工后以工作树和重跑结果为准。
 
 ## 给执行代理的提示词
@@ -30,7 +37,7 @@
 
 **交接时的工作树已经不干净。** 2026-09-27 观测到 U131 相关未提交改动：`REFACTOR_REPORT.md`、`docs/{REMAINING-WORK,WORKSTATE,architecture-debt,architecture,m10-type-debt}.md`、`package.json`、`scripts/lint-invariants.mjs`、`src/engine/modules/persistence/{game-save,save-dto}.js`，以及未跟踪的 `scripts/audit-save-schema.mjs`。它们不属于你可随意丢弃的临时文件。先查看 diff、记录归属与意图；不做 `reset --hard`、`clean`、整树格式化，不把别人的改动混进自己的提交。若发现另一个 agent 正在同一目录改文件，应在无冲突区域工作或使用独立工作树；不要覆盖其文件。
 
-**资料优先级**：当前源码与真实测试输出 > 顶部最新工作状态 > 历史报告。`docs/NEXT-ARCHITECTURE-PROMPT.md` 是 U130 前的旧执行提示，里面“成就切片尚未实施、SaveData 尚未接入、lint 因隐形文件名失败”等叙述已过期。`docs/HANDOFF-PROMPT.md` 更早。`docs/WORKSTATE.md` 顶部记录 U131，但后部仍有“当前工作树干净”“30 场景”“M10 已完成”等历史段落；不得摘一段旧话当作当前事实。
+**资料优先级**：当前源码与真实测试输出 > 顶部最新工作状态 > 历史报告。`docs/DEVELOPMENT.md` 是 U130 前的旧执行提示，里面“成就切片尚未实施、SaveData 尚未接入、lint 因隐形文件名失败”等叙述已过期。`docs/history/tasks/HANDOFF-PROMPT.md` 更早。`docs/WORKSTATE.md` 顶部记录 U131，但后部仍有“当前工作树干净”“30 场景”“M10 已完成”等历史段落；不得摘一段旧话当作当前事实。
 
 交接时重新跑过的**当前基线**：`npm run lint` 退出码 0（10 条不变量），`npm run check` 退出码 0（134 文件语法、typecheck、15 单测），`npm run audit:arch -- --json` 与 `npm run audit:save-schema` 退出码 0，`npm run test:parity` 的 0/1/99/900 回合通过，`npm run test:e2e` 通过，完整 `npm run test:scenarios` **62/62** 通过。soak/perf 的当前工作树结果仍应由你自己复跑；交接时的绿灯不是今夜后续修改的通行证。
 
