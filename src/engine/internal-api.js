@@ -1,5 +1,6 @@
 import { game } from './modules/runtime/index.js';
 import { configurePersistence } from './modules/runtime/storage-port.js';
+import { configureFaults } from './modules/runtime/fault-port.js';
 import { adventurerClasses } from './modules/content/classes.js';
 import { partyCapacityBonus } from './modules/content/balance.js';
 import { statValue } from './modules/characters/stats.js';
@@ -18,4 +19,5 @@ export const runtime = {
   encode: compress,
   importSave: value => game.importSave(value),
   setPersistence: configurePersistence,
+  setFaults: configureFaults,
 };

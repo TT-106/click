@@ -1,3 +1,4 @@
+import { animationBackground, spriteBackground } from '../rendering/preview.js';
 /** 升级按钮及各类详情显示。
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
@@ -13,8 +14,8 @@ import { getPartyMinLevel } from "../characters/party.js";
 import { statValue } from "../characters/stats.js";
 /** @typedef {{ createDomElements: () => void }} DomDetails */
 /** @typedef {{ reset: () => void, render: () => void, attachUpgrade: (upgrade: unknown) => void }} ActiveUpgradeButton */
-/** 升级详情视图所需的八个依赖由组合根注入。state / terrainSprites / monsterSprites / monsterCatalog /
- *  shops / dungeons / castles / animations 八个容器对象都在 runtime 的 game 模块对象字面量里只构造一次、
+/** 升级详情视图所需的九个依赖由组合根注入。state / terrainSprites / monsterSprites / monsterCatalog /
+ *  shops / dungeons / castles / animations / itemSprites 九个容器对象都在 runtime 的 game 模块对象字面量里只构造一次、
  *  从不整体重新赋值（src/ 内 0 处 `game.X =`，判据见 docs/reverse-engineering/facts.md），所以按引用绑安全；
  *  字段值（adventurers、collectedGold、pendingFarmKills、castleSpriteName 等）随游戏进程变化，读的始终是同一对象。
  *  未绑定就用到会立刻抛，避免"装配漏一步"退化成静默的 undefined 读取。 */
@@ -26,7 +27,8 @@ var boundShops = null;
 var boundDungeons = null;
 var boundCastles = null;
 var boundAnimations = null;
-export function bindUpgradeDetailViews(state, terrainSprites, monsterSprites, monsterCatalog, shops, dungeons, castles, animations) {
+var boundItemSprites = null;
+export function bindUpgradeDetailViews(state, terrainSprites, monsterSprites, monsterCatalog, shops, dungeons, castles, animations, itemSprites) {
   boundState = state;
   boundTerrainSprites = terrainSprites;
   boundMonsterSprites = monsterSprites;
@@ -35,6 +37,11 @@ export function bindUpgradeDetailViews(state, terrainSprites, monsterSprites, mo
   boundDungeons = dungeons;
   boundCastles = castles;
   boundAnimations = animations;
+  boundItemSprites = itemSprites;
+}
+function itemSpritesRef() {
+  if (!boundItemSprites) throw new Error('升级详情视图尚未绑定物品资源目录');
+  return boundItemSprites;
 }
 function stateRef() {
   if (!boundState) {
@@ -417,7 +424,7 @@ export function initializeViewsUpgradeDetails() {
     costIconBox.style.width = "30px";
     costIconBox.style.height = "100%";
     costIconBox.style.textAlign = "left";
-    costIconBox.style.background = "url('spritesheet/terrain.png') -1302px -363px";
+    costIconBox.style.background = spriteBackground(terrainSpritesRef().getSprite('L2_SkeletonHumanMedium2.PNG'), 'sacrifice');
     var costIconImage = createElement("img", costIconBox, null, null);
     costIconImage.src = "images/Transparent.gif";
     costIconImage.style.width = "100%";
@@ -475,7 +482,7 @@ export function initializeViewsUpgradeDetails() {
         this.cachedCharacterLevel = characterLevel;
         var sprite = character.getSprite(),
           statMultipliers = character.classDefinition.statMultipliers;
-        this.characterImage.style.background = "url('spritesheet/monsters.png') -" + (sprite.sourceX + 10) + "px -" + (sprite.sourceY + 12) + "px";
+        this.characterImage.style.background = spriteBackground(sprite, 'portrait');
         this.descriptionLabel.innerHTML = this.upgrade.getDescription();
         this.experienceLabel.innerHTML = formatAmount(character.stats.experienceToLevelUp) + " XP";
         this.levelLabel.innerHTML = "等级 " + (characterLevel + 1);
@@ -542,11 +549,11 @@ export function initializeViewsUpgradeDetails() {
       this.cachedItem = item;
       var iconSprite = item.getIconSprite(),
         inventorySprite = item.inventory.getSprite();
-      this.itemImage.style.background = "url('spritesheet/items.png') -" + iconSprite.sourceX + "px -" + iconSprite.sourceY + "px";
+      this.itemImage.style.background = spriteBackground(iconSprite, 'icon');
       this.itemNameLabel.innerHTML = getHighlightedItemName(item);
       this.rarityLabel.className = getRarityClass(item.getRarity());
       this.rarityLabel.innerHTML = " (" + getItemRarityLabel(item) + ")";
-      this.monsterImage.style.background = "url('spritesheet/monsters.png') -" + (inventorySprite.sourceX + 10) + "px -" + (inventorySprite.sourceY + 12) + "px";
+      this.monsterImage.style.background = spriteBackground(inventorySprite, 'portrait');
       this.levelLabel.innerHTML = "等级" + item.itemLevel;
       var equippedItem = item.inventory.getSlotItem(item.slot);
       var statDelta = equippedItem ? item.itemValue - equippedItem.itemValue : item.itemValue;
@@ -638,7 +645,7 @@ export function initializeViewsUpgradeDetails() {
     this.previewImage.style.width = "50px";
     this.previewImage.style.height = "50px";
     var castleSprite = terrainSpritesRef().getSprite(castlesRef().castleSpriteName);
-    this.previewImage.style.background = "url('spritesheet/terrain.png') -" + castleSprite.sourceX + "px -" + castleSprite.sourceY + "px";
+    this.previewImage.style.background = spriteBackground(castleSprite, 'terrain');
     var titleCell = titleRow.insertCell(1);
     titleCell.style.textAlign = "left";
     this.titleElement = createElement("span", titleCell, null, null);
@@ -676,7 +683,7 @@ export function initializeViewsUpgradeDetails() {
       if (item = items[itemIndex], this.cachedItems.length < itemIndex || this.cachedItems[itemIndex] !== item) {
         this.cachedItems[itemIndex] = item;
         iconSprite = item.getIconSprite();
-        this.iconElements[itemIndex].style.background = "url('spritesheet/items.png') -" + iconSprite.sourceX + "px -" + iconSprite.sourceY + "px";
+        this.iconElements[itemIndex].style.background = spriteBackground(iconSprite, 'icon');
         this.nameElements[itemIndex].innerHTML = getHighlightedItemName(item);
         this.rarityElements[itemIndex].className = getRarityClass(item.getRarity());
         this.rarityElements[itemIndex].innerHTML = " (" + getItemRarityLabel(item) + ")";
@@ -779,7 +786,7 @@ export function initializeViewsUpgradeDetails() {
         this.assetSource = monsterSpritesRef();
         this.asset = monsterSpritesRef().getSprite(minionSpriteName);
         this.isAnimated = false;
-        this.spellImage.style.background = "url('spritesheet/monsters.png') -" + (this.asset.sourceX + 10) + "px -" + (this.asset.sourceY + 12) + "px";
+        this.spellImage.style.background = spriteBackground(this.asset, 'summon');
       } else {
         var effectName = spell.impactEffectName;
         this.assetSource = animationsRef().animationMap[effectName];
@@ -798,8 +805,7 @@ export function initializeViewsUpgradeDetails() {
         if (this.frameIndex >= this.asset.getFrameCount()) {
           this.frameIndex = 0;
         }
-        var frame = this.asset.frames[this.frameIndex];
-        this.spellImage.style.background = "url('" + this.assetSource.fileName + "') -" + frame.frameSourceX + "px -" + frame.frameSourceY + "px";
+        this.spellImage.style.background = animationBackground(this.asset, this.frameIndex, 'spell');
       }
     }
   };
@@ -880,7 +886,7 @@ export function initializeViewsUpgradeDetails() {
     costIconBox.style.width = "30px";
     costIconBox.style.height = "100%";
     costIconBox.style.textAlign = "left";
-    costIconBox.style.background = "url('spritesheet/items.png') -1464px -73px";
+    costIconBox.style.background = spriteBackground(itemSpritesRef().getSprite('CoinsGoldLarge.PNG'), 'goldCost');
     var costIconImage = createElement("img", costIconBox, null, null);
     costIconImage.src = "images/Transparent.gif";
     costIconImage.style.width = "100%";
@@ -938,7 +944,7 @@ export function initializeViewsUpgradeDetails() {
     }
     if (this.selectedDungeon !== dungeon && (this.selectedDungeon = dungeon)) {
       var mapSprite = terrainSpritesRef().getSprite(dungeon.mapSprite);
-      this.previewImageElement.style.background = "url('spritesheet/terrain.png') -" + mapSprite.sourceX + "px -" + mapSprite.sourceY + "px";
+      this.previewImageElement.style.background = spriteBackground(mapSprite, 'terrain');
       this.labelCell.innerHTML = dungeon.dungeonName;
     }
   };
@@ -968,7 +974,7 @@ export function initializeViewsUpgradeDetails() {
     costIconBox.style.width = "30px";
     costIconBox.style.height = "100%";
     costIconBox.style.textAlign = "left";
-    costIconBox.style.background = "url('spritesheet/items.png') -1464px -73px";
+    costIconBox.style.background = spriteBackground(itemSpritesRef().getSprite('CoinsGoldLarge.PNG'), 'goldCost');
     var costIconImage = createElement("img", costIconBox, null, null);
     costIconImage.src = "images/Transparent.gif";
     costIconImage.style.width = "100%";
@@ -1008,7 +1014,7 @@ export function initializeViewsUpgradeDetails() {
     }
     if (this.cachedScroll !== scrollItem && (this.cachedScroll = scrollItem)) {
       var scrollSprite = scrollItem.spriteName;
-      this.scrollImage.style.background = "url('spritesheet/items.png') -" + scrollSprite.sourceX + "px -" + scrollSprite.sourceY + "px";
+      this.scrollImage.style.background = spriteBackground(scrollSprite, 'icon');
     }
     if (this.cachedTitleText !== title) {
       this.cachedTitleText = title;
@@ -1045,7 +1051,7 @@ export function initializeViewsUpgradeDetails() {
     costIconBox.style.width = "30px";
     costIconBox.style.height = "100%";
     costIconBox.style.textAlign = "left";
-    costIconBox.style.background = "url('spritesheet/items.png') -1464px -73px";
+    costIconBox.style.background = spriteBackground(itemSpritesRef().getSprite('CoinsGoldLarge.PNG'), 'goldCost');
     var costIconImage = createElement("img", costIconBox, null, null);
     costIconImage.src = "images/Transparent.gif";
     costIconImage.style.width = "100%";
@@ -1095,7 +1101,7 @@ export function initializeViewsUpgradeDetails() {
     this.previewImageElement.style.width = "50px";
     this.previewImageElement.style.height = "50px";
     var dungeonSprite = terrainSpritesRef().getSprite("L2_DungeonE.PNG");
-    this.previewImageElement.style.background = "url('spritesheet/terrain.png') -" + dungeonSprite.sourceX + "px -" + dungeonSprite.sourceY + "px";
+    this.previewImageElement.style.background = spriteBackground(dungeonSprite, 'terrain');
     var titleCell = headerRow.insertCell(1);
     titleCell.style.textAlign = "left";
     titleCell.style.width = "150px";
@@ -1109,7 +1115,7 @@ export function initializeViewsUpgradeDetails() {
     costIconBox.style.width = "30px";
     costIconBox.style.height = "100%";
     costIconBox.style.textAlign = "left";
-    costIconBox.style.background = "url('spritesheet/terrain.png') -1302px -363px";
+    costIconBox.style.background = spriteBackground(terrainSpritesRef().getSprite('L2_SkeletonHumanMedium2.PNG'), 'sacrifice');
     var costIconImage = createElement("img", costIconBox, null, null);
     costIconImage.src = "images/Transparent.gif";
     costIconImage.style.width = "100%";
@@ -1159,7 +1165,7 @@ export function initializeViewsUpgradeDetails() {
     this.previewImageElement.style.width = "50px";
     this.previewImageElement.style.height = "50px";
     var farmSprite = terrainSpritesRef().getSprite("L2_Terrain077.PNG");
-    this.previewImageElement.style.background = "url('spritesheet/terrain.png') -" + farmSprite.sourceX + "px -" + farmSprite.sourceY + "px";
+    this.previewImageElement.style.background = spriteBackground(farmSprite, 'terrain');
     var titleCell = headerRow.insertCell(1);
     titleCell.style.textAlign = "left";
     titleCell.style.width = "150px";
@@ -1173,7 +1179,7 @@ export function initializeViewsUpgradeDetails() {
     costIconBox.style.width = "30px";
     costIconBox.style.height = "100%";
     costIconBox.style.textAlign = "left";
-    costIconBox.style.background = "url('spritesheet/items.png') -1464px -73px";
+    costIconBox.style.background = spriteBackground(itemSpritesRef().getSprite('CoinsGoldLarge.PNG'), 'goldCost');
     var costIconImage = createElement("img", costIconBox, null, null);
     costIconImage.src = "images/Transparent.gif";
     costIconImage.style.width = "100%";
@@ -1233,7 +1239,7 @@ export function initializeViewsUpgradeDetails() {
       this.monsterDefenceLabel.innerHTML = formatAmount(this.monsterDefence) + " 防御";
       var monsterTypes = getMonsterTypesForLevel(monsterCatalogRef(), monsterLevel);
       var monsterSprite = monsterTypes[randomInt(monsterTypes.length)].sprite;
-      this.monsterPreviewImage.style.background = "url('spritesheet/monsters.png') -" + (monsterSprite.sourceX + 10) + "px -" + (monsterSprite.sourceY + 12) + "px";
+      this.monsterPreviewImage.style.background = spriteBackground(monsterSprite, 'portrait');
     }
     var totalDamage = 0,
       totalArmor = 0,
@@ -1298,7 +1304,7 @@ export function initializeViewsUpgradeDetails() {
     costIconBox.style.width = "30px";
     costIconBox.style.height = "100%";
     costIconBox.style.textAlign = "left";
-    costIconBox.style.background = "url('spritesheet/terrain.png') -1302px -363px";
+    costIconBox.style.background = spriteBackground(terrainSpritesRef().getSprite('L2_SkeletonHumanMedium2.PNG'), 'sacrifice');
     var costIconImage = createElement("img", costIconBox, null, null);
     costIconImage.src = "images/Transparent.gif";
     costIconImage.style.width = "100%";

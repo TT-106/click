@@ -60,11 +60,12 @@
 .pointsBreakdownContainer {
     position: absolute;
     top: 73px;
-    bottom: 230px;
+    bottom: 245px;
     width: 360px;
     left: 3px;
 
     border: 1px solid #2B2B32;
+    overflow-y: auto;
 
     padding: 5px;
 }

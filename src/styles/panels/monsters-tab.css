@@ -59,7 +59,9 @@
     top: 0;
     left: 0;
     right: 0;
-    height: 395px;
+    /* 用底部留白代替固定高度：下方 .monsterUpgradeValuesContainer 是 <table>，
+       其 height 只作最小值、会被内容撑高（实测 210px -> 295px），固定高度必然重叠。 */
+    bottom: 310px;
     overflow-y: scroll;
     
     border: 1px solid #2B2B32;

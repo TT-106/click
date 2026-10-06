@@ -13,9 +13,11 @@ import { mkdir, readdir, readFile, rm, stat, writeFile } from 'node:fs/promises'
 import path from 'node:path';
 import process from 'node:process';
 import { auditProductionBoundary } from './audit-production-boundary.mjs';
+import { importAssets } from './import-assets.mjs';
 
 const root = path.resolve(import.meta.dirname, '..');
 const dist = path.join(root, 'dist');
+await importAssets({ root, check: true });
 
 const required = ['index.html', 'src/app.js', 'src/engine/adapter.js', 'spritesheet/items.png', 'spritesheet/monsters.png', 'spritesheet/terrain.png'];
 for (const file of required) {
@@ -54,7 +56,7 @@ async function listFiles(base, rel = '') {
   return out;
 }
 
-for (const entry of ['index.html', 'favicon.svg', 'src', 'spritesheet', 'images']) {
+for (const entry of ['index.html', 'favicon.svg', 'src', 'spritesheet', 'images', 'assets']) {
   const sourceRoot = path.join(root, entry);
   const info = await stat(sourceRoot);
   if (info.isDirectory()) {
@@ -75,7 +77,7 @@ const count = async dir => {
 };
 
 // 可复现纯净：dist 中不在本次源清单内的文件即陈旧产物，逐一清理（只动 dist/）。
-const copyRoots = ['index.html', 'favicon.svg', 'src', 'spritesheet', 'images'];
+const copyRoots = ['index.html', 'favicon.svg', 'src', 'spritesheet', 'images', 'assets'];
 const expected = new Set();
 for (const entry of copyRoots) {
   const sourceRoot = path.join(root, entry);

@@ -18,20 +18,19 @@ import { BehaviorQueue } from "../ai/behaviors.js";
 import { GoldDrop } from "../loot/treasure.js";
 import { Potion, PotionDrop, potionDefinitions } from "../combat/potions.js";
 import { showFloatingText } from "../rendering/floating-text.js";
-import { HALF_TILE_SIZE, TILE_SIZE, VIEWPORT_HALF_HEIGHT, VIEWPORT_HALF_WIDTH } from "../core/screen-layout.js";
+import { projectActor, projectLegacyPosition } from "../rendering/projection.js";
+import { HALF_TILE_SIZE, TILE_SIZE } from "../core/screen-layout.js";
 export function projectDungeonX(levelX, levelY) {
-  return Math.round(VIEWPORT_HALF_WIDTH + (levelX - game.level.centerX - (levelY - game.level.centerY)));
+  return Math.round(projectActor(levelX, levelY, game.level.centerX, game.level.centerY).x);
 }
 export function projectDungeonY(levelX, levelY) {
-  return Math.round(VIEWPORT_HALF_HEIGHT + 0.5 * (levelX - game.level.centerX + (levelY - game.level.centerY)));
+  return Math.round(projectActor(levelX, levelY, game.level.centerX, game.level.centerY).y);
 }
 export function projectWorldX(worldX, worldY) {
-  var camera = game.camera;
-  return VIEWPORT_HALF_WIDTH + ((worldX / TILE_SIZE | 0) - camera.tileColumn - ((worldY / TILE_SIZE | 0) - camera.tileRow)) * TILE_SIZE + ((worldX % TILE_SIZE | 0) - (worldY % TILE_SIZE | 0)) - camera.viewportOffsetX;
+  return projectLegacyPosition(worldX, worldY, game.camera).x;
 }
 export function projectWorldY(worldX, worldY) {
-  var camera = game.camera;
-  return VIEWPORT_HALF_HEIGHT + ((worldX / TILE_SIZE | 0) - camera.tileColumn + ((worldY / TILE_SIZE | 0) - camera.tileRow)) * HALF_TILE_SIZE + (((worldX % TILE_SIZE | 0) + (worldY % TILE_SIZE | 0)) / 2 | 0) - camera.viewportOffsetY;
+  return projectLegacyPosition(worldX, worldY, game.camera).y;
 }
 export function CharacterLifecycle() {
   this.regenTurnCounter = this.turnTimeAccumulator = 0;

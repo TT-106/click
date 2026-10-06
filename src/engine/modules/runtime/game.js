@@ -2,15 +2,18 @@
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
 import { AnimationCatalog, AnimationSheet, SpriteSheet, bindEffectAnimations, clearVisualEffects } from "../rendering/sprites.js";
+import { createAssetCatalog } from '../rendering/asset-catalog.js';
+import { bindAssetPreviews } from '../rendering/preview.js';
+import assetDefinitions from '../../../data/assets.generated.js';
 import { HALF_TILE_SIZE, TILE_SIZE, VIEWPORT_HALF_HEIGHT, VIEWPORT_HALF_WIDTH, VIEWPORT_HEIGHT, VIEWPORT_WIDTH } from "../core/screen-layout.js";
 import { monsterSpriteDefinitions } from "../core/bootstrap-data.js";
 import { createAnimationCatalog } from "../content/animations.js";
 import { CharacterLifecycle } from "../simulation/characters.js";
-import { WorldMap } from "../world/terrain.js";
+import { WorldMap, placePartyInWorld } from "../world/terrain.js";
 import { AllyRegistry, EncounterState, MonsterNameGenerator, MonsterRegistry, clearMonsters, resetEncounter } from "../combat/encounters.js";
 import { MinionRegistry, clearMinions } from "../characters/minions.js";
 import { DungeonRegistry, FarmRegistry, ShopRegistry, resetDungeons, resetFarms, resetShops } from "../world/dungeons.js";
-import { WORLD_ORIGIN_COLUMN, WORLD_ORIGIN_ROW, resetCastles } from "../world/regions.js";
+import { WORLD_ORIGIN_COLUMN, WORLD_ORIGIN_ROW, resetCastles, unlockStartingRegion } from "../world/regions.js";
 import { DungeonDecorationGenerator, DungeonLevel } from "../world/generation.js";
 import { GameLoop } from "../simulation/loop.js";
 import { GameView } from "../views/navigation.js";
@@ -40,6 +43,15 @@ import itemsAtlas from "../../../data/items-atlas.js";
 import { bindAchievementViews } from "../views/achievements.js";
 export var game;
 export function initializeRuntimeGame() {
+  const assets = createAssetCatalog({
+    legacyGroups: {
+      actors: new SpriteSheet('spritesheet/monsters.png', 54, monsterSpriteDefinitions),
+      terrain: new SpriteSheet('spritesheet/terrain.png', 54, terrainAtlas),
+      items: new SpriteSheet('spritesheet/items.png', 32, itemsAtlas)
+    },
+    definitions: assetDefinitions
+  });
+  bindAssetPreviews(assets);
   game = {
     tileSize: TILE_SIZE,
     halfTileSize: HALF_TILE_SIZE,
@@ -47,9 +59,10 @@ export function initializeRuntimeGame() {
     viewportHeight: VIEWPORT_HEIGHT,
     viewportHalfWidth: VIEWPORT_HALF_WIDTH,
     viewportHalfHeight: VIEWPORT_HALF_HEIGHT,
-    monsterSprites: new SpriteSheet("spritesheet/monsters.png", 54, monsterSpriteDefinitions),
-    terrainSprites: new SpriteSheet("spritesheet/terrain.png", 54, terrainAtlas),
-    itemSprites: new SpriteSheet("spritesheet/items.png", 32, itemsAtlas),
+    assets,
+    monsterSprites: assets.group('actors'),
+    terrainSprites: assets.group('terrain'),
+    itemSprites: assets.group('items'),
     animations: createAnimationCatalog({ AnimationCatalog, AnimationSheet }),
     camera: new function () {
       this.viewportOffsetY = this.viewportOffsetX = this.tileRow = this.tileColumn = 0;
@@ -360,6 +373,7 @@ export function initializeRuntimeGame() {
       initializeRegionsAndCastles();
     },
     resetRun: function (isFullReset) {
+      game.loop.simulationFault = null;
       game.state.turnNumber = 0;
       resetEncounter();
       game.state.party = new PartyState();
@@ -480,6 +494,17 @@ export function initializeRuntimeGame() {
         }
       }
     },
+    continueRun: function () {
+      game.gameWon = false;
+      recordGameEvent("Victory", "Decision: Continue");
+      game.resetContinuation();
+      game.state.victoryStatistics.currentContinueCount++;
+      placePartyInWorld();
+      unlockStartingRegion();
+      game.allies.reset();
+      game.view.reset();
+      saveProgress(game.saves);
+    },
     beginOfflineProgress: function () {
       if (!game.gameWon && game.partyCreated) {
         game.offlineDuration = Math.min(game.offlineDuration, 432E5 + offlineTimeBonus.currentValue);
@@ -517,6 +542,7 @@ export function initializeRuntimeGame() {
       }
     },
     importSave: function (saveText) {
+      game.loop.simulationFault = null;
       var saveManager = game.saves;
       recordGameEvent("SaveManager", "Import");
       return restoreGameState(saveManager, saveText) ? (game.partyCreated && game.view.reset(), game.processingOffline && game.view.onOfflineStart(), game.gameWon && game.view.onGameWon(), saveProgress(game.saves), true) : false;

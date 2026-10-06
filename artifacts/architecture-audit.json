@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-10-03T12:14:09.276Z",
+  "generatedAt": "2026-10-04T15:25:59.836Z",
   "counts": {
-    "srcJsFiles": 95,
-    "engineModules": 79,
-    "totalEdges": 546
+    "srcJsFiles": 126,
+    "engineModules": 87,
+    "totalEdges": 619
   },
   "gameImporters": {
     "total": 19,
@@ -170,6 +170,24 @@
       "toIndex": 5,
       "fromIndex": 6,
       "violatesOrder": false
+    },
+    {
+      "from": "initializeWorldTerrain",
+      "fromModule": "src/engine/modules/world/terrain.js",
+      "toModule": "src/engine/modules/world/tile-visuals.js",
+      "toInit": null,
+      "toIndex": null,
+      "fromIndex": 9,
+      "violatesOrder": null
+    },
+    {
+      "from": "initializeWorldRooms",
+      "fromModule": "src/engine/modules/world/rooms.js",
+      "toModule": "src/engine/modules/world/tile-visuals.js",
+      "toInit": null,
+      "toIndex": null,
+      "fromIndex": 11,
+      "violatesOrder": null
     },
     {
       "from": "initializeViewsNavigation",
@@ -354,11 +372,29 @@
     {
       "from": "initializeRuntimeGame",
       "fromModule": "src/engine/modules/runtime/game.js",
+      "toModule": "src/engine/modules/rendering/asset-catalog.js",
+      "toInit": null,
+      "toIndex": null,
+      "fromIndex": 73,
+      "violatesOrder": null
+    },
+    {
+      "from": "initializeRuntimeGame",
+      "fromModule": "src/engine/modules/runtime/game.js",
       "toModule": "src/engine/modules/rendering/sprites.js",
       "toInit": "initializeRenderingSprites",
       "toIndex": 6,
       "fromIndex": 73,
       "violatesOrder": false
+    },
+    {
+      "from": "initializeRuntimeGame",
+      "fromModule": "src/engine/modules/runtime/game.js",
+      "toModule": "src/engine/modules/rendering/preview.js",
+      "toInit": null,
+      "toIndex": null,
+      "fromIndex": 73,
+      "violatesOrder": null
     },
     {
       "from": "initializeRuntimeGame",
@@ -584,6 +620,21 @@
       ]
     },
     {
+      "path": "game.state.turnNumber",
+      "readFiles": 9,
+      "writeFiles": 2,
+      "dirs": [
+        "engine/modules/ai",
+        "engine/modules/characters",
+        "engine/modules/combat",
+        "engine/modules/persistence",
+        "engine/modules/rendering",
+        "engine/modules/simulation",
+        "engine/modules/views",
+        "engine/modules/world"
+      ]
+    },
+    {
       "path": "game.state.adventurers.length",
       "readFiles": 11,
       "writeFiles": 0,
@@ -608,20 +659,6 @@
         "engine/modules/rendering",
         "engine/modules/runtime",
         "engine/modules/simulation",
-        "engine/modules/world"
-      ]
-    },
-    {
-      "path": "game.state.turnNumber",
-      "readFiles": 8,
-      "writeFiles": 2,
-      "dirs": [
-        "engine/modules/ai",
-        "engine/modules/characters",
-        "engine/modules/combat",
-        "engine/modules/persistence",
-        "engine/modules/simulation",
-        "engine/modules/views",
         "engine/modules/world"
       ]
     },
@@ -771,6 +808,18 @@
       ]
     },
     {
+      "path": "game.terrainSprites",
+      "readFiles": 8,
+      "writeFiles": 0,
+      "dirs": [
+        "engine/modules/rendering",
+        "engine/modules/runtime",
+        "engine/modules/simulation",
+        "engine/modules/views",
+        "engine/modules/world"
+      ]
+    },
+    {
       "path": "game.floatingText",
       "readFiles": 7,
       "writeFiles": 0,
@@ -819,17 +868,6 @@
         "engine/modules/persistence",
         "engine/modules/progression",
         "engine/modules/runtime",
-        "engine/modules/world"
-      ]
-    },
-    {
-      "path": "game.terrainSprites",
-      "readFiles": 7,
-      "writeFiles": 0,
-      "dirs": [
-        "engine/modules/runtime",
-        "engine/modules/simulation",
-        "engine/modules/views",
         "engine/modules/world"
       ]
     },
@@ -915,6 +953,17 @@
         "engine/modules/runtime",
         "engine/modules/simulation",
         "engine/modules/views"
+      ]
+    },
+    {
+      "path": "game.terrainSprites.getSprite",
+      "readFiles": 6,
+      "writeFiles": 0,
+      "dirs": [
+        "engine/modules/rendering",
+        "engine/modules/simulation",
+        "engine/modules/views",
+        "engine/modules/world"
       ]
     },
     {
@@ -1031,16 +1080,6 @@
         "engine/modules/simulation",
         "engine/modules/views"
       ]
-    },
-    {
-      "path": "game.terrainSprites.getSprite",
-      "readFiles": 5,
-      "writeFiles": 0,
-      "dirs": [
-        "engine/modules/simulation",
-        "engine/modules/views",
-        "engine/modules/world"
-      ]
     }
   ],
   "saveDto": {
@@ -1114,22 +1153,32 @@
     }
   },
   "naming": {
-    "singleLetterBindings": 0,
-    "filesWithSingleLetterBindings": 0,
-    "topFiles": [],
-    "crypticBindings": 2,
-    "filesWithCrypticBindings": 1,
-    "allowListedBindings": 9,
+    "singleLetterBindings": 1,
+    "filesWithSingleLetterBindings": 1,
+    "topFiles": [
+      {
+        "file": "src/engine/modules/world/scene-objects.js",
+        "count": 1
+      }
+    ],
+    "crypticBindings": 3,
+    "filesWithCrypticBindings": 2,
+    "allowListedBindings": 10,
     "allowListedByFile": {
       "src/engine/modules/persistence/game-save.js": 4,
       "src/engine/modules/characters/character.js": 3,
       "src/engine/modules/simulation/tick.js": 1,
-      "src/engine/modules/world/initialization.js": 1
+      "src/engine/modules/world/initialization.js": 1,
+      "src/engine/modules/world/tile-visuals.js": 1
     },
     "crypticTopFiles": [
       {
         "file": "src/engine/modules/persistence/game-save.js",
         "count": 2
+      },
+      {
+        "file": "src/engine/modules/world/scene-objects.js",
+        "count": 1
       }
     ]
   }

@@ -1,3 +1,4 @@
+import { frameGeometry, resolveAnimationFrame, resolveSpriteFrame } from './frame.js';
 /** 产品画面样式：只处理像素和绘制，不接触游戏状态、随机流或存档。 */
 export function createMapPresentation() {
   const groundCache = new WeakMap();
@@ -10,14 +11,15 @@ export function createMapPresentation() {
 
   function terrainImage(sprite, ground) {
     const cache = ground ? groundCache : sceneryCache;
-    let image = cache.get(sprite);
+    const frame = resolveSpriteFrame(sprite);
+    let image = cache.get(frame);
     if (image) return image;
-    const size = sprite.spriteSheet.spriteSize;
     image = document.createElement('canvas');
-    image.width = image.height = size;
+    image.width = frame.source.width; image.height = frame.source.height;
     const context = image.getContext('2d');
-    context.drawImage(sprite.getSheetImage(), sprite.sourceX, sprite.sourceY, size, size, 0, 0, size, size);
-    cache.set(sprite, image);
+    const source = frame.source;
+    context.drawImage(frame.image, source.x, source.y, source.width, source.height, 0, 0, image.width, image.height);
+    cache.set(frame, image);
     metrics.cachedSprites++;
     return image;
   }
@@ -30,13 +32,14 @@ export function createMapPresentation() {
     return false;
   }
 
-  function sourceImage(owner, sheetImage, sourceX, sourceY, size, cache) {
-    let image = cache.get(owner);
+  function sourceImage(frame, cache) {
+    let image = cache.get(frame);
     if (!image) {
       image = document.createElement('canvas');
-      image.width = image.height = size;
-      image.getContext('2d').drawImage(sheetImage, sourceX, sourceY, size, size, 0, 0, size, size);
-      cache.set(owner, image);
+      const source = frame.source;
+      image.width = source.width; image.height = source.height;
+      image.getContext('2d').drawImage(frame.image, source.x, source.y, source.width, source.height, 0, 0, source.width, source.height);
+      cache.set(frame, image);
     }
     return image;
   }
@@ -68,9 +71,9 @@ export function createMapPresentation() {
     return raster;
   }
 
-  function paint(context, image, screenX, screenY, size, ground = false) {
+  function paint(context, image, screenX, screenY, renderWidth, renderHeight, ground = false) {
     const left = Math.round(screenX * scaleX), top = Math.round(screenY * scaleY);
-    const width = Math.max(1, Math.round(size * scaleX)), height = Math.max(1, Math.round(size * scaleY));
+    const width = Math.max(1, Math.round(renderWidth * scaleX)), height = Math.max(1, Math.round(renderHeight * scaleY));
     if (outside(context, left, top, width, height)) return;
     // 精灵固定重采样一次，再按物理像素平移，避免采样相位随位置改变。
     const raster = rasterImage(image, width, height, ground);
@@ -98,24 +101,25 @@ export function createMapPresentation() {
       return (Math.round((column + row) * halfTileSize * scaleY) + Math.round(cameraY * scaleY)) / scaleY;
     },
     drawSprite(context, sprite, screenX, screenY, size, layer = 'actor') {
-      if (outside(context, Math.round(screenX * scaleX), Math.round(screenY * scaleY), Math.round(size * scaleX), Math.round(size * scaleY))) return;
+      const frame = resolveSpriteFrame(sprite);
+      const bounds = frameGeometry(frame, screenX, screenY, size);
+      if (outside(context, Math.round(bounds.x * scaleX), Math.round(bounds.y * scaleY), Math.round(bounds.width * scaleX), Math.round(bounds.height * scaleY))) return;
       let image;
       if (layer === 'ground' || layer === 'scenery') {
         image = terrainImage(sprite, layer === 'ground');
       } else {
-        const sourceSize = sprite.spriteSheet.spriteSize;
-        image = sourceImage(sprite, sprite.getSheetImage(), sprite.sourceX, sprite.sourceY, sourceSize, spriteCache);
+        image = sourceImage(frame, spriteCache);
       }
-      paint(context, image, screenX, screenY, size, layer === 'ground');
+      paint(context, image, bounds.x, bounds.y, bounds.width, bounds.height, layer === 'ground');
     },
     drawAnimation(context, animation, frameIndex, screenX, screenY, size) {
-      if (outside(context, Math.round(screenX * scaleX), Math.round(screenY * scaleY), Math.round(size * scaleX), Math.round(size * scaleY))) return;
-      const frame = animation.frames[frameIndex];
-      const sourceSize = animation.spriteSheet.spriteSize;
-      const image = sourceImage(frame, animation.getSheetImage(), frame.frameSourceX, frame.frameSourceY, sourceSize, frameCache);
+      const frame = resolveAnimationFrame(animation, frameIndex);
+      const bounds = frameGeometry(frame, screenX, screenY, size);
+      if (outside(context, Math.round(bounds.x * scaleX), Math.round(bounds.y * scaleY), Math.round(bounds.width * scaleX), Math.round(bounds.height * scaleY))) return;
+      const image = sourceImage(frame, frameCache);
       const alpha = context.globalAlpha;
       context.globalAlpha = alpha * .68;
-      paint(context, image, screenX, screenY, size);
+      paint(context, image, bounds.x, bounds.y, bounds.width, bounds.height);
       context.globalAlpha = alpha;
     },
     drawHealthBar(context, screenX, screenY, health, maxHealth, color) {

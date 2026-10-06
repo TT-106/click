@@ -1,3 +1,4 @@
+import { spriteBackground } from '../rendering/preview.js';
 /** 角色属性、技能、背包和装备界面。
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
@@ -200,7 +201,7 @@ export function initializeViewsCharacter() {
   InventoryItemView.prototype.setItem = function (item) {
     if (this.item = item) {
       var iconSprite = this.item.getIconSprite();
-      this.descriptionLabel.style.background = "url('spritesheet/items.png') -" + iconSprite.sourceX + "px -" + iconSprite.sourceY + "px";
+      this.descriptionLabel.style.background = spriteBackground(iconSprite, 'icon');
       this.nameLabel.innerHTML = getHighlightedItemName(this.item);
       this.rarityCell.innerHTML = getItemRarityLabel(this.item);
       this.levelCell.innerHTML = this.item.itemLevel + "";
@@ -331,7 +332,7 @@ export function initializeViewsCharacter() {
   EquipmentItemRowView.prototype.setItem = function (item) {
     if (this.item = item) {
       var iconSprite = this.item.getIconSprite();
-      this.descriptionLabel.style.background = "url('spritesheet/items.png') -" + iconSprite.sourceX + "px -" + iconSprite.sourceY + "px";
+      this.descriptionLabel.style.background = spriteBackground(iconSprite, 'icon');
       this.nameLabel.innerHTML = getHighlightedItemName(this.item);
       this.rarityCell.innerHTML = getItemRarityLabel(this.item);
       this.levelCell.innerHTML = this.item.itemLevel + "";

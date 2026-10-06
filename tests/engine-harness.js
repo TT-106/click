@@ -8,7 +8,7 @@ const resetRandom = () => { seed = 123456789; };
 Math.random = () => { seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0; return seed / 4294967296; };
 Date.now = () => fixedNow;
 const original = new URLSearchParams(location.search).has('original');
-let game, initialize, ready, snapshot, load, advance, isOffline, loopTick, restart, reset, syncLoopClock, upgradeCollections, castScroll, PurchaseDungeonUpgrade, generateItem, ItemDrop, getAttackCooldown, getSpellSpiritCost, statValue;
+let game, initialize, ready, snapshot, load, advance, isOffline, loopTick, restart, reset, syncLoopClock, upgradeCollections, castScroll, PurchaseDungeonUpgrade, generateItem, ItemDrop, getAttackCooldown, getSpellSpiritCost, statValue, subscribeGameEvents;
 if (original) {
   await new Promise((resolve, reject) => {
     const script = document.createElement('script');
@@ -35,6 +35,8 @@ if (original) {
   ({ PurchaseDungeonUpgrade } = await import('../src/engine/modules/progression/upgrades.js'));
   ({ generateItem, ItemDrop } = await import('../src/engine/modules/loot/items.js'));
   ({ getAttackCooldown, getSpellSpiritCost, statValue } = await import('../src/engine/modules/characters/stats.js'));
+  // 继续征程事件取证：重构端有事件总线，原版没有——原版侧不插桩（保持只读、无侵入）。
+  ({ subscribeGameEvents } = await import('../src/engine/modules/core/math.js'));
   // 引擎不直接碰 localStorage（宿主注入端口）。差分要比对"自动保存真正落盘的字节"，
   // 这里按 src/services/saves.js 的同一套键与备份语义注入端口。
   {
@@ -334,7 +336,73 @@ window.harness = {
       gameOverVisible: !!el && !!style && style.display !== 'none',
       gameOverText: el ? (el.innerText || '').slice(0, 400) : '',
       runNumber: snapshot().victoryCount,
+      // 带上即时 DTO：让"胜利面板挂载"这一步也能作为后续步骤的 previous 基线，
+      // 避免下一步（真实继续点击）在分叉诊断里读到 undefined.turnNumber。
+      snapshot: snapshot(),
     };
+  },
+  // 真实"继续征程"按钮：在各自页面内查找唯一按钮并触发其真实 onclick，证明继续路径
+  // 确实经由产品界面接线（而不是测试直接调底层复位）。返回即时 DTO、落盘原文与结构判定；
+  // Continue 事件顺序只对重构端取证（原版无事件总线，不插桩）。
+  clickContinueRun() {
+    const label = '继续 - 用你当前的队伍征服新的城堡.';
+    const buttons = [...document.querySelectorAll('.upgradeButton')]
+      .filter(el => (el.innerHTML || '').indexOf(label) === 0);
+    if (buttons.length !== 1) throw new Error(`继续按钮应唯一存在，实际找到 ${buttons.length} 个`);
+    const button = buttons[0];
+    if (typeof button.onclick !== 'function') throw new Error('继续按钮缺少 onclick 处理器');
+    const worldBefore = original ? window.Game.S : game.world;
+    const levelBefore = original ? window.Game.Ba : game.level;
+    const dungeonFarms = original ? window.Game.Aa.dg : game.dungeons.farms;
+    const before = snapshot();
+    const events = [];
+    let eventProbe = null;
+    let unsubscribe = null;
+    if (!original) {
+      unsubscribe = subscribeGameEvents(event => {
+        events.push(`${event.category}:${event.action}`);
+        if (event.category === 'Victory' && event.action === 'Decision: Continue') {
+          // 事件发生瞬间的只读探针：胜利标记应已清除、世界尚未替换
+          eventProbe = { gameWon: game.gameWon, worldReplaced: game.world !== worldBefore };
+        }
+      });
+    }
+    try {
+      button.onclick();
+    } finally {
+      if (unsubscribe) unsubscribe();
+    }
+    const after = snapshot();
+    const worldAfter = original ? window.Game.S : game.world;
+    const levelAfter = original ? window.Game.Ba : game.level;
+    const allies = original ? window.Game.$h.Pf : game.allies.allies;
+    const startBlock = original ? worldAfter.q[1][1] : worldAfter.worldBlocks[1][1];
+    const startRegionKey = original
+      ? startBlock.Hd + '_' + startBlock.Id
+      : startBlock.regionColumn + '_' + startBlock.regionRow;
+    const startCastle = original ? window.Game.kb.ju[startRegionKey] : game.castles.byRegionKey[startRegionKey];
+    return {
+      buttonCount: buttons.length,
+      before,
+      snapshot: after,
+      savedText: localStorage.getItem('C2_V1_001'),
+      eventOrder: original ? null : events,
+      eventProbe,
+      worldReplaced: worldAfter !== worldBefore,
+      levelReplaced: levelAfter !== levelBefore,
+      dungeonFarmCountBefore: dungeonFarms.length,
+      allyNames: allies.map(a => (original ? a.Xt : a.adventurerName)),
+      startingRegionUnlocked: Boolean(startCastle)
+        && (original ? startCastle.$b === false : startCastle.regionLocked === false),
+    };
+  },
+  // 再次进入：合法导入一份已胜利存档 → 挂载面板 → 点击真实继续按钮。
+  // 用于证明继续入口每次读取"当前状态"，而不是绑定期缓存的状态子对象。
+  reloadAndContinue({ text, idleFrames = 30 } = {}) {
+    const ok = this.load(text);
+    if (!ok) throw new Error('重载已胜利存档失败');
+    for (let i = 0; i < idleFrames; i++) { fixedNow += 250; loopTick(); }
+    return this.clickContinueRun();
   },
   // U7：驱动"升级购买"这条只有视图层会触发的路径。视图里按钮的处理就是
   // `if (upgrade.canPurchaseNow()) upgrade.purchase()`，这里按同一条判断驱动引擎侧对象。

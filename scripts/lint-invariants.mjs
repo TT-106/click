@@ -177,6 +177,21 @@ function walk(dir, out = [], skip = new Set(['node_modules', '.git', 'dist', 'ou
   notes.push(`类型债务（仅报告）：${anyCasts} 处 @type {any}、${unknownLines} 行含 unknown —— 台账 docs/m10-type-debt.md`);
 }
 
+// 12) 素材引用必须全部可解析，且不得跨组错用
+// 存在理由：加内容时最贵的是**静默失效**——拼错的精灵名、把地形名写进怪物目录，
+// getSprite 返回 undefined，运行时不报错、只画空白，60 秒游玩都不一定看得见。
+// 本审计把代码引用的名字与真实图集/素材包对账（当前 1,283 处字面量、49 处可判定组调用）。
+{
+  const r = await run(process.execPath, ['scripts/audit-asset-refs.mjs']);
+  const ok = r.status === 0 && /全部素材引用可解析/.test(r.stdout || '');
+  if (!ok) {
+    problems.push('素材引用审计未通过（见 audit-asset-refs 输出：缺失或跨组的精灵引用）');
+  } else {
+    const m = (r.stdout || '').match(/名字字面量\s*(\d+)\s*处、可判定组调用\s*(\d+)\s*处/);
+    notes.push(`素材引用全部可解析、无跨组错用 ✓（${m ? `${m[1]} 处名字字面量 / ${m[2]} 处组调用` : '实测通过'}）`);
+  }
+}
+
 console.log('lint 不变量检查：');
 for (const n of notes) console.log(`  ✓ ${n}`);
 if (problems.length) {

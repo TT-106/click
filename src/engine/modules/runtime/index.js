@@ -174,7 +174,7 @@ bindLootTreasure(game.goldDrops, game.state, game.treasure);
 bindWorldRegions(game.regions, game.castles, () => game.world);
 bindCastleViews(game.monsterCatalog, game.castles, game.regions, game.itemSprites);
 bindPersistenceEntities(game.itemGenerator, game.dungeons, game.monsterCatalog, game.scrolls);
-bindUpgradeDetailViews(game.state, game.terrainSprites, game.monsterSprites, game.monsterCatalog, game.shops, game.dungeons, game.castles, game.animations);
+bindUpgradeDetailViews(game.state, game.terrainSprites, game.monsterSprites, game.monsterCatalog, game.shops, game.dungeons, game.castles, game.animations, game.itemSprites);
 bindFloatingTextRender(game.floatingText, () => game.processingOffline, () => game.worldActive, () => game.world);
 bindCombatScrolls(game.state, game.scrolls, game.scrollTargets, game.scrollDrops, game.itemSprites, game.effects);
 export { game } from './game.js';

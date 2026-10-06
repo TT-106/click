@@ -452,7 +452,8 @@
       "game.shops",
       "game.dungeons",
       "game.castles",
-      "game.animations"
+      "game.animations",
+      "game.itemSprites"
     ]
   },
   {

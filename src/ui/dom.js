@@ -2,7 +2,10 @@ export const $ = selector => document.querySelector(selector);
 export const $$ = selector => [...document.querySelectorAll(selector)];
 export const escapeHtml = text => String(text).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
 export const number = value => new Intl.NumberFormat('zh-CN', { notation: value >= 100000 ? 'compact' : 'standard', maximumFractionDigits: 1 }).format(value || 0);
-export function sprite(position, className = '') { return `<span class="sprite ${className}" style="--sprite-x:-${position.x}px;--sprite-y:-${position.y}px" aria-hidden="true"></span>`; }
+export function sprite(preview, className = '') {
+  const style = `background-image:url(${JSON.stringify(preview.url)});background-position:-${preview.x}px -${preview.y}px`;
+  return `<span class="sprite ${className}" style="${escapeHtml(style)}" aria-hidden="true"></span>`;
+}
 const paths = {
   compass: '<circle cx="12" cy="12" r="9"/><path d="m16 8-2.5 5.5L8 16l2.5-5.5Z"/>',
   users: '<circle cx="9" cy="8" r="3"/><path d="M3 21v-3a6 6 0 0 1 12 0v3M17 5a3 3 0 0 1 0 6M18 15a5 5 0 0 1 3 5"/>',

@@ -149,6 +149,36 @@ export function withCastleVictory(save) {
   return out;
 }
 
+/** 继续征程前提存档：在"只剩最后一座城堡待攻克"的胜利前置态上，叠加
+ *  队员财富、已激活药水、有库存卷轴与非零继续次数，并把 discoveredDungeonCount 与
+ *  城堡 nextRequiredMonsterLevel 摆成非默认值。用于验证继续按钮读取"当前状态"而非
+ *  缓存对象，以及"发现数 = 重置前 farms.length""城堡下一要求等级保留"两条特殊语义。
+ *  默认 gameWon=false：需按原版流程真实打赢最后一座城堡；won=true 时直接给出已胜利态，
+ *  供"合法导入已胜利存档再点一次"的再次进入路径使用。 */
+export function withVictoryContinuation(save, {
+  continueCount = 3,
+  dungeonCostLevel = 7,
+  nextRequiredMonsterLevel = 3,
+  gold = 123456,
+  won = false,
+  victoryCount = 1,
+} = {}) {
+  let out = withCastleVictory(save);
+  out.victoryStatistics.currentContinueCount = continueCount;
+  out.dungeonManagerState.dungeonCostLevel = dungeonCostLevel;
+  out.castleManager.nextRequiredMonsterLevel = nextRequiredMonsterLevel;
+  out.party.gold = gold;
+  // 至少一瓶已激活药水：继续后库存与激活都必须清空
+  out = withPotions(out, ['doubleKills'], { active: true });
+  // 至少一项有库存的卷轴：继续后卷轴库存必须保留
+  out = withScrolls(out, [{ scrollId: out.scrollInventory[0].scrollId, count: 5 }]);
+  if (won) {
+    out.gameWon = true;
+    out.victoryCount = victoryCount;
+  }
+  return out;
+}
+
 /** 把 count 个未获得的击杀类成就置为"已达成未领取"（优先 achievementId 含 Kills 的条目），
  *  供多次领取场景驱动成就队列（原版 Ze 队列 4 个领取槽）。成就奖励统一走
  *  increasePointEventReward(pointEventTypeId, Vt)：领取后对应事件类型的 currentPointReward 抬升，

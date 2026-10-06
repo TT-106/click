@@ -1,3 +1,4 @@
+import { spriteBackground } from '../rendering/preview.js';
 /** 胜利、继承与离线收益面板。
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
@@ -20,14 +21,8 @@ import { monsterSpriteDefinitions } from "../core/bootstrap-data.js";
  * @property {() => number} readVictoryCount
  * @property {() => void} clearGameWon
  * @property {() => void} restartRun
- * @property {() => void} resetContinuation
- * @property {() => void} incrementContinueCount
- * @property {() => void} resetAllies
- * @property {() => void} resetView
- * @property {() => void} placePartyInWorld
- * @property {() => void} unlockStartingRegion
- * @property {() => void} saveGame
- * @property {(monsterName: string) => {sourceX: number, sourceY: number}} getMonsterSprite
+ * @property {() => void} continueRun
+ * @property {(monsterName: string) => any} getMonsterSprite
  * @property {() => number} readOfflineDuration
  * @property {() => number} readOfflineProcessed
  * @property {() => import('../progression/statistics.js').RunStatistics} readRunStatistics
@@ -35,7 +30,7 @@ import { monsterSpriteDefinitions } from "../core/bootstrap-data.js";
  * @property {() => number} readAchievementClaimQueueLength
  * @property {() => void} finishOfflineProgress
  */
-var resultsDepsFields = ["readVictoryCount", "clearGameWon", "restartRun", "resetContinuation", "incrementContinueCount", "resetAllies", "resetView", "placePartyInWorld", "unlockStartingRegion", "saveGame", "getMonsterSprite", "readOfflineDuration", "readOfflineProcessed", "readRunStatistics", "readAttackableCastleCount", "readAchievementClaimQueueLength", "finishOfflineProgress"];
+var resultsDepsFields = ["readVictoryCount", "clearGameWon", "restartRun", "continueRun", "getMonsterSprite", "readOfflineDuration", "readOfflineProcessed", "readRunStatistics", "readAttackableCastleCount", "readAchievementClaimQueueLength", "finishOfflineProgress"];
 /** @param {ResultsDeps} deps */
 function assertResultsDeps(deps) {
   if (!deps) {
@@ -94,15 +89,7 @@ export function mountGameOver(gameOverView) {
   continueButtonDiv.style.textAlign = "center";
   continueButtonDiv.innerHTML = "继续 - 用你当前的队伍征服新的城堡.";
   continueButtonDiv.onclick = function () {
-    gameOverView.deps.clearGameWon();
-    recordGameEvent("Victory", "Decision: Continue");
-    gameOverView.deps.resetContinuation();
-    gameOverView.deps.incrementContinueCount();
-    gameOverView.deps.placePartyInWorld();
-    gameOverView.deps.unlockStartingRegion();
-    gameOverView.deps.resetAllies();
-    gameOverView.deps.resetView();
-    gameOverView.deps.saveGame();
+    gameOverView.deps.continueRun();
   };
 }
 export function getNewlyUnlockedClasses(victoryCount) {
@@ -145,7 +132,7 @@ export function appendRandomMonsterPortrait(portraitCell, deps) {
     monsterSprite = deps.getMonsterSprite(monsterDefinition.name);
   var portraitImage = createElement("img", portraitCell, null, "characterImage");
   portraitImage.src = "images/Transparent.gif";
-  portraitImage.style.background = "url('spritesheet/monsters.png') -" + monsterSprite.sourceX + "px -" + (monsterSprite.sourceY + 10) + "px";
+  portraitImage.style.background = spriteBackground(monsterSprite, 'monster');
   portraitImage.style.height = "30px";
   portraitImage.style.width = "52px";
 }

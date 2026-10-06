@@ -11,6 +11,7 @@ const ROOT = process.cwd();
 const PORT = Number(process.env.DIST_PORT || 4175);
 const URL_BASE = `http://127.0.0.1:${PORT}`;
 const skipBuild = process.argv.includes('--no-build');
+const browserScript = process.argv.includes('--village') ? 'scripts/test-village.mjs' : 'scripts/test-browser.mjs';
 
 const run = (cmd, args, opts = {}) => new Promise((resolve) => {
   const child = spawn(cmd, args, { cwd: ROOT, stdio: opts.inherit ? 'inherit' : ['ignore', 'pipe', 'pipe'], env: { ...process.env, ...opts.env } });
@@ -57,7 +58,7 @@ const appJs = await fetch(`${URL_BASE}/src/app.js`);
 console.log(`dist/src/app.js 可取：${appJs.ok ? '✓' : '✗ ' + appJs.status}`);
 
 process.stdout.write('对 dist 跑 e2e ... ');
-const e2e = await run(process.execPath, ['scripts/test-browser.mjs'], { env: { TEST_URL: URL_BASE } });
+const e2e = await run(process.execPath, [browserScript], { env: { TEST_URL: URL_BASE } });
 console.log(e2e.code === 0 ? '✓ 0' : `✗ ${e2e.code}`);
 server.kill?.();
 process.exitCode = entryBad || !appJs.ok || e2e.code !== 0 ? 1 : 0;

@@ -1,3 +1,4 @@
+import { spriteBackground } from '../rendering/preview.js';
 /** 原版组队规则及创建动作。
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
@@ -143,7 +144,7 @@ export function mountClassChoices(view, tabContentElement) {
       characterImage.src = "images/Transparent.gif";
       characterImage.style.height = "35px";
       characterImage.style.width = "35px";
-      characterImage.style.background = "url('spritesheet/monsters.png') -" + (classSprite.sourceX + 10) + "px -" + (classSprite.sourceY + 12) + "px";
+      characterImage.style.background = spriteBackground(classSprite, 'portrait');
       classCell = createElement("div", classCell, null, null);
       var lockMessageText = undefined;
       switch (adventurerClasses[lockedClassIndex].requiredVictories) {
@@ -214,7 +215,7 @@ export function mountClassChoice(view, containerElement, classIndex) {
   portraitElement.src = "images/Transparent.gif";
   portraitElement.style.height = "35px";
   portraitElement.style.width = "35px";
-  portraitElement.style.background = "url('spritesheet/monsters.png') -" + (classSprite.sourceX + 10) + "px -" + (classSprite.sourceY + 12) + "px";
+  portraitElement.style.background = spriteBackground(classSprite, 'portrait');
   var nameCell = portraitRow.insertCell(1);
   nameCell.style.width = "410px";
   nameCell.style.textAlign = "left";
@@ -249,7 +250,7 @@ export function mountSelectedCharacter(view, selectionCell, selectedCharacter, s
   portraitElement.src = "images/Transparent.gif";
   portraitElement.style.height = "35px";
   portraitElement.style.width = "35px";
-  portraitElement.style.background = "url('spritesheet/monsters.png') -" + (classSprite.sourceX + 10) + "px -" + (classSprite.sourceY + 12) + "px";
+  portraitElement.style.background = spriteBackground(classSprite, 'portrait');
   var nameCell = portraitRow.insertCell(1);
   nameCell.style.width = "400px";
   nameCell.style.textAlign = "left";

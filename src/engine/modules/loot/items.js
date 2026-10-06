@@ -3,6 +3,7 @@
  */
 import { ItemNameGenerator, formatItemName } from "./item-names.js";
 import { floorNumber, formatAmount, randomInt, randomizeScaledValue } from "../core/math.js";
+import { escapeHtmlText } from "../core/html-text.js";
 export var FIRE_ITEM_EFFECT, ICE_ITEM_EFFECT, POISON_ITEM_EFFECT, SHOCK_ITEM_EFFECT, SONIC_ITEM_EFFECT;
 export function ItemDrop(item, levelPositionX, levelPositionY, room) {
   this.item = item;
@@ -127,7 +128,7 @@ export function getHighlightedItemName(item) {
   const baseName = item.itemType.baseName;
   const itemName = item.itemName;
   const nameIndex = itemName.indexOf(baseName);
-  return -1 === nameIndex ? itemName : itemName.substring(0, nameIndex) + '<span style="color:#FAF;">' + baseName + "</span>" + itemName.substring(nameIndex + baseName.length);
+  return -1 === nameIndex ? escapeHtmlText(itemName) : escapeHtmlText(itemName.substring(0, nameIndex)) + '<span style="color:#FAF;">' + escapeHtmlText(baseName) + "</span>" + escapeHtmlText(itemName.substring(nameIndex + baseName.length));
 }
 export function ItemGenerator(rules) {
   this.rules = rules;

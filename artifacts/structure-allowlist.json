@@ -1,1 +1,1694 @@
-[]
+[
+  {
+    "file": "src/engine/modules/runtime/game.js",
+    "line": "I: function () {",
+    "max": 2,
+    "reason": "继续征程切片：在运行时生命周期 module 新增 continueRun 同步方法（方法头 + 其后 beginOfflineProgress 方法头被 LCS 判为新增）。业务顺序从 GameOverView 迁入此 module。"
+  },
+  {
+    "file": "src/engine/modules/runtime/game.js",
+    "line": "I.I = false;",
+    "max": 1,
+    "reason": "continueRun 第 1 步 game.gameWon = false（与原版 w.Fe=!1 同序同位）。"
+  },
+  {
+    "file": "src/engine/modules/runtime/game.js",
+    "line": "I( \"I\" , \"I: I\" );",
+    "max": 1,
+    "reason": "continueRun 第 2 步 recordGameEvent(\"Victory\",\"Decision: Continue\")，与原版 Ta 调用同参同序。"
+  },
+  {
+    "file": "src/engine/modules/runtime/game.js",
+    "line": "I.I();",
+    "max": 1,
+    "reason": "continueRun 第 3 步 game.resetContinuation()（底层复位，保持既有语义，不换成 resetRun/restartRun）。"
+  },
+  {
+    "file": "src/engine/modules/runtime/game.js",
+    "line": "I.I.I.I++;",
+    "max": 1,
+    "reason": "continueRun 第 4 步 game.state.victoryStatistics.currentContinueCount++（继续次数 +1）。"
+  },
+  {
+    "file": "src/engine/modules/runtime/game.js",
+    "line": "I();",
+    "max": 2,
+    "reason": "continueRun 第 5、6 步 placePartyInWorld() / unlockStartingRegion()（放置队伍、解锁起始区域）。"
+  },
+  {
+    "file": "src/engine/modules/runtime/game.js",
+    "line": "I.I.I();",
+    "max": 2,
+    "reason": "continueRun 第 7、8 步 game.allies.reset() / game.view.reset()（盟友重建、视图刷新）。"
+  },
+  {
+    "file": "src/engine/modules/runtime/game.js",
+    "line": "I(I.I);",
+    "max": 1,
+    "reason": "continueRun 第 9 步 saveProgress(game.saves)（在放置/解锁/盟友/视图刷新之后真实落盘）。"
+  },
+  {
+    "file": "src/engine/modules/simulation/loop.js",
+    "line": "I: () => { I.I.I.I++; },",
+    "max": 1,
+    "reason": "继续征程切片：删除 resultsDeps.incrementContinueCount 装配（该知识迁入 game.continueRun）。"
+  },
+  {
+    "file": "src/engine/modules/simulation/loop.js",
+    "line": "I: () => I.I.I(),",
+    "max": 2,
+    "reason": "继续征程切片：删除 resultsDeps.resetAllies / resetView 装配（迁入 game.continueRun）。"
+  },
+  {
+    "file": "src/engine/modules/simulation/loop.js",
+    "line": "I: () => I(),",
+    "max": 2,
+    "reason": "继续征程切片：删除 resultsDeps.placePartyInWorld / unlockStartingRegion 装配（迁入 game.continueRun）。"
+  },
+  {
+    "file": "src/engine/modules/simulation/loop.js",
+    "line": "I: () => I(I.I),",
+    "max": 1,
+    "reason": "继续征程切片：删除 resultsDeps.saveGame 装配（迁入 game.continueRun）。"
+  },
+  {
+    "file": "src/engine/modules/views/results.js",
+    "line": "I.I.I();",
+    "max": 9,
+    "reason": "继续征程切片：继续按钮 9 条底层编排（clearGameWon/recordGameEvent/resetContinuation/incrementContinueCount/placePartyInWorld/unlockStartingRegion/resetAllies/resetView/saveGame）收为单次 gameOverView.deps.continueRun()；9 删 1 增，视图不再编排顺序。"
+  },
+  {
+    "file": "src/engine/modules/views/results.js",
+    "line": "I( \"I\" , \"I: I\" );",
+    "max": 1,
+    "reason": "继续征程切片：删除视图内重复记录的 Continue 事件（事件现由 game.continueRun 记录一次）。"
+  },
+  {
+    "file": "src/engine/modules/views/results.js",
+    "line": "var I = [ \"I\" , \"I\" , \"I\" , \"I\" , \"I\" , \"I\" , \"I\" , \"I\" , \"I\" , \"I\" , \"I\" , \"I\" , \"I\" , \"I\" , \"I\" , \"I\" , \"I\" ];",
+    "max": 1,
+    "reason": "继续征程切片：ResultsDeps 必填字段表由 17 项收缩为 11 项（删 7 项底层操作、增 continueRun）。"
+  },
+  {
+    "file": "src/engine/modules/views/results.js",
+    "line": "var I = [ \"I\" , \"I\" , \"I\" , \"I\" , \"I\" , \"I\" , \"I\" , \"I\" , \"I\" , \"I\" , \"I\" ];",
+    "max": 1,
+    "reason": "继续征程切片：收缩后的 ResultsDeps 必填字段表（11 项，含新的 continueRun）。"
+  },
+  {
+    "file": "src/engine/modules/rendering/presentation.js",
+    "line": "const I = I(I);",
+    "max": 2,
+    "reason": "素材升级：使用归一帧矩形、锚点和逐帧缓存；旧方形精灵的采样、颜色与物理像素吸附保持。"
+  },
+  {
+    "file": "src/engine/modules/rendering/presentation.js",
+    "line": "const I = I.I.I;",
+    "max": 3,
+    "reason": "素材升级：使用归一帧矩形、锚点和逐帧缓存；旧方形精灵的采样、颜色与物理像素吸附保持。"
+  },
+  {
+    "file": "src/engine/modules/rendering/presentation.js",
+    "line": "I.I = I.I = I;",
+    "max": 2,
+    "reason": "素材升级：使用归一帧矩形、锚点和逐帧缓存；旧方形精灵的采样、颜色与物理像素吸附保持。"
+  },
+  {
+    "file": "src/engine/modules/rendering/presentation.js",
+    "line": "I.I = I.I.I; I.I = I.I.I;",
+    "max": 1,
+    "reason": "素材升级：使用归一帧矩形、锚点和逐帧缓存；旧方形精灵的采样、颜色与物理像素吸附保持。"
+  },
+  {
+    "file": "src/engine/modules/rendering/presentation.js",
+    "line": "I.I(I.I(), I.I, I.I, I, I, 0, 0, I, I);",
+    "max": 1,
+    "reason": "素材升级：使用归一帧矩形、锚点和逐帧缓存；旧方形精灵的采样、颜色与物理像素吸附保持。"
+  },
+  {
+    "file": "src/engine/modules/rendering/presentation.js",
+    "line": "const I = I.I;",
+    "max": 2,
+    "reason": "素材升级：使用归一帧矩形、锚点和逐帧缓存；旧方形精灵的采样、颜色与物理像素吸附保持。"
+  },
+  {
+    "file": "src/engine/modules/rendering/presentation.js",
+    "line": "I.I(I.I, I.I, I.I, I.I, I.I, 0, 0, I.I, I.I);",
+    "max": 1,
+    "reason": "素材升级：使用归一帧矩形、锚点和逐帧缓存；旧方形精灵的采样、颜色与物理像素吸附保持。"
+  },
+  {
+    "file": "src/engine/modules/rendering/presentation.js",
+    "line": "function I(I, I, I, I, I, I) {",
+    "max": 1,
+    "reason": "素材升级：使用归一帧矩形、锚点和逐帧缓存；旧方形精灵的采样、颜色与物理像素吸附保持。"
+  },
+  {
+    "file": "src/engine/modules/rendering/presentation.js",
+    "line": "function I(I, I) {",
+    "max": 1,
+    "reason": "素材升级：使用归一帧矩形、锚点和逐帧缓存；旧方形精灵的采样、颜色与物理像素吸附保持。"
+  },
+  {
+    "file": "src/engine/modules/rendering/presentation.js",
+    "line": "I.I = I.I; I.I = I.I;",
+    "max": 1,
+    "reason": "素材升级：使用归一帧矩形、锚点和逐帧缓存；旧方形精灵的采样、颜色与物理像素吸附保持。"
+  },
+  {
+    "file": "src/engine/modules/rendering/presentation.js",
+    "line": "function I(I, I, I, I, I, I = false) {",
+    "max": 1,
+    "reason": "素材升级：使用归一帧矩形、锚点和逐帧缓存；旧方形精灵的采样、颜色与物理像素吸附保持。"
+  },
+  {
+    "file": "src/engine/modules/rendering/presentation.js",
+    "line": "function I(I, I, I, I, I, I, I = false) {",
+    "max": 1,
+    "reason": "素材升级：使用归一帧矩形、锚点和逐帧缓存；旧方形精灵的采样、颜色与物理像素吸附保持。"
+  },
+  {
+    "file": "src/engine/modules/rendering/presentation.js",
+    "line": "const I = I(I, I, I, I);",
+    "max": 2,
+    "reason": "素材升级：使用归一帧矩形、锚点和逐帧缓存；旧方形精灵的采样、颜色与物理像素吸附保持。"
+  },
+  {
+    "file": "src/engine/modules/rendering/presentation.js",
+    "line": "I = I(I, I.I(), I.I, I.I, I, I);",
+    "max": 1,
+    "reason": "素材升级：使用归一帧矩形、锚点和逐帧缓存；旧方形精灵的采样、颜色与物理像素吸附保持。"
+  },
+  {
+    "file": "src/engine/modules/rendering/presentation.js",
+    "line": "I = I(I, I);",
+    "max": 1,
+    "reason": "素材升级：使用归一帧矩形、锚点和逐帧缓存；旧方形精灵的采样、颜色与物理像素吸附保持。"
+  },
+  {
+    "file": "src/engine/modules/rendering/presentation.js",
+    "line": "I(I, I, I, I, I, I === 'I' );",
+    "max": 1,
+    "reason": "素材升级：使用归一帧矩形、锚点和逐帧缓存；旧方形精灵的采样、颜色与物理像素吸附保持。"
+  },
+  {
+    "file": "src/engine/modules/rendering/presentation.js",
+    "line": "I(I, I, I.I, I.I, I.I, I.I, I === 'I' );",
+    "max": 1,
+    "reason": "素材升级：使用归一帧矩形、锚点和逐帧缓存；旧方形精灵的采样、颜色与物理像素吸附保持。"
+  },
+  {
+    "file": "src/engine/modules/rendering/presentation.js",
+    "line": "const I = I(I, I);",
+    "max": 2,
+    "reason": "素材升级：使用归一帧矩形、锚点和逐帧缓存；旧方形精灵的采样、颜色与物理像素吸附保持。"
+  },
+  {
+    "file": "src/engine/modules/rendering/presentation.js",
+    "line": "const I = I.I[I];",
+    "max": 1,
+    "reason": "素材升级：使用归一帧矩形、锚点和逐帧缓存；旧方形精灵的采样、颜色与物理像素吸附保持。"
+  },
+  {
+    "file": "src/engine/modules/rendering/presentation.js",
+    "line": "const I = I(I, I.I(), I.I, I.I, I, I);",
+    "max": 1,
+    "reason": "素材升级：使用归一帧矩形、锚点和逐帧缓存；旧方形精灵的采样、颜色与物理像素吸附保持。"
+  },
+  {
+    "file": "src/engine/modules/rendering/presentation.js",
+    "line": "I(I, I, I, I, I);",
+    "max": 1,
+    "reason": "素材升级：使用归一帧矩形、锚点和逐帧缓存；旧方形精灵的采样、颜色与物理像素吸附保持。"
+  },
+  {
+    "file": "src/engine/modules/rendering/presentation.js",
+    "line": "I(I, I, I.I, I.I, I.I, I.I);",
+    "max": 1,
+    "reason": "素材升级：使用归一帧矩形、锚点和逐帧缓存；旧方形精灵的采样、颜色与物理像素吸附保持。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "const I = { I: 0, I: 1, I: 2, I: 3, I: 4 };",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "function I(I, I, I) {",
+    "max": 2,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "const I = I.I();",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "const I = I.I?.I(I, 'I' ) || I;",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "return I(I, I, {",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I: I(I.I.I, I.I.I),",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I: I.I, I, I",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "function I(I, I, I, I) {",
+    "max": 2,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "return I(I, I, I(I), I);",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "function I(I) {",
+    "max": 2,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "return I?.I?.I(I) || I;",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "return I(I(I), I(I.I.I, I.I.I));",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "const I = I ? I.I : I.I;",
+    "max": 7,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "const I = I.I ? I(I, I, I, I) : I(I, I, I, I);",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "if (!I && !I.I) { I.I = I.I(I.I); I.I = I.I(I.I); }",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "return I;",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "export function I(I, I, I = false) {",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "for (const I of I.I || []) {",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "const I = I.I?.I(I.I, 'I' ) || I.I.I(I.I);",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "if (!I) throw new I( `场景物件资源未注册：I{I.I}` );",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "const I = I(I);",
+    "max": 2,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "const I = I.I;",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "const I = I(I.I, I.I, I, I, I.I || 0);",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I.I.I(I, I.I, I.I, I.I, I.I, I(I), 0, I.I || 'I' , I.I);",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "const I = I.I?.I();",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "if (!I || !(I.I < 0 || I.I < 0 || I.I > 54 || I.I > 54)) return false;",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "const I = I(I, I, I);",
+    "max": 5,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "if (I) {",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "const I = I.I.I();",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I.I = I.I(I.I, I.I(...I.I(I => I.I)));",
+    "max": 2,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I.I = I.I(I.I, I.I(...I.I(I => I.I)) - 1);",
+    "max": 2,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "} else {",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I.I = I.I(I.I, 0);",
+    "max": 2,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I.I = I.I(I.I, I.I - 1);",
+    "max": 2,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "const I = I ? I : I;",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "for (let I = I.I; I <= I.I; I++) {",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I(I, I, I.I, I.I + 1);",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "return true;",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I.I = 0;",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I.I = I;",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I.I = I.I || I;",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I.I = I.I ? (I[I.I || I] || 0) : 0;",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "const I = I(I, I);",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I.I = I.I[I]?.I ? (I[I.I || 'I' ] || 0) : 0;",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "return I.I() - I.I();",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "if (I.I !== I.I) return I.I ? -1 : 1;",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "return I.I() - I.I() || (I.I || 0) - (I.I || 0);",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "var I = I + (I - I.I - (I - I.I)) * I - I.I;",
+    "max": 2,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "var I = I + (I - I.I + (I - I.I)) * I - I.I;",
+    "max": 2,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "var I = I(I, I, I);",
+    "max": 3,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "var I = I.I, I = I.I;",
+    "max": 2,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I.I(I.I, I, I, 'I' );",
+    "max": 2,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "var I = I.I;",
+    "max": 3,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I.I(I(I.I), I, I, 'I' );",
+    "max": 2,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "var I = I(I.I);",
+    "max": 3,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I.I.I(I, I.I(), I.I(), I, I, I.I.I, 0, 'I' );",
+    "max": 3,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I.I.I(I, I.I(), I.I(), I, I, I(I), 0, 'I' );",
+    "max": 3,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I = I.I();",
+    "max": 2,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I.I.I(I, I, I, I + (I - I.I.I - (I - I.I.I)), I + 0.5 * (I - I.I.I + (I - I.I.I)), I.I.I, 0);",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I = I(I, I, I);",
+    "max": 2,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "var I = I(I, I, I, true);",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I.I.I(I, I, I, I.I, I.I, I(I), 0);",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "var I = I.I();",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I.I.I(I, I, I, I, I, I.I.I, I ? 0.4 : 0);",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "if (I.I) {",
+    "max": 4,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "const I = I(I, I, I, false);",
+    "max": 5,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I = I.I; I = I.I;",
+    "max": 3,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I.I.I(I, I, I, I, I, I(I), I ? 0.4 : 0);",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I = I(I, I) + 10;",
+    "max": 2,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I = I.I + 10;",
+    "max": 2,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I.I.I(I, I, I, I, I, I, I.I.I, 0);",
+    "max": 3,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I.I.I(I, I, I, I, I, I, I(I), 0);",
+    "max": 3,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "const I = I(I(I), I.I, I.I);",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I = I.I + I.I / 2 - 25;",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I = I.I - 6;",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "var I;",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I = this.I.I.I;",
+    "max": 2,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "else I.I(this.I.I(), this.I.I, this.I.I, I, I, this.I, this.I, this.I, this.I);",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "else I(I, this.I, this.I, this.I, this.I);",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "var I = this.I.I[this.I];",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "else I.I(this.I.I(), I.I, I.I, I, I, this.I, this.I, this.I, this.I);",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "else I(I, this.I, this.I, this.I, this.I, this.I);",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I.I.I = function (I, I, I, I, I, I, I, I = 'I' ) {",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I.I.I = function (I, I, I, I, I, I, I, I = 'I' , I) {",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "const I = I;",
+    "max": 4,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I = I(I);",
+    "max": 5,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "if (I !== I) I = I(I);",
+    "max": 4,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "const I = I(I, I, I, I);",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "const I = I(I, I, I(I, I));",
+    "max": 2,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "var I = I.I.I;",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "var I = I(I);",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "else this.I.I(I.I(), I.I, I.I, I, I, I, I, I, I);",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "else I(this.I, I, I, I, I);",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "if (!I(I, I.I, true)) {",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I(I, I.I, true);",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "if (!I(I, I.I, false)) {",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I(I, I.I, false);",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I.I.I(I, I, I, I, I, I.I.I, 0);",
+    "max": 3,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I.I.I(I, I, I, I, I, I(I), 0);",
+    "max": 3,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I.I(I.I(), I, I);",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I.I(I, I, I);",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "if (4 === I.I) {",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "if (4 === I.I && !I.I) {",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/sprites.js",
+    "line": "this.I = null;",
+    "max": 2,
+    "reason": "素材升级：记录图片加载失败供启动层报告；成功加载与旧图集帧定义保持。"
+  },
+  {
+    "file": "src/engine/modules/rendering/sprites.js",
+    "line": "this.I.I = function () { I.I = `无法加载图集: I{I}` ; };",
+    "max": 1,
+    "reason": "素材升级：记录图片加载失败供启动层报告；成功加载与旧图集帧定义保持。"
+  },
+  {
+    "file": "src/engine/modules/rendering/sprites.js",
+    "line": "this.I.I = function () { I.I = `无法加载动画图集: I{I}` ; };",
+    "max": 1,
+    "reason": "素材升级：记录图片加载失败供启动层报告；成功加载与旧图集帧定义保持。"
+  },
+  {
+    "file": "src/engine/modules/runtime/game.js",
+    "line": "import I from '../../../I/I.I.I' ;",
+    "max": 1,
+    "reason": "素材升级：组合根建立资源目录与旧三组门面、接入生成清单和预览目录；既有 continueRun 工作树修改保持。"
+  },
+  {
+    "file": "src/engine/modules/runtime/game.js",
+    "line": "const I = I({",
+    "max": 1,
+    "reason": "素材升级：组合根建立资源目录与旧三组门面、接入生成清单和预览目录；既有 continueRun 工作树修改保持。"
+  },
+  {
+    "file": "src/engine/modules/runtime/game.js",
+    "line": "I: {",
+    "max": 1,
+    "reason": "素材升级：组合根建立资源目录与旧三组门面、接入生成清单和预览目录；既有 continueRun 工作树修改保持。"
+  },
+  {
+    "file": "src/engine/modules/runtime/game.js",
+    "line": "I: new I( 'I/I.I' , 54, I),",
+    "max": 2,
+    "reason": "素材升级：组合根建立资源目录与旧三组门面、接入生成清单和预览目录；既有 continueRun 工作树修改保持。"
+  },
+  {
+    "file": "src/engine/modules/runtime/game.js",
+    "line": "I: new I( 'I/I.I' , 32, I)",
+    "max": 1,
+    "reason": "素材升级：组合根建立资源目录与旧三组门面、接入生成清单和预览目录；既有 continueRun 工作树修改保持。"
+  },
+  {
+    "file": "src/engine/modules/runtime/game.js",
+    "line": "I: I",
+    "max": 1,
+    "reason": "素材升级：组合根建立资源目录与旧三组门面、接入生成清单和预览目录；既有 continueRun 工作树修改保持。"
+  },
+  {
+    "file": "src/engine/modules/runtime/game.js",
+    "line": "I(I);",
+    "max": 1,
+    "reason": "素材升级：组合根建立资源目录与旧三组门面、接入生成清单和预览目录；既有 continueRun 工作树修改保持。"
+  },
+  {
+    "file": "src/engine/modules/runtime/game.js",
+    "line": "I: new I( \"I/I.I\" , 54, I),",
+    "max": 2,
+    "reason": "素材升级：组合根建立资源目录与旧三组门面、接入生成清单和预览目录；既有 continueRun 工作树修改保持。"
+  },
+  {
+    "file": "src/engine/modules/runtime/game.js",
+    "line": "I: new I( \"I/I.I\" , 32, I),",
+    "max": 1,
+    "reason": "素材升级：组合根建立资源目录与旧三组门面、接入生成清单和预览目录；既有 continueRun 工作树修改保持。"
+  },
+  {
+    "file": "src/engine/modules/runtime/game.js",
+    "line": "I,",
+    "max": 1,
+    "reason": "素材升级：组合根建立资源目录与旧三组门面、接入生成清单和预览目录；既有 continueRun 工作树修改保持。"
+  },
+  {
+    "file": "src/engine/modules/runtime/game.js",
+    "line": "I: I.I( 'I' ),",
+    "max": 3,
+    "reason": "素材升级：组合根建立资源目录与旧三组门面、接入生成清单和预览目录；既有 continueRun 工作树修改保持。"
+  },
+  {
+    "file": "src/engine/modules/runtime/index.js",
+    "line": "I(I.I, I.I, I.I, I.I, I.I, I.I, I.I, I.I);",
+    "max": 1,
+    "reason": "素材升级：升级详情显式注入物品资源目录，替代硬编码金币图集裁切；初始化先后顺序保持。"
+  },
+  {
+    "file": "src/engine/modules/runtime/index.js",
+    "line": "I(I.I, I.I, I.I, I.I, I.I, I.I, I.I, I.I, I.I);",
+    "max": 1,
+    "reason": "素材升级：升级详情显式注入物品资源目录，替代硬编码金币图集裁切；初始化先后顺序保持。"
+  },
+  {
+    "file": "src/engine/modules/simulation/characters.js",
+    "line": "return I.I(I + (I - I.I.I - (I - I.I.I)));",
+    "max": 1,
+    "reason": "素材升级：旧坐标换算委托纯几何函数，保留角色半格比例及掉落物商余数截断；不改变位置、移动或规则。"
+  },
+  {
+    "file": "src/engine/modules/simulation/characters.js",
+    "line": "return I.I(I(I, I, I.I.I, I.I.I).I);",
+    "max": 2,
+    "reason": "素材升级：旧坐标换算委托纯几何函数，保留角色半格比例及掉落物商余数截断；不改变位置、移动或规则。"
+  },
+  {
+    "file": "src/engine/modules/simulation/characters.js",
+    "line": "return I.I(I + 0.5 * (I - I.I.I + (I - I.I.I)));",
+    "max": 1,
+    "reason": "素材升级：旧坐标换算委托纯几何函数，保留角色半格比例及掉落物商余数截断；不改变位置、移动或规则。"
+  },
+  {
+    "file": "src/engine/modules/simulation/characters.js",
+    "line": "var I = I.I;",
+    "max": 2,
+    "reason": "素材升级：旧坐标换算委托纯几何函数，保留角色半格比例及掉落物商余数截断；不改变位置、移动或规则。"
+  },
+  {
+    "file": "src/engine/modules/simulation/characters.js",
+    "line": "return I + ((I / I | 0) - I.I - ((I / I | 0) - I.I)) * I + ((I % I | 0) - (I % I | 0)) - I.I;",
+    "max": 1,
+    "reason": "素材升级：旧坐标换算委托纯几何函数，保留角色半格比例及掉落物商余数截断；不改变位置、移动或规则。"
+  },
+  {
+    "file": "src/engine/modules/simulation/characters.js",
+    "line": "return I(I, I, I.I).I;",
+    "max": 2,
+    "reason": "素材升级：旧坐标换算委托纯几何函数，保留角色半格比例及掉落物商余数截断；不改变位置、移动或规则。"
+  },
+  {
+    "file": "src/engine/modules/simulation/characters.js",
+    "line": "return I + ((I / I | 0) - I.I + ((I / I | 0) - I.I)) * I + (((I % I | 0) + (I % I | 0)) / 2 | 0) - I.I;",
+    "max": 1,
+    "reason": "素材升级：旧坐标换算委托纯几何函数，保留角色半格比例及掉落物商余数截断；不改变位置、移动或规则。"
+  },
+  {
+    "file": "src/engine/modules/views/castles.js",
+    "line": "I.I.I = \"I('I/I.I') -\" + I.I + \"I -\" + I.I + \"I\" ;",
+    "max": 1,
+    "reason": "素材升级：城堡图标使用统一地形预览，旧裁切窗口集中在兼容适配器。"
+  },
+  {
+    "file": "src/engine/modules/views/castles.js",
+    "line": "I.I.I = I(I, 'I' );",
+    "max": 1,
+    "reason": "素材升级：城堡图标使用统一地形预览，旧裁切窗口集中在兼容适配器。"
+  },
+  {
+    "file": "src/engine/modules/views/character.js",
+    "line": "this.I.I.I = \"I('I/I.I') -\" + I.I + \"I -\" + I.I + \"I\" ;",
+    "max": 2,
+    "reason": "素材升级：角色头像与装备图标使用语义预览，旧UI尺寸与窗口保持。"
+  },
+  {
+    "file": "src/engine/modules/views/character.js",
+    "line": "this.I.I.I = I(I, 'I' );",
+    "max": 2,
+    "reason": "素材升级：角色头像与装备图标使用语义预览，旧UI尺寸与窗口保持。"
+  },
+  {
+    "file": "src/engine/modules/views/dungeons.js",
+    "line": "this.I.I.I = \"I('I/I.I') -\" + I.I + \"I -\" + I.I + \"I\" ;",
+    "max": 3,
+    "reason": "素材升级：副本、远征资源预览经目录解析，保留旧图标窗口。"
+  },
+  {
+    "file": "src/engine/modules/views/dungeons.js",
+    "line": "this.I.I.I = I(I, 'I' );",
+    "max": 3,
+    "reason": "素材升级：副本、远征资源预览经目录解析，保留旧图标窗口。"
+  },
+  {
+    "file": "src/engine/modules/views/expedition.js",
+    "line": "I.I.I = \"I('I/I.I') -\" + I.I + \"I -\" + (I.I + 8) + \"I\" ;",
+    "max": 1,
+    "reason": "素材升级：人物及特效背景经预览适配器；旧特效 frameAge/index 递增、回绕与模拟伤害时序保持。"
+  },
+  {
+    "file": "src/engine/modules/views/expedition.js",
+    "line": "I.I.I = I(I, 'I' );",
+    "max": 1,
+    "reason": "素材升级：人物及特效背景经预览适配器；旧特效 frameAge/index 递增、回绕与模拟伤害时序保持。"
+  },
+  {
+    "file": "src/engine/modules/views/expedition.js",
+    "line": "var I = I.I;",
+    "max": 2,
+    "reason": "素材升级：人物及特效背景经预览适配器；旧特效 frameAge/index 递增、回绕与模拟伤害时序保持。"
+  },
+  {
+    "file": "src/engine/modules/views/expedition.js",
+    "line": "var I = I.I[this.I[I]];",
+    "max": 1,
+    "reason": "素材升级：人物及特效背景经预览适配器；旧特效 frameAge/index 递增、回绕与模拟伤害时序保持。"
+  },
+  {
+    "file": "src/engine/modules/views/expedition.js",
+    "line": "I.I.I = \"I('\" + I + \"') -\" + I.I + \"I -\" + I.I + \"I\" ;",
+    "max": 2,
+    "reason": "素材升级：人物及特效背景经预览适配器；旧特效 frameAge/index 递增、回绕与模拟伤害时序保持。"
+  },
+  {
+    "file": "src/engine/modules/views/expedition.js",
+    "line": "I.I.I = I(I, this.I[I]);",
+    "max": 1,
+    "reason": "素材升级：人物及特效背景经预览适配器；旧特效 frameAge/index 递增、回绕与模拟伤害时序保持。"
+  },
+  {
+    "file": "src/engine/modules/views/expedition.js",
+    "line": "var I = I.I[0];",
+    "max": 1,
+    "reason": "素材升级：人物及特效背景经预览适配器；旧特效 frameAge/index 递增、回绕与模拟伤害时序保持。"
+  },
+  {
+    "file": "src/engine/modules/views/expedition.js",
+    "line": "I.I.I = I(I, 0);",
+    "max": 1,
+    "reason": "素材升级：人物及特效背景经预览适配器；旧特效 frameAge/index 递增、回绕与模拟伤害时序保持。"
+  },
+  {
+    "file": "src/engine/modules/views/expedition.js",
+    "line": "this.I.I.I = \"I('I/I.I') -\" + I.I + \"I -\" + I.I + \"I\" ;",
+    "max": 2,
+    "reason": "素材升级：人物及特效背景经预览适配器；旧特效 frameAge/index 递增、回绕与模拟伤害时序保持。"
+  },
+  {
+    "file": "src/engine/modules/views/expedition.js",
+    "line": "this.I.I.I = I(I, 'I' );",
+    "max": 2,
+    "reason": "素材升级：人物及特效背景经预览适配器；旧特效 frameAge/index 递增、回绕与模拟伤害时序保持。"
+  },
+  {
+    "file": "src/engine/modules/views/monsters.js",
+    "line": "this.I.I.I = \"I('I/I.I') -\" + I.I + \"I -\" + (I.I + 10) + \"I\" ;",
+    "max": 2,
+    "reason": "素材升级：怪物列表及详情使用语义预览，旧显示窗口保持。"
+  },
+  {
+    "file": "src/engine/modules/views/monsters.js",
+    "line": "this.I.I.I = I(I, 'I' );",
+    "max": 2,
+    "reason": "素材升级：怪物列表及详情使用语义预览，旧显示窗口保持。"
+  },
+  {
+    "file": "src/engine/modules/views/party-creation.js",
+    "line": "I.I.I = \"I('I/I.I') -\" + (I.I + 10) + \"I -\" + (I.I + 12) + \"I\" ;",
+    "max": 3,
+    "reason": "素材升级：创建队伍头像使用统一语义预览，旧选择与随机生成顺序保持。"
+  },
+  {
+    "file": "src/engine/modules/views/party-creation.js",
+    "line": "I.I.I = I(I, 'I' );",
+    "max": 3,
+    "reason": "素材升级：创建队伍头像使用统一语义预览，旧选择与随机生成顺序保持。"
+  },
+  {
+    "file": "src/engine/modules/views/results.js",
+    "line": "I.I.I = \"I('I/I.I') -\" + I.I + \"I -\" + (I.I + 10) + \"I\" ;",
+    "max": 1,
+    "reason": "素材升级：结果页头像使用统一预览；既有 continueRun 解耦修改保持。"
+  },
+  {
+    "file": "src/engine/modules/views/results.js",
+    "line": "I.I.I = I(I, 'I' );",
+    "max": 1,
+    "reason": "素材升级：结果页头像使用统一预览；既有 continueRun 解耦修改保持。"
+  },
+  {
+    "file": "src/engine/modules/views/upgrade-details.js",
+    "line": "export function I(I, I, I, I, I, I, I, I) {",
+    "max": 1,
+    "reason": "素材升级：升级详情头像、道具、召唤物与特效通过统一预览；金币/祭品使用原命名资源代替固定像素；按引用注入物品目录，旧动画步进保持。"
+  },
+  {
+    "file": "src/engine/modules/views/upgrade-details.js",
+    "line": "var I = null;",
+    "max": 1,
+    "reason": "素材升级：升级详情头像、道具、召唤物与特效通过统一预览；金币/祭品使用原命名资源代替固定像素；按引用注入物品目录，旧动画步进保持。"
+  },
+  {
+    "file": "src/engine/modules/views/upgrade-details.js",
+    "line": "export function I(I, I, I, I, I, I, I, I, I) {",
+    "max": 1,
+    "reason": "素材升级：升级详情头像、道具、召唤物与特效通过统一预览；金币/祭品使用原命名资源代替固定像素；按引用注入物品目录，旧动画步进保持。"
+  },
+  {
+    "file": "src/engine/modules/views/upgrade-details.js",
+    "line": "I = I;",
+    "max": 1,
+    "reason": "素材升级：升级详情头像、道具、召唤物与特效通过统一预览；金币/祭品使用原命名资源代替固定像素；按引用注入物品目录，旧动画步进保持。"
+  },
+  {
+    "file": "src/engine/modules/views/upgrade-details.js",
+    "line": "if (!I) throw new I( '升级详情视图尚未绑定物品资源目录' );",
+    "max": 1,
+    "reason": "素材升级：升级详情头像、道具、召唤物与特效通过统一预览；金币/祭品使用原命名资源代替固定像素；按引用注入物品目录，旧动画步进保持。"
+  },
+  {
+    "file": "src/engine/modules/views/upgrade-details.js",
+    "line": "return I;",
+    "max": 1,
+    "reason": "素材升级：升级详情头像、道具、召唤物与特效通过统一预览；金币/祭品使用原命名资源代替固定像素；按引用注入物品目录，旧动画步进保持。"
+  },
+  {
+    "file": "src/engine/modules/views/upgrade-details.js",
+    "line": "function I() {",
+    "max": 1,
+    "reason": "素材升级：升级详情头像、道具、召唤物与特效通过统一预览；金币/祭品使用原命名资源代替固定像素；按引用注入物品目录，旧动画步进保持。"
+  },
+  {
+    "file": "src/engine/modules/views/upgrade-details.js",
+    "line": "I.I.I = \"I('I/I.I') -1302I -363I\" ;",
+    "max": 3,
+    "reason": "素材升级：升级详情头像、道具、召唤物与特效通过统一预览；金币/祭品使用原命名资源代替固定像素；按引用注入物品目录，旧动画步进保持。"
+  },
+  {
+    "file": "src/engine/modules/views/upgrade-details.js",
+    "line": "I.I.I = I(I().I( 'I.I' ), 'I' );",
+    "max": 7,
+    "reason": "素材升级：升级详情头像、道具、召唤物与特效通过统一预览；金币/祭品使用原命名资源代替固定像素；按引用注入物品目录，旧动画步进保持。"
+  },
+  {
+    "file": "src/engine/modules/views/upgrade-details.js",
+    "line": "this.I.I.I = \"I('I/I.I') -\" + (I.I + 10) + \"I -\" + (I.I + 12) + \"I\" ;",
+    "max": 3,
+    "reason": "素材升级：升级详情头像、道具、召唤物与特效通过统一预览；金币/祭品使用原命名资源代替固定像素；按引用注入物品目录，旧动画步进保持。"
+  },
+  {
+    "file": "src/engine/modules/views/upgrade-details.js",
+    "line": "this.I.I.I = I(I, 'I' );",
+    "max": 9,
+    "reason": "素材升级：升级详情头像、道具、召唤物与特效通过统一预览；金币/祭品使用原命名资源代替固定像素；按引用注入物品目录，旧动画步进保持。"
+  },
+  {
+    "file": "src/engine/modules/views/upgrade-details.js",
+    "line": "this.I.I.I = \"I('I/I.I') -\" + I.I + \"I -\" + I.I + \"I\" ;",
+    "max": 6,
+    "reason": "素材升级：升级详情头像、道具、召唤物与特效通过统一预览；金币/祭品使用原命名资源代替固定像素；按引用注入物品目录，旧动画步进保持。"
+  },
+  {
+    "file": "src/engine/modules/views/upgrade-details.js",
+    "line": "this.I[I].I.I = \"I('I/I.I') -\" + I.I + \"I -\" + I.I + \"I\" ;",
+    "max": 1,
+    "reason": "素材升级：升级详情头像、道具、召唤物与特效通过统一预览；金币/祭品使用原命名资源代替固定像素；按引用注入物品目录，旧动画步进保持。"
+  },
+  {
+    "file": "src/engine/modules/views/upgrade-details.js",
+    "line": "this.I[I].I.I = I(I, 'I' );",
+    "max": 1,
+    "reason": "素材升级：升级详情头像、道具、召唤物与特效通过统一预览；金币/祭品使用原命名资源代替固定像素；按引用注入物品目录，旧动画步进保持。"
+  },
+  {
+    "file": "src/engine/modules/views/upgrade-details.js",
+    "line": "this.I.I.I = \"I('I/I.I') -\" + (this.I.I + 10) + \"I -\" + (this.I.I + 12) + \"I\" ;",
+    "max": 1,
+    "reason": "素材升级：升级详情头像、道具、召唤物与特效通过统一预览；金币/祭品使用原命名资源代替固定像素；按引用注入物品目录，旧动画步进保持。"
+  },
+  {
+    "file": "src/engine/modules/views/upgrade-details.js",
+    "line": "this.I.I.I = I(this.I, 'I' );",
+    "max": 1,
+    "reason": "素材升级：升级详情头像、道具、召唤物与特效通过统一预览；金币/祭品使用原命名资源代替固定像素；按引用注入物品目录，旧动画步进保持。"
+  },
+  {
+    "file": "src/engine/modules/views/upgrade-details.js",
+    "line": "var I = this.I.I[this.I];",
+    "max": 1,
+    "reason": "素材升级：升级详情头像、道具、召唤物与特效通过统一预览；金币/祭品使用原命名资源代替固定像素；按引用注入物品目录，旧动画步进保持。"
+  },
+  {
+    "file": "src/engine/modules/views/upgrade-details.js",
+    "line": "this.I.I.I = \"I('\" + this.I.I + \"') -\" + I.I + \"I -\" + I.I + \"I\" ;",
+    "max": 1,
+    "reason": "素材升级：升级详情头像、道具、召唤物与特效通过统一预览；金币/祭品使用原命名资源代替固定像素；按引用注入物品目录，旧动画步进保持。"
+  },
+  {
+    "file": "src/engine/modules/views/upgrade-details.js",
+    "line": "this.I.I.I = I(this.I, this.I, 'I' );",
+    "max": 1,
+    "reason": "素材升级：升级详情头像、道具、召唤物与特效通过统一预览；金币/祭品使用原命名资源代替固定像素；按引用注入物品目录，旧动画步进保持。"
+  },
+  {
+    "file": "src/engine/modules/views/upgrade-details.js",
+    "line": "I.I.I = \"I('I/I.I') -1464I -73I\" ;",
+    "max": 4,
+    "reason": "素材升级：升级详情头像、道具、召唤物与特效通过统一预览；金币/祭品使用原命名资源代替固定像素；按引用注入物品目录，旧动画步进保持。"
+  },
+  {
+    "file": "src/engine/modules/world/generation.js",
+    "line": "this.I = [];",
+    "max": 1,
+    "reason": "素材升级：副本层持有并在生成时清空显示专用 sceneObjects；不写旧存档或参与碰撞生成。"
+  },
+  {
+    "file": "src/engine/modules/world/generation.js",
+    "line": "I.I.I = 0;",
+    "max": 1,
+    "reason": "素材升级：副本层持有并在生成时清空显示专用 sceneObjects；不写旧存档或参与碰撞生成。"
+  },
+  {
+    "file": "src/engine/modules/world/rooms.js",
+    "line": "I(I.I, () => I.I, [",
+    "max": 1,
+    "reason": "素材升级：副本 tile 的背景与装饰保存语义资源 ID，通过兼容属性晚解析；生成顺序保持。"
+  },
+  {
+    "file": "src/engine/modules/world/rooms.js",
+    "line": "[ 'I' , 'I' ], [ 'I' , 'I' ], [ 'I' , 'I' ]",
+    "max": 1,
+    "reason": "素材升级：副本 tile 的背景与装饰保存语义资源 ID，通过兼容属性晚解析；生成顺序保持。"
+  },
+  {
+    "file": "src/engine/modules/world/terrain.js",
+    "line": "this.I = [];",
+    "max": 1,
+    "reason": "素材升级：世界 tile 资源语义槽及显示专用 sceneObjects；旧地图种子、主题、生成顺序与存档保持。"
+  },
+  {
+    "file": "src/engine/modules/world/terrain.js",
+    "line": "I(I.I, () => I.I, [",
+    "max": 1,
+    "reason": "素材升级：世界 tile 资源语义槽及显示专用 sceneObjects；旧地图种子、主题、生成顺序与存档保持。"
+  },
+  {
+    "file": "src/engine/modules/world/terrain.js",
+    "line": "[ 'I' , 'I' ], [ 'I' , 'I' ]",
+    "max": 1,
+    "reason": "素材升级：世界 tile 资源语义槽及显示专用 sceneObjects；旧地图种子、主题、生成顺序与存档保持。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I: I.I, I: I, I: I",
+    "max": 1,
+    "reason": "素材升级：语义资源晚解析、角色/静态物件播放帧、新素材统一投影、脚点/占地深度和地形尺寸候选窗；旧绘制分支及随机调用顺序保留。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "var I = I.I.I(I.I.I),",
+    "max": 2,
+    "reason": "地图窗口去硬编码切片：删除 var centerTileColumn/worldRowCursor 游标声明（中心地块改由 drawClassicTileWindow 内部计算）。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I = I.I.I(I.I.I) - 18;",
+    "max": 2,
+    "reason": "地图窗口去硬编码切片：删除游标声明第二行（-18 起行偏移现为 MAP_WINDOW_FIRST_ROW_OFFSET）。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I(I, I++, I - 5, I - 3);",
+    "max": 2,
+    "reason": "地图窗口去硬编码切片：删除展开的 draw*TileRow 调用；窗口提为 rendering/map-window.js 的 MAP_WINDOW_ROWS 单一来源，调用序列由 tests/unit/map-window.test.mjs 金标准逐行保护（35 行 × world/dungeon 两处共 70 行 → 2 行 helper 调用）。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I(I, I++, I - 6, I - 2);",
+    "max": 2,
+    "reason": "地图窗口去硬编码切片：删除展开的 draw*TileRow 调用；窗口提为 rendering/map-window.js 的 MAP_WINDOW_ROWS 单一来源，调用序列由 tests/unit/map-window.test.mjs 金标准逐行保护（35 行 × world/dungeon 两处共 70 行 → 2 行 helper 调用）。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I(I, I++, I - 7, I - 1);",
+    "max": 2,
+    "reason": "地图窗口去硬编码切片：删除展开的 draw*TileRow 调用；窗口提为 rendering/map-window.js 的 MAP_WINDOW_ROWS 单一来源，调用序列由 tests/unit/map-window.test.mjs 金标准逐行保护（35 行 × world/dungeon 两处共 70 行 → 2 行 helper 调用）。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I(I, I++, I - 8, I);",
+    "max": 2,
+    "reason": "地图窗口去硬编码切片：删除展开的 draw*TileRow 调用；窗口提为 rendering/map-window.js 的 MAP_WINDOW_ROWS 单一来源，调用序列由 tests/unit/map-window.test.mjs 金标准逐行保护（35 行 × world/dungeon 两处共 70 行 → 2 行 helper 调用）。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I(I, I++, I - 9, I + 1);",
+    "max": 2,
+    "reason": "地图窗口去硬编码切片：删除展开的 draw*TileRow 调用；窗口提为 rendering/map-window.js 的 MAP_WINDOW_ROWS 单一来源，调用序列由 tests/unit/map-window.test.mjs 金标准逐行保护（35 行 × world/dungeon 两处共 70 行 → 2 行 helper 调用）。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I(I, I++, I - 10, I + 2);",
+    "max": 2,
+    "reason": "地图窗口去硬编码切片：删除展开的 draw*TileRow 调用；窗口提为 rendering/map-window.js 的 MAP_WINDOW_ROWS 单一来源，调用序列由 tests/unit/map-window.test.mjs 金标准逐行保护（35 行 × world/dungeon 两处共 70 行 → 2 行 helper 调用）。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I(I, I++, I - 11, I + 3);",
+    "max": 2,
+    "reason": "地图窗口去硬编码切片：删除展开的 draw*TileRow 调用；窗口提为 rendering/map-window.js 的 MAP_WINDOW_ROWS 单一来源，调用序列由 tests/unit/map-window.test.mjs 金标准逐行保护（35 行 × world/dungeon 两处共 70 行 → 2 行 helper 调用）。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I(I, I++, I - 12, I + 4);",
+    "max": 2,
+    "reason": "地图窗口去硬编码切片：删除展开的 draw*TileRow 调用；窗口提为 rendering/map-window.js 的 MAP_WINDOW_ROWS 单一来源，调用序列由 tests/unit/map-window.test.mjs 金标准逐行保护（35 行 × world/dungeon 两处共 70 行 → 2 行 helper 调用）。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I(I, I++, I - 13, I + 5);",
+    "max": 2,
+    "reason": "地图窗口去硬编码切片：删除展开的 draw*TileRow 调用；窗口提为 rendering/map-window.js 的 MAP_WINDOW_ROWS 单一来源，调用序列由 tests/unit/map-window.test.mjs 金标准逐行保护（35 行 × world/dungeon 两处共 70 行 → 2 行 helper 调用）。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I(I, I++, I - 14, I + 6);",
+    "max": 2,
+    "reason": "地图窗口去硬编码切片：删除展开的 draw*TileRow 调用；窗口提为 rendering/map-window.js 的 MAP_WINDOW_ROWS 单一来源，调用序列由 tests/unit/map-window.test.mjs 金标准逐行保护（35 行 × world/dungeon 两处共 70 行 → 2 行 helper 调用）。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I(I, I++, I - 15, I + 7);",
+    "max": 2,
+    "reason": "地图窗口去硬编码切片：删除展开的 draw*TileRow 调用；窗口提为 rendering/map-window.js 的 MAP_WINDOW_ROWS 单一来源，调用序列由 tests/unit/map-window.test.mjs 金标准逐行保护（35 行 × world/dungeon 两处共 70 行 → 2 行 helper 调用）。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I(I, I++, I - 16, I + 8);",
+    "max": 2,
+    "reason": "地图窗口去硬编码切片：删除展开的 draw*TileRow 调用；窗口提为 rendering/map-window.js 的 MAP_WINDOW_ROWS 单一来源，调用序列由 tests/unit/map-window.test.mjs 金标准逐行保护（35 行 × world/dungeon 两处共 70 行 → 2 行 helper 调用）。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I(I, I++, I - 17, I + 9);",
+    "max": 2,
+    "reason": "地图窗口去硬编码切片：删除展开的 draw*TileRow 调用；窗口提为 rendering/map-window.js 的 MAP_WINDOW_ROWS 单一来源，调用序列由 tests/unit/map-window.test.mjs 金标准逐行保护（35 行 × world/dungeon 两处共 70 行 → 2 行 helper 调用）。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I(I, I++, I - 18, I + 10);",
+    "max": 2,
+    "reason": "地图窗口去硬编码切片：删除展开的 draw*TileRow 调用；窗口提为 rendering/map-window.js 的 MAP_WINDOW_ROWS 单一来源，调用序列由 tests/unit/map-window.test.mjs 金标准逐行保护（35 行 × world/dungeon 两处共 70 行 → 2 行 helper 调用）。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I(I, I++, I - 19, I + 11);",
+    "max": 2,
+    "reason": "地图窗口去硬编码切片：删除展开的 draw*TileRow 调用；窗口提为 rendering/map-window.js 的 MAP_WINDOW_ROWS 单一来源，调用序列由 tests/unit/map-window.test.mjs 金标准逐行保护（35 行 × world/dungeon 两处共 70 行 → 2 行 helper 调用）。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I(I, I++, I - 20, I + 12);",
+    "max": 2,
+    "reason": "地图窗口去硬编码切片：删除展开的 draw*TileRow 调用；窗口提为 rendering/map-window.js 的 MAP_WINDOW_ROWS 单一来源，调用序列由 tests/unit/map-window.test.mjs 金标准逐行保护（35 行 × world/dungeon 两处共 70 行 → 2 行 helper 调用）。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I(I, I++, I - 19, I + 13);",
+    "max": 2,
+    "reason": "地图窗口去硬编码切片：删除展开的 draw*TileRow 调用；窗口提为 rendering/map-window.js 的 MAP_WINDOW_ROWS 单一来源，调用序列由 tests/unit/map-window.test.mjs 金标准逐行保护（35 行 × world/dungeon 两处共 70 行 → 2 行 helper 调用）。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I(I, I++, I - 18, I + 14);",
+    "max": 2,
+    "reason": "地图窗口去硬编码切片：删除展开的 draw*TileRow 调用；窗口提为 rendering/map-window.js 的 MAP_WINDOW_ROWS 单一来源，调用序列由 tests/unit/map-window.test.mjs 金标准逐行保护（35 行 × world/dungeon 两处共 70 行 → 2 行 helper 调用）。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I(I, I++, I - 17, I + 15);",
+    "max": 2,
+    "reason": "地图窗口去硬编码切片：删除展开的 draw*TileRow 调用；窗口提为 rendering/map-window.js 的 MAP_WINDOW_ROWS 单一来源，调用序列由 tests/unit/map-window.test.mjs 金标准逐行保护（35 行 × world/dungeon 两处共 70 行 → 2 行 helper 调用）。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I(I, I++, I - 16, I + 16);",
+    "max": 2,
+    "reason": "地图窗口去硬编码切片：删除展开的 draw*TileRow 调用；窗口提为 rendering/map-window.js 的 MAP_WINDOW_ROWS 单一来源，调用序列由 tests/unit/map-window.test.mjs 金标准逐行保护（35 行 × world/dungeon 两处共 70 行 → 2 行 helper 调用）。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I(I, I++, I - 14, I + 16);",
+    "max": 2,
+    "reason": "地图窗口去硬编码切片：删除展开的 draw*TileRow 调用；窗口提为 rendering/map-window.js 的 MAP_WINDOW_ROWS 单一来源，调用序列由 tests/unit/map-window.test.mjs 金标准逐行保护（35 行 × world/dungeon 两处共 70 行 → 2 行 helper 调用）。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I(I, I++, I - 13, I + 16);",
+    "max": 2,
+    "reason": "地图窗口去硬编码切片：删除展开的 draw*TileRow 调用；窗口提为 rendering/map-window.js 的 MAP_WINDOW_ROWS 单一来源，调用序列由 tests/unit/map-window.test.mjs 金标准逐行保护（35 行 × world/dungeon 两处共 70 行 → 2 行 helper 调用）。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I(I, I++, I - 12, I + 15);",
+    "max": 2,
+    "reason": "地图窗口去硬编码切片：删除展开的 draw*TileRow 调用；窗口提为 rendering/map-window.js 的 MAP_WINDOW_ROWS 单一来源，调用序列由 tests/unit/map-window.test.mjs 金标准逐行保护（35 行 × world/dungeon 两处共 70 行 → 2 行 helper 调用）。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I(I, I++, I - 11, I + 14);",
+    "max": 2,
+    "reason": "地图窗口去硬编码切片：删除展开的 draw*TileRow 调用；窗口提为 rendering/map-window.js 的 MAP_WINDOW_ROWS 单一来源，调用序列由 tests/unit/map-window.test.mjs 金标准逐行保护（35 行 × world/dungeon 两处共 70 行 → 2 行 helper 调用）。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I(I, I++, I - 10, I + 13);",
+    "max": 2,
+    "reason": "地图窗口去硬编码切片：删除展开的 draw*TileRow 调用；窗口提为 rendering/map-window.js 的 MAP_WINDOW_ROWS 单一来源，调用序列由 tests/unit/map-window.test.mjs 金标准逐行保护（35 行 × world/dungeon 两处共 70 行 → 2 行 helper 调用）。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I(I, I++, I - 9, I + 12);",
+    "max": 2,
+    "reason": "地图窗口去硬编码切片：删除展开的 draw*TileRow 调用；窗口提为 rendering/map-window.js 的 MAP_WINDOW_ROWS 单一来源，调用序列由 tests/unit/map-window.test.mjs 金标准逐行保护（35 行 × world/dungeon 两处共 70 行 → 2 行 helper 调用）。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I(I, I++, I - 8, I + 11);",
+    "max": 2,
+    "reason": "地图窗口去硬编码切片：删除展开的 draw*TileRow 调用；窗口提为 rendering/map-window.js 的 MAP_WINDOW_ROWS 单一来源，调用序列由 tests/unit/map-window.test.mjs 金标准逐行保护（35 行 × world/dungeon 两处共 70 行 → 2 行 helper 调用）。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I(I, I++, I - 7, I + 10);",
+    "max": 2,
+    "reason": "地图窗口去硬编码切片：删除展开的 draw*TileRow 调用；窗口提为 rendering/map-window.js 的 MAP_WINDOW_ROWS 单一来源，调用序列由 tests/unit/map-window.test.mjs 金标准逐行保护（35 行 × world/dungeon 两处共 70 行 → 2 行 helper 调用）。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I(I, I++, I - 6, I + 9);",
+    "max": 2,
+    "reason": "地图窗口去硬编码切片：删除展开的 draw*TileRow 调用；窗口提为 rendering/map-window.js 的 MAP_WINDOW_ROWS 单一来源，调用序列由 tests/unit/map-window.test.mjs 金标准逐行保护（35 行 × world/dungeon 两处共 70 行 → 2 行 helper 调用）。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I(I, I++, I - 5, I + 8);",
+    "max": 2,
+    "reason": "地图窗口去硬编码切片：删除展开的 draw*TileRow 调用；窗口提为 rendering/map-window.js 的 MAP_WINDOW_ROWS 单一来源，调用序列由 tests/unit/map-window.test.mjs 金标准逐行保护（35 行 × world/dungeon 两处共 70 行 → 2 行 helper 调用）。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I(I, I++, I - 4, I + 7);",
+    "max": 2,
+    "reason": "地图窗口去硬编码切片：删除展开的 draw*TileRow 调用；窗口提为 rendering/map-window.js 的 MAP_WINDOW_ROWS 单一来源，调用序列由 tests/unit/map-window.test.mjs 金标准逐行保护（35 行 × world/dungeon 两处共 70 行 → 2 行 helper 调用）。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I(I, I++, I - 3, I + 6);",
+    "max": 2,
+    "reason": "地图窗口去硬编码切片：删除展开的 draw*TileRow 调用；窗口提为 rendering/map-window.js 的 MAP_WINDOW_ROWS 单一来源，调用序列由 tests/unit/map-window.test.mjs 金标准逐行保护（35 行 × world/dungeon 两处共 70 行 → 2 行 helper 调用）。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I(I, I++, I - 2, I + 5);",
+    "max": 2,
+    "reason": "地图窗口去硬编码切片：删除展开的 draw*TileRow 调用；窗口提为 rendering/map-window.js 的 MAP_WINDOW_ROWS 单一来源，调用序列由 tests/unit/map-window.test.mjs 金标准逐行保护（35 行 × world/dungeon 两处共 70 行 → 2 行 helper 调用）。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I(I, I++, I - 1, I + 4);",
+    "max": 2,
+    "reason": "地图窗口去硬编码切片：删除展开的 draw*TileRow 调用；窗口提为 rendering/map-window.js 的 MAP_WINDOW_ROWS 单一来源，调用序列由 tests/unit/map-window.test.mjs 金标准逐行保护（35 行 × world/dungeon 两处共 70 行 → 2 行 helper 调用）。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I(I, I, I, I + 3);",
+    "max": 2,
+    "reason": "地图窗口去硬编码切片：删除展开的 draw*TileRow 调用；窗口提为 rendering/map-window.js 的 MAP_WINDOW_ROWS 单一来源，调用序列由 tests/unit/map-window.test.mjs 金标准逐行保护（35 行 × world/dungeon 两处共 70 行 → 2 行 helper 调用）。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I(I, I.I, true, I);",
+    "max": 1,
+    "reason": "地图窗口去硬编码切片：世界分支新增 drawClassicTileWindow(renderer, game.world, true, drawWorldTileRow)。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I(I, I.I, false, I);",
+    "max": 1,
+    "reason": "地图窗口去硬编码切片：地牢分支新增 drawClassicTileWindow(renderer, game.level, false, drawDungeonTileRow)。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "return I(typeof I === 'I' ? I.I.I(I) : I);",
+    "max": 1,
+    "reason": "tile 显示层数据驱动：新增 resolveTileSprite/drawTileVisuals 及 draw*TileRow 调用，替代两处各抄一遍的 background/decoration/cachedBackground 硬编码绘制块（顺序与通道由 TILE_VISUAL_SLOTS 决定）。像素由 91 场景 + presentation + map-motion 验证不变。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "function I(I, I, I, I, I) {",
+    "max": 1,
+    "reason": "tile 显示层数据驱动：新增 resolveTileSprite/drawTileVisuals 及 draw*TileRow 调用，替代两处各抄一遍的 background/decoration/cachedBackground 硬编码绘制块（顺序与通道由 TILE_VISUAL_SLOTS 决定）。像素由 91 场景 + presentation + map-motion 验证不变。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "for (const I of I(I, I, I)) {",
+    "max": 1,
+    "reason": "tile 显示层数据驱动：新增 resolveTileSprite/drawTileVisuals 及 draw*TileRow 调用，替代两处各抄一遍的 background/decoration/cachedBackground 硬编码绘制块（顺序与通道由 TILE_VISUAL_SLOTS 决定）。像素由 91 场景 + presentation + map-motion 验证不变。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "if (I.I === 'I' ) {",
+    "max": 1,
+    "reason": "tile 显示层数据驱动：新增 resolveTileSprite/drawTileVisuals 及 draw*TileRow 调用，替代两处各抄一遍的 background/decoration/cachedBackground 硬编码绘制块（顺序与通道由 TILE_VISUAL_SLOTS 决定）。像素由 91 场景 + presentation + map-motion 验证不变。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "} else if (I.I === 'I' ) {",
+    "max": 1,
+    "reason": "tile 显示层数据驱动：新增 resolveTileSprite/drawTileVisuals 及 draw*TileRow 调用，替代两处各抄一遍的 background/decoration/cachedBackground 硬编码绘制块（顺序与通道由 TILE_VISUAL_SLOTS 决定）。像素由 91 场景 + presentation + map-motion 验证不变。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I.I.I(I.I, I.I(), I.I(), I, I, I(I.I), 0, 'I' );",
+    "max": 2,
+    "reason": "tile 显示层数据驱动：新增 resolveTileSprite/drawTileVisuals 及 draw*TileRow 调用，替代两处各抄一遍的 background/decoration/cachedBackground 硬编码绘制块（顺序与通道由 TILE_VISUAL_SLOTS 决定）。像素由 91 场景 + presentation + map-motion 验证不变。"
+  },
+  {
+    "file": "src/engine/modules/rendering/scene.js",
+    "line": "I(I, I, I, I, I);",
+    "max": 2,
+    "reason": "tile 显示层数据驱动：新增 resolveTileSprite/drawTileVisuals 及 draw*TileRow 调用，替代两处各抄一遍的 background/decoration/cachedBackground 硬编码绘制块（顺序与通道由 TILE_VISUAL_SLOTS 决定）。像素由 91 场景 + presentation + map-motion 验证不变。"
+  },
+  {
+    "file": "src/engine/modules/world/rooms.js",
+    "line": "I(I.I, () => I.I, I);",
+    "max": 1,
+    "reason": "tile 显示层数据驱动：访问器安装改传 TILE_VISUAL_SLOTS 数据表（原为内联元组数组），层顺序/通道改为单一来源。像素由 91 场景 + presentation + map-motion 验证不变。"
+  },
+  {
+    "file": "src/engine/modules/world/terrain.js",
+    "line": "I(I.I, () => I.I, I);",
+    "max": 1,
+    "reason": "tile 显示层数据驱动：访问器安装改传 TILE_VISUAL_SLOTS 数据表（原为内联元组数组），层顺序/通道改为单一来源。像素由 91 场景 + presentation + map-motion 验证不变。"
+  },
+  {
+    "file": "src/engine/modules/world/generation.js",
+    "line": "I(I, I, I.I);",
+    "max": 1,
+    "reason": "场景物件生产者接线：地牢生成在主题套用后调用 installThemeSceneObjects(level, theme, level.levelSeed)；主题未声明 sceneObjects 时为空操作（不消耗 RNG，对既有地图零影响）。已验证 parity=0、91/91 场景、presentation、map-motion 全绿。"
+  },
+  {
+    "file": "src/engine/modules/loot/items.js",
+    "line": "return -1 === I ? I : I.I(0, I) + '<I I=\"I:#I;\">' + I + \"</I>\" + I.I(I + I.I);",
+    "max": 1,
+    "reason": "阶段0-A：删除同一条 return 的未转义旧形态（与 131 行配对替换）。"
+  },
+  {
+    "file": "src/engine/modules/loot/items.js",
+    "line": "return -1 === I ? I(I) : I(I.I(0, I)) + '<I I=\"I:#I;\">' + I(I) + \"</I>\" + I(I.I(I + I.I));",
+    "max": 1,
+    "reason": "阶段0-A 名称输出边界：getHighlightedItemName 只转义存档可写入的文本分段，引擎自产的高亮 <span> 保持字面量。存档值不改写，因此不会跨读档累积二次转义。"
+  },
+  {
+    "file": "src/engine/modules/runtime/game.js",
+    "line": "I.I.I = null;",
+    "max": 2,
+    "reason": "阶段0-B 模拟停机恢复：resetRun（restartRun / resetGame 共用）解除 loop.simulationFault，使停机后仍可重开。不改存档结构与 RNG。"
+  },
+  {
+    "file": "src/engine/modules/simulation/loop.js",
+    "line": "this.I = null;",
+    "max": 1,
+    "reason": "阶段0-B：GameLoop 构造器初始化 simulationFault 停机标记。"
+  },
+  {
+    "file": "src/engine/modules/simulation/loop.js",
+    "line": "if (I.I && !I.I && !I.I) {",
+    "max": 1,
+    "reason": "阶段0-B：把模拟推进单独纳入 try/catch。切片前只有 view.render() 有 catch，模拟异常会逃出 tick 使 requestAnimationFrame 永不再执行、循环静默死亡。"
+  },
+  {
+    "file": "src/engine/modules/simulation/loop.js",
+    "line": "try {",
+    "max": 1,
+    "reason": "阶段0-B：把模拟推进单独纳入 try/catch。切片前只有 view.render() 有 catch，模拟异常会逃出 tick 使 requestAnimationFrame 永不再执行、循环静默死亡。"
+  },
+  {
+    "file": "src/engine/modules/simulation/loop.js",
+    "line": "if (!this.I && I.I && !I.I && !I.I) {",
+    "max": 1,
+    "reason": "阶段0-B：停机后不再进入模拟（不无限续排已损坏的模拟）。"
+  },
+  {
+    "file": "src/engine/modules/simulation/loop.js",
+    "line": "} catch (I) {",
+    "max": 1,
+    "reason": "阶段0-B：catch 子句，记录故障并上报宿主。"
+  },
+  {
+    "file": "src/engine/modules/simulation/loop.js",
+    "line": "this.I = { I: I.I, I: I.I, I: I() };",
+    "max": 1,
+    "reason": "阶段0-B：把故障落到 loop.simulationFault，使故障可检查、可被恢复路径解除。字段名用 recordedAtMilliseconds 以免触发混淆属性名回流门禁。"
+  },
+  {
+    "file": "src/engine/modules/simulation/loop.js",
+    "line": "I.I( \"I I, I I I I. I: \" + I.I + \" I: \" + I.I + \" I: \" + I);",
+    "max": 1,
+    "reason": "阶段0-B：控制台留痕，与既有 render 错误的记录方式一致。"
+  },
+  {
+    "file": "src/engine/modules/simulation/loop.js",
+    "line": "I.I?.(I);",
+    "max": 1,
+    "reason": "阶段0-B：通过 fault-port 宿主钩子把故障交给宿主展示（沿用 storage-port 的 onLoadError 模式，引擎不直接耦合 UI）。"
+  },
+  {
+    "file": "src/engine/modules/simulation/loop.js",
+    "line": "if (!I.I) {",
+    "max": 1,
+    "reason": "阶段0-B：删除原自动保存条件（未含停机判断），由含停机判断的新条件取代。"
+  },
+  {
+    "file": "src/engine/modules/simulation/loop.js",
+    "line": "if (!this.I && !I.I) {",
+    "max": 1,
+    "reason": "阶段0-B：停机后不自动保存，避免用损坏状态覆盖最后有效记录。"
+  },
+  {
+    "file": "src/engine/modules/simulation/loop.js",
+    "line": "if (!(I.I || I.I)) {",
+    "max": 1,
+    "reason": "阶段0-B：停机后不自动保存，避免用损坏状态覆盖最后有效记录。"
+  },
+  {
+    "file": "src/engine/modules/simulation/loop.js",
+    "line": "if (!(this.I || I.I || I.I)) {",
+    "max": 1,
+    "reason": "阶段0-B：停机后不累计游玩时长，避免统计被停机期间的墙钟时间污染。"
+  },
+  {
+    "file": "src/engine/modules/views/monsters.js",
+    "line": "this.I.I = this.I.I();",
+    "max": 2,
+    "reason": "阶段0-A：删除怪物图鉴首行渲染处的未转义旧赋值（与 220 行配对替换）。"
+  },
+  {
+    "file": "src/engine/modules/views/monsters.js",
+    "line": "this.I.I = I(this.I.I());",
+    "max": 2,
+    "reason": "阶段0-A 名称输出边界：怪物图鉴首行渲染处对存档可写入的怪物名做转义，纯文本上下文。"
+  },
+  {
+    "file": "src/engine/modules/views/expedition.js",
+    "line": "I.I = I.I;",
+    "max": 1,
+    "reason": "阶段0-A 名称输出边界：adventurerName 的 sink 改为实体感知转义，删除同位置的裸赋值（配对替换的旧侧）。玩家输入侧早已逐字符转义，输出侧只中和导入存档的裸标签，不改存档结构与输入侧行为。"
+  },
+  {
+    "file": "src/engine/modules/views/expedition.js",
+    "line": "I.I = I(I.I);",
+    "max": 1,
+    "reason": "阶段0-A 名称输出边界：adventurerName 走 escapeHtmlTextPreservingEntities，既避免玩家输入的 & 被二次转义，也阻止导入存档里的裸标签变成真实节点。"
+  }
+]

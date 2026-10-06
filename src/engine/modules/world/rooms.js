@@ -6,6 +6,7 @@ import { game } from "../runtime/game.js";
 import { rollGoldDrop, treasureRoomModifier } from "../content/balance.js";
 import { GoldDrop } from "../loot/treasure.js";
 import { TILE_SIZE } from "../core/screen-layout.js";
+import { DUNGEON_TILE_VISUAL_SLOTS, installTileVisualAccessors } from './tile-visuals.js';
 export var EMPTY_TILE;
 export function DungeonTile(tileColumn, tileRow, pixelColumn, pixelRow) {
   this.tileColumn = tileColumn;
@@ -538,6 +539,7 @@ export function paintHallwayTile(tile, floorSprite, wallSprite, forceDecoration)
   }
 }
 export function initializeWorldRooms() {
+  installTileVisualAccessors(DungeonTile.prototype, () => game.terrainSprites, DUNGEON_TILE_VISUAL_SLOTS);
   DungeonTile.prototype.getTileColumn = function () {
     return this.tileColumn;
   };

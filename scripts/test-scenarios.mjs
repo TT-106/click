@@ -7,7 +7,7 @@ import saveCodec from '../src/engine/save-codec.js';
 import {
   decodeFixture, encodeSave, summarize,
   withPotions, withScrolls, withGold, withKills, withPointPools, withFarmableDungeon, withTurns, withElapsed, withOfflineProcessing, withBackgroundProcessing,
-  withVictories, withClassSpell, withCastleVictory, withReclassedSpell, withEquippedItem, withResurrectionTrial, withSkillPoints, withExperience, withCharacterClass, withAttackableCastle, withClaimableAchievements, withAchievementThresholds, withoutFields, withFieldValues, withEmptyBackpacks,
+  withVictories, withClassSpell, withCastleVictory, withReclassedSpell, withEquippedItem, withResurrectionTrial, withSkillPoints, withExperience, withCharacterClass, withAttackableCastle, withClaimableAchievements, withAchievementThresholds, withoutFields, withFieldValues, withEmptyBackpacks, withVictoryContinuation,
   HARNESS_FIXED_NOW,
 } from '../tests/scenarios/save-mutations.mjs';
 
@@ -450,6 +450,41 @@ const scenarios = [
           && snap.castleManager.castleStates.every(c => c.conquered),
       }) },
         { turns: 30, victoryPanel: 30 },
+    ],
+  },
+  {
+    // 胜利后继续征程（真实按钮）：先真实打赢最后一座城堡，挂载胜利面板，
+    // 再点击页面里唯一的"继续"按钮（两端各自触发真实 onclick handler），
+    // 点击后不额外推进回合即比对完整 DTO 与真实落盘；随后推进 1/99/900 回合，
+    // 抓动作目标、冷却、旧世界引用与随机流漂移。
+    name: 'victory-continue-run',
+    make: () => withCastleVictory(base),
+    steps: [
+      { turns: 15000, trackBoss: true, check: snap => ({
+        victory: snap.gameWon === true && snap.victoryCount === 1,
+      }) },
+      { turns: 30, victoryPanel: 30 },
+      { continueRun: true },
+      { turns: 1 },
+      { turns: 98 },
+      { turns: 801 },
+    ],
+  },
+  {
+    // 继续征程的非空前提与特殊复位：在胜利前置态上叠加财富、已激活药水、
+    // 有库存卷轴、非零继续次数，以及"发现数≠farms.length""城堡要求等级非默认"。
+    // 真实打赢 → 真实点击 → 核实药水清空/卷轴保留/发现数特殊复位/要求等级保留；
+    // 随后再合法导入一份已胜利存档并第二次点击，证明入口读取当前状态而非缓存。
+    name: 'victory-continue-run-populated',
+    make: () => withVictoryContinuation(base),
+    steps: [
+      { turns: 15000, trackBoss: true, check: snap => ({
+        victory: snap.gameWon === true && snap.victoryCount === 1,
+      }) },
+      { turns: 30, victoryPanel: 30 },
+      { continueRun: { expectPopulated: true } },
+      { turns: 25 },
+      { reloadContinue: { save: withVictoryContinuation(base, { continueCount: 9, dungeonCostLevel: 4, gold: 654321, won: true, victoryCount: 1 }), idleFrames: 30 } },
     ],
   },
   {
@@ -1322,7 +1357,7 @@ try {
         // effectType 表示这一步改用"逐帧扫描活怪物效果队列"的推进方式，并直接对账施加次数。
         // purchaseUpgrades 表示这一步先推进再驱动升级购买（U7：只有视图层会触发的路径）。
         const step = Array.isArray(rawStep) ? { turns: rawStep[0], check: rawStep[1] } : rawStep;
-        const { turns, check, effectType, purchaseUpgrades, purchasePointUpgrades, claimAchievement, equipBestItems, purchaseEquipItemUpgrades, castScrollDuringCombat, scrollId, purchaseDungeonFarm, purchaseDungeonRowFarm, harvestFarmKills, lootTreasureDuringExplore, treasureKind, activatePotions, floatingText, damageNumbers, healNumbers, spellEffects, allyEffectType, trackBoss, frames, frameGap, victoryPanel, equipFromInventory, seedAncientItemDrop, selectedTreasure, createPartyFromBlank, purchaseCharacterSkill, readAttackCooldownProbe, loadSave, statValueProbe, summonLimitProbe, readRegenProbe, buffPotencyProbe, skillFieldProbe, spellCostProbe, boundaryValues } = step;
+        const { turns, check, effectType, purchaseUpgrades, purchasePointUpgrades, claimAchievement, equipBestItems, purchaseEquipItemUpgrades, castScrollDuringCombat, scrollId, purchaseDungeonFarm, purchaseDungeonRowFarm, harvestFarmKills, lootTreasureDuringExplore, treasureKind, activatePotions, floatingText, damageNumbers, healNumbers, spellEffects, allyEffectType, trackBoss, frames, frameGap, victoryPanel, continueRun, reloadContinue, equipFromInventory, seedAncientItemDrop, selectedTreasure, createPartyFromBlank, purchaseCharacterSkill, readAttackCooldownProbe, loadSave, statValueProbe, summonLimitProbe, readRegenProbe, buffPotencyProbe, skillFieldProbe, spellCostProbe, boundaryValues } = step;
         const results = await Promise.all(pages.map(async p => {
           await p.page.evaluate(ms => window.harness.setTime(ms), HARNESS_FIXED_NOW);
           // 重置后无队伍：走真实帧循环（守卫路径），而非裸推进
@@ -1351,6 +1386,13 @@ try {
           if (spellEffects !== undefined) return p.page.evaluate(a => window.harness.countVisualEffects(a), { turns });
           if (trackBoss !== undefined) return p.page.evaluate(a => window.harness.trackBossEncounter(a), { turns });
           if (victoryPanel !== undefined) return p.page.evaluate(n => { window.harness.idle(n); return window.harness.observeVictoryPanel(); }, victoryPanel);
+          // 真实"继续"按钮：各自页面内唯一按钮 + 真实 onclick；点击后立即取完整 DTO 与落盘原文
+          if (continueRun !== undefined) return p.page.evaluate(() => window.harness.clickContinueRun());
+          // 再次进入：合法导入已胜利存档 → 挂载面板 → 第二次点击真实继续按钮
+          if (reloadContinue !== undefined) {
+            const reloadText = encodeSave(reloadContinue.save);
+            return p.page.evaluate(a => window.harness.reloadAndContinue(a), { text: reloadText, idleFrames: reloadContinue.idleFrames ?? 30 });
+          }
           if (equipFromInventory !== undefined) return p.page.evaluate(a => window.harness.equipFromInventory(a), equipFromInventory);
           // P-3：注入远古掉落物后逐帧推进直到 AI 真的拾取（两端拾取发生在同一回合）
           if (seedAncientItemDrop !== undefined) return p.page.evaluate(a => window.harness.seedAncientItemDrop(a), seedAncientItemDrop);
@@ -1414,6 +1456,68 @@ try {
           }, frames);
           return { snapshot: await p.page.evaluate(turns => window.harness.advance(turns), turns) };
         }));
+        // 真实继续征程：先跑"这一跳确实发生了正确的事"的专项断言（计数/保留/落盘/事件时序），
+        // 再跑通用的即时 DTO 双端 deepEqual。顺序有意如此：计数、队伍保留等若被破坏，
+        // 应直接由具名断言报红，而不是被通用 DTO 分叉吞成一句"推进 undefined 回合后状态分叉"。
+        if (continueRun !== undefined || reloadContinue !== undefined) {
+          const populated = (continueRun && continueRun.expectPopulated) === true;
+          for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {
+            const r = results[i];
+            assert.equal(r.buttonCount, 1, `${label} 页面内继续按钮必须唯一存在`);
+            const before = r.before, after = r.snapshot;
+            assert.equal(after.gameWon, false, `${label} 继续后必须清除胜利标记`);
+            assert.equal(after.turnNumber, 0, `${label} 继续后游戏回合必须归零`);
+            // 队伍身份与成长保留（不是新建 1 级队伍 / 不是重生清队）——先于计数断言，
+            // 因为"继续≠重生"的核心语义就在这里，被破坏时该由本断言具名报红。
+            assert.deepEqual(
+              after.adventurers.map(a => [a.adventurerName, a.characterClass, a.characteristicsComponent.characterLevel]),
+              before.adventurers.map(a => [a.adventurerName, a.characterClass, a.characteristicsComponent.characterLevel]),
+              `${label} 继续后队伍身份与等级必须保留`);
+            assert.equal(after.party.gold, before.party.gold, `${label} 继续后金币必须保留`);
+            assert.equal(after.victoryStatistics.currentContinueCount, before.victoryStatistics.currentContinueCount + 1, `${label} 继续次数必须恰好 +1`);
+            assert.equal(after.victoryCount, before.victoryCount, `${label} 继续按钮不得额外增加胜利次数`);
+            assert.deepEqual(after.scrollInventory, before.scrollInventory, `${label} 继续后卷轴库存必须保留`);
+            assert.equal(after.potionInventory.length, 0, `${label} 继续后药水库存必须清空`);
+            // 承重细节：发现数 = 重置前 farms.length（不是旧的 discoveredDungeonCount）；城堡要求等级保留
+            assert.equal(after.dungeonManagerState.dungeonCostLevel, r.dungeonFarmCountBefore, `${label} discoveredDungeonCount 必须等于重置前 farms.length（实际 ${after.dungeonManagerState.dungeonCostLevel} / farms ${r.dungeonFarmCountBefore}）`);
+            assert.equal(after.castleManager.nextRequiredMonsterLevel, before.castleManager.nextRequiredMonsterLevel, `${label} nextRequiredMonsterLevel 必须保留`);
+            // 世界与地牢层替换、起始区域解锁、盟友恰为当前队伍
+            assert.equal(r.worldReplaced, true, `${label} 继续后世界对象必须被替换`);
+            assert.equal(r.levelReplaced, true, `${label} 继续后地牢层对象必须被替换`);
+            assert.equal(r.startingRegionUnlocked, true, `${label} 继续后起始区域必须解锁`);
+            assert.deepEqual(r.allyNames, after.adventurers.map(a => a.adventurerName), `${label} 盟友必须恰为当前保留的队员`);
+            // 真实落盘：原文可解码，且等于即时 DTO（保存时间戳沿用既有合法口径剔除）
+            assert.ok(typeof r.savedText === 'string' && r.savedText.length > 0, `${label} 继续后必须真实落盘到 localStorage`);
+            const persisted = JSON.parse(saveCodec.decompress(r.savedText));
+            const immediate = JSON.parse(JSON.stringify(after));
+            delete persisted.gameTimestamp; delete immediate.gameTimestamp;
+            assert.deepEqual(persisted, immediate, `${label} 落盘存档必须等于即时 DTO`);
+          }
+          const persistedStates = results.map(r => {
+            const s = JSON.parse(saveCodec.decompress(r.savedText));
+            delete s.gameTimestamp;
+            return s;
+          });
+          assert.deepEqual(persistedStates[1], persistedStates[0], '两端落盘存档内容不一致');
+          // 事件时序：仅重构端有事件总线（原版不插桩）
+          assert.equal(results[0].eventOrder, null, '原版侧不应有事件总线插桩');
+          assert.deepEqual(results[1].eventOrder, ['Victory:Decision: Continue'], '重构端 Continue 事件必须恰好一次');
+          assert.equal(results[1].eventProbe.gameWon, false, 'Continue 事件必须发生在清除胜利标记之后');
+          assert.equal(results[1].eventProbe.worldReplaced, false, 'Continue 事件必须发生在底层复位（世界替换）之前');
+          if (populated) {
+            for (const [i, label] of [[0, 'original'], [1, 'refactored']]) {
+              const r = results[i];
+              assert.ok(r.before.victoryStatistics.currentContinueCount > 0, `${label} 非空前提：继续次数必须非零`);
+              assert.ok(r.before.potionInventory.length > 0, `${label} 非空前提：药水库存必须非空`);
+              assert.ok(r.before.scrollInventory.some(s => s.count > 0), `${label} 非空前提：卷轴库存必须非空`);
+              assert.ok(r.before.party.gold > 0, `${label} 非空前提：金币必须非零`);
+              assert.notEqual(r.dungeonFarmCountBefore, r.before.dungeonManagerState.dungeonCostLevel, `${label} 非空前提：farms.length 与 discoveredDungeonCount 必须不同`);
+              assert.notEqual(r.before.castleManager.nextRequiredMonsterLevel, 1, `${label} 非空前提：nextRequiredMonsterLevel 必须非默认`);
+            }
+            console.log(`  · 继续征程非空前提成立：继续次数 ${results[0].before.victoryStatistics.currentContinueCount}，药水 ${results[0].before.potionInventory.length}，farms ${results[0].dungeonFarmCountBefore} vs 发现数 ${results[0].before.dungeonManagerState.dungeonCostLevel}`);
+          }
+          console.log(`  · 真实继续按钮：即时 DTO 双端一致，落盘存档一致（回合 ${results[0].snapshot.turnNumber}，继续次数 ${results[0].snapshot.victoryStatistics.currentContinueCount}）`);
+        }
         const states = results.map(r => r.snapshot);
         try {
           assert.deepEqual(states[1], states[0], `推进 ${turns} 回合后状态分叉`);

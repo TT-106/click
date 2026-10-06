@@ -1,8 +1,10 @@
+import { animationBackground, spriteBackground } from '../rendering/preview.js';
 /** 远征资源、队员摘要、卷轴与药水。
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
 import { View, addChildView, resetChildViews } from "./base.js";
 import { clearElement, clearElementById, createElement, getElement, hideElement, hideElementById, setElementHtml, showElement, showElementById } from "./dom.js";
+import { escapeHtmlTextPreservingEntities } from "../core/html-text.js";
 import { BASE_POTION_CAPACITY, infiniteScrollsModifier, partyCapacityBonus, potionCapacityBonus, potionDurationBonus, quickUpgradeCollection } from "../content/balance.js";
 import { statValue } from "../characters/stats.js";
 import { floorNumber, formatAmount, formatGroupedAmount } from "../core/math.js";
@@ -298,10 +300,12 @@ export function initializeViewsExpedition() {
         portraitElement = createElement("img", portraitElement, null, "characterImage");
       portraitElement.src = "images/Transparent.gif";
       portraitElement.style.height = "35px";
-      portraitElement.style.background = "url('spritesheet/monsters.png') -" + sprite.sourceX + "px -" + (sprite.sourceY + 8) + "px";
+      portraitElement.style.background = spriteBackground(sprite, 'expedition');
       var nameCell = healthRow.insertCell(1);
       nameCell.style.width = "123px";
-      nameCell.innerHTML = adventurer.adventurerName;
+      // 输入侧（原版 renameSelectedCharacter）已把敏感字符逐个转成实体；这里用实体感知
+      // 转义，保留既有实体以免玩家输入的 `&` 显示成 `&amp;`，同时中和导入存档里的裸标签。
+      nameCell.innerHTML = escapeHtmlTextPreservingEntities(adventurer.adventurerName);
       var healthSliderCell = healthRow.insertCell(2);
       healthSliderCell.className = "gameTabAdventurerSliderCell";
       healthSliderCell.title = "生命值";
@@ -456,26 +460,22 @@ export function initializeViewsExpedition() {
             if (shownEffectTypeId && shownEffectTypeId === potionSlotTypeId) {
               if (shouldAdvanceEffectFrame) {
                 var currentEffectDefinition = statusEffectDefinitions[shownEffectTypeId];
-                var currentSpritesheetPath = currentEffectDefinition.spritesheetPath;
                 var currentEffectAnimation = expeditionDeps().readAnimation(currentEffectDefinition.animationName);
                 this.effectFrameIndices[effectIconIndex]++;
                 if (this.effectFrameIndices[effectIconIndex] >= currentEffectAnimation.getFrameCount()) {
                   this.effectFrameIndices[effectIconIndex] = 0;
                 }
-                var currentEffectFrame = currentEffectAnimation.frames[this.effectFrameIndices[effectIconIndex]];
                 var effectIconElement = getElement(this.effectIconIds[effectIconIndex]);
-                effectIconElement.style.background = "url('" + currentSpritesheetPath + "') -" + currentEffectFrame.frameSourceX + "px -" + currentEffectFrame.frameSourceY + "px";
+                effectIconElement.style.background = animationBackground(currentEffectAnimation, this.effectFrameIndices[effectIconIndex]);
               }
             } else {
               var adoptedEffectTypeId = potionSlotTypeId;
               this.shownEffectTypeIds[effectIconIndex] = adoptedEffectTypeId;
               var newEffectDefinition = statusEffectDefinitions[adoptedEffectTypeId];
-              var newSpritesheetPath = newEffectDefinition.spritesheetPath;
               var newEffectAnimation = expeditionDeps().readAnimation(newEffectDefinition.animationName);
               this.effectFrameIndices[effectIconIndex] = 0;
-              var newEffectFrame = newEffectAnimation.frames[0];
               var newEffectIconElement = getElement(this.effectIconIds[effectIconIndex]);
-              newEffectIconElement.style.background = "url('" + newSpritesheetPath + "') -" + newEffectFrame.frameSourceX + "px -" + newEffectFrame.frameSourceY + "px";
+              newEffectIconElement.style.background = animationBackground(newEffectAnimation, 0);
               newEffectIconElement.title = newEffectDefinition.tooltipLabel;
               showElementById(this.effectIconIds[effectIconIndex]);
             }
@@ -616,7 +616,7 @@ export function initializeViewsExpedition() {
     var scrollChanged = false;
     if (this.scroll != this.cachedScroll && (this.cachedScroll = this.scroll, scrollChanged = true, this.scroll)) {
       var scrollSprite = this.scroll.spriteName;
-      this.itemImage.style.background = "url('spritesheet/items.png') -" + scrollSprite.sourceX + "px -" + scrollSprite.sourceY + "px";
+      this.itemImage.style.background = spriteBackground(scrollSprite, 'icon');
     }
     var scrollLabel = this.scroll.label;
     if (this.cachedLabel !== scrollLabel) {
@@ -718,7 +718,7 @@ export function initializeViewsExpedition() {
         this.nameCell.innerHTML = this.potion.displayName;
         this.effectLabelCell.innerHTML = this.potion.effectLabel;
         var potionSprite = this.potion.potionSprite;
-        this.potionImage.style.background = "url('spritesheet/items.png') -" + potionSprite.sourceX + "px -" + potionSprite.sourceY + "px";
+        this.potionImage.style.background = spriteBackground(potionSprite, 'icon');
       }
       this.cachedPotion = this.potion;
       if (this.potion.active) {

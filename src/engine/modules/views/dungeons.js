@@ -1,3 +1,4 @@
+import { spriteBackground } from '../rendering/preview.js';
 /** 宝箱交互、地牢列表与状态。
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
@@ -159,7 +160,7 @@ export function initializeViewsDungeons() {
       this.messageCell.innerHTML = "在房间内点击.";
       if (visibleTreasure) {
         var treasureSprite = visibleTreasure.opened ? visibleTreasure.openedSpriteName : visibleTreasure.closedSpriteName;
-        this.treasureImage.style.background = "url('spritesheet/terrain.png') -" + treasureSprite.sourceX + "px -" + treasureSprite.sourceY + "px";
+        this.treasureImage.style.background = spriteBackground(treasureSprite, 'terrain');
       }
     }
     var buttonClass = /** @type {{getButtonClass: () => string}} */ (/** @type {unknown} */ (this)).getButtonClass();
@@ -201,7 +202,7 @@ export function initializeViewsDungeons() {
     this.terrainImage.src = "images/Transparent.gif";
     if (this.dungeon) {
       var mapSprite = game.terrainSprites.getSprite(this.dungeon.mapSprite);
-      this.terrainImage.style.background = "url('spritesheet/terrain.png') -" + mapSprite.sourceX + "px -" + mapSprite.sourceY + "px";
+      this.terrainImage.style.background = spriteBackground(mapSprite, 'terrain');
     }
     this.labelCell = rowElement.insertCell(1);
     this.labelCell.style.width = "200px";
@@ -255,7 +256,7 @@ export function initializeViewsDungeons() {
       if (this.selectedDungeon !== this.dungeon) {
         this.selectedDungeon = this.dungeon;
         var mapSprite = game.terrainSprites.getSprite(this.dungeon.mapSprite);
-        this.terrainImage.style.background = "url('spritesheet/terrain.png') -" + mapSprite.sourceX + "px -" + mapSprite.sourceY + "px";
+        this.terrainImage.style.background = spriteBackground(mapSprite, 'terrain');
       }
       if (this.cachedDungeonName !== dungeonName) {
         this.cachedDungeonName = dungeonName;

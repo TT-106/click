@@ -7,6 +7,7 @@ import { DungeonRoom, DungeonStairs, DungeonTile, EMPTY_TILE, positionStairs, re
 import { HallwayPathfinder, findHallwayPath } from "./pathfinding.js";
 import { game } from "../runtime/game.js";
 import { getDungeonTheme } from "./regions.js";
+import { installThemeSceneObjects } from "./scene-objects.js";
 import { clearItemDrops } from "../loot/items.js";
 import { clearScrollTargets } from "../combat/scrolls.js";
 import { clearMonsters, getAllies, populateEncounter, resetEncounter } from "../combat/encounters.js";
@@ -144,11 +145,13 @@ export function DungeonLevel() {
   this.tileGrid = null;
   this.roomList = [];
   this.hallwayList = [];
+  this.sceneObjects = [];
   this.exitDoor = this.entranceDoor = null;
   this.levelSeed = 0;
 }
 export function generateDungeonLevel(levelSeed, dungeonTypeId, hasSecondEntrance, placeParty) {
   var level = game.level;
+  level.sceneObjects.length = 0;
   level.levelSeed = levelSeed;
   var seededRandom = new SeededRandom(levelSeed);
   level.roomList.length = 0;
@@ -186,6 +189,8 @@ export function generateDungeonLevel(levelSeed, dungeonTypeId, hasSecondEntrance
   for (areaIndex = 0; areaIndex < level.hallwayList.length; areaIndex++) {
     level.hallwayList[areaIndex].applyTheme(theme, level.tileGrid);
   }
+  // 主题声明了 sceneObjects 规则才物化（默认无 ⇒ 保持为空，对既有地图零影响，不消耗 RNG）。
+  installThemeSceneObjects(level, theme, level.levelSeed);
   clearItemDrops(game.itemDrops);
   var goldDrops = game.goldDrops;
   if (0 < goldDrops.drops.length) {

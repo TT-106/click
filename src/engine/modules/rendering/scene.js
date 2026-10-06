@@ -14,6 +14,87 @@ import { TARGETED_EFFECT } from "./sprites.js";
 import { createElement, getElement } from "../views/dom.js";
 import { HALF_TILE_SIZE, TILE_SIZE, VIEWPORT_HALF_HEIGHT, VIEWPORT_HALF_WIDTH, VIEWPORT_HEIGHT, VIEWPORT_WIDTH } from "../core/screen-layout.js";
 import { createMapPresentation } from "./presentation.js";
+import { animationRenderSize, drawAnimationFrame, drawSpriteFrame, frameGeometry, resolveAnimationFrame, resolveSpriteFrame, spriteRenderSize } from './frame.js';
+import { projectActor, projectLegacyTile, projectMap, visibleTileBounds, visualDepthPosition } from './projection.js';
+import { presentationTimeMs, resolveEntityVisual, resolveSceneVisual } from './entity-visual.js';
+import { drawClassicTileWindow } from './map-window.js';
+import { DUNGEON_TILE_VISUAL_SLOTS, WORLD_TILE_VISUAL_SLOTS, tileVisualCalls } from '../world/tile-visuals.js';
+const layerPriorities = { ground: 0, scenery: 1, actor: 2, effect: 3, overlay: 4 };
+
+/** 目录替换不会改变角色实例，也不会将动画状态写入模拟或存档。 */
+function entitySprite(entity, worldX, worldY) {
+  const original = entity.getSprite();
+  const sprite = game.assets?.resolve(original, 'actors') || original;
+  return resolveEntityVisual(entity, sprite, {
+    timeMs: presentationTimeMs(game.state.turnNumber, game.lifecycle.turnTimeAccumulator),
+    worldActive: game.worldActive, x: worldX, y: worldY
+  });
+}
+
+function depthPosition(sprite, worldX, worldY, footprint) {
+  return visualDepthPosition(worldX, worldY, resolveSpriteFrame(sprite), footprint);
+}
+
+function currentSprite(sprite) {
+  return game?.assets?.resolve(sprite) || sprite;
+}
+
+function sceneSprite(sprite) {
+  return resolveSceneVisual(currentSprite(sprite), presentationTimeMs(game.state.turnNumber, game.lifecycle.turnTimeAccumulator));
+}
+
+/** 新资源与地块共用同一几何；旧角色保留每格13.5px的发行版投影。 */
+function entityProjection(sprite, worldX, worldY, worldActive) {
+  const map = worldActive ? game.world : game.level;
+  const centerX = worldActive ? map.worldCenterX : map.centerX;
+  const centerY = worldActive ? map.worldCenterY : map.centerY;
+  const screen = sprite.frame ? projectMap(worldX, worldY, centerX, centerY) : projectActor(worldX, worldY, centerX, centerY);
+  if (!worldActive && !sprite.frame) { screen.x = Math.round(screen.x); screen.y = Math.round(screen.y); }
+  return screen;
+}
+
+/** 新对象只描述世界里有什么，显示尺寸/锚点由资源定义。
+ * footprint 用于前沿排序；长墙可拆成多个独立显示段，不承担碰撞实现。
+ */
+export function drawSceneObjects(renderer, map, worldActive = false) {
+  for (const object of map.sceneObjects || []) {
+    const resource = game.assets?.resolve(object.visualId, 'terrain') || game.terrainSprites.getSprite(object.visualId);
+    if (!resource) throw new Error(`场景物件资源未注册：${object.visualId}`);
+    const sprite = sceneSprite(resource);
+    const position = object.position;
+    const centerX = worldActive ? map.worldCenterX : map.centerX;
+    const centerY = worldActive ? map.worldCenterY : map.centerY;
+    const screen = projectMap(position.x, position.y, centerX, centerY, object.elevation || 0);
+    renderer.spriteRenderer.drawSpriteDepth(sprite, position.x, position.y, screen.x, screen.y, spriteRenderSize(sprite), 0, object.layer || 'scenery', object.footprint);
+  }
+}
+
+/** 旧地图保留原候选窗；只有超出旧54px方格范围的新资源才扩展候选范围。 */
+function drawExpandedTiles(renderer, map, worldActive) {
+  const extent = game.terrainSprites?.getVisualExtent();
+  if (!extent || !(extent.left < 0 || extent.top < 0 || extent.right > 54 || extent.bottom > 54)) return false;
+  const centerX = worldActive ? map.worldCenterX : map.centerX;
+  const centerY = worldActive ? map.worldCenterY : map.centerY;
+  const bounds = visibleTileBounds(centerX, centerY, extent);
+  // 不让一个超大导入图片把未加载的整个世界也变成每帧候选区域。
+  if (worldActive) {
+    const blocks = map.worldBlocks.flat();
+    bounds.minColumn = Math.max(bounds.minColumn, Math.min(...blocks.map(block => block.tileOriginColumn)));
+    bounds.maxColumn = Math.min(bounds.maxColumn, Math.max(...blocks.map(block => block.tileEndColumn)) - 1);
+    bounds.minRow = Math.max(bounds.minRow, Math.min(...blocks.map(block => block.tileOriginRow)));
+    bounds.maxRow = Math.min(bounds.maxRow, Math.max(...blocks.map(block => block.tileEndRow)) - 1);
+  } else {
+    bounds.minColumn = Math.max(bounds.minColumn, 0);
+    bounds.minRow = Math.max(bounds.minRow, 0);
+    bounds.maxColumn = Math.min(bounds.maxColumn, map.widthInTiles - 1);
+    bounds.maxRow = Math.min(bounds.maxRow, map.heightInTiles - 1);
+  }
+  const drawRow = worldActive ? drawWorldTileRow : drawDungeonTileRow;
+  for (let row = bounds.minRow; row <= bounds.maxRow; row++) {
+    drawRow(renderer, row, bounds.minColumn, bounds.maxColumn + 1);
+  }
+  return true;
+}
 export function RenderCommand() {
   this.animation = this.sprite = null;
   this.raiseOffset = this.sortKey = this.frameIndex = 0;
@@ -28,6 +109,7 @@ export function resetRenderCommand(command) {
   command.sortKey = 1E5;
   command.raiseOffset = 0;
   command.layer = 'actor';
+  command.sortLayer = 0;
 }
 export function setSpriteRenderCommand(command, sprite, sortKey, screenX, screenY, renderSize, alpha, layer = 'actor') {
   command.sprite = sprite;
@@ -37,7 +119,10 @@ export function setSpriteRenderCommand(command, sprite, sortKey, screenX, screen
   command.renderSize = renderSize;
   command.alpha = alpha;
   command.isSet = true;
-  command.layer = layer;
+  const frame = resolveSpriteFrame(sprite);
+  command.layer = frame.layer || layer;
+  // 层只处理同深度的顺序；它不会把整棵树强行放在所有角色之前或之后。
+  command.sortLayer = sprite.frame ? (layerPriorities[frame.layer || layer] || 0) : 0;
 }
 export function setAnimationRenderCommand(command, animation, frameIndex, sortKey, screenX, screenY, renderSize, alpha) {
   command.animation = animation;
@@ -48,10 +133,14 @@ export function setAnimationRenderCommand(command, animation, frameIndex, sortKe
   command.renderSize = renderSize;
   command.alpha = alpha;
   command.isSet = true;
+  const frame = resolveAnimationFrame(animation, frameIndex);
+  command.sortLayer = animation.frames[frameIndex]?.source ? (layerPriorities[frame.layer || 'effect'] || 0) : 0;
 }
 export function DepthSortedRenderer() {
   this.compareRenderSortKey = function (left, right) {
-    return left.getRenderSortKey() - right.getRenderSortKey();
+    // 命令池的空项不能靠1e5哨兵排在活动项之后：负世界坐标的深度可以超过它。
+    if (left.isSet !== right.isSet) return left.isSet ? -1 : 1;
+    return left.getRenderSortKey() - right.getRenderSortKey() || (right.sortLayer || 0) - (left.sortLayer || 0);
   };
   this.scratchVector = new Vector2();
   this.renderCommands = [];
@@ -86,22 +175,37 @@ export function SceneRenderer(context) {
   this.depthSortedRenderer = new DepthSortedRenderer();
   this.immediateRenderer = new ImmediateRenderer();
 }
+/** 地图 tile 的显示层：顺序与绘制通道由 TILE_VISUAL_SLOTS 数据决定，渲染代码不再逐个硬编码。
+ * 固定层（background/decoration/cachedBackground）之后可追加 tile.visualLayers 动态层。
+ * @param {any} value 已解析的 Sprite，或待经目录解析的 assetId
+ */
+function resolveTileSprite(value) {
+  return sceneSprite(typeof value === 'string' ? game.terrainSprites.getSprite(value) : value);
+}
+/** @param {any} renderer @param {any} tile @param {ReadonlyArray<{ entity: string, mode: string }>} slots */
+function drawTileVisuals(renderer, tile, slots, screenX, screenY) {
+  for (const call of tileVisualCalls(tile, slots, resolveTileSprite)) {
+    if (call.mode === 'ground') {
+      renderer.drawSprite(call.sprite, screenX, screenY, 'ground');
+    } else if (call.mode === 'sceneryRaised') {
+      renderer.spriteRenderer.drawSpriteDepthRaised(call.sprite, tile.getPixelX(), tile.getPixelY(), screenX, screenY, spriteRenderSize(call.sprite), 0, 'scenery');
+    } else {
+      renderer.spriteRenderer.drawSpriteDepth(call.sprite, tile.getPixelX(), tile.getPixelY(), screenX, screenY, spriteRenderSize(call.sprite), 0, 'scenery');
+    }
+  }
+}
 export function drawWorldTileRow(renderer, tileRow, startColumn, endColumn) {
   for (; startColumn < endColumn; startColumn++) {
     var tile = game.world.getTileAtPixel(startColumn, tileRow);
     if (tile) {
       var camera = game.camera;
-      var screenX = VIEWPORT_HALF_WIDTH + (startColumn - camera.tileColumn - (tileRow - camera.tileRow)) * TILE_SIZE - camera.viewportOffsetX;
-      var screenY = VIEWPORT_HALF_HEIGHT + (startColumn - camera.tileColumn + (tileRow - camera.tileRow)) * HALF_TILE_SIZE - camera.viewportOffsetY;
+      var projected = projectLegacyTile(startColumn, tileRow, camera);
+      var screenX = projected.x, screenY = projected.y;
       if (renderer.presentation) {
         screenX = renderer.presentation.tileScreenX(startColumn, tileRow, game.world.worldCenterX, game.world.worldCenterY, TILE_SIZE, VIEWPORT_HALF_WIDTH);
         screenY = renderer.presentation.tileScreenY(startColumn, tileRow, game.world.worldCenterX, game.world.worldCenterY, TILE_SIZE, HALF_TILE_SIZE, VIEWPORT_HALF_HEIGHT);
       }
-      renderer.drawSprite(tile.backgroundSprite, screenX, screenY, 'ground');
-      var decorationSprite = tile.decorationSprite;
-      if (decorationSprite) {
-        renderer.spriteRenderer.drawSpriteDepth(decorationSprite, tile.getPixelX(), tile.getPixelY(), screenX, screenY, decorationSprite.spriteSheet.spriteSize, 0, 'scenery');
-      }
+      drawTileVisuals(renderer, tile, WORLD_TILE_VISUAL_SLOTS, screenX, screenY);
     }
   }
 }
@@ -110,21 +214,13 @@ export function drawDungeonTileRow(renderer, tileRow, startColumn, endColumn) {
     var tile = game.level.getTileAt(startColumn, tileRow);
     if (tile && tile.floorType !== EMPTY_TILE) {
       var camera = game.camera;
-      var screenX = VIEWPORT_HALF_WIDTH + (startColumn - camera.tileColumn - (tileRow - camera.tileRow)) * TILE_SIZE - camera.viewportOffsetX;
-      var screenY = VIEWPORT_HALF_HEIGHT + (startColumn - camera.tileColumn + (tileRow - camera.tileRow)) * HALF_TILE_SIZE - camera.viewportOffsetY;
+      var projected = projectLegacyTile(startColumn, tileRow, camera);
+      var screenX = projected.x, screenY = projected.y;
       if (renderer.presentation) {
         screenX = renderer.presentation.tileScreenX(startColumn, tileRow, game.level.centerX, game.level.centerY, TILE_SIZE, VIEWPORT_HALF_WIDTH);
         screenY = renderer.presentation.tileScreenY(startColumn, tileRow, game.level.centerX, game.level.centerY, TILE_SIZE, HALF_TILE_SIZE, VIEWPORT_HALF_HEIGHT);
       }
-      renderer.drawSprite(tile.backgroundSprite, screenX, screenY, 'ground');
-      var decorationSprite = tile.decorationSprite;
-      if (decorationSprite) {
-        renderer.spriteRenderer.drawSpriteDepth(decorationSprite, tile.getPixelX(), tile.getPixelY(), screenX, screenY, decorationSprite.spriteSheet.spriteSize, 0, 'scenery');
-      }
-      var cachedBackgroundSprite = tile.cachedBackgroundSprite;
-      if (cachedBackgroundSprite) {
-        renderer.spriteRenderer.drawSpriteDepthRaised(cachedBackgroundSprite, tile.getPixelX(), tile.getPixelY(), screenX, screenY, cachedBackgroundSprite.spriteSheet.spriteSize, 0, 'scenery');
-      }
+      drawTileVisuals(renderer, tile, DUNGEON_TILE_VISUAL_SLOTS, screenX, screenY);
     }
   }
 }
@@ -134,8 +230,9 @@ export function drawWorldCharacters(renderer, characters) {
     character = characters[characterIndex];
     worldX = character.position.getWorldPositionX();
     worldY = character.position.getWorldPositionY();
-    sprite = character.getSprite();
-    renderer.spriteRenderer.drawSpriteDepth(sprite, worldX, worldY, VIEWPORT_HALF_WIDTH + (worldX - game.world.worldCenterX - (worldY - game.world.worldCenterY)), VIEWPORT_HALF_HEIGHT + 0.5 * (worldX - game.world.worldCenterX + (worldY - game.world.worldCenterY)), sprite.spriteSheet.spriteSize, 0);
+    sprite = entitySprite(character, worldX, worldY);
+    var projected = entityProjection(sprite, worldX, worldY, true);
+    renderer.spriteRenderer.drawSpriteDepth(sprite, worldX, worldY, projected.x, projected.y, spriteRenderSize(sprite), 0);
   }
 }
 export function drawDungeonCharacters(renderer, characters) {
@@ -153,8 +250,12 @@ export function drawDungeonCharacters(renderer, characters) {
     screenX = projectDungeonX(levelX, levelY);
     screenY = projectDungeonY(levelX, levelY);
     isStealthed = character.effects.isStealthed;
-    var sprite = character.getSprite();
-    renderer.spriteRenderer.drawSpriteDepth(sprite, levelX, levelY, screenX, screenY, sprite.spriteSheet.spriteSize, isStealthed ? 0.4 : 0);
+    var sprite = entitySprite(character, levelX, levelY);
+    if (sprite.frame) {
+      const screen = entityProjection(sprite, levelX, levelY, false);
+      screenX = screen.x; screenY = screen.y;
+    }
+    renderer.spriteRenderer.drawSpriteDepth(sprite, levelX, levelY, screenX, screenY, spriteRenderSize(sprite), isStealthed ? 0.4 : 0);
   }
 }
 export function drawCharacterEffects(renderer, characters) {
@@ -167,11 +268,13 @@ export function drawCharacterEffects(renderer, characters) {
           if (!projected) {
             levelX = character.position.getLevelPositionX();
             levelY = character.position.getLevelPositionY();
-            screenX = projectDungeonX(levelX, levelY) + 10;
-            screenY = projectDungeonY(levelX, levelY) + 10;
+            const sprite = entitySprite(character, levelX, levelY);
+            const screen = entityProjection(sprite, levelX, levelY, false);
+            screenX = screen.x + 10;
+            screenY = screen.y + 10;
             projected = true;
           }
-          renderer.spriteRenderer.drawAnimationRaised(effectAnimation, overlayFrameIndex, levelX, levelY, screenX, screenY, effectAnimation.spriteSheet.spriteSize, 0);
+          renderer.spriteRenderer.drawAnimationRaised(effectAnimation, overlayFrameIndex, levelX, levelY, screenX, screenY, animationRenderSize(effectAnimation), 0);
         }
       }
     }
@@ -214,6 +317,13 @@ export function drawCharacterHighlights(renderer, characters, healthBarColor) {
       levelY = character.position.getLevelPositionY();
       screenX = projectDungeonX(levelX, levelY);
       screenY = projectDungeonY(levelX, levelY);
+      const sprite = entitySprite(character, levelX, levelY);
+      if (sprite.frame) {
+        const screen = entityProjection(sprite, levelX, levelY, false);
+        const bounds = frameGeometry(resolveSpriteFrame(sprite), screen.x, screen.y);
+        screenX = bounds.x + bounds.width / 2 - 25;
+        screenY = bounds.y - 6;
+      }
       stats = character.stats;
       health = stats.health;
       maxHealth = statValue(stats.maxHealth);
@@ -253,16 +363,12 @@ export function initializeRenderingScene() {
         context.save();
         context.globalAlpha = 0.4;
       }
-      var spriteSize;
       if (this.sprite) {
-        spriteSize = this.sprite.spriteSheet.spriteSize;
         if (presentation) presentation.drawSprite(context, this.sprite, this.screenX, this.screenY, this.renderSize, this.layer);
-        else context.drawImage(this.sprite.getSheetImage(), this.sprite.sourceX, this.sprite.sourceY, spriteSize, spriteSize, this.screenX, this.screenY, this.renderSize, this.renderSize);
+        else drawSpriteFrame(context, this.sprite, this.screenX, this.screenY, this.renderSize);
       } else if (this.animation) {
-        var frame = this.animation.frames[this.frameIndex];
-        spriteSize = this.animation.spriteSheet.spriteSize;
         if (presentation) presentation.drawAnimation(context, this.animation, this.frameIndex, this.screenX, this.screenY, this.renderSize);
-        else context.drawImage(this.animation.getSheetImage(), frame.frameSourceX, frame.frameSourceY, spriteSize, spriteSize, this.screenX, this.screenY, this.renderSize, this.renderSize);
+        else drawAnimationFrame(context, this.animation, this.frameIndex, this.screenX, this.screenY, this.renderSize);
       }
       if (0 < this.alpha) {
         context.restore();
@@ -287,15 +393,23 @@ export function initializeRenderingScene() {
     }
     setVector(this.scratchVector, centerX, centerY);
   };
-  DepthSortedRenderer.prototype.drawSpriteDepth = function (sprite, worldX, worldY, screenX, screenY, renderSize, alpha, layer = 'actor') {
+  DepthSortedRenderer.prototype.drawSpriteDepth = function (sprite, worldX, worldY, screenX, screenY, renderSize, alpha, layer = 'actor', footprint) {
     if (sprite) {
-      var distance = this.presentation ? this.presentation.depthKey(worldX, worldY) : distanceToPoint(this.scratchVector, worldX, worldY);
+      const original = sprite;
+      sprite = currentSprite(sprite);
+      if (sprite !== original) renderSize = spriteRenderSize(sprite);
+      const depth = depthPosition(sprite, worldX, worldY, footprint);
+      var distance = this.presentation ? this.presentation.depthKey(depth.x, depth.y) : distanceToPoint(this.scratchVector, depth.x, depth.y);
       setSpriteRenderCommand(acquireRenderCommand(this), sprite, distance, screenX, screenY, renderSize, alpha, layer);
     }
   };
   DepthSortedRenderer.prototype.drawSpriteDepthRaised = function (sprite, worldX, worldY, screenX, screenY, renderSize, alpha, layer = 'actor') {
     if (sprite) {
-      var distance = this.presentation ? this.presentation.depthKey(worldX, worldY) : distanceToPoint(this.scratchVector, worldX, worldY);
+      const original = sprite;
+      sprite = currentSprite(sprite);
+      if (sprite !== original) renderSize = spriteRenderSize(sprite);
+      const depth = depthPosition(sprite, worldX, worldY);
+      var distance = this.presentation ? this.presentation.depthKey(depth.x, depth.y) : distanceToPoint(this.scratchVector, depth.x, depth.y);
       var command = acquireRenderCommand(this);
       setSpriteRenderCommand(command, sprite, distance, screenX, screenY, renderSize, alpha, layer);
       command.raiseOffset = 0.1;
@@ -303,13 +417,15 @@ export function initializeRenderingScene() {
   };
   DepthSortedRenderer.prototype.drawAnimation = function (animation, frameIndex, worldX, worldY, screenX, screenY, renderSize, alpha) {
     if (animation) {
-      var distance = this.presentation ? this.presentation.depthKey(worldX, worldY) : distanceToPoint(this.scratchVector, worldX, worldY);
+      const depth = visualDepthPosition(worldX, worldY, resolveAnimationFrame(animation, frameIndex));
+      var distance = this.presentation ? this.presentation.depthKey(depth.x, depth.y) : distanceToPoint(this.scratchVector, depth.x, depth.y);
       setAnimationRenderCommand(acquireRenderCommand(this), animation, frameIndex, distance, screenX, screenY, renderSize, alpha);
     }
   };
   DepthSortedRenderer.prototype.drawAnimationRaised = function (animation, frameIndex, worldX, worldY, screenX, screenY, renderSize, alpha) {
     if (animation) {
-      var distance = this.presentation ? this.presentation.depthKey(worldX, worldY) : distanceToPoint(this.scratchVector, worldX, worldY);
+      const depth = visualDepthPosition(worldX, worldY, resolveAnimationFrame(animation, frameIndex));
+      var distance = this.presentation ? this.presentation.depthKey(depth.x, depth.y) : distanceToPoint(this.scratchVector, depth.x, depth.y);
       var command = acquireRenderCommand(this);
       setAnimationRenderCommand(command, animation, frameIndex, distance, screenX, screenY, renderSize, alpha);
       command.raiseOffset = 0.1;
@@ -328,6 +444,9 @@ export function initializeRenderingScene() {
   };
   ImmediateRenderer.prototype.drawSpriteDepth = function (sprite, worldX, worldY, screenX, screenY, renderSize, alpha, layer = 'actor') {
     if (sprite) {
+      const original = sprite;
+      sprite = currentSprite(sprite);
+      if (sprite !== original) renderSize = spriteRenderSize(sprite);
       var command = acquireImmediateCommand(this);
       setSpriteRenderCommand(command, sprite, 0, screenX, screenY, renderSize, alpha, layer);
       command.draw(this.context, this.presentation);
@@ -335,6 +454,9 @@ export function initializeRenderingScene() {
   };
   ImmediateRenderer.prototype.drawSpriteDepthRaised = function (sprite, worldX, worldY, screenX, screenY, renderSize, alpha, layer = 'actor') {
     if (sprite) {
+      const original = sprite;
+      sprite = currentSprite(sprite);
+      if (sprite !== original) renderSize = spriteRenderSize(sprite);
       var command = acquireImmediateCommand(this);
       setSpriteRenderCommand(command, sprite, 0, screenX, screenY, renderSize, alpha, layer);
       command.draw(this.context, this.presentation);
@@ -357,9 +479,10 @@ export function initializeRenderingScene() {
   ImmediateRenderer.prototype.sortCommands = function () {};
   SceneRenderer.prototype.drawSprite = function (sprite, screenX, screenY, layer = 'actor') {
     if (sprite) {
-      var spriteSize = sprite.spriteSheet.spriteSize;
+      sprite = currentSprite(sprite);
+      var spriteSize = spriteRenderSize(sprite);
       if (this.presentation) this.presentation.drawSprite(this.context, sprite, screenX, screenY, spriteSize, layer);
-      else this.context.drawImage(sprite.getSheetImage(), sprite.sourceX, sprite.sourceY, spriteSize, spriteSize, screenX, screenY, spriteSize, spriteSize);
+      else drawSpriteFrame(this.context, sprite, screenX, screenY, spriteSize);
     }
   };
   GameCanvasView.prototype = new View();
@@ -374,43 +497,10 @@ export function initializeRenderingScene() {
     renderer.spriteRenderer.setContext(renderer.context);
     if (game.world.hasPartyPlaced) {
       if (renderer.context.fillStyle = "#000000", renderer.context.fillRect(0, 0, VIEWPORT_WIDTH, VIEWPORT_HEIGHT), game.worldActive) {
-        var centerTileColumn = game.world.pixelToTileColumn(game.world.worldCenterX),
-          worldRowCursor = game.world.pixelToTileRow(game.world.worldCenterY) - 18;
-        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 5, centerTileColumn - 3);
-        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 6, centerTileColumn - 2);
-        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 7, centerTileColumn - 1);
-        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 8, centerTileColumn);
-        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 9, centerTileColumn + 1);
-        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 10, centerTileColumn + 2);
-        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 11, centerTileColumn + 3);
-        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 12, centerTileColumn + 4);
-        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 13, centerTileColumn + 5);
-        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 14, centerTileColumn + 6);
-        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 15, centerTileColumn + 7);
-        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 16, centerTileColumn + 8);
-        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 17, centerTileColumn + 9);
-        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 18, centerTileColumn + 10);
-        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 19, centerTileColumn + 11);
-        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 20, centerTileColumn + 12);
-        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 19, centerTileColumn + 13);
-        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 18, centerTileColumn + 14);
-        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 17, centerTileColumn + 15);
-        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 16, centerTileColumn + 16);
-        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 14, centerTileColumn + 16);
-        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 13, centerTileColumn + 16);
-        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 12, centerTileColumn + 15);
-        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 11, centerTileColumn + 14);
-        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 10, centerTileColumn + 13);
-        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 9, centerTileColumn + 12);
-        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 8, centerTileColumn + 11);
-        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 7, centerTileColumn + 10);
-        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 6, centerTileColumn + 9);
-        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 5, centerTileColumn + 8);
-        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 4, centerTileColumn + 7);
-        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 3, centerTileColumn + 6);
-        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 2, centerTileColumn + 5);
-        drawWorldTileRow(renderer, worldRowCursor++, centerTileColumn - 1, centerTileColumn + 4);
-        drawWorldTileRow(renderer, worldRowCursor, centerTileColumn, centerTileColumn + 3);
+        if (!drawExpandedTiles(renderer, game.world, true)) {
+          drawClassicTileWindow(renderer, game.world, true, drawWorldTileRow);
+        }
+        drawSceneObjects(renderer, game.world, true);
         drawWorldCharacters(renderer, game.minions.minionList);
         drawWorldCharacters(renderer, game.state.adventurers);
         if (game.options.showCombatText) {
@@ -480,43 +570,10 @@ export function initializeRenderingScene() {
           renderer.context.restore();
         }
       } else {
-        var centerTileColumn = game.level.pixelToTileColumn(game.level.centerX),
-          dungeonRowCursor = game.level.pixelToTileRow(game.level.centerY) - 18;
-        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 5, centerTileColumn - 3);
-        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 6, centerTileColumn - 2);
-        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 7, centerTileColumn - 1);
-        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 8, centerTileColumn);
-        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 9, centerTileColumn + 1);
-        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 10, centerTileColumn + 2);
-        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 11, centerTileColumn + 3);
-        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 12, centerTileColumn + 4);
-        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 13, centerTileColumn + 5);
-        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 14, centerTileColumn + 6);
-        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 15, centerTileColumn + 7);
-        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 16, centerTileColumn + 8);
-        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 17, centerTileColumn + 9);
-        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 18, centerTileColumn + 10);
-        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 19, centerTileColumn + 11);
-        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 20, centerTileColumn + 12);
-        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 19, centerTileColumn + 13);
-        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 18, centerTileColumn + 14);
-        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 17, centerTileColumn + 15);
-        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 16, centerTileColumn + 16);
-        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 14, centerTileColumn + 16);
-        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 13, centerTileColumn + 16);
-        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 12, centerTileColumn + 15);
-        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 11, centerTileColumn + 14);
-        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 10, centerTileColumn + 13);
-        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 9, centerTileColumn + 12);
-        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 8, centerTileColumn + 11);
-        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 7, centerTileColumn + 10);
-        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 6, centerTileColumn + 9);
-        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 5, centerTileColumn + 8);
-        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 4, centerTileColumn + 7);
-        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 3, centerTileColumn + 6);
-        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 2, centerTileColumn + 5);
-        drawDungeonTileRow(renderer, dungeonRowCursor++, centerTileColumn - 1, centerTileColumn + 4);
-        drawDungeonTileRow(renderer, dungeonRowCursor, centerTileColumn, centerTileColumn + 3);
+        if (!drawExpandedTiles(renderer, game.level, false)) {
+          drawClassicTileWindow(renderer, game.level, false, drawDungeonTileRow);
+        }
+        drawSceneObjects(renderer, game.level, false);
         var goldDropList = game.goldDrops.drops,
           goldDrop,
           goldDropX,
@@ -596,9 +653,9 @@ export function initializeRenderingScene() {
             treasureScreenY = projectWorldY(treasureX, treasureY);
             treasureSprite = treasure.opened ? treasure.openedSpriteName : treasure.closedSpriteName;
             if (treasure.definition.flushPlacement) {
-              renderer.spriteRenderer.drawSpriteDepthRaised(treasureSprite, treasureX, treasureY, treasureScreenX, treasureScreenY, treasureSprite.spriteSheet.spriteSize, 0);
+              renderer.spriteRenderer.drawSpriteDepthRaised(treasureSprite, treasureX, treasureY, treasureScreenX, treasureScreenY, spriteRenderSize(treasureSprite), 0);
             } else {
-              renderer.spriteRenderer.drawSpriteDepth(treasureSprite, treasureX, treasureY, treasureScreenX, treasureScreenY, treasureSprite.spriteSheet.spriteSize, 0);
+              renderer.spriteRenderer.drawSpriteDepth(treasureSprite, treasureX, treasureY, treasureScreenX, treasureScreenY, spriteRenderSize(treasureSprite), 0);
             }
           }
         }
@@ -615,7 +672,12 @@ export function initializeRenderingScene() {
           defeatedY = defeatedMonster.position.getLevelPositionY();
           defeatedScreenX = projectWorldX(defeatedX, defeatedY);
           defeatedScreenY = projectWorldY(defeatedX, defeatedY);
-          renderer.drawSprite(defeatedMonster.getSprite(), defeatedScreenX, defeatedScreenY);
+          const sprite = entitySprite(defeatedMonster, defeatedX, defeatedY);
+          if (sprite.frame) {
+            const screen = entityProjection(sprite, defeatedX, defeatedY, false);
+            defeatedScreenX = screen.x; defeatedScreenY = screen.y;
+          }
+          renderer.drawSprite(sprite, defeatedScreenX, defeatedScreenY);
         }
         var monsterList = getMonsters(),
           monster,
@@ -632,11 +694,15 @@ export function initializeRenderingScene() {
           monsterY = monster.position.getLevelPositionY();
           monsterScreenX = projectDungeonX(monsterX, monsterY);
           monsterScreenY = projectDungeonY(monsterX, monsterY);
-          monsterSprite = monster.getSprite();
-          if (4 === monster.characterType) {
+          monsterSprite = entitySprite(monster, monsterX, monsterY);
+          if (monsterSprite.frame) {
+            const screen = entityProjection(monsterSprite, monsterX, monsterY, false);
+            monsterScreenX = screen.x; monsterScreenY = screen.y;
+          }
+          if (4 === monster.characterType && !monsterSprite.frame) {
             renderer.spriteRenderer.drawSpriteDepth(monsterSprite, monsterX, monsterY, monsterScreenX - halfTileSize, monsterScreenY - halfTileSize, 3 * TILE_SIZE, 0);
           } else {
-            renderer.spriteRenderer.drawSpriteDepth(monsterSprite, monsterX, monsterY, monsterScreenX, monsterScreenY, monsterSprite.spriteSheet.spriteSize, 0);
+            renderer.spriteRenderer.drawSpriteDepth(monsterSprite, monsterX, monsterY, monsterScreenX, monsterScreenY, spriteRenderSize(monsterSprite), 0);
           }
         }
         drawDungeonCharacters(renderer, game.minions.minionList);
@@ -668,7 +734,7 @@ export function initializeRenderingScene() {
                 effectY = effectPosition.y;
                 effectScreenX = projectDungeonX(effectX, effectY) + 10;
                 effectScreenY = projectDungeonY(effectX, effectY) + 10;
-                renderer.spriteRenderer.drawAnimationRaised(effectAnimation, effectFrameIndex, effectX, effectY, effectScreenX, effectScreenY, effectAnimation.spriteSheet.spriteSize, 0);
+                renderer.spriteRenderer.drawAnimationRaised(effectAnimation, effectFrameIndex, effectX, effectY, effectScreenX, effectScreenY, animationRenderSize(effectAnimation), 0);
               } else if (2 === effectType) {
                 renderer.context.lineWidth = 1;
                 renderer.context.strokeStyle = "#FFD700";
@@ -727,7 +793,7 @@ export function initializeRenderingScene() {
                     tilePixelY = tile.getPixelY();
                     tileScreenX = projectDungeonX(tilePixelX, tilePixelY) + 10;
                     tileScreenY = projectDungeonY(tilePixelX, tilePixelY) + 10;
-                    renderer.spriteRenderer.drawAnimation(tileEffectAnimation, tileEffectFrameIndex, tilePixelX, tilePixelY, tileScreenX, tileScreenY, tileEffectAnimation.spriteSheet.spriteSize, 0);
+                    renderer.spriteRenderer.drawAnimation(tileEffectAnimation, tileEffectFrameIndex, tilePixelX, tilePixelY, tileScreenX, tileScreenY, animationRenderSize(tileEffectAnimation), 0);
                   }
                 }
               }

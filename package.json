@@ -3,6 +3,9 @@
   "version": "2.0.0",
   "private": true,
   "type": "module",
+  "main": "desktop/main.mjs",
+  "productName": "Wilderness Companion",
+  "config": { "forge": "./desktop/forge.config.cjs" },
   "description": "Clickpocalypse II 本地恢复与现代化工程",
   "engines": {
     "node": ">=22"
@@ -10,7 +13,15 @@
   "scripts": {
     "dev": "node scripts/serve.mjs",
     "start": "node scripts/serve.mjs",
+    "desktop:dev": "electron .",
+    "desktop:package": "npm run build && electron-forge package --platform=win32 --arch=x64",
+    "desktop:make": "npm run build && electron-forge make --platform=win32 --arch=x64",
+    "test:desktop": "node scripts/test-desktop.mjs",
+    "test:expedition": "node scripts/test-expedition.mjs",
+    "test:expedition:desktop": "node scripts/test-expedition-desktop.mjs",
     "build": "node scripts/build.mjs",
+    "import:assets": "node scripts/import-assets.mjs",
+    "check:assets": "node scripts/import-assets.mjs --check",
     "test": "node --test \"tests/unit/*.test.mjs\"",
     "test:unit": "node --test \"tests/unit/*.test.mjs\"",
     "test:parity": "node scripts/test-parity.mjs",
@@ -19,6 +30,9 @@
     "test:soak": "node scripts/test-soak.mjs",
     "test:e2e": "node scripts/test-browser.mjs",
     "test:presentation": "node scripts/test-presentation.mjs",
+    "test:assets": "node scripts/test-assets.mjs",
+    "test:village": "node scripts/test-village.mjs",
+    "test:village:dist": "node scripts/e2e-dist.mjs --village",
     "test:map-motion": "node scripts/test-map-motion.mjs",
     "test:e2e:dist": "node scripts/e2e-dist.mjs",
     "check": "node scripts/check.mjs",
@@ -30,9 +44,10 @@
     "audit:dead-reads": "node scripts/find-dead-reads.mjs",
     "audit:doc-refs": "node scripts/verify-doc-refs.mjs",
     "audit:doc-snippets": "node scripts/check-doc-snippets.mjs",
-  "audit:doc-anchors": "node scripts/check-doc-ref-anchors.mjs",
+    "audit:doc-anchors": "node scripts/check-doc-ref-anchors.mjs",
     "audit:doc-counts": "node scripts/check-doc-counts.mjs",
     "audit:arch": "node scripts/audit-architecture.mjs",
+    "audit:asset-refs": "node scripts/audit-asset-refs.mjs",
     "audit:initialization-order": "node scripts/check-initialization-order.mjs",
     "audit:production-boundary": "node scripts/audit-production-boundary.mjs",
     "audit:save-schema": "node scripts/audit-save-schema.mjs",
@@ -45,7 +60,13 @@
     "@babel/parser": "7.29.9",
     "@babel/traverse": "7.29.8",
     "@babel/types": "7.29.8",
+    "@electron-forge/cli": "8.0.1",
+    "@electron-forge/maker-zip": "8.0.1",
+    "electron": "44.5.1",
     "playwright": "^1.63.0",
     "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "electron-store": "11.0.2"
   }
 }

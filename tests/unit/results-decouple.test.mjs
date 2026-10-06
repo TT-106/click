@@ -8,9 +8,9 @@
 //
 // 覆盖四件事：
 //   1) 「重生」回调顺序：clearGameWon → recordGameEvent → restartRun；
-//   2) 「继续」回调顺序：clearGameWon → recordGameEvent → resetContinuation →
-//      incrementContinueCount → placePartyInWorld → unlockStartingRegion →
-//      resetAllies → resetView → saveGame；并锁定随机头像消费 76 次精灵查询；
+//   2) 「继续」回调：视图只发出一个意图级操作 continueRun（顺序/复位/计数/放置/解锁/
+//      盟友重建/视图刷新/保存的完整业务顺序归属运行时生命周期 module，不在视图内编排），
+//      并锁定随机头像消费 76 次精灵查询；视图不产生额外的 Continue 事件；
 //   3) 离线面板 onOfflineStart 读取注入基线，update 用差值刷新且同值不重写；
 //   4) 缺少必需依赖时立即抛错——绑定遗漏不可能静默通过。
 import test from 'node:test';
@@ -79,13 +79,7 @@ function makeDeps(ops, sprites, overrides) {
     readVictoryCount: () => 3,
     clearGameWon: () => ops.push('clearGameWon'),
     restartRun: () => ops.push('restartRun'),
-    resetContinuation: () => ops.push('resetContinuation'),
-    incrementContinueCount: () => ops.push('incrementContinueCount'),
-    resetAllies: () => ops.push('resetAllies'),
-    resetView: () => ops.push('resetView'),
-    placePartyInWorld: () => ops.push('placePartyInWorld'),
-    unlockStartingRegion: () => ops.push('unlockStartingRegion'),
-    saveGame: () => ops.push('saveGame'),
+    continueRun: () => ops.push('continueRun'),
     getMonsterSprite: monsterName => { sprites.push(monsterName); return { sourceX: 1, sourceY: 2 }; },
     readOfflineDuration: () => 7200000,
     readOfflineProcessed: () => 0,
@@ -107,7 +101,7 @@ test('重生按钮：先清除胜利标记再记录事件，最后重启（顺�
   assert.deepEqual(timeline, ['clearGameWon', 'event:Victory:Decision: Prestige', 'restartRun']);
 }));
 
-test('继续按钮：按清除→记录→复位→存档顺序调用注入操作；随机头像消费 76 次精灵查询', () => withDocument(gameOver => {
+test('继续按钮：只发出一个意图级操作 continueRun；随机头像消费 76 次精灵查询', () => withDocument(gameOver => {
   const timeline = [];
   const sprites = [];
   const unsubscribe = subscribeGameEvents(event => timeline.push(`event:${event.category}:${event.action}`));
@@ -117,8 +111,8 @@ test('继续按钮：按清除→记录→复位→存档顺序调用注入操�
     assert.equal(sprites.length, 76);
     findButton(gameOver, '继续').onclick();
   } finally { unsubscribe(); }
-  assert.deepEqual(timeline, ['clearGameWon', 'event:Victory:Decision: Continue', 'resetContinuation', 'incrementContinueCount',
-    'placePartyInWorld', 'unlockStartingRegion', 'resetAllies', 'resetView', 'saveGame']);
+  // 视图只跨一次 seam 表达玩家选择：不自行记录 Continue 事件，也不编排底层复位顺序
+  assert.deepEqual(timeline, ['continueRun']);
 }));
 
 test('离线面板：onOfflineStart 读取注入基线，update 用差值刷新且同值不重写', () => withDocument((gameOver, offline) => {

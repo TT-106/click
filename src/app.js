@@ -6,8 +6,11 @@ import { $, $$, icon, escapeHtml } from './ui/dom.js';
 import { createPartyBuilder } from './ui/party-builder.js';
 import { createDashboard } from './ui/dashboard.js';
 import { enhanceLegacyControls, mountExpedition } from './ui/legacy-panels.js';
+import { createVillagePanel } from './ui/village-panel.js';
+import { createDesktopStorage } from './services/desktop-storage.js';
+import { mountDesktopCompanion } from './ui/desktop-companion.js';
 
-let toastTimer, currentPage = 'expedition', activeHero = 0, booted = false;
+let toastTimer, currentPage = 'expedition', activeHero = 0, booted = false, village = null, desktop = null, desktopStorage = null;
 function notify(message, error = false) {
   clearTimeout(toastTimer);
   $('#toast-message').textContent = message;
@@ -15,11 +18,11 @@ function notify(message, error = false) {
   $('#toast').hidden = false;
   if (!error) toastTimer = setTimeout(() => { $('#toast').hidden = true; }, 4500);
 }
-const saves = createSaveService(engine, notify);
+const saves = createSaveService(engine, notify, { storage: () => desktopStorage || globalThis.localStorage });
 const titles = {
   expedition: '远征', heroes: '冒险者', dungeons: '地牢', castles: '城堡',
   monsters: '怪物图鉴', points: '成就与点数', settings: '设置与帮助',
-  info: '统计资料', victory: '远征战果'
+  info: '统计资料', victory: '远征战果', village: '林中旧村'
 };
 const PRESENTATION_KEY = 'C2_PRESENTATION_V1';
 let presentationStyle = 'clean';
@@ -31,12 +34,14 @@ function navigate(page, focus = false) {
   if (!booted) return;
   const state = engine.snapshot();
   if (!state.started && ['heroes','dungeons','castles','monsters'].includes(page)) return;
+  if (currentPage === 'village' && page !== 'village') village?.close();
   currentPage = page;
   const setup = page === 'expedition' && !state.started;
-  $('#page-heading').hidden = page === 'expedition';
+  $('#page-heading').hidden = page === 'expedition' || page === 'village';
   $('#page-title').textContent = titles[page];
   $('#setup-screen').hidden = !setup;
   $('#expedition-screen').hidden = page !== 'expedition' || !state.started;
+  $('#village-screen').hidden = page !== 'village';
   $('#settings-screen').hidden = page !== 'settings';
   $('#legacy-screen').hidden = ![...Object.keys(panels),'heroes'].includes(page);
   $('#hero-tabs').hidden = page !== 'heroes';
@@ -62,6 +67,8 @@ function navigate(page, focus = false) {
 }
 
 function refresh() {
+  desktop?.refresh();
+  if (desktop && !desktop.isVisible()) return;
   const state = engine.snapshot();
   engine.setPresentation(presentationStyle);
   $('#presentation-style').value = presentationStyle;
@@ -79,16 +86,17 @@ function bind() {
   $('#presentation-style').onchange = event => {
     presentationStyle = event.target.value;
     engine.setPresentation(presentationStyle);
-    try { localStorage.setItem(PRESENTATION_KEY, presentationStyle); } catch { /* 偏好仍在本次会话生效。 */ }
+    try { (desktopStorage || localStorage).setItem(PRESENTATION_KEY, presentationStyle); } catch { /* 偏好仍在本次会话生效。 */ }
   };
   $('#manage-heroes').onclick = () => navigate('heroes');
+  $('#enter-village').onclick = openWorld;
   $('#original-info').onclick = () => navigate('info');
   $('#hero-tabs').onclick = event => { const target = event.target.closest('[data-hero-tab]'); if (target) { activeHero = Number(target.dataset.heroTab); navigate('heroes'); } };
   $('#toggle-pause').onclick = () => { engine.pause(); refresh(); };
   $('#dismiss-toast').onclick = () => { $('#toast').hidden = true; };
   $('#open-saves').onclick = () => { $('#save-dialog').showModal(); };
   $('#close-saves').onclick = () => $('#save-dialog').close();
-  $('#save-now').onclick = () => { saves.save(); refresh(); };
+  $('#save-now').onclick = () => { saveCurrent(); refresh(); };
   $('#export-save').onclick = () => saves.export();
   $('#export-original').onclick = () => saves.export(true);
   $('#save-file').onchange = async event => {
@@ -109,10 +117,12 @@ function bind() {
   $('#reset-confirm').oninput = event => { $('#reset-game').disabled = event.target.value !== '重新开始'; };
   $('#reset-game').onclick = () => { if ($('#reset-confirm').value === '重新开始') saves.reset(); };
   for (const input of $$('[data-option]')) input.onchange = () => engine.setOption(input.dataset.option, input.checked);
-  $('#settings-save').onclick = () => saves.save();
+  $('#settings-save').onclick = saveCurrent;
   document.addEventListener('keydown', event => {
-    if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 's') { event.preventDefault(); saves.save(); return; }
-    if (event.code !== 'Space' || event.repeat || $('#save-dialog').open || event.target.closest('input,textarea,select,button,a,summary,[role="button"],[contenteditable]')) return;
+    if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 's') { event.preventDefault(); saveCurrent(); return; }
+    if (event.key.toLowerCase() === 'b' && !event.ctrlKey && !event.metaKey && !event.altKey && !event.repeat && !document.querySelector('dialog[open]') && !event.target.closest('input,textarea,select,[contenteditable]')) { village?.openInventory(); return; }
+    if (event.code !== 'Space' || event.repeat || document.querySelector('dialog[open]') || event.target.closest('input,textarea,select,button,a,summary,[role="button"],[contenteditable]')) return;
+    if (village?.isOpen()) { event.preventDefault(); village.togglePause(); return; }
     if (engine.snapshot().started) { event.preventDefault(); engine.pause(); refresh(); }
   });
   window.addEventListener('pagehide', () => saves.save(true));
@@ -120,25 +130,58 @@ function bind() {
   document.addEventListener('visibilitychange', () => { if (document.hidden) saves.save(true); });
 }
 
+function saveCurrent() { if (desktop) return desktop.save(); return saves.save(); }
+
+function openWorld() {
+  if (!engine.snapshot().started || village?.isOpen()) return;
+  if (!village) village = createVillagePanel(engine, notify, {
+    onExit: () => navigate('expedition'),
+    storage: desktopStorage || undefined,
+    background: Boolean(window.companionDesktop),
+    isVisible: () => desktop ? desktop.isVisible() : !document.hidden,
+    canAdvance: () => desktop ? desktop.canAdvance() : true,
+  });
+  village.open(); navigate('village', true);
+}
+
 async function boot() {
   $$('[data-icon]').forEach(element => { element.innerHTML = icon(element.dataset.icon); });
   $('#legacy-host').innerHTML = await loadGamePanels();
   for (const link of $$('#legacy-host a[target="_blank"]')) link.rel = 'noopener noreferrer';
+  if (window.companionDesktop) {
+    desktopStorage = await createDesktopStorage(window.companionDesktop, message => notify(message, true));
+    presentationStyle = desktopStorage.getItem(PRESENTATION_KEY) === 'classic' ? 'classic' : 'clean';
+    if (desktopStorage.error) throw new Error(desktopStorage.error);
+  }
   await saves.prepare();
-  await engine.boot(saves.persistence);
+  await engine.boot(saves.persistence, {
+    startPaused: Boolean(window.companionDesktop),
+    onSimulationFault: error => notify(`模拟已停机：${error.message}。最后有效存档已保留，请先导出存档再刷新页面。`, true)
+  });
   if (matchMedia('(prefers-reduced-motion: reduce)').matches && !engine.snapshot().started) engine.setOption('effects', false);
   booted = true;
-  createPartyBuilder(engine, () => { saves.save(true); mountExpedition(); navigate('expedition'); }, notify);
+  createPartyBuilder(engine, () => {
+    saves.save(true); mountExpedition(); navigate('expedition');
+    desktop?.onPartyStarted().catch(error => notify(error.message, true));
+  }, notify);
   bind();
   enhanceLegacyControls($('#main'));
   $('#loading-screen').hidden = true;
   $('#app-content').hidden = false;
   navigate(engine.snapshot().won ? 'victory' : 'expedition');
   saves.report();
+  if (window.companionDesktop) desktop = await mountDesktopCompanion({
+    bridge: window.companionDesktop, storage: desktopStorage, engine, saves,
+    explorer: () => village, openWorld, notify,
+  });
   let wasStarted = engine.snapshot().started, wasWon = engine.snapshot().won, wasOffline = engine.snapshot().offline;
   setInterval(() => {
     const state = engine.snapshot();
-    if (state.started !== wasStarted || state.won !== wasWon) { wasStarted = state.started; wasWon = state.won; navigate(state.won ? 'victory' : 'expedition'); }
+    if (state.started !== wasStarted || state.won !== wasWon) {
+      wasStarted = state.started; wasWon = state.won;
+      if (desktop?.isCompanion() && state.started && !state.won) openWorld();
+      else navigate(state.won ? 'victory' : 'expedition');
+    }
     if (wasOffline && !state.offline) navigate(currentPage);
     wasOffline = state.offline;
     refresh();

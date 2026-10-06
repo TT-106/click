@@ -1,3 +1,4 @@
+import { spriteBackground } from '../rendering/preview.js';
 /** 城堡地图、列表与状态。
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
@@ -153,7 +154,7 @@ export function initializeViewsCastles() {
             crownImage.style.width = "35px";
             crownImage.style.height = "35px";
             var crownSprite = itemSpritesRef().getSprite("CrownGolden.PNG");
-            crownImage.style.background = "url('spritesheet/items.png') -" + crownSprite.sourceX + "px -" + crownSprite.sourceY + "px";
+            crownImage.style.background = spriteBackground(crownSprite, 'icon');
           }
         }
         this.mapCells[columnIndex].push(mapTile);

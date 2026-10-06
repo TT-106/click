@@ -29,6 +29,8 @@ export function SpriteSheet(imageUrl, spriteSize, spriteDefinitions) {
     (/** @type {any} */ (sheet)).registerDefinitions(spriteDefinitions);
     sheet.loaded = true;
   };
+  this.error = null;
+  this.image.onerror = function () { sheet.error = `无法加载图集: ${imageUrl}`; };
   this.image.src = imageUrl;
 }
 export function SpriteAnimation(spriteSheet, animationName, firstFrameColumn, firstFrameRow, lastRowFrameCount, lastFrameRow, lastFrameColumnIndex, isDirectional) {
@@ -65,6 +67,8 @@ export function AnimationSheet(fileName, spriteSize, animationDefinitions, lastF
     (/** @type {any} */ (sheet)).registerDefinitions(animationDefinitions, lastFrameColumnIndex);
     sheet.loaded = true;
   };
+  this.error = null;
+  this.image.onerror = function () { sheet.error = `无法加载动画图集: ${fileName}`; };
   this.image.src = fileName;
 }
 export function AnimationCatalog(sheets) {

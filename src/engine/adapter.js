@@ -1,4 +1,6 @@
 import { runtime } from "./internal-api.js";
+import { getSpritePreview } from './modules/rendering/preview.js';
+import { createVillageExplorer } from './exploration/controller.js';
 const {
   game
 } = runtime;
@@ -17,11 +19,15 @@ const plainName = text => {
 
 /** 产品层的唯一引擎入口：校验命令并提供只读显示快照。 */
 export const engine = {
-  async boot(persistence) {
+  async boot(persistence, { startPaused = false, onSimulationFault = null } = {}) {
     runtime.setPersistence(persistence);
+    runtime.setFaults({ onSimulationFault });
+    if (startPaused) game.paused = true;
     game.onLoad();
     const start = performance.now();
     while (!game.view.panels.length || !game.partyCreated && !document.getElementById('startQuestButton')) {
+      const errors = [...game.assets.getErrors(), ...game.animations.sheets.map(sheet => sheet.error).filter(Boolean)];
+      if (errors.length) throw new Error(`素材加载失败: ${errors.join('; ')}`);
       if (performance.now() - start > 15000) throw new Error('游戏资源加载超时，请刷新重试。');
       await new Promise(resolve => setTimeout(resolve, 30));
     }
@@ -38,15 +44,18 @@ export const engine = {
         description: entry.descriptionText,
         unlocked: game.state.victoryCount >= entry.requiredVictories,
         unlockRun: entry.requiredVictories + 1,
-        sprite: {
-          x: sprite.sourceX + 10,
-          y: sprite.sourceY + 12
-        }
+        sprite: getSpritePreview(sprite)
       };
     });
   },
   get capacity() {
     return 4 + runtime.partyBonus.currentValue;
+  },
+  /** 产品只持有探索控制器；角色、资源和世界构造集中在引擎入口。 */
+  createVillageExplorer(canvas, options = {}) {
+    return createVillageExplorer(canvas, { ...options, heroes: game.state.adventurers.map(hero => ({
+      name: plainName(hero.adventurerName), sprite: game.monsterSprites.getSprite(hero.classDefinition.spriteName)
+    })) });
   },
   startParty(party) {
     if (game.partyCreated) throw new Error('当前冒险已经开始。');
@@ -107,10 +116,7 @@ export const engine = {
           damage: runtime.statValue(stats.damage),
           armor: runtime.statValue(stats.armor),
           skillPoints: hero.skillPoints + hero.initialSpellSkillPoint,
-          sprite: {
-            x: sprite.sourceX + 10,
-            y: sprite.sourceY + 12
-          }
+          sprite: getSpritePreview(sprite)
         };
       }),
       options: {
@@ -132,6 +138,10 @@ export const engine = {
   },
   pause(value = !game.paused) {
     game.paused = value;
+  },
+  /** 宿主可以停止不可见的经典画面绘制；不改变模拟、选项和存档。 */
+  setDisplayActive(enabled) {
+    game.renderEnabled = Boolean(enabled);
   },
   setPresentation(style) {
     const panel = game.view.panels.find(view => view.elementId === 'gameTabContent');

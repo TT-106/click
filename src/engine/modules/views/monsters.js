@@ -1,9 +1,11 @@
+import { spriteBackground } from '../rendering/preview.js';
 /** 怪物升级与图鉴。
  * 初始化由 runtime/index.js 统一协调；字段与原符号映射见 docs/symbol-map.json。
  */
 import { View, addChildView, resetChildViews, updateChildViews } from "./base.js";
 import { appendHeaderCell, clearElement, clearElementById, createElement, getElement, hideElement, setElementHtml } from "./dom.js";
 import { formatAmount, formatGroupedAmount } from "../core/math.js";
+import { escapeHtmlText } from "../core/html-text.js";
 import { VISIBLE_MONSTER_LEVELS, globalUpgradeDefinitions, monsterUpgradeCollection } from "../content/balance.js";
 import { TabBar, TabState, TabView, addTab } from "./navigation.js";
 import { getMonsterTypesForLevel } from "../combat/encounters.js";
@@ -211,11 +213,11 @@ export function initializeViewsMonsters() {
     iconCell.style.textAlign = "center";
     this.spriteImage = createElement("img", iconCell, null, "characterImage");
     this.spriteImage.src = "images/Transparent.gif";
-    this.spriteImage.style.background = "url('spritesheet/monsters.png') -" + monsterSprite.sourceX + "px -" + (monsterSprite.sourceY + 10) + "px";
+    this.spriteImage.style.background = spriteBackground(monsterSprite, 'monster');
     this.spriteImage.style.height = "30px";
     this.nameCell = rowElement.insertCell(1);
     this.nameCell.style.width = "200px";
-    this.nameCell.innerHTML = this.monsterType.getName();
+    this.nameCell.innerHTML = escapeHtmlText(this.monsterType.getName());
     this.experienceCell = rowElement.insertCell(2);
     this.experienceCell.style.width = "80px";
     this.experienceCell.style.textAlign = "right";
@@ -291,9 +293,9 @@ export function initializeViewsMonsters() {
       this.defenceRatingCell.innerHTML = formatAmount(this.monsterType.defenceRating);
       this.rankCell.innerHTML = formatAmount(this.monsterType.rank);
       if (this.cachedLevel != this.monsterType.level) {
-        this.nameCell.innerHTML = this.monsterType.getName();
+        this.nameCell.innerHTML = escapeHtmlText(this.monsterType.getName());
         var monsterSprite = this.monsterType.sprite;
-        this.spriteImage.style.background = "url('spritesheet/monsters.png') -" + monsterSprite.sourceX + "px -" + (monsterSprite.sourceY + 10) + "px";
+        this.spriteImage.style.background = spriteBackground(monsterSprite, 'monster');
       }
       this.cachedLevel = this.monsterType.level;
       this.cachedRank = this.monsterType.rank;

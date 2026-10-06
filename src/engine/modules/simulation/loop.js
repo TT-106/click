@@ -5,8 +5,6 @@ import { nowMilliseconds, recordGameEvent } from "../core/math.js";
 import { game } from "../runtime/game.js";
 import { advanceSimulation } from "./tick.js";
 import { restoreGameState, saveProgress, serializeGame } from "../persistence/game-save.js";
-import { placePartyInWorld } from "../world/terrain.js";
-import { unlockStartingRegion } from "../world/regions.js";
 import { PauseView, TabBar, TabState, addTab, mountTabBar } from "../views/navigation.js";
 import { PartyCreationView } from "../views/party-creation.js";
 import { ExpeditionView, bindExpeditionViews } from "../views/expedition.js";
@@ -19,6 +17,7 @@ import { PointsView } from "../views/achievements.js";
 import { InformationView } from "../views/information.js";
 import { addChildView } from "../views/base.js";
 import { persistence } from "../runtime/storage-port.js";
+import { faults } from "../runtime/fault-port.js";
 import { TILE_SIZE } from "../core/screen-layout.js";
 export function GameLoop() {
   this.resourcesReady = false;
@@ -31,6 +30,7 @@ export function GameLoop() {
     (/** @type {GameLoop & { tick: () => void }} */ (/** @type {unknown} */ (self))).tick();
   };
   this.fpsElapsed = this.fpsFrameCount = 0;
+  this.simulationFault = null;
 }
 export function initializeSimulationLoop() {
   GameLoop.prototype.tick = function () {
@@ -41,38 +41,44 @@ export function initializeSimulationLoop() {
           tickDeltaMs = Math.max(0, now - this.lastTickAt),
           offlineTurnCount;
         this.lastFrameAt = nowMilliseconds();
-        if (game.partyCreated && !game.gameWon && !game.paused) {
-          if (1E3 < tickDeltaMs && game.options.allowBackgroundProgress && (game.processingOffline || (game.processingOffline = true, game.offlineProcessed = 0, game.offlineDuration = 0, game.view.onOfflineStart()), game.offlineDuration += tickDeltaMs), game.processingOffline) {
-            for (offlineTurnCount = 0; 200 > offlineTurnCount && game.offlineProcessed < game.offlineDuration && !game.gameWon && game.processingOffline;) {
-              advanceSimulation(15);
-              game.offlineProcessed += this.turnDuration;
-              game.state.statisticsRecorder.recordPlayedMilliseconds(this.turnDuration);
-              offlineTurnCount++;
-            }
-            if (game.offlineProcessed >= game.offlineDuration) {
-              game.finishOfflineProgress();
-            }
-          } else {
-            var frameSimulationUnits = tickDeltaMs / this.frameDuration;
-            if (0 < frameSimulationUnits) {
-              advanceSimulation(frameSimulationUnits);
-            }
-            var camera = game.camera;
-            var centerX, centerY, centerRemainderX, centerRemainderY;
-            if (game.worldActive) {
-              centerX = game.world.worldCenterX;
-              centerY = game.world.worldCenterY;
+        try {
+          if (!this.simulationFault && game.partyCreated && !game.gameWon && !game.paused) {
+            if (1E3 < tickDeltaMs && game.options.allowBackgroundProgress && (game.processingOffline || (game.processingOffline = true, game.offlineProcessed = 0, game.offlineDuration = 0, game.view.onOfflineStart()), game.offlineDuration += tickDeltaMs), game.processingOffline) {
+              for (offlineTurnCount = 0; 200 > offlineTurnCount && game.offlineProcessed < game.offlineDuration && !game.gameWon && game.processingOffline;) {
+                advanceSimulation(15);
+                game.offlineProcessed += this.turnDuration;
+                game.state.statisticsRecorder.recordPlayedMilliseconds(this.turnDuration);
+                offlineTurnCount++;
+              }
+              if (game.offlineProcessed >= game.offlineDuration) {
+                game.finishOfflineProgress();
+              }
             } else {
-              centerX = game.level.centerX;
-              centerY = game.level.centerY;
+              var frameSimulationUnits = tickDeltaMs / this.frameDuration;
+              if (0 < frameSimulationUnits) {
+                advanceSimulation(frameSimulationUnits);
+              }
+              var camera = game.camera;
+              var centerX, centerY, centerRemainderX, centerRemainderY;
+              if (game.worldActive) {
+                centerX = game.world.worldCenterX;
+                centerY = game.world.worldCenterY;
+              } else {
+                centerX = game.level.centerX;
+                centerY = game.level.centerY;
+              }
+              centerRemainderX = Math.round(centerX % TILE_SIZE);
+              centerRemainderY = Math.round(centerY % TILE_SIZE);
+              camera.viewportOffsetX = centerRemainderX - centerRemainderY;
+              camera.viewportOffsetY = Math.round((centerRemainderX + centerRemainderY) / 2);
+              camera.tileColumn = centerX / TILE_SIZE | 0;
+              camera.tileRow = centerY / TILE_SIZE | 0;
             }
-            centerRemainderX = Math.round(centerX % TILE_SIZE);
-            centerRemainderY = Math.round(centerY % TILE_SIZE);
-            camera.viewportOffsetX = centerRemainderX - centerRemainderY;
-            camera.viewportOffsetY = Math.round((centerRemainderX + centerRemainderY) / 2);
-            camera.tileColumn = centerX / TILE_SIZE | 0;
-            camera.tileRow = centerY / TILE_SIZE | 0;
           }
+        } catch (simulationError) {
+          this.simulationFault = { name: simulationError.name, message: simulationError.message, recordedAtMilliseconds: nowMilliseconds() };
+          console.error("Simulation halted, last valid save kept. name: " + simulationError.name + " message: " + simulationError.message + " exception: " + simulationError);
+          faults.onSimulationFault?.(simulationError);
         }
         if (game.renderEnabled) {
           try {
@@ -87,13 +93,13 @@ export function initializeSimulationLoop() {
           game.state.fps = this.fpsFrameCount / (this.fpsElapsed / 1E3) | 0;
           this.fpsElapsed = this.fpsFrameCount = 0;
         }
-        if (!game.processingOffline) {
+        if (!this.simulationFault && !game.processingOffline) {
           var saveManager = game.saves;
           if (nowMilliseconds() - saveManager.lastSavedAt > saveManager.autoSaveInterval) {
             saveProgress(saveManager);
           }
         }
-        if (!(game.paused || game.processingOffline)) {
+        if (!(this.simulationFault || game.paused || game.processingOffline)) {
           game.state.statisticsRecorder.recordPlayedMilliseconds(tickDeltaMs);
         }
         this.lastTickAt = nowMilliseconds();
@@ -166,13 +172,7 @@ export function initializeSimulationLoop() {
             readVictoryCount: () => game.state.victoryCount,
             clearGameWon: () => { game.gameWon = false; },
             restartRun: () => game.restartRun(),
-            resetContinuation: () => game.resetContinuation(),
-            incrementContinueCount: () => { game.state.victoryStatistics.currentContinueCount++; },
-            resetAllies: () => game.allies.reset(),
-            resetView: () => game.view.reset(),
-            placePartyInWorld: () => placePartyInWorld(),
-            unlockStartingRegion: () => unlockStartingRegion(),
-            saveGame: () => saveProgress(game.saves),
+            continueRun: () => game.continueRun(),
             getMonsterSprite: monsterName => game.monsterSprites.getSprite(monsterName),
             readOfflineDuration: () => game.offlineDuration,
             readOfflineProcessed: () => game.offlineProcessed,

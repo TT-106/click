@@ -6,6 +6,7 @@ import { game } from "../runtime/game.js";
 import { WORLD_BLOCK_COLUMNS, WORLD_BLOCK_ROWS, WORLD_ORIGIN_COLUMN, WORLD_ORIGIN_ROW, findCastle, findCastleByRegion } from "./regions.js";
 import { Shop, randomShopSprite } from "./dungeons.js";
 import { TILE_SIZE } from "../core/screen-layout.js";
+import { WORLD_TILE_VISUAL_SLOTS, installTileVisualAccessors } from './tile-visuals.js';
 export var OCEAN_TERRAIN_CODE, shoreTileLookup, L2_ForestCanopy01Sprite, L2_ForestCanopy03Sprite, L2_ForestMaple03Sprite, L2_ForestPine01Sprite, L2_ForestPine02Sprite, L2_ForestPine03Sprite, L2_ForestPine07Sprite, L2_ForestPine08Sprite, L2_ForestPine09Sprite, L2_ForestMixed05Sprite, L2_ForestWillow03Sprite, L1_HillsSprite, L2_MountainBigEarth01Sprite, L2_MountainBigRock01Sprite, L2_MountainBigVolcano01Sprite, L2_MountainBigVolcanoActive01Sprite, L2_MountainBigVolcanoErupt01Sprite, L2_MountainRocky01Sprite, L2_MountainRocky02Sprite, L2_MountainRocky03Sprite, L2_MountainRocky04Sprite, L2_MountainRocky05Sprite, L2_Terrain041Sprite, L1_Terrain033Sprite, L2_MountainDesert01Sprite, L2_MountainDesert02Sprite, L2_MountainDesert03Sprite, L2_MountainDesert04Sprite, L2_MountainDesert05Sprite, L2_MountainDesert06Sprite, L2_ForestPine04Sprite, L2_ForestPine05Sprite, L2_ForestPine06Sprite, L2_Terrain040Sprite, L1_Terrain039Sprite;
 export function FractalNoise(seed, lacunarity, persistence, octaveCount, baseFrequency) {
   var noise = this.simplexNoise = new SimplexNoise(),
@@ -413,6 +414,8 @@ export function WorldMap() {
   this.blockOriginColumn = WORLD_ORIGIN_COLUMN;
   this.blockOriginRow = WORLD_ORIGIN_ROW;
   this.worldBlocks = [];
+  // 静态展示物件：{ visualId, position: { x, y }, footprint? }；不参与碰撞或存档。
+  this.sceneObjects = [];
   this.hasPartyPlaced = false;
 }
 export function createWorldBlocks(worldMap) {
@@ -491,6 +494,7 @@ export function findNearestWorldRow(tileRow) {
   return nearestRow;
 }
 export function initializeWorldTerrain() {
+  installTileVisualAccessors(WorldTile.prototype, () => game.terrainSprites, WORLD_TILE_VISUAL_SLOTS);
   OCEAN_TERRAIN_CODE = "O";
   shoreTileLookup = {
     GOGO: "L1_ShoreEout.PNG",

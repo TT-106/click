@@ -1,6 +1,6 @@
 // 把已完成改名的「原字母 → 语义名」写入 docs/symbol-map.json 的 fields 段（一对一表）。
 // 用法: node scripts/record-field-names.mjs scripts/mappings/a.json [scripts/mappings/b.json ...]
-// 规则（见 docs/HANDOFF-PROMPT.md §4）：**异主字母不得写入**——本脚本不做属主判定，
+// 规则（见 docs/DEVELOPMENT.md）：**异主字母不得写入**——本脚本不做属主判定，
 // 调用方必须只传入「单主或已确证同义并名」的映射文件。
 import fs from 'node:fs';
 
