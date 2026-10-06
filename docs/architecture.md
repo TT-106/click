@@ -50,6 +50,14 @@ flowchart TD
 | `assets`、`src/data/assets.generated.js` | 素材包与开发期派生清单；运行时不扫描目录 |
 | `content-prep`、`tools/content-prep` | 未接线经济草案与独立工具；生产源码不反向导入 |
 | `archive/original`、`archive/migration` | 原版验证参照与恢复清单；产品构建不加载原版脚本 |
+| `scripts`、`tests` | 构建/校验/生成脚本与单测、差分场景和 harness；不属产品运行时，命令入口与编译配置在 `package.json`、`tsconfig.json` |
+| `docs`、`CONTEXT.md`、根级 README 与四份报告 | 文档索引与维护规则见 [docs/README](README.md)；四份报告承载验收/兼容/性能/迁移证据 |
+| `spritesheet`、`images` | 原版经典素材与档案运行依赖（`archive/original` 引用 `images/Transparent.gif`） |
+| `artifacts` | 机读审计产物与素材来源归档；`assets/vendor/SOURCES.json` 引用 `artifacts/vendor-assets/downloads` |
+| `index.html`、`favicon.svg`、`启动桌面试用.cmd` | 网页入口与桌面试用启动脚本 |
+| `output`、`dist`、`node_modules` | 本地生成物与依赖，不入库；忽略规则见根目录 `.gitignore` |
+
+新增顶层目录或调整上述归属时同步更新本表，并跑 `npm run lint` 与 `npm run check` 复核。
 
 ## 显示与行为边界
 

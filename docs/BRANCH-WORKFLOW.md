@@ -41,3 +41,8 @@ git status --short --branch
 不要将 Godot 分支整体合入主线，也不要将主线的原生方案移除提交挑选进 Godot 分支。Godot 分支里的 `src/` 是分支建立时的参照快照；当前恢复版的权威进展以 `main` 为准。
 
 两个 worktree 的 `git stash` 和分支引用属于同一仓库；清理前先用 `git worktree list` 确认，不直接删除 Godot 目录。以后若要移除该工作目录，使用 `git worktree remove` 并先保留尚未提交的文件和忽略目录。
+
+## stash 与远程同步
+
+- stash 只作短期暂存：创建时在消息里写清目标，处理完即清理；长期遗留的 WIP 逐文件核验其改名/改动已由后续提交落地后删除。2026-10-06 已清理两个 2026-09-26 的改名 WIP（机械核验 336+37 处替换全部为纯标识符改名，当前代码旧名零残留）。
+- 远程 `origin` 为 `https://github.com/TT-106/click`。每批入库通过门禁后推送 `main`；推送前后用 `git status --branch` 与 `git ls-remote origin main` 核对远程与本地一致。
