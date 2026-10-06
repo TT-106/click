@@ -1,0 +1,30 @@
+html:has(.desktop-app) { scrollbar-gutter:auto; }
+.desktop-app { padding-top:44px; }
+.desktop-titlebar { height:44px; position:fixed; inset:0 0 auto; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:0 8px 0 14px; background:#17221b; border-bottom:1px solid #34483a; -webkit-app-region:drag; user-select:none; }
+.desktop-brand { display:flex; align-items:center; gap:9px; min-width:0; }
+.desktop-brand strong { font-size:12px; font-weight:600; letter-spacing:1px; }
+.desktop-mark { display:flex; color:#b3ca9b; }
+.desktop-mark .icon { width:17px; height:17px; }
+.desktop-caption { font-size:10px; color:#9cae9e; margin-left:7px; }
+.desktop-window-actions, .desktop-observation-actions { display:flex; align-items:center; gap:3px; -webkit-app-region:no-drag; }
+.desktop-window-actions button, .desktop-observation-actions button { background:transparent; color:#b3c1b4; padding:5px 9px; border-radius:4px; font-size:11px; }
+.desktop-window-actions button:hover, .desktop-observation-actions button:hover { background:#2c4030; color:#eef4e8; }
+.desktop-window-actions button[aria-pressed="true"], .desktop-observation-actions button[aria-pressed="true"] { color:#e1ca90; background:#34432d; }
+.desktop-window-actions .icon { width:15px; height:15px; }
+.desktop-app .sidebar { top:44px; height:calc(100vh - 44px); }
+.desktop-app .app-layout { min-height:calc(100vh - 44px); }
+.desktop-observation { display:none; }
+.desktop-compact { overflow:hidden; }
+.desktop-compact .sidebar, .desktop-compact #page-heading, .desktop-compact .village-heading, .desktop-compact .village-hud, .desktop-compact .village-lower { display:none; }
+.desktop-compact .app-layout { display:block; }
+.desktop-compact #main { margin:0; padding:0; max-width:none; width:100%; }
+.desktop-compact #village-screen { display:block; }
+.desktop-compact .village-stage { border:0; border-radius:0; margin:0; height:calc(100vh - 44px); background:#31452c; }
+.desktop-compact #village-canvas { width:100%; height:100%; display:block; }
+.desktop-compact .desktop-observation { position:fixed; bottom:10px; left:12px; right:12px; z-index:20; display:flex; align-items:center; justify-content:space-between; gap:10px; padding:6px 8px 6px 12px; border:1px solid #63755a55; border-radius:7px; background:#17251ee8; box-shadow:0 3px 12px #10201733; }
+.desktop-observation > div:first-child { display:flex; align-items:center; gap:8px; min-width:0; }
+.desktop-observation strong { font-size:11px; font-weight:500; color:#d5e1ce; white-space:nowrap; }
+.desktop-status-dot { width:5px; height:5px; border-radius:50%; background:#b2cb96; flex-shrink:0; }
+#desktop-discovery { font-size:10px; color:#9eaf9a; white-space:nowrap; }
+.desktop-compact #toast { bottom:68px; }
+@media(max-width:580px) { .desktop-caption, #desktop-discovery { display:none; } .desktop-window-actions button { padding-inline:7px; } }
